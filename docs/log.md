@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:41] session — F76 TASK-03: ajustes vistos nas capturas e o banco de prova da janela do álbum e do ranking
+**Branch:** feat/f76-mobile-album-window
+O segmento ligado mantém o alvo de 44 px (a pílula desenhada por dentro), o cabeçalho alinha no topo, os botões de mover cabem, sai o vão herdado da tabela do computador.
+Banco de prova `reports/evidence/F76/harness/album-window.*` (as janelas de verdade com dados de exemplo: título longo, 16 faixas, valor do F75) e `reports/evidence/F76/album-window/shoot.mjs` (Chrome sem cabeça, porta própria; mede alvos, texto, campos, faixas à vista, rolagens).
+
 ## [2026-11-20 02:35] session — F76 TASK-03: a janela do álbum e o meu ranking no celular (código e testes)
 **Branch:** feat/f76-mobile-album-window
 Janela do álbum: uma rolagem só, barra com fechar sempre à vista, capa como herói com a própria capa desfocada atrás, as três fontes num controle segmentado preso sob a barra, faixa em duas linhas (título sozinho; BEA, Spotify e duração embaixo). Meu ranking: barra Back · My ranking · Reset (Reset desfazível por 5 s), linha com o título em linha própria, mover sem arrastar (tocar na faixa, Up/Down/«Move to…»), arrastar só pela alça, Save preso no pé, o aviso abaixo da barra.

@@ -112,7 +112,7 @@
     overflow: hidden;
     display: grid;
     grid-template-columns: 112px minmax(0, 1fr);
-    align-items: end;
+    align-items: start;
     gap: 16px;
     padding: calc(var(--phone-topbar-h) + var(--phone-safe-top) + 8px) var(--phone-gutter-right) 20px var(--phone-gutter-left);
     border-bottom: 0;
@@ -205,8 +205,9 @@
   }
 
   /* ── 4. The three sources: one segmented control, held under the bar ───────────────────── */
-  .album-window .tracks-ranking-comparison > * + * {
-    margin-top: 12px;
+  /* The table of the computer is hidden here: its gap above the tracks goes with it */
+  .album-window .tracks-ranking-comparison.space-y-6 > .tracks-tabs-container {
+    margin-top: 0;
   }
 
   .tracks-tabs__bar {
@@ -251,11 +252,12 @@
     background: rgba(255, 255, 255, 0.12);
   }
 
-  /* The source on: the one orange of the window */
+  /* The source on: the one orange of the window, drawn 3 px inside a target that stays 44 px */
   .tracks-tabs__segment.is-on {
-    margin: 3px;
-    min-height: calc(var(--phone-target) - 6px);
+    padding: 3px;
+    border-radius: 13px;
     background: var(--phone-accent);
+    background-clip: content-box;
     color: #0a0a0c;
   }
 

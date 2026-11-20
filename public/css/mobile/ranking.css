@@ -165,9 +165,9 @@
 
   .rank-row__number {
     flex: none;
-    width: 32px;
+    width: 36px;
     color: #fff;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     line-height: 24px;
     text-align: center;
@@ -244,8 +244,8 @@
 
   .rank-phone__mover:not([hidden]) {
     display: grid;
-    grid-template-columns: 1fr 1fr 1.35fr 1fr;
-    gap: 8px;
+    grid-template-columns: 1fr 1.2fr 1.4fr 1fr;
+    gap: 6px;
   }
 
   .rank-phone__move {
@@ -255,12 +255,12 @@
     gap: 4px;
     min-width: 0;
     min-height: var(--phone-target);
-    padding: 0 6px;
+    padding: 0 4px;
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.08);
     color: #f2f2f4;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     line-height: 20px;
     white-space: nowrap;
