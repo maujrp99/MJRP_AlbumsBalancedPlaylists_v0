@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 21:03] review — triagem das 26 issues abertas contra o código de hoje; sete passam a fixed
+
+Relatório em `reports/audits/2026-11-19-mjrpalbumblender-v0-open-issues-triage.md`. Em `fixed`, por já não acontecerem no código (com a feature que resolveu): UAT-31, 62, 73, 84, 152, 22, 29. Ficam abertas com «um olhar no navegador» pendente: UAT-75, 101, 143. Decidido pelo agente — revisável, sob a dispensa do MJRP: a F65 aposenta as duas telas de ranking alcançáveis só por endereço (UAT-10) e a tela de migração (UAT-11), remove a rota `/api/playlists` do servidor (sem tráfego em 30 dias) e os scripts com o token do Discogs; o código fica no histórico do git. Trocar o token no Discogs continua sendo do MJRP.
+
 ## [2026-11-19 20:52] session — F58 em produção (site)
 
 Site publicado da `main` (`ec69407`, pacote `main-Bt2pCXey.js`). Em produção, como visitante: a Home abre, a busca de «Kendrick Lamar» mostra Studio (10) com «To Pimp a Butterfly», sem erro novo no console. Anotado, sem dono: um visitante ainda chega a pedir a lista da IA (rota paga) e recebe 403; o app devia nem pedir. Auxiliar trabalhando: F69.
