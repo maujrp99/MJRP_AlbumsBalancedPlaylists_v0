@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 13:38] session — F77 em produção, desligada: falta a chave do projeto do PostHog
+**Branch:** main
+Site publicado da `385ff60` (`main-CqYQz48c.js`); a publicação diz «measurement of use: OFF (no VITE_POSTHOG_KEY)». Provado no app local com a conta do MJRP e a marca de depuração: `screen_viewed` por nome de tela, `filter_used` para o filtro de status e para a busca, sem o texto buscado; nenhum pedido ao PostHog. Suíte 3192. Para ligar: o MJRP põe `VITE_POSTHOG_KEY` no `.env` da raiz (projeto na nuvem da União Europeia, captura de IP desligada) e o site é publicado de novo. Não verificado: evento chegando ao PostHog; `sign_out` sobrevivendo à recarga.
+
 ## [2026-11-20 13:34] session — F77: plano, spec, tarefas e os documentos da medição
 **Branch:** feat/f77-measure-how-the-app-is-used
 O `plan.md` reescrito com as onze decisões do agente (revisáveis), a spec com estados, critérios e fora do escopo, as tarefas com uma aberta para o MJRP (o projeto e a chave do PostHog); `arch.md`, `behavior.md` (`^usage-*`), `data-model.md`, `tech-stack.md` e o manual de publicação dizem a porta, o adaptador, o que é medido e o que nunca é.
