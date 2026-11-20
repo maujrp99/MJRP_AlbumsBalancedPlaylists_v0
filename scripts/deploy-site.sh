@@ -42,7 +42,13 @@ find_env_file() {
 # Prints the value of the client id from the env file. Callers keep it in a
 # variable: it is never written to the output.
 read_client_id() {
-  sed -n "s/^[[:space:]]*$CLIENT_ID_VAR[[:space:]]*=[[:space:]]*//p" "$1" | tail -1 \
+  read_env_value "$CLIENT_ID_VAR" "$1"
+}
+
+# Prints the value of a variable of the env file (the last one wins), without quotes. Callers keep
+# it in a variable: it is never written to the output.
+read_env_value() {
+  sed -n "s/^[[:space:]]*$1[[:space:]]*=[[:space:]]*//p" "$2" | tail -1 \
     | tr -d '\r' | sed -e 's/[[:space:]]*$//' -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/"
 }
 
@@ -112,6 +118,8 @@ verify_build() {
     || die "the built scripts do not contain the Spotify client id: Spotify would break in production"
   ok "the Spotify client id is in the built scripts"
 
+  verify_usage_measurement "$dist"
+
   maps="$(find "$dist" -name '*.map' | wc -l | tr -d ' ')"
   [ "$maps" = "0" ] || die "$maps source map file(s) in dist/: the site must not hand out its source"
   ok "no .map files"
@@ -135,6 +143,23 @@ EOF
   [ "$missing" -eq 0 ] || die "the build is incomplete"
   [ -f "$dist/js/firebase-config.js" ] || die "dist/js/firebase-config.js is missing"
   ok "css/, assets/ and js/firebase-config.js are complete ($(find "$dist" -type f | wc -l | tr -d ' ') files in dist/)"
+}
+
+# The measurement of use (F77): on only with VITE_POSTHOG_KEY, unless VITE_USAGE_MEASUREMENT=off.
+# Says which way the site was built; a key that did not reach the built scripts is refused.
+verify_usage_measurement() {
+  local dist="$1" key switch
+  key="$(read_env_value VITE_POSTHOG_KEY "$ENV_FILE")"
+  switch="$(read_env_value VITE_USAGE_MEASUREMENT "$ENV_FILE" | tr '[:upper:]' '[:lower:]')"
+  if [ -z "$key" ]; then
+    ok "measurement of use: OFF (no VITE_POSTHOG_KEY): the site measures nothing"
+  elif [ "$switch" = "off" ]; then
+    ok "measurement of use: OFF (VITE_USAGE_MEASUREMENT=off)"
+  else
+    grep -rqF --include='*.js' -- "$key" "$dist/assets" \
+      || die "VITE_POSTHOG_KEY is set but the built scripts do not contain it: the measurement would not start"
+    ok "measurement of use: ON (the PostHog project key is in the built scripts)"
+  fi
 }
 
 # --- deploy and verification of production ----------------------------------

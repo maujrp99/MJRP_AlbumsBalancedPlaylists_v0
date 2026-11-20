@@ -7,10 +7,12 @@ import { ownRankingsStore } from '../../stores/ownRankings.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { userRankingRepository } from '../../repositories/UserRankingRepository.js'
 import { OwnRankingService } from './OwnRankingService.js'
+import { track } from '../usage/track.js'
 
 export const ownRankingService = new OwnRankingService({
     store: ownRankingsStore,
     getUserId: () => albumSeriesStore.getUserId(),
     getAllRankings: (userId) => userRankingRepository.getAllRankings(userId),
-    saveRanking: (userId, albumId, data) => userRankingRepository.saveRanking(userId, albumId, data)
+    saveRanking: (userId, albumId, data) => userRankingRepository.saveRanking(userId, albumId, data),
+    measure: track
 })

@@ -811,3 +811,24 @@ Conferidas em 2026-11-20 por leitura das páginas (ferramenta de busca, sem disf
 - Spotify, modos de cota: https://developer.spotify.com/documentation/web-api/concepts/quota-modes · mudança de fevereiro de 2026: https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security (lida em resumo)
 - Trazidas pela crítica (não relidas por quem escreveu a proposta): Hermes, expressões regulares e `Intl`: https://github.com/facebook/hermes/blob/main/doc/RegExp.md · https://github.com/facebook/hermes/blob/main/doc/IntlAPIs.md · `crypto` no Expo: https://docs.expo.dev/versions/latest/sdk/crypto/ · login do Firebase JS no React Native: https://github.com/firebase/firebase-js-sdk/issues/9316
 - Do projeto: `reports/audits/2026-11-20-mjrpalbumblender-v0-f78-architecture-critique.md`, `reports/audits/2026-11-20-mjrpalbumblender-v0-public-product-study.md`, `reports/audits/2026-11-20-mjrpalbumblender-v0-cd-prices-feasibility.md`, `docs/specs/arch.md`, `docs/specs/constitution.md`, `docs/specs/tech-stack.md`, `docs/specs/design-system.md` § Celular, `docs/specs/info-arch.md` § O celular (F76), `firestore.rules`.
+
+## 17. Notas da reconferência independente (2026-11-20 13:39)
+
+Um segundo agente conferiu se a revisão respondeu à crítica. **Veredito: pode ir ao MJRP, com estas notas.** Elas ficam abertas e entram na primeira fatia de trabalho, antes de qualquer código do app:
+
+| Achado | Estado | O que falta |
+|---|---|---|
+| P0-1, gravar | fechado | `SeriesFactsService.saveAlbumFacts` grava a série sozinho e não foi classificado (com ou sem rede). No teste rápido S2, a pergunta 4 (a transação falha sem rede no pacote nativo?) tem de ser obrigatória, não «o que tiver mais sim»: o § 5.3 depende dela |
+| P0-2, versões | **em parte** | `BaseRepository.save` grava `_schemaVersion` com o número de quem escreve: um app antigo rebaixa a versão e a regra 3 cai; nada no `firestore.rules` impede. O nome também diverge: a proposta diz `schemaVersion`, o código `_schemaVersion` |
+| 1, costura do núcleo | fechado | contradição: o § 4.7 diz que a fatia Ref-A só mexe em «import e construtor», e o § 6.2 põe nela a troca do `setDoc` e as transações |
+| 2, sensores | em parte | o S1 compara a saída com um gerador de identificadores fixo, então o gerador real do aparelho não é comparado; falta exigir «todas as receitas e todas as estratégias» |
+| 3, qual Firebase | fechado | — |
+| 4, custo | em parte | a cota diária da chave de IA não foi verificada, e a alternativa não tem lugar no desenho |
+| 5, ameaças | fechado | — |
+| 6, fonte de nota | em parte | faltam os três desfechos da autorização do BestEverAlbums no desenho, e o que a receita faz sem nenhuma fonte de nota |
+| 7, carga de manutenção | fechado | — |
+
+Sobre rodar os 954 casos de teste no aparelho: o conferente aceita a comparação por corpo dourado no lugar, com uma condição: o corpo inclui as entradas dos testes do núcleo (vazios, empates, acentos), não só os dados do dono.
+
+**As três perguntas a responder primeiro, segundo o conferente:** quantas horas por mês de manutenção o MJRP aceita (a estimativa é de 6 a 11); se o app público vale a pena sem o BestEverAlbums; por quanto tempo o site continua.
+

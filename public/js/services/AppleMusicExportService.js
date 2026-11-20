@@ -20,6 +20,8 @@
  */
 
 import { exportLedger } from './export/exportLedger.js'
+import { exportOutcome } from '../models/exportOutcome.js'
+import { track } from './usage/track.js'
 
 /** Between two creations, as the export always did. */
 const BETWEEN_PLAYLISTS_MS = 500
@@ -28,6 +30,12 @@ const BETWEEN_PLAYLISTS_MS = 500
 const NAMED_AT_MOST = 5
 
 const titleOf = (playlist) => playlist.title || playlist.name
+
+/** F77: how the export ended, measured once, whatever way it ended. */
+function measured(report, playlists) {
+    track('playlists_exported', { target: 'apple_music', outcome: exportOutcome(report), playlist_count: playlists.length })
+    return report
+}
 const isCatalogId = (id) => !!id && /^\d+$/.test(String(id))
 
 /** Why the export never began, in the terms the screen tells the person. */
@@ -81,7 +89,7 @@ export class AppleMusicExportService {
             console.error('[AppleMusicExport] could not start:', error)
             report.failure = failureOf(error)
             report.notCreated = targets.map(target => target.name)
-            return report
+            return measured(report, playlists)
         }
         report.folder.created = !!folderId
 
@@ -89,7 +97,7 @@ export class AppleMusicExportService {
             onProgress(`Exporting ${target.name}...`)
             await this._deliver(target, folderId || null, report, musicKit)
         }
-        return report
+        return measured(report, playlists)
     }
 
     /** Have one playlist in the library, unless this session already put it there. */

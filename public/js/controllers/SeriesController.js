@@ -26,6 +26,14 @@ import { paginate, takeFirst, normalizePageSize, PagingMode } from '../models/pa
 import { AlbumStatus } from '../models/albumLoadState.js';
 import toast from '../components/Toast.js';
 import { router } from '../router.js';
+import { filterUseOf } from '../models/filterUse.js';
+import { track } from '../services/usage/track.js';
+
+/** F77: a filter, a search or an order chosen on the albums screen (never what was chosen). */
+function measureFilter(type, value, before) {
+    const use = filterUseOf('albums', type, value, before);
+    if (use) track('filter_used', use);
+}
 
 /** The order the albums screen opens in: «Newest», the series created last first (UAT-227). */
 const DEFAULT_SERIES_ORDER = 'recent_desc'
@@ -372,6 +380,7 @@ export default class SeriesController {
      * Handle search query change
      */
     handleSearch(query) {
+        measureFilter('search', query, this.state.searchQuery);
         this.state.searchQuery = query;
         this.resetPaging();
         this.requestLoad(false);
@@ -392,6 +401,7 @@ export default class SeriesController {
      */
     handleFilterChange(type, value) {
         if (!this.state.filters) this.state.filters = {};
+        measureFilter(type, value, this.state.filters[type]);
         this.state.filters[type] = value;
         // 'My Ranking' answers from the list of ranked albums: one read, the first time it is asked
         if (type === 'source' && value === 'user') ownRankingService.ensureLoaded();
@@ -420,6 +430,7 @@ export default class SeriesController {
      * Handle sort change
      */
     handleSort(sortKey) {
+        measureFilter('sort', sortKey, this.state.seriesSortMode);
 
         this.state.seriesSortMode = sortKey;
         this.resetPaging();
