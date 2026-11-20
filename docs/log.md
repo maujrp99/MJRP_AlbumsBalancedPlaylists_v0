@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:37] session — UAT-222 em produção; `## Now` em dia
+
+- O conserto das capas foi juntado na `main` (`75e0176`) e o site publicado (pacote `main-DHmNr6iC.js`).
+- `## Now` atualizado com a F75 (proposta, protótipo v2, comparador) e o que ela espera do MJRP.
+
 ## [2026-11-20 00:36] session — F71: o item do inventário sem capa ganha a capa do álbum (UAT-222)
 
 **Branch:** fix/f71-inventory-item-gets-its-cover
