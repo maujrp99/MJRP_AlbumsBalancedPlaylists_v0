@@ -9,7 +9,7 @@ Três regras, cada uma num lugar só, sem camada nova:
 3. **Um contrato de vida da tela** (`BaseView`): a inscrição numa loja vai em `this.subscriptions` e o `destroy()` do roteador a solta. A `InventoryView` usava `onUnmount()`, que ninguém chama. O teste `test/architecture/viewLifecycle.test.js` guarda o contrato.
 
 ## Technical Design
-- `utils/keepField.js` — `redrawKeepingField(container, redraw)`: guarda o campo de texto em uso dentro do contêiner (pelo `id`), o valor e o cursor; redesenha; devolve o foco, o valor digitado e o cursor ao campo de mesmo `id`. Sem `id`, não há devolução. (REQ-01)
+- `utils/keepField.js` — `redrawKeepingField(container, redraw)`: guarda o campo de texto em uso dentro do contêiner (pelo `id`), o valor e o cursor; redesenha; devolve o foco, o valor digitado e o cursor ao campo de mesmo `id`. Sem `id`, não há devolução. (REQ-01) Guarda também a rolagem da janela e a repõe quando o redesenho a levou ao topo. (REQ-05)
 - `views/PlaylistsView.js` `update()` e `views/InventoryView.js` `render()` — redesenham por `redrawKeepingField`. (REQ-01)
 - `utils/staleBuild.js` — `installStaleBuildGuard(window)`: ouve `vite:preloadError` e `unhandledrejection` com o texto de arquivo ausente, e chama `reloadOnceForNewBuild`. (REQ-02)
 - `views/PlaylistsView.js` e `components/playlists/PlaylistsGridRenderer.js` — sem playlists e fora da edição, só `renderEmptyState()`; `renderInitialSettings` e o ouvinte do `#generateBtn` foram apagados. (REQ-03)

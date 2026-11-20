@@ -25,3 +25,9 @@
 - O `vite:preloadError` de verdade: só acontece no site construído, numa aba aberta antes de uma publicação. Está coberto por teste de unidade; a próxima publicação com uma aba aberta é a prova real.
 - Por que o rascunho do MJRP não voltou ao recarregar em produção (não reproduzido; aqui o rascunho voltou).
 - Um clique num botão no exato instante de um redesenho (o botão é trocado entre apertar e soltar) ainda pode se perder. A tela de playlists continua se redesenhando inteira; redesenhar por partes ficou fora do escopo.
+
+## REQ-05 — a rolagem fica onde estava (2026-11-19 23:38)
+
+No inventário (211 álbuns, página de 62957 px), com a rolagem em 9000: a loja foi trocada pela mesma lista, que é o redesenho que uma mudança de status provoca. Rolagem depois: 9000; o primeiro cartão visível era «Desire, I Want to Turn Into You» antes e depois.
+
+**Não conferido:** a mudança de status de verdade não foi feita, para não gravar na conta do MJRP enquanto ele marca os álbuns; o redesenho provocado é o mesmo.

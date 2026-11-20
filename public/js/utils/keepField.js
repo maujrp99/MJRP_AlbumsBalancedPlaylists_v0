@@ -7,6 +7,9 @@
  * where it was. What the person typed wins over what the screen would draw.
  *
  * A field is recognised after the redraw by its `id`: a field with no id cannot be handed back.
+ *
+ * The place on the page is kept too (UAT-219): while the screen is empty, in the middle of the
+ * redraw, the page is short and the browser takes the scroll to the top; it is put back after.
  */
 
 const TEXT_TYPES = new Set(['', 'text', 'search', 'email', 'url', 'tel', 'number', 'password'])
@@ -45,13 +48,16 @@ function handBack(container, doc, kept) {
 }
 
 /**
- * Draws the screen again and hands back the field that was in use.
+ * Draws the screen again, hands back the field that was in use and keeps the place on the page.
  * @param {HTMLElement} container - what is drawn again
  * @param {Function} redraw - replaces the content of the container
  * @param {Document} [doc]
  */
 export function redrawKeepingField(container, redraw, doc = document) {
     const kept = container ? fieldInUse(container, doc) : null
+    const view = doc.defaultView
+    const place = view ? { x: view.scrollX, y: view.scrollY } : null
     redraw()
     if (kept) handBack(container, doc, kept)
+    if (place && (view.scrollX !== place.x || view.scrollY !== place.y)) view.scrollTo(place.x, place.y)
 }
