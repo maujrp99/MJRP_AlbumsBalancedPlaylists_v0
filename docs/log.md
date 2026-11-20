@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:07] session — UAT-211 em produção (site); em fixed
+
+Site publicado da `main` (`946fc21`, pacote `main-DBBm8vch.js`). Em produção, a imagem do título servida tem o primeiro pixel transparente. Os nomes só aparecem com a conta do MJRP; não foram vistos pelo agente em produção (a regra e o `title` estão nos testes). UAT-211 em `fixed`, à espera do olhar do MJRP.
+
 ## [2026-11-19 23:06] session — UAT-211 consertada: título sem caixa e nomes inteiros na barra do topo (F63)
 
 A imagem `TheAlbumBlender.png` tinha fundo preto opaco; o preto foi tirado de forma que, sobre preto, a imagem fique igual (diferença máxima de 10 em 255 por canal, o ruído do fundo). Os nomes da conta e do Spotify deixam o limite fixo de 80 px: 96 px em telas menores, 220 px em telas largas, e o nome inteiro em `title`. Teste primeiro: `test/components/TopBarNames.test.js`.
