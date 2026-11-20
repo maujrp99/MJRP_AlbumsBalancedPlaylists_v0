@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 03:19] session — F76 polimento: o ranking pergunta antes de descartar (N6)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+No celular, Back e Escape com a ordem mudada e não salva abrem a folha «Discard changes?» (Keep editing · Discard); sem mudança, saem direto. O computador não muda (tem o mesmo defeito, mas a correção lá pediria outra janela de confirmação, não duas linhas).
+Testes: 6 novos em test/components/ranking/UserRankModal.phone.test.js.
+
 ## [2026-11-20 03:16] review — crítica de UX independente da F76 no celular: sem P0, 11 P1, 11 P2
 **Branch:** main
 Um agente separado percorreu as telas novas na conta do MJRP, a 393x852, 393x660 e 667x375: dos 24 achados antigos, 19 fechados, 3 em parte, 2 não medidos; nenhuma tela rola de lado, nenhum alvo abaixo de 44 px. Melhor tela: Albums; mais fraca: playlists gravadas. Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-recheck.md`. Entram também no repositório a crítica de origem, o benchmark e a conferência dele. Decidido pelo agente — revisável: no celular, títulos de linha em Syne e o resto na fonte de texto do app; um só desenho de controle segmentado.

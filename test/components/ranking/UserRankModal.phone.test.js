@@ -173,3 +173,89 @@ describe('UserRankModal on the computer (F76: unchanged)', () => {
         modal.close()
     })
 })
+
+describe('UserRankModal on the phone: Back with an order not saved (F76, recheck N6)', () => {
+    let modal
+    let onClose
+    beforeEach(() => {
+        vi.useFakeTimers()
+        asScreen(true)
+        window.scrollTo = () => { }
+        onClose = vi.fn()
+        modal = new UserRankModal({ album: album(), onSubmit: vi.fn(async () => true), onClose })
+        modal.show()
+        vi.runOnlyPendingTimers()
+    })
+    afterEach(() => {
+        modal.close()
+        vi.useRealTimers()
+        delete window.matchMedia
+        document.body.innerHTML = ''
+    })
+    const back = () => document.querySelector('.rank-phone__back').click()
+    const sheet = () => document.getElementById('rankDiscardSheet')
+    const sheetButton = (text) => [...sheet().querySelectorAll('button')].find(b => b.textContent === text)
+
+    it('leaves at once when nothing changed', () => {
+        back()
+        expect(sheet()).toBe(null)
+        expect(document.querySelector('.rank-window')).toBe(null)
+        expect(onClose).toHaveBeenCalledTimes(1)
+    })
+
+    it('asks «Discard changes?» when the order changed; «Keep editing» keeps the window and the order', () => {
+        pick(0)
+        moveButton('Move down').click()
+        back()
+        expect(sheet().querySelector('.sheet__title').textContent).toBe('Discard changes?')
+        expect(document.querySelector('.rank-window')).not.toBe(null)
+        expect(document.activeElement.textContent).toBe('Keep editing')
+        sheetButton('Keep editing').click()
+        vi.runAllTimers()
+        expect(document.querySelector('.rank-window')).not.toBe(null)
+        expect(titles(modal)).toEqual(['Money for Nothing', 'So Far Away', 'Walk of Life', 'Your Latest Trick'])
+        expect(onClose).not.toHaveBeenCalled()
+    })
+
+    it('«Discard» closes the window without saving; Escape asks too', () => {
+        pick(0)
+        moveButton('Move down').click()
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+        expect(sheet()).not.toBe(null)
+        sheetButton('Discard').click()
+        expect(document.querySelector('.rank-window')).toBe(null)
+        expect(modal.onSubmit).not.toHaveBeenCalled()
+        expect(onClose).toHaveBeenCalledTimes(1)
+    })
+
+    it('an order moved back to where it was is not a change', () => {
+        pick(0)
+        moveButton('Move down').click()
+        moveButton('Move up').click()
+        back()
+        expect(sheet()).toBe(null)
+        expect(document.querySelector('.rank-window')).toBe(null)
+    })
+
+    it('after a save, Back leaves at once', async () => {
+        pick(0)
+        moveButton('Move down').click()
+        await modal.save()
+        expect(modal.hasUnsavedChanges()).toBe(false)
+    })
+})
+
+describe('UserRankModal on the computer: Back is unchanged (F76, recheck N6)', () => {
+    it('closes at once on Escape even with the order changed', () => {
+        asScreen(false)
+        const onClose = vi.fn()
+        const modal = new UserRankModal({ album: album(), onClose })
+        modal.show()
+        modal.moveTrack(0, 2)
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+        expect(document.querySelector('.rank-window')).toBe(null)
+        expect(onClose).toHaveBeenCalledTimes(1)
+        delete window.matchMedia
+        document.body.innerHTML = ''
+    })
+})
