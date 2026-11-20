@@ -2,7 +2,7 @@
  * trackIdentity - the ONE rule that says "this track of the album and this track of a source are
  * the same track" (F74, UAT-221), in the mould of the album rule (shared/albumIdentity.js).
  *
- * Pure: no network, no DOM, no project import. The app imports it (`@shared/trackIdentity.js`,
+ * Pure: no network, no DOM, no import outside shared/ (the engine's Unicode tables come through shared/platform/text.js). The app imports it (`@shared/trackIdentity.js`,
  * through public/js/models/sameTrack.js) and the server loads it (server/lib/trackIdentity.js), so
  * both decide with the same code. Every place that puts what a source says of a track (a rating
  * of BestEverAlbums, the popularity of Spotify, a position the AI gave) on the tracks of an album
@@ -59,6 +59,7 @@
  *   and the version is what makes them ask again (test/architecture/trackIdentityRule.test.js
  *   fails until the list of rules and the version are updated together).
  */
+import { normalizeText } from './platform/text.js' // the engine's Unicode tables, in one place (F78)
 
 /**
  * Bumped whenever a change of this file can change which track a rating goes to. The ratings of an
@@ -109,8 +110,7 @@ const NOT_A_WORD = /[^\p{L}\p{N}]+/gu
 
 /** The words of a text. */
 function wordsOf(text) {
-    return String(text ?? '')
-        .normalize('NFD').replace(DIACRITICS, '')
+    return normalizeText(text ?? '', 'NFD').replace(DIACRITICS, '')
         .toLowerCase()
         .replace(APOSTROPHES, '')
         .replace(/&/g, ' and ')
@@ -273,7 +273,7 @@ function splitParts(outside) {
 /** The words of a text with the asterisks a store puts in the place of letters kept: "n***a". */
 const NOT_A_WORD_NOR_A_STAR = /[^\p{L}\p{N}*]+/gu
 function starredWordsOf(text) {
-    const words = String(text ?? '').normalize('NFD').replace(DIACRITICS, '').toLowerCase().replace(APOSTROPHES, '').replace(/&/g, ' and ')
+    const words = normalizeText(text ?? '', 'NFD').replace(DIACRITICS, '').toLowerCase().replace(APOSTROPHES, '').replace(/&/g, ' and ')
         .replace(NOT_A_WORD_NOR_A_STAR, ' ').trim().split(' ').filter(Boolean)
     return writtenAlike(words)
 }

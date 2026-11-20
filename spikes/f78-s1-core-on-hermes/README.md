@@ -6,6 +6,33 @@ on Hermes, the engine of React Native, the same output as on the site, byte for 
 
 The answer and its evidence: `reports/evidence/F78/2026-11-20-spike-s1-core-on-hermes.md`.
 
+## Promoted (2026-11-20, branch `feat/f78-core-foundations`)
+
+The two changes the spike asked for are in the site now (the id port `shared/platform/newId.js`;
+the `TrackEnrichmentMixin` retired, it was dead), and the corpus and the run became an asset of the
+repository:
+
+- the inputs: `test/fixtures/golden-core/inputs/` (the extracted calls, the hand-made albums, the
+  measured catalog albums), and the run: `test/fixtures/golden-core/run/` (engine-neutral, the id
+  port wired by the host instead of a global `crypto` stand-in);
+- ONE reference, the output of the current rules on Node: `test/fixtures/golden-core/reference/`
+  (`output.jsonl.gz`, one line per case, and `cases.tsv`, the id and a hash of each case: the diff
+  a reviewer reads); the suite compares with it on every run
+  (`test/architecture/goldenCoreUnchanged.test.js`);
+- the Hermes run, optional (it needs this folder's engine and never runs in the suite):
+
+  ```sh
+  cd spikes/f78-s1-core-on-hermes && npm install && sh scripts/get-hermes.sh   # once
+  cd ../.. && node scripts/golden-core.mjs --hermes                            # «N of N match»
+  ```
+
+  On 2026-11-20, after the two changes: 3,343 of 3,343 match on Hermes from source and from bytecode
+  (the 58 `mixin:enrichTracks` cases left with the mixin).
+
+This folder stays as the record of the spike. Its own `npm run spike` reproduces that record on the
+code of `main` at `79b36d3`; on later code its `src/run-core.js` names the retired mixin and does not
+run as it is.
+
 ## Rerun it (one command)
 
 ```sh

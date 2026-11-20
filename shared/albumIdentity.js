@@ -1,7 +1,7 @@
 /**
  * albumIdentity - the ONE rule that says "this is the album that was asked for" (F55, reviewed in F68).
  *
- * Pure: no network, no DOM, no project import. The app imports it (`@shared/albumIdentity.js`) and
+ * Pure: no network, no DOM, no import outside shared/ (the engine's Unicode tables come through shared/platform/text.js). The app imports it (`@shared/albumIdentity.js`) and
  * the server loads it (`server/lib/albumIdentity.js`), so both decide with the same code. Every
  * place that receives candidates from a source (Apple Music, Spotify, BestEverAlbums, the local
  * dataset, the AI answer) turns its data into { artist, title, year? } and asks here.
@@ -66,6 +66,7 @@
  * include the genre asked for; (3) nothing else changes: the verdicts, pickAlbum, the flag on the
  * album and the notice are the same. A genre rule never replaces the general ones.
  */
+import { normalizeText } from './platform/text.js' // the engine's Unicode tables, in one place (F78)
 
 /**
  * Bumped whenever a change of this file can turn a "not found" into a found album. A "the source
@@ -124,8 +125,7 @@ const NOT_A_WORD = /[^\p{L}\p{N}]+/gu
 
 /** The words of a text. In an artist's name "+" is "and" too ("Florence + the Machine"). */
 function wordsOf(text, { plusIsAnd = false } = {}) {
-    return String(text ?? '')
-        .normalize('NFD').replace(DIACRITICS, '')
+    return normalizeText(text ?? '', 'NFD').replace(DIACRITICS, '')
         .toLowerCase()
         .replace(APOSTROPHES, '')
         .replace(plusIsAnd ? /[&+]/g : /&/g, ' and ')

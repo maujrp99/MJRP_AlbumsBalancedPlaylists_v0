@@ -2,7 +2,7 @@
  * LoginModal
  * Handles user authentication (Google/Apple)
  */
-import { authService } from '@shared/services/AuthService.js'
+import { authService } from '../services/auth/signIn.js'
 import toast from './Toast.js'
 import { getIcon } from './Icons.js'
 import { track } from '../services/usage/track.js'

@@ -1,0 +1,2722 @@
+{
+ "source": "test/shared/albumIdentity.test.js",
+ "records": [
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Shangri-La Dee Da",
+     "year": 2001
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core Memories"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core Memories"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    [
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Shangri-La Dee Da",
+      "year": 2001
+     },
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Purple",
+      "year": 1994
+     },
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Core Memories"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    [
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Shangri-La Dee Da"
+     },
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Core"
+     },
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Purple"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Beyoncé",
+     "title": "Lemonade"
+    },
+    {
+     "artist": "BEYONCE",
+     "title": "lemonade"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "AC/DC",
+     "title": "Back in Black"
+    },
+    {
+     "artist": "ACDC",
+     "title": "Back In Black"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Simon & Garfunkel",
+     "title": "Bridge Over Troubled Water"
+    },
+    {
+     "artist": "Simon and Garfunkel",
+     "title": "Bridge over Troubled Water"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Guns N' Roses",
+     "title": "Lies & Deceit"
+    },
+    {
+     "artist": "Guns N’ Roses",
+     "title": "Lies and Deceit"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "The Beatles",
+     "title": "Abbey Road"
+    },
+    {
+     "artist": "Beatles",
+     "title": "Abbey Road"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    {
+     "artist": "Pink Floyd",
+     "title": "Wall"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "R.E.M.",
+     "title": "Automatic for the People"
+    },
+    {
+     "artist": "REM",
+     "title": "Automatic For The People!"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Florence + the Machine",
+     "title": "Lungs"
+    },
+    {
+     "artist": "Florence and the Machine",
+     "title": "Lungs"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Robert Plant & Alison Krauss",
+     "title": "Raising Sand"
+    },
+    {
+     "artist": "Robert Plant, Alison Krauss",
+     "title": "Raising Sand"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Sigur Rós",
+     "title": "Ágætis byrjun"
+    },
+    {
+     "artist": "Sigur Ros",
+     "title": "Agætis Byrjun"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Sigur Rós",
+     "title": "Ágætis byrjun"
+    },
+    {
+     "artist": "Sigur Rós",
+     "title": "Agaetis Byrjun"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Ed Sheeran",
+     "title": "÷"
+    },
+    {
+     "artist": "Ed Sheeran",
+     "title": "÷ (Deluxe)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Ed Sheeran",
+     "title": "÷"
+    },
+    {
+     "artist": "Ed Sheeran",
+     "title": "×"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Кино",
+     "title": "Группа крови"
+    },
+    {
+     "artist": "Кино",
+     "title": "Группа Крови"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Кино",
+     "title": "Группа крови"
+    },
+    {
+     "artist": "Кино",
+     "title": "Ночь"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Deluxe Edition)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Deluxe Edition)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Remastered 2011)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Remastered 2011)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core [Expanded]"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core [Expanded]"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core - Remastered"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core - Remastered"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Super Deluxe)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Super Deluxe)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (25th Anniversary Edition)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (25th Anniversary Edition)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core - 2011 Remaster"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core - 2011 Remaster"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (2017)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (2017)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Deluxe Edition) [2017 Remaster]"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Deluxe Edition) [2017 Remaster]"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Bonus Track Version)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Bonus Track Version)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Mono)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Mono)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core - EP"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core - EP"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Live)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Live)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core: Deluxe Edition"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core: Deluxe Edition"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Collector's Edition)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Collector's Edition)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Explicit)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Explicit)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Deluxe Edition)"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core - 2011 Remaster"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Weezer",
+     "title": "Weezer (Blue Album)"
+    },
+    {
+     "artist": "Weezer",
+     "title": "Weezer (Green Album)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Oasis",
+     "title": "(What's the Story) Morning Glory?"
+    },
+    {
+     "artist": "Oasis",
+     "title": "Morning Glory"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits"
+    },
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits (1970-2002)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Weezer",
+     "title": "Weezer"
+    },
+    {
+     "artist": "Weezer",
+     "title": "Weezer (Green Album)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Eagles",
+     "title": "Hotel California"
+    },
+    {
+     "artist": "Eagles",
+     "title": "Hotel California (Live at the Forum '76)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Harmonia",
+     "title": "Deluxe"
+    },
+    {
+     "artist": "Harmonia",
+     "title": "Deluxe"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Harmonia",
+     "title": "Deluxe"
+    },
+    {
+     "artist": "Harmonia",
+     "title": "Musik von Harmonia"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Garbage",
+     "title": "Version 2.0"
+    },
+    {
+     "artist": "Garbage",
+     "title": "Garbage"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Pavement",
+     "title": "Brighten the Corners"
+    },
+    {
+     "artist": "Pavement",
+     "title": "Brighten the Corners: Nicene Creedence Ed."
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Pavement",
+     "title": "Brighten the Corners: Nicene Creedence Ed."
+    },
+    {
+     "artist": "Pavement",
+     "title": "Brighten the Corners"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "The Wall"
+    },
+    {
+     "artist": "X",
+     "title": "The Wall: Live in Berlin"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Unreal Unearth"
+    },
+    {
+     "artist": "X",
+     "title": "Unreal Unearth: Unheard"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "folklore"
+    },
+    {
+     "artist": "X",
+     "title": "folklore: the long pond studio sessions"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Alchemy"
+    },
+    {
+     "artist": "X",
+     "title": "Alchemy - Dire Straits Live"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Greatest Hits"
+    },
+    {
+     "artist": "X",
+     "title": "Greatest Hits: 1970-2002"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "The Wall: Live in Berlin"
+    },
+    {
+     "artist": "X",
+     "title": "The Wall"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Unreal Unearth: Unheard"
+    },
+    {
+     "artist": "X",
+     "title": "Unreal Unearth"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "folklore: the long pond studio sessions"
+    },
+    {
+     "artist": "X",
+     "title": "folklore"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Alchemy - Dire Straits Live"
+    },
+    {
+     "artist": "X",
+     "title": "Alchemy"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Greatest Hits: 1970-2002"
+    },
+    {
+     "artist": "X",
+     "title": "Greatest Hits"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "The Wall: Live in Berlin"
+    },
+    {
+     "artist": "X",
+     "title": "The Wall - Live in Berlin"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    [
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "Walking Into Clarksdale"
+     },
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    [
+     {
+      "artist": "Pink Floyd",
+      "title": "The Wall: Live in Berlin",
+      "year": 1990
+     },
+     {
+      "artist": "Pink Floyd",
+      "title": "The Wall",
+      "year": 1979
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    [
+     {
+      "artist": "Pink Floyd",
+      "title": "The Wall",
+      "year": 1979
+     },
+     {
+      "artist": "Pink Floyd",
+      "title": "The Wall: Live in Berlin",
+      "year": 1990
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall",
+     "year": 1990
+    },
+    [
+     {
+      "artist": "Pink Floyd",
+      "title": "The Wall: Live in Berlin",
+      "year": 1990
+     },
+     {
+      "artist": "Pink Floyd",
+      "title": "The Wall (Deluxe Edition)",
+      "year": 2012
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    [
+     {
+      "artist": "Pink Floyd",
+      "title": "The Wall: Live in Berlin"
+     },
+     {
+      "artist": "Pink Floyd",
+      "title": "Animals"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall: Live in Berlin"
+    },
+    [
+     {
+      "artist": "Pink Floyd",
+      "title": "The Wall"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits"
+    },
+    [
+     {
+      "artist": "Elton John",
+      "title": "Greatest Hits: 1970-2002"
+     },
+     {
+      "artist": "Elton John",
+      "title": "Greatest Hits: Vol 2"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    [
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded (Deluxe Edition)",
+      "id": "deluxe",
+      "year": 2004
+     },
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded",
+      "id": "plain-04",
+      "year": 2004
+     },
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded",
+      "id": "plain-94",
+      "year": 1994
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter",
+     "year": 1994
+    },
+    [
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded (Deluxe Edition)",
+      "id": "deluxe",
+      "year": 2004
+     },
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded",
+      "id": "plain-04",
+      "year": 2004
+     },
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded",
+      "id": "plain-94",
+      "year": 1994
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    [
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded (Deluxe Edition)",
+      "id": "deluxe",
+      "year": 2004
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Alchemy"
+    },
+    {
+     "artist": "X",
+     "title": "Alchemy - Dire Straits Live"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Live: Volume One"
+    },
+    {
+     "artist": "X",
+     "title": "Live: Volume One - The Encores"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Live"
+    },
+    {
+     "artist": "X",
+     "title": "Live: Volume One - The Encores"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "X",
+     "title": "No Quarter: Unledded (Remastered)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "No Quarter (Remastered)"
+    },
+    {
+     "artist": "X",
+     "title": "No Quarter: Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Core"
+    },
+    {
+     "artist": "X",
+     "title": "Core Memories"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Quarter"
+    },
+    {
+     "artist": "X",
+     "title": "No Quarter: Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Unledded"
+    },
+    {
+     "artist": "X",
+     "title": "No Quarter: Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Self-Titled"
+    },
+    {
+     "artist": "X",
+     "title": "Self-Titled-Ish"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Tina Turner",
+     "title": "No Quarter: Jimmy Page & Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page & Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "title": "No Quarter"
+    },
+    [
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page & Robert Plant Unledded"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Ben E. King",
+     "title": "Stand by Me"
+    },
+    [
+     "Stand by Me: The Collection by Ben E. King"
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Stand by Me: The Collection by Ben E. King"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall (Remastered)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    {
+     "artist": "Pink Floyd",
+     "title": "Animals"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall: Live in Berlin",
+     "identityReason": "title-before-subtitle"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall: Live in Berlin"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall: Live in Berlin",
+     "identityReason": "exact-title"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    },
+    {
+     "artist": "Pink Floyd",
+     "title": "Animals",
+     "identityReason": "title-before-subtitle"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Stone Temple Pilots"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Stone Temple Pilots"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Stone Temple Pilots"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Stone Temple Pilots (2018)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Stone Temple Pilots",
+     "year": 2018
+    },
+    [
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Stone Temple Pilots",
+      "year": 2010
+     },
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Stone Temple Pilots",
+      "year": "2018-03-16"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Stone Temple Pilots",
+     "year": 2010
+    },
+    [
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Stone Temple Pilots",
+      "year": 2010
+     },
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Stone Temple Pilots",
+      "year": "2018-03-16"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Stone Temple Pilots"
+    },
+    [
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Stone Temple Pilots",
+      "year": 2010
+     },
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Stone Temple Pilots",
+      "year": "2018-03-16"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin III"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin III"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "IV"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "III"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "III"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "IV"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits Vol. 2"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits Vol. 2"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits Vol. 2"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits Vol. 3"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits Vol. 3"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits Vol. 2"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits (Vol. 2)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits (Vol. 2)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Use Your Illusion I"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Use Your Illusion II"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Use Your Illusion II"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Use Your Illusion I"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "1"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "1962-1966"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "1962-1966"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "1"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits Vol. 2"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits, Volume 2"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits Vol. 2"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Greatest Hits (Vol. 2) [Remastered]"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Persefone",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Page",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Page & Plant",
+     "title": "No Quarter"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "The Beatles",
+    "Beatles"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Page",
+    "Page & Plant"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "",
+    ""
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Stone Temple Pilots"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Purple"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "",
+     "title": "The Beatles Abbey Road"
+    },
+    {
+     "artist": "The Beatles",
+     "title": "Abbey Road (2019 Mix)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "",
+     "title": "The Beatles Abbey Road"
+    },
+    {
+     "artist": "The Beatles",
+     "title": "Let It Be"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": ""
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    null
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    null
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 2017
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    [
+     {
+      "artist": "Stone Temple Pilots",
+      "title": "Core",
+      "year": 2017
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    [
+     {
+      "id": "deluxe-92",
+      "artist": "Stone Temple Pilots",
+      "title": "Core (Deluxe Edition)",
+      "year": 1992
+     },
+     {
+      "id": "plain-17",
+      "artist": "Stone Temple Pilots",
+      "title": "Core",
+      "year": 2017
+     },
+     {
+      "id": "plain-93",
+      "artist": "Stone Temple Pilots",
+      "title": "Core",
+      "year": 1993
+     },
+     {
+      "id": "plain-unknown",
+      "artist": "Stone Temple Pilots",
+      "title": "Core"
+     },
+     {
+      "id": "other",
+      "artist": "Stone Temple Pilots",
+      "title": "Purple",
+      "year": 1992
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": null
+    },
+    [
+     {
+      "id": "deluxe-92",
+      "artist": "Stone Temple Pilots",
+      "title": "Core (Deluxe Edition)",
+      "year": 1992
+     },
+     {
+      "id": "plain-17",
+      "artist": "Stone Temple Pilots",
+      "title": "Core",
+      "year": 2017
+     },
+     {
+      "id": "plain-93",
+      "artist": "Stone Temple Pilots",
+      "title": "Core",
+      "year": 1993
+     },
+     {
+      "id": "plain-unknown",
+      "artist": "Stone Temple Pilots",
+      "title": "Core"
+     },
+     {
+      "id": "other",
+      "artist": "Stone Temple Pilots",
+      "title": "Purple",
+      "year": 1992
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core (Deluxe Edition)",
+     "year": 1992
+    },
+    [
+     {
+      "id": "deluxe-92",
+      "artist": "Stone Temple Pilots",
+      "title": "Core (Deluxe Edition)",
+      "year": 1992
+     },
+     {
+      "id": "plain-17",
+      "artist": "Stone Temple Pilots",
+      "title": "Core",
+      "year": 2017
+     },
+     {
+      "id": "plain-93",
+      "artist": "Stone Temple Pilots",
+      "title": "Core",
+      "year": 1993
+     },
+     {
+      "id": "plain-unknown",
+      "artist": "Stone Temple Pilots",
+      "title": "Core"
+     },
+     {
+      "id": "other",
+      "artist": "Stone Temple Pilots",
+      "title": "Purple",
+      "year": 1992
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core",
+     "year": 1992
+    },
+    [
+     {
+      "id": "a2",
+      "attributes": {
+       "name": "Purple",
+       "artistName": "Stone Temple Pilots"
+      }
+     },
+     {
+      "id": "a1",
+      "attributes": {
+       "name": "Core",
+       "artistName": "Stone Temple Pilots",
+       "releaseDate": "1992-09-29"
+      }
+     }
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Core by Stone Temple Pilots"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Stand by Me by Ben E. King"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Stone Temple Pilots"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    null
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page & Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall: Live in Berlin"
+    },
+    {
+     "artist": "Pink Floyd",
+     "title": "The Wall"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Shangri-La Dee Da"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Persefone",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    null
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Nevermind by Nirvana (US)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.artistNamesFromLabel",
+   "args": [
+    "Nirvana (US)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.artistNamesFromLabel",
+   "args": [
+    "Nirvana"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.artistNamesFromLabel",
+   "args": [
+    ""
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Nirvana",
+     "title": "Nevermind"
+    },
+    [
+     "Nevermind by Nirvana (US)",
+     "Nevermind: The Singles by Nirvana (US)",
+     "Album of the day (#2894): Nevermind by Nirvana by BestEverAlbums"
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Nevermind by Nirvana (US)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Nevermind: The Singles by Nirvana (US)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Album of the day (#2894): Nevermind by Nirvana by BestEverAlbums"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Nirvana",
+     "title": "In Utero"
+    },
+    [
+     "Nevermind by Nirvana (US)"
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Nevermind by Nirvana (US)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Pearl Jam",
+     "title": "Nevermind"
+    },
+    [
+     "Nevermind by Nirvana (US)"
+    ],
+    "[function]"
+   ],
+   "replayable": false
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.albumFromLabel",
+   "args": [
+    "Nevermind by Nirvana (US)"
+   ],
+   "replayable": true
+  }
+ ]
+}

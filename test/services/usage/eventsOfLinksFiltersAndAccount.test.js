@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({
     ranking: { ensureLoaded: vi.fn(async () => true), save: vi.fn(async () => true) }
 }))
 
-vi.mock('@shared/services/AuthService.js', () => ({ authService: auth }))
+vi.mock('@/services/auth/signIn.js', () => ({ authService: auth }))
 vi.mock('../../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthService: { logout: vi.fn() } }))
 vi.mock('../../../public/js/components/Toast.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }

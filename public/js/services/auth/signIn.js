@@ -1,7 +1,9 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth'
 
 /**
- * Service to handle Authentication with Firebase
+ * Service to handle Authentication with Firebase: the site's sign-in, through Firebase's window
+ * (signInWithPopup). It lived in shared/services/ until F78 (REQ-08): it is the browser's side, not
+ * a rule, so it left the core; the app signs in natively, with its own wiring.
  */
 export class AuthService {
     constructor() {

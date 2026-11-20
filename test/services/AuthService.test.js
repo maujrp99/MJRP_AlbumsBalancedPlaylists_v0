@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { AuthService } from '../../shared/services/AuthService.js'
+import { AuthService } from '../../public/js/services/auth/signIn.js'
 import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth'
 
 // Mock Firebase Auth

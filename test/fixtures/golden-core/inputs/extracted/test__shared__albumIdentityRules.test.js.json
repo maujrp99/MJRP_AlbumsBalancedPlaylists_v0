@@ -1,0 +1,1901 @@
+{
+ "source": "test/shared/albumIdentityRules.test.js",
+ "records": [
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Genesis",
+     "title": "Foxtrot (2007 Stereo Mix)"
+    },
+    {
+     "artist": "Genesis",
+     "title": "Foxtrot"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "",
+     "title": "The Beatles Abbey Road"
+    },
+    {
+     "artist": "The Beatles",
+     "title": "Abbey Road"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page And Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core Memories"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    },
+    {
+     "artist": "Persefone",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Stone Temple Pilots",
+     "title": ""
+    },
+    {
+     "artist": "Stone Temple Pilots",
+     "title": "Core"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Robert Plant & The Strange Sensation",
+    "Robert Plant And The Strange Sensation"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Robert Plant And The Strange Sensation",
+    "Robert Plant & The Strange Sensation"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Robert Plant & Jimmy Page",
+    "Jimmy Page & Robert Plant"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Jimmy Page & Robert Plant",
+    "Robert Plant & Jimmy Page"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Robert Plant & Jimmy Page",
+    "Jimmy Page & Robert Plant"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Robert Plant and Jimmy Page",
+    "Jimmy Page, Robert Plant"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Crosby, Stills & Nash",
+    "Nash, Crosby and Stills"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Robert Plant & Jimmy Page",
+     "title": "Walking Into Clarksdale"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "Walking Into Clarksdale"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Robert Plant & The Strange Sensation",
+    "Robert Plant And The Strange Sensation"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Robert Plant & The Strange Sensation",
+    "Robert Plant & Strange Sensation"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Florence + the Machine",
+    "Florence and the Machine"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Tyler, The Creator",
+    "Tyler the Creator"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Page & Plant",
+    "Jimmy Page & Robert Plant"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Robert Plant",
+    "Robert Plant & The Strange Sensation"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "James Brown",
+    "James Brown And His Famous Flames"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Jimmy Page & Robert Plant",
+    "Jimmy Page & The Black Crowes"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Simon & Garfunkel",
+    "Simon"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "AC/DC",
+    "DC/AC"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "AC/DC",
+    "ACDC"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.sameArtist",
+   "args": [
+    "Andy Summers",
+    "Summers Andy"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page And Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    [
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "Some Other Album"
+     },
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page And Robert Plant Unledded"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    [
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter: Jimmy Page And Robert Plant Unledded"
+     },
+     {
+      "artist": "Jimmy Page & Robert Plant",
+      "title": "No Quarter"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Tina Turner",
+     "title": "No Quarter: Jimmy Page And Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page And Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page And Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page And Robert Plant Unledded",
+     "identityReason": "title-before-subtitle"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page And Robert Plant Unledded",
+     "identityReason": "another-reason"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter"
+    },
+    {
+     "artist": "Jimmy Page & Robert Plant",
+     "title": "No Quarter: Jimmy Page And Robert Plant Unledded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    [
+     {
+      "artist": "King Crimson",
+      "title": "Some Other Album"
+     },
+     {
+      "artist": "King Crimson",
+      "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    [
+     {
+      "artist": "King Crimson",
+      "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+     },
+     {
+      "artist": "King Crimson",
+      "title": "In the Court of the Crimson King (Expanded Edition)"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "Tina Turner",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)",
+     "identityReason": "title-without-parentheses"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)",
+     "identityReason": "another-reason"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    [
+     {
+      "artist": "Led Zeppelin",
+      "title": "Some Other Album"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Untitled (Led Zeppelin IV)"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    [
+     {
+      "artist": "Led Zeppelin",
+      "title": "Untitled (Led Zeppelin IV)"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Led Zeppelin IV (Remastered)"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Tina Turner",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)",
+     "identityReason": "title-in-parentheses"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)",
+     "identityReason": "another-reason"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    [
+     {
+      "artist": "James Brown",
+      "title": "Some Other Album"
+     },
+     {
+      "artist": "James Brown",
+      "title": "James Brown Live At The Apollo"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    [
+     {
+      "artist": "James Brown",
+      "title": "James Brown Live At The Apollo"
+     },
+     {
+      "artist": "James Brown",
+      "title": "Live At The Apollo (1962)"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "Tina Turner",
+     "title": "James Brown Live At The Apollo"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo",
+     "identityReason": "title-with-artist-name"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo",
+     "identityReason": "another-reason"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    [
+     {
+      "artist": "Frank Ocean",
+      "title": "Some Other Album"
+     },
+     {
+      "artist": "Frank Ocean",
+      "title": "Blond"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    [
+     {
+      "artist": "Frank Ocean",
+      "title": "Blond"
+     },
+     {
+      "artist": "Frank Ocean",
+      "title": "Blonde"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Tina Turner",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond",
+     "identityReason": "title-written-otherwise"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareKeptAlbum",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond",
+     "identityReason": "another-reason"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareOnlyAnswer",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King (Expanded Edition)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In the Court of the Crimson King"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Oasis",
+     "title": "(What's the Story) Morning Glory?"
+    },
+    {
+     "artist": "Oasis",
+     "title": "Morning Glory"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits"
+    },
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits (Vol. 2)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits"
+    },
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits (Volume II)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits"
+    },
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits (II)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits"
+    },
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits (1970-2002)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "In the Court"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "King Crimson",
+     "title": "Crimson King"
+    },
+    {
+     "artist": "King Crimson",
+     "title": "In The Court Of The Crimson King (An Observation By King Crimson)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Weezer",
+     "title": "Weezer"
+    },
+    [
+     {
+      "artist": "Weezer",
+      "title": "Weezer (Blue Album)"
+     },
+     {
+      "artist": "Weezer",
+      "title": "Weezer (Green Album)"
+     },
+     {
+      "artist": "Weezer",
+      "title": "Weezer (Red Album)"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Weezer",
+     "title": "Weezer"
+    },
+    [
+     {
+      "artist": "Weezer",
+      "title": "Weezer (Blue Album)"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Weezer",
+     "title": "Weezer (Green Album)"
+    },
+    [
+     {
+      "artist": "Weezer",
+      "title": "Weezer (Blue Album)"
+     },
+     {
+      "artist": "Weezer",
+      "title": "Weezer (Green Album)"
+     },
+     {
+      "artist": "Weezer",
+      "title": "Weezer (Red Album)"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled [Led Zeppelin IV]"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin III"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "IV"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Untitled (Led Zeppelin IV)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV (Remastered)"
+    },
+    [
+     {
+      "artist": "Led Zeppelin",
+      "title": "Led Zeppelin"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Led Zeppelin II"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Led Zeppelin III"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Untitled (Led Zeppelin IV)"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Houses Of The Holy"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin II"
+    },
+    [
+     {
+      "artist": "Led Zeppelin",
+      "title": "Led Zeppelin"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Led Zeppelin II"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Led Zeppelin III"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Untitled (Led Zeppelin IV)"
+     },
+     {
+      "artist": "Led Zeppelin",
+      "title": "Houses Of The Holy"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "X",
+     "title": "Live"
+    },
+    {
+     "artist": "X",
+     "title": "Core (Live)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.pickAlbum",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo (1962)"
+    },
+    [
+     {
+      "artist": "James Brown",
+      "title": "James Brown Live At The Apollo"
+     },
+     {
+      "artist": "James Brown And His Famous Flames",
+      "title": "Live At The Apollo, Volume II"
+     },
+     {
+      "artist": "James Brown",
+      "title": "Revolution Of The Mind: Recorded Live At The Apollo, Vol. III"
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo"
+    },
+    {
+     "artist": "James Brown",
+     "title": "James Brown Live At The Apollo, Volume II"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "James Brown",
+     "title": "Live At The Apollo"
+    },
+    {
+     "artist": "James Brown",
+     "title": "B.B. King Live At The Apollo"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin"
+    },
+    {
+     "artist": "Led Zeppelin",
+     "title": "Led Zeppelin IV"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde (Deluxe Edition)"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "AC/DC",
+     "title": "POWER UP"
+    },
+    {
+     "artist": "AC/DC",
+     "title": "PWR/UP"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "AC/DC",
+     "title": "PWR/UP"
+    },
+    {
+     "artist": "AC/DC",
+     "title": "POWER UP"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "AC/DC",
+     "title": "POWER UP (Deluxe Edition)"
+    },
+    {
+     "artist": "AC/DC",
+     "title": "PWR/UP"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Joy Division",
+     "title": "Substance 1977-1980"
+    },
+    {
+     "artist": "Joy Division",
+     "title": "Substance"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Joy Division",
+     "title": "Substance"
+    },
+    {
+     "artist": "Joy Division",
+     "title": "Substance 1977-1980"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Joy Division",
+     "title": "Substance 1977-1980 (Deluxe Edition)"
+    },
+    {
+     "artist": "Joy Division",
+     "title": "Substance"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Cœur de pirate",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Cœur de pirate",
+     "title": "Blond"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "New Order",
+     "title": "Substance 1987"
+    },
+    {
+     "artist": "New Order",
+     "title": "Substance"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits 1970-2002"
+    },
+    {
+     "artist": "Elton John",
+     "title": "Greatest Hits"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.compareAlbumIdentity",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde"
+    },
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonded"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "Foxtrot (2007 Stereo Mix)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "Mighty ReArranger (Bonus Tracks)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "Best of Live At the Apollo: 50th Anniversary"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "Core - 2011 Remaster"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "Ágætis byrjun  (Remastered)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "Unreal Unearth: Unheard"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "Weezer (Blue Album)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "Deluxe"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [
+    "(Deluxe)"
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titleWithoutEditionNotes",
+   "args": [],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titlesToSearch",
+   "args": [
+    {
+     "artist": "Genesis",
+     "title": "Foxtrot (2007 Stereo Mix)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titlesToSearch",
+   "args": [
+    {
+     "artist": "AC/DC",
+     "title": "POWER UP"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titlesToSearch",
+   "args": [
+    {
+     "artist": "Frank Ocean",
+     "title": "Blonde (Explicit)"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titlesToSearch",
+   "args": [
+    {
+     "artist": "Joy Division",
+     "title": "Substance 1977-1980"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titlesToSearch",
+   "args": [
+    {
+     "artist": "Cœur de pirate",
+     "title": "Blonde"
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titlesToSearch",
+   "args": [
+    {
+     "artist": "X",
+     "title": ""
+    }
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "albumIdentity.titlesToSearch",
+   "args": [
+    null
+   ],
+   "replayable": true
+  }
+ ]
+}

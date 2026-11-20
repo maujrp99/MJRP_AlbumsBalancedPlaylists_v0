@@ -10,6 +10,7 @@ import '../css/tailwind.css' // Tailwind, built with the site; after the app's o
 import '../css/mobile.css' // the phone (F76): after everything, every rule inside the phone's media query
 import '../css/mobile/screens.css' // one file per screen of the phone, each inside the same media query
 import '../css/safe-area.css' // a phone lying down: the page keeps clear of the island (F76)
+import './services/platform/platformWiring.js' // the id port gets the browser's source before any module runs (F78)
 import { canonicalLocalUrl } from './utils/localAddress.js'
 import { installStaleBuildGuard } from './utils/staleBuild.js'
 

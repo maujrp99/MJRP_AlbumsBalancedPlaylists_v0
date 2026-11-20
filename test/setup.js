@@ -1,4 +1,9 @@
 import { beforeEach, vi } from 'vitest'
+import { setIdSource } from '@shared/platform/newId.js'
+
+// The id port of the core (F78, REQ-07): the tests wire it as the site does, with crypto.randomUUID
+// (Node's, the same Web Crypto API the browser has). A test of the port itself takes it away and puts it back.
+setIdSource(() => globalThis.crypto.randomUUID())
 
 // Browser storage for the tests. Newer Node versions define their own `localStorage` global,
 // which is undefined without a file to write to and hides the one jsdom would provide; so the

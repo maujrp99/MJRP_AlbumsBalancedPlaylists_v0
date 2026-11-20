@@ -11,6 +11,7 @@ import { Album } from '../models/Album.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { coverImage } from './ui/coverImage.js'
 import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
+import { roundToCents } from '../models/inventoryValue.js'
 import { createBuyLinksSection, createPhoneBuyLinks, createValueSection, phoneValueFold } from './InventoryValueSection.js'
 import { isPhone } from '../utils/isPhone.js'
 
@@ -357,9 +358,10 @@ function createCloseButton() {
 
 function formatCurrency(value, currency = 'USD') {
   if (!value) return currency === 'USD' ? '$0.00' : 'R$ 0,00'
+  const cents = roundToCents(value) // to cents first: engines round the half differently (F78)
   if (currency === 'BRL') {
-    return `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    return `R$ ${cents.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   }
-  return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `$${cents.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 

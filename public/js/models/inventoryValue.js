@@ -191,9 +191,22 @@ export function shownCurrency(chosen, rates) {
     return isAmount(rates?.[chosen]) ? chosen : BASE_CURRENCY
 }
 
-/** "$12.30", "R$ 1,234.50". */
+/**
+ * An amount rounded to cents, half away from zero, on the amount as its shortest decimal text (the
+ * text JavaScript gives a number is fixed by the language, the same on every engine): 1166.505 is
+ * 1166.51, 1.005 is 1.01. It is what the site's browsers already show (the default rounding of
+ * `toLocaleString`). Money is rounded here, BEFORE it is formatted, because engines round the half
+ * differently when they format: the phone's engine wrote 1166.505 as .50, Node as .51 (F78, S1).
+ */
+export function roundToCents(amount) {
+    const [digits, exponent = '0'] = String(Math.abs(amount)).split('e')
+    const cents = Math.round(Number(`${digits}e${Number(exponent) + 2}`))
+    return Math.sign(amount) * Number(`${cents}e-2`)
+}
+
+/** "$12.30", "R$ 1,234.50": rounded to cents first (`roundToCents`), then formatted. */
 export function formatMoney(amount, currency = BASE_CURRENCY) {
-    const digits = amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    const digits = roundToCents(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     return `${SYMBOLS[currency] ?? `${currency} `}${digits}`
 }
 

@@ -25,6 +25,20 @@ O fluxo do esqueleto: a tela de entrar → a conta (login nativo da Apple ou do 
 | Medição do app | `app/src/wiring/usagePosthog.js`, sobre `shared/usageEvents.js` da F77 | os mesmos nomes de evento | REQ-15 |
 | Roteiro do autoteste | `app/maestro/golden-core.yaml` e `scripts/app-selftest.sh` | um comando, as duas plataformas, «N of N match» | REQ-16 |
 
+**Construído na primeira fatia (ramo `feat/f78-core-foundations`, 2026-11-20):**
+
+| Módulo | Onde mora | O que faz | REQ |
+|---|---|---|---|
+| Porta do id | `shared/platform/newId.js`; a ligação do site em `public/js/services/platform/platformWiring.js` (o primeiro módulo do `app.js`); a dos testes em `test/setup.js` | `newId()` e `setIdSource(fn)`; sem fonte, erro que diz o que ligar | REQ-07 |
+| Texto do motor | `shared/platform/text.js` | `normalizeText`, o `normalize` num lugar só; as duas regras de identidade o usam | REQ-08 |
+| Pacote do núcleo | `shared/package.json` (`@album-blender/shared`, sem dependência), `"workspaces": ["shared"]` na raiz, `package-lock.json` | o `npm ci` liga o pacote; o Vite e o deploy do servidor seguem como antes | REQ-08 |
+| Sensores | `test/architecture/coreStaysPortable.test.js`, `appAndSiteApart.test.js` (vazio até `app/` existir, menos `public/` → `app/`), `vitest.workspace.js` (projeto `core-node`: `test/shared/` sem jsdom) | as linhas da arquitetura falham na suíte | REQ-08 |
+| Login do site | `public/js/services/auth/signIn.js` (saiu de `shared/services/AuthService.js`) | o núcleo não importa Firebase | REQ-08 |
+| Corpo dourado | `test/fixtures/golden-core/` (entradas, a corrida neutra de motor, a referência), `scripts/golden-core.mjs` (`--check`, `--write`, `--hermes`), `test/architecture/goldenCoreUnchanged.test.js` | a saída das regras guardada; mudou, a suíte acusa | REQ-01, REQ-16 |
+| Deploy do servidor | `scripts/deploy-server.sh` (`MAX_INSTANCES`, 3), `test/server/deployFixesMaxInstances.test.js` | o pior caso: 60 chamadas pagas por hora por pessoa vezes 3 | REQ-18 |
+
+Dois consertos que o S1 achou, feitos na mesma fatia: o `TrackEnrichmentMixin` (comparador que deixava a ordem ao motor) estava morto e saiu; o dinheiro do inventário é arredondado a centavos antes de virar texto (`roundToCents` em `models/inventoryValue.js`).
+
 ## UI/UX Design
 As telas do esqueleto (entrar, lista de séries, cópia «Saved earlier», «No connection», «Update to continue», autoteste) vêm da rodada de desenho (`mjrp-designing-ui`), a partir do desenho de celular da F76, julgada pelo MJRP antes do código delas. As medidas são as de `design-system.md` § Celular. O sensor visual do projeto compara páginas do site; para o app, os pares são capturas do simulador e do emulador ao lado do protótipo julgado.
 

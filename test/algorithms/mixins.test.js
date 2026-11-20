@@ -9,7 +9,6 @@ import { BaseAlgorithm } from '../../public/js/algorithms/BaseAlgorithm.js'
 import {
     PlaylistBalancingMixin,
     DurationTrimmingMixin,
-    TrackEnrichmentMixin,
     applyMixins
 } from '../../public/js/algorithms/mixins/index.js'
 
@@ -173,90 +172,6 @@ describe('DurationTrimmingMixin', () => {
 })
 
 // ═══════════════════════════════════════════════════════════════════════════
-// TrackEnrichmentMixin Tests
-// ═══════════════════════════════════════════════════════════════════════════
-
-describe('TrackEnrichmentMixin', () => {
-    let TestClass
-    let instance
-
-    beforeEach(() => {
-        TestClass = TrackEnrichmentMixin(BaseAlgorithm)
-        instance = new TestClass()
-    })
-
-    describe('enrichTracks', () => {
-        it('should return empty array for null album', () => {
-            expect(instance.enrichTracks(null)).toEqual([])
-        })
-
-        it('should enrich tracks with album metadata', () => {
-            const album = {
-                id: 'album1',
-                title: 'Test Album',
-                artist: 'Test Artist',
-                tracks: [
-                    { id: 't1', title: 'Track 1', duration: 180 },
-                    { id: 't2', title: 'Track 2', duration: 200 }
-                ]
-            }
-
-            const enriched = instance.enrichTracks(album)
-
-            expect(enriched.length).toBe(2)
-            expect(enriched[0].originAlbumId).toBe('album1')
-            expect(enriched[0].artist).toBe('Test Artist')
-            expect(enriched[0].album).toBe('Test Album')
-        })
-
-        it('should assign acclaim ranks based on sorting', () => {
-            const album = {
-                id: 'album1',
-                tracks: [
-                    { id: 't1', title: 'Track 1', rating: 50 },
-                    { id: 't2', title: 'Track 2', rating: 90 },
-                    { id: 't3', title: 'Track 3', rating: 70 }
-                ]
-            }
-
-            const enriched = instance.enrichTracks(album)
-
-            // Should be sorted by rating descending
-            expect(enriched[0].rating).toBe(90)
-            expect(enriched[1].rating).toBe(70)
-            expect(enriched[2].rating).toBe(50)
-
-            // Should have ranks assigned
-            expect(enriched[0].acclaimRank).toBe(1)
-            expect(enriched[1].acclaimRank).toBe(2)
-            expect(enriched[2].acclaimRank).toBe(3)
-        })
-
-        it('should use rankingConsolidated data when available', () => {
-            const album = {
-                id: 'album1',
-                tracks: [
-                    { title: 'Track 1', duration: 180 },
-                    { title: 'Track 2', duration: 200 }
-                ],
-                rankingConsolidated: [
-                    { trackTitle: 'Track 1', finalPosition: 2, rating: 80 },
-                    { trackTitle: 'Track 2', finalPosition: 1, rating: 95 }
-                ]
-            }
-
-            const enriched = instance.enrichTracks(album)
-
-            const track1 = enriched.find(t => t.title === 'Track 1')
-            const track2 = enriched.find(t => t.title === 'Track 2')
-
-            expect(track1.rating).toBe(80)
-            expect(track2.rating).toBe(95)
-        })
-    })
-})
-
-// ═══════════════════════════════════════════════════════════════════════════
 // applyMixins Utility Tests
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -265,14 +180,12 @@ describe('applyMixins', () => {
         const FullAlgorithm = applyMixins(
             BaseAlgorithm,
             PlaylistBalancingMixin,
-            DurationTrimmingMixin,
-            TrackEnrichmentMixin
+            DurationTrimmingMixin
         )
 
         const instance = new FullAlgorithm()
 
         expect(typeof instance.runSwapBalancing).toBe('function')
         expect(typeof instance.trimOverDurationPlaylists).toBe('function')
-        expect(typeof instance.enrichTracks).toBe('function')
     })
 })

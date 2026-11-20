@@ -61,11 +61,21 @@ Qualquer passo que falha interrompe tudo; nada é publicado.
 | 5 | Copia o `.env` para a cópia limpa; `npx vite build` | Monta o contexto da imagem: `shared/` vira `server/_shared_temp` (com um `package.json` `{"type": "module"}`) e `config/` vira `server/config` |
 | 6 | Copia o que o Vite não empacota: `public/js/firebase-config.js`, `public/css/`, `public/assets/`, `public/favicon.ico` | — |
 | 7 | Confere o que construiu: o script principal que o `index.html` nomeia existe; o Client ID do Spotify está nos scripts; nenhum arquivo `.map`; todo arquivo local que o `index.html` aponta está em `dist/`; `css/` e `assets/` chegaram inteiros | Confere o contexto (`Dockerfile`, `index.js`, lockfile, `config/prompts.json`, sem `.env`) e **sobe o servidor localmente**, numa cópia arrumada como a imagem arruma, com as dependências do lockfile e sem segredo nenhum: `/_health` e `/api/musickit-status` respondem 200, `/api/debug/files` responde 404, os prompts e os módulos de `shared/` carregam. Nenhuma rota paga é chamada. |
-| 8 | `firebase deploy --only hosting --project mjrp-playlist-generator` | `gcloud run deploy mjrp-proxy --source server --region southamerica-east1 --project mjrp-playlist-generator --allow-unauthenticated` |
+| 8 | `firebase deploy --only hosting --project mjrp-playlist-generator` | `gcloud run deploy mjrp-proxy --source server --region southamerica-east1 --project mjrp-playlist-generator --allow-unauthenticated --max-instances 3` |
 | 9 | Confere a produção: o `index.html` no ar nomeia o script recém-construído, e esse endereço devolve um script (o Hosting responde 200 com a página do app para arquivo que não existe) | Confere a produção: a revisão nova recebe 100% do tráfego; `/api/musickit-status` responde 200 e `/api/debug/files` responde 404 |
 | 10 | Mostra como voltar atrás | Mostra o comando para voltar à revisão anterior, com o nome dela |
 
 Com `--dry-run`, os passos 8 e 9 não rodam; todo o resto roda de verdade.
+
+**No máximo 3 instâncias do servidor** (`MAX_INSTANCES` no `deploy-server.sh`, F78, REQ-18). O limite
+por pessoa mora na memória de cada instância (`server/lib/rateLimit.js`), então o teto de verdade é o
+limite vezes o número de instâncias: 60 chamadas pagas de IA por hora por pessoa vezes 3 dá 180 no
+pior caso; com o padrão do Cloud Run (20, lido do serviço em 2026-11-20) dava 1.200. Uma instância
+dá conta do uso de hoje (uma pessoa, 80 pedidos ao mesmo tempo por instância); as outras duas cobrem
+a partida a frio e uma rajada de carga de álbuns. Para outro número numa publicação:
+`MAX_INSTANCES=5 ./scripts/deploy-server.sh`. O `test/server/deployFixesMaxInstances.test.js` falha
+se o comando de publicar deixar de fixar o número. A contagem sai da instância antes do app ser
+público (proposta da F78, § 8 e § 10).
 
 ### 2.3 Voltar atrás
 

@@ -60,7 +60,6 @@ const CALL_SITES = [
     { name: 'the person\'s own ranking on the album', file: 'public/js/models/Album.js', asks: APP },
     { name: 'the "my ranking" order', file: 'public/js/ranking/UserRankingStrategy.js', asks: APP },
     { name: 'the balanced order', file: 'public/js/ranking/BalancedRankingStrategy.js', asks: APP },
-    { name: 'the tracks of the blend', file: 'public/js/algorithms/mixins/TrackEnrichmentMixin.js', asks: APP },
     { name: 'the album cache (the version of the rule)', file: 'public/js/services/albums/adapters/AlbumCacheAdapter.js', asks: APP }
 ]
 
@@ -71,8 +70,8 @@ const OWN_KEYS = /\b(?:normalizeKey|normalizeRankingKey|loadNormalizeKey|localNo
 const TITLE_KEYED_BY_HAND = /\b\w+\??\.(?:trackTitle|title)\)?\??\.(?:toLowerCase|normalize)\(/g
 
 describe('one rule says "this is the same track"', () => {
-    it('the rule is pure: it imports nothing', () => {
-        expect(importsOf(RULE)).toEqual([])
+    it('the rule is pure: it imports only the platform port of the core (the engine\'s Unicode tables, F78)', () => {
+        expect(importsOf(RULE)).toEqual(['./platform/text.js'])
     })
 
     it('the app and the server reach the same file', () => {

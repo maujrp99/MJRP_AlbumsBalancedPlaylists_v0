@@ -3,6 +3,36 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 14:40] session — F78: o núcleo ganha casa e sensor (pacote do npm, coreStaysPortable, testes sem jsdom)
+**Branch:** feat/f78-core-foundations
+`shared/package.json` (`@album-blender/shared`, sem dependência) e `"workspaces": ["shared"]` na raiz; o lockfile ganhou só o elo (`npm ci` conferido numa cópia: liga `node_modules/@album-blender/shared`); o `vite build` passa e o arranjo do deploy do servidor (`_shared_temp`) carrega `shared/` como antes. `coreStaysPortable.test.js` (sem exceção: nenhum global do navegador, nada do motor fora de `shared/platform/`, nenhum import que saia de `shared/`, as regras sem `shared/data/`) e `appAndSiteApart.test.js` (as checagens de `app/` passam vazias até ele existir); `vitest.workspace.js` roda `test/shared/` também em Node puro.
+Para o sensor passar: o `normalize` das duas regras de identidade foi para `shared/platform/text.js` (o Hermes ainda dá 3.343 de 3.343), e o login do site saiu de `shared/services/AuthService.js` para `public/js/services/auth/signIn.js`. `arch.md` ganha a seção do núcleo (casa, porta do id, corpo dourado e o que quer dizer uma saída mudada); manual 23 e `plan.md` dizem os módulos novos.
+
+## [2026-11-20 14:33] session — F78: o corpo dourado do núcleo vira peça do repositório, e o Hermes dá 3.343 de 3.343
+**Branch:** feat/f78-core-foundations
+O corpo e a corrida do spike S1 foram para `test/fixtures/golden-core/` (entradas 744 KB; a corrida sem global, o id pela porta) com UMA referência, a saída das regras de hoje no Node: `reference/output.jsonl.gz` (1,3 MB) e `reference/cases.tsv` (230 KB, o diff que se revisa). `test/architecture/goldenCoreUnchanged.test.js` refaz a saída a cada suíte e falha em qualquer caso mudado; `node scripts/golden-core.mjs --write` grava a referência depois de uma mudança revisada. Sem dado pessoal: no lugar da conta do MJRP, os 28 álbuns de catálogo das fixtures.
+`node scripts/golden-core.mjs --hermes` (opcional, fora da suíte, precisa do motor do spike): 3.343 de 3.343 iguais no Hermes, do código-fonte e do bytecode, depois das duas mudanças; os 58 casos `mixin:enrichTracks` saíram com o mixin. O README do spike diz como rodar.
+
+## [2026-11-20 14:28] session — F78: o deploy do servidor fixa no máximo 3 instâncias
+**Branch:** feat/f78-core-foundations
+`scripts/deploy-server.sh` passa `--max-instances "$MAX_INSTANCES"` (padrão 3, com o motivo ao lado) ao `gcloud run deploy` e o diz no passo e no ensaio. O limite por pessoa mora na memória de cada instância, então o pior caso é 60 chamadas pagas por hora vezes 3 = 180; o serviço tinha o padrão de 20 (lido com `gcloud run services describe`, só leitura), 1.200. Nenhuma publicação rodada: o número vale na próxima.
+`test/server/deployFixesMaxInstances.test.js` falha se o comando não fixar o número; o manual 00 diz o valor e como trocá-lo numa publicação.
+
+## [2026-11-20 14:26] session — F78: o dinheiro do inventário é arredondado a centavos antes de virar texto
+**Branch:** feat/f78-core-foundations
+`models/inventoryValue.js` ganha `roundToCents`: metade para longe do zero, sobre o texto decimal mais curto do número (fixado pela linguagem, igual em todo motor), o mesmo que os navegadores já mostravam; `formatMoney` (e por ele `moneyOf` e o total do cabeçalho) e o «Paid:» do `ViewAlbumModal.js` arredondam antes do `toLocaleString`. O spike S1 mediu 1166.505 como .50 no Hermes e .51 no Node: os motores arredondam a metade de jeitos diferentes ao formatar.
+O teste novo formata como o Hermes (metade para o par) e falhava no código de antes, com 1166.505 direto e convertido; nenhum número da tela do site muda.
+
+## [2026-11-20 14:25] session — F78: o TrackEnrichmentMixin estava morto e saiu
+**Branch:** feat/f78-core-foundations
+O comparador inconsistente que o spike S1 achou (`TrackEnrichmentMixin.js:152` e `:155`, a ordem fica a cargo do motor) morava num mixin que nenhuma receita aplica: só o `mixins/index.js` o reexportava. Tirado o reexporte, o `noDeadModules` o acusou sem ninguém que o alcance; o arquivo saiu por `git rm` (o `_safe.py` recusa `retire` para arquivo versionado), com os quatro testes dele em `test/algorithms/mixins.test.js`, a linha do `trackIdentityRule.test.js` e as três da lista de complexidade (a lista só encolhe).
+O `PlaylistBalancingMixin` e o `applyMixins` também não são aplicados por nenhuma receita (só reexportados e testados); ficaram, fora do escopo, ditos no relatório. `arch.md` e o manual 08 deixam de citar o mixin.
+
+## [2026-11-20 14:21] session — F78, Ref-0: um gerador de id só, atrás de uma porta do núcleo
+**Branch:** feat/f78-core-foundations
+`shared/platform/newId.js` exporta `newId()` e `setIdSource(fn)`; sem fonte ligada, `newId()` dá erro dizendo o que ligar (o núcleo não procura global sozinho). O site liga a fonte uma vez, com o `crypto.randomUUID` do navegador, em `public/js/services/platform/platformWiring.js`, o primeiro módulo que o `app.js` carrega; os testes ligam a mesma em `test/setup.js`. `Track.js` e `TrackTransformer.js` chamam `newId()` e não citam mais `crypto`.
+Testes novos: `test/shared/platform/newId.test.js` (a porta, o erro sem fonte, os dois arquivos sem `crypto`, ninguém fora da ligação chama `randomUUID`) e `test/services/platform/platformWiring.test.js` (a ligação dá UUID v4 sem repetir; o `app.js` a carrega primeiro). O servidor não cria faixa: não precisa de ligação.
+
 ## [2026-11-20 14:15] session — F78: a proposta da constituição v2 corrigida pela reconferência independente
 **Branch:** feat/f78-constitution-v2-fixes
 Os sete achados aplicados em `design/proposals/f78-app-architecture/constitution-v2.md`: os artigos numerados para que toda citação `violates:: [[constitution#N]]` (F52, F64, F65 e as UAT-15, 16, 17, 21, 22, 23, 24, 25) fique no seu assunto, com o mapa v1→v2 (a segurança e os segredos voltam ao artigo V, como no v1.0.0; a UAT-25 é a única que muda de sentido, e fica como história); `albums/` e `spotify_enrichment/` marcados «vale antes de qualquer conta de fora», sem teste ainda; hooks separados do procedimento (nenhum hook roda o doctor); a Factory por injeção (`DP-02`) de volta; o TypeScript do app como decisão do MJRP e a condição do resto como recomendação do agente.

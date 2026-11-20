@@ -4,7 +4,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-vi.mock('@shared/services/AuthService.js', () => ({ authService: { logout: vi.fn(async () => { }) } }))
+vi.mock('@/services/auth/signIn.js', () => ({ authService: { logout: vi.fn(async () => { }) } }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthService: { logout: vi.fn() } }))
 vi.mock('../../public/js/components/LoginModal.js', () => ({ showLoginModal: vi.fn() }))
 vi.mock('../../public/js/components/Toast.js', () => ({ default: { success: vi.fn(), error: vi.fn() } }))
