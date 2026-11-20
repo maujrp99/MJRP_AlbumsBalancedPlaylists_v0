@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 15:51] session — F78 esqueleto do app: a ordem «mais nova primeiro» passa ao núcleo
+**Branch:** feat/f78-app-skeleton
+A ordem padrão das séries (UAT-227, «Newest») sai do `SeriesController` do site para `shared/seriesOrder.js` (`DEFAULT_SERIES_ORDER`, `compareByCreation`, `newestFirst`), que lê a data de criação como Date, número ou Timestamp do Firestore: uma regra para o site e o app.
+O site usa a mesma comparação nos modos «recent»; a função do controller caiu de 20 para 16 de complexidade e a lista baixou junto; `test/shared/seriesOrder.test.js` roda com jsdom e em Node puro.
+
 ## [2026-11-20 15:16] decision — o MJRP aceita a constituição v2.0.0 e o ADR-0022, para esta iteração
 **Branch:** main
 Em resposta ao item «1. Ler e aceitar a constituição v2.0.0 e o ADR-0022», ele escreveu: «1.aceito pra essa iteração». O aceite vale para os dois textos como estão em `design/proposals/f78-app-architecture/constitution-v2.md` e `docs/decisions/0022-app-in-react-native-over-a-shared-core.md`, com a ressalva dele: para esta iteração, isto é, revisável na próxima. A seguir, o que a proposta lista em «O que muda no dia em que for aceita»: a v2.0.0 entra em `docs/specs/constitution.md`, a v1.0.0 vai para o arquivo, as citações vivas são atualizadas e o ADR-0022 passa a aceito.
