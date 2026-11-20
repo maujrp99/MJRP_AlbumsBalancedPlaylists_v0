@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 09:26] session — UAT-224 e UAT-225 em produção; UAT-229 registrada
+**Branch:** main
+Site publicado da `main`. Provado no app local, conta do MJRP, 1280x800, ranking de «Mezzanine» (nada gravado): com a ordem mudada, «Back» e Escape perguntam «Discard changes?»; «Keep editing» mantém a janela e a ordem; «Discard» fecha. UAT-229: o MJRP quer o nome da playlist no nome padrão do lote; o formato espera a resposta dele.
+
 ## [2026-11-20 09:24] session — UAT-224 e UAT-225: o ranking no computador pergunta antes de descartar; o nome automático do lote com dia e hora do mesmo relógio
 **Branch:** feat/f76-rank-discard-computer
 Testes primeiro, vistos falhando. Ranking: «Back», Escape e o clique fora passam por `requestClose`; no computador a pergunta é a `ConfirmModal` do app (a janela de ranking não pode chamar serviço: `ownRankingBoundaries`), com as palavras do celular. O teste que afirmava o «Back» antigo do computador foi reescrito para a regra nova. Lote: `_generateDefaultBatchName` lê dia e hora do relógio local (o dia vinha de UTC). Suíte 3074, lint limpo.
