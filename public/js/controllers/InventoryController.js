@@ -69,6 +69,11 @@ export class InventoryController {
         this._leaving = new AbortController()
     }
 
+    /** The album of an item as the album load has it now, for the window of the item. */
+    albumOfItem(item, signal) {
+        return inventoryService.albumOfItem(item, { signal })
+    }
+
     /** The screen closes: what the ask for the ratings still waits for is dropped. */
     dispose() {
         this._leaving.abort()

@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:50] session — F71: a janela do álbum no inventário pede o álbum à carga e mostra as faixas (UAT-220)
+
+**Branch:** fix/f71-inventory-window-shows-tracks
+
+- Decidido pelo agente — revisável: o inventário não guarda faixas; a janela de um item pede o álbum pela porta única da carga (`albumAsks.albumsOf`, pelo `InventoryService.albumOfItem`) e mostra o que chega. O que o item guarda aparece na hora e dá lugar ao álbum de agora.
+- Visto no navegador com os três álbuns das capturas do MJRP. UAT-220 em `fixed`.
+
 ## [2026-11-19 23:48] session — UAT-220 registrada na F71: a janela do álbum no inventário não mostra as faixas
 
 - O MJRP mostrou, em produção, a janela de dois álbuns que vieram das séries dizendo «No tracks are kept for this album…», e a de um item antigo com a popularidade «Not linked». UAT-220 aberta; entra na F71 como REQ-19.

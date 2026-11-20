@@ -8,7 +8,7 @@
  */
 
 import { findInInventory, planSeriesAlbums } from '../../models/inventoryFromSeries.js'
-import { RATING_SOURCES, planAverages, ratingsAskOf } from '../../models/inventoryRatings.js'
+import { RATING_SOURCES, planAverages, queryOfItem, ratingsAskOf } from '../../models/inventoryRatings.js'
 
 const ANONYMOUS = 'anonymous-user'
 
@@ -211,6 +211,24 @@ export class InventoryService {
         const { saved, error } = await this._writeAverages(repository, updates, onProgress)
         const { notFound, withoutRatings, popularityNotConnected, unanswered } = plan
         return { ...nothing, planned: updates.length, saved, error, notFound, withoutRatings, popularityNotConnected, unanswered }
+    }
+
+    /**
+     * The album of an item as the album load has it now, with its ratings and popularity (F71,
+     * UAT-220): what the window of an item shows. Asked through the load's one door; what the
+     * browser or the albums screen already has is not asked again.
+     * @param {Object} item - an inventory item
+     * @param {Object} [options]
+     * @param {AbortSignal} [options.signal] - aborted when the window closes
+     * @returns {Promise<Object|null>} the album, or null when the load could not give it
+     */
+    async albumOfItem(item, { signal = null } = {}) {
+        const result = await this.albumAsks.albumsOf({
+            series: [{ id: `inventory-album:${item.id}`, albumQueries: [queryOfItem(item)] }],
+            sources: [...RATING_SOURCES],
+            signal
+        })
+        return result.albums?.[0] || null
     }
 
     /** The one ask to the album load; progress is the albums done (found with their sources, or failed) of the total. */

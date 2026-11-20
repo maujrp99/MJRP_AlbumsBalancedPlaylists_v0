@@ -11,7 +11,6 @@ import { Album } from '../models/Album.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { coverImage } from './ui/coverImage.js'
 import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
-import { ADDED_FROM_SERIES } from '../models/inventoryFromSeries.js'
 
 /** The colour of the status badge of an inventory item. */
 const STATUS_BADGE = Object.freeze({
@@ -20,22 +19,30 @@ const STATUS_BADGE = Object.freeze({
   [InventoryStatus.WISHLIST]: 'badge badge-neutral'
 })
 
-/** What the window says in the place of the tracks when the album has none. */
-export function noTracksText(album) {
-  return album.metadata?.addedFrom === ADDED_FROM_SERIES
-    ? 'No tracks are kept for this album: it was added from your series. Open it in its series to see its tracks.'
-    : 'No tracks are kept for this album.'
-}
+/** What the window says in the place of the tracks, when it has none to show. */
+export const TRACKS_TEXT = Object.freeze({
+  loading: 'Loading the tracks of this album…',
+  notLoaded: 'The tracks of this album could not be loaded. Close this window and open it again to try once more.',
+  none: 'No tracks are kept for this album.'
+})
+
+const asAlbum = (data) => (data instanceof Album ? data : new Album(data))
+const hasTracks = (album) => album.getTracks('original').length > 0 || album.getTracks('acclaim').length > 0
 
 /**
  * @param {Object} albumInput - a loaded album, or an inventory item (it holds its album in
  *   `albumData`, and its own status, format, price and notes)
+ * @param {Object} [options]
+ * @param {Function} [options.loadAlbum] - (signal) => Promise<Album|null>: the album as the album
+ *   load has it now. The inventory gives it (F71, UAT-220): an item keeps no tracks, or the ones of
+ *   the day it was added, so the window shows what it has, asks, and shows the album that comes.
+ *   The ask is dropped when the window closes.
  */
-export async function showViewAlbumModal(albumInput) {
+export async function showViewAlbumModal(albumInput, { loadAlbum = null } = {}) {
   // Hydrate Album Model if needed
   const item = albumInput.albumData ? albumInput : null
   const rawData = albumInput.albumData || albumInput
-  const album = rawData instanceof Album ? rawData : new Album(rawData)
+  const album = asAlbum(rawData)
   // What the person wrote about the album is the item's; a loaded album has none of it
   const kept = item || {}
 
@@ -122,7 +129,10 @@ export async function showViewAlbumModal(albumInput) {
 
   // -- 6. Logic & Mounting --
 
+  const closing = new AbortController()
+
   function handleClose() {
+    closing.abort()
     containerEl.classList.add('animate-fade-out-down')
     modalOverlay.classList.remove('animate-fade-in') // Optional: fade out overlay too
     modalOverlay.style.opacity = '0'
@@ -145,20 +155,39 @@ export async function showViewAlbumModal(albumInput) {
   // Close Button Action
   closeBtn.addEventListener('click', handleClose)
 
-  // An album with no tracks (one that came from a series) has nothing to compare: it says so
-  if (album.getTracks('original').length === 0 && album.getTracks('acclaim').length === 0) {
-    rankingContainer.appendChild(SafeDOM.p({ className: 'text-gray-400 text-center py-12', dataset: { role: 'no-tracks' } }, noTracksText(album)))
+  /** The comparison of the tracks of an album, or one line when there is nothing to compare. */
+  const showTracks = (shown, emptyText) => {
+    SafeDOM.clear(rankingContainer)
+    if (!hasTracks(shown)) {
+      rankingContainer.appendChild(SafeDOM.p({ className: 'text-gray-400 text-center py-12', dataset: { role: 'no-tracks' } }, emptyText))
+      return
+    }
+    // A host of its own: a comparison that was replaced still draws, later, into the host it knew
+    const host = SafeDOM.div({})
+    rankingContainer.appendChild(host)
+    const comparison = new TracksRankingComparison({ album: shown })
+    comparison.mount(host)
+    comparison.updateUI()
+  }
+
+  if (!loadAlbum) {
+    showTracks(album, TRACKS_TEXT.none)
     return modalOverlay
   }
 
-  // Initialize Comparison Component
-  const comparison = new TracksRankingComparison({ album })
-
-  // Defer mount slightly to ensure DOM checks work inside sub-components
-  setTimeout(() => {
-    comparison.mount(rankingContainer)
-    comparison.updateUI()
-  }, 0)
+  // What the item keeps is shown at once; the album of now takes its place when it comes
+  showTracks(album, TRACKS_TEXT.loading)
+  loadAlbum(closing.signal)
+    .then(given => {
+      if (closing.signal.aborted) return
+      const loaded = given ? asAlbum(given) : null
+      if (loaded && hasTracks(loaded)) showTracks(loaded, TRACKS_TEXT.none)
+      else if (!hasTracks(album)) showTracks(album, TRACKS_TEXT.notLoaded)
+    })
+    .catch(error => {
+      console.error('[ViewAlbumModal] The album could not be loaded:', error)
+      if (!closing.signal.aborted && !hasTracks(album)) showTracks(album, TRACKS_TEXT.notLoaded)
+    })
 
   return modalOverlay
 }
