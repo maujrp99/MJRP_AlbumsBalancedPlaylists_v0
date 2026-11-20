@@ -173,7 +173,7 @@ window.addEventListener('error', (e) => {
     console.error('Global Error:', e.error)
 })
 
-// Expose stores/router globally for Puppeteer testing
+// Expose stores/router globally, for the browser console and for browser-driven checks
 if (typeof window !== 'undefined') {
     import('./stores/albumSeries.js').then(m => { window.albumSeriesStore = m.albumSeriesStore })
     import('./stores/albums.js').then(m => { window.albumsStore = m.albumsStore })

@@ -1,7 +1,7 @@
 {
     "name": "mjrp-playlist-generator",
     "version": "3.19.0",
-    "description": "MJRP Playlist Generator - v2.0 with series management and modern SPA architecture",
+    "description": "The Album Blender (Album Blender V0): the site that blends ranked albums into balanced playlists - vanilla JS built with Vite; the server is in server/",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -10,8 +10,6 @@
         "test": "vitest",
         "test:ui": "vitest --ui",
         "test:coverage": "vitest --coverage",
-        "test:e2e": "node test/e2e/run-all.js",
-        "test:e2e:headful": "HEADLESS=false node test/e2e/run-all.js",
         "lint": "eslint .",
         "deploy:site": "./scripts/deploy-site.sh",
         "deploy:site:dry-run": "./scripts/deploy-site.sh --dry-run",
@@ -32,10 +30,10 @@
         "@vitest/ui": "^1.1.0",
         "dotenv": "^17.2.3",
         "eslint": "^9.39.2",
+        "espree": "^10.4.0",
         "globals": "^16.5.0",
         "jsdom": "^23.0.1",
-        "jsonwebtoken": "^9.0.3",
-        "puppeteer": "^24.31.0",
+        "postcss": "^8.5.6",
         "tailwindcss": "^3.4.19",
         "vite": "^5.0.10",
         "vitest": "^1.1.0"
