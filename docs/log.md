@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 20:15] session — F80 rodada 2: o Caixote v2, com o fio e o fogo, e capas reais
+**Branch:** wip/f80-splash-design-round-2
+Protótipo `design/inception/splash-crate-v2.html` (o caixote 3D é o palco, a rolagem é o disco tocando com o fio do Lado A, lado B, o fogo da Brasa é a luz; 14 capas reais do Apple Music, 211 KB), prévia do fogo brando × vivo, comparador republicado no mesmo Artifact (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e), `proposal.md` § Rodada 2, `info-arch.md` (estados `^splash-v2-*`, SPL-15 a SPL-19), padrões pendentes no `design-system.md`, wireframes v2.
+Crítica separada: passa, 0 P0, 4 P1 corrigidos, 12 P2. Os termos da Apple (DPLA 3.3.6(D), App Review 4.5.2(ii)) só preveem a capa junto da reprodução e pedem autorização para marketing: a confirmar antes de publicar. Nada no remoto.
+
 ## [2026-11-20 19:54] session — F79, rodada 2 da Home: Transformar v2 com todos os estados, a prévia de cor e a crítica
 **Branch:** wip/f79-home-design-round-2
 `design/inception/home-transformar-v2.html` (18 estados, 1280 e 393; a v1 intacta), a prévia A/B da cor `#fdba74` em `design/proposals/f79-home/previews/`, o comparador republicado no mesmo Artifact (abre em v2 ao lado da v1; Consolidar e Elevar dobrados como decididos; a Referência num botão); `proposal.md` § Rodada 2 (as perguntas respondidas pelo código: a ordem dos álbuns pesa no Blend, `MJRPBalancedCascadeAlgorithm.js` linhas 77, 134, 141; os defaults D1–D9 marcados na tela), `info-arch.md` § Home com os 18 estados e onze IDs novos, `design-system.md` com os padrões pendentes, wireframes v2.

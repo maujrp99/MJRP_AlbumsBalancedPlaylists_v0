@@ -122,6 +122,20 @@ Nasceram na rodada 1 de exploração da página de entrada (2026-11-20, `design/
 | Pausar o movimento | botão «Pause motion» / «Play motion» (`aria-pressed`), 44 px, preso no canto de baixo à direita no computador e sob as chamadas no celular; para fogo, equalizadores, luz e giro automático; some com movimento reduzido | movimento sem fim ao lado do texto pede um jeito de parar (crítica de UX da rodada, WCAG 2.2.2) | novo; pendente de aprovação do MJRP |
 | Aviso de capas fictícias | junto de todo grupo de capas inventadas, «Fictional albums · original art» em 12 a 13 px, legível (não só dentro da arte) | quem vê a página não pode tomar a capa inventada por um disco real | novo; pendente de aprovação do MJRP |
 
+### Página de entrada · rodada 2 (Caixote v2) — padrões propostos, pendentes de aprovação do MJRP
+
+Da `design/inception/splash-crate-v2.html` (2026-11-20). **Pendente de aprovação do MJRP**; substitui, só nesta página e só se ele aprovar, as linhas acima que a v2 contraria.
+
+| Padrão | Como é | Por quê | Muda o quê |
+|---|---|---|---|
+| Fio do equalizador (progresso) | um grupo de 5 barras por faixa da página (3 a 7 px no computador, até 4 px e 3 barras por grupo no celular), degradê do fogo nos grupos lidos, cinza a 20 % nos outros; o grupo da faixa atual respira, cada barra com altura, duração e atraso próprios; no computador cada grupo é um link de 44 px de altura; no celular fica na barra de baixo, só progresso, sem toque | o equalizador quer dizer som e progresso: é o fio e mais nada | **diverge** das barras de 5 a 8 px do «Equalizador» acima (o fio é mais fino para caber sete grupos); novo |
+| Equalizador na ação principal | 4 barras pretas de 3 px dentro do «Open the app», que respiram enquanto há movimento | o único outro lugar do equalizador: a ação principal | novo |
+| Capa real com crédito | capa do Apple Music; ao lado de toda capa mostrada inteira, título, artista, ano, «Artwork from Apple Music» e «Listen on Apple Music» (link de 44 px); no rodapé, a linha de direitos e a marca da Apple | o MJRP escolheu capas reais (2026-11-20); a Apple pede o link e a marca; **o uso numa página pública está a confirmar** | substitui «Capa fictícia» e «Aviso de capas fictícias» nesta página |
+| Fogo como luz | leito de brasas em canvas 2D baixo no palco e luz de fogo de baixo na cena 3D; forte na primeira tela e no convite final, brando no meio; prévia «brando» × «vivo» no comparador | o fogo ilumina as capas sem disputar com elas nem ficar atrás de texto | refina «Fogo em movimento» |
+| Movimento que para sozinho | fogo e equalizador param 10 s depois de carregar ou da última rolagem; o 3D desenha só quando algo muda | movimento automático tem de terminar parado | novo |
+| «Pause motion» no fio | no computador, no fim do fio preso; no celular, sob as chamadas da primeira tela | o canto de baixo cobria o link do Apple Music | **diverge** da posição do «Pausar o movimento» acima |
+| Celular até 899 px | uma coluna abaixo de 900 px (a página tem duas colunas, texto e palco, que não cabem em 768) | o palco preso precisa de ~700 px ao lado do texto | **diverge** do corte de 767 px; só nesta página |
+
 ## Fontes consultadas (2026-11-20)
 
 - Apple, Human Interface Guidelines: Tab bars, Sheets, Accessibility, Layout, Typography — <https://developer.apple.com/design/human-interface-guidelines/>. As páginas não abriram na ferramenta de leitura (são montadas por script); os valores acima (44 pt, cinco abas, alça e fechar da folha) são os conhecidos da HIG e ficam a conferir pelo MJRP se algum pesar numa decisão.

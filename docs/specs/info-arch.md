@@ -2,6 +2,7 @@
 
 > Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html · a Home (F79): rodada 1, três níveis (design/inception/home-consolidar-v1.html, design/inception/home-elevar-v1.html, design/inception/home-transformar-v1.html); o MJRP escolheu a direção Transformar; rodada 2: design/inception/home-transformar-v2.html (não aprovada)
 > Página de entrada (F80), rodada 1 de exploração, 2026-11-20: três direções, design/inception/splash-ember-v1.html, design/inception/splash-sides-v1.html e design/inception/splash-crate-v1.html (nenhuma aprovada; comparador em design/proposals/f80-splash/comparator.html)
+> Página de entrada (F80), rodada 2 de desenho, 2026-11-20: a direção escolhida pelo MJRP, design/inception/splash-crate-v2.html («Caixote · v2, o fogo e o fio»: o caixote 3D com o fio do Lado A, lado B e o fogo da Brasa, capas reais do Apple Music); não aprovada ainda; comparador https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e (cópia local design/proposals/f80-splash/comparator.html)
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -28,7 +29,7 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 | Janela do álbum | por tarefa: quanto vale, onde comprar, as faixas |
 | Home (F79, proposta) | por tarefa, em três passos: achar álbuns (por artista ou lista colada), escolher, criar a série; a discografia do mais novo ao mais antigo, filtrável por tipo |
 | Os outros nós | a descrever quando a tela for desenhada |
-| Página de entrada (F80) | narrativa, de cima para baixo: o que é → os três momentos na ordem do uso (série, ranking e mistura, coleção) → por que álbuns inteiros → o convite; na direção «Lado A, lado B» a mesma ordem vira faixas de um disco (A1 a B2) |
+| Página de entrada (F80) | narrativa, de cima para baixo: o que é → os três momentos na ordem do uso (série, ranking e mistura, coleção) → por que álbuns inteiros → o convite; na direção «Lado A, lado B» a mesma ordem vira faixas de um disco (A1 a B2); **na v2 (Caixote, rodada 2)** a ordem é o disco tocando: lado A em cinco faixas (o que é, série, ranking, mistura, coleção), «Flip the record», lado B em duas (por que álbuns inteiros, o convite) |
 
 ## Rótulos
 
@@ -75,6 +76,15 @@ Uma página pública, de uma coluna de leitura, na ordem: faixa do protótipo (s
 - **Brasa** (`splash-ember-v1.html`, Consolidar): o tipo grande é a imagem; um leito de fogo em canvas 2D e um equalizador em CSS embaixo do texto são o único movimento.
 - **Lado A, lado B** (`splash-sides-v1.html`, Elevar): a página é um disco ouvido inteiro; capa e vinil em CSS 3D, o vinil gira com a rolagem; um fio de equalizador preso no topo mostra a faixa em que a pessoa está.
 - **Caixote** (`splash-crate-v1.html`, Transformar): um caixote de nove capas fictícias em 3D real (WebGL, three.js), que se gira arrastando, pelos botões ou pelas setas; luz de fogo que tremula, vinil saindo da capa da frente, equalizador 3D.
+
+#### Rodada 2 · Caixote v2, o fogo e o fio (`splash-crate-v2.html`)
+
+A direção escolhida pelo MJRP em 2026-11-20 (o Caixote, mais a progressão do Lado A, lado B e o fogo da Brasa, com capas reais). Cada elemento tem um trabalho só:
+- **O caixote é o palco** — o único objeto 3D, preso à direita durante toda a leitura no computador; 14 capas reais do Apple Music de pé num caixote de madeira escura.
+- **A rolagem é o disco tocando** — a rolagem do navegador, nunca sequestrada; cada faixa puxa um disco do caixote e diz uma coisa que o produto faz; «Flip the record» gira o caixote para o outro lado, o lado B.
+- **O fio do equalizador é o progresso** — preso sob o topo no computador (um grupo de barras por faixa, cada grupo um link; o da faixa atual respira); no celular desce para a barra de baixo, junto de «Open the app», como progresso sem toque.
+- **O fogo é a luz** — um leito de brasas baixo no palco e a luz que vem de baixo nas capas; forte na primeira tela e no convite final, brando nas faixas do meio; nunca atrás de texto.
+- **No celular:** uma coluna; o título e a frase primeiro; o caixote em CSS logo abaixo; cada faixa traz o seu disco (capa, crédito e link) acima do título.
 
 ## Fluxos
 
@@ -142,6 +152,18 @@ Estados que as três direções da rodada 1 mostram (escritos pelo agente em 202
 - **Movimento pausado.** Depois de «Pause motion», o botão diz «Play motion»; o fogo, os equalizadores, a luz e o giro automático param no quadro em que estavam; arrastar e os botões ‹ › do Caixote seguem funcionando. ^splash-motion-paused
 - **No celular (até 767 px).** Uma coluna; as duas chamadas ocupam a largura, uma sobre a outra; no topo fica só «Open the app». Lado A, lado B e Caixote põem a imagem acima do título; a Brasa, o título primeiro. ^splash-phone
 - **Caixote, um álbum na frente.** Sob o caixote, «‹ · nome do álbum · artista · ›»; um leitor de tela ouve o álbum («Lantern Hymnal by The Hollow Lanterns, fictional album, 3 of 9») só quando a pessoa gira; os giros automáticos não são anunciados. No canto do caixote, «Fictional albums · original art». ^splash-crate-album-in-front
+
+#### Rodada 2 · Caixote v2 (`splash-crate-v2.html`)
+Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para eles ainda; os IDs não mudam). Os da v2:
+- **Primeira tela (lado A · 1).** Título, a frase «The Album Blender is a web app for people who listen to whole albums.» e as duas chamadas à esquerda; à direita o caixote com a capa da frente («In the Court of the Crimson King») e a legenda com «Listen on Apple Music»; o fogo forte; o fio com o primeiro grupo aceso. ^splash-v2-hero
+- **Uma faixa do lado A tocando** (Series, Ranking, Blend, Your shelf). O disco da faixa sobe do caixote, os da frente se inclinam para a frente; a legenda troca para ele; o fio acende até essa faixa e o grupo dela respira; o fogo brando. ^splash-v2-track
+- **Virando o disco.** Na seção «Flip the record» o caixote gira com a rolagem, de um lado ao outro; nenhum disco puxado; a meio do giro a rolagem pode parar e o caixote fica onde está. ^splash-v2-flip
+- **Lado B.** O caixote mostra o outro lado (a capa da frente é «To Pimp a Butterfly»); B1 puxa «In the Aeroplane Over the Sea»; B2, o convite, com o fogo forte de novo e as duas chamadas. ^splash-v2-side-b
+- **Antes do 3D, sem WebGL ou no celular.** O caixote em CSS com as mesmas capas: a da faixa sobe, as da frente se inclinam; no FLIP ele troca para o lado B sem girar. O 3D aparece por cima quando desenha o primeiro quadro (computador, com WebGL, sem pedido de menos movimento). ^splash-v2-css-crate
+- **Movimento reduzido.** Sem three.js, sem animação: o caixote em CSS parado na faixa atual, o fogo num quadro parado, o equalizador em alturas fixas; nenhum botão «Pause motion». A página parece acabada. ^splash-v2-reduced-motion
+- **O movimento que para sozinho.** Dez segundos depois de carregar ou da última rolagem, o fogo e o equalizador param num quadro; o 3D só desenha quando algo muda. «Pause motion» (no fim do fio no computador, sob as chamadas no celular) para tudo; vira «Play motion». ^splash-v2-motion-rest
+- **Sem JavaScript.** Todo o texto e as chamadas; o caixote em CSS parado com as sete capas do lado A, a da frente à vista; o fio aparece sem nada aceso, rotulado na primeira faixa; os discos de cada faixa no celular não aparecem (a legenda e o link do disco da frente ficam). ^splash-v2-no-js
+- **Celular (até 899 px).** Uma coluna; topo com o logotipo e «Sign in»; o caixote em CSS sob a primeira tela; cada faixa abre com o seu disco, a capa com o crédito e o link «Listen on Apple Music»; a barra de baixo presa leva o fio (só progresso) e «Open the app». ^splash-v2-phone
 
 ## O celular (F76)
 
@@ -290,6 +312,9 @@ Estados que as três direções da rodada 1 mostram (escritos pelo agente em 202
 | os três momentos | o que a pessoa faz em cada etapa | na ordem do uso | — |
 | exemplo de faixas ordenadas | um álbum fictício, quatro faixas, uma barra por faixa | «Bar length = the track's place in the ranking you choose.» | «Illustrative · fictional album» e «Example data, not real scores.» |
 | aviso das capas | as capas e os discos da página são inventados | — | «original artwork made for this page» |
+| legenda do disco (v2) | o disco puxado: título, artista, ano | «Artwork from Apple Music» | «Listen on Apple Music», que abre o álbum no Apple Music |
+| fio (v2) | a faixa em que a pessoa está, «Side A · 2 — Series» | um grupo de barras por faixa; aceso até onde a pessoa leu | — |
+| crédito das capas (v2) | as capas vêm do Apple Music e são dos artistas e gravadoras; a linha de marca da Apple | — | o link de cada disco mostrado inteiro |
 
 ## Decisões de IA
 
@@ -304,6 +329,8 @@ Estados que as três direções da rodada 1 mostram (escritos pelo agente em 202
 - **Página de entrada (F80), rodada 1:** as três direções têm a mesma ordem, os mesmos três momentos, a mesma prova e as mesmas chamadas, e diferem no eixo «quanto 3D, e de onde vem a profundidade»; o título, o subtítulo e o fecho acompanham a imagem (segundo eixo, declarado depois da crítica de UX; decidido pelo agente). O texto é proposta (`design/proposals/2026-11-20-splash-copy-proposal.md`).
 - **Página de entrada:** o texto inteiro fica no HTML e a primeira tela diz o que o produto é antes de qualquer imagem (candidato de GEO e AEO do PRD; NN/g, rolagem e atenção).
 - **Página de entrada:** capas fictícias, desenhadas na página (gradientes e tipo nas cores da marca), nenhuma capa real; os direitos das capas para uma página pública são pergunta ao MJRP.
+- **Página de entrada, rodada 2 (2026-11-20):** o MJRP escolheu capas reais, as do Apple Music que o app já mostra, com crédito e link; a v2 as usa. Os termos da Apple pesquisados nesta rodada só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing: **a confirmar antes de publicar** (`design/proposals/f80-splash/proposal.md` § Rodada 2).
+- **Página de entrada, rodada 2:** cada elemento visual tem um trabalho (caixote = palco, rolagem = disco, fio = progresso e navegação, fogo = luz); os botões ‹ ›, o arrastar, o giro automático, o vinil e o equalizador 3D da v1 saíram para dar lugar à progressão (decisão do agente, a julgar pelo MJRP).
 
 ## Protótipos aprovados
 
@@ -453,4 +480,14 @@ Fonte: `design/inception/splash-ember-v1.html`, `design/inception/splash-sides-v
 | SPL-12 | Faixa e notas do protótipo | — | cortado do site: só existe no protótipo, para o MJRP |
 | SPL-13 | Fio do equalizador preso no topo, com a faixa atual (só Lado A, lado B) | informar (onde a pessoa está) | S-62 |
 | SPL-14 | Botões ‹ › e o nome do álbum da frente (só Caixote) | agir | S-62 |
+
+Rodada 2 (`design/inception/splash-crate-v2.html`; wireframes `design/wireframes/splash-crate-v2-desktop.png` e `-phone.png`): SPL-01 a SPL-13 seguem com o mesmo sentido; na v2 a SPL-05 é o caixote 3D com 14 capas reais e a SPL-13 é o fio de todas as larguras (no celular, na barra de baixo). A SPL-14 sai na v2 (o giro é a rolagem). Novos:
+
+| ID | O que a tela mostra | Função do produto | Destino |
+|---|---|---|---|
+| SPL-15 | Legenda do disco puxado: título, artista, ano, «Artwork from Apple Music» e «Listen on Apple Music» | informar, agir | S-62 (e a condição da Apple, a confirmar) |
+| SPL-16 | Faixa A4, mistura (separada da A3, ranking) | informar | S-62 |
+| SPL-17 | «Flip the record»: a seção que gira o caixote | informar (a identidade) | S-62 |
+| SPL-18 | Leito de brasas e a luz de baixo, forte em duas faixas | informar (a identidade) | S-62 |
+| SPL-19 | No celular, o disco de cada faixa com crédito e link | informar, agir | S-62 |
 

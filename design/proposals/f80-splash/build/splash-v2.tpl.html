@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Album Blender — for people who listen to whole albums</title>
+<meta name="description" content="The Album Blender is a web app for people who listen to whole albums: gather albums into series, rank every track, blend them into balanced playlists, and keep count of the records you own.">
+<!-- F80 · protótipo de convergência · direção «Caixote» v2 (o fogo e o fio): o caixote 3D é o palco, a rolagem é o disco tocando (Lado A, lado B), o fogo é a luz · 2026-11-20 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.min.js"}}</script>
+<style>
+:root{
+  --bg:#0a0a0c;--panel:#121216;--line:rgba(255,255,255,.12);
+  --orange:#f97316;--orange-text:#fb923c;--red:#dc2626;--amber:#fbbf24;
+  --text:#fff;--muted:#b9b9c2;--faint:#9a9aa4;
+  --flame:linear-gradient(135deg,#f97316 0%,#dc2626 100%);
+  --display:'Syne',sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  --gutter:max(16px,env(safe-area-inset-left));
+  --top:64px;--thread:48px;
+}
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark;scroll-padding-top:calc(var(--top) + var(--thread) + 8px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{width:100%;max-width:1280px;margin:0 auto;padding:0 var(--gutter)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px}.skip:focus{left:16px;top:8px;background:#fff;color:#000;padding:10px 14px;z-index:30;border-radius:8px}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+.proto-strip{background:#1a1206;color:#fde7c8;font:13px/1.4 var(--body);padding:8px var(--gutter);text-align:center;border-bottom:1px solid rgba(249,115,22,.35)}
+.proto-strip a{color:var(--orange-text);font-weight:700;display:inline-block;padding:14px 6px;margin:-14px 0}
+
+/* top bar */
+header.top{position:sticky;top:0;z-index:20;background:rgba(10,10,12,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:var(--top)}
+.home{display:inline-flex;align-items:center;min-height:44px}
+.logo{display:block;height:30px;width:auto}
+.top nav{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;min-width:44px;padding:0 22px;border-radius:12px;font:800 18px/1 var(--display);text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--flame);color:#0b0b0b;box-shadow:0 0 24px rgba(249,115,22,.32)}
+.btn-primary:hover{box-shadow:0 0 34px rgba(249,115,22,.5)}
+.btn-ghost{border:1px solid rgba(255,255,255,.62);color:#fff;font-weight:700}
+.btn-ghost:hover{border-color:#fff}
+.btn-sm{min-height:44px;padding:0 16px;font-size:16px}
+/* the equalizer breathes on the main action, nowhere else but the thread */
+.eqi{display:inline-flex;align-items:flex-end;gap:2px;height:16px}
+.eqi i{width:3px;border-radius:1px;background:#0b0b0b;height:var(--h);transform-origin:bottom}
+.eqi i:nth-child(1){--h:55%;--d:.71s}.eqi i:nth-child(2){--h:100%;--d:.93s;--o:-.3s}.eqi i:nth-child(3){--h:70%;--d:.62s;--o:-.5s}.eqi i:nth-child(4){--h:40%;--d:1.08s;--o:-.2s}
+html.moving:not(.paused) .eqi i{animation:eqb var(--d) ease-in-out var(--o,0s) infinite alternate}
+@keyframes eqb{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+
+/* the thread: the record's progress, one group of bars per track; the only navigation motif */
+.thread{position:sticky;top:var(--top);z-index:19;background:rgba(10,10,12,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.thread .wrap{display:flex;align-items:center;gap:16px;height:var(--thread)}
+.thread .now-track{font:700 13px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--orange-text);white-space:nowrap;min-width:13.5em}
+.thread .groups{flex:1;display:flex;align-items:stretch;gap:10px;height:44px}
+.thread .g{flex:1;display:flex;align-items:center;gap:3px;text-decoration:none;min-width:24px;border-radius:6px;padding:0 2px}
+.thread .g:hover i{background:rgba(255,255,255,.34)}
+.thread .g i{flex:1;min-width:2px;max-width:7px;border-radius:2px 2px 1px 1px;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom;align-self:center}
+.thread .g.on i{background:linear-gradient(0deg,#dc2626,#f97316 60%,#fbbf24)}
+html.moving:not(.paused) .thread .g.cur i{animation:eqb var(--d) ease-in-out var(--o) infinite alternate}
+.thread .turn{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:44px;font:700 12px/1 var(--body);letter-spacing:.1em;color:var(--faint);text-decoration:none;border-radius:6px}
+.thread .turn.on{color:var(--orange-text)}
+.thread .bar-cta{display:none}
+
+/* story: text column + the stage */
+.story{display:grid;grid-template-columns:minmax(0,500px) minmax(0,1fr);column-gap:clamp(24px,4vw,64px);align-items:start}
+.story > section{grid-column:1;min-height:calc(88dvh - var(--top) - var(--thread));display:flex;flex-direction:column;justify-content:center;padding:56px 0}
+.story > .stage-col{grid-column:2;grid-row:1 / span 8;align-self:stretch}
+.hero{min-height:calc(100dvh - var(--top) - var(--thread) - 36px)!important;padding-top:24px!important}
+.kicker{font:700 13px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--orange-text);margin:0 0 16px}
+h1{font:800 clamp(38px,3.6vw,48px)/1.04 var(--display);letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--orange)}
+.what{font-size:19px;color:var(--muted);max-width:38ch;margin:22px 0 30px}
+.what strong{color:#fff;font-weight:600}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+h2.t{font:800 clamp(30px,3.3vw,44px)/1.05 var(--display);letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance}
+section p{color:var(--muted);margin:0 0 14px;max-width:44ch}
+.flip h2.t{font-size:clamp(40px,5vw,68px)}
+.why blockquote{margin:0 0 20px;font:700 clamp(26px,2.8vw,38px)/1.14 var(--display);text-wrap:balance}
+.why blockquote em{font-style:normal;color:var(--orange-text)}
+.ranked{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--panel);margin-top:12px;max-width:440px}
+.ranked .tag{font:700 12px/1.3 var(--body);letter-spacing:.1em;text-transform:uppercase;color:#d6d6dc;display:flex;justify-content:space-between;gap:8px;margin-bottom:8px}
+.ranked .tag b{color:var(--orange-text)}
+.ranked ol{list-style:none;margin:0;padding:0}
+.ranked li{display:grid;grid-template-columns:20px 1fr 84px;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(255,255,255,.07);font-size:15px}
+.ranked li span:first-child{color:var(--faint)}
+.ranked .bar{height:8px;border-radius:4px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
+.ranked .bar::after{content:"";position:absolute;inset:0;width:var(--w);background:var(--flame)}
+.ranked .note{font-size:13px;color:var(--faint);margin:8px 0 0}
+.slot{display:none}
+
+/* the stage: ember glow (back), crate (middle); text never sits on it */
+.stage{position:sticky;top:calc(var(--top) + var(--thread));height:calc(100dvh - var(--top) - var(--thread) - 8px);min-height:520px;margin:0;display:flex;flex-direction:column}
+.scene{position:relative;flex:1;min-height:0;isolation:isolate;overflow:hidden}
+.glow{position:absolute;inset:auto -10% -6% -10%;height:55%;z-index:0;background:radial-gradient(50% 70% at 50% 100%,rgba(249,115,22,calc(.42 * var(--fire,1))),rgba(220,38,38,calc(.18 * var(--fire,1))) 45%,transparent 75%);transition:opacity .6s}
+.embers{position:absolute;left:0;right:0;bottom:0;height:42%;width:100%;z-index:1;pointer-events:none}
+.gl{position:absolute;inset:0;width:100%;height:100%;z-index:2;opacity:0;transition:opacity .8s ease}
+.stage.live .gl{opacity:1}
+.stage.live .crate-css{opacity:0;visibility:hidden}
+/* CSS crate: before the script, without WebGL, with reduced motion, and on the phone */
+.crate-css{position:absolute;inset:0;z-index:2;perspective:1100px;perspective-origin:50% -10%;transition:opacity .6s}
+.crate-css .box{position:absolute;left:50%;bottom:16%;width:min(56%,330px);aspect-ratio:1;transform:translateX(-50%);transform-style:preserve-3d}
+.crate-css .sl{position:absolute;inset:0;width:100%;height:100%;border-radius:3px;box-shadow:0 18px 40px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08) inset;transform-origin:50% 100%;transition:transform .7s cubic-bezier(.2,.7,.2,1),opacity .4s;opacity:0}
+.crate-css .sl.vis{opacity:1}
+html:not(.js) .crate-css .sl:nth-child(-n+7){opacity:1;z-index:calc(20 - var(--p));transform:translate3d(0,calc(var(--p) * -6.5%),calc(var(--p) * -34px)) rotateX(-6deg)}
+.crate-css .front{position:absolute;left:50%;bottom:9%;width:min(64%,378px);height:24%;transform:translateX(-50%);z-index:40;border-radius:4px;background:linear-gradient(180deg,#3a2616,#24170d 60%,#1a0f08);box-shadow:0 -1px 0 rgba(255,200,150,.18) inset,0 20px 40px rgba(0,0,0,.6)}
+.crate-css .front::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 31%,rgba(0,0,0,.35) 31% 33%);border-radius:4px}
+.caption{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;padding:8px 0 12px;border-top:1px solid var(--line)}
+.caption .who{min-width:0;font-size:14px;color:var(--muted);line-height:1.35}
+.caption .src{display:block;font-size:12px;color:var(--faint)}
+.caption .who b{display:block;font:700 17px/1.2 var(--display);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.am{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.62);font:600 14px/1 var(--body);text-decoration:none;white-space:nowrap;color:#fff}
+.am:hover{border-color:#fff}
+.am .mk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:linear-gradient(180deg,#fa5c6f,#f9354f);color:#fff;font:800 12px/1 var(--body)}
+.credit-tag{position:absolute;top:10px;left:0;z-index:5;font:600 12px/1.3 var(--body);color:#e6e6ea;background:rgba(10,10,12,.72);padding:6px 9px;border-radius:6px;letter-spacing:.02em}
+
+/* side B: the CTA */
+.final .ctas{margin-top:8px}
+footer{border-top:1px solid var(--line);padding:32px 0 calc(40px + env(safe-area-inset-bottom));color:var(--faint);font-size:14px}
+footer .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+footer nav{display:flex;gap:4px;flex-wrap:wrap}
+footer nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;text-decoration:none;color:#d6d6dc}
+footer p{margin:12px 0 0;max-width:80ch}
+footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
+.proto-notes{margin-top:24px;border:1px dashed rgba(249,115,22,.45);border-radius:12px;padding:4px 16px;background:#0d0905;color:#e9e1d6;font-size:14px}
+.proto-notes summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700;color:#fde7c8}
+.motion-toggle{flex:0 0 auto;min-height:44px;padding:0 16px;border-radius:22px;border:1px solid rgba(255,255,255,.4);background:rgba(10,10,12,.85);color:#fff;font:600 14px/1 var(--body);cursor:pointer}
+.motion-toggle:hover{border-color:#fff}
+.motion-toggle.inline{position:static;background:transparent;border:0;text-decoration:underline;color:#d6d6dc;padding:0 6px}
+.b2-fire{display:none}
+
+/* PHONE: one column; the crate is a short CSS fan under the hero; each track brings its sleeve; the thread and the main action live in the bottom bar */
+@media (max-width:899px){
+  :root{--top:56px;--thread:0px}
+  body{font-size:16px;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  .logo{height:22px}
+  .top .btn-primary{display:none}
+  .story{display:flex;flex-direction:column}
+  .story > *{order:2}.story > .hero{order:0}.story > .stage-col{order:1}
+  .story > section{min-height:0;padding:44px 0;border-top:1px solid var(--line)}
+  .story > section.hero{border-top:0;min-height:0!important;padding:20px 0 8px!important}
+  h1{font-size:36px}
+  .what{font-size:17px;margin:16px 0 22px}
+  .ctas .btn{flex:1 1 100%}
+  .stage{position:relative;top:0;height:auto;min-height:0}
+  .scene{height:330px;flex:none}
+  .stage-col{margin:0 calc(-1 * var(--gutter))}
+  .caption{padding:8px var(--gutter) 12px}
+  .credit-tag{left:var(--gutter)}
+  .thread{position:fixed;top:auto;bottom:0;left:0;right:0;border-bottom:0;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+  .thread .wrap{height:72px;gap:12px}
+  .thread .now-track{display:none}
+  .thread .groups{gap:5px}
+  .thread .groups{min-width:0}
+  .thread .g{min-width:0;flex:1 1 0;gap:2px;padding:0}
+  .thread .g i{max-width:4px}
+  .thread .g i:nth-child(n+4){display:none}
+  .caption .who b{white-space:normal}
+  .thread .g,.thread .turn{pointer-events:none}
+  .thread .turn{min-width:24px;font-size:0}
+  .thread .turn::before{content:"⟲";font-size:16px}
+  .thread .bar-cta{display:inline-flex;flex:0 0 auto;padding:0 14px;font-size:16px}
+  .slot{display:block;width:180px;height:180px;margin:0 0 22px;position:relative;perspective:700px}
+  .slot img{position:absolute;inset:0;width:100%;height:100%;border-radius:3px;box-shadow:0 18px 36px rgba(0,0,0,.7);transform-origin:50% 100%;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+  .slot.pre img{transform:translateY(22%) rotateX(-28deg)}
+  .slot .slot-am{position:absolute;left:0;top:100%;display:inline-flex;align-items:center;min-height:44px;font-size:13px;color:#d6d6dc;white-space:nowrap}
+  .slot{margin-bottom:56px}
+  .b2-fire{display:block;position:relative;height:120px;margin:8px calc(-1 * var(--gutter)) -44px;overflow:hidden}
+  .b2-fire .glow{bottom:-20%;height:120%}
+  .b2-fire canvas{position:absolute;inset:0;width:100%;height:100%}
+  .crate-css .box{width:min(58%,220px);bottom:18%}
+  .crate-css .front{width:min(68%,260px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .crate-css .sl,.slot img,.gl,.crate-css{transition:none!important}
+  .slot.pre img{transform:none}
+}
+html.paused *,html.paused *::before,html.paused *::after{animation-play-state:paused!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="proto-strip" lang="pt-BR">Protótipo F80 · <b>Caixote v2</b> (o fogo e o fio) · fogo <b id="fire-name">brando</b> · capas reais do Apple Music: <b>uso público ainda não liberado</b> · textos propostos pelo agente · <a href="#proto-notes">Notas</a></div>
+
+<header class="top"><div class="wrap">
+  <a class="home" href="#a1" aria-label="The Album Blender, top of the page"><img class="logo" alt="The Album Blender" src="%%LOGO%%"></a>
+  <nav aria-label="Account"><a class="btn btn-ghost btn-sm" href="#signin">Sign in</a><a class="btn btn-primary btn-sm" href="#app">Open the app</a></nav>
+</div></header>
+
+<nav class="thread" aria-label="Tracks of this page"><div class="wrap">
+  <span class="now-track" id="now-track">Side A · 1 — The Blender</span>
+  <div class="groups" id="groups">
+    <a class="g" href="#a1" data-for="a1" aria-label="Side A, track 1: The Album Blender"></a>
+    <a class="g" href="#a2" data-for="a2" aria-label="Side A, track 2: Series"></a>
+    <a class="g" href="#a3" data-for="a3" aria-label="Side A, track 3: Rank every track"></a>
+    <a class="g" href="#a4" data-for="a4" aria-label="Side A, track 4: Blend"></a>
+    <a class="g" href="#a5" data-for="a5" aria-label="Side A, track 5: Your shelf"></a>
+    <a class="turn" href="#flip" data-for="flip" aria-label="Flip the record">FLIP</a>
+    <a class="g" href="#b1" data-for="b1" aria-label="Side B, track 1: Why whole albums"></a>
+    <a class="g" href="#b2" data-for="b2" aria-label="Side B, track 2: Start"></a>
+  </div>
+  <a class="btn btn-primary bar-cta" href="#app">Open the app</a>
+  <button class="motion-toggle" id="motion" type="button" aria-pressed="false" hidden>Pause motion</button>
+</div></nav>
+
+<main id="main" class="wrap story">
+  <section class="hero" id="a1" data-track="a1" aria-labelledby="h1">
+    <p class="kicker">For whole-album listeners</p>
+    <h1 id="h1">Dig through the albums you love. <em>Keep every track.</em></h1>
+    <p class="what"><strong>The Album Blender is a web app for people who listen to whole albums.</strong> Gather albums into series, rank every track, and blend them into playlists that keep every record in the mix — then keep count of the ones on your shelf.</p>
+    <div class="ctas" id="hero-ctas"><a class="btn btn-primary" href="#app" id="app">Open the app <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a><a class="btn btn-ghost" href="#signin" id="signin">Sign in</a></div>
+  </section>
+
+  <section id="a2" data-track="a2" aria-labelledby="t2">
+    <div class="slot pre" data-pull="2" aria-hidden="true"></div>
+    <p class="kicker">Side A · 2 — Series</p>
+    <h2 class="t" id="t2">Gather the albums that belong together.</h2>
+    <p>An artist's run, a decade, a mood: a series is a shelf of whole albums you choose. Every blend starts there.</p>
+  </section>
+
+  <section id="a3" data-track="a3" aria-labelledby="t3">
+    <div class="slot pre" data-pull="3" aria-hidden="true"></div>
+    <p class="kicker">Side A · 3 — Ranking</p>
+    <h2 class="t" id="t3">Rank every track, not just the singles.</h2>
+    <p>Order each album's tracks by how often they are played, by published rankings where the app has them, or by your own ear. The deep cuts get a place in line.</p>
+    <div class="ranked" role="group" aria-label="Illustrative example of one album's tracks ranked">
+      <div class="tag"><span>Illustrative · fictional album</span><b>Copper Year</b></div>
+      <ol>
+        <li><span>1</span><span>Low Sun Overture</span><span class="bar" style="--w:92%"></span></li>
+        <li><span>2</span><span>Pier at Dusk</span><span class="bar" style="--w:78%"></span></li>
+        <li><span>3</span><span>Second Side Waltz</span><span class="bar" style="--w:64%"></span></li>
+        <li><span>4</span><span>The Long Player</span><span class="bar" style="--w:51%"></span></li>
+      </ol>
+      <p class="note">Bar length = the track's place in the ranking you choose. Example data, not real scores.</p>
+    </div>
+  </section>
+
+  <section id="a4" data-track="a4" aria-labelledby="t4">
+    <div class="slot pre" data-pull="5" aria-hidden="true"></div>
+    <p class="kicker">Side A · 4 — Blend</p>
+    <h2 class="t" id="t4">Blend the series into one playlist.</h2>
+    <p>Pick a recipe and the Blender draws tracks from every album in the series, so no record drowns out the rest. You choose how long it runs and what leads.</p>
+  </section>
+
+  <section id="a5" data-track="a5" aria-labelledby="t5">
+    <div class="slot pre" data-pull="6" aria-hidden="true"></div>
+    <p class="kicker">Side A · 5 — Your shelf</p>
+    <h2 class="t" id="t5">Keep count of the records you own.</h2>
+    <p>Mark the albums on your shelf, see an estimate of what the collection is worth, and what the missing ones would cost.</p>
+  </section>
+
+  <section class="flip" id="flip" data-track="flip" aria-labelledby="tf">
+    <div class="slot pre" data-pull="13" aria-hidden="true"></div>
+    <p class="kicker">End of Side A</p>
+    <h2 class="t" id="tf">Flip the record.</h2>
+    <p>Side B is the why, and the way in.</p>
+  </section>
+
+  <section class="why" id="b1" data-track="b1" aria-labelledby="t6">
+    <div class="slot pre" data-pull="10" aria-hidden="true"></div>
+    <h2 class="kicker" id="t6">Side B · 1 — Why whole albums</h2>
+    <blockquote>Shuffle keeps the hits and loses the record. <em>The Blender starts from the record.</em></blockquote>
+    <p>An album has an order: an opening, a turn, a closer. Ranking brings the deep cuts back; blending keeps every playlist rooted in albums you chose, whole.</p>
+  </section>
+
+  <section class="final" id="b2" data-track="b2" aria-labelledby="t7">
+    <p class="kicker">Side B · 2 — Start</p>
+    <h2 class="t" id="t7">Drop the needle on your first series.</h2>
+    <p>Open the app and start a series with one album you love. Sign in to keep your series, rankings and shelf with you.</p>
+    <div class="ctas"><a class="btn btn-primary" href="#app">Open the app <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a><a class="btn btn-ghost" href="#signin">Sign in</a></div>
+    <div class="b2-fire" aria-hidden="true"><div class="glow"></div><canvas id="embers-b2"></canvas></div>
+  </section>
+
+  <div class="stage-col">
+    <figure class="stage" id="stage" aria-label="A crate of albums from a collection; the page pulls one record forward for each part">
+      <div class="scene" id="scene">
+        <div class="glow" aria-hidden="true"></div>
+        <canvas class="embers" id="embers" aria-hidden="true"></canvas>
+        <div class="crate-css" id="crate-css">
+          <div class="box" id="box">
+        %%COVERS%%
+          </div>
+          <div class="front" aria-hidden="true"></div>
+        </div>
+      </div>
+      <figcaption class="caption" id="caption">
+        <span class="who"><span id="who"><b>In the Court of the Crimson King</b>King Crimson · 1969</span><span class="src">Artwork from Apple Music</span></span>
+        <a class="am" id="am" href="https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711" target="_blank" rel="noopener"><span class="mk" aria-hidden="true">♫</span>Listen on Apple Music<span class="sr"> (opens in a new tab)</span></a>
+      </figcaption>
+    </figure>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <div class="row"><span>The Album Blender</span><nav aria-label="Footer"><a href="#app">Open the app</a><a href="#signin">Sign in</a><a href="#privacy">Privacy</a></nav></div>
+  <p>Album artwork comes from Apple Music and belongs to the artists and labels; every record shown whole on this page links to its page on Apple Music. Apple and Apple Music are trademarks of Apple Inc., registered in the U.S. and other countries.</p>
+  <details class="proto-notes" id="proto-notes" lang="pt-BR">
+    <summary>Notas do protótipo (para o MJRP, não vão para o site)</summary>
+    <ul>
+      <li><b>Harmonia:</b> o caixote é o palco (o único objeto 3D); a rolagem é o disco tocando (cada faixa puxa um disco do caixote; «Flip the record» gira o caixote para o lado B); o fio do equalizador é o progresso e a navegação; o fogo é a luz que vem de baixo, forte só na primeira tela e no convite final.</li>
+      <li><b>Prévia do fogo:</b> <code>?fire=soft</code> (brando, o padrão) e <code>?fire=bright</code> (vivo). Só muda a força do fogo.</li>
+      <li><b>Capas reais:</b> capturadas do app, do Apple Music. Os termos da Apple (DPLA 3.3.6(D); App Review 4.5.2(ii)) só permitem a capa junto da reprodução ou da playlist, e pedem autorização dos donos dos direitos para marketing: <b>a confirmar antes de publicar</b>. O selo oficial «Listen on Apple Music» entra no lugar do botão de texto quando a página for pública.</li>
+      <li><b>Sem WebGL, com menos movimento, ou no celular:</b> o caixote em CSS, com as mesmas capas; no celular cada faixa traz o seu disco.</li>
+      <li><b>O movimento automático para sozinho:</b> 10 s depois de carregar ou da última rolagem, o fogo e o equalizador param; «Pause motion» para tudo.</li>
+    </ul>
+  </details>
+</div></footer>
+
+<script>
+/* Classic script: runs with or without WebGL. The text above never waits for it. */
+(function(){
+  var D=document, H=D.documentElement, ALBUMS=%%ALBUMS%%; H.classList.add('js');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  var phone=matchMedia('(max-width:899px)');
+  var Q=new URLSearchParams(location.search);
+  var FIRE=Q.get('fire')==='bright'?{peak:1,low:.55,name:'vivo'}:{peak:.72,low:.28,name:'brando'};
+  D.getElementById('fire-name').textContent=FIRE.name;
+  // where each track stands: which side faces you, which record is pulled, how strong the fire is
+  var TRACKS={a1:{side:'A',pull:-1,face:0,fire:FIRE.peak,label:'Side A · 1 — The Blender'},
+    a2:{side:'A',pull:2,fire:FIRE.low,label:'Side A · 2 — Series'},
+    a3:{side:'A',pull:3,fire:FIRE.low,label:'Side A · 3 — Ranking'},
+    a4:{side:'A',pull:5,fire:FIRE.low,label:'Side A · 4 — Blend'},
+    a5:{side:'A',pull:6,fire:FIRE.low,label:'Side A · 5 — Your shelf'},
+    flip:{side:'A',pull:-1,face:0,fire:(FIRE.low+FIRE.peak)/2,label:'Flip the record'},
+    b1:{side:'B',pull:10,fire:FIRE.low,label:'Side B · 1 — Why whole albums'},
+    b2:{side:'B',pull:-1,face:13,fire:FIRE.peak,label:'Side B · 2 — Start'}};
+  var ORDER=['a1','a2','a3','a4','a5','flip','b1','b2'];
+  var sections=ORDER.map(function(id){return D.getElementById(id);});
+  // thread bars: each bar its own height, duration and offset, never in unison
+  var gi=0;
+  [].forEach.call(D.querySelectorAll('#groups .g'),function(g){var h='';for(var i=0;i<5;i++){var k=gi*5+i;h+='<i style="--h:'+(38+Math.round(58*Math.abs(Math.sin(k*1.93+.4))))+'%;--d:'+(.55+((k*37)%9)/10).toFixed(2)+'s;--o:-'+(((k*53)%7)/10).toFixed(1)+'s"></i>';}g.innerHTML=h;gi++;});
+
+  // motion window: the automatic motion (fire flicker, breathing bars) runs 10 s after load or after the last scroll, then rests
+  var restT=0;
+  function wake(){ if(reduce.matches) return; H.classList.add('moving'); clearTimeout(restT); restT=setTimeout(function(){H.classList.remove('moving');D.dispatchEvent(new Event('motionchange'));},10000); D.dispatchEvent(new Event('motionchange')); }
+  window.__splash={TRACKS:TRACKS,ORDER:ORDER,ALBUMS:ALBUMS,state:{track:'a1',flip:0},moving:function(){return H.classList.contains('moving')&&!H.classList.contains('paused');}};
+
+  // pause control: visible unless the system already asks for less motion
+  if(phone.matches) [].forEach.call(D.querySelectorAll('#groups a'),function(a){a.tabIndex=-1;a.setAttribute('aria-hidden','true');});
+  var mb=D.getElementById('motion');
+  if(!reduce.matches){ mb.hidden=false; if(phone.matches){ var slot=D.getElementById('hero-ctas'); slot.appendChild(mb); mb.classList.add('inline'); } }
+  mb.onclick=function(){var p=H.classList.toggle('paused');mb.setAttribute('aria-pressed',p?'true':'false');mb.textContent=p?'Play motion':'Pause motion';if(!p)wake();D.dispatchEvent(new Event('motionchange'));};
+
+  // CSS crate: the side that faces you, with the pulled record lifted
+  var imgs=[].slice.call(D.querySelectorAll('#box .sl'));
+  function layoutCss(t){
+    var s=TRACKS[t]; var order=s.side==='A'?[0,1,2,3,4,5,6]:[13,12,11,10,9,8,7];
+    imgs.forEach(function(im){im.classList.remove('vis');});
+    var pulledPos=order.indexOf(s.pull);
+    order.forEach(function(idx,pos){
+      var im=imgs[idx]; im.classList.add('vis');
+      var z=-pos*34, y=-pos*6.5, tr;
+      if(idx===s.pull){ tr='translate3d(0,-46%,'+(z+18)+'px) rotateX(3deg)'; im.style.zIndex=30; }
+      else if(pulledPos>0 && pos<pulledPos){ tr='translate3d(0,'+(10-pos*2)+'%,'+(z+30)+'px) rotateX(-38deg)'; im.style.zIndex=20-pos; }
+      else { tr='translate3d(0,'+y+'%,'+z+'px) rotateX(-6deg)'; im.style.zIndex=20-pos; }
+      im.style.transform=tr;
+    });
+  }
+  function caption(t){
+    var s=TRACKS[t]; var i=s.pull>=0?s.pull:s.face; var a=ALBUMS[i];
+    D.getElementById('who').innerHTML='<b>'+a.t+'</b>'+a.a+' · '+a.y;
+    var am=D.getElementById('am'); am.href=a.href; am.setAttribute('aria-label','Listen to '+a.t+' by '+a.a+' on Apple Music (opens in a new tab)');
+  }
+  // phone: each track brings its own record (a copy of the crate's image, no extra bytes on the wire)
+  [].forEach.call(D.querySelectorAll('.slot'),function(sl){var i=+sl.dataset.pull;var im=imgs[i].cloneNode();im.removeAttribute('class');im.alt='';sl.appendChild(im);var c=D.createElement('a');c.className='slot-am';c.href=ALBUMS[i].href;c.target='_blank';c.rel='noopener';c.textContent=ALBUMS[i].t+' · '+ALBUMS[i].a+' — Listen on Apple Music';sl.appendChild(c);sl.removeAttribute('aria-hidden');});
+  if('IntersectionObserver' in window){ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target);}});},{rootMargin:'0px 0px -25% 0px'}); [].forEach.call(D.querySelectorAll('.slot.pre'),function(s){io.observe(s);}); }
+  else [].forEach.call(D.querySelectorAll('.slot.pre'),function(s){s.classList.remove('pre');});
+
+  // the record playing: native scroll decides the track; nothing is hijacked
+  var cur='';
+  function onScroll(){
+    var vh=innerHeight, mark=vh*.55, t='a1';
+    for(var k=0;k<sections.length;k++){ if(sections[k].getBoundingClientRect().top<mark) t=ORDER[k]; }
+    var fr=D.getElementById('flip').getBoundingClientRect();
+    var f=Math.max(0,Math.min(1,(vh*.75-fr.top)/(fr.height+vh*.25)));
+    if(ORDER.indexOf(t)>ORDER.indexOf('flip')) f=1;
+    window.__splash.state.flip=f; window.__splash.state.track=t;
+    if(t!==cur){
+      cur=t; var s=TRACKS[t];
+      D.getElementById('now-track').textContent=s.label;
+      var ti=ORDER.indexOf(t);
+      [].forEach.call(D.querySelectorAll('#groups [data-for]'),function(g){var gi=ORDER.indexOf(g.dataset.for);g.classList.toggle('on',gi<=ti);g.classList.toggle('cur',gi===ti);if(gi===ti)g.setAttribute('aria-current','step');else g.removeAttribute('aria-current');});
+      D.getElementById('scene').style.setProperty('--fire',s.fire);
+      if(!phone.matches){ layoutCss(t); caption(t); }
+      D.dispatchEvent(new CustomEvent('trackchange',{detail:t}));
+    }
+    D.dispatchEvent(new Event('scrollstate'));
+  }
+  addEventListener('scroll',function(){onScroll();wake();},{passive:true});
+  addEventListener('resize',onScroll);
+  // prototype only: ?measure writes the paint times on <html data-measure> for the headless measurement
+  if(Q.has('measure')) addEventListener('load',function(){setTimeout(function(){H.setAttribute('data-measure',JSON.stringify({paint:performance.getEntriesByType('paint').map(function(e){return [e.name,Math.round(e.startTime)];}),live:D.getElementById('stage').classList.contains('live'),three:performance.getEntriesByType('resource').filter(function(r){return /three/.test(r.name);}).length,reduce:reduce.matches}));},4000);});
+  layoutCss('a1'); caption('a1'); onScroll(); wake();
+
+  // the ember bed: a quieter Brasa, low in the scene, never behind text
+  function embers(cv,getLevel){
+    var x=cv.getContext('2d'), P=[], N=phone.matches?26:46, w=0,h=0, raf=0, vis=true, last=0;
+    function size(){var r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;cv.width=Math.round(w*d);cv.height=Math.round(h*d);x.setTransform(d,0,0,d,0,0);}
+    function spawn(p,init){p.x=w*(.15+.7*Math.random());p.y=init?h*Math.random():h+4;p.r=1+Math.random()*2.4;p.v=12+Math.random()*30;p.l=0;p.L=1.6+Math.random()*2.2;p.c=Math.random()<.5?'249,115,22':(Math.random()<.5?'220,38,38':'251,191,36');p.s=Math.random()*6;}
+    function frame(dt){
+      var lv=getLevel(); x.clearRect(0,0,w,h);
+      var g=x.createLinearGradient(0,h,0,h*.2); g.addColorStop(0,'rgba(249,115,22,'+(.30*lv)+')'); g.addColorStop(.5,'rgba(220,38,38,'+(.10*lv)+')'); g.addColorStop(1,'rgba(220,38,38,0)');
+      x.fillStyle=g; x.fillRect(0,0,w,h);
+      x.globalCompositeOperation='lighter';
+      for(var i=0;i<P.length;i++){var p=P[i]; if(dt){p.l+=dt;p.y-=p.v*dt;p.x+=Math.sin(p.l*2+p.s)*8*dt;} if(p.l>p.L||p.y<-4) spawn(p,false);
+        var a=(1-p.l/p.L)*.85*lv*(i<P.length*lv+4?1:0); if(a<=0) continue; x.fillStyle='rgba('+p.c+','+a.toFixed(3)+')'; x.beginPath(); x.arc(p.x,p.y,p.r,0,7); x.fill();}
+      x.globalCompositeOperation='source-over';
+    }
+    function loop(ts){ raf=0; if(!vis||D.hidden) return; var dt=last?Math.min((ts-last)/1000,.05):0; last=ts; frame(dt); if(window.__splash.moving()) raf=requestAnimationFrame(loop); else last=0; }
+    function kick(){ if(!raf && !reduce.matches && vis) raf=requestAnimationFrame(loop); }
+    size(); for(var i=0;i<N;i++){var p={};spawn(p,true);P.push(p);} frame(0);
+    new ResizeObserver(function(){size();frame(0);}).observe(cv);
+    if('IntersectionObserver' in window) new IntersectionObserver(function(e){vis=e[0].isIntersecting;if(vis)kick();}).observe(cv);
+    D.addEventListener('motionchange',function(){ if(window.__splash.moving()) kick(); else frame(0); });
+    D.addEventListener('trackchange',function(){ frame(0); kick(); });
+    kick();
+  }
+  embers(D.getElementById('embers'),function(){return +getComputedStyle(D.getElementById('scene')).getPropertyValue('--fire')||FIRE.peak;});
+  if(phone.matches) embers(D.getElementById('embers-b2'),function(){return FIRE.peak;});
+})();
+</script>
+<script type="module">
+/* The real 3D crate: computer only, after the page has loaded, only with WebGL and without a request for less motion. */
+const S = window.__splash; const D = document;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const phone = matchMedia('(max-width:899px)').matches;
+function hasWebGL(){ try{ const c=D.createElement('canvas'); return !!c.getContext('webgl2',{failIfMajorPerformanceCaveat:true}); }catch(e){ return false; } }
+function whenIdle(fn){ const go=()=>('requestIdleCallback' in window)?requestIdleCallback(fn,{timeout:1500}):setTimeout(fn,200); D.readyState==='complete'?go():addEventListener('load',go,{once:true}); }
+const Q = new URLSearchParams(location.search);
+if (S && !reduce && !phone && !Q.has('nogl') && hasWebGL()) whenIdle(start);
+
+async function start(){
+  let THREE; try{ THREE = await import('three'); }catch(e){ return; }
+  const stage=D.getElementById('stage'), scene3=D.getElementById('scene');
+  const canvas=D.createElement('canvas'); canvas.className='gl'; canvas.setAttribute('aria-hidden','true'); scene3.insertBefore(canvas, D.getElementById('crate-css'));
+  let renderer; try{ renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,failIfMajorPerformanceCaveat:true}); }catch(e){ canvas.remove(); return; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2)); renderer.outputColorSpace=THREE.SRGBColorSpace;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(30,1,.1,60); camera.position.set(0,4.9,10.6); camera.lookAt(0,1.75,0);
+  scene.add(new THREE.AmbientLight(0x3a2414,1.1));
+  const key=new THREE.DirectionalLight(0xfff4e8,.85); key.position.set(-2,6,5); scene.add(key);
+  const fireA=new THREE.PointLight(0xf97316,10,0,1.1); fireA.position.set(-1.4,.15,3.6); scene.add(fireA);
+  const fireB=new THREE.PointLight(0xdc2626,8,0,1.1); fireB.position.set(1.6,0,3.3); scene.add(fireB);
+  const crate=new THREE.Group(); scene.add(crate);
+  // crate: open box of dark planks
+  const pc=D.createElement('canvas'); pc.width=256; pc.height=128; const px=pc.getContext('2d');
+  px.fillStyle='#2e1d10'; px.fillRect(0,0,256,128); for(let i=0;i<3;i++){ px.fillStyle=i%2?'#3a2616':'#33200f'; px.fillRect(0,i*43,256,40); px.fillStyle='rgba(0,0,0,.45)'; px.fillRect(0,i*43+40,256,3); }
+  const wt=new THREE.CanvasTexture(pc); wt.colorSpace=THREE.SRGBColorSpace;
+  const wood=new THREE.MeshStandardMaterial({map:wt,roughness:.85});
+  const W=2.62, DEP=4.3, HT=1.05, T=.08;
+  const plank=(w,h,d,x,y,z)=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wood); m.position.set(x,y,z); crate.add(m); };
+  plank(W,T,DEP,0,0,0); plank(W,HT,T,0,HT/2,DEP/2); plank(W,HT,T,0,HT/2,-DEP/2); plank(T,HT,DEP,W/2,HT/2,0); plank(T,HT,DEP,-W/2,HT/2,0);
+  // sleeves: the captured covers on both faces, standing on the crate floor, pivoting from their bottom edge
+  const SZ=2.3, N=S.ALBUMS.length, edge=new THREE.MeshStandardMaterial({color:0x141414,roughness:.8});
+  const geo=new THREE.BoxGeometry(SZ,SZ,.035); geo.translate(0,SZ/2,0);
+  const imgs=[...D.querySelectorAll('#box .sl')];
+  await Promise.all(imgs.map(im=>im.decode?im.decode().catch(()=>{}):0));
+  const sleeves=imgs.map((im,i)=>{
+    const tex=new THREE.Texture(im); tex.needsUpdate=true; tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=renderer.capabilities.getMaxAnisotropy?Math.min(8,renderer.capabilities.getMaxAnisotropy()):4;
+    const face=new THREE.MeshStandardMaterial({map:tex,roughness:.55});
+    const m=new THREE.Mesh(geo,[edge,edge,edge,edge,face,face]);
+    m.userData={z:1.82-i*.28,lift:0,tilt:-.16};
+    m.position.set(0,T/2,m.userData.z); crate.add(m); return m;
+  });
+  function resize(){ const r=canvas.getBoundingClientRect(); if(!r.width) return; renderer.setSize(r.width,r.height,false); camera.aspect=r.width/r.height; camera.updateProjectionMatrix(); dirty=true; }
+  let dirty=true; new ResizeObserver(resize).observe(canvas);
+  // targets from the scroll state
+  function targets(){
+    const st=S.state, tr=S.TRACKS[st.track], f=st.flip, s=f<.5?1:-1;
+    const lean=-.16*s;
+    return sleeves.map((m,i)=>{
+      let lift=0, tilt=lean;
+      if(tr.pull>=0 && f%1===0){ if(i===tr.pull){ lift=1; tilt=.04*s; } else if((s>0 && i<tr.pull)||(s<0 && i>tr.pull)) tilt=.62*s; }
+      return {lift,tilt};
+    });
+  }
+  let rot=0, fireLv=+getComputedStyle(scene3).getPropertyValue('--fire')||1, tt=0, raf=0, visible=true, last=0;
+  function step(dt){
+    const tg=targets(), st=S.state; let moving=false;
+    const k=Math.min(1,dt*4.2);
+    const rT=Math.PI*(st.flip<.5?2*st.flip*st.flip:1-2*(1-st.flip)*(1-st.flip));
+    const dr=rT-rot; rot+= Math.abs(dr)>.0005? dr*Math.min(1,dt*6):dr; if(Math.abs(dr)>.0005) moving=true;
+    crate.rotation.y=rot;
+    sleeves.forEach((m,i)=>{ const u=m.userData, t=tg[i];
+      const dl=t.lift-u.lift, dti=t.tilt-u.tilt; if(Math.abs(dl)>.001||Math.abs(dti)>.001) moving=true;
+      u.lift+=dl*k; u.tilt+=dti*k;
+      const s=Math.sign(u.tilt)||1;
+      m.position.y=T/2+u.lift*1.55; m.position.z=u.userData?u.z:u.z; m.position.z=u.z+u.lift*.55*(rot<Math.PI/2?1:-1);
+      m.rotation.x=u.tilt; });
+    const fT=+getComputedStyle(scene3).getPropertyValue('--fire')||1; fireLv+=(fT-fireLv)*Math.min(1,dt*3); if(Math.abs(fT-fireLv)>.005) moving=true;
+    const anim=S.moving(); if(anim) tt+=dt;
+    const fl=anim?(1+.18*Math.sin(tt*7.1)+.1*Math.sin(tt*13.7+1)+.07*Math.sin(tt*23.3)):1;
+    const fl2=anim?(1+.16*Math.sin(tt*5.3+2)+.1*Math.sin(tt*17.9)):1;
+    fireA.intensity=12*fireLv*fl; fireB.intensity=9*fireLv*fl2;
+    renderer.render(scene,camera);
+    if(!stage.classList.contains('live')) stage.classList.add('live');
+    return moving||anim;
+  }
+  function loop(ts){ raf=0; if(!visible||D.hidden) return; const dt=last?Math.min((ts-last)/1000,.05):.016; last=ts; if(step(dt)) raf=requestAnimationFrame(loop); else last=0; }
+  const kick=()=>{ if(!raf&&visible&&!D.hidden) raf=requestAnimationFrame(loop); };
+  new IntersectionObserver(e=>{ visible=e[0].isIntersecting; if(visible) kick(); }).observe(stage);
+  D.addEventListener('visibilitychange',kick); D.addEventListener('scrollstate',kick); D.addEventListener('motionchange',kick); D.addEventListener('trackchange',kick);
+  canvas.addEventListener('webglcontextlost',e=>{ e.preventDefault(); stage.classList.remove('live'); });
+  resize(); kick();
+}
+</script>
+</body>
+</html>
