@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 17:12] decision — identidade visual: o fogo e os equalizadores são do site, e o design system é o piso
+**Branch:** main
+Palavras do MJRP, ao pedir as propostas da Home (F79) e da página de entrada (F80): «veja que o elemento do fogo, de equalizadores, fazem parte da identidade do site, busquem respeitar o design system num minimo pelo menos». Vale para as duas rodadas de desenho: o fogo (o logotipo `public/assets/TheAlbumBlender.png`, o degradê «flame» `#f97316 → #dc2626`) e os equalizadores são elementos da identidade, a manter e a usar; nenhuma proposta, nem a mais ousada, sai do `docs/specs/design-system.md` sem dizer o que muda e por quê.
+
 ## [2026-11-20 17:10] decision — duas features de desenho pedidas pelo MJRP: a Home que se explica (F79) e a página de entrada (F80)
 **Branch:** main
 Palavras dele: «vamos utilizar as skills de UI e UX e de writing copy para melhorar essa seção inicial do site … Gostaria de ver uma proposta consolidar, elevar, transformar, considerando copy, elementos de UI e UX e usabilidade. Tb gostaria de prototipo de uma home splash page para o site, com design moderno imersivo com animações, 3d...tudo relacionado a paixao por ouvir e apreciar ALBUNS completos de musica.» Criadas na `main`, em esboço: S-61 e F79 (EP-01), S-62 e F80 (EP-10; colocação decidida pelo agente, revisável). As duas começam por rodada de desenho com protótipos; nenhum ramo de código antes da escolha dele e da priorização.
