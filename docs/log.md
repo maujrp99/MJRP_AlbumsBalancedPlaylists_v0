@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:55] decision — F72: o ramo foi renomeado para fora da convenção, para o cartão voltar a ser arrastável
+
+- O MJRP não conseguia arrastar a F72: o cartão aparecia «em andamento». O agente mestre do harness explicou (`rules/delivery.py`; CC-ADR-0029 e CC-ADR-0056): um ramo aberto com o nome da convenção (`feat/f72-…`) conta como começo, e feature começada não se ordena.
+- O ramo `feat/f72-albums-screen-says-how-many` virou `wip-f72-albums-screen-says-how-many`; o commit `57667c2` e o trabalho em staging ficaram como estavam. Depois que o MJRP salvar a ordem, o ramo volta ao nome da convenção e o trabalho é commitado.
+- Regra daqui em diante: o ramo de uma feature só nasce depois que ela está na «Priorizada».
+
 ## [2026-11-19 23:54] session — F71: a janela do item faz o mesmo pedido da tela de álbuns (as três fontes)
 
 **Branch:** fix/f71-item-window-same-ask
