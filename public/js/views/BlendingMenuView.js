@@ -21,6 +21,7 @@ import { BlendRecipeCard } from '../components/blend/BlendRecipeCard.js'
 import { BlendIngredientsPanel } from '../components/blend/BlendIngredientsPanel.js'
 import { blendingController } from '../controllers/BlendingController.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
+import { isPhone, onPhoneChange } from '../utils/isPhone.js'
 
 /** How long a notice about what the load left out stays: it is read on the next screen. */
 const NOTICE_MS = 10000
@@ -54,17 +55,17 @@ export class BlendingMenuView extends BaseView {
         const container = SafeDOM.div({ className: 'container mx-auto px-4 py-8 max-w-5xl' })
 
         // Header
-        const header = SafeDOM.div({ className: 'text-center mb-8' })
+        const header = SafeDOM.div({ className: 'text-center mb-8 blend-head' })
 
         const titleRow = SafeDOM.div({ className: 'inline-flex items-center gap-3 mb-3' })
         titleRow.appendChild(SafeDOM.span({ className: 'text-4xl' }, '🍹'))
         titleRow.appendChild(SafeDOM.h1({ className: 'text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent' }, 'The Blending Menu'))
         header.appendChild(titleRow)
 
-        header.appendChild(SafeDOM.p({ className: 'text-muted text-lg mb-6' }, '"Your Music, Your Recipe"'))
+        header.appendChild(SafeDOM.p({ className: 'text-muted text-lg mb-6 blend-head__motto' },'"Your Music, Your Recipe"'))
 
         // Progressive Disclosure Stepper
-        const stepperContainer = SafeDOM.div({ className: 'inline-flex items-center gap-2 md:gap-4 px-4 py-3 rounded-2xl bg-white/5 border border-white/10' })
+        const stepperContainer = SafeDOM.div({ className: 'inline-flex items-center gap-2 md:gap-4 px-4 py-3 rounded-2xl bg-white/5 border border-white/10 blend-stepper' })
         stepperContainer.appendChild(SafeDOM.fromHTML(this.renderStepper()))
         header.appendChild(stepperContainer)
 
@@ -139,6 +140,7 @@ export class BlendingMenuView extends BaseView {
 
         // Results Area
         container.appendChild(SafeDOM.section({ id: 'blend-results', className: 'mt-8 hidden' }))
+        this.appendPhoneBar(container)
 
         return container
     }
@@ -177,21 +179,55 @@ export class BlendingMenuView extends BaseView {
                     : 'text-muted'
 
             const connector = idx < steps.length - 1
-                ? `<div class="w-4 md:w-8 h-0.5 ${isDone ? 'bg-green-500' : 'bg-white/20'}"></div>`
+                ? `<div class="w-4 md:w-8 h-0.5 blend-stepper__line ${isDone ? 'bg-green-500' : 'bg-white/20'}"></div>`
                 : ''
 
             return `
-                <div class="flex items-center gap-1 md:gap-2">
-                    <div class="flex flex-col items-center">
+                <div class="flex items-center gap-1 md:gap-2 blend-stepper__step"${isActive ? ' aria-current="step"' : ''}>
+                    <div class="flex flex-col items-center blend-stepper__mark">
                         <div class="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center text-sm transition-all ${stepClass}">
                             ${isDone ? '✓' : getIcon(step.icon, 'w-2/3 h-2/3')}
                         </div>
-                        <span class="text-[10px] md:text-xs mt-1 ${labelClass}">${step.label}</span>
+                        <span class="text-[10px] md:text-xs mt-1 blend-stepper__label ${labelClass}">${step.label}</span>
                     </div>
                     ${connector}
                 </div>
             `
         }).join('')
+    }
+
+    /**
+     * The phone (F76, REQ-10): «Blend it!» always in view in the action bar, off while a step is
+     * missing and the note saying which. On the computer nothing is drawn.
+     */
+    appendPhoneBar(container) {
+        if (!isPhone()) return
+        container.appendChild(this.renderPhoneBar())
+    }
+
+    renderPhoneBar() {
+        const ready = Boolean(this.selectedSeries && this.selectedRecipe)
+        const button = SafeDOM.button({ type: 'button', id: 'blend-bar-btn', className: 'btn btn-primary blend-bar__btn' }, this.isGenerating ? 'Blending…' : 'Blend it!')
+        button.disabled = !ready || this.isGenerating
+        if (this.isGenerating) button.setAttribute('aria-busy', 'true')
+        button.addEventListener('click', () => this.handleGenerate())
+        return SafeDOM.div({ id: 'blend-phone-bar', className: 'phone-action-bar blend-bar md:hidden' }, [
+            SafeDOM.span({ className: 'phone-action-bar__note blend-bar__note', role: 'status', 'aria-live': 'polite' }, this.phoneBarNote()),
+            button
+        ])
+    }
+
+    /** What the bar says: the step that is missing, or what will be blended. */
+    phoneBarNote() {
+        if (!this.selectedSeries) return 'Step 1 of 4: choose a series'
+        if (!this.selectedRecipe) return 'Step 2 of 4: choose a recipe'
+        return `${this.selectedRecipe.name} · ${this.config.duration} min`
+    }
+
+    /** The bar drawn again from the state (a step done, blending started or ended). */
+    refreshPhoneBar() {
+        const bar = document.getElementById('blend-phone-bar')
+        if (bar) bar.replaceWith(this.renderPhoneBar())
     }
 
     /**
@@ -260,6 +296,9 @@ export class BlendingMenuView extends BaseView {
             }
         })
 
+        // The phone and the computer draw step 1 and the action differently: a turn redraws (F76)
+        this.subscriptions.push(onPhoneChange(() => this.fullUpdate()))
+
         // Render components
         this.seriesSelector.render()
         await this.seriesSelector.loadSeries()
@@ -311,6 +350,7 @@ export class BlendingMenuView extends BaseView {
     updateGenerateButton() {
         // Update stepper
         this.updateStepper()
+        this.refreshPhoneBar()
 
         // Update generate button
         const section = document.getElementById('blend-generate-section')
@@ -393,6 +433,7 @@ export class BlendingMenuView extends BaseView {
     /** Leaving the screen drops the albums it was waiting for: no load is left that nobody reads. */
     destroy() {
         this._leaving?.abort()
+        this.seriesSelector?.phonePicker?.close()
         super.destroy()
     }
 

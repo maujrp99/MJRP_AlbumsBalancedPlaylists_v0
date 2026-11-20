@@ -97,6 +97,36 @@ describe('SeriesComponentFactory', () => {
             const header = SeriesComponentFactory.createHeader(mockContainer, { view: mockView })
             expect(header.props.pageTitle).toBe('All Albums Series')
         })
+
+        // UAT-217: «Blend your Albums» opens the Blend with the series of the page chosen
+        describe('«Blend your Albums»', () => {
+            const blendFrom = async (view) => {
+                const { router } = await import('../../../public/js/router.js')
+                router.navigate.mockClear()
+                SeriesComponentFactory.createHeader(mockContainer, { view }).props.onGeneratePlaylists()
+                return router.navigate.mock.calls[0][0]
+            }
+
+            it('carries the series the page is at, even when the store has no active series yet', async () => {
+                albumSeriesStore.getActiveSeries.mockReturnValue(null)
+                const view = { currentScope: 'SINGLE', controller: { getState: () => ({ targetSeriesId: 'abc 1' }) } }
+
+                expect(await blendFrom(view)).toBe('/blend?seriesId=abc%201')
+            })
+
+            it('carries the store\'s active series when the page has no controller state', async () => {
+                albumSeriesStore.getActiveSeries.mockReturnValue({ id: 's1', name: 'My Series' })
+
+                expect(await blendFrom({ currentScope: 'SINGLE' })).toBe('/blend?seriesId=s1')
+            })
+
+            it('on the page of every series, opens the Blend with none chosen', async () => {
+                albumSeriesStore.getActiveSeries.mockReturnValue(null)
+                const view = { currentScope: 'ALL', controller: { getState: () => ({ targetSeriesId: null }) } }
+
+                expect(await blendFrom(view)).toBe('/blend')
+            })
+        })
     })
 
     describe('createToolbar', () => {
