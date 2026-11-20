@@ -3,6 +3,21 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:21] session — fecho: a v5.0 em produção; 79 issues em fixed, 6 abertas com o MJRP
+
+Branch: main
+Session: sessão do V0 aberta pelo orquestrador do harness em 2026-11-19 («resolver todos os problemas do album blender»), continuada sob a dispensa do MJRP de 2026-11-19 19:03.
+
+**Resumo.** Todas as features da v5.0 que dependiam do agente estão na `main` e em produção: site `fd9a0a1`, servidor `mjrp-proxy-00207-lhz` (publicado pela trava de lint; em produção, depois da última subida: depuração 404, 401 sem login, notas de «Nevermind» com login, «In the Court of the Crimson King» com página achada). A suíte tem 2219 testes; a build compila; `npx eslint .` termina com 0 erros.
+
+**Decisões desta sessão (todas no log, com hora; as do agente são revisáveis).**
+- MJRP: visitante não leva dados ao entrar com conta; sair da conta recarrega o app; servidor em Node 24; F52 ao código com a proposta emendada; o conserto do Scan na frente; «No Quarter» com afrouxamento e a F68 para rever as regras de identidade; a conformidade de 28/10 fica de lado; dispensa de bloqueio pelo processo.
+- Agente: a resposta única da busca por IA entra no segundo nível da regra de identidade; a F68 passou na frente depois da varredura (16 de 199 álbuns sem página de notas; hoje 6, todos legítimos); a tabela de «escritas conhecidas»; aposentar as telas de ranking e de migração e a rota `/api/playlists`; os roteiros de navegador antigos saíram; erro do provedor de IA sai como 424; «não tem» da fonte vale 24 horas, «página sem notas» 7 dias; a ADR-0021 (Tailwind compilado) publicada como proposta; F67, F69 e F70 criadas na `main`; o Cloud Run não foi reconfigurado.
+
+**Próxima sessão.** Começa pelo `## Now`: nada em andamento do lado do agente; as treze pendências do MJRP estão listadas lá, o aceite primeiro. Se ele pedir mais trabalho, os candidatos sem dono estão em «Pending on Agent».
+
+**Dados.** Publicações do dia: mais de vinte do site e doze do servidor (revisões `mjrp-proxy-00196-sj7` a `mjrp-proxy-00207-lhz`). Dados de teste deixados na conta do MJRP: rankings em «Brothers In Arms» e «Rapture of the Deep»; os identificadores corrigidos de álbuns nas séries (F55) e os fatos das séries reescritos (F69) são efeito das features, não de teste. Nenhum push, nenhum carimbo de aceite, nenhuma senha digitada.
+
 ## [2026-11-19 22:18] review — segunda fatia da F58 e trava de lint em produção (site); UAT-18, 19, 20 em fixed
 
 Site publicado da `main` (`fd9a0a1`, pacote `main-bsMs4i-z.js`), a primeira publicação que passou pela trava de lint. Prova em `reports/evidence/F58/2026-11-20-layers-and-lint-gate-proof.md`: arrastar uma faixa muda a ordem e o desfazer devolve; em produção as seis telas principais abrem sem erro. O servidor está sendo publicado (mudou só a escrita de expressões regulares, com teste antes e depois). Restam 6 issues abertas, todas dependentes do MJRP: UAT-17, 28, 202, 61, 143, 193.
