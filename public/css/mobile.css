@@ -32,6 +32,11 @@
     --phone-sheet-bg: #101014;
     --phone-accent: #f97316;
     --phone-slide: 200ms;
+    /* The two families (recheck N4, design-system.md § Celular): the title of a row (album, track,
+       playlist, series) is Syne, the display face; everything else is the text face of the system
+       (SF Pro on the iPhone), which stays legible at 12 to 16 px */
+    --phone-font-title: 'Syne', sans-serif;
+    --phone-font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
   }
 
   /* ── 2. The page ─────────────────────────────────────────────────────────────────────────── */
@@ -924,5 +929,54 @@
   .phone-menu__message {
     margin: 0;
     color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* ── 11. The segmented control (recheck N9; design-system.md § Celular) ──────────────────── */
+  /* One look for every «one of these» choice of the phone: 44 px high, the options side by side,
+     the chosen one on a raised light surface with white text. Never orange: orange is the main
+     action of the screen, the current tab and a picked item, and a segmented choice is none of them. */
+  .phone-segmented {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 0;
+    border-radius: 12px;
+    background: #0a0a0c;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .phone-segmented__option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+    min-height: var(--phone-target);
+    padding: 0 8px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #a0a0a8;
+    font-family: var(--phone-font-text);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 18px;
+    white-space: nowrap;
+  }
+
+  .phone-segmented__option.is-on,
+  .phone-segmented__option[aria-pressed="true"] {
+    background: #2a2a30;
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  }
+
+  .phone-segmented__option:disabled {
+    opacity: 0.4;
+  }
+
+  .phone-segmented__option:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -2px;
   }
 }

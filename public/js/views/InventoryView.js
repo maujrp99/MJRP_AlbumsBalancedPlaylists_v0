@@ -10,12 +10,12 @@ import { InventoryStatus, statusCountLabel } from '../models/inventoryStatus.js'
 import { SORT_OPTIONS, choiceOf } from '../models/inventorySort.js'
 import { SourceState } from '../models/inventoryValue.js'
 import { showDiscogsNotice } from '../components/Footer.js'
-import { renderNotices, renderTotals } from './renderers/InventoryValueHeader.js'
+import { phoneValuesDetails, renderNotices, renderPhoneNotices, renderPhoneTotals, renderTotals } from './renderers/InventoryValueHeader.js'
 import { isPhone, onPhoneChange } from '../utils/isPhone.js'
 import { DISCOGS_NOTICE } from '../components/Footer.js'
 import { PHONE_CHUNK, jumpTargets, jumpsByLetter, shownFor } from '../models/inventoryJump.js'
 import { MORE_ICON, phoneEmpty, phoneList, phoneLoading, phoneProgress, phoneRow } from './renderers/InventoryPhoneRow.js'
-import { openActionsSheet, openFiltersSheet, openItemSheet, openJumpSheet, openStatusSheet } from './InventoryPhoneSheets.js'
+import { openActionsSheet, openFiltersSheet, openItemSheet, openJumpSheet, openStatusSheet, openValuesSheet } from './InventoryPhoneSheets.js'
 
 /** The action that puts every album of the person's series in the inventory (F71). */
 const ADD_SERIES_ALBUMS_ID = 'addSeriesAlbumsBtn'
@@ -356,15 +356,27 @@ export class InventoryView extends BaseView {
 
   /** The strip under the title: the two totals and the currency (F75, REQ-07, REQ-08). */
   renderTotals(state) {
-    const strip = SafeDOM.div({ id: TOTALS_ID, className: 'glass-panel p-4 mb-6 flex flex-wrap items-center gap-4' })
-    strip.appendChild(SafeDOM.fromHTML(renderTotals(state.value)))
+    // The phone (F76, recheck N2): two short rows, no panel, so the list shows on the first screen
+    const strip = isPhone()
+      ? SafeDOM.div({ id: TOTALS_ID, className: 'inv-values' })
+      : SafeDOM.div({ id: TOTALS_ID, className: 'glass-panel p-4 mb-6 flex flex-wrap items-center gap-4' })
+    strip.appendChild(SafeDOM.fromHTML(this.totalsHtml(state.value)))
     return strip
+  }
+
+  /** The totals and the notices as the phone or the computer writes them. */
+  totalsHtml(value) {
+    return isPhone() ? renderPhoneTotals(value) : renderTotals(value)
+  }
+
+  noticesHtml(value) {
+    return isPhone() ? renderPhoneNotices(value) : renderNotices(value)
   }
 
   /** The notices of the values, between the totals and the filters: a run under way, or albums waiting for a value. */
   renderNotices(state) {
     const notices = SafeDOM.div({ id: NOTICES_ID })
-    notices.appendChild(SafeDOM.fromHTML(renderNotices(state.value)))
+    notices.appendChild(SafeDOM.fromHTML(this.noticesHtml(state.value)))
     return notices
   }
 
@@ -434,8 +446,8 @@ export class InventoryView extends BaseView {
     if (this.left) return
     const button = document.getElementById(UPDATE_VALUES_ID)
     if (button) this.applyAction(button, UPDATE_VALUES_LABEL, state.value.run)
-    this.redraw(TOTALS_ID, renderTotals(state.value))
-    this.redraw(NOTICES_ID, renderNotices(state.value))
+    this.redraw(TOTALS_ID, this.totalsHtml(state.value))
+    this.redraw(NOTICES_ID, this.noticesHtml(state.value))
     if (itemId) this.redrawCard(state, itemId)
     this.drawPhoneProgress()
     this.openWindow?.redrawValue()
@@ -579,6 +591,7 @@ export class InventoryView extends BaseView {
     document.getElementById(TOTALS_ID)?.addEventListener('click', (e) => {
       const code = e.target.closest('[data-currency]')?.dataset.currency
       if (code) this.controller.handleCurrencyChoice(code)
+      if (e.target.closest('[data-values-about]')) openValuesSheet(phoneValuesDetails(this.controller.state.value))
     })
     document.getElementById(NOTICES_ID)?.addEventListener('click', (e) => {
       const action = e.target.closest('[data-notice-action]')?.dataset.noticeAction

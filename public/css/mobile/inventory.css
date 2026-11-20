@@ -27,12 +27,13 @@
 
   /* ── The top: title, the three status filters, the totals ─────────────────────────────── */
   .inv-phone-header {
-    margin: 0 0 12px;
+    margin: 0 0 8px;
+    padding-top: 4px;
   }
 
   .inv-phone-header .header-title-row {
-    margin-bottom: 12px;
-    gap: 10px;
+    margin-bottom: 8px;
+    gap: 0;
   }
 
   /* «My Collection» stays for a screen reader: the top bar already says «Inventory» */
@@ -53,8 +54,9 @@
   /* «211 albums»: the count, quiet */
   .inv-phone-header .stats-row > span:first-child {
     display: block;
-    margin: 0 0 8px;
-    font-size: 14px;
+    margin: 0 0 6px;
+    font-family: var(--phone-font-text);
+    font-size: 13px;
     line-height: 18px;
     font-weight: 400;
     color: var(--inv-grey);
@@ -95,122 +97,175 @@
     outline-offset: 2px;
   }
 
-  /* The totals: two numbers side by side, each with its «N of M» line; the currency under them */
-  .inventory-view--phone #inventoryTotals {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 16px;
-    margin-bottom: 12px;
-    padding: 14px 16px;
-    border-radius: 14px;
-    background: var(--inv-raised);
-    border: 1px solid var(--inv-line);
-    box-shadow: none;
+  /* The totals (recheck N2): «Owned» and «To buy» one above the other, the currency at their
+     right; then «Data provided by Discogs.» and the button that opens the rest in a sheet. No
+     panel: the list has to show on the first screen (2 rows at 393x660, 4 at 393x852) */
+  .inventory-view--phone .inv-values {
+    margin: 0 0 8px;
   }
 
-  .inventory-view--phone #inventoryTotals [data-total] {
+  .inv-values__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .inv-values__totals {
+    flex: 1 1 auto;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 2px;
   }
 
-  .inventory-view--phone #inventoryTotals [data-total] > span:first-child {
-    font-size: 12px;
-    line-height: 16px;
+  .inv-values__total {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .inv-values__label {
+    flex: none;
+    width: 52px;
+    font-family: var(--phone-font-text);
+    font-size: 13px;
+    line-height: 20px;
     color: var(--inv-grey);
   }
 
-  .inventory-view--phone #inventoryTotals [data-role="sum"] {
-    font-size: 20px;
-    line-height: 24px;
+  .inv-values__sum {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--phone-font-text);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20px;
     color: #fff;
     font-variant-numeric: tabular-nums;
   }
 
-  .inventory-view--phone #inventoryTotals [data-role="count"] {
+  .inv-values__currency {
+    flex: none;
+    width: 184px;
+  }
+
+  .inv-values__note {
+    margin-top: 6px;
+    font-family: var(--phone-font-text);
     font-size: 12px;
     line-height: 16px;
     color: var(--inv-grey);
   }
 
-  /* The currency: a segmented control of 44 px (the selector of 41 x 26 the foundation measured) */
-  .inventory-view--phone #currencySelector {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    margin: 0;
-    padding: 2px;
-    border-radius: 12px;
-    background: #0a0a0c;
-    border: 1px solid var(--inv-line);
-  }
-
-  .inventory-view--phone #currencySelector button {
-    min-height: var(--phone-target);
-    border: 0 !important;
-    border-radius: 10px;
-    background: transparent;
-    color: var(--inv-grey);
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-
-  .inventory-view--phone #currencySelector button[aria-pressed="true"] {
-    background: var(--inv-raised-2) !important;
-    color: #fff !important;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
-  }
-
-  .inventory-view--phone #currencySelector button:disabled {
-    opacity: 0.4;
-  }
-
-  .inventory-view--phone #inventoryTotals [data-role="rate"],
-  .inventory-view--phone #inventoryTotals [data-role="rates-missing"],
-  .inventory-view--phone #inventoryTotals [data-role="discogs-credit"] {
-    grid-column: 1 / -1;
-    font-size: 12px;
-    line-height: 16px;
-    color: var(--inv-grey);
-  }
-
-  /* «Data provided by Discogs.»: a term of use, a link that is read and touched */
-  .inventory-view--phone #inventoryTotals [data-role="discogs-credit"] {
+  .inv-values__foot {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    column-gap: 4px;
-    margin: -4px 0 -8px;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 2px;
   }
 
-  .inventory-view--phone #inventoryTotals [data-role="discogs-credit"] a {
+  .inv-values__credit,
+  .inv-values__about {
     display: inline-flex;
     align-items: center;
     min-height: var(--phone-target);
+    font-family: var(--phone-font-text);
+    font-size: 13px;
+    line-height: 16px;
+    color: var(--inv-grey);
+    white-space: nowrap;
+  }
+
+  .inv-values__credit {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .inv-values__about {
+    padding: 0 0 0 8px;
     color: #fff;
   }
 
-  /* The notices of the values (a run, albums waiting): one calm line, its button at the right */
-  .inventory-view--phone #inventoryNotices > div {
-    flex-wrap: nowrap;
-    margin-bottom: 12px;
-    padding: 8px 8px 8px 16px;
-    border-radius: 14px;
+  /* The notices of the values (a run, albums waiting): one line, its button at the right */
+  .inv-notice {
+    display: flex;
+    align-items: center;
     gap: 12px;
+    margin: 0 0 8px;
+    padding: 4px 4px 4px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--inv-line);
+    background: var(--inv-raised);
   }
 
-  .inventory-view--phone #inventoryNotices > div > span {
+  .inv-notice__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--phone-font-text);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 18px;
+    color: #fff;
+  }
+
+  .inv-notice__action {
+    flex: none;
+    min-height: var(--phone-target);
+    padding: 0 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    font-family: var(--phone-font-text);
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  /* «Why?» / «About the values»: the totals in words, the rate, the seller settings */
+  .inv-values-sheet__total {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 12px;
+    padding: 10px 0;
+  }
+
+  .inv-values-sheet__label,
+  .inv-values-sheet__count {
+    font-family: var(--phone-font-text);
     font-size: 14px;
     line-height: 18px;
+    color: var(--inv-grey);
   }
 
-  .inventory-view--phone #inventoryNotices .btn {
-    flex: none;
-    padding: 0 14px;
-    font-size: 14px;
+  .inv-values-sheet__count {
+    grid-column: 1 / -1;
+    font-size: 13px;
+  }
+
+  .inv-values-sheet__sum {
+    font-family: var(--phone-font-text);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 22px;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .inv-values-sheet__seller {
+    margin: 12px 0;
+    font-family: var(--phone-font-text);
+    font-size: 15px;
+    line-height: 21px;
+    color: #f2f2f4;
+  }
+
+  .inv-values-sheet__link {
+    color: var(--phone-accent);
+    text-decoration: underline;
   }
 
   /* ── The bar under the top bar: search, A–Z, filters, actions; what an action is doing ── */
