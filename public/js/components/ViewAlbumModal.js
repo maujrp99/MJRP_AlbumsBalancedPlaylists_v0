@@ -11,7 +11,7 @@ import { Album } from '../models/Album.js'
 import { SafeDOM } from '../utils/SafeDOM.js'
 import { coverImage } from './ui/coverImage.js'
 import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
-import { createBuyLinksSection, createValueSection } from './InventoryValueSection.js'
+import { createBuyLinksSection, createPhoneBuyLinks, createValueSection, phoneValueFold } from './InventoryValueSection.js'
 import { isPhone } from '../utils/isPhone.js'
 
 /** The colour of the status badge of an inventory item. */
@@ -254,8 +254,15 @@ function watchTheTitle(scroller, title, closed) {
 /** The sections an inventory item shows above its tracks (F75): its value, and where to buy it. */
 function sectionsOfAnItem(item, value) {
   if (!item || !value) return { valueSection: null, aboveTheTracks: [] }
-  const valueSection = createValueSection(value)
-  return { valueSection, aboveTheTracks: [valueSection, createBuyLinksSection(item)] }
+  if (!isPhone()) {
+    const valueSection = createValueSection(value)
+    return { valueSection, aboveTheTracks: [valueSection, createBuyLinksSection(item)] }
+  }
+  // The phone (F76, recheck N7): both folded to one line each, so the tracks start on the first screen
+  let fold = null
+  const valueSection = createValueSection({ ...value, onDrawn: () => fold?.drawLine() })
+  fold = phoneValueFold(valueSection, value.view)
+  return { valueSection, aboveTheTracks: [fold, createPhoneBuyLinks(item)] }
 }
 
 /** Draws the value section again, while the window is open and has one. */

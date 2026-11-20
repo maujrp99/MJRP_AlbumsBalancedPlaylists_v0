@@ -1,0 +1,46 @@
+{
+ "list-393x660": {
+  "phone": true,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 5813,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 171,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "rowsDrawn": 50,
+  "rowHeights": [
+   102,
+   122
+  ],
+  "firstRowTop": 365,
+  "rowsAboveFold": 2,
+  "stickyBarTop": 300,
+  "openSheet": null,
+  "visibleText": 172
+ },
+ "seller-393x660": {
+  "phone": true,
+  "clientWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 5813,
+  "textBelow12": 0,
+  "textBelow12Sample": [],
+  "fieldsBelow16": [],
+  "targets": 171,
+  "targetsBelow44": 0,
+  "targetsBelow44Sample": [],
+  "rowsDrawn": 50,
+  "rowHeights": [
+   102,
+   122
+  ],
+  "firstRowTop": 365,
+  "rowsAboveFold": 2,
+  "stickyBarTop": 300,
+  "openSheet": null,
+  "visibleText": 172
+ }
+}

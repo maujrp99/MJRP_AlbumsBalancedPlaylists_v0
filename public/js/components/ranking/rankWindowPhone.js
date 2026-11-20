@@ -22,7 +22,11 @@ export const RANK_PHONE_TEXT = Object.freeze({
     hint: 'Tap a track to move it with the buttons below, or drag it by its handle.',
     note: 'BEA and Spotify ranks are shown for reference. Your ranking is used by the "Top Tracks by My Own Ranking" recipe.',
     reset: 'Back to the order of the album.',
-    undo: 'Undo'
+    undo: 'Undo',
+    discardTitle: 'Discard changes?',
+    discardNote: 'Your new order has not been saved.',
+    keepEditing: 'Keep editing',
+    discard: 'Discard'
 })
 
 const icon = (name, className = 'rank-icon') => SafeDOM.fromHTML(getIcon(name, className))
@@ -63,7 +67,7 @@ export function renderPhoneRow(modal, track, index) {
 
 function renderBar(modal) {
     return SafeDOM.div({ className: 'rank-phone__bar' }, [
-        SafeDOM.button({ className: 'rank-phone__back', onClick: () => modal.close() }, [icon('ChevronRight', 'rank-icon rank-icon--back'), 'Back']),
+        SafeDOM.button({ className: 'rank-phone__back', onClick: () => modal.requestClose() }, [icon('ChevronRight', 'rank-icon rank-icon--back'), 'Back']),
         SafeDOM.create('h2', { id: 'rankPhoneTitle', className: 'rank-phone__title' }, RANK_PHONE_TEXT.title),
         SafeDOM.button({ className: 'rank-phone__reset', onClick: () => resetWithUndo(modal) }, [icon('Undo'), 'Reset'])
     ])
@@ -188,4 +192,30 @@ export function resetWithUndo(modal) {
             refreshPhone(modal)
         }
     })
+}
+
+/**
+ * Back (or Escape) with an order changed and not saved: a sheet from the bottom asks before the
+ * order is thrown away (F76, recheck N6). «Keep editing» is first and takes the focus; «Discard»
+ * closes the window without saving.
+ */
+export function confirmDiscard(modal) {
+    if (modal._sheet) return modal._sheet
+    const keep = SafeDOM.button({ className: 'rank-discard__keep', onClick: () => sheet.close() }, RANK_PHONE_TEXT.keepEditing)
+    const discard = SafeDOM.button({
+        className: 'rank-discard__discard',
+        onClick: () => {
+            sheet.close()
+            modal.close()
+        }
+    }, RANK_PHONE_TEXT.discard)
+    const sheet = openSheet({
+        variant: 'bottom',
+        title: RANK_PHONE_TEXT.discardTitle,
+        content: [SafeDOM.p({ className: 'rank-discard__note' }, RANK_PHONE_TEXT.discardNote), SafeDOM.div({ className: 'rank-discard' }, [keep, discard])],
+        onClose: () => { modal._sheet = null },
+        id: 'rankDiscardSheet'
+    })
+    modal._sheet = sheet
+    return sheet
 }

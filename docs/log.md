@@ -13,6 +13,16 @@ Computador idêntico pixel a pixel em todas as cenas comparadas, salvo uma faixa
 No celular: mover uma faixa pela folha mostra «Moved … to number 2 · Undo» e acende a linha por 1,2 s (sem transição com menos movimento); o filtro «?» da Home lê «Other»; na janela Edit Series os avisos de espera/vazio/falha passam a #a0a0a8 (eram 2,43:1).
 Fora da lista estrita: views/playlists/phonePlaylistActions.js (as ações da tela de Playlists). Testes 3047 verdes, lint e build verdes.
 
+## [2026-11-20 03:39] session — F76 polimento: notas de tela e provas do Inventário, da janela do álbum e de Albums
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Seções «Polimento depois da crítica» em screens/inventory.md, album-window-and-ranking.md e albums.md (decisões, medidas, o que não foi feito: N11, N14, N15, N16).
+Provas em reports/evidence/F76/inventory/2026-11-20-polish-proof.md e album-window/2026-11-20-polish-proof.md.
+
+## [2026-11-20 03:37] session — F76 polimento: a página presa sem nada aberto é devolvida (N22)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Lidos pageScrollLock.js e windowsHoldThePage.js: no código do app nenhum caminho deixa o contador alto (folhas e janelas sempre saem pelo close ou são tiradas do body, o que o observador vê). Os dois caminhos que deixam a página presa sem nada aberto — uma folha tirada do DOM sem close e o módulo recarregado (HMR do servidor de desenvolvimento, onde a crítica rodou) com o body preso — agora se soltam: giveBackAStrayHold roda a cada mudança dos filhos do body e a cada troca de tela (PhoneShell.screenChanged, uma linha).
+Testes: 4 novos em test/components/ui/windowsHoldThePage.test.js.
+
 ## [2026-11-20 03:36] session — F76 polimento: títulos de linha em Syne em Playlists e na folha da Home (N4, N15 em parte)
 **Branch:** feat/f76-mobile-polish-home-playlists
 No celular, o título da faixa (15 px, 600, até 2 linhas, como as linhas da janela de ranking) e o nome nas fichas de New Playlists em Syne; na folha de escolhidos da Home, artista, campo, aviso e dica na fonte de texto. Os «⋯» de New Playlists passam de «Options for…» para «Actions for…», o verbo de Albums e Inventário.
@@ -23,15 +33,35 @@ A 393x660 continuam 4 faixas inteiras; computador intocado (só regras dentro da
 No celular, a folha «n albums chosen» abre com o campo «Series name» (16 px, o mesmo valor do campo da página, escrito nos dois sentidos); sem nome, «Create series» abre a folha, diz «Give the series a name first.» e põe o cursor no campo, em vez de criar «New Album Series» calado. O computador segue com o nome padrão.
 Arnês da Home com cenas novas (rolada, folha com e sem nome) e 393x660; computador igual ao de main (uma faixa de antisserrilhado no botão Sign In da primeira cena, fora deste ramo). Decidido pelo agente — revisável.
 
+## [2026-11-20 03:35] session — F76 polimento: um controle segmentado e duas famílias de fonte no celular (N9, N4)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+Um só segmentado (mobile.css § 11, variáveis --phone-seg-*): escolhido na superfície clara elevada, nunca laranja; aplicado em Grid/List e Pages/Scroll (Albums), Original/BEA/Spotify (janela do álbum) e a moeda (Inventário). Fonte: título de linha em Syne (--phone-font-title), o resto na fonte de texto (--phone-font-text) em Albums, Inventário, janela do álbum e ranking. As duas regras escritas em design-system.md § Celular.
+3045 testes verdes, eslint e build verdes; Albums 1280x800 idêntico ao da passada de construção.
+
+## [2026-11-20 03:31] session — F76 polimento: a janela do álbum do Inventário dobra o valor e as lojas (N7)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+No celular, «Estimated value» vira uma linha (valor, origem, chevron) com «Data provided by Discogs.» ao lado, que abre a seção inteira num toque; «Where to buy» vira uma linha de três lojas de 44 px. As faixas começam em ~y=520 a 393x852 (antes 965). Os .btn-secondary da janela perdem o backdrop-filter próprio no celular (N7b, defensivo: não reproduzido no Chrome).
+Testes: 2 novos em test/components/ViewAlbumModal.phone.test.js; 1280x800 idêntico pixel a pixel antes e depois.
+
 ## [2026-11-20 03:29] session — F76 polimento: Playlists gravadas com a anatomia de Albums (N5)
 **Branch:** feat/f76-mobile-polish-home-playlists
 No celular: busca + «Filters (n)» numa folha (`filtersInSheet`), séries como linhas (capas, nome em Syne, «n batches · n playlists», «⋯»), lotes como linhas com nome legível (o nome da máquina inteiro na folha), data num formato só, playlists como linhas que abrem as faixas; toda ação numa folha «⋯», apagar por último, em vermelho, com a confirmação de sempre.
 Fora da lista: `components/ui/FilterSheet.js` aceita `props.sheetText` (rótulos de recarregar e fechar). Computador idêntico pixel a pixel (1280x800). Decidido pelo agente — revisável.
 
+## [2026-11-20 03:26] session — F76 polimento: o Inventário mostra a lista na primeira tela (N2, N8)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+No celular, os totais viram duas linhas («Owned», «To buy») com a moeda ao lado no controle segmentado único (.phone-segmented, novo em mobile.css § 11), «Data provided by Discogs.» fica junto dos valores e o aviso das configurações de vendedor sai do fluxo para a folha «Lowest asking prices · Why?». Medido no harness: 1ª linha em y=365, 2 linhas a 393x660 e 4 a 393x852 (antes 721 e 0). A folha Status mostra uma marca só (N8).
+Testes: test/views/InventoryPhoneValues.test.js (5) e o de status atualizado; 1280x800 igual antes e depois.
+
 ## [2026-11-20 03:23] session — F76 polimento: New Playlists mostra 4 faixas a 393x660 (N3)
 **Branch:** feat/f76-mobile-polish-home-playlists
 No celular, nome do lote, Undo e Redo numa linha só (ícones nomeados de 44 px), sem trilha (a barra de baixo orienta), linha fechada «Reconfigure» fora da página (abre pelo «⋯» da playlist, agora com as receitas em uma coluna), resumo repetido da playlist só para leitor de tela.
 Primeira faixa de y=496 para y=270: a 393x660, 0 → 4 faixas inteiras; a 393x852, 3 → 6. Decidido pelo agente — revisável.
+
+## [2026-11-20 03:19] session — F76 polimento: o ranking pergunta antes de descartar (N6)
+**Branch:** feat/f76-mobile-polish-inventory-windows
+No celular, Back e Escape com a ordem mudada e não salva abrem a folha «Discard changes?» (Keep editing · Discard); sem mudança, saem direto. O computador não muda (tem o mesmo defeito, mas a correção lá pediria outra janela de confirmação, não duas linhas).
+Testes: 6 novos em test/components/ranking/UserRankModal.phone.test.js.
 
 ## [2026-11-20 03:17] session — F76 polimento: os filtros da Home não flutuam mais sobre as capas (N1)
 **Branch:** feat/f76-mobile-polish-home-playlists

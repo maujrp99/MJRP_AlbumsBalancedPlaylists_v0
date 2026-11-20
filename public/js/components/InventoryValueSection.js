@@ -10,14 +10,20 @@
  * again when the action ends: it holds no value of its own. Beside every value that came from
  * Discogs it says «Data provided by Discogs.», linked to the page of that edition.
  *
+ * On the phone (F76, recheck N7) the window shows both folded, one line each, so the tracks start
+ * on the first screen: `phoneValueFold` (the value and its origin, «Data provided by Discogs.»
+ * beside it, the whole section on a tap) and `createPhoneBuyLinks` (the three stores in one row).
+ *
  * Every text from outside goes through escapeHtml, every address through safeUrl.
  */
 
 import { SafeDOM } from '../utils/SafeDOM.js'
+import { getIcon } from './Icons.js'
 import { escapeHtml } from '../utils/stringUtils.js'
 import { safeUrl } from '../utils/safeUrl.js'
 import {
-    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf
+    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf,
+    noValueText
 } from '../models/inventoryValue.js'
 import { BUY_LINKS_NOTE, buyLinksOf } from '../models/buyLinks.js'
 
@@ -182,9 +188,10 @@ export function valueSectionHtml(shown) {
  * @param {Function} host.onWrite - (text) => Promise<boolean>: the person wrote a value
  * @param {Function} host.onForget - () => Promise: back to the Discogs value
  * @param {Function} host.onRead - () => Promise: read the value of this album now
+ * @param {Function} [host.onDrawn] - called each time the section is drawn (the phone's line follows it)
  * @returns {HTMLElement} the section; `section.draw()` draws it again
  */
-export function createValueSection({ view, onWrite, onForget, onRead }) {
+export function createValueSection({ view, onWrite, onForget, onRead, onDrawn }) {
     const section = SafeDOM.div({ className: `${BOX} mb-6`, dataset: { role: 'estimated-value' } })
     section.style.padding = '1rem'
 
@@ -196,6 +203,7 @@ export function createValueSection({ view, onWrite, onForget, onRead }) {
         const typed = before ? { text: before.value, inUse: before.ownerDocument.activeElement === before } : null
         SafeDOM.clear(section)
         section.appendChild(SafeDOM.fromHTML(valueSectionHtml(view())))
+        onDrawn?.()
         const field = input()
         if (!typed || !field) return
         field.value = typed.text
@@ -241,4 +249,68 @@ export function createBuyLinksSection(album) {
     section.style.padding = '1rem'
     section.appendChild(SafeDOM.fromHTML(`${heading('Where to buy')}${lead(BUY_LINKS_NOTE)}<div class="flex flex-wrap gap-3">${links}</div>`))
     return section
+}
+
+/* ── The phone (F76, recheck N7) ─────────────────────────────────────────────────────────────── */
+
+/**
+ * The value in one line: the amount (or what stands for none) and where it comes from, and the
+ * edition of Discogs it was read from, for the credit.
+ * @param {{ value: Object, money: Object }} shown - what `view()` gives
+ */
+export function valueSummaryOf({ value, money }) {
+    const amount = value.amount ?? (value.conditions ? meanOfConditions(value.conditions) : null)
+    if (!value.origin || amount === null || amount === undefined) return { amount: '—', origin: noValueText(value), release: null }
+    const discogs = value.origin === ValueOrigin.DISCOGS
+    return { amount: `≈ ${moneyOf({ amount, currency: value.currency }, money)}`, origin: discogs ? 'Discogs' : 'Yours', release: discogs ? value.release || {} : null }
+}
+
+/** «Data provided by Discogs.», linked to the edition (or to Discogs when the edition has no address). */
+const phoneCredit = (release) => SafeDOM.a({
+    className: 'value-fold__credit', href: safeUrl(release.url) || 'https://www.discogs.com/', target: '_blank', rel: 'noopener', dataset: { role: 'discogs-credit' }
+}, DISCOGS_CREDIT)
+
+/**
+ * «Estimated value» folded to one line: a button with the value and its origin that opens the
+ * whole section below it, and the Discogs credit beside it (a term of use: never folded away).
+ * @param {HTMLElement} section - from createValueSection
+ * @param {Function} view - the host's view()
+ * @returns {HTMLElement} the fold; `fold.drawLine()` draws the line again
+ */
+export function phoneValueFold(section, view) {
+    const panel = SafeDOM.div({ id: 'albumWindowValueDetails', className: 'value-fold__panel', hidden: true }, [section])
+    const toggle = SafeDOM.button({ className: 'value-fold__toggle', 'aria-expanded': 'false', 'aria-controls': panel.id })
+    const line = SafeDOM.div({ className: 'value-fold__line' })
+    toggle.addEventListener('click', () => {
+        const open = panel.hidden
+        panel.hidden = !open
+        toggle.setAttribute('aria-expanded', String(open))
+    })
+    const drawLine = () => {
+        const { amount, origin, release } = valueSummaryOf(view())
+        SafeDOM.clear(toggle)
+        toggle.append(
+            SafeDOM.span({ className: 'value-fold__label' }, 'Estimated value'),
+            SafeDOM.span({ className: 'value-fold__value' }, [SafeDOM.span({ className: 'value-fold__amount', dataset: { role: 'amount' } }, amount), SafeDOM.span({ className: 'value-fold__origin' }, origin)]),
+            SafeDOM.fromHTML(getIcon('ChevronDown', 'value-fold__chevron'))
+        )
+        SafeDOM.clear(line)
+        line.append(...[toggle, release ? phoneCredit(release) : null].filter(Boolean))
+    }
+    const fold = SafeDOM.div({ className: 'value-fold', dataset: { role: 'value-fold' } }, [line, panel])
+    fold.drawLine = drawLine
+    drawLine()
+    return fold
+}
+
+/** «Where to buy» on the phone: the three stores in one row, and what the links are. */
+export function createPhoneBuyLinks(album) {
+    const links = buyLinksOf(album).map(({ name, url }) => SafeDOM.a({
+        className: 'value-fold__store', href: safeUrl(url), target: '_blank', rel: 'noopener', dataset: { store: name }
+    }, `${name} ↗`))
+    return SafeDOM.div({ className: 'value-fold value-fold--buy', dataset: { role: 'where-to-buy' } }, [
+        SafeDOM.p({ className: 'value-fold__label' }, 'Where to buy'),
+        SafeDOM.div({ className: 'value-fold__stores' }, links),
+        SafeDOM.p({ className: 'value-fold__note' }, BUY_LINKS_NOTE)
+    ])
 }

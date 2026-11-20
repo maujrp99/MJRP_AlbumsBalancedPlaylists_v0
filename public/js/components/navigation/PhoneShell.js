@@ -10,7 +10,7 @@
  */
 import { getIcon } from '../Icons.js'
 import { isPhone, onPhoneChange } from '../../utils/isPhone.js'
-import { holdPageBehindWindows } from '../ui/windowsHoldThePage.js'
+import { giveBackAStrayHold, holdPageBehindWindows } from '../ui/windowsHoldThePage.js'
 import { renderTabBar, screenName, currentTab } from './phoneTabs.js'
 import { openPhoneMenu, accountInitial } from './PhoneMenu.js'
 import { isSignedIn } from './AuthNav.js'
@@ -110,6 +110,7 @@ export class PhoneShell {
         this.nameGiven = null
         if (!this.parts) return
         this.menu?.close()
+        giveBackAStrayHold(this.win) // a hold left with nothing open never outlives its screen (recheck N22)
         // A new screen starts at its top; the same screen drawn again stays where it was
         if (path !== this.lastPath) this.win.scrollTo(0, 0)
         this.lastPath = path

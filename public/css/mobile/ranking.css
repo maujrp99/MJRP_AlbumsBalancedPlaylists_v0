@@ -102,6 +102,20 @@
     padding: 16px 0 12px;
   }
 
+  /* The two families (recheck N4): the text face, Syne for the album's and the tracks' titles */
+  .rank-phone,
+  .rank-phone button,
+  #rankDiscardSheet .sheet__body,
+  #rankDiscardSheet .sheet__body button {
+    font-family: var(--phone-font-text);
+  }
+
+  .rank-phone .rank-phone__album,
+  .rank-phone .rank-row__title,
+  .rank-phone .rank-phone__title {
+    font-family: var(--phone-font-title);
+  }
+
   .rank-phone__album {
     margin: 0;
     color: #fff;
@@ -354,5 +368,38 @@
     .rank-toast {
       animation: none;
     }
+  }
+
+  /* ── 8. «Discard changes?»: Back with an order not saved (recheck N6) ───────────────────── */
+  .rank-discard__note {
+    margin: 0 0 16px;
+    color: #a0a0a8;
+    font-size: 15px;
+    line-height: 20px;
+  }
+
+  .rank-discard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rank-discard__keep,
+  .rank-discard__discard {
+    min-height: 48px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+  }
+
+  .rank-discard__keep {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f2f2f4;
+  }
+
+  .rank-discard__discard {
+    background: transparent;
+    color: #f87171;
   }
 }

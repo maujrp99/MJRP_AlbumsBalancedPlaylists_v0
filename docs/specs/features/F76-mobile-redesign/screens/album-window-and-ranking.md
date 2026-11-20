@@ -71,3 +71,13 @@ Inventário de elementos, de cima para baixo:
 ## O que não verifiquei
 
 O iPhone de verdade (Safari, áreas seguras, o arrastar com o dedo no iOS); o desempenho do desfoque da capa no Safari; as janelas abertas pelo app com login; VoiceOver.
+
+## Polimento depois da crítica (2026-11-20, ramo `feat/f76-mobile-polish-inventory-windows`)
+
+Fonte: `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-recheck.md`. Prova: `reports/evidence/F76/album-window/2026-11-20-polish-proof.md`.
+
+- **N6 (P1) · Back não joga fora a ordem.** No celular, Back e Escape com a ordem mudada e não salva abrem a folha de baixo «Discard changes?» («Your new order has not been saved.»), com «Keep editing» (primeiro, com o foco, superfície clara) e «Discard» (vermelho, fecha sem salvar). Sem mudança — ou com a ordem devolvida ao que era, ou depois de «Save ranking» — sai direto. Escape sobre a folha fecha só a folha (= continuar editando). No computador nada muda: ele tem o mesmo defeito, mas lá a correção pediria uma janela de confirmação nova, não duas linhas; fica registrado.
+- **N7 (P1) · a janela aberta pelo Inventário.** Decidido pelo agente — revisável: «Estimated value» vira uma linha (rótulo, «≈ $30.75 Discogs», chevron) com «Data provided by Discogs.» ao lado, ligado à edição; um toque abre a seção inteira, igual à de antes (condições, edição, «Read again», o campo e «Save»). A linha acompanha cada novo desenho da seção (valor escrito, lido de novo). «Where to buy» vira uma linha de três lojas de 44 px com a nota embaixo. As faixas começam em ~y=520 a 393x852 (antes 965); a 393x660 o controle das faixas fica à vista e a primeira faixa começa no pé da tela (o cabeçalho do álbum, com título de 5 linhas e notas, ocupa o resto).
+- **N7(b) · botões sem rótulo.** Não reproduzido no Chrome sem cabeça (rótulo branco sobre `rgba(255,255,255,.1)`, ~15:1). Defensivo: no celular, `.btn-secondary` dentro da janela perde o `backdrop-filter` próprio e ganha fundo e cor explícitos. Confirmar no iPhone.
+- **N9 · Original / BEA / Spotify** passam ao segmentado único (`.phone-segmented__option`): o escolhido é a superfície clara, não mais o laranja; o laranja da janela de ranking fica só em «Save ranking» e na faixa escolhida.
+- **N4 · fonte.** Corpo da janela e do ranking na fonte de texto; título de faixa, nome do álbum e «My ranking» em Syne.
