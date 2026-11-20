@@ -14,6 +14,18 @@ function requireAlbum(album) {
     if (!album.id) throw new Error('Album must have an ID')
 }
 
+/**
+ * What a read of the album load adds to an item: the averages, and the cover when the item had
+ * none. The cover is one field inside `albumData`: a dotted path, so the rest of it is untouched.
+ */
+function readFacts(averages, coverUrl) {
+    const data = {}
+    // JSON round trip: a value that is undefined is left out, Firestore refuses it
+    if (averages) data.averages = JSON.parse(JSON.stringify(averages))
+    if (coverUrl) data['albumData.coverUrl'] = coverUrl
+    return data
+}
+
 export class InventoryRepository extends BaseRepository {
     /**
      * @param {Firestore} firestore - Firestore instance (modular)
@@ -127,11 +139,11 @@ export class InventoryRepository extends BaseRepository {
      * @throws when an entry lacks its id or its averages (nothing is written), and when the write fails
      */
     async setAverages(entries) {
-        entries.forEach(({ id, averages }) => {
-            if (!id || !averages || typeof averages !== 'object') throw new Error('Each update needs the id of an item and its averages')
+        entries.forEach(({ id, averages, coverUrl }) => {
+            const hasAverages = !!averages && typeof averages === 'object'
+            if (!id || (!hasAverages && !coverUrl)) throw new Error('Each update needs the id of an item and its averages or its cover')
         })
-        // JSON round trip: a value that is undefined is left out, Firestore refuses it
-        return this.updateMany(entries.map(({ id, averages }) => ({ id, data: { averages: JSON.parse(JSON.stringify(averages)) } })))
+        return this.updateMany(entries.map(({ id, averages, coverUrl }) => ({ id, data: readFacts(averages, coverUrl) })))
     }
 
     /**

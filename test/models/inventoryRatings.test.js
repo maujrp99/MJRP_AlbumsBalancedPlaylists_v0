@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest'
 import {
     RATING_SOURCES, RATINGS_SERIES_ID, CONFIRM_FROM, ratingsAskOf, queryOfItem, mergeAverages, planAverages,
-    ratingsQuestion, ratingsProgressText, ratingsOutcome
+    ratingsQuestion, ratingsProgressText, ratingsOutcome, missingCoverOf
 } from '../../public/js/models/inventoryRatings.js'
 import { SourceGap } from '../../public/js/models/albumAsk.js'
 
@@ -198,5 +198,28 @@ describe('what the person is told', () => {
             ok: false,
             text: 'No ratings were saved: the write failed and your inventory is as it was. Try again.'
         })
+    })
+})
+
+describe('missingCoverOf: the cover the album has and the item lacks (UAT-222)', () => {
+    it('gives the cover of the album to an item with none', () => {
+        expect(missingCoverOf({ albumData: { coverUrl: null } }, { coverUrl: 'https://example.com/a.jpg' })).toBe('https://example.com/a.jpg')
+        expect(missingCoverOf({}, { coverUrl: 'https://example.com/a.jpg' })).toBe('https://example.com/a.jpg')
+    })
+
+    it('never replaces a cover the item has, and gives nothing when the album has none', () => {
+        expect(missingCoverOf({ albumData: { coverUrl: 'https://example.com/mine.jpg' } }, { coverUrl: 'https://example.com/a.jpg' })).toBe(null)
+        expect(missingCoverOf({ albumData: {} }, { coverUrl: null })).toBe(null)
+        expect(missingCoverOf({ albumData: {} }, {})).toBe(null)
+    })
+})
+
+describe('ratingsOutcome says the covers that were added', () => {
+    it('adds one sentence when some album got its cover', async () => {
+        const { ratingsOutcome } = await import('../../public/js/models/inventoryRatings.js')
+        const base = { total: 211, planned: 209, saved: 209, error: null, notFound: 0, withoutRatings: 0, popularityNotConnected: 0, unanswered: 0 }
+        expect(ratingsOutcome({ ...base, covers: 15 }).text).toBe('Ratings updated for 209 of 211 albums. 15 albums got their cover.')
+        expect(ratingsOutcome({ ...base, covers: 1 }).text).toBe('Ratings updated for 209 of 211 albums. 1 album got its cover.')
+        expect(ratingsOutcome({ ...base, covers: 0 }).text).toBe('Ratings updated for 209 of 211 albums.')
     })
 })

@@ -200,7 +200,7 @@ export class InventoryService {
         this.init()
         const repository = this.repository
         const items = this.store.getAlbums()
-        const nothing = { aborted: false, total: items.length, planned: 0, saved: 0, notFound: 0, withoutRatings: 0, popularityNotConnected: 0, unanswered: 0, error: null }
+        const nothing = { aborted: false, total: items.length, planned: 0, saved: 0, covers: 0, notFound: 0, withoutRatings: 0, popularityNotConnected: 0, unanswered: 0, error: null }
         if (items.length === 0) return nothing
 
         const result = await this._askForRatings(items, { signal, onProgress })
@@ -211,7 +211,13 @@ export class InventoryService {
         const updates = plan.updates.filter(update => present.has(update.id))
         const { saved, error } = await this._writeAverages(repository, updates, onProgress)
         const { notFound, withoutRatings, popularityNotConnected, unanswered } = plan
-        return { ...nothing, planned: updates.length, saved, error, notFound, withoutRatings, popularityNotConnected, unanswered }
+        // `planned` and `saved` are of the ratings: an item that only got its cover is counted in `covers`
+        const written = updates.slice(0, saved)
+        const withRatings = (list) => list.filter(update => update.averages).length
+        return {
+            ...nothing, planned: withRatings(updates), saved: withRatings(written), covers: written.filter(update => update.coverUrl).length,
+            error, notFound, withoutRatings, popularityNotConnected, unanswered
+        }
     }
 
     /**
@@ -274,10 +280,15 @@ export class InventoryService {
         return { saved, error }
     }
 
-    /** The items of the store get the averages that were saved; nothing else of them changes. */
+    /** The items of the store get the averages and the covers that were saved; nothing else of them changes. */
     _showAverages(saved) {
-        const byId = new Map(saved.map(({ id, averages }) => [id, averages]))
-        this.store.replaceAlbums(this.store.getAlbums().map(item => (byId.has(item.id) ? { ...item, averages: byId.get(item.id) } : item)))
+        const byId = new Map(saved.map(update => [update.id, update]))
+        const withFacts = (item, { averages, coverUrl }) => ({
+            ...item,
+            ...(averages && { averages }),
+            ...(coverUrl && { albumData: { ...item.albumData, coverUrl } })
+        })
+        this.store.replaceAlbums(this.store.getAlbums().map(item => (byId.has(item.id) ? withFacts(item, byId.get(item.id)) : item)))
     }
 
     /** Write the changes of one album; the store changes only after the write worked. */
