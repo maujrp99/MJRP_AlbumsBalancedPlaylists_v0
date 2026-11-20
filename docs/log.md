@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:53] session — F72: a tela de séries diz quantas séries e quantos álbuns tem (S-55)
+
+Uma linha sob o título: «47 series · 227 albums»; com busca, «2 of 47 series · 4 albums»; numa série, «5 albums». Modelo puro `models/seriesCounts.js`, testes primeiro, prova no navegador com a conta do MJRP. Decidido pelo agente, revisável: conta os álbuns pedidos nas séries que passam pelos filtros (o mesmo álbum em duas séries conta duas vezes), não os distintos.
+
 ## [2026-11-19 22:51] decision — MJRP pede: a tela de séries diz quantos álbuns tem (S-55, F72); auxiliares de melhoria não precisam do modelo mais caro
 
 Palavras do MJRP: «outra melhoria conseguimos colocar quantos albums estao na página de albuns series?» e «agora pra implementar essas melhorias creio que vc nao precisa passar para agents com modelos fable». Registrado na `main` antes do ramo: o requisito S-55 no épico EP-01, embutido no `prd.md`, e a feature F72 (via rápida, tipo feature, `^REL-40`). A F72 é feita pelo próprio integrador. O auxiliar da F71 já estava rodando quando a segunda frase chegou e termina como começou; daqui em diante, melhorias pequenas são feitas na sessão principal ou por um auxiliar de modelo mais barato.
