@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:34] session — F75: protótipo v2 fiel à tela real, comparador e `info-arch.md`
+
+- O MJRP pediu o protótipo fidedigno e o comparador da skill. A v2 é a tela real do inventário capturada como o app a desenha, com o que a F75 propõe; a v1 fica para comparar. O comparador (`design/proposals/inventory/comparator.html`) põe a tela de hoje ao lado das versões.
+- `docs/specs/info-arch.md` nasceu com esta feature, descrevendo só a tela do inventário com valor: a trava do protótipo exige o `info-arch` e os wireframes da versão no mesmo commit.
+- Proposta: `design/proposals/f75-inventory-value/proposal.md`. Notas: `docs/specs/inception-notes.md`.
+
 ## [2026-11-20 00:26] session — F75: proposta e protótipo da rodada 1 (valor estimado do inventário e onde comprar)
 
 - A pedido do MJRP: `design/proposals/f75-inventory-value/proposal.md` e `design/inception/inventory-value-v1.html` (modo explorar, valores ilustrativos, sete cenários). A proposta cobre como um álbum entra no inventário e ganha valor, e o que acontece quando o status muda para «Owned».

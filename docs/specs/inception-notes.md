@@ -12,3 +12,12 @@
 - **Perguntas abertas:** as seis do fim da proposta.
 - **Reação do MJRP:** ainda não houve.
 
+## [2026-11-20 00:34] F75 · valor estimado do inventário e onde comprar · rodada 2
+
+- **Reação do MJRP à rodada 1:** «o prototipo tem que ser fidedigno»; e «vc está usando a skill e criando o artefato comparador? deveria».
+- **O que mudou:** a v2 (`design/inception/inventory-value-v2.html`) é a tela real do inventário, capturada como o app a desenha (HTML e estilos do app, doze álbuns dele, capas de verdade), com os elementos da F75 feitos só com classes que o app já usa. A v1 fica intacta. O total passou de uma caixa à direita para uma faixa sob o título, no lugar do «Total Owned».
+- **Comparador:** `design/proposals/inventory/comparator.html`: «Referência» (o inventário de hoje), v2 «Nova» e v1 «Esboço», em 1440 e 390 px.
+- **Como a captura foi feita:** uma rota só do ambiente local (`vite.config.local.js`, fora do git) guarda o HTML da tela em `design/.snapshots/`, e `design/.snapshots/assemble.py` monta o protótipo. Nada disso entra em produção.
+- **Não feito:** a v2 em 390 px não foi conferida por mim; o benchmark de apps de coleção; a crítica de UX.
+- **Perguntas abertas:** as seis do fim da proposta.
+

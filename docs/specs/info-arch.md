@@ -1,6 +1,6 @@
 # Info-arch — Album Blender V0
 
-> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v1.html
+> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v2.html
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -81,7 +81,7 @@ Cabeçalho do álbum (capa, título, artista, status, formato); «Estimated valu
 
 - **Discogs não ligado.** Aviso «Values come from Discogs. Connect your Discogs account once to read them.», com «Connect Discogs»; o total mostra «—» e «No value read yet». ^inventory-value-not-connected
 - **Lendo os valores.** Aviso «Reading values… 86 of 211. You can keep using the inventory. This takes about 25 minutes for 211 albums.», com «Stop»; o botão «Update values» fica desabilitado e conta o progresso; os cartões ainda sem valor dizem «Reading…». ^inventory-value-reading
-- **Valores lidos.** A caixa do total mostra «Estimated value of what I own», «N of M owned albums have a value» e «To buy the rest»; cada cartão mostra o valor e a etiqueta «Discogs» ou «Yours». ^inventory-value-read
+- **Valores lidos.** Uma faixa sob o título, no lugar do «Total Owned», mostra «Estimated value of what I own», «N of M owned albums have a value» e «To buy the rest»; cada cartão mostra o valor e a etiqueta «Discogs» ou «Yours». ^inventory-value-read
 - **Álbuns novos esperando valor.** Aviso «2 new albums are waiting for a value. They are read on their own, a few at a time, while the app is open.», com «Read them now»; o cartão diz «Waiting for a value». ^inventory-value-waiting
 
 ### Janela do álbum do inventário
@@ -115,7 +115,7 @@ Nenhum ainda. A rodada 1 da F75 é de exploração.
 
 ## Inventário do protótipo
 
-Fonte: `design/inception/inventory-value-v1.html` · wireframes: `design/wireframes/inventory-value-v1-inventory.png`, `design/wireframes/inventory-value-v1-album-window.png`.
+Fonte: `design/inception/inventory-value-v2.html` (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; a v1, um esboço, fica para comparar) · wireframes: `design/wireframes/inventory-value-v2-inventory.png`, `design/wireframes/inventory-value-v2-album-window.png` · comparador: `design/proposals/inventory/comparator.html`.
 
 | ID | O que a tela mostra | Função do produto | Destino |
 |---|---|---|---|

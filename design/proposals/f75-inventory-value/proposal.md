@@ -4,7 +4,7 @@ subject: "F75: valor estimado dos CDs do inventário e onde comprar"
 project: mjrpalbumblender-v0
 feature: F75
 requirement: S-57
-prototype: design/inception/inventory-value-v1.html
+prototype: design/inception/inventory-value-v2.html
 status: para o MJRP julgar
 written: "2026-11-20"
 ---
@@ -12,7 +12,9 @@ written: "2026-11-20"
 
 **Para quem:** MJRP. **O que decidir:** se o desenho abaixo serve para a primeira versão, e as seis perguntas do fim.
 
-**O protótipo:** `design/inception/inventory-value-v1.html` (rodada 1, modo explorar). Os valores nele são ilustrativos: nada foi lido do Discogs. Com o servidor local ligado, abre em `http://127.0.0.1:5010/_prototype-inventory-value.html`.
+**O protótipo:** `design/inception/inventory-value-v2.html` (modo explorar). É a **tela real do inventário**, capturada como o app a desenha (o HTML e os estilos do app, com doze dos seus álbuns e as capas de verdade), com o que a F75 propõe acrescentado. Os valores são ilustrativos: nada foi lido do Discogs. A v1 (`inventory-value-v1.html`) era um esboço e fica para comparar.
+
+**O comparador:** `design/proposals/inventory/comparator.html` mostra a tela de hoje («Referência») ao lado das versões. Com o servidor local ligado: `http://127.0.0.1:5010/_compare-inventory.html`.
 
 ## A ideia em uma frase
 
@@ -32,7 +34,7 @@ O inventário passa a dizer quanto vale cada CD, lendo o valor do Discogs sozinh
 
 ### No cabeçalho do inventário
 
-O «Total Owned: $0.00» de hoje dá lugar a uma caixa com:
+O «Total Owned: $0.00» de hoje dá lugar a uma faixa sob o título, com:
 
 - **«Estimated value of what I own»**: a soma dos álbuns «Owned», e ao lado «3 of 14 owned albums have a value».
 - **«To buy the rest»**: a soma dos «Not Owned» e «Wishlist», com a mesma contagem.
