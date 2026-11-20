@@ -35,18 +35,32 @@ const READERS = {
     purchasePrice: (item) => number(item.purchasePrice)
 }
 
-/** The choices of the order, as the person sees them, with the direction each starts with. */
+/**
+ * The choices of the order, as the person sees them: each criterion in its two directions, the
+ * arrow in the name, the way the albums list offers its own (F71, REQ-21). The first of each pair
+ * is the direction a criterion starts with.
+ */
 export const SORT_OPTIONS = Object.freeze([
-    { value: 'artist', label: 'Artist', direction: 'asc' },
-    { value: 'averageRating', label: 'Avg Rating', direction: 'desc' },
-    { value: 'averagePopularity', label: 'Avg Pop', direction: 'desc' },
-    { value: 'addedToInventory', label: 'Recently added', direction: 'desc' }
+    { value: 'artist', field: 'artist', direction: 'asc', label: 'Artist (A-Z)' },
+    { value: 'artist_desc', field: 'artist', direction: 'desc', label: 'Artist (Z-A)' },
+    { value: 'averageRating', field: 'averageRating', direction: 'desc', label: 'Avg Rating (↓)' },
+    { value: 'averageRating_asc', field: 'averageRating', direction: 'asc', label: 'Avg Rating (↑)' },
+    { value: 'averagePopularity', field: 'averagePopularity', direction: 'desc', label: 'Avg Pop (↓)' },
+    { value: 'averagePopularity_asc', field: 'averagePopularity', direction: 'asc', label: 'Avg Pop (↑)' },
+    { value: 'addedToInventory', field: 'addedToInventory', direction: 'desc', label: 'Newest' },
+    { value: 'addedToInventory_asc', field: 'addedToInventory', direction: 'asc', label: 'Oldest' }
 ])
 
 /** The sorting a choice stands for; anything that is not a choice is the default (by artist). */
 export function sortingFor(value) {
-    const { value: field, direction } = SORT_OPTIONS.find(option => option.value === value) || SORT_OPTIONS[0]
+    const { field, direction } = SORT_OPTIONS.find(option => option.value === value) || SORT_OPTIONS[0]
     return { field, direction }
+}
+
+/** The choice a sorting is: what the select shows as chosen. */
+export function choiceOf(sorting) {
+    const chosen = SORT_OPTIONS.find(option => option.field === sorting?.field && option.direction === sorting?.direction)
+    return (chosen || SORT_OPTIONS[0]).value
 }
 
 const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0)
