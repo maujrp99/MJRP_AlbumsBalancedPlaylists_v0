@@ -1,0 +1,13 @@
+node_modules/
+# The plain outputs are large (about 54 MB each) and stay on disk. Committed: the reference, the
+# Hermes run and the bare Hermes run compressed, the diff of the Hermes run, the feature probes and
+# the summaries (which carry the sha256 of every output, compressed or not).
+out/**/*.json
+out/**/*.gz
+out/**/diff-*.txt
+!out/**/summary.json
+!out/features-*.json
+!out/node-reference.json.gz
+!out/hermes-polyfill-source.json.gz
+!out/hermes-bare.json.gz
+!out/diff-hermes-polyfill-source.txt

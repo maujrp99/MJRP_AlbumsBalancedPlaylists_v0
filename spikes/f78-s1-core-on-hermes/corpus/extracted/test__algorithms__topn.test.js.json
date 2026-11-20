@@ -1,0 +1,714 @@
+{
+ "source": "test/algorithms/topn.test.js",
+ "records": [
+  {
+   "kind": "generate",
+   "name": "TopNAlgorithm",
+   "albums": [
+    {
+     "id": "album1",
+     "title": "Album album1",
+     "artist": "Test Artist",
+     "tracks": [
+      {
+       "id": "album1_track_1",
+       "title": "Track 1",
+       "duration": 180,
+       "spotifyPopularity": 100,
+       "rating": 90
+      },
+      {
+       "id": "album1_track_2",
+       "title": "Track 2",
+       "duration": 210,
+       "spotifyPopularity": 90,
+       "rating": 85
+      },
+      {
+       "id": "album1_track_3",
+       "title": "Track 3",
+       "duration": 240,
+       "spotifyPopularity": 80,
+       "rating": 80
+      },
+      {
+       "id": "album1_track_4",
+       "title": "Track 4",
+       "duration": 270,
+       "spotifyPopularity": 70,
+       "rating": 75
+      },
+      {
+       "id": "album1_track_5",
+       "title": "Track 5",
+       "duration": 300,
+       "spotifyPopularity": 60,
+       "rating": 70
+      }
+     ]
+    },
+    {
+     "id": "album2",
+     "title": "Album album2",
+     "artist": "Test Artist",
+     "tracks": [
+      {
+       "id": "album2_track_1",
+       "title": "Track 1",
+       "duration": 180,
+       "spotifyPopularity": 100,
+       "rating": 90
+      },
+      {
+       "id": "album2_track_2",
+       "title": "Track 2",
+       "duration": 210,
+       "spotifyPopularity": 90,
+       "rating": 85
+      },
+      {
+       "id": "album2_track_3",
+       "title": "Track 3",
+       "duration": 240,
+       "spotifyPopularity": 80,
+       "rating": 80
+      },
+      {
+       "id": "album2_track_4",
+       "title": "Track 4",
+       "duration": 270,
+       "spotifyPopularity": 70,
+       "rating": 75
+      },
+      {
+       "id": "album2_track_5",
+       "title": "Track 5",
+       "duration": 300,
+       "spotifyPopularity": 60,
+       "rating": 70
+      }
+     ]
+    }
+   ],
+   "opts": {},
+   "rankingStrategy": null,
+   "replayable": true
+  },
+  {
+   "kind": "rank",
+   "name": "BalancedRankingStrategy",
+   "album": {
+    "id": "album1",
+    "title": "Album album1",
+    "artist": "Test Artist",
+    "tracks": [
+     {
+      "id": "album1_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album1_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album1_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album1_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album1_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ]
+   },
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album1_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album1_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album1_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album1_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album1_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album1_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album1_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album1_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album1_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album1_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album1_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album1_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album1_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album1_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album1_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album1_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album1_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album1_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album1_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album1_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    [
+     {
+      "id": "album1_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album1_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album1_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album1_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album1_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album1_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album1_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album1_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album1_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album1_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "rank",
+   "name": "BalancedRankingStrategy",
+   "album": {
+    "id": "album2",
+    "title": "Album album2",
+    "artist": "Test Artist",
+    "tracks": [
+     {
+      "id": "album2_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album2_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album2_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album2_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album2_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ]
+   },
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album2_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album2_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album2_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album2_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album2_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album2_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album2_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album2_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album2_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album2_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album2_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album2_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album2_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album2_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album2_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album2_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album2_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album2_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album2_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album2_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    [
+     {
+      "id": "album2_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album2_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album2_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album2_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album2_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ]
+   ],
+   "replayable": true
+  },
+  {
+   "kind": "call",
+   "name": "trackIdentity.matchTracks",
+   "args": [
+    [
+     {
+      "id": "album2_track_1",
+      "title": "Track 1",
+      "duration": 180,
+      "spotifyPopularity": 100,
+      "rating": 90
+     },
+     {
+      "id": "album2_track_2",
+      "title": "Track 2",
+      "duration": 210,
+      "spotifyPopularity": 90,
+      "rating": 85
+     },
+     {
+      "id": "album2_track_3",
+      "title": "Track 3",
+      "duration": 240,
+      "spotifyPopularity": 80,
+      "rating": 80
+     },
+     {
+      "id": "album2_track_4",
+      "title": "Track 4",
+      "duration": 270,
+      "spotifyPopularity": 70,
+      "rating": 75
+     },
+     {
+      "id": "album2_track_5",
+      "title": "Track 5",
+      "duration": 300,
+      "spotifyPopularity": 60,
+      "rating": 70
+     }
+    ],
+    []
+   ],
+   "replayable": true
+  }
+ ]
+}

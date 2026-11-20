@@ -1,0 +1,13 @@
+{
+  "name": "f78-s1-core-on-hermes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "spike": "node scripts/run-all.mjs && node scripts/run-all.mjs --skip-extract --patched"
+  },
+  "description": "Spike S1 of F78: do the product's rules give the same output on Hermes as on Node?",
+  "dependencies": {
+    "esbuild": "0.28.2",
+    "hermes-compiler": "260318099.0.5"
+  }
+}
