@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 16:01] session — F78: o esqueleto do app na `main`; a constituição v2.0.0 em vigor
+**Branch:** main
+`app/` existe: Expo SDK 58, React Native 0.88.1, TypeScript estrito, cinco abas (quatro dizem «Not in the app yet»), a lista de séries lida pelos repositórios do núcleo, a tela de entrar atrás de uma porta, o autoteste do núcleo (3.343 de 3.343 no Jest), a medição pela lista de eventos compartilhada. Conferido pelo integrador: `npm run app:check` (tipos, 44 testes, lint, empacotamento para iOS e Android, varredura de segredos) e a raiz (3601 testes, lint, build). O site foi publicado de novo porque a ordem das séries passou a vir de `shared/seriesOrder.js`: no app local, conta do MJRP, as séries seguem em «Newest» («Pitty hits», «Trip Hop Vol.1»). **Nada do app rodou em simulador nem em aparelho**: a licença do Xcode não foi aceita. Não provados: o Firebase nativo, entrar com Apple e Google, o gerador de identificadores no aparelho, as telas. O ADR-0022 segue «Proposed» até o commit carimbado pelo MJRP.
+
 ## [2026-11-20 15:55] session — F78 esqueleto do app: documentos — tarefas, plano, arch, pilha e manual
 **Branch:** feat/f78-app-skeleton
 `tasks.md`: a TASK-24 feita; o que o esqueleto fez das TASK-19, 20, 22 e 23 como itens próprios, com o que falta (nenhuma tarefa de aparelho marcada); a linha do `tech-stack.md` feita. `plan.md` § Technical Design: os módulos do app e o que cada um prova aqui; `arch.md`: a seção de `app/` (estrutura, as três portas, o não provado); `tech-stack.md`: as linhas do app, cada uma citando o ADR-0022.
