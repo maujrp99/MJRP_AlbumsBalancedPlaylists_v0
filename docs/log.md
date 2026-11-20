@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:52] session — F76 TASK-02: Albums no celular, ajuste visual e prova em navegador (harness)
+**Branch:** feat/f76-mobile-albums
+Ajustes vistos nas capturas: fonte do sistema no texto dos álbuns, lupa da busca, selos do ladrilho numa linha, vão entre séries, respiro sob o «voltar ao topo», o vazio sem o «no match» junto; alvos de 44 nas fichas, no segmentado e em Pages/Scroll. Harness `reports/evidence/F76/harness/albums.html` (a SeriesView real com 50 séries e 230 álbuns) e `shoot-albums.mjs`.
+Medido a 393x852: 1º álbum de 1126 para 261 px, alvos < 44 de 356 para 0, nada passa da borda; a 1280x800 sete cenários idênticos pixel a pixel. Nota da tela em `docs/specs/features/F76-mobile-redesign/screens/albums.md`.
+
 ## [2026-11-20 02:33] session — F76 TASK-02: Albums no celular (filtros numa folha, cartão e linha do álbum com «⋯», cabeçalho da série, pager)
 **Branch:** feat/f76-mobile-albums
 No celular, a barra de Albums fica só com a busca e um botão «Filters» com quantos estão ligados (fichas que se removem; a vista, a ordem, os filtros e Reload numa folha de baixo); o álbum é um ladrilho (capa, título em duas linhas, artista · ano) ou uma linha compacta de 56 px, com as ações nomeadas numa folha aberta pelo «⋯» de 44 px; o cabeçalho da série quebra o nome e leva o «⋯» de Edit e Delete; o pager de cima é uma linha e o de baixo pula a qualquer página. Achados 1, 2, 7, 8, 19 e 22 da crítica.

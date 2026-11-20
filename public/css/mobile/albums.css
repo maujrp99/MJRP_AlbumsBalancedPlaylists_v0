@@ -23,10 +23,38 @@
     --albums-text-2: #a0a0a8;
     --albums-danger: #f87171;
     --albums-press: rgba(255, 255, 255, 0.06);
+    --albums-page: #000;
+    /* Syne stays on the screen's name (the top bar); the text of the albums is the system's: at 13
+       to 16 px Syne loses legibility (benchmark § 9.2), and on the iPhone this is SF Pro */
+    --albums-font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+  }
+
+  .albums-view .series-group-header,
+  .albums-view .filters-section,
+  .albums-view .album-tile,
+  .albums-view .album-row,
+  .albums-view .series-pager--phone,
+  .albums-view .load-more-btn,
+  .albums-view #emptyStateContainer,
+  .albums-view .series-page-header--single #generatePlaylistsBtn,
+  .albums-sheet,
+  .filter-sheet-window {
+    font-family: var(--albums-font);
   }
 
   .albums-view.container {
     max-width: none;
+    /* the end of the list scrolls clear of the round «back to top» button */
+    padding-bottom: 72px;
+  }
+
+  .albums-view select,
+  .albums-view button,
+  .albums-view input,
+  .albums-sheet button,
+  .filter-sheet-window select,
+  .filter-sheet-window button {
+    font-family: inherit;
   }
 
   /* ── 2. The page header ─────────────────────────────────────────────────────────────────────── */
@@ -52,25 +80,28 @@
   }
 
   .albums-view .series-page-header--single h1 {
+    font-family: var(--albums-font);
     font-size: 20px;
     line-height: 24px;
-    gap: 8px;
     overflow-wrap: anywhere;
     padding-top: 10px;
   }
 
+  /* the disc beside the name is decoration: the top bar already says where the person is */
   .albums-view .series-page-header--single h1 svg {
-    width: 20px;
-    height: 20px;
-    flex: none;
+    display: none;
   }
 
   .albums-view .series-page-header--single #generatePlaylistsBtn {
     grid-column: 1 / -1;
     margin-top: 0;
     min-height: 48px;
+    padding: 0 16px;
     border-radius: 12px;
     font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
   }
 
   .albums-view .series-page-header--single #generatePlaylistsBtn:hover {
@@ -126,6 +157,7 @@
 
   .albums-view #genericSearch {
     height: var(--phone-target);
+    padding-left: 42px;
     border-radius: 12px;
     background: var(--albums-raised);
     border-color: var(--albums-line);
@@ -182,7 +214,8 @@
     align-items: center;
     gap: 6px;
     max-width: 100%;
-    min-height: 36px;
+    height: 36px;
+    box-sizing: border-box;
     padding: 0 10px 0 12px;
     border-radius: 999px;
     background: var(--albums-raised-2);
@@ -196,7 +229,11 @@
   .filters-chip::after {
     content: '';
     position: absolute;
-    inset: -4px 0;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: var(--phone-target);
+    transform: translateY(-50%);
   }
 
   .filters-chip__text {
@@ -250,7 +287,8 @@
   .filter-sheet__segments {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 3px;
+    gap: 4px;
+    padding: 2px;
     border-radius: 12px;
     background: var(--albums-raised);
     border: 1px solid var(--albums-line);
@@ -261,8 +299,8 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 40px;
-    border-radius: 9px;
+    min-height: var(--phone-target);
+    border-radius: 10px;
     color: var(--albums-text-2);
     font-size: 15px;
     font-weight: 600;
@@ -406,22 +444,17 @@
 
   .series-pager-form {
     display: inline-flex;
-    padding: 2px;
+    overflow: hidden;
     border-radius: 12px;
     background: var(--albums-raised);
     border: 1px solid var(--albums-line);
   }
 
   .series-pager-form button {
-    min-height: 40px;
-    padding: 0 14px;
-    border-radius: 10px;
+    min-height: var(--phone-target);
+    padding: 0 16px;
     color: var(--albums-text-2);
     font-weight: 600;
-  }
-
-  .series-pager--phone .series-pager-form button {
-    min-height: 40px;
   }
 
   .series-pager-form button[aria-pressed="true"] {
@@ -442,7 +475,8 @@
     gap: 28px;
   }
 
-  .albums-view .all-series-container > * {
+  .albums-view .all-series-container > *,
+  .albums-view .all-series-container > :not([hidden]) ~ :not([hidden]) {
     margin: 0;
   }
 
@@ -466,7 +500,7 @@
     z-index: 5;
     margin: 0 0 12px;
     padding: 8px 0;
-    background: #0a0a0c;
+    background: var(--albums-page);
     border-bottom: 1px solid var(--albums-line);
   }
 
@@ -478,7 +512,7 @@
   }
 
   .albums-view .series-group-header h2 {
-    font-family: inherit;
+    font-family: var(--albums-font);
     font-size: 18px;
     line-height: 22px;
     font-weight: 700;
@@ -577,7 +611,7 @@
   .album-row__title {
     color: var(--albums-text);
     font-size: 15px;
-    line-height: 19px;
+    line-height: 20px;
     font-weight: 600;
     overflow-wrap: anywhere;
     display: -webkit-box;
@@ -606,7 +640,29 @@
     margin-top: 4px;
   }
 
-  .album-tile__badges-item,
+  /* One quiet line, «My ranking · BestEverAlbums · Spotify», cut at the edge: the list view and
+     the album's sheet carry them whole */
+  .album-tile__badges {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .album-tile__badges-item {
+    color: var(--albums-text-2);
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .album-tile__badges-item + .album-tile__badges-item::before {
+    content: '·';
+    padding: 0 5px;
+  }
+
   .album-row__badges-item {
     padding: 0 6px;
     border-radius: 6px;
@@ -789,7 +845,12 @@
     border-radius: 16px;
   }
 
-  .albums-view #emptyStateContainer .empty-state svg {
+  /* With nothing in the library, «no albums match your filters» above it said the wrong thing */
+  .albums-view:has(#emptyStateContainer .empty-state) #series-grid-mount {
+    display: none;
+  }
+
+  .albums-view #emptyStateContainer .empty-state > div:first-child svg {
     width: 48px;
     height: 48px;
   }
@@ -814,7 +875,15 @@
 
   .albums-view #emptyStateContainer .btn {
     min-height: 48px;
+    padding: 0 20px;
     border-radius: 12px;
+    font-weight: 700;
+  }
+
+  .albums-view #emptyStateContainer .btn svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
   }
 
   .albums-view .view-footer {
