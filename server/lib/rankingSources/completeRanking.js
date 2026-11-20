@@ -38,7 +38,8 @@ const leftOf = (entries, matches) => {
 function ofNoTrack ({ pageEntries, modelEntries, fromPage, fromModel }, matchTracks) {
   const pageLeft = leftOf(pageEntries, fromPage)
   const modelLeft = leftOf(modelEntries, fromModel)
-  const onThePage = matchTracks(modelLeft, pageEntries)
+  // titles only: the `position` of an entry is its place in a ranking, not a track number
+  const onThePage = matchTracks(modelLeft.map(entry => entry.trackTitle), pageEntries)
   return [...pageLeft, ...modelLeft.filter((entry, index) => !onThePage[index])]
 }
 

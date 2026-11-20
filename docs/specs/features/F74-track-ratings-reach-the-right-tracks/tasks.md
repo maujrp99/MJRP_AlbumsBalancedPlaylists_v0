@@ -12,10 +12,15 @@
 - [x] TASK-05 o app pergunta à regra: `models/sameTrack.js`, `BEAEnrichmentHelper`, `SpotifyEnrichmentHelper`, `albumAverages`, `Album`, `UserRankingStrategy`, `BalancedRankingStrategy`, `TrackEnrichmentMixin`; `utils/NormalizationUtils.js` saiu; teste antes (`test/services/albums/trackRatings.test.js`) · implements:: REQ-04, REQ-07 · model:: opus · rounds:: 1
 - [x] TASK-06 as notas guardadas de antes da regra são pedidas de novo: `trackRule` na resposta do servidor, no `AcclaimEnricher`, em `sourceOutcome` e no `AlbumCacheAdapter` · implements:: REQ-06 · model:: opus · rounds:: 1
 - [x] TASK-07 a função de aptidão `test/architecture/trackIdentityRule.test.js`: os lugares que perguntam à regra, nenhuma chave de título de volta, a lista de degraus presa à versão · implements:: REQ-04 · model:: opus · rounds:: 1
+- [x] TASK-09 a segunda fatia da regra (versão 2): os degraus `title-with-its-parts`, `first-of-titles-listed-together`, `letters-starred-out` e `title-in-its-brackets`, o que é só escrita e duas escritas conhecidas; teste antes (`test/shared/trackIdentitySecondSlice.test.js`) · implements:: REQ-08, REQ-09 · model:: opus · rounds:: 1
+- [x] TASK-10 o número da faixa é o que a faixa traz (`position`), não o lugar na lista enviada · implements:: REQ-10 · model:: opus · rounds:: 1
+- [x] TASK-11 o raspador lê títulos de uma letra e não corta o número de um título quando a página dá o número à parte; teste com as páginas reais reduzidas · implements:: REQ-11 · model:: opus · rounds:: 1
 
 ## Verification
 - [x] TASK-02 medida antes e depois nos 12 álbuns (`scripts/measure-track-identity.mjs`: 96 notas antes, 12 delas em duas faixas e 2 de outro disco; 102 depois, de 105 que as páginas têm); suíte (2623 testes), lint e build verdes · implements:: REQ-01, REQ-02, REQ-03 · model:: opus · rounds:: 1
-- [ ] TASK-08 publicar o servidor e provar no navegador · implements:: REQ-01, REQ-02, REQ-05, REQ-06 · model:: opus · waiting:: human — o agente não publica o servidor e não tem navegador nem a conta do MJRP · action:: o integrador publica o servidor antes do app, abre «In the Court of the Crimson King (Expanded Edition)» e «High Voltage» sem limpar o cache e roda «Update ratings»
+- [x] TASK-08 publicar o servidor e provar no navegador: feito pelo integrador em 2026-11-20 (servidor `mjrp-proxy-00208-kzm`, site de `8efa91c`; «Update ratings» nos 211 álbuns: 2106 de 2612 faixas com nota, a medida dos 12 álbuns confirmada) · implements:: REQ-01, REQ-02, REQ-05, REQ-06 · model:: opus · rounds:: 1
+- [x] TASK-12 a segunda medida, nos 16 álbuns da segunda fatia (`node scripts/measure-track-identity.mjs --second`: 127 faixas com nota na versão 1, 149 depois); suíte (2667 testes), lint e build verdes · implements:: REQ-08, REQ-09, REQ-10, REQ-11 · model:: opus · rounds:: 1
+- [ ] TASK-13 publicar a segunda fatia e provar no navegador · implements:: REQ-08, REQ-09, REQ-10, REQ-11 · model:: opus · waiting:: human — o agente não publica o servidor e não tem navegador nem a conta do MJRP · action:: o integrador publica o servidor antes do app, roda «Update ratings» e confere «Close to the Edge», «Black Rose» e «To Pimp a Butterfly»
 
 ## Documentation
 - [x] `docs/specs/behavior.md`: `^track-ratings-right-track` (nasce), `^local-album-cache` (muda)
@@ -27,3 +32,5 @@
 - «High Voltage» (AC/DC): nove faixas com nota
 - «Live At The Apollo (1962)»: «Lost Someone» fica sem nota (a fonte dá nota a duas metades); dizer se deve receber uma delas
 - «Mirage (Deluxe Edition)»: seis faixas com nota, não dez; os remixes ficam sem
+- «Close to the Edge» (Yes): as três faixas com nota
+- «Selling England By the Pound»: «Aisle of Plenty» fica sem nota (a fonte dá uma nota só às duas últimas faixas); dizer se deve repetir a de «The Cinema Show»

@@ -7,6 +7,7 @@
  *
  *   node scripts/measure-track-identity.mjs            the table, as Markdown
  *   node scripts/measure-track-identity.mjs --tracks   every track of every album, before and after
+ *   node scripts/measure-track-identity.mjs --second   the second measure (measuredAlbums2.json)
  *
  * "Before" is a frozen copy of what the server did until F74 (shared/normalize.js `normalizeKey`,
  * then server/lib/normalize.js `toFuzzyCore`): it lives here only, to be measured against.
@@ -74,6 +75,39 @@ export function measure() {
     })
 }
 
+const second = JSON.parse(fs.readFileSync(path.join(ROOT, 'test/fixtures/trackIdentity/measuredAlbums2.json'), 'utf8'))
+
+/**
+ * The second measure (the second slice of F74): the albums whose tracks version 1 of the rule left
+ * unrated. `version1` is kept in the fixture (the rule of then is not in the repository any more).
+ */
+export function measureSecond() {
+    return second.albums.map(({ album, artist, tracks, page, partial, ratedByVersion1 }) => {
+        const after = matchTracks(tracks.map((title, index) => ({ title, position: partial ? null : index + 1 })), page)
+        return {
+            album: partial ? `${album} (only the tracks named)` : album,
+            artist,
+            tracks: tracks.length,
+            onThePage: page.filter(entry => entry.rating !== null).length,
+            version1: ratedByVersion1,
+            after: after.filter(rated).length,
+            unrated: tracks.filter((title, index) => !rated(after[index]))
+        }
+    })
+}
+
+function secondTable(results) {
+    const sum = (field) => results.reduce((total, r) => total + r[field], 0)
+    return [
+        `Rule version ${TRACK_IDENTITY_RULE_VERSION}; pages read on ${second.readAt}.`,
+        '',
+        '| Album | Tracks | Rated on the page | Version 1 | After |',
+        '|---|---|---|---|---|',
+        ...results.map(r => `| ${r.artist} «${r.album}» | ${r.tracks} | ${r.onThePage} | ${r.version1} | ${r.after} |`),
+        `| **Total** | ${sum('tracks')} | ${sum('onThePage')} | ${sum('version1')} | ${sum('after')} |`
+    ].join('\n')
+}
+
 function table(results) {
     const lines = [
         `Rule version ${TRACK_IDENTITY_RULE_VERSION}; pages read on ${readAt}.`,
@@ -97,5 +131,6 @@ function everyTrack(results) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
     const results = measure()
-    console.log(process.argv.includes('--tracks') ? everyTrack(results) : table(results))
+    if (process.argv.includes('--second')) console.log(secondTable(measureSecond()))
+    else console.log(process.argv.includes('--tracks') ? everyTrack(results) : table(results))
 }

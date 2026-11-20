@@ -171,7 +171,8 @@ describe('fourth tier, medley-listed-shorter', () => {
     })
 
     it('a title that is not a medley, or that names too little, is not read as the start of another', () => {
-        expect(same('Please Please Please', 'Please Please Please/You\'ve Got The Power')).toBe(false)
+        expect(reasonOf('Please Please Please', 'Please Please Please/You\'ve Got The Power')).toBe(TrackReason.FIRST_OF_TITLES_LISTED_TOGETHER) // not by this tier
+        expect(same('You\'ve Got The Power', 'Please Please Please/You\'ve Got The Power')).toBe(false)
         expect(same('Medley', medleyOfThePage)).toBe(false)
         expect(same('Medley: Please', medleyOfThePage)).toBe(false)
     })
