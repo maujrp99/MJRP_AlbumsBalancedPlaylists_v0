@@ -16,7 +16,7 @@ import { httpError, fakeResponse, answerOf } from './helpers/fakes.js'
 
 const require = createRequire(import.meta.url)
 const GenerationService = require('../../server/lib/services/GenerationService.js')
-const { consolidateRanking, normalizeKey: normalizeRankingKey } = require('../../server/lib/ranking.js')
+const { consolidateRanking } = require('../../server/lib/ranking.js')
 const { renderPrompt, PromptsError } = require('../../server/lib/prompts.js')
 const { UpstreamError, bodyOf } = require('../../server/lib/outcome.js')
 const { createBudget } = require('../../server/lib/timeBudget.js')
@@ -48,7 +48,6 @@ const serviceWith = ({ album = answeredAlbum(), overrides = {}, ...sources } = {
         getBestEverRanking: fetch.bestEver,
         fetchRankingForAlbum: fetch.fetchRankingForAlbum,
         consolidateRanking,
-        normalizeRankingKey,
         logger: quiet,
         ...overrides
     })
@@ -312,7 +311,7 @@ describe('POST /api/generate: the time of the request (F52, slice 5)', () => {
         const { service, fetch } = serviceWith({ bestEver: null, overrides: { newBudget: () => budget } })
         await generate(service)
 
-        expect(fetch.bestEver.mock.calls[0][2]).toEqual({ deadlineAt: budget.deadlineAt })
+        expect(fetch.bestEver.mock.calls[0][2]).toMatchObject({ deadlineAt: budget.deadlineAt })
     })
 })
 

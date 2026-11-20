@@ -90,7 +90,7 @@ classDiagram
 
 ## 5. Other Utilities
 *   **`stringUtils.js`**: `escapeHtml` (section 2) and `safeText`. The string similarity and the album key that lived here were removed in F55: whether an album is the album asked for is decided by `shared/albumIdentity.js`.
-*   **`NormalizationUtils.js`**: `toCore` (matching track titles). The title cleaner that lived here (`cleanTitle`) was removed in F68: the text sent to a search is the identity rule's `titleWithoutEditionNotes`. Its album and artist normalizers were removed in F55 for the same reason.
+*   **`NormalizationUtils.js`**: removed in F74 with its last function, `toCore` (it deleted the brackets of a track title): matching track titles is the one track rule's (`shared/trackIdentity.js`, through `models/sameTrack.js`). The title cleaner that lived here (`cleanTitle`) was removed in F68: the text sent to a search is the identity rule's `titleWithoutEditionNotes`. Its album and artist normalizers were removed in F55 for the same reason.
 *   **`dom-helpers.js`**: Low-level DOM traversal/manipulation helpers.
 *   **`SvgGenerator.js`**: Dynamic SVG generation (likely for placeholders or dynamic icons). *(removed in F65: `SvgGenerator.js`)*
 

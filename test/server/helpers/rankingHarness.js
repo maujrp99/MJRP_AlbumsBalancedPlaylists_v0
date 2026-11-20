@@ -15,7 +15,7 @@ const LIB = '../../../server/lib/'
 const realPrompts = require(`${LIB}prompts.js`)
 const { createRankingFetch } = require(`${LIB}fetchRanking.js`)
 const { extractAndValidateRankingEntries, rankingEntriesToSources } = require(`${LIB}normalize.js`)
-const { normalizeKey: loadNormalizeKey } = require(`${LIB}ranking.js`)
+const { loadTrackIdentity } = require(`${LIB}trackIdentity.js`)
 
 const quiet = { info: vi.fn(), warn: vi.fn(), error: vi.fn() }
 
@@ -87,7 +87,7 @@ export function rankingFetchWith ({ prompts = PROMPTS, bestEver = null, spotify 
         rankingEntriesToSources,
         getBestEverRanking: doubles.bestEver,
         getSpotifyPopularityRanking: doubles.spotify,
-        loadNormalizeKey,
+        loadTrackIdentity,
         logger: quiet,
         env: { AI_API_KEY: 'k' }
     })

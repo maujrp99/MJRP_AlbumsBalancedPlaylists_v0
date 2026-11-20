@@ -12,6 +12,7 @@
  * @since Sprint 20
  */
 
+import { entryOfEachTrack } from '../models/sameTrack.js'
 import { RankingStrategy } from './RankingStrategy.js'
 
 export class UserRankingStrategy extends RankingStrategy {
@@ -62,18 +63,12 @@ export class UserRankingStrategy extends RankingStrategy {
      * @private
      */
     _applyUserRanking(album) {
-        // Create lookup map: normalized track title -> user rank
-        const userRankMap = new Map(
-            album.userRanking.map(r => [
-                this._normalizeKey(r.trackTitle),
-                r.userRank
-            ])
-        )
+        // Which row of the person's ranking is of which track is the one track rule's to say
+        // (models/sameTrack.js, F74): two tracks of one title keep each its own rank.
+        const rowOf = entryOfEachTrack(album.tracks, album.userRanking)
 
-        // Apply user ranks to tracks
-        const rankedTracks = album.tracks.map(track => {
-            const key = this._normalizeKey(track.title)
-            const userRank = userRankMap.get(key)
+        const rankedTracks = album.tracks.map((track, index) => {
+            const userRank = rowOf[index]?.userRank
 
             return {
                 ...track,
@@ -101,23 +96,5 @@ export class UserRankingStrategy extends RankingStrategy {
             userRank: null,
             _rank: index + 1  // 1-based ranking
         }))
-    }
-
-    /**
-     * Normalize track title for matching
-     * Handles case differences, extra spaces, special characters
-     * @param {string} title - Track title
-     * @returns {string} Normalized key
-     * @private
-     */
-    _normalizeKey(title) {
-        if (!title) return ''
-        return title
-            .toLowerCase()
-            .trim()
-            .replace(/\s+/g, ' ')           // Collapse multiple spaces
-            .replace(/['']/g, "'")           // Normalize quotes
-            .replace(/[""]/g, '"')           // Normalize double quotes
-            .replace(/[^\w\s'"-]/g, '')      // Remove special chars
     }
 }

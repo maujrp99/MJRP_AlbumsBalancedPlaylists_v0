@@ -4,7 +4,7 @@
  * Track ratings of an album, from BestEverAlbums (the scraper is injected).
  *
  * It returns a typed result (lib/outcome.js), never a swallowed failure (F52):
- *   found       the source has the album and at least one rating matched a track asked for
+ *   found       the source has the album and at least one rating is of a track asked for
  *   not_found   the source answered every search and has no page for the album
  *   no_ratings  the source has the page, with no rating for the tracks asked for
  *   failure     the request was unusable (invalid_request) or the source could not answer
@@ -21,20 +21,26 @@
  * A `not_found` is decided by the identity rule (shared/albumIdentity.js), and the rule changes: its
  * data carries `identityRule`, the version of the rule that decided it, so the app does not keep
  * believing a "no page" of an older rule (F68).
+ * Which track a rating is of is decided by the track rule (shared/trackIdentity.js, F74), one
+ * rating to one track; `found` and `no_ratings` carry `trackRule`, the version of the rule that
+ * decided, so the app asks again for the ratings an older rule spread (an extra track with the
+ * rating of the original). The tracks asked for go to the scraper too: they choose the page when
+ * the source has two editions under one name.
  * Every result carries `trace` ({ how: 'source' | 'joined', sourceRequests }) for the log of the
  * route; it does not go on the wire.
  */
 const { OUTCOMES, success, failure, UpstreamError } = require('../outcome')
-const { toFuzzyCore } = require('../normalize')
 const { createInFlight } = require('../inFlight')
 const { createBudget } = require('../timeBudget')
 const { loadAlbumIdentity } = require('../albumIdentity')
+const { loadTrackIdentity } = require('../trackIdentity')
 
 /** The whole time of one album request. The app gives up at 20 s; the answer has to leave before. */
 const ALBUM_BUDGET_MS = 15000
 const SOURCE = 'BestEverAlbums'
 
 const titleOf = (track) => (track && (track.title || track.name)) || ''
+const isRated = (entry) => Boolean(entry) && entry.rating !== undefined && entry.rating !== null
 
 /** Two requests are for the same album when artist and title are the same text, case and spacing apart. */
 const sameText = (text) => String(text || '').toLowerCase().replace(/\s+/g, ' ').trim()
@@ -43,15 +49,13 @@ const albumKey = (artist, title) => `${sameText(artist)}|${sameText(title)}`
 class EnrichmentService {
     /**
      * @param {Object} deps
-     * @param {Function} deps.getBestEverRanking - (title, artist, { deadlineAt, stats }) => Promise<page|null>
-     * @param {Function} deps.normalizeRankingKey
+     * @param {Function} deps.getBestEverRanking - (title, artist, { deadlineAt, stats, tracks }) => Promise<page|null>
      * @param {Object} [deps.logger]
      * @param {Object} [deps.inFlight] - lib/inFlight.js
      * @param {Function} [deps.newBudget] - () => a budget of lib/timeBudget.js, for one request
      */
     constructor(deps) {
         this.getBestEverRanking = deps.getBestEverRanking;
-        this.normalizeRankingKey = deps.normalizeRankingKey;
         this.logger = deps.logger || console;
         this.inFlight = deps.inFlight || createInFlight();
         this.newBudget = deps.newBudget || (() => createBudget({ ms: ALBUM_BUDGET_MS }));
@@ -60,7 +64,7 @@ class EnrichmentService {
     /**
      * @param {Object} albumData - { artist, title, tracks }
      * @returns {Promise<Object>} a result of lib/outcome.js; on success `data` is
-     *          { bestEverInfo, trackRatings, trackEvidence }
+     *          { bestEverInfo, trackRatings, trackEvidence, trackRule? }
      */
     async enrichAlbum(albumData) {
         if (!albumData || !albumData.title || !Array.isArray(albumData.tracks)) {
@@ -69,7 +73,7 @@ class EnrichmentService {
         const artist = albumData.artist || ''
         const { title, tracks } = albumData
 
-        const search = this._searchOnce(title, artist, this.newBudget())
+        const search = this._searchOnce({ title, artist, tracks }, this.newBudget())
         let page
         try {
             page = await search.page
@@ -86,10 +90,10 @@ class EnrichmentService {
      * the budget of this request.
      * @returns {{ page: Promise<Object|null>, trace: Function }}
      */
-    _searchOnce(title, artist, budget) {
+    _searchOnce({ title, artist, tracks }, budget) {
         const stats = { requests: 0 }
         const shared = this.inFlight.share(albumKey(artist, title), () =>
-            this.getBestEverRanking(title, artist, { deadlineAt: budget.deadlineAt, stats }))
+            this.getBestEverRanking(title, artist, { deadlineAt: budget.deadlineAt, stats, tracks }))
         return {
             page: budget.race(shared.promise, SOURCE),
             trace: () => ({ how: shared.joined ? 'joined' : 'source', sourceRequests: stats.requests })
@@ -109,10 +113,12 @@ class EnrichmentService {
             return success({ ...data, identityRule: IDENTITY_RULE_VERSION }, OUTCOMES.NOT_FOUND)
         }
 
-        const matched = await this._matchRatings(page, tracks)
+        const { matchTracks, TRACK_IDENTITY_RULE_VERSION } = await loadTrackIdentity()
+        const matched = this._matchRatings(page, tracks, matchTracks)
         const ratedCount = matched.filter(entry => entry.rating !== null).length
         this.logger.info(`[Enrichment] ${title}: ${(page.evidence || []).length} rankings on the page, ${ratedCount} matched.`)
-        return success(this._data(page, matched), ratedCount > 0 ? OUTCOMES.FOUND : OUTCOMES.NO_RATINGS)
+        const data = { ...this._data(page, matched), trackRule: TRACK_IDENTITY_RULE_VERSION }
+        return success(data, ratedCount > 0 ? OUTCOMES.FOUND : OUTCOMES.NO_RATINGS)
     }
 
     _unrated(track) {
@@ -120,32 +126,17 @@ class EnrichmentService {
     }
 
     /**
-     * Each track asked for with the rating the page has for it, or null: by the ranking key first,
-     * then by the fuzzy core of the title (the two passes this service always made).
+     * Each track asked for with the rating the page has for it, or null. Which entry of the page
+     * is of which track is the track rule's to say (`matchTracks`): one entry to one track.
      */
-    async _matchRatings(page, tracks) {
+    _matchRatings(page, tracks, matchTracks) {
         const evidence = Array.isArray(page.evidence) ? page.evidence : []
-        const rated = evidence.filter(e => e && e.rating !== undefined && e.rating !== null)
-        if (rated.length === 0) return tracks.map(track => this._unrated(track))
-
-        const normalizeKey = await this.normalizeRankingKey()
-        const byKey = new Map()
-        rated.forEach(e => {
-            const key = normalizeKey(e.trackTitle || e.title)
-            if (key) byKey.set(key, e)
-        })
         const url = page.albumUrl || page.referenceUrl
 
-        return tracks.map(track => {
-            const title = titleOf(track)
-            const key = normalizeKey(title)
-            const fuzzy = toFuzzyCore(title)
-            const match = (key && byKey.get(key)) ||
-                evidence.find(e => e && toFuzzyCore(e.trackTitle || e.title) === fuzzy)
-            if (!match || match.rating === null || match.rating === undefined) return this._unrated(track)
-
-            const rating = Number(match.rating)
-            return { title, rating, evidence: [{ source: 'BestEverAlbums', score: rating, votes: null, url }] }
+        return matchTracks(tracks, evidence).map((match, index) => {
+            if (!match || !isRated(match.entry)) return this._unrated(tracks[index])
+            const rating = Number(match.entry.rating)
+            return { title: titleOf(tracks[index]), rating, evidence: [{ source: 'BestEverAlbums', score: rating, votes: null, url }] }
         })
     }
 

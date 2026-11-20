@@ -31,7 +31,7 @@ Os nomes da coluna *Stack layer* são as camadas de `docs/specs/tech-stack.md`.
 | Component | Responsibility | Stack layer |
 |-----------|---------------|-------------|
 | Curadoria (`shared/curation.js`) | retirada na F65 (2026-11-19): nenhum cliente chamava `POST /api/playlists`, a única rota que a usava; as playlists são geradas no navegador, pelos algoritmos de `js/algorithms/` | — |
-| Normalização (`shared/normalize.js`) | limpeza de texto de título/artista | Linguagem |
+| Identidade da faixa (`shared/trackIdentity.js`) | a regra única de «esta faixa do álbum é a faixa que a fonte lista» (F74), pura, em degraus com nome, e a distribuição de uma nota para uma faixa (`matchTracks`); o app a usa por `public/js/models/sameTrack.js` e o servidor por `server/lib/trackIdentity.js`. Ver «Uma regra só para dizer que é a mesma faixa». `shared/normalize.js` (`normalizeKey`), que ocupava este lugar, saiu com ela | Linguagem |
 | Identidade do álbum (`shared/albumIdentity.js`) | a regra única de «este é o álbum pedido» (F55, revista na F68), pura, em listas de regras com nome; o app a usa por `public/js/models/askedAlbum.js` e o servidor por `server/lib/albumIdentity.js`. Ver «Uma regra só para dizer que é o mesmo álbum», no fim deste arquivo | Linguagem |
 | Autenticação de usuário (`shared/services/AuthService.js`) | login Google/Apple e saída, sobre `firebase/auth`; **só o navegador o usa** (`stores/UserStore.js` o importa por `@shared/`); o servidor não. Existe também outro `AuthService` em `public/js/services/AuthService.js` (login anônimo) | Dados |
 
@@ -743,6 +743,80 @@ flowchart LR
 - *Ordem de publicação.* O app novo com o servidor antigo não acredita em nenhum `not_found` (não vem carimbado) e pergunta de novo a cada carga, até o servidor novo entrar.
 
 **Verificado e não verificado:** a F55 foi provada no navegador com a conta do MJRP e em produção (`reports/evidence/F55/`). A revisão da F68 não foi vista num navegador nem contra o servidor publicado. Da fonte de notas só as respostas de `suggest.php` foram lidas (56 pedidos em 2026-11-19); as páginas de artista e a busca em HTML não, então o teste offline prova que a busca por sugestões acha cada álbum, não por qual tentativa a produção o achará.
+
+## Uma regra só para dizer que é a mesma faixa (F74) — construída no ramo
+
+> **Estado:** construída em 2026-11-20 no ramo `fix/f74-track-ratings-reach-the-right-tracks`. Não entrou na `main`, o servidor não foi publicado e nada foi visto num navegador. Documentos: `docs/specs/features/F74-track-ratings-reach-the-right-tracks/`; medida em `reports/evidence/F74/2026-11-20-track-identity-measure.md`.
+
+**O problema.** A nota de cada faixa vem do BestEverAlbums e é posta nas faixas do álbum comparando títulos. A comparação apagava tudo o que estava entre parênteses, dos dois lados. Em «In the Court of the Crimson King (Expanded Edition)» quatro das cinco faixas originais ficavam sem nota (a fonte escreve «21st Century Schizoid Man Including Mirrors», sem parênteses) e a extra «I Talk to the Wind (Duo Version)» levava o 90 da original ([[uat#^UAT-221]]). E a pergunta «esta faixa é aquela?» era respondida em nove lugares, cada um com a sua chave: `normalizeKey`, `toFuzzyCore`, `toCore`, «um título contém o outro», 40% das palavras em comum.
+
+**O desenho.** Um módulo puro, `shared/trackIdentity.js`, no molde da regra do álbum: o app o usa por `public/js/models/sameTrack.js` e o servidor por `server/lib/trackIdentity.js` (a mesma ponte de `server/lib/albumIdentity.js`: o servidor é CommonJS, a regra é módulo ES, carregada no primeiro uso; a publicação já leva `shared/` inteiro). Cada lugar entrega as duas listas a `matchTracks(faixasDoÁlbum, entradasDaFonte)` e escreve o que ela responde; nenhum compara título. O arquivo se lê de cima a baixo:
+
+| Seção do arquivo | O que tem | Como cresce |
+|---|---|---|
+| 1. O texto | como um título vira o texto comparado: sem acento, caixa e pontuação, «&» lido como «and», as palavras juntas («T.N.T.» = «TNT», «Sub-culture» = «Subculture»); o que é só jeito de escrever («Part One» = «Pt 1», o «The» do começo) e as escritas conhecidas (`KNOWN_WRITINGS`: «Foxey Lady» = «Foxy Lady») | uma entrada em `KNOWN_WRITINGS` |
+| 2. As notas | o que o título traz entre parênteses ou depois de « - »; `DESCRIBING_NOTES`, os jeitos com nome de uma nota só descrever a mesma gravação: `mastering-or-placement` («(2011 Remaster)», «(Mono)», «(2019 Mix)», «(Album Version)», «(Bonus Track)»), `credit` («(feat. …)», «(… vs. …)»), `parts-of-the-song` («(Including …)») | uma entrada em `DESCRIBING_NOTES` |
+| 3. Os degraus | `TIERS`, do mais forte ao mais fraco; `compareTrackTitles` para um par; `REASONS_EXPLAINED`, todos os motivos com exemplo real, que o teste roda | uma entrada em `TIERS`, no lugar da sua força |
+| 4. A distribuição | `matchTracks`: uma entrada da fonte para uma faixa do álbum | — |
+
+**Os degraus.**
+
+| Motivo | O que diz | Exemplo real (a faixa do álbum → o que a fonte escreve) |
+|---|---|---|
+| `same-text` | o mesmo texto, lidos os parênteses como palavras | «21st Century Schizoid Man (Including "Mirrors")» → «21st Century Schizoid Man Including Mirrors» |
+| `same-song-described` | a mesma música descrita ou escrita de outro jeito: sai a nota que só descreve; «Pt. 1» é «Part One» | «Larks' Tongues In Aspic, Pt. 1» → «Larks' Tongues In Aspic, Part One» |
+| `same-place-one-word-apart` | o mesmo número de faixa, e um título é o outro com uma palavra a mais | faixa 5 «My Sarah» → faixa 5 «Sarah» |
+| `medley-listed-shorter` | dois medleys, um listando só as primeiras músicas do outro | o medley de «Live At The Apollo (1962)» |
+| `title-without-its-note` | um título é o outro sem a nota (ao vivo, versão, subtítulo); o mais fraco | «I'll Go Crazy (Live 1962)» → «I'll Go Crazy» |
+
+Recusas: `another-recording` (o mesmo título com duas notas diferentes: «Lost Someone (Live 1962)» e «Lost Someone (Part 1)»), `title-mismatch`, `title-missing`. Não há «um contém o outro», nota nem limiar.
+
+**Uma nota, uma faixa.** `matchTracks` percorre os degraus do mais forte ao mais fraco sobre o álbum inteiro. Quando duas faixas disputam a mesma entrada, ganha o degrau mais forte, depois a faixa que vem antes; a que perde fica sem nada. É isso que impede a extra de levar a nota da original: «I Talk to the Wind» pega a entrada pelo primeiro degrau, e para «I Talk to the Wind (Duo Version)», que só casaria pelo último, não sobra entrada. A faixa com a nota só recebe quando o álbum não tem a faixa sem ela (o disco ao vivo).
+
+**O que mudou do esboço, pelos dados.** O esboço tinha um degrau «nunca é a mesma» para a faixa com marca de outra gravação. As 12 páginas lidas mostraram dois álbuns em que isso tiraria notas certas: todas as faixas de «Live At The Apollo (1962)» dizem «(Live 1962)» e a fonte as escreve sem; «Substance» (New Order) tem «The Perfect Kiss (Substance Edit)» e a fonte escreve «Perfect Kiss». A proteção passou do «nunca» para a ordem: o degrau mais fraco, numa distribuição de uma para uma. Por isso não existe lista de palavras de versão para os parênteses: toda nota que não só descreve é parte do que a faixa é. Entraram dois degraus que o esboço não tinha, pedidos por faixas reais: o do mesmo número de faixa e o do medley.
+
+**A página da edição (causa d).** A fonte tem duas páginas com o nome «High Voltage» do AC/DC: o disco australiano (8 faixas) e «High Voltage (International)» (9). A regra do álbum fica com a primeira, pelo nome, e 7 das 9 faixas do disco internacional ficavam sem nota. O raspador recebe agora as faixas do álbum (`getRankingForAlbum(título, artista, { tracks })`); quando a página aceita divide com o álbum menos da metade das faixas dela, ele lê as outras páginas de mesmo nome que a mesma busca listou (no máximo duas; `candidatesOfTheSameName`, função nova de `shared/albumIdentity.js`, que não aceita nada) e fica com a que divide mais faixas (`pageOfTheEdition`). Sem faixas, sem outra página de mesmo nome, ou com a página certa de primeira, nenhum pedido a mais é feito. O raspador também passou a guardar o número que a página dá a cada faixa (`trackNumber`).
+
+**Os lugares que perguntam à regra:**
+
+| Lugar | O que casa |
+|---|---|
+| `server/lib/services/EnrichmentService.js` (`POST /api/enrich-album`) | as notas da página com as faixas pedidas; a resposta leva `trackRule` |
+| `server/lib/scrapers/besteveralbums.js` | quantas faixas do álbum cada página lista, para escolher a edição |
+| `server/lib/ranking.js` | as menções de cada fonte com as faixas, fonte por fonte; saíram «um contém o outro» e os 40% de palavras |
+| `server/lib/rankingSources/completeRanking.js`, `rankingPlan.js`, `server/lib/fetchRanking.js` | a página completada pela IA |
+| `server/lib/albumAnswer.js`, `server/lib/services/GenerationService.js` | o ranking consolidado escrito nas faixas |
+| `public/js/helpers/BEAEnrichmentHelper.js` | a resposta de notas escrita no álbum; uma linha sem nota tira a nota antiga da faixa |
+| `public/js/helpers/SpotifyEnrichmentHelper.js` | a popularidade do Spotify (antes: «o mesmo título, ou um que contém o outro») |
+| `public/js/models/albumAverages.js` (`mergedTracksOf`) | as duas ordens do mesmo álbum |
+| `public/js/models/Album.js`, `public/js/ranking/UserRankingStrategy.js` | o ranking da própria pessoa |
+| `public/js/ranking/BalancedRankingStrategy.js`, `public/js/algorithms/mixins/TrackEnrichmentMixin.js` | as listas que o álbum da busca por IA traz |
+
+Saíram, sem ninguém mais chamando: `shared/normalize.js` (`normalizeKey`), `public/js/utils/NormalizationUtils.js` (`toCore`), e de `server/lib/normalize.js` os quatro limpadores (`toCore`, `toFuzzyCore`, `normalizeFuzzy`, `normalizeArtist`). `TrackTransformer.calculateSpotifyRanks` deixou de usar o título para dar a posição: usa a própria faixa.
+
+**O guardado e a versão da regra.** As notas que o navegador guarda foram postas nas faixas por uma versão da regra. O servidor carimba a resposta com ela (`trackRule` nos dados de `found` e de `no_ratings`; `TRACK_IDENTITY_RULE_VERSION`, hoje 1); o `AcclaimEnricher` leva o carimbo, e o registro (`enrichment.acclaim.trackRule`) só vale enquanto for a versão do app. Um registro sem carimbo, ou com outro, não diz nada hoje: o `AlbumCacheAdapter` entrega o álbum sem as notas, sem a evidência e sem o endereço da página (o álbum com esse endereço se lê como «já tem as notas»), e a fonte é perguntada de novo, uma vez. O «não tem página» (`not_found`) não depende desta regra e segue como estava.
+
+```mermaid
+flowchart LR
+    P["página do BestEverAlbums<br>título, nota, número"] --> M["matchTracks<br>shared/trackIdentity.js"]
+    T["faixas do álbum<br>como o Apple Music escreve"] --> M
+    M -->|"uma nota por faixa<br>+ trackRule"| R["resposta do servidor"]
+    R --> C["registro no navegador<br>enrichment.acclaim.trackRule"]
+    C -->|"outra versão: sem as notas,<br>pergunta de novo"| R
+```
+
+**Funções de aptidão** (`test/architecture/trackIdentityRule.test.js`). O teste falha quando: a regra importa alguma coisa; um dos lugares da tabela deixa de perguntar à regra; os nomes das chaves antigas voltam em qualquer arquivo do app, do servidor ou de `shared/`; um arquivo põe o título de uma faixa em minúsculas para comparar; os módulos antigos reaparecem; a lista de degraus, de notas que descrevem ou de escritas conhecidas muda sem a versão mudar.
+
+**Riscos conhecidos:**
+- *Ordem de publicação.* O app novo com o servidor antigo não acredita em nenhuma nota (não vem carimbada): mostra o álbum sem notas até a resposta chegar e pergunta de novo a cada carga, até o servidor novo entrar. Publicar o servidor primeiro.
+- *A nota some antes de a nova chegar.* O álbum guardado de antes aparece sem notas pelos segundos da nova leitura; se a fonte falhar, fica sem notas até a próxima carga. Foi a escolha: uma nota decidida pela regra antiga pode estar na faixa errada.
+- *Álbum da busca por IA.* Quando o caminho de `/api/generate` pôs a popularidade do Spotify no lugar da nota e a página do BestEverAlbums ficou como evidência, a segunda leitura troca essa popularidade pelas notas da página (poucas).
+- *O mesmo número de faixa* vem da página; as fontes sem número (Spotify, IA) não usam esse degrau.
+- *A edição escolhida pelas faixas* custa até dois pedidos a mais à fonte, só quando a primeira página é de outro disco.
+- *As escritas conhecidas* são mantidas à mão.
+- *As médias do inventário* são gravadas no item: mudam quando a pessoa usa «Update ratings».
+
+**Verificado e não verificado:** a regra, os lugares que perguntam e a escolha da edição foram testados sem rede, com os títulos de 12 álbuns e as páginas da fonte lidas em 2026-11-20 (28 pedidos). O leitor do servidor foi rodado com o `cheerio` de verdade sobre a página guardada. Nada foi visto num navegador; o servidor não foi publicado; os outros álbuns do inventário não foram medidos.
 
 ## Leitura das playlists guardadas (F61) — construída no ramo
 

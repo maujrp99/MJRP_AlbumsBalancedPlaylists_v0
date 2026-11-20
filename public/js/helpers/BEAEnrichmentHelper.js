@@ -1,126 +1,71 @@
 /**
  * BEAEnrichmentHelper
- * 
+ *
  * Writes the answer of the ratings source (BestEverAlbums) into an album.
  * It asks no source: the album load asks (services/albums/adapters/enrichers.js, through its
  * queue) and hands the answer here. The call that asked on its own left with F56.
+ *
+ * The answer has one row per track that was asked for. Which row is of which track of the album
+ * is the one track rule's to say (models/sameTrack.js, F74): each row goes to one track, so a
+ * track with a note («I Talk to the Wind (Duo Version)») never takes the rating of the plain one.
+ * The row is the whole word of the source on the track: a row with no rating takes away a rating
+ * an older answer left there.
  */
 
-import { NormalizationUtils } from '../utils/NormalizationUtils.js'
+import { entryOfEachTrack } from '../models/sameTrack.js'
+
+const isRated = (row) => row?.rating !== null && row?.rating !== undefined
+const listsOf = (album) => [album.tracks, album.tracksOriginalOrder].filter(Array.isArray)
+
+/** The page of the album at the source. */
+function applyPage(album, info) {
+    if (info?.url) album.bestEverUrl = info.url
+    if (info?.albumId) album.bestEverAlbumId = info.albumId
+}
+
+/** The evidence of a track: what its row lists, and nothing when its row lists nothing. */
+function applyEvidence(track, row) {
+    const evidence = Array.isArray(row?.evidence) ? row.evidence : []
+    if (evidence.length > 0) track.ranking = { ...track.ranking, evidence }
+    else if (track.ranking?.evidence) track.ranking.evidence = []
+}
+
+/** Each track of the list with the rating and the evidence of its own row. */
+function applyRows(tracks, data) {
+    const ratings = entryOfEachTrack(tracks, data.trackRatings)
+    const evidence = entryOfEachTrack(tracks, data.trackEvidence)
+    tracks.forEach((track, index) => {
+        if (!ratings[index]) return
+        track.rating = isRated(ratings[index]) ? ratings[index].rating : null
+        applyEvidence(track, evidence[index])
+    })
+}
+
+const ratingOf = (track) => (typeof track.rating === 'number' ? track.rating : -1)
+const placeOf = (track) => track.trackNumber || track.position || 0
+
+/** The acclaim order: by rating, highest first; then by the place on the album. Each track gets its rank. */
+function rankByRating(tracks) {
+    tracks.sort((a, b) => (ratingOf(b) - ratingOf(a)) || (placeOf(a) - placeOf(b)))
+    tracks.forEach((track, index) => {
+        track.rank = index + 1
+        if (track.ranking) track.ranking.rank = index + 1
+    })
+}
 
 /**
  * Apply BEA data to album object.
- * Maps raw API response to Album model fields.
- * 
- * @param {Album} album
- * @param {Object} enrichmentData - From API response
+ * @param {Album} album - changed in place: give a copy
+ * @param {Object} enrichmentData - the `data` of the server's answer:
+ *        { bestEverInfo: { url, albumId } | null, trackRatings: [{ title, rating }], trackEvidence: [{ title, evidence }] }
  */
 export function applyBEAData(album, enrichmentData) {
-    // 1. Apply Album-Level Metadata
-    if (enrichmentData.bestEverInfo?.url) {
-        album.bestEverUrl = enrichmentData.bestEverInfo.url
+    applyPage(album, enrichmentData.bestEverInfo)
+    if (!Array.isArray(enrichmentData.trackRatings)) return
+
+    listsOf(album).forEach(tracks => applyRows(tracks, enrichmentData))
+    if (enrichmentData.trackRatings.some(isRated)) {
+        album.acclaim = { ...album.acclaim, hasRatings: true, source: 'best-ever-albums', enrichedAt: new Date().toISOString() }
     }
-    if (enrichmentData.bestEverInfo?.albumId) {
-        album.bestEverAlbumId = enrichmentData.bestEverInfo.albumId
-    }
-
-    // 2. Map Ratings to Tracks
-    if (enrichmentData.trackRatings && Array.isArray(enrichmentData.trackRatings)) {
-        // Create O(1) Lookup Map
-        // Key: Normalized Title
-        const ratingsMap = new Map()
-        enrichmentData.trackRatings.forEach(r => {
-            if (r.rating !== null && r.rating !== undefined) {
-                ratingsMap.set(normalizeTrackTitle(r.title), r.rating)
-            }
-        })
-
-        // Apply to 'tracks' (Acclaim Order)
-        if (album.tracks) {
-            album.tracks.forEach(track => {
-                const key = normalizeTrackTitle(track.title)
-                if (ratingsMap.has(key)) {
-                    track.rating = ratingsMap.get(key)
-                }
-            })
-        }
-
-        // Apply to 'tracksOriginalOrder' (Disk Order) - Ensuring consistency
-        if (album.tracksOriginalOrder) {
-            album.tracksOriginalOrder.forEach(track => {
-                const key = normalizeTrackTitle(track.title)
-                if (ratingsMap.has(key)) {
-                    track.rating = ratingsMap.get(key)
-                }
-            })
-        }
-
-        // 3. Update Acclaim Metadata
-        // If we successfully applied ratings, mark the source
-        if (ratingsMap.size > 0) {
-            album.acclaim = {
-                ...album.acclaim,
-                hasRatings: true,
-                source: 'best-ever-albums',
-                enrichedAt: new Date().toISOString()
-            }
-        }
-
-        // 4. Map Evidence (Sprint 23)
-        if (enrichmentData.trackEvidence && Array.isArray(enrichmentData.trackEvidence)) {
-            const evidenceLookup = new Map()
-            enrichmentData.trackEvidence.forEach(e => {
-                if (e.evidence && e.evidence.length > 0) {
-                    evidenceLookup.set(normalizeTrackTitle(e.title), e.evidence)
-                }
-            })
-
-            const applyEvidence = (track) => {
-                const key = normalizeTrackTitle(track.title)
-                if (evidenceLookup.has(key)) {
-                    // Ensure ranking object exists
-                    if (!track.ranking) track.ranking = {}
-                    track.ranking.evidence = evidenceLookup.get(key)
-                }
-            }
-
-            if (album.tracks) album.tracks.forEach(applyEvidence)
-            if (album.tracksOriginalOrder) album.tracksOriginalOrder.forEach(applyEvidence)
-        }
-
-        // 5. Re-sort album.tracks by Rating (Desc) now that we have fresh data
-        // This ensures the "Acclaim" view is actually sorted by acclaim
-        if (album.tracks) {
-            album.tracks.sort((a, b) => {
-                const ratingA = (typeof a.rating === 'number') ? a.rating : -1
-                const ratingB = (typeof b.rating === 'number') ? b.rating : -1
-
-                // Primary: Rating Descending
-                if (ratingA !== ratingB) return ratingB - ratingA
-
-                // Secondary: Track Number Ascending (for ties)
-                const numA = a.trackNumber || a.position || 0
-                const numB = b.trackNumber || b.position || 0
-                return numA - numB
-            })
-
-            // Re-assign ranks based on new sort order
-            album.tracks.forEach((t, idx) => {
-                t.rank = idx + 1
-                if (t.ranking) t.ranking.rank = idx + 1
-            })
-        }
-    }
-}
-
-
-
-/**
- * Helper: Normalize track title for fuzzy matching key
- * @param {string} title 
- * @returns {string}
- */
-function normalizeTrackTitle(title) {
-    if (!title) return ''
-    return NormalizationUtils.toCore(title)
+    if (album.tracks) rankByRating(album.tracks)
 }

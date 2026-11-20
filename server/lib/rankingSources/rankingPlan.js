@@ -51,12 +51,12 @@ function fromPopularity ({ acclaim, popularity }) {
   return hasEntries(acclaim) ? { ...ranking, bestEver: acclaim.bestEver } : ranking
 }
 
-function fromPage (asked, { acclaim, aiRanking }, normalizeKey) {
+function fromPage (asked, { acclaim, aiRanking }, matchTracks) {
   const page = { entries: acclaim.entries, sources: [acclaim.source], bestEver: acclaim.bestEver }
   if (!answered(aiRanking)) return page // complete, or the AI could not complete it
   return {
     ...page,
-    entries: completeRanking(asked.tracks, acclaim.entries, aiRanking.entries, normalizeKey),
+    entries: completeRanking(asked.tracks, acclaim.entries, aiRanking.entries, matchTracks),
     sources: [acclaim.source, ...aiRanking.sources.slice(0, MODEL_SOURCES_LISTED)]
   }
 }
@@ -64,12 +64,12 @@ function fromPage (asked, { acclaim, aiRanking }, normalizeKey) {
 /**
  * @param {Object} asked - { title, artist, tracks, trackCount }
  * @param {{ acclaim: Object, popularity: Object, aiRanking: Object }} answers
- * @param {Function} normalizeKey
+ * @param {Function} matchTracks - the one track rule (shared/trackIdentity.js)
  * @returns {{ entries: Array, sources: Array, bestEver?: Object, spotify?: Object }}
  */
-function chooseRanking (asked, answers, normalizeKey) {
+function chooseRanking (asked, answers, matchTracks) {
   if (popularityWins(asked, answers)) return fromPopularity(answers)
-  if (hasEntries(answers.acclaim)) return fromPage(asked, answers, normalizeKey)
+  if (hasEntries(answers.acclaim)) return fromPage(asked, answers, matchTracks)
   return { entries: entriesOf(answers.aiRanking), sources: answers.aiRanking.sources || [] }
 }
 

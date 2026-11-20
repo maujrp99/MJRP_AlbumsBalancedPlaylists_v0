@@ -129,9 +129,9 @@ router.get('/debug/import', async (req, res) => {
     const AI_API_KEY = process.env.AI_API_KEY
     if (!AI_API_KEY) return res.status(503).json({ error: 'AI API key not configured' })
     try {
-        const mod = await import('../../shared/normalize.js')
+        const mod = await import('../../shared/trackIdentity.js')
         const input = req.query.input
-        const normalized = input ? mod.normalizeKey(input) : null
+        const normalized = input ? mod.trackTextOf(input) : null
         res.json({ ok: true, exports: Object.keys(mod), input, normalized })
     } catch (e) {
         res.status(500).json({ error: e.message, stack: e.stack })

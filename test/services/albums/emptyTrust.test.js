@@ -12,6 +12,10 @@
  * stamps its "not_found" with the version of its rule; the stamp travels with the reason to the
  * record, and a "no page" decided with another version (or with none: a record of before F68) is
  * not believed: the source is asked again.
+ *
+ * F74: which track a rating is of is decided by the track rule of the server. The ratings ("done")
+ * and "page without ratings" carry the version of that rule (`trackRule`) and are believed only
+ * while it is the version of the app (test/services/albums/trackRatings.test.js).
  */
 import { describe, it, expect, vi } from 'vitest'
 import { Album } from '../../../public/js/models/Album.js'
@@ -21,6 +25,7 @@ import { AlbumLoadService } from '../../../public/js/services/albums/AlbumLoadSe
 import { AlbumLoadStore } from '../../../public/js/stores/albumLoad.js'
 import { queryKey } from '../../../public/js/models/albumLoadState.js'
 import { IDENTITY_RULE_VERSION } from '../../../shared/albumIdentity.js'
+import { TRACK_IDENTITY_RULE_VERSION } from '../../../shared/trackIdentity.js'
 
 const HOUR = 60 * 60 * 1000
 const DAY = 24 * HOUR
@@ -85,7 +90,8 @@ describe('AlbumCacheAdapter: "empty" is believed for a time that depends on the 
         const built = build()
         const album = makeAlbum()
         await built.adapter.saveBase('Artist - Album', album)
-        await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty', reason ? { reason, rule: IDENTITY_RULE_VERSION } : undefined)
+        const note = reason ? { reason, rule: IDENTITY_RULE_VERSION, trackRule: TRACK_IDENTITY_RULE_VERSION } : undefined
+        await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty', note)
         return built
     }
     const acclaimAfter = async ({ adapter, clock }, ms) => {
@@ -163,13 +169,13 @@ describe('AlbumCacheAdapter: "empty" is believed for a time that depends on the 
             expect((await built.adapter.get('Artist - Album')).album.title).toBe('Album')
         })
 
-        it('"page without ratings" does not depend on the rule: it keeps its 7 days, with no version', async () => {
+        it('"page without ratings" does not depend on the identity rule: it keeps its 7 days, with the version of the track rule only (F74)', async () => {
             const built = build()
             const album = makeAlbum()
             await built.adapter.saveBase('Artist - Album', album)
-            await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty', { reason: 'no_ratings', rule: IDENTITY_RULE_VERSION - 1 })
+            await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'empty', { reason: 'no_ratings', rule: IDENTITY_RULE_VERSION - 1, trackRule: TRACK_IDENTITY_RULE_VERSION })
 
-            expect(savedAcclaim(built)).toEqual({ status: 'empty', at: 1000, reason: 'no_ratings' })
+            expect(savedAcclaim(built)).toEqual({ status: 'empty', at: 1000, reason: 'no_ratings', trackRule: TRACK_IDENTITY_RULE_VERSION })
             expect(await acclaimAfter(built, 6 * DAY)).toBe('empty')
         })
     })
@@ -178,10 +184,10 @@ describe('AlbumCacheAdapter: "empty" is believed for a time that depends on the 
         const built = build()
         const album = makeAlbum()
         await built.adapter.saveBase('Artist - Album', album)
-        await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'done', { reason: 'not_found' })
+        await built.adapter.saveEnrichment('Artist - Album', album, 'acclaim', 'done', { reason: 'not_found', trackRule: TRACK_IDENTITY_RULE_VERSION })
 
         expect(await acclaimAfter(built, 6 * DAY)).toBe('done')
-        expect([...built.backing.values()][0].enrichment.acclaim).toEqual({ status: 'done', at: 1000 })
+        expect([...built.backing.values()][0].enrichment.acclaim).toEqual({ status: 'done', at: 1000, trackRule: TRACK_IDENTITY_RULE_VERSION })
     })
 
     it('a newer answer replaces the older one, reason and time', async () => {

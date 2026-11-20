@@ -1,5 +1,6 @@
 const axios = require('axios')
 const { loadAlbumIdentity } = require('../albumIdentity')
+const { loadTrackIdentity } = require('../trackIdentity')
 const { UpstreamError, upstreamErrorFrom } = require('../outcome')
 const { createPoliteQueue, PaceError, noPace } = require('../politeQueue')
 
@@ -22,6 +23,13 @@ const { createPoliteQueue, PaceError, noPace } = require('../politeQueue')
  * list of attempts (`locateAlbum`, `searchAttempts`), each judged by the one identity rule; the
  * titles asked for are the rule's own (`titlesToSearch`). There is no title cleaner here.
  *
+ * The rule of the edition (F74): the source may have two pages that are the album by its name, one
+ * for each edition («High Voltage», the Australian record, and «High Voltage (International)»).
+ * The name cannot tell them apart; the tracks can. When the tracks of the album are given and the
+ * page found shares few of them (`pageOfTheEdition`), the other pages of the same name that the
+ * same search listed are read, and the one that shares the most tracks is the page of the album.
+ * "The same track" is the one track rule's to say (shared/trackIdentity.js).
+ *
  * `createBestEverScraper({ http, loadHtml, pace })` receives the HTTP client, the HTML reader and
  * the queue, so the tests run with no network and no waiting; the module also exports one scraper
  * wired to axios, cheerio and the real queue (BEA_PACE). That queue is PER INSTANCE of the server.
@@ -41,6 +49,10 @@ function parseSuggest (data) {
 
 /** How many album links of the HTML search are opened to be checked. */
 const HTML_SEARCH_PAGES_CHECKED = 5
+/** How many other pages of the same name are read when the page found is of another edition (F74). */
+const OTHER_EDITIONS_READ = 2
+/** A page that shares fewer than this share of ITS tracks with the album is the page of another edition. */
+const SHARE_OF_THE_SAME_EDITION = 0.5
 
 const ALBUM_ADDRESSES = [/thechart\.php\?a=(\d+)/i, /album\.php\?id=(\d+)/i]
 /** The id in the address of an album page, or null when the address is not one. */
@@ -149,11 +161,25 @@ function albumSuggestions ({ titles, urls }) {
     .filter(suggestion => suggestion.id)
 }
 
-/** The suggestion whose label says it is the album asked for, with the reason of the rule, or null. */
+/** Of a list a search gave, the pages that carry the name of the album asked for, the one found apart. */
+async function othersOfTheSameName (asked, candidates, read, found) {
+  const { candidatesOfTheSameName } = await loadAlbumIdentity()
+  return candidatesOfTheSameName(asked, candidates, read)
+    .filter(candidate => candidate.id !== found.id)
+    .map(candidate => ({ id: candidate.id, url: absoluteUrl(candidate.url) }))
+}
+
+/**
+ * The suggestion whose label says it is the album asked for, with the reason of the rule and the
+ * other suggestions of the same name (`others`), or null.
+ */
 async function pickSuggested (asked, suggestions) {
   const { pickAlbum, albumFromLabel } = await loadAlbumIdentity()
-  const picked = pickAlbum(asked, suggestions, suggestion => albumFromLabel(suggestion.label))
-  return picked.found ? { ...picked.candidate, reason: picked.verdict.reason } : null
+  const read = suggestion => albumFromLabel(suggestion.label)
+  const picked = pickAlbum(asked, suggestions, read)
+  if (!picked.found) return null
+  const others = await othersOfTheSameName(asked, suggestions, read, picked.candidate)
+  return { ...picked.candidate, reason: picked.verdict.reason, others }
 }
 
 /**
@@ -276,7 +302,7 @@ async function albumFromSuggest ({ name, text }, asked, { openUnlabelled }) {
     (openUnlabelled ? await albumFromUnlabelled(suggestions, asked) : null)
   if (!found) return null
   logger.log(`[BEA Search] ${name} "${text}": "${found.label}" -> ${found.url} (${found.reason})`)
-  return { id: found.id, url: found.url, label: found.label, reason: found.reason, attempt: name }
+  return { id: found.id, url: found.url, label: found.label, reason: found.reason, attempt: name, others: found.others || [] }
 }
 
 /**
@@ -339,6 +365,15 @@ async function parseArtistDiscography(artistId) {
     albums.push({ id, title: text, url: absoluteUrl(href) })
   })
   return { artistUrl: url, albums }
+}
+
+/**
+ * The number the page gives a track of its grid («5.», in the first cell of the row), or null.
+ * The track identity rule reads it (shared/trackIdentity.js, `same-place-one-word-apart`, F74).
+ */
+function trackNumberOf ($el) {
+  const found = ($el.siblings().first().text() || '').trim().match(/^(\d{1,3})\.?$/)
+  return found ? parseInt(found[1], 10) : null
 }
 
 async function parseChartRankingById(id) {
@@ -430,7 +465,7 @@ async function parseChartRankingById(id) {
           if (m) rating = parseInt(m[1], 10)
         }
         logger.log(`[BEA Scraper]   Track ${i + 1}: "${title}" (Rating: ${rating}, Raw: "${aveText.substring(0, 30)}...")`)
-        if (title && title.length > 1) rows.push({ trackTitle: title, rating })
+        if (title && title.length > 1) rows.push({ trackTitle: title, rating, trackNumber: trackNumberOf($el) })
       })
     } else {
       logger.log('[BEA Scraper] Grid fallback: No track items found.')
@@ -443,7 +478,8 @@ async function parseChartRankingById(id) {
       .replace(/^\s*\d+(?:[.):]|\s-\s)\s*/, '')
       .replace(/^Track \d+[\s.)-]*/i, '')
       .trim(),
-    rating: typeof r.rating === 'number' ? r.rating : null
+    rating: typeof r.rating === 'number' ? r.rating : null,
+    trackNumber: r.trackNumber ?? null
   }))
 
   normalized.sort((a, b) => {
@@ -552,9 +588,12 @@ async function albumFromArtistPage (albumTitle, albumArtist) {
   const { albums } = await parseArtistDiscography(artistId)
   const { pickAlbum } = await loadAlbumIdentity()
   // The page is the artist's own, so each link is an album of that artist: its text is the title
-  const picked = pickAlbum({ title: albumTitle, artist: albumArtist }, albums, a => ({ title: a.title, artist: albumArtist }))
+  const asked = { title: albumTitle, artist: albumArtist }
+  const read = a => ({ title: a.title, artist: albumArtist })
+  const picked = pickAlbum(asked, albums, read)
   if (!picked.found) return null
-  return { id: picked.candidate.id, url: picked.candidate.url, reason: picked.verdict.reason, attempt: 'artist-page' }
+  const others = await othersOfTheSameName(asked, albums, read, picked.candidate)
+  return { id: picked.candidate.id, url: picked.candidate.url, reason: picked.verdict.reason, attempt: 'artist-page', others }
 }
 
 /** The ratings of the album found: the chart page when its address is one, the album page otherwise. */
@@ -577,15 +616,48 @@ async function locateAlbum (albumTitle, albumArtist) {
   return (await albumFromArtistPage(albumTitle, albumArtist)) || findAlbum(albumTitle, albumArtist)
 }
 
+/** How many tracks of the album the page lists, by the one track rule. */
+async function tracksShared (tracks, ranking) {
+  const { matchTracks } = await loadTrackIdentity()
+  return matchTracks(tracks, ranking.evidence).filter(Boolean).length
+}
+
+/**
+ * The page of the EDITION asked for (F74): `first` unless it lists mostly other tracks and another
+ * page of the same name lists more tracks of the album. Nothing more is asked of the source when
+ * the tracks are not given, when the search listed no other page of that name, or when the page
+ * found is of the album's edition.
+ * @param {Object} first - the ranking of the page the identity rule accepted
+ * @param {Array<{ id: string, url: string }>} others - the other pages of the same name
+ * @param {Array} tracks - the tracks of the album asked for
+ */
+async function pageOfTheEdition (first, others, tracks) {
+  if (tracks.length === 0 || others.length === 0) return first
+  let best = { ranking: first, shared: await tracksShared(tracks, first) }
+  if (best.shared >= first.evidence.length * SHARE_OF_THE_SAME_EDITION) return first
+
+  for (const other of others.slice(0, OTHER_EDITIONS_READ)) {
+    const ranking = await rankingOfFound(other)
+    const shared = await tracksShared(tracks, ranking)
+    if (shared > best.shared) best = { ranking, shared }
+  }
+  if (best.ranking !== first) logger.log(`[BEA Search] the page of the edition is ${best.ranking.referenceUrl}: it lists ${best.shared} of the ${tracks.length} tracks`)
+  return best.ranking
+}
+
 /**
  * The track ratings of the album asked for.
+ * @param {string} albumTitle
+ * @param {string} albumArtist
+ * @param {Array} [tracks] - the tracks of the album, when known: they choose between two editions
  * @returns {Promise<Object|null>} null when the source answered every search and has no page that
  *          is the album asked for; another album of the artist is never returned in its place (F55)
  * @throws {UpstreamError} when a request to the source failed
  */
-async function getRankingForAlbum (albumTitle, albumArtist) {
+async function getRankingForAlbum (albumTitle, albumArtist, tracks = []) {
   const found = await locateAlbum(albumTitle, albumArtist)
-  return found ? rankingOfFound(found) : null
+  if (!found) return null
+  return pageOfTheEdition(await rankingOfFound(found), found.others || [], Array.isArray(tracks) ? tracks : [])
 }
 
 /** @throws {UpstreamError} when the page could not be read */
@@ -609,9 +681,10 @@ return {
   /**
    * @param {string} albumTitle
    * @param {string} albumArtist
-   * @param {Object} [options] - { deadlineAt, stats }: see pageGetter
+   * @param {Object} [options] - { deadlineAt, stats }: see pageGetter; { tracks }: the tracks of the
+   *        album, which choose between two editions the source has under one name (F74)
    */
-  getRankingForAlbum: (albumTitle, albumArtist, options) => searchesWith(pageGetter(options)).getRankingForAlbum(albumTitle, albumArtist),
+  getRankingForAlbum: (albumTitle, albumArtist, options) => searchesWith(pageGetter(options)).getRankingForAlbum(albumTitle, albumArtist, options && options.tracks),
   getRankingFromUrl: direct('getRankingFromUrl'),
   findArtistPage: direct('findArtistPage'),
   parseArtistDiscography: direct('parseArtistDiscography'),

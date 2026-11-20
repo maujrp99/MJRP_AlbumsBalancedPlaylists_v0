@@ -15,6 +15,10 @@
  * 'empty' with no reason (the server before F52) is believed for a short time only.
  * A 'not_found' also carries `rule`, the version of the identity rule the server decided it with
  * (null from a server before F68): the record is believed only while that is the rule of the app.
+ * The ratings themselves ('done'), and a 'no_ratings', carry `trackRule`, the version of the track
+ * rule the server put each rating on its track with (null from a server before F74): the record is
+ * believed only while that is the rule of the app, so ratings an older rule spread are asked for
+ * again, once (F74).
  */
 
 import { cloneAlbum } from '../../../models/cloneAlbum.js'
@@ -27,12 +31,15 @@ const NOT_CONNECTED = 'not-connected'
 const SOURCE_HAS_NONE = new Set(['not_found', 'no_ratings'])
 const LEGACY = 'legacy'
 
+/** The version of the track rule the server decided with, or null when it does not say. */
+const trackRuleOf = (answer) => answer.data?.trackRule ?? null
+
 /** The answer changes nothing in the album. */
 const unchanged = (album) => album
 
 /** "The source has none", with the server's reason and, for 'not_found', the version of the rule that decided it. */
 const hasNone = (answer, album) => ({
-    status: EMPTY, reason: answer.kind, rule: answer.data?.identityRule ?? null, album, apply: unchanged
+    status: EMPTY, reason: answer.kind, rule: answer.data?.identityRule ?? null, trackRule: trackRuleOf(answer), album, apply: unchanged
 })
 
 /** Track ratings from the server (BestEverAlbums). */
@@ -79,7 +86,7 @@ export class AcclaimEnricher {
         const copy = apply(album)
         // The server before F52 does not say whether the source has ratings: the rule of before
         const hasData = answer.kind === LEGACY ? Boolean(copy.acclaim?.hasRatings || copy.bestEverUrl) : true
-        return { status: hasData ? DONE : EMPTY, album: copy, apply }
+        return { status: hasData ? DONE : EMPTY, album: copy, apply, trackRule: trackRuleOf(answer) }
     }
 }
 

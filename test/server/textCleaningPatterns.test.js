@@ -3,9 +3,9 @@
  * (`no-useless-escape`: an escape that changes nothing was removed). Each case below was written
  * and run BEFORE the expression was touched, and passes the same after: the meaning did not change.
  *
- *   server/lib/normalize.js             toCore, toFuzzyCore, normalizeFuzzy (what is between
- *                                       parentheses or brackets leaves the title) and the numbered
- *                                       list read from a plain-text answer of the AI
+ *   server/lib/normalize.js             the numbered list read from a plain-text answer of the AI
+ *                                       (toCore, toFuzzyCore and normalizeFuzzy, which were pinned
+ *                                       here too, left with F74: the track rule replaced them)
  *   server/lib/scrapers/besteveralbums.js  the number in front of a track title on a chart page
  *
  * Some of what is pinned is odd ("3 - Gamma" keeps its dash, "12 Monkeys" loses its number): it
@@ -17,41 +17,8 @@ import { JSDOM } from 'jsdom'
 import { fakeHttp } from './helpers/fakes.js'
 
 const require = createRequire(import.meta.url)
-const { toCore, toFuzzyCore, normalizeFuzzy, extractRankingEntries } = require('../../server/lib/normalize.js')
+const { extractRankingEntries } = require('../../server/lib/normalize.js')
 const { createBestEverScraper } = require('../../server/lib/scrapers/besteveralbums.js')
-
-describe('server/lib/normalize.js: what is between parentheses or brackets leaves the title', () => {
-    const CASES = [
-        // title, toCore, toFuzzyCore, normalizeFuzzy
-        ['Lemonade (Deluxe Edition) [2016 Remaster]', 'lemonade', 'lemonad', 'lemonade'],
-        ['The Wall [Live] (Disc 1)', 'thewall', 'wall', 'wall'],
-        ['Blonde', 'blonde', 'blond', 'blonde'],
-        ['Unreal Unearth: Unheard', 'unrealunearthunheard', 'unrealunearth', 'unreal unearth unheard'],
-        ['Nevermind (Remastered) by Nirvana', 'nevermindbynirvana', 'nevermind', 'nevermind by nirvana'],
-        ['Abbey Road (2019 Mix)', 'abbeyroad', 'abbeyroad', 'abbey road 2019 mix'],
-        ['Sgt. Pepper (50th Anniversary Edition)', 'sgtpepper', 'sgtpepper', 'sgt pepper'],
-        // a bracket inside a parenthesis, a parenthesis inside a bracket, one that never closes, one that never opened
-        ['A (B [C] D)', 'ad', 'ad', 'a b c d'],
-        ['A [B (C) D]', 'abd', 'abd', 'a b c d'],
-        ['A (B', 'ab', 'ab', 'a b'],
-        ['Purple Rain ) x', 'purplerainx', 'purplerainx', 'purple rain x'],
-        // the characters the expressions name, each alone
-        ['One [Two] Three', 'onethree', 'onethre', 'one two three'],
-        ['One (Two] Three', 'onethree', 'onethre', 'one two three'],
-        ['One [Two) Three', 'onethree', 'onethre', 'one two three'],
-        ['One \\(Two\\) Three', 'onethree', 'onethre', 'one two three']
-    ]
-
-    it.each(CASES)('%s', (title, core, fuzzyCore, fuzzy) => {
-        expect([toCore(title), toFuzzyCore(title), normalizeFuzzy(title)]).toEqual([core, fuzzyCore, fuzzy])
-    })
-
-    it('an edition note is dropped by normalizeFuzzy only when it names an edition', () => {
-        expect(normalizeFuzzy('Album [Expanded Version]')).toBe('album')
-        expect(normalizeFuzzy('Album (Live at Leeds)')).toBe('album')
-        expect(normalizeFuzzy('Album (Part Two)')).toBe('album part two')
-    })
-})
 
 describe('server/lib/normalize.js: a numbered list in a plain-text answer', () => {
     const titlesOf = (text) => extractRankingEntries({ data: { text } }).map(entry => [entry.position, entry.trackTitle])

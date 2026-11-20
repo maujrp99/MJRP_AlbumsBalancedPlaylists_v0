@@ -26,7 +26,7 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'algorithms/mixins/PlaylistBalancingMixin.js:runSwapBalancing': 20, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/mixins/PlaylistBalancingMixin.js:isSwapValid': 14, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/mixins/TrackEnrichmentMixin.js:arrow function': 14, // F62 holds this code (blend, playlists, export, Spotify)
-    'algorithms/mixins/TrackEnrichmentMixin.js:arrow function#2': 32, // F62 holds this code (blend, playlists, export, Spotify)
+    'algorithms/mixins/TrackEnrichmentMixin.js:arrow function#2': 29, // F62 holds this code (blend, playlists, export, Spotify)
     'algorithms/mixins/TrackEnrichmentMixin.js:arrow function#3': 20, // F62 holds this code (blend, playlists, export, Spotify)
     'api/serverResult.js:readServerResult': 11, // no feature yet: the API client still normalizes by hand what the server sends
     'components/InventoryEditModal.js:open': 14, // no feature yet
@@ -40,12 +40,11 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'components/ui/TrackRow.js:render': 11, // no feature yet
     'components/ui/TrackRow.js:buildBadges': 14, // no feature yet
     'controllers/SeriesController.js:arrow function': 20, // no feature yet
-    'helpers/BEAEnrichmentHelper.js:applyBEAData': 15, // no feature yet
     'models/Album.js:constructor': 16, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/Track.js:constructor': 39, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/seriesFilter.js:matches': 14, // no feature yet: three filters of albums that should be one rule
     'ranking/BalancedRankingStrategy.js:arrow function': 14, // F62 holds this code (blend, playlists, export, Spotify)
-    'ranking/BalancedRankingStrategy.js:arrow function#2': 30, // F62 holds this code (blend, playlists, export, Spotify)
+    'ranking/BalancedRankingStrategy.js:arrow function#2': 27, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/BalancedRankingStrategy.js:arrow function#3': 12, // F62 holds this code (blend, playlists, export, Spotify)
     'ranking/SpotifyRankingStrategy.js:arrow function': 11, // F62 holds this code (blend, playlists, export, Spotify)
     'services/PlaylistsService.js:_writeCurrentBatch': 13, // F62 holds this code (blend, playlists, export, Spotify)

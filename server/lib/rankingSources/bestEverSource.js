@@ -29,14 +29,15 @@ const pageOf = (page) => ({ albumUrl: urlOf(page), albumId: page.albumId || null
 
 /**
  * @param {Object} deps
- * @param {Function} deps.getBestEverRanking - (title, artist, { deadlineAt }) => Promise<page|null>, throws UpstreamError
+ * @param {Function} deps.getBestEverRanking - (title, artist, { deadlineAt, tracks }) => Promise<page|null>, throws
+ *        UpstreamError; the tracks of the album choose the page when the source has two editions under one name (F74)
  */
 function createBestEverSource ({ getBestEverRanking }) {
   /**
    * @returns {Promise<Object>} found | no_ratings, with { entries, rated, source, bestEver }; or not_found
    */
-  async function ask ({ title, artist }, { deadlineAt }) {
-    const page = await getBestEverRanking(title, artist, { deadlineAt })
+  async function ask ({ title, artist, tracks }, { deadlineAt }) {
+    const page = await getBestEverRanking(title, artist, { deadlineAt, tracks: tracks || [] })
     if (!page) return none(SOURCE_OUTCOMES.NOT_FOUND)
 
     const entries = entriesOf({ ...page, evidence: Array.isArray(page.evidence) ? page.evidence : [] })

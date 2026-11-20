@@ -90,7 +90,6 @@ const serviceWith = (overrides = {}) => new GenerationService({
     getBestEverRanking: vi.fn(async () => null),
     fetchRankingForAlbum: vi.fn(async () => ({ entries: [], sources: [], debugTrace: [], ratings: { acclaim: 'not_found', popularity: 'not_found', aiRanking: 'not_found' } })),
     consolidateRanking: vi.fn(async () => ({ results: [], divergence: {} })),
-    normalizeRankingKey: async () => (text) => String(text || '').toLowerCase(),
     logger: quiet,
     ...overrides
 })

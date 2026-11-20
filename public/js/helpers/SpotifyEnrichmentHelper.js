@@ -2,7 +2,7 @@
  * SpotifyEnrichmentHelper
  *
  * Writes what Spotify said about an album into an album object: its Spotify id, address and
- * popularity, and the popularity of each track, matched by title.
+ * popularity, and the popularity of each track.
  *
  * It only writes. It asks nobody and reads no store: since F69 the one path that asks for the
  * popularity of an album is the popularity source of the album load
@@ -11,42 +11,21 @@
  */
 
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
+import { entryOfEachTrack } from '../models/sameTrack.js'
 
-/** A title as the loose match reads it: lower case, letters, digits and single spaces. */
-const looseTitle = (text) => text?.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim() || ''
-
-/** The popularity of each track Spotify listed, by its title in lower case. */
-function tracksByTitle(trackPopularity = []) {
-    const byTitle = new Map()
-    trackPopularity.forEach(track => {
-        const title = track.name?.toLowerCase().trim()
-        if (!title) return
-        byTitle.set(title, { popularity: track.popularity, spotifyId: track.spotifyId, spotifyUri: track.spotifyUri })
-    })
-    return byTitle
-}
-
-/** What Spotify has for a track title: the same title, or one that contains the other. */
-function matchFor(trackTitle, byTitle) {
-    const exact = byTitle.get(String(trackTitle || '').toLowerCase().trim())
-    if (exact) return exact
-
-    const wanted = looseTitle(trackTitle)
-    for (const [title, data] of byTitle) {
-        const listed = looseTitle(title)
-        if (listed === wanted || listed.includes(wanted) || wanted.includes(listed)) return data
-    }
-    return null
-}
-
-/** Write the popularity into each track of the list that Spotify has, then rank the list by it. */
-function applyToTracks(tracks, byTitle) {
+/**
+ * Write the popularity into each track of the list that Spotify has, then rank the list by it.
+ * Which track of Spotify is which track of the album is the one track rule's to say
+ * (models/sameTrack.js, F74): one track of Spotify goes to one track of the album. It used to be
+ * "the same title, or one that contains the other", which gave the popularity of the original to
+ * every extra version of it.
+ */
+function applyToTracks(tracks, trackPopularity) {
     if (!tracks || tracks.length === 0) return
-    tracks.forEach(track => {
-        const match = matchFor(track.title, byTitle)
-        if (!match) return
-        const merged = TrackTransformer.mergeSpotifyData(track, match)
-        Object.assign(track, {
+    entryOfEachTrack(tracks, trackPopularity).forEach((listed, index) => {
+        if (!listed) return
+        const merged = TrackTransformer.mergeSpotifyData(tracks[index], { popularity: listed.popularity, spotifyId: listed.spotifyId, spotifyUri: listed.spotifyUri })
+        Object.assign(tracks[index], {
             spotifyPopularity: merged.spotifyPopularity,
             spotifyId: merged.spotifyId,
             spotifyUri: merged.spotifyUri
@@ -66,8 +45,8 @@ export function applySpotifyData(album, data) {
     album.spotifyPopularity = data.spotifyPopularity
     if (data.spotifyArtwork && !album.coverUrl) album.coverUrl = data.spotifyArtwork
 
-    const byTitle = tracksByTitle(data.trackPopularity)
-    if (byTitle.size === 0) return
-    applyToTracks(album.tracks, byTitle)
-    applyToTracks(album.tracksOriginalOrder, byTitle)
+    const listed = (data.trackPopularity || []).filter(track => track?.name)
+    if (listed.length === 0) return
+    applyToTracks(album.tracks, listed)
+    applyToTracks(album.tracksOriginalOrder, listed)
 }

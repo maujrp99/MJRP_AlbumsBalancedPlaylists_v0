@@ -2,22 +2,34 @@
 
 > **Deep Dive Enrichment**: This document details the platform-agnostic business logic shared between Server and Frontend (if applicable), focusing on the Core Curation Engine.
 
-## 1. Utilities: `shared/normalize.js`
-**Status**: `[ACTIVE]`
-**Type**: Utility / String Manipulation
+## 1. The track identity rule: `shared/trackIdentity.js` - v5.0 (F74)
+**Status**: `[ACTIVE]`, on the branch `fix/f74-track-ratings-reach-the-right-tracks` (2026-11-20); not yet published. It replaced `shared/normalize.js` (`normalizeKey`), which was removed: that key deleted everything in brackets on both sides, so an original track written with brackets got no rating and an extra version took the rating of the original (UAT-221).
+**Type**: Domain rule, pure (it imports nothing).
 
-**Purpose**: Provides standard canonicalization for fuzzy matching of track titles and artist names.
+**Purpose**: the ONE answer to "is this track of the album the track a source lists?". The app imports it through `public/js/models/sameTrack.js`; the server loads it through `server/lib/trackIdentity.js` (dynamic `import()`, the same bridge as `server/lib/albumIdentity.js`). The file reads top to bottom: the text, the notes, the tiers, the assignment.
 
-*   **Logic Trace**:
-    1.  **Input**: Raw string (e.g., "Money (2023 Remaster)").
-    2.  **Transformations**:
-        *   Lowercase.
-        *   Remove parentheticals `(...)`, `[...]`, `{...}`.
-        *   Remove trailing dash suffixes that contain `remaster` or `mix` (e.g., `- 2011 Remaster`, `- 2023 Mix`).
-        *   Remove all non-alphanumeric characters (punctuation).
-        *   Collapse whitespace.
-    3.  **Output**: Clean token string (e.g., "money").
-*   **Consumers**: imported (dynamic `import()`) by `server/lib/ranking.js` (whose loader `server/lib/fetchRanking.js` and `GenerationService` use) and `server/routes/debug.js`, and by `shared/curation.js`. *(removed in F65: `curation.js`)*
+*   **What it exports**:
+    *   `matchTracks(albumTracks, sourceEntries)` -> one item per track of the album: `{ entry, index, reason }` or `null`. Titles come as texts or in `title` / `trackTitle` / `name`; an entry may carry `trackNumber`. ONE entry goes to ONE track: the tiers are tried strongest first over the whole album, so the stronger tier wins an entry, then the earlier track.
+    *   `compareTrackTitles(albumTitle, sourceTitle, { albumPlace, sourcePlace })` -> `{ same, reason }`, for one pair with no other track in sight.
+    *   `trackTextOf(title)`: the text the first tier compares, for the one place that only groups mentions of one title (`server/lib/ranking.js`, when the tracks of the album are not known).
+    *   The rule as data: `TIERS`, `DESCRIBING_NOTES`, `KNOWN_WRITINGS`, `REASONS_EXPLAINED` (every reason with a sentence and a real example; the tests run each row), `TrackReason`.
+    *   `TRACK_IDENTITY_RULE_VERSION` (1): bumped whenever a change can move a rating to another track. The server stamps its ratings with it and the browser's record is believed only while it is the app's version (see `AlbumCacheAdapter`).
+*   **The text**: accents out, lower case, apostrophes out, "&" read as "and", every other punctuation (brackets included) a word break, the words joined ("T.N.T." is "TNT", "Sub-culture" is "Subculture").
+*   **The notes**: what a title carries in `()`, `[]`, `{}` or after " - ". A note that only DESCRIBES the same recording is dropped before the second tier compares (`DESCRIBING_NOTES`: `mastering-or-placement` such as "(2011 Remaster)", "(Mono)", "(2019 Mix)", "(Album Version)", "(Bonus Track)"; `credit` such as "(feat. X)", "(A vs. B)"; `parts-of-the-song`, "(Including ...)"). Any other note (a live take, a demo, a remix, a subtitle) is part of what the track is. After " - " a text is a note only when it describes or has a version word (live, demo, remix, edit, ...).
+*   **The tiers**, strongest first:
+
+    | Reason | The album's track | The source writes |
+    |---|---|---|
+    | `same-text` | "21st Century Schizoid Man (Including "Mirrors")" | "21st Century Schizoid Man Including Mirrors" |
+    | `same-song-described` | "Larks' Tongues In Aspic, Pt. 1" | "Larks' Tongues In Aspic, Part One" |
+    | `same-place-one-word-apart` | track 5, "My Sarah" | track 5, "Sarah" |
+    | `medley-listed-shorter` | "Medley: Please Please Please/You've Got The Power/I Found Someone (Live 1962)" | the same medley with every song listed |
+    | `title-without-its-note` | "I'll Go Crazy (Live 1962)" | "I'll Go Crazy" |
+
+    Refused: `another-recording` (the same title with two different notes), `title-mismatch`, `title-missing`. Never: one text containing the other, a share of words in common, a score.
+*   **Why an extra never takes the rating of the original**: `title-without-its-note` is the weakest tier and the assignment is one to one. With "I Talk to the Wind" and "I Talk to the Wind (Duo Version)" on the album and one "I Talk To The Wind" in the source, the plain track takes the entry by the first tier and nothing is left for the other. Only an album that has the song in no plain form (a live album) gives the entry to the track with the note.
+*   **Known costs**: a track the source rates in two parts ("Lost Someone (Part 1)", "(Part 2)") gives no rating to the whole track; a spelling difference needs an entry in `KNOWN_WRITINGS`; the place tier needs the track number, which only the BestEverAlbums page gives.
+*   **Tests**: `test/shared/trackIdentity.test.js` (every reason with its example and the nearest title it refuses; the 12 albums of `test/fixtures/trackIdentity/measuredAlbums.json`), `test/server/trackRatings.test.js`, `test/services/albums/trackRatings.test.js`, `test/architecture/trackIdentityRule.test.js` (every call site asks the rule; no title key grows back). The measure: `node scripts/measure-track-identity.mjs`.
 
 ---
 
@@ -26,7 +38,7 @@
 > **F65 (2026-11-19):** `curation.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Status**: `[ACTIVE]`
 **Type**: Domain Logic / Algorithm
-**Dependencies**: `normalize.js`
+**Dependencies**: `normalize.js` (removed in F74)
 
 **Purpose**: The curation engine behind the server endpoint `POST /api/playlists`. Takes enriched albums and distributes tracks into balanced playlists (Greatest Hits, Deep Cuts). Entry point: `curateAlbums(albums, opts)`, which creates a `CurationEngine` and calls `curate`.
 
@@ -104,7 +116,7 @@ Wraps Firebase Auth for the browser: `signInWithGoogle()`, `signInWithApple()`, 
 **Status**: `[ACTIVE]`. F55 (slices 1 and 2) is published (2026-11-19). The review of F68 is on the branch `fix/f68-album-identity-rules-reviewed` (2026-11-19); not yet published.
 **Type**: Domain rule, pure (it imports nothing).
 
-**Purpose**: the ONE answer to "is this the album that was asked for?" (issues UAT-184, UAT-205). The app imports it through `public/js/models/askedAlbum.js`; the server loads it through `server/lib/albumIdentity.js` (dynamic `import()`, as it does for `normalize.js`). The file reads top to bottom, in the order a comparison runs: normalization, the artist, the title (edition notes, first tier, second tier), one comparison, the choice among candidates, the readers of source labels, the search texts. Its header has the table of every reason with a real example, "How to add a rule" and where a rule for one genre would plug in.
+**Purpose**: the ONE answer to "is this the album that was asked for?" (issues UAT-184, UAT-205). The app imports it through `public/js/models/askedAlbum.js`; the server loads it through `server/lib/albumIdentity.js` (dynamic `import()`, as it does for `trackIdentity.js`). The file reads top to bottom, in the order a comparison runs: normalization, the artist, the title (edition notes, first tier, second tier), one comparison, the choice among candidates, the readers of source labels, the search texts. Its header has the table of every reason with a real example, "How to add a rule" and where a rule for one genre would plug in.
 
 *   **What it exports**:
     *   `compareAlbumIdentity(asked, candidate)` -> `{ verdict: 'same' | 'same-if-alone' | 'different', same, reason }`. Both sides are `{ artist, title, year? }`. `same` is true only for the verdict `same`. `reason` is one of `Reason`: `exact-title`, `edition-of-title`, `artist-and-title-in-one-text` (first tier); `title-before-subtitle`, `title-without-parentheses`, `title-in-parentheses`, `title-with-artist-name`, `title-written-otherwise` (second tier); `title-missing`, `title-mismatch`, `artist-mismatch`.

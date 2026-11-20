@@ -28,6 +28,7 @@ const { providerFailure, failureFromProviderError, describeProviderError } = req
 const { createBudget } = require('../timeBudget')
 const { requirePrompt } = require('../prompts')
 const { withRanking, withConsolidation, withRanksOnTracks } = require('../albumAnswer')
+const { loadTrackIdentity } = require('../trackIdentity')
 
 /** The whole time of one request. The app gives up at 90 s; the answer has to leave before. */
 const GENERATE_BUDGET_MS = 75000
@@ -50,7 +51,6 @@ class GenerationService {
      * @param {Function} [deps.validateAlbum] - the schema check (ajv), with `ajvAvailable`
      * @param {Function} deps.fetchRankingForAlbum - lib/fetchRanking.js
      * @param {Function} deps.consolidateRanking - lib/ranking.js
-     * @param {Function} deps.normalizeRankingKey
      * @param {Object} [deps.logger]
      * @param {Function} [deps.newBudget] - () => a budget of lib/timeBudget.js, for one request
      */
@@ -63,7 +63,6 @@ class GenerationService {
         this.ajvAvailable = deps.ajvAvailable;
         this.fetchRankingForAlbum = deps.fetchRankingForAlbum;
         this.consolidateRanking = deps.consolidateRanking;
-        this.normalizeRankingKey = deps.normalizeRankingKey;
         this.logger = deps.logger || console;
         this.newBudget = deps.newBudget || (() => createBudget({ ms: GENERATE_BUDGET_MS }));
     }
@@ -182,7 +181,8 @@ class GenerationService {
     async _answerOf(album, ranking) {
         const ranked = withRanking(album, ranking)
         const consolidated = await this.consolidateRanking(ranked.tracks || [], ranked.rankingAcclaim || [])
-        return withRanksOnTracks(withConsolidation(ranked, consolidated, ranking), await this.normalizeRankingKey())
+        const { matchTracks } = await loadTrackIdentity()
+        return withRanksOnTracks(withConsolidation(ranked, consolidated, ranking), matchTracks)
     }
 }
 

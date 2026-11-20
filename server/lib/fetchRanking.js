@@ -23,7 +23,7 @@ const { callProvider } = require('./aiClient')
 const { extractAndValidateRankingEntries, rankingEntriesToSources } = require('./normalize')
 const { getRankingForAlbum: getBestEverRanking } = require('./scrapers/besteveralbums')
 const { getSpotifyPopularityRanking } = require('./services/spotifyPopularity')
-const { normalizeKey: loadNormalizeKey } = require('./ranking')
+const { loadTrackIdentity } = require('./trackIdentity')
 const logger = require('./logger')
 const { askSource, notAsked, NO_BUDGET } = require('./rankingSources/sourceOutcome')
 const { createBestEverSource } = require('./rankingSources/bestEverSource')
@@ -57,7 +57,7 @@ const ratingsOf = (answers) => Object.fromEntries(Object.entries(answers).map(([
 /**
  * @param {Object} deps - the outside, injected: loadPrompts, renderPrompt, requirePrompt, callProvider,
  *        extractAndValidateRankingEntries, rankingEntriesToSources, getBestEverRanking,
- *        getSpotifyPopularityRanking, loadNormalizeKey, logger, [env]
+ *        getSpotifyPopularityRanking, loadTrackIdentity, logger, [env]
  */
 function createRankingFetch (deps) {
   const model = createModelSource(deps)
@@ -109,8 +109,8 @@ function createRankingFetch (deps) {
 
     requirePrompt(deps.loadPrompts(), 'rankingPrompt')
     const answers = await askInOrder(asked, options.budget || NO_BUDGET)
-    const normalizeKey = await deps.loadNormalizeKey()
-    return { ...chooseRanking(asked, answers, normalizeKey), ratings: ratingsOf(answers), debugTrace: traceOf(answers) }
+    const { matchTracks } = await deps.loadTrackIdentity()
+    return { ...chooseRanking(asked, answers, matchTracks), ratings: ratingsOf(answers), debugTrace: traceOf(answers) }
   }
 
   return fetchRankingForAlbum
@@ -125,7 +125,7 @@ const fetchRankingForAlbum = createRankingFetch({
   rankingEntriesToSources,
   getBestEverRanking,
   getSpotifyPopularityRanking,
-  loadNormalizeKey,
+  loadTrackIdentity,
   logger
 })
 

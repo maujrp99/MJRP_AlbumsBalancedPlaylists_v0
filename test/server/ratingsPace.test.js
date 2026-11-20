@@ -152,7 +152,7 @@ describe('EnrichmentService: one search per album at a time, inside a budget', (
     const serviceLogger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() }
     const page = (evidence) => ({ albumId: '1', referenceUrl: 'https://bea/thechart.php?a=1', evidence })
     const serviceWith = (getBestEverRanking, deps = {}) => new EnrichmentService({
-        getBestEverRanking, normalizeRankingKey: async () => (title) => String(title || '').toLowerCase(), logger: serviceLogger, ...deps
+        getBestEverRanking, logger: serviceLogger, ...deps
     })
 
     it('two identical requests at the same time search the source once; each gets the ratings of its own tracks', async () => {
@@ -284,7 +284,6 @@ describe('POST /api/enrich-album: the answer in time, and one line of log per re
         const scraper = createBestEverScraper({ http: fakeHttp([[/./, httpError(429)]]), loadHtml, logger: quiet, pace, now: () => t })
         const service = new EnrichmentService({
             getBestEverRanking: scraper.getRankingForAlbum,
-            normalizeRankingKey: async () => (title) => title,
             logger: quiet,
             newBudget: () => createBudget({ ms: 15000, now: () => t })
         })

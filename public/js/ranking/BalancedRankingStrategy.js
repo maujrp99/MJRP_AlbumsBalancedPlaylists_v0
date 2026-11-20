@@ -12,6 +12,7 @@
  * @module ranking/BalancedRankingStrategy
  */
 import { RankingStrategy } from './RankingStrategy.js'
+import { entryOfEachTrack } from '../models/sameTrack.js'
 import { TrackTransformer } from '../transformers/TrackTransformer.js'
 
 export class BalancedRankingStrategy extends RankingStrategy {
@@ -24,40 +25,10 @@ export class BalancedRankingStrategy extends RankingStrategy {
     rank(album) {
         if (!album) return []
 
-        const localNormalizeKey = (str) => str ? str.toLowerCase().trim().replace(/[^a-z0-9]/g, '') : ''
-
-        // Build indexes from album metadata (Copied logic from Legacy)
-        const consolidatedIndex = new Map()
-        if (Array.isArray(album.rankingConsolidated)) {
-            album.rankingConsolidated.forEach(entry => {
-                const key = localNormalizeKey(entry?.trackTitle || entry?.title || '')
-                if (key) consolidatedIndex.set(key, entry)
-            })
-        }
-
-        const bestEverIndex = new Map()
-        if (Array.isArray(album.bestEverEvidence)) {
-            album.bestEverEvidence.forEach(entry => {
-                const key = localNormalizeKey(entry?.trackTitle || entry?.title || '')
-                if (key) bestEverIndex.set(key, entry)
-            })
-        }
-
-        const acclaimIndex = new Map()
-        if (Array.isArray(album.rankingAcclaim)) {
-            album.rankingAcclaim.forEach(entry => {
-                const key = localNormalizeKey(entry?.trackTitle || entry?.title || '')
-                if (key) acclaimIndex.set(key, entry)
-            })
-        }
-
-        const durationIndex = new Map()
-        if (Array.isArray(album.tracks)) {
-            album.tracks.forEach(track => {
-                const key = localNormalizeKey(track?.title || track?.trackTitle || track?.name || '')
-                if (key && track) durationIndex.set(key, track.duration || null)
-            })
-        }
+        // Which entry of a list of the album is of which track is the one track rule's to say
+        // (models/sameTrack.js, F74): nothing here compares titles.
+        /** For each of `tracks`, the entry of `list` that is the same track, or null. */
+        const entriesFor = (tracks, list) => entryOfEachTrack(tracks, Array.isArray(list) ? list : [])
 
         // Determine base tracks source
         const baseTracks = (() => {
@@ -65,13 +36,14 @@ export class BalancedRankingStrategy extends RankingStrategy {
                 return album.tracksByAcclaim.map(track => ({ ...track }))
             }
             if (Array.isArray(album.rankingConsolidated) && album.rankingConsolidated.length > 0) {
-                return album.rankingConsolidated
+                const rows = album.rankingConsolidated
                     .slice()
                     .sort((a, b) => Number(a.finalPosition || a.position || 0) - Number(b.finalPosition || b.position || 0))
+                const trackOfRow = entriesFor(rows, album.tracks)
+                return rows
                     .map((entry, idx) => {
                         const title = entry.trackTitle || entry.title || `Track ${idx + 1}`
-                        const key = localNormalizeKey(title)
-                        const duration = key && durationIndex.has(key) ? durationIndex.get(key) : null
+                        const duration = trackOfRow[idx]?.duration || null
                         return {
                             id: entry.id || `consolidated_${album.id || 'album'}_${idx + 1}`,
                             title,
@@ -88,15 +60,20 @@ export class BalancedRankingStrategy extends RankingStrategy {
             return Array.isArray(album.tracks) ? album.tracks.map(track => ({ ...track })) : []
         })()
 
+        const consolidatedOf = entriesFor(baseTracks, album.rankingConsolidated)
+        const bestEverOf = entriesFor(baseTracks, album.bestEverEvidence)
+        const acclaimOf = entriesFor(baseTracks, album.rankingAcclaim)
+        const byAcclaimOf = entriesFor(baseTracks, album.tracks)
+        const inAlbumOrderOf = entriesFor(baseTracks, album.tracksOriginalOrder)
+
         // Enrich each track using TrackTransformer
         const enrichedTracks = baseTracks.map((track, idx) => {
             const title = track.title || track.trackTitle || track.name || `Track ${idx + 1}`
-            const key = localNormalizeKey(title)
 
-            // Lookup metadata from various indices
-            const consolidatedEntry = key ? consolidatedIndex.get(key) : null
-            const bestEverEntry = key ? bestEverIndex.get(key) : null
-            const acclaimEntry = key ? acclaimIndex.get(key) : null
+            // The entries of the same track in the lists of the album
+            const consolidatedEntry = consolidatedOf[idx]
+            const bestEverEntry = bestEverOf[idx]
+            const acclaimEntry = acclaimOf[idx]
 
             // Prepare Raw Data for Transformer
             // Priority: Explicit Consolidated -> BestEver -> Acclaim -> Track Itself
@@ -132,10 +109,10 @@ export class BalancedRankingStrategy extends RankingStrategy {
             // Spotify Enrichment (Sprint 12.5)
             // If explicit Spotify data missing, try to find it in original album context
             if (!canonical.spotifyPopularity && !canonical.spotifyRank) {
-                let originalTrack = album.tracks?.find(t => localNormalizeKey(t.title || t.name) === key)
+                let originalTrack = byAcclaimOf[idx]
 
                 if (!originalTrack?.spotifyPopularity && album.tracksOriginalOrder) {
-                    originalTrack = album.tracksOriginalOrder.find(t => localNormalizeKey(t.title || t.name) === key)
+                    originalTrack = inAlbumOrderOf[idx] || undefined
                 }
 
                 if (originalTrack) {
