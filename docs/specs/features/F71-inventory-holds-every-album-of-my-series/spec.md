@@ -77,6 +77,7 @@ O que a leitura do código mostrou (2026-11-19, ramo `feat/f71-inventory-holds-e
 - [REQ-19] No inventário, a janela de um álbum mostra as faixas do álbum, com as notas e a popularidade de agora, pedidas à carga de álbuns, para qualquer item (o que veio de uma série e o antigo). Enquanto pede, diz que está carregando; se o álbum não é achado, mostra as faixas que o item guarda ou diz que não foi possível. · fixes S-54 · [[uat#^UAT-220]]
 - [REQ-20] O cartão do inventário diz de quantas faixas cada média saiu, ao lado da média. · fixes S-56
 - [REQ-21] A ordenação do inventário segue o padrão da lista de séries: cada critério aparece nas duas direções, com a seta na opção («Avg Rating (↓)», «Avg Rating (↑)», «Avg Pop (↓)», «Avg Pop (↑)», «Artist (A-Z)», «Artist (Z-A)», «Newest», «Oldest»). Um item sem valor fica no fim nas duas direções. · fixes S-56
+- [REQ-22] Um item do inventário sem capa ganha a capa do álbum quando a carga de álbuns o entrega («Update ratings» e a janela do álbum); uma capa que o item já tem não é trocada. · fixes S-54 · [[uat#^UAT-222]]
   verified_by:: `test/views/InventoryView.ratings.test.js` («the card»), `test/models/albumAverages.test.js`
 
 ## Observable States

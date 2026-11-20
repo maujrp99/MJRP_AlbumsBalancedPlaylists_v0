@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:34] session — UAT-222 registrada na F71: álbuns do inventário sem capa
+
+- O MJRP viu, em produção, capas faltando no inventário que aparecem na lista de séries. Contado: 15 de 211 itens sem capa, todos vindos de séries cuja entrada não guarda o endereço da capa. UAT-222 aberta; REQ-22 na F71.
+
 ## [2026-11-20 00:34] session — F75: protótipo v2 fiel à tela real, comparador e `info-arch.md`
 
 - O MJRP pediu o protótipo fidedigno e o comparador da skill. A v2 é a tela real do inventário capturada como o app a desenha, com o que a F75 propõe; a v1 fica para comparar. O comparador (`design/proposals/inventory/comparator.html`) põe a tela de hoje ao lado das versões.
