@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 09:06] session — UAT-227 e UAT-228 em produção
+**Branch:** main
+Site publicado da `5e8bbf3` (`main-D922NX-F.js`). Provado no app local, conta do MJRP, 393x852: Albums abre em «Newest» («Trip Hop Vol.1» e «ELP - Early Days», de hoje, primeiro); na janela de «Mezzanine» as faixas dizem «BEA ★ 90» em laranja e «Spotify 82%» em verde.
+
 ## [2026-11-20 09:05] session — UAT-227 e UAT-228: Albums abre em «Newest»; a janela do álbum no celular diz a nota do BEA, cada fonte na sua cor
 **Branch:** feat/f76-owner-adjustments
 Testes primeiro (vistos falhando): `SeriesController.defaultOrder.test.js` e o teste novo de `TracksTabs.phone.test.js`. A ordem de abertura é uma constante, `DEFAULT_SERIES_ORDER = 'recent_desc'`. Na faixa, «BEA ★ 87» no lugar de «BEA #4», com `aria-label` falado sem a estrela; BEA laranja `#fb923c`, Spotify verde `#1ed760`, contraste medido. Suíte 3068, lint limpo. `behavior.md` e `design-system.md` dizem as duas regras.
