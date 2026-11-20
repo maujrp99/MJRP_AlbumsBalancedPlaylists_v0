@@ -47,6 +47,8 @@ const CALL_SITES = [
     { name: 'the local dataset', file: 'public/js/services/OptimizedAlbumLoader.js', asks: /models\/askedAlbum\.js$/ },
     { name: 'BestEverAlbums (server)', file: 'server/lib/scrapers/besteveralbums.js', asks: /^\.\.\/albumIdentity$/ },
     { name: 'Spotify (server)', file: 'server/lib/services/spotifyPopularity.js', asks: /^\.\.\/albumIdentity$/ },
+    // F75: which Discogs master, or CD release, is the album whose value is asked for
+    { name: 'Discogs (server)', file: 'server/lib/valueSources/discogsSource.js', asks: /^\.\.\/albumIdentity$/ },
     { name: 'the read-only count', file: 'public/js/services/albums/albumIdentityAudit.js', asks: /models\/askedAlbum\.js$/ },
     { name: 'the album cache, when it is read', file: 'public/js/services/albums/adapters/AlbumCacheAdapter.js', asks: /models\/askedAlbum\.js$/ },
     { name: 'adding and removing an album of a series', file: 'public/js/services/SeriesService.js', asks: /models\/askedAlbum\.js$/, from: 'async addAlbumToSeries(', to: 'async enrichAllAlbums(' },

@@ -3,6 +3,17 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:45] session — F75, servidor: a fonte de valor do Discogs, o interruptor e o câmbio do dia
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- Fonte de valor tipada em `server/lib/valueSources/` (`discogsSource.js`, `discogsParse.js`, `valueSwitch.js`), ao lado das fontes de notas: acha a edição em CD mais comum (a regra de identidade de álbum escolhe o master ou o lançamento; nenhum segundo comparador) e pede a sugestão de preço em três estados. Um pedido por vez, no máximo um por segundo, pela fila educada, que ganhou `pause(ms)` para obedecer ao cabeçalho `X-Discogs-Ratelimit-Remaining`.
+- Três rotas: `POST /api/album-value` (pessoa com conta, limite próprio `VALUE_CALLS_PER_HOUR`), `GET /api/value-sources` (o interruptor: `DISCOGS_TOKEN` presente e `DISCOGS_VALUES` diferente de `off`; opcional `DISCOGS_VALUES_FOR`) e `GET /api/exchange-rates` (Frankfurter, guardado em memória pelo dia).
+- O contrato de resposta ganhou os desfechos `no_value` e `not_configured` e o código de erro `upstream_unauthorized` (o token foi recusado). Decidido pelo agente — revisável: os nomes que já existiam ficam (`upstream_busy`, `upstream_failed`), em vez de sinônimos novos.
+- Nomes de campo conferidos em respostas reais do Discogs (5 pedidos sem token, um a cada 2 a 3 segundos): busca (`results[].type`, `id`, `title` como «Artista - Título», `community.have`, `format[]`) e versões (`versions[].major_formats`, `stats.community.in_collection`, `label`, `country`, `released`). A sugestão de preço exige o token: o leitor foi escrito a partir do formato documentado e nunca chamou a API de verdade.
+- Nenhum preço é guardado no servidor depois do pedido (termos de uso da API do Discogs).
+- Testes do servidor: 447 passando.
+
 ## [2026-11-20 01:32] decision — F75 priorizada: opção B, com interruptor; UAT-17 resolvida
 
 - Dito pelo MJRP: «sim, gerei o novo antes de copiar. opção B (pra fazer um full teste, depois eu abro outra feature pra desligar o discogs, poderiamos usar feature toggle aqui, o que acha?), priorizando a F75».

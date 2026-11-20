@@ -1,0 +1,122 @@
+{
+  "_note": "Reduced from a real answer of GET https://api.discogs.com/database/search?type=release&format=CD&artist=Joni+Mitchell&release_title=Hejira (read on 2026-11-20, unauthenticated). Only the fields the source reads are kept.",
+  "pagination": {
+    "page": 1,
+    "pages": 9,
+    "per_page": 5,
+    "items": 43
+  },
+  "results": [
+    {
+      "country": "Argentina",
+      "format": [
+        "CD",
+        "Album",
+        "Reissue"
+      ],
+      "label": [
+        "Asylum Records",
+        "Asylum Records",
+        "Asylum Records"
+      ],
+      "type": "release",
+      "id": 14140420,
+      "master_id": 47775,
+      "uri": "/release/14140420-Joni-Mitchell-Hejira",
+      "title": "Joni Mitchell - Hejira",
+      "community": {
+        "want": 101,
+        "have": 18
+      }
+    },
+    {
+      "country": "US",
+      "format": [
+        "CD",
+        "HDCD",
+        "Album"
+      ],
+      "label": [
+        "Asylum Records",
+        "Asylum Records",
+        "Asylum Records"
+      ],
+      "type": "release",
+      "id": 18418450,
+      "master_id": 47775,
+      "uri": "/release/18418450-Joni-Mitchell-Hejira",
+      "title": "Joni Mitchell - Hejira",
+      "community": {
+        "want": 88,
+        "have": 53
+      }
+    },
+    {
+      "country": "Canada",
+      "format": [
+        "CD",
+        "HDCD",
+        "Album"
+      ],
+      "label": [
+        "Asylum Records",
+        "Warner Music Canada Ltd",
+        "A&M Studios"
+      ],
+      "type": "release",
+      "id": 15755426,
+      "master_id": 47775,
+      "uri": "/release/15755426-Joni-Mitchell-Hejira",
+      "title": "Joni Mitchell - Hejira",
+      "community": {
+        "want": 92,
+        "have": 15
+      }
+    },
+    {
+      "country": "Canada",
+      "format": [
+        "CD",
+        "HDCD",
+        "Album"
+      ],
+      "label": [
+        "Asylum Records",
+        "Asylum Records",
+        "Asylum Records"
+      ],
+      "type": "release",
+      "id": 29785354,
+      "master_id": 47775,
+      "uri": "/release/29785354-Joni-Mitchell-Hejira",
+      "title": "Joni Mitchell - Hejira",
+      "community": {
+        "want": 42,
+        "have": 9
+      }
+    },
+    {
+      "country": "Japan",
+      "year": "2006",
+      "format": [
+        "CD",
+        "HDCD",
+        "Album"
+      ],
+      "label": [
+        "Asylum Records",
+        "Warner Music Japan Inc.",
+        "WEA International Inc."
+      ],
+      "type": "release",
+      "id": 12713427,
+      "master_id": 47775,
+      "uri": "/release/12713427-Joni-Mitchell-Hejira",
+      "title": "Joni Mitchell - Hejira",
+      "community": {
+        "want": 119,
+        "have": 21
+      }
+    }
+  ]
+}

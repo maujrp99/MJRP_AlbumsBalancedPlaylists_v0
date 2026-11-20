@@ -1,0 +1,122 @@
+{
+  "_note": "Reduced from a real answer of GET https://api.discogs.com/database/search?type=master&artist=Pink+Floyd&release_title=The+Dark+Side+of+the+Moon (read on 2026-11-20, unauthenticated). Only the fields the source reads are kept.",
+  "pagination": {
+    "page": 1,
+    "pages": 3,
+    "per_page": 5,
+    "items": 12
+  },
+  "results": [
+    {
+      "country": "US",
+      "year": "1973",
+      "format": [
+        "Vinyl",
+        "7\"",
+        "45 RPM"
+      ],
+      "label": [
+        "Harvest",
+        "Harvest",
+        "The Gramophone Co. Ltd."
+      ],
+      "type": "master",
+      "id": 1411610,
+      "master_id": 1411610,
+      "uri": "/master/1411610-Pink-Floyd-Dark-Side-Of-The-Moon",
+      "title": "Pink Floyd - Dark Side Of The Moon",
+      "community": {
+        "want": 660,
+        "have": 178
+      }
+    },
+    {
+      "country": "UK",
+      "year": "1973",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Album"
+      ],
+      "label": [
+        "Harvest",
+        "Harvest",
+        "EMI"
+      ],
+      "type": "master",
+      "id": 10362,
+      "master_id": 10362,
+      "uri": "/master/10362-Pink-Floyd-The-Dark-Side-Of-The-Moon",
+      "title": "Pink Floyd - The Dark Side Of The Moon",
+      "community": {
+        "want": 1480628,
+        "have": 818409
+      }
+    },
+    {
+      "country": "Europe",
+      "year": "2021",
+      "format": [
+        "Vinyl",
+        "LP",
+        "Unofficial Release"
+      ],
+      "label": [
+        "Radical"
+      ],
+      "type": "master",
+      "id": 2750483,
+      "master_id": 2750483,
+      "uri": "/master/2750483-Pink-Floyd-The-Dark-Side-Of-The-Moon-Demo",
+      "title": "Pink Floyd - The Dark Side Of The Moon Demo",
+      "community": {
+        "want": 114,
+        "have": 414
+      }
+    },
+    {
+      "country": "US",
+      "year": "2003",
+      "format": [
+        "DVD",
+        "DVD-Video",
+        "NTSC"
+      ],
+      "label": [
+        "Eagle Vision",
+        "Eagle Vision",
+        "Classic Albums"
+      ],
+      "type": "master",
+      "id": 347225,
+      "master_id": 347225,
+      "uri": "/master/347225-Pink-Floyd-The-Making-Of-The-Dark-Side-Of-The-Moon",
+      "title": "Pink Floyd - The Making Of The Dark Side Of The Moon",
+      "community": {
+        "want": 548,
+        "have": 3206
+      }
+    },
+    {
+      "country": "Europe",
+      "year": "2011",
+      "format": [
+        "Blu-ray",
+        "Promo"
+      ],
+      "label": [
+        "EMI",
+        "EMI"
+      ],
+      "type": "master",
+      "id": 1331918,
+      "master_id": 1331918,
+      "uri": "/master/1331918-Pink-Floyd-The-Dark-Side-Of-The-Moon-Blu-ray",
+      "title": "Pink Floyd - The Dark Side Of The Moon Blu-ray",
+      "community": {
+        "want": 132,
+        "have": 82
+      }
+    }
+  ]
+}
