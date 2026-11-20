@@ -1,6 +1,7 @@
 import { TracksTable } from './TracksTable.js'
 import { TracksTabs } from './TracksTabs.js'
 import { describePopularity } from '../../models/popularityState.js'
+import { mergedTracksOf } from '../../models/albumAverages.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 
 /**
@@ -35,40 +36,11 @@ export class TracksRankingComparison {
     }
 
     /**
-     * Ensures all tracks have necessary fields for sorting/display
-     * (Track model should already provide this, but this is a safety layer)
+     * Every track of the original order with what the acclaim order knows of it merged in
+     * (models/albumAverages.js: the inventory averages the same tracks).
      */
     normalizeTracks(album) {
-        // Enriched/Ranked source (contains ratings, popularity)
-        const enrichedTracks = album.getTracks('acclaim')
-
-        // Create lookup map by title (normalized) for merging
-        const enrichedMap = new Map()
-        const norm = (str) => str?.toLowerCase().trim().replace(/[^a-z0-9]/g, '') || ''
-
-        enrichedTracks.forEach(t => {
-            enrichedMap.set(norm(t.title), t)
-        })
-
-        // We use tracksOriginalOrder as base to ensure we have all tracks 1..N
-        return album.getTracks('original').map((track, idx) => {
-            const enriched = enrichedMap.get(norm(track.title))
-
-            return {
-                ...track,
-                // Merge enriched fields if available
-                rank: enriched?.rank || track.rank || 999,
-                rating: enriched?.rating || track.rating || null,
-                spotifyPopularity: (enriched?.spotifyPopularity !== undefined && enriched?.spotifyPopularity !== null)
-                    ? Number(enriched.spotifyPopularity)
-                    : (track.spotifyPopularity !== undefined && track.spotifyPopularity !== null ? Number(track.spotifyPopularity) : -1),
-                spotifyId: enriched?.spotifyId || track.spotifyId,
-                // FIX: Ensure position fallback to index+1 if data missing
-                position: Number(track.position) || (idx + 1),
-                // FIX: Ensure duration from enriched source if available, else track, else 0
-                duration: enriched?.duration || track.duration || 0
-            }
-        })
+        return mergedTracksOf(album)
     }
 
     getSortedTracks() {
@@ -91,24 +63,6 @@ export class TracksRankingComparison {
             if (valA > valB) return sortDirection === 'asc' ? 1 : -1
             return 0
         })
-    }
-
-    getAverages() {
-        const { tracks } = this.state
-
-        // Acclaim Average (Rank)
-        const rankedTracks = tracks.filter(t => t.rank && t.rank < 999)
-        const avgRank = rankedTracks.length
-            ? (rankedTracks.reduce((sum, t) => sum + t.rank, 0) / rankedTracks.length).toFixed(1)
-            : '-'
-
-        // Spotify Average (Popularity)
-        const popTracks = tracks.filter(t => t.spotifyPopularity >= 0)
-        const avgPop = popTracks.length
-            ? (popTracks.reduce((sum, t) => sum + t.spotifyPopularity, 0) / popTracks.length).toFixed(1)
-            : '-'
-
-        return { avgRank, avgPop, rankedCount: rankedTracks.length, popCount: popTracks.length }
     }
 
     handleSort(field) {

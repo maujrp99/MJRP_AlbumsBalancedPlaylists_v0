@@ -120,6 +120,21 @@ export class InventoryRepository extends BaseRepository {
     }
 
     /**
+     * Write the averages of many items in ONE write (F71, S-56): only the `averages` field of each
+     * item changes (models/inventoryRatings.js decides what it holds); nothing else of the item does.
+     * @param {Array<{ id: string, averages: Object }>} entries - at most what one batch holds
+     * @returns {Promise<string[]>} the ids of the items, in the order given
+     * @throws when an entry lacks its id or its averages (nothing is written), and when the write fails
+     */
+    async setAverages(entries) {
+        entries.forEach(({ id, averages }) => {
+            if (!id || !averages || typeof averages !== 'object') throw new Error('Each update needs the id of an item and its averages')
+        })
+        // JSON round trip: a value that is undefined is left out, Firestore refuses it
+        return this.updateMany(entries.map(({ id, averages }) => ({ id, data: { averages: JSON.parse(JSON.stringify(averages)) } })))
+    }
+
+    /**
      * Update price inline (for quick edits)
      * @param {string} albumId - Inventory album ID
      * @param {number} newPrice - New price

@@ -12,6 +12,7 @@ import { getIcon } from '../../components/Icons.js'
 import { Card } from '../../components/ui/Card.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 import { InventoryStatus, STATUS_SELECT_OPTIONS, statusOf } from '../../models/inventoryStatus.js'
+import { averagesLine } from '../../models/albumAverages.js'
 
 /** The colours of the status selector on a card, and of each of its options. */
 const STATUS_BORDER = Object.freeze({
@@ -124,6 +125,7 @@ export class InventoryGridRenderer {
                 
                 <div class="mt-2 flex justify-between items-center px-1 shrink-0 min-h-[1.5rem]">
                      ${InventoryGridRenderer.renderPrice(album)}
+                     ${InventoryGridRenderer.renderAverages(album)}
                 </div>
             </div>
         `
@@ -140,6 +142,7 @@ export class InventoryGridRenderer {
                  <div class="flex items-center gap-4 mt-2">
                     ${InventoryGridRenderer.renderFormatBadge(album.format)}
                     ${InventoryGridRenderer.renderPrice(album)}
+                    ${InventoryGridRenderer.renderAverages(album)}
                  </div>
             `),
             actions: [
@@ -175,6 +178,16 @@ export class InventoryGridRenderer {
     static renderPrice(album) {
         if (!(Number(album.purchasePrice) > 0)) return ''
         return `<span class="font-mono text-accent-primary font-bold">${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}</span>`
+    }
+
+    /**
+     * The averages of an item (F71, S-56): «Avg Rating: 78.4 · Avg Pop: 42.6%», in one small line.
+     * An item that was never read shows nothing, not a dash: 200 cards of dashes say nothing.
+     */
+    static renderAverages(album) {
+        const line = averagesLine(album.averages)
+        if (!line) return ''
+        return `<span class="text-xs text-gray-400" data-role="averages" title="Mean of the BestEverAlbums rating and of the Spotify popularity of the tracks">${escapeHtml(line)}</span>`
     }
 
     /** The name of a format; an item with no format (it came from a series) has no badge. */

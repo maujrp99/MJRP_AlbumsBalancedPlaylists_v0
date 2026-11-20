@@ -62,7 +62,7 @@ export function inventoryAlbumFromQuery(query) {
 }
 
 /** The Apple Music id of an album: the one a series stored, or the one the catalog loaded it by. */
-function appleIdOf(album) {
+export function appleIdOf(album) {
     if (album?.appleMusicId) return String(album.appleMusicId)
     const { source, sourceId } = album?.metadata || {}
     return source === APPLE_MUSIC && sourceId ? String(sourceId) : null

@@ -17,11 +17,11 @@ planned_for: "[[ROADMAP#^REL-40]]"
 **Approved**: not a gate (via rápida; o MJRP julga)
 
 ## Summary
-**A feature:** O inventário ganha uma ação que põe nele todos os álbuns das séries da pessoa que ainda não estão lá, marcados como «Not Owned»; e o filtro de situação passa a oferecer «Owned», «Not Owned» e «Wishlist», além de «All».
+**A feature:** O inventário ganha uma ação que põe nele todos os álbuns das séries da pessoa que ainda não estão lá, marcados como «Not Owned»; o filtro de situação passa a oferecer «Owned», «Not Owned» e «Wishlist», além de «All»; e, na segunda fatia, o inventário guarda, mostra e ordena por duas médias de cada álbum, «Avg Rating» e «Avg Pop», lidas pela ação «Update ratings».
 
 **Por quê:** O MJRP quer ver, num lugar só, o que já possui e o que falta dos álbuns que ele curou; hoje o inventário só tem o que foi adicionado um a um.
 
-**Como saber que funcionou:** Depois da ação, todo álbum das séries aparece no inventário uma vez só; os que já estavam lá mantêm a situação, o preço e o formato; o filtro mostra cada um dos três grupos pelo nome.
+**Como saber que funcionou:** (primeira fatia) Depois da ação, todo álbum das séries aparece no inventário uma vez só; os que já estavam lá mantêm a situação, o preço e o formato; o filtro mostra cada um dos três grupos pelo nome.
 
 ## Problem Statement
 Segunda fatia (2026-11-20), o MJRP com a captura das duas médias do cartão: «no inventory, na 71, pode usar as metricas do print e ter um filtro/ranking por BEA Avg rank e Spotify Avg Pop.?» — o inventário mostra «Avg Rank» e «Avg Pop» de cada álbum e ordena por elas.
@@ -59,6 +59,22 @@ O que a leitura do código mostrou (2026-11-19, ramo `feat/f71-inventory-holds-e
   verified_by:: `test/views/InventoryView.statusAndSeries.test.js` («the card of an item», «the album window of an item»)
 - [REQ-10] Com cerca de 200 itens, a tela desenha os cartões numa passada, sem ler o banco por cartão, e a adição em lote avisa a tela uma vez, no fim. · fixes S-54
   verified_by:: `test/services/inventory/InventoryService.seriesAlbums.test.js` («writes the albums in parts… tells the store only at the end»), `test/views/InventoryView.statusAndSeries.test.js` («draws 200 cards in one pass»), `test/models/inventoryFromSeries.test.js` («plans the 200 albums of 47 series…»)
+- [REQ-11] As duas médias de um álbum são ditas por um modelo só, `models/albumAverages.js`: «Avg Rating» é a média da nota do BestEverAlbums das faixas (só as de nota maior que zero) e «Avg Pop» é a média da popularidade do Spotify das faixas (só as de zero ou mais), com uma casa decimal e guardadas como número; sem nenhuma faixa que conte, a média é `null`, nunca zero. O inventário e a comparação de faixas leem as médias desse modelo. · fixes S-56
+  verified_by:: `test/models/albumAverages.test.js`
+- [REQ-12] Na comparação de faixas de um álbum, «Avg Rank» (a média das posições, que só media quantas faixas o álbum tem) sai e dá lugar a «Avg Rating», calculada pelo modelo; «My Avg» e «Avg Pop» seguem com o mesmo sentido, e uma média sem dados mostra «—». · fixes S-56
+  verified_by:: `test/components/ranking/TracksTable.averages.test.js`, `test/components/ranking/TracksRankingComparison.popularity.test.js`
+- [REQ-13] O item do inventário guarda as médias do seu álbum, num campo opcional `averages: { rating, popularity, ratedTracks, popTracks, at }` (`at`: a hora, em ISO, em que foram calculadas), porque o cache de álbuns do navegador é por consulta de série e expira em 7 dias. O item sem o campo não mostra média nenhuma. · fixes S-56
+  verified_by:: `test/repositories/InventoryRepository.averages.test.js`, `test/services/inventory/InventoryService.ratings.test.js`, `test/views/InventoryView.ratings.test.js` («the card»)
+- [REQ-14] A tela do inventário tem a ação «Update ratings», um botão alcançável pelo teclado, ao lado de «Add the albums of my series». Ela faz **um** pedido ao serviço de carga de álbuns (`albumAsks.albumsOf`, com as fontes `acclaim` e `popularity`) com um álbum por item, sem chamar a rede nem o cache por outro caminho. Com mais de 30 álbuns a pessoa confirma antes («Read the ratings of 211 albums? This can take a few minutes.»). O botão fica desligado com `aria-busy` e diz o progresso («Reading ratings… 40 of 211», depois «Saving ratings…»), a outra ação do botão espera, e o pedido é abortado quando a pessoa sai da tela. · fixes S-56
+  verified_by:: `test/services/inventory/InventoryService.ratings.test.js`, `test/controllers/InventoryController.ratings.test.js`, `test/views/InventoryView.ratings.test.js` («the button "Update ratings"»), `test/models/inventoryRatings.test.js`; a prova no navegador e a execução na conta do MJRP são a TASK-17
+- [REQ-15] Cada álbum pronto da resposta volta ao seu item pela regra única de identidade (`findInInventory`, a mesma da ação das séries), as médias são calculadas por `averagesOfAlbum`, e gravadas em partes de 100, cada parte uma gravação só (`BaseRepository.updateMany`). Uma média que a fonte não deu desta vez (por exemplo, o Spotify não conectado) mantém o valor que o item já tinha: um número nunca é trocado por «nada». O serviço devolve um resultado tipado e não lança por causa de uma parte que falha; a parte que falha não desfaz as anteriores, e rodar de novo grava o resto. · fixes S-56
+  verified_by:: `test/models/inventoryRatings.test.js`, `test/services/inventory/InventoryService.ratings.test.js`, `test/repositories/InventoryRepository.averages.test.js`
+- [REQ-16] O fim diz a verdade: quantos álbuns ganharam notas, quantos não foram achados, quantos vieram sem nota nenhuma, e, quando uma fonte faltou, uma frase simples («Spotify is not connected: popularity was not read for 150 albums.»); se uma parte da gravação falha, quantos foram gravados e como gravar o resto. Sair da tela no meio não mostra aviso. · fixes S-56
+  verified_by:: `test/models/inventoryRatings.test.js` («what the person is told»), `test/controllers/InventoryController.ratings.test.js`
+- [REQ-17] O inventário se ordena por um seletor `#inventorySort` na barra de filtros, com «Artist» (o padrão), «Avg Rating» (a maior primeiro), «Avg Pop» (a maior primeiro) e «Recently added» (a mais nova primeiro). O item sem valor para a ordem escolhida vem **por último**, qualquer que seja a direção; o empate cai em artista e título. «Recently added» lê a data que os itens de fato têm (`addedToInventory`, ou `createdAt`: carimbo do Firestore `{ seconds }`, `Date`, texto ISO ou número). A ordem fica junto com a busca e os filtros. Um filtro por nota mínima **não** foi construído (Open Questions). · fixes S-56
+  verified_by:: `test/models/inventorySort.test.js`, `test/controllers/InventoryController.ratings.test.js` («the order by the averages»), `test/views/InventoryView.ratings.test.js` («the order»)
+- [REQ-18] O cartão do inventário (grade e lista) mostra as duas médias numa linha pequena — «Avg Rating: 78.4 · Avg Pop: 42.6%» — quando o item as tem, só a que tem se tiver uma só, e nada (nem «—») quando não tem nenhuma. O nome do álbum continua texto, nunca marcação. · fixes S-56
+  verified_by:: `test/views/InventoryView.ratings.test.js` («the card»), `test/models/albumAverages.test.js`
 
 ## Observable States
 <!-- What the imported nodes point_to: the screen state in info-arch.md (the prototype the human judged —
@@ -75,6 +91,13 @@ O nó S-54 não aponta para nenhum estado (está no nível do problema). Os esta
 - `^album-detail-modal` (muda): a janela do álbum mostra a situação, o formato, o preço e as notas do item; sem item, nenhuma situação; sem faixas, uma linha no lugar delas.
 - `^album-add-to-inventory` (muda): o cartão de um álbum recusa também a edição de um álbum que já está.
 
+Segunda fatia (S-56), em `docs/specs/behavior.md`:
+
+- `^inventory-ratings-updated` (novo): a ação «Update ratings».
+- `^inventory-order` (novo): o seletor «Artist / Avg Rating / Avg Pop / Recently added».
+- `^inventory-item-card` (muda): a linha das duas médias, quando o item as tem.
+- `^album-track-table` (muda): o topo mostra My Avg, Avg Rating e Avg Pop; «Avg Rank» saiu.
+
 Nenhum estado de tela novo num `info-arch.md`: a ação é um botão na barra de filtros que já existe, e não houve protótipo (via rápida; o MJRP julga na tela).
 
 ## Success Criteria
@@ -86,13 +109,14 @@ O nó S-54 ainda não tem critérios de aceite escritos (nível do problema); os
 - O filtro «Not Owned» mostra os itens novos; «Owned» e «Wishlist» mostram os de antes, cada um no seu grupo; a busca continua a valer junto.
 - Durante a ação, a aba de rede não mostra nenhum pedido ao Apple Music nem ao servidor do app: só leituras e gravações do Firestore (TASK-10).
 - Depois da ação, «Add to Inventory» no cartão de um álbum que veio de uma série responde «Album is already in your inventory».
+- Segunda fatia: depois de «Update ratings» na conta do MJRP (211 itens), os itens mostram a linha das médias, e a ordem «Avg Rating» põe a maior nota primeiro e os itens sem nota por último; com o Spotify desconectado o fim diz a frase do Spotify e nenhuma «Avg Pop» que o item já tinha é apagada. A contar no navegador (TASK-17).
 - Nenhuma função nova ou editada passa de complexidade 10; `InventoryRepository.addAlbum` e `InventoryView.render` saíram da lista de exceções.
 
 ## Out of Scope
 - **Escrever no inventário quando uma série é criada ou editada.** Fica como pergunta aberta abaixo; nesta feature a ação é repetível e traz as séries novas quando é apertada de novo.
 - **Tirar do inventário o álbum que saiu de uma série.** A ação só adiciona.
 - **Carregar os álbuns pelo catálogo para o inventário** (faixas, notas): o item traz o que a série guarda.
-- **Ordenar a grade.** A tela não tem ordenação ligada (o controlador ordena por um campo que os itens não têm, e a ordem que se vê é a do banco). Com 200 itens isso passa a pesar: está nas perguntas abaixo.
+- **Ordenar a grade.** (Primeira fatia.) Feita depois, no mesmo ramo: por artista e título. Na segunda fatia o seletor ganhou as médias e a data de entrada (REQ-17).
 - **Paginar a grade.** 200 cartões são desenhados numa passada; não há nada quadrático no desenho.
 - **Migrar o campo `owned`** para um campo de texto: o valor gravado fica como sempre foi.
 - **O ramo morto de `handleUpdateAlbum`** (espera `false` de um serviço que lança): mesmo defeito que a F70 consertou no preço; não é desta entrega.
@@ -104,5 +128,9 @@ O nó S-54 ainda não tem critérios de aceite escritos (nível do problema); os
 - **A regra de identidade trata «(Live)» e «(Remastered)» como edição do mesmo álbum: dois pedidos assim nas séries viram um item só.** — Decidido pelo agente — revisável, 2026-11-19: vale a regra única, sem exceção nesta tela (o pedido do MJRP é «uma regra só»). As entradas deixadas de fora saem no console do navegador, com o motivo, para a conferência da TASK-10; se algum par for de álbuns que ele quer separados, a exceção entra em `shared/albumIdentity.js`, não aqui.
 - **Um cartão sem preço deve mostrar «$0.00»?** — Decidido pelo agente — revisável, 2026-11-19: não. Com 176 itens «Not Owned» sem preço, «$0.00» em cada um diria que custaram nada. Muda também os itens antigos sem preço, que mostravam «$0.00» ou «R$ 0.00». O MJRP julga na TASK-11.
 - **A janela do álbum aberta fora do inventário (na tela de álbuns) mostrava «OWNED» para qualquer álbum.** — Decidido pelo agente — revisável, 2026-11-19: sem item do inventário, a janela não mostra situação nenhuma; aberta do inventário, mostra a do item. O MJRP julga na TASK-11.
-- **Em que ordem a grade deve mostrar 200 itens?** — Aberta para o MJRP. Hoje a ordem é a do banco (o id automático do item), que para a pessoa parece aleatória. A troca é pequena (ordenar por artista e título, em `InventoryController`), mas muda a tela de um jeito que ele não pediu; não foi feita.
+- **Em que ordem a grade deve mostrar 200 itens?** — Decidido pelo agente — revisável, 2026-11-19: por artista e depois por título (feito na primeira fatia, `models/inventorySort.js`); na segunda fatia, o seletor oferece também as médias e a data de entrada.
 - **Um texto de série sem « - » (só o título, sem artista) não vira item.** — Decidido pelo agente — revisável, 2026-11-19: fica de fora, contado na confirmação («n entries with no artist or no title are left out»); o inventário exige artista e título, e sem artista a regra de identidade aceitaria o álbum de qualquer artista.
+- **«filtro/ranking»: um filtro por nota mínima não foi construído.** — Aberta para o MJRP. O pedido dizia «filtro/ranking por BEA Avg rank e Spotify Avg Pop»; foi feita só a ordenação (o «ranking»). Um filtro por nota mínima («só álbuns com Avg Rating de 80 para cima») pediria: (1) um campo numérico na barra de filtros (ou um seletor de faixas de nota), com o valor guardado em `state.filters`; (2) uma regra nova em `models/inventoryFilter.js` (`filterInventory`) que lê `item.averages.rating` e `item.averages.popularity`, decidindo antes o que fazer com o item sem média (sair do filtro, o mais honesto, ou ficar); (3) as contagens do cabeçalho passarem a seguir o filtro novo, ou ignorá-lo como ignoram o de situação; (4) testes do modelo, do controlador e da tela. Não muda o dado guardado: `averages` já tem o que o filtro precisa.
+- **«Avg Rank» saiu da comparação de faixas do álbum.** — Decidido pelo MJRP em 2026-11-19 («poderia trocar por AVG Rating tb»); fica registrado como mudança de comportamento fora da tela do inventário, para ele julgar na TASK-17.
+- **As médias do inventário só mudam quando a pessoa aperta «Update ratings».** — Decidido pelo agente — revisável, 2026-11-19: o item guarda o número da última leitura (`averages.at` diz quando); nada o refaz sozinho. Um álbum cuja fonte não respondeu desta vez mantém o número anterior em vez de virar «—». Se o MJRP quiser que o inventário se atualize sem o botão (por exemplo, ao abrir a tela quando `at` for velho), é outra feature: pede uma regra de «velho», uma leitura em segundo plano pela mesma fila e um lugar que diga à pessoa que está acontecendo.
+- **O botão pede ao serviço de carga todos os álbuns do inventário de uma vez.** — Decidido pelo agente — revisável, 2026-11-19: 211 álbuns passam pela fila educada do catálogo, das notas e do Spotify, e podem levar minutos (o tempo real não foi medido: depende do que o navegador já guarda para essas consultas). Por isso a pergunta antes de começar, com mais de 30 álbuns. A consulta de cada item leva artista, título, ano e o id do Apple Music que o item guarda.

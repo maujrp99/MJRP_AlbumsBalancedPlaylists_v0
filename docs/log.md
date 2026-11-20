@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:40] session — F71, segunda fatia: o inventário guarda, mostra e ordena pelas médias «Avg Rating» e «Avg Pop»
+
+**Branch:** feat/f71-inventory-averages-2
+
+Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na tela e a execução na conta do MJRP são a TASK-17, do integrador. A decisão do MJRP (2026-11-19): «opção A e to achando que o AVG rank nao faz sentido pra mim, poderia trocar por AVG Rating tb».
+
+- **O modelo das médias** (`public/js/models/albumAverages.js`): «Avg Rating» (média da nota do BestEverAlbums das faixas, nota maior que zero) e «Avg Pop» (média da popularidade do Spotify, zero ou mais), uma casa decimal, `null` sem dados; a mescla das faixas é a que a comparação de faixas já fazia (`mergedTracksOf`). A comparação de faixas do álbum (`TracksTable`) troca «Avg Rank» por «Avg Rating»; `TracksRankingComparison.getAverages` não tinha chamador e saiu, e saiu também a exceção de complexidade da função de mescla.
+- **O item guarda** `averages: { rating, popularity, ratedTracks, popTracks, at }` (`data-model.md`). **«Update ratings»** (`#updateRatingsBtn`): um pedido a `albumAsks.albumsOf` (fontes `acclaim` e `popularity`) com uma consulta por item; cada álbum pronto volta ao item por `findInInventory`; as médias vão em partes de 100 por `BaseRepository.updateMany` / `InventoryRepository.setAverages`; uma média que a fonte não deu mantém o valor anterior; pergunta antes com mais de 30 álbuns; progresso no botão; o pedido é abortado ao sair da tela; o fim diz quantos ganharam notas, quantos não foram achados e, se for o caso, «Spotify is not connected: popularity was not read for N albums.»
+- **A ordem** (`#inventorySort`): Artist, Avg Rating, Avg Pop, Recently added; o item sem valor vem por último nas duas direções; «Recently added» lê `addedToInventory` (ou `createdAt`), carimbo do Firestore ou data. **O cartão** mostra a linha das médias, ou nada.
+- **Achado:** o roteador chama `destroy()` ao sair da tela e `InventoryView` só tinha `onUnmount()`, que ninguém chamava (a assinatura da loja ficava ligada). `destroy()` agora chama `onUnmount()`, que também aborta o pedido.
+- **Não feito, por escolha:** um filtro por nota mínima («filtro/ranking»). Está nas Open Questions do `spec.md`, com o que ele pediria.
+- Documentos: `spec.md` (REQ-11 a REQ-18), `plan.md`, `tasks.md` (TASK-12 a TASK-16 feitas; TASK-17 aberta, do integrador), `behavior.md` (`^inventory-ratings-updated`, `^inventory-order`, `^inventory-item-card`, `^album-track-table`), `data-model.md`, o nó S-56 e as páginas do manual que citavam «Avg Rank» ou descrevem o inventário. Suíte: 200 arquivos, 2439 testes verdes; `eslint` e `vite build` limpos.
+
 ## [2026-11-19 23:22] session — F71 em produção; a F49 provada pelo MJRP em produção
 
 - A F71 (primeira fatia) foi juntada na `main` (`63793a4`) e o site publicado: pacote `main-BfgCsm6G.js`. O servidor não mudou (`mjrp-proxy-00207-lhz`).

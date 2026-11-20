@@ -11,6 +11,7 @@ vi.mock('../../../public/js/firebase-init.js', () => ({ db: { name: 'db' } }))
 vi.mock('../../../public/js/repositories/InventoryRepository.js', () => ({ InventoryRepository: class { findAll() { return [] } } }))
 vi.mock('../../../public/js/cache/CacheManager.js', () => ({ cacheManager: {} }))
 vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService }))
+vi.mock('../../../public/js/services/albums/albumLoading.js', () => ({ albumAsks: { albumsOf: vi.fn() } }))
 
 import { inventoryService, readSeriesOfThePerson } from '../../../public/js/services/inventory/inventoryWiring.js'
 import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
