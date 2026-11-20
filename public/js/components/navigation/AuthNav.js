@@ -35,14 +35,14 @@ export class AuthNav {
         if (currentUser && !currentUser.isAnonymous) {
             const isAppleProvider = currentUser.providerData?.some(p => p.providerId === 'apple.com');
             const avatarContent = isAppleProvider
-                ? `<div class="w-8 h-8 rounded-full bg-gray-800 border border-white/20 flex items-center justify-center">${getIcon('Apple', 'w-5 h-5 text-white')}</div>`
-                : `<img src="${escapeHtml(currentUser.photoURL || '/assets/images/logo.png')}" class="w-8 h-8 rounded-full border border-white/20" alt="User">`;
+                ? `<div class="w-8 h-8 shrink-0 rounded-full bg-gray-800 border border-white/20 flex items-center justify-center">${getIcon('Apple', 'w-5 h-5 text-white')}</div>`
+                : `<img src="${escapeHtml(currentUser.photoURL || '/assets/images/logo.png')}" class="w-8 h-8 shrink-0 rounded-full border border-white/20" alt="User">`;
 
             return `
-                <div class="relative" id="userMenuDropdownTrigger">
-                    <button id="userMenuBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="userMenu" aria-label="Account menu" class="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors">
+                <div class="relative min-w-0" id="userMenuDropdownTrigger">
+                    <button id="userMenuBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="userMenu" aria-label="Account menu" class="flex items-center gap-2 p-1 max-w-full rounded-full hover:bg-white/5 transition-colors">
                         ${avatarContent}
-                         <span class="hidden lg:block text-xs font-medium text-white/80 ${NAME_IN_THE_BAR}" data-account-name title="${escapeHtml(currentUser.displayName || 'User')}">${escapeHtml(currentUser.displayName || 'User')}</span>
+                         <span class="hidden xl:block text-xs font-medium text-white/80 ${NAME_IN_THE_BAR}" data-account-name title="${escapeHtml(currentUser.displayName || 'User')}">${escapeHtml(currentUser.displayName || 'User')}</span>
                     </button>
                     
                     <div id="userMenu" role="menu" aria-labelledby="userMenuBtn" class="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl opacity-0 invisible transition-all duration-200 z-50">

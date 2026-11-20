@@ -38,14 +38,14 @@ export class TopNav {
     const currentPath = window.location.pathname
 
     return `
-      <nav class="top-nav glass-panel mx-auto max-w-[1200px] mt-4 mb-8 px-3 py-1 flex justify-between items-center sticky top-4 z-50">
+      <nav class="top-nav glass-panel mx-auto max-w-[1200px] xl:max-w-[1400px] mt-4 mb-8 px-3 py-1 flex justify-between items-center gap-2 sticky top-4 z-50">
         <!-- Mobile Menu Button (LEFT) -->
-        <button id="mobileMenuBtn" class="md:hidden btn-icon p-2 mr-2">
+        <button id="mobileMenuBtn" class="lg:hidden btn-icon p-2 mr-2">
           ${getIcon('Menu', 'w-6 h-6')}
         </button>
 
         <!-- Logo -->
-        <a href="/home" class="nav-logo flex items-center gap-3 group flex-1 md:flex-none" data-link>
+        <a href="/home" class="nav-logo flex items-center gap-3 group flex-1 lg:flex-none lg:shrink-0" data-link>
           <div class="logo-icon w-12 h-12 md:w-16 md:h-16 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform shrink-0">
             <img src="/assets/images/logo.png" alt="MJRP Logo" class="w-full h-full object-contain">
           </div>
@@ -58,28 +58,28 @@ export class TopNav {
         </a>
 
         <!-- Desktop Menu -->
-        <div class="hidden md:flex items-center gap-6">
+        <div class="hidden lg:flex items-center gap-2 lg:gap-3 xl:gap-6 min-w-0">
           ${this.renderNavLink('/home', 'Home', currentPath)}
           ${this.renderSeriesDropdown(currentPath)}
           ${this.renderNavLink('/blend', 'The Blending Menu', currentPath)}
           ${this.renderNavLink('/saved-playlists', 'Playlists', currentPath)}
           ${this.renderNavLink('/inventory', 'Inventory', currentPath)}
           <!-- Spotify Connect (Phase 1) -->
-          <div id="spotify-connect-desktop"></div>
+          <div id="spotify-connect-desktop" class="min-w-0"></div>
         </div>
 
         <!-- User Section (Right) -->
-        <div class="flex items-center gap-2 ml-4">
+        <div class="flex items-center gap-2 min-w-0">
              ${this.authNav.renderDesktop()}
         </div>
 
         <!-- Mobile Menu Overlay (Background) -->
-        <div id="mobileMenuOverlay" class="fixed inset-0 z-40 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div>
+        <div id="mobileMenuOverlay" class="fixed inset-0 z-40 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
         
         <!-- Mobile Menu Drawer (Left Side) -->
         <div 
           id="mobileMenu" 
-          class="mobile-drawer fixed inset-y-0 left-0 z-50 flex flex-col w-[280px] max-w-[80vw] transition-transform duration-300 transform -translate-x-full border-r border-orange-500/20 bg-brand-dark md:hidden"
+          class="mobile-drawer fixed inset-y-0 left-0 z-50 flex flex-col w-[280px] max-w-[80vw] transition-transform duration-300 transform -translate-x-full border-r border-orange-500/20 bg-brand-dark lg:hidden"
           style="box-shadow: 4px 0 40px rgba(0,0,0,0.9);"
         >
           <!-- Header -->
@@ -165,7 +165,7 @@ export class TopNav {
 
     const baseClass = isMobile
       ? 'text-2xl font-bold'
-      : 'nav-link-glow text-xs font-semibold uppercase tracking-wide px-2.5 py-1.5 rounded-lg transition-all duration-300 text-center whitespace-nowrap'
+      : 'nav-link-glow text-xs font-semibold uppercase tracking-wide px-2.5 py-1.5 rounded-lg transition-all duration-300 text-center whitespace-nowrap shrink-0'
     const activeClass = isActive ? 'text-accent-primary bg-white/5' : 'text-muted'
 
     return `

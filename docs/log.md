@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 23:41] session — F63: a barra do topo cabe na tela em toda largura (UAT-218)
+
+**Branch:** fix/f63-top-bar-fits
+
+- Os nomes da conta e do Spotify encolhem antes de a barra passar da tela (`navigation/barName.js`: `min-w-0` da barra até o nome); a barra vai a 1400 px a partir de 1280; abaixo de 1280 o botão do Spotify mostra só o ícone; abaixo de 1024 os links vão para o menu lateral (era 768, e os links não cabiam).
+- Visto a 375, 800, 1024, 1280, 1440 e 1680 px: sem rolagem horizontal. UAT-218 em `fixed`.
+
 ## [2026-11-19 23:39] session — a rolagem mantida em produção; `## Now` reescrito
 
 - A correção da UAT-219 foi juntada na `main` (`0c0df5e`) e o site publicado (pacote `main-DLZf9BMM.js`).
