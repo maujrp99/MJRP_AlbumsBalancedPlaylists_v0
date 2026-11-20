@@ -9,6 +9,9 @@
 
 const ANONYMOUS = 'anonymous-user'
 
+/** What a price change shows and writes: a currency only when there is one. */
+const priceChanges = (purchasePrice, currency) => (currency ? { purchasePrice, currency } : { purchasePrice })
+
 export class InventoryService {
     /**
      * @param {Object} deps
@@ -108,20 +111,31 @@ export class InventoryService {
         }
     }
 
-    /** Change a price: shown at once, and put back if the write is refused. */
+    /**
+     * Change a price: shown at once, and put back if the write is refused.
+     * The item keeps its currency (F70, UAT-209): with no `currency` given, the one the item has
+     * is shown and written; an item that never had one gets none invented, only the price changes.
+     * @param {string} albumId - the inventory item
+     * @param {number} newPrice
+     * @param {string} [currency] - only when the person chose another one
+     * @returns {Promise<string>} the id of the item
+     * @throws when the price is negative (nothing is shown or written) or when the write fails
+     */
     async updatePrice(albumId, newPrice, currency) {
         this.init()
+        if (newPrice < 0) throw new Error('Price cannot be negative')
 
         const before = this.store.getAlbums()
         const oldAlbum = before.find(a => a.id === albumId)
+        const changes = priceChanges(newPrice, currency || oldAlbum?.currency)
         if (oldAlbum) {
             this.store.replaceAlbums(before.map(album =>
-                album.id === albumId ? { ...album, purchasePrice: newPrice, currency } : album
+                album.id === albumId ? { ...album, ...changes } : album
             ))
         }
 
         try {
-            await this.repository.updatePrice(albumId, newPrice, currency)
+            await this._writePrice(albumId, changes)
             return albumId
         } catch (error) {
             console.error('Failed to update price:', error)
@@ -132,6 +146,13 @@ export class InventoryService {
             }
             throw error
         }
+    }
+
+    /** The repository's price door checks the currency; with none to write, only the price goes. */
+    _writePrice(albumId, changes) {
+        return changes.currency
+            ? this.repository.updatePrice(albumId, changes.purchasePrice, changes.currency)
+            : this.repository.updateAlbum(albumId, changes)
     }
 
     /** Remove an album from the cloud, then from the store. */

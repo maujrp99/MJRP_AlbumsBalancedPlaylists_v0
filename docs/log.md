@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-19 22:10] session — F70: o preço do inventário mantém a moeda (UAT-209)
+
+Confirmado no código: `controllers/InventoryController.js` `handleUpdatePrice` chamava `updatePrice(albumId, newPrice)` sem moeda. Efeito real, pior que o descrito: a tela ficava com `currency: undefined` e o repositório gravava o seu padrão, `USD`, qualquer que fosse a moeda do item (um item em BRL virava USD). O ramo `else` era inalcançável (o serviço lança na falha, nunca devolve falso), então a falha não mostrava aviso. A chave `sorting` estava escrita duas vezes no estado inicial.
+
+Nenhuma tela chama `handleUpdatePrice` hoje: a janela de editar o item passa por `handleUpdateAlbum`, que manda preço e moeda juntos. O defeito existia no código e não era alcançável pela tela.
+
+Feito no dono: `services/inventory/InventoryService.js` `updatePrice(albumId, newPrice, currency?)` usa a moeda do item quando nenhuma é dada, na tela e na gravação; item sem moeda não ganha uma inventada (só o preço é gravado); preço negativo é recusado antes de qualquer mudança; na falha, o item de antes volta. O controlador mostra «Price updated» ou «Failed to update price» e redesenha a partir da store nos dois casos.
+
+Testes: `test/services/inventory/InventoryService.price.test.js` (repositório real sobre o Firestore de teste), `test/controllers/InventoryController.price.test.js`.
+
 ## [2026-11-19 22:09] session — F70: o visitante não pede rota paga (UAT-208)
 
 Confirmado no código: `services/album-search/AlbumSearchService.js` pedia `POST /api/ai/studio-albums` para qualquer pessoa quando havia álbum eletrônico (`scanArtist`), e `api/client.js` `_fetchAlbumFromAPI` pedia `POST /api/generate`; o servidor recusa o convidado com 403 (`server/lib/auth/requireUser.js`). Na carga de álbuns o 403 não segura a carga (só o 401 segura, `api/serverResult.js` `holdOf`): o álbum já terminava como «não achado», depois de um pedido recusado.
