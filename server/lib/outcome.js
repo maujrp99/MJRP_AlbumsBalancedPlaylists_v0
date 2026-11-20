@@ -8,6 +8,9 @@
  *                                                     'found'       the source has it
  *                                                     'not_found'   the source answered: it has no such thing
  *                                                     'no_ratings'  the source has the page, with no rating
+ *                                                     'no_value'    the source has the edition, with no price for it (F75)
+ *                                                     'not_configured'  this server is not set up (or was told not)
+ *                                                                   to ask the source: it was not asked (F75)
  *   failure  4xx/5xx  { error: { code, retryable } } code is one of ERROR_CODES;
  *                                                    retryable: the same request, sent again within
  *                                                    seconds, may work
@@ -19,7 +22,7 @@
  * `respond(res, result)`. Nothing else in server/ writes `res.status(...).json(...)` for these routes.
  */
 
-const OUTCOMES = Object.freeze({ FOUND: 'found', NOT_FOUND: 'not_found', NO_RATINGS: 'no_ratings' })
+const OUTCOMES = Object.freeze({ FOUND: 'found', NOT_FOUND: 'not_found', NO_RATINGS: 'no_ratings', NO_VALUE: 'no_value', NOT_CONFIGURED: 'not_configured' })
 const OUTCOME_VALUES = new Set(Object.values(OUTCOMES))
 
 /** code -> the status it leaves with when the caller names no other, and whether to ask again. */
@@ -27,6 +30,7 @@ const ERRORS = Object.freeze({
   upstream_failed: Object.freeze({ status: 502, retryable: true }), // the outside source failed
   upstream_timeout: Object.freeze({ status: 504, retryable: true }), // the outside source was too slow
   upstream_busy: Object.freeze({ status: 503, retryable: true }), // the outside source asked to wait
+  upstream_unauthorized: Object.freeze({ status: 502, retryable: false }), // the outside source refused this server's own key (F75)
   invalid_request: Object.freeze({ status: 400, retryable: false }), // the caller sent something unusable
   unauthorized: Object.freeze({ status: 401, retryable: false }), // no login, or one that may not do this
   rate_limited: Object.freeze({ status: 429, retryable: false }), // this person's limit; see Retry-After
@@ -82,7 +86,7 @@ function respond (res, result) {
  */
 class UpstreamError extends Error {
   /**
-   * @param {string} code - upstream_failed | upstream_timeout | upstream_busy
+   * @param {string} code - upstream_failed | upstream_timeout | upstream_busy | upstream_unauthorized
    * @param {string} message - for the log
    * @param {Object} [options]
    * @param {Error} [options.cause]

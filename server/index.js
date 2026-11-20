@@ -124,6 +124,11 @@ const guards = buildGuards(process.env)
 app.use('/api/generate', guards.paid)
 app.use('/api/ai', guards.paid)
 app.use('/api/enrich-album', guards.costly)
+// The value of the inventory (F75): the price of Discogs only to a person with an account, with
+// its own limit; the switch and the exchange rates to any signed-in person
+app.use('/api/album-value', guards.value)
+app.use('/api/value-sources', guards.costly)
+app.use('/api/exchange-rates', guards.costly)
 
 // MusicKit routes (Apple Music integration)
 const musickitRoutes = require('./routes/musickit')
@@ -133,6 +138,11 @@ app.use('/api', musickitRoutes)
 const { router: albumRoutes, initAlbumRoutes } = require('./routes/albums')
 initAlbumRoutes(routeDeps)
 app.use('/api', albumRoutes)
+
+// Value routes (album-value, value-sources, exchange-rates): F75
+const { router: valueRoutes, initValueRoutes } = require('./routes/values')
+initValueRoutes({ logger })
+app.use('/api', valueRoutes)
 
 // Debug routes (list-models, raw-ranking, files, import): off unless turned on by name (F59)
 const { debugRoutesEnabled } = require('./lib/debugGate')

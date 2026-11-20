@@ -52,7 +52,11 @@ const SERVER_WITHIN_THE_LIMIT = [
     'server/lib/inFlight.js',
     'server/lib/politeQueue.js',
     'server/lib/services',
-    'server/routes/handlers/albums.js'
+    'server/routes/handlers/albums.js',
+    // F75: the value source, its routes and its handlers were born under the limit
+    'server/lib/valueSources',
+    'server/routes/handlers/values.js',
+    'server/routes/values.js'
 ]
 
 const told = (row) => `${row.file}:${row.line} ${row.name} has ${row.complexity}`

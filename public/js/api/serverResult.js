@@ -2,11 +2,11 @@
  * serverResult - the one place where the app reads an answer of its own server (F52).
  *
  * The contract (server/lib/outcome.js writes it):
- *   200      { data, outcome }                outcome: 'found' | 'not_found' | 'no_ratings'
+ *   200      { data, outcome }                outcome: 'found' | 'not_found' | 'no_ratings' | 'no_value' | 'not_configured'
  *   4xx/5xx  { error: { code, retryable } }   code from the server's closed list
  *
  * `readServerResult(response)` gives a typed result:
- *   { kind: 'found' | 'not_found' | 'no_ratings', data }
+ *   { kind: 'found' | 'not_found' | 'no_ratings' | 'no_value' | 'not_configured', data }
  *   { kind: 'legacy', body }     a 200 WITHOUT outcome: the server before F52. The caller follows
  *                                the rule it had before; it is never trusted as "the source has none"
  *   { kind: 'failed', code, retryable, status, hold }
@@ -29,6 +29,8 @@ export const ResultKind = Object.freeze({
     FOUND: 'found',
     NOT_FOUND: 'not_found',
     NO_RATINGS: 'no_ratings',
+    NO_VALUE: 'no_value', // the value source has the edition, with no price for it (F75)
+    NOT_CONFIGURED: 'not_configured', // the server was not set up, or was told not, to ask the source (F75)
     LEGACY: 'legacy',
     FAILED: 'failed'
 })
@@ -36,8 +38,8 @@ export const ResultKind = Object.freeze({
 /** How long to hold after a 429 that does not say when to come back. */
 export const DEFAULT_RATE_LIMIT_WAIT_MS = 60000
 
-const OUTCOMES = new Set([ResultKind.FOUND, ResultKind.NOT_FOUND, ResultKind.NO_RATINGS])
-const SERVER_CODES = new Set(['upstream_failed', 'upstream_timeout', 'upstream_busy', 'invalid_request',
+const OUTCOMES = new Set([ResultKind.FOUND, ResultKind.NOT_FOUND, ResultKind.NO_RATINGS, ResultKind.NO_VALUE, ResultKind.NOT_CONFIGURED])
+const SERVER_CODES = new Set(['upstream_failed', 'upstream_timeout', 'upstream_busy', 'upstream_unauthorized', 'invalid_request',
     'unauthorized', 'rate_limited', 'internal'])
 
 /** The codes the old server's own text errors stand for, by status. */

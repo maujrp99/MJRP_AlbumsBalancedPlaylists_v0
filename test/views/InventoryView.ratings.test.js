@@ -9,6 +9,8 @@ const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(
 const dialogService = vi.hoisted(() => ({ confirm: vi.fn() }))
 
 vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn() }))
+// The values of the inventory (F75) are off in these tests: no Discogs, no rates
+vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../helpers/inventoryValuesStub.js')).valuesOff() }))
 vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
 vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
 vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService }))
@@ -52,7 +54,8 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
             expect(select.getAttribute('aria-label')).toBe('Sort by')
             expect([...select.options].map(option => [option.value, option.textContent])).toEqual([
                 ['artist', 'Artist (A-Z)'], ['artist_desc', 'Artist (Z-A)'], ['averageRating', 'Avg Rating (↓)'], ['averageRating_asc', 'Avg Rating (↑)'],
-                ['averagePopularity', 'Avg Pop (↓)'], ['averagePopularity_asc', 'Avg Pop (↑)'], ['addedToInventory', 'Newest'], ['addedToInventory_asc', 'Oldest']
+                ['averagePopularity', 'Avg Pop (↓)'], ['averagePopularity_asc', 'Avg Pop (↑)'], ['value', 'Value (↓)'], ['value_asc', 'Value (↑)'],
+            ['addedToInventory', 'Newest'], ['addedToInventory_asc', 'Oldest']
             ])
             expect(select.value).toBe('artist')
             expect(cards()).toEqual(['inv-never', 'inv-ten', 'inv-wall', 'inv-fragile'])
@@ -83,22 +86,29 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
     })
 
     describe('the card', () => {
-        it('shows the two averages in one small line, each with the tracks it was made of (REQ-20)', () => {
+        it('shows the two averages in one line, each with its icon and the tracks it was made of (REQ-20; F75: the third line of the card)', () => {
             const line = document.querySelector('[data-album-id="inv-wall"] [data-role="averages"]')
 
-            expect(text(line)).toBe('Avg Rating: 88.2 (10 of 12) · Avg Pop: 71.4% (9 of 12)')
+            expect(text(line)).toBe('Avg Rating88.2(10 of 12)Avg Pop71.4%(9 of 12)')
+            expect(line.querySelectorAll('svg')).toHaveLength(2)
+            expect([...line.children].map(part => part.getAttribute('title'))).toEqual([
+                'Mean BestEverAlbums rating of the tracks; in brackets, how many tracks of the album it was made of',
+                'Mean Spotify popularity of the tracks; in brackets, how many tracks of the album it was made of'
+            ])
         })
 
         it('shows only the average the item has', () => {
             const line = document.querySelector('[data-album-id="inv-ten"] [data-role="averages"]')
 
-            expect(text(line)).toBe('Avg Rating: 90.1 (10 of 12)')
+            expect(text(line)).toBe('Avg Rating90.1(10 of 12)')
         })
 
-        it('shows nothing, not even a dash, when the item has none', () => {
-            expect(document.querySelector('[data-album-id="inv-never"] [data-role="averages"]')).toBe(null)
-            expect(text(document.querySelector('[data-album-id="inv-never"]'))).not.toContain('—')
-            expect(document.querySelectorAll('[data-role="averages"]')).toHaveLength(3)
+        it('an item with no average keeps the line, empty: every card has the same lines (F75, REQ-01)', () => {
+            const line = document.querySelector('[data-album-id="inv-never"] [data-role="averages"]')
+
+            expect(line).not.toBe(null)
+            expect(text(line)).toBe('')
+            expect(document.querySelectorAll('[data-role="averages"]')).toHaveLength(4)
         })
 
         it('the list view shows it too', () => {

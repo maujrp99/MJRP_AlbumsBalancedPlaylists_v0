@@ -291,6 +291,24 @@ export class InventoryService {
         this.store.replaceAlbums(this.store.getAlbums().map(item => (byId.has(item.id) ? withFacts(item, byId.get(item.id)) : item)))
     }
 
+    /**
+     * Keep in the items which Discogs edition their value is read from (F75): one write for all of
+     * them, then the store. Only `discogs` changes; no price is written.
+     * @param {Array<{ id: string, discogs: Object }>} entries
+     * @throws when the write fails (the store is not changed)
+     */
+    async setEditions(entries) {
+        this.init()
+        const repository = this.repository
+        const present = new Set(this.store.getAlbums().map(item => item.id))
+        const kept = entries.filter(entry => present.has(entry.id))
+        if (kept.length === 0) return
+        await repository.setEditions(kept)
+        if (repository !== this.repository) return
+        const byId = new Map(kept.map(entry => [entry.id, entry.discogs]))
+        this.store.replaceAlbums(this.store.getAlbums().map(item => (byId.has(item.id) ? { ...item, discogs: byId.get(item.id) } : item)))
+    }
+
     /** Write the changes of one album; the store changes only after the write worked. */
     async updateAlbum(albumId, updates) {
         this.init()

@@ -1,19 +1,19 @@
 ---
-status: Draft
+status: In Progress
 lane: standard
 solution_type: feature
 imports: ["[[S-57-see-what-a-cd-costs-and-where-to-buy-it]]"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
 # Feature F75: Preço de CDs e onde comprar, no inventário
-**Approved**: pendente (via padrão: protótipo com a skill de UI antes de construir, pedido do MJRP)
+**Approved**: pendente (o MJRP priorizou em 2026-11-20 01:32, com o protótipo v5.1 escolhido, e saiu; o plano e as decisões do agente esperam o julgamento dele)
 
 ## Summary
 **A feature:** Cada álbum do inventário mostra quanto custa o CD e traz o link de compra na Amazon, no Discogs e na iMusic; a busca vale para um álbum ou para o inventário inteiro.
 
 **Por quê:** O MJRP quer decidir o que comprar e onde, e no futuro entrar em programas de afiliação.
 
-**Como saber que funcionou:** A escrever depois do protótipo.
+**Como saber que funcionou:** Com a fonte ligada, «Update values» lê os 211 álbuns do inventário dele sem travar a tela e o fim diz quantos têm valor; os dois totais do cabeçalho somam o que ele tem e o que falta; com a fonte desligada, nada do Discogs aparece e o resto segue.
 
 ## Problem Statement
 Pedido do MJRP de 2026-11-20 00:14. A viabilidade foi conferida antes de qualquer desenho: `reports/audits/2026-11-20-mjrpalbumblender-v0-cd-prices-feasibility.md`. Links de compra: viáveis nos três. Preço: só o Discogs entrega hoje; a Amazon exige conta de afiliado com vendas; a iMusic não tem interface pública.
@@ -55,14 +55,49 @@ Termos de uso da API do Discogs lidos em 2026-11-20 01:24 (relatório de viabili
 - [REQ-13] Cada falha diz o que houve e nada é inventado: o Discogs não tem edição em CD, o Discogs não respondeu, o limite de pedidos foi atingido, o token foi recusado, o câmbio não chegou. · fixes S-57
 
 ## Observable States
-A escrever com o protótipo.
+Os estados estão no `docs/specs/info-arch.md`, seção «Estados», cada um com o seu ID de bloco; o comportamento, no `docs/specs/behavior.md`, seção «Inventário».
+
+| Estado | ID de bloco | REQ |
+|---|---|---|
+| Fonte do Discogs desligada | `^inventory-value-source-off` | REQ-10 |
+| Álbuns esperando valor | `^inventory-value-waiting` | REQ-09 |
+| Lendo os valores | `^inventory-value-reading` | REQ-09 |
+| Valores lidos | `^inventory-value-read` | REQ-01, REQ-07 |
+| Filtrado por status | `^inventory-filtered-by-status-count` | REQ-02 |
+| O câmbio não chegou | `^inventory-value-rates-missing` | REQ-08, REQ-13 |
+| A rodada terminou com falhas, ou parou | `^inventory-value-run-ended` | REQ-09, REQ-13 |
+| Janela: valor do Discogs | `^inventory-item-value-discogs` | REQ-04, REQ-06 |
+| Janela: valor escrito à mão | `^inventory-item-value-yours` | REQ-03 |
+| Janela: sem valor ainda | `^inventory-item-value-none` | REQ-04 |
+| Janela: edição não achada | `^inventory-item-value-not-found` | REQ-13 |
+| Janela: edição sem sugestão de preço | `^inventory-item-value-no-suggestion` | REQ-13 |
+| Janela: a leitura falhou | `^inventory-item-value-failed` | REQ-13 |
 
 ## Success Criteria
-A escrever.
+- **O cartão.** Todo cartão da grade tem as mesmas cinco linhas, com a mesma altura, qualquer que seja o status e haja ou não valor (medido num navegador: seis cartões, 501 px cada). Falta ver com os 211 itens dele.
+- **O valor à mão.** Escrever um valor na janela o grava no item, ele aparece como «written by you», entra no total, e uma rodada de «Update values» não o toca.
+- **O valor do Discogs.** Com o token mapeado, «Read the value now» num álbum mostra os três estados, a média, a edição com link e «Data provided by Discogs.». **Não provado:** a chamada de preço nunca foi feita.
+- **Seis horas.** Nenhum preço do Discogs no Firestore (o repositório não tem porta para ele); a leitura some da tela seis horas depois de lida.
+- **A rodada.** «Update values» nos 211 álbuns termina, pode ser parado, não trava a tela e diz no fim quantos foram lidos, quantos não têm edição em CD e quantos falharam, com o motivo.
+- **O interruptor.** `DISCOGS_VALUES=off` no serviço, sem publicar código: ao reabrir o inventário não há botão, valor nem aviso do Discogs; o valor à mão, os totais, a moeda, a ordem e os links seguem.
+- **As moedas.** Trocar para BRL converte cartões e totais e diz a taxa; sem câmbio, a tela fica em dólar e diz por quê.
+- **Os portões.** Suíte (2852 testes), lint e build verdes; os testes de arquitetura (complexidade 10, fronteiras, módulos mortos, texto de fora escapado, endereços conferidos, a regra de identidade) passam sem exceção nova.
 
 ## Out of Scope
-Ler preço da página da Amazon ou da iMusic por conta própria (fere os termos delas).
+- Ler preço da página da Amazon ou da iMusic por conta própria (fere os termos delas).
+- Marca de afiliado nos links: o lugar existe (`models/buyLinks.js`), a marca não.
+- Escolher a edição exata do Discogs («Pick an edition on Discogs», do protótipo, não foi construído e não aparece).
+- Vinil, fita e outros formatos: a leitura é sempre da edição em CD.
+- As perguntas ao virar «Owned» (quanto pagou, estado do disco) e o valor pelo estado do disco informado.
+- Vender e trocar entre colecionadores: «Sell» e «Trade» aparecem desligados.
+- Histórico de valor e quanto a coleção valorizou.
+- Ler os valores sozinho, com o app aberto: nesta versão a leitura só começa quando a pessoa pede.
+- Abrir o valor do Discogs a outros usuários de forma comercial, ou junto de links de afiliado: depende de autorização escrita do Discogs.
 
 ## Open Questions
-- Quais três estados guardar: os três mais altos (Mint, Near Mint, Very Good Plus)?
-- Os termos de uso da API do Discogs permitem guardar e mostrar a sugestão de preço?
+- Respondida pelo agente — revisável: os três estados são Mint, Near Mint e Very Good Plus.
+- Respondida pela leitura dos termos: a sugestão de preço pode ser mostrada em uso pessoal, por até seis horas, com o aviso; não pode ser guardada além disso.
+- O formato real da resposta de preço do Discogs é o documentado? Só a primeira chamada com o token diz.
+- `DISCOGS_VALUES_FOR` fica definida com o id do MJRP? Sem ela, toda pessoa com conta no app vê preços lidos com o token dele.
+- O valor do Discogs ao lado dos links da Amazon e da iMusic cabe nos termos («levar tráfego a outras lojas»)? O MJRP escolheu testar em uso pessoal, com o interruptor como saída.
+- As doze decisões «decidido pelo agente — revisável» do `plan.md`.

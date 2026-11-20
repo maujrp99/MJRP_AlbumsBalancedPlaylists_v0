@@ -48,7 +48,8 @@ describe('the order of the inventory by the averages and by the date (F71, S-56)
     it('the choices, in order, with the direction each one starts with', () => {
         expect(SORT_OPTIONS.map(({ value, label }) => [value, label])).toEqual([
             ['artist', 'Artist (A-Z)'], ['artist_desc', 'Artist (Z-A)'], ['averageRating', 'Avg Rating (↓)'], ['averageRating_asc', 'Avg Rating (↑)'],
-            ['averagePopularity', 'Avg Pop (↓)'], ['averagePopularity_asc', 'Avg Pop (↑)'], ['addedToInventory', 'Newest'], ['addedToInventory_asc', 'Oldest']
+            ['averagePopularity', 'Avg Pop (↓)'], ['averagePopularity_asc', 'Avg Pop (↑)'], ['value', 'Value (↓)'], ['value_asc', 'Value (↑)'],
+            ['addedToInventory', 'Newest'], ['addedToInventory_asc', 'Oldest']
         ])
         expect(sortingFor('artist')).toEqual({ field: 'artist', direction: 'asc' })
         expect(sortingFor('averageRating')).toEqual({ field: 'averageRating', direction: 'desc' })

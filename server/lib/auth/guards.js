@@ -4,11 +4,14 @@
  *
  *   paid    routes that spend the AI key: a signed-in person with an account (no guests), few calls
  *   costly  routes that make the server work (scraping): any signed-in person, more calls
+ *   value   the route that reads a price from Discogs with the token of the owner's account
+ *           (F75): a signed-in person with an account (no guests), with a limit of its own, so
+ *           that reading the values of an inventory does not spend the calls of the AI routes
  *
  * Switches (all optional; with none set the routes are CLOSED to who is not signed in):
  *   REQUIRE_SIGN_IN=false             turns the door off (local experiments only; warns at start)
  *   PAID_ROUTES_ALLOW_ANONYMOUS=true  lets guests use the paid routes
- *   PAID_CALLS_PER_HOUR, COSTLY_CALLS_PER_HOUR   the limits per person (defaults 60 and 900)
+ *   PAID_CALLS_PER_HOUR, COSTLY_CALLS_PER_HOUR, VALUE_CALLS_PER_HOUR   the limits per person (defaults 60, 900 and 900)
  *   FIREBASE_PROJECT_ID               the project whose logins are accepted
  */
 const axios = require('axios')
@@ -36,7 +39,7 @@ function buildGuards (env = {}, { fetchKeys = fetchGoogleKeys, logger = console 
   if (env.REQUIRE_SIGN_IN === 'false') {
     if (logger && logger.warn) logger.warn('Sign-in is NOT required on the paid routes (REQUIRE_SIGN_IN=false). Never in production.')
     const open = (req, res, next) => next()
-    return { paid: [open], costly: [open], required: false }
+    return { paid: [open], costly: [open], value: [open], required: false }
   }
 
   const verifier = createIdTokenVerifier({
@@ -53,6 +56,10 @@ function buildGuards (env = {}, { fetchKeys = fetchGoogleKeys, logger = console 
     costly: [
       requireUser({ verifier, allowAnonymous: true, logger }),
       createRateLimiter({ limit: positiveNumber(env.COSTLY_CALLS_PER_HOUR, 900), windowMs: HOUR_MS })
+    ],
+    value: [
+      requireUser({ verifier, allowAnonymous: false, logger }),
+      createRateLimiter({ limit: positiveNumber(env.VALUE_CALLS_PER_HOUR, 900), windowMs: HOUR_MS })
     ]
   }
 }

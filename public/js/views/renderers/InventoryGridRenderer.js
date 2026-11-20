@@ -1,18 +1,19 @@
 /**
  * InventoryGridRenderer.js
- * 
- * Handles HTML generation for InventoryView. 
+ *
+ * Handles HTML generation for InventoryView.
  * Pure function style (mostly).
- * 
+ *
  * @module views/renderers/InventoryGridRenderer
  */
 
 import { escapeHtml } from '../../utils/stringUtils.js'
-import { getIcon } from '../../components/Icons.js'
 import { Card } from '../../components/ui/Card.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 import { InventoryStatus, STATUS_SELECT_OPTIONS, statusOf } from '../../models/inventoryStatus.js'
 import { averagesLine } from '../../models/albumAverages.js'
+import { NoValue } from '../../models/inventoryValue.js'
+import { cardValueBlock, rowValue } from './InventoryCardValue.js'
 
 /** The colours of the status selector on a card, and of each of its options. */
 const STATUS_BORDER = Object.freeze({
@@ -25,6 +26,15 @@ const STATUS_OPTION = Object.freeze({
     [InventoryStatus.NOT_OWNED]: 'bg-gray-900 text-white',
     [InventoryStatus.WISHLIST]: 'bg-gray-900 text-pink-400'
 })
+
+/** The card as a surface (F75, prototype v5.1): its own background and a faint edge. */
+const CARD_SURFACE = 'background:#15151a;border:1px solid rgba(255,255,255,.08)'
+/** The value of an item nothing was said about: the screen draws before the values are known. */
+const NOT_KNOWN = Object.freeze({ origin: null, reason: NoValue.NEVER_READ })
+const USD_ONLY = Object.freeze({ currency: 'USD', rates: null })
+
+/** What the screen knows of the values, or the little that is true before it knows anything. */
+const valuesOf = (state) => state?.value || { values: new Map(), money: USD_ONLY }
 
 export class InventoryGridRenderer {
 
@@ -40,64 +50,55 @@ export class InventoryGridRenderer {
             return InventoryGridRenderer.renderEmptyState()
         }
 
+        const known = valuesOf(state)
         return viewMode === 'list'
-            ? InventoryGridRenderer.renderList(filteredAlbums)
-            : InventoryGridRenderer.renderGrid(filteredAlbums)
+            ? InventoryGridRenderer.renderList(filteredAlbums, known)
+            : InventoryGridRenderer.renderGrid(filteredAlbums, known)
     }
 
-    static renderGrid(albums) {
+    static renderGrid(albums, known = valuesOf()) {
         return `
             <div class="albums-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 fade-in">
-                ${albums.map(album => InventoryGridRenderer.renderCard(album)).join('')}
+                ${albums.map(album => InventoryGridRenderer.renderCard(album, known)).join('')}
             </div>
         `
     }
 
-    static renderList(albums) {
+    static renderList(albums, known = valuesOf()) {
         return `
             <div class="albums-list space-y-3 fade-in">
-                ${albums.map(album => InventoryGridRenderer.renderRow(album)).join('')}
+                ${albums.map(album => InventoryGridRenderer.renderRow(album, known)).join('')}
             </div>
         `
     }
 
-    static renderCard(album) {
-        const status = statusOf(album)
+    /**
+     * The card of the grid, as HTML: the Card of the app made into a surface, the cover reaching
+     * its edges, and under the title the five lines every card has (InventoryCardValue.js).
+     */
+    static cardSurface(cardProps, valueBlock) {
+        const card = Card.render(cardProps)
+        card.classList.remove('h-full')
+        const [cover, info] = card.children
+        cover.classList.remove('rounded-xl', 'border', 'border-white/5')
+        cover.style.borderRadius = '0'
+        cover.style.border = '0'
+        // the row of tags gives way to the value block: the format is said there
+        Array.from(info.children).slice(1).forEach(node => info.removeChild(node))
+        info.style.padding = '0 12px 12px'
+        info.appendChild(SafeDOM.fromHTML(valueBlock))
+        return card.outerHTML
+    }
 
-        // Normalize album data for Card
-        const cardProps = {
-            variant: 'grid',
-            entity: album,
-            title: album.title,
-            subtitle: album.artist,
-            image: album.albumData?.coverUrl || album.coverUrl,
-            badge: InventoryGridRenderer.getFormatLabel(album.format),
-            actions: [
-                { icon: 'Eye', label: 'View', action: 'view-modal', class: 'view-album-btn' },
-                { icon: 'Edit', label: 'Edit', action: 'edit-modal', class: 'edit-album-btn text-blue-400' },
-                { icon: 'Trash2', label: 'Delete', action: 'delete-modal', class: 'delete-album-btn text-red-400' }
-            ],
-            // Custom click handling for specific targets is managed by View delegation
-            // so we don't attach specific onClick props here for the adapter mode
-        }
-
-        // We wrap the Card in a relative container to overlay the custom Inventory Status Dropdown
-        // This preserves the specific Inventory requirement while reusing the Card UI
-        // Fix: Remove h-full from Card to facilitate custom footer stacking without overlap
-        const cardHTML = Card.renderHTML(cardProps).replace('h-full', '')
-
-        // Inject Status Dropdown (This is specific to Inventory, so we inject it into the card container)
-        // Note: The Card render creates a div. We will wrap it or rely on absolute positioning.
-        // To avoid parsing HTML, we can render the status dropdown and append it, 
-        // BUT since we are returning a string, we concatenate.
-
+    /** The status of an item, chosen on its card. */
+    static renderStatusSelect(album, status) {
         const statusOptions = STATUS_SELECT_OPTIONS.map(({ value, label }) =>
             `<option value="${value}" ${value === status ? 'selected' : ''} class="${STATUS_OPTION[value]}">${escapeHtml(label)}</option>`).join('')
 
-        const statusDropdown = `
+        return `
         <div class="absolute top-2 right-2 z-20 w-32 user-select-none">
           <div class="relative group/dropdown">
-            <select 
+            <select
               class="status-select w-full appearance-none pl-3 pr-8 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors bg-gray-900 ${STATUS_BORDER[status]}"
               data-album-id="${escapeHtml(album.id)}"
               style="background-color: #1f2937;"
@@ -112,26 +113,46 @@ export class InventoryGridRenderer {
             </div>
           </div>
         </div>`
+    }
 
-        // Hacky but effective: The Card is 1 root element. We put it in a wrapper with relative positioning so the dropdown works.
-        // And we ensure data-album-id is on the wrapper for delegation.
-        // Updated Layout: Use flex-col to stack Card and Footer properly.
+    /**
+     * The card of an item (F75, REQ-01): a surface with the cover to its edges, the status
+     * selector over the cover, the title, and the five lines of the value block.
+     * @param {Object} album - an inventory item
+     * @param {{ values: Map, money: Object }} [known] - what the screen knows of the values
+     */
+    static renderCard(album, known = valuesOf()) {
+        const value = known.values.get(album.id) || NOT_KNOWN
+
+        const cardProps = {
+            variant: 'grid',
+            entity: album,
+            title: album.title,
+            subtitle: album.artist,
+            image: album.albumData?.coverUrl || album.coverUrl,
+            actions: [
+                { icon: 'Eye', label: 'View', action: 'view-modal', class: 'view-album-btn' },
+                { icon: 'Edit', label: 'Edit', action: 'edit-modal', class: 'edit-album-btn text-blue-400' },
+                { icon: 'Trash2', label: 'Delete', action: 'delete-modal', class: 'delete-album-btn text-red-400' }
+            ]
+            // Custom click handling for specific targets is managed by View delegation
+        }
+        const cardHTML = InventoryGridRenderer.cardSurface(cardProps, cardValueBlock(album, value, known.money))
+
+        // The Card is one root element, wrapped so that the status selector sits over the cover;
+        // data-album-id is on the wrapper for the delegation of the view.
         return `
-            <div class="inventory-card-wrapper relative group h-full flex flex-col" data-album-id="${escapeHtml(album.id)}">
-                ${statusDropdown}
+            <div class="inventory-card-wrapper relative group h-full flex flex-col rounded-xl overflow-hidden" data-album-id="${escapeHtml(album.id)}" style="${CARD_SURFACE}">
+                ${InventoryGridRenderer.renderStatusSelect(album, statusOf(album))}
                 <div class="flex-1 min-h-0 w-full">
                     ${cardHTML}
-                </div>
-                
-                <div class="mt-2 flex justify-between items-center px-1 shrink-0 min-h-[1.5rem]">
-                     ${InventoryGridRenderer.renderPrice(album)}
-                     ${InventoryGridRenderer.renderAverages(album)}
                 </div>
             </div>
         `
     }
 
-    static renderRow(album) {
+    static renderRow(album, known = valuesOf()) {
+        const value = known.values.get(album.id) || NOT_KNOWN
         const cardProps = {
             variant: 'list',
             entity: album,
@@ -139,9 +160,9 @@ export class InventoryGridRenderer {
             subtitle: album.artist,
             image: album.albumData?.coverUrl || album.coverUrl,
             content: SafeDOM.fromHTML(`
-                 <div class="flex items-center gap-4 mt-2">
+                 <div class="flex flex-wrap items-center gap-4 mt-2">
                     ${InventoryGridRenderer.renderFormatBadge(album.format)}
-                    ${InventoryGridRenderer.renderPrice(album)}
+                    ${rowValue(album, value, known.money)}
                     ${InventoryGridRenderer.renderAverages(album)}
                  </div>
             `),
@@ -165,39 +186,15 @@ export class InventoryGridRenderer {
         return `<div class="p-12 text-center text-muted border border-dashed border-white/10 rounded-xl">No albums found matching your filters.</div>`
     }
 
-    static formatPrice(price, currency = 'USD') {
-        const val = Number(price) || 0
-        if (currency === 'BRL') return `R$ ${val.toFixed(2)}`
-        return `$${val.toFixed(2)}`
-    }
-
     /**
-     * The price of an item on its card. An item with no price (every album that came from a
-     * series, until the person edits it) shows none: "$0.00" would say it cost nothing.
-     */
-    static renderPrice(album) {
-        if (!(Number(album.purchasePrice) > 0)) return ''
-        return `<span class="font-mono text-accent-primary font-bold">${InventoryGridRenderer.formatPrice(album.purchasePrice, album.currency)}</span>`
-    }
-
-    /**
-     * The averages of an item (F71, S-56): «Avg Rating: 78.4 · Avg Pop: 42.6%», in one small line.
-     * An item that was never read shows nothing, not a dash: 200 cards of dashes say nothing.
+     * The averages of an item in the list view (F71, S-56): «Avg Rating: 78.4 · Avg Pop: 42.6%», in
+     * one small line. An item that was never read shows nothing, not a dash. (The card of the grid
+     * shows them in its third line: InventoryCardValue.js.)
      */
     static renderAverages(album) {
         const line = averagesLine(album.averages)
         if (!line) return ''
         return `<span class="text-xs text-gray-400" data-role="averages" title="Mean of the BestEverAlbums rating and of the Spotify popularity of the tracks; in brackets, how many tracks of the album each mean was made of">${escapeHtml(line)}</span>`
-    }
-
-    /** The name of a format; an item with no format (it came from a series) has no badge. */
-    static getFormatLabel(format) {
-        if (!format) return ''
-        const f = (format || '').toLowerCase()
-        if (f.includes('vinyl') || f.includes('lp')) return 'Vinyl'
-        if (f.includes('cd')) return 'CD'
-        if (f.includes('digital')) return 'Digital'
-        return format
     }
 
     static renderFormatBadge(format) {

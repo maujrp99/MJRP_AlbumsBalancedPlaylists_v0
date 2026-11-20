@@ -12,6 +12,8 @@ const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(
 
 vi.mock('../../public/js/stores/inventory.js', () => ({ inventoryStore: store }))
 vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson }))
+// The values of the inventory (F75) are off in these tests: no Discogs, no rates
+vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../helpers/inventoryValuesStub.js')).valuesOff() }))
 vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: {} }))
 vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
 
@@ -77,10 +79,22 @@ describe('InventoryController (F71)', () => {
             expect(counts()).toEqual({ totalCount: 1, ownedCount: 0, notOwnedCount: 1, wishlistCount: 0 })
         })
 
-        it('the value counts only what is owned among the items shown', () => {
-            expect(controller.state.stats.ownedValueBRL).toBe(50)
+        it('the price paid is no longer added up: the totals are of the estimated value (F75), and a status filter does not empty them', () => {
+            expect(controller.state.stats.ownedValueBRL).toBeUndefined()
+            const before = controller.state.value.totals
+            expect(before.owned).toEqual({ sum: 0, valued: 0, total: 1 })
+            expect(before.toBuy).toEqual({ sum: 0, valued: 0, total: 3 })
             controller.handleFilterChange('ownership', 'not-owned')
-            expect(controller.state.stats.ownedValueBRL).toBe(0)
+            expect(controller.state.value.totals).toEqual(before)
+        })
+
+        it('a count of the header pressed shows only that status; pressed again, all (F75, REQ-02)', () => {
+            controller.handleStatusCount('wishlist')
+            expect(shown()).toEqual(['purple'])
+            controller.handleStatusCount('owned')
+            expect(shown()).toEqual(['core'])
+            controller.handleStatusCount('owned')
+            expect(shown()).toEqual(['core', 'purple', 'ten', 'vs'])
         })
     })
 

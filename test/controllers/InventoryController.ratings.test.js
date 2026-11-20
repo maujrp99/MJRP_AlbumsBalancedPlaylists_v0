@@ -11,6 +11,8 @@ const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(
 
 vi.mock('../../public/js/stores/inventory.js', () => ({ inventoryStore: store }))
 vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn() }))
+// The values of the inventory (F75) are off in these tests: no Discogs, no rates
+vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../helpers/inventoryValuesStub.js')).valuesOff() }))
 vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: {} }))
 vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
 
