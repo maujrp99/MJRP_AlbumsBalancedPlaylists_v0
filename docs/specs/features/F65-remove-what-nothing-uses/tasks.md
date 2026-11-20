@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f65-remove-what-nothing-uses`, a partir da `main` em `2f9215b`
 - [x] suíte da `main` verde antes de começar (1869 testes em 156 arquivos) e `npx vite build` compilando; o grafo de importações medido antes de mexer (49 módulos mortos, 4.998 linhas)
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -34,11 +34,15 @@
 
 ## Verification
 - [x] TASK-12 `npx vitest run` (1945 passando em 162 arquivos, com a F69 dentro) e `npx vite build` compilando sem aviso de importação não resolvida; o grafo sem módulo morto; numa cópia limpa do ramo, `npm ci` de verdade (395 pacotes), a suíte, a build e o servidor de desenvolvimento respondendo; o servidor numa cópia fora do repositório (`npm ci --omit=dev`, `/_health` 200, `/api/playlists` 404, rotas guardadas 401) · implements:: REQ-01, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: sonnet · rounds:: 1
-- [ ] TASK-13 prova no navegador, pelo integrador (o implementador não tinha navegador): toda tela ainda abre, pelas 15 rotas do `app.js`, com o console sem erro novo e sem pedido 404 a arquivo do app; os três endereços retirados levam para a Home; o servidor local responde (os dois roteiros estão no `plan.md`) · implements:: REQ-02, REQ-03 · model:: opus
-- [ ] TASK-14 julgamento do MJRP (tarefa do humano): as duas telas de ranking, a tela de migração, a rota `/api/playlists` e os roteiros de navegador ficarem fora (decisões de agentes, revisáveis); o que fazer com as classes sem regra, com as quatro regras do `firestore.rules` sem uso e com os 44 MB de `public/assets` sem uso · implements:: REQ-02, REQ-03 · model:: opus · waiting:: human — as decisões foram tomadas por agentes sob a dispensa e o aceite é do MJRP · action:: o MJRP lê as «Open Questions» da spec e a seção «Achados» do plano
+- [x] TASK-13 prova no navegador, pelo integrador (o implementador não tinha navegador): toda tela ainda abre, pelas 15 rotas do `app.js`, com o console sem erro novo e sem pedido 404 a arquivo do app; os três endereços retirados levam para a Home; o servidor local responde (os dois roteiros estão no `plan.md`) — prova: `reports/evidence/F65/2026-11-19-remove-what-nothing-uses-proof.md` · implements:: REQ-02, REQ-03 · model:: opus · rounds:: 1
+- [ ] TASK-14 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/specs/arch.md` (a seção nova da F65 e as linhas que citavam o que saiu), `docs/specs/data-model.md`, `docs/specs/tech-stack.md`, `docs/manual/` (as entradas dos módulos removidos marcadas; 01, 02, 03, 11, 17, 18, 19 e 24 reescritas onde descreviam o que saiu), `docs/onboarding/` (QA e UX) e `README.md` dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md`, `ROADMAP.md` e `docs/specs/constitution.md` (cita os testes de navegador em Puppeteer): do agente integrador
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
+
+## For the owner at UAT
+- O MJRP julga as duas telas de ranking, a tela de migração, a rota `/api/playlists` e os roteiros de navegador ficarem fora (decisões de agentes, revisáveis); o que fazer com as classes sem regra, com as quatro regras do `firestore.rules` sem uso e com os 44 MB de `public/assets` sem uso
+- `docs/specs/constitution.md` cita os testes de navegador em Puppeteer, que a F65 tirou; a emenda da constituição é do MJRP.
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

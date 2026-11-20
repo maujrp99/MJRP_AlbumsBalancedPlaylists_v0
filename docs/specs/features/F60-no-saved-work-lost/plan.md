@@ -45,6 +45,15 @@ Nenhuma.
 - `firestore.rules` (cada `uid` só lê e grava o que é seu: é o que faz a leitura sem usuário falhar na UAT-198 e o que impede ler os dados do visitante depois do login na UAT-12)
 - `docs/specs/behavior.md`, `docs/specs/data-model.md`, `docs/specs/arch.md`, `docs/manual/`
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `6cee4df`)
+- `docs/specs/data-model.md` — atualizado (commit `6cee4df`)
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `6cee4df`)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **O salvamento agora exige que a série exista no banco.** Antes ele a recriava a partir da memória. Uma série que só existisse na memória deixaria de aceitar playlists; não achei caminho que crie série sem gravá-la (`SeriesService.createSeries` grava primeiro), mas é a mudança de comportamento mais larga da feature.
 - **Apagar a série apaga playlists guardadas.** É o que a issue pede, e a janela avisa quantas; não há desfazer.

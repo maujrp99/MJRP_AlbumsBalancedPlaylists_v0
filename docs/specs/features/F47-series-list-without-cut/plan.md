@@ -33,6 +33,15 @@ Nenhuma.
 - `docs/manual/` — «atualizado» no commit `12713e2`: o 07 diz que a lista de séries vem inteira.
 - `info-arch.md` e `design-system.md` — o projeto não tem.
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — sem mudança: a tabela da seção 15 já dava a F47 como dona do fim do corte
+- `docs/specs/data-model.md` — atualizado (commit `12713e2`)
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — sem mudança: não descrevia o corte
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - A leitura traz todas as séries de uma vez. Para 45 é uma leitura só; uma conta muito maior pediria leitura em partes.
 - A ordem agora é feita no navegador. O teste cobre a série sem data; uma data inválida é tratada como sem data.

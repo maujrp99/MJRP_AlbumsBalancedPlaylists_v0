@@ -7,7 +7,7 @@
 
 ## Pre-Implementation
 - [x] um ramo por fatia, a partir da `main`: o da última parte da fatia E é `fix/f59-tailwind-local-and-url-schemes`
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -33,11 +33,14 @@
 ## Verification
 - [x] TASK-11 suíte (`npx vitest run`: 1002 passando, 982 antes do ramo), `npx vite build` com o CSS em `dist/assets/`, `npx vite` entregando os estilos, e complexidade até 10 nas funções novas (`npx eslint --rule '{"complexity":["error",10]}'`) · implements:: REQ-09, REQ-10, REQ-11 · model:: sonnet · rounds:: 1
 - [x] TASK-12 prova no servidor de verdade e em produção das fatias A, B, C e do texto da fatia E: `reports/evidence/F59-close-what-is-open-security/F59-probe-2026-11-19.json` · implements:: REQ-01, REQ-02, REQ-05, REQ-06, REQ-08 · model:: opus · rounds:: 1
-- [ ] TASK-13 prova no navegador da troca do Tailwind e dos endereços: cada tela do app comparada com a de produção (Home com o Scan e a pilha de escolhidos; Albums em grade, em lista e expandido, com os selos; a janela de um álbum; o ranking de um álbum e a janela de ranking próprio; o ranking consolidado; o menu de blend com uma receita selecionada, que é onde estão as classes montadas na hora; as playlists geradas e o arrastar; as playlists salvas; o inventário e as suas janelas; a janela de entrada; o menu de cima no celular e o rodapé; a página de «em breve»); o console sem o aviso do CDN e sem recusa da política de conteúdo; o botão «abrir no Spotify» depois de exportar uma playlist · implements:: REQ-09, REQ-10, REQ-11 · model:: opus · waiting:: human — quem implementou não tem navegador · action:: o integrador roda `npm ci`, sobe o app em `http://127.0.0.1:5010` e compara com produção
-- [ ] TASK-14 aceite da [[ADR-0021]] (o Tailwind fica, compilado junto com o site) · implements:: REQ-10 · model:: opus · waiting:: human — a ADR decide stack; o aceite é do MJRP · action:: o MJRP lê `docs/decisions/0021-tailwind-built-with-the-site.md` e aceita ou devolve
+- [x] TASK-13 prova no navegador da troca do Tailwind e dos endereços: cada tela do app comparada com a de produção (Home com o Scan e a pilha de escolhidos; Albums em grade, em lista e expandido, com os selos; a janela de um álbum; o ranking de um álbum e a janela de ranking próprio; o ranking consolidado; o menu de blend com uma receita selecionada, que é onde estão as classes montadas na hora; as playlists geradas e o arrastar; as playlists salvas; o inventário e as suas janelas; a janela de entrada; o menu de cima no celular e o rodapé; a página de «em breve»); o console sem o aviso do CDN e sem recusa da política de conteúdo; o botão «abrir no Spotify» depois de exportar uma playlist — prova: `reports/evidence/F59/2026-11-19-tailwind-built-and-url-schemes-proof.md` · implements:: REQ-09, REQ-10, REQ-11 · model:: opus · rounds:: 1
+- [ ] TASK-14 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/specs/tech-stack.md` (linha do Tailwind, com a [[ADR-0021]]), `docs/specs/arch.md` (a casca e a linha de CDN/Assets) e `docs/manual/` (07b, 09a, 31) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md` (UAT-25 e UAT-199), `MEMORY.md` e `ROADMAP.md`: do agente integrador, depois da prova no navegador
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/uat.md` (UAT-25 e UAT-199), `MEMORY.md` e `ROADMAP.md`: do agente integrador, depois da prova no navegador — conferido: UAT-25 e UAT-199 em `fixed`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
+
+## For the owner at UAT
+- aceite da [[ADR-0021]] (o Tailwind fica, compilado junto com o site)
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

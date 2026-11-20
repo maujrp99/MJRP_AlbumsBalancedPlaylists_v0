@@ -6,7 +6,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f46-albums-load-state`, cortado da `main` local (`23d81d7`)
 - [x] conferido no código o que a F45 e a F51 já tinham entregue desta feature (estado por série, aviso com «Try again», página inteira, inscrições desfeitas a cada visita)
-- [ ] conferência cruzada da spec e do plano: fica para o fecho, porque os dois foram escritos depois do código
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 - [x] TASK-01 (entregue pela F45) `models/albumLoadState.js`, `stores/albumLoad.js`, `SeriesGridRenderer.js`: o estado da série derivado, a grade desenhada por ele, o aviso «N albums did not load · Try again» e `AlbumLoadService.retryFailed` · implements:: REQ-01, REQ-02 · model:: opus · rounds:: 1
@@ -20,11 +20,15 @@
 
 ## Verification
 - [x] TASK-09 suíte inteira (`npx vitest run`): 337 passam, as mesmas 28 falhas da linha de base; `npx vite build` compila · implements:: REQ-01, REQ-02, REQ-04, REQ-05, REQ-06, REQ-07 · model:: sonnet · rounds:: 1
-- [ ] TASK-10 conferência no navegador, conta do MJRP: sair e voltar no meio da carga; «Try again»; salvar um ranking; «My Ranking» com uma página carregada (sessão de integração) · implements:: REQ-02, REQ-03, REQ-04, REQ-05, REQ-06 · model:: opus
-- [ ] TASK-11 julgamento do MJRP no navegador (tarefa do humano); a UAT-173 e a UAT-174 seguem abertas até lá · implements:: REQ-01, REQ-02, REQ-04 · model:: opus
+- [x] TASK-10 conferência no navegador, conta do MJRP: sair e voltar no meio da carga; «Try again»; salvar um ranking; «My Ranking» com uma página carregada (sessão de integração) — prova: `reports/evidence/F46-albums-load-state/F46-browser-2026-11-19.json`, `reports/evidence/F46-albums-load-state/F46-ranking-2026-11-19.json` · implements:: REQ-02, REQ-03, REQ-04, REQ-05, REQ-06 · model:: opus · rounds:: 1
+- [ ] TASK-11 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/specs/arch.md` seção 18; `docs/manual/` (06, 08, 09, 12, 16, 17, mapa de arquivos, `regression_checklist`); spec, plano e tarefas escritos do que foi feito
-- [ ] `docs/specs/uat.md`: UAT-173 e UAT-174 em `fixed` depois da conferência no navegador (sessão de integração)
-- [ ] levar o ramo à `main` (push e aceite são do MJRP)
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde; só então `status: Done`
+- [x] `docs/specs/uat.md`: UAT-173 e UAT-174 em `fixed` depois da conferência no navegador (sessão de integração) — UAT-173 e UAT-174 estão em `fixed`
+- [x] levar o ramo à `main` — feito: ramo mergeado na `main` local (`40ca80d`)
+
+## For the owner at UAT
+- O MJRP confere no navegador e dá o OK na UAT-173 e na UAT-174.
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- Push da `main` ao remoto (e, com ele, a primeira rodada da automação do GitHub): é do MJRP.

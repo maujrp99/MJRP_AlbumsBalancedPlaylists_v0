@@ -52,6 +52,14 @@ Uma dependência nova, de desenvolvimento, na fatia E: `tailwindcss` 3.4.19 ([[A
 - `docs/specs/constitution.md`, Art. II («Tailwind only if requested») e a nota CM-0071 do harness (a stack só muda por ADR)
 - A configuração e o bloco de estilos do Tailwind que estavam em `public/index.html` (levados sem mudança)
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `0daec03`)
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — atualizado (commit `0daec03`)
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **Ordem de publicação:** o site vai primeiro (passa a mandar o login; o servidor antigo ignora), o servidor depois (passa a exigir). Ao contrário, o app em produção ficaria sem notas e sem a segunda fonte até o site sair.
 - **Quem está com a página aberta desde antes** não manda o login até recarregar: recebe 401 nas notas e vê o aviso de falha; recarregar resolve.

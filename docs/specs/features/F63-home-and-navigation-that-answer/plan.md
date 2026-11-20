@@ -45,6 +45,15 @@ Nenhuma nova. O teste `test/architecture/interfaceInEnglish.test.js` usa o `espr
 - `docs/specs/behavior.md`, `docs/manual/` (08, 11, 13, 15, 17, 19, 21, 24, 29, 99)
 - `docs/specs/constitution.md` (complexidade até 10 nas funções novas)
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — sem mudança: nenhum componente, fluxo técnico ou integração novos
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `c21c830`)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **O roteador mudou no caminho de quatro rotas e da tela de álbuns.** `redirect` troca a entrada: quem chega por `/album-series` não volta mais para `/album-series` (era o defeito). Na tela de álbuns, entrar não acrescenta entrada; trocar de série acrescenta, como antes.
 - **O menu da conta não abre mais ao passar o mouse.** É mudança de comportamento para quem usa mouse; a julgar pelo MJRP.

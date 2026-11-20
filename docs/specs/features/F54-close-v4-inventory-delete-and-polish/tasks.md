@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] causa de cada defeito lida no código antes de mexer; a unidade da duração conferida nos dados reais (2.109 faixas, de 15 a 4.767, em segundos)
 - [x] ramo criado: `fix/f54-close-v4-inventory-delete-and-polish`
-- [ ] conferência cruzada da spec e do plano: fica para o fecho, porque os dois foram escritos depois do código
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 - [x] TASK-01 ícone da aba a partir do logo e título único — commit `791da82` · implements:: REQ-05 · model:: sonnet · rounds:: 1
@@ -18,9 +18,12 @@
 
 ## Verification
 - [x] TASK-05 no navegador: remover «GNX» do inventário; durações nas duas janelas; botão «Close»; título e ícone; `reports/evidence/F54-close-v4-inventory-delete-and-polish/F54-browser-2026-11-19.json` · implements:: REQ-01, REQ-03, REQ-04, REQ-05 · model:: opus · rounds:: 1
-- [ ] TASK-06 julgamento do MJRP (tarefa do humano) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP confere em produção e dá o OK na UAT-01, na UAT-188 e na UAT-195
+- [ ] TASK-06 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/manual/` (14, 21, 99, 07b) e `docs/specs/behavior.md` dizem que o apagar funciona e onde a duração é formatada
 - [x] spec, plano e tarefas escritos do registro (passo retroativo, 2026-11-19)
-- [ ] fechar chamando a `mjrp-ensuring-sdd` antes do Done; só então `status: Done` (depende do aceite do MJRP)
+
+## For the owner at UAT
+- O MJRP confere em produção e dá o OK na UAT-01, na UAT-188 e na UAT-195.
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.

@@ -69,6 +69,15 @@ Nenhuma.
 - `firestore.rules` (por que não há consulta por grupo de coleção)
 - `docs/specs/arch.md`, `docs/specs/behavior.md`, `docs/specs/constitution.md` (complexidade até 10)
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `03c94ec`)
+- `docs/specs/data-model.md` — sem mudança: nenhuma entidade, campo ou esquema mudou
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `03c94ec`)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - **O tempo real não foi medido.** Os números são do banco falso: contam idas e esperas, não segundos. Se uma ida continuar em 0,4 s, 7 esperas dão cerca de 3 s para a lista inteira e menos de 1 s para a primeira série; o tamanho das playlists (faixas dentro) pode pesar mais do que a conta sugere.
 - **8 leituras juntas não foi testado contra o Firestore de produção.** O limite está num lugar só (`READ_LIMITS`).

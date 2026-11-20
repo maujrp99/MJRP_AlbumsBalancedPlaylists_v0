@@ -43,6 +43,15 @@ Nenhuma.
 ## Documents Consulted
 `docs/specs/arch.md` (seção «Carga da tela de álbuns — proposta», 1 a 17), `docs/specs/data-model.md`, `docs/specs/uat.md` (UAT-14, UAT-175, UAT-176, UAT-177), `docs/specs/constitution.md`, `docs/wiki/harness/design-patterns.md` (`DP-01`, `DP-22`, `DP-23`), `docs/manual/` (06, 07, 07b, 08, 11, 19). `info-arch.md`, `behavior.md` e `design-system.md`: o primeiro e o terceiro não existem no v0; o segundo não descreve nada do que mudou aqui.
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-19):
+- `docs/specs/constitution.md` — sem mudança: nenhum padrão de código nem dependência novos
+- `docs/specs/arch.md` — atualizado (commit `1713bd4`)
+- `docs/specs/data-model.md` — atualizado (commit `1713bd4`)
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `d9e6103`, da v4.0, que não cita a F48 na mensagem)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+
 ## Risks & Considerations
 - A nova tentativa numa rota de IA paga pode custar mais. Limitado a duas, só em falha de rede ou 5xx; prazo estourado não repete.
 - O prazo de 90 s é novo: uma geração mais lenta que isso passa a falhar. Não há medição do tempo real da rota (ela responde 402 hoje).

@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] lidos os dois scripts antigos, o `cloudbuild.yaml`, o `server/Dockerfile`, a automação, as três issues e os passos feitos à mão no `docs/log.md`; lida do serviço a origem da imagem em produção
 - [x] ramo criado: `fix/f64-one-tested-way-to-production`
-- [ ] conferência cruzada da spec e do plano: fica para o fecho, porque os dois foram escritos depois do código
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 - [x] TASK-01 `scripts/lib/deploy-common.sh` e `scripts/deploy-site.sh`: publicar o site da `main` commitada, com `--dry-run` — commit `fca0108` · implements:: REQ-01, REQ-03 · model:: opus · rounds:: 2
@@ -20,9 +20,8 @@
 ## Verification
 - [x] TASK-06 os dois ensaios até o fim na `main` em `e54c80e` (493 testes), pasta temporária removida; recusa com a `main` suja e com o Client ID vazio; `reports/evidence/F64-one-tested-way-to-production/` · implements:: REQ-01, REQ-02, REQ-03 · model:: opus · rounds:: 1
 - [x] TASK-07 o servidor no Node 26: subida local com as dependências do lockfile, ES256 com chave descartável, `cheerio` e `axios` carregados · implements:: REQ-04 · model:: opus · rounds:: 1
-- [ ] TASK-08 primeira publicação real com os scripts, do site e do servidor (com o Node 26) · implements:: REQ-01, REQ-02, REQ-04 · model:: opus · waiting:: human — publicar em produção e trocar o Node do servidor dependem do sim do MJRP · action:: o MJRP dá o sim; o agente integrador roda `npm run deploy:site` e `npm run deploy:server` depois de integrar o ramo na `main`
+- [x] TASK-08 primeira publicação real com os scripts, do site e do servidor (com o Node 26) — site publicado por `npm run deploy:site` (`docs/log.md` 2026-11-19 16:31) e servidor por `npm run deploy:server` (2026-11-19 17:12, Node 24 pela ADR-0020, no lugar do 26) · implements:: REQ-01, REQ-02, REQ-04 · model:: opus · rounds:: 1
 - [ ] TASK-09 a automação do GitHub roda uma vez e o job `unit-tests` passa · implements:: REQ-05 · model:: sonnet · waiting:: human — o push é do MJRP e a automação só roda no GitHub · action:: o MJRP faz o push; depois, abrir a aba de automação do repositório e conferir o resultado
-- [ ] TASK-10 julgamento do MJRP (tarefa do humano) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP confere uma publicação feita pelos scripts e dá o OK na UAT-202 e na UAT-22; a UAT-20 só fecha quando o lint reprovar
 - [x] TASK-11 a aba aberta antes de uma publicação carrega a versão nova uma vez (`utils/staleBuild.js`, roteador) e a página sai com `Cache-Control: no-cache` (`firebase.json`) · implements:: REQ-07 · model:: opus · rounds:: 1
 
 - [x] TASK-12 (fatia do lint, ramo `fix/f58-layers-and-lint-gate`) os erros de lint consertados, de 22 para 1, com teste antes onde o comportamento podia mudar: `no-useless-escape` 17 (`public/js/utils/NormalizationUtils.js`, `server/lib/normalize.js`, `server/lib/scrapers/besteveralbums.js`; `test/server/textCleaningPatterns.test.js` e `test/utils/NormalizationUtils.test.js`), `no-dupe-keys` 1 de 2 (`public/js/components/Icons.js`; `test/components/Icons.test.js`), `no-async-promise-executor` 1 (`public/js/services/AlbumLoader.js`; `test/services/AlbumLoader.test.js`), `no-case-declarations` 1 (`public/js/components/series/SeriesEventHandler.js`), `no-empty` 1 (`public/js/components/blend/BlendSeriesSelector.js`); os avisos mecânicos removidos, de 78 para 24 · implements:: REQ-08 · model:: opus · rounds:: 1
@@ -32,5 +31,8 @@
 - [x] fatia do lint: `docs/manual/00_Deployment_and_Setup.md` (seção 2.5), o cabeçalho do `eslint.config.mjs` e esta spec, plano e tarefas dizem o estado do lint em 2026-11-19
 - [x] `docs/manual/00_Deployment_and_Setup.md` (seções 1 e 2), `.env.example` e as instruções em `.github/` descrevem o caminho único
 - [x] spec, plano e tarefas escritos do que foi feito (passo retroativo, 2026-11-19)
-- [ ] `docs/specs/arch.md` e `docs/specs/tech-stack.md`: tirar os scripts antigos, o `cloudbuild.yaml` e o Node 18 das linhas de implantação (fora dos caminhos desta entrega; fica para a integração)
+- [x] `docs/specs/arch.md` e `docs/specs/tech-stack.md`: tirar os scripts antigos, o `cloudbuild.yaml` e o Node 18 das linhas de implantação (fora dos caminhos desta entrega; fica para a integração) — `arch.md` diz que o `cloudbuild.yaml` foi removido e descreve só os dois scripts; o Node do servidor é o 24
 - [ ] fechar chamando a `mjrp-ensuring-sdd` antes do Done; só então `status: Done` (depende do aceite do MJRP)
+
+## For the owner at UAT
+- O MJRP confere uma publicação feita pelos scripts e dá o OK na UAT-202 e na UAT-22.

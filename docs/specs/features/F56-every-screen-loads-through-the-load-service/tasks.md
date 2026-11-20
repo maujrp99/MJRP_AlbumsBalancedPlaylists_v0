@@ -8,7 +8,7 @@
 ## Pre-Implementation
 - [x] ramo criado: `fix/f56-screens-load-through-the-service`, a partir da `main` em `d210f35`
 - [x] caminhos lidos no código antes de mexer, com arquivo e linha, na seção «Diagnóstico» do plano; suíte da `main` verde antes de começar (1143 testes) e `vite build` compilando
-- [ ] conferência cruzada da spec e do plano: fica para o fecho (via rápida)
+- [x] conferência cruzada da spec e do plano: feita no fecho — REQs da spec cobertos pelas tasks e plano preenchido, conferido em 2026-11-19
 
 ## Implementation
 <!-- Atomic (one focused session), verifiable (a clear "done"), ordered by dependency: data → logic →
@@ -35,11 +35,14 @@
 
 ## Verification
 - [x] TASK-13 suíte (`npx vitest run`: 1232 passando, 1143 antes), `npx vite build` e complexidade até 10 nas funções novas (`npx eslint --rule 'complexity: [2, 10]'` nos arquivos tocados: só funções que já estavam acima e não foram tocadas) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09 · model:: sonnet · rounds:: 1
-- [ ] TASK-14 prova no navegador com a conta do MJRP, com o tempo medido pelo roteiro do relatório de entrega: «Blend It» até a tela de playlists com os álbuns já carregados (antes: 8 a 18 s) e com a série fora da tela; abrir a edição de um lote até os álbuns prontos; salvar a edição de uma série sem as outras recarregarem (antes: cerca de 10 s); «Refetch» de um álbum; um álbum que falha aparecendo no aviso do blend; sair do blend durante a carga · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus
-- [ ] TASK-15 julgamento do MJRP (tarefa do humano): o blend seguir sem os álbuns que falharam, os textos dos avisos, a saída da pergunta «No ratings detected... Continue?» e o «Refetch» sem gravar o documento compartilhado · implements:: REQ-04, REQ-05, REQ-07 · model:: opus · waiting:: human — o aceite das issues é do MJRP · action:: o MJRP confere em produção e dá o OK na UAT-189 e na UAT-191
+- [x] TASK-14 prova no navegador com a conta do MJRP, com o tempo medido pelo roteiro do relatório de entrega: «Blend It» até a tela de playlists com os álbuns já carregados (antes: 8 a 18 s) e com a série fora da tela; abrir a edição de um lote até os álbuns prontos; salvar a edição de uma série sem as outras recarregarem (antes: cerca de 10 s); «Refetch» de um álbum; um álbum que falha aparecendo no aviso do blend; sair do blend durante a carga — prova: `reports/evidence/F56/2026-11-19-screens-through-the-load-service-proof.md` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · rounds:: 1
+- [ ] TASK-15 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
 
 ## Documentation
 - [x] `docs/specs/arch.md` (seção «Toda tela pede os álbuns ao serviço de carga (F56)»), `docs/decisions/0019-one-owner-for-the-album-load.md` (a lista do que falta), `docs/specs/behavior.md` (os estados do blend, das playlists e da tela de álbuns) e `docs/manual/` (01, 06, 07, 08, 15, 17, 18, 19, 21, 99) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
-- [ ] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
+
+## For the owner at UAT
+- O MJRP julga o blend seguir sem os álbuns que falharam, os textos dos avisos, a saída da pergunta «No ratings detected... Continue?» e o «Refetch» sem gravar o documento compartilhado
+- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
