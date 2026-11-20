@@ -75,6 +75,7 @@ O que a leitura do código mostrou (2026-11-19, ramo `feat/f71-inventory-holds-e
   verified_by:: `test/models/inventorySort.test.js`, `test/controllers/InventoryController.ratings.test.js` («the order by the averages»), `test/views/InventoryView.ratings.test.js` («the order»)
 - [REQ-18] O cartão do inventário (grade e lista) mostra as duas médias numa linha pequena — «Avg Rating: 78.4 · Avg Pop: 42.6%» — quando o item as tem, só a que tem se tiver uma só, e nada (nem «—») quando não tem nenhuma. O nome do álbum continua texto, nunca marcação. · fixes S-56
 - [REQ-19] No inventário, a janela de um álbum mostra as faixas do álbum, com as notas e a popularidade de agora, pedidas à carga de álbuns, para qualquer item (o que veio de uma série e o antigo). Enquanto pede, diz que está carregando; se o álbum não é achado, mostra as faixas que o item guarda ou diz que não foi possível. · fixes S-54 · [[uat#^UAT-220]]
+- [REQ-20] O cartão do inventário diz de quantas faixas cada média saiu, ao lado da média. · fixes S-56
   verified_by:: `test/views/InventoryView.ratings.test.js` («the card»), `test/models/albumAverages.test.js`
 
 ## Observable States

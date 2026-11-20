@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 00:00] session — UAT-221 e F74 registradas (a nota chega à faixa certa); REQ-20 na F71 (de quantas faixas saiu a média)
+
+- O MJRP respondeu à pergunta da média tirada de poucas faixas: «mostrar, mas precisamos melhorar o algoritmo do BEA pra que ele encontre a media das faixas». O cartão vai dizer de quantas faixas a média saiu (F71, REQ-20).
+- Causa do casamento parcial, lida no código e na página do BestEverAlbums que ele indicou: `normalizeKey` apaga todo parêntese. UAT-221 aberta; F74 criada na `main`, via rápida, conserto. Sem ramo até ele priorizar.
+
 ## [2026-11-19 23:55] decision — F72: o ramo foi renomeado para fora da convenção, para o cartão voltar a ser arrastável
 
 - O MJRP não conseguia arrastar a F72: o cartão aparecia «em andamento». O agente mestre do harness explicou (`rules/delivery.py`; CC-ADR-0029 e CC-ADR-0056): um ramo aberto com o nome da convenção (`feat/f72-…`) conta como começo, e feature começada não se ordena.
