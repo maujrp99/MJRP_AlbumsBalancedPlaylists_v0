@@ -8,17 +8,29 @@
 import { SafeDOM } from '../../utils/SafeDOM.js';
 import { getIcon } from '../Icons.js';
 import { SavedPlaylistCard } from './SavedPlaylistCard.js';
-import { SeriesPlaylistsStatus } from '../../models/savedPlaylists.js';
+import { SeriesPlaylistsStatus, batchTotals } from '../../models/savedPlaylists.js';
+import { isPhone } from '../../utils/isPhone.js';
+
+/** «3 batches · 18 playlists»: what a closed series holds, said on the phone. */
+export function seriesSummary(batches = []) {
+    const playlists = batches.reduce((sum, batch) => sum + batchTotals(batch).playlists, 0);
+    const batchWord = batches.length === 1 ? 'batch' : 'batches';
+    return `${batches.length} ${batchWord} · ${playlists} playlist${playlists === 1 ? '' : 's'}`;
+}
 
 export class SavedSeriesGroup {
     /**
      * @param {Object} options
      * @param {Object} options.group - { series, status, batches, thumbnails, error }
      * @param {Object} options.handlers - { onNavigate, onOpenSeries, onDeleteAll, onEditBatch, onDeleteBatch, onOpenPlaylist, onRetry }
+     * @param {boolean} [options.open] - on the phone, whether the batches show (F76: closed by default)
+     * @param {Function} [options.onToggle] - (seriesId, open) => void: the phone opened or closed the series
      */
-    constructor({ group, handlers }) {
+    constructor({ group, handlers, open = false, onToggle = () => { } }) {
         this.group = group;
         this.handlers = handlers;
+        this.open = open;
+        this.onToggle = onToggle;
     }
 
     render() {
@@ -27,18 +39,45 @@ export class SavedSeriesGroup {
         if (batches.length === 0 && !failed) return null;
 
         const seriesId = this.group.series.id;
+        // The batches, in a box of their own: a plain block on the computer; on the phone it is
+        // closed until the series is opened, so the page is a list of series, not of every batch
+        const batchesBox = SafeDOM.div({
+            className: 'saved-series-batches',
+            id: `savedSeriesBatches_${seriesId}`
+        }, batches.map(batch => this.renderBatch(batch, seriesId)));
+        const phone = isPhone();
+        if (phone && !this.open) batchesBox.hidden = true;
 
         return SafeDOM.div({
             className: 'series-group glass-panel p-6 rounded-xl animate-scale-in',
             dataset: { seriesId, status: this.group.status }
         }, [
-            this.renderHeader(batches.length > 0),
+            this.renderHeader(batches.length > 0, phone ? this.renderToggle(batches, batchesBox) : null),
             failed ? this.renderFailure(batches.length > 0) : null,
-            SafeDOM.fragment(batches.map(batch => this.renderBatch(batch, seriesId)))
+            batchesBox
         ]);
     }
 
-    renderHeader(hasPlaylists) {
+    /** The phone's «open the series» row: what it holds, and a chevron that turns when open. */
+    renderToggle(batches, batchesBox) {
+        const toggle = SafeDOM.button({
+            type: 'button',
+            className: 'saved-series-toggle md:hidden',
+            'aria-expanded': String(!batchesBox.hidden),
+            'aria-controls': batchesBox.id
+        }, [
+            SafeDOM.fromHTML(getIcon('ChevronRight', 'saved-series-toggle__chevron')),
+            SafeDOM.span({ className: 'saved-series-toggle__text' }, seriesSummary(batches))
+        ]);
+        toggle.addEventListener('click', () => {
+            batchesBox.hidden = !batchesBox.hidden;
+            toggle.setAttribute('aria-expanded', String(!batchesBox.hidden));
+            this.onToggle(this.group.series.id, !batchesBox.hidden);
+        });
+        return toggle;
+    }
+
+    renderHeader(hasPlaylists, phoneToggle = null) {
         const seriesId = this.group.series.id;
         const seriesName = this.group.series.name;
 
@@ -47,9 +86,10 @@ export class SavedSeriesGroup {
                 SafeDOM.fromHTML(getIcon('Layers', 'w-6 h-6')),
                 SafeDOM.text(' ' + seriesName)
             ]),
-            SafeDOM.span({ className: 'text-xs text-muted font-mono bg-black/30 px-2 py-1 rounded ml-8' },
+            SafeDOM.span({ className: 'saved-series-id text-xs text-muted font-mono bg-black/30 px-2 py-1 rounded ml-8' },
                 `ID: ${seriesId.slice(0, 8)}...`
-            )
+            ),
+            phoneToggle
         ]);
 
         const buttons = SafeDOM.div({ className: 'flex gap-2' }, [
@@ -70,6 +110,7 @@ export class SavedSeriesGroup {
             hasPlaylists ? SafeDOM.button({
                 className: 'btn btn-ghost btn-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors',
                 title: 'Delete all playlists in this series',
+                'aria-label': `Delete all playlists in ${seriesName}`,
                 onClick: () => this.handlers.onDeleteAll(seriesId, seriesName)
             }, SafeDOM.fromHTML(getIcon('Trash', 'w-4 h-4'))) : null
         ]);

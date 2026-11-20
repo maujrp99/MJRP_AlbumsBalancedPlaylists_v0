@@ -78,7 +78,7 @@ export class SavedPlaylistCard {
         const fact = (icon, text, className = 'flex items-center gap-1') =>
             SafeDOM.span({ className }, [SafeDOM.fromHTML(getIcon(icon, 'w-3 h-3')), ` ${text}`]);
 
-        return SafeDOM.div({}, [
+        return SafeDOM.div({ className: 'batch-info' }, [
             SafeDOM.h3({ className: 'font-bold text-xl text-white tracking-tight' }, batchName),
             SafeDOM.div({ className: 'flex items-center gap-3 text-sm text-muted mt-1' }, [
                 fact('List', `${totals.playlists} playlists`),

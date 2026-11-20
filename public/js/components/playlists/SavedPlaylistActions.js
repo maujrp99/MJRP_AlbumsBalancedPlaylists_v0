@@ -24,6 +24,7 @@ export class SavedPlaylistActions {
             SafeDOM.button({
                 className: 'btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md',
                 title: 'Edit this batch',
+                'aria-label': `Edit batch ${batchName}`,
                 onClick: (e) => {
                     e.stopPropagation();
                     if (onEdit) onEdit(seriesId, batchName, createdAt);
@@ -32,11 +33,16 @@ export class SavedPlaylistActions {
             SafeDOM.button({
                 className: 'btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors',
                 title: 'Delete entire batch',
+                'aria-label': `Delete batch ${batchName}`,
                 onClick: (e) => {
                     e.stopPropagation();
                     if (onDelete) onDelete(seriesId, batchName, playlistCount);
                 }
-            }, SafeDOM.fromHTML(getIcon('Trash', 'w-4 h-4')))
+            }, [
+                SafeDOM.fromHTML(getIcon('Trash', 'w-4 h-4')),
+                // the phone names the action beside the icon (no hover there to explain it)
+                SafeDOM.span({ className: 'md:hidden' }, 'Delete')
+            ])
         ]);
     }
 

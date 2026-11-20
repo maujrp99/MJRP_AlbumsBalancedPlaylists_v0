@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:32] session — F76 TASK-04: playlists no celular, uma por vez, e as gravadas fechadas por série
+**Branch:** feat/f76-mobile-playlists
+`/playlists` no celular: fichas no topo (nome, faixas, duração) abrem uma playlist por vez; as faixas rolam com a página; cada faixa tem «⋯» de 44 px com mover (cima, baixo, topo, fim, para outra playlist) e remover com Desfazer; apagar playlist pergunta antes; Salvar e Exportar (folha com Spotify, Apple Music, JSON) na barra de ação. `/saved-playlists`: série fechada com «n lotes · n playlists», sem ID cru, ações nomeadas de 44 px. Computador sem mudança (marcação só no celular). Testes: `test/components/playlists/PhonePlaylists.test.js`.
+
 ## [2026-11-20 02:20] session — F76 TASK-01: design-system (§ Celular), o plano, o kit das telas e a prova em navegador
 **Branch:** feat/f76-mobile-redesign
 Criado `docs/specs/design-system.md` § Celular (44 / 12 / 16 px, escala de tipo, barras, folha, áreas seguras, com as fontes: WebKit, MDN, web.dev, WCAG, Apple; achado 24 da crítica). `plan.md` reescrito com cada módulo e seu REQ; `mobile-kit.md` para quem faz as telas (um CSS por tela em `public/css/mobile/`, a API da folha, a barra de ação, o que a base achou e é de cada tela); TASK-01 marcada. Prova: `reports/evidence/F76/2026-11-20-foundation-proof.md` (Chrome sem cabeça a 393x852, 852x393 e 1280x800, antes e depois; fora do celular as medidas de layout são iguais nas 14 telas e nas 5 janelas, e as capturas idênticas a menos de ruído de captura medido). Não visto: iPhone de verdade e telas com login.

@@ -17,6 +17,9 @@ import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { router } from '../router.js'
 import { installUnsavedChangesGuard } from './playlists/unsavedChangesGuard.js'
 import { attachPlaylistEditActions } from './playlists/playlistEditActions.js'
+import { attachPhonePlaylistActions } from './playlists/phonePlaylistActions.js'
+import { PhonePlaylists } from '../components/playlists/PhonePlaylists.js'
+import { isPhone, onPhoneChange } from '../utils/isPhone.js'
 
 /** The batch name on screen: what was typed, or the name of the batch being edited. */
 const shownBatchNameOf = (state) => state.batchName || state.editContext?.currentBatchName || ''
@@ -32,6 +35,8 @@ export class PlaylistsView extends BaseView {
     this.isRegeneratePanelExpanded = false // UI State
     this.editActions = null     // undo, redo, delete a playlist, title of a playlist
     this.updateDeferred = false // a redraw asked for while a title was being typed
+    this.phoneActive = 0        // the phone shows one playlist at a time: this one (F76)
+    this.phoneActions = null
 
     // Init Controller
     this.controller = new PlaylistsController(this)
@@ -66,6 +71,13 @@ export class PlaylistsView extends BaseView {
     this.attachDelegatedListeners() // Call ONCE
     this.attachElementListeners()   // Call on every render
 
+    // The phone: one playlist at a time, its actions in sheets; turning into a computer draws the grid again
+    this.phoneActions = attachPhonePlaylistActions(this.container, {
+      controller: this.controller,
+      showPlaylist: (index) => this.showPhonePlaylist(index)
+    })
+    this.subscriptions.push(onPhoneChange(() => this.update()))
+
     const state = playlistsStore.getState()
     if (state.playlists.length > 0) {
       this.dragHandler.setup(this.container)
@@ -82,11 +94,15 @@ export class PlaylistsView extends BaseView {
     }
     this.updateDeferred = false
 
-    // Draw again; the field in use (the batch name) is handed back with its text and cursor (F73)
+    // Draw again; the field in use (the batch name) is handed back with its text and cursor (F73).
+    // On the phone the strip of chips keeps where it was scrolled to.
+    const chipsLeft = this.container.querySelector('.phone-pl-chips__row')?.scrollLeft || 0
     redrawKeepingField(this.container, () => {
       SafeDOM.clear(this.container)
       this.container.appendChild(this.renderContent())
     })
+    const chips = this.container.querySelector('.phone-pl-chips__row')
+    if (chips) chips.scrollLeft = chipsLeft
 
     // Attach Element Listeners (Re-bind recreated elements)
     this.attachElementListeners()
@@ -181,7 +197,8 @@ export class PlaylistsView extends BaseView {
       nameInput.addEventListener('input', (e) => {
         playlistsStore.setBatchName(e.target.value)
 
-        const gridContainer = this.container.querySelector('#playlistsGrid')
+        // the phone does not write the batch name beside each title: nothing to draw again there
+        const gridContainer = isPhone() ? null : this.container.querySelector('#playlistsGrid')
         if (gridContainer) {
           const state = playlistsStore.getState()
           const batchName = state.batchName || ''
@@ -224,6 +241,7 @@ export class PlaylistsView extends BaseView {
     const playlists = state.playlists
     const activeSeries = albumSeriesStore.getActiveSeries()
     const isEditMode = playlistsStore.isEditingExistingBatch()
+    const phone = isPhone()
 
     const container = SafeDOM.div({ className: 'playlists-view container' })
 
@@ -247,12 +265,17 @@ export class PlaylistsView extends BaseView {
       genContainer.appendChild(SafeDOM.fromHTML(this.renderGenerationSection(playlists, activeSeries)))
       container.appendChild(genContainer)
 
+      // The phone: undo and redo in a row of their own; save and export in the action bar at the foot
+      if (phone) {
+        container.appendChild(SafeDOM.fromHTML(PhonePlaylists.renderHistoryRow({ canUndo: state.canUndo, canRedo: state.canRedo })))
+      }
+
       // Export
       const exportSec = SafeDOM.div({ id: 'exportSection', className: 'mb-6 fade-in', style: { animationDelay: '0.08s' } })
       exportSec.appendChild(SafeDOM.fromHTML(PlaylistsGridRenderer.renderExportSection(playlists, {
         isSaving: state.isSaving, canUndo: state.canUndo, canRedo: state.canRedo
       })))
-      container.appendChild(exportSec)
+      if (!phone) container.appendChild(exportSec)
     }
 
     // Grid
@@ -263,11 +286,13 @@ export class PlaylistsView extends BaseView {
     }
 
     const grid = SafeDOM.div({ id: 'playlistsGrid' })
-    grid.appendChild(SafeDOM.fromHTML(
-      PlaylistsGridRenderer.renderGrid(playlists, shownBatchNameOf(state) || state.defaultBatchName || '')
-    ))
+    grid.appendChild(SafeDOM.fromHTML(this.gridHtml(state, phone)))
     mainContent.appendChild(grid)
     container.appendChild(mainContent)
+
+    if (phone && playlists.length > 0) {
+      container.appendChild(SafeDOM.fromHTML(PhonePlaylists.renderActionBar({ isSaving: state.isSaving })))
+    }
 
     // Overlay
     if (this.isGenerating) {
@@ -280,6 +305,29 @@ export class PlaylistsView extends BaseView {
     ]))
 
     return container
+  }
+
+  /** The playlists: all side by side on the computer, one at a time on the phone (F76). */
+  gridHtml(state, phone = isPhone()) {
+    if (phone) return PhonePlaylists.render({ playlists: state.playlists, active: this.phoneActive })
+    return PlaylistsGridRenderer.renderGrid(state.playlists, shownBatchNameOf(state) || state.defaultBatchName || '')
+  }
+
+  /**
+   * The phone opens another playlist: only the playlists are drawn again, and when the page was
+   * scrolled into the tracks it goes back to the top of the playlist just opened.
+   */
+  showPhonePlaylist(index) {
+    const grid = this.container?.querySelector('#playlistsGrid')
+    if (!grid || Number.isNaN(index)) return
+    this.phoneActive = index
+    const chipsLeft = grid.querySelector('.phone-pl-chips__row')?.scrollLeft || 0
+    const stuck = grid.getBoundingClientRect().top < 0
+    grid.innerHTML = this.gridHtml(playlistsStore.getState(), true)
+    const chips = grid.querySelector('.phone-pl-chips__row')
+    if (chips) chips.scrollLeft = chipsLeft
+    this.dragHandler.setup(this.container)
+    if (stuck) grid.scrollIntoView({ block: 'start' })
   }
 
   renderGenerationSection(playlists, activeSeries) {
@@ -329,6 +377,8 @@ export class PlaylistsView extends BaseView {
     super.destroy()
     this.editActions?.detach()
     this.editActions = null
+    this.phoneActions?.detach()
+    this.phoneActions = null
     this.removeUnsavedChangesGuard?.()
     this.removeUnsavedChangesGuard = null
     this.controller.destroy()
