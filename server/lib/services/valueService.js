@@ -3,7 +3,10 @@
  * lib/outcome.js. The source is injected (lib/valueSources/discogsSource.js).
  *
  *   found           the source has a price suggestion for the CD edition; `data` is
- *                   { release: { id, title, url }, conditions: { mint, nearMint, veryGoodPlus }, currency, readAt }
+ *                   { release: { id, title, url }, conditions: { mint, nearMint, veryGoodPlus }, currency, readAt };
+ *                   or, when Discogs refuses suggestions to the account (no seller settings), the
+ *                   lowest price for sale: { release, kind: 'lowest_for_sale', lowest: { value, currency },
+ *                   forSale, suggestions: 'seller_settings_missing' | 'not_asked', readAt }
  *   not_found       the source has no CD edition of the album; `data` is null
  *   no_value        the edition exists and has no suggestion; `data` is { release }
  *   not_configured  the switch is off for who asks (lib/valueSources/valueSwitch.js): the source
@@ -36,6 +39,8 @@ function albumOf (body) {
   const album = { artist: body.artist.trim(), title: body.title.trim() }
   if (yearOf(body.year) !== null) album.year = body.year
   if (isReleaseId(body.releaseId)) album.releaseId = body.releaseId
+  // the app already knows the suggestions are refused for the seller settings: only the lowest price is asked
+  if (body.prices === 'lowest') album.prices = 'lowest'
   return album
 }
 

@@ -36,9 +36,17 @@ export const NoValue = Object.freeze({
     READING: 'reading',
     NO_CD_EDITION: 'no_cd_edition',
     NO_SUGGESTION: 'no_suggestion',
+    NONE_FOR_SALE: 'none_for_sale',
     SOURCE_OFF: 'source_off',
     FAILED: 'failed'
 })
+
+/**
+ * What a Discogs value is made of. Discogs gives the suggestion by condition only to an account
+ * with seller settings filled in; to any other the app reads the lowest price the edition is for
+ * sale at. It is a Discogs value all the same, and it is never called a suggestion or a mean.
+ */
+export const ValueBasis = Object.freeze({ SUGGESTION: 'suggestion', LOWEST_FOR_SALE: 'lowest_for_sale' })
 
 /** What a reading kept in the browser says. */
 export const ReadingKind = Object.freeze({ FOUND: 'found', NOT_FOUND: 'not_found', NO_VALUE: 'no_value' })
@@ -90,6 +98,7 @@ const none = (reason, extra = {}) => ({ origin: null, reason, ...extra })
 /** What a reading that is still fresh says of the item. */
 function fromReading(reading) {
     if (reading.kind === ReadingKind.NOT_FOUND) return none(NoValue.NO_CD_EDITION, { readAt: reading.readAt })
+    if (reading.basis === ValueBasis.LOWEST_FOR_SALE) return fromLowestForSale(reading)
     const amount = reading.kind === ReadingKind.FOUND ? meanOfConditions(reading.conditions) : null
     if (amount === null) return none(NoValue.NO_SUGGESTION, { release: reading.release ?? null, readAt: reading.readAt })
     return {
@@ -97,6 +106,21 @@ function fromReading(reading) {
         amount,
         currency: reading.currency || BASE_CURRENCY,
         conditions: reading.conditions,
+        release: reading.release ?? null,
+        readAt: reading.readAt
+    }
+}
+
+/** A reading of the lowest price for sale: that price, or "none for sale" when nobody sells the edition. */
+function fromLowestForSale(reading) {
+    const lowest = reading.kind === ReadingKind.FOUND ? reading.lowest : null
+    if (!lowest || !isAmount(lowest.value)) return none(NoValue.NONE_FOR_SALE, { release: reading.release ?? null, readAt: reading.readAt })
+    return {
+        origin: ValueOrigin.DISCOGS,
+        basis: ValueBasis.LOWEST_FOR_SALE,
+        amount: lowest.value,
+        currency: lowest.currency || BASE_CURRENCY,
+        forSale: reading.forSale ?? null,
         release: reading.release ?? null,
         readAt: reading.readAt
     }
@@ -233,6 +257,9 @@ export function totalsOf(items, valueFor, rates) {
 /** How many of these values came from Discogs: while there is one on the screen, the screen says where the data comes from. */
 export const itemsWithDiscogsValue = (values) => [...values.values()].filter(value => value.origin === ValueOrigin.DISCOGS).length
 
+/** How many of these values are the lowest price for sale: while there is one, the screen says what they are. */
+export const lowestValuesShown = (values) => [...values.values()].filter(value => value.basis === ValueBasis.LOWEST_FOR_SALE).length
+
 /** The amount of a value in USD, for the order of the inventory; null when it has none. */
 export const usdOf = (value, rates) => (value?.origin ? toUsd(value.amount, value.currency, rates) : null)
 
@@ -252,7 +279,8 @@ const NONE_TEXT = Object.freeze({
     [NoValue.WAITING]: 'Waiting for a value',
     [NoValue.READING]: 'Reading…',
     [NoValue.NO_CD_EDITION]: 'No CD edition found',
-    [NoValue.NO_SUGGESTION]: 'No price suggested on Discogs'
+    [NoValue.NO_SUGGESTION]: 'No price suggested on Discogs',
+    [NoValue.NONE_FOR_SALE]: 'None for sale on Discogs now'
 })
 
 export const failureText = (failure) => FAILURE_TEXT[failure] || FAILURE_TEXT[ReadFailure.OTHER]
@@ -265,6 +293,8 @@ export const valueLabel = (item) => (statusOf(item) === InventoryStatus.OWNED ? 
 
 export const DISCOGS_MEAN_TITLE = 'Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition'
 export const DISCOGS_CREDIT = 'Data provided by Discogs.'
+export const DISCOGS_LOWEST_TITLE = 'Lowest price this CD edition is for sale at on Discogs now'
+export const LOWEST_PRICES_NOTE = 'Discogs values are lowest asking prices for now.'
 export const RATES_MISSING_TEXT = 'Exchange rates are not available: values are shown in USD.'
 
 /** "3 of 14 owned albums have a value": the words of the prototype, the same for every count. */

@@ -3,6 +3,33 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 02:35] session — F75, documentos: a sugestão recusada e o menor preço à venda
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- `plan.md`: a decisão («decidido pelo agente — revisável»), como os três estados voltam, a leitura dos termos para as estatísticas do marketplace (conteúdo do Discogs: atribuição e seis horas; dado do marketplace, tratado como «Restricted Data») e o que não foi verificado.
+- `behavior.md` (`^inventory-value-lowest-for-sale`), `info-arch.md` (três estados novos com ID de bloco), `data-model.md` (a base `lowest_for_sale` da leitura; a chave `v2`), `arch.md` (emenda) e `docs/manual/21_Dynamic_UI_Mapping.md`.
+- Não verificado: `/marketplace/stats` com o token; quantas das 211 edições têm algo à venda (a de «The Dark Side of the Moon» tinha zero).
+
+## [2026-11-20 02:34] session — F75, app: o menor preço à venda como valor do Discogs, um aviso só sobre as configurações de vendedor, e as leituras erradas descartadas
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- O modelo ganhou a base do valor (`ValueBasis`): a leitura de menor preço é um valor de origem «discogs», nunca chamado de sugestão nem de média. No cartão: «CD · Discogs · lowest for sale»; sem nada à venda: «None for sale on Discogs now». Na janela: «Lowest price for sale on Discogs: $12.93 (37 for sale)», a edição, quando foi lido, «Data provided by Discogs.» e a frase que explica por que não há os três estados.
+- Um aviso só na tela: «Discogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.», com o link. Na faixa dos totais, enquanto for o caso: «Discogs values are lowest asking prices for now.».
+- A rodada não pergunta mais a página de preço a cada álbum: o serviço lembra a recusa na memória da página por seis horas e manda `prices: 'lowest'`. Decidido pelo agente — revisável: cada rodada nova tenta a sugestão uma vez, no primeiro álbum; se vier, os três estados voltam sem mudar código.
+- A chave das leituras no navegador foi para `inventoryvalue:v2:`: as leituras erradas da primeira rodada em produção não são lidas de volta.
+- Testes escritos antes e vistos falhar (14 de 15). Suíte: 2879 testes; lint e build verdes. Um teste de tempo (`inventoryFromSeries`, 200 álbuns em menos de 1 s) falhou uma vez sob carga e passou sozinho.
+
+## [2026-11-20 02:31] session — F75, servidor: a sugestão recusada por falta de «seller settings» tem nome, e o menor preço à venda entra no lugar
+
+**Branch:** feat/f75-cd-prices-and-where-to-buy
+
+- Produção mostrou: a página de preço do Discogs responde HTTP 404 «You must fill out your seller settings first.» para todo álbum. A fonte passa a reconhecer essa recusa (404, 401 ou 403 com essa frase) e a dizê-la dentro da resposta (`suggestions: 'seller_settings_missing'`), e lê no lugar `GET /marketplace/stats/{id}`: `found` com `kind: 'lowest_for_sale'`, `lowest: { value, currency }` e `forSale`; sem nada à venda, `no_value` com `reason: 'none_for_sale'`.
+- Decidido pelo agente — revisável: a recusa vai do lado do sucesso do contrato, como um campo, porque o álbum foi respondido (com um valor mais fraco); não é um código de falha. O servidor não guarda estado: o app que já sabe manda `prices: 'lowest'` e a página de preço não é pedida de novo; sem a dica, a sugestão é tentada, de modo que os três estados voltam sozinhos quando a conta tiver as configurações de vendedor.
+- Formato real de `/marketplace/stats/{id}`, lido em 6 pedidos sem token: `{"num_for_sale":124,"lowest_price":{"value":0.53,"currency":"USD"},"blocked_from_sale":false}`; sem nada à venda, `{"num_for_sale":0,"lowest_price":null,…}`; edição que não existe, 404 «Release not found.». A edição de «The Dark Side of the Moon» que a fonte escolhe (5012948) tinha zero à venda nessa leitura.
+- Testes do servidor escritos antes e vistos falhar; 459 passando.
+
 ## [2026-11-20 02:25] session — F75 em produção: o 404 da página de preço não é «sem edição em CD»
 **Branch:** feat/f75-cd-prices-and-where-to-buy
 Na primeira leitura na conta do MJRP, 16 de 16 álbuns voltaram «No CD edition found», em cerca de 3 s cada (três pedidos ao Discogs): a busca e as versões funcionam (refeitas sem token: AC/DC «High Voltage» acha a edição 864947) e o terceiro pedido, o do preço, voltou 404, que o servidor lia como «não achado». Conserto: o 404 da página de preço vira «sem valor», com a edição dita, e o que o Discogs escreveu vai para o log; o 404 de uma página de master continua «não achado».

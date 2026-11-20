@@ -25,7 +25,7 @@ export const itemsToRead = (items, readings, now) => items.filter(item => needsR
 const isGiven = (value) => value !== undefined && value !== null
 
 /** What the server is asked for an item: a known edition skips the search. */
-export function askOfItem(item) {
+export function askOfItem(item, { lowestOnly = false } = {}) {
     const held = item.albumData || {}
     const year = [item.year, held.year].find(isGiven)
     const releaseId = item.discogs ? item.discogs.releaseId : null
@@ -33,7 +33,9 @@ export function askOfItem(item) {
         artist: [item.artist, held.artist].find(Boolean) || '',
         title: [item.title, held.title].find(Boolean) || '',
         ...(isGiven(year) && { year }),
-        ...(Number.isInteger(releaseId) && { releaseId })
+        ...(Number.isInteger(releaseId) && { releaseId }),
+        // the suggestions are known to be refused (no seller settings): only the lowest price is asked
+        ...(lowestOnly && { prices: 'lowest' })
     }
 }
 
@@ -63,7 +65,21 @@ const FAILED = 'failed'
 /** The reading the browser keeps for an answer of the source. `at`: when it was read, for an answer that carries no time. */
 function readingOf(result, at) {
     const data = result.data || {}
-    return { kind: KIND_OF_RESULT[result.kind], release: data.release ?? null, conditions: data.conditions ?? null, currency: data.currency ?? null, readAt: data.readAt || at }
+    const reading = { kind: KIND_OF_RESULT[result.kind], release: data.release ?? null, conditions: data.conditions ?? null, currency: data.currency ?? null, readAt: data.readAt || at }
+    return isOfLowestForSale(data) ? { ...reading, ...lowestForSaleOf(data) } : reading
+}
+
+const LOWEST_FOR_SALE = 'lowest_for_sale'
+const NONE_FOR_SALE = 'none_for_sale'
+const SELLER_SETTINGS_MISSING = 'seller_settings_missing'
+
+/** The answer is of the weaker reading: the lowest price for sale, or "none for sale". */
+const isOfLowestForSale = (data) => data.kind === LOWEST_FOR_SALE || data.reason === NONE_FOR_SALE
+
+/** What a reading of the lowest price for sale keeps beside the rest. */
+function lowestForSaleOf(data) {
+    const lowest = data.lowest || null
+    return { basis: LOWEST_FOR_SALE, lowest, forSale: data.forSale ?? 0, currency: lowest ? lowest.currency : null }
 }
 
 const waitOf = (result) => result.hold?.retryAfterMs ?? (result.code === 'upstream_busy' || result.code === 'rate_limited' ? DEFAULT_WAIT_MS : null)
@@ -75,7 +91,11 @@ const waitOf = (result) => result.hold?.retryAfterMs ?? (result.code === 'upstre
  * @returns {Object} { reading } | { off: true } | { failure, waitMs, stops }
  */
 export function readOutcomeOf(result, at) {
-    if (KIND_OF_RESULT[result.kind]) return { reading: readingOf(result, at) }
+    if (KIND_OF_RESULT[result.kind]) {
+        // Discogs refused the suggestions for the seller settings: said beside the reading, so the run stops asking for them
+        const refused = result.data && result.data.suggestions === SELLER_SETTINGS_MISSING
+        return { reading: readingOf(result, at), ...(refused && { sellerSettingsMissing: true }) }
+    }
     if (result.kind === NOT_CONFIGURED) return { off: true }
     const failure = (result.kind === FAILED && FAILURE_OF_CODE[result.code]) || ReadFailure.OTHER
     const waitMs = failure === ReadFailure.LIMIT ? waitOf(result) : null

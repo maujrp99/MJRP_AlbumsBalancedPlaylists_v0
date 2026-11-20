@@ -112,7 +112,18 @@ function mostCollectedCd (body) {
   return best ? { id: best.id, title: editionTitle({ label: best.label, year: yearOf(best.released), country: best.country }) } : null
 }
 
+/**
+ * The lowest price an edition is for sale at, and how many copies are for sale.
+ * @param {*} body - the answer of GET /marketplace/stats/{release_id}: { num_for_sale, lowest_price: { value, currency } | null }
+ * @returns {{ lowest: { value: number, currency: string }, forSale: number }|null} null when none is for sale, or the price is unreadable
+ */
+function lowestForSaleOf (body) {
+  const price = isObject(body) && isObject(body.lowest_price) ? body.lowest_price : null
+  if (!price || typeof price.value !== 'number' || !(price.value > 0) || typeof price.currency !== 'string') return null
+  return { lowest: { value: price.value, currency: price.currency.trim().toUpperCase() }, forSale: count(body.num_for_sale) }
+}
+
 /** The page of a release at Discogs: where "Data provided by Discogs." links to. */
 const releaseUrl = (id) => `https://www.discogs.com/release/${id}`
 
-module.exports = { suggestionsOf, candidatesOf, readingsOfLabel, mostCollectedCd, releaseUrl, editionTitle }
+module.exports = { lowestForSaleOf, suggestionsOf, candidatesOf, readingsOfLabel, mostCollectedCd, releaseUrl, editionTitle }

@@ -12,7 +12,7 @@
  */
 
 import {
-    BASE_CURRENCY, CURRENCIES, SourceState, itemsWithDiscogsValue, shownCurrency, totalsOf, usdOf, valueOfItem,
+    BASE_CURRENCY, CURRENCIES, SourceState, itemsWithDiscogsValue, lowestValuesShown, shownCurrency, totalsOf, usdOf, valueOfItem,
     writtenValueFrom
 } from '../models/inventoryValue.js'
 import { itemsToRead, readFailedText, valuesOutcome, valuesProgressText } from '../models/inventoryValueRun.js'
@@ -146,6 +146,9 @@ export class InventoryValues {
             totals: totalsOf(counted, valueFor, money.rates),
             waiting: this.source === SourceState.ON ? itemsToRead(items, this.readings, this.now()).length : 0,
             discogsShown: itemsWithDiscogsValue(values) > 0,
+            lowestShown: lowestValuesShown(values) > 0,
+            // Discogs refuses suggestions to the account: known by the service, or seen in a value on the screen
+            sellerSettingsMissing: this.source === SourceState.ON && (lowestValuesShown(values) > 0 || Boolean(this.service.sellerSettingsMissing?.())),
             run: this.run,
             usdOf: (item) => usdOf(valueFor(item), money.rates)
         }
