@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 01:04] session — F74, primeira fatia, provada em produção; regressão achada e segunda fatia aberta
+
+- Servidor `mjrp-proxy-00208-kzm` e site `8efa91c` publicados. Na conta do MJRP: «In the Court of the Crimson King» com as cinco originais com nota e as extras sem; «High Voltage» 9 de 9, pela página da edição internacional.
+- Medida do inventário depois de «Update ratings»: 109 álbuns com nota em tudo, 87 em parte, 13 sem nenhuma; 2106 de 2612 faixas.
+- Regressão: «Close to the Edge» de 3 de 3 para 1 de 3 (título seguido da lista das suas partes). Segunda fatia aberta com os exemplos reais; a UAT-221 segue `open`. Prova: `reports/evidence/F74/2026-11-20-production-proof.md`.
+
 ## [2026-11-20 01:02] decision — F75: o MJRP escolheu o cartão «Transformar» com «Where to buy» em links, e as contagens como filtro
 
 - Dito por ele: «A opcao é transformar mas na parte do where to buy, quero um merge do elevar (O label WHERE TO BUY) com os links em laranja do consolidar»; e «concordo com a proposta de torná-los filtros».

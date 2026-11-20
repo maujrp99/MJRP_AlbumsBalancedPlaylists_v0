@@ -15,7 +15,8 @@
 
 ## Verification
 - [x] TASK-02 medida antes e depois nos 12 álbuns (`scripts/measure-track-identity.mjs`: 96 notas antes, 12 delas em duas faixas e 2 de outro disco; 102 depois, de 105 que as páginas têm); suíte (2623 testes), lint e build verdes · implements:: REQ-01, REQ-02, REQ-03 · model:: opus · rounds:: 1
-- [ ] TASK-08 publicar o servidor e provar no navegador · implements:: REQ-01, REQ-02, REQ-05, REQ-06 · model:: opus · waiting:: human — o agente não publica o servidor e não tem navegador nem a conta do MJRP · action:: o integrador publica o servidor antes do app, abre «In the Court of the Crimson King (Expanded Edition)» e «High Voltage» sem limpar o cache e roda «Update ratings»
+- [x] TASK-08 servidor publicado (`mjrp-proxy-00208-kzm`) e site publicado (`8efa91c`) em 2026-11-20; prova na conta do MJRP: Crimson King 5 de 8, High Voltage 9 de 9; medida do inventário depois de «Update ratings» · evidência: `reports/evidence/F74/2026-11-20-production-proof.md` · implements:: REQ-01, REQ-02, REQ-05, REQ-06 · model:: opus · rounds:: 1
+- [ ] TASK-09 segunda fatia: a regressão de «Close to the Edge» (título seguido da lista das suas partes) e as outras escritas achadas na medida de produção · implements:: REQ-01, REQ-02 · model:: opus · waiting:: human — a fatia está com o auxiliar no ramo `fix/f74-track-titles-second-slice` · action:: o integrador revisa, junta, publica o servidor e o site e refaz a medida
 
 ## Documentation
 - [x] `docs/specs/behavior.md`: `^track-ratings-right-track` (nasce), `^local-album-cache` (muda)
