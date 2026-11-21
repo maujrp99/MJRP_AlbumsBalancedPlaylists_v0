@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:14] session — F81: fechamento (levantamento dos textos e rascunho da feature entregues)
+Branch: claude/f81-site-in-more-than-one-language
+Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21)
+Resumo: 1106 textos em 1437 pontos mapeados (`design/copy/album-blender-copy.md`, `scripts/i18n/`), relatório `reports/audits/2026-11-21-f81-copy-survey.md` com as decisões D-01 a D-13, spec/plan/tasks da F81 em rascunho (`**Approved**` pendente; tasks esperam o MJRP). Nenhum código de produto foi tocado; nada foi enviado ao remoto.
+Decisões gravadas: nenhuma decisão do MJRP; a coluna PT do mapa é proposta do agente, nada aprovado.
+Próxima sessão: o MJRP responde D-01 a D-13; a proposta da F83 define o contrato do dicionário; depois a F81 é priorizada e construída (TASK-01).
+Key Data: commits `4dfc9db`, `ba9cc27`, `ad26f1f` neste ramo.
+
 ## [2026-11-21 10:14] session — F81: spec, plan e tasks saem do esboço; fechamento da sessão do levantamento
 **Branch:** claude/f81-site-in-more-than-one-language
 Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21 («levantar todos os textos do site e entregar o mapa de que a F81 vai traduzir»).)
