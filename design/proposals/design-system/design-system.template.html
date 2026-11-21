@@ -1,0 +1,137 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Album Blender Design System</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+/* the site's own Home stylesheet (public/css/views/home.css): the fire button and the equalizer of the opening, alive */
+/*HOME_CSS*/
+</style>
+<style>
+/* Layout: the site's black; the identity on the first screen, then one family per section, each piece in two live frames
+   (960 px and 390 px) drawn with the site's own CSS. One look, the site's (dark only, by choice). */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --panel: #101014;
+  --line: rgba(255, 255, 255, 0.12);
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.72);
+  --soft: rgba(255, 255, 255, 0.64);
+  --orange: #f97316;
+  --title: 'Syne', sans-serif;
+  --sys: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/1.5 var(--title); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: rgba(0, 0, 0, 0.9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; gap: 16px; min-height: 56px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 800 16px/1 var(--title); white-space: nowrap; }
+.brand img { width: 28px; height: 28px; object-fit: contain; }
+nav.fams { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; min-width: 0; flex: 1; }
+nav.fams::-webkit-scrollbar { display: none; }
+nav.fams a { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 999px; color: var(--muted); font: 700 13px/1 var(--title); text-decoration: none; white-space: nowrap; }
+nav.fams a:hover, nav.fams a:focus-visible { color: #fff; background: rgba(255, 255, 255, 0.08); outline: none; }
+nav.fams a:last-child { color: #fff; box-shadow: inset 0 -2px 0 var(--orange); border-radius: 0; }
+main { padding-block: 0 64px; }
+
+/* the opening: the identity on one screen */
+.open { padding-block: 28px 8px; display: grid; gap: 22px; position: relative; align-content: center; min-height: calc(100dvh - 56px - env(safe-area-inset-top, 0px)); }
+.open::before { content: ""; position: absolute; left: 50%; top: -60px; width: 900px; max-width: 100%; height: 360px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(249, 115, 22, 0.18), rgba(220, 38, 38, 0.06) 60%, transparent); pointer-events: none; }
+.wordmark { position: relative; display: block; width: min(560px, 100%); height: auto; margin: 0 auto; }
+.sw { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+.sw li { display: grid; gap: 8px; }
+.sw i { display: block; height: 64px; border-radius: 12px; border: 1px solid var(--line); }
+.sw span, .open small { font: 700 13px/1.2 var(--title); color: var(--muted); }
+.idrow { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.idrow p { margin: 0; display: flex; align-items: center; gap: 18px; padding: 16px 18px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); flex-wrap: wrap; }
+.type__syne { font: 800 48px/1 var(--title); }
+.type__sys { font: 400 48px/1 var(--sys); color: var(--muted); }
+.eqrow { position: relative; display: grid; gap: 6px; justify-items: center; }
+.eqrow .home-eq { width: 100%; margin: 0; opacity: 1; }
+
+/* a family of pieces */
+.fam { padding-block: 36px 8px; border-top: 1px solid var(--line); margin-top: 28px; scroll-margin-top: 64px; }
+.open { scroll-margin-top: 64px; }
+.fam h2 { margin: 0; font: 800 28px/1.15 var(--title); text-wrap: balance; }
+.fam .line { margin: 6px 0 18px; color: var(--muted); max-width: 62ch; }
+.pair { display: grid; grid-template-columns: minmax(0, 960fr) minmax(0, 390fr); gap: 16px; align-items: start; }
+.pair--phone { grid-template-columns: minmax(0, 390px); }
+.pair--ask { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.frame { margin: 0; min-width: 0; }
+.frame figcaption { font: 700 12px/1 var(--title); color: var(--soft); margin-bottom: 8px; letter-spacing: 0.04em; }
+.frame__box { position: relative; width: 100%; overflow: hidden; border-radius: 14px; border: 1px solid var(--line); background: #000; aspect-ratio: calc(var(--w) / var(--h)); }
+.frame iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; background: #000; }
+.scale p { margin: 0 0 8px; line-height: 1.2; }
+
+/* the details, small and closed */
+.det { margin-top: 14px; font: 400 13px/1.45 var(--sys); color: var(--muted); }
+.det summary { cursor: pointer; width: max-content; min-height: 32px; display: inline-flex; align-items: center; font: 700 13px/1 var(--title); color: var(--soft); }
+.det summary:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 4px; }
+.scroll { overflow-x: auto; margin-top: 8px; }
+table { border-collapse: collapse; width: 100%; min-width: 640px; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { color: #fff; font-weight: 600; }
+code { font: 12px/1.4 ui-monospace, Menlo, monospace; color: #e4e4e7; overflow-wrap: anywhere; }
+
+/* what waits for him */
+.wait h2 { color: #fff; }
+.ask { padding: 18px; border-radius: 16px; background: var(--panel); border: 1px solid rgba(249, 115, 22, 0.45); margin-bottom: 14px; }
+.ask h3 { margin: 0 0 4px; font: 800 18px/1.2 var(--title); }
+.ask .q { margin: 0 0 14px; font-size: 16px; }
+footer { color: var(--soft); font: 400 12px/1.4 var(--sys); padding-block: 24px; border-top: 1px solid var(--line); }
+
+@media (max-width: 820px) {
+  .pair { grid-template-columns: minmax(0, 1fr); }
+  .pair--phone { grid-template-columns: minmax(0, 1fr); max-width: 390px; }
+  .idrow { grid-template-columns: 1fr; }
+  .sw { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .sw i { height: 48px; }
+  .brand span { display: none; }
+  .type__syne, .type__sys { font-size: 40px; }
+}
+@media (prefers-reduced-motion: reduce) { .home-eq i { animation: none !important; } }
+</style>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="#identidade" style="color:inherit;text-decoration:none"><img src="<!--LOGO-->" alt=""><span>Album Blender</span></a>
+  <nav class="fams" aria-label="Famílias">
+    <!--NAV-->
+  </nav>
+</div></header>
+
+<main class="wrap">
+<!--BODY-->
+</main>
+<footer><div class="wrap"><!--FOOT--></div></footer>
+
+<!--TEMPLATES-->
+
+<script>
+const CSS = { app: /*CSS_APP*/null, splash: /*CSS_SPLASH*/null };
+const FONT = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap">';
+const BASE = 'html,body{margin:0;background:#000;color:#fff}';
+/* each frame: the template's markup in a document of its own, with the site's CSS, at its real width; scaled to the column */
+function draw(iframe) {
+  const tpl = document.getElementById(iframe.dataset.tpl);
+  const w = Number(iframe.getAttribute('width'));
+  const body = iframe.dataset.css === 'splash' ? '' : ' class="bg-black text-white font-syne"';
+  iframe.srcdoc = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=' + w + '">' + FONT +
+    '<style>' + CSS[iframe.dataset.css] + '</style><style>' + BASE + '</style></head><body' + body + '>' + tpl.innerHTML + '</body></html>';
+}
+function fit() {
+  document.querySelectorAll('.frame__box').forEach((box) => {
+    const iframe = box.querySelector('iframe');
+    const k = box.clientWidth / Number(iframe.getAttribute('width'));
+    iframe.style.transform = 'scale(' + k + ')';
+  });
+}
+document.querySelectorAll('iframe[data-tpl]').forEach(draw);
+fit();
+window.addEventListener('resize', fit);
+if (window.ResizeObserver) new ResizeObserver(fit).observe(document.body);
+</script>

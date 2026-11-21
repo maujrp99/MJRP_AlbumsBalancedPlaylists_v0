@@ -1,16 +1,214 @@
 # Design system — Album Blender V0
 
-O que as telas compartilham: medidas, tipo, cores e componentes. Este documento nasceu com a F76 (achado 24 da crítica de UX de 2026-11-20: não havia escala declarada, e por isso 9, 10, 12, 14 e 16 px conviviam, e alvos de 24 a 48 px). Hoje ele declara o **celular**; o que é da tela de computador ainda vive só no código (`tailwind.config.js`, `public/css/tailwind.css`, `public/css/tech-theme.css`) e entra aqui quando for mexido.
+**Status: Draft** — os padrões da Home (F79) e da página de entrada (F80) aprovados pelo MJRP com os protótipos em 2026-11-20; o resto é o que o código usa, decidido pelo agente — revisável; as perguntas abertas estão em § Pendentes.
+> **Página do design system:** a publicar (F86) — gerada deste documento por `design/proposals/design-system/build-design-system.mjs`, nunca editada à mão.
 
-## Identidade (não muda no celular)
+O que as telas do site compartilham: cores, tipo, medidas e componentes. Este documento nasceu com a F76 (o celular) e foi refeito na F86 (2026-11-21) a partir de um levantamento do código (`public/css/`, `tailwind.config.js`, `public/splash.html`, as views e os componentes): o que está aqui é o que o site **usa**, não o que deveria usar. Onde o código tem dois valores para a mesma coisa, § Conflitos no código diz quais e propõe um; nada foi mudado no código. A migração para React (F83) vai consumir os tokens daqui. O app nativo (`app/`, em pausa) fica fora.
 
-| O quê | Valor | Onde está |
+Ordem em que o site carrega o CSS (decide quem ganha num conflito): `public/css/modals.css` (no `<head>`), `public/css/index.css` (`animations.css`, `neon.css`, `tech-theme.css`, `views/home.css`), o Tailwind (`public/css/tailwind.css`, gerado com o site), `public/css/mobile.css` e `public/css/mobile/*.css` (só até 767 px), `public/css/safe-area.css`. A página de entrada (`public/splash.html`) é outro documento, com o seu próprio CSS, e não carrega nenhum desses.
+
+## Conceito e DNA
+
+Uma loja de discos à noite: tela preta, o fogo (o logotipo da chama sobre o vinil, o degradê laranja-vermelho) e os equalizadores como as duas marcas da casa, títulos em Syne. Decisão do MJRP (2026-11-20 17:12): «o elemento do fogo, de equalizadores, fazem parte da identidade do site». O fogo é a ação: um botão de fogo por tela (HI-05). O equalizador quer dizer som e espera: parado é pronto, em movimento é esperando uma resposta, baixo é que a resposta não veio.
+
+## Paleta
+
+Um tema só, escuro. O laranja é a ação principal, a aba atual e o item escolhido; o vermelho é a outra ponta do fogo e o perigo. As cores de estado (verde, rosa, vermelho claro) não vêm da marca (AH-08). Contraste medido (WCAG) sobre o preto e, entre parênteses, sobre o painel `#101014`: branco 21:1 (18,6:1); `#a0a0a8` 8,1:1 (7,3:1); branco a 72 % 10,6:1 (9,6:1); branco a 64 % 8,3:1 (7,5:1); `#fb923c` 9,3:1 (8,4:1); `#4ade80` 12,1:1 (10,9:1); `#fca5a5` 11,1:1 (10,0:1); `#f87171` 7,6:1 (6,9:1). Branco sobre o fogo: 2,8:1 na ponta laranja, 4,8:1 na vermelha — só passa como texto grande (19 px, peso 800); ver § Pendentes, P1.
+
+### Cores
+
+| Nome | Valor | Para quê | Onde no código | Estado | Na abertura |
+|---|---|---|---|---|---|
+| preto | `#000000` | o fundo de toda tela do app | `body.bg-black` (`public/index.html`), `--albums-page` | em uso | Preto |
+| painel | `#101014` | folhas do celular, painel da série, a caixa do campo da Home | `--phone-sheet-bg`, `--home-panel` | em uso | Painel |
+| superfície | `#1c1c22` | botão neutro, capa vazia, botões das linhas | `.home-btn`, `.home-dcv`, `.home-rbtn button` | em uso | Superfície |
+| escolhido neutro | `#2a2a30` | a opção escolhida do controle segmentado | `--phone-seg-on` | em uso | |
+| laranja | `#f97316` | a ação principal, a aba atual, o item escolhido, o anel da capa escolhida | `brand.orange` (Tailwind), `--home-flame-a`, `--phone-accent`, `--orange` (página de entrada) | em uso | Laranja |
+| vermelho | `#dc2626` | a outra ponta do fogo; o sublinhado do «Undo» | `brand.red`, `--home-flame-b`, `--red` | em uso | Vermelho |
+| fogo | `linear-gradient(135deg, #f97316 0%, #dc2626 100%)` | um botão por tela; o número da capa escolhida; a inicial da conta | `bg-flame-gradient`, `--home-flame`, `--flame`, `.phone-avatar` | em uso | Fogo |
+| fogo no texto | `linear-gradient(90deg, #f97316, #dc2626)` | a segunda linha do título da Home | `--home-flame-text` | em uso | |
+| texto | `#ffffff` | todo texto principal | `text-white`, `#fff` | em uso | Texto |
+| texto apagado | `rgba(255, 255, 255, 0.72)` · `0.64` | frases de apoio, contagens | `--home-muted`, `--home-soft` | em uso | |
+| cinza | `#a0a0a8` | ano, dica dentro do campo, opção não escolhida | `--phone-seg-text`, `--albums-text-2` | em uso | |
+| linha | `rgba(255, 255, 255, 0.12)` | bordas de painel e de campo | `--home-line`, `--line` (página de entrada) | em uso | |
+| laranja de texto | `#fb923c` | a fonte BestEverAlbums nas faixas; rótulos da página de entrada | `.tracks-tabs__ref--bea`, `--orange-text` | em uso — conflito C2 | |
+| âmbar | `#fbbf24` | a ponta clara do equalizador e o anel de foco da página de entrada | `--amber` (página de entrada) | pendente (P2) | |
+| verde | `#4ade80` | pronto, salvo | `.home-line.is-ok`, `.home-saved__ico` | em uso | |
+| rosa | `#fca5a5` | o motivo de uma linha que não entrou; tirar da série | `.home-line__tag`, `.home-rbtn__remove` | em uso | |
+| vermelho claro | `#f87171` | perigo em texto; a linha de erro | `.phone-menu__row--danger`, `--albums-danger` | em uso | |
+| claro | `#f4f4f5` | a faixa do «Undo» da Home | `.home-undo` | em uso — conflito C9 | |
+| Spotify | `#1db954` · `#1ed760` | só o que é do Spotify | `SpotifyExportModal.js`, `.tracks-tabs__ref--spotify` | em uso — conflito C8 | |
+
+### O fogo
+
+| Onde | Como | Estado |
 |---|---|---|
-| Fonte | Syne (400, 700, 800), sem serifa de reserva | `public/index.html`, `tailwind.config.js` |
-| Fundo | preto `#000000`; painel `#101014` (folhas do celular) | `body.bg-black`; `--phone-sheet-bg` |
-| Destaque | laranja `#f97316`; degradê «flame» `#f97316 → #dc2626` | `brand.orange`, `bg-flame-gradient` |
-| Perigo | vermelho `#dc2626` / `#f87171` em texto | `.btn-danger` |
-| Texto | branco; secundário branco a 60% ou mais | — |
+| logotipo | `public/assets/images/logo.png` (a chama sobre o vinil): barra do computador, rodapé, barra do topo do celular (28 px) | em uso |
+| nome do site | `public/assets/images/TheAlbumBlender.png` no app; `public/splash/wordmark.jpg` na página de entrada (dois arquivos para a mesma marca, C10) | em uso |
+| botão de fogo | o degradê fogo num botão por estado da tela; brilho `0 0 24px rgba(249, 115, 22, 0.3)` | em uso |
+| fogo vivo | só na página de entrada: brasas em canvas abaixo do texto (46 partículas no computador, 26 no celular), força 0,72 no pico e 0,28 no meio («fogo brando»), para 10 s depois da última rolagem, «Pause motion» | aprovado com o protótipo da F80 |
+| brilho do palco | `radial-gradient` laranja e vermelho atrás do título da Home | em uso |
+
+### O equalizador
+
+| Onde | Barras | Cores | Estados | Estado |
+|---|---|---|---|---|
+| Home, sob o campo | 48 (32 no celular), até 8 px, 4 px entre elas | `#dc2626` embaixo → `#f97316` em cima | parado (50 % de opacidade): pronto · em movimento (0,7 s): esperando · baixo (35 %, 10 % de altura): não respondeu · menos movimento: paradas na altura cheia | aprovado com o protótipo da F79 |
+| Home, «Saving your series…» | 5, em 30 x 14 px | as mesmas | só em movimento | aprovado com o protótipo da F79 |
+| Página de entrada, o fio | 5 por faixa (3 no celular), de 2 a 7 px | `#dc2626` → `#f97316` → `#fbbf24` nas faixas lidas; branco a 20 % nas outras | a faixa atual respira (0,55 a 1,35 s) enquanto há movimento | aprovado com o protótipo da F80 |
+| Página de entrada, dentro de «Open the app» | 4 pretas de 3 px | `#0b0b0b` | respiram enquanto há movimento | aprovado com o protótipo da F80 |
+
+## Tipografia
+
+Só a Syne é carregada (400, 700 e 800 no app; 700 e 800 na página de entrada). No computador o app é todo em Syne; no celular, títulos de uma linha em Syne e o resto na fonte de texto do sistema (SF Pro no iPhone) — regra da F76 (§ Celular). Os pesos 500 e 600, pedidos em muitos lugares (`font-medium`, `font-semibold`), não são carregados e caem para 400 ou 700 (C11).
+
+### Tipo
+
+| Papel | Família | Tamanho | Peso | Onde |
+|---|---|---|---|---|
+| Título da Home | Syne | 52/55 px | 800 | `.home-hero h1` (38 a 48 px na página de entrada) |
+| Título de seção | Syne | 32 px | 800 | `.home-artist h2` |
+| Nome da série | Syne | 20 px | 800 | `.home-name` |
+| Botão de fogo | Syne | 19 px | 800 | `.home-btn.is-flame` |
+| Título da barra e da folha (celular) | Syne | 17/22 px | 700 | `.phone-topbar__title`, `.sheet__title` |
+| Corpo | Syne no computador · texto do sistema no celular | 16/22 px | 400 | `.home-hero p`, `.sheet__body` |
+| Botão | Syne | 15 px | 700 | `.home-btn` |
+| Secundário | texto do sistema | 14/18 px | 400 | `.home-hint`, `.phone-action-bar__note` |
+| Rótulo pequeno | texto do sistema | 12/16 px | 700 | abas da barra de baixo (12/14), selos, anos: o piso |
+
+## Espaço, forma e sombra
+
+### Medidas
+
+| Medida | Valor | Onde |
+|---|---|---|
+| alvo de toque | 44 x 44 px | `--phone-target`; `.home-btn`, `.home-chip`, as linhas do painel |
+| botão principal | 48 px (56 px o grande) | `.home-btn`, `.home-btn.is-big`, `.phone-action-bar > .btn` |
+| margem lateral | 16 px (24 px na Home do computador) | `--phone-gutter`, `.home-page` |
+| entre peças | 8 px (o mais comum); 4 a 16 px | `gap-2`, `gap` das barras |
+| canto de capa e cartão | 10 px (6 px nas capas pequenas) | `.home-card__cover`, `.home-dcv` |
+| canto de botão e campo | 12 px | `.home-btn`, `rounded-xl`, `.phone-segmented` |
+| canto de folha e painel | 16 a 20 px | `.sheet--bottom` (16), `.home-panel` (18), `.home-dock` (20) |
+| ficha | redonda (999 px) | `.home-chip`, `.badge` |
+| sombra de capa | `0 8px 24px rgba(0, 0, 0, 0.6)` | `.home-card__cover` |
+| sombra da base | `0 -10px 40px rgba(0, 0, 0, 0.6)` | `.home-dock`, `.sheet--bottom` |
+| brilho do fogo | `0 0 24px rgba(249, 115, 22, 0.3)` | `.home-btn.is-flame` |
+| vidro | `blur(16px)` sobre `rgba(8, 8, 10, 0.78)` | `.phone-topbar`, `.phone-tabbar`, `.home-dock` |
+| barras do celular | topo 48 px · ação 64 px · abas 56 px, mais as áreas seguras | `--phone-topbar-h`, `--phone-action-bar-h`, `--phone-tabbar-h` |
+| movimento | 200 ms (folha), 0,7 s (equalizador); nada se mexe com menos movimento | `--phone-slide`, `.home-eq` |
+
+## Componentes
+
+Cada padrão que se repete, com o arquivo que o desenha. A página do design system mostra cada família viva, com o CSS do site, a 960 px e a 390 px.
+
+| Família | Peça | Como é | Classes | Arquivo | Estado |
+|---|---|---|---|---|---|
+| Botões | botão de fogo | degradê fogo, branco 19/800, 48 px (56 o grande), brilho laranja; um por estado da tela | `.home-btn.is-flame` | `public/css/views/home.css` | aprovado com o protótipo da F79 |
+| Botões | botão neutro | `#1c1c22`, borda branca a 14 %, Syne 700 15 px, 48 px | `.home-btn` | `public/css/views/home.css` | em uso |
+| Botões | botão sem fundo | transparente, 44 px | `.home-btn.is-ghost` | `public/css/views/home.css` | em uso |
+| Botões | botão principal do resto do app | degradê fogo, branco, cantos de 12 px, cresce ao passar o mouse | `.btn.btn-primary` | `public/css/tailwind.css` (e `modals.css`, C3) | em uso — conflito C3 |
+| Botões | secundário e perigo | branco a 5 % com borda; vermelho `#dc2626 → #ef4444` | `.btn-secondary`, `.btn-danger` | `public/css/tailwind.css` | em uso |
+| Botões | botão da página de entrada | degradê fogo, **texto preto** `#0b0b0b`, Syne 800 18 px, 48 px, equalizador dentro | `.btn-primary` | `public/splash.html` | aprovado com o protótipo da F80 — texto preto pendente (P1) |
+| Campos | campo único da Home | 64 px (56 no celular), cantos de 18 px, `rgba(16, 16, 20, 0.94)`, borda laranja e anel ao focar | `.home-field` | `public/css/views/home.css` | aprovado com o protótipo da F79 |
+| Campos | campo de formulário | branco a 5 %, cantos de 12 px, borda laranja ao focar; 16 px no celular | `.form-control` | `public/css/tailwind.css` (e `modals.css`, C3) | em uso |
+| Campos | controle segmentado | 44 px, trilho `#0a0a0c`, escolhido `#2a2a30` (nunca laranja) | `.phone-segmented` | `public/css/mobile.css` § 11 | em uso (só no celular) |
+| Fichas | ficha de tipo | 44 px, redonda, borda branca a 14 %; ligada = branca com texto preto | `.home-chip`, `.is-on` | `public/css/views/home.css` | aprovado com o protótipo da F79 |
+| Fichas | selo | redondo, 12 px em caixa alta, verde ou âmbar a 20 % | `.badge`, `.badge-success` | `public/css/tailwind.css` | em uso |
+| Cartões | capa da Home | quadrada, cantos de 10 px, sombra; escolhida = anel laranja de 3 px e o número no fogo | `.home-card`, `.is-in` | `public/css/views/home.css` | aprovado com o protótipo da F79 |
+| Cartões | álbum no celular | capa quadrada, título Syne 15/20 em duas linhas, artista 13/18 `#a0a0a8`, «⋯» de 44 px | `.album-tile` | `public/js/components/ui/AlbumPhoneCard.js`, `public/css/mobile/albums.css` | em uso |
+| Base da série | base do computador | presa embaixo, cantos de 20 px, vidro; até 7 capas numeradas, o nome, «Edit order» e «Create series»; borda laranja quando tem álbum | `.home-dock`, `.is-full`, `.is-done` | `public/js/components/home/HomeDock.js` | aprovado com o protótipo da F79 |
+| Base da série | base do celular | é a barra de ação, acima das abas: uma capa, a nota e um botão de 48 px | `.home-dock.phone-action-bar` | `public/css/mobile/home.css` | aprovado com o protótipo da F79 |
+| Barras do celular | barra do topo | 48 px, vidro, logotipo de 28 px, nome da tela 17/22, menu de 44 px | `.phone-topbar` | `public/css/mobile.css` § 4 | em uso |
+| Barras do celular | barra de abas | cinco destinos, ícone de 24 px e rótulo de 12 px; a atual em laranja com brilho | `.phone-tabbar` | `public/js/components/navigation/phoneTabs.js` | em uso |
+| Barras do celular | barra de ação e voltar ao topo | 64 px acima das abas, botões de 48 px; botão redondo de 44 px | `.phone-action-bar`, `.phone-to-top` | `public/css/mobile.css` § 6 | em uso |
+| Folhas | folha | `#101014`; de baixo com alça e cantos de 16 px, ou a tela inteira; fechar de 44 px | `.sheet--bottom`, `.sheet--full` | `public/js/components/ui/Sheet.js` | em uso (só no celular; no computador, janela) |
+| Avisos | aviso rápido | no alto à direita, cantos de 8 px; verde, vermelho, âmbar ou escuro | `#toast-container` | `public/js/components/Toast.js` | em uso — defeito D3 |
+| Avisos | faixa de desfazer | clara `#f4f4f5`, texto preto, «Undo» de 44 px sublinhado em vermelho, por 8 s | `.home-undo` | `public/js/components/home/HomeDock.js` | aprovado com o protótipo da F79 |
+| Fogo e equalizador | equalizador da Home | três estados: parado, em movimento, baixo | `.home-eq`, `.is-still`, `.is-live`, `.is-flat` | `public/js/components/home/HomeEqualizer.js` | aprovado com o protótipo da F79 |
+| Página de entrada | barra do topo, fio e primeira tela | o nome do site, «Sign in» e «Open the app»; o fio do equalizador com uma faixa por parte; o título e as chamadas | `header.top`, `.thread`, `.hero` | `public/splash.html` | aprovado com o protótipo da F80 |
+
+### Famílias
+
+| Família | Uma linha |
+|---|---|
+| Tipo | Syne nos títulos; no celular, o resto na fonte do sistema. |
+| Botões | Um botão de fogo por tela; o resto neutro. |
+| Campos | Campo grande na Home; segmentado para «um destes». |
+| Fichas | Ligada é branca, nunca laranja. |
+| Cartões | A capa manda; escolhida ganha anel e número. |
+| Base da série | A série sempre à vista, com a ação que conclui. |
+| Barras do celular | Topo, ação e abas, de vidro. |
+| Folhas | No celular toda janela é uma folha. |
+| Avisos | Avisos curtos; tirar se desfaz depois. |
+| Fogo e equalizador | Parado é pronto; mexendo é esperando; baixo é falha. |
+| Página de entrada | A mesma identidade, numa página para quem chega. |
+
+## Pendentes
+
+Padrões que o site já usa, decididos pelo agente, que pedem a palavra do MJRP. Ficam como estão até ele decidir.
+
+| # | Padrão | Pergunta | Mostra | Hoje no código |
+|---|---|---|---|---|
+| P1 | Texto sobre o fogo | No botão de fogo, o texto fica branco (como no app) ou preto (como na página de entrada)? | texto-no-fogo | Branco no app (`.btn-primary`, `.home-btn.is-flame`: 2,8:1 na ponta laranja, passa só como texto grande, 19 px peso 800); preto na página de entrada (`#0b0b0b`: 7,0:1 na ponta laranja e 4,1:1 na vermelha). Recomendação do agente: preto nos dois, porque passa em qualquer tamanho. |
+| P2 | Ponta amarela do fogo | O equalizador termina em amarelo (página de entrada) ou só laranja e vermelho (Home)? | ponta-amarela | Home: duas cores (`#dc2626 → #f97316`, a cor A, decidida pelo agente na F79). Página de entrada: três (`… → #fbbf24`). `#fdba74`, a ponta clara da prévia da F79, não está no código. Uma só para as duas telas. |
+| P3 | Fonte do texto corrido no computador | No computador, o texto corrido fica em Syne (app) ou na fonte do sistema (página de entrada e celular)? | fonte-do-corpo | App no computador: tudo em Syne. Página de entrada e celular: títulos em Syne, o resto na fonte do sistema. Recomendação do agente: a fonte do sistema, que a 14–16 px lê melhor. |
+
+## Conflitos no código
+
+O que o levantamento de 2026-11-21 achou com dois ou mais valores para a mesma coisa. A proposta é do agente; nada foi mudado (a F86 não mexe no código do site). Cada linha vira uma correção quando o MJRP priorizar.
+
+| # | O quê | Valores no código | Proposta |
+|---|---|---|---|
+| C1 | Laranja | `#f97316` (marca) e `#ff8800`, `#ff4d00`, `#ea580c` (`neon.css`, `tech-theme.css`, `animations.css`, `Icons.js`, `modals.css`) | um só: `#f97316`; o logotipo guarda as suas cores |
+| C2 | Laranja de texto | `#fb923c` reservado à fonte BestEverAlbums, mas usado como laranja comum (`text-orange-400`, 19 usos; `--orange-text` na página de entrada) | decidir se é o laranja de texto da casa ou só da fonte |
+| C3 | Botão principal e regras repetidas | `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-danger`, `.badge`, `.form-control` em `tailwind.css` e `modals.css`; `.glass-panel` em três arquivos; o primário tem quatro aparências | uma definição só, a do Tailwind |
+| C4 | Pretos e superfícies | uns 20 tons: `#101014`, `#121216`, `#0a0a0c`, `#0b0b0e`, `#0a0a0a`, `#17171a`, `#15151a`, `#1c1c22`, `#1f1f23`, `#1f1f24`, `rgba(26, 26, 46, 0.95)` nas janelas do computador | três degraus: preto, painel `#101014`, superfície `#1c1c22` |
+| C5 | Cinza e texto | `#a0a0a8`, `#a8a8b0`, `#a1a1aa`, `#9a9aa4`, `#b9b9c2`, `text-gray-400`; texto `#fff` e `#f2f2f4` | `#a0a0a8` e `#fff` |
+| C6 | Corte do celular | 767 px (CSS e `isPhone.js`), 899 px (página de entrada), 640 px (`modals.css`), `<= 768` (`UserRankModal.js`), 1024 px (menu do computador) | 767 px no app; os 899 px da página de entrada são dela (aprovado) |
+| C7 | Equalizador | Home: duas cores, até 8 px, 0,7 s; página de entrada: três cores, 2 a 7 px, 0,55 a 1,35 s | a cor decide-se em P2; a medida fica com cada tela |
+| C8 | Verdes | Spotify `#1db954` (38 usos) e `#1ed760`; pronto `#4ade80`; Tailwind `green-500`/`green-600` nos selos e avisos | Spotify só no que é do Spotify; pronto `#4ade80` |
+| C9 | Faixa de desfazer | Home `#f4f4f5` com sublinhado vermelho; Playlists `#f2f2f4` com botão `#b45309`; ranking `#26262c` escura | a da Home |
+| C10 | Nome do site | `TheAlbumBlender.png` (app) e `wordmark.jpg` (página de entrada); vários arquivos de logo sem uso | um arquivo |
+| C11 | Pesos da Syne | 500 e 600 pedidos (`font-medium` 41, `font-semibold` 17, 31 regras), não carregados | usar 400, 700 e 800 |
+| C12 | Escolhido | segmentado cinza; fichas brancas; filtro do Inventário laranja; aba atual laranja | laranja só na aba atual e na ação |
+| C13 | Anel de foco | branco 2 px (app); âmbar 3 px (página de entrada); laranja (`.form-control`) | branco 2 px no app |
+
+## Declarado e não usado
+
+| Declarado | No código |
+|---|---|
+| `.tap-44`, `.tap-44-box` («regra do kit», § Celular) | definidas em `mobile.css` § 3.3, nenhum uso |
+| `#fdba74` (a ponta clara da prévia da F79) | em nenhum lugar |
+| `brand.yellow`, `brand.red`, `flame-gradient-hover` (`tailwind.config.js`) | nenhum uso |
+| `hero_bg.svg` (o equalizador de fundo antigo) | nenhum uso |
+| «Secundário branco a 60 % ou mais» | no computador há `text-white/50`, `/40`, `/30` e `text-gray-500` |
+| `.phone-segmented` para toda escolha «um destes» | usada em 2 arquivos; o filtro de Albums e as abas da janela do álbum desenham o seu |
+
+## Defeitos do CSS
+
+Listados pela F86, não consertados (a feature não muda o código do site).
+
+| # | Onde | O quê |
+|---|---|---|
+| D1 | `public/css/modals.css:25` | `border: 1px rgba(…)` sem o estilo: a borda da janela não aparece |
+| D2 | `public/css/tech-theme.css:44` | `var(--tech-blue)` nunca definida |
+| D3 | `public/js/components/Toast.js:113` | o aviso «info» pede `bg-surface-dark/95`, que não existe: sem fundo no computador |
+| D4 | JavaScript | classes sem regra: `.btn-ghost` (11 usos), `.text-muted` (76), `.dark-glow`, `bg-surface-lighter`, `animate-fade-in-up`, `animate-progress-indeterminate`, `.fade-in` e outras |
+| D5 | `neon.css`, `tech-theme.css`, `animations.css` | regras sem uso (`.neon-*`, `.tech-panel`, `.badge-warning`, `.progress-bar`…); `.custom-scrollbar` e `@keyframes fadeIn` definidos duas vezes |
+| D6 | contraste | `text-white/30` (2,5:1), `text-white/40` (3,7:1), aviso âmbar com texto branco (3,0:1) |
+| D7 | `public/css/mobile/blend.css:242` | `var(--phone-accent, #ff8800)`: a reserva é o laranja antigo |
+
+## Voz e tom
+
+Os textos do site são em inglês, curtos, no imperativo nos botões («Create series», «Blend it now»); o que é dado de exemplo diz que é («Illustrative · fictional album»). A revisão dos textos e o português são da F81 (`design/copy/album-blender-copy.md`, a página de revisão de texto).
+
+## Temas
+
+Um tema só, escuro, sem seletor: o preto e as cores de § Cores. As cores de estado não vêm da marca. O contraste foi medido sobre o preto e o painel (§ Paleta).
+
+## Referência visual
+
+Os protótipos aprovados: a Home `design/inception/home-transformar-v2.html` (F79) e a página de entrada `design/inception/splash-crate-v2.html` no fogo brando (F80). A página do design system (§ topo) mostra cada peça viva.
 
 ## Celular
 
@@ -191,3 +389,19 @@ A construção (`public/css/views/home.css`, `public/css/mobile/home.css`, `publ
 | O fechar da folha da série | a Folha `full` do celular usa o botão de fechar dela (✕, com o nome «Done» para o leitor de tela) no lugar do «Done» em texto do protótipo | reusa a Folha (`components/ui/Sheet.js`) | a Folha `full` tem o fechar sempre à vista, de 44 px; dois fechar na mesma folha seriam dois rótulos para uma ação (IA-02) |
 | Os números na fonte de texto | o número da capa, da linha do painel, da base e dos passos na fonte de texto do sistema, também no computador | ajusta a regra de fonte do computador (só nos números) | o «1» da Syne se lê como «ı» justamente no número da ordem (achado 18 da crítica) |
 | Os tokens da Home | `--home-flame`, `--home-flame-text`, `--home-eq-grad`, `--home-panel`, `--home-muted`, `--home-soft`, `--home-line` em `:root` (`css/views/home.css`) | traduz o protótipo; as cores são as declaradas | uma fonte só para as cores da Home no computador, no celular e na folha |
+
+## Arquivo
+
+Texto substituído na F86 (2026-11-21), guardado palavra por palavra para as referências antigas (UAT, log). O que vale está nas seções acima.
+
+O que as telas compartilham: medidas, tipo, cores e componentes. Este documento nasceu com a F76 (achado 24 da crítica de UX de 2026-11-20: não havia escala declarada, e por isso 9, 10, 12, 14 e 16 px conviviam, e alvos de 24 a 48 px). Hoje ele declara o **celular**; o que é da tela de computador ainda vive só no código (`tailwind.config.js`, `public/css/tailwind.css`, `public/css/tech-theme.css`) e entra aqui quando for mexido.
+
+## Identidade (não muda no celular)
+
+| O quê | Valor | Onde está |
+|---|---|---|
+| Fonte | Syne (400, 700, 800), sem serifa de reserva | `public/index.html`, `tailwind.config.js` |
+| Fundo | preto `#000000`; painel `#101014` (folhas do celular) | `body.bg-black`; `--phone-sheet-bg` |
+| Destaque | laranja `#f97316`; degradê «flame» `#f97316 → #dc2626` | `brand.orange`, `bg-flame-gradient` |
+| Perigo | vermelho `#dc2626` / `#f87171` em texto | `.btn-danger` |
+| Texto | branco; secundário branco a 60% ou mais | — |
