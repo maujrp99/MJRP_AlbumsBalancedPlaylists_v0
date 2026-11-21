@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:16] review — F83 onda 2: a reconferência visual independente da tela das playlists em React (relatório do juiz, copiado sem mudança)
+**Branch:** claude/f83-wave-2-playlists-edit
+O juiz escreveu o relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-playlists-visual-parity-recheck.md` e as capturas em `reports/evidence/F83/wave-2/recheck/`; copiados aqui sem mudança. Veredito dele: não passa, 0 P0, 1 P1 (as migalhas perguntam duas vezes ao cancelar), 2 P2 (o foco depois de uma ação, no celular e no computador); o resto igual à antiga e o ruído de pixels se sustenta.
+
 ## [2026-11-21 16:42] step — F83 onda 2: o placar de pixels com os controles; o foco que ficava no X da faixa seguinte devolvido à página
 **Branch:** claude/f83-wave-2-playlists-edit
 Controles novos em `reports/evidence/F83/wave-2/pixel-noise-wave-2.md`: antiga contra antiga com transições desligadas (0 px nos dois tamanhos), nova contra antiga com o mouse fora da página (o mouse não é a causa). O controle achou uma diferença real: ao remover uma faixa, o botão X ficava com o foco na faixa seguinte (linhas por posição), e a tela antiga, que desenhava de novo, devolvia o foco à página (462 px com o mouse fora); `PlaylistCards.tsx` solta o foco antes de remover, com teste vermelho sem a correção. O resto (até 176 px depois de desfazer e refazer, 2 a 28 px com transições desligadas) é a rasterização do Chrome em nós mantidos: mesmo DOM, mesmos estilos e caixas, e 0 px depois de forçar um novo desenho de `#app`.
