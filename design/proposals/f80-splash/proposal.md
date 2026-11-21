@@ -9,7 +9,7 @@ Fiz três páginas de entrada que dizem a mesma coisa na mesma ordem e mudam num
 - Comparador (Artifact do Claude, privado): https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e (as três páginas vão como arquivos do próprio Artifact) — cópia local em `design/proposals/f80-splash/comparator.html`.
 - Protótipos: `design/inception/splash-ember-v1.html`, `splash-sides-v1.html`, `splash-crate-v1.html`.
 - Textos: `design/proposals/2026-11-20-splash-copy-proposal.md` (15 linhas, opções e recomendação em cada uma).
-- Pesquisa: `design/references/f80-splash/references.md`. Crítica de UX: `reports/audits/2026-11-20-f80-splash-round1-ux-audit.md`.
+- Pesquisa: `design/references/f80-splash/references.md`. Crítica de UX: `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round1-ux-audit.md`.
 
 ## O que você pediu, e o piso
 
@@ -98,7 +98,7 @@ Recomendo **a raiz, só para quem não entrou**, como um arquivo HTML estático 
 
 - Protótipo: `design/inception/splash-crate-v2.html` (a v1 fica intacta, para comparar).
 - Comparador, o mesmo link: https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e — abre em «Caixote · v2 (o fogo e o fio)», ao lado da prévia do fogo vivo e do «Caixote · v1»; Brasa e Lado A, lado B ficam dobradas em «As outras direções (rodada 1)». Cópia local: `design/proposals/f80-splash/comparator.html`.
-- Crítica separada: `reports/audits/2026-11-20-f80-splash-round2-ux-audit.md`.
+- Crítica separada: `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round2-ux-audit.md`.
 
 ## Como os três se harmonizam: um trabalho para cada um
 
@@ -206,7 +206,7 @@ A página diz o que o produto é na primeira frase depois do título. (Lido do H
 
 ## A crítica (agente separado)
 
-Passa, sem P0; 4 P1 e 12 P2 (`reports/audits/2026-11-20-f80-splash-round2-ux-audit.md`). **Corrigi nesta rodada:** o fio do celular deixou de ser uma fila de alvos pequenos (é progresso, sem toque); cada disco mostrado inteiro no celular tem crédito e link, e a frase do rodapé diz só o que a página faz; o `info-arch.md` descreve a v2; os padrões que divergem estão no `design-system.md` como pendentes; B1 voltou a ter título de seção; sem JavaScript o caixote mostra as capas do lado A. **Fica:** o contraste do texto preto no fim vermelho do degradê (4,1:1 a 18 px peso 800, que a crítica não conta como texto grande) — o botão de texto preto já é pergunta sua (7 da rodada 1); os outros P2 estão no relatório.
+Passa, sem P0; 4 P1 e 12 P2 (`reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round2-ux-audit.md`). **Corrigi nesta rodada:** o fio do celular deixou de ser uma fila de alvos pequenos (é progresso, sem toque); cada disco mostrado inteiro no celular tem crédito e link, e a frase do rodapé diz só o que a página faz; o `info-arch.md` descreve a v2; os padrões que divergem estão no `design-system.md` como pendentes; B1 voltou a ter título de seção; sem JavaScript o caixote mostra as capas do lado A. **Fica:** o contraste do texto preto no fim vermelho do degradê (4,1:1 a 18 px peso 800, que a crítica não conta como texto grande) — o botão de texto preto já é pergunta sua (7 da rodada 1); os outros P2 estão no relatório.
 
 ## O que ainda precisa de você
 
@@ -245,3 +245,84 @@ A primeira pintura e os quadros por segundo (acima); o 3D num iPhone ou num comp
 4. **As histórias que saem** («Why whole albums», «Ranking» como faixa própria) podem sair? Recomendo **sim**: a página fica com uma história por item do menu; o porquê dos álbuns inteiros cabe numa linha da abertura, se ele quiser.
 
 **O que não pude conferir:** um iPhone de verdade e o toque; o 3D num computador sem placa de vídeo; o leitor de tela (só a árvore de acessibilidade); a página publicada no Safari.
+
+## Rodada 3 · v2 — a home em português (2026-11-21, nota para o orquestrador)
+
+**Pedido** (as palavras dele, no log): «sugiro rever o prototipo já com texto tudo me portugues pls»; sobre o ranking, «o user nao deve rank every track, ele ranqueia o que ele quer, as vezes ele que colocar so uma track no topo… Rank your tracks...algo mais flexivel em termos de copy»; sobre o cartão, «isso aqui tb nao deve ser ilustrativo, vamos colocar dados rais de album pls»; sobre a tela da virada, «faz sentido isso aqui ?». A direção: a B, que ele chama **«A barra é o menu»** («a barra é o menu»; «mas pode falar pra ele fazer só para a opcao recomendada») — só ela foi refeita.
+
+**A versão:** `design/inception/splash-menu-bar-v2.html` (gerador `home-menu/build_v2.mjs`; a v1 e as prévias A e C ficam como ele viu). Custo de construir: o da B na rodada 3, mais o texto em dois idiomas (depende da F81, os idiomas do site) e a troca do cartão do ranking por um disco real (o mesmo componente).
+
+**Padrões que apliquei — decidido pelo agente — revisável:**
+1. Todo texto visível em português do Brasil, escrito como copy; rótulos do documento de copy (`design/copy/album-blender-copy.md`): Entrar, Abrir o app, Álbuns, Inventário; «Inicie» por decisão dele. Ficam em inglês: **The Album Blender** e «o Blender» (o nome), **Blend** (palavra do produto, D-01 do documento de copy), **Playlists** (a palavra que o ouvinte brasileiro usa), **Apple Music** e **Spotify** (marcas). Uma chave PT / EN no protótipo mostra a mesma página em inglês, revisada com as mesmas mudanças.
+2. O ranking é opcional e parcial: nada de «every track».
+3. O cartão do ranking usa **The Velvet Underground & Nico** (o disco da frente do caixote) com as faixas reais, lidas na busca pública do iTunes do álbum que já está em `covers.js` (disco 1, 11 faixas); a ordem é um exemplo do ranking da pessoa: «Venus In Furs» no topo, as outras como estavam. Sem notas do BestEverAlbums nem popularidade do Spotify. Nessa história o caixote puxa a própria banana.
+4. A virada é uma faixa curta: no computador o caixote ainda gira; uma linha diz o que o lado B guarda; no celular, um filete.
+5. Fica o que ele já decidiu: a banana na frente e o King Crimson em segundo, o caixote em diagonal no palco largo, o ícone de pausa, e a home com conta com só o «Inicie» com o fogo, para todos no endereço principal.
+
+**O texto — proposta do agente, a revisar** (nada aqui é final; o final é dele, na página de revisão de copy):
+
+| Onde | Português | English |
+|---|---|---|
+| Sobretítulo | The Album Blender · um app web para quem ouve álbuns inteiros | The Album Blender · a web app for whole-album listeners |
+| Título | Mergulhe nos álbuns que você ama. Cada faixa conta. | Dig through the albums you love. Every track counts. |
+| Frase | Reúna álbuns em séries, ponha as faixas na ordem que quiser e misture playlists em que nenhum disco fica de fora. | Gather albums into series, put the tracks in the order you want, and blend playlists where no record is left out. |
+| Chamadas | Abrir o app · Entrar | Open the app · Sign in |
+| Com conta: sobretítulo, título | De volta ao caixote · Sua próxima série começa aqui. | Back to the crate · Your next series starts here. |
+| Com conta: frase, chamadas | Comece por um artista ou por uma lista de álbuns, ou retome o que você guardou: suas playlists e seu inventário. · Inicie · Suas playlists | Start from an artist or a list of albums, or pick up what you kept: your playlists and your inventory. · Start · Your playlists |
+| Menu | Inicie · Álbuns · Blend · Playlists · Inventário | Start · Albums · Blend · Playlists · Inventory |
+| Inicie | Comece por um artista ou por uma lista. — Digite um artista ou cole os álbuns que você tem em mente. O Blender junta tudo numa série. | Begin with one artist, or a list. — Type an artist, or paste the albums you have in mind. The Blender gathers them into a series. |
+| Álbuns (o ranking) | Ponha no topo as faixas que você quiser. — Uma só ou várias. As outras ficam como estão, e o Blend pode seguir a sua ordem. | Rank your tracks, your way. — Just one, or a few. The rest stay as they are, and the Blend can follow your order. |
+| O cartão | Seu ranking · exemplo · «você subiu» · + 7 faixas · Exemplo: uma faixa subiu para o topo. | Your ranking · example · «you moved it up» · + 7 tracks · Example: one track moved to the top. |
+| Blend | Misture a série numa playlist só. — Escolha uma receita. O Blender tira faixas de cada álbum, e nenhum disco abafa os outros. | Blend the series into one playlist. — Pick a recipe. The Blender draws from every album, so no record drowns out the rest. |
+| A virada | Vire o disco — No lado B fica o que você guarda: suas playlists e seu inventário. | Flip the record — Side B holds what you keep: your playlists and your inventory. |
+| Playlists | Guarde os Blends que você curtiu. — Toda playlist salva fica aqui, para ouvir de novo, refazer ou exportar para o Spotify. | Keep the blends you love. — Every playlist you save waits here, to play again, regenerate or export to Spotify. |
+| Inventário | Conte os discos da sua estante. — Marque os álbuns da sua estante e veja uma estimativa de quanto vale a coleção. | Keep count of the records you own. — Mark the albums on your shelf and see an estimate of what the collection is worth. |
+| Portas (com conta) | Começar uma série → · Ver seus álbuns → · Fazer um Blend → · Ver suas playlists → · Abrir o inventário → | Start a series → · See your albums → · Make a blend → · See your playlists → · Open your inventory → |
+| Convite | Ponha a agulha na sua primeira série. — Abra o app e comece uma série com um álbum que você ama. Entre para guardá-la. · com conta: Ponha a agulha numa série nova. | Drop the needle on your first series. — Open the app and start a series with one album you love. Sign in to keep it. · signed in: Drop the needle on a new series. |
+| Capas | Capa do Apple Music · Ouça no Apple Music | Artwork from Apple Music · Listen on Apple Music |
+
+**O que conferi:** 1280 × 800 e 393 × 852, sem conta e com conta, PT e EN: nenhum erro, nenhuma rolagem lateral, nenhum rótulo do menu cortado ou quebrado nos dois idiomas (a 393, «Inventário» cabe a 12 px numa parada de 72 px); com movimento reduzido o ícone some e nada se move; sem WebGL, o caixote em CSS; contraste do item atual e do «você subiu» 8,7:1. Palavras na primeira tela, sem conta: 60 a 1280 e 51 a 393 (teto 100 e 70); com conta: 40 e 34.
+
+**A crítica** (agente separado, `reports/audits/2026-11-21-f80-home-pt-v2-ux-audit.md`): passa, sem P0; 5 P1 e 8 P2. **Corrigi antes de publicar:** a capa errada na história de Álbuns no celular (agora a banana); os rótulos a 11 px abaixo de 380 px (ficam 12); o sobretítulo que repetia a frase (título e frase mais curtos); o título do ranking sem «Ranqueie» (o app diz «Classificar»; D-09 segue aberto); as portas com verbo; o título do Inventário; a chave de idioma que marcava PT e EN juntos; o rodapé em inglês para o leitor de tela; a virada no celular como filete; a v2 no `info-arch.md` e os padrões novos no `design-system.md`. **Fica:** com conta, o mesmo rótulo leva a dois lugares (pergunta 2 da rodada 3, ainda sem resposta); o verbo do ranking no app (D-09); o pausar tarde no Tab.
+
+**Perguntas que seguem para ele** (uma por vez):
+1. Com conta, clicar num item do menu leva à história ou à tela do app? Recomendo a tela do app.
+2. Sem conta, o botão principal fica «Abrir o app» ou vira «Inicie»? Recomendo «Inicie».
+3. O verbo do ranking no site e no app: «ranquear» ou «classificar»? Recomendo «ranquear», que ele mesmo usa.
+4. O texto em português e em inglês da tabela acima: serve como base, ou quer outra voz?
+
+## Rodada 3 · v3 — o texto em português revisado (2026-11-21, nota para o orquestrador)
+
+**Pedido** (as palavras dele, no log): «Cada faixa Conta em pt está estranho»; «ponha é feio, melhor coloque»; «eu revisaria todo esse copy»; sobre o ranking, «tem que ser Ranqueie/ordene e o uso do blend aqui nao é adequado, pode ser "junte" ou agrupe»; sobre as Playlists, «exporta só para o spotify?»; sobre o Inventário, «Conte as midias fisicas da sua estante». A abertura, escrita por ele: «Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada»; «Embaixo: Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas…» (cada palavra onde ele a pôs: «balanceada» na linha, «equilibradas» na frase). Ela substitui as três opções de título.
+
+**A versão:** `design/inception/splash-menu-bar-v3.html` (gerador `home-menu/build_v3.mjs`, que lê a v2 e troca só o texto; a v2 fica intacta). Tudo o que é visual é o da v2. A abertura é a dele (abaixo).
+
+**Conferido no código do app** (`public/js`): o ranking da pessoa ordena as faixas que ela ranqueou e deixa as outras na ordem em que estavam; a receita «Top Tracks by My Own Ranking» usa essa ordem (`ranking/UserRankingStrategy.js`, `algorithms/TopNUserAlgorithm.js`), daí «a playlist **pode** seguir a sua ordem». A exportação vai para o Spotify, para a Apple Music e para um arquivo JSON (`views/playlists/PlaylistsExport.js`, `components/SpotifyExportModal.js`). O inventário tem CD, vinil e fita cassete ao adicionar, e também DVD, Blu-ray e digital ao editar (`components/InventoryAddModal.js`, `components/InventoryEditModal.js`).
+
+**O texto — proposta do agente, a revisar** (só as linhas que mudaram; as outras seguem a tabela da v2). A abertura em português é final, dele; o inglês dela é proposta.
+
+| Onde | Português: antes → depois | English: antes → depois |
+|---|---|---|
+| Sobretítulo | um app web para quem ouve álbuns inteiros → um app web para quem ama discos | a web app for whole-album listeners → a web app for record lovers |
+| Título (dele) | Mergulhe nos álbuns que você ama. Cada faixa conta. → Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada. | Dig through the albums you love. Every track counts. → Dig through the albums you love. Your albums of the moment, in one balanced playlist. |
+| Frase (dele) | Reúna álbuns em séries, ponha as faixas na ordem que quiser e misture playlists em que nenhum disco fica de fora. → Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas. | Gather albums into series, put the tracks in the order you want, and blend playlists where no record is left out. → Build series from your albums of the moment, rank your tracks and make balanced playlists. |
+| Com conta: sobretítulo | De volta ao caixote → De volta aos discos | Back to the crate → Back to the records |
+| Inicie: frase | Digite um artista ou cole os álbuns que você tem em mente. O Blender junta tudo numa série. → Digite um artista ou cole os álbuns que você quer ouvir. O Blender monta a série. | … the albums you have in mind. The Blender gathers them into a series. → … the albums you want to hear. The Blender builds the series. |
+| Álbuns: título | Ponha no topo as faixas que você quiser. → Ranqueie as faixas do seu jeito. | Rank your tracks, your way. (igual) |
+| Álbuns: frase | Uma só ou várias. As outras ficam como estão, e o Blend pode seguir a sua ordem. → Uma só ou várias, para cima ou para baixo. As outras ficam como estão e, ao juntar os álbuns, a playlist pode seguir a sua ordem. | Just one, or a few. The rest stay as they are, and the Blend can follow your order. → Just one or a few, up or down. The rest stay as they are, and when you bring the albums together, the playlist can follow your order. |
+| Blend: título | Misture a série numa playlist só. → Junte a série numa playlist só. | Blend the series into one playlist. → Bring the series together in one playlist. |
+| Blend: frase | O Blender tira faixas de cada álbum, e nenhum disco abafa os outros. → O Blender pega faixas de cada álbum, sem deixar um disco dominar os outros. | … so no record drowns out the rest. → … so no record takes over the rest. |
+| Playlists: título | Guarde os Blends que você curtiu. → Guarde as playlists que você curtiu. | Keep the blends you love. → Keep the playlists you love. |
+| Playlists: frase | … refazer ou exportar para o Spotify. → … refazer ou exportar para o Spotify ou a Apple Music. | … export to Spotify. → … export to Spotify or Apple Music. |
+| Inventário: título | Conte os discos da sua estante. → Conte as mídias físicas da sua estante. (as palavras dele) | Keep count of the records you own. → Count the physical media on your shelf. |
+| Inventário: frase | Marque os álbuns da sua estante e veja uma estimativa de quanto vale a coleção. → Marque o que você tem em vinil, CD, fita cassete ou outro formato e veja uma estimativa de quanto vale a coleção. | Mark the albums on your shelf … → Mark what you own on vinyl, CD, cassette or another format, and see an estimate of what the collection is worth. |
+| Porta do Blend (com conta) | Fazer um Blend → Gerar uma playlist | Make a blend → Make a playlist |
+| Convite: título | Ponha a agulha na sua primeira série. → Coloque sua primeira série para tocar. | (igual) |
+| Convite: frase | … Entre para guardá-la. → … Entre na sua conta para salvá-la. | (igual) |
+| Convite com conta | Ponha a agulha numa série nova. → Coloque uma série nova para tocar. | (igual) |
+
+«Blend» fica só como nome do item do menu e da história (Lado A · 3 — Blend); «o Blender» segue como o nome do produto.
+
+**O comparador:** abre em «O texto em português ficou natural?», uma linha e dois cartões: a v3 (Nova, a página viva) e a v2 (a que você viu). A pergunta da v2 foi para `home-pt-v2.html`, atrás de «Rodadas anteriores».
+
+**O que conferi:** a v3 a 1280 × 800 e 393 × 852, sem e com conta, PT e EN: nenhuma rolagem lateral (no topo e na história de Álbuns), nenhum título, botão ou rótulo do menu cortado, nenhum erro no console. O comparador a 1280 e 393: sem rolagem lateral, sem erro; a v3 viva troca de idioma com a chave. **Fica:** a abertura dele ocupa o título com a segunda frase em laranja, como na v2 (14 palavras no título, acima da régua de 8 a 12); a 393 o caixote desce para baixo da dobra. Separar a segunda frase num subtítulo menor é uma mudança visual que não fiz.

@@ -1,0 +1,1166 @@
+{
+ "grid-all-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9723,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 411,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 67,
+   "samples": [
+    "span.text-[10px].text-gray-500 «1966» 10px",
+    "span.text-[10px].text-gray-500 «1967» 10px",
+    "span.text-[10px].text-gray-500 «1968» 10px",
+    "span.text-[10px].text-gray-500 «1969» 10px",
+    "span.text-[10px].text-gray-500 «1970» 10px",
+    "span.text-[10px].text-gray-500 «1971» 10px",
+    "span.text-[10px].text-gray-500 «1972» 10px",
+    "span.text-[10px].text-gray-500 «1973» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "list-all-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 21734,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 429,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "loading-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 4628,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 35,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "_extra": {
+  "series-states-1280": {
+   "states": {
+    "s1": "loading found=0 failed=0 inFlight=3",
+    "s4": "empty found=0 failed=0 inFlight=0",
+    "s5": "failed found=7 failed=1 inFlight=0",
+    "s6": "failed found=0 failed=5 inFlight=0",
+    "s8": "loading found=3 failed=0 inFlight=1"
+   },
+   "drawnGroups": [
+    "s1 (skeleton)",
+    "s2",
+    "s3",
+    "s5",
+    "s6",
+    "s7",
+    "s8",
+    "s9",
+    "s10"
+   ],
+   "failureNotices": [
+    "1 album did not load. Try again",
+    "5 albums did not load. Try again"
+   ],
+   "emptySeriesS4InDom": false
+  },
+  "single-1280": {
+   "pagerTopText": "",
+   "pagerBottomText": "",
+   "h1": "Pink Floyd"
+  },
+  "typing-discipline-1280": {
+   "afterEachKey": [
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "d"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "di"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "dis"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "disc"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "disci"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "discip"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "discipl"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "discipli"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "disciplin"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "discipline"
+    }
+   ],
+   "finalActiveElementIsSearchInput": true,
+   "finalInputValue": "discipline",
+   "everyKeyKeptFocus": true,
+   "everyKeyKeptTypedText": true,
+   "clickedOnlyOnce": "the field was clicked once before the first key; no click between keys",
+   "standInRedraws": "the stand-in redraws once per tick (microtask), like SeriesController.renderFromStore; the real controller was not run and has no timer-based debounce in handleSearch (read, not executed)",
+   "pagerCountText": "Showing 1–10 of 12 series (of 50 in all) · 10 albums"
+  },
+  "load-more-1280": {
+   "before": {
+    "shown": 72,
+    "button": "Load 3 more albums"
+   },
+   "after": {
+    "shown": 90,
+    "buttonStillThere": false,
+    "headerCount": "15 albums"
+   }
+  },
+  "album-notices-1280": {
+   "identityNotes": [
+    "Asked for by its short title: the catalog only has this one, with a subtitle.",
+    "Asked for by its short title: the catalog only has this one, with more in parentheses.",
+    "Asked for in another spelling: the catalog writes the title this way."
+   ],
+   "failureNotices": [
+    "1 album did not load. Try again"
+   ]
+  },
+  "album-window-1280": {
+   "closeButtons": [
+    {
+     "label": "text: Close",
+     "visible": true,
+     "size": "85x43"
+    }
+   ],
+   "times": [
+    "7:22",
+    "7:22",
+    "6:05",
+    "6:05",
+    "8:56",
+    "8:56",
+    "12:05",
+    "12:05",
+    "9:21",
+    "9:21",
+    "4:40",
+    "4:40",
+    "8:17",
+    "8:17",
+    "6:52",
+    "6:52"
+   ],
+   "rowsText": [
+    "In the Court of the Crimson King (Expanded Edition)",
+    "21st Century Schizoid Man (including Mirrors)",
+    "I Talk to the Wind",
+    "Epitaph (including March for No Reason and Tomorrow and Tomorrow)",
+    "Moonchild (including The Dream and The Illusion)",
+    "The Court of the Crimson King (including The Return of the Fire Witch and The Dance of the Puppets)",
+    "I Talk to the Wind (Duo Version)",
+    "Epitaph (Backing Track)",
+    "21st Century Schizoid Man (Alternate Mix)"
+   ]
+  },
+  "footer-1280": {
+   "clearCacheButton": "Clear Cache",
+   "visible": true
+  },
+  "series-states-393": {
+   "states": {
+    "s1": "loading found=0 failed=0 inFlight=3",
+    "s4": "empty found=0 failed=0 inFlight=0",
+    "s5": "failed found=7 failed=1 inFlight=0",
+    "s6": "failed found=0 failed=5 inFlight=0",
+    "s8": "loading found=3 failed=0 inFlight=1"
+   },
+   "drawnGroups": [
+    "s1 (skeleton)",
+    "s2",
+    "s3",
+    "s5",
+    "s6",
+    "s7",
+    "s8",
+    "s9",
+    "s10"
+   ],
+   "failureNotices": [
+    "1 album did not load. Try again",
+    "5 albums did not load. Try again"
+   ],
+   "emptySeriesS4InDom": false
+  },
+  "single-393": {
+   "pagerTopText": "",
+   "pagerBottomText": "",
+   "h1": "Pink Floyd"
+  },
+  "typing-discipline-393": {
+   "afterEachKey": [
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "d"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "di"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "dis"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "disc"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "disci"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "discip"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "discipl"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "discipli"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "disciplin"
+    },
+    {
+     "activeIsSearch": true,
+     "active": "INPUT#genericSearch",
+     "value": "discipline"
+    }
+   ],
+   "finalActiveElementIsSearchInput": true,
+   "finalInputValue": "discipline",
+   "everyKeyKeptFocus": true,
+   "everyKeyKeptTypedText": true,
+   "clickedOnlyOnce": "the field was clicked once before the first key; no click between keys",
+   "standInRedraws": "the stand-in redraws once per tick (microtask), like SeriesController.renderFromStore; the real controller was not run and has no timer-based debounce in handleSearch (read, not executed)",
+   "pagerCountText": "1–10 of 12 series (of 50 in all) · 10 albums"
+  },
+  "load-more-393": {
+   "before": {
+    "shown": 48,
+    "button": "Load 3 more albums"
+   },
+   "after": {
+    "shown": 60,
+    "buttonStillThere": false,
+    "headerCount": "15 albums"
+   }
+  },
+  "album-notices-393": {
+   "identityNotes": [
+    "Asked for by its short title: the catalog only has this one, with a subtitle.",
+    "Asked for by its short title: the catalog only has this one, with more in parentheses.",
+    "Asked for in another spelling: the catalog writes the title this way."
+   ],
+   "failureNotices": [
+    "1 album did not load. Try again"
+   ]
+  },
+  "album-window-393": {
+   "closeButtons": [
+    {
+     "label": "Close",
+     "visible": true,
+     "size": "44x44"
+    },
+    {
+     "label": "text: Close",
+     "visible": false,
+     "size": "0x0"
+    }
+   ],
+   "times": [
+    "7:22",
+    "7:22",
+    "6:05",
+    "6:05",
+    "8:56",
+    "8:56",
+    "12:05",
+    "12:05",
+    "9:21",
+    "9:21",
+    "4:40",
+    "4:40",
+    "8:17",
+    "8:17",
+    "6:52",
+    "6:52"
+   ],
+   "rowsText": [
+    "In the Court of the Crimson King (Expanded Edition)",
+    "In the Court of the Crimson King (Expanded Edition)",
+    "21st Century Schizoid Man (including Mirrors)",
+    "I Talk to the Wind",
+    "Epitaph (including March for No Reason and Tomorrow and Tomorrow)",
+    "Moonchild (including The Dream and The Illusion)",
+    "The Court of the Crimson King (including The Return of the Fire Witch and The Dance of the Puppets)",
+    "I Talk to the Wind (Duo Version)",
+    "Epitaph (Backing Track)",
+    "21st Century Schizoid Man (Alternate Mix)"
+   ]
+  },
+  "footer-393-inline": {
+   "footerClearCacheButtonInDom": true,
+   "visible": false,
+   "siteFooterDisplay": "block"
+  },
+  "footer-393-menu": {
+   "menuTexts": [
+    "Sign In",
+    "Connect",
+    "Clear album cache"
+   ]
+  }
+ },
+ "series-states-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 8755,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 334,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 53,
+   "samples": [
+    "span.text-[10px].text-gray-500 «1969» 10px",
+    "span.text-[10px].text-gray-500 «1970» 10px",
+    "span.text-[10px].text-gray-500 «1971» 10px",
+    "span.text-[10px].text-gray-500 «1972» 10px",
+    "span.text-[10px].text-gray-500 «1973» 10px",
+    "span.text-[10px].text-gray-500 «1974» 10px",
+    "span.text-[10px].text-gray-500 «1975» 10px",
+    "span.text-[10px].text-gray-500 «1976» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "single-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 1365,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 57,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 8,
+   "samples": [
+    "span.text-[10px].text-gray-500 «1994» 10px",
+    "span.text-[10px].text-gray-500 «1995» 10px",
+    "span.text-[10px].text-gray-500 «1996» 10px",
+    "span.text-[10px].text-gray-500 «1997» 10px",
+    "span.text-[10px].text-gray-500 «1998» 10px",
+    "span.text-[10px].text-gray-500 «1999» 10px",
+    "span.text-[10px].text-gray-500 «2000» 10px",
+    "span.text-[10px].text-gray-500 «2001» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "filtered-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 6385,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 109,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 10,
+   "samples": [
+    "span.text-[10px].text-gray-500 «1968» 10px",
+    "span.text-[10px].text-gray-500 «1998» 10px",
+    "span.text-[10px].text-gray-500 «1988» 10px",
+    "span.text-[10px].text-gray-500 «1978» 10px",
+    "span.text-[10px].text-gray-500 «1968» 10px",
+    "span.text-[10px].text-gray-500 «1998» 10px",
+    "span.text-[10px].text-gray-500 «1988» 10px",
+    "span.text-[10px].text-gray-500 «1978» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "load-more-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9723,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 411,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 67,
+   "samples": [
+    "span.text-[10px].text-gray-500 «1966» 10px",
+    "span.text-[10px].text-gray-500 «1967» 10px",
+    "span.text-[10px].text-gray-500 «1968» 10px",
+    "span.text-[10px].text-gray-500 «1969» 10px",
+    "span.text-[10px].text-gray-500 «1970» 10px",
+    "span.text-[10px].text-gray-500 «1971» 10px",
+    "span.text-[10px].text-gray-500 «1972» 10px",
+    "span.text-[10px].text-gray-500 «1973» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "load-more-open-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9665,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 425,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 70,
+   "samples": [
+    "span.text-[10px].text-gray-500 «1966» 10px",
+    "span.text-[10px].text-gray-500 «1967» 10px",
+    "span.text-[10px].text-gray-500 «1968» 10px",
+    "span.text-[10px].text-gray-500 «1969» 10px",
+    "span.text-[10px].text-gray-500 «1970» 10px",
+    "span.text-[10px].text-gray-500 «1971» 10px",
+    "span.text-[10px].text-gray-500 «1972» 10px",
+    "span.text-[10px].text-gray-500 «1973» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "album-notices-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9429,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 406,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 69,
+   "samples": [
+    "span.text-[10px].text-gray-500 «1966» 10px",
+    "span.basis-full.text-[10px] «Asked for by its short t» 10px",
+    "span.text-[10px].text-gray-500 «1967» 10px",
+    "span.basis-full.text-[10px] «Asked for by its short t» 10px",
+    "span.text-[10px].text-gray-500 «1968» 10px",
+    "span.basis-full.text-[10px] «Asked for in another spe» 10px",
+    "span.text-[10px].text-gray-500 «1969» 10px",
+    "span.text-[10px].text-gray-500 «1970» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "album-notices-list-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 21463,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 423,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 3,
+   "samples": [
+    "span.basis-full.text-[10px] «Asked for by its short t» 10px",
+    "span.basis-full.text-[10px] «Asked for by its short t» 10px",
+    "span.basis-full.text-[10px] «Asked for in another spe» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "ranking-window-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 800,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 2,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 10,
+   "samples": [
+    "span. «Score» 10px",
+    "span.text-white/60 «61%» 10px",
+    "span. «Score» 10px",
+    "span.text-white/60 «55%» 10px",
+    "span. «Score» 10px",
+    "span.text-white/60 «58%» 10px",
+    "span. «Score» 10px",
+    "span.text-white/60 «40%» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "album-close-button-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 800,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 2,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 10,
+   "samples": [
+    "span. «Score» 10px",
+    "span.text-white/60 «61%» 10px",
+    "span. «Score» 10px",
+    "span.text-white/60 «55%» 10px",
+    "span. «Score» 10px",
+    "span.text-white/60 «58%» 10px",
+    "span. «Score» 10px",
+    "span.text-white/60 «40%» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "ranking-window-rank-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 800,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 3,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": null,
+   "h2": null,
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "footer-1280": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "scrollHeight": 9723,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 411,
+  "smallTargets44": "n/a (desktop)",
+  "textUnder12px": {
+   "count": 67,
+   "samples": [
+    "span.text-[10px].text-gray-500 «1966» 10px",
+    "span.text-[10px].text-gray-500 «1967» 10px",
+    "span.text-[10px].text-gray-500 «1968» 10px",
+    "span.text-[10px].text-gray-500 «1969» 10px",
+    "span.text-[10px].text-gray-500 «1970» 10px",
+    "span.text-[10px].text-gray-500 «1971» 10px",
+    "span.text-[10px].text-gray-500 «1972» 10px",
+    "span.text-[10px].text-gray-500 «1973» 10px"
+   ]
+  },
+  "inputsUnder16px": "n/a (desktop)",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "grid-all-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 11149,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 230,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "list-all-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 7431,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 169,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "loading-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 6629,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 17,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": null,
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "series-states-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 9804,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 188,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "single-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 1570,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 36,
+  "smallTargets44": {
+   "count": 2,
+   "samples": [
+    "button.filters-chip «Remove the filter Series» 158x36",
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "filtered-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 3934,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 57,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "load-more-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 11149,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 230,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "load-more-open-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 11628,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 239,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "album-notices-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 11375,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 228,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "album-notices-list-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 7494,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 167,
+  "smallTargets44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "ranking-window-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 4,
+  "smallTargets44": {
+   "count": 0,
+   "samples": []
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "album-close-button-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 4,
+  "smallTargets44": {
+   "count": 0,
+   "samples": []
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "ranking-window-rank-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 8,
+  "smallTargets44": {
+   "count": 0,
+   "samples": []
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "footer-393": {
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveTotal": 238,
+  "smallTargets44": {
+   "count": 2,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28",
+    "#spotifyLoginBtn «Connect» 109x30"
+   ]
+  },
+  "textUnder12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsUnder16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": null,
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif"
+  },
+  "bodyBackground": "rgb(0, 0, 0)"
+ },
+ "_console": [
+  "--- grid-all 1280",
+  "--- list-all 1280",
+  "--- loading 1280",
+  "--- series-states 1280",
+  "--- single 1280",
+  "--- filtered 1280",
+  "--- load-more 1280",
+  "--- album-notices 1280",
+  "--- ranking-window 1280",
+  "--- footer 1280",
+  "--- grid-all 393",
+  "--- list-all 393",
+  "--- loading 393",
+  "--- series-states 393",
+  "--- single 393",
+  "--- filtered 393",
+  "--- load-more 393",
+  "--- album-notices 393",
+  "--- ranking-window 393",
+  "--- footer 393"
+ ]
+}

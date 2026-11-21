@@ -11,9 +11,25 @@
 **Branch:** claude/f83-wave-0-base
 `scripts/migration-status.mjs` (`--json`, `--root`): os arquivos feitos à mão e as linhas (contra a lista do dia em que a migração começou), os arquivos em React por pasta, as pontes para pedaços antigos (arquivos em `react-bridge/legacy/` e quem os usa) e os textos escritos fora do dicionário (o contador da medição, portado para `scripts/lib/stringSites.mjs`, que também lê TSX: texto solto entre tags e `aria-label`/`title`/`placeholder`/`alt` literais; uma contagem boa a uns 10%). Não grava nada. A saída de hoje, antes do canário, em `reports/evidence/F83/wave-0/migration-status-start-of-wave-0.txt`: 103 arquivos feitos à mão (17.624 linhas; 17.779 no dia que a migração começou, a diferença é o `Icons.js`, que passou a ler os dados), 7 arquivos em React (a ponte e o ícone), 0 pontes, 987 textos fora do dicionário. 5 testes; `test/architecture` e `test/scripts` 319 verdes; lint sem erro.
 
+## [2026-11-21 13:59] session — segundo relatório do juiz (passa) guardado como veio; 2 P2 viram UAT-256 e UAT-257
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-failed-sources-visual-parity-recheck-2.md` e capturas `reports/evidence/F52/recheck-2/` escritos pelo juiz (F52, F69), copiados sem edição. Os dois P2 restantes (a lista que se mexe no «Try again»; o azul fora da paleta) entram em `uat.md` como UAT-256 e UAT-257, ids reservados por `merge_train.py next-uat-id --reserve`.
+
 ## [2026-11-21 13:58] step — F83 TASK-08: o teto de peso, medido no build publicável
 **Branch:** claude/f83-wave-0-base
 Medido o build publicável de hoje (`main@3356113`, com as chaves do `.env`; a saída bruta em `reports/evidence/F83/wave-0/raw/`): script principal 301.437 B gzip (`main-Cp3Nsp6i.js`, o mesmo de produção; os 301.051 B da medição eram sem as chaves), folha de estilos 28.974 B, adaptador da medição 129.204 B, a maior tela sob demanda 10.257 B; tempo até a primeira tela em `/start` 1.742 ms (mediana de 5, sem limitação) e 3.701 ms com Slow 4G; `/artists` 1.765 ms. A tabela da proposta § 11 foi acertada com esses números. `scripts/bundle-budget.mjs` lê `dist/` e `scripts/bundle-budget.json`: o script principal sob o teto; React em exatamente um arquivo `react-vendor-*.js` sob o teto e sem ser carregado na abertura (nem import estático do script principal, nem tag nas páginas) enquanto a moldura for à mão; cada arquivo sob o alarme de uma tela, salvo a lista `allowed` com o motivo (só o adaptador da medição, F77); o que desce depois da primeira tela dentro da folga. `vite.config.js`: `manualChunks` põe react, react-dom e scheduler em `react-vendor`. `scripts/deploy-site.sh` recusa publicar um build acima do teto (os tipos já entram em `run_lint`, TASK-01). 14 testes do script e do config; `test/architecture` e `test/scripts` 314 verdes; lint sem erro. O teto de peso da onda 0 fecha depois do canário (TASK-10), com a medição do build com a tela em React.
+
+## [2026-11-21 13:55] session — achados do juiz tratados: «Try again» de 44 px no celular, BestEverAlbums nomeada, linha «Asking»
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+P1-1: botão com min-h 44 px até o breakpoint md (computador segue 72x24; celular medido 76x44 a 393). P2-1: «BestEverAlbums did not answer.». P2-3: a nota mostra «Asking BestEverAlbums for ratings…» enquanto pergunta, como a popularidade. Azul mantido (P2-2, issue à parte). Novas capturas em F52/ e F69/.
+
+## [2026-11-21 13:54] session — teste vermelho dos achados do juiz: alvo de 44 px, nome da fonte, linha «Asking»
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Quatro testes falham (F52/F69, UAT-244/245), cobrindo P1-1, P2-1 e P2-3 do relatório do juiz.
+
+## [2026-11-21 13:53] session — relatório e capturas do juiz sobre a prova de F52 e F69, guardados como vieram
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+O juiz independente escreveu o relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-failed-sources-visual-parity-recheck.md` e as capturas `reports/evidence/F52/recheck/`; o agente só os copiou, sem editar o veredito nem os achados.
 
 ## [2026-11-21 13:52] step — F83 TASK-07: o andaime de teste das telas em React e o teste-molde de sair
 **Branch:** claude/f83-wave-0-base
@@ -23,29 +39,204 @@ Medido o build publicável de hoje (`main@3356113`, com as chaves do `.env`; a s
 **Branch:** claude/f83-wave-0-base
 Os desenhos dos 65 ícones passaram para dados (`utils/iconShapes.js`: os atributos da raiz e os elementos, na ordem do texto); `components/Icons.js` (`getIcon`, `Icons`) e o `<Icon>` de `ui/Icon.tsx` leem os mesmos dados. A prova (`test/ui/Icon.test.tsx`, com o texto de antes guardado em `test/fixtures/iconMarkupBeforeF83.json`, copiado antes da mudança): 64 ícones iguais byte a byte ao texto de antes, com e sem classe, e o DOM do React igual ao DOM que o navegador faz do texto; a exceção única registrada com o motivo é o `MJRPLogo`, que nenhuma tela usa e perdeu os comentários e a quebra de linha entre os elementos (não se desenham). Andaime de teste acertado: `test/components/Icons.test.js` («nenhum ícone escrito duas vezes») passou a ler `iconShapes.js`, onde os desenhos moram agora; mesma asserção. `tsconfig`: `resolveJsonModule`. O `ui/Icon.tsx` entra em `KEPT_ON_PURPOSE` do `noDeadModules` até o canário. 863 testes verdes; lint e typecheck sem erro.
 
+## [2026-11-21 13:50] session — F80: a home em português, v3, todo o texto revisado (UAT-241, UAT-240)
+**Branch:** wip/f80-home-pt-copy-v3
+Decisões do MJRP (2026-11-21), nas palavras dele: «Cada faixa Conta em pt está estranho»; «ponha é feio, melhor coloque»; «eu revisaria todo esse copy»; sobre o ranking, «ponha no topo é ruim, e vc pode querer colocar pra baixo, entao aqui tem que ser Ranqueie/ordene e o uso do blend aqui nao é adequado, pode ser "junte" ou agrupe»; sobre as Playlists, «exporta só para o spotify?»; sobre o Inventário, «Conte as midias fisicas da sua estante». Nova versão `design/inception/splash-menu-bar-v3.html` (gerador `home-menu/build_v3.mjs`, lê a v2 e troca só o texto; a v2 intacta): a abertura escrita por ele, nas palavras dele: «Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada» e «Embaixo: Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas…» (o inglês dela é proposta), «Ranqueie as faixas do seu jeito.» com o ranking nos dois sentidos, sem «ponha», sem «misture», «Blend» só como nome do menu, exportação «para o Spotify ou a Apple Music», «Conte as mídias físicas da sua estante.» com os formatos do app. Conferido no código: `UserRankingStrategy`/`TopNUserAlgorithm` (a playlist pode seguir a ordem da pessoa), `PlaylistsExport.js`/`SpotifyExportModal.js`, `InventoryAddModal`/`InventoryEditModal`. Wireframes `design/wireframes/splash-menu-bar-v3-*.png` e o registro no `info-arch.md`. Tabela antes → depois em `proposal.md` § Rodada 3 · v3. Comparador republicado na mesma URL (versão 13): abre em «O texto em português ficou natural?», a v3 viva ao lado da v2 (a chave dos três títulos saiu, a abertura dele os substitui); a pergunta da v2 em `home-pt-v2.html`, atrás de «Rodadas anteriores». Conferi 1280 e 393, sem e com conta, PT e EN: sem rolagem lateral, sem rótulo cortado, sem erro no console. Texto decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:49] session — F72: o nó S-55 com entrega, estado e critérios; Done
+**Branch:** wip/closing-pass-2026-11-21
+F72 (quantos álbuns e séries a tela diz): o código está na `main`. Faltavam três linhas da trava: no nó S-55 o `delivered_by` (`49c786e`, `274dfe4`), o `points_to` (`behavior#^library-counts`) e os critérios de aceite, escritos do que o MJRP julgou em 2026-11-20 (a contagem ficou na linha da paginação; numa série só não aparece, hoje a UAT-248, aberta pela reconferência); e a reconferência visual (relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Acrescentei `verified_by` ao REQ-01 e ao REQ-02 e marquei o REQ-01 como substituído pelo REQ-03, como o próprio MJRP decidiu. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: o aceite do S-55 é do MJRP.
+
+## [2026-11-21 13:47] session — F67: o estado da busca no `arch.md`; Done
+**Branch:** wip/closing-pass-2026-11-21
+F67 (o Scan da Home responde ao clique): o código está na `main`. Faltavam duas linhas da trava. (1) `arch.md`: a declaração dizia «atualizado» pelo commit da F57, que não cita a F67; escrevi na seção do seletor de álbuns o estado da busca, a geração, os prazos e a montagem única do roteador, conferido no código. (2) Reconferência visual: relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md` (os quatro estados estão na tela). Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: a UAT-204 segue com o MJRP.
+
+## [2026-11-21 13:46] session — F48: o comportamento da nova tentativa no `behavior.md`, os commits certos nas issues; Done
+**Branch:** wip/closing-pass-2026-11-21
+F48 (cache e nova tentativa): o código está na `main`. Faltavam duas linhas da trava. (1) `behavior.md`: escrevi as novas tentativas do servidor e o que não se tenta de novo, conferido em `api/client.js`. (2) Reconferência visual: relatórios do lote de 2026-11-21 (álbuns e casca). Conferi também a linha das issues: UAT-175, 176 e 177 já diziam `fixed (F48: …)`, mas citavam o commit `fe12d90`, que é o da UAT-14; troquei pelos commits que as consertaram (`57ce6bc`, `d57ca5c`, `061bcce`). Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite.
+
+## [2026-11-21 13:46] session — prova no navegador da nota e da popularidade que falharam na janela do álbum (UAT-244, UAT-245)
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Capturas a 1280 e 393 em `reports/evidence/F52/ratings-failed-*.png` e `reports/evidence/F69/popularity-failed-*.png`, com a janela real do álbum, o CSS real e o fixture da reconferência; a carga é um substituto no roteiro (`reports/evidence/F52/harness/`, `shoot.mjs`). Nada passa da borda; «Try again» pede a fonte e o aviso some. O aviso usa o azul que o aviso da popularidade já tinha (a janela de ranking fora da paleta é a UAT-250); não inventei cor.
+
+## [2026-11-21 13:45] session — F46: o estado por série no `behavior.md`, a UAT-174 devolvida à F45; Done
+**Branch:** wip/closing-pass-2026-11-21
+F46 (estado claro por série): o código está na `main`. Faltavam três linhas da trava do passo retroativo. (1) `behavior.md`: escrevi o estado por série e que a série sem álbum não é desenhada (UAT-247). (2) Issues: a UAT-174 foi fechada pelo commit `ce52f46`, da F45, e diz `fixed (F45: …)`; não marquei nada como consertado pela F46 e tirei a UAT-174 do `fixes:` da F46 (a UAT-173 segue `fixed (F46: 510a840 …)`); decisão que cabe ao MJRP rever, se ele preferir a UAT-174 no `fixes:` da F45. (3) Reconferência visual: relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite.
+
+## [2026-11-21 13:44] session — F45: o comportamento da carga paralela escrito no `behavior.md`; Done
+**Branch:** wip/closing-pass-2026-11-21
+F45 (carga de álbuns em paralelo): o código está na `main`. Faltavam duas linhas da trava do passo retroativo: o `behavior.md` (a declaração dizia «atualizado», mas só o commit da v4.0, que não cita a F45, o tocava) e a reconferência visual. Escrevi no `^library-loading-skeleton` o que `LOAD_LIMITS` faz (3 buscas no catálogo juntas, séries de cima primeiro, prazo de 45 s por álbum e 20 s por fonte), conferido no código; a reconferência é a do lote `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: a UAT-172 segue com o MJRP.
+
+## [2026-11-21 13:44] session — a janela do álbum mostra a nota e a popularidade que falharam, com «Try again» (UAT-244, UAT-245)
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+A tela de séries dá à janela do álbum `sources` (ler, pedir, observar a carga): a nota (`enrichment.acclaim`) em «failed» mostra «The ratings source did not answer.» e a popularidade em «failed» mostra o aviso que já existia («Spotify did not answer.»), ambos com «Try again» via `albumLoadService.refreshSource`; a janela se redesenha quando a carga muda. Reuso do componente e das cores do aviso da popularidade, sem padrão novo. Não mudei o status das linhas no uat.md: o fecho é do integrador/MJRP.
+
 ## [2026-11-21 13:43] step — F83 TASK-05: sem rede não é versão nova
 **Branch:** claude/f83-wave-0-base
 `utils/staleBuild.js` distingue os três desfechos de um arquivo de tela: chegou; sumiu porque o site foi publicado de novo (pede `/app.html` sem cache e compara o nome do script principal com o da aba: `publicationState`); a rede não respondeu, ou o prazo de 10 s passou (`loadWithDeadline`, `ScreenLoadTimeout`). Só o segundo recarrega o app. O roteador mostra o estado «No connection» com «Try again» (pede a tela de novo, sem recarregar o app), mostra a barra de progresso que já existe só se a tela demora mais de 150 ms (nenhum piscar numa troca rápida) e a tira ao fim, com ou sem erro. O guarda do app inteiro (`installStaleBuildGuard`) também não recarrega com a rede fora. `utils/prefetchScreens.js`: as telas carregadas sob demanda do menu descem em segundo plano depois da primeira tela (uma de cada vez, sem segurar nada). `app.js`: as rotas de playlists guardadas passam pelo prazo de 10 s. Mudei o andaime de testes antigos (não o sentido): `router.staleBuild.test.js` agora injeta `checkPublication` (a rede do jsdom não responde) e os três testes do guarda esperam um tick, porque o reload agora espera a resposta sobre a publicação; no guarda a asserção `defaultPrevented` do `vite:preloadError` saiu (o evento não é mais impedido de forma síncrona). `renderView` ficou com 11 e foi partida (`showFailure`). 421 testes verdes (`test/architecture`, `utils`, `react`); lint e typecheck sem erro.
+
+## [2026-11-21 13:42] session — F68: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F68 (F68-album-identity-rules-reviewed): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:41] session — F61: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F61 (F61-saved-playlists-fast): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-playlists-blend-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:41] session — F55: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F55 (F55-the-album-asked-for-or-a-notice): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:40] session — F54: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F54 (F54-close-v4-inventory-delete-and-polish): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-visual-parity-recheck.md`, `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:40] session — F50: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F50 (F50-one-local-address): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:40] session — F49: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F49 (F49-load-more-albums): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:40] session — teste vermelho: a janela do álbum mostra a nota e a popularidade que falharam (UAT-244, UAT-245)
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Teste que falha por falta do modelo e da ligação da janela com a carga (`test/components/ViewAlbumModal.failedSources.test.js`). Decidido pelo agente, revisável: a janela recebe `sources` (ler, pedir, observar) da tela de séries.
+
+## [2026-11-21 13:39] session — F47: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F47 (F47-series-list-without-cut): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
 
 ## [2026-11-21 13:35] step — F83 TASK-04: a ponte do React com o roteador (ReactView, useStore, usePhone, useScreenTitle, navigate)
 **Branch:** claude/f83-wave-0-base
 `react-bridge/`: `ReactView.tsx` (a tela é uma view do roteador; a barreira de erro desenha o painel do roteador — o texto e o botão vêm de um modelo só, `utils/failurePanel.js`, que o roteador também usa — e conta o erro por `track('screen_error', { screen })`; modo estrito ligado), `useStore.ts` (um número de versão por store e um ouvinte fixo por store, pelo contrato da proposta § 4.3), `usePhone.ts`, `useScreenTitle.ts`, `navigation.ts` (navegar adiado uma microtarefa), `listeners.ts` (`bridgeListenerCount()`, com o ouvinte fixo contado à parte). `router.afterNavigate` devolve como parar de ouvir. Evento novo `screen_error` em `shared/usageEvents.js` e uma frase em `behavior.md`. Testes: entra, sai e volta cinco vezes sem ouvinte de tela sobrando; um erro ao desenhar mostra o painel e é contado; nas três formas de store (`getState` novo a cada chamada, sem foto, aviso em lote) a store muda entre o primeiro desenho e a inscrição e a tela mostra o valor novo; navegar de dentro de um efeito não quebra. A ponte ainda não tem usuário: entra em `KEPT_ON_PURPOSE` do `noDeadModules` até o canário (TASK-10), que tira as linhas. Corrigido de passagem: `outsideTextEscaped` e `outsideUrlChecked` passavam o nome do arquivo só nos exemplos. 408 testes de `test/architecture`, `test/react` e afins verdes; lint e typecheck sem erro.
 
+## [2026-11-21 13:35] decision — ids de UAT renumerados na integração de `wip/visual-recheck-batch-2026-11-21`
+
+> Participantes: Claude (Claude Code), integrador · Branch: main
+
+- `UAT-240` da `wip/visual-recheck-batch-2026-11-21` colidiu com outra issue de mesmo id e virou `UAT-254` (ordem de chegada).
+  - As referências listadas abaixo ainda citam o id velho `UAT-240` e valem para a issue do ramo (hoje `UAT-254`); a reescrever em um commit seguinte, sem tocar nas que citam a issue da `main`:
+    - `docs/log.md:20: Juiz separado (Opus) olhou a tela de hoje, em produção e no servidor de desenvolvimento da `main`, a 1280 e 393, contra o design system; nen`
+    - `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md:43: - **P2-1 · F57 · a janela «Edit Series» não acompanhou a Start.** Mesma peça e mesmos dados, mas a ficha escolhida é laranja preenchida (o d`
+- `UAT-241` da `wip/visual-recheck-batch-2026-11-21` colidiu com outra issue de mesmo id e virou `UAT-255` (ordem de chegada).
+  - As referências listadas abaixo ainda citam o id velho `UAT-241` e valem para a issue do ramo (hoje `UAT-255`); a reescrever em um commit seguinte, sem tocar nas que citam a issue da `main`:
+    - `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md:44: - **P2-2 · F48 · no computador, em `/start`, o rodapé (com «Clear Cache») fica sob a base fixa da série,** mesmo com a página rolada até o f`
+
+## [2026-11-21 13:35] session — conform: as 8 perguntas do relatório viram um lote para o Control Center
+**Branch:** wip/kernel-conform-2-2026-11-21
+Lote `reports/proposals/2026-11-21-1335-v0-conform-questions.md` (proposal-batch@1, 8 itens, recomendada primeiro). Nenhuma pergunta respondida nem registrada como respondida. `proposal_batches.py check` passou. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:34] session — conform: `process-sensors` completo, `sensors.board_states` declarado (CM-0144, 0148, 0150, 0153, 0154, 0155, 0156, 0157)
+**Branch:** wip/kernel-conform-2-2026-11-21
+Com o seed do board já rodado no checkout principal, declarei `sensors.board_states` no contrato (`board_states_check.py`). O sensor saiu com exit 0 («o grafo e o registro conferem») e as 8 notas passaram em `--check-note` antes de serem registradas. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:33] review — reconferência visual em lote, grupo playlists, playlists guardadas, blend e exportar (F61, F73): fail sem P0, sem P1, 2 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou as playlists geradas, as guardadas e o Blending Menu de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (as telas, o controlador e o leitor reais com uma fonte de mentira; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-playlists-blend-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/playlists/`. Dois P2 (UAT-252, UAT-253). Fecha a série de quatro relatórios do lote; nada fechado no board.
+
+## [2026-11-21 13:32] review — reconferência visual em lote, grupo inventário (F54, F71, F73): fail sem P0, sem P1, 1 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou o inventário e a janela do álbum de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (as telas reais com 211 itens de fixture e o serviço real sobre um repositório em memória; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/inventory/` e o ajudante comum `cdp-lib-inventory-playlists.mjs`. O filtro de situação da F71 foi trocado pela F75 pelos três botões de contagem: registrado, sem issue. Um P2 (UAT-251). Nada fechado.
+
+## [2026-11-21 13:31] session — F80: a home em português, «A barra é o menu» v2, no comparador (UAT-241, UAT-240)
+**Branch:** wip/f80-home-menu-and-slider
+Palavras do MJRP (2026-11-21): «sugiro rever o prototipo já com texto tudo me portugues pls»; sobre o ranking, «o user nao deve rank every track, ele ranqueia o que ele quer, as vezes ele que colocar so uma track no topo, entao o copy aqui deve mudar. Rank your tracks...algo mais flexivel em termos de copy»; sobre o cartão ilustrativo, «isso aqui tb nao deve ser ilustrativo, vamos colocar dados rais de album pls»; sobre a tela «End of side A · Flip the record», «faz sentido isso aqui ?». A direção, nas palavras dele: «a barra é o menu» e «mas pode falar pra ele fazer só para a opcao recomendada» — a B, só ela refeita. Nova versão `design/inception/splash-menu-bar-v2.html` (gerador `home-menu/build_v2.mjs`, wireframes `design/wireframes/splash-menu-bar-v2-*.png`): todo o texto em português com chave PT/EN; o ranking parcial («Ponha no topo as faixas que você quiser.» / «Rank your tracks, your way.»); o cartão com The Velvet Underground & Nico e as faixas reais (busca pública do iTunes), sem notas de terceiros; a virada como faixa curta, filete no celular. Padrões aplicados como «decidido pelo agente — revisável» (`proposal.md` § Rodada 3 · v2, com a tabela PT/EN, proposta a revisar). Crítica separada: passa, 0 P0, 5 P1, 8 P2; corrigidos antes de publicar a capa da história de Álbuns no celular, os 11 px abaixo de 380 px, o sobretítulo repetido, o verbo do ranking, as portas, a chave de idioma, o filete da virada e o registro no `info-arch.md` e no `design-system.md`. Comparador republicado na mesma URL (versão 10): abre em «A home em português: é este o caminho?», a v2 ao lado da prévia que ele viu, chaves PT/EN e sem conta/com conta; **48 palavras na primeira tela**; as três prévias em `home-menu-abc.html`, atrás de «Rodadas anteriores».
+
+## [2026-11-21 13:30] review — reconferência visual em lote, grupo álbuns e séries (F45, F46, F47, F48, F49, F51, F52, F55, F68, F69, F72, F74): fail sem P0, 2 P1, 5 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou a tela de álbuns e a janela do álbum de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (a `SeriesView` e as janelas reais com dados de fixture; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/albums/`. Os dois P1 são estados de falha que os requisitos descrevem e que nenhuma tela mostra: a nota que falhou (F52, UAT-244) e a popularidade que falhou (F69, UAT-245). P2 em UAT-246 a UAT-250. Nada fechado.
+
 ## [2026-11-21 13:28] step — F83 TASK-03: os sensores novos da migração (só encolhe, o React na borda, um estilo, um React)
 **Branch:** claude/f83-wave-0-base
 Sete sensores em `test/architecture/`, cada um com o exemplo errado que acusa e passando no código de hoje: `handMadeScreensOnlyShrink` (a lista `handMadeScreensBaseline.js`: os 100 arquivos de `views/` e `components/` com as linhas de cada um, mais o desenho feito à mão fora das duas pastas que o levantamento achou — `utils/SafeDOM.js`, `services/DialogService.js`, `utils/pageScrollLock.js`; arquivo novo falha, crescer mais de 20 linhas falha, entrada sem arquivo falha), `bridgesOnlyShrink`, `reactStaysAtTheEdge` (só `screens/`, `ui/`, `shell/`, `react-bridge/` importam o React; `ui/` não importa store, serviço nem controlador; só o `app.js` importa `screens/` e `shell/`; os `as unknown as` só na ponte, numa lista que só encolhe), `oneStyleSystem`, `lazyOnlyAtTheRoute`, `oneReact` (site, app e o lock) e `everyScreenHasTheLeaveTest`. Os leitores novos: `support/siteImports.js`. `test/architecture`: 300 verdes; lint e typecheck sem erro. Decisão minha: a lista de hoje tem 100 arquivos em `views/` e `components/` (a proposta dizia 99).
+
+## [2026-11-21 13:26] session — conform parcial do V0 depois do kernel de 2026-11-21: 90 para 46 notas, 11 para 10 lacunas
+**Branch:** wip/kernel-conform-2026-11-21
+Relatório em `reports/audits/2026-11-21-mjrpalbumblender-v0-conform.md`: o que foi registrado (38 notas), feito (6), o que ficou (46 notas, 10 lacunas) e as oito perguntas ao MJRP. O critério estrito do portão segue em 1; o que falta depende do MJRP, do orquestrador (`board_move.py seed` no checkout principal) e da auditoria de conteúdo, que vai por último. Não rodei o doctor, os testes nem o build. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:26] review — mjrp-critiquing-ux-ui: F80 home «A barra é o menu» v2 em português · passa, sem P0
+`reports/audits/2026-11-21-f80-home-pt-v2-ux-audit.md` · P0 0 · P1 5 · P2 8 · quem julgou: agente separado.
 
 ## [2026-11-21 13:25] step — F83 TASK-02: os sensores que existem leem .ts e .tsx
 **Branch:** claude/f83-wave-0-base
 Um leitor só para os sensores (`test/architecture/support/parseSource.js`: espree para `.js`, typescript-estree para `.ts`/`.tsx`, com `loc` e `range`) e uma lista de arquivos de código única. Ensinados: `importGraph` (segue `import`, `import()` e `.ts`/`.tsx`; `noDeadModules` passa a vigiar os arquivos React), `sourceImports` (`layerBoundaries`, `screensLoadThroughTheService`: `screens/`, `ui/` e `shell/` entram na lista do que é tela), `measureComplexity` (`complexityLimit`, o teto de 10 sem lista de exceções para o código novo), `historyOwnedByRouter`, `outsideTextEscaped`, `outsideUrlChecked` (lê `href={…}` em JSX), `tailwindBuiltWithSite` (uma classe só escrita em `.tsx` chega ao CSS), `viewLifecycle`, `oneTabTitle` e, para o dicionário em português não quebrá-lo, `interfaceInEnglish` (lê `.ts`/`.tsx`; português só em `i18n/pt/`). Cada um acusa o seu exemplo em `test/architecture/fixtures/typescript/`. `test/architecture` inteira: 273 verdes; lint e typecheck sem erro.
 
+## [2026-11-21 13:25] session — conform: `delivery-strategy` registrado (CM-0111)
+**Branch:** wip/kernel-conform-2026-11-21
+Escrita a seção `## Delivery strategy` do `docs/specs/arch.md` lendo os scripts de deploy, o workflow de CI, o `firebase.json`, a ADR-0020 e o contrato; marcada **proposta do agente, à espera do MJRP** (a regra de que só o MJRP envia não mudou). O que o repositório não mostra (se existe canal de preview no Firebase, se há projeto de teste separado) está escrito «not checked». `delivery_strategy_check.py` sai verde com o aviso de proposta; `--check-note CM-0111` passou. A confirmação é do MJRP. Decidido pelo agente (a forma), a decisão do conteúdo é do MJRP.
+
+## [2026-11-21 13:24] session — conform: `uat.md` com a trilha Agente/Juiz separada em 7 issues (uat@4, parcial)
+**Branch:** wip/kernel-conform-2026-11-21
+Acrescentado `**Aberta por:** agente (<quem>)`, lido da evidência que cada issue cita, em UAT-224, 225, 226, 231, 232, 233 e 234, e a coluna `Reportado por` de UAT-231 a 234 passou de «agente (juiz da F80/F79)» para `juiz` (a forma que a regra aceita; o nome do juiz foi para o `Aberta por`). Faltam 3 lacunas, de UAT-224, 225 e 226: a célula «OK do humano» traz a frase do histórico anterior ao harness (regra de 2026-10-18) numa issue de 2026-11-20, que não é anterior ao harness, e a âncora delas é `^UAT-171` (copiada da UAT-171). Não escrevi o OK (`recheck independente:` ou `testes verdes:`) porque nenhuma evidência no repositório o prova, e não mexi na âncora: vai ao MJRP. A CM-0096 segue pendente. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:23] session — conform: ADR-0019 encurtada ao teto e com a via do aceite (adr-names)
+**Branch:** wip/kernel-conform-2026-11-21
+A ADR-0019 (Proposed) tinha 8.553 caracteres, o teto é 6.000: o texto agora traz só a decisão, as alternativas e as consequências, e a lista de «ainda não feito» (que seguia o andamento da F56/F58) aponta para o relatório do cruzamento e para os specs; o texto antigo está no histórico do git. Ganhou `**Acceptance**: tech lead` (escolha técnica; a regra: técnica vai ao tech lead, produto e dinheiro ao MJRP). A ADR-0020 (Accepted) também não tem a linha, mas ADR aceita não se edita: fica para o MJRP (ou o tech lead) dizer se a linha entra no cabeçalho. As três notas (CM-0112, CM-0113, CM-0149) seguem pendentes até lá. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:23] review — reconferência visual em lote, grupo Start, navegação e casca (F48, F50, F54, F57, F59, F64, F67): fail sem P0, 4 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou a tela de hoje, em produção e no servidor de desenvolvimento da `main`, a 1280 e 393, contra o design system; nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/shell/`. Sem entrar com senha, nada gravado. Achados abertos como UAT-254 a UAT-243 (P2). O ramo começou como `claude/f45-visual-recheck-batch` (o número de uma feature do lote, para o gancho de commit) e virou `wip/…` porque a trava «o estado primeiro» pedia a F45 «Em andamento» no board, que só o MJRP move; o orquestrador mandou trocar o nome. Nada fechado: o `Done` fica para o passo de fecho.
+
+## [2026-11-21 13:22] session — conform: `process-sensors` registrado (CM-0107, CM-0121, CM-0129, CM-0135, CM-0140)
+**Branch:** wip/kernel-conform-2026-11-21
+Declarados em `sensors:` do contrato os quatro sensores do processo que passam hoje (`pdlc_vocabulary`, `sdd_shape`, `requirements_graph_check`, `hooks_map`); os quatro saíram com exit 0. Ficam pendentes as 8 notas seguintes (CM-0144 a CM-0157), que pedem também `sensors.board_states`: o juiz acha 54 features sem registro no board, e o conserto é `board_move.py seed`, que grava em `<checkout principal>/.mjrp/board.jsonl` (fora do git e fora deste ramo). Não rodei o seed daqui: é do orquestrador, no checkout principal; depois dele se declara `board_states` e se registram as 8 notas. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:21] session — conform: `type:` de 8 relatórios acertado (report-names)
+**Branch:** wip/kernel-conform-2026-11-21
+Pelo cabeçalho e pelo tema de cada um: `type: research` em 7 (o benchmark de UX do celular e a checagem dele, a análise da carga de álbuns, o estudo de viabilidade do produto público, a viabilidade do preço de CDs, a análise do framework do site e a régua do volume de texto) e `content-audit` no levantamento dos textos do site (F81). Seguem sem tipo da lista 8 relatórios (regressão no navegador, cruzamento dos relatórios com o plano da v5, triagem das issues abertas, varredura das fontes das notas, mapa da v5, e-mails de contato, a atualização do kernel e a limpeza dos worktrees): a regra manda perguntar ao MJRP, porque tipo novo entra na lista do harness. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:20] session — conform: relatórios de `reports/audits/` renomeados para o padrão (report-names)
+**Branch:** wip/kernel-conform-2026-11-21
+16 relatórios (as reconferências visuais e as críticas de UX de F56 a F86 e a pesquisa de cópia da F81) passaram de `AAAA-MM-DD-FNN-…` para `AAAA-MM-DD-mjrpalbumblender-v0-fnn-…`, com `git mv`; o nome antigo foi varrido do repositório (docs, specs, UAT, `info-arch.md`, propostas, um teste e um script de cópia que citavam o caminho). NÃO foram tocados os 5 arquivos de protótipo em `design/` (html e css) que citam o nome antigo em comentário: mexer neles dispara a trava do espelho do protótipo (wireframe e info-arch refeitos), que é da `mjrp-designing-ui`. Duas críticas de arquitetura (F52, F78) trocaram `type: architecture-critique` por `architecture-audit` com `status: open` (na dúvida, aberta). Os outros 16 `type:` fora da lista e os 4 pareceres do harness sem o segmento do projeto ficam para o MJRP/harness. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:19] step — F83 TASK-01: as ferramentas do React no site (React 19.3.0 exato, TypeScript, plugin do Vite, tsconfig, lint, typecheck)
 **Branch:** claude/f83-wave-0-base
 `react` e `react-dom` 19.3.0 exatos (o `overrides` da raiz vale para o site e o app: um React só), `typescript` 6.0.3, `@types/react`, `@types/react-dom`, `@vitejs/plugin-react` 4.7.0, `typescript-eslint`, `eslint-plugin-react-hooks`. `vite.config.js` e `vitest.config.js` com o plugin; o Vitest roda `.test.ts(x)`; `tsconfig.json` estrito (`allowJs`, sem `checkJs`); `npm run typecheck` dentro de `npm run lint`, no CI e em `run_lint` dos scripts de publicação; bloco de `.ts/.tsx` no ESLint (complexidade 10, hooks, sem `dangerouslySetInnerHTML`, sem `any` nem `as unknown as` em `screens/`, `ui/`, `shell/`); o Tailwind lê `.tsx`. Prova: `test/architecture/reactToolchain.test.js` (8) e `test/react/toolchain.test.tsx` (1); `test/architecture` inteira 262 verdes; typecheck e lint sem erro. Nenhuma tela mudou. Feito sob a decisão do MJRP de 2026-11-21 (Control Center); a ADR-0023 continua Proposed.
 
+## [2026-11-21 13:18] session — conform: `merge-drivers` registrado (CM-0130)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:18] session — conform: `session-close` registrado (CM-0124, CM-0132, CM-0136, CM-0137, CM-0146, CM-0151, CM-0160, CM-0164, CM-0165)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:18] session — conform: `board` registrado (CM-0095, CM-0123, CM-0141, CM-0145, CM-0147)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:18] session — conform: `inception-notes` registrado (CM-0039)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:17] session — conform: `info-arch-sections` registrado (CM-0038, CM-0119, CM-0127)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:17] session — conform: `requirement-nodes` registrado (CM-0102)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:17] session — conform: `product-structure` registrado (CM-0097, CM-0098, CM-0106)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:17] session — conform: `wireframes` registrado (CM-0009)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:16] session — F83 onda 0 (a base) começa, num agente Sonnet
 **Branch:** claude/f83-wave-0-base
 Ramo `claude/f83-wave-0-base` cortado da `main` (`3356113`). Contrato: spec, plano, tarefas TASK-01 a TASK-10, proposta de arquitetura e ADR-0023 (continua Proposed; o aceite é um commit do MJRP). O card da F83 foi movido a «Em andamento» com `board_move.py move F83 in_progress --why`, como o gancho (regra 39) pediu.
+
+## [2026-11-21 13:16] session — conform: `visual-sensor` registrado (CM-0007, CM-0023, CM-0090, CM-0091, CM-0099, CM-0115, CM-0116, CM-0117, CM-0125, CM-0142, CM-0162, CM-0166)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:16] session — conform: `releases` registrado (CM-0134, CM-0159)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou nas duas notas (releases@3→4 e @4→5) sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
 
 ## [2026-11-21 13:11] decision — o MJRP respondeu as oito perguntas do React e dos idiomas: a opção recomendada em todas
 **Branch:** main
@@ -139,7 +330,7 @@ O ramo em `09a0c61` contra a produção, deslogado, a 1280 e 393: só mudou o r�
 
 ## [2026-11-21 11:56] review — reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236): fail, sem P0 nem P1
 **Branch:** fix/f80-uat-entry-page
-Um agente que não implementou julgou a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. A caixa em 3D fica em diagonal e inteira no quadro em todas as posições, de 900 a 1920 px. O palco vai até a borda direita. A capa da banana é o primeiro disco e o King Crimson o segundo; são 15 capas reais e 14 fictícias, sem faltar nenhuma. A faixa e «Flip the record» funcionam. O celular fica como antes. O sensor, com a `main` de referência, deu 0 · 0 · 0. Um P2: na caixa em CSS (sem WebGL ou com menos movimento), o disco da frente sai da caixa como uma cunha branca. Abri a UAT-237, `fixing (F80)`. A legenda alta da banana no celular é efeito do nome comprido, não defeito. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md`; capturas em `reports/evidence/F80/recheck-uat235/`.
+Um agente que não implementou julgou a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. A caixa em 3D fica em diagonal e inteira no quadro em todas as posições, de 900 a 1920 px. O palco vai até a borda direita. A capa da banana é o primeiro disco e o King Crimson o segundo; são 15 capas reais e 14 fictícias, sem faltar nenhuma. A faixa e «Flip the record» funcionam. O celular fica como antes. O sensor, com a `main` de referência, deu 0 · 0 · 0. Um P2: na caixa em CSS (sem WebGL ou com menos movimento), o disco da frente sai da caixa como uma cunha branca. Abri a UAT-237, `fixing (F80)`. A legenda alta da banana no celular é efeito do nome comprido, não defeito. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-f80-visual-parity-recheck.md`; capturas em `reports/evidence/F80/recheck-uat235/`.
 
 ## [2026-11-21 11:48] decision — cada agente interno declara o seu modelo; Sonnet em esforço médio é o padrão
 **Branch:** main
@@ -251,27 +442,27 @@ F66 (o token do Discogs fora do repositório): o conserto está na `main` (os sc
 
 ## [2026-11-21 11:37] session — F63 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
-F63 (Home e navegação que respondem): o código está na `main` (merges `cbd96fa`, `946fc21`, `5c3abda`). A tarefa «o MJRP diz Prototype: none e a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência independente existe (`reports/audits/2026-11-19-F63-visual-parity-recheck.md`: 2 P1, que viraram a UAT-217 e a UAT-218; a UAT-218 está `fixed` pela F63 e a UAT-217 pela F76). Tirei a UAT-10 e a UAT-11 do `fixes:` da spec: quem as consertou foi a F65 (as linhas dizem `fixed (F65: c9f15ec …)`; a própria spec já dizia que o REQ-11 não foi entregue neste ramo), e a trava do passo retroativo exigia `fixed (F63 …)`. Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"`. Nenhum merge traz nota de Touch ID. Nada de `Accepted`.
+F63 (Home e navegação que respondem): o código está na `main` (merges `cbd96fa`, `946fc21`, `5c3abda`). A tarefa «o MJRP diz Prototype: none e a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência independente existe (`reports/audits/2026-11-19-mjrpalbumblender-v0-f63-visual-parity-recheck.md`: 2 P1, que viraram a UAT-217 e a UAT-218; a UAT-218 está `fixed` pela F63 e a UAT-217 pela F76). Tirei a UAT-10 e a UAT-11 do `fixes:` da spec: quem as consertou foi a F65 (as linhas dizem `fixed (F65: c9f15ec …)`; a própria spec já dizia que o REQ-11 não foi entregue neste ramo), e a trava do passo retroativo exigia `fixed (F63 …)`. Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"`. Nenhum merge traz nota de Touch ID. Nada de `Accepted`.
 
 ## [2026-11-21 11:37] session — F65 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
-F65 (tirar o que nada usa): o código está na `main` (merges `ef1b721`, `7be0701`, `1e6e6f0`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F65-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente; a feature não muda nada que ele veja, então não pus `needs_human`. Declarei `constitution.md` «sem mudança» no `plan.md`, conferido pelo histórico. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+F65 (tirar o que nada usa): o código está na `main` (merges `ef1b721`, `7be0701`, `1e6e6f0`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-mjrpalbumblender-v0-f65-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente; a feature não muda nada que ele veja, então não pus `needs_human`. Declarei `constitution.md` «sem mudança» no `plan.md`, conferido pelo histórico. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
 
 ## [2026-11-21 11:37] session — F58 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
-F58 (o serviço de carga dentro do limite de complexidade): o código está na `main` (merges `fd9a0a1`, `c780a48`, `822a794`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F58-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente; a feature não muda nada que ele veja, então não pus `needs_human`. Declarei `constitution.md` «sem mudança» no `plan.md`, conferido pelo histórico. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+F58 (o serviço de carga dentro do limite de complexidade): o código está na `main` (merges `fd9a0a1`, `c780a48`, `822a794`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-mjrpalbumblender-v0-f58-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente; a feature não muda nada que ele veja, então não pus `needs_human`. Declarei `constitution.md` «sem mudança» no `plan.md`, conferido pelo histórico. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
 
 ## [2026-11-21 11:37] session — F70 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
-F70 (defeitos pequenos achados no caminho): o código está na `main` (merges `ffd414f`, `88adbc4`, `109b656`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F70-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+F70 (defeitos pequenos achados no caminho): o código está na `main` (merges `ffd414f`, `88adbc4`, `109b656`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-mjrpalbumblender-v0-f70-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
 
 ## [2026-11-21 11:37] session — F60 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
-F60 (nada do que foi salvo se perde): o código está na `main` (merges `bcdd114`, `fa141c0`, `c760592`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F60-visual-parity-recheck.md`: não passou limpo: 1 P1, que virou a UAT-216 (playlists salvas no celular), hoje `fixed` pela F76; o fecho da UAT-216 como `closed` é da reconferência independente). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+F60 (nada do que foi salvo se perde): o código está na `main` (merges `bcdd114`, `fa141c0`, `c760592`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-mjrpalbumblender-v0-f60-visual-parity-recheck.md`: não passou limpo: 1 P1, que virou a UAT-216 (playlists salvas no celular), hoje `fixed` pela F76; o fecho da UAT-216 como `closed` é da reconferência independente). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
 
 ## [2026-11-21 11:36] session — F56 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
-Aviso: o ramo deste lote se chama `claude/f45-…` porque a trava de commits só aceita nome com número de feature; por isso o board mostra a F45 («a tela de álbuns carrega vários álbuns ao mesmo tempo») «em branch» enquanto o lote roda — não é trabalho novo dela. F56 (o blend e a edição de playlist pelo serviço de carga): o código está na `main` (merges `042da86`, `06fba84`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente já existe (`reports/audits/2026-11-19-F56-visual-parity-recheck.md`: passa, sem P0 nem P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`. Antes e depois do lote: `reports/audits/2026-11-21-mjrpalbumblender-v0-board-batch-close.md`.
+Aviso: o ramo deste lote se chama `claude/f45-…` porque a trava de commits só aceita nome com número de feature; por isso o board mostra a F45 («a tela de álbuns carrega vários álbuns ao mesmo tempo») «em branch» enquanto o lote roda — não é trabalho novo dela. F56 (o blend e a edição de playlist pelo serviço de carga): o código está na `main` (merges `042da86`, `06fba84`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente já existe (`reports/audits/2026-11-19-mjrpalbumblender-v0-f56-visual-parity-recheck.md`: passa, sem P0 nem P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`. Antes e depois do lote: `reports/audits/2026-11-21-mjrpalbumblender-v0-board-batch-close.md`.
 
 ## [2026-11-21 11:32] session — save: F83, o fecho nomeia o ramo
 **Branch:** claude/f83-site-screens-in-react
@@ -293,7 +484,7 @@ Fecho depois do último commit de trabalho (`ba10b43`). O conteúdo está nas du
 
 ## [2026-11-21 11:30] review — começou a reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236)
 **Branch:** fix/f80-uat-entry-page
-Um agente que não implementou julga a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md` (por ora `verdict: running`).
+Um agente que não implementou julga a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-f80-visual-parity-recheck.md` (por ora `verdict: running`).
 
 ## [2026-11-21 11:29] session — a capa da banana marcada como feita (UAT-236)
 **Branch:** fix/f80-uat-entry-page
@@ -461,14 +652,6 @@ Key Data: último commit de trabalho `4ebb97b`.
 Branch: claude/f81-site-in-more-than-one-language
 Pedido do orquestrador (palavras do MJRP: «vc cria o artefato do copy deck pra funcionar como o site MJRP pro»). `design/copy/album-blender-copy.md` agora tem as colunas `ID | Onde aparece | Tipo | Português | Status PT | English | Status EN` mais caracteres e palavras por linha e por tela; o inglês é «em produção, a revisar», o português «tradução do agente, a revisar», nada final. `design/copy/album-blender-ids.json` congela os ids (viram chaves do CMS). 178 de 289 arquivos de teste comparam texto de interface (`scripts/i18n/tests-with-literal-text.py`). O que cabe sem rolar a 1280 e a 393 px não foi medido. Relatório e plan atualizados.
 
-## [2026-11-21 10:14] session — F81: fechamento (levantamento dos textos e rascunho da feature entregues)
-Branch: claude/f81-site-in-more-than-one-language
-Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21)
-Resumo: 1106 textos em 1437 pontos mapeados (`design/copy/album-blender-copy.md`, `scripts/i18n/`), relatório `reports/audits/2026-11-21-f81-copy-survey.md` com as decisões D-01 a D-13, spec/plan/tasks da F81 em rascunho (`**Approved**` pendente; tasks esperam o MJRP). Nenhum código de produto foi tocado; nada foi enviado ao remoto.
-Decisões gravadas: nenhuma decisão do MJRP; a coluna PT do mapa é proposta do agente, nada aprovado.
-Próxima sessão: o MJRP responde D-01 a D-13; a proposta da F83 define o contrato do dicionário; depois a F81 é priorizada e construída (TASK-01).
-Key Data: commits `4dfc9db`, `ba9cc27`, `ad26f1f` neste ramo.
-
 ## [2026-11-21 10:14] session — F81: spec, plan e tasks saem do esboço; fechamento da sessão do levantamento
 **Branch:** claude/f81-site-in-more-than-one-language
 Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21 («levantar todos os textos do site e entregar o mapa de que a F81 vai traduzir»).)
@@ -477,9 +660,17 @@ Decisões gravadas: nenhuma decisão do MJRP nesta sessão; as perguntas D-01 a 
 Próxima sessão: o MJRP responde as decisões; a proposta de arquitetura da F83 define o contrato do dicionário; só então a F81 é priorizada e construída (TASK-01 em diante). A busca não vê texto que vem de dado, de imagem, do manifesto, de janelas de login de terceiros nem o que só aparece em estados reais; 391 linhas do mapa são «provável».
 Key Data: 1106 textos / 1437 pontos; 234 montados de pedaços; 23 pontos mostram `error.message`; 13 pontos de data/moeda; 87 descartados; commit do mapa `4dfc9db`.
 
+## [2026-11-21 10:14] session — F81: fechamento (levantamento dos textos e rascunho da feature entregues)
+Branch: claude/f81-site-in-more-than-one-language
+Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21)
+Resumo: 1106 textos em 1437 pontos mapeados (`design/copy/album-blender-copy.md`, `scripts/i18n/`), relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-f81-copy-survey.md` com as decisões D-01 a D-13, spec/plan/tasks da F81 em rascunho (`**Approved**` pendente; tasks esperam o MJRP). Nenhum código de produto foi tocado; nada foi enviado ao remoto.
+Decisões gravadas: nenhuma decisão do MJRP; a coluna PT do mapa é proposta do agente, nada aprovado.
+Próxima sessão: o MJRP responde D-01 a D-13; a proposta da F83 define o contrato do dicionário; depois a F81 é priorizada e construída (TASK-01).
+Key Data: commits `4dfc9db`, `ba9cc27`, `ad26f1f` neste ramo.
+
 ## [2026-11-21 10:13] session — F81: levantamento de todos os textos do site (1106 textos, 1437 pontos) e o mapa para o português
 **Branch:** claude/f81-site-in-more-than-one-language
-Levantamento dos textos que uma pessoa vê ou o leitor de tela lê, por árvore sintática (`scripts/i18n/scan-copy.cjs`, `scripts/i18n/build-deck.py`): 1106 textos distintos em 1437 pontos de `public/` e `server/`; o mapa está em `design/copy/album-blender-copy.md` (uma linha por texto, com id, tela, tipo, EN, PT e marca) e a coluna PT é proposta do agente (subagentes Sonnet), nada aprovado. O relatório `reports/audits/2026-11-21-f81-copy-survey.md` traz as contagens, os casos difíceis, os conceitos com mais de um rótulo (IA-02) e as decisões D-01 a D-13 para o MJRP. Nenhum código de produto foi alterado.
+Levantamento dos textos que uma pessoa vê ou o leitor de tela lê, por árvore sintática (`scripts/i18n/scan-copy.cjs`, `scripts/i18n/build-deck.py`): 1106 textos distintos em 1437 pontos de `public/` e `server/`; o mapa está em `design/copy/album-blender-copy.md` (uma linha por texto, com id, tela, tipo, EN, PT e marca) e a coluna PT é proposta do agente (subagentes Sonnet), nada aprovado. O relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-f81-copy-survey.md` traz as contagens, os casos difíceis, os conceitos com mais de um rótulo (IA-02) e as decisões D-01 a D-13 para o MJRP. Nenhum código de produto foi alterado.
 
 ## [2026-11-21 10:08] session — UAT da F80: a caixa de discos mais em diagonal e sem corte (UAT-235); o board fora de passo com o estado real
 **Branch:** main
@@ -626,19 +817,19 @@ Palavras do MJRP: «Bom dia pode publicar!». O site foi publicado da `main` (`1
 
 ## [2026-11-21 00:35] session — F79 na `main`, junto com a F80; conferido no navegador com a conta do MJRP
 **Branch:** main
-Merge `f3f417f` pelo trem, depois da segunda reconferência independente (`reports/audits/2026-11-21-F79-visual-parity-recheck-2.md`: passa, 0 P0, 0 P1, 4 P2; a primeira tinha reprovado com 2 P1, consertados no ramo em `b12e751`). O conflito foi só o registro das duas aprovações no `info-arch.md`: ficaram as duas, e a página foi gerada de novo. Na `main` com as duas: 293 arquivos, 3719 testes, nenhum falhou; lint sem erro; build fechado. No navegador (prévia local, conta do MJRP): `/` leva direto à Home nova; a busca «Pink Floyd» traz a discografia do catálogo de verdade; `/?entry` mostra a página de entrada com as capas fictícias. Não provado escrevendo: criar uma série. Os P2 que ficaram viraram UAT-232, 233 e 234 (o sensor visual do projeto, P2-7, é decisão do MJRP: pede o Playwright como dependência). O gancho marcou F79, F80, S-61 e S-62 como «Done» ao fechar as tarefas; o aceite continua do MJRP. Nada publicado, nada enviado ao remoto.
+Merge `f3f417f` pelo trem, depois da segunda reconferência independente (`reports/audits/2026-11-21-mjrpalbumblender-v0-f79-visual-parity-recheck-2.md`: passa, 0 P0, 0 P1, 4 P2; a primeira tinha reprovado com 2 P1, consertados no ramo em `b12e751`). O conflito foi só o registro das duas aprovações no `info-arch.md`: ficaram as duas, e a página foi gerada de novo. Na `main` com as duas: 293 arquivos, 3719 testes, nenhum falhou; lint sem erro; build fechado. No navegador (prévia local, conta do MJRP): `/` leva direto à Home nova; a busca «Pink Floyd» traz a discografia do catálogo de verdade; `/?entry` mostra a página de entrada com as capas fictícias. Não provado escrevendo: criar uma série. Os P2 que ficaram viraram UAT-232, 233 e 234 (o sensor visual do projeto, P2-7, é decisão do MJRP: pede o Playwright como dependência). O gancho marcou F79, F80, S-61 e S-62 como «Done» ao fechar as tarefas; o aceite continua do MJRP. Nada publicado, nada enviado ao remoto.
 
 ## [2026-11-21 00:33] review — F79: a segunda passada da reconferência visual — passa, sem P0 e sem P1 (4 P2)
 **Branch:** feat/f79-home-that-explains-itself
-Os 36 pares refeitos sobre `b12e751` e olhados um a um; os fatos medidos nos 72 cenários: zero diferenças no fogo, o Syne carregado, nenhuma rolagem lateral. Fechados os achados da primeira passada: P1-1 (a lista colada em Syne 15/400 e a linha pulada sem caixa, em Syne bold), P1-2 (o mini equalizador na linha de «Saving your series…»), P2-1, P2-2, P2-6 e o corte do P2-3. Ficam P2-4, P2-5 e P2-7 (de propósito) e P2-3' (o contorno de foco e a altura da caixa colada no celular). Nenhuma regressão, nem na janela de editar a série. Nenhuma issue foi aberta no `uat.md`, por instrução do orquestrador. Relatório: `reports/audits/2026-11-21-F79-visual-parity-recheck-2.md`; capturas: `reports/evidence/F79/recheck-2/`.
+Os 36 pares refeitos sobre `b12e751` e olhados um a um; os fatos medidos nos 72 cenários: zero diferenças no fogo, o Syne carregado, nenhuma rolagem lateral. Fechados os achados da primeira passada: P1-1 (a lista colada em Syne 15/400 e a linha pulada sem caixa, em Syne bold), P1-2 (o mini equalizador na linha de «Saving your series…»), P2-1, P2-2, P2-6 e o corte do P2-3. Ficam P2-4, P2-5 e P2-7 (de propósito) e P2-3' (o contorno de foco e a altura da caixa colada no celular). Nenhuma regressão, nem na janela de editar a série. Nenhuma issue foi aberta no `uat.md`, por instrução do orquestrador. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-f79-visual-parity-recheck-2.md`; capturas: `reports/evidence/F79/recheck-2/`.
 
 ## [2026-11-21 00:26] review — F79: a segunda passada da reconferência visual começou
 **Branch:** feat/f79-home-that-explains-itself
-O mesmo agente juiz (que não implementou) refaz os 36 pares sobre `b12e751`, as correções dos achados da primeira passada. Relatório novo em `reports/audits/2026-11-21-F79-visual-parity-recheck-2.md`, `verdict: running`; o da primeira passada fica como está.
+O mesmo agente juiz (que não implementou) refaz os 36 pares sobre `b12e751`, as correções dos achados da primeira passada. Relatório novo em `reports/audits/2026-11-21-mjrpalbumblender-v0-f79-visual-parity-recheck-2.md`, `verdict: running`; o da primeira passada fica como está.
 
 ## [2026-11-21 00:25] session — F79: os achados da reconferência visual corrigidos (P1-1, P1-2 e os P2 da tela)
 **Branch:** feat/f79-home-that-explains-itself
-Lido `reports/audits/2026-11-20-F79-visual-parity-recheck.md` (não tocado). Corrigido, com o teste escrito antes e visto falhar (`test/components/home/HomeRecheckShapes.test.js`, mais asserções em `HomeController.bulk.test.js` e `HomePhone.dock.test.js`):
+Lido `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-visual-parity-recheck.md` (não tocado). Corrigido, com o teste escrito antes e visto falhar (`test/components/home/HomeRecheckShapes.test.js`, mais asserções em `HomeController.bulk.test.js` e `HomePhone.dock.test.js`):
 - P1-1: a regra do campo do artista alcançava as linhas da lista colada. Agora vale só para `.home-field > input`. As linhas estão em Syne 15/400 (texto 16/400 no celular). A linha pulada está em Syne 18/600, sem caixa. «Added 2 albums.» em negrito.
 - P1-2: o mini equalizador fica na linha de «Saving your series…», e a barra do celular não cresce.
 - P2-2: «Not saved: the connection dropped» aparece inteiro.
@@ -650,23 +841,23 @@ Pares refeitos em `reports/evidence/F79/pairs/`, com a seção nova no relatóri
 
 ## [2026-11-21 00:20] session — F80 na `main`: a página de entrada passou na reconferência visual; o P2 das capas reais vira a UAT-231
 **Branch:** main
-Merge `afbaf31` pelo trem, depois da reconferência independente (`reports/audits/2026-11-20-F80-visual-parity-recheck.md`: passa, 0 P0, 0 P1, 1 P2). O P2 (com as capas reais, a 393 px, o crédito do disco não quebra linha) está aberto como UAT-231; com as capas fictícias, o padrão, não acontece. A primeira tentativa de merge foi recusada pelo portão visual, como devia. A F79 teve a reconferência reprovada sem P0 (2 P1, 7 P2) e está nos consertos no ramo dela. Nada publicado, nada enviado ao remoto.
+Merge `afbaf31` pelo trem, depois da reconferência independente (`reports/audits/2026-11-20-mjrpalbumblender-v0-f80-visual-parity-recheck.md`: passa, 0 P0, 0 P1, 1 P2). O P2 (com as capas reais, a 393 px, o crédito do disco não quebra linha) está aberto como UAT-231; com as capas fictícias, o padrão, não acontece. A primeira tentativa de merge foi recusada pelo portão visual, como devia. A F79 teve a reconferência reprovada sem P0 (2 P1, 7 P2) e está nos consertos no ramo dela. Nada publicado, nada enviado ao remoto.
 
 ## [2026-11-21 00:11] review — F80: a reconferência visual independente passa, sem P0 e sem P1
 **Branch:** feat/f80-splash-page-for-album-lovers
-Um agente que não implementou a F80 comparou a página de entrada (`public/splash.html`, no Vite de desenvolvimento, com as capas reais e com as fictícias) ao Caixote v2 aprovado no fogo brando (`design/inception/splash-crate-v2.html?fire=soft`). O kit `visual_parity` rodou com uma config da rodada (Chromium e WebKit, 1280 e 393, 7 faixas, 28 registros por conjunto): 0 · 0 · 0 nos dois conjuntos. A Syne carrega (700 e 800) e os tokens são iguais. Os olhos conferiram o caixote 3D faixa por faixa, o fio lado A / lado B, «Flip the record», o fogo brando (`peak 0.72`, `low 0.28`), o movimento que para sozinho, e o protótipo e o produto iguais com menos movimento, sem WebGL e sem JavaScript. Veredito `pass`, `p0: 0`, `p1: 0`. Um P2: com as capas reais, a 393 px, o crédito do disco (`a.slot-am`) não quebra linha e a página fica com 467 px, e «Open the app» da barra de baixo sai cortado. O protótipo faz o mesmo; as fictícias (o padrão) não. Fica para o MJRP decidir se corrige antes de publicar as capas reais. A issue no `uat.md` não foi aberta, porque o commit desta passagem foi limitado ao relatório. Relatório: `reports/audits/2026-11-20-F80-visual-parity-recheck.md`; capturas em `reports/evidence/F80/recheck/`. Não conferido: iPhone e Safari de verdade, o build de produção, a fluidez da animação.
+Um agente que não implementou a F80 comparou a página de entrada (`public/splash.html`, no Vite de desenvolvimento, com as capas reais e com as fictícias) ao Caixote v2 aprovado no fogo brando (`design/inception/splash-crate-v2.html?fire=soft`). O kit `visual_parity` rodou com uma config da rodada (Chromium e WebKit, 1280 e 393, 7 faixas, 28 registros por conjunto): 0 · 0 · 0 nos dois conjuntos. A Syne carrega (700 e 800) e os tokens são iguais. Os olhos conferiram o caixote 3D faixa por faixa, o fio lado A / lado B, «Flip the record», o fogo brando (`peak 0.72`, `low 0.28`), o movimento que para sozinho, e o protótipo e o produto iguais com menos movimento, sem WebGL e sem JavaScript. Veredito `pass`, `p0: 0`, `p1: 0`. Um P2: com as capas reais, a 393 px, o crédito do disco (`a.slot-am`) não quebra linha e a página fica com 467 px, e «Open the app» da barra de baixo sai cortado. O protótipo faz o mesmo; as fictícias (o padrão) não. Fica para o MJRP decidir se corrige antes de publicar as capas reais. A issue no `uat.md` não foi aberta, porque o commit desta passagem foi limitado ao relatório. Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-visual-parity-recheck.md`; capturas em `reports/evidence/F80/recheck/`. Não conferido: iPhone e Safari de verdade, o build de produção, a fluidez da animação.
 
 ## [2026-11-21 00:05] review — F79: a reconferência visual independente — não passa, sem P0 (2 P1, 7 P2)
 **Branch:** feat/f79-home-that-explains-itself
-Um agente que não implementou a F79 refez as 72 capturas sobre o código atual (`1d875bc`): os 18 estados a 1280 e a 393, o protótipo `design/inception/home-transformar-v2.html` e a Home construída, como visitante, sem gravar nada. Olhou os 36 pares e mediu fatos nos dois lados (o Syne carregado, o fogo, a tipografia, a rolagem lateral). Bate no leiaute, no texto, no fogo (um botão por estado, igual nos 36 pares), no equalizador, na base, no Undo e no depois de criar. Os dois P1: a tipografia da lista colada (as linhas em Syne 18/600 contra 15/400; a linha pulada num campo de sistema 16/400 contra Syne 18/600) e a barra do celular em «Criando» (o mini equalizador cai para outra linha e a barra cresce). A janela de editar a série não está quebrada. O kit visual não rodou: o contrato não declara `sensors.visual` (o A2). Nenhuma issue foi aberta no `uat.md`, por instrução do orquestrador. Relatório: `reports/audits/2026-11-20-F79-visual-parity-recheck.md`; capturas: `reports/evidence/F79/recheck/`.
+Um agente que não implementou a F79 refez as 72 capturas sobre o código atual (`1d875bc`): os 18 estados a 1280 e a 393, o protótipo `design/inception/home-transformar-v2.html` e a Home construída, como visitante, sem gravar nada. Olhou os 36 pares e mediu fatos nos dois lados (o Syne carregado, o fogo, a tipografia, a rolagem lateral). Bate no leiaute, no texto, no fogo (um botão por estado, igual nos 36 pares), no equalizador, na base, no Undo e no depois de criar. Os dois P1: a tipografia da lista colada (as linhas em Syne 18/600 contra 15/400; a linha pulada num campo de sistema 16/400 contra Syne 18/600) e a barra do celular em «Criando» (o mini equalizador cai para outra linha e a barra cresce). A janela de editar a série não está quebrada. O kit visual não rodou: o contrato não declara `sensors.visual` (o A2). Nenhuma issue foi aberta no `uat.md`, por instrução do orquestrador. Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-visual-parity-recheck.md`; capturas: `reports/evidence/F79/recheck/`.
 
 ## [2026-11-20 23:51] review — F80: a reconferência visual independente começou
 **Branch:** feat/f80-splash-page-for-album-lovers
-Um agente que não implementou a F80 começa a reconferência visual da página de entrada contra o protótipo aprovado (`design/inception/splash-crate-v2.html`, fogo brando): o relatório `reports/audits/2026-11-20-F80-visual-parity-recheck.md` nasce com `verdict: running`, para o quadro mostrar a F80 em avaliação.
+Um agente que não implementou a F80 começa a reconferência visual da página de entrada contra o protótipo aprovado (`design/inception/splash-crate-v2.html`, fogo brando): o relatório `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-visual-parity-recheck.md` nasce com `verdict: running`, para o quadro mostrar a F80 em avaliação.
 
 ## [2026-11-20 23:51] review — F79: a reconferência visual independente começou
 **Branch:** feat/f79-home-that-explains-itself
-Um agente que não implementou a F79 começa a reconferência visual da Home contra `design/inception/home-transformar-v2.html` (18 estados, 1280 e 393). O relatório nasce em `reports/audits/2026-11-20-F79-visual-parity-recheck.md` com `verdict: running`; o veredito sobrescreve o mesmo arquivo.
+Um agente que não implementou a F79 começa a reconferência visual da Home contra `design/inception/home-transformar-v2.html` (18 estados, 1280 e 393). O relatório nasce em `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-visual-parity-recheck.md` com `verdict: running`; o veredito sobrescreve o mesmo arquivo.
 
 ## [2026-11-20 23:48] session — F79: a prova no navegador, ao lado do protótipo aprovado; os ajustes que ela mostrou
 **Branch:** feat/f79-home-that-explains-itself
@@ -725,7 +916,7 @@ Palavras do MJRP: «ok sigamos sua sugestao para as capas e vamos fazer um proto
 
 ## [2026-11-20 19:47] review — mjrp-critiquing-ux-ui: F79 Home, Transformar v2 · passa (0 P0), 6 P1 no próximo corte
 **Branch:** wip/f79-home-design-round-2
-- Relatório: reports/audits/2026-11-20-F79-home-r2-ux-audit.md · P0 0 · P1 6 · P2 13 · quem julgou: agente separado.
+- Relatório: reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-r2-ux-audit.md · P0 0 · P1 6 · P2 13 · quem julgou: agente separado.
 - Os seis P1 foram consertados na mesma rodada (proposta § Rodada 2, «A crítica da rodada 2»); o relatório fica `open` até o MJRP aprovar a v2.
 
 ## [2026-11-20 19:19] decision — F79: o MJRP escolhe o nível Transformar para a Home
@@ -743,18 +934,18 @@ A medição final em lote não rodou (a fila da máquina não andou em uma hora)
 
 ## [2026-11-20 18:43] review — crítica de UX independente da F80, rodada 1: sem P0, 8 P1, 17 P2
 **Branch:** feat/f80-splash-design-round
-Relatório: `reports/audits/2026-11-20-f80-splash-round1-ux-audit.md` (agente separado, só a skill, os protótipos e os documentos do produto). Os 8 P1 e 7 P2 baratos foram corrigidos na mesma versão, anotados no fim do relatório.
+Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round1-ux-audit.md` (agente separado, só a skill, os protótipos e os documentos do produto). Os 8 P1 e 7 P2 baratos foram corrigidos na mesma versão, anotados no fim do relatório.
 Fica para o MJRP: S2 (fogo em movimento no Lado A, lado B?) e nove P2.
-
-## [2026-11-20 18:38] review — mjrp-critiquing-ux-ui: F79 a Home, três níveis · passa para a escolha (0 P0)
-**Branch:** wip/f79-home-design-round
-Relatório: `reports/audits/2026-11-20-F79-home-ux-audit.md` · P0 0 · P1 8 · P2 9 · quem julgou: agente separado.
-Consertados na rodada: o contraste do painel da grade (Consolidar), as capas da barra do celular (Elevar), «Tap» no celular, os wireframes; o que fica está em `design/proposals/f79-home/proposal.md` § 6.
 
 ## [2026-11-20 18:38] session — F79 a Home: rodada 1 de desenho, três níveis (Consolidar, Elevar, Transformar) ao lado da tela de hoje
 **Branch:** wip/f79-home-design-round
 Protótipos feitos da Home real capturada no site local (busca «Pink Floyd»), sete estados, 1280 e 393 px: `design/inception/home-consolidar-v1.html`, `-elevar-v1.html`, `-transformar-v1.html`; a Referência, o comparador (Artifact privado https://claude.ai/artifact/AsiVV2i3595LqpLEadm61h), a proposta com o diagnóstico medido e as sete perguntas, e o gerador em `design/proposals/f79-home/`; o texto da tela em `design/proposals/2026-11-20-home-copy-proposal.md` (juiz verde). Recomendado: Elevar. Descrição na mesma rodada: `info-arch.md` § A Home (F79) com sete estados e o inventário HOME-01 a HOME-19, wireframes dos três níveis, padrões novos pendentes em `design-system.md`.
 O ramo pedido era `feat/f79-home-design-round`; ficou `wip/` para o board não dar a F79 como começada antes de o MJRP priorizá-la. Nenhum código do produto tocado; nada enviado ao remoto.
+
+## [2026-11-20 18:38] review — mjrp-critiquing-ux-ui: F79 a Home, três níveis · passa para a escolha (0 P0)
+**Branch:** wip/f79-home-design-round
+Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-ux-audit.md` · P0 0 · P1 8 · P2 9 · quem julgou: agente separado.
+Consertados na rodada: o contraste do painel da grade (Consolidar), as capas da barra do celular (Elevar), «Tap» no celular, os wireframes; o que fica está em `design/proposals/f79-home/proposal.md` § 6.
 
 ## [2026-11-20 17:38] session — F66: registro do que já estava resolvido, para o fecho
 **Branch:** main
@@ -1566,7 +1757,7 @@ Auxiliar sem navegador e sem conta: nada rodou contra dados reais; a prova na te
 
 ## [2026-11-19 23:34] review — reconferência visual de F56, F58, F60, F63, F65 e F70 por quem não implementou; três achados viram issues
 
-- Relatórios: `reports/audits/2026-11-19-F56-visual-parity-recheck.md` e os de F58, F60, F63, F65 e F70, na mesma pasta. Feitos por um auxiliar que não implementou nenhuma das seis.
+- Relatórios: `reports/audits/2026-11-19-mjrpalbumblender-v0-f56-visual-parity-recheck.md` e os de F58, F60, F63, F65 e F70, na mesma pasta. Feitos por um auxiliar que não implementou nenhuma das seis.
 - Veredito: F56, F58, F65 e F70 passam. F60 e F63 reprovam sem P0; os três P1 viraram UAT-216 (playlists salvas no celular), UAT-217 («Blend your Albums» sem a série) e UAT-218 (barra do topo mais larga que a tela com o Spotify conectado).
 - O que não foi conferido está dito em cada relatório: tudo que exigia gravar, apagar, gerar, sair ou conectar.
 - F62: as exportações reais foram feitas pelo MJRP em produção («sem o problema do campo funcionam os exports apple e spotify»); a TASK-13 está marcada com essa prova.

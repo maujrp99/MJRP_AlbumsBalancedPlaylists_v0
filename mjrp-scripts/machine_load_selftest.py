@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """machine_load_selftest.py - proves the one-heavy-suite-at-a-time semaphore (machine_load.py, hooks/machine_load_guard.py, the doctor's turn; F293).
 
 Incident behind it (2026-11-18): 40+ doctors ran together and the load went past 50. Each case fails if the trava is removed: the second
@@ -150,6 +150,10 @@ case("MJRP_HEAVY_WORKERS=4 muda o teto; off deixa os runners em paz; o valor do 
      ml.worker_env({"MJRP_HEAVY_WORKERS": "4"})["VITEST_MAX_WORKERS"] == "4" and "VITEST_MAX_WORKERS" not in ml.worker_env({"MJRP_HEAVY_WORKERS": "off"})
      and ml.worker_env({"VITEST_MAX_WORKERS": "7"})["VITEST_MAX_WORKERS"] == "7")
 BASE_NICE = os.getpriority(os.PRIO_PROCESS, 0)
+case("F337 · o teto traz o mínimo do vitest (UAT-638), e sem teto não há mínimo",
+     we["VITEST_MIN_THREADS"] == "1" and we["VITEST_MIN_FORKS"] == "1"
+     and ml.worker_env({"VITEST_MIN_THREADS": "2"})["VITEST_MIN_THREADS"] == "2"
+     and "VITEST_MIN_THREADS" not in ml.worker_env({"MJRP_HEAVY_WORKERS": "off"}), we)
 probe = "import os;print(os.getpriority(os.PRIO_PROCESS, 0), os.environ.get('VITEST_MAX_WORKERS'))"
 r_run = subprocess.run([sys.executable, str(HERE / "machine_load.py"), "run", "--", sys.executable, "-c", probe],
                    capture_output=True, text=True, env=dict(os.environ, MJRP_MACHINE_HOME=GUARD_HOME_EARLY, MJRP_HEAVY_NICE="10"))

@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * F79, after the independent visual recheck (reports/audits/2026-11-20-F79-visual-parity-recheck.md):
+ * F79, after the independent visual recheck (reports/audits/2026-11-20-mjrpalbumblender-v0-f79-visual-parity-recheck.md):
  * the shapes the prototype gives that the build had lost, read from the stylesheets.
  *
  *  P1-1  the pasted lines in the prototype's type (Syne 15/400 at 1280, the text face 16/400 at 393); the line

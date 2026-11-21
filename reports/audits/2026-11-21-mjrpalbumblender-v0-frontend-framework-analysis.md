@@ -1,3 +1,6 @@
+---
+type: research
+---
 # Album Blender · adotar um framework no site? React, Vue ou Next
 
 Escrito em 2026-11-21 08:47 pelo agente do V0, a pedido do MJRP: «como ele vai virar um produto, acha que está na hora de usar um framework mais moderno? React, vue ou o next? Quer fazer uma analise de comparacao de ganhos e perdas pra adocao de cada um?». É uma análise para decidir; não é uma proposta de arquitetura nem uma ADR, e nada foi mudado no código.

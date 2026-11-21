@@ -14,6 +14,7 @@ import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatu
 import { roundToCents } from '../models/inventoryValue.js'
 import { createBuyLinksSection, createPhoneBuyLinks, createValueSection, phoneValueFold } from './InventoryValueSection.js'
 import { isPhone } from '../utils/isPhone.js'
+import { readSources, sourceProps, stateKey, watchSources } from './albumWindowSources.js'
 
 /** The colour of the status badge of an inventory item. */
 const STATUS_BADGE = Object.freeze({
@@ -43,8 +44,11 @@ const hasTracks = (album) => album.getTracks('original').length > 0 || album.get
  * @param {Object} [options.value] - the host of the «Estimated value» section (F75): { view, onWrite,
  *   onForget, onRead } (components/InventoryValueSection.js). The inventory gives it; with it the
  *   window also shows «Where to buy». The window returned has `redrawValue()` to draw it again.
+ * @param {Object} [options.sources] - the albums screen gives it: where the ratings and the Spotify
+ *   popularity of the album are in the album load, and how to ask again (components/albumWindowSources.js).
+ *   With it the window says when a source failed, with «Try again»; without it, it says nothing.
  */
-export async function showViewAlbumModal(albumInput, { loadAlbum = null, value } = {}) {
+export async function showViewAlbumModal(albumInput, { loadAlbum = null, value, sources } = {}) {
   // Hydrate Album Model if needed
   const item = albumInput.albumData ? albumInput : null
   const rawData = albumInput.albumData || albumInput
@@ -166,7 +170,12 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null, value }
   closeBtn.addEventListener('click', handleClose)
 
   /** The comparison of the tracks of an album, or one line when there is nothing to compare. */
+  let shownAlbum = album
+  let drawnKey = ''
   const showTracks = (shown, emptyText) => {
+    shownAlbum = shown
+    const state = readSources(sources)
+    drawnKey = stateKey(state)
     SafeDOM.clear(rankingContainer)
     if (!hasTracks(shown)) {
       rankingContainer.appendChild(SafeDOM.p({ className: 'text-gray-400 text-center py-12', dataset: { role: 'no-tracks' } }, emptyText))
@@ -175,10 +184,16 @@ export async function showViewAlbumModal(albumInput, { loadAlbum = null, value }
     // A host of its own: a comparison that was replaced still draws, later, into the host it knew
     const host = SafeDOM.div({})
     rankingContainer.appendChild(host)
-    const comparison = new TracksRankingComparison({ album: shown })
+    const comparison = new TracksRankingComparison({ album: shown, ...sourceProps(sources, state) })
     comparison.mount(host)
     comparison.updateUI()
   }
+
+  // The load says a source failed, or answered: the window says so, and draws the album of now
+  watchSources(sources, closing.signal, {
+    changed: () => stateKey(readSources(sources)) !== drawnKey,
+    redraw: (state) => showTracks(state?.album ? asAlbum(state.album) : shownAlbum, TRACKS_TEXT.none)
+  })
 
   if (!loadAlbum) {
     showTracks(album, TRACKS_TEXT.none)

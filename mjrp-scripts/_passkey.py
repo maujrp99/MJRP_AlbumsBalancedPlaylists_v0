@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _passkey.py - what the merge hook and `remote_approval.py` share about a remote approval (CC-ADR-0038): where the approvals live, the list of
 trusted keys read from `main:` of the harness, the verifier and the book of used nonces. The checks of a signature live in one place, the
@@ -225,10 +225,11 @@ def signed_records():
     return out
 
 
-def record_of_tip(tip, project=None):
-    """The newest signed record of a merge of this tip, or None; one of `project` first, since a clone shares its tips."""
+def record_of_tip(tip, project=None, kind="merge"):
+    """The newest signed record of a merge of this tip, or None; one of `project` first, since a clone shares its tips. `kind` "fix-release"
+    (F280, CC-ADR-0058): the single passkey of a bug fix, whose payload also holds the `base`."""
     found = [(p.get("project") == project, p["issued_at"] if isinstance(p.get("issued_at"), int) else 0, r, p) for _path, r, p in signed_records()
-             if p.get("kind") == "merge" and p.get("subject") == tip]
+             if p.get("kind") == kind and p.get("subject") == tip]
     return max(found, key=lambda x: x[:2])[2:] if found else None
 
 
@@ -248,6 +249,8 @@ def verify(record, expect, keys, at, timeout=READ_SECONDS):
         return 1, "unknown_key"
     argv = [str(verifier_path()), "--kind", expect["kind"], "--scope", expect["scope"], "--project", expect["project"],
             "--subject", expect["subject"], "--rp-id", rp_id, "--at", str(at)]
+    if expect.get("base"):                       # F280 (CC-ADR-0058): the signature of a bug fix covers the base too
+        argv += ["--base", expect["base"]]
     r = _run(argv, timeout=timeout, data=json.dumps({"record": record, "keys": keys}).encode())
     said = r.stderr.decode(errors="replace").strip()
     return r.returncode if r.returncode in (0, 1, 2) else 2, said.split(": ", 1)[-1]
@@ -302,13 +305,80 @@ def consume_nonce(nonce, who, now=None):
 
 
 # --------------------------------------------------------------------------------------------- what the hook asks
-REASON_PT = {"expired": "a assinatura venceu", "wrong_subject": "a assinatura é de outro tip", "wrong_scope": "a assinatura é de outro ramo",
+REASON_PT = {"wrong_base": "a assinatura é de outra base (a main andou)", "expired": "a assinatura venceu", "wrong_subject": "a assinatura é de outro tip", "wrong_scope": "a assinatura é de outro ramo",
              "wrong_kind": "a assinatura é de outro tipo de aprovação", "wrong_project": "a assinatura é de outro projeto",
              "unknown_key": "a chave não está na lista da main", "key_expired": "a chave venceu: renovar pede o Mac",
              "key_revoked": "a chave foi revogada", "bad_signature": "a assinatura não confere",
              "no_user_verification": "o aparelho não confirmou a biometria", "no_user_presence": "o aparelho não confirmou o gesto",
              "wrong_origin": "a assinatura veio de outra origem", "wrong_rp": "a assinatura é de outro nome da máquina",
              "repeated": "a assinatura já foi usada"}
+
+
+# --------------------------------------------------------------------------------------------- the single passkey of a bug fix (F280)
+def stamps_dir():
+    return approvals_dir() / "stamps"
+
+
+def use_key(nonce, use):
+    """CC-ADR-0058 § 5: one nonce, two uses (`merge`, `push`), each spent once, in the same book as the nonces of today."""
+    return f"{nonce}#{use}"
+
+
+def write_stamp(payload, record, merged_at):
+    """The `merge` stamp of a `fix-release`, in the account's store: the signed bytes and the assertion, so the service judges the signature again
+    before it pushes (the stamp alone authorizes nothing: the hook runs where the agent reaches). Atomic: `tmp` + `os.replace`."""
+    stamps_dir().mkdir(parents=True, exist_ok=True)
+    body = {"nonce": payload["nonce"], "kind": "fix-release", "project": payload.get("project"), "scope": payload.get("scope"),
+            "tip": payload.get("subject"), "base": payload.get("base"), "record": record, "merged_at": int(merged_at), "uses": {"merge": int(merged_at)}}
+    tmp = stamps_dir() / f".{payload['nonce']}.tmp"
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        json.dump(body, f)
+    os.replace(tmp, stamps_dir() / f"{payload['nonce']}.json")
+
+
+def judge_fix_release(root, tip, scope):
+    """(state, why, record, payload) of the single passkey of this tip at `root` (CC-ADR-0058 § 3): "none" (no record: the merge goes as today),
+    "valid", "invalid" (a record that does not hold: the use is spent and the merge goes as today, with the reason) or "unavailable".
+    `root` is the merge in course: HEAD is `main`, the index is the merge result."""
+    try:
+        if record_of_tip(tip, None, "fix-release") is None:
+            return "none", "", None, None
+        project = project_of(root)
+        if project != HARNESS_PROJECT:
+            return "none", "", None, None            # a child's merge goes as today until its copy of the hook carries this (F280, out of scope)
+        record, payload = record_of_tip(tip, project, "fix-release")
+        harness_root()
+        problem = verifier_problem()
+        if problem:
+            return "unavailable", problem, record, payload
+        keys = read_list()
+        base = payload.get("base")
+        code, reason = verify(record, {"kind": "fix-release", "scope": scope, "project": project, "subject": tip, "base": base}, keys,
+                              int(time.time()))
+        if code == 2:
+            return "unavailable", f"o verificador não avaliou ({reason})", record, payload
+        if code == 1:
+            return "invalid", REASON_PT.get(reason, reason), record, payload
+        nonce = payload.get("nonce")
+        if not nonce or nonce_used(use_key(nonce, "merge")):
+            return "invalid", REASON_PT["repeated"], record, payload
+        head = _run(["git", "rev-parse", "--verify", "HEAD^{commit}"], env=clean_env(), cwd=str(root)).stdout.decode().strip()
+        if not base or head != base:
+            return "invalid", "a main andou desde que a assinatura foi dada (HEAD não é a base assinada)", record, payload
+        if _run(["git", "merge-base", "--is-ancestor", base, tip], env=clean_env(), cwd=str(root)).returncode != 0:
+            return "invalid", "a base assinada não é ancestral da ponta", record, payload
+        index = _run(["git", "write-tree"], cwd=str(root)).stdout.decode().strip()
+        tree = _run(["git", "rev-parse", "--verify", f"{tip}^{{tree}}"], env=clean_env(), cwd=str(root)).stdout.decode().strip()
+        if not index or index != tree:
+            return "invalid", "a árvore do merge não é a da ponta assinada", record, payload
+        import fix_release                          # the rule has one source: the same file the service reads
+        problems = fix_release.judge(root, tip, base)
+        if problems:
+            return "invalid", "o branch saiu da regra do conserto: " + "; ".join(problems), record, payload
+    except Unevaluable as e:
+        return "unavailable", str(e), None, None
+    return "valid", "", record, payload
 
 
 def judge_tip(root, tip, scope):

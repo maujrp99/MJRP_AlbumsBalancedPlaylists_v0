@@ -18,7 +18,7 @@
 
 ## Verification
 - [x] TASK-05 no navegador: remover «GNX» do inventário; durações nas duas janelas; botão «Close»; título e ícone; `reports/evidence/F54-close-v4-inventory-delete-and-polish/F54-browser-2026-11-19.json` · implements:: REQ-01, REQ-03, REQ-04, REQ-05 · model:: opus · rounds:: 1
-- [ ] TASK-06 o que a trava do passo retroativo ainda cobra antes do `Done` (`python3 mjrp-scripts/retro_step_check.py . --staged` com a feature em `Done`, conferido em 2026-11-21): Reconferência visual: a feature mexeu na tela e não há relatório `visual-parity-recheck` nem nota de Touch ID (`mjrp-visual-ok`) que a cubra. É trabalho de agente; nenhum item é do MJRP. O que falta de verdade é a reconferência visual independente (relatório `reports/audits/<data>-F54-visual-parity-recheck.md`, por quem não implementou, num navegador): nenhum merge traz nota de Touch ID. «Prototype: none» já está gravada na spec (MJRP, 2026-11-20 00:10). · implements:: REQ-01 · model:: opus
+- [x] TASK-06 reconferência visual independente, por quem não implementou, num navegador, em 2026-11-21 — relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-visual-parity-recheck.md` e `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`. Veredito dos lotes `fail`, sem P0; achado desta feature: o «X» do topo da janela do álbum sem nome (UAT-251, P2); apagar, durações em m:ss e «Close» conferem · implements:: REQ-01 · model:: opus · rounds:: 1
 
 ## Documentation
 - [x] `docs/manual/` (14, 21, 99, 07b) e `docs/specs/behavior.md` dizem que o apagar funciona e onde a duração é formatada

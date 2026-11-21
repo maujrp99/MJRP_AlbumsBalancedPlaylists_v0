@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _safe.py - the ONE way a harness script (and the agent) removes or moves a path (ADR-0023; F74).
 

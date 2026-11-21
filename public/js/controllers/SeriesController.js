@@ -272,11 +272,32 @@ export default class SeriesController {
      * shows about it (F69). Null when the load does not have that album.
      */
     getPopularityStatus(albumId) {
+        return this._loadedEntryOf(albumId)?.enrichment.popularity ?? null;
+    }
+
+    /** The entry of a loaded album in the album load, or null when the load does not have it. */
+    _loadedEntryOf(albumId) {
         for (const seriesId of albumLoadStore.getSeriesIds()) {
             const entry = albumLoadStore.getEntries(seriesId).find(item => item.album?.id === albumId);
-            if (entry) return entry.enrichment.popularity;
+            if (entry) return entry;
         }
         return null;
+    }
+
+    /**
+     * What the album window needs of the album load for one album (F52 UAT-244, F69 UAT-245): where
+     * its ratings and its Spotify popularity are, how to ask for either again, and when they change.
+     * The window reaches the load only through this.
+     */
+    sourcesOf(albumId) {
+        return {
+            read: () => {
+                const entry = this._loadedEntryOf(albumId);
+                return entry ? { album: entry.album, ratings: entry.enrichment.acclaim, popularity: entry.enrichment.popularity } : null;
+            },
+            ask: (id, source) => albumLoadService.refreshSource(id, source),
+            watch: (listener) => albumLoadStore.subscribe(listener)
+        };
     }
 
     /** Ask Spotify again for the popularity of one album, through the album load (F69). */

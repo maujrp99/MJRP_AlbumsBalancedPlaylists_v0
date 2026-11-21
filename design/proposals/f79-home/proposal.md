@@ -69,7 +69,7 @@ O texto do Consolidar pode entrar antes de tudo, sozinho, como um conserto peque
 
 ## 6. A crítica (agente separado, `mjrp-critiquing-ux-ui`)
 
-Relatório: `reports/audits/2026-11-20-F79-home-ux-audit.md`. Veredito: os três níveis podem ir para a sua escolha; **nenhum P0**, 8 P1, 9 P2. O método (três níveis num eixo nomeado, igualmente acabados) passa; o fogo e os equalizadores são respeitados nos três. O Elevar é o que tem menos P1 próprios (1).
+Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-ux-audit.md`. Veredito: os três níveis podem ir para a sua escolha; **nenhum P0**, 8 P1, 9 P2. O método (três níveis num eixo nomeado, igualmente acabados) passa; o fogo e os equalizadores são respeitados nos três. O Elevar é o que tem menos P1 próprios (1).
 
 **Consertado nesta rodada:** o contraste dos textos do painel da grade no Consolidar (P1, AH-01); as capas da barra do celular no Elevar cobrindo o texto (P1, AH-11); «Click» virou «Tap» no celular (P2); os wireframes que faltavam (P1).
 
@@ -191,7 +191,7 @@ Primeira visita · Digitando · Buscando · Discografia com filtros · Um álbum
 
 ### A crítica da rodada 2 (agente separado, `mjrp-critiquing-ux-ui`)
 
-Relatório: `reports/audits/2026-11-20-F79-home-r2-ux-audit.md`. O crítico recebeu só a skill, o protótipo, as prévias e os documentos do produto, e tirou as próprias capturas pela fila da máquina. Veredito: **passa para a sua aprovação**; nenhum P0, 6 P1, 13 P2, 3 decisões suas.
+Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-r2-ux-audit.md`. O crítico recebeu só a skill, o protótipo, as prévias e os documentos do produto, e tirou as próprias capturas pela fila da máquina. Veredito: **passa para a sua aprovação**; nenhum P0, 6 P1, 13 P2, 3 decisões suas.
 
 **Consertado nesta rodada (recapturado e medido depois):**
 - P1 · a base do celular passava da barra de ação de 64 px (100–150 px): agora mede 62–67 px em todos os estados, exceto «Não deu para gravar» (80 px, a frase do erro em duas linhas) e «Muitos» com a faixa Undo em cima (122 px, a faixa é à parte); o aviso de visitante saiu da barra e foi para baixo do campo; «Criada» cabe numa linha (o nome, «Open the series», «Blend it now»).

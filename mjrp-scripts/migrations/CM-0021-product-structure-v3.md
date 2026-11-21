@@ -4,7 +4,7 @@ item: product-structure
 from: 2
 to: 3
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0021 · product-structure@2 → product-structure@3
 
 ## Por que

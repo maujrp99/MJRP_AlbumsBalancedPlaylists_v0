@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
  "version": 1,
  "about": "O manifesto único dos sensores do processo (F182, UAT-489). Todo mjrp-scripts/*_check.py está em `sensors` (vai ao filho, e `runs` diz onde roda) ou em `harness_only` (com o motivo). Quem confere: o autoteste do kernel (new_project_selftest) no harness, e o I5 do doctor no filho. Para um sensor novo: ponha-o aqui E em VENDORED_FILES (new_project_kernel.py). Toda trava que um hook git do kernel capaz de recusar (pre-commit, commit-msg, pre-merge-commit) executa está em `taught_by` (F306, UAT-618): a skill que ensina o passo que ela cobra, e que a nomeia no próprio texto, ou `none: <motivo>`; o autoteste do kernel (`untaught_gates`) reprova o que falta, o que sobra e a skill que não a nomeia. Para uma trava nova: a linha aqui e o nome dela na skill, no mesmo commit.",
  "runs_values": {

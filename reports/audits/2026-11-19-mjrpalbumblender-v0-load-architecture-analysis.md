@@ -1,5 +1,5 @@
 ---
-type: architecture-analysis
+type: research
 subject: "Carga de álbuns do Album Blender v0: o desenho de hoje, o desenho proposto e a comparação entre os dois"
 project: mjrpalbumblender-v0
 written: "2026-11-19 14:30"

@@ -1,0 +1,2064 @@
+{
+ "list-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1329,
+  "interactiveBelow44": {
+   "count": 1321,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1321,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 422,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 214,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "items": 211,
+   "shown": 211
+  }
+ },
+ "filters-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1329,
+  "interactiveBelow44": {
+   "count": 1321,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1321,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 422,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 214,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "statusControls": [
+    {
+     "status": "owned",
+     "text": "✓ 160 Owned",
+     "pressed": "false"
+    },
+    {
+     "status": "not-owned",
+     "text": "32 Not Owned",
+     "pressed": "false"
+    },
+    {
+     "status": "wishlist",
+     "text": "♡ 19 Wishlist",
+     "pressed": "false"
+    }
+   ],
+   "statusSelectPresent": false,
+   "formatOptions": [
+    "All Formats",
+    "CD",
+    "Vinyl",
+    "Digital"
+   ],
+   "sortOptions": [
+    "Artist (A-Z)",
+    "Artist (Z-A)",
+    "Avg Rating (↓)",
+    "Avg Rating (↑)",
+    "Avg Pop (↓)",
+    "Avg Pop (↑)",
+    "Value (↓)",
+    "Value (↑)",
+    "Newest",
+    "Oldest"
+   ],
+   "openSheetTitle": null
+  }
+ },
+ "filtered-notowned-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 4715,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 263,
+  "interactiveBelow44": {
+   "count": 255,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 255,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 64,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 35,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "pressed": [
+    "not-owned"
+   ],
+   "shown": 32,
+   "allNotOwned": true
+  }
+ },
+ "sort-avg-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 62983,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 594,
+  "interactiveBelow44": {
+   "count": 586,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "button.tech-btn.tech-btn-secondary «Edit» 75x34",
+    "button.tech-btn.tech-btn-secondary «Delete» 89x34"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 586,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "button.tech-btn.tech-btn-secondary «Edit» 75x34",
+    "button.tech-btn.tech-btn-secondary «Delete» 89x34"
+   ]
+  },
+  "textBelow12px": {
+   "count": 211,
+   "samples": [
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 3,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-accent-primary.text-lg «Rush»"
+  },
+  "extra": {
+   "sorting": {
+    "field": "averageRating",
+    "direction": "desc"
+   },
+   "viewMode": "list",
+   "firstFive": [
+    [
+     "Purple",
+     97.8,
+     28.2
+    ],
+    [
+     "Who's Next",
+     97.7,
+     69.3
+    ],
+    [
+     "Mezzanine",
+     97.4,
+     58.6
+    ],
+    [
+     "Superunknown",
+     97.2,
+     66.8
+    ],
+    [
+     "Purple",
+     96.8,
+     37.2
+    ]
+   ],
+   "averagesLines": [
+    "Avg Rating: 97.8 (9 of 10) · Avg Pop: 28.2% (10 of 10)",
+    "Avg Rating: 97.7 (9 of 10) · Avg Pop: 69.3% (10 of 10)",
+    "Avg Rating: 97.4 (9 of 10) · Avg Pop: 58.6% (10 of 10)"
+   ]
+  }
+ },
+ "sort-pop-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 62983,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 594,
+  "interactiveBelow44": {
+   "count": 586,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "button.tech-btn.tech-btn-secondary «Edit» 75x34",
+    "button.tech-btn.tech-btn-secondary «Delete» 89x34"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 586,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "button.tech-btn.tech-btn-secondary «Edit» 75x34",
+    "button.tech-btn.tech-btn-secondary «Delete» 89x34"
+   ]
+  },
+  "textBelow12px": {
+   "count": 211,
+   "samples": [
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px",
+    "span.px-2.py-0.5 «CD» 10px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 3,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-accent-primary.text-lg «Radiohead»"
+  },
+  "extra": {
+   "sorting": {
+    "field": "averagePopularity",
+    "direction": "desc"
+   },
+   "firstFive": [
+    [
+     "Crime of the Century",
+     91.3,
+     79.7
+    ],
+    [
+     "Hounds of Love",
+     67.5,
+     79.5
+    ],
+    [
+     "Purple",
+     60.8,
+     79.2
+    ],
+    [
+     "The Dark Side of the Moon",
+     75,
+     79
+    ],
+    [
+     "Aja",
+     82.5,
+     78.5
+    ]
+   ],
+   "averagesLines": [
+    "Avg Rating: 91.3 (9 of 10) · Avg Pop: 79.7% (10 of 10)",
+    "Avg Rating: 67.5 (9 of 10) · Avg Pop: 79.5% (10 of 10)",
+    "Avg Rating: 60.8 (9 of 10) · Avg Pop: 79.2% (10 of 10)"
+   ]
+  }
+ },
+ "series-button-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1329,
+  "interactiveBelow44": {
+   "count": 1321,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1321,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 422,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 214,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "button": "Add the albums of my series",
+   "disabled": false,
+   "noteText": null
+  }
+ },
+ "series-confirm-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1332,
+  "interactiveBelow44": {
+   "count": 1322,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1322,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 422,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 214,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "dialogTitle": "Add the albums of your series?",
+   "dialogText": "Add the albums of your series?11 albums from your 2 series will be added as Not Owned. 3 albums already in your inventory stay as they are. 1 entry that repeats an album of another series is added once. 1 entry with no artist or no title is left out.CancelAdd 11 albums",
+   "buttons": [
+    "Close",
+    "Cancel",
+    "Add 11 albums"
+   ],
+   "written": 0,
+   "inventoryCount": 211
+  }
+ },
+ "series-result-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 29915,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1407,
+  "interactiveBelow44": {
+   "count": 1399,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «43 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1399,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «43 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 444,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 225,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "before": 211,
+   "after": 222,
+   "written": 11,
+   "toasts": [
+    "Added 11 albums as Not Owned."
+   ],
+   "listCount": 222,
+   "notOwnedCount": 43
+  }
+ },
+ "series-nothing-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1330,
+  "interactiveBelow44": {
+   "count": 1322,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1322,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 422,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 214,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "toasts": [
+    "Every album of your series is already in your inventory. Nothing was added."
+   ],
+   "written": 0
+  }
+ },
+ "delete-confirm-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1332,
+  "interactiveBelow44": {
+   "count": 1322,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1322,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 422,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 214,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "dialogText": "Remove from Inventory?Are you sure you want to remove \"Brothers in Arms\" from your collection?CancelRemove",
+   "buttons": [
+    "Close",
+    "Cancel",
+    "Remove"
+   ],
+   "inventoryCount": 211,
+   "removed": []
+  }
+ },
+ "delete-after-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1322,
+  "interactiveBelow44": {
+   "count": 1314,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «31 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1314,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «31 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 420,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 213,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "before": 211,
+   "after": 210,
+   "removed": [
+    "inv-1"
+   ],
+   "itemStillOnScreen": false,
+   "itemStillInState": false,
+   "toasts": [
+    "Album removed from inventory"
+   ]
+  }
+ },
+ "item-window-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1339,
+  "interactiveBelow44": {
+   "count": 1324,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1324,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 442,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 215,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "durationsFound": 30,
+   "durationSample": [
+    "1:35",
+    "1:35",
+    "2:33",
+    "2:33",
+    "3:31",
+    "3:31",
+    "3:38",
+    "3:38",
+    "4:36",
+    "4:36"
+   ],
+   "noDashDash": true,
+   "closeButtons": [
+    {
+     "text": "",
+     "ariaLabel": null,
+     "action": "close",
+     "visible": true
+    },
+    {
+     "text": "Close",
+     "ariaLabel": null,
+     "action": null,
+     "visible": true
+    }
+   ],
+   "title": "Ten"
+  }
+ },
+ "edit-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 28340,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 1337,
+  "interactiveBelow44": {
+   "count": 1324,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1324,
+   "samples": [
+    "button.badge.badge-success «✓ 160 Owned» 114x26",
+    "button.badge.badge-neutral «32 Not Owned» 125x26",
+    "button.badge.badge-neutral «♡ 19 Wishlist» 123x26",
+    "button.text-xs.px-2 «USD» 43x26",
+    "button.text-xs.px-2 «EUR» 43x26",
+    "button.text-xs.px-2 «GBP» 43x26",
+    "button.text-xs.px-2 «BRL» 41x26",
+    "a.underline.hover:text-white «Data provided by Discogs.» 140x14",
+    "select.status-select.w-full «Status» 128x26",
+    "button.p-1.5.text-gray-400 «» 12x12"
+   ]
+  },
+  "textBelow12px": {
+   "count": 422,
+   "samples": [
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «Not mine yet · costs» 11px",
+    "span.text-[11px].text-gray-400 «Where to buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px",
+    "div.text-[11px].text-gray-400 «In my collection · worth» 11px",
+    "span.text-[11px].text-gray-400 «Sell, trade or buy» 11px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 217,
+   "samples": [
+    "#inventorySearch «» 14px",
+    "#formatFilter «All FormatsCDVinylDigital» 14px",
+    "#inventorySort «Sort by» 14px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px",
+    "select.status-select.w-full «Status» 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-gray-400.text-sm «ABBA»"
+  },
+  "extra": {
+   "dialogTitle": "Edit Inventory Item",
+   "fields": [
+    "edit-format",
+    "edit-currency",
+    "edit-currency",
+    "number",
+    "textarea"
+   ],
+   "buttons": [
+    "Close",
+    "Cancel",
+    "Save Changes"
+   ]
+  }
+ },
+ "list-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 5925,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 172,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "items": 211,
+   "shown": 211
+  }
+ },
+ "filters-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 188,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "statusControls": [
+    {
+     "status": "owned",
+     "text": "✓ 160 Owned",
+     "pressed": "false"
+    },
+    {
+     "status": "not-owned",
+     "text": "32 Not Owned",
+     "pressed": "false"
+    },
+    {
+     "status": "wishlist",
+     "text": "♡ 19 Wishlist",
+     "pressed": "false"
+    }
+   ],
+   "statusSelectPresent": false,
+   "formatOptions": [],
+   "sortOptions": [],
+   "openSheetTitle": "Filters and order"
+  }
+ },
+ "filtered-notowned-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 4033,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 117,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Brothers in Arms»"
+  },
+  "extra": {
+   "pressed": [
+    "not-owned"
+   ],
+   "shown": 32,
+   "allNotOwned": true
+  }
+ },
+ "sort-avg-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 5965,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 172,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Purple»"
+  },
+  "extra": {
+   "sorting": {
+    "field": "averageRating",
+    "direction": "desc"
+   },
+   "viewMode": "list",
+   "firstFive": [
+    [
+     "Purple",
+     97.8,
+     28.2
+    ],
+    [
+     "Who's Next",
+     97.7,
+     69.3
+    ],
+    [
+     "Mezzanine",
+     97.4,
+     58.6
+    ],
+    [
+     "Superunknown",
+     97.2,
+     66.8
+    ],
+    [
+     "Purple",
+     96.8,
+     37.2
+    ]
+   ],
+   "averagesLines": [
+    "Avg Rating97.8Avg Pop28.2%",
+    "Avg Rating97.7Avg Pop69.3%",
+    "Avg Rating97.4Avg Pop58.6%"
+   ]
+  }
+ },
+ "sort-pop-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 5925,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 172,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Crime of the Century»"
+  },
+  "extra": {
+   "sorting": {
+    "field": "averagePopularity",
+    "direction": "desc"
+   },
+   "firstFive": [
+    [
+     "Crime of the Century",
+     91.3,
+     79.7
+    ],
+    [
+     "Hounds of Love",
+     67.5,
+     79.5
+    ],
+    [
+     "Purple",
+     60.8,
+     79.2
+    ],
+    [
+     "The Dark Side of the Moon",
+     75,
+     79
+    ],
+    [
+     "Aja",
+     82.5,
+     78.5
+    ]
+   ],
+   "averagesLines": [
+    "Avg Rating91.3Avg Pop79.7%",
+    "Avg Rating67.5Avg Pop79.5%",
+    "Avg Rating60.8Avg Pop79.2%"
+   ]
+  }
+ },
+ "series-button-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 176,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "button": "Add the albums of my series",
+   "disabled": false,
+   "noteText": "Add the albums of my seriesPuts every album of your series in the inventory, as Not Owned. You see how many and confirm first.Update ratingsReads the BestEverAlbums rating and the Spotify popularity o"
+  }
+ },
+ "series-confirm-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 175,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "dialogTitle": "Add the albums of your series?",
+   "dialogText": "Inventory | Start Albums Blend Playlists Inventory |  | Add the albums of your series?11 albums from your 2 series will be added as Not Owned. 3 albums already in your inventory stay as they are. 1 entry that repeats an album of another series is added once. 1 entry with no artist or no title is left out.CancelAdd 11 albums",
+   "buttons": [
+    "Menu and account",
+    "Close",
+    "Cancel",
+    "Add 11 albums"
+   ],
+   "written": 0,
+   "inventoryCount": 211
+  }
+ },
+ "series-result-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 5939,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 173,
+  "interactiveBelow44": {
+   "count": 2,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28",
+    "button.toast-close.opacity-60 «» 32x32"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 2,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28",
+    "button.toast-close.opacity-60 «» 32x32"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "before": 211,
+   "after": 222,
+   "written": 11,
+   "toasts": [
+    "Added 11 albums as Not Owned."
+   ],
+   "listCount": 222,
+   "notOwnedCount": 43
+  }
+ },
+ "series-nothing-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 5925,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 173,
+  "interactiveBelow44": {
+   "count": 2,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28",
+    "button.toast-close.opacity-60 «» 32x32"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 2,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28",
+    "button.toast-close.opacity-60 «» 32x32"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "toasts": [
+    "Every album of your series is already in your inventory. Nothing was added."
+   ],
+   "written": 0
+  }
+ },
+ "delete-confirm-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 175,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "dialogText": "Inventory | Start Albums Blend Playlists Inventory |  | Remove from Inventory?Are you sure you want to remove \"Brothers in Arms\" from your collection?CancelRemove",
+   "buttons": [
+    "Menu and account",
+    "Close",
+    "Cancel",
+    "Remove"
+   ],
+   "inventoryCount": 211,
+   "removed": []
+  }
+ },
+ "delete-after-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 5945,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 173,
+  "interactiveBelow44": {
+   "count": 2,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28",
+    "button.toast-close.opacity-60 «» 32x32"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 2,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28",
+    "button.toast-close.opacity-60 «» 32x32"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "before": 211,
+   "after": 210,
+   "removed": [
+    "inv-1"
+   ],
+   "itemStillOnScreen": false,
+   "itemStillInState": false,
+   "toasts": [
+    "Album removed from inventory"
+   ]
+  }
+ },
+ "item-window-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 2,
+   "samples": [
+    "div.album-window__glow.md:hidden «» right=441",
+    "img. «» right=441"
+   ]
+  },
+  "interactive": 181,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "durationsFound": 30,
+   "durationSample": [
+    "1:35",
+    "1:35",
+    "2:33",
+    "2:33",
+    "3:31",
+    "3:31",
+    "3:38",
+    "3:38",
+    "4:36",
+    "4:36"
+   ],
+   "noDashDash": true,
+   "closeButtons": [
+    {
+     "text": "",
+     "ariaLabel": "Close",
+     "action": null,
+     "visible": true
+    },
+    {
+     "text": "",
+     "ariaLabel": null,
+     "action": "close",
+     "visible": false
+    },
+    {
+     "text": "Close",
+     "ariaLabel": null,
+     "action": null,
+     "visible": false
+    }
+   ],
+   "title": "Ten"
+  }
+ },
+ "edit-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 180,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.inv-row__title «Blue»"
+  },
+  "extra": {
+   "dialogTitle": "Edit Inventory Item",
+   "fields": [
+    "edit-format",
+    "edit-currency",
+    "edit-currency",
+    "number",
+    "textarea"
+   ],
+   "buttons": [
+    "Menu and account",
+    "Close",
+    "Cancel",
+    "Save Changes"
+   ]
+  }
+ }
+}

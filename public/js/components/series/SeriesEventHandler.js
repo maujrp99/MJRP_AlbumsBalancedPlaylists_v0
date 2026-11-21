@@ -29,6 +29,7 @@ export default class SeriesEventHandler extends Component {
      * @param {Function} config.props.onRefetchMetadata - Callback for refetch
      * @param {Function} config.props.onShowAllAlbums - (seriesId) the person asked for the albums a series holds back
      * @param {Function} config.props.onSaveRanking - (album, rankings) => Promise<boolean>, saves the person's ranking
+     * @param {Function} config.props.sourcesOf - (albumId) => the album window's view of the album load (ratings, popularity)
      */
     constructor(config) {
         super(config);
@@ -176,6 +177,11 @@ export default class SeriesEventHandler extends Component {
         );
     }
 
+    /** What the album window is given by this screen: the view of the album load (UAT-244, UAT-245). */
+    albumWindowOptions(albumId) {
+        return { sources: this.props.sourcesOf?.(albumId) };
+    }
+
     /**
      * Handle album-level actions (view, add to inventory, remove)
      */
@@ -190,7 +196,8 @@ export default class SeriesEventHandler extends Component {
 
         switch (action) {
             case 'view-modal':
-                showViewAlbumModal(album); // Verified SafeDOM
+                // The window says where the ratings and the popularity are, and asks again (UAT-244, UAT-245)
+                showViewAlbumModal(album, this.albumWindowOptions(albumId));
                 break;
 
             // F76: the phone's «⋯» names every action in a bottom sheet; each one comes back here,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """state_first_guard.py - the PreToolUse(Write|Edit|MultiEdit|NotebookEdit) hook behind «o estado primeiro» (F295, S-245, orchestrator rule 39).
 
 It refuses (exit 2, one line on stderr that goes back to the agent) a write inside a feature's linked worktree while the feature's card is not

@@ -144,7 +144,8 @@ export default class SeriesView extends BaseView {
                 onRefetchMetadata: (album) => this.controller.handleRefetchMetadata(album),
                 onRetrySeries: (sid) => this.controller.retrySeries(sid),
                 onShowAllAlbums: (sid) => this.showAllAlbums(sid),
-                onSaveRanking: (album, rankings) => this.controller.saveRanking(album, rankings)
+                onSaveRanking: (album, rankings) => this.controller.saveRanking(album, rankings),
+                sourcesOf: (albumId) => this.controller.sourcesOf(albumId)
             }
         });
         this.components.eventHandler.mount();
