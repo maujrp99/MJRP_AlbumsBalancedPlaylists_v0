@@ -326,3 +326,50 @@ A primeira pintura e os quadros por segundo (acima); o 3D num iPhone ou num comp
 **O comparador:** abre em «O texto em português ficou natural?», uma linha e dois cartões: a v3 (Nova, a página viva) e a v2 (a que você viu). A pergunta da v2 foi para `home-pt-v2.html`, atrás de «Rodadas anteriores».
 
 **O que conferi:** a v3 a 1280 × 800 e 393 × 852, sem e com conta, PT e EN: nenhuma rolagem lateral (no topo e na história de Álbuns), nenhum título, botão ou rótulo do menu cortado, nenhum erro no console. O comparador a 1280 e 393: sem rolagem lateral, sem erro; a v3 viva troca de idioma com a chave. **Fica:** a abertura dele ocupa o título com a segunda frase em laranja, como na v2 (14 palavras no título, acima da régua de 8 a 12); a 393 o caixote desce para baixo da dobra. Separar a segunda frase num subtítulo menor é uma mudança visual que não fiz.
+
+## Rodada 3 · v4 — o ritmo da página (2026-11-21, nota para o orquestrador)
+
+**Pedido** (as palavras dele, no log): olhando o trecho depois de «Lado A · 1 — Inicie», «o espçamento aqui tem um vázio muito grande, ou reduzimos ou colocamos animacoes ligadas a fogo e musica...motions fading in e fading out»; depois, «gaste um tempo pra repensar nesse ultimo ponto e caprichar na v4». E uma correção da abertura: o título é só «Mergulhe nos álbuns que você ama.»; «Seus álbuns do momento, numa playlist balanceada.» vira a linha menor embaixo.
+
+**A versão:** `design/inception/splash-menu-bar-v4.html` (gerador `home-menu/build_v4.mjs`, que lê a v3; a v3 fica intacta). Fiz as duas coisas que ele ofereceu: reduzi o espaço e pus em cada história uma vinheta viva, de fogo e música, que aparece quando a história entra e some quando ela sai.
+
+**O diagnóstico** (medido na v3 e na v4, com o mesmo script; «trecho vazio» = o maior trecho da coluna do texto sem texto, capa, cartão ou vinheta, do sobretítulo de uma história até o começo da seguinte):
+
+| História | Celular 393 × 852: altura, trecho vazio, vazio ao lado da capa — v3 → v4 | Computador 1280 × 900: altura, trecho vazio — v3 → v4 |
+|---|---|---|
+| Inicie | 536 px, 107 px, 32 580 px² → 508 px, 91 px, 2 408 px² | 720 px (texto 231), 329 px → 630 px, 125 px |
+| Álbuns | 857, 89, 32 580 → 828, 73, 2 408 | 720 (texto 567), 312 → 662, 125 |
+| Blend | 561, 70, 32 580 → 533, 62, 2 408 | 720 (texto 231), 308 → 630, 133 |
+| Playlists | 561, 107, 32 580 → 533, 91, 2 408 | 720 (texto 231), 468 → 630, 133 |
+| Inventário | 561, 104, 32 580 → 533, 88, 2 408 | 720 (texto 275), 457 → 630, 173 |
+| Convite | 455, 18 → 439, 18 | 720 (texto 264), 228 → 504, 120 |
+
+O caixote: no computador fica preso à direita, 820 px de altura, a página toda (puxa um disco por história, como antes). No celular aparece uma vez, logo depois da abertura; cada história traz a capa do seu disco (172 px) e, na v3, nada ao lado dela: 165 × 172 px de preto por história. A abertura no celular: na v3 o título de 14 palavras levava o caixote para baixo da dobra; na v4 ele mostra de 213 a 330 px na primeira tela (conforme idioma e conta). **Não reproduzi «mais de uma tela de preto» a 393:** o maior vazio que medi foi no computador (até 468 px numa janela de 900 px, mais numa janela maior, porque a história tinha 88 % da altura); no iPhone de verdade não pude conferir.
+
+**As vinhetas** (painel quieto, sem texto, decorativo; no computador sob o texto, no celular ao lado da capa):
+- **Inicie** — um campo de busca digita «Pink Floyd» e três resultados acendem, um a um: começar por um artista.
+- **Álbuns** — no cartão real do Velvet Underground & Nico, «Venus In Furs» sobe da 2ª para a 1ª linha quando o cartão chega ao meio da tela; no celular, ao lado da banana, uma faixa em fogo sobe da 4ª para a 1ª.
+- **Blend** — três discos (laranja, vermelho, âmbar) girando, ligados por fios a uma lista de seis faixas que acendem alternando os discos: nenhum disco domina.
+- **Playlists** — duas playlists salvas (mosaicos de capa), ▶ pulsando na que toca, «Spotify ✓» e «Apple Music ✓» acendendo um de cada vez (um estado, não um botão).
+- **Inventário** — uma prateleira de madeira com brasa embaixo: um vinil que desliza para fora da capa girando, uma fita cujos carretéis giram, um CD.
+
+**Padrões** (no `design-system.md`, pendentes de aprovação): a vinheta da história, o movimento ligado à rolagem e o ritmo das histórias. Reusei o que a página já tem: o degradê do fogo, a brasa do palco, a madeira do caixote, o disco; o equalizador ficou só onde já estava (o fio e o botão principal), como pede o design system.
+
+**A crítica** (agente separado, `reports/audits/2026-11-21-f80-home-v4-rhythm-ux-audit.md`): passa, sem P0; 2 P1 e 5 P2. **Corrigi antes de publicar:** os dois P1 — equalizadores novos com papel de «tocando» (trocados por ▶ e pela faixa que sobe) e as fichas de exportação que pareciam botões (viraram «Spotify ✓», sem contorno nem seta); e três P2 — em repouso as vinhetas param na imagem composta, não no meio de um quadro; as linhas de resultado e da lista mais claras (36 % de branco, ciclo nunca abaixo de 55 %); a vinheta do Álbuns no celular mostra uma faixa subindo; os padrões novos no `design-system.md`. **Fica:** «Entrar» duas vezes na primeira tela do celular (no topo e ao lado de «Abrir o app»), como na v3.
+
+**O que conferi:** a 393 × 852 e a 1280 × 900, sem e com conta, PT e EN: nenhuma rolagem lateral, nenhum título, botão ou rótulo cortado, nenhum erro no console; as vinhetas animam na tela; depois do ícone de pausa, nenhuma animação rodando e as vinhetas paradas e inteiras; em repouso (10 s), nenhuma vinheta viva; com movimento reduzido, nenhuma animação e o ícone some. **Não pude conferir:** o iPhone de verdade (Safari, toque, 60 fps medidos), o leitor de tela além da árvore de acessibilidade.
+
+### Para quem constrói (a v4 em números)
+
+| História | Altura: celular / computador | Vinheta | Entra e sai com a rolagem | Opacidade | Imagem parada (movimento reduzido, pausa, repouso) |
+|---|---|---|---|---|---|
+| Abertura | conteúdo (sem mínimo), caixote na primeira tela / `calc(100dvh − 72px − 36px)` como antes | — (o caixote e a brasa) | — | — | como antes |
+| Inicie | conteúdo, 36 px em cima e embaixo / `clamp(540px, 70dvh, 680px)` | campo digita «Pink Floyd» (passos de 11 em 7 s), três resultados acendem a 40–59 % do ciclo | opacidade 1 enquanto o centro da vinheta está a menos de 62 % da meia-altura do centro da tela; cai a 0 até 95 %; desloca `centro × 10 px` | painel 1; linhas 36 % de branco, ciclo .55 → 1 | campo com «Pink Floyd», três resultados acesos |
+| Álbuns | idem / `clamp(540px, 70dvh, 680px)` (o cartão leva a 662) | cartão: «Venus In Furs» sobe 38 px em .9 s quando o cartão passa a 55 % do centro; volta à posição de antes só depois de sair da tela; celular: faixa em fogo sobe da 4ª à 1ª em 6 s | o cartão não some (é conteúdo); a vinheta do celular, como Inicie | — | «Venus In Furs» em 1º com «você subiu»; no celular a faixa em fogo no topo |
+| Blend | idem | três discos girando (3,1 a 4,4 s); seis linhas acendem a cada .45 s num ciclo de 7,2 s | como Inicie | linhas .5 → 1 | discos parados, as seis linhas acesas |
+| Virada | faixa curta / faixa curta, como na v3 | — | — | — | — |
+| Playlists | idem | ▶ pulsa (1,6 s); «✓» de Spotify e de Apple Music acendem em alternância (6 s) | como Inicie | ✓ .35 → 1 | ▶ e os dois ✓ acesos |
+| Inventário | idem | vinil sai da capa girando (8 s), carretéis da fita giram (2,6 s) | como Inicie | painel 1 | vinil meio para fora, carretéis parados |
+| Convite | conteúdo / `clamp(440px, 56dvh, 560px)` | — (a brasa, como antes) | — | — | como antes |
+
+Regras para todas: só `transform` e `opacity`; tamanho fixo (420 × 200 no computador; a largura que sobra ao lado da capa × 172 no celular), nada salta; os laços só com a classe `live` (vinheta na tela, página em movimento, sem pausa); o pausar e o repouso tiram o `live` e mostram a imagem parada; com movimento reduzido o script nem liga o controle e tudo fica parado.

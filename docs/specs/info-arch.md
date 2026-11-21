@@ -6,6 +6,7 @@
 > Página de entrada (F80), rodada 3, 2026-11-21 (UAT-241, UAT-240): a home com o menu na barra — três prévias num eixo, «quanto o menu e a barra se juntam»: design/inception/splash-menu-stops-v1.html (A, fio com paradas), design/inception/splash-menu-bar-v1.html (B, o menu é a barra; recomendada) e design/inception/splash-menu-deck-v1.html (C, barra embaixo); nenhuma aprovada; a página de hoje como referência em design/proposals/f80-splash/home-menu/today.html; gerador design/proposals/f80-splash/home-menu/build.mjs; mesmo comparador
 > Página de entrada (F80), rodada 3 · v2 em português, 2026-11-21: design/inception/splash-menu-bar-v2.html («A barra é o menu», a direção que o MJRP escolheu para esta rodada: «a barra é o menu», «mas pode falar pra ele fazer só para a opcao recomendada»); todo o texto em português com chave PT/EN, o ranking parcial com um disco real, a virada como faixa curta; nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v2.mjs; mesmo comparador
 > Página de entrada (F80), rodada 3 · v3, 2026-11-21: design/inception/splash-menu-bar-v3.html (o texto em português revisado depois da leitura do MJRP; a abertura é dele; o visual é o da v2); nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v3.mjs; mesmo comparador
+> Página de entrada (F80), rodada 3 · v4, 2026-11-21: design/inception/splash-menu-bar-v4.html (o ritmo da rolagem: histórias mais curtas e uma vinheta viva por história; a abertura com título curto e linha menor); nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v4.mjs; mesmo comparador
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -206,6 +207,10 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 #### Rodada 3 · v3, o texto revisado (`splash-menu-bar-v3.html`)
 
 - **Os mesmos estados da v2**, com o texto da v3: sem conta, com conta, em inglês, o ranking com um disco real, a virada curta. Com conta, a porta do Blend passa a «Gerar uma playlist →» e o sobretítulo a «De volta aos discos». ^home-v3-copy
+
+#### Rodada 3 · v4, o ritmo (`splash-menu-bar-v4.html`)
+
+- **Os mesmos estados da v3**, com a abertura em título («Mergulhe nos álbuns que você ama.») e linha menor («Seus álbuns do momento, numa playlist balanceada.»). Cada história ganha uma vinheta decorativa (`aria-hidden`): no computador sob o texto, no celular ao lado da capa. A vinheta tem três estados: viva (na tela, com movimento), parada (repouso, pausa, movimento reduzido: a imagem composta) e fora (opacidade 0, longe da tela). ^home-v4-rhythm
 
 ## O celular (F76)
 
@@ -583,4 +588,11 @@ v2 em português (`design/inception/splash-menu-bar-v2.html`; wireframes `design
 | SPL-28 | Chave PT / EN do protótipo (no site, o idioma vem da F81) | — | só no protótipo |
 
 v3, o texto revisado (`design/inception/splash-menu-bar-v3.html`; wireframes `design/wireframes/splash-menu-bar-v3-desktop.png` e `-phone.png`): os mesmos itens da v2; muda só o texto de SPL-02, SPL-03, SPL-06, SPL-08, SPL-10, SPL-16, SPL-22, SPL-23, SPL-24 e SPL-25 (a porta do Blend). Nenhum item novo.
+
+v4, o ritmo (`design/inception/splash-menu-bar-v4.html`; wireframes `design/wireframes/splash-menu-bar-v4-desktop.png` e `-phone.png`): os mesmos itens da v3; a SPL-02 fica só com o título «Mergulhe nos álbuns que você ama.» e ganha a linha menor SPL-29; cada história ganha a sua vinheta (SPL-30); as histórias ficam mais curtas no computador.
+
+| ID | O que a tela mostra | Função do produto | Destino |
+|---|---|---|---|
+| SPL-29 | A linha menor sob o título: «Seus álbuns do momento, numa playlist balanceada.» | informar | o MJRP, 2026-11-21 (a abertura) |
+| SPL-30 | A vinheta da história: um painel decorativo, sem texto, que diz a história (Inicie, a busca; Álbuns, a faixa que sobe; Blend, três discos numa lista; Playlists, as salvas e a exportação; Inventário, a prateleira); aparece e some com a rolagem | encantar, explicar | o MJRP, 2026-11-21 («o espçamento aqui tem um vázio muito grande…») |
 
