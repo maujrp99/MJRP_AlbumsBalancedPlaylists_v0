@@ -85,7 +85,7 @@ export class SeriesViewUpdater {
                 message: 'No albums in library',
                 subMessage: 'Create a series from the home page to get started',
                 ctaText: 'Go to Home',
-                ctaHref: '/home'
+                ctaHref: '/start'
             });
             emptyState.mount(container);
         }

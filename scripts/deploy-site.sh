@@ -131,7 +131,7 @@ verify_build() {
 
   # Every local file the two pages point to must be in dist. Firebase answers a
   # missing path with app.html (status 200), so a missing file is silent in production.
-  # An address of the app (no extension: /home, /home?signin) is not a file.
+  # An address of the app (no extension: /start, /start?signin) is not a file.
   missing=0
   for page in app.html index.html; do
     for ref in $(grep -oE '(src|href)="/[^"/][^"]*"' "$dist/$page" | sed -E 's/^(src|href)="//; s/"$//; s/[?#].*$//' | grep -E '\.[a-z0-9]+$' | sort -u); do

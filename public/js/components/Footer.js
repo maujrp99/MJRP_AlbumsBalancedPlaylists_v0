@@ -37,7 +37,7 @@ export class Footer {
           
           <!-- Sitemap -->
           <div class="footer-links flex gap-6 text-sm text-muted items-center">
-            <a href="/home" class="hover:text-white transition-colors" data-link>Home</a>
+            <a href="/start" class="hover:text-white transition-colors" data-link>Start</a>
             <a href="/albums" class="hover:text-white transition-colors" data-link>Albums</a>
             <a href="/playlists" class="hover:text-white transition-colors" data-link>Playlists</a>
             <div class="flex items-center gap-3">

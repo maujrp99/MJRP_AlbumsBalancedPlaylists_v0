@@ -2,7 +2,7 @@
  * The root decides before it paints (F80, REQ-02).
  *
  * The site's root is the entry page for whoever has not signed in with an account; a person who
- * did goes straight to the app (/home) and never sees a piece of the page. The page is static HTML,
+ * did goes straight to the app (/start) and never sees a piece of the page. The page is static HTML,
  * so it cannot ask the app who is there: it reads where Firebase Auth keeps the sign-in in this
  * browser — IndexedDB `firebaseLocalStorageDb` / `firebaseLocalStorage` (one record per Firebase
  * app, `{ fbase_key, value: <the user> }`), or, in a browser without IndexedDB, the localStorage key
@@ -24,7 +24,7 @@
 export const FIREBASE_DB = 'firebaseLocalStorageDb'
 export const FIREBASE_STORE = 'firebaseLocalStorage'
 export const USER_KEY_PREFIX = 'firebase:authUser:'
-export const APP_PATH = '/home'
+export const APP_PATH = '/start'
 export const HOLD_MS = 600
 
 /** A stored Firebase user (object or JSON text) that is an account of its own, not a guest session. */

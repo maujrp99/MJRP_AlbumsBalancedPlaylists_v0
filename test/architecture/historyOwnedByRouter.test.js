@@ -51,6 +51,6 @@ describe('the router owns the history of the browser (F63)', () => {
         const app = fs.readFileSync(path.join(JS_ROOT, 'app.js'), 'utf8')
 
         expect(app).not.toMatch(/router\s*\.\s*navigate\s*\(/)
-        expect(app.match(/router\s*\.\s*redirect\s*\(/g)).toHaveLength(4)
+        expect(app.match(/router\s*\.\s*redirect\s*\(/g)).toHaveLength(5) // + the old /home, which leads to /start (F85)
     })
 })

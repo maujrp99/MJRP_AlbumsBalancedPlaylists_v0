@@ -11,7 +11,7 @@
 import { getIcon } from '../Icons.js'
 
 export const PHONE_TABS = Object.freeze([
-    { id: 'home', label: 'Home', route: 'home', icon: 'Home', under: ['/home'] },
+    { id: 'home', label: 'Start', route: 'start', icon: 'Home', under: ['/start'] },
     { id: 'albums', label: 'Albums', route: 'albums', icon: 'Disc', under: ['/albums', '/album-series', '/series'] },
     { id: 'blend', label: 'Blend', route: 'blend', icon: 'Blend', under: ['/blend'] },
     { id: 'playlists', label: 'Playlists', route: 'saved-playlists', icon: 'ListMusic', under: ['/saved-playlists', '/playlist-series', '/playlists'] },
@@ -20,7 +20,7 @@ export const PHONE_TABS = Object.freeze([
 
 /** What the top bar says on each address; the longest beginning that matches wins. */
 const SCREEN_NAMES = Object.freeze([
-    ['/home', 'Home'],
+    ['/start', 'Start'],
     ['/albums', 'Albums'],
     ['/blend', 'Blend'],
     ['/playlists/edit', 'Edit Playlists'],

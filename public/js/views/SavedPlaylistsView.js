@@ -318,7 +318,7 @@ export class SavedPlaylistsView extends BaseView {
             SafeDOM.p({}, 'Generate and save playlists in your series to see them here.'),
             SafeDOM.button({
                 className: 'btn btn-primary mt-4',
-                onClick: () => router.navigate('/home')
+                onClick: () => router.navigate('/start')
             }, 'Create Series')
         ])
     }

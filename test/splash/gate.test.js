@@ -122,14 +122,14 @@ describe('the root decides', () => {
     it('an account in IndexedDB goes to the app without the page ever being shown', async () => {
         const win = fakeWindow({ indexedDB: fakeIndexedDb({ stores: { [FIREBASE_STORE]: [record(account)] } }) })
         await expect(runGate(win)).resolves.toBe('app')
-        expect(win.location.replace).toHaveBeenCalledWith('/home')
+        expect(win.location.replace).toHaveBeenCalledWith('/start')
         expect(document.documentElement.classList.contains('gate')).toBe(true)
     })
 
     it('an account in localStorage goes to the app at once', async () => {
         const win = fakeWindow({ storage: storageWith({ [KEY]: JSON.stringify(account) }) })
         await expect(runGate(win)).resolves.toBe('app')
-        expect(win.location.replace).toHaveBeenCalledWith('/home')
+        expect(win.location.replace).toHaveBeenCalledWith('/start')
         expect(document.documentElement.classList.contains('gate')).toBe(false)
     })
 

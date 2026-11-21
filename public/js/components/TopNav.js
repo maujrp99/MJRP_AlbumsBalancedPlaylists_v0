@@ -45,7 +45,7 @@ export class TopNav {
         </button>
 
         <!-- Logo -->
-        <a href="/home" class="nav-logo flex items-center gap-3 group flex-1 lg:flex-none lg:shrink-0" data-link>
+        <a href="/?entry" class="nav-logo flex items-center gap-3 group flex-1 lg:flex-none lg:shrink-0" data-full-page aria-label="The Album Blender, the entry page">
           <div class="logo-icon w-12 h-12 md:w-16 md:h-16 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform shrink-0">
             <img src="/assets/images/logo.png" alt="MJRP Logo" class="w-full h-full object-contain">
           </div>
@@ -59,7 +59,7 @@ export class TopNav {
 
         <!-- Desktop Menu -->
         <div class="hidden lg:flex items-center gap-2 lg:gap-3 xl:gap-6 min-w-0">
-          ${this.renderNavLink('/home', 'Home', currentPath)}
+          ${this.renderNavLink('/start', 'Start', currentPath)}
           ${this.renderSeriesDropdown(currentPath)}
           ${this.renderNavLink('/blend', 'The Blending Menu', currentPath)}
           ${this.renderNavLink('/saved-playlists', 'Playlists', currentPath)}
@@ -95,7 +95,7 @@ export class TopNav {
           
           <!-- Navigation Links -->
           <nav class="flex flex-col p-4 gap-1 flex-1 bg-brand-dark">
-            ${this.renderMobileNavLink('/home', 'Home', 'Rocket', currentPath)}
+            ${this.renderMobileNavLink('/start', 'Start', 'Rocket', currentPath)}
             
             <!-- Series Expandable Section -->
             <div class="mobile-series-section">
@@ -153,14 +153,14 @@ export class TopNav {
 
   renderNavLink(path, label, currentPath, isMobile = false) {
     // FIX: Strict prefix matching to avoid "Album Series" (/albums) matching "/" incorrectly?
-    // Actually, logic was: path !== '/home' && currentPath.startsWith(path)
+    // Actually, logic was: path !== '/start' && currentPath.startsWith(path)
     // If path is '/albums', it matches '/albums/series/5'. 
-    // If currentPath is '/home', it shouldn't match. 
+    // If currentPath is '/start', it shouldn't match. 
     // Let's make it stricter: exact match OR path + '/' prefix match
     const isActive = currentPath === path || (path !== '/' && currentPath.startsWith(path + '/'))
 
     // Fallback for "Home" if it's implicitly active due to root? 
-    // If path is '/home' and currentPath is '/', let's assume Redirect handled it?
+    // If path is '/start' and currentPath is '/', let's assume Redirect handled it?
     // But strictly speaking, highlights should match URL.
 
     const baseClass = isMobile

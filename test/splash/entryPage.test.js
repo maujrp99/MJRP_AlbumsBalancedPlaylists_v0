@@ -31,7 +31,7 @@ describe('the page as written in the repository', () => {
 
     it('its calls to action lead into the app', () => {
         const hrefs = [...source.matchAll(/<a class="btn[^"]*"[^>]*href="([^"]+)"/g)].map(m => m[1])
-        expect(new Set(hrefs)).toEqual(new Set(['/home', '/home?signin']))
+        expect(new Set(hrefs)).toEqual(new Set(['/start', '/start?signin']))
         expect(source).not.toContain('#privacy')
     })
 })
@@ -119,12 +119,12 @@ describe('which address is which', () => {
     it('the root, with or without a query, is the entry page', () => {
         expect(isRootAddress('/')).toBe(true)
         expect(isRootAddress('/?entry')).toBe(true)
-        expect(isRootAddress('/home')).toBe(false)
+        expect(isRootAddress('/start')).toBe(false)
         expect(isRootAddress('/splash.html')).toBe(false)
     })
 
     it('every other address without a file extension is the app; files and the API are not', () => {
-        ['/home', '/albums', '/albums/abc123', '/inventory', '/callback?code=x', '/home?signin'].forEach(url => expect(isAppAddress(url)).toBe(true));
+        ['/start', '/home', '/albums', '/albums/abc123', '/inventory', '/callback?code=x', '/start?signin', '/home?signin'].forEach(url => expect(isAppAddress(url)).toBe(true));
         ['/', '/?entry', '/assets/main-abc.js', '/favicon.png', '/api/generate', '/@vite/client', '/splash/main.js'].forEach(url => expect(isAppAddress(url)).toBe(false))
     })
 })

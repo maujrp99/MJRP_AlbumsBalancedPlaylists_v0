@@ -30,7 +30,8 @@ export class Router {
         // Intercept link clicks for SPA navigation
         document.addEventListener('click', (e) => {
             const link = e.target.closest('a[href^="/"]')
-            if (link) {
+            // A link marked data-full-page (the logo: out of the app, to the entry page) is the browser's
+            if (link && !link.hasAttribute('data-full-page')) {
                 const targetHref = link.getAttribute('href')
                 const currentPath = window.location.pathname + window.location.search
 
@@ -63,7 +64,7 @@ export class Router {
 
     /**
      * Register a route
-     * @param {string} path - Route path (e.g., '/home', '/albums/:id')
+     * @param {string} path - Route path (e.g., '/start', '/albums/:id')
      * @param {Function} viewFactory - Function that returns view instance
      */
     register(path, viewFactory) {
@@ -167,7 +168,7 @@ export class Router {
         }
 
         // No route matched - redirect to home (once: without a home route there is nowhere to go)
-        if (path !== '/home') this.redirect('/home')
+        if (path !== '/start') this.redirect('/start')
     }
 
     /**

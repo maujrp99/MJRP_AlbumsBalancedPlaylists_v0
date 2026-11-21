@@ -35,6 +35,14 @@ describe('Router: links (F63)', () => {
         vi.restoreAllMocks()
     })
 
+    it('a link marked data-full-page is left to the browser (F85: the logo leads out of the app)', async () => {
+        holder.innerHTML = '<a href="/?entry" id="out" data-full-page>Logo</a>'
+        const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+        holder.querySelector('#out').dispatchEvent(click)
+        await settle()
+        expect(click.defaultPrevented).toBe(false)
+    })
+
     it('a plain link of the app navigates', async () => {
         holder.innerHTML = '<a href="/albums" id="go">Albums</a>'
 
