@@ -1,5 +1,5 @@
 ---
-type: feasibility
+type: research
 subject: "Preço de CDs e links de compra no inventário: Amazon, Discogs e iMusic"
 project: mjrpalbumblender-v0
 feature: F75

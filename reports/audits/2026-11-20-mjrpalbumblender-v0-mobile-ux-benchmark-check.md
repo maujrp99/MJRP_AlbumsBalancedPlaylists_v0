@@ -1,5 +1,5 @@
 ---
-type: audit
+type: research
 subject: "Conferência das fontes do benchmark de UX no celular (F76): reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-ux-benchmark.md"
 judged: "2026-11-20"
 who_judged: separate-agent

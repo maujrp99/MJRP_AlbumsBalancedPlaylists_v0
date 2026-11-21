@@ -1,5 +1,5 @@
 ---
-type: feasibility-study
+type: research
 subject: "Viabilidade de transformar o Album Blender em produto público e monetizá-lo por afiliação, com autorização do BestEverAlbums e do MusicBrainz"
 project: MJRP_AlbumsBalancedPlaylists_v0
 written: "2026-11-20 10:18"

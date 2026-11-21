@@ -1,3 +1,6 @@
+---
+type: research
+---
 # Régua do volume de texto por tela — pesquisa e medida (computador e telefone)
 
 > Pesquisa · 2026-11-21 · ramo `claude/f81-copy-volume-research` (F81, os textos do site) · pedido do orquestrador do harness, a partir das palavras do MJRP (2026-11-21): «o copy que pretendo gerenciar no CMS … está bem verbose … gostaria de uma revisao de UX e Copyright para o volume de copy no site … tanto para web qto para mobile».
