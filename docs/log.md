@@ -3,6 +3,54 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:49] session — F72: o nó S-55 com entrega, estado e critérios; Done
+**Branch:** wip/closing-pass-2026-11-21
+F72 (quantos álbuns e séries a tela diz): o código está na `main`. Faltavam três linhas da trava: no nó S-55 o `delivered_by` (`49c786e`, `274dfe4`), o `points_to` (`behavior#^library-counts`) e os critérios de aceite, escritos do que o MJRP julgou em 2026-11-20 (a contagem ficou na linha da paginação; numa série só não aparece, hoje a UAT-248, aberta pela reconferência); e a reconferência visual (relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Acrescentei `verified_by` ao REQ-01 e ao REQ-02 e marquei o REQ-01 como substituído pelo REQ-03, como o próprio MJRP decidiu. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: o aceite do S-55 é do MJRP.
+
+## [2026-11-21 13:47] session — F67: o estado da busca no `arch.md`; Done
+**Branch:** wip/closing-pass-2026-11-21
+F67 (o Scan da Home responde ao clique): o código está na `main`. Faltavam duas linhas da trava. (1) `arch.md`: a declaração dizia «atualizado» pelo commit da F57, que não cita a F67; escrevi na seção do seletor de álbuns o estado da busca, a geração, os prazos e a montagem única do roteador, conferido no código. (2) Reconferência visual: relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md` (os quatro estados estão na tela). Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: a UAT-204 segue com o MJRP.
+
+## [2026-11-21 13:46] session — F48: o comportamento da nova tentativa no `behavior.md`, os commits certos nas issues; Done
+**Branch:** wip/closing-pass-2026-11-21
+F48 (cache e nova tentativa): o código está na `main`. Faltavam duas linhas da trava. (1) `behavior.md`: escrevi as novas tentativas do servidor e o que não se tenta de novo, conferido em `api/client.js`. (2) Reconferência visual: relatórios do lote de 2026-11-21 (álbuns e casca). Conferi também a linha das issues: UAT-175, 176 e 177 já diziam `fixed (F48: …)`, mas citavam o commit `fe12d90`, que é o da UAT-14; troquei pelos commits que as consertaram (`57ce6bc`, `d57ca5c`, `061bcce`). Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite.
+
+## [2026-11-21 13:45] session — F46: o estado por série no `behavior.md`, a UAT-174 devolvida à F45; Done
+**Branch:** wip/closing-pass-2026-11-21
+F46 (estado claro por série): o código está na `main`. Faltavam três linhas da trava do passo retroativo. (1) `behavior.md`: escrevi o estado por série e que a série sem álbum não é desenhada (UAT-247). (2) Issues: a UAT-174 foi fechada pelo commit `ce52f46`, da F45, e diz `fixed (F45: …)`; não marquei nada como consertado pela F46 e tirei a UAT-174 do `fixes:` da F46 (a UAT-173 segue `fixed (F46: 510a840 …)`); decisão que cabe ao MJRP rever, se ele preferir a UAT-174 no `fixes:` da F45. (3) Reconferência visual: relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite.
+
+## [2026-11-21 13:44] session — F45: o comportamento da carga paralela escrito no `behavior.md`; Done
+**Branch:** wip/closing-pass-2026-11-21
+F45 (carga de álbuns em paralelo): o código está na `main`. Faltavam duas linhas da trava do passo retroativo: o `behavior.md` (a declaração dizia «atualizado», mas só o commit da v4.0, que não cita a F45, o tocava) e a reconferência visual. Escrevi no `^library-loading-skeleton` o que `LOAD_LIMITS` faz (3 buscas no catálogo juntas, séries de cima primeiro, prazo de 45 s por álbum e 20 s por fonte), conferido no código; a reconferência é a do lote `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: a UAT-172 segue com o MJRP.
+
+## [2026-11-21 13:42] session — F68: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F68 (F68-album-identity-rules-reviewed): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:41] session — F61: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F61 (F61-saved-playlists-fast): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-playlists-blend-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:41] session — F55: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F55 (F55-the-album-asked-for-or-a-notice): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:40] session — F54: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F54 (F54-close-v4-inventory-delete-and-polish): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-visual-parity-recheck.md`, `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:40] session — F50: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F50 (F50-one-local-address): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:40] session — F49: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F49 (F49-load-more-albums): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:39] session — F47: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F47 (F47-series-list-without-cut): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
 ## [2026-11-21 13:35] decision — ids de UAT renumerados na integração de `wip/visual-recheck-batch-2026-11-21`
 
 > Participantes: Claude (Claude Code), integrador · Branch: main
