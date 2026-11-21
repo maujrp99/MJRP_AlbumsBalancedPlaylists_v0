@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 15:43] step — F83 onda 2: a resposta sobre as listas do serviço de playlists
+**Branch:** claude/f83-wave-2-playlists-edit
+Conferido em `services/PlaylistsService.js`: as edições (mover, reordenar, remover faixa, remover e renomear playlist, desfazer, refazer) **trocam** a lista por uma nova; só `applyBatchName` escreve dentro das playlists que estão na loja. A tela nova lê a lista a cada desenho, sem `useMemo` nem `React.memo`, e usa a posição como chave da linha. Escrito no mapa da onda 2.
+
 ## [2026-11-21 15:40] step — F83 TASK-15: o mapa das telas das playlists (onda 2); a tela ainda não foi construída
 **Branch:** claude/f83-wave-2-playlists-edit
 Ramo empilhado sobre o da onda 1. `docs/specs/features/F83-site-screens-in-react/map-wave-2-playlists.md`: os pedaços (~2.600 linhas), o que a tela lê e a auditoria dos `set` de `playlistsStore` (todos avisam, menos `setBatchName`, de propósito), os estados a conferir a 1280 e a 393, e a decisão do arrastar (decidido pelo agente — revisável: manter o `sortablejs` atrás de uma ponte que devolve o nó ao React antes de pedir o `moveTrack`; o `@dnd-kit` muda o comportamento e iria ao MJRP antes). Achados: o `RegeneratePanel` também é do `BlendingController` (fica o antigo atrás de invólucro até a onda 7), a `TrackRow` é portada uma vez para `ui/` (o invólucro da onda 1 sai da lista), a tela tem migalhas (a das playlists guardadas não tinha). Não foram feitos: a medição do arrastar (TASK-14, pede navegador com toque) nem a tela (TASK-16). Nenhum código de produto mudou.
