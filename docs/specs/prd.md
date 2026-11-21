@@ -215,6 +215,10 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-10
 
 ![[S-62-meet-the-album-blender-on-an-entry-page]]
 
+![[S-63-use-the-album-blender-in-my-language]]
+
+![[S-64-edit-the-site-content-from-an-admin]]
+
 ### Transversais
 
 Os requisitos não funcionais valem para todas as features e não são importados por nenhuma: cada um é um arquivo `docs/specs/requirements/nfr/NFR-xx-<slug>.md`.

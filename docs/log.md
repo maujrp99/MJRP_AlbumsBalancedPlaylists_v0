@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 08:11] decision — F81 (o site em mais de um idioma) e F82 (um admin com o CMS-kit), em esboço, com S-63 e S-64
+**Branch:** main
+Palavras do MJRP (2026-11-21): «As próximas features agora serao de internacionalizar o site e criar um admin como temos nos sites do MJRP personal, utilizando o CMS-kit nosso.» «Pode falar com o master agent sobre isso e com o orchestrator do MJRP personal tb». As duas nascem na `main`, em esboço (via padrão, tipo feature), com as histórias S-63 e S-64 no PRD, sob o EP-10 e planejadas para a v6.0 — o épico e a versão foram escolhidos pelo agente, revisáveis. Nenhum ramo, protótipo ou código antes das conversas com o agente mestre do harness e o orquestrador do MJRPpersonal e de o MJRP priorizar.
+
 ## [2026-11-21 08:10] session — F80: as capas reais em produção; a UAT-231 consertada
 **Branch:** main
 Site publicado da `main` (`e79ac58`, `/assets/main-NTQyvnTw.js`) com `VITE_SPLASH_COVERS=real` no `.env` da pasta da `main` desta máquina (fora do repositório: um build feito noutra máquina, sem essa linha, volta às capas fictícias). Em produção, a 393 px: as capas vêm do servidor de imagens da Apple, a página não passa da largura da tela e o crédito mais longo cabe (termina em 377 px). Relatório: `reports/evidence/F80/2026-11-21-production-proof.md`. A prévia local (porta 5010) foi encerrada pela limpeza do harness e, ao subir de novo, serviu a pasta da sessão, com código antigo: a conferência foi feita em produção.
