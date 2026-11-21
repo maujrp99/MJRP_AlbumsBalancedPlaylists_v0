@@ -1,610 +1,395 @@
 /*
- * The phone · Home: create and edit a series (TASK-05, REQ-09): the series form, the discography grid and the chosen albums.
+ * The phone · Home (F79 over F76): the Home that explains itself, in one column, and the edit of a series.
  *
- * Every rule goes INSIDE the media query below and nowhere else (REQ-12;
- * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is
- * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
+ * Every rule goes INSIDE the media query below and nowhere else (F76, REQ-12;
+ * test/architecture/phoneStylesStayOnThePhone.test.js). The base all screens share is ../mobile.css;
+ * the computer's design, which the phone starts from, is ../views/home.css.
  *
- * On the phone the Home is one column that flows with the page: the name of the series, the
- * artist search (or the pasted list), the type filters and the grid of covers. The chosen set is
- * not a section of the page any more: it travels with the finger, in the action bar
- * (components/home/HomePhoneChosen.js) and in a sheet. Orange is for the main action and the
- * «on» state only.
+ * Baseline: design/inception/home-transformar-v2.html at 393 px. The stage flows with the page (no box
+ * with its own scroll, nothing pinned over the covers); the dock of the series IS the action bar of
+ * F76 (`.phone-action-bar`, components/home/HomeDock.js) above the tab bar; the series opens in a full
+ * sheet (it holds the name field). Titles in Syne, everything else in the text face (recheck N4);
+ * targets of 44 px, the 16 px gutter of #app.
  */
 
 @media (max-width: 767px) {
-  /* ── 1. One column that flows with the page (no box with its own scroll) ─────────────────── */
-  #app > div:has(> #home-left-panel) {
-    min-height: 0;
-    overflow: visible;
-    padding-top: 4px;
+  /* ── 1. The page: the gutter of #app, room for the action bar ──────────────────────────────── */
+  :root {
+    --home-dock-h: 76px;
   }
 
-  /* the hero picture and its veil lay over the grid on the phone and dimmed every cover: the
-     covers are the picture here */
-  #app > div:has(> #home-left-panel) > div:first-child,
-  #home-header,
-  #home-staging-area,
-  #home-left-footer {
-    display: none;
+  #app > .home-page {
+    padding-bottom: calc(var(--home-dock-h) + 72px);
   }
 
-  #home-left-panel {
-    background: none;
-    border: 0;
-    box-shadow: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+  /* ── 2. The stage ─────────────────────────────────────────────────────────────────────────── */
+  .home-stage.is-big {
+    padding: 16px 0 4px;
+    text-align: left;
   }
 
-  #home-left-content {
-    padding: 0;
-    overflow: visible;
+  .home-stage::before {
+    width: 500px;
+    height: 300px;
   }
 
-  #home-left-content > * + * {
-    margin-top: 20px;
+  .home-hero h1 {
+    font-size: 30px;
   }
 
-  /* ── 2. The series name ──────────────────────────────────────────────────────────────────── */
-  #home-series-config label,
-  #home-series-config > span {
-    display: block;
-    font-size: 12px;
-    line-height: 16px;
-    letter-spacing: 0.06em;
-    color: #a0a0a8;
+  .home-hero p {
+    font: 15px/1.45 var(--phone-font-text);
+    margin: 0 0 16px;
   }
 
-  #home-series-config > span {
-    font-size: 14px;
-    line-height: 18px;
-    letter-spacing: 0;
-    text-transform: none;
-    color: #d0d0d6;
-    margin-top: 2px;
+  .home-field {
+    height: 56px;
+    padding: 0 6px 0 14px;
+    border-radius: 14px;
   }
 
-  #seriesNameInput {
-    min-height: 48px;
-    font-size: 16px;
+  .home-field.home-paste {
+    height: auto;
+    padding: 12px;
   }
 
-  /* ── 3. The artist search and the pasted list ────────────────────────────────────────────── */
-  #home-tech-panel {
-    background: #141417;
-    border-color: rgba(255, 255, 255, 0.08);
+  /* 16 px: the iPhone does not zoom into a field of 16 px or more */
+  .home-field input {
+    font: 600 16px var(--phone-font-text);
   }
 
-  /* the orange stripe was decoration: orange stays for the action and the «on» state */
-  #home-tech-panel > div:first-child {
-    display: none;
+  .home-field input::placeholder {
+    font-size: 15px;
   }
 
-  #home-tech-panel > div:nth-child(2) {
+  .home-field .home-btn {
+    height: 44px;
+    padding: 0 14px;
+    font: 700 14px var(--phone-font-text);
+  }
+
+  .home-field .home-btn.is-flame {
+    font: 800 19px var(--phone-font-text);
+  }
+
+  .home-hint {
+    text-align: left;
+    font: 14px/1.45 var(--phone-font-text);
+  }
+
+  .home-guest-stage .home-guest {
+    margin: 10px 0 0;
+    font: 13px/1.4 var(--phone-font-text);
+  }
+
+  .home-eq {
+    height: 22px;
+    margin-top: 14px;
+    gap: 3px;
+  }
+
+  /* The pasted list: the reason goes under the line; the button the whole width, above the dock */
+  .home-paste__foot {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    padding-left: 0;
+  }
+
+  .home-line {
+    grid-template-columns: 18px 1fr;
+    font: 16px var(--phone-font-text);
+  }
+
+  .home-line__text {
+    font: 16px var(--phone-font-text);
+  }
+
+  .home-line__tag {
+    grid-column: 2;
+  }
+
+  /* ── 3. The results ───────────────────────────────────────────────────────────────────────── */
+  .home-how {
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+    gap: 8px;
+  }
+
+  .home-how li {
     padding: 12px;
-    background: none;
   }
 
-  #home-tech-panel > div:nth-child(2) > span {
-    font-size: 12px;
-    line-height: 16px;
-    letter-spacing: 0.06em;
-    color: #a0a0a8;
+  .home-how span strong {
+    font: 700 16px var(--phone-font-text);
   }
 
-  /* Visual | Bulk Paste: a segmented control of 44 px */
-  #home-tech-panel > div:nth-child(2) > div {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px;
-    padding: 4px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.06);
+  .home-how span,
+  .home-wait,
+  .home-msg span,
+  .home-after {
+    font: 14px/1.4 var(--phone-font-text);
   }
 
-  #btnModeVisual,
-  #btnModeBulk {
-    min-height: 44px;
-    border-radius: 9px;
-    font-size: 14px;
-    line-height: 18px;
-    font-weight: 600;
-    padding: 0 12px;
-    background: transparent;
-    color: #d0d0d6;
+  .home-msg strong {
+    font: 700 17px var(--phone-font-text);
   }
 
-  #btnModeVisual[aria-pressed="true"],
-  #btnModeBulk[aria-pressed="true"] {
-    background: #2a2a30;
-    color: #f2f2f4;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
-  }
-
-  #home-tech-panel > div:nth-child(3) {
-    padding: 0 12px 12px;
-  }
-
-  #home-tech-panel > div:nth-child(3) > * + * {
-    margin-top: 10px;
-  }
-
-  #visualInputs {
-    gap: 8px;
-  }
-
-  #artistScanInput {
-    min-height: 48px;
-    font-size: 16px;
-  }
-
-  #btnScanArtist {
-    min-height: 48px;
-    min-width: 88px;
-    padding: 0 16px;
-    font-size: 16px;
-  }
-
-  #home-tech-panel > div:nth-child(3) > div:last-child {
-    padding: 0;
-    font-size: 13px;
-    line-height: 18px;
-    color: #a0a0a8;
-  }
-
-  #bulkPasteInput {
-    height: 30dvh;
-    min-height: 180px;
-    font-size: 16px;
-    line-height: 22px;
-  }
-
-  #btnProcessBulk {
-    min-height: 48px;
-    margin-top: 10px;
-    font-size: 16px;
-    border-radius: 12px;
-  }
-
-  #bulkPasteReport {
-    font-size: 14px;
-    line-height: 20px;
-  }
-
-  /* ── 4. The type filters: all six in view, two columns, 44 px ────────────────────────────── */
-  #home-right-panel {
-    min-height: 0;
-    overflow: visible;
-    margin-top: 24px;
-    background: none;
-  }
-
-  /* N1 (recheck 2026-11-20): css/views/home.css keeps the toolbar sticky at top:0 below 769 px;
-     here it has no background, so the filters floated over the covers under the top bar. On the
-     phone it flows with the page: six filters in two columns are ~150 px, too tall to pin. */
-  #home-toolbar {
-    position: static;
-    z-index: auto;
-    padding: 0 0 12px;
-    background: none;
-    border: 0;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    gap: 10px;
-  }
-
-  #home-toolbar > div:first-child > span:first-child {
-    font-size: 12px;
-    line-height: 16px;
-    letter-spacing: 0.06em;
-    color: #a0a0a8;
-  }
-
-  #home-toolbar > div:last-child {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    overflow: visible;
-    padding: 0;
-    margin: 0;
-  }
-
-  #home-toolbar .filter-btn {
-    min-height: 44px;
-    justify-content: center;
-    padding: 0 10px;
-    border-radius: 999px;
-    font-size: 14px;
-    line-height: 18px;
-    font-weight: 600;
-    background: #17171a;
-    color: #d0d0d6;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: none;
-  }
-
-  #home-toolbar .filter-btn[aria-pressed="true"] {
-    background: var(--phone-accent, #ff8800);
-    color: #0a0a0c;
-    border-color: transparent;
-  }
-
-  /* «on» is said by a mark too, not by colour alone */
-  #home-toolbar .filter-btn[aria-pressed="true"]::before {
-    content: "✓";
-    font-weight: 700;
-  }
-
-  #home-toolbar .filter-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  #home-toolbar .filter-btn-count {
-    font-size: 13px;
-    opacity: 0.8;
-  }
-
-  /* «?» says nothing: on the phone the filter of albums of no known type reads «Other» (N15) */
-  #home-toolbar [data-filter="uncategorized"] .filter-btn-text {
-    display: none;
-  }
-
-  /* ── 5. The grid of covers, and the answer on the album tapped ───────────────────────────── */
-  #discographyGridContainer {
-    padding: 0;
-    overflow: visible;
-  }
-
-  #discographyGrid {
-    gap: 20px 12px;
-    padding-bottom: 8px;
-  }
-
-  /* the waiting, empty and failed messages read on the dark (4.5:1 or more) */
-  #discographyGrid [data-scan-panel] {
-    color: #a0a0a8;
-    padding-top: 40px;
-    padding-bottom: 40px;
-  }
-
-  #discographyGrid [data-scan-panel] p {
-    font-size: 15px;
-    line-height: 22px;
-  }
-
-  #discographyGrid [data-action="pick-album"] {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-
-  #discographyGrid [data-action="pick-album"] > div:first-child {
-    border-radius: 10px;
-    transition: transform 100ms linear, box-shadow 120ms ease-out;
-  }
-
-  #discographyGrid [data-action="pick-album"]:active > div:first-child {
-    transform: scale(0.97);
-  }
-
-  /* hover is a mouse thing: no zoom of the cover and no orange title left after a tap */
-  #discographyGrid [data-action="pick-album"] img {
-    transform: none !important;
-  }
-
-  #discographyGrid [data-action="pick-album"] h3 {
-    color: #f2f2f4;
-    font-size: 14px;
-    line-height: 18px;
-  }
-
-  #discographyGrid [data-action="pick-album"] h3 + p {
-    font-size: 13px;
-    color: #a0a0a8;
-  }
-
-  #discographyGrid .is-chosen > div:first-child {
-    box-shadow: 0 0 0 3px var(--phone-accent, #ff8800);
-  }
-
-  #discographyGrid .is-chosen img {
-    filter: brightness(0.8);
-  }
-
-  /* the «+» of a chosen album gives its place to the number */
-  #discographyGrid .is-chosen > div:first-child > div.absolute.top-2.right-2 {
-    display: none;
-  }
-
-  .home-chosen-mark {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    min-width: 30px;
-    height: 30px;
-    padding: 0 6px;
-    box-sizing: border-box;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    background: var(--phone-accent, #ff8800);
-    color: #0a0a0c;
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
-    font-size: 15px;
-    line-height: 1;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-    box-shadow: 0 0 0 2px #0a0a0c;
-    animation: home-chosen-pop 160ms ease-out;
-  }
-
-  @keyframes home-chosen-pop {
-    from { transform: scale(0.6); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-
-  /* ── 6. The action bar: «N albums chosen» and «Create series» ────────────────────────────── */
-  .home-chosen-bar > .home-chosen-count {
-    flex: 1 1 auto;
-    min-height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 0 4px 0 0;
-    background: none;
-    border: 0;
-    text-align: left;
-    color: #f2f2f4;
-  }
-
-  .home-chosen-bar > .home-chosen-count:disabled {
-    opacity: 1;
-  }
-
-  .home-chosen-count__covers {
-    display: flex;
-    flex: none;
-  }
-
-  .home-chosen-count__cover {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    object-fit: cover;
-    box-shadow: 0 0 0 2px #0a0a0c;
-  }
-
-  .home-chosen-count__cover + .home-chosen-count__cover {
-    margin-left: -22px;
-  }
-
-  .home-chosen-count__text {
-    display: flex;
+  .home-artist__t {
     flex-direction: column;
-    min-width: 0;
-  }
-
-  .home-chosen-count__n {
-    font-size: 14px;
-    line-height: 18px;
-    white-space: nowrap;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .home-chosen-count__hint {
-    font-size: 12px;
-    line-height: 16px;
-    color: #a0a0a8;
-  }
-
-  .home-chosen-bar > .home-chosen-create {
-    flex: 0 0 auto;
-    padding: 0 16px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-  }
-
-  .home-chosen-bar > .home-chosen-create:disabled {
-    opacity: 0.45;
-  }
-
-  /* ── 7. The sheet with the chosen set: remove, move up and down, no dragging ─────────────── */
-  /* Recheck N4 (decided): the title of a row in Syne (the album's, inherited), the rest in the
-     text face */
-  .home-chosen-row__artist,
-  .home-chosen-name,
-  .home-chosen-name__field,
-  .home-chosen-undo,
-  .home-chosen-empty,
-  .home-chosen-count__hint {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Inter", sans-serif;
-  }
-
-  /* The name of the series, on top (recheck N10): the page's field, mirrored; 16 px, no zoom */
-  .home-chosen-name {
-    margin-bottom: 12px;
-  }
-
-  .home-chosen-name__label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #a0a0a8;
-  }
-
-  .home-chosen-name__field {
-    width: 100%;
-    height: 48px;
-    padding: 0 14px;
-    font-size: 16px;
-    line-height: 22px;
-    color: #f2f2f4;
-    background: #17171a;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-  }
-
-  .home-chosen-name__field:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.4);
-  }
-
-  .home-chosen-name__field[aria-invalid="true"] {
-    border-color: #f87171;
-  }
-
-  .home-chosen-name__error:empty {
-    display: none;
-  }
-
-  .home-chosen-name__error {
-    margin-top: 6px;
-    font-size: 14px;
-    line-height: 18px;
-    color: #f87171;
-  }
-
-  .home-chosen-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .home-chosen-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 64px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .home-chosen-row__n {
-    width: 20px;
-    flex: none;
-    text-align: right;
-    font-size: 13px;
-    color: #a0a0a8;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .home-chosen-row__cover {
-    width: 48px;
-    height: 48px;
-    flex: none;
-    border-radius: 6px;
-    object-fit: cover;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  }
-
-  .home-chosen-row__text {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
+    align-items: flex-start;
     gap: 2px;
   }
 
-  .home-chosen-row__title {
+  .home-artist h2 {
+    font-size: 20px;
+  }
+
+  #statusArtistName {
+    font: 14px var(--phone-font-text);
+  }
+
+  /* The type chips flow with the page, three to a row, 44 px (recheck N1: nothing floats over the covers) */
+  #home-toolbar {
+    position: static;
+  }
+
+  .home-chips {
+    margin-left: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+  }
+
+  .home-chip {
+    padding: 0 4px;
+    font: 600 13px var(--phone-font-text);
+  }
+
+  .home-addall {
+    width: 100%;
+    font: 700 14px var(--phone-font-text);
+  }
+
+  .home-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 14px;
+  }
+
+  .home-card__title {
+    font: 700 14px/1.25 'Syne', sans-serif;
+  }
+
+  .home-card__year {
+    font: 12px var(--phone-font-text);
+  }
+
+  /* ── 4. The dock is the action bar (F76): one cover with the count, the name, one button ──── */
+  .home-dockwrap.is-phone {
+    position: static;
+    transform: none;
+    width: auto;
+    display: block;
+  }
+
+  .home-dockwrap.is-phone .home-undo {
+    position: fixed;
+    left: var(--phone-gutter-left);
+    right: var(--phone-gutter-right);
+    bottom: calc(var(--phone-tabbar-h) + var(--phone-safe-bottom) + var(--phone-action-bar-h) + 8px);
+    z-index: 39;
+    justify-content: space-between;
+    font: 14px var(--phone-font-text);
+  }
+
+  .home-dock.phone-action-bar {
+    flex-direction: row;
+    gap: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-radius: 16px 16px 0 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 0;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .home-dock.phone-action-bar.is-full {
+    border-color: rgba(249, 115, 22, 0.5);
+  }
+
+  .home-dock.phone-action-bar.is-done {
+    border-color: rgba(74, 222, 128, 0.45);
+  }
+
+  .home-dock .home-pile {
+    position: relative;
+    height: 48px;
+    min-width: 48px;
+    gap: 0;
+    cursor: pointer;
+  }
+
+  .home-dock .home-dcv {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #0c0c0f;
+  }
+
+  .home-dock .home-dn,
+  .home-dock .home-more,
+  .home-dock .home-slot:nth-child(n + 2) {
+    display: none;
+  }
+
+  .home-dock .home-slot {
+    width: 30px;
+    height: 30px;
+  }
+
+  .home-dock.is-full .home-pile::after {
+    content: attr(data-n);
+    position: absolute;
+    right: -6px;
+    top: -4px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    border-radius: 11px;
+    background: #fff;
+    color: #000;
+    font: 800 13px/22px var(--phone-font-text);
+    text-align: center;
+  }
+
+  .home-dock__open {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 48px;
+    width: 100%;
+    min-width: 0;
+    background: none;
+    border: 0;
+    padding: 0;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .home-dock__open strong,
+  .home-dock .home-dock__meta > strong {
+    font: 700 16px 'Syne', sans-serif;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .home-dock__open > span,
+  .home-dock .home-dock__meta > span,
+  .home-dock .home-count,
+  .home-dock .home-busy,
+  .home-dock .home-fail {
+    font: 13px var(--phone-font-text);
+    color: var(--home-soft);
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .home-dock .home-fail {
+    color: #fca5a5;
+  }
+
+  .home-dock:not(.is-full) .home-dock__meta > strong,
+  .home-dock:not(.is-full) .home-dock__meta > span {
+    white-space: normal;
+  }
+
+  .home-dock__open small {
+    font: 12px var(--phone-font-text);
+    color: var(--home-soft);
+  }
+
+  .home-dock .home-btn.is-big {
+    height: 48px;
+    padding: 0 14px;
+    font: 800 19px var(--phone-font-text);
+  }
+
+  .home-go--after .home-btn.is-ghost {
+    padding: 0 8px;
+    font: 600 14px var(--phone-font-text);
+  }
+
+  .home-dock .home-saved {
     font-size: 15px;
-    line-height: 20px;
-    font-weight: 600;
-    color: #f2f2f4;
+  }
+
+  /* ── 5. The series in the full sheet: the name on top, the rows, «Create series» at the foot ── */
+  #homeSeriesSheet .home-sheet__name {
+    margin-bottom: 8px;
+  }
+
+  #homeSeriesSheet .home-name {
+    max-width: none;
+    font: 700 20px 'Syne', sans-serif;
+  }
+
+  #homeSeriesSheet .home-name__label,
+  #homeSeriesSheet .home-name__error {
+    font: 13px var(--phone-font-text);
+  }
+
+  #homeSeriesSheet .home-order {
+    font: 14px/1.4 var(--phone-font-text);
+  }
+
+  #homeSeriesSheet .home-rows li {
+    grid-template-columns: 22px 44px 1fr auto;
+    gap: 8px;
+    padding: 4px 0;
+  }
+
+  /* each title read up to its third word: two lines allowed (critique r2, finding 12) */
+  #homeSeriesSheet .home-rt strong {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    overflow: hidden;
+    white-space: normal;
+    font: 700 15px/1.25 'Syne', sans-serif;
   }
 
-  .home-chosen-row__artist {
-    font-size: 13px;
-    line-height: 18px;
-    color: #a0a0a8;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  #homeSeriesSheet .home-rt small {
+    font: 12px var(--phone-font-text);
   }
 
-  .home-chosen-row__btn {
-    width: 44px;
-    height: 44px;
-    flex: none;
-    display: grid;
-    place-items: center;
-    border-radius: 10px;
-    background: none;
-    border: 0;
-    color: #d0d0d6;
+  #homeSeriesSheet .home-rbtn {
+    gap: 2px;
   }
 
-  .home-chosen-row__btn:active {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .home-chosen-row__btn:disabled {
-    opacity: 0.25;
-  }
-
-  .home-chosen-row__btn--down svg {
-    transform: rotate(180deg);
-  }
-
-  .home-chosen-row__btn--remove {
-    color: #f87171;
-  }
-
-  .home-chosen-undo {
+  #homeSeriesSheet .home-sheet__foot {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     gap: 8px;
-    margin-bottom: 8px;
-    padding: 0 4px 0 12px;
-    min-height: 48px;
-    border-radius: 12px;
-    background: #1f1f23;
-    font-size: 14px;
-    line-height: 18px;
-    color: #d0d0d6;
+    width: 100%;
   }
 
-  .home-chosen-undo > span {
-    min-width: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  #homeSeriesSheet .home-sheet__foot .home-btn {
+    width: 100%;
+    height: 48px;
+    font: 800 19px var(--phone-font-text);
   }
 
-  .home-chosen-undo__btn {
-    min-height: 44px;
-    padding: 0 12px;
-    background: none;
-    border: 0;
-    font-size: 15px;
-    font-weight: 700;
-    color: #f2f2f4;
-    text-decoration: underline;
+  #homeSeriesSheet .home-undo {
+    margin: 0;
+    align-self: stretch;
+    justify-content: space-between;
+    font: 14px var(--phone-font-text);
   }
 
-  .home-chosen-empty {
-    padding: 16px 0;
-    font-size: 15px;
-    line-height: 22px;
-    color: #a0a0a8;
-  }
-
-  /* ── 8. Edit series (opened from Albums): the inside of the full-screen sheet ───────────────
+  /* ── 6. Edit series (opened from Albums): the inside of the full-screen sheet ───────────────
      The shell (full screen, header, sticky footer with Cancel and Save) is mobile.css § 8. */
   #edit-series-modal .app-modal__body label {
     font-size: 14px;
@@ -714,13 +499,4 @@
     min-height: 48px;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .home-chosen-mark {
-      animation: none;
-    }
-
-    #discographyGrid [data-action="pick-album"] > div:first-child {
-      transition: none;
-    }
-  }
 }

@@ -1,6 +1,7 @@
 /**
- * F67 - a click on Scan always has one visible answer, drawn by the Home view from one state:
- * scanning (button busy), results, no results, or failed with "Try again". No alert().
+ * F67 - a click on Search always has one visible answer, drawn by the Home view from one state:
+ * searching (button busy), results, no results, or failed with "Try again". No alert().
+ * F79 - the words of the Home that explains itself («Search», «Looking for…», the line under the artist).
  * F57 - the Home is a frame of the one album picker (AlbumPickerController): the real HomeView
  * and HomeController are mounted here, and only the search service is replaced.
  */
@@ -33,6 +34,8 @@ describe('Home scan (F67)', () => {
     const type = (text) => { $('#artistScanInput').value = text }
     const clickScan = () => $('#btnScanArtist').click()
     const gridText = () => $('#discographyGrid').textContent
+    const messageText = () => $('#homeMessage').textContent
+    const titles = () => [...app.querySelectorAll('#discographyGrid .home-card__title')].map(t => t.textContent)
 
     beforeEach(async () => {
         app = document.createElement('div')
@@ -66,9 +69,9 @@ describe('Home scan (F67)', () => {
         const button = $('#btnScanArtist')
         expect(button.disabled).toBe(true)
         expect(button.getAttribute('aria-busy')).toBe('true')
-        expect(button.textContent).toContain('Scanning…')
-        expect($('#statusArtistName').textContent).toBe('Scanning…')
-        expect(gridText()).toContain('Searching the catalog for «pavement»…')
+        expect(button.textContent).toBe('Searching…')
+        expect($('#homeWait').textContent).toBe('Looking for «pavement» in the catalog… the covers appear as soon as it answers.')
+        expect($('#homeWait').hidden).toBe(false)
         expect(controller.scan.status).toBe(ScanStatus.SCANNING)
     })
 
@@ -128,13 +131,13 @@ describe('Home scan (F67)', () => {
         clickScan()
         await flush()
 
-        const titles = [...app.querySelectorAll('#discographyGrid h3')].map(h => h.textContent)
-        expect(titles).toEqual(['Crooked', 'Slanted'])
-        expect($('#statusArtistName').textContent).toBe('→ Pavement')
-        expect($('#btnFilterAlbumsCount').textContent).toBe(' (2)')
-        expect($('#btnFilterEPsCount').textContent).toBe(' (1)')
+        expect(titles()).toEqual(['Crooked', 'Slanted'])
+        expect($('#homeArtistName').textContent).toBe('Pavement')
+        expect($('#statusArtistName').textContent).toBe('2 studio albums · newest first')
+        expect($('#btnFilterAlbumsCount').textContent).toBe(' · 2')
+        expect($('#btnFilterEPsCount').textContent).toBe(' · 1')
         expect($('#btnScanArtist').disabled).toBe(false)
-        expect($('#btnScanArtist').textContent).toContain('Scan')
+        expect($('#btnScanArtist').textContent).toBe('Search')
         expect($('#btnScanArtist').hasAttribute('aria-busy')).toBe(false)
     })
 
@@ -151,18 +154,18 @@ describe('Home scan (F67)', () => {
 
         expect(gridText()).toContain('Snivilisation')
         expect(gridText()).not.toContain('Brown Album')
-        expect($('#btnFilterAlbumsCount').textContent).toBe(' (1)')
-        expect($('#btnFilterUncategorizedCount').textContent).toBe(' (1)')
-        expect($('#statusArtistName').textContent).toBe('→ Pavement · confirming album types…')
+        expect($('#btnFilterAlbumsCount').textContent).toBe(' · 1')
+        expect($('#btnFilterUncategorizedCount').textContent).toBe(' · 1')
+        expect($('#statusArtistName').textContent).toBe('1 studio album · newest first · confirming album types…')
         expect($('#btnScanArtist').disabled).toBe(false)
 
         ai.resolve([album('Brown Album', 'Album'), album('Snivilisation', 'Album')])
         await flush()
 
         expect(gridText()).toContain('Brown Album')
-        expect($('#btnFilterAlbumsCount').textContent).toBe(' (2)')
+        expect($('#btnFilterAlbumsCount').textContent).toBe(' · 2')
         expect($('#btnFilterUncategorizedCount').textContent).toBe('')
-        expect($('#statusArtistName').textContent).toBe('→ Pavement')
+        expect($('#statusArtistName').textContent).toBe('2 studio albums · newest first')
     })
 
     it('when the AI list fails, the albums shown stay and the wait ends', async () => {
@@ -176,18 +179,20 @@ describe('Home scan (F67)', () => {
         await flush()
 
         expect(gridText()).toContain('Snivilisation')
-        expect($('#statusArtistName').textContent).toBe('→ Pavement')
+        expect($('#statusArtistName').textContent).toBe('1 studio album · newest first')
     })
 
-    it('no results: a message in the panel, counts cleared, no alert', async () => {
+    it('no results: the way out in words, «Paste a list», counts cleared, no alert', async () => {
         service.scanArtist.mockResolvedValue({ albums: [], reclassified: null })
         type('pavemnt')
 
         clickScan()
         await flush()
 
-        expect(gridText()).toContain('No albums found for «pavemnt».')
-        expect($('#statusArtistName').textContent).toBe('→ Not found')
+        expect(messageText()).toContain('No albums found for «pavemnt».')
+        expect(messageText()).toContain('Check the spelling, or paste the albums as a list: one per line, Artist - Album.')
+        expect($('#homeMessage [data-home-mode="paste"]').textContent).toBe('Paste a list')
+        expect($('#homeArtist').hidden).toBe(true)
         expect($('#btnScanRetry')).toBeNull()
         expect($('#btnScanArtist').disabled).toBe(false)
         expect(window.alert).not.toHaveBeenCalled()
@@ -200,8 +205,9 @@ describe('Home scan (F67)', () => {
         clickScan()
         await flush()
 
-        expect(gridText()).toContain('The search could not be completed.')
-        expect($('#statusArtistName').textContent).toBe('→ Search failed')
+        expect(messageText()).toContain('The search could not be completed.')
+        expect(messageText()).toContain('Nothing was changed. Try again in a moment.')
+        expect($('#homeMessage').getAttribute('role')).toBe('alert')
         expect($('#btnScanArtist').disabled).toBe(false)
         expect(window.alert).not.toHaveBeenCalled()
 
@@ -222,7 +228,7 @@ describe('Home scan (F67)', () => {
         clickScan()
         await flush()
 
-        expect(gridText()).toContain('The catalog did not answer in 15 seconds.')
+        expect(messageText()).toContain('The catalog did not answer in 15 seconds.')
         expect($('#btnScanRetry')).not.toBeNull()
     })
 
@@ -245,7 +251,7 @@ describe('Home scan (F67)', () => {
 
         expect(gridText()).toContain('New One')
         expect(gridText()).not.toContain('Old')
-        expect($('#btnFilterAlbumsCount').textContent).toBe(' (1)')
+        expect($('#btnFilterAlbumsCount').textContent).toBe(' · 1')
     })
 
     it('a click on a filter button shows the albums of that type and marks the button', async () => {
@@ -258,14 +264,13 @@ describe('Home scan (F67)', () => {
         $('#btnFilterUncategorized').click()
         $('#btnFilterAlbums').click()
 
-        const titles = [...app.querySelectorAll('#discographyGrid h3')].map(h => h.textContent)
-        expect(titles).toEqual(['Watery', 'Odd'])
+        expect(titles()).toEqual(['Watery', 'Odd'])
         expect($('#btnFilterEPs').getAttribute('aria-pressed')).toBe('true')
         expect($('#btnFilterAlbums').getAttribute('aria-pressed')).toBe('false')
-        expect($('#btnFilterUncategorizedCount').textContent).toBe(' (1)')
+        expect($('#btnFilterUncategorizedCount').textContent).toBe(' · 1')
     })
 
-    it('a click on a card hands the album to the Home: it goes to the staging stack', async () => {
+    it('a click on a card hands the album to the Home: it goes into the series', async () => {
         service.scanArtist.mockResolvedValue({ albums: [album('Slanted'), album('Crooked')], reclassified: null })
         type('pavement')
         clickScan()
@@ -284,7 +289,7 @@ describe('Home scan (F67)', () => {
 
         controller.toggleFilter('eps')
 
-        expect(gridText()).toContain('The search could not be completed.')
+        expect(messageText()).toContain('The search could not be completed.')
     })
 
     it('after the screen is left, a late answer draws nothing', async () => {

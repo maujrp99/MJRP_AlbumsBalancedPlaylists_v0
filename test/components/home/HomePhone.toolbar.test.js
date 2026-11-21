@@ -1,10 +1,10 @@
 // @vitest-environment node
 /**
- * F76 polish, recheck N1: on the phone the Home's type filters flow with the page.
+ * F76 polish, recheck N1, kept by F79: on the phone the Home's type chips flow with the page.
  *
- * css/views/home.css pins #home-toolbar (sticky, top 0) below 769 px, for the computer's narrow
- * window; on the phone its background is cleared, so pinned it floated over the covers, under
- * the top bar. The phone's sheet must undo the pinning, inside the phone's media query.
+ * Before F79 the computer's narrow window pinned #home-toolbar (sticky, top 0), and on the phone it
+ * floated over the covers, under the top bar. F79 pins nothing; the phone's sheet still says so,
+ * inside the phone's media query, so a later rule of the computer cannot float the chips again.
  */
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
@@ -27,5 +27,16 @@ const phoneDeclarations = (selector) => {
 describe('the Home on the phone: the type filters (recheck N1)', () => {
     it('are not pinned: they scroll away with the page instead of floating over the covers', () => {
         expect(phoneDeclarations('#home-toolbar').position).toBe('static')
+    })
+})
+
+describe('the Home on the phone: the pasted list (F79)', () => {
+    it('grows with its lines: the 56 px of the field do not hold the list (it covered the hint and the equalizer)', () => {
+        expect(phoneDeclarations('.home-field.home-paste').height).toBe('auto')
+    })
+
+    it('the lines are written at 16 px, so the iPhone does not zoom in', () => {
+        expect(phoneDeclarations('.home-line__text').font).toMatch(/^16px/)
+        expect(phoneDeclarations('.home-field input').font).toMatch(/16px/)
     })
 })

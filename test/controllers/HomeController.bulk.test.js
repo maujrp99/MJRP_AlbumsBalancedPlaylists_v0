@@ -1,8 +1,10 @@
 /**
- * F63 (UAT-201, UAT-26) - "Bulk Paste" on the Home, through the real view and controller.
- * A name with a hyphen is searched whole; a line that cannot go in is skipped and listed in the
- * screen (number, text, why) while the other lines go on; an empty box says what is missing.
- * No alert().
+ * F63 (UAT-201, UAT-26) and F79 - the pasted list on the Home, through the real view and controller.
+ * F79: the list lives in the one field; each line says «ready» or what to fix before the click
+ * (^home-paste-list); after «Add», what went in is said, and each line that did not go in stays as
+ * a field with its reason, to fix in place (^home-paste-report).
+ * F63 still holds: a name with a hyphen is searched whole; a line that cannot go in is skipped and the
+ * other lines go on. No alert().
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
@@ -16,42 +18,36 @@ vi.mock('../../public/js/components/Toast.js', () => ({
 }))
 vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))
 
-import toast from '../../public/js/components/Toast.js'
 import { HomeView } from '../../public/js/views/HomeView.js'
 
 const found = (artist, title) => ({ id: `${artist}|${title}`, artist, title, year: 2001, coverUrl: 'https://img/{w}x{h}.jpg' })
 const findAll = async (artist, title) => [found(artist, title)]
 
-describe('Home: Bulk Paste (F63)', () => {
+describe('Home: the pasted list (F63, F79)', () => {
     let app, view
     const $ = (selector) => app.querySelector(selector)
-    const paste = (text) => {
-        $('#bulkPasteInput').value = text
-        $('#bulkPasteInput').dispatchEvent(new Event('input', { bubbles: true }))
-    }
-    const process = async () => {
+    const lines = () => [...app.querySelectorAll('#homePaste .home-line')]
+    const paste = (text) => view.controller.setMode('paste', text)
+    const add = async () => {
         $('#btnProcessBulk').click()
-        await vi.waitFor(() => expect($('#btnProcessBulk').disabled).toBe(false))
+        await vi.waitFor(() => expect($('#btnProcessBulk').hasAttribute('aria-busy')).toBe(false))
     }
     const selected = () => view.controller.stagingController.getSelectedAlbums().map(album => `${album.artist} / ${album.title}`)
-    const reportLines = () => [...app.querySelectorAll('#bulkPasteReport li')].map(item => item.textContent)
+    const summary = () => $('#homePasteSummary').textContent
 
     beforeEach(async () => {
         app = document.createElement('div')
         app.id = 'app'
         document.body.appendChild(app)
-        vi.spyOn(console, 'log').mockImplementation(() => {})
         vi.spyOn(console, 'warn').mockImplementation(() => {})
         vi.spyOn(console, 'error').mockImplementation(() => {})
         window.alert = vi.fn()
-        Object.values(toast).forEach(mock => mock.mockClear())
         catalog.search.mockReset()
         catalog.search.mockImplementation(findAll)
 
         view = new HomeView()
         app.appendChild(await view.render({}))
         await view.mount({})
-        $('#btnModeBulk').click()
     })
 
     afterEach(() => {
@@ -60,10 +56,32 @@ describe('Home: Bulk Paste (F63)', () => {
         vi.restoreAllMocks()
     })
 
+    it('each line says «ready» or what to fix, before the click; the foot counts and names the button (^home-paste-list)', () => {
+        paste('Joni Mitchell - Hejira\nYes - Close to the Edge\nRadiohead OK Computer\nCaravan - In the Land of Grey and Pinkk')
+
+        expect(lines().map(line => line.querySelector('.home-line__tag').textContent.trim()))
+            .toEqual(['ready', 'ready', 'add « - » between artist and album', 'ready'])
+        expect(lines()[2].classList.contains('is-bad')).toBe(true)
+        expect(lines().map(line => line.querySelector('.home-line__n').textContent)).toEqual(['1', '2', '3', '4'])
+        expect(summary()).toBe('4 lines: 3 ready, 1 to fix. Lines to fix are skipped; the rest go in.')
+        expect($('#btnProcessBulk').textContent).toBe('Add 3 albums')
+        expect($('#btnProcessBulk').classList.contains('is-flame')).toBe(true)
+    })
+
+    it('typing a line checks it again', () => {
+        paste('Radiohead OK Computer')
+        const input = $('#homePaste .home-line__text')
+        input.value = 'Radiohead - OK Computer'
+        input.dispatchEvent(new Event('input', { bubbles: true }))
+
+        expect(lines()[0].classList.contains('is-ok')).toBe(true)
+        expect($('#btnProcessBulk').textContent).toBe('Add 1 album')
+    })
+
     it('searches a name with a hyphen whole: "Jay-Z - The Blueprint" is Jay-Z, not "Jay"', async () => {
         paste('Jay-Z - The Blueprint\nAlt-J - An Awesome Wave\nBlink-182 - Enema of the State\nAC/DC - Back in Black\nArtist - Album - Deluxe')
 
-        await process()
+        await add()
 
         expect(catalog.search.mock.calls.map(([artist, title]) => [artist, title])).toEqual([
             ['Jay-Z', 'The Blueprint'],
@@ -73,26 +91,37 @@ describe('Home: Bulk Paste (F63)', () => {
             ['Artist', 'Album - Deluxe']
         ])
         expect(selected()).toHaveLength(5)
-        expect(toast.success).toHaveBeenCalledWith('Added 5 albums.')
-        expect($('#bulkPasteInput').value).toBe('')
-        expect($('#bulkPasteReport').classList.contains('hidden')).toBe(true)
+        expect(summary()).toBe('Added 5 albums.')
+        expect(lines()).toHaveLength(1)
+        expect($('#homePaste .home-line__text').value).toBe('')
     })
 
-    it('skips the bad line, says which and why in the screen, and the good lines go on', async () => {
-        paste('Pink Floyd - Animals\nJay-Z-The Blueprint\n\nCan - Tago Mago')
+    it('a line not found stays as a field with its reason; «Add this line» sends what is in it (^home-paste-report)', async () => {
+        catalog.search.mockImplementation(async (artist, title) => (title.endsWith('Pinkk') ? [] : [found(artist, title)]))
+        paste('Joni Mitchell - Hejira\nYes - Close to the Edge\nCaravan - In the Land of Grey and Pinkk')
 
-        await process()
+        await add()
 
-        expect(selected()).toEqual(['Pink Floyd / Animals', 'Can / Tago Mago'])
-        expect(reportLines()).toEqual(['Line 2: «Jay-Z-The Blueprint» — no " - " between the artist and the album'])
-        expect($('#bulkPasteReport').classList.contains('hidden')).toBe(false)
-        expect($('#bulkPasteReport').getAttribute('role')).toBe('status')
-        expect(toast.warning).toHaveBeenCalledWith('Added 2 albums. 1 line was skipped: see the list under the box.')
-        expect($('#bulkPasteInput').value).toBe('Jay-Z-The Blueprint')
+        expect(selected()).toEqual(['Joni Mitchell / Hejira', 'Yes / Close to the Edge'])
+        expect(summary()).toBe('Added 2 albums. 1 line was skipped and is still here to fix.')
+        expect(lines()).toHaveLength(1)
+        expect(lines()[0].classList.contains('is-skip')).toBe(true)
+        expect(lines()[0].querySelector('.home-line__tag').textContent).toBe('not found in the catalog: fix the spelling here')
+        expect($('#homePaste .home-line__text').value).toBe('Caravan - In the Land of Grey and Pinkk')
+        expect($('#btnProcessBulk').textContent).toBe('Add this line')
+        expect($('.home-dock .home-name').value).toBe('Joni Mitchell and Yes')
+        expect($('.home-dock').textContent).toContain('2 albums from 2 artists · the order counts')
+
+        const input = $('#homePaste .home-line__text')
+        input.value = 'Caravan - In the Land of Grey and Pink'
+        input.dispatchEvent(new Event('input', { bubbles: true }))
+        await add()
+
+        expect(selected()).toEqual(['Joni Mitchell / Hejira', 'Yes / Close to the Edge', 'Caravan / In the Land of Grey and Pink'])
         expect(window.alert).not.toHaveBeenCalled()
     })
 
-    it('a line the catalog does not have, and a search that breaks, are reported; the rest goes on', async () => {
+    it('a line the catalog does not have, and a search that breaks, both stay; the rest goes on', async () => {
         catalog.search.mockImplementation(async (artist, title) => {
             if (artist === 'Nobody') return []
             if (artist === 'Broken') throw new Error('network down')
@@ -100,47 +129,33 @@ describe('Home: Bulk Paste (F63)', () => {
         })
         paste('Nobody - Nothing\nBroken - Line\nNeu! - Neu! 75')
 
-        await process()
+        await add()
 
         expect(selected()).toEqual(['Neu! / Neu! 75'])
-        expect(reportLines()).toEqual([
-            'Line 1: «Nobody - Nothing» — not found in the catalog',
-            'Line 2: «Broken - Line» — the catalog search failed: try this line again'
+        expect(lines().map(line => [line.querySelector('input').value, line.querySelector('.home-line__tag').textContent])).toEqual([
+            ['Nobody - Nothing', 'not found in the catalog: fix the spelling here'],
+            ['Broken - Line', 'the catalog did not answer: try this line again']
         ])
-        expect($('#bulkPasteInput').value).toBe('Nobody - Nothing\nBroken - Line')
+        expect($('#btnProcessBulk').textContent).toBe('Add these 2 lines')
     })
 
-    it('no line went in: an error, with the lines listed', async () => {
-        paste('Animals\nMeddle')
-
-        await process()
-
-        expect(catalog.search).not.toHaveBeenCalled()
-        expect(toast.error).toHaveBeenCalledWith('No album was added. 2 lines were skipped: see the list under the box.')
-        expect(reportLines()).toHaveLength(2)
-    })
-
-    it('an album already selected is said so and does not stay in the box', async () => {
+    it('an album already in the series is said, and does not stay', async () => {
         paste('Can - Tago Mago')
-        await process()
+        await add()
 
         paste('Can - Tago Mago\nNeu! - Neu! 75')
-        await process()
+        await add()
 
         expect(selected()).toEqual(['Can / Tago Mago', 'Neu! / Neu! 75'])
-        expect(reportLines()).toEqual(['Line 1: «Can - Tago Mago» — already in the selection'])
-        expect($('#bulkPasteInput').value).toBe('')
+        expect(summary()).toBe('Added 1 album. 1 line was already in your series.')
     })
 
-    it('an empty box says what is missing and searches nothing (UAT-26)', async () => {
+    it('an empty list cannot be sent: the button is off and nothing is searched (UAT-26)', () => {
         paste('   \n ')
 
+        expect($('#btnProcessBulk').disabled).toBe(true)
         $('#btnProcessBulk').click()
-        await Promise.resolve()
-
-        expect(toast.warning).toHaveBeenCalledWith('Please paste some "Artist - Album" lines first.')
         expect(catalog.search).not.toHaveBeenCalled()
-        expect($('#btnProcessBulk').disabled).toBe(false)
     })
 
     it('while it searches, the button is busy and cannot be clicked twice', async () => {
@@ -153,27 +168,20 @@ describe('Home: Bulk Paste (F63)', () => {
 
         expect($('#btnProcessBulk').disabled).toBe(true)
         expect($('#btnProcessBulk').getAttribute('aria-busy')).toBe('true')
-        expect($('#btnProcessBulk').textContent).toContain('Processing…')
+        expect($('#btnProcessBulk').textContent).toBe('Adding…')
 
         release()
-        await vi.waitFor(() => expect($('#btnProcessBulk').disabled).toBe(false))
-        expect($('#btnProcessBulk').textContent).toContain('Process List')
-        expect($('#btnProcessBulk').hasAttribute('aria-busy')).toBe(false)
+        await vi.waitFor(() => expect($('#btnProcessBulk').hasAttribute('aria-busy')).toBe(false))
+        expect(summary()).toBe('Added 1 album.')
     })
 
-    it('the box shows, as the person types, whether every line is an album', () => {
-        const box = $('#bulkPasteInput')
+    it('Enter opens a new line; Backspace on an empty line closes it', () => {
+        paste('Can - Tago Mago')
+        const first = $('#homePaste .home-line__text')
+        first.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+        expect(lines()).toHaveLength(2)
 
-        paste('Jay-Z - The Blueprint')
-        expect(box.classList.contains('border-green-500')).toBe(true)
-
-        paste('Jay-Z - The Blueprint\nAnimals')
-        expect(box.classList.contains('border-orange-500')).toBe(true)
-        expect(box.classList.contains('border-green-500')).toBe(false)
-
-        paste('')
-        expect(box.classList.contains('border-orange-500')).toBe(false)
-        expect(box.classList.contains('border-green-500')).toBe(false)
-        expect(box.classList.contains('border-white/10')).toBe(true)
+        lines()[1].querySelector('input').dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }))
+        expect(lines()).toHaveLength(1)
     })
 })

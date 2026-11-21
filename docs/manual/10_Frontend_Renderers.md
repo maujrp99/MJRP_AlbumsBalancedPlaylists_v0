@@ -28,7 +28,7 @@ To keep the main View classes (like `SeriesView` and `InventoryView`) maintainab
 *   **Status**: the selected status and the three options come from `models/inventoryStatus.js` (`statusOf`, `STATUS_SELECT_OPTIONS`); the renderer only holds the colours.
 
 ### Discography Renderer (`public/js/views/renderers/DiscographyRenderer.js`)
-*   **Role**: The album card of the one album picker (F57): used by `HomeController` in Home and by `AlbumPickerPanel` in the series edit modal to render the artist's discography.
+*   **Role**: The album card of the one album picker (F57): used by `HomeController` in Home and by `AlbumPickerPanel` in the series edit modal to render the artist's discography. Two forms (F79): the series edit's (the default) and the Home's, `new DiscographyRenderer(grid, { variant: 'stage' })`: a button with the square cover, the «+» (`.home-card__mark`, which the Home turns into the album's place in the series), the title and the year.
 *   **Key Features**:
     *   **Visual Flair**: Adds subtle gradients and badges: "Deluxe" and "Remaster" derived from title keywords; "Live", "Single", "EP" and "Comp" from `album.type` (the rule is `badgesOf` in `models/albumPicker.js`).
     *   **Interactivity**: Cards are clickable to pick the album (`data-action="pick-album"`); the frame of the screen hears the click and asks `AlbumPickerController.pick`.

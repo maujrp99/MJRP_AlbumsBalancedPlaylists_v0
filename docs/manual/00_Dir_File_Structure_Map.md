@@ -99,7 +99,7 @@
 80. `public/js/components/ranking/TracksTabs.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
 81. `public/js/components/ranking/UserRankModal.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
 82. `public/js/components/home/SearchController.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
-83. `public/js/components/home/StagingAreaController.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+83. `public/js/components/home/StagingAreaController.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`); with F79, `HomeDock.js`, `HomePasteList.js` and `HomeEqualizer.js` beside it (`manual/14_Frontend_Components_Feature_Map.md`)
 
 ## 5. Service & Logic Audit 
 
@@ -184,7 +184,7 @@
 148. `public/js/views/playlists/PlaylistsExport.js` (Analysis: `manual/10_Frontend_Renderers.md`)
 149. `public/js/views/renderers/DiscographyRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`)
 150. `public/js/views/renderers/InventoryGridRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`)
-151. `public/js/views/renderers/StagingAreaRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`)
+151. `public/js/views/renderers/StagingAreaRenderer.js` — removed in F79 (the dock of the Home, `components/home/HomeDock.js`, draws the series)
 152. `public/js/views/strategies/ViewModeStrategy.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(removed in F65: `ViewModeStrategy.js`)*
 
 ### Batch 10: State, Models & Controllers 

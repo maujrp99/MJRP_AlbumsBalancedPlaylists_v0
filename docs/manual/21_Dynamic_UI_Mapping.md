@@ -14,35 +14,36 @@
 ## 1. Authentication & Entry (Home)
 **File Context**: `views/HomeView.js`, `controllers/HomeController.js`
 
-### 1.1 Artist Search & Staging
+### 1.1 Artist Search and the series being built (F79, the Home that explains itself)
 *   **Logic Trace**:
-    1.  **[UI]** User types in `#artistScanInput` (visual mode) and presses Enter or clicks the Scan button (`#btnScanArtist`). There is no debounce.
-    2.  **[FN]** `AlbumPickerController.searchArtist(query)` (the one album picker, F57; the Home is one of its two frames) -> the scan state goes to `scanning` (`models/scanState.js`) and `HomeView.renderScan` draws it at once: the button busy and disabled ("Scanning…"), the status line, the wait in the panel. While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`.
+    1.  **[UI]** User types in the one field `#artistScanInput` ("An artist, or paste a list of albums") and presses Enter or clicks «Search» (`#btnScanArtist`). There is no debounce. The hint under the field changes while the field has the focus and text (`HomeController.fieldFocused` -> `HomeView.drawHint`).
+    2.  **[FN]** `HomeController.search(text)` -> `AlbumPickerController.searchArtist(query)` (the one album picker, F57; the Home is one of its two frames) -> the scan state goes to `scanning` (`models/scanState.js`) and the port `drawScan` -> `HomeController.drawScan` -> `HomeView.drawResults` / `drawStage` draw it at once: «Searching…» busy and disabled, «Looking for «text» in the catalog…», skeleton covers, the stage small, the equalizer moving (`components/home/HomeEqualizer.js`, state `live`). While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`.
     3.  **[API]** Apple Music catalog through MusicKit (`musicKitService.getArtistAlbums`), in the browser, straight to Apple: the app's server sees nothing of it except `GET /api/musickit-token`, once per page load. The catalog step has a deadline of 15 s (`CATALOG_DEADLINE_MS`) and the start of MusicKit one of 10 s (`MUSICKIT_INIT_DEADLINE_MS`).
-    4.  **[UI]** As soon as the catalog answers, `DiscographyRenderer` draws the albums, classified by the one classifier (`models/albumType.js`) without the AI list (or with the list remembered from an earlier scan of the same artist), and the filter counts are updated. No album: the panel says "No albums found for «text».". Deadline or failure: the panel says so, with the button "Try again" (`#btnScanRetry`), which scans the same text.
-    4b. **[API]** Only when some album is of an electronic genre (`wantsAiList`), `POST /api/ai/studio-albums` is asked after that first render (deadline of 60 s, `AI_LIST_DEADLINE_MS`); the status line shows "confirming album types…" meanwhile. Until then a full-length electronic album shows under "Studio". When the list arrives the albums are classified again (in the list: "Studio"; not in it: "?") and the grid and the counts are redrawn; when it does not arrive, or is empty, the albums shown stay. A visitor (the guest login) never asks it (F70, `api/paidRoutes.js`): `scanArtist` gives `reclassified: null`, so the status line shows only the artist.
-    5.  **[UI]** User clicks Album Card (`[data-action="pick-album"]`).
-    6.  **[FN]** `HomeController.handleGridClick` -> `AlbumPickerController.pick(id)` -> `onPick` -> `StagingAreaController.addAlbum(album)`.
-    7.  **[UI]** `StagingAreaRenderer` adds item to the visual stack.
+    4.  **[UI]** As soon as the catalog answers, `DiscographyRenderer` (`variant: 'stage'`) draws the cards, classified by the one classifier (`models/albumType.js`) without the AI list (or with the list remembered from an earlier scan of the same artist); the artist, the line «N studio albums · newest first» (`models/homeSeries.js` `typesLine`), the chips with their counts and «Add all N …» (`addAllLabel`) are drawn. No album: «No albums found for «text».» with «Paste a list». Deadline or failure: the reason, what still holds, and «Try again» (`#btnScanRetry`), which scans the same text; the equalizer goes flat.
+    4b. **[API]** Only when some album is of an electronic genre (`wantsAiList`), `POST /api/ai/studio-albums` is asked after that first render (deadline of 60 s, `AI_LIST_DEADLINE_MS`); the line under the artist adds «· confirming album types…» meanwhile. When the list arrives the albums are classified again (in the list: "Studio"; not in it: "Other") and the grid and the counts are redrawn. A visitor (the guest login) never asks it (F70, `api/paidRoutes.js`).
+    5.  **[UI]** User clicks a cover (`[data-action="pick-album"]`, a button).
+    6.  **[FN]** `HomeController.clickCard(id)`: a cover already in the series is taken out (`StagingAreaController.removeAlbum`) with «Undo» for 8 s (`UNDO_MS`); otherwise `AlbumPickerController.pick(id)` -> `onPick` -> `StagingAreaController.addAlbum(album)`. After a series was created, a click starts another series first (`startAnother`).
+    7.  **[UI]** `StagingAreaController` tells the change -> `HomeController.seriesChanged` (the suggested name follows the series, `models/homeSeries.js` `nameAfterChange`) -> `redraw`: `HomeView.markCards` (the ring and the place on each chosen cover) and `components/home/HomeDock.js` (the dock: numbered covers, name, «N albums from N artists · the order counts», «Edit order», «Create series»; on the phone the `.phone-action-bar` and the full sheet of the series).
+    8.  **[UI]** «Edit order» opens the series panel above the dock (↑ ↓ ✕ per row, `HomeController.move` / `removeWithUndo`); «Add all» (`HomeController.addAll`) adds what the chips show, with «Added N albums. Undo».
 
-### 1.2 Bulk Processing
+### 1.2 The pasted list (F63, F79)
 *   **Logic Trace**:
-    1.  **[UI]** User pastes "Artist - Album" list in `#bulkPasteInput`, one album per line.
-    2.  **[FN]** `HomeController.validateBulkInput` -> `bulkInputState(text)` (`models/bulkPaste.js`) -> `HomeView.setBulkInputState`: green border when every line is an album, orange when some line is not, neutral when the box is empty.
-    3.  **[UI]** User clicks "Process List" (`#btnProcessBulk`). An empty box gets the notice "Please paste some "Artist - Album" lines first." and nothing else happens.
-    4.  **[FN]** `HomeController.handleBulkProcess()` -> `readPastedList(text)` (`models/bulkPaste.js`), which reads each line with `parsePastedAlbumLine` (`models/albumQuery.js`, the one parser of "Artist - Album"): only the first " - " separates, so a hyphen in a name is kept ("Jay-Z - The Blueprint", "Artist - Album - Deluxe"); a list number or bullet in front, an en or em dash or a tab as the separator and a space missing on one side of the hyphen are accepted; a hyphen with no space on either side never separates ("Jay-Z-The Blueprint" is refused, not guessed).
-    5.  **[FN]** `stageBulkEntries` searches each good line (`albumSearchService.search(artist, title, { limit: 1 })`) and selects the first result (`toStagedAlbum` -> `StagingAreaController.addAlbum`). One line never stops the others: a line that cannot be read, that the catalog does not have, whose search failed or whose album is already selected is skipped with its reason. The button is busy and disabled meanwhile (`HomeView.setBulkBusy`).
-    6.  **[UI]** `bulkOutcome` says what the screen shows: a toast ("Added N albums.", with "N lines were skipped: see the list under the box." when some were), the skipped lines listed under the box in `#bulkPasteReport` ("Line N: «text» — why"), and the box left with the lines that can be fixed. No `alert`.
+    1.  **[UI]** The same field takes a list: pasting several lines into `#artistScanInput` (`HomeController.pasteIntoField`), or «paste a list» (`[data-home-mode="paste"]`), turns it into `components/home/HomePasteList.js`: one input per album line.
+    2.  **[FN]** Every input event checks every line (`models/homePaste.js` `checkPastedLines`, which reads each line with `parsePastedAlbumLine` of `models/albumQuery.js`: only the first " - " separates, so a hyphen in a name is kept; a list number or bullet in front, an en or em dash or a tab as the separator and a space missing on one side are accepted; a hyphen with no space on either side never separates). Each line says «ready» or what to fix; the foot says «N lines: N ready, N to fix…» and the button «Add N albums» (`pasteSummary`).
+    3.  **[UI]** User clicks «Add N albums» (`#btnProcessBulk`). With no ready line the button is off.
+    4.  **[FN]** `HomeController.addPastedList(text)` -> `readPastedList(text)` (`models/bulkPaste.js`) -> `stageBulkEntries` searches each good line (`albumSearchService.search(artist, title, { limit: 1 })`) and adds the first result (`toStagedAlbum` -> `StagingAreaController.addAlbum`). One line never stops the others. The button is busy («Adding…») meanwhile.
+    5.  **[UI]** `pasteReport` (`models/homePaste.js`) says what the foot shows: «Added N albums. N lines were skipped and are still here to fix.»; each line to fix stays as an input with its reason, and the button becomes «Add this line» / «Add these N lines». No toast, no `alert`.
 
-### 1.3 Initialize Series (The Big Bang)
+### 1.3 Create the series (F79)
 *   **Logic Trace**:
-    1.  **[UI]** User names series in `#seriesNameInput`.
-    2.  **[UI]** User clicks "Initialize Load Sequence" (`#btnInitializeLoad`).
-    3.  **[FN]** `HomeController.handleInitializeLoad()`:
-        -   Validates > 0 albums.
-        -   Builds the queries with `toAlbumQuery` (`models/albumQuery.js`).
-        -   **[FN]** `SeriesService.createSeries({ name, albumQueries, status: 'pending' })`.
-    4.  **[FN]** `router.navigate('/albums/{seriesId}')`.
+    1.  **[UI]** The name is already there, suggested from the artists («Pink Floyd selection»), in `#seriesNameInput` in the dock (on the phone, `#homeChosenName` in the sheet); typing in it keeps it (`HomeController.setName`).
+    2.  **[UI]** User clicks «Create series» (`#btnCreateSeries`, `#btnCreateSeriesPhone` or `#btnCreateSeriesSheet`).
+    3.  **[FN]** `HomeController.createSeries()`:
+        -   With no album the button is off; with no name nothing is created: the state `noname` draws «Give the series a name first.» and «Use «suggested name»», and the focus goes to the name.
+        -   `creating`: «Creating…» busy, «Saving your series…» with the small equalizer moving.
+        -   `writeSeries(name, albums)` builds the queries with `toAlbumQuery` (`models/albumQuery.js`), in the order of the series, and asks **[FN]** `SeriesService.createSeries({ name, albumQueries, status: 'pending' })`.
+        -   `created`: the dock says «"name" is saved», «Blend it now» -> `router.navigate('/blend?seriesId={id}')`, «Open the series» -> `router.navigate('/albums/{id}')`, «Start another series» -> `startAnother()`. The Home stays.
+        -   `failed`: the albums stay, the words say the series was not saved (the connection, only when the failure is of the network) and the button becomes «Try again».
 
 ---
 

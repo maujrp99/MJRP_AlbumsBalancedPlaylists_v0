@@ -7,7 +7,7 @@
     -   **Role**: The one album picker - "search an artist, see the albums by type, pick some" - of the Home and of the series edit modal. Owner of the scan's state (F67) and of the type filters.
     -   **Logic**: Holds one scan state (`this.scan`, rules in `models/scanState.js`: idle, scanning, results, empty, failed) and one filter state (`this.filters`, rules in `models/albumPicker.js`), and draws every change through the view port it was given: `drawScan(scan)`, `drawFilters(filters, counts)`, `drawAlbums(albums)`. `searchArtist(query)` calls `albumSearchService.scanArtist` (one instance for the whole app, so the paid AI list of an artist is asked once) and sorts the albums newest first; `retry()` scans the same text; `toggleFilter(key)`; `pick(albumId)` hands the album to `onPick`. While a scan runs another ask does nothing; every answer carries the generation of its scan, so a late answer changes nothing; after `dispose()` nothing is drawn. No `alert()`.
     -   **The seam**: the two screens differ only in `onPick`. Home: `stagingController.addAlbum` (the album goes to the stack of the new series). Series edit: `SeriesEditModal.addAlbum` (the album joins the list of the series being edited).
-    -   **Frames**: the Home (`controllers/HomeController.js` wires the delegated handlers of `#artistScanInput`, `#btnScanArtist`, `#btnScanRetry` and `#home-toolbar [data-filter]`; `views/HomeView.js` `renderScan` and `renderFilters` draw) and `album-picker/AlbumPickerPanel.js` (the picker as one block inside the edit modal: field, Scan button, status line, filter buttons, cards). Both use the same drawn parts: `album-picker/pickerParts.js` (Scan button, filter button with its count, panel message with "Try again") and `views/renderers/DiscographyRenderer.js` (the album card, `data-action="pick-album"`).
+    -   **Frames**: the Home (`controllers/HomeController.js` wires the delegated handlers of `#artistScanInput`, `#btnScanArtist`, `#btnScanRetry`, `#home-toolbar [data-filter]`, `#btnAddAll` and the covers; `views/HomeView.js` `drawResults`, `drawStage`, `drawFilters` and `markCards` draw; since F79 the Home draws its own words and chips, and the cards with `DiscographyRenderer` `variant: 'stage'`) and `album-picker/AlbumPickerPanel.js` (the picker as one block inside the edit modal: field, Scan button, status line, filter buttons, cards). Both use the same drawn parts: `album-picker/pickerParts.js` (Scan button, filter button with its count, panel message with "Try again") and `views/renderers/DiscographyRenderer.js` (the album card, `data-action="pick-album"`).
 
     ```mermaid
     flowchart LR
@@ -23,16 +23,19 @@
         Failed --> Draw
         Picker -->|pick| OnPick[onPick: stage it / add it to the series]
     ```
--   **`home/StagingAreaController.js`**:
-    -   **Role**: Manages the "Staging Stack" (drag-and-drop area).
-    -   **Logic**: Uses `SortableJS` for reordering. Syncs state with the `StagingAreaRenderer`.
+-   **`home/StagingAreaController.js`** (F79):
+    -   **Role**: The series being built: the chosen albums in their order (the order counts in the Blend), each once.
+    -   **Logic**: `addAlbum`, `addMany`, `removeAlbum` (gives back the album and its place, for «Undo»), `insertAlbum`, `moveAlbum` (↑ ↓, no dragging: SortableJS left the Home), `snapshot` / `restore` (the «Undo» of «Add all»), `clear`. It draws nothing: every change goes to `onChange`.
+-   **`home/HomeDock.js`** (F79): the dock of the series, always in view: on the computer a bar fixed at the bottom with the numbered covers, the name, the count, «Edit order» (the panel with ↑ ↓ ✕) and «Create series», and the «Undo» strip; on the phone the `.phone-action-bar` and the full sheet (`ui/Sheet.js`) with the name, the rows and «Create series» at its foot; the visitor's line. It draws the model it is given and hands every gesture to its handlers.
+-   **`home/HomePasteList.js`** (F79): the pasted list, one input per line, each checked as it is typed («ready» or what to fix), with the report after «Add».
+-   **`home/HomeEqualizer.js`** (F79): the equalizer bars and their three states (`still`, `live`, `flat`).
 -   **`search/`**: the folder is gone. `DiscographyToolbar.js` and `VariantPickerModal.js`, which no module imported, were removed in F57.
 
 ### No celular (Home e edição da série)
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **Escolher os álbuns.** A grade tem duas colunas; tocar num álbum o escolhe (anel laranja e o número de ordem), e tocar de novo o tira. A barra de ação (`components/home/HomePhoneChosen.js`) diz «N albums chosen» e tem «Create series»; tocar na contagem abre a folha dos escolhidos, onde cada álbum tem ↑, ↓ e ✕.
-*   **Nome da série.** O campo do nome existe também na folha dos escolhidos. Sem nome, «Create series» não cria e diz «Give the series a name first.»; no computador a série sai como «New Album Series».
+*   **Escolher os álbuns.** A grade tem duas colunas; tocar num álbum o escolhe (anel laranja e o número de ordem), e tocar de novo o tira, com Undo. Desde a F79 a base da série é a barra de ação (`components/home/HomeDock.js`): uma capa com a contagem, o nome, «Tap to edit or reorder» e «Create series»; tocar nela abre a série numa folha de tela cheia, com o nome no topo, ↑ ↓ ✕ em cada álbum e «Create series» no pé.
+*   **Nome da série.** Sugerido pelos artistas («Pavement selection»), editável na folha. Sem nome, «Create series» não cria e diz «Give the series a name first.», no celular e no computador.
 *   **Editar uma série** (aberta em Albums): janela de tela cheia, a lista dos álbuns sem caixa de rolagem própria, ↑ ↓ ✕ em cada linha, «Cancel» e «Save Changes» no pé.
 
 ## Blend Wizard (`blend/`)
