@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 12:58] session — a proposta do React e dos idiomas na `main`; as oito decisões dela vão ao Control Center
+**Branch:** main
+O ramo `claude/f83-site-screens-in-react` entrou na `main` (`4a63985`) depois de a ADR-0023 ser registrada nela como proposta. As oito perguntas da proposta («Decisões do MJRP») estão no lote `reports/proposals/2026-11-21-1258-v0-react-and-languages.md`, para ele responder pelo Control Center: o ritmo, a mudança da constituição, o endereço por idioma, onde fica a escolha do idioma, o idioma sem país, a home em português, a ordem das telas e quando o português abre. O aceite da ADR-0023 não vai no lote: é um commit dele.
+
 ## [2026-11-21 12:58] decision — ADR-0023 registrada na `main` como proposta: as telas do site em React e TypeScript, tela a tela, com os textos num dicionário por idioma
 **Branch:** main
 O trem recusou o ramo `claude/f83-site-screens-in-react` porque a ADR que espera o MJRP nasce na `main`, registrada pelo orquestrador, para o Control Center mostrá-la. Registrada como `docs/decisions/0023-site-screens-in-react-screen-by-screen.md`, `Proposed`, igual ao texto do ramo; a crítica separada deu «pode ir ao MJRP» (0 P0, 10 P1 respondidos na proposta, 3 P2). O aceite é dele, no commit dele; o agente não o escreve. Na `main` desde o último registro: o lote de fecho do board (`9d46df8`), o sensor visual (`79f767d`) e o design system do site refeito do código (`9abc02e`).
