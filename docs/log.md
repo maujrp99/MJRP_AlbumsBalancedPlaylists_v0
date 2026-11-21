@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 20:51] step — F75: o relatório do juiz sobre o «Clear Cache» (passou, sem P0 nem P1, 1 P2) e suas capturas entram no ramo
+**Branch:** fix/f75-clear-cache-keeps-the-inventory-values
+O juiz escreveu o relatório sobre 01d26d9; copiado como veio para `reports/audits/` e as capturas para `reports/evidence/F75/clear-cache-recheck/`. UAT-272 (melhoria, aberta pelo juiz): o rodapé ainda diz «Clear Cache» / «Cache Cleared!» embora agora guarde os valores do inventário e o câmbio; o texto visível não foi mudado, é do MJRP aprovar.
+
 ## [2026-11-21 20:41] step — F88: o relatório do juiz sobre o menu do celular (passou, sem P0 nem P1, 3 P2) e suas capturas entram no ramo; UAT-270 consertada, UAT-271 nova
 **Branch:** fix/f88-phone-menu-equal-in-home-and-app
 O juiz escreveu o relatório sobre 8c09860; copiado como veio para `reports/audits/` e as capturas para `reports/evidence/F88/phone-menu-equal/recheck/`. Dos três P2, o P2-1 (alisamento de fonte) foi consertado em e4f7c46. UAT-270 (os menus diferentes e o ícone do Start) passa a `fixed (F88: 5243644, 8c09860, e4f7c46)`. UAT-271, aberta pelo juiz: no iPhone SE a primeira tela da home mostra só uma fatia do caixote. UAT-263 ganhou a nota de que «Playlists» e «Inventory» também se tocam no app agora que os menus são um só.
