@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:16] session — conform: `visual-sensor` registrado (CM-0007, CM-0023, CM-0090, CM-0091, CM-0099, CM-0115, CM-0116, CM-0117, CM-0125, CM-0142, CM-0162, CM-0166)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:16] session — conform: `releases` registrado (CM-0134, CM-0159)
 **Branch:** wip/kernel-conform-2026-11-21
 O `--check-note` passou nas duas notas (releases@3→4 e @4→5) sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
