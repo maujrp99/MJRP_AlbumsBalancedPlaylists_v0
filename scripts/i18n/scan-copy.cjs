@@ -46,7 +46,7 @@ const isHumanText = (s) => {
   if (t.length < 2) return false
   if (!/[A-Za-zÀ-ú]{2,}/.test(t)) return false
   if (/^(https?:|\/|\.|#|data:|mailto:)/.test(t)) return false
-  if (/^[a-z0-9_.:\-\/\[\]="'#> *,~+()%]+$/.test(t) && !/\s{1}[A-Z]/.test(t)) return false // selector / class list / id / key
+  if (/^[a-z0-9_.:\-/[\]="'#> *,~+()%]+$/.test(t) && !/\s{1}[A-Z]/.test(t)) return false // selector / class list / id / key
   if (/^[a-z]+([A-Z][a-z0-9]+)+$/.test(t)) return false // camelCase identifier
   if (/^[A-Z0-9_]+$/.test(t)) return false // CONSTANT
   if (/^[a-z]+(-[a-z0-9]+)+$/.test(t)) return false // kebab id
