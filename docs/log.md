@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:47] step — F83 onda 4: o teste «igual ao de antes» da Start, vermelho (a tela em React ainda não existe)
+**Branch:** claude/f83-wave-4-start
+test/screens/start/Start.sameAsBefore.test.tsx toca os 30 cenários na tela nova e compara cada página e o foco com test/fixtures/startBeforeF83.json; mais três provas de que ele acusa uma palavra, uma classe e um foco trocados. Falha hoje porque screens/start/ não existe.
+
 ## [2026-11-21 18:47] step — F83 onda 4: o retrato da tela Start antiga (30 cenários) antes de apagá-la
 **Branch:** claude/f83-wave-4-start
 O registro das páginas que a Start à mão desenha (computador e celular: a primeira visita, a digitação, a busca, a discografia e os filtros, as capas escolhidas e o Undo, o painel de ordem, o nome, criar, a falha de gravar, a lista colada, o visitante, a folha do celular, virar computador e voltar), com onde fica o foco depois de cada passo e as chamadas ao que está fora (catálogo, gravação, navegação, janela de entrar): test/support/startScenarios.js (os cenários, uma só vez para a antiga e a nova), test/fixtures/startBeforeF83.json (o que a antiga desenhou) e o registro reports/evidence/F83/wave-4/capture-before.test.js. O foco da antiga: a capa e o chip ficam com o foco; no dock o foco volta por seletor; na folha do celular as linhas são refeitas e o foco vai para a página.
