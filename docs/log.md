@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:32] session — F85: fechamento da sessão (o ramo e a sessão, no formato que o `session-check` lê)
+Branch: `claude/f85-start-in-the-menu`, no commit `78ad892` e antes dele.
+Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador, via rápida)
+Mesmo fechamento da entrada anterior, escrito com a linha `Branch:` sem negrito, que o leitor do `session-check` exige. Nada do código mudou.
+
 ## [2026-11-21 10:32] session — F85 entregue: tarefas 01 a 03 e a documentação; a TASK-04 espera o integrador
 **Branch:** claude/f85-start-in-the-menu
 Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador, via rápida)
