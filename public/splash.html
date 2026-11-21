@@ -145,7 +145,7 @@ footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
   .caption{padding:8px var(--gutter) 12px}
   .credit-tag{left:var(--gutter)}
   .thread{position:fixed;top:auto;bottom:0;left:0;right:0;border-bottom:0;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-  .thread .wrap{height:72px;gap:12px}
+  .thread .wrap{height:auto;min-height:72px;gap:12px}
   .caption .who b{white-space:normal}
   .slot{display:block;width:180px;height:180px;margin:0 0 22px;position:relative;perspective:700px}
   html:not(.js) .slot{display:none}
@@ -184,7 +184,7 @@ html.paused .motion-icon .i-pause{display:none}
   .motion-icon{width:44px;height:44px;border-radius:22px;top:6px;right:var(--gutter)}
   html.in .top .btn-start{display:inline-flex}
   .top .acct .btn-primary.only-out{display:none}
-  .ms .flipmark{display:none}
+  .thread .ms .flipmark{display:none}
   .thread .wrap{padding-top:4px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -197,10 +197,10 @@ html.paused .motion-icon .i-pause{display:none}
   :root{--top:56px}
   .ms-desk{display:none}
   .thread{display:block}
-  .thread .wrap{height:64px}
-  .ms .stop{justify-content:flex-end;padding:0 0 8px;font-size:12px;min-height:56px}
-  .eqbar{top:8px;bottom:auto;height:18px}
-  .ms .flipmark{top:4px;font-size:0}
+  .thread .wrap{height:auto;min-height:64px;padding-top:0;padding-bottom:0;align-items:stretch}
+  .thread .ms .stop{justify-content:flex-start;padding:36px 0 14px;font-size:12px;line-height:14px;min-height:64px}
+  .thread .eqbar{top:8px;bottom:auto;height:18px}
+  .thread .ms .flipmark{top:4px;font-size:0}
 }
 /* ===== v2: Portuguese first, the real ranking card, the flip as a band ===== */
 .rank-real .tag{flex-direction:column;gap:4px}
@@ -217,7 +217,7 @@ html.paused .motion-icon .i-pause{display:none}
   .story > section.flip-band{padding:8px 0;margin:0;border-bottom:0;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px}
   .flip-band .fb-title{font-size:14px;margin:0}
   .flip-band .fb-line{font-size:13px;line-height:1.35}
-  .ms .stop{font-size:12px}
+  .thread .ms .stop{font-size:12px}
 }
 /* ===== F80 · the home as built: the hero's lines, the language switch, the menu without script ===== */
 .top .acct{gap:10px}

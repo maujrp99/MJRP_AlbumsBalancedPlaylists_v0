@@ -305,8 +305,8 @@
     box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    height: var(--phone-tabbar-h);
-    padding-top: 8px;
+    min-height: var(--phone-tabbar-h); /* a floor, not a height: larger text makes the bar taller, never lets a label climb onto the bars */
+    padding-top: 14px; /* the row of bars is the first 8 px: 6 px of gap are guaranteed under it */
   }
 
   .phone-tabbar__tab {
