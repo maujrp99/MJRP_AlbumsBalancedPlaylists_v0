@@ -3,6 +3,28 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:00] session — save: pesquisa da régua do volume de copy (F81) fechada
+
+> Participantes: orquestrador do V0 + Claude Code (Opus 5.5) · Branch: claude/f81-copy-volume-research
+> Session: sessão de página iniciada pelo orquestrador do V0 (local_12b5ff2f-ff3a-4682-b761-b99d85bbc840)
+
+### Executive Summary
+A pesquisa da régua do volume de texto está pronta: as fontes abertas com data, a medida de Spotify, Bandcamp e Linear a 1280 e a 390 px, a régua por elemento e por tela, e o V0 e os três comparadores medidos contra ela. Só medida e proposta: nada do site, do cânone ou das skills foi editado.
+
+### Decisions
+- O ramo é da F81, não uma feature nova, por decisão do orquestrador do V0. A trava de commit recusou o nome `claude/research-copy-volume`.
+- Os números de elemento e de tela sem fonte são proposta do agente, revisável; o relatório marca cada um.
+
+### Next Session
+1. O orquestrador do harness leva ao MJRP, como uma decisão só, a disciplina CV (CV-01 a CV-07) e os passos das três skills.
+2. O integrador junta este ramo na `main`.
+3. Falta medir no navegador, com a conta, as telas de trabalho (F84).
+
+### Key Data
+- Primeira tela da página de entrada do V0: 84 palavras no computador e 64 no telefone. O topo (título e subtítulo) tem 52 palavras, acima do teto de 40.
+- Primeira tela dos comparadores, no computador / no telefone: Home 179 / 132; página de entrada 359 / 454; Inventário 106 / 86. O teto de tela de trabalho é 100 / 50.
+- Commit da pesquisa: `10b5dad`.
+
 ## [2026-11-21 10:52] session — pesquisa: uma régua para o volume de texto por tela, no computador e no telefone
 **Branch:** claude/f81-copy-volume-research
 A pedido do orquestrador do harness, a partir das palavras do MJRP («o copy … está bem verbose … tanto para web qto para mobile»). O relatório está em `reports/research/2026-11-21-copy-volume-ruler.md`. Ele traz as fontes primárias abertas com data, a medida de Spotify, Bandcamp e Linear a 1280 e a 390 px, a régua por tipo de elemento e por tela, o V0 contra a régua e uma proposta de disciplina nova no cânone (CV-01 a CV-07, só proposta). O script de medida e as medidas brutas estão ao lado. No V0, a primeira tela está na faixa dos produtos medidos (84 e 64 palavras). O excesso está no topo (título e subtítulo, 52 palavras) e no número de textos por tela (Inventário, 231). Também mediu os três comparadores publicados (Home, página de entrada, Inventário). A primeira tela deles tem 179, 359 e 106 palavras no computador; os tetos de tela de trabalho são 100 no computador e 50 no telefone. O ramo é da F81, por decisão do orquestrador. Nada do cânone, das skills ou do site foi editado.
