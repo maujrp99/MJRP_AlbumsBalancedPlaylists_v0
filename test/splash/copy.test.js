@@ -78,7 +78,7 @@ describe('the page and the dictionary', () => {
             .replace(/<[^>]+>/g, '\n').split('\n').map(s => s.trim()).filter(Boolean)
         const tracks = ['Sunday Morning', 'I\'m Waiting for the Man', 'Femme Fatale', 'Venus In Furs', 'Run Run Run', 'All Tomorrow\'s Parties',
             'Heroin', 'There She Goes Again', 'I\'ll Be Your Mirror', 'The Black Angel\'s Death Song', 'European Son']
-        const allowed = [/^[⟲→↑♫·]+$/, /^The Album Blender$/, /^The Velvet Underground &amp; Nico · 1967$/, /^\d+$/, /^PT$/, /^EN$/, ...tracks.map(s => new RegExp(`^${s.replace(/'/g, '(\'|&#39;|&apos;)')}$`))]
+        const allowed = [/^[⟲→↑♫·▶✓]+$/, /^The Album Blender$/, /^(Pink Floyd|Spotify|Apple Music)$/, /^The Velvet Underground &amp; Nico · 1967$/, /^\d+$/, /^PT$/, /^EN$/, ...tracks.map(s => new RegExp(`^${s.replace(/'/g, '(\'|&#39;|&apos;)')}$`))]
         expect(lines.filter(line => !allowed.some(re => re.test(line)))).toEqual([])
     })
 })

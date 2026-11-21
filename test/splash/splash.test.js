@@ -152,7 +152,6 @@ describe('the page wired', () => {
         expect(page.state.track).toBe('a1')
         expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · álbum fictício')
         expect(document.querySelectorAll('#box .sl.vis')).toHaveLength(7)
-        expect(document.getElementById('a1').classList.contains('is-current')).toBe(true)
         expect(document.documentElement.lang).not.toBe('en')
     })
 

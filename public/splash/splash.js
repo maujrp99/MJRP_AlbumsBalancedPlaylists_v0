@@ -19,6 +19,7 @@ import { t } from './copy.js'
 import { chooseLanguage, readStoredLanguage, storeLanguage, pageStorage, applyLanguage } from './lang.js'
 import { startMenuBar, applyAccount, threadBarStyle } from './menu.js'
 import { hasAccount } from './gate.js'
+import { startAmbient } from './ambient.js'
 
 export { threadBarStyle }
 
@@ -284,7 +285,6 @@ function watchTracks(win, page, scene, view) {
         if (track !== current) {
             current = track
             scene.style.setProperty('--fire', TRACKS[track].fire)
-            sections.forEach(s => s.classList.toggle('is-current', s.id === track)) // the hook of each story's ambient slot
             if (!page.phone) { view.layoutCss(track); view.caption(track) }
             D.dispatchEvent(new win.CustomEvent('trackchange', { detail: track }))
         }
@@ -358,6 +358,7 @@ export function startSplash(win) {
     language.start()
 
     startMenuBar(win)
+    startAmbient(win)
     hasAccount(win).then((signedIn) => applyAccount(D, signedIn))
 
     const fireLevel = () => Number(win.getComputedStyle(scene).getPropertyValue('--fire')) || FIRE.peak
