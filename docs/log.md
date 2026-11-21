@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:33] review — reconferência visual em lote, grupo playlists, playlists guardadas, blend e exportar (F61, F73): fail sem P0, sem P1, 2 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou as playlists geradas, as guardadas e o Blending Menu de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (as telas, o controlador e o leitor reais com uma fonte de mentira; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-playlists-blend-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/playlists/`. Dois P2 (UAT-252, UAT-253). Fecha a série de quatro relatórios do lote; nada fechado no board.
+
 ## [2026-11-21 13:32] review — reconferência visual em lote, grupo inventário (F54, F71, F73): fail sem P0, sem P1, 1 P2
 **Branch:** wip/visual-recheck-batch-2026-11-21
 Juiz separado (Opus) olhou o inventário e a janela do álbum de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (as telas reais com 211 itens de fixture e o serviço real sobre um repositório em memória; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/inventory/` e o ajudante comum `cdp-lib-inventory-playlists.mjs`. O filtro de situação da F71 foi trocado pela F75 pelos três botões de contagem: registrado, sem issue. Um P2 (UAT-251). Nada fechado.
