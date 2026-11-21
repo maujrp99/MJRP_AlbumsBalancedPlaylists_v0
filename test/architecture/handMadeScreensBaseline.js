@@ -1,4 +1,8 @@
 /**
+ * (2026-11-21, wave 1: the saved playlists screen went to React, and these left the list in the commit that deleted them:
+ * views/SavedPlaylistsView.js and, in components/playlists, SavedSeriesGroup, SavedPlaylistCard, SavedPlaylistRow,
+ * SavedPlaylistActions, SavedPlaylistsPhone, PlaylistDetailsModal and batchNames; the controller moved to controllers/.)
+ *
  * (2026-11-21, merge of main into the wave 0 branch: the notices of failed sources in the album window came from main with
  * their files: `components/albumWindowSources.js` is new, and four files were brought to their sizes of that day.)
  *
@@ -52,18 +56,10 @@ export const HAND_MADE = {
     'components/navigation/startRoute.js': 62,
     'components/playlists/PhonePlaylists.js': 187,
     'components/playlists/PhoneUndoNotice.js': 45,
-    'components/playlists/PlaylistDetailsModal.js': 68,
     'components/playlists/PlaylistGrid.js': 187,
     'components/playlists/PlaylistsDragHandler.js': 85,
     'components/playlists/PlaylistsGridRenderer.js': 183,
     'components/playlists/RegeneratePanel.js': 182,
-    'components/playlists/SavedPlaylistActions.js': 104,
-    'components/playlists/SavedPlaylistCard.js': 113,
-    'components/playlists/SavedPlaylistRow.js': 95,
-    'components/playlists/SavedPlaylistsController.js': 137,
-    'components/playlists/SavedPlaylistsPhone.js': 174,
-    'components/playlists/SavedSeriesGroup.js': 154,
-    'components/playlists/batchNames.js': 47,
     'components/ranking/TracksRankingComparison.js': 207,
     'components/ranking/TracksTable.js': 314,
     'components/ranking/TracksTabs.js': 102,
@@ -101,7 +97,6 @@ export const HAND_MADE = {
     'views/InventoryPhoneSheets.js': 226,
     'views/InventoryView.js': 693,
     'views/PlaylistsView.js': 383,
-    'views/SavedPlaylistsView.js': 354,
     'views/SeriesView.js': 254,
     'views/albums/AlbumsGridRenderer.js': 129,
     'views/albums/AlbumsScopedRenderer.js': 233,

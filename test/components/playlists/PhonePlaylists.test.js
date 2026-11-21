@@ -1,8 +1,8 @@
 /**
  * F76 (TASK-04, REQ-08, REQ-12) - the playlists on the phone: one playlist at a time with chips
  * on top, track rows with named actions in a sheet, remove with Undo, delete asked first, save and
- * export in the action bar; the saved playlists closed by series. On the computer the markup is
- * the one of before.
+ * export in the action bar. On the computer the markup is the one of before. (The saved playlists closed by series moved with
+ * their screen to test/screens/saved-playlists/SeriesGroup.test.tsx, F83 wave 1.)
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
@@ -15,7 +15,6 @@ import { PhonePlaylists, playlistSummary, minutes } from '../../../public/js/com
 import { attachPhonePlaylistActions } from '../../../public/js/views/playlists/phonePlaylistActions.js'
 import { dismissUndoNotice } from '../../../public/js/components/playlists/PhoneUndoNotice.js'
 import { dragHandleSelector } from '../../../public/js/components/playlists/PlaylistsDragHandler.js'
-import { SavedSeriesGroup, seriesSummary } from '../../../public/js/components/playlists/SavedSeriesGroup.js'
 import { PlaylistGrid } from '../../../public/js/components/playlists/PlaylistGrid.js'
 import { playlistsStore } from '../../../public/js/stores/playlists.js'
 
@@ -230,109 +229,5 @@ describe('the computer keeps its grid', () => {
         const host = draw(PlaylistGrid.render({ playlists, batchName: 'Road trip' }))
         expect(host.querySelectorAll('.playlist-card')).toHaveLength(3)
         expect(host.querySelector('.phone-playlists')).toBeNull()
-    })
-})
-
-describe('a saved series', () => {
-    const batch = (name, count) => ({ name, savedAt: '2026-11-01T10:00:00Z', playlists: Array.from({ length: count }, (_, i) => ({ id: `${name}${i}`, name: `P${i}`, tracks: [] })) })
-    const group = { series: { id: 'Jp93LzaUxyz', name: 'Prog Rock Classics' }, status: 'ready', batches: [batch('Sunday mix', 4), batch('Night drive', 2)], thumbnails: [] }
-    const handlers = { onNavigate: vi.fn(), onOpenSeries: vi.fn(), onDeleteAll: vi.fn(), onEditBatch: vi.fn(), onDeleteBatch: vi.fn(), onOpenPlaylist: vi.fn(), onRetry: vi.fn() }
-
-    it('on the phone is closed, says what it holds, and opens by a named row', () => {
-        asPhone(true)
-        const onToggle = vi.fn()
-        const node = new SavedSeriesGroup({ group, handlers, onToggle }).render()
-        const box = node.querySelector('.saved-series-batches')
-        const toggle = node.querySelector('.saved-series-toggle')
-
-        expect(box.hidden).toBe(true)
-        expect(toggle.querySelector('.saved-phone-series__name').textContent).toBe('Prog Rock Classics')
-        expect(toggle.querySelector('.saved-series-toggle__text').textContent).toBe('2 batches · 6 playlists')
-        expect(toggle.getAttribute('aria-expanded')).toBe('false')
-        toggle.click()
-        expect(box.hidden).toBe(false)
-        expect(toggle.getAttribute('aria-expanded')).toBe('true')
-        expect(onToggle).toHaveBeenCalledWith('Jp93LzaUxyz', true)
-    })
-
-    it('on the phone opens again when it was open before', () => {
-        asPhone(true)
-        const node = new SavedSeriesGroup({ group, handlers, open: true }).render()
-        expect(node.querySelector('.saved-series-batches').hidden).toBe(false)
-    })
-
-    it('on the computer is open with no toggle, as before', () => {
-        asPhone(false)
-        const node = new SavedSeriesGroup({ group, handlers }).render()
-
-        expect(node.querySelector('.saved-series-toggle')).toBeNull()
-        expect(node.querySelector('.saved-series-batches').hidden).toBe(false)
-        expect(node.querySelectorAll('.batch-group-card')).toHaveLength(2)
-    })
-
-    it('on the computer keeps its buttons and its id, as before', () => {
-        asPhone(false)
-        const node = new SavedSeriesGroup({ group, handlers }).render()
-
-        expect(node.querySelector('.saved-series-id').textContent).toContain('Jp93LzaU')
-        expect(node.querySelector('[aria-label="Delete all playlists in Prog Rock Classics"]')).not.toBeNull()
-        expect(node.querySelector('[aria-label="Delete batch Sunday mix"]')).not.toBeNull()
-        expect(node.querySelector('[aria-label="Edit batch Sunday mix"]')).not.toBeNull()
-    })
-
-    describe('on the phone (recheck N5)', () => {
-        beforeEach(() => asPhone(true))
-        const sheetRows = () => [...document.querySelectorAll('.sheet .albums-sheet__row')]
-        const tapRow = (text) => sheetRows().find(row => row.textContent.trim() === text).click()
-
-        it('shows no raw id and no button but its rows and «⋯»: nothing red in view', () => {
-            const node = new SavedSeriesGroup({ group, handlers, open: true }).render()
-            expect(node.querySelector('.saved-series-id')).toBeNull()
-            expect(node.querySelector('.btn')).toBeNull()
-            expect([...node.querySelectorAll('.phone-more')].map(b => b.getAttribute('aria-label'))).toEqual([
-                'Actions for series Prog Rock Classics', 'Actions for batch Sunday mix', 'Actions for batch Night drive'
-            ])
-        })
-
-        it('a batch row says its name, playlists, tracks, length and one date format', () => {
-            const node = new SavedSeriesGroup({ group, handlers, open: true }).render()
-            const row = node.querySelector('.saved-phone-batch')
-            expect(row.querySelector('.saved-phone-batch__name').textContent).toBe('Sunday mix')
-            expect(row.querySelector('.saved-phone__meta').textContent).toBe('4 playlists · 0 tracks · 0 min · 1 Nov 2026')
-        })
-
-        it('the «⋯» of a series names its actions, delete last and red, and each calls the computer\'s handler', () => {
-            const node = new SavedSeriesGroup({ group, handlers }).render()
-            document.body.appendChild(node)
-            node.querySelector('[aria-label="Actions for series Prog Rock Classics"]').click()
-            expect(sheetRows().map(row => row.textContent.trim())).toEqual(['Add playlists', 'Open the album series', 'Delete all playlists of this series'])
-            expect(sheetRows().at(-1).classList.contains('albums-sheet__row--danger')).toBe(true)
-            tapRow('Delete all playlists of this series')
-            expect(handlers.onDeleteAll).toHaveBeenCalledWith('Jp93LzaUxyz', 'Prog Rock Classics')
-        })
-
-        it('the «⋯» of a batch edits or deletes it (the view asks before deleting)', () => {
-            const node = new SavedSeriesGroup({ group, handlers, open: true }).render()
-            document.body.appendChild(node)
-            node.querySelector('[aria-label="Actions for batch Sunday mix"]').click()
-            tapRow('Edit batch')
-            expect(handlers.onEditBatch).toHaveBeenCalledWith('Jp93LzaUxyz', 'Sunday mix', '2026-11-01T10:00:00Z')
-            node.querySelector('[aria-label="Actions for batch Sunday mix"]').click()
-            tapRow('Delete batch')
-            expect(handlers.onDeleteBatch).toHaveBeenCalledWith('Jp93LzaUxyz', 'Sunday mix', 4)
-        })
-
-        it('a batch opens its playlists as rows; a playlist row opens its tracks', () => {
-            const node = new SavedSeriesGroup({ group, handlers, open: true }).render()
-            node.querySelector('.saved-phone-batch .batch-header').click()
-            const rows = node.querySelectorAll('.saved-phone-batch')[0].querySelectorAll('.saved-phone-playlist')
-            expect(rows).toHaveLength(4)
-            rows[1].click()
-            expect(handlers.onOpenPlaylist).toHaveBeenCalledWith('Jp93LzaUxyz', 'Sunday mix1')
-        })
-    })
-
-    it('one batch, one playlist: singular words', () => {
-        expect(seriesSummary([batch('Solo', 1)])).toBe('1 batch · 1 playlist')
     })
 })

@@ -24,12 +24,14 @@ import {
 const KEPT_ON_PURPOSE = {
     // The model a person copies to public/js/firebase-config.js to point the app at a Firebase project.
     'public/js/firebase-config.example.js': 'configuration template, copied by hand',
-    // The hooks of the React bridge (F83) that the canary screen does not need wait for the screens of wave 1 on. Each line goes
-    // out in the commit of the screen that first uses the hook: this test fails the moment a line stops being true.
-    'public/js/react-bridge/navigation.ts': 'the bridge, until a screen navigates by code (wave 1)',
-    'public/js/react-bridge/usePhone.ts': 'the bridge, until a screen asks if it is the phone (wave 1)',
-    'public/js/react-bridge/useScreenTitle.ts': 'the bridge, until a screen names itself (wave 1)',
-    'public/js/react-bridge/useStore.ts': 'the bridge, until a screen reads a store (wave 1)'
+    // The hook of the React bridge (F83) that no screen has needed yet waits for the screen that does. The line goes out in the
+    // commit of the screen that first uses it: this test fails the moment it stops being true. (navigation, usePhone and
+    // useStore went out with the saved playlists screen, wave 1; the saved playlists screen sets no title of its own.)
+    'public/js/react-bridge/useScreenTitle.ts': 'the bridge, until a screen names itself (wave 2: the playlists screen)',
+    // The background download of the menu's screens (F83 wave 0). Its one user was the hand-made saved playlists screen; the
+    // screens in React are not fetched in the background until the shell is React (wave 3, REQ-07: the first load downloads no
+    // React), and no hand-made screen is loaded late any more. It goes back to app.js in wave 3, with the test it already has.
+    'public/js/utils/prefetchScreens.js': 'the background download of the menu\'s screens, until the shell is React (wave 3)'
 }
 
 const graph = graphFrom(allEntryPoints())
@@ -79,7 +81,7 @@ describe('the graph follows every way a file is loaded', () => {
     })
 
     it('a dynamic import() of the app and of the server, and require()', () => {
-        expect(graph.reachable.has('public/js/views/SavedPlaylistsView.js')).toBe(true) // import() in a route of app.js
+        expect(graph.reachable.has('public/js/screens/saved-playlists/index.ts')).toBe(true) // import() in a route of app.js
         expect(graph.reachable.has('shared/trackIdentity.js')).toBe(true) // import() from the CommonJS server
         expect(graph.reachable.has('server/routes/debug.js')).toBe(true) // require() inside an if
     })

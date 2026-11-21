@@ -54,7 +54,7 @@ export function watchCovers(root = document) {
 
 /**
  * The image of an album cover.
- * @param {Object} props - what SafeDOM.img takes (alt, className, loading, style...), and:
+ * @param {{ src?: string|null, dataset?: Object, alt?: string, className?: string, loading?: string, style?: Object }} [props] - what SafeDOM.img takes (alt, className, loading, style...), and:
  * @param {string|null} [props.src] - the address of the cover; with none, the stand-in is shown
  * @returns {HTMLImageElement}
  */

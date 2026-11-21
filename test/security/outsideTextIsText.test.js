@@ -11,7 +11,6 @@ import { AlbumCardRenderer } from '../../public/js/components/ui/AlbumCardRender
 import { Album } from '../../public/js/models/Album.js'
 import { TrackRow } from '../../public/js/components/ui/TrackRow.js'
 import { renderSeriesHeader } from '../../public/js/views/albums/AlbumsScopedRenderer.js'
-import { SavedPlaylistCard } from '../../public/js/components/playlists/SavedPlaylistCard.js'
 import { InventoryGridRenderer } from '../../public/js/views/renderers/InventoryGridRenderer.js'
 import { Router } from '../../public/js/router.js'
 import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
@@ -116,16 +115,8 @@ describe('text from outside is shown as text', () => {
         expect(host.querySelector('h4').textContent).toBe(TEXT)
     })
 
-    it('saved playlists card: batch name and playlist names', () => {
-        const card = new SavedPlaylistCard({
-            batch: { name: TEXT, savedAt: '2026-11-19T12:00:00Z', playlists: [{ id: QUOTED, name: TEXT, tracks: [{ title: TEXT, artist: TEXT }] }] },
-            seriesId: QUOTED,
-            thumbnails: [QUOTED]
-        })
-        draw(card.render())
-        expectOnlyText(host, TEXT)
-        expect(host.querySelector('h3').textContent).toBe(TEXT)
-    })
+    // The saved playlists card (batch name and playlist names) moved with its screen to React (F83 wave 1): its test is
+    // test/screens/saved-playlists/outsideText.test.tsx, with the same assertions.
 
     it('inventory card and inventory row: title, artist, format and id', () => {
         const owned = { id: QUOTED, title: TEXT, artist: TEXT, format: TEXT, owned: true, purchasePrice: 10, currency: 'USD', notes: TEXT }

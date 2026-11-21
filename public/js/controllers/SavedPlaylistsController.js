@@ -7,28 +7,28 @@
  * turns the person's actions (edit, delete, try again) into calls. It reads nothing itself and
  * knows no repository.
  *
- * @module components/playlists/SavedPlaylistsController
- * @since Sprint 15 (ARCH-12); the read moved to the reader in F61
+ * @module controllers/SavedPlaylistsController
+ * @since Sprint 15 (ARCH-12); the read moved to the reader in F61; moved from components/playlists to controllers (F83 wave 1,
+ *   with the screen in React: it was never a component, and it was given a `view` it did not use)
  */
 
-import { savedPlaylistsReader, savedPlaylistsStore } from '../../services/playlists/savedPlaylistsReading.js'
-import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js'
-import { ListStatus, SeriesPlaylistsStatus as Status } from '../../models/savedPlaylists.js'
-import { router } from '../../router.js'
-import toast from '../Toast.js'
+import { savedPlaylistsReader, savedPlaylistsStore } from '../services/playlists/savedPlaylistsReading.js'
+import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
+import { ListStatus, SeriesPlaylistsStatus as Status } from '../models/savedPlaylists.js'
+import { router } from '../router.js'
+import toast from '../components/Toast.js'
+import { t } from '../i18n/t.js'
 
 /** A series is on the list when it has playlists to show or a failure to tell. */
 const isListed = (entry) => entry.status === Status.READY || entry.status === Status.FAILED
 
 export class SavedPlaylistsController {
     /**
-     * @param {Object} view
      * @param {Object} [deps]
      * @param {Object} [deps.reader] - SavedPlaylistsReader
-     * @param {Object} [deps.store] - SavedPlaylistsStore
+     * @param {import('../stores/savedPlaylists.js').SavedPlaylistsStore} [deps.store] - SavedPlaylistsStore
      */
-    constructor(view, { reader = savedPlaylistsReader, store = savedPlaylistsStore } = {}) {
-        this.view = view
+    constructor({ reader = savedPlaylistsReader, store = savedPlaylistsStore } = {}) {
         this.reader = reader
         this.store = store
     }
@@ -113,10 +113,10 @@ export class SavedPlaylistsController {
     async deleteBatch(seriesId, batchName) {
         try {
             await this.reader.removeBatch(seriesId, batchName)
-            toast.success(`Deleted batch: ${batchName}`)
+            toast.success(t('savedPlaylists.toast.deletedBatch', { name: batchName }))
             return true
         } catch (error) {
-            toast.error('Failed to delete batch')
+            toast.error(t('savedPlaylists.toast.deleteBatchFailed'))
             console.error('[SavedPlaylistsController] deleteBatch failed:', error)
             return false
         }
@@ -126,10 +126,10 @@ export class SavedPlaylistsController {
     async deleteAllPlaylists(seriesId, seriesName) {
         try {
             await this.reader.removeAll(seriesId)
-            toast.success(`Deleted playlists for ${seriesName}`)
+            toast.success(t('savedPlaylists.toast.deletedAll', { name: seriesName }))
             return true
         } catch (error) {
-            toast.error('Failed to delete playlists')
+            toast.error(t('savedPlaylists.toast.deleteAllFailed'))
             console.error('[SavedPlaylistsController] deleteAllPlaylists failed:', error)
             return false
         }

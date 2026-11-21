@@ -408,6 +408,20 @@ A construção (`public/css/views/home.css`, `public/css/mobile/home.css`, `publ
 | Os números na fonte de texto | o número da capa, da linha do painel, da base e dos passos na fonte de texto do sistema, também no computador | ajusta a regra de fonte do computador (só nos números) | o «1» da Syne se lê como «ı» justamente no número da ordem (achado 18 da crítica) |
 | Os tokens da Home | `--home-flame`, `--home-flame-text`, `--home-eq-grad`, `--home-panel`, `--home-muted`, `--home-soft`, `--home-line` em `:root` (`css/views/home.css`) | traduz o protótipo; as cores são as declaradas | uma fonte só para as cores da Home no computador, no celular e na folha |
 
+## Portes para React (F83) — peça de hoje → peça em `ui/`
+
+Nenhuma peça é redesenhada: o mesmo HTML, as mesmas classes e as mesmas folhas de estilo (o Tailwind lê `.tsx`; nada de CSS por componente, `oneStyleSystem.test.js`). A prova de cada porte é o teste da tela que o levou.
+
+| Peça de hoje | Peça em React | Onda | Nota |
+|---|---|---|---|
+| `components/Icons.js` `getIcon()` | `ui/Icon.tsx` (lê os mesmos desenhos, `utils/iconShapes.js`) | 0 | HTML igual provado para todo ícone usado |
+| `components/common/AlbumCascade.js` | `ui/AlbumCascade.tsx` | 1 | duas escritas das mesmas poucas linhas até a Blend migrar (onda 7); `test/ui/AlbumCascade.test.tsx` as mantém iguais |
+| `components/ui/coverImage.js` | `ui/CoverImage.tsx` | 1 | a imagem de capa com a reserva; a escuta do erro e o endereço da reserva são os do módulo antigo |
+| `components/ui/Sheet.js` (a Folha) | `ui/SheetWindow.tsx` (`useSheetWindow`) | 1 | o motor fica; o conteúdo da Folha é React, por um portal |
+| `components/ui/BaseModal.js` (a janela) | `ui/ModalWindow.tsx` (`useModalWindow`) | 1 | a casca fica; corpo e rodapé são React, por dois portais |
+| `components/ui/FilterToolbar.js` e `FilterSheet.js` | **ainda a antiga**, por `react-bridge/legacy/FilterToolbar.tsx` | 5 | a tela dos álbuns, antiga, também a usa e carrega no script principal; um porte para React lá faria o script principal chamar o React |
+| `components/ui/TrackRow.js` | **ainda a antiga**, por `react-bridge/legacy/TrackRows.tsx` | 2 | a tela das playlists (onda 2) também a usa; porta-se uma vez, para `ui/`, nela |
+
 ## Arquivo
 
 Texto substituído na F86 (2026-11-21), guardado palavra por palavra para as referências antigas (UAT, log). O que vale está nas seções acima.
