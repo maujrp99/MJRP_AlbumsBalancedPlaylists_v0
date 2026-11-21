@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:04] session — D-01 aplicada: o kit do CMS mora no harness; o MJRP priorizou F81 > F83 > F82
+**Branch:** main
+O MJRP respondeu pelo Control Center, com a passkey (09:04): o pacote do kit do CMS mora dentro do harness, distribuído como o kernel. Aplicado: o agente mestre e a orquestradora do MJRPpersonal avisados; o plano da F82 atualizado. Ele também priorizou no board F81 > F83 > F82 (`9126a95`; F79 e F80 saíram como entregues). O agente mestre corrigiu o plano das sessões por feature: Sonnet em esforço médio para construir, Opus ou Fable para arquitetura e desenho; ramo `claude/fNN-<slug>` para a sessão de construção; no máximo duas sessões de construção do V0 por vez; atualizar a cópia do kernel no V0 antes. As sessões ainda não subiram: o MJRP está pelo Remote Control, de onde o app não deixa iniciar sessão; sobem quando ele pedir pelo app do Mac.
+
+## [2026-11-21 09:04] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 6f926be79ae04025
+- D-01: b
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lUVWx1TFhwamRHOU9OMmxNYVhveFlUWmtObXRVTURVMFVGSkdhM2d3TFY5TFdqa3hWRkF3YzNKeVVTSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek1qUXdMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakkyTkRBc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaU9XdHVRVFJhY1dOMGRFWlhiamREYzI5SU4zbE9SMUZVSWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSTFaVGc0Wm1KbU56TXpPRE5sWmpBM01URTNZMkV3WXpKa00yUTNNakU1T0RrelkyWTFZV0pqWmprek9HUmtNakZoT0RJeU1USmlPR1EwT1RrellXTXpJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJSG13SFl4eTNRRjMzMkpKUHB0ckE3a1NDRlByR0xYNU9uZ3JxU3NMcEZ6QkFpRUFnVk5pQWtpMHdwQXd6ZFg5TGNJaC1tbVU4bl80WTZuMVBTTF9kZWp2ZzJvIn0=
+- folhas: D-01:61a2a498596a9f6d
+
 ## [2026-11-21 08:58] decision — a ordem: React, os idiomas junto com a migração, o CMS depois
 **Branch:** main
 O agente propôs a ordem (1. React com as primeiras telas; 2. os idiomas junto com a migração, tela a tela; 3. o CMS depois, editando o dicionário pronto, quando o kit for pacote) e o MJRP respondeu: «Bora !». Como foi lido: a ordem está aceita como caminho de trabalho; não é aceite de feature nem de ADR. Segue: a medição numa tela real (em curso), depois a proposta de arquitetura da F83 com a F81 e a ADR da adoção, para ele aceitar; os ramos de construção só depois de ele priorizar a F83 e a F81 no board. No lote do Control Center, a pergunta D-02 fica respondida por esta conversa («os idiomas primeiro, o CMS depois»).

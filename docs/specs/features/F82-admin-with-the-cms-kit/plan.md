@@ -8,6 +8,7 @@ Esboço, com o que as duas conversas de 2026-11-21 08:12 trouxeram (relato dos o
 - Não vêm no kit: o login, o banco e o copy deck. As telas do CMS partem do copy deck (regra do MJRP), nunca só do protótipo.
 - Caminho recomendado por eles para o V0: o kit como uma ilha React numa rota `/admin`, com React só nessa entrada do Vite; as portas de ler e gravar sobre o Firestore, o site lendo em tempo de execução; o login com o Firebase Auth que já existe, e as regras do Firestore liberando a escrita só ao dono; a tradução num endpoint do servidor Node (a chave da IA nunca vai ao navegador).
 - **Decisão do MJRP, que esta feature provoca:** a ADR-0011 diz que o kit «vira pacote quando houver o segundo projeto», e proíbe construir copiando a pasta. O V0 é o segundo projeto. Onde o pacote mora (repositório próprio ou no harness) e quem o extrai é dele.
+- **Decidido pelo MJRP em 2026-11-21 09:04** (Control Center, lote `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`, D-01): o pacote do kit mora **dentro do harness, distribuído aos projetos como o kernel**. A extração é trabalho do harness com o MJRPpersonal; o V0 espera o kit chegar por esse caminho e não copia a pasta.
 - Regras do MJRP lembradas por eles: recurso de CMS nasce no kit e vale para todos os CMS; diz-se «CMS», não «painel».
 Nenhum código de produto antes da proposta aprovada.
 

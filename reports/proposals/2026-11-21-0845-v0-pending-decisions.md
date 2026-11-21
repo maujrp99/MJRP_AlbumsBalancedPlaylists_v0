@@ -13,6 +13,9 @@ Base: média — relato do agente mestre e da orquestradora do MJRPpersonal; eu 
 - a) Num repositório próprio, como pacote com versão (Recomendado)
 - b) Dentro do harness, distribuído aos projetos como o kernel
 - c) Fica no MJRPpersonal por ora, e o V0 espera
+→ respondida em 2026-11-21 09:04
+  - b
+→ aplicada em 2026-11-21 09:04: avisei o agente mestre do harness e a orquestradora do MJRPpersonal; o plano da F82 diz que o kit chega pelo harness e que o V0 não copia a pasta
 
 ### D-02 · A ordem entre o CMS (F82) e os idiomas (F81)
 Pergunta: Qual das duas features eu começo primeiro?
