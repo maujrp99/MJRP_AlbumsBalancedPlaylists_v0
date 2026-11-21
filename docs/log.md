@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 14:25] session — F87 e S-69: um ambiente separado para validar o site antes da produção, em esboço; o MJRP escolheu a fatia A
+**Branch:** wip/staging-environment-registration
+Palavras do MJRP (2026-11-21), sobre validar a versão em React e a nova home: «O firebase não nos dá um ambiente de staging pra homologarmos a versão em react?» e depois «Eu preferia ver tudo num ambiente separado». Registrados na `main`-origem: a story S-69 (EP-10, no PRD) e a feature F87 (via padrão, tipo feature), spec, plan e tasks em esboço, ids reservados por `merge_train.py next-item-id --reserve`. A spec traz duas fatias: A, um canal de prévia do Firebase Hosting (mesmos dados, login e servidor da produção); B, um segundo projeto Firebase todo separado. Ele respondeu «A)» (só o site separado): fatia A decidida, B fica na spec como não escolhida por ora.
+
 ## [2026-11-21 13:59] session — segundo relatório do juiz (passa) guardado como veio; 2 P2 viram UAT-256 e UAT-257
 **Branch:** wip/failed-sources-are-shown-2026-11-21
 Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-failed-sources-visual-parity-recheck-2.md` e capturas `reports/evidence/F52/recheck-2/` escritos pelo juiz (F52, F69), copiados sem edição. Os dois P2 restantes (a lista que se mexe no «Try again»; o azul fora da paleta) entram em `uat.md` como UAT-256 e UAT-257, ids reservados por `merge_train.py next-uat-id --reserve`.
