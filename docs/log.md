@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 14:43] session — F87: os testes de recusa do `--branch` ficam herméticos (repositório temporário próprio)
+**Branch:** wip/f87-preview-tests-hermetic
+Os scripts de publicação rodam a suíte dentro de uma cópia exportada do ramo, que não é repositório git; lá os três testes de recusa (`--branch` inexistente, `--branch` sem nome, `deploy-site.sh --branch x`) falhavam com «must live inside the git repository». Agora cada um roda numa fixture: repositório git temporário com cópia dos scripts, apagado no fim. Provado no repositório e numa exportação por `git archive`.
+
 ## [2026-11-21 14:40] step — F83 onda 0: a `main` (F87, o build compartilhado do site) entra no ramo
 **Branch:** claude/f83-wave-0-base
 Conflito só em `scripts/deploy-site.sh`: ficou a forma fina da `main` e a minha mudança foi para o compartilhado. O tipo (`npm run typecheck` dentro de `run_lint`) já estava em `scripts/lib/deploy-common.sh`; a recusa pelo teto de peso (`scripts/bundle-budget.mjs`) passou para `verify_build` de `scripts/lib/site-build.sh`, que a publicação de produção e a da prévia (`deploy-preview.sh`) chamam. `test/scripts/bundleBudget.test.js` prova que o teto mora no compartilhado e que os dois scripts chamam `verify_build` e `run_lint` sem ter cópia própria. `test/server test/architecture test/scripts test/security`: 842 testes verdes; typecheck e lint sem erro.
