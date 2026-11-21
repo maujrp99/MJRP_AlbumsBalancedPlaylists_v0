@@ -3,9 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:32] session — save: F83, o fecho nomeia o ramo
+**Branch:** claude/f83-site-screens-in-react
+> Participantes: sessão de desenho aberta pelo orquestrador do V0 (Claude Code) · Branch: claude/f83-site-screens-in-react
+> Session: claude/f83-site-screens-in-react (sessão de página, no worktree `f83-site-screens-in-react-83ca31`)
+
+A conferência de fecho só reconhece a entrada que traz o ramo na linha dos participantes; as duas entradas anteriores não a tinham. Nenhum trabalho depois de `ba10b43`. O conteúdo do fecho está nas entradas de 10:32 e de 11:31 deste ramo.
+
 ## [2026-11-21 11:32] session — save: F83, sessão de desenho fechada
 **Branch:** claude/f83-site-screens-in-react
-> Session: claude/f83-site-screens-in-react (sessão de página, no worktree `f83-site-screens-in-react-83ca31`). Fecho depois do último commit de trabalho (`ba10b43`). O conteúdo está nas duas entradas anteriores deste ramo: a de 10:32 (resumo, decisões do agente, próxima sessão, dados) e a de 11:31 (as decisões para o MJRP reescritas; o doctor fica com o orquestrador, na junção). Nada mudou depois delas.
+> Participantes: sessão de desenho aberta pelo orquestrador do V0 (Claude Code) · Branch: claude/f83-site-screens-in-react
+> Session: claude/f83-site-screens-in-react (sessão de página, no worktree `f83-site-screens-in-react-83ca31`)
+
+Fecho depois do último commit de trabalho (`ba10b43`). O conteúdo está nas duas entradas anteriores deste ramo: a de 10:32 (resumo, decisões do agente, próxima sessão, dados) e a de 11:31 (as decisões para o MJRP reescritas; o doctor fica com o orquestrador, na junção). Nada mudou depois delas.
 
 ## [2026-11-21 11:31] session — save: F83, as decisões para o MJRP reescritas no jeito que ele pediu; o doctor fica com o orquestrador
 **Branch:** claude/f83-site-screens-in-react
