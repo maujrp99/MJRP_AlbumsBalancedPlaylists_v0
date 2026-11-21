@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:45] session — F46: o estado por série no `behavior.md`, a UAT-174 devolvida à F45; Done
+**Branch:** wip/closing-pass-2026-11-21
+F46 (estado claro por série): o código está na `main`. Faltavam três linhas da trava do passo retroativo. (1) `behavior.md`: escrevi o estado por série e que a série sem álbum não é desenhada (UAT-247). (2) Issues: a UAT-174 foi fechada pelo commit `ce52f46`, da F45, e diz `fixed (F45: …)`; não marquei nada como consertado pela F46 e tirei a UAT-174 do `fixes:` da F46 (a UAT-173 segue `fixed (F46: 510a840 …)`); decisão que cabe ao MJRP rever, se ele preferir a UAT-174 no `fixes:` da F45. (3) Reconferência visual: relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite.
+
 ## [2026-11-21 13:44] session — F45: o comportamento da carga paralela escrito no `behavior.md`; Done
 **Branch:** wip/closing-pass-2026-11-21
 F45 (carga de álbuns em paralelo): o código está na `main`. Faltavam duas linhas da trava do passo retroativo: o `behavior.md` (a declaração dizia «atualizado», mas só o commit da v4.0, que não cita a F45, o tocava) e a reconferência visual. Escrevi no `^library-loading-skeleton` o que `LOAD_LIMITS` faz (3 buscas no catálogo juntas, séries de cima primeiro, prazo de 45 s por álbum e 20 s por fonte), conferido no código; a reconferência é a do lote `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: a UAT-172 segue com o MJRP.

@@ -1,9 +1,9 @@
 ---
-status: In Progress
+status: Done
 lane: fast
 solution_type: fix
 imports: []
-fixes: ["UAT-173", "UAT-174"]
+fixes: ["UAT-173"]
 ---
 # Feature F46: Cada série termina carregada, vazia ou com aviso de falha, e nada some durante a carga
 **Approved**: not a gate (via rápida; o MJRP julga)
@@ -21,7 +21,7 @@ A tela usava um único sinal de «carregando» para três coisas (bloco cinza, s
 ## Requirements
 - [REQ-01] Cada série tem um estado derivado dos seus álbuns: carregando, completa, com falha ou vazia. Nenhum sinal global decide o que aparece. · fixes UAT-173 · **entregue pela F45**
   verified_by:: `test/models/albumLoadState.test.js`, `test/stores/albumLoad.test.js`
-- [REQ-02] Uma série com álbum que não carregou continua na tela e diz quantos faltaram, com «Try again», que busca de novo só os que falharam. · fixes UAT-174 · **entregue pela F45**
+- [REQ-02] Uma série com álbum que não carregou continua na tela e diz quantos faltaram, com «Try again», que busca de novo só os que falharam. · UAT-174, que a F45 fechou (`ce52f46`, a issue diz `fixed (F45: …)`) · **entregue pela F45**
   verified_by:: `test/services/albums/AlbumLoadService.test.js`, `test/controllers/SeriesController.test.js`
 - [REQ-03] A página é desenhada inteira: nenhuma série com álbum espera a pessoa rolar para sair do bloco cinza. · fixes UAT-173 · **entregue pela F51**
   verified_by:: `reports/evidence/F51-album-filters-search-and-paging/F51-probe-2026-11-19.json`
