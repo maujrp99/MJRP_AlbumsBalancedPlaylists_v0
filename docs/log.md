@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:31] session — F85: entregue sem o build de produção; provado no servidor de desenvolvimento
+**Branch:** claude/f85-start-in-the-menu
+Session: sessão do V0 aberta pelo orquestrador (worktree dazzling-haslett-d4b727), via rápida.
+Tarefas 01 a 03 feitas, teste primeiro (555 testes verdes nos arquivos tocados); a TASK-04 fica aberta: provado no servidor de desenvolvimento a 1280 e 393 px, com e sem conta (`reports/evidence/F85/`); NÃO provado: o build sob `vite preview`, a bateria completa e o doctor neste ramo (a fila de trabalhos pesados não andou em mais de uma hora; o orquestrador mandou entregar e cobre isso no trem de merge e na conferência em produção). Decidido pelo agente — revisável: o id de uso `home` não muda; «Go to Start» nas telas vazias; migalha e rodapé dizem «Start».
+
 ## [2026-11-21 09:45] session — F85: a documentação no mesmo ramo (passo retroativo da via rápida)
 **Branch:** claude/f85-start-in-the-menu
 `behavior.md` (os endereços antigos e o menu, o rodapé, a raiz, «Sign in» da página, e duas linhas novas: o logotipo e o «Start»), `arch.md`, `info-arch.md` (e `info-arch.html`, gerado com o `build_info_arch_page.py`), as páginas do manual que nomeiam o menu ou o endereço, a spec/plan/tasks. Decidido pelo agente — revisável: o botão das telas vazias passa a dizer «Go to Start» (ia para a tela que se chamava Home); a migalha e o rodapé também dizem «Start». A aprovação da spec segue do MJRP.

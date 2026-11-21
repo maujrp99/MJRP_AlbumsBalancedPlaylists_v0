@@ -1,0 +1,586 @@
+[
+ [
+  "1280 out /",
+  {
+   "at": "/",
+   "page": "entry",
+   "label": [],
+   "logo": [],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 out /start",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 out /home",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 out /home?signin",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280,
+   "dialog": true
+  }
+ ],
+ [
+  "1280 out /albums/abc123",
+  {
+   "at": "/albums?seriesId=abc123",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 out /inventory",
+  {
+   "at": "/inventory",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 out /app.html",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 out logo click",
+  {
+   "at": "/?entry",
+   "page": "entry",
+   "label": [],
+   "logo": [],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 out open-the-app hrefs",
+  "[\"Sign in → /start?signin\",\"Open the app → /start\",\"Open the app → /start\",\"Open the app → /start\",\"Sign in → /start?signin\",\"Open the app → /start\",\"Sign in → /start?signin\",\"Open the app → /start\",\"Sign in → /start?signin\"]"
+ ],
+ [
+  "1280 seed",
+  "seeded"
+ ],
+ [
+  "1280 in /",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 in /?entry",
+  {
+   "at": "/?entry",
+   "page": "entry",
+   "label": [],
+   "logo": [],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 in /start",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 in /home",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 in /home?signin",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280,
+   "dialog": true
+  }
+ ],
+ [
+  "1280 in /albums/abc123",
+  {
+   "at": "/albums?seriesId=abc123",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 in /inventory",
+  {
+   "at": "/inventory",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 in /app.html",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry"
+   ],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "1280 in logo click (a full load to the entry page)",
+  {
+   "at": "/?entry",
+   "page": "entry",
+   "label": [],
+   "logo": [],
+   "topbar": null,
+   "scrollW": 1280,
+   "innerW": 1280
+  }
+ ],
+ [
+  "393 out /",
+  {
+   "at": "/",
+   "page": "entry",
+   "label": [],
+   "logo": [],
+   "topbar": null,
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 out /start",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 out /home",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 out /home?signin",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393,
+   "dialog": true
+  }
+ ],
+ [
+  "393 out /albums/abc123",
+  {
+   "at": "/albums?seriesId=abc123",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Albums",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 out /inventory",
+  {
+   "at": "/inventory",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Inventory",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 out /app.html",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 out logo click",
+  {
+   "at": "/?entry",
+   "page": "entry",
+   "label": [],
+   "logo": [],
+   "topbar": null,
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 out open-the-app hrefs",
+  "[\"Sign in → /start?signin\",\"Open the app → /start\",\"Open the app → /start\",\"Open the app → /start\",\"Sign in → /start?signin\",\"Open the app → /start\",\"Sign in → /start?signin\",\"Open the app → /start\",\"Sign in → /start?signin\"]"
+ ],
+ [
+  "393 seed",
+  "seeded"
+ ],
+ [
+  "393 in /",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 in /?entry",
+  {
+   "at": "/?entry",
+   "page": "entry",
+   "label": [],
+   "logo": [],
+   "topbar": null,
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 in /start",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 in /home",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 in /home?signin",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393,
+   "dialog": true
+  }
+ ],
+ [
+  "393 in /albums/abc123",
+  {
+   "at": "/albums?seriesId=abc123",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Albums",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 in /inventory",
+  {
+   "at": "/inventory",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Inventory",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 in /app.html",
+  {
+   "at": "/start",
+   "page": "app",
+   "label": [
+    "Start",
+    "Start",
+    "Start"
+   ],
+   "logo": [
+    "/?entry",
+    "/?entry"
+   ],
+   "topbar": "Start",
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ],
+ [
+  "393 in logo click (a full load to the entry page)",
+  {
+   "at": "/?entry",
+   "page": "entry",
+   "label": [],
+   "logo": [],
+   "topbar": null,
+   "scrollW": 393,
+   "innerW": 393
+  }
+ ]
+]
