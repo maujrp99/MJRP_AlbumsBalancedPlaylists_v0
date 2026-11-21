@@ -79,6 +79,20 @@ export class MemoryCache {
     }
 
     /**
+     * Clear only the entries whose key starts with one of the prefixes
+     * @param {string[]} prefixes
+     * @returns {Promise<void>}
+     */
+    async clearPrefixes(prefixes) {
+        for (const key of [...this.store.keys()]) {
+            if (prefixes.some(prefix => key.startsWith(prefix))) {
+                this.store.delete(key)
+                this.metadata.delete(key)
+            }
+        }
+    }
+
+    /**
      * Get cache size
      * @returns {number} Number of cached items
      */

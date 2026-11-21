@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 20:22] step — «Clear Cache» deixa os valores lidos do Discogs (F75, UAT-267)
+**Branch:** fix/f75-clear-cache-keeps-the-inventory-values
+O botão apagava o IndexedDB inteiro e levava junto as leituras de valor e o câmbio. Agora apaga por nome (`ALBUM_CACHE_KEY_PREFIXES`: `albumload:`, `userRanking:`, `spotify_enrichment:`, `artifacts/`) por `CacheManager.clearPrefixes`; ficam `inventoryvalue:` e `exchangerates:` (vencem sozinhos) e qualquer armazém futuro não nomeado. `behavior.md` (^app-clear-cache) diz o que apaga e o que guarda. Conferência em Chromium real: 15 de 15 (valor lido, Clear Cache, recarregar: o valor segue e não há aviso de espera; os caches de álbuns somem). Nenhum texto visível mudou.
+
 ## [2026-11-21 20:09] step — duas issues do MJRP sobre o menu novo do app (F88): o cabeçalho e a home fora do menu
 **Branch:** wip/inventory-values-reread-investigation
 Palavras do MJRP (2026-11-21): «acho que precisamos melhora o header da app tb» (UAT-268: no celular o cabeçalho do app — a marca, o nome da tela ao lado, a conta — precisa de redesenho na linguagem da home nova; melhoria, passa por rodada de design) e «a home parece algo muito separado por nao estar no meu» (ele diz o menu; UAT-269: a home não é item do menu e parece à parte; melhoria, rodada de design sobre como chegar à home de dentro do app além da marca). Só registradas; nada desenhado nem construído.
