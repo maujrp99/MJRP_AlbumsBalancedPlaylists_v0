@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: fast
 solution_type: feature
 imports: ["[[S-66-check-each-screen-against-its-approved-prototype]]"]
@@ -32,4 +32,4 @@ O doctor sem o A2; a suíte de testes sem pegar os arquivos do Playwright; uma r
 Os estados que o kit não exprime (movimento reduzido, sem JavaScript, o caixote só em CSS) ficam com as capturas da reconferência.
 
 ## Open Questions
-- Os 18 P0 da primeira rodada são mesmo dos seletores? A conferir par a par antes de dar o sensor como confiável.
+- ~~Os 18 P0 da primeira rodada são mesmo dos seletores?~~ Conferido par a par (2026-11-21): o `header` genérico era outro elemento nos dois lados; com os seletores da casca, o P0 de ordem continua nos mesmos 18 estados a 1280 e é real: o protótipo aprovado renderiza o rodapé com 0 px (logotipo sem tamanho), o produto tem o rodapé. Relatado em `reports/evidence/F84/2026-11-21-sensor-findings.md`; a decisão é do MJRP.

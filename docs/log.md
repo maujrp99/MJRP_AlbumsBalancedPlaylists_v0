@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:46] session — F84: os 18 P0 de ordem da casca conferidos par a par; os seletores da Home acertados
+**Branch:** claude/f84-visual-sensor-with-playwright
+Conferidos nos pares e no DOM dos dois lados. Os seletores genéricos `header`/`main`/`footer` pegavam outro elemento (a barra do celular no protótipo, o título do artista no produto); a configuração agora usa a casca do app (`#header-container nav.top-nav`, `#app`, `footer.site-footer`). Com isso o resultado não mudou em contagem (P0 18 · P1 0 · P2 27, os mesmos 18 estados a 1280) e o P0 que sobra é real, não de seletor: o protótipo aprovado renderiza o rodapé com 0 px (o logotipo MJRP sem tamanho), o produto tem o rodapé de verdade. Fica relatado, sem mexer no produto nem esconder a região; a decisão é do MJRP. A F80 e o celular (393) não têm diferença. A rota da Home é `VISUAL_HOME_PATH` (padrão `/home`; `/start` depois da F85). Relatório: `reports/evidence/F84/2026-11-21-sensor-findings.md`; a rodada: `reports/evidence/F84/2026-11-21/`.
+
 ## [2026-11-21 11:12] session — kernel do harness atualizado (2026-11-10 → 2026-11-21)
 **Branch:** claude/kernel-refresh-2026-11-21
 Rodei `new_project.py --refresh-kernel` a partir do harness: 31 páginas da wiki, scripts vendorizados (entre eles `machine_load.py`, a fila de máquina), hooks e catálogo na versão de 2026-11-21. O contrato, o `board.json` e o `AGENTS.md` do projeto ficaram como estavam (o contrato só ganhou `received:` e o carimbo do kernel). Nenhuma nota de conformidade foi executada; a lista do que fica pendente está em `reports/audits/2026-11-21-mjrpalbumblender-v0-kernel-refresh.md`.
