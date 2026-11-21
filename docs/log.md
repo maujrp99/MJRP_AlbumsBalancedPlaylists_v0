@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:40] step — F88: o status derivado da spec (Draft para In Progress), gravado pelo hook de commit
+**Branch:** feat/f88-top-menu-build
+O hook de commit derivou o status da F88 ao começar a construção; só registro, sem mudar a spec.
+
 ## [2026-11-21 17:39] session — F88: o estado verdadeiro do Apple Music, a barra de baixo igual à da home, e um ponto de quebra só (não cabe na home)
 **Branch:** feat/f88-top-menu-build
 Apple Music: o MusicKit guarda a autorização entre visitas e só diz depois de iniciado (music.isAuthorized); MusicKitAuth.checkConnection() inicia o MusicKit e lê; o painel (ao abrir) e a folha do celular (ao abrir) perguntam, com «Checking…» antes, «Connected», «Not connected» ou «Could not connect» + «Try again»; a carga da página não muda; ordem alfabética. Testes primeiro (connections, MusicKitAuth.connection, AuthNav.menu, PhoneMenu). /api/musickit-status só diz se o servidor tem a chave, não a autorização da pessoa. Barra de baixo do celular: --phone-tabbar-h de 68 para 64 px: 65 px como a da home (medido). Ponto de quebra: a home com a barra no cabeçalho a 800 px sem conta fica com paradas de 31 px e rótulos de 33 a 48 px (sobrepõem), então a home segue até 899 px (tentei, medi e desfiz) e a passagem entre 768 e 899 px continua mudando de forma; evidência em reports/evidence/F88/ (apple-*, heights.json, passage-out-800.png).
