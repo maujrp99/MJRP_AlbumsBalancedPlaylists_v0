@@ -8,8 +8,9 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync, mkdtempSync, writeFileSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
+import { COPY } from '../../public/splash/copy.js'
 import {
-    PLACES, fillEntryPage, isRootAddress, isEntryAddress, isAppAddress, renameBuiltPages, entryPage
+    PLACES, fillEntryPage, fillCopy, isRootAddress, isEntryAddress, isAppAddress, renameBuiltPages, entryPage
 } from '../../scripts/entryPage.mjs'
 
 const ROOT = process.cwd()
@@ -30,7 +31,7 @@ describe('the page as written in the repository', () => {
 
     it('its calls to action lead into the app', () => {
         const hrefs = [...source.matchAll(/<a class="btn[^"]*"[^>]*href="([^"]+)"/g)].map(m => m[1])
-        expect(new Set(hrefs)).toEqual(new Set(['/start', '/start?signin']))
+        expect(new Set(hrefs)).toEqual(new Set(['/start', '/start?signin', '/saved-playlists']))
         expect(source).not.toContain('#privacy')
     })
 })
@@ -46,8 +47,9 @@ describe('the page as served (what a search engine or an assistant reads, withou
     })
 
     it('title, description, canonical address, Open Graph and structured data', () => {
-        expect(page).toContain('<title>The Album Blender — for people who listen to whole albums</title>')
-        expect(page).toMatch(/<meta name="description" content="The Album Blender is a web app for people who listen to whole albums/)
+        expect(page).toContain(`<title data-i18n="meta.title">${COPY.pt['meta.title']}</title>`)
+        expect(page).toMatch(/<meta name="description" content="O The Album Blender é um app web para quem ouve álbuns inteiros/)
+        expect(page).toContain('<html lang="pt-BR"')
         expect(page).toContain('<link rel="canonical" href="https://mjrp-playlist-generator.web.app/">')
         expect(page).toContain('<meta property="og:title"')
         const ld = JSON.parse(page.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1])
@@ -57,15 +59,16 @@ describe('the page as served (what a search engine or an assistant reads, withou
     it('the text reads whole: the definition first, then every track', () => {
         const text = textOf(page)
         const order = [
-            'Dig through the albums you love. Keep every track.',
-            'The Album Blender is a web app for people who listen to whole albums.',
-            'Gather the albums that belong together.',
-            'Rank every track, not just the singles.',
-            'Blend the series into one playlist.',
-            'Keep count of the records you own.',
-            'Flip the record.',
-            'Shuffle keeps the hits and loses the record.',
-            'Drop the needle on your first series.'
+            'Mergulhe nos álbuns que você ama.',
+            'Seus álbuns do momento, numa playlist balanceada.',
+            'Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas.',
+            'Comece por um artista ou por uma lista.',
+            'Ranqueie as faixas do seu jeito.',
+            'Misture a série numa playlist só.',
+            'Vire o disco',
+            'Guarde os Blends que você curtiu.',
+            'Conte as mídias físicas da sua estante.',
+            'Coloque a agulha na sua primeira série.'
         ]
         const at = order.map(line => text.indexOf(line))
         at.forEach(i => expect(i).toBeGreaterThan(-1))
@@ -74,8 +77,9 @@ describe('the page as served (what a search engine or an assistant reads, withou
 
     it('fictional covers by default: 14 sleeves, the tag on the stage, no Apple Music', () => {
         expect(page.match(/<img class="sl /g)).toHaveLength(14)
-        expect(page).toContain('Fictional albums · original art')
-        expect(page).not.toContain('Apple Music')
+        expect(page).toContain(COPY.pt['tag.fict'])
+        expect(page).not.toContain(COPY.pt['c.listen'])
+        expect(page).not.toContain('music.apple.com')
         expect(page).not.toContain('mzstatic.com/image') // the CSP may name the host; no image comes from it
         PLACES.forEach(place => expect(page).not.toContain(`<!--splash:${place}-->`))
     })
@@ -84,13 +88,29 @@ describe('the page as served (what a search engine or an assistant reads, withou
         const real = built('real')
         expect(real.match(/<img class="sl /g)).toHaveLength(15)
         expect(real).toContain('https://is1-ssl.mzstatic.com/image/thumb/')
-        expect(real).toContain('Listen on Apple Music')
-        expect(real).toContain('Apple and Apple Music are trademarks of Apple Inc.')
-        expect(real).not.toContain('Fictional albums · original art')
+        expect(real).toContain(COPY.pt['c.listen'])
+        expect(real).toContain('Apple e Apple Music são marcas da Apple Inc.')
+        expect(real).not.toContain(COPY.pt['tag.fict'])
     })
 
     it('a page missing a place is refused, not built half-filled', () => {
         expect(() => fillEntryPage(source.replace('<!--splash:covers-->', ''), { set: 'fictional' })).toThrow(/covers/)
+    })
+})
+
+describe('the text comes from the dictionary', () => {
+    it('fillCopy writes the language asked into every marked element and label', () => {
+        const html = '<h1 data-i18n="h.title"></h1><nav aria-label="" data-i18n-aria="r.aria"></nav>'
+        expect(fillCopy(html, 'en')).toBe(`<h1 data-i18n="h.title">${COPY.en['h.title']}</h1><nav aria-label="Example ranking of the tracks of The Velvet Underground &amp; Nico" data-i18n-aria="r.aria"></nav>`)
+    })
+
+    it('a key the dictionary lacks stops the build', () => {
+        expect(() => fillCopy('<p data-i18n="no.such"></p>')).toThrow(/no\.such/)
+        expect(() => fillCopy('<p aria-label="" data-i18n-aria="no.such"></p>')).toThrow(/no\.such/)
+    })
+
+    it('the page as built holds no empty marked element', () => {
+        expect(built('real')).not.toMatch(/data-i18n="[^"]+"[^>]*><\/(p|h1|h2|span|a|button|title)>/)
     })
 })
 

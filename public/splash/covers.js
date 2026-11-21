@@ -13,13 +13,15 @@
  *
  * `VITE_SPLASH_COVERS=real` at build time chooses the real set; anything else is fictional. The
  * Vite plugin `entryPage` (vite.config.js) writes the chosen set into public/splash.html, in the
- * build and in the dev server. Pure: no browser API, no import.
+ * build and in the dev server. Pure: no browser API; its only import is the dictionary (copy.js).
  *
  * Order matters: the last seven records are side B of the crate (the last in front when the crate is
  * turned), every one before them side A (0 in front): 7 + 7 in the fictional set, 8 + 7 in the real
  * one. The page pulls 2, 3, 5, 6 on side A and the fourth from the back on side B (splash.js TRACKS,
  * framing.js recordAt). Harvest went to the back of side A so the pulled records stayed the same.
  */
+
+import { t } from './copy.js'
 
 export const COVER_SWITCH = 'VITE_SPLASH_COVERS'
 
@@ -185,29 +187,27 @@ export function coverImagesHtml(setName) {
         + ` src="${coverSrc(album)}">`).join('\n        ')
 }
 
-/** "Title · Artist · Year", or "Title · Artist · fictional album": the line under the title in the caption. */
-export const captionLine = (album) => album.kind === 'real' ? `${album.a} · ${album.y}` : `${album.a} · fictional album`
+/** "Artist · Year", or "Artist · fictional album": the line under the title in the caption (the fictional tag in the page's language). */
+export const captionLine = (album, lang = 'pt') => album.kind === 'real' ? `${album.a} · ${album.y}` : `${album.a} · ${t('c.fictional', lang)}`
 
-/** The caption of the stage, written for the front record (the page changes it as the record plays). */
+/** The caption of the stage, written for the front record (the page changes it as the record plays). Its texts are filled from copy.js by the build. */
 export function captionHtml(setName) {
     const album = albumsOf(setName)[0]
     const who = `<span class="who"><span id="who"><b>${escapeHtml(album.t)}</b>${escapeHtml(captionLine(album))}</span>`
     if (album.kind !== 'real') {
-        return `${who}<span class="src">Fictional album · original art</span></span>`
+        return `${who}<span class="src" data-i18n="c.src.fict"></span></span>`
             + '<a class="am" id="am" hidden></a>'
     }
-    return `${who}<span class="src">Artwork from Apple Music</span></span>`
-        + `<a class="am" id="am" href="${escapeHtml(album.href)}" target="_blank" rel="noopener"><span class="mk" aria-hidden="true">♫</span>Listen on Apple Music<span class="sr"> (opens in a new tab)</span></a>`
+    return `${who}<span class="src" data-i18n="c.src"></span></span>`
+        + `<a class="am" id="am" href="${escapeHtml(album.href)}" target="_blank" rel="noopener"><span class="mk" aria-hidden="true">♫</span><span data-i18n="c.listen"></span><span class="sr" data-i18n="c.newtab"></span></a>`
 }
 
 /** The footer line about the covers: what they are and whose they are. */
 export function creditHtml(setName) {
-    return chooseCoverSet(setName) === 'real'
-        ? '<p>Album artwork comes from Apple Music and belongs to the artists and labels; every record shown whole on this page links to its page on Apple Music. Apple and Apple Music are trademarks of Apple Inc., registered in the U.S. and other countries.</p>'
-        : '<p>The albums on this page are fictional, with original artwork made for this page.</p>'
+    return `<p data-i18n="${chooseCoverSet(setName) === 'real' ? 'credit.real' : 'credit.fict'}"></p>`
 }
 
 /** Over invented covers the stage says so, in words, not only inside the art. */
 export function stageTagHtml(setName) {
-    return chooseCoverSet(setName) === 'real' ? '' : '<span class="credit-tag">Fictional albums · original art</span>'
+    return chooseCoverSet(setName) === 'real' ? '' : '<span class="credit-tag" data-i18n="tag.fict"></span>'
 }
