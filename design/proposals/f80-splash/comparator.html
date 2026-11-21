@@ -1,137 +1,59 @@
 <meta charset="utf-8">
-<title>Página de entrada F80</title>
+<title>Página de entrada</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-/* Layout: one control bar (direção · aparelho), the chosen direction's ruler, then the live page in a frame at its real width, scaled to fit. Single dark world: the product is dark. */
+/* Layout: the decision in hand only. One question, four pictures side by side (today and the three views), one pose switch; everything older behind one link. Single dark world: the product is dark. */
 :root{
   color-scheme:dark;
   --bg:#0a0908;--panel:#15120f;--line:#2c2620;--fg:#f4efe9;--muted:#b9aea2;--accent:#f97316;--accent-text:#fb923c;--chip:#221c16;
   --display:'Syne',system-ui,sans-serif;--text:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
 }
+*{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--text)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .shell{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-header h1{font:800 24px/1.1 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
-header p{margin:6px 0 0;color:var(--muted);max-width:80ch}
-.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:8px;z-index:5}
-.seg{display:flex;flex-wrap:wrap;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+h1{font:800 26px/1.1 var(--display);margin:0;letter-spacing:-.01em}
+.seg{display:flex;flex-wrap:wrap;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--panel);width:fit-content;max-width:100%}
 .seg button{min-height:44px;padding:0 14px;border-radius:8px;border:0;background:transparent;color:var(--muted);font:600 14px/1 var(--text);cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--chip);color:var(--fg);box-shadow:inset 0 0 0 1px #3b3128}
-.seg button:focus-visible,a:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
-.seg button .lv{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text);margin-bottom:3px}
-.ruler{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.ruler div{border-top:2px solid var(--line);padding-top:8px;min-width:0}
-.ruler dt{font:700 11px/1 var(--text);letter-spacing:.1em;text-transform:uppercase;color:var(--accent-text);margin:0 0 6px}
-.ruler dd{margin:0;color:var(--fg)}
-.stagewrap{border:1px solid var(--line);border-radius:14px;background:#000;padding:12px;overflow:hidden}
-.stagewrap .meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-bottom:10px}
-.stagewrap .meta a{color:var(--accent-text)}
-.frame{margin:0 auto;overflow:hidden;border-radius:8px;background:#000}
-.frame iframe{border:0;display:block;transform-origin:0 0;background:#000}
-.ref{border:1px dashed var(--line);border-radius:14px;padding:14px 16px;color:var(--muted)}
-.ref b{color:var(--fg)}
-.all{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.old summary{min-height:44px;display:flex;align-items:center;padding:0 12px;cursor:pointer;color:var(--muted);font-weight:600}
-.old[open] summary{color:var(--fg)}
-.old #olds{display:flex;flex-wrap:wrap;gap:4px}
-.all article{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--panel);min-width:0}
-.all h3{font:700 16px/1.2 var(--display);margin:0 0 6px}
-.all p{margin:0;color:var(--muted);font-size:14px}
-.all .num{font-variant-numeric:tabular-nums;color:var(--fg)}
-@media (max-width:860px){.ruler{grid-template-columns:repeat(2,minmax(0,1fr))}.all{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+button:focus-visible,a:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
+.views{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.views figure{margin:0;border:1px solid var(--line);border-radius:12px;background:#000;padding:10px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.views figure.rec{border-color:var(--accent)}
+.views img{display:block;width:100%;height:auto;border-radius:6px}
+.views h2{font:800 18px/1.2 var(--display);margin:0;display:flex;gap:8px;align-items:baseline;justify-content:space-between;white-space:nowrap;overflow:hidden}
+.views h2 .tag{font:700 11px/1 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
+.views p{margin:0;color:var(--muted);font-size:14px}
+.more{color:var(--accent-text);display:inline-flex;align-items:center;min-height:44px}
+@media (max-width:980px){.views{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.views{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap">
 
 <div class="shell">
-  <header>
-    <h1>Página de entrada · rodada 2</h1>
-    <p>Você escolheu o <b>Caixote</b> com o fio do <b>Lado A, lado B</b> e o fogo da <b>Brasa</b>, e capas reais. A v2 dá um trabalho a cada um: o caixote é o palco, a rolagem é o disco tocando (cada faixa puxa um disco; «Flip the record» gira o caixote), o fogo é a luz que vem de baixo. A dúvida aberta é <b>a força do fogo</b>: brando ou vivo, a mesma página. Capas reais do Apple Music: <b>uso público ainda não liberado</b> (ver a proposta). Textos em inglês propostos pelo agente.</p>
-  </header>
-
-  <div class="bar" role="toolbar" aria-label="Escolher a direção e o aparelho">
-    <div class="seg" id="dirs" role="group" aria-label="Versão"></div>
-    <details class="seg old"><summary>As outras direções (rodada 1)</summary><div id="olds" role="group" aria-label="As outras direções"></div></details>
-    <div class="seg" id="devs" role="group" aria-label="Aparelho">
-      <button type="button" data-dev="desktop" aria-pressed="true">Computador · 1280</button>
-      <button type="button" data-dev="phone" aria-pressed="false">Celular · 393</button>
-    </div>
-  </div>
-
-  <dl class="ruler" id="ruler"></dl>
-
-  <section class="stagewrap" aria-label="A página da direção escolhida">
-    <div class="meta"><span id="meta"></span><a id="open" href="#" target="_blank" rel="noopener">Abrir sozinha, em tela cheia ↗</a></div>
-    <div class="frame" id="frame"><iframe id="view" title="Protótipo" loading="eager"></iframe></div>
-  </section>
-
-  <div class="ref"><b>Referência · hoje:</b> não há página de entrada. Quem chega ao site cai direto no app (a Home, que cria uma série); não há nada para um buscador ou um assistente de IA ler.</div>
-
-  <section aria-label="As versões, lado a lado"><div class="all" id="all"></div></section>
+  <h1>A caixa de discos: qual vista?</h1>
+  <p style="margin:-8px 0 0;color:var(--muted)">A página numa janela de 1920 px.</p>
+  <div class="seg" id="poses" role="group" aria-label="Momento da rolagem"></div>
+  <section class="views" id="views" aria-label="Hoje e as três vistas"></section>
+  <a class="more" href="rodadas-anteriores.html">Rodadas anteriores →</a>
 </div>
 
 <script>
-// Newest first. The last two (v2 and v1 of the Caixote) open the page; round 1's other directions stay, folded.
-const BASE = '../../inception/'; // the published copy serves the pages beside this one
-const W2 = '≈ 405 KB na primeira visita sem cache, comprimido (página 358 KB, 213 KB com gzip, das quais 211 KB são as 14 capas em WebP 360 px; fonte Syne 35 KB; three.js 0.185.0 155 KB comprimido, só no computador e depois do texto). No celular: ≈ 250 KB, sem three.js.';
-const R2 = 'Capas reais: os termos da Apple só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing — a confirmar antes de publicar. 3D só no computador; o caixote desenha só quando algo muda e para quando a rolagem para. Sem WebGL, com menos movimento, ou no celular: o caixote em CSS com as mesmas capas.';
-const VERSIONS = [
-  { id:'crate-v2', level:'Caixote · v2', name:'Caixote · v2 (o fogo e o fio) · Nova · fogo brando', file:BASE+'splash-crate-v2.html',
-    say:'O caixote é o palco, com 14 capas reais; cada faixa da rolagem puxa um disco (série, ranking, mistura, coleção); «Flip the record» gira o caixote para o lado B. O fio do equalizador no topo é o progresso e a navegação; no celular desce para a barra de baixo, junto de «Open the app». O fogo é luz de baixo, forte só na primeira tela e no convite final.',
-    axis:'Prévia da força do fogo, opção 1 de 2: brando (o padrão que recomendo).', weight:W2, risk:R2 },
-  { id:'crate-v2-bright', level:'Caixote · v2', name:'Caixote · v2 · prévia: fogo vivo', file:BASE+'splash-crate-v2.html?fire=bright',
-    say:'A mesma página, só o fogo mais forte: o leito e a luz de baixo quase o dobro nas faixas do meio e no máximo na primeira tela e no convite.',
-    axis:'Prévia da força do fogo, opção 2 de 2: vivo.', weight:W2, risk:R2 },
-  { id:'crate', level:'Caixote · v1', name:'Caixote · v1 (rodada 1)', file:BASE+'splash-crate-v1.html',
-    say:'Um caixote de nove capas fictícias em 3D real (WebGL), que se gira arrastando, pelos botões ou pelas setas; luz de fogo que tremula, o vinil saindo da capa da frente, um equalizador 3D.',
-    axis:'Máximo de 3D: a profundidade é uma cena WebGL (three.js 0.185.0).',
-    weight:'≈ 254 KB na primeira visita (página 64 KB; fonte 35 KB; three.js 0.185.0, 155 KB comprimido, baixado depois do texto)',
-    risk:'O mais caro: o three.js é baixado depois do texto; no celular, bateria e calor com a cena aberta. Sem WebGL ou com menos movimento, cai num leque de capas em CSS, parado.' },
-  { id:'sides', old:true, level:'Elevar', name:'Lado A, lado B (rodada 1)', file:BASE+'splash-sides-v1.html',
-    say:'A página é um disco ouvido inteiro: capa e vinil em CSS 3D, o vinil gira com a rolagem; um fio de equalizador preso no topo mostra a faixa em que você está (A1 a B2).',
-    axis:'3D médio: profundidade em CSS (perspectiva), movimento ligado à rolagem, sem biblioteca.',
-    weight:'≈ 91 KB na primeira visita (página 56 KB, 34 KB comprimida; fonte 35 KB); nenhuma biblioteca',
-    risk:'Animação ligada à rolagem é nova em parte dos navegadores (Safari 26, Firefox 159); nos antigos, um script curto faz o giro. Não tem fogo em movimento, só o do logotipo.' },
-  { id:'ember', old:true, level:'Consolidar', name:'Brasa (rodada 1)', file:BASE+'splash-ember-v1.html',
-    say:'O tipo grande é a imagem. Um leito de fogo (canvas 2D) e um equalizador que respira, embaixo do texto, são o único movimento.',
-    axis:'Sem 3D: a profundidade vem da luz do fogo e do tamanho do tipo.',
-    weight:'≈ 88 KB na primeira visita (página 53 KB, 34 KB comprimida; fonte Syne 35 KB); nenhuma biblioteca',
-    risk:'O mais leve e o mais seguro; o risco é parecer simples demais para o pedido de «imersivo, 3D».' },
+// The decision in hand: today's page and the three views of the crate, at the same moment of the scroll, window 1920 × 1080.
+const VIEWS = [
+  { id:'today', name:'Hoje', line:'De frente; cortada na virada.' },
+  { id:'a', name:'1 · Três-quartos', line:'Em diagonal, inteira no quadro.' },
+  { id:'b', name:'2 · Palco largo', line:'A mesma diagonal, caixa maior.', rec:true },
+  { id:'c', name:'3 · Ângulo forte', line:'Mais 3D; o disco vira de frente.' },
 ];
-const DEV = { desktop:{w:1280,h:800}, phone:{w:393,h:852} };
-let cur = 'crate-v2', dev = 'desktop';
-try { const h = location.hash.slice(1); if (VERSIONS.some(v => v.id === h)) cur = h; } catch (e) {}
-
-const dirs = document.getElementById('dirs');
-const btn = v => `<button type="button" data-id="${v.id}" aria-pressed="false"><span class="lv">${v.level}</span>${v.name}</button>`;
-dirs.innerHTML = VERSIONS.filter(v => !v.old).map(btn).join('');
-document.getElementById('olds').innerHTML = VERSIONS.filter(v => v.old).map(btn).join('');
-document.getElementById('all').innerHTML = VERSIONS.filter(v => v.id !== 'crate-v2-bright').map(v => `<article><h3>${v.name.replace(' · Nova','').replace(' · fogo brando','')} <span style="color:var(--accent-text);font-size:12px">${v.level}</span></h3><p><b style="color:var(--fg)">Eixo.</b> ${v.axis}</p><p style="margin-top:6px"><b style="color:var(--fg)">Peso.</b> <span class="num">${v.weight}</span></p><p style="margin-top:6px"><b style="color:var(--fg)">Risco.</b> ${v.risk}</p></article>`).join('');
-
-function fit(){
-  const d = DEV[dev], wrap = document.querySelector('.stagewrap');
-  const avail = wrap.clientWidth - 24;
-  const scale = Math.min(1, avail / d.w);
-  const frame = document.getElementById('frame'), view = document.getElementById('view');
-  frame.style.width = Math.round(d.w * scale) + 'px'; frame.style.height = Math.round(d.h * scale) + 'px';
-  view.style.width = d.w + 'px'; view.style.height = d.h + 'px'; view.style.transform = `scale(${scale})`;
-  document.getElementById('meta').textContent = `${d.w} × ${d.h} px${scale < 1 ? ' · reduzida a ' + Math.round(scale*100) + '%' : ''} · role dentro do quadro`;
-}
+const POSES = [['flip','A virada'],['a1','A abertura'],['a3','Um disco puxado'],['b1','O lado B']];
+let pose = 'flip';
+document.getElementById('poses').innerHTML = POSES.map(([id, label]) => `<button type="button" data-p="${id}" aria-pressed="false">${label}</button>`).join('');
 function render(){
-  const v = VERSIONS.find(x => x.id === cur);
-  document.querySelectorAll('#dirs button,#olds button').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === cur));
-  document.querySelectorAll('#devs button').forEach(b => b.setAttribute('aria-pressed', b.dataset.dev === dev));
-  document.getElementById('ruler').innerHTML = `<div><dt>O que muda</dt><dd>${v.say}</dd></div><div><dt>Eixo</dt><dd>${v.axis}</dd></div><div><dt>Peso</dt><dd>${v.weight}</dd></div><div><dt>Risco</dt><dd>${v.risk}</dd></div>`;
-  const view = document.getElementById('view');
-  if (view.getAttribute('src') !== v.file) view.setAttribute('src', v.file);
-  view.title = 'Protótipo ' + v.name;
-  document.getElementById('open').href = v.file;
-  fit();
+  document.querySelectorAll('#poses button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === pose));
+  const label = POSES.find(p => p[0] === pose)[1];
+  document.getElementById('views').innerHTML = VIEWS.map(v => `<figure${v.rec ? ' class="rec"' : ''}><h2>${v.name}${v.rec ? '<span class="tag">Recomendo</span>' : ''}</h2><img src="d-${v.id}-${pose}.webp" alt="${v.name}: ${label}" width="640" height="536"><p>${v.line}</p></figure>`).join('');
 }
-document.querySelector('.bar').addEventListener('click', e => { const b = e.target.closest('button[data-id]'); if (!b) return; cur = b.dataset.id; try { history.replaceState(null, '', '#' + cur); } catch (err) {} render(); });
-document.getElementById('devs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; dev = b.dataset.dev;
-  const view = document.getElementById('view'); const src = view.getAttribute('src'); view.removeAttribute('src'); render(); view.setAttribute('src', src); });
-addEventListener('hashchange', () => { const h = location.hash.slice(1); if (VERSIONS.some(v => v.id === h)) { cur = h; render(); } });
-addEventListener('resize', fit);
+document.getElementById('poses').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; pose = b.dataset.p; render(); });
 render();
 </script>

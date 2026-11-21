@@ -1,0 +1,2282 @@
+[
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   567,
+   113,
+   1264,
+   793
+  ],
+  "scene": [
+   567,
+   113,
+   1280,
+   717
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "a2",
+  "track": "a2",
+  "flip": 0,
+  "now": "Side A · 2 — Series",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "The Dark Side of the Moon | Pink Floyd · 1973",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "Low | David Bowie · 1977",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "a4",
+  "track": "a4",
+  "flip": 0,
+  "now": "Side A · 4 — Blend",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "Dummy | Portishead · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "a5",
+  "track": "a5",
+  "flip": 0,
+  "now": "Side A · 5 — Your shelf",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "Illmatic | Nas · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "flip25",
+  "track": "flip",
+  "flip": 0.25007891414141414,
+  "now": "Flip the record",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.5000789141414141,
+  "now": "Flip the record",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "flip75",
+  "track": "flip",
+  "flip": 0.7500789141414141,
+  "now": "Flip the record",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "In the Aeroplane Over the Sea | Neutral Milk Hotel · 1998",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "b2",
+  "track": "b2",
+  "flip": 1,
+  "now": "Side B · 2 — Start",
+  "stage": [
+   567,
+   32,
+   1264,
+   712
+  ],
+  "scene": [
+   567,
+   32,
+   1280,
+   635
+  ],
+  "caption": "To Pimp a Butterfly | Kendrick Lamar · 2015",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "info": {
+   "albums": [
+    "{\"t\":\"The Velvet Underground & Nico\",\"a\":\"The Velvet Underground & Nico\",\"y\":\"1967\",\"href\"",
+    "{\"t\":\"In the Court of the Crimson King\",\"a\":\"King Crimson\",\"y\":\"1969\",\"href\":\"https://musi",
+    "{\"t\":\"The Dark Side of the Moon\",\"a\":\"Pink Floyd\",\"y\":\"1973\",\"href\":\"https://music.apple.c",
+    "{\"t\":\"Low\",\"a\":\"David Bowie\",\"y\":\"1977\",\"href\":\"https://music.apple.com/us/album/low-2017-",
+    "{\"t\":\"Power, Corruption & Lies\",\"a\":\"New Order\",\"y\":\"1983\",\"href\":\"https://music.apple.com",
+    "{\"t\":\"Dummy\",\"a\":\"Portishead\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/dummy/14",
+    "{\"t\":\"Illmatic\",\"a\":\"Nas\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/illmatic/856",
+    "{\"t\":\"Harvest\",\"a\":\"Neil Young\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/harves",
+    "{\"t\":\"Close to the Edge\",\"a\":\"Yes\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/clo",
+    "{\"t\":\"Homogenic\",\"a\":\"Björk\",\"y\":\"1997\",\"href\":\"https://music.apple.com/us/search?term=Bj%",
+    "{\"t\":\"Mezzanine\",\"a\":\"Massive Attack\",\"y\":\"1998\",\"href\":\"https://music.apple.com/us/album/",
+    "{\"t\":\"In the Aeroplane Over the Sea\",\"a\":\"Neutral Milk Hotel\",\"y\":\"1998\",\"href\":\"https://m",
+    "{\"t\":\"Admirável Chip Novo\",\"a\":\"Pitty\",\"y\":\"2003\",\"href\":\"https://music.apple.com/us/album",
+    "{\"t\":\"Desire, I Want to Turn Into You\",\"a\":\"Caroline Polachek\",\"y\":\"2023\",\"href\":\"https://",
+    "{\"t\":\"To Pimp a Butterfly\",\"a\":\"Kendrick Lamar\",\"y\":\"2015\",\"href\":\"https://music.apple.com"
+   ],
+   "live": false,
+   "html": "js moving"
+  },
+  "errs": []
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   654,
+   113,
+   1344,
+   893
+  ],
+  "scene": [
+   654,
+   113,
+   1440,
+   817
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "a2",
+  "track": "a2",
+  "flip": 0,
+  "now": "Side A · 2 — Series",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "The Dark Side of the Moon | Pink Floyd · 1973",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "Low | David Bowie · 1977",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "a4",
+  "track": "a4",
+  "flip": 0,
+  "now": "Side A · 4 — Blend",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "Dummy | Portishead · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "a5",
+  "track": "a5",
+  "flip": 0,
+  "now": "Side A · 5 — Your shelf",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "Illmatic | Nas · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "flip25",
+  "track": "flip",
+  "flip": 0.24972375690607734,
+  "now": "Flip the record",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.5005524861878453,
+  "now": "Flip the record",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "flip75",
+  "track": "flip",
+  "flip": 0.7502762430939226,
+  "now": "Flip the record",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "In the Aeroplane Over the Sea | Neutral Milk Hotel · 1998",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "b2",
+  "track": "b2",
+  "flip": 1,
+  "now": "Side B · 2 — Start",
+  "stage": [
+   654,
+   20,
+   1344,
+   800
+  ],
+  "scene": [
+   654,
+   20,
+   1440,
+   724
+  ],
+  "caption": "To Pimp a Butterfly | Kendrick Lamar · 2015",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "info": {
+   "albums": [
+    "{\"t\":\"The Velvet Underground & Nico\",\"a\":\"The Velvet Underground & Nico\",\"y\":\"1967\",\"href\"",
+    "{\"t\":\"In the Court of the Crimson King\",\"a\":\"King Crimson\",\"y\":\"1969\",\"href\":\"https://musi",
+    "{\"t\":\"The Dark Side of the Moon\",\"a\":\"Pink Floyd\",\"y\":\"1973\",\"href\":\"https://music.apple.c",
+    "{\"t\":\"Low\",\"a\":\"David Bowie\",\"y\":\"1977\",\"href\":\"https://music.apple.com/us/album/low-2017-",
+    "{\"t\":\"Power, Corruption & Lies\",\"a\":\"New Order\",\"y\":\"1983\",\"href\":\"https://music.apple.com",
+    "{\"t\":\"Dummy\",\"a\":\"Portishead\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/dummy/14",
+    "{\"t\":\"Illmatic\",\"a\":\"Nas\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/illmatic/856",
+    "{\"t\":\"Harvest\",\"a\":\"Neil Young\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/harves",
+    "{\"t\":\"Close to the Edge\",\"a\":\"Yes\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/clo",
+    "{\"t\":\"Homogenic\",\"a\":\"Björk\",\"y\":\"1997\",\"href\":\"https://music.apple.com/us/search?term=Bj%",
+    "{\"t\":\"Mezzanine\",\"a\":\"Massive Attack\",\"y\":\"1998\",\"href\":\"https://music.apple.com/us/album/",
+    "{\"t\":\"In the Aeroplane Over the Sea\",\"a\":\"Neutral Milk Hotel\",\"y\":\"1998\",\"href\":\"https://m",
+    "{\"t\":\"Admirável Chip Novo\",\"a\":\"Pitty\",\"y\":\"2003\",\"href\":\"https://music.apple.com/us/album",
+    "{\"t\":\"Desire, I Want to Turn Into You\",\"a\":\"Caroline Polachek\",\"y\":\"2023\",\"href\":\"https://",
+    "{\"t\":\"To Pimp a Butterfly\",\"a\":\"Kendrick Lamar\",\"y\":\"2015\",\"href\":\"https://music.apple.com"
+   ],
+   "live": false,
+   "html": "js moving"
+  },
+  "errs": []
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   900,
+   113,
+   1584,
+   1073
+  ],
+  "scene": [
+   900,
+   113,
+   1920,
+   997
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "a2",
+  "track": "a2",
+  "flip": 0,
+  "now": "Side A · 2 — Series",
+  "stage": [
+   900,
+   112,
+   1584,
+   1072
+  ],
+  "scene": [
+   900,
+   112,
+   1920,
+   996
+  ],
+  "caption": "The Dark Side of the Moon | Pink Floyd · 1973",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   900,
+   112,
+   1584,
+   1072
+  ],
+  "scene": [
+   900,
+   112,
+   1920,
+   996
+  ],
+  "caption": "Low | David Bowie · 1977",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "a4",
+  "track": "a4",
+  "flip": 0,
+  "now": "Side A · 4 — Blend",
+  "stage": [
+   900,
+   112,
+   1584,
+   1072
+  ],
+  "scene": [
+   900,
+   112,
+   1920,
+   996
+  ],
+  "caption": "Dummy | Portishead · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "a5",
+  "track": "a5",
+  "flip": 0,
+  "now": "Side A · 5 — Your shelf",
+  "stage": [
+   900,
+   112,
+   1584,
+   1072
+  ],
+  "scene": [
+   900,
+   112,
+   1920,
+   996
+  ],
+  "caption": "Illmatic | Nas · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "flip25",
+  "track": "flip",
+  "flip": 0.2503066100906438,
+  "now": "Flip the record",
+  "stage": [
+   900,
+   112,
+   1584,
+   1072
+  ],
+  "scene": [
+   900,
+   112,
+   1920,
+   996
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.5002185037427577,
+  "now": "Flip the record",
+  "stage": [
+   900,
+   112,
+   1584,
+   1072
+  ],
+  "scene": [
+   900,
+   112,
+   1920,
+   996
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "flip75",
+  "track": "flip",
+  "flip": 0.7501303973948715,
+  "now": "Flip the record",
+  "stage": [
+   900,
+   112,
+   1584,
+   1072
+  ],
+  "scene": [
+   900,
+   112,
+   1920,
+   996
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   900,
+   112,
+   1584,
+   1072
+  ],
+  "scene": [
+   900,
+   112,
+   1920,
+   996
+  ],
+  "caption": "In the Aeroplane Over the Sea | Neutral Milk Hotel · 1998",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "h": 1080,
+  "p": "b2",
+  "track": "b2",
+  "flip": 1,
+  "now": "Side B · 2 — Start",
+  "stage": [
+   900,
+   -1,
+   1584,
+   959
+  ],
+  "scene": [
+   900,
+   -1,
+   1920,
+   882
+  ],
+  "caption": "To Pimp a Butterfly | Kendrick Lamar · 2015",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1920,
+  "cw": 1920,
+  "live": true
+ },
+ {
+  "w": 1920,
+  "info": {
+   "albums": [
+    "{\"t\":\"The Velvet Underground & Nico\",\"a\":\"The Velvet Underground & Nico\",\"y\":\"1967\",\"href\"",
+    "{\"t\":\"In the Court of the Crimson King\",\"a\":\"King Crimson\",\"y\":\"1969\",\"href\":\"https://musi",
+    "{\"t\":\"The Dark Side of the Moon\",\"a\":\"Pink Floyd\",\"y\":\"1973\",\"href\":\"https://music.apple.c",
+    "{\"t\":\"Low\",\"a\":\"David Bowie\",\"y\":\"1977\",\"href\":\"https://music.apple.com/us/album/low-2017-",
+    "{\"t\":\"Power, Corruption & Lies\",\"a\":\"New Order\",\"y\":\"1983\",\"href\":\"https://music.apple.com",
+    "{\"t\":\"Dummy\",\"a\":\"Portishead\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/dummy/14",
+    "{\"t\":\"Illmatic\",\"a\":\"Nas\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/illmatic/856",
+    "{\"t\":\"Harvest\",\"a\":\"Neil Young\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/harves",
+    "{\"t\":\"Close to the Edge\",\"a\":\"Yes\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/clo",
+    "{\"t\":\"Homogenic\",\"a\":\"Björk\",\"y\":\"1997\",\"href\":\"https://music.apple.com/us/search?term=Bj%",
+    "{\"t\":\"Mezzanine\",\"a\":\"Massive Attack\",\"y\":\"1998\",\"href\":\"https://music.apple.com/us/album/",
+    "{\"t\":\"In the Aeroplane Over the Sea\",\"a\":\"Neutral Milk Hotel\",\"y\":\"1998\",\"href\":\"https://m",
+    "{\"t\":\"Admirável Chip Novo\",\"a\":\"Pitty\",\"y\":\"2003\",\"href\":\"https://music.apple.com/us/album",
+    "{\"t\":\"Desire, I Want to Turn Into You\",\"a\":\"Caroline Polachek\",\"y\":\"2023\",\"href\":\"https://",
+    "{\"t\":\"To Pimp a Butterfly\",\"a\":\"Kendrick Lamar\",\"y\":\"2015\",\"href\":\"https://music.apple.com"
+   ],
+   "live": true,
+   "html": "js moving"
+  },
+  "errs": []
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   552,
+   113,
+   884,
+   761
+  ],
+  "scene": [
+   552,
+   113,
+   900,
+   631
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 130,
+  "capLines": 4,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "a2",
+  "track": "a2",
+  "flip": 0,
+  "now": "Side A · 2 — Series",
+  "stage": [
+   552,
+   112,
+   884,
+   760
+  ],
+  "scene": [
+   552,
+   112,
+   900,
+   667
+  ],
+  "caption": "The Dark Side of the Moon | Pink Floyd · 1973",
+  "capH": 93,
+  "capLines": 2,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   552,
+   112,
+   884,
+   760
+  ],
+  "scene": [
+   552,
+   112,
+   900,
+   648
+  ],
+  "caption": "Low | David Bowie · 1977",
+  "capH": 112,
+  "capLines": 3,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "a4",
+  "track": "a4",
+  "flip": 0,
+  "now": "Side A · 4 — Blend",
+  "stage": [
+   552,
+   112,
+   884,
+   760
+  ],
+  "scene": [
+   552,
+   112,
+   900,
+   667
+  ],
+  "caption": "Dummy | Portishead · 1994",
+  "capH": 93,
+  "capLines": 2,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "a5",
+  "track": "a5",
+  "flip": 0,
+  "now": "Side A · 5 — Your shelf",
+  "stage": [
+   552,
+   112,
+   884,
+   760
+  ],
+  "scene": [
+   552,
+   112,
+   900,
+   667
+  ],
+  "caption": "Illmatic | Nas · 1994",
+  "capH": 93,
+  "capLines": 2,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "flip25",
+  "track": "flip",
+  "flip": 0.2495400326628491,
+  "now": "Flip the record",
+  "stage": [
+   552,
+   112,
+   884,
+   760
+  ],
+  "scene": [
+   552,
+   112,
+   900,
+   630
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 130,
+  "capLines": 4,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.499596882558452,
+  "now": "Flip the record",
+  "stage": [
+   552,
+   112,
+   884,
+   760
+  ],
+  "scene": [
+   552,
+   112,
+   900,
+   630
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 130,
+  "capLines": 4,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "flip75",
+  "track": "flip",
+  "flip": 0.749653732454055,
+  "now": "Flip the record",
+  "stage": [
+   552,
+   112,
+   884,
+   760
+  ],
+  "scene": [
+   552,
+   112,
+   900,
+   630
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 130,
+  "capLines": 4,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   552,
+   112,
+   884,
+   760
+  ],
+  "scene": [
+   552,
+   112,
+   900,
+   648
+  ],
+  "caption": "In the Aeroplane Over the Sea | Neutral Milk Hotel · 1998",
+  "capH": 112,
+  "capLines": 3,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "h": 768,
+  "p": "b2",
+  "track": "b2",
+  "flip": 1,
+  "now": "Side B · 2 — Start",
+  "stage": [
+   552,
+   36,
+   884,
+   684
+  ],
+  "scene": [
+   552,
+   36,
+   900,
+   572
+  ],
+  "caption": "To Pimp a Butterfly | Kendrick Lamar · 2015",
+  "capH": 112,
+  "capLines": 3,
+  "sw": 900,
+  "cw": 900,
+  "live": true
+ },
+ {
+  "w": 900,
+  "info": {
+   "albums": [
+    "{\"t\":\"The Velvet Underground & Nico\",\"a\":\"The Velvet Underground & Nico\",\"y\":\"1967\",\"href\"",
+    "{\"t\":\"In the Court of the Crimson King\",\"a\":\"King Crimson\",\"y\":\"1969\",\"href\":\"https://musi",
+    "{\"t\":\"The Dark Side of the Moon\",\"a\":\"Pink Floyd\",\"y\":\"1973\",\"href\":\"https://music.apple.c",
+    "{\"t\":\"Low\",\"a\":\"David Bowie\",\"y\":\"1977\",\"href\":\"https://music.apple.com/us/album/low-2017-",
+    "{\"t\":\"Power, Corruption & Lies\",\"a\":\"New Order\",\"y\":\"1983\",\"href\":\"https://music.apple.com",
+    "{\"t\":\"Dummy\",\"a\":\"Portishead\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/dummy/14",
+    "{\"t\":\"Illmatic\",\"a\":\"Nas\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/illmatic/856",
+    "{\"t\":\"Harvest\",\"a\":\"Neil Young\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/harves",
+    "{\"t\":\"Close to the Edge\",\"a\":\"Yes\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/clo",
+    "{\"t\":\"Homogenic\",\"a\":\"Björk\",\"y\":\"1997\",\"href\":\"https://music.apple.com/us/search?term=Bj%",
+    "{\"t\":\"Mezzanine\",\"a\":\"Massive Attack\",\"y\":\"1998\",\"href\":\"https://music.apple.com/us/album/",
+    "{\"t\":\"In the Aeroplane Over the Sea\",\"a\":\"Neutral Milk Hotel\",\"y\":\"1998\",\"href\":\"https://m",
+    "{\"t\":\"Admirável Chip Novo\",\"a\":\"Pitty\",\"y\":\"2003\",\"href\":\"https://music.apple.com/us/album",
+    "{\"t\":\"Desire, I Want to Turn Into You\",\"a\":\"Caroline Polachek\",\"y\":\"2023\",\"href\":\"https://",
+    "{\"t\":\"To Pimp a Butterfly\",\"a\":\"Kendrick Lamar\",\"y\":\"2015\",\"href\":\"https://music.apple.com"
+   ],
+   "live": true,
+   "html": "js moving"
+  },
+  "errs": []
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   556,
+   113,
+   984,
+   761
+  ],
+  "scene": [
+   556,
+   113,
+   1000,
+   666
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 95,
+  "capLines": 3,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "a2",
+  "track": "a2",
+  "flip": 0,
+  "now": "Side A · 2 — Series",
+  "stage": [
+   556,
+   112,
+   984,
+   760
+  ],
+  "scene": [
+   556,
+   112,
+   1000,
+   684
+  ],
+  "caption": "The Dark Side of the Moon | Pink Floyd · 1973",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   556,
+   112,
+   984,
+   760
+  ],
+  "scene": [
+   556,
+   112,
+   1000,
+   684
+  ],
+  "caption": "Low | David Bowie · 1977",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "a4",
+  "track": "a4",
+  "flip": 0,
+  "now": "Side A · 4 — Blend",
+  "stage": [
+   556,
+   112,
+   984,
+   760
+  ],
+  "scene": [
+   556,
+   112,
+   1000,
+   684
+  ],
+  "caption": "Dummy | Portishead · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "a5",
+  "track": "a5",
+  "flip": 0,
+  "now": "Side A · 5 — Your shelf",
+  "stage": [
+   556,
+   112,
+   984,
+   760
+  ],
+  "scene": [
+   556,
+   112,
+   1000,
+   684
+  ],
+  "caption": "Illmatic | Nas · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "flip25",
+  "track": "flip",
+  "flip": 0.2504909763711161,
+  "now": "Flip the record",
+  "stage": [
+   556,
+   112,
+   984,
+   760
+  ],
+  "scene": [
+   556,
+   112,
+   1000,
+   665
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 95,
+  "capLines": 3,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.500547826266719,
+  "now": "Flip the record",
+  "stage": [
+   556,
+   112,
+   984,
+   760
+  ],
+  "scene": [
+   556,
+   112,
+   1000,
+   665
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 95,
+  "capLines": 3,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "flip75",
+  "track": "flip",
+  "flip": 0.750604676162322,
+  "now": "Flip the record",
+  "stage": [
+   556,
+   112,
+   984,
+   760
+  ],
+  "scene": [
+   556,
+   112,
+   1000,
+   665
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 95,
+  "capLines": 3,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   556,
+   112,
+   984,
+   760
+  ],
+  "scene": [
+   556,
+   112,
+   1000,
+   684
+  ],
+  "caption": "In the Aeroplane Over the Sea | Neutral Milk Hotel · 1998",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "h": 768,
+  "p": "b2",
+  "track": "b2",
+  "flip": 1,
+  "now": "Side B · 2 — Start",
+  "stage": [
+   556,
+   36,
+   984,
+   684
+  ],
+  "scene": [
+   556,
+   36,
+   1000,
+   608
+  ],
+  "caption": "To Pimp a Butterfly | Kendrick Lamar · 2015",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1000,
+  "cw": 1000,
+  "live": true
+ },
+ {
+  "w": 1000,
+  "info": {
+   "albums": [
+    "{\"t\":\"The Velvet Underground & Nico\",\"a\":\"The Velvet Underground & Nico\",\"y\":\"1967\",\"href\"",
+    "{\"t\":\"In the Court of the Crimson King\",\"a\":\"King Crimson\",\"y\":\"1969\",\"href\":\"https://musi",
+    "{\"t\":\"The Dark Side of the Moon\",\"a\":\"Pink Floyd\",\"y\":\"1973\",\"href\":\"https://music.apple.c",
+    "{\"t\":\"Low\",\"a\":\"David Bowie\",\"y\":\"1977\",\"href\":\"https://music.apple.com/us/album/low-2017-",
+    "{\"t\":\"Power, Corruption & Lies\",\"a\":\"New Order\",\"y\":\"1983\",\"href\":\"https://music.apple.com",
+    "{\"t\":\"Dummy\",\"a\":\"Portishead\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/dummy/14",
+    "{\"t\":\"Illmatic\",\"a\":\"Nas\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/illmatic/856",
+    "{\"t\":\"Harvest\",\"a\":\"Neil Young\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/harves",
+    "{\"t\":\"Close to the Edge\",\"a\":\"Yes\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/clo",
+    "{\"t\":\"Homogenic\",\"a\":\"Björk\",\"y\":\"1997\",\"href\":\"https://music.apple.com/us/search?term=Bj%",
+    "{\"t\":\"Mezzanine\",\"a\":\"Massive Attack\",\"y\":\"1998\",\"href\":\"https://music.apple.com/us/album/",
+    "{\"t\":\"In the Aeroplane Over the Sea\",\"a\":\"Neutral Milk Hotel\",\"y\":\"1998\",\"href\":\"https://m",
+    "{\"t\":\"Admirável Chip Novo\",\"a\":\"Pitty\",\"y\":\"2003\",\"href\":\"https://music.apple.com/us/album",
+    "{\"t\":\"Desire, I Want to Turn Into You\",\"a\":\"Caroline Polachek\",\"y\":\"2023\",\"href\":\"https://",
+    "{\"t\":\"To Pimp a Butterfly\",\"a\":\"Kendrick Lamar\",\"y\":\"2015\",\"href\":\"https://music.apple.com"
+   ],
+   "live": true,
+   "html": "js moving"
+  },
+  "errs": []
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   560,
+   113,
+   1084,
+   761
+  ],
+  "scene": [
+   560,
+   113,
+   1100,
+   685
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "a2",
+  "track": "a2",
+  "flip": 0,
+  "now": "Side A · 2 — Series",
+  "stage": [
+   560,
+   112,
+   1084,
+   760
+  ],
+  "scene": [
+   560,
+   112,
+   1100,
+   684
+  ],
+  "caption": "The Dark Side of the Moon | Pink Floyd · 1973",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   560,
+   112,
+   1084,
+   760
+  ],
+  "scene": [
+   560,
+   112,
+   1100,
+   684
+  ],
+  "caption": "Low | David Bowie · 1977",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "a4",
+  "track": "a4",
+  "flip": 0,
+  "now": "Side A · 4 — Blend",
+  "stage": [
+   560,
+   112,
+   1084,
+   760
+  ],
+  "scene": [
+   560,
+   112,
+   1100,
+   684
+  ],
+  "caption": "Dummy | Portishead · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "a5",
+  "track": "a5",
+  "flip": 0,
+  "now": "Side A · 5 — Your shelf",
+  "stage": [
+   560,
+   112,
+   1084,
+   760
+  ],
+  "scene": [
+   560,
+   112,
+   1100,
+   684
+  ],
+  "caption": "Illmatic | Nas · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "flip25",
+  "track": "flip",
+  "flip": 0.2504289583031857,
+  "now": "Flip the record",
+  "stage": [
+   560,
+   112,
+   1084,
+   760
+  ],
+  "scene": [
+   560,
+   112,
+   1100,
+   684
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.5004858081987886,
+  "now": "Flip the record",
+  "stage": [
+   560,
+   112,
+   1084,
+   760
+  ],
+  "scene": [
+   560,
+   112,
+   1100,
+   684
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "flip75",
+  "track": "flip",
+  "flip": 0.7505426580943915,
+  "now": "Flip the record",
+  "stage": [
+   560,
+   112,
+   1084,
+   760
+  ],
+  "scene": [
+   560,
+   112,
+   1100,
+   684
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   560,
+   112,
+   1084,
+   760
+  ],
+  "scene": [
+   560,
+   112,
+   1100,
+   684
+  ],
+  "caption": "In the Aeroplane Over the Sea | Neutral Milk Hotel · 1998",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "h": 768,
+  "p": "b2",
+  "track": "b2",
+  "flip": 1,
+  "now": "Side B · 2 — Start",
+  "stage": [
+   560,
+   36,
+   1084,
+   684
+  ],
+  "scene": [
+   560,
+   36,
+   1100,
+   608
+  ],
+  "caption": "To Pimp a Butterfly | Kendrick Lamar · 2015",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1100,
+  "cw": 1100,
+  "live": true
+ },
+ {
+  "w": 1100,
+  "info": {
+   "albums": [
+    "{\"t\":\"The Velvet Underground & Nico\",\"a\":\"The Velvet Underground & Nico\",\"y\":\"1967\",\"href\"",
+    "{\"t\":\"In the Court of the Crimson King\",\"a\":\"King Crimson\",\"y\":\"1969\",\"href\":\"https://musi",
+    "{\"t\":\"The Dark Side of the Moon\",\"a\":\"Pink Floyd\",\"y\":\"1973\",\"href\":\"https://music.apple.c",
+    "{\"t\":\"Low\",\"a\":\"David Bowie\",\"y\":\"1977\",\"href\":\"https://music.apple.com/us/album/low-2017-",
+    "{\"t\":\"Power, Corruption & Lies\",\"a\":\"New Order\",\"y\":\"1983\",\"href\":\"https://music.apple.com",
+    "{\"t\":\"Dummy\",\"a\":\"Portishead\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/dummy/14",
+    "{\"t\":\"Illmatic\",\"a\":\"Nas\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/illmatic/856",
+    "{\"t\":\"Harvest\",\"a\":\"Neil Young\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/harves",
+    "{\"t\":\"Close to the Edge\",\"a\":\"Yes\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/clo",
+    "{\"t\":\"Homogenic\",\"a\":\"Björk\",\"y\":\"1997\",\"href\":\"https://music.apple.com/us/search?term=Bj%",
+    "{\"t\":\"Mezzanine\",\"a\":\"Massive Attack\",\"y\":\"1998\",\"href\":\"https://music.apple.com/us/album/",
+    "{\"t\":\"In the Aeroplane Over the Sea\",\"a\":\"Neutral Milk Hotel\",\"y\":\"1998\",\"href\":\"https://m",
+    "{\"t\":\"Admirável Chip Novo\",\"a\":\"Pitty\",\"y\":\"2003\",\"href\":\"https://music.apple.com/us/album",
+    "{\"t\":\"Desire, I Want to Turn Into You\",\"a\":\"Caroline Polachek\",\"y\":\"2023\",\"href\":\"https://",
+    "{\"t\":\"To Pimp a Butterfly\",\"a\":\"Kendrick Lamar\",\"y\":\"2015\",\"href\":\"https://music.apple.com"
+   ],
+   "live": true,
+   "html": "js moving"
+  },
+  "errs": []
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   564,
+   113,
+   1184,
+   761
+  ],
+  "scene": [
+   564,
+   113,
+   1200,
+   685
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "a2",
+  "track": "a2",
+  "flip": 0,
+  "now": "Side A · 2 — Series",
+  "stage": [
+   564,
+   112,
+   1184,
+   760
+  ],
+  "scene": [
+   564,
+   112,
+   1200,
+   684
+  ],
+  "caption": "The Dark Side of the Moon | Pink Floyd · 1973",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   564,
+   112,
+   1184,
+   760
+  ],
+  "scene": [
+   564,
+   112,
+   1200,
+   684
+  ],
+  "caption": "Low | David Bowie · 1977",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "a4",
+  "track": "a4",
+  "flip": 0,
+  "now": "Side A · 4 — Blend",
+  "stage": [
+   564,
+   112,
+   1184,
+   760
+  ],
+  "scene": [
+   564,
+   112,
+   1200,
+   684
+  ],
+  "caption": "Dummy | Portishead · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "a5",
+  "track": "a5",
+  "flip": 0,
+  "now": "Side A · 5 — Your shelf",
+  "stage": [
+   564,
+   112,
+   1184,
+   760
+  ],
+  "scene": [
+   564,
+   112,
+   1200,
+   684
+  ],
+  "caption": "Illmatic | Nas · 1994",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "flip25",
+  "track": "flip",
+  "flip": 0.24995348644905216,
+  "now": "Flip the record",
+  "stage": [
+   564,
+   112,
+   1184,
+   760
+  ],
+  "scene": [
+   564,
+   112,
+   1200,
+   684
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.5000103363446551,
+  "now": "Flip the record",
+  "stage": [
+   564,
+   112,
+   1184,
+   760
+  ],
+  "scene": [
+   564,
+   112,
+   1200,
+   684
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "flip75",
+  "track": "flip",
+  "flip": 0.750067186240258,
+  "now": "Flip the record",
+  "stage": [
+   564,
+   112,
+   1184,
+   760
+  ],
+  "scene": [
+   564,
+   112,
+   1200,
+   684
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   564,
+   112,
+   1184,
+   760
+  ],
+  "scene": [
+   564,
+   112,
+   1200,
+   684
+  ],
+  "caption": "In the Aeroplane Over the Sea | Neutral Milk Hotel · 1998",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "h": 768,
+  "p": "b2",
+  "track": "b2",
+  "flip": 1,
+  "now": "Side B · 2 — Start",
+  "stage": [
+   564,
+   36,
+   1184,
+   684
+  ],
+  "scene": [
+   564,
+   36,
+   1200,
+   607
+  ],
+  "caption": "To Pimp a Butterfly | Kendrick Lamar · 2015",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1200,
+  "cw": 1200,
+  "live": true
+ },
+ {
+  "w": 1200,
+  "info": {
+   "albums": [
+    "{\"t\":\"The Velvet Underground & Nico\",\"a\":\"The Velvet Underground & Nico\",\"y\":\"1967\",\"href\"",
+    "{\"t\":\"In the Court of the Crimson King\",\"a\":\"King Crimson\",\"y\":\"1969\",\"href\":\"https://musi",
+    "{\"t\":\"The Dark Side of the Moon\",\"a\":\"Pink Floyd\",\"y\":\"1973\",\"href\":\"https://music.apple.c",
+    "{\"t\":\"Low\",\"a\":\"David Bowie\",\"y\":\"1977\",\"href\":\"https://music.apple.com/us/album/low-2017-",
+    "{\"t\":\"Power, Corruption & Lies\",\"a\":\"New Order\",\"y\":\"1983\",\"href\":\"https://music.apple.com",
+    "{\"t\":\"Dummy\",\"a\":\"Portishead\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/dummy/14",
+    "{\"t\":\"Illmatic\",\"a\":\"Nas\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/illmatic/856",
+    "{\"t\":\"Harvest\",\"a\":\"Neil Young\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/harves",
+    "{\"t\":\"Close to the Edge\",\"a\":\"Yes\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/clo",
+    "{\"t\":\"Homogenic\",\"a\":\"Björk\",\"y\":\"1997\",\"href\":\"https://music.apple.com/us/search?term=Bj%",
+    "{\"t\":\"Mezzanine\",\"a\":\"Massive Attack\",\"y\":\"1998\",\"href\":\"https://music.apple.com/us/album/",
+    "{\"t\":\"In the Aeroplane Over the Sea\",\"a\":\"Neutral Milk Hotel\",\"y\":\"1998\",\"href\":\"https://m",
+    "{\"t\":\"Admirável Chip Novo\",\"a\":\"Pitty\",\"y\":\"2003\",\"href\":\"https://music.apple.com/us/album",
+    "{\"t\":\"Desire, I Want to Turn Into You\",\"a\":\"Caroline Polachek\",\"y\":\"2023\",\"href\":\"https://",
+    "{\"t\":\"To Pimp a Butterfly\",\"a\":\"Kendrick Lamar\",\"y\":\"2015\",\"href\":\"https://music.apple.com"
+   ],
+   "live": true,
+   "html": "js moving"
+  },
+  "errs": []
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   0,
+   634,
+   393,
+   1135
+  ],
+  "scene": [
+   0,
+   634,
+   393,
+   964
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "a2",
+  "track": "a2",
+  "flip": 0,
+  "now": "Side A · 2 — Series",
+  "stage": [
+   0,
+   -437,
+   393,
+   64
+  ],
+  "scene": [
+   0,
+   -437,
+   393,
+   -107
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   0,
+   -1030,
+   393,
+   -529
+  ],
+  "scene": [
+   0,
+   -1030,
+   393,
+   -700
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "a4",
+  "track": "a4",
+  "flip": 0,
+  "now": "Side A · 4 — Blend",
+  "stage": [
+   0,
+   -1898,
+   393,
+   -1397
+  ],
+  "scene": [
+   0,
+   -1898,
+   393,
+   -1568
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "a5",
+  "track": "a5",
+  "flip": 0.01926318324103058,
+  "now": "Side A · 5 — Your shelf",
+  "stage": [
+   0,
+   -2483,
+   393,
+   -1982
+  ],
+  "scene": [
+   0,
+   -2483,
+   393,
+   -2153
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "flip25",
+  "track": "flip",
+  "flip": 0.25042138213339754,
+  "now": "Flip the record",
+  "stage": [
+   0,
+   -2648,
+   393,
+   -2147
+  ],
+  "scene": [
+   0,
+   -2648,
+   393,
+   -2318
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.4997920451809207,
+  "now": "Flip the record",
+  "stage": [
+   0,
+   -2826,
+   393,
+   -2325
+  ],
+  "scene": [
+   0,
+   -2826,
+   393,
+   -2496
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "flip75",
+  "track": "flip",
+  "flip": 0.7505636670096097,
+  "now": "Flip the record",
+  "stage": [
+   0,
+   -3005,
+   393,
+   -2504
+  ],
+  "scene": [
+   0,
+   -3005,
+   393,
+   -2675
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   0,
+   -3545,
+   393,
+   -3044
+  ],
+  "scene": [
+   0,
+   -3545,
+   393,
+   -3215
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "h": 852,
+  "p": "b2",
+  "track": "b2",
+  "flip": 1,
+  "now": "Side B · 2 — Start",
+  "stage": [
+   0,
+   -4159,
+   393,
+   -3658
+  ],
+  "scene": [
+   0,
+   -4159,
+   393,
+   -3829
+  ],
+  "caption": "The Velvet Underground & Nico | The Velvet Underground & Nico · 1967",
+  "capH": 171,
+  "capLines": 6,
+  "sw": 393,
+  "cw": 393,
+  "live": false
+ },
+ {
+  "w": 393,
+  "info": {
+   "albums": [
+    "{\"t\":\"The Velvet Underground & Nico\",\"a\":\"The Velvet Underground & Nico\",\"y\":\"1967\",\"href\"",
+    "{\"t\":\"In the Court of the Crimson King\",\"a\":\"King Crimson\",\"y\":\"1969\",\"href\":\"https://musi",
+    "{\"t\":\"The Dark Side of the Moon\",\"a\":\"Pink Floyd\",\"y\":\"1973\",\"href\":\"https://music.apple.c",
+    "{\"t\":\"Low\",\"a\":\"David Bowie\",\"y\":\"1977\",\"href\":\"https://music.apple.com/us/album/low-2017-",
+    "{\"t\":\"Power, Corruption & Lies\",\"a\":\"New Order\",\"y\":\"1983\",\"href\":\"https://music.apple.com",
+    "{\"t\":\"Dummy\",\"a\":\"Portishead\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/dummy/14",
+    "{\"t\":\"Illmatic\",\"a\":\"Nas\",\"y\":\"1994\",\"href\":\"https://music.apple.com/us/album/illmatic/856",
+    "{\"t\":\"Harvest\",\"a\":\"Neil Young\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/harves",
+    "{\"t\":\"Close to the Edge\",\"a\":\"Yes\",\"y\":\"1972\",\"href\":\"https://music.apple.com/us/album/clo",
+    "{\"t\":\"Homogenic\",\"a\":\"Björk\",\"y\":\"1997\",\"href\":\"https://music.apple.com/us/search?term=Bj%",
+    "{\"t\":\"Mezzanine\",\"a\":\"Massive Attack\",\"y\":\"1998\",\"href\":\"https://music.apple.com/us/album/",
+    "{\"t\":\"In the Aeroplane Over the Sea\",\"a\":\"Neutral Milk Hotel\",\"y\":\"1998\",\"href\":\"https://m",
+    "{\"t\":\"Admirável Chip Novo\",\"a\":\"Pitty\",\"y\":\"2003\",\"href\":\"https://music.apple.com/us/album",
+    "{\"t\":\"Desire, I Want to Turn Into You\",\"a\":\"Caroline Polachek\",\"y\":\"2023\",\"href\":\"https://",
+    "{\"t\":\"To Pimp a Butterfly\",\"a\":\"Kendrick Lamar\",\"y\":\"2015\",\"href\":\"https://music.apple.com"
+   ],
+   "live": false,
+   "html": "js moving"
+  },
+  "errs": []
+ }
+]

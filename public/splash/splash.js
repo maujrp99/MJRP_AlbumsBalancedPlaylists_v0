@@ -12,6 +12,8 @@
  * Pure parts are exported for the tests; `startSplash(window)` wires them to the page.
  */
 
+import { VIEWS, PAGE_VIEW, recordAt } from './framing.js'
+
 /** The soft fire, the owner's choice (2026-11-20 «fogo brando na verdade»): peak on A1 and B2, low in between. */
 export const FIRE = Object.freeze({ peak: 0.72, low: 0.28 })
 
@@ -47,7 +49,7 @@ export function flipProgress(flipTop, flipHeight, viewportHeight, track) {
 }
 
 /** The record the caption names on a track: the pulled one, or the one in front. */
-export const captionIndex = (track) => (TRACKS[track].pull >= 0 ? TRACKS[track].pull : TRACKS[track].face)
+export const captionIndex = (track, count = 14) => recordAt(TRACKS[track].pull >= 0 ? TRACKS[track].pull : TRACKS[track].face, count)
 
 /**
  * The CSS crate on a track: for each of the 14 sleeves, whether it shows, its transform and its
@@ -56,15 +58,18 @@ export const captionIndex = (track) => (TRACKS[track].pull >= 0 ? TRACKS[track].
  */
 export function cssCrateLayout(track, count = 14) {
     const s = TRACKS[track]
-    const order = s.side === 'A' ? [0, 1, 2, 3, 4, 5, 6] : [13, 12, 11, 10, 9, 8, 7]
-    const pulledPos = order.indexOf(s.pull)
+    // side A is every record before the last seven (7 or 8 of them); side B the last seven, the last in front
+    const sideA = Array.from({ length: count - 7 }, (_, i) => i)
+    const order = s.side === 'A' ? sideA : Array.from({ length: 7 }, (_, i) => count - 1 - i)
+    const pull = s.pull >= 0 ? recordAt(s.pull, count) : -1
+    const pulledPos = order.indexOf(pull)
     const out = Array.from({ length: count }, () => ({ visible: false, transform: '', zIndex: '' }))
     order.forEach((idx, pos) => {
         const z = -pos * 34
         const y = -pos * 6.5
         let transform
         let zIndex = 20 - pos
-        if (idx === s.pull) {
+        if (idx === pull) {
             transform = `translate3d(0,-46%,${z + 18}px) rotateX(3deg)`
             zIndex = 30
         } else if (pulledPos > 0 && pos < pulledPos) {
@@ -187,6 +192,21 @@ export function startSplash(win) {
     }
     win.__splash = page
 
+    // the crate on a diagonal (UAT-235): the camera's view, and the CSS crate turned the same way, half as far
+    // (it has no side walls: at the full turn the leaning records stick out past its front);
+    // on a computer the stage reaches the window's right edge, past its column («Palco largo»)
+    page.view = VIEWS[PAGE_VIEW]
+    const crateCss = D.getElementById('crate-css')
+    if (crateCss && page.view.azimuth && !phone) crateCss.style.setProperty('--yaw', `${-page.view.azimuth / 2}deg`)
+    if (page.view.bleed && !phone) {
+        const bleed = () => {
+            scene.style.marginRight = '0px'
+            const st = D.getElementById('stage').getBoundingClientRect()
+            scene.style.marginRight = `${-Math.max(0, H.clientWidth - st.right)}px`
+        }
+        bleed(); win.addEventListener('resize', bleed)
+    }
+
     // the motion window: the automatic motion runs 10 s after load or after the last scroll, then rests
     let restTimer = 0
     const wake = () => {
@@ -224,7 +244,7 @@ export function startSplash(win) {
         })
     }
     const caption = (track) => {
-        const album = albums[captionIndex(track)]
+        const album = albums[captionIndex(track, albums.length)]
         if (!album) return
         const who = D.getElementById('who')
         const b = D.createElement('b')
@@ -239,7 +259,7 @@ export function startSplash(win) {
 
     // phone: each track brings its own record (a copy of the crate's image, no extra bytes on the wire)
     D.querySelectorAll('.slot').forEach((slot) => {
-        const i = Number(slot.dataset.pull)
+        const i = recordAt(Number(slot.dataset.pull), imgs.length)
         if (!imgs[i]) return
         const im = imgs[i].cloneNode()
         im.removeAttribute('class'); im.removeAttribute('style'); im.alt = ''

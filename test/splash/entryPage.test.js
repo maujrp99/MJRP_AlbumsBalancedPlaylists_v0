@@ -85,7 +85,7 @@ describe('the page as served (what a search engine or an assistant reads, withou
 
     it('real covers when the switch says so: credit, link and the trademark line', () => {
         const real = built('real')
-        expect(real.match(/<img class="sl /g)).toHaveLength(14)
+        expect(real.match(/<img class="sl /g)).toHaveLength(15)
         expect(real).toContain('https://is1-ssl.mzstatic.com/image/thumb/')
         expect(real).toContain('Listen on Apple Music')
         expect(real).toContain('Apple and Apple Music are trademarks of Apple Inc.')

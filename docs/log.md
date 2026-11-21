@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:56] review — reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236): fail, sem P0 nem P1
+**Branch:** fix/f80-uat-entry-page
+Um agente que não implementou julgou a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. A caixa em 3D fica em diagonal e inteira no quadro em todas as posições, de 900 a 1920 px. O palco vai até a borda direita. A capa da banana é o primeiro disco e o King Crimson o segundo; são 15 capas reais e 14 fictícias, sem faltar nenhuma. A faixa e «Flip the record» funcionam. O celular fica como antes. O sensor, com a `main` de referência, deu 0 · 0 · 0. Um P2: na caixa em CSS (sem WebGL ou com menos movimento), o disco da frente sai da caixa como uma cunha branca. Abri a UAT-237, `fixing (F80)`. A legenda alta da banana no celular é efeito do nome comprido, não defeito. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md`; capturas em `reports/evidence/F80/recheck-uat235/`.
+
 ## [2026-11-21 11:48] decision — cada agente interno declara o seu modelo; Sonnet em esforço médio é o padrão
 **Branch:** main
 Palavras do MJRP (2026-11-21): «os agentes internos precisam utilizar modelos adequados nao podem derivar tudo do seu modelo, isso importante adicionar no seu processo, é crítico pra gesta de tokens e eficiencia das taregas». Está no resumo da via rápida (`reports/harness-feedback/2026-11-21-fast-lane-as-worked-on-2026-11-20.md`): Sonnet médio para construir, consertar, testar e fechar; Opus para desenho, arquitetura, pesquisa e juiz de tela; nenhum agente herda o modelo do orquestrador. Sessões arquivadas a pedido dele: textos, proposta do React, régua de texto, lote do board e design system (o trabalho de cada uma está no seu ramo); a do kernel não arquivou (ainda tinha trabalho vivo) e as duas com juiz dentro («Start» no menu e a página de entrada) ficam até o juiz terminar.
@@ -10,6 +14,18 @@ Palavras do MJRP (2026-11-21): «os agentes internos precisam utilizar modelos a
 ## [2026-11-21 11:47] decision — volta o jeito de trabalhar de 20/11: uma conversa, agentes internos, o orquestrador junta e publica; as sessões por feature param
 **Branch:** main
 Palavras do MJRP (2026-11-21): «parece que vc entrou no processo do harness agora, que está te atrapalhando, ontem vc estava mais agil e colocando as coisas em prod, mais rápido»; «vamos matar todas as sessoes e manter o trabalho como ontem, a agilidade do seu trabalho de ontem deve ser o modelo para o fast lane do harness passe esse feedback para o master agent considerar isso na F350 da v2.0 do harness e a partir de agora siga o que vc estava seguindo ontem»; «assuma o trabalho das sessoes e arquivo todas as sessoes»; «ok esse é o resumo do fast lane, coloque no md pls». Feito: as duas sessões que trabalhavam foram paradas; o trabalho sem commit da sessão do design system foi gravado no ramo dela (`91c7c53`); o resumo do processo está em `reports/harness-feedback/2026-11-21-fast-lane-as-worked-on-2026-11-20.md` e foi ao agente mestre. O trabalho das sessões fica nos ramos (`claude/f81-…`, `claude/f81-copy-volume-research`, `claude/f83-…`, `claude/f85-…`, `fix/f80-uat-entry-page`, `claude/f86-…`, `claude/f45-batch-close-merged-features`), que o orquestrador junta. Também de hoje: o push foi feito por ele pelo terminal; a trava de comunicação deixou de pedir reescrita (pedido dele, mudado no harness, commit `c49bf25c8` de lá); a cópia do kernel foi atualizada (`8731582`).
+
+## [2026-11-21 11:30] review — começou a reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236)
+**Branch:** fix/f80-uat-entry-page
+Um agente que não implementou julga a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md` (por ora `verdict: running`).
+
+## [2026-11-21 11:29] session — a capa da banana marcada como feita (UAT-236)
+**Branch:** fix/f80-uat-entry-page
+A linha da capa da banana na lista de problemas do UAT passa a «fixed (42d4cad)»; faltam a reconferência visual e a publicação, com o orquestrador.
+
+## [2026-11-21 11:29] decision — a capa da banana na frente da caixa de discos da página de entrada (UAT-236)
+**Branch:** fix/f80-uat-entry-page
+Palavras do MJRP: «pode colocar a capa inicial com a do velvet underground & nico a capa da banana?» e «mas mantenha o king crimson so nao ser a primeira». Feito: «The Velvet Underground & Nico» (1967) é o primeiro disco do lado A e o King Crimson vem logo depois; nenhum disco saiu: as capas reais passam a 15 (lado A com 8, lado B com 7; as fictícias seguem 14). «Harvest» foi para o fundo do lado A, para cada faixa continuar puxando os mesmos discos. A busca pública do iTunes achou o álbum certo: a edição de 45 anos com as 11 faixas originais (https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613); a capa vem do servidor de imagens da Apple, como as outras. A caixa em 3D cabe inteira com 15 (o teste do enquadramento roda com 14 e 15); no celular a legenda cabe na largura, mas o nome longo quebra em três linhas ao lado do botão. Antes: o conserto da caixa em diagonal com palco largo (UAT-235) ficou em `d88b0cf`.
 
 ## [2026-11-21 11:12] session — kernel do harness atualizado (2026-11-10 → 2026-11-21)
 **Branch:** claude/kernel-refresh-2026-11-21
@@ -31,6 +47,10 @@ Fecho da pesquisa da régua do volume de texto (relatório `reports/research/202
 
 ### Key Data
 - Ramo `claude/f81-copy-volume-research`; pesquisa em `10b5dad`; save anterior em `c0b9027`.
+
+## [2026-11-21 11:03] decision — a caixa de discos da página de entrada em diagonal, com o palco largo (UAT-235)
+**Branch:** fix/f80-uat-entry-page
+Palavras do MJRP: «escolha: 2- palco largo». Feito: a câmera do 3D vê a caixa a 30° do lado e se ajusta ao quadro, de modo que a caixa fica inteira em todas as poses (antes passava da borda na virada); no computador o palco vai até a borda direita da janela; a caixa em CSS (sem WebGL ou com menos movimento) gira para o mesmo lado, pela metade do ângulo, porque sem laterais os discos inclinados saíam da frente; no celular nada muda. Teste da regra escrito antes (vermelho na câmera de hoje). Prova: `reports/evidence/F80/uat/2026-11-21-uat-235-crate-diagonal-proof.md`.
 
 ## [2026-11-21 11:01] decision — F86 (o design system do site, como artefato) em esboço, com a S-68; «copy deck» é o nome dele para o artefato de revisão dos textos
 **Branch:** main
@@ -72,6 +92,19 @@ Pedido do orquestrador (o MJRP disse sim). Gerada por `design/proposals/copy-rev
 ## [2026-11-21 10:52] session — pesquisa: uma régua para o volume de texto por tela, no computador e no telefone
 **Branch:** claude/f81-copy-volume-research
 A pedido do orquestrador do harness, a partir das palavras do MJRP («o copy … está bem verbose … tanto para web qto para mobile»). O relatório está em `reports/research/2026-11-21-copy-volume-ruler.md`. Ele traz as fontes primárias abertas com data, a medida de Spotify, Bandcamp e Linear a 1280 e a 390 px, a régua por tipo de elemento e por tela, o V0 contra a régua e uma proposta de disciplina nova no cânone (CV-01 a CV-07, só proposta). O script de medida e as medidas brutas estão ao lado. No V0, a primeira tela está na faixa dos produtos medidos (84 e 64 palavras). O excesso está no topo (título e subtítulo, 52 palavras) e no número de textos por tela (Inventário, 231). Também mediu os três comparadores publicados (Home, página de entrada, Inventário). A primeira tela deles tem 179, 359 e 106 palavras no computador; os tetos de tela de trabalho são 100 no computador e 50 no telefone. O ramo é da F81, por decisão do orquestrador. Nada do cânone, das skills ou do site foi editado.
+
+## [2026-11-21 10:48] session — o comparador da página de entrada sem siglas
+**Branch:** fix/f80-uat-entry-page
+O MJRP: «e a questao de sigla, nao me ajuda Uat-235???». Tirei os códigos dos títulos e botões do comparador: a primeira tela não tem nenhum; o aviso das rodadas anteriores diz «A caixa de discos em diagonal, sem corte» e o botão «Ver as prévias da caixa em diagonal»; a página das prévias se chama «A caixa em diagonal».
+
+## [2026-11-21 10:47] session — o comparador da F80 abre na decisão da caixa de discos
+**Branch:** fix/f80-uat-entry-page
+O MJRP abriu o comparador e disse: «abri o artefato agora e nao sei o que eu faço e olho, com tanta info na tela». A página de entrada do comparador (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e) agora abre só na decisão em mãos: «A caixa de discos: qual vista?», a página de hoje e as três vistas lado a lado (janela de 1920 px, onde o corte de hoje aparece), cada uma com um nome curto e uma linha, a recomendada marcada, e um seletor do momento da rolagem (a virada, a abertura, um disco puxado, o lado B). Tudo o que estava antes (rodada 2, peso e risco, o fogo, as versões antigas, o celular) foi para `rodadas-anteriores.html`, intacto, atrás de um link no pé. Palavras visíveis sem rolar, numa janela de 1440 × 900: antes 414, depois 61.
+
+## [2026-11-21 10:23] session — UAT-235: o diagnóstico da caixa chapada e cortada, e três prévias no comparador
+**Branch:** fix/f80-uat-entry-page
+Diagnóstico: a câmera do 3D (`public/splash/crate3d.js`) é fixa, de frente, no eixo comprido da caixa, com 30° de campo vertical, e nunca se ajusta ao quadro. O quadro é a coluna do palco: ~690 px de largura em 1280, 1440 e 1920 (a página para em 1280), mas a altura cresce com a janela (604, 704, 884 px), então o campo horizontal encolhe. De frente a caixa parece chapada; o único momento em diagonal é a virada («Flip the record»), quando a caixa (4,3 de comprimento) gira de lado e passa da borda: medido, os cantos chegam a 106% do quadro em 1024, 108% em 1920 e 153% em 900. Entre 900 e 1280 a coluna vai de ~330 a ~700 px e o corte piora quanto mais estreita.
+Três prévias no mesmo eixo (de que ângulo se vê a caixa e quanto espaço ela ganha), tiradas da página real com as capas do ar e publicadas no comparador (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e, página `uat-235.html`; as versões que ele já viu ficaram intactas): 1, três-quartos (30°) inteira no quadro; 2, o mesmo com o palco até a borda direita da janela; 3, ângulo forte (42°) com o disco puxado virando de frente. Nas três a câmera se ajusta ao quadro para todos os cantos caberem em todas as poses. Gerador em `design/proposals/f80-splash/uat-235/`. A página no ar não muda até a escolha dele.
 
 ## [2026-11-21 10:17] session — F81: fechamento depois do acerto com o deck do MJRPpersonal
 Branch: claude/f81-site-in-more-than-one-language
