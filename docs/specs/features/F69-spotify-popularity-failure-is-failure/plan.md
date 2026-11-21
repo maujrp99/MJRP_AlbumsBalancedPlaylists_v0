@@ -83,6 +83,15 @@ Nenhuma.
 <!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
 `AGENTS.md`, `MEMORY.md` (`## Now`), `docs/specs/arch.md` («Carga da tela de álbuns»; a proposta da F52, seções 11 e 12; F56; F58), `docs/specs/behavior.md`, `docs/specs/uat.md` (UAT-206, UAT-28), `docs/decisions/0019-one-owner-for-the-album-load.md`, `server/lib/outcome.js`, `docs/manual/06`, `08`, `17`, `32`.
 
+Declarações do passo retroativo da via rápida (conferidas nos commits que citam a F69, em 2026-11-21):
+- `docs/specs/constitution.md` — sem mudança (nenhum commit que cita a F69 toca o arquivo)
+- `docs/specs/arch.md` — atualizado (commits que citam a F69 e tocam o arquivo: `1eb1977`)
+- `docs/specs/data-model.md` — sem mudança (nenhum commit que cita a F69 toca o arquivo)
+- `docs/specs/tech-stack.md` — sem mudança (nenhum commit que cita a F69 toca o arquivo)
+- `docs/specs/design-system.md` — sem mudança (nenhum commit que cita a F69 toca o arquivo)
+- `docs/specs/behavior.md` — atualizado (commits que citam a F69 e tocam o arquivo: `1eb1977`)
+- `docs/wiki/` — sem mudança (nenhum commit que cita a F69 toca uma página da wiki do projeto)
+
 ## Risks & Considerations
 - **Mais chamadas ao Spotify depois de 1 hora.** Antes, com o acesso vencido, ninguém perguntava; agora a carga pergunta (até 6 álbuns ao mesmo tempo, 3 a 5 chamadas por álbum). O 429 é tratado (espera curta segura, longa falha), e o Spotify não é perguntado antes da hora que deu. O limite real do Spotify não foi medido.
 - **Uma espera do Spotify é uma espera da carga inteira para quem lê.** Enquanto dura (até 30 s), o blend não espera por nenhuma fonte, as notas incluídas, e diz «not waited for: the server paused the load». É a regra da espera de hoje; o texto fala em «servidor» e aqui é o Spotify.
