@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:22] session — conform: `process-sensors` registrado (CM-0107, CM-0121, CM-0129, CM-0135, CM-0140)
+**Branch:** wip/kernel-conform-2026-11-21
+Declarados em `sensors:` do contrato os quatro sensores do processo que passam hoje (`pdlc_vocabulary`, `sdd_shape`, `requirements_graph_check`, `hooks_map`); os quatro saíram com exit 0. Ficam pendentes as 8 notas seguintes (CM-0144 a CM-0157), que pedem também `sensors.board_states`: o juiz acha 54 features sem registro no board, e o conserto é `board_move.py seed`, que grava em `<checkout principal>/.mjrp/board.jsonl` (fora do git e fora deste ramo). Não rodei o seed daqui: é do orquestrador, no checkout principal; depois dele se declara `board_states` e se registram as 8 notas. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:21] session — conform: `type:` de 8 relatórios acertado (report-names)
 **Branch:** wip/kernel-conform-2026-11-21
 Pelo cabeçalho e pelo tema de cada um: `type: research` em 7 (o benchmark de UX do celular e a checagem dele, a análise da carga de álbuns, o estudo de viabilidade do produto público, a viabilidade do preço de CDs, a análise do framework do site e a régua do volume de texto) e `content-audit` no levantamento dos textos do site (F81). Seguem sem tipo da lista 8 relatórios (regressão no navegador, cruzamento dos relatórios com o plano da v5, triagem das issues abertas, varredura das fontes das notas, mapa da v5, e-mails de contato, a atualização do kernel e a limpeza dos worktrees): a regra manda perguntar ao MJRP, porque tipo novo entra na lista do harness. Decidido pelo agente, revisável pelo MJRP.
