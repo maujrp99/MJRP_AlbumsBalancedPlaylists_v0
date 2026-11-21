@@ -63,4 +63,47 @@ describe('the preview deploy script', () => {
     it('has an npm script', () => {
         expect(JSON.parse(read('package.json')).scripts['deploy:preview']).toBe('./scripts/deploy-preview.sh')
     })
+
+    it('accepts --branch and says so in the usage header', () => {
+        const run = spawnSync('bash', [scriptPath, '--help'], { encoding: 'utf8' })
+        expect(run.stdout).toMatch(/--branch <branch>/)
+        expect(code()).toMatch(/--branch\)/)
+    })
+
+    it('refuses a branch that does not exist locally, with a plain message', () => {
+        const run = spawnSync('bash', [scriptPath, '--branch', 'no-such-branch-f87-xyz'], { encoding: 'utf8' })
+        expect(run.status).not.toBe(0)
+        expect(run.stderr).toMatch(/no local branch named 'no-such-branch-f87-xyz'/)
+    })
+
+    it('refuses --branch without a name', () => {
+        const run = spawnSync('bash', [scriptPath, '--branch'], { encoding: 'utf8' })
+        expect(run.status).not.toBe(0)
+        expect(run.stderr).toMatch(/--branch needs a branch name/)
+    })
+
+    it('prints the branch and the commit at the start and at the end, with the channel', () => {
+        expect(code()).toMatch(/branch %s at commit %s/)
+        expect(code()).toMatch(/Preview published: branch %s, commit %s, channel %s/)
+    })
+
+    it('reads the .env the way it does today and never copies or prints it', () => {
+        expect(code()).toContain('find_env_file')
+        expect(code()).not.toMatch(/cp .*\.env|cat .*ENV_FILE/)
+    })
+})
+
+describe('production publishes only main', () => {
+    const siteScript = path.resolve(__dirname, '../../scripts/deploy-site.sh')
+
+    it('refuses deploy-site.sh --branch x', () => {
+        const run = spawnSync('bash', [siteScript, '--branch', 'x'], { encoding: 'utf8' })
+        expect(run.status).not.toBe(0)
+        expect(run.stderr).toMatch(/unknown argument: --branch/)
+    })
+
+    it('deploy-site.sh has no --branch option in its code', () => {
+        const body = read('scripts/deploy-site.sh').split('\n').filter(l => !/^\s*#/.test(l)).join('\n')
+        expect(body).not.toMatch(/--branch/)
+    })
 })
