@@ -101,7 +101,7 @@ function PlaylistCard({ playlist, index, batchName, actions }: { playlist: Playl
                     </h3>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-muted">
-                    <span className="flex items-center gap-1"><Icon name="Music" className="w-4 h-4" />{' '}{tracks.length}{' '}</span>
+                    <span className="flex items-center gap-1"><Icon name="Music" className="w-4 h-4" />{` ${tracks.length} `}</span>
                     <span className="font-mono">{total}</span>
                     <button
                         type="button"

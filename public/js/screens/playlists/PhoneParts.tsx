@@ -62,7 +62,7 @@ function Chips({ playlists, active, onShow }: Pick<PhoneListProps, 'playlists' |
             <div className="phone-pl-chips__row">
                 {playlists.map((playlist, index) => (
                     <button key={index} type="button" className={`phone-pl-chip${index === active ? ' is-current' : ''}`} data-phone-action="show-playlist" data-playlist-index={index} aria-pressed={index === active} onClick={() => onShow(index)}>
-                        <span className="phone-pl-chip__name">{index + 1} · {playlistNameOf(playlist, index)}</span>
+                        <span className="phone-pl-chip__name">{`${index + 1} · ${playlistNameOf(playlist, index)}`}</span>
                         <span className="phone-pl-chip__meta">{playlistSummary(playlist)}</span>
                     </button>
                 ))}
@@ -125,10 +125,10 @@ export function PhonePlaylists(props: PhoneListProps) {
 export function PhoneActionBar({ isSaving, onExport, onSave }: { isSaving: boolean; onExport: () => void; onSave: () => void }) {
     return (
         <div className="phone-action-bar phone-pl-bar md:hidden">
-            <button type="button" className="btn btn-secondary" data-phone-action="export" onClick={onExport}><Icon name="Share" className="w-5 h-5" />{' '}{t('playlists.phone.export')}</button>
+            <button type="button" className="btn btn-secondary" data-phone-action="export" onClick={onExport}><Icon name="Share" className="w-5 h-5" />{` ${t('playlists.phone.export')}`}</button>
             {isSaving
-                ? <button type="button" className="btn btn-primary" data-phone-action="save" disabled aria-busy="true"><Icon name="Loader" className="w-5 h-5 animate-spin" />{' '}{t('playlists.phone.saving')}</button>
-                : <button type="button" className="btn btn-primary" data-phone-action="save" onClick={onSave}><Icon name="Cloud" className="w-5 h-5" />{' '}{t('playlists.phone.save')}</button>}
+                ? <button type="button" className="btn btn-primary" data-phone-action="save" disabled aria-busy="true"><Icon name="Loader" className="w-5 h-5 animate-spin" />{` ${t('playlists.phone.saving')}`}</button>
+                : <button type="button" className="btn btn-primary" data-phone-action="save" onClick={onSave}><Icon name="Cloud" className="w-5 h-5" />{` ${t('playlists.phone.save')}`}</button>}
         </div>
     )
 }
@@ -277,7 +277,7 @@ function AppleRow() {
         <button type="button" className="phone-sheet-action" disabled={status !== null} onClick={() => { void exportToAppleMusic(setStatus) }}>
             {status === null
                 ? <><Icon name="Apple" className="phone-sheet-action__icon" /><span>{t('playlists.actions.apple')}</span></>
-                : <><Icon name="Apple" className="w-5 h-5" />{' '}{status}</>}
+                : <><Icon name="Apple" className="w-5 h-5" />{` ${status}`}</>}
         </button>
     )
 }

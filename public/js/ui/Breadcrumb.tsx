@@ -34,8 +34,10 @@ export function Breadcrumb({ crumbs, onNavigate }: { crumbs: Crumb[]; onNavigate
                                 className="breadcrumb-link"
                                 data-path={crumb.path}
                                 onClick={(event) => { event.preventDefault(); onNavigate(crumb.path) }}
-                            > {crumb.label} </a>
+                            >{` ${crumb.label} `}</a>
+                            {' '}
                             <span className="breadcrumb-separator">›</span>
+                            {' '}
                         </Fragment>
                     )
             ))}

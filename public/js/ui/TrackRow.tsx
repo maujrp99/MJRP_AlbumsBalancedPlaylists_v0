@@ -64,7 +64,7 @@ function Position({ index, ranking }: { index: number; ranking: boolean }) {
 
 function UserBadge({ track }: { track: RowTrack }) {
     if (!isRank(track.userRank)) return null
-    return <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-sky-500 text-white text-[10px] font-bold" title={t('ui.trackRow.yourRank')}>#{track.userRank}</span>
+    return <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-sky-500 text-white text-[10px] font-bold" title={t('ui.trackRow.yourRank')}>{`#${track.userRank}`}</span>
 }
 
 function AcclaimBadge({ track }: { track: RowTrack }) {
@@ -75,8 +75,8 @@ function AcclaimBadge({ track }: { track: RowTrack }) {
     if (!hasRank && !hasRating) return null
     return (
         <span className="flex items-center gap-1">
-            {hasRank && <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20" title={t('ui.trackRow.acclaimRank')}>#{rank}</span>}
-            {hasRating && <span className="flex items-center gap-0.5 text-[10px] font-bold text-brand-orange" title={t('ui.trackRow.acclaimRating')}>★{rating}</span>}
+            {hasRank && <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-orange/10 text-brand-orange text-[10px] font-bold border border-brand-orange/20" title={t('ui.trackRow.acclaimRank')}>{`#${rank}`}</span>}
+            {hasRating && <span className="flex items-center gap-0.5 text-[10px] font-bold text-brand-orange" title={t('ui.trackRow.acclaimRating')}>{`★${rating}`}</span>}
         </span>
     )
 }
@@ -84,10 +84,10 @@ function AcclaimBadge({ track }: { track: RowTrack }) {
 function SpotifyBadge({ track }: { track: RowTrack }) {
     const popularity = track.spotifyPopularity
     if (isRank(track.spotifyRank)) {
-        return <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-[10px] font-bold border border-[#1DB954]/20" title={t('ui.trackRow.spotifyRank')}>#{track.spotifyRank}</span>
+        return <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-[10px] font-bold border border-[#1DB954]/20" title={t('ui.trackRow.spotifyRank')}>{`#${track.spotifyRank}`}</span>
     }
     if (popularity != null && popularity > -1) {
-        return <span className="text-[10px] font-bold text-[#1DB954]" title={t('ui.trackRow.spotifyPopularity')}>{popularity}%</span>
+        return <span className="text-[10px] font-bold text-[#1DB954]" title={t('ui.trackRow.spotifyPopularity')}>{`${popularity}%`}</span>
     }
     return null
 }

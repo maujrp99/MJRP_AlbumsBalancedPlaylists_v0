@@ -69,12 +69,12 @@ describe('formatStatus and the command', () => {
         expect(text).toMatch(/texts outside the dictionary\s+4/)
     })
 
-    it('runs over the real site and says the migration has not begun: no React screen yet in the count of screens, a hand-made list of 100', () => {
+    it('runs over the real site: a hand-made list that is still long (it shrinks with each wave: 94 files after wave 1, 83 after wave 2) and no more files than the list of the day it began', () => {
         const run = spawnSync('node', ['scripts/migration-status.mjs', '--json'], { cwd: process.cwd(), encoding: 'utf8' })
         expect(run.status, run.stderr).toBe(0)
         const status = JSON.parse(run.stdout)
-        expect(status.handMade.files).toBeGreaterThan(90)
-        expect(status.handMade.baselineFiles).toBeGreaterThan(90)
+        expect(status.handMade.files).toBeGreaterThan(40)
+        expect(status.handMade.baselineFiles).toBeGreaterThan(40)
         expect(status.handMade.files).toBeLessThanOrEqual(status.handMade.baselineFiles)
         expect(status.texts.handMade).toBeGreaterThan(500)
     })

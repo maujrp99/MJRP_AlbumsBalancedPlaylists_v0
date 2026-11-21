@@ -61,7 +61,7 @@ const HISTORY_BUTTON = 'btn btn-secondary flex items-center gap-2 disabled:opaci
 function HistoryButton({ action, icon, text, label, enabled, onTap }: { action: string; icon: string; text: string; label: string; enabled: boolean; onTap: () => void }) {
     return (
         <button className={HISTORY_BUTTON} data-action={action} aria-label={label} title={label} disabled={!enabled} onClick={onTap}>
-            {' '}<Icon name={icon} className="w-5 h-5" />{' '}{text}{' '}
+            {' '}<Icon name={icon} className="w-5 h-5" />{` ${text} `}
         </button>
     )
 }
@@ -81,24 +81,24 @@ interface ExportProps {
 function ExportSection({ isSaving, canUndo, canRedo, appleStatus, onUndo, onRedo, onSave, onApple }: ExportProps) {
     return (
         <div className="export-section glass-panel p-6">
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Icon name="Save" className="w-5 h-5" />{' '}{t('playlists.actions.heading')}{' '}</h3>
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Icon name="Save" className="w-5 h-5" />{` ${t('playlists.actions.heading')} `}</h3>
             <div className="export-actions flex flex-wrap gap-4">
                 <HistoryButton action="undo-edit" icon="Undo" text={t('playlists.history.undo')} label={t('playlists.history.undoLabel')} enabled={canUndo} onTap={onUndo} />
                 <HistoryButton action="redo-edit" icon="Redo" text={t('playlists.history.redo')} label={t('playlists.history.redoLabel')} enabled={canRedo} onTap={onRedo} />
                 <div className="h-auto w-px bg-white/10 mx-2" />
                 {isSaving
-                    ? <button className="btn btn-success flex items-center gap-2" id="saveToHistoryBtn" disabled aria-busy="true">{' '}<Icon name="Loader" className="w-4 h-4 animate-spin" />{' '}{t('playlists.actions.saving')}{' '}</button>
-                    : <button className="btn btn-success flex items-center gap-2" id="saveToHistoryBtn" onClick={onSave}>{' '}<Icon name="Cloud" className="w-5 h-5" />{' '}{t('playlists.actions.save')}{' '}</button>}
+                    ? <button className="btn btn-success flex items-center gap-2" id="saveToHistoryBtn" disabled aria-busy="true">{' '}<Icon name="Loader" className="w-4 h-4 animate-spin" />{` ${t('playlists.actions.saving')} `}</button>
+                    : <button className="btn btn-success flex items-center gap-2" id="saveToHistoryBtn" onClick={onSave}>{' '}<Icon name="Cloud" className="w-5 h-5" />{` ${t('playlists.actions.save')} `}</button>}
                 <div className="h-auto w-px bg-white/10 mx-2" />
                 <button className="btn flex items-center gap-2 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all duration-300" style={{ background: 'linear-gradient(135deg, #1DB954 0%, #1ed760 100%)' }} id="exportSpotifyBtn" onClick={() => { void openSpotifyExport() }}>
-                    {' '}<Icon name="Spotify" className="w-5 h-5" />{' '}{t('playlists.actions.spotify')}{' '}
+                    {' '}<Icon name="Spotify" className="w-5 h-5" />{` ${t('playlists.actions.spotify')} `}
                 </button>
                 <button className="btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300" id="exportAppleMusicBtn" disabled={appleStatus !== null} onClick={onApple}>
                     {appleStatus === null
-                        ? <>{' '}<Icon name="Apple" className="w-5 h-5" />{' '}{t('playlists.actions.apple')}{' '}</>
-                        : <><Icon name="Apple" className="w-5 h-5" />{' '}{appleStatus}</>}
+                        ? <>{' '}<Icon name="Apple" className="w-5 h-5" />{` ${t('playlists.actions.apple')} `}</>
+                        : <><Icon name="Apple" className="w-5 h-5" />{` ${appleStatus}`}</>}
                 </button>
-                <button className="btn btn-secondary flex items-center gap-2" id="exportJsonBtn" onClick={() => { void exportJson() }}>{' '}<Icon name="Download" className="w-5 h-5" />{' '}{t('playlists.actions.json')}{' '}</button>
+                <button className="btn btn-secondary flex items-center gap-2" id="exportJsonBtn" onClick={() => { void exportJson() }}>{' '}<Icon name="Download" className="w-5 h-5" />{` ${t('playlists.actions.json')} `}</button>
             </div>
         </div>
     )
@@ -110,7 +110,7 @@ function Header({ editing, editedName, onNavigate }: { editing: boolean; editedN
             <Breadcrumb crumbs={playlistsTrail(editing)} onNavigate={onNavigate} />
             <div className="header-content mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                 <h1 className="text-2xl md:text-4xl font-bold flex items-center gap-3">
-                    <Icon name={editing ? 'Edit' : 'Music'} className="w-8 h-8" />{' '}{t(editing ? 'playlists.title.edit' : 'playlists.title.manage')}{' '}
+                    <Icon name={editing ? 'Edit' : 'Music'} className="w-8 h-8" />{` ${t(editing ? 'playlists.title.edit' : 'playlists.title.manage')} `}
                 </h1>
                 <div className="header-actions flex flex-wrap items-center gap-4 w-full md:w-auto">
                     {editing && editedName ? <span className="badge badge-success px-3 py-1 rounded-full text-sm">{t('playlists.badge.editing', { name: editedName })}</span> : null}
@@ -141,7 +141,7 @@ function NotFound({ name }: { name: string }) {
 function EmptyState() {
     return (
         <div className="glass-panel max-w-2xl mx-auto text-center p-8 mb-6" data-playlists-empty="">
-            <h3 className="text-lg font-bold mb-2 flex items-center justify-center gap-2"><Icon name="Music" className="w-5 h-5" />{' '}{t('playlists.empty.title')}</h3>
+            <h3 className="text-lg font-bold mb-2 flex items-center justify-center gap-2"><Icon name="Music" className="w-5 h-5" />{` ${t('playlists.empty.title')}`}</h3>
             <p className="text-muted mb-6">{t('playlists.empty.body')}</p>
             <a href="/blend" data-link="" className="btn btn-primary">{t('playlists.empty.go')}</a>
         </div>
