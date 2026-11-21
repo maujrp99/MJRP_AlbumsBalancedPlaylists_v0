@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 20:22] step — UAT-267 registrada como consertada pelo agente (F75: ad88323)
+**Branch:** fix/f75-clear-cache-keeps-the-inventory-values
+A linha da UAT-267 passa de `open` a `fixed (F75: ad88323)`, como a UAT-266; o aceite é do MJRP.
+
 ## [2026-11-21 20:22] step — «Clear Cache» deixa os valores lidos do Discogs (F75, UAT-267)
 **Branch:** fix/f75-clear-cache-keeps-the-inventory-values
 O botão apagava o IndexedDB inteiro e levava junto as leituras de valor e o câmbio. Agora apaga por nome (`ALBUM_CACHE_KEY_PREFIXES`: `albumload:`, `userRanking:`, `spotify_enrichment:`, `artifacts/`) por `CacheManager.clearPrefixes`; ficam `inventoryvalue:` e `exchangerates:` (vencem sozinhos) e qualquer armazém futuro não nomeado. `behavior.md` (^app-clear-cache) diz o que apaga e o que guarda. Conferência em Chromium real: 15 de 15 (valor lido, Clear Cache, recarregar: o valor segue e não há aviso de espera; os caches de álbuns somem). Nenhum texto visível mudou.
