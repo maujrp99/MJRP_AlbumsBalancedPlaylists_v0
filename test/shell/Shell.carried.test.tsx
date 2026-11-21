@@ -456,6 +456,18 @@ describe('the shell of the phone', () => {
         expect(toTop().hidden).toBe(false)
     })
 
+    it('«back to top» goes to the top and lets go of the focus first (React would put the scroll back when the button hides itself on the way up)', async () => {
+        const s = await on('/albums', { phone: true })
+        await s.act(async () => { (window as { scrollY: number }).scrollY = 2000; window.dispatchEvent(new Event('scroll')); await flush() })
+        $('.phone-to-top').focus()
+        expect(document.activeElement).toBe($('.phone-to-top'))
+
+        await tap(s, $('.phone-to-top'))
+
+        expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: expect.any(String) })
+        expect(document.activeElement).toBe(document.body)
+    })
+
     it('a screen can name itself in the top bar, until the next screen', async () => {
         const s = await on('/albums', { phone: true })
 

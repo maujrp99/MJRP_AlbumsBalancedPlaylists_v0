@@ -423,6 +423,11 @@ Nenhuma peça é redesenhada: o mesmo HTML, as mesmas classes e as mesmas folhas
 | `components/ui/TrackRow.js` | `ui/TrackRow.tsx` | 2 | porte único: as telas das playlists guardadas e das playlists o usam; mesmo HTML e mesmas classes (a prova é a página das duas telas), os rótulos dos selos vêm do dicionário (`ui.trackRow.*`); o invólucro `TrackRows` saiu |
 | `components/Breadcrumb.js` | `ui/Breadcrumb.tsx` | 2 | a trilha da tela das playlists; a antiga fica para as telas de séries e de inventário até elas migrarem (ondas 5 e 6) |
 | `components/playlists/RegeneratePanel.js` | **ainda a antiga**, por `react-bridge/legacy/RegeneratePanel.tsx` | 7 | o controlador da Blend também a usa; reescrita junto com a Blend |
+| `components/TopNav.js`, `navigation/SeriesDropdown.js`, `navigation/AuthNav.js` | `shell/TopNav.tsx`, `SeriesDropdown.tsx`, `Account.tsx` | 3 | a barra do topo do computador e a gaveta da tela média: mesmo HTML e mesmas classes (a prova é a página de cada estado contra a antiga, `test/shell/Shell.sameAsBefore.test.tsx`); a barra segue o endereço e o chevron da gaveta gira (a antiga girava a nota): únicas diferenças |
+| `components/Footer.js` | `shell/Footer.tsx` | 3 | o rodapé; a frase do Discogs liga e desliga por `stores/discogsNotice.js` |
+| `components/SpotifyConnectButton.js` | `shell/SpotifyConnect.tsx` | 3 | os três botões (barra, gaveta, menu do celular), cada um com o seu estado |
+| `components/navigation/PhoneShell.js`, `PhoneMenu.js`, `phoneTabs.js` | `shell/PhoneShell.tsx`, `PhoneMenu.tsx`, `phoneTabs.ts` | 3 | a moldura do celular escreve no `body` por um portal; o menu e a pergunta de limpar o cache são `ui/SheetWindow` (que ganhou `id` e rodapé) |
+| `components/LoginModal.js` | `shell/LoginWindow.tsx` | 3 | a janela de entrar, aberta por `stores/loginWindow.js` (qualquer tela chama `openLoginWindow()`) |
 
 ## Arquivo
 

@@ -57,4 +57,12 @@ Celular (393): sem conta e com conta; cada aba atual; o nome dado por uma tela e
 
 ## Onde parou (atualizado ao fim da onda)
 
-(a preencher)
+A onda 3 foi construída inteira (TASK-18 e TASK-19; a reconferência visual, TASK-32, é de quem não construiu). O que saiu diferente do mapa:
+
+- **Duas diferenças de comportamento, de propósito, reveláveis:** a barra do computador segue o endereço (a antiga não seguia); a gaveta da tela média gira o chevron de «Music Series» (a antiga, por um `svg:last-of-type` que acha o primeiro ícone do botão, girava a nota). Cada uma tem seu teste; o resto da página é comparado letra a letra.
+- **Uma coisa que a antiga não precisava e a nova precisa:** o React, quando um desenho tira o foco de um elemento, põe de volta a rolagem da página no valor daquele instante, o que **parava a rolagem suave do «voltar ao topo»** no meio quando o botão se escondia no caminho (visto no navegador, com um toque de verdade: parava em 1.409 px). O botão agora solta o foco antes de rolar; `Shell.carried.test.tsx` e o navegador cobrem. Vale para as ondas seguintes: um controle que se esconde sozinho durante uma rolagem suave.
+- **Um defeito da antiga mantido de propósito:** depois de um erro ao entrar, o botão que foi tocado volta sem a sombra de passar o mouse (a antiga refazia o conteúdo do botão sem a caixa `absolute inset-0`); a nova faz igual.
+- **Defeito da antiga NÃO mexido, fora do escopo:** o fundo da gaveta da tela média (`#mobileMenuOverlay`) tem o tamanho da barra e não da tela (a barra tem `backdrop-filter`, que vira a caixa de referência do `fixed`), então tocar ao lado da gaveta não a fecha, nas duas.
+- **A janela de entrar já não se abre duas vezes** (a antiga empilhava uma por chamada; a nova é uma janela só).
+- O seletor de idioma não foi construído (é da F81); o lugar está dito acima.
+- `react-vendor` na abertura: `reactAtStart` verdadeiro; o script principal cresceu 4.147 B (294.753 B contra 290.606 B) e o primeiro carregamento ganhou os 68.691 B do React: ver `reports/evidence/F83/wave-3/bundle-budget-wave-3.txt` e `first-load` na mesma pasta.

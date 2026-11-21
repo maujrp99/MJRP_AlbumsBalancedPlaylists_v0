@@ -34,6 +34,16 @@ const toTop = (): void => {
     window.scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' })
 }
 
+/**
+ * «Back to top». The tapped button lets go of the focus first: the button hides itself on the way up (below two screens of scroll), and React,
+ * when a commit takes the focus from an element, puts the scroll of the page back where it was at that moment, which stops a smooth scroll
+ * half way. With the focus on nothing there is nothing for React to restore, and the page goes all the way up, as it did.
+ */
+function backToTop(event: ReactMouseEvent<HTMLButtonElement>): void {
+    event.currentTarget.blur()
+    toTop()
+}
+
 function TopBarContent({ path, user, named, openMenu }: { path: string; user: ShellUser | null; named: string | null; openMenu: () => void }) {
     return (
         <>
@@ -122,7 +132,7 @@ function PhoneParts() {
                     </nav>
                 </Fragment>
             </div>
-            <button type="button" className="phone-to-top" hidden={!isFar} aria-label={t('shell.phone.backToTop')} onClick={toTop}>
+            <button type="button" className="phone-to-top" hidden={!isFar} aria-label={t('shell.phone.backToTop')} onClick={backToTop}>
                 <Icon name="ArrowUp" className="phone-to-top__icon" />
             </button>
         </>
