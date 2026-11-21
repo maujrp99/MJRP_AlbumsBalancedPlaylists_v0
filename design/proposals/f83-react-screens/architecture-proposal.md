@@ -617,54 +617,54 @@ Higiene: os dois números errados foram acertados (14 chamadas `toLocale…`; 28
 
 ## Decisões do MJRP
 
-Cada pergunta é uma só; a recomendação é opinião do agente que escreveu. A aceitação da ADR-0023 não está nesta lista: é uma válvula dele (o commit dele com o carimbo). A crítica deixa com ele também o **quando** aceitar: agora, sabendo o que ficou aberto (seção 17), ou depois da onda 0 provar a ponte e o ícone.
+Oito perguntas, uma de cada vez. Em cada opção: o que você ganha e o que custa. A recomendação é opinião do agente que escreveu; a análise está no corpo da proposta, para quem quiser ler. Aceitar o registro da decisão (a ADR-0023) não está nesta lista: é um commit seu, e você pode fazê-lo agora ou depois de a primeira etapa provar as duas peças ainda não medidas (seção 17).
 
-**D-1. Em que ritmo a migração anda?**
-- a) Esforço dedicado: as ondas em sequência até o fim, com uma revisão sua depois da onda 2, quando houver duas telas medidas (uma fácil, uma difícil) e antes de a moldura migrar.
-- b) Só quando a tela for mexida por outro motivo.
-- c) Dedicado só até a onda 2; o resto você decide com o número na mão.
-- *Recomendação (opinião): a.* É o que você disse querer, e é o que tira o risco de o site ficar anos com dois estilos e meio traduzido. A revisão da onda 2 já lhe dá a saída da opção c.
+**D-1. Em que ritmo as telas passam para o React?**
+- a) Todas em sequência, até o fim, com uma parada para você rever depois de duas telas medidas. *Ganha:* o site fica poucas semanas com dois jeitos de fazer tela. *Custa:* menos função nova enquanto durar.
+- b) Só quando uma tela for mexida por outro motivo. *Ganha:* nenhuma parada. *Custa:* o site pode ficar anos pela metade.
+- c) Em sequência só até a parada; o resto você decide lá. *Ganha:* compromisso menor agora. *Custa:* nada além da opção a, que já tem a mesma parada.
+- **Recomendação: a.** É o que você disse querer, e a parada já lhe dá a saída.
 
-**D-2. Você aceita emendar a constituição para o site usar React e falar dois idiomas?**
-- a) Sim, as duas emendas juntas, com a ADR-0023: React e TypeScript nas telas do site; «a interface fala inglês» vira «todo texto visível vem do dicionário, em inglês e português do Brasil».
-- b) Só a do React agora; a dos idiomas numa emenda própria, quando a F81 for aprovada.
-- c) Não por enquanto.
-- *Recomendação (opinião): a.* As duas mudanças andam juntas, tela a tela; separar as emendas deixaria o primeiro texto em português descumprindo a constituição.
+**D-2. Você aceita mudar as regras do projeto (a constituição) para o site usar React e falar dois idiomas?**
+- a) Sim, as duas mudanças juntas. *Ganha:* o primeiro texto em português já nasce dentro da regra. *Custa:* uma leitura só, maior.
+- b) Só a do React agora; a dos idiomas depois. *Ganha:* decide menos de cada vez. *Custa:* o português fica fora da regra até a segunda mudança.
+- c) Ainda não. *Ganha:* tempo para pensar. *Custa:* nada começa.
+- **Recomendação: a.** As duas andam juntas, tela a tela.
 
-**D-3. Os endereços do site mudam por idioma?**
-- a) Só na página de entrada: `/en/` e `/pt/` (é o que os buscadores leem). Dentro do app o endereço é o mesmo nos dois idiomas (`/albums`).
-- b) Em tudo: `/en/albums`, `/pt/albums`.
-- c) Em nada: só a raiz, que muda conforme o país.
-- *Recomendação (opinião): a.* O app fica atrás do login e ninguém o acha por buscador; prefixo em tudo mexeria no retorno do Spotify, nas rotas da F85 e em todo link guardado, sem ganho. Sem endereço nenhum por idioma (c), o Google veria quase sempre só o inglês.
+**D-3. O endereço das páginas muda conforme o idioma?**
+- a) Só na página de entrada (`/en/` e `/pt/`); dentro do app, o mesmo endereço nos dois idiomas. *Ganha:* o Google acha o site em português; nenhum link guardado quebra. *Custa:* o idioma do app não aparece no endereço.
+- b) Em tudo (`/pt/albums`). *Ganha:* um link já diz o idioma. *Custa:* mexe na volta do Spotify e em todo link guardado.
+- c) Em nada. *Ganha:* nenhuma mudança. *Custa:* o Google vê quase sempre só o inglês.
+- **Recomendação: a.**
 
-**D-4. Onde fica guardada a escolha de idioma de quem tem conta?**
-- a) No aparelho desde já, e também na conta assim que você publicar a regra nova do Firestore (`users/{uid}/preferences`).
-- b) Só no aparelho: cada navegador lembra o seu.
-- c) Na conta, num caminho que as regras de hoje já permitem (dentro de `curator`), sem publicar regra nova.
-- *Recomendação (opinião): a.* É o que foi lido da sua decisão («com conta, na conta») e não depende de você publicar nada para começar. A opção c funciona, mas guarda uma preferência numa pasta que é de outra coisa.
+**D-4. Onde fica guardado o idioma que a pessoa escolheu, quando ela tem conta?**
+- a) No aparelho desde já, e na conta quando você publicar uma regra nova de acesso ao banco de dados. *Ganha:* a escolha acompanha a pessoa em todo aparelho. *Custa:* uma publicação sua.
+- b) Só no aparelho. *Ganha:* nada a publicar. *Custa:* cada navegador pergunta de novo.
+- c) Na conta, numa pasta do banco que já é permitida. *Ganha:* nada a publicar. *Custa:* a preferência mora numa pasta feita para outra coisa.
+- **Recomendação: a.** É o que foi lido da sua decisão, e começa a valer sem esperar por você.
 
 **D-5. Quando o site não consegue saber o país, que idioma ele abre?**
-- a) Inglês, sempre (é o padrão de hoje).
-- b) O idioma do navegador da pessoa: português se o navegador estiver em português, senão inglês.
-- *Recomendação (opinião): b.* Só vale quando o país não é sabido, então não muda o que você decidiu. E pesa mais do que parece: se o teste do Firebase Hosting falhar e a resposta for a), nenhum brasileiro abre o site em português na primeira visita.
+- a) Inglês, sempre. *Ganha:* a regra mais simples. *Custa:* se a leitura do país falhar, nenhum brasileiro abre em português na primeira visita.
+- b) O idioma do navegador da pessoa. *Ganha:* acerta mesmo sem saber o país. *Custa:* uma regra a mais.
+- **Recomendação: b.** Só vale quando o país não é sabido; não muda o que você decidiu.
 
-**D-6. A página de entrada já sai em português junto com os idiomas (F81)?**
-- a) Sim: a página de entrada em inglês e em português desde a primeira publicação dos idiomas.
-- b) Depois: primeiro o app, a página de entrada numa segunda etapa.
-- *Recomendação (opinião): a.* É a única página que quem não tem conta vê, e a única que os buscadores leem.
+**D-6. A página de entrada sai em português junto com o resto?**
+- a) Sim, desde a primeira publicação dos idiomas. *Ganha:* quem não tem conta e o Google já veem português. *Custa:* mais uma página para conferir.
+- b) Depois, numa segunda etapa. *Ganha:* uma entrega menor. *Custa:* a porta do site fica em inglês.
+- **Recomendação: a.**
 
-**D-7. A ordem das telas é a da seção 15?**
-- a) Sim: base e canário; playlists guardadas; edição das playlists (a medição difícil, e a sua revisão); a moldura com o seletor de idioma; Start; séries e álbuns; inventário; Blend; fecho.
-- b) A moldura antes da medição difícil (o menu e a barra migram mais cedo; a revisão chega com eles já em React).
-- c) Start primeiro, por ser a primeira tela que se vê.
-- d) Outra ordem (você diz qual).
-- *Recomendação (opinião): a.* Medir a tela mais difícil antes de mexer no que está em toda tela é o que deixa parar barato, se o número for ruim; a Start acabou de ser aceita e ganha em esperar as peças prontas.
+**D-7. Em que ordem as telas passam para o React?**
+- a) Base; playlists guardadas; edição das playlists (a tela difícil, e a sua parada); o menu e a barra; Start; séries e álbuns; inventário; Blend. *Ganha:* o custo real aparece cedo, quando parar ainda é barato. *Custa:* a primeira tela que se vê só muda no meio.
+- b) O menu e a barra antes da tela difícil. *Ganha:* o seletor de idioma chega antes. *Custa:* a parada chega com o que está em toda tela já trocado.
+- c) Start primeiro. *Ganha:* a primeira tela que se vê muda logo. *Custa:* mexe numa tela que acabou de ser aceita, antes de as peças estarem prontas.
+- d) Outra ordem, que você diz.
+- **Recomendação: a.**
 
 **D-8. Quando o português abre para quem usa o site?**
-- a) De uma vez, quando tudo estiver pronto: a moldura, a página de entrada e todas as telas. Até lá o site é inglês para todos, e só você vê o português, para revisar.
-- b) Aos poucos, tela a tela: quem acessa do Brasil vê as telas já migradas em português e as outras em inglês.
-- c) Antes do fim: as telas antigas recebem os textos traduzidos sem migrar, e o português abre assim que a moldura e a página de entrada estiverem prontas.
-- *Recomendação (opinião): a.* Um produto público não deve misturar idiomas; e se a migração parar no meio, o site continua inteiro em inglês. A opção c abre mais cedo, ao custo de passar duas vezes por cada tela antiga.
+- a) De uma vez, com tudo pronto; até lá só você vê o português, para revisar. *Ganha:* o site nunca mistura idiomas, nem se o trabalho parar. *Custa:* o português demora mais a aparecer.
+- b) Aos poucos, tela a tela. *Ganha:* aparece cedo. *Custa:* quem acessa do Brasil vê umas telas em português e outras em inglês.
+- c) Antes do fim: as telas antigas ganham os textos traduzidos sem trocar de tecnologia. *Ganha:* abre mais cedo e inteiro. *Custa:* passa-se duas vezes por cada tela antiga.
+- **Recomendação: a.**
 
 ## Fontes
 
