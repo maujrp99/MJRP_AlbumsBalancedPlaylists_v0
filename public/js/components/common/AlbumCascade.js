@@ -2,7 +2,8 @@
  * AlbumCascade Component
  * 
  * Renders a stack of album thumbnails in a diagonal cascade.
- * Reusable across BlendSeriesSelector and SavedPlaylistsView.
+ * Reusable across BlendSeriesSelector (it writes it as text) and, in React, the saved playlists screen (ui/AlbumCascade.tsx, F83 wave 1,
+ * the same element; test/ui/AlbumCascade.test.tsx keeps the two the same until the Blend screen migrates).
  * 
  * @module components/common/AlbumCascade
  */
@@ -22,7 +23,7 @@ export class AlbumCascade {
 
     /**
      * Render cascade thumbnails as DOM Node
-     * @param {string[]} thumbnails - Array of image URLs (can contain nulls)
+     * @param {Array<string|null>} thumbnails - Array of image URLs (can contain nulls)
      * @param {Object} options - Rendering options
      * @returns {HTMLElement} DOM Element
      */

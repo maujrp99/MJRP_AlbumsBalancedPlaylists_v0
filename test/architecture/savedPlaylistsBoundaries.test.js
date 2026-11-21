@@ -22,12 +22,13 @@ const offenders = (files, isForbidden) => files.flatMap(file =>
     importsOf(file).filter(isForbidden).map(specifier => `${file} -> ${specifier}`))
 
 const SCREEN = [
-    'views/SavedPlaylistsView.js',
-    'components/playlists/SavedPlaylistsController.js',
-    'components/playlists/SavedSeriesGroup.js',
-    'components/playlists/SavedPlaylistCard.js',
-    'components/playlists/SavedPlaylistRow.js',
-    'components/playlists/SavedPlaylistActions.js'
+    'controllers/SavedPlaylistsController.js',
+    'screens/saved-playlists/index.ts',
+    'screens/saved-playlists/SavedPlaylists.tsx',
+    'screens/saved-playlists/SeriesGroup.tsx',
+    'screens/saved-playlists/BatchCard.tsx',
+    'screens/saved-playlists/PhoneParts.tsx',
+    'screens/saved-playlists/PlaylistDetails.tsx'
 ]
 
 describe('saved playlists read boundaries', () => {
@@ -66,7 +67,7 @@ describe('saved playlists read boundaries', () => {
         const knowing = all.filter(file => importsOf(file).some(specifier => /savedPlaylistsReading|SavedPlaylistsReader\.js/.test(specifier)))
 
         expect(knowing.sort()).toEqual([
-            'components/playlists/SavedPlaylistsController.js',
+            'controllers/SavedPlaylistsController.js',
             'services/playlists/savedPlaylistsReading.js'
         ])
     })

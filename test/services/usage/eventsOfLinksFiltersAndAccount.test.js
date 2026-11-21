@@ -37,7 +37,6 @@ import { openItemSheet } from '../../../public/js/views/InventoryPhoneSheets.js'
 import SeriesController from '../../../public/js/controllers/SeriesController.js'
 import { signOut } from '../../../public/js/components/navigation/AuthNav.js'
 import { showLoginModal } from '../../../public/js/components/LoginModal.js'
-import { SavedPlaylistsView } from '../../../public/js/views/SavedPlaylistsView.js'
 
 const notOwned = { id: 'i1', artist: 'Joni Mitchell', title: 'Hejira', owned: null }
 const linksIn = (root) => [...root.querySelectorAll('a[data-buy-store]')].map(link => [link.dataset.buyStore, link.dataset.buyPlace])
@@ -118,18 +117,8 @@ describe('filter_used on the albums screen', () => {
     })
 })
 
-describe('filter_used on the saved playlists', () => {
-    it('the series and the batch chosen, never their names', () => {
-        const view = { filterState: { search: '', seriesId: 'all', batchName: 'all', sort: 'updated_desc' }, update: vi.fn() }
-        SavedPlaylistsView.prototype.handleFilterChange.call(view, 'seriesId', 'sA')
-        SavedPlaylistsView.prototype.handleFilterChange.call(view, 'batchName', 'My secret batch')
-
-        expect(sent).toEqual([
-            ['filter_used', { screen: 'saved_playlists', which: 'series' }],
-            ['filter_used', { screen: 'saved_playlists', which: 'batch' }]
-        ])
-    })
-})
+// filter_used on the saved playlists: the screen moved to React (F83 wave 1); its test is
+// test/screens/saved-playlists/SavedPlaylists.usage.test.tsx.
 
 describe('sign_in and sign_out', () => {
     it('sign_in with the provider, after the sign-in worked', async () => {

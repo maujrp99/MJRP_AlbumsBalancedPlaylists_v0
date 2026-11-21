@@ -14,7 +14,6 @@ import './services/platform/platformWiring.js' // the id port gets the browser's
 import { canonicalLocalUrl } from './utils/localAddress.js'
 import { installStaleBuildGuard } from './utils/staleBuild.js'
 import { loadScreen } from './utils/loadScreen.js'
-import { prefetchScreensAfterTheFirstScreen } from './utils/prefetchScreens.js'
 
 // One local address (F50): a page opened at `localhost` goes to the same place at 127.0.0.1,
 // where the logins, the Spotify redirect and the caches live.
@@ -175,13 +174,12 @@ router.register('/album-series', () => {
     router.redirect('/albums')
     return null
 })
-// The screens loaded late: the file comes with a deadline of 10 s (F83: after it, «no connection», not «new version»), and
-// the screens of the menu are fetched in the background once the first screen is on the page.
+// The screens loaded late: the file comes with a deadline of 10 s (F83: after it, «no connection», not «new version»).
 // loadScreen gives each file a deadline and, after a lost network, asks for it again in a way the browser does not refuse
-const loadSavedPlaylists = loadScreen(() => import('./views/SavedPlaylistsView.js'))
+const loadSavedPlaylists = loadScreen(() => import('./screens/saved-playlists/index.ts'))
 const savedPlaylistsRoute = async () => {
-    const { SavedPlaylistsView } = await loadSavedPlaylists()
-    return new SavedPlaylistsView()
+    const { savedPlaylistsView } = await loadSavedPlaylists()
+    return savedPlaylistsView()
 }
 router.register('/playlist-series', savedPlaylistsRoute)
 router.register('/saved-playlists', savedPlaylistsRoute)
@@ -190,8 +188,8 @@ router.register('/series', () => {
     return null
 })
 
-// Not the screens in React: until the shell is React (wave 3), the site's first load downloads no React (F83, REQ-07)
-prefetchScreensAfterTheFirstScreen(router, [loadSavedPlaylists])
+// The screens in React are not fetched in the background: until the shell is React (wave 3), the site's first load downloads no
+// React (F83, REQ-07). Wave 3 hands the menu's screens to prefetchScreensAfterTheFirstScreen (utils/prefetchScreens.js).
 
 // Global Error Handler
 window.addEventListener('error', (e) => {

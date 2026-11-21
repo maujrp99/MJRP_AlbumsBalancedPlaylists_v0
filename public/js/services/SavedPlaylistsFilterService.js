@@ -70,7 +70,7 @@ export const SavedPlaylistsFilterService = {
     /**
      * Get unique generic values for dropdowns
      * @param {Array} seriesList 
-     * @returns {Object} { seriesNames: [], batchNames: [] }
+     * @returns {{ seriesOptions: Array<{ value: string, label: string }>, batchOptions: Array<{ value: string, label: string }> }}
      */
     getDropdownOptions(seriesList) {
         if (!seriesList) return { seriesOptions: [], batchOptions: [] }

@@ -105,7 +105,7 @@ export class SavedPlaylistsStore {
 
     /**
      * @param {Function} listener
-     * @returns {Function} unsubscribe
+     * @returns {() => void} unsubscribe
      */
     subscribe(listener) {
         this.listeners.add(listener)

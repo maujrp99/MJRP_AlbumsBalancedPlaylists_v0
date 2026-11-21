@@ -3,18 +3,18 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('../../../public/js/services/playlists/savedPlaylistsReading.js', () => ({
+vi.mock('../../public/js/services/playlists/savedPlaylistsReading.js', () => ({
     savedPlaylistsReader: {},
     savedPlaylistsStore: {}
 }))
-vi.mock('../../../public/js/components/Toast.js', () => ({
+vi.mock('../../public/js/components/Toast.js', () => ({
     default: { success: vi.fn(), error: vi.fn() }
 }))
 
-import toast from '../../../public/js/components/Toast.js'
-import { SavedPlaylistsController } from '../../../public/js/components/playlists/SavedPlaylistsController.js'
-import { SavedPlaylistsStore } from '../../../public/js/stores/savedPlaylists.js'
-import { ListStatus, SeriesPlaylistsStatus as Status } from '../../../public/js/models/savedPlaylists.js'
+import toast from '../../public/js/components/Toast.js'
+import { SavedPlaylistsController } from '../../public/js/controllers/SavedPlaylistsController.js'
+import { SavedPlaylistsStore } from '../../public/js/stores/savedPlaylists.js'
+import { ListStatus, SeriesPlaylistsStatus as Status } from '../../public/js/models/savedPlaylists.js'
 
 const entry = (id, status, playlists = null) => ({
     seriesId: id, series: { id, name: id }, status, playlists, batches: [], thumbnails: [], error: null, refreshing: false
@@ -32,7 +32,7 @@ describe('SavedPlaylistsController', () => {
             removeBatch: vi.fn(() => Promise.resolve(2)),
             removeAll: vi.fn(() => Promise.resolve(3))
         }
-        controller = new SavedPlaylistsController({}, { reader, store })
+        controller = new SavedPlaylistsController({ reader, store })
     })
 
     it('open joins or starts the read; reload starts over; retry reads one series', () => {

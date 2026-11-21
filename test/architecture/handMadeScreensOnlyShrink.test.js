@@ -49,8 +49,10 @@ export function findings(current, listed) {
 
 describe('the hand-made screens only shrink (F83)', () => {
     it('the list is the size of the site: the files of today, with their lines', () => {
-        expect(Object.keys(HAND_MADE).length).toBeGreaterThan(90)
-        expect(Object.values(HAND_MADE).reduce((sum, lines) => sum + lines, 0)).toBeGreaterThan(17000)
+        // 102 files and 17,277 lines when the migration began; the list shrinks with each wave, so this only says it was not emptied
+        // by accident (wave 1 took it to 93 files and 16,544 lines): lower the bounds when a wave brings the list under them.
+        expect(Object.keys(HAND_MADE).length).toBeGreaterThan(60)
+        expect(Object.values(HAND_MADE).reduce((sum, lines) => sum + lines, 0)).toBeGreaterThan(12000)
         expect(Object.keys(HAND_MADE)).toEqual(expect.arrayContaining(['views/InventoryView.js', 'utils/SafeDOM.js', 'services/DialogService.js', 'utils/pageScrollLock.js']))
     })
 
