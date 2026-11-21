@@ -21,7 +21,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
-import * as espree from 'espree'
+import { parseSource, listSourceFiles } from './support/parseSource.js'
 
 const ROOT = path.resolve(process.cwd(), 'public/js')
 
@@ -44,11 +44,7 @@ const WRITTEN_IN_THE_CODE = {
     'app.js': ['localUrl']
 }
 
-const listJs = (dir = '') => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }).flatMap(entry => {
-    const child = path.join(dir, entry.name)
-    if (entry.isDirectory()) return child === 'vendor' ? [] : listJs(child)
-    return entry.name.endsWith('.js') ? [child] : []
-})
+const listJs = (dir = '') => listSourceFiles(ROOT, dir) // .js, .ts and .tsx (F83)
 
 const FIXED_START = /^(\/(?!\/)|https:\/\/[a-z0-9.-]+\/)/i
 const FOLLOWING_CALLS = new Set(['open', 'assign', 'replace'])
@@ -70,6 +66,8 @@ function writtenHere(node) {
 
 /** True when the address is written in the code or went through safeUrl. */
 function isChecked(node, constants) {
+    // a type assertion or a non-null mark says nothing about where the address came from (TypeScript)
+    if (node.type === 'TSAsExpression' || node.type === 'TSNonNullExpression' || node.type === 'TSSatisfiesExpression') return isChecked(node.expression, constants)
     if (writtenHere(node) || isCallTo(node, 'safeUrl')) return true
     if (isCallTo(node, 'escapeHtml')) return isChecked(node.arguments[0], constants)
     if (node.type === 'LogicalExpression') return isChecked(node.left, constants) && isChecked(node.right, constants)
@@ -94,6 +92,12 @@ const FOLLOWED = {
         if (callee.type !== 'MemberExpression' || node.arguments.length === 0) return []
         return FOLLOWING_CALLS.has(callee.property.name) && isLocationOrWindow(callee.object) ? [node.arguments[0]] : []
     },
+    // href={address} or href="/path" in JSX (F83)
+    JSXAttribute: (node) => {
+        if (node.name.name !== 'href' || !node.value) return []
+        if (node.value.type === 'JSXExpressionContainer') return node.value.expression.type === 'JSXEmptyExpression' ? [] : [node.value.expression]
+        return [node.value]
+    },
     TemplateLiteral: (node) => node.expressions.filter((_, index) => HREF_IN_HTML.test(node.quasis[index].value.raw))
 }
 
@@ -113,8 +117,8 @@ const walk = (node, visit) => {
 }
 
 /** Every followed address of one source that is neither written in the code nor checked: [{ line, code }]. */
-export function uncheckedAddresses(source) {
-    const ast = espree.parse(source, { ecmaVersion: 'latest', sourceType: 'module', loc: true, range: true })
+export function uncheckedAddresses(source, file = 'file.js') {
+    const ast = parseSource(source, file)
 
     const constants = new Map()
     walk(ast, node => {
@@ -145,6 +149,18 @@ describe('addresses from outside the code', () => {
         // a template that starts with what came from outside is not written in the code
         expect(codes('SafeDOM.a({ href: `${base}/album/1` })')).toEqual(['`${base}/album/1`'])
         expect(codes('SafeDOM.a({ href: `//${host}/album/1` })')).toEqual(['`//${host}/album/1`'])
+    })
+
+    it('it reads TSX: an unchecked href={...} is accused, a written or safeUrl one is accepted (F83)', () => {
+        const fixture = path.join(process.cwd(), 'test/architecture/fixtures/typescript/uncheckedLink.tsx')
+        expect(uncheckedAddresses(fs.readFileSync(fixture, 'utf8'), fixture).map(item => item.code)).toEqual(['album.url'])
+        for (const source of [
+            'export const A = () => <a href="/albums">x</a>',
+            'export const A = () => <a href={safeUrl(album.url)}>x</a>',
+            'export const A = () => <a href={`/albums/${id}`}>x</a>',
+            'export const A = () => <a href={(safeUrl(album.url) ?? "/albums") as string}>x</a>'
+        ]) expect(uncheckedAddresses(source, 'x.tsx'), source).toEqual([])
+        expect(uncheckedAddresses('window.open(link as string)', 'x.ts').map(item => item.code)).toEqual(['link as string'])
     })
 
     it('the reader accepts text written in the code and what went through safeUrl', () => {

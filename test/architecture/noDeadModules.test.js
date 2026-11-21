@@ -82,6 +82,19 @@ describe('the graph follows every way a file is loaded', () => {
         expect(graph.reachable.has('public/css/neon.css')).toBe(true)
     })
 
+    it('TypeScript and TSX (F83): a static import of .ts from .tsx and a dynamic import() of .tsx, both followed', () => {
+        const entry = 'test/architecture/fixtures/typescript/Entry.tsx'
+        expect(loadsOf(entry).specifiers).toEqual(['./Leaf', './Lazy'])
+        expect(resolve('./Leaf', entry)).toBe('test/architecture/fixtures/typescript/Leaf.ts')
+        const fromTsx = graphFrom([entry])
+        expect([...fromTsx.reachable].sort()).toEqual([
+            'test/architecture/fixtures/typescript/Entry.tsx',
+            'test/architecture/fixtures/typescript/Lazy.tsx',
+            'test/architecture/fixtures/typescript/Leaf.ts'
+        ])
+        expect(fromTsx.missing).toEqual([])
+    })
+
     it('a package or a URL is not a file of the repository', () => {
         expect(resolve('firebase/firestore', 'public/js/firebase-init.js')).toBeNull()
         expect(resolve('https://fonts.googleapis.com/css2?family=Syne', 'public/index.html')).toBeNull()

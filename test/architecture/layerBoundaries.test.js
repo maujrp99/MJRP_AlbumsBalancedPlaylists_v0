@@ -12,7 +12,8 @@
  * test, and so does a line that is no longer true (remove it when you fix it).
  */
 import { describe, it, expect } from 'vitest'
-import { appFiles, listJs, offenders, lineCount, read } from './support/sourceImports.js'
+import path from 'node:path'
+import { appFiles, listJs, importsOf, offenders, lineCount, read } from './support/sourceImports.js'
 
 /**
  * Empty since the second slice of F58: the Spotify popularity "store" became a service given its
@@ -86,7 +87,14 @@ describe('a store only holds state (UAT-18, ADR-0017)', () => {
 })
 
 describe('the screen reaches the data only through services (UAT-19, ADR-0016)', () => {
-    const screen = [...listJs('views'), ...listJs('components'), ...listJs('controllers')]
+    // The screens in React (screens/, ui/, shell/: F83) are screens like the hand-made ones, and keep the same rules
+    const screen = [...listJs('views'), ...listJs('components'), ...listJs('controllers'), ...listJs('screens'), ...listJs('ui'), ...listJs('shell')]
+
+    it('the reader of imports sees .ts and .tsx (F83): the fixture imports are found, static and dynamic', () => {
+        const root = path.join(process.cwd(), 'test/architecture/fixtures/typescript')
+        expect(listJs('', root).sort()).toEqual(expect.arrayContaining(['Entry.tsx', 'Lazy.tsx', 'Leaf.ts']))
+        expect(importsOf('Entry.tsx', root)).toEqual(['./Leaf', './Lazy'])
+    })
 
     it('no view, component or controller imports a repository or Firebase', () => {
         const database = /(\/repositories\/|shared\/data\/|firebase)/

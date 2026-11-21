@@ -17,7 +17,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
-import * as espree from 'espree'
+import { parseSource, listSourceFiles } from './support/parseSource.js'
 
 const ROOT = path.resolve(process.cwd(), 'public/js')
 
@@ -41,11 +41,7 @@ const WRITTEN_IN_THE_CODE = {
     'views/ComingSoonView.js': ['feature.name']
 }
 
-const listJs = (dir = '') => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }).flatMap(entry => {
-    const child = path.join(dir, entry.name)
-    if (entry.isDirectory()) return child === 'vendor' ? [] : listJs(child)
-    return entry.name.endsWith('.js') ? [child] : []
-})
+const listJs = (dir = '') => listSourceFiles(ROOT, dir) // .js, .ts and .tsx (F83)
 
 const HTML_TAG = /<\/?[a-zA-Z]/
 const HTML_PROPERTIES = new Set(['innerHTML', 'outerHTML'])
@@ -70,8 +66,8 @@ const outsideName = (node) => {
 }
 
 /** Every unescaped interpolation of outside text of one source: [{ line, code }]. */
-export function unescapedOutsideText(source) {
-    const ast = espree.parse(source, { ecmaVersion: 'latest', sourceType: 'module', loc: true, range: true })
+export function unescapedOutsideText(source, file = 'file.js') {
+    const ast = parseSource(source, file)
     const found = []
 
     const visit = (node, insideHtml, htmlSink) => {
@@ -121,6 +117,14 @@ describe('outside text in HTML strings', () => {
         expect(unescapedOutsideText('const html = `<i>${getIcon(step.name)}</i><b>${tracks.length}</b>`')).toEqual([])
         // not HTML: a message, a key, a log line
         expect(unescapedOutsideText('toast.error(`Could not save ${album.title}`); const key = `${artist}_${album}`')).toEqual([])
+    })
+
+    it('it reads TypeScript: an unescaped name in an HTML string of a .ts file is accused (F83)', () => {
+        const fixture = path.join(process.cwd(), 'test/architecture/fixtures/typescript/unescapedText.ts')
+        const bad = unescapedOutsideText(fs.readFileSync(fixture, 'utf8'), fixture)
+        expect(bad.map(item => item.code)).toEqual(['album.title'])
+        expect(unescapedOutsideText('const row = (a: { title: string }): string => `<li>${escapeHtml(a.title)}</li>`', 'x.ts')).toEqual([])
+        expect(unescapedOutsideText('export const C = () => <p>{album.title}</p>', 'x.tsx')).toEqual([]) // React escapes the text it draws
     })
 
     it('every HTML template of public/js escapes the outside text it carries', () => {

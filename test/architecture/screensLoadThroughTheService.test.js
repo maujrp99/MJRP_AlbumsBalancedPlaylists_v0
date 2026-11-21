@@ -17,7 +17,7 @@ const listJs = (relativeDir) => {
     return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
         const child = path.join(relativeDir, entry.name)
         if (entry.isDirectory()) return listJs(child)
-        return entry.name.endsWith('.js') ? [child] : []
+        return /\.(js|ts|tsx)$/.test(entry.name) && !entry.name.endsWith('.d.ts') ? [child] : [] // .ts/.tsx: the React screens (F83)
     })
 }
 /** The module specifiers a file imports, static and dynamic. */
@@ -34,7 +34,7 @@ const writing = (files, pattern) => files.flatMap(file =>
 
 const ALL = listJs('').filter(file => !file.startsWith('vendor/'))
 /** Everything that is a screen or decides for one. */
-const SCREENS = [...listJs('controllers'), ...listJs('views'), ...listJs('components')]
+const SCREENS = [...listJs('controllers'), ...listJs('views'), ...listJs('components'), ...listJs('screens'), ...listJs('ui'), ...listJs('shell')]
 const COMPOSITION = 'services/albums/albumLoading.js'
 const ASKS = 'services/albums/AlbumAsks.js'
 

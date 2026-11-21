@@ -11,6 +11,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
+import { listSourceFiles } from './support/parseSource.js'
 
 const JS_ROOT = path.join(process.cwd(), 'public/js')
 const ROUTER = 'router.js'
@@ -26,25 +27,29 @@ const KNOWN = {
 
 const WRITES_HISTORY = /history\s*\.\s*(pushState|replaceState)\s*\(|location\s*\.\s*hash\s*=[^=]/g
 
-function jsFiles(dir) {
-    return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
-        const full = path.join(dir, entry.name)
-        if (entry.isDirectory()) return entry.name === 'vendor' ? [] : jsFiles(full)
-        return entry.name.endsWith('.js') ? [full] : []
-    })
-}
+/** Every .js, .ts and .tsx file of the app, absolute (F83: the React screens write no history either). */
+const jsFiles = (dir) => listSourceFiles(dir).map(file => path.join(dir, file))
+const writesOf = (source) => (source.match(WRITES_HISTORY) || []).length
 
 describe('the router owns the history of the browser (F63)', () => {
-    it('no file outside the router writes the history, except the known ones', () => {
+    /** The files of a folder that write the history, with how many times. */
+    const scan = (root) => {
         const found = {}
-        jsFiles(JS_ROOT).forEach(file => {
-            const relative = path.relative(JS_ROOT, file)
+        jsFiles(root).forEach(file => {
+            const relative = path.relative(root, file)
             if (relative === ROUTER) return
-            const count = (fs.readFileSync(file, 'utf8').match(WRITES_HISTORY) || []).length
+            const count = writesOf(fs.readFileSync(file, 'utf8'))
             if (count > 0) found[relative] = count
         })
+        return found
+    }
 
-        expect(found).toEqual(KNOWN)
+    it('no file outside the router writes the history, except the known ones', () => {
+        expect(scan(JS_ROOT)).toEqual(KNOWN)
+    })
+
+    it('it reads .ts and .tsx: a React file that writes the history by itself is accused (F83)', () => {
+        expect(scan(path.join(process.cwd(), 'test/architecture/fixtures/typescript'))).toEqual({ 'writesHistory.tsx': 1 })
     })
 
     it('the routes that only send the person on use redirect, not navigate', () => {

@@ -25,6 +25,7 @@ import postcss from 'postcss'
 import tailwindcss from 'tailwindcss'
 import tailwindConfig from '../../tailwind.config.js'
 import viteConfig from '../../vite.config.js'
+import { listSourceFiles } from './support/parseSource.js'
 
 const REPO = process.cwd()
 const JS_ROOT = path.join(REPO, 'public/js')
@@ -53,11 +54,7 @@ const PUT_TOGETHER_AT_RUN_TIME = {
 
 const GLUED = /[^\s"'<>]*(?:[a-z0-9\]]-\$\{|\$\{[^}]*\}-[a-z0-9[]|\}\/\d|[a-z]-['"]\s*\+|\+\s*['"][-/][a-z0-9])[^\s"'<>]*/g
 
-const listJs = (dir = '') => fs.readdirSync(path.join(JS_ROOT, dir), { withFileTypes: true }).flatMap(entry => {
-    const child = path.join(dir, entry.name)
-    if (entry.isDirectory()) return listJs(child)
-    return entry.name.endsWith('.js') ? [child] : []
-})
+const listJs = (dir = '') => listSourceFiles(JS_ROOT, dir) // .js, .ts and .tsx: a class written only in JSX must reach the CSS (F83)
 
 const read = (file) => fs.readFileSync(file, 'utf8')
 const pagesOfTheSite = () => Object.values(viteConfig.build.rollupOptions.input)
@@ -111,6 +108,16 @@ describe('Tailwind is built with the site', () => {
         expect(fromEveryFile.size).toBeGreaterThan(500)
         const missing = [...fromEveryFile].filter(name => !built.has(name)).sort()
         expect(missing).toEqual([])
+    })
+
+    it('a class written only in a .tsx file reaches the CSS: the content of the config reads the same files as the screens are written in (F83)', async () => {
+        const jsGlob = tailwindConfig.content.find(entry => typeof entry === 'string' && entry.includes('public/js'))
+        const fixtureGlob = jsGlob.replace('public/js/**', 'test/architecture/fixtures/typescript')
+        expect(fixtureGlob).not.toBe(jsGlob)
+
+        const css = await build({ ...tailwindConfig, content: [fixtureGlob], safelist: [] })
+
+        expect(classesOf(css).has('bg-fuchsia-950')).toBe(true)
     })
 
     it('the theme of the page came along: the font, the brand colors, the gradients', () => {
