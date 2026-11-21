@@ -6,3 +6,7 @@ browser-offline-and-portuguese.mjs (dev server): offline -> "No connection" with
   the second attempt fails the same way and the F64 repair (reload once) runs: the screen comes, but the page was loaded again. Same on the production build (/private/tmp/f83_offline_dist.mjs, built dist/):
   "after retry, same page (no reload): false | h1: Artist Series".
 Not tested in a browser: the artist search (needs a series with albums and the local API server; the albums screen draws).
+
+UPDATE (fix of the finding above): loadScreen (public/js/utils/loadScreen.js) asks the network (HEAD /app.html) BEFORE importing a screen, so no failed import() is ever made and remembered; offline gives «No connection» without importing, and «Try again» later imports the very file the build made. A first attempt (the same file with ?retry=N) was proved NOT to work: the file's static dependency (react-vendor) stays cached as failed.
+browser-offline-retry.mjs: PASS 5/5 on the dev server (raw/offline-retry-dev-server.txt) and on the production build (raw/offline-retry-production-build.txt): the screen draws, the window marker and performance.timeOrigin are unchanged, the page fired one load event only.
+Remaining limit: a network that answers the question and drops before the file comes still ends in the repair of F64 (one reload).

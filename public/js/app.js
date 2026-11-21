@@ -12,7 +12,8 @@ import '../css/mobile/screens.css' // one file per screen of the phone, each ins
 import '../css/safe-area.css' // a phone lying down: the page keeps clear of the island (F76)
 import './services/platform/platformWiring.js' // the id port gets the browser's source before any module runs (F78)
 import { canonicalLocalUrl } from './utils/localAddress.js'
-import { installStaleBuildGuard, loadWithDeadline } from './utils/staleBuild.js'
+import { installStaleBuildGuard } from './utils/staleBuild.js'
+import { loadScreen } from './utils/loadScreen.js'
 import { prefetchScreensAfterTheFirstScreen } from './utils/prefetchScreens.js'
 
 // One local address (F50): a page opened at `localhost` goes to the same place at 127.0.0.1,
@@ -138,9 +139,9 @@ router.register('/inventory', () => new InventoryView())
 
 // TopNav v2: New entity type routes (Coming Soon). The first screen in React (F83): its file, and React with it, come when
 // the person opens one of the three; the main script carries neither.
-const loadComingSoon = () => import('./screens/coming-soon/index.ts')
+const loadComingSoon = loadScreen(() => import('./screens/coming-soon/index.ts'))
 const comingSoonRoute = (kind) => async () => {
-    const { comingSoonView } = await loadWithDeadline(loadComingSoon())
+    const { comingSoonView } = await loadComingSoon()
     return comingSoonView(kind)
 }
 router.register('/artists', comingSoonRoute('artists'))
@@ -176,9 +177,10 @@ router.register('/album-series', () => {
 })
 // The screens loaded late: the file comes with a deadline of 10 s (F83: after it, «no connection», not «new version»), and
 // the screens of the menu are fetched in the background once the first screen is on the page.
-const loadSavedPlaylists = () => import('./views/SavedPlaylistsView.js')
+// loadScreen gives each file a deadline and, after a lost network, asks for it again in a way the browser does not refuse
+const loadSavedPlaylists = loadScreen(() => import('./views/SavedPlaylistsView.js'))
 const savedPlaylistsRoute = async () => {
-    const { SavedPlaylistsView } = await loadWithDeadline(loadSavedPlaylists())
+    const { SavedPlaylistsView } = await loadSavedPlaylists()
     return new SavedPlaylistsView()
 }
 router.register('/playlist-series', savedPlaylistsRoute)

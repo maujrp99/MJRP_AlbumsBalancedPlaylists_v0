@@ -99,6 +99,15 @@ export class ScreenLoadTimeout extends Error {
     }
 }
 
+/** The network did not answer before a screen file was asked for: nothing was imported (loadScreen). The same state as a timeout. */
+export class ScreenOffline extends ScreenLoadTimeout {
+    constructor() {
+        super(0)
+        this.name = 'ScreenOffline'
+        this.message = 'The network did not answer: the screen was not asked for'
+    }
+}
+
 /** @returns {boolean} true when the failure is a screen file that did not come in time */
 export const isLoadTimeout = (error) => error?.code === 'screen-load-timeout'
 

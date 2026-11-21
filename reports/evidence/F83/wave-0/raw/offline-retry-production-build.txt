@@ -1,0 +1,5 @@
+PASS  /artists offline: «No connection» with «Try again»
+PASS  /artists online, «Try again»: the screen draws (Artist Series)
+PASS  /artists: the page was not loaded again (marker, timeOrigin)
+PASS  no new load event of the page during the whole run  loads=1
+PASS  visiting the screen again later draws it at once (the module is kept)

@@ -1,4 +1,7 @@
 /**
+ * (2026-11-21, merge of main into the wave 0 branch: the notices of failed sources in the album window came from main with
+ * their files: `components/albumWindowSources.js` is new, and four files were brought to their sizes of that day.)
+ *
  * The hand-made screens of the site, as they were when the migration to React began (F83, wave 0, 2026-11-21):
  * every file of public/js/views and public/js/components, and the hand-made drawing that lives outside the two folders, with the lines each one has (as `wc -l` counts them).
  *
@@ -24,10 +27,11 @@ export const HAND_MADE = {
     'components/SpotifyExportModal.js': 434,
     'components/Toast.js': 154,
     'components/TopNav.js': 271,
-    'components/ViewAlbumModal.js': 367,
+    'components/ViewAlbumModal.js': 382,
     'components/album-picker/AlbumPickerController.js': 121,
     'components/album-picker/AlbumPickerPanel.js': 109,
     'components/album-picker/pickerParts.js': 89,
+    'components/albumWindowSources.js': 40,
     'components/base/Component.js': 64,
     'components/blend/BlendIngredientsPanel.js': 428,
     'components/blend/BlendRecipeCard.js': 174,
@@ -60,14 +64,14 @@ export const HAND_MADE = {
     'components/playlists/SavedPlaylistsPhone.js': 174,
     'components/playlists/SavedSeriesGroup.js': 154,
     'components/playlists/batchNames.js': 47,
-    'components/ranking/TracksRankingComparison.js': 193,
+    'components/ranking/TracksRankingComparison.js': 207,
     'components/ranking/TracksTable.js': 314,
     'components/ranking/TracksTabs.js': 102,
     'components/ranking/UserRankModal.js': 508,
     'components/ranking/rankWindowPhone.js': 221,
     'components/series/SeriesEditModal.js': 227,
     'components/series/SeriesEmptyState.js': 47,
-    'components/series/SeriesEventHandler.js': 346,
+    'components/series/SeriesEventHandler.js': 353,
     'components/series/SeriesGridRenderer.js': 321,
     'components/series/SeriesHeader.js': 80,
     'components/series/SeriesModals.js': 115,
@@ -98,7 +102,7 @@ export const HAND_MADE = {
     'views/InventoryView.js': 693,
     'views/PlaylistsView.js': 383,
     'views/SavedPlaylistsView.js': 354,
-    'views/SeriesView.js': 253,
+    'views/SeriesView.js': 254,
     'views/albums/AlbumsGridRenderer.js': 129,
     'views/albums/AlbumsScopedRenderer.js': 233,
     'views/helpers/SeriesComponentFactory.js': 177,
