@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:30] step — F80 e F88: o terceiro relatório do juiz (passou, sem P0 nem P1) e suas capturas entram no ramo; cinco linhas na uat.md
+**Branch:** feat/f88-top-menu-build
+O juiz escreveu o relatório sobre 6d518c2; copiado como veio para reports/audits/ e as capturas para reports/evidence/F88/recheck-3/. UAT-262 a UAT-265: os três P2 do juiz e o nome não confirmado da chave do MusicKit (abertas); UAT-266: o defeito do iPhone achado pelo MJRP, já consertado em a4b3933.
+
 ## [2026-11-21 19:15] decision — o MJRP escolheu «A» para a barra do computador: 620 px centrados na página, só «Entrar» no cabeçalho da home (F88)
 **Branch:** feat/f88-top-menu-build
 Pergunta ao MJRP (opções do juiz): (a) 620 px, a largura aprovada na v4, centrada na página, com o cabeçalho da home só com «Entrar» e «Abrir o app» no meio da página; (b) 620 px encostados à esquerda; (c) 412 px centrados, como construído. Resposta do MJRP (2026-11-21): «A». Construído: `--bar-w` = min(620 px, 100vw − 502 px), centrada, no mesmo x na home e no app, sem e com conta; a home tira «Abrir o app» do cabeçalho em toda largura do computador (o botão do corpo da página continua); o idioma e o botão da conta ficam. Abaixo de 1122 px a barra encolhe sem encostar nos lados nem quebrar rótulos, até 900 px (398 px). Medido (x, largura; as quatro combinações iguais em cada largura): 900 px: 251, 398; 1000: 251, 498; 1100: 251, 598; 1280: 330, 620; 1600: 490, 620. Testes atualizados (`barIsCentredOnThePage`); capturas em `reports/evidence/F88/bar-620/`.
