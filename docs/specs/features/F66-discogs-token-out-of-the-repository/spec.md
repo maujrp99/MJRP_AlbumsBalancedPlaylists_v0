@@ -1,7 +1,8 @@
 ---
-status: In Progress
+status: Done
 lane: fast
 solution_type: fix
+needs_human: "segurança: o token antigo do Discogs apagado — só pela palavra do MJRP, o agente não o testou; o histórico do git ainda guarda o token morto"
 imports: []
 fixes: ["UAT-17"]
 planned_for: "[[ROADMAP#^REL-40]]"
@@ -44,11 +45,14 @@ N/A: não importa nenhum nó de requisito; conserta a issue UAT-17.
 
 ## Success Criteria
 <!-- One measurable item per acceptance criterion of the imported nodes. -->
-- «a escrever: um item mensurável e testável por critério de aceite dos nós importados»
+- Nenhum arquivo versionado traz um token: `git ls-files` não lista os dois scripts que o traziam e `test/security/noSecretsInRepo.test.js` passa (11 testes, 2026-11-20 17:38, na evidência).
+- O token antigo do Discogs não vale mais: apagado pelo MJRP no Discogs em 2026-11-20 (palavra dele, na evidência); o agente não o testou.
+- O token em uso fica no Secret Manager (`discogs-token`) e chega ao servidor como `DISCOGS_TOKEN`.
 
 ## Out of Scope
-- «a escrever: o que esta feature não faz»
+- Reescrever o histórico do git: o token antigo continua escrito nos commits anteriores à `f9d1abd`; está morto se foi apagado no Discogs. Não foi pedido nem feito.
+- Reescrever os dois scripts: saíram do repositório na F65; o app nunca os usou.
 
 ## Open Questions
 <!-- ALL resolved before Plan. -->
-- «a escrever: pergunta — resposta, quem, quando; ou "Nenhuma." se todas estão resolvidas»
+- O token antigo foi mesmo apagado no Discogs? — o MJRP disse que sim (2026-11-20 01:2x e 17:38, na evidência); o agente não conferiu. Fica na marca `needs_human` da spec.
