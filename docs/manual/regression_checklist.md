@@ -12,7 +12,7 @@
 - [ ] **Clear Cache (v4.0, F48)**: with `/albums` fully loaded, click "Clear Cache" in the footer -> "Cache Cleared!" -> the page reloads and the albums are searched again (grey blocks first, requests to Apple Music in the network tab). The Spotify connection and the view mode are still there.
 - [ ] **Personal ranking read once (v4.0, F48)**: reload `/albums` within the hour -> no new read of `albumRankings` per album; save a ranking -> the card shows it after the next load.
 - [ ] **Albums load (v4.0)**: with the site data cleared, `/albums` shows the first page of series within seconds; every series ends as albums, or with the notice "N albums did not load · Try again"; none disappears.
-- [ ] **Leave and return (v4.0)**: going to Home mid-load and back shows the same number of series.
+- [ ] **Leave and return (v4.0)**: going to Start (the former Home) mid-load and back shows the same number of series.
 - [ ] **Search fields (v4.0)**: typing a whole word without clicking again works in the search of `/albums`, of `/saved-playlists` and in the artist field of the Home.
 - [ ] **"&" in a name (v4.0)**: an album whose artist has "&" loads (series "Robert Plant 00-10s": "Jimmy Page & Robert Plant - No Quarter"), and no screen shows `&amp;`.
 - [ ] **All series (v4.0)**: the count under the grid says the total of series of the account (no cut at 20).

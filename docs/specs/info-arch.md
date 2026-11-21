@@ -13,13 +13,13 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 
 ## Sitemap
 
-- **Home** (`/home`): criar uma série a partir de um artista ou de uma lista colada
+- **Start** (`/start`; «Home» até a F85, e `/home` ainda leva a ela): criar uma série a partir de um artista ou de uma lista colada
 - **Music Series** (`/albums`): as séries de álbuns e os álbuns de cada uma
 - **The Blending Menu** (`/blend`): escolher série e receita e gerar playlists
 - **Playlists** (`/playlists`, `/saved-playlists`): as playlists geradas e os lotes guardados
 - **Inventory** (`/inventory`): a coleção da pessoa, com status, notas e (F75) valor estimado
   - a janela de um álbum do inventário
-- **Página de entrada** (F80, aprovada na v2; mora na raiz `/` só para quem não entrou com conta — quem entrou vai direto a `/home`; decidido pelo agente — revisável; o comportamento está no `behavior.md` § A raiz do site e a página de entrada): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript.
+- **Página de entrada** (F80, aprovada na v2; mora na raiz `/` só para quem não entrou com conta — quem entrou vai direto a `/start`, e o logotipo do app leva a ela por `/?entry` (F85); decidido pelo agente — revisável; o comportamento está no `behavior.md` § A raiz do site e a página de entrada): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript.
 
 ### O esquema de cada nó
 
@@ -176,13 +176,13 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 
 | Destino | Endereço que abre | Fica marcado também em |
 |---|---|---|
-| Home | `/home` | `/home` |
+| Start (era Home, F85) | `/start` | `/start` |
 | Albums | `/albums` | `/albums`, `/album-series`, `/series` |
 | Blend | `/blend` | `/blend` |
 | Playlists | `/saved-playlists` | `/saved-playlists`, `/playlist-series`, `/playlists` |
 | Inventory | `/inventory` | `/inventory` |
 
-- **Nome na barra do topo:** Home, Albums, Blend, «New Playlists» (`/playlists`), «Edit Playlists» (`/playlists/edit`), Playlists (`/saved-playlists`), Inventory; as telas «em breve» dizem «Series by Artist», «Series by Genre» e «Series by Track».
+- **Nome na barra do topo:** Start, Albums, Blend, «New Playlists» (`/playlists`), «Edit Playlists» (`/playlists/edit`), Playlists (`/saved-playlists`), Inventory; as telas «em breve» dizem «Series by Artist», «Series by Genre» e «Series by Track».
 - **Menu** (folha de baixo, aberta pelo botão da barra do topo): a conta (ou «Sign In»); «New playlists» (as recém-geradas); «Series by artist», «Series by genre» e «Series by track», cada uma com «Soon»; a ligação com o Spotify; «Clear album cache», que pede confirmação («Clear the album cache?»); «Sign Out».
 - **Voltar ao topo** («Back to top»): botão redondo de 44 px que aparece depois de duas telas de rolagem e some enquanto há janela aberta.
 - **A gaveta ☰ e a barra do computador** só valem de 768 px para cima.
@@ -235,7 +235,7 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 - **Folha do álbum aberta.** Título do álbum e as ações com nome; «Remove from this series» por último, em vermelho, separado, e pede confirmação. ^albums-phone-album-sheet-open
 - **Folha da série aberta.** «Edit series» e, em vermelho, «Delete series», que pede confirmação. ^albums-phone-series-sheet-open
 - **Carregando.** Esqueleto da série em duas colunas. ^albums-phone-loading
-- **Biblioteca vazia.** Ícone, uma frase e um botão, «Go to Home». ^albums-phone-empty
+- **Biblioteca vazia.** Ícone, uma frase e um botão, «Go to Start». ^albums-phone-empty
 - **Série que falhou.** Aviso com «Try again». ^albums-phone-series-failed
 - **Nenhum álbum nos filtros.** A frase do pager diz que nada combina; a lista fica vazia. ^albums-phone-no-match
 

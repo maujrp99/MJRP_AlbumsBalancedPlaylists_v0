@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: fast
 solution_type: feature
 imports: ["[[S-67-reach-the-entry-page-from-the-logo]]"]

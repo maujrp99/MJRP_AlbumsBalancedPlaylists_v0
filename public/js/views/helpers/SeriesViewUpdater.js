@@ -84,7 +84,7 @@ export class SeriesViewUpdater {
             const emptyState = new SeriesEmptyState({
                 message: 'No albums in library',
                 subMessage: 'Create a series from the home page to get started',
-                ctaText: 'Go to Home',
+                ctaText: 'Go to Start',
                 ctaHref: '/start'
             });
             emptyState.mount(container);

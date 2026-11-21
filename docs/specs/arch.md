@@ -1197,9 +1197,9 @@ serviço / controlador (depois da ação dar certo)
 
 **O 3D.** `public/splash/crate3d.js` importa o three.js 0.185.0 do jsDelivr por endereço completo (o Vite o deixa fora do build), só no computador, com WebGL, sem pedido de menos movimento, depois do `load`. O `package.json` não mudou.
 
-**O «Sign in» da página.** Leva a `/home?signin`; o `app.js` chama `openSignInWhenAsked` (`components/navigation/signInFromLink.js`), que tira o `signin` do endereço e abre a janela de entrar para quem não entrou com conta.
+**O «Sign in» da página.** Leva a `/start?signin` (era `/home?signin`; `/home` ainda leva a `/start`, com a consulta, F85); o `app.js` chama `openSignInWhenAsked` (`components/navigation/signInFromLink.js`), que tira o `signin` do endereço e abre a janela de entrar para quem não entrou com conta.
 
-**O que este desenho não resolve.** Quem entrou com conta e abre a raiz dá um passo a mais (a página começa a chegar e o script troca para `/home`). Se uma versão maior do Firebase JS SDK mudar o formato do registro no IndexedDB, a decisão falha aberta: a pessoa vê a página e entra pelo «Open the app». Os testes de arquitetura que leem `public/index.html` continuam lendo o app.
+**O que este desenho não resolve.** Quem entrou com conta e abre a raiz dá um passo a mais (a página começa a chegar e o script troca para `/start`). Se uma versão maior do Firebase JS SDK mudar o formato do registro no IndexedDB, a decisão falha aberta: a pessoa vê a página e entra pelo «Open the app». Os testes de arquitetura que leem `public/index.html` continuam lendo o app.
 
 ## Propostas em avaliação
 

@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:45] session — F85: a documentação no mesmo ramo (passo retroativo da via rápida)
+**Branch:** claude/f85-start-in-the-menu
+`behavior.md` (os endereços antigos e o menu, o rodapé, a raiz, «Sign in» da página, e duas linhas novas: o logotipo e o «Start»), `arch.md`, `info-arch.md` (e `info-arch.html`, gerado com o `build_info_arch_page.py`), as páginas do manual que nomeiam o menu ou o endereço, a spec/plan/tasks. Decidido pelo agente — revisável: o botão das telas vazias passa a dizer «Go to Start» (ia para a tela que se chamava Home); a migalha e o rodapé também dizem «Start». A aprovação da spec segue do MJRP.
+
 ## [2026-11-21 09:40] session — F85 TASK-01..03: «Start» no menu e na aba, `/start`, o logotipo leva à página de entrada, a raiz manda para `/start`
 **Branch:** claude/f85-start-in-the-menu
 Teste primeiro, depois o código. O item «Home» (menu do computador, gaveta, aba do celular, rodapé, migalha) virou «Start»; a rota é `/start`, e `/home` (com a consulta: `/home?signin`) leva a ela por `startRoute.js`. O logotipo (computador e celular) é um link para `/?entry` marcado `data-full-page`: o roteador o deixa ao navegador (carga inteira). A decisão da raiz (`gate.js`) e os botões da página de entrada levam a `/start` (e `/start?signin`). Decidido pelo agente — revisável: o id de uso `home` (medição) não muda.
