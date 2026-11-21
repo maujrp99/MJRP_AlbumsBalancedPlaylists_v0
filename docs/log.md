@@ -3,6 +3,23 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:04] session — save: pesquisa da régua do volume de copy (F81), o fecho com a falha aceita
+
+> Participantes: orquestrador do V0 + Claude Code (Opus 5.5) · Branch: claude/f81-copy-volume-research
+> Session: sessão de página iniciada pelo orquestrador do V0 (local_12b5ff2f-ff3a-4682-b761-b99d85bbc840)
+
+### Executive Summary
+Fecho da pesquisa da régua do volume de texto (relatório `reports/research/2026-11-21-copy-volume-ruler.md`, commit `10b5dad`). Nada mudou desde a entrada anterior, além desta nota.
+
+### Decisions
+- A conferência de fechamento falha só nas tarefas TASK-01 e TASK-02 do `tasks.md` da F81, que são da sessão da F81. O orquestrador do V0 aceitou a falha e reconcilia o arquivo no merge; esta sessão não o tocou.
+
+### Next Session
+1. O integrador junta este ramo na `main`; o orquestrador do harness leva a disciplina CV (volume de copy) ao MJRP.
+
+### Key Data
+- Ramo `claude/f81-copy-volume-research`; pesquisa em `10b5dad`; save anterior em `c0b9027`.
+
 ## [2026-11-21 11:00] session — save: pesquisa da régua do volume de copy (F81) fechada
 
 > Participantes: orquestrador do V0 + Claude Code (Opus 5.5) · Branch: claude/f81-copy-volume-research
