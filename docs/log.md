@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 15:46] step — F83 onda 2: o retrato das páginas da tela antiga das playlists (a prova de HTML igual)
+**Branch:** claude/f83-wave-2-playlists-edit
+Escrito antes de qualquer código da tela nova: `test/support/playlistsScenarios.js` (13 cenários: vazio, lote não achado, gerada pela Blend, nome digitado, painel de gerar aberto, faixa movida, removida, playlist apagada, desfazer e refazer, título digitado, gerando, salvando, lote guardado em edição, os três exportar; no celular: os chips, as folhas, o aviso de desfazer, virar computador) e o retrato `test/fixtures/playlistsBeforeF83.json` (44 páginas), tirado da `PlaylistsView` à mão por `reports/evidence/F83/wave-2/capture-before.test.js`. O serviço das playlists é um substituto que guarda o histórico (o que se testa é a tela lendo a loja). A janela do Spotify e os exportar são conferidos pelo que a tela pede, não pelo conteúdo deles.
+
 ## [2026-11-21 15:43] step — F83 onda 2: a resposta sobre as listas do serviço de playlists
 **Branch:** claude/f83-wave-2-playlists-edit
 Conferido em `services/PlaylistsService.js`: as edições (mover, reordenar, remover faixa, remover e renomear playlist, desfazer, refazer) **trocam** a lista por uma nova; só `applyBatchName` escreve dentro das playlists que estão na loja. A tela nova lê a lista a cada desenho, sem `useMemo` nem `React.memo`, e usa a posição como chave da linha. Escrito no mapa da onda 2.
