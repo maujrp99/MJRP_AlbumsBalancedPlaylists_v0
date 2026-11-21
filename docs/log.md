@@ -3,6 +3,38 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:32] session — save: F83, a proposta de arquitetura das telas em React com os idiomas, criticada, e a ADR-0023 em «Proposed»
+**Branch:** claude/f83-site-screens-in-react
+
+> Participantes: sessão de desenho aberta pelo orquestrador do V0 (Claude Code) · Branch: claude/f83-site-screens-in-react
+> Session: claude/f83-site-screens-in-react (sessão de página, no worktree `f83-site-screens-in-react-83ca31`)
+
+### Executive Summary
+Entrega de desenho, sem código de produto e sem tela migrada. A proposta guiada por risco (`design/proposals/f83-react-screens/architecture-proposal.md`) decide como as telas em React convivem com as antigas, o que fica, a camada do celular, os testes, o contrato dos idiomas com a F81, a ordem das telas e o build. Foi julgada por um agente separado (pode ir ao MJRP: 0 P0, 10 P1, 3 P2) e revista: a resposta a cada achado está na seção 17. A ADR-0023 está em «Proposed», à espera dele; spec, plano e tarefas da F83 saíram do esboço, com «Approved» pendente.
+
+### Decisions
+Nenhuma do MJRP nesta sessão. Decidido pelo agente, na proposta, revisável, tudo à espera da aceitação dele:
+- A tela em React é mais uma «view» do roteador da casa, no mesmo `#app`; o roteador só é revisto quando a última tela antiga sair.
+- Ficam como estão: controladores, stores (sem biblioteca de estado), serviços, modelos, repositórios, `shared/`, o CSS e a camada do celular; TypeScript só no código novo (`screens/`, `ui/`, `shell/`, `react-bridge/`).
+- Os textos num dicionário por idioma em JavaScript puro (`i18n/en`, `i18n/pt`), usado pelas telas antigas e novas; o conteúdo editável como par `{ en, pt }`; o app sem prefixo de idioma no endereço; a página de entrada com `/en/` e `/pt/`.
+- O país de acesso pelo Firebase Hosting (reescritas de i18n e um `geo.json`), **a conferir** num canal de prévia; a escolha da pessoa vale acima; o palpite do país nunca é gravado como escolha.
+- O português fica fechado em produção por uma chave (`OPEN_LOCALES`) até a cobertura que o MJRP escolher.
+- A ordem: base e canário; playlists guardadas; edição das playlists (a medição difícil e o ponto de revisão dele); a moldura; Start; séries e álbuns; inventário; Blend; fecho.
+
+### Next Session
+1. O orquestrador leva ao MJRP, pelo Control Center, as decisões D-1 a D-8 da proposta (o ritmo; as emendas da constituição; os endereços por idioma; onde a escolha de idioma fica na conta; o idioma quando o país não é sabido; a página de entrada em português; a ordem das telas; quando o português abre) e a aceitação da ADR-0023, que é o commit dele com o carimbo.
+2. Quando a medição (`wip/react-measurement-spike`) for entregue: trocar as marcas «prévia» e «a medir» da proposta pelos números dela.
+3. A sessão da F81 lê o contrato dos idiomas: a nota `f83-languages-contract-for-f81.md` na pasta de notas das sessões, e a proposta § 5.2 a § 5.4, § 6 e § 7.
+4. Depois da aceitação: a onda 0 (ferramentas, sensores, a ponte, «sem rede», o ícone, o teto de peso, o canário).
+
+### Key Data
+- Commits: `5a3be3f` (proposta e crítica), `fee3c2d` (ADR-0023), `a8bfc53` (spec, plano, tarefas), mais este de fechamento.
+- Crítica: `reports/audits/2026-11-21-mjrpalbumblender-v0-f83-architecture-critique.md`, `verdict: can-go`, `status: open` até a decisão dele.
+- Ainda «a medir»: o script principal depois da onda 0, o dicionário em português, as telas do menu em segundo plano, o tempo até a primeira tela, o tempo do build e da suíte com React, o custo de uma tela difícil (arrastar e soltar), o redesenho com listas grandes. Do rascunho da medição já se usa: React 68.922 B comprimidos (a análise estimava 45 KB), script principal +177 B, HTML idêntico em 4 estados, 0 asserções mudadas de 39.
+- Não conferido: as reescritas de i18n do Firebase Hosting junto com a reescrita para `/app.html` e o cache por país; a ponte com as stores e o ícone sem HTML cru (desenho, não medida); o sensor da F84 com telas com dados.
+- A proposta não tem página visual publicada; o arquivo é a fonte.
+- O `status_sync` passou a spec da F83 de «Draft» a «In Progress» no commit das tarefas (derivado pelo gancho, não escolhido).
+
 ## [2026-11-21 10:31] session — F83: spec, plano e tarefas saem do esboço; a nota do contrato dos idiomas para a sessão da F81
 **Branch:** claude/f83-site-screens-in-react
 A spec ganha dez requisitos (a tela em React sob o mesmo roteador; nenhuma mudança para quem usa; a regra da casa e as listas que só encolhem; o que fica debaixo da tela; a camada do celular e o design system; os sensores e os tipos; o teto de peso; os textos pelo dicionário da F81; todas as telas, em ondas; publicar, voltar atrás e «sem rede»). O plano aponta para a proposta e lista os módulos. As tarefas são 32, em nove ondas (0 a 8): as de desenho em Opus, as de construção em Sonnet; todas esperam a ADR-0023 aceita. «Approved» segue pendente. Fora do repositório, na pasta de notas das sessões: `f83-languages-contract-for-f81.md`, o contrato do dicionário, da escolha de idioma e da chave que mantém o português fechado.
