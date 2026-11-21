@@ -9,15 +9,12 @@
  * (decided by the agent, revisable). Albums also stands for the other kinds of series (artist, genre, track):
  * today's «Music Series» item of the computer's menu lit on them, and it is the item the Albums stop replaces (F88).
  */
-import { getIcon } from '../Icons.js'
-import { renderBars } from './bars.js'
-
 export const PHONE_TABS = Object.freeze([
-    { id: 'home', label: 'Start', route: 'start', icon: 'Home', under: ['/start'] },
-    { id: 'albums', label: 'Albums', route: 'albums', icon: 'Disc', under: ['/albums', '/album-series', '/series', '/artists', '/genres', '/tracks'] },
-    { id: 'blend', label: 'Blend', route: 'blend', icon: 'Blend', under: ['/blend'] },
-    { id: 'playlists', label: 'Playlists', route: 'saved-playlists', icon: 'ListMusic', under: ['/saved-playlists', '/playlist-series', '/playlists'] },
-    { id: 'inventory', label: 'Inventory', route: 'inventory', icon: 'Archive', under: ['/inventory'] }
+    { id: 'home', label: 'Start', route: 'start', under: ['/start'] },
+    { id: 'albums', label: 'Albums', route: 'albums', under: ['/albums', '/album-series', '/series', '/artists', '/genres', '/tracks'] },
+    { id: 'blend', label: 'Blend', route: 'blend', under: ['/blend'] },
+    { id: 'playlists', label: 'Playlists', route: 'saved-playlists', under: ['/saved-playlists', '/playlist-series', '/playlists'] },
+    { id: 'inventory', label: 'Inventory', route: 'inventory', under: ['/inventory'] }
 ])
 
 /** What the top bar says on each address; the longest beginning that matches wins. */
@@ -37,9 +34,6 @@ const SCREEN_NAMES = Object.freeze([
 
 const APP_NAME = 'Album Blender'
 
-/** How many bars the row over the tab bar has (a phone is a narrow screen: a bar about every six pixels). */
-const TAB_BARS = 64
-
 const begins = (path, start) => path === start || path.startsWith(start + '/')
 
 /**
@@ -57,18 +51,3 @@ export function screenName(path) {
     return matches.reduce((best, entry) => (entry[0].length > best[0].length ? entry : best))[1]
 }
 
-/** @returns {string} the tab bar, with the current destination marked for the eye and the reader */
-export function renderTabBar(path) {
-    const current = currentTab(path)
-    const tabs = PHONE_TABS.map(tab => {
-        const isCurrent = tab === current
-        return `
-        <a href="/${tab.route}" data-link data-tab="${tab.id}" class="phone-tabbar__tab${isCurrent ? ' is-current' : ''}"${isCurrent ? ' aria-current="page"' : ''}>
-          ${getIcon(tab.icon, 'phone-tabbar__icon')}
-          <span class="phone-tabbar__label">${tab.label}</span>
-        </a>`
-    }).join('')
-    // F88: the home's row of bars on top of the tabs, the fire on the stretch of the current one
-    const bars = renderBars(TAB_BARS, PHONE_TABS.indexOf(current), PHONE_TABS.length)
-    return `<div class="eqbar phone-tabbar__bars" aria-hidden="true">${bars}</div><nav class="phone-tabbar__tabs" aria-label="Main">${tabs}</nav>`
-}

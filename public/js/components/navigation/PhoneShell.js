@@ -11,7 +11,8 @@
 import { getIcon } from '../Icons.js'
 import { isPhone, onPhoneChange } from '../../utils/isPhone.js'
 import { giveBackAStrayHold, holdPageBehindWindows } from '../ui/windowsHoldThePage.js'
-import { renderTabBar, screenName, currentTab } from './phoneTabs.js'
+import { screenName, currentTab } from './phoneTabs.js'
+import { renderPhoneBar, fitBars } from './barMenu.js'
 import { openPhoneMenu, accountInitial } from './PhoneMenu.js'
 import { isSignedIn } from './AuthNav.js'
 import { MENU_TEXT } from './menuText.js'
@@ -39,6 +40,7 @@ export class PhoneShell {
         this.nameGiven = null
         this.lastPath = null
         this.onScroll = () => this.showToTop()
+        this.onResize = () => this.fitTabBar()
     }
 
     /** Called once, when the app starts. */
@@ -65,7 +67,7 @@ export class PhoneShell {
         topBar.className = 'phone-topbar'
         const tabBar = this.doc.createElement('div')
         tabBar.id = 'phone-tabbar'
-        tabBar.className = 'phone-tabbar'
+        tabBar.className = 'phone-tabbar pbar'
         const toTop = this.doc.createElement('button')
         toTop.type = 'button'
         toTop.className = 'phone-to-top'
@@ -80,6 +82,7 @@ export class PhoneShell {
         tabBar.addEventListener('click', (event) => this.tabTapped(event))
         toTop.addEventListener('click', () => this.toTop())
         this.win.addEventListener('scroll', this.onScroll, { passive: true })
+        this.win.addEventListener('resize', this.onResize)
 
         this.lastPath = this.path
         this.drawTopBar()
@@ -91,6 +94,7 @@ export class PhoneShell {
         if (!this.parts) return
         const { topBar, tabBar, toTop, giveThePageBack } = this.parts
         this.win.removeEventListener('scroll', this.onScroll)
+        this.win.removeEventListener('resize', this.onResize)
         giveThePageBack()
         this.menu?.close()
         this.menu = null
@@ -137,7 +141,14 @@ export class PhoneShell {
     }
 
     drawTabBar() {
-        if (this.parts) this.parts.tabBar.innerHTML = renderTabBar(this.path)
+        if (!this.parts) return
+        this.parts.tabBar.innerHTML = renderPhoneBar(this.path)
+        this.fitTabBar()
+    }
+
+    /** The row of bars has as many bars as the home's has for this width (the passage from the home does not change it). */
+    fitTabBar() {
+        if (this.parts) fitBars(this.parts.tabBar.querySelector('nav.ms'), this.path)
     }
 
     /** A tap on the tab of the screen the person is on goes to the top of it, as on the iPhone. */
