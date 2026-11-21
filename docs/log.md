@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:38] step — F83 onda 3: o mapa da moldura (TASK-18)
+**Branch:** claude/f83-wave-3-shell
+Barra do topo, rodapé, moldura do celular, menu, janela de entrar: 1.402 linhas à mão em 10 arquivos; o que redesenha e quando; as três lojas pequenas para as telas antigas falarem com a moldura; o achado de que a barra do computador de hoje não segue o endereço (decidido: a nova segue, revisável); onde o seletor de idioma entra.
+
 ## [2026-11-21 17:26] step — F83 onda 2: o ponto de partida do Tab volta ao começo da tela depois de uma ação (conferido no navegador contra a tela antiga)
 **Branch:** claude/f83-wave-2-playlists-edit
 No navegador (1280 e 393, a tela antiga em 5011 e a nova em 5012): migalhas com Cancelar, 1 pergunta e 1 navegação nas duas; depois de remover pelo X com Enter e de desfazer com Enter, o foco é a página e o próximo Tab vai ao «Start» das migalhas nas duas; no celular, depois de mover e de remover pela folha, o foco é a página nas duas. Para o X, o `blur` sozinho deixava o Tab recomeçar no controle; `useFocusLikeAfterAnewDraw` agora põe o foco na tela e solta, que é de onde o Tab recomeça. Servidores parados.
