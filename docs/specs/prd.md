@@ -115,6 +115,8 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
 ![[S-61-build-a-series-on-a-home-that-explains-itself]]
 
+![[S-67-reach-the-entry-page-from-the-logo]]
+
 
 
 
@@ -214,6 +216,14 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-10
 ![[S-60-use-the-album-blender-as-an-app-from-the-store]]
 
 ![[S-62-meet-the-album-blender-on-an-entry-page]]
+
+![[S-63-use-the-album-blender-in-my-language]]
+
+![[S-64-edit-the-site-content-from-an-admin]]
+
+![[S-65-keep-the-site-screens-on-one-framework]]
+
+![[S-66-check-each-screen-against-its-approved-prototype]]
 
 ### Transversais
 

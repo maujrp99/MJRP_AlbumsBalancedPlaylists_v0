@@ -3,9 +3,136 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:08] session — UAT da F80: a caixa de discos mais em diagonal e sem corte (UAT-235); o board fora de passo com o estado real
+**Branch:** main
+O MJRP abriu o UAT da F80 com uma captura: «a caixa de discos, fica com um efeito muito 2 d qdo está reta e a area dela bem limita, que tal melhorarmos pra ficar mais em diagonal, mas sem o corte da tela que temos hj. o que acha?» — UAT-235. Ele propôs uma sessão de UAT para ir passando as issues; ela sobe em Opus (desenho de tela), com prévias no comparador antes de mudar a página. Sobre o board, palavras dele: «se preocupe com o status do board está condizente com o status real … se é esperando meu aceite nao deveriam estar em coluna esperando». Medido: de F45 a F78, 33 features «em andamento»; 23 só esperam o juízo dele (deveriam estar em «Pronto para UAT»), 6 mistas, 4 só com passo do agente. O agente mestre deu o caminho: atualizar a cópia do kernel (sessão aberta por ele) e depois fechar em lote, numa sessão, tirando a tarefa de aceite. Ele também disse para não cobrar os aceites: ele os gerencia.
+
+## [2026-11-21 09:41] session — F84: instalar os navegadores do Playwright sempre pelo nome
+**Branch:** main
+A orquestradora do MJRPpersonal repôs o WebKit 2215 que a instalação do V0 tinha tirado do cache da máquina, e avisou a causa: `npx playwright install` sem nome remove as versões dos outros projetos. A regra e o jeito de contornar o travamento ao descompactar estão no plano da F84.
+
+## [2026-11-21 09:30] decision — F85: o item do menu se chama «Start», e «Inicie» em português
+**Branch:** main
+Palavras do MJRP (2026-11-21, no chat): «pode ser new Series», «pensando bem, pode ser Starte e Inicie em pt», «Start». Na spec da F85: «Start» em inglês, «Inicie» em português do Brasil (que entra com a F81). Continua decidido pelo agente, revisável: com a conta aberta, o site abre direto na tela de trabalho e só o logotipo leva à página de entrada.
+
+## [2026-11-21 09:29] session — F85 («Start» no menu, o logotipo leva à página de entrada) em esboço, com a S-67; o roteiro de UAT da F79 e da F80
+**Branch:** main
+O MJRP perguntou se a mudança do menu e do logotipo pode ir a produção já. A F85 nasce na `main` em esboço, via rápida, com a S-67 (EP-01, v6.0 — escolhidos pelo agente). Decidido pelo agente, revisável, porque ele não escolheu: o nome «Start», e com a conta aberta o site continua abrindo direto na tela de trabalho (só o logotipo leva à página de entrada). O ramo espera a F85 na «Priorizada». A pedido dele («uat da f80 e f79»), o roteiro de UAT das duas: `reports/evidence/F79/2026-11-21-f79-f80-uat-script.md`; o aceite é dele, pela tela de aceite do Control Center.
+
+## [2026-11-21 09:28] decision — F82: os álbuns da página de entrada passam a ser escolhidos no CMS
+**Branch:** main
+Palavras do MJRP (2026-11-21): «ah e gostaria que no CMS fosse configurável os albuns que aparece na nova home». Virou o REQ-03 da F82, com a tarefa. Na mesma mensagem ele abriu uma discussão, ainda sem decisão: o item «Home» do menu virar «Initiate» ou «Start», e o logotipo levar à página de entrada, que passaria a ser a home. As sessões por feature não subiram: ele pediu para discutir isso antes da migração.
+
+## [2026-11-21 09:26] decision — o app (F78) fica em pausa; o foco é React com os idiomas, e o CMS
+**Branch:** main
+Palavras do MJRP (2026-11-21, de volta ao Mac): «agora voltei para o mac, pause a continuacao da app por enqto, vamos nos concentrar na migracao pra react + internacionalizacao e no CMS». A F78 para onde está (o esqueleto no simulador; a rodada de desenho das telas do app, escolhida na D-06, não começa). As sessões por feature sobem agora para a F83 (a proposta de arquitetura do React) e a F81 (o levantamento dos textos), mais a atualização da cópia do kernel. O CMS (F82) depende da F332 do harness, que espera a prioridade dele no board de lá.
+
+## [2026-11-21 09:10] session — D-06 e D-07 aplicadas: o app segue por uma rodada de desenho; o MJRP já tem a conta de desenvolvedor da Apple
+**Branch:** main
+Respostas do MJRP pelo Control Center, com a passkey (09:09). D-06: «a» — uma rodada de desenho das telas do app, no comparador, antes de mais código; é a próxima coisa da F78 (a tarefa de protótipo julgado que o plano já previa), numa sessão de desenho em Opus quando as sessões puderem subir. D-07, nas palavras dele: «Tenho conta de dev da apple» — a conta da Apple sai das pendências; a do Expo ele não mencionou e fica para quando houver o que testar no aparelho. O lote `2026-11-21-0845-v0-pending-decisions` está todo respondido e aplicado. O conserto da UAT-232 (`361ad29`) está na `main` e ainda não foi publicado: a publicação foi recusada pela trava de permissão desta sessão e espera a palavra dele.
+
+## [2026-11-21 09:09] session — D-04 e D-05 aplicadas: o contorno laranja sai (UAT-232); a medição fica desligada e ganha uma chave no CMS
+**Branch:** main
+Respostas do MJRP pelo Control Center, com a passkey (09:08). D-04: aceita a recomendação — tirar o contorno laranja ao abrir «paste a list» e deixar as outras duas diferenças como estão. Feito: a caixa da lista colada não acende mais em laranja com o foco dentro; a linha em foco continua marcada (`public/css/views/home.css`, teste `test/components/home/HomePasteBoxFocus.test.js`, que falhou antes e passa depois). UAT-233 e UAT-234 ficam como estão, com a decisão dele escrita na linha; o fecho delas é dele. D-05, nas palavras dele: «Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS» — virou o REQ-02 da F82; a medição segue desligada.
+
+## [2026-11-21 09:09] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 006863e0abbe691f
+- Recomendações aceitas: D-06
+- D-07: (outra) Tenho conta de dev da apple
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lOSFpWUVV3MVNXOTJhbGg2VlhaaGRHUjVTMGREYVdsaE5XVmljVXh4U0dwa2FXNVZaWFZFUW5ZeU9DSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek5UYzVMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakk1Tnprc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaWVtcHVPVEV5VEdkSVMwbzFkV2RFUm1Sd2RXeEZlRlZISWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSTBaV0kxWm1FM1lqWmtOREF3TkRGalltTXlNelUzWXpVMU4yRmhObU5tWVRVeE56Rm1OREkyTkRRNE5XVmpOVEV4WVdJeU0yTmhNekZrWkRFNFlUWXhJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FUUNJQUZ0YmpYQ1JKX0c3TThyTnFPSHhwSHdVem1oZnJHSDg5M00zUy0tdEtGMEFpQXBiOWM5N2VWdTBudGhOcDBuRnc4TlVOeGJUTGppNmp3c0kyUnp1X0xKTXcifQ==
+- folhas: D-06:f389280df56ef970 D-07:3091725cd9e4f1bc
+
+## [2026-11-21 09:08] session — F84 (o sensor visual, com o Playwright) em esboço, com a S-66; o trabalho montado espera a prioridade
+**Branch:** main
+O agente montou o sensor num worktree (Playwright 1.63.0, `test/visual/visual.config.mjs`, `sensors.visual`), mas o gancho de nomes recusou o ramo `chore/visual-sensor-setup`: o trabalho precisa de uma feature no board. A F84 nasce na `main` em esboço (via rápida; S-66; épico e versão escolhidos pelo agente). O que está montado fica sem commit no worktree até o MJRP pôr a F84 na «Priorizada». Primeira rodada do sensor, sem ajuste: 18 P0, 0 P1, 27 P2 — os 18 P0 são todos «ordem de região» na Home a 1280, que o agente atribui aos seletores da configuração e não à tela; a conferir par a par (REQ-02). Com o sensor declarado o doctor deixa de acusar o A2. Efeito colateral a avisar: a instalação dos navegadores tirou da pasta de cache o WebKit 2215, que pode ser o do Playwright 1.56.1 do MJRPpersonal.
+
+## [2026-11-21 09:08] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 837c03887231f8aa
+- Recomendações aceitas: D-04
+- D-05: (outra) Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2laamxNTlRCTGIxZFlWa3RJVEc1clRYcEpkbEE0VG1WdVZEaHlVbXRaVWpkNFlsQlRkV0ZETW5wUVFTSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek5URXlMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakk1TVRJc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaVlsSTNMWEJxVjBwelV6aERabGxmZEhOeGFrVXhkVGt5SWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSXlORGN6WTJNME1qTTJNRGRpWWpRNU1qTmtZemcwTXpJM01XWTNZbUUyTW1JNU0yRXdOREJoWmpGaVlqTmxNVFZqTWpCbFlXWmhNV014TjJJd01tTmtJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJQW9vbGhlVTNPWGttVWVDcWNfYmZHQU9jb2ItTUpackdKWXl1NGxEU0NIVkFpRUFsY0RTM1lBdjFsX0tjMGdKNGlXRFZ5XzN6cGRvbXF6bTRVaUZMUUp1cW5ZIn0=
+- folhas: D-04:ce84bed217e0c7cd D-05:20e14caef230cd38
+
+## [2026-11-21 09:06] decision — F81: o idioma vem do lugar de quem acessa, e a escolha da pessoa vale acima
+**Branch:** main
+Palavras do MJRP (Control Center, com a passkey, D-03, 09:05): «De acordo com a geo location primeiro e depois a selecao do user toma precedencia». Como foi lido: primeira visita pelo país de acesso (Brasil → português do Brasil; fora → inglês); a escolha da pessoa passa a valer acima disso. Decidido pelo agente, revisável: sem saber o lugar, inglês; a escolha guardada no aparelho e, com conta, na conta. Está na spec da F81. O agente mestre registrou no harness a F332 (o kit do CMS mora no harness, S-253 de lá, commit `82c7ebfec`, em esboço): a F82 do V0 declara a dependência no plano.
+
+## [2026-11-21 09:05] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 1c32b72c6db272f7
+- D-03: (outra) De acordo com a geo location primeiro e depois a selecao do user toma precedencia
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2llbXBOTlVodlQxOWtWRGhuY0dWUGMwbHZlVGhMVXpWNVMycERkVlZ5ZG5scmIxZHNhSHBTY1hoUWR5SXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek16UTVMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakkzTkRrc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaVdtMUlRMmRKUVhnMVIyUTFUeTFJY25OS2VDMTBNa1ZWSWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSTFaRGsxWXpSalpERmxNalF6TVRRMU1qVmtOMlprWWpObFlUZGlOMlUyTTJJd05HSXpZakUzT0dFeFpHVTRZMk01Tm1RME5HRXdOVE16WTJJME5HRmlJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJUUNZUWhkVVNkSzBidTN5MzBocmVHVkFpNVlqTHdSM2E0SUpPTlVsMGhxM3hRSWdQX1VKUllDY3pzOWFlcm9vVFZaUC11MjVJUzhNdmM2dm9DOFdHX3RPbUNVIn0=
+- folhas: D-03:50fe081b61df3bb1
+
+## [2026-11-21 09:05] session — D-02 aplicada: a ordem é a do chat
+**Branch:** main
+O MJRP respondeu a D-02 pelo Control Center com «Respondido no chat». No chat ele aceitou a ordem React, idiomas junto com a migração e o CMS depois («Bora !») e priorizou F81 > F83 > F82. Os planos das três features seguem essa ordem; marcado no lote.
+
 ## [2026-11-21 09:04] session — Playwright instalado como devDependency da raiz
 **Branch:** claude/f84-visual-sensor-with-playwright
 Palavras do MJRP: «Instala o playwright». O `@playwright/test` entrou como devDependency da raiz, fixado em `1.63.0` (a versão que o harness usa), não na 1.56.1 do juiz: o WebKit da 1.56.1 (build 2215) não baixou nesta máquina (o download parava depois de 16 MB, em três tentativas, e o outro servidor de download respondeu 403), e o Chromium 1243 e o WebKit 2359 que a 1.63.0 usa já estavam instalados; o kit aceita da 1.51 até a 2.0. O `vitest.config.js` passa a excluir `test/visual/**`: nenhum arquivo do Playwright entra nos testes do app. Só a dependência e o `package-lock.json`; o sensor vem no commit seguinte.
+
+## [2026-11-21 09:04] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 3e3afc4b038345ea
+- D-02: (outra) Respondido no chat
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lXRTF0VWpOclkwUmhXVWxKT1dKVGVFaEZWRWxrUTA5a05HRmhXR0pmVW1kWlZUVkpaVWxSZG5obU1DSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek1qazFMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakkyT1RVc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaWNUZ3Rka1JNWHpOa1RuVkNlSFZEVlRWV1JuRlBhV3g2SWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSmxPV0ZsTXpBNVltUTNNV0V3T1dWaE5EaGxaREpqTkRabU9HVmlaREl4TURjd01EVmxNMlV3TVRVd01HWTNOMlF4TVRWaVpqQXlZakkzTVRrMFpUTTNJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJRG9vSGFZdzFfd2xvbkNuZFZnZllSblNjOGI2cnhzcWFLcjNENWF4cURKc0FpRUEwUnFPT20wWHhiTjdkblVvbFZWdm5LUlU3UVQ0TFFHQVlpR1lsU2VTaTZFIn0=
+- folhas: D-02:49a28fc46e60a650
+
+## [2026-11-21 09:04] session — D-01 aplicada: o kit do CMS mora no harness; o MJRP priorizou F81 > F83 > F82
+**Branch:** main
+O MJRP respondeu pelo Control Center, com a passkey (09:04): o pacote do kit do CMS mora dentro do harness, distribuído como o kernel. Aplicado: o agente mestre e a orquestradora do MJRPpersonal avisados; o plano da F82 atualizado. Ele também priorizou no board F81 > F83 > F82 (`9126a95`; F79 e F80 saíram como entregues). O agente mestre corrigiu o plano das sessões por feature: Sonnet em esforço médio para construir, Opus ou Fable para arquitetura e desenho; ramo `claude/fNN-<slug>` para a sessão de construção; no máximo duas sessões de construção do V0 por vez; atualizar a cópia do kernel no V0 antes. As sessões ainda não subiram: o MJRP está pelo Remote Control, de onde o app não deixa iniciar sessão; sobem quando ele pedir pelo app do Mac.
+
+## [2026-11-21 09:04] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 6f926be79ae04025
+- D-01: b
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lUVWx1TFhwamRHOU9OMmxNYVhveFlUWmtObXRVTURVMFVGSkdhM2d3TFY5TFdqa3hWRkF3YzNKeVVTSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek1qUXdMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakkyTkRBc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaU9XdHVRVFJhY1dOMGRFWlhiamREYzI5SU4zbE9SMUZVSWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSTFaVGc0Wm1KbU56TXpPRE5sWmpBM01URTNZMkV3WXpKa00yUTNNakU1T0RrelkyWTFZV0pqWmprek9HUmtNakZoT0RJeU1USmlPR1EwT1RrellXTXpJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJSG13SFl4eTNRRjMzMkpKUHB0ckE3a1NDRlByR0xYNU9uZ3JxU3NMcEZ6QkFpRUFnVk5pQWtpMHdwQXd6ZFg5TGNJaC1tbVU4bl80WTZuMVBTTF9kZWp2ZzJvIn0=
+- folhas: D-01:61a2a498596a9f6d
+
+## [2026-11-21 08:58] decision — a ordem: React, os idiomas junto com a migração, o CMS depois
+**Branch:** main
+O agente propôs a ordem (1. React com as primeiras telas; 2. os idiomas junto com a migração, tela a tela; 3. o CMS depois, editando o dicionário pronto, quando o kit for pacote) e o MJRP respondeu: «Bora !». Como foi lido: a ordem está aceita como caminho de trabalho; não é aceite de feature nem de ADR. Segue: a medição numa tela real (em curso), depois a proposta de arquitetura da F83 com a F81 e a ADR da adoção, para ele aceitar; os ramos de construção só depois de ele priorizar a F83 e a F81 no board. No lote do Control Center, a pergunta D-02 fica respondida por esta conversa («os idiomas primeiro, o CMS depois»).
+
+## [2026-11-21 08:53] decision — o site vai para React; F83 em esboço, com a S-65
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Ok transforme a opiniao em fato checado e sim vamos com react, qual a vantagem de fazer a migracao e internacionalizacao juntas? O cms nao deveria surgir depois?» Como foi lido: a adoção do React no site está decidida; falta transformar em fato o que a análise deu como opinião, e responder sobre a ordem. Conferido lendo o kit do CMS: é React puro (só `react`, `clsx` e `@dnd-kit`), sem o Next. A F83 «As telas do site em React, tela a tela» nasce na `main` em esboço (S-65, EP-10, v6.0 — épico e versão escolhidos pelo agente). O esforço e o peso estão sendo medidos numa tela real, num ramo de experimento que não entra na `main`. A adoção pede uma ADR, que só ele aceita. Sobre a ordem, o agente reviu a própria recomendação: migração e idiomas juntos, tela a tela; o CMS depois.
+
+## [2026-11-21 08:47] session — análise: adotar um framework no site (React, Vue ou Next)
+**Branch:** main
+A pedido do MJRP («acha que está na hora de usar um framework mais moderno? React, vue ou o next?»). `reports/audits/2026-11-21-mjrpalbumblender-v0-frontend-framework-analysis.md`: o site medido (105 arquivos e 19.461 linhas de tela feita à mão; 141 arquivos de regras, serviços e núcleo que não dependem de tela), as quatro opções com ganhos e perdas, e a recomendação do agente, que é opinião: React com o Vite atual, em TypeScript, tela a tela, começando pela página do CMS (F82); o Next fica como porta aberta. Nenhum código mudou; adotar pede uma ADR aceita por ele.
+
+## [2026-11-21 08:45] session — as pendências com o MJRP vão ao Control Center, num lote de propostas
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Pergunte para o master agent como vc faz propostas/perguntas usando o harness control center e use-o para fazer peeguntas e enderecar suas pendencias comigo. Responderei via harness remote». O agente mestre explicou o mecanismo (`proposal-batch@1`, `mjrp-scripts/proposal_batches.py`). Lote `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`, sete itens: onde mora o pacote do kit do CMS, a ordem entre F82 e F81, os idiomas, os três P2 da Home, a medição de uso, o próximo passo do app, as contas da Apple e do Expo. Fora do lote, porque são válvulas dele: o aceite da F71 à F80 e o carimbo da ADR-0022. Cada resposta se aplica e se marca com `proposal_batches.py mark`.
+
+## [2026-11-21 08:12] session — F81 e F82: o que o agente mestre e o orquestrador do MJRPpersonal responderam
+**Branch:** main
+O kit do CMS é uma pasta do MJRPpersonal (`src/admin-kit/`, ADR-0011 de lá): núcleo em TypeScript sem framework, interface em React, com portas de ler, gravar, imagem e traduzir; o login e o banco são do projeto. Para o V0 os dois recomendam uma ilha React em `/admin`, as portas sobre o Firestore, o Firebase Auth que já existe e a tradução no servidor Node; para os idiomas, um dicionário por idioma e o conteúdo como par `{pt, en}`. A ADR-0011 diz que o kit vira pacote no segundo projeto e proíbe copiar a pasta: onde o pacote mora é decisão do MJRP. Tudo isso está nos planos das duas features como relato a conferir; nada foi lido no kit ainda, nenhum ramo aberto.
+
+## [2026-11-21 08:11] decision — F81 (o site em mais de um idioma) e F82 (um admin com o CMS-kit), em esboço, com S-63 e S-64
+**Branch:** main
+Palavras do MJRP (2026-11-21): «As próximas features agora serao de internacionalizar o site e criar um admin como temos nos sites do MJRP personal, utilizando o CMS-kit nosso.» «Pode falar com o master agent sobre isso e com o orchestrator do MJRP personal tb». As duas nascem na `main`, em esboço (via padrão, tipo feature), com as histórias S-63 e S-64 no PRD, sob o EP-10 e planejadas para a v6.0 — o épico e a versão foram escolhidos pelo agente, revisáveis. Nenhum ramo, protótipo ou código antes das conversas com o agente mestre do harness e o orquestrador do MJRPpersonal e de o MJRP priorizar.
+
+## [2026-11-21 08:10] session — F80: as capas reais em produção; a UAT-231 consertada
+**Branch:** main
+Site publicado da `main` (`e79ac58`, `/assets/main-NTQyvnTw.js`) com `VITE_SPLASH_COVERS=real` no `.env` da pasta da `main` desta máquina (fora do repositório: um build feito noutra máquina, sem essa linha, volta às capas fictícias). Em produção, a 393 px: as capas vêm do servidor de imagens da Apple, a página não passa da largura da tela e o crédito mais longo cabe (termina em 377 px). Relatório: `reports/evidence/F80/2026-11-21-production-proof.md`. A prévia local (porta 5010) foi encerrada pela limpeza do harness e, ao subir de novo, serviu a pasta da sessão, com código antigo: a conferência foi feita em produção.
+
+## [2026-11-21 08:03] decision — F80: as capas reais do Apple Music vão ao ar; o sensor visual é instalado
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Instala o playwright e vamos com as capas da Apple pq por enqto só eu uso». Como foi lido: a página de entrada passa a ser publicada com o conjunto real de capas (`VITE_SPLASH_COVERS=real`), enquanto só ele usa o site; a leitura dos termos da Apple feita na proposta continua valendo para quando o site for público. Antes de ligar, o conserto da UAT-231: no celular o crédito sob cada disco quebra linha e ocupa a largura da coluna (`public/splash.html`, teste `test/splash/creditWrapsOnThePhone.test.js`, que falhou na página antiga e passa na nova). O sensor visual (Playwright) está sendo montado num ramo próprio, `chore/visual-sensor-setup`.
 
 ## [2026-11-21 08:01] session — F79 e F80 publicadas em produção
 **Branch:** main
