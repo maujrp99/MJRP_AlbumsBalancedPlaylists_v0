@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 14:16] session — F80: o dicionário da home no texto v3 e o «Inicie» sozinho com conta (UAT-240, UAT-241)
+**Branch:** wip/f80-home-bar-is-the-menu-build
+Todas as linhas de `public/splash/copy.js` (pt e en) na tabela v3 de `design/proposals/f80-splash/proposal.md`, com o título da abertura só «Mergulhe nos álbuns que você ama.» e a linha menor e o parágrafo embaixo; com conta, o botão «Suas playlists» saiu e fica só o «Inicie». A `main` entrou no ramo por merge. Capturas da primeira tela a 1280 e 393, sem e com conta, em `reports/evidence/F80/home-bar-is-the-menu/`; o caixote aparece na primeira tela a 393.
+
 ## [2026-11-21 14:01] session — F80: a home «A barra é o menu» v2 construída na página de entrada (UAT-240, UAT-241)
 **Branch:** wip/f80-home-bar-is-the-menu-build
 A página real (`public/splash.html`) vira o protótipo aprovado: a barra contínua é o menu (Inicie, Álbuns, Blend, Playlists, Inventário), uma história por item, a virada como faixa curta, o ícone de pausa; com conta, só o menu e o «Inicie» (um item do menu vai à tela do app; decidido pelo orquestrador, revisável); português e inglês pela chave PT · EN (idioma do navegador, escolha no localStorage). Todo texto visível em `public/splash/copy.js`; o título, a linha e o parágrafo da abertura são do MJRP. Cada história só de texto tem um ponto de ambiente vazio (`.ambient`) e a altura em `--story-min`, para a v4 do espaçamento. Testes de `test/splash` e `test/architecture` verdes (359), eslint limpo, prova no navegador em `reports/evidence/F80/home-bar-is-the-menu/`. Docs: `tasks.md` da F80 (TASK-09 a 11) e `behavior.md` (^entry-home-menu).

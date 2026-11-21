@@ -31,7 +31,7 @@ describe('the page as written in the repository', () => {
 
     it('its calls to action lead into the app', () => {
         const hrefs = [...source.matchAll(/<a class="btn[^"]*"[^>]*href="([^"]+)"/g)].map(m => m[1])
-        expect(new Set(hrefs)).toEqual(new Set(['/start', '/start?signin', '/saved-playlists']))
+        expect(new Set(hrefs)).toEqual(new Set(['/start', '/start?signin']))
         expect(source).not.toContain('#privacy')
     })
 })
@@ -64,11 +64,11 @@ describe('the page as served (what a search engine or an assistant reads, withou
             'Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas.',
             'Comece por um artista ou por uma lista.',
             'Ranqueie as faixas do seu jeito.',
-            'Misture a série numa playlist só.',
+            'Junte a série numa playlist só.',
             'Vire o disco',
-            'Guarde os Blends que você curtiu.',
+            'Guarde as playlists que você curtiu.',
             'Conte as mídias físicas da sua estante.',
-            'Coloque a agulha na sua primeira série.'
+            'Coloque sua primeira série para tocar.'
         ]
         const at = order.map(line => text.indexOf(line))
         at.forEach(i => expect(i).toBeGreaterThan(-1))

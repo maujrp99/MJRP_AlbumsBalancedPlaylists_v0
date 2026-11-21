@@ -44,15 +44,17 @@ describe('the dictionary', () => {
         const all = LANGS.flatMap(l => Object.values(COPY[l])).join('\n')
         expect(all).not.toMatch(/ponha|ponho|pôr\b/i)
         expect(t('t.albums', 'pt')).toBe('Ranqueie as faixas do seu jeito.')
-        expect(t('p.playlists', 'pt')).toMatch(/Spotify e (o )?Apple Music/)
-        expect(t('p.playlists', 'en')).toMatch(/Spotify and Apple Music/)
+        expect(t('p.playlists', 'pt')).toMatch(/Spotify ou a Apple Music/)
+        expect(t('p.playlists', 'en')).toMatch(/Spotify or Apple Music/)
         expect(t('t.inventory', 'pt')).toBe('Conte as mídias físicas da sua estante.')
-        expect(t('e.title', 'pt')).toMatch(/^Coloque a agulha/)
+        expect(t('e.title', 'pt')).toBe('Coloque sua primeira série para tocar.')
+        expect(t('h.title', 'pt')).toBe('Mergulhe nos álbuns que você ama.')
+        expect(t('h.what', 'pt')).toBe('Seus álbuns do momento, numa playlist balanceada.')
     })
 
     it('the ranking is optional and partial: never «every track»', () => {
         expect(t('t.albums', 'en')).not.toMatch(/every track/i)
-        expect(t('p.albums', 'pt')).toMatch(/Uma só ou várias/)
+        expect(t('p.albums', 'pt')).toMatch(/Uma só ou várias, para cima ou para baixo/)
     })
 })
 
