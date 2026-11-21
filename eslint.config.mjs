@@ -3,6 +3,7 @@
  *
  * Each part of the code is linted as what it is (F65, UAT-20):
  *   public/js        ES modules that run in the browser (built by Vite)
+ *   public/splash    the entry page's modules (F80), in the browser
  *   public/js/workers  the same, in a web worker
  *   shared           ES modules that run in the browser and in Node
  *   server           CommonJS that runs in Node
@@ -75,6 +76,11 @@ export default [
                 MusicKit: "readonly" // Apple's MusicKit JS, loaded from Apple's CDN at run time
             }
         }
+    },
+    {
+        // the entry page (F80): its own small modules, in the browser; covers.js is also read by the build (Node)
+        files: ["public/splash/**/*.js"],
+        languageOptions: { sourceType: "module", globals: globals.browser }
     },
     {
         files: ["public/js/workers/**/*.js"],

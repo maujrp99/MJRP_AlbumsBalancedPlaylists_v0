@@ -61,6 +61,8 @@ const listJs = (dir = '') => fs.readdirSync(path.join(JS_ROOT, dir), { withFileT
 
 const read = (file) => fs.readFileSync(file, 'utf8')
 const pagesOfTheSite = () => Object.values(viteConfig.build.rollupOptions.input)
+/** The pages that use Tailwind: the app's. The entry page (public/splash.html, F80) has its own styles and no Tailwind class. */
+const pagesWithTailwind = () => pagesOfTheSite().filter(page => path.basename(page) !== 'splash.html')
 
 const unescapeCss = (name) => name
     .replace(/\\([0-9a-f]{1,6}) ?/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
@@ -84,7 +86,7 @@ describe('Tailwind is built with the site', () => {
     let builtCss, built, fromEveryFile, everyFileText
 
     beforeAll(async () => {
-        everyFileText = [...pagesOfTheSite(), ...listJs().map(file => path.join(JS_ROOT, file))].map(read).join('\n')
+        everyFileText = [...pagesWithTailwind(), ...listJs().map(file => path.join(JS_ROOT, file))].map(read).join('\n')
         builtCss = await build(tailwindConfig)
         built = classesOf(builtCss)
         fromEveryFile = classesOf(await build({ ...tailwindConfig, content: [{ raw: everyFileText, extension: 'html' }], safelist: [] }))

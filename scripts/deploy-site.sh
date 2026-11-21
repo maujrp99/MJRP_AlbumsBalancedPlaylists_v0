@@ -81,7 +81,8 @@ build_site() {
     die "the build failed: nothing was deployed"
   fi
 
-  # Vite bundles only what public/index.html imports. The rest of what the site
+  # Vite bundles only what public/index.html (the app) and public/splash.html (the entry
+  # page, F80) import. The rest of what the site
   # serves is copied as it is: the Firebase configuration, the stylesheets linked
   # by path, the images and data under assets, and the old .ico icon.
   step "Copying what Vite does not bundle"
@@ -96,20 +97,24 @@ build_site() {
 
 # --- verification of what was built -----------------------------------------
 
-# Prints the path of the main script named by an index.html read from stdin.
+# Prints the path of the main script named by a page read from stdin.
+# F80: in dist/ the app is app.html; index.html is the entry page served at the root.
 main_script_of() {
   grep -oE '<script[^>]*src="/assets/[^"]+\.js"' | grep -oE '/assets/[^"]+\.js' | head -1
 }
 
 verify_build() {
   step "Verifying what was built"
-  local dist="$SRC_DIR/dist" client_id maps missing ref path
+  local dist="$SRC_DIR/dist" client_id maps missing ref path page
 
-  [ -f "$dist/index.html" ] || die "dist/index.html was not built"
+  [ -f "$dist/app.html" ] || die "dist/app.html (the app) was not built"
+  [ -f "$dist/index.html" ] || die "dist/index.html (the entry page) was not built"
+  [ ! -f "$dist/splash.html" ] || die "dist/splash.html is still there: the entry page was not put at the root"
+  grep -q 'data-page="entry"' "$dist/index.html" || die "dist/index.html is not the entry page"
 
-  MAIN_SCRIPT="$(main_script_of < "$dist/index.html")"
-  [ -n "$MAIN_SCRIPT" ] || die "dist/index.html names no main script under /assets/"
-  [ -s "$dist$MAIN_SCRIPT" ] || die "the main script named by index.html does not exist: $MAIN_SCRIPT"
+  MAIN_SCRIPT="$(main_script_of < "$dist/app.html")"
+  [ -n "$MAIN_SCRIPT" ] || die "dist/app.html names no main script under /assets/"
+  [ -s "$dist$MAIN_SCRIPT" ] || die "the main script named by app.html does not exist: $MAIN_SCRIPT"
   ok "main script: $MAIN_SCRIPT"
 
   client_id="$(read_client_id "$ENV_FILE")"
@@ -124,14 +129,17 @@ verify_build() {
   [ "$maps" = "0" ] || die "$maps source map file(s) in dist/: the site must not hand out its source"
   ok "no .map files"
 
-  # Every local file index.html points to must be in dist. Firebase answers a
-  # missing path with index.html (status 200), so a missing file is silent in production.
+  # Every local file the two pages point to must be in dist. Firebase answers a
+  # missing path with app.html (status 200), so a missing file is silent in production.
+  # An address of the app (no extension: /home, /home?signin) is not a file.
   missing=0
-  for ref in $(grep -oE '(src|href)="/[^"/][^"]*"' "$dist/index.html" | sed -E 's/^(src|href)="//; s/"$//; s/[?#].*$//' | sort -u); do
-    if [ ! -f "$dist$ref" ]; then warn "index.html points to a file that is not in dist: $ref"; missing=1; fi
+  for page in app.html index.html; do
+    for ref in $(grep -oE '(src|href)="/[^"/][^"]*"' "$dist/$page" | sed -E 's/^(src|href)="//; s/"$//; s/[?#].*$//' | grep -E '\.[a-z0-9]+$' | sort -u); do
+      if [ ! -f "$dist$ref" ]; then warn "$page points to a file that is not in dist: $ref"; missing=1; fi
+    done
   done
   [ "$missing" -eq 0 ] || die "the build is incomplete"
-  ok "every local file named by index.html is in dist/"
+  ok "every local file named by app.html and index.html is in dist/"
 
   # Everything under public/css and public/assets must have arrived.
   missing=0
@@ -187,17 +195,17 @@ verify_production() {
   step "Verifying production ($SITE_URL)"
   local attempt live_script="" head_bytes
   for attempt in 1 2 3 4 5 6; do
-    live_script="$(curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL/index.html" 2>/dev/null | main_script_of || true)"
+    live_script="$(curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL/app.html" 2>/dev/null | main_script_of || true)"
     [ "$live_script" = "$MAIN_SCRIPT" ] && break
     sleep 5
   done
   if [ "$live_script" != "$MAIN_SCRIPT" ]; then
     print_rollback
-    die "the live index.html names '$live_script', not the script just built ('$MAIN_SCRIPT')"
+    die "the live app.html names '$live_script', not the script just built ('$MAIN_SCRIPT')"
   fi
-  ok "the live index.html names the script just built: $MAIN_SCRIPT"
+  ok "the live app.html names the script just built: $MAIN_SCRIPT"
 
-  # A missing file is answered with index.html and status 200: look at the content.
+  # A missing file is answered with app.html and status 200: look at the content.
   head_bytes="$(curl -fsS --max-time 30 "$SITE_URL$MAIN_SCRIPT" 2>/dev/null | head -c 200 | tr '[:upper:]' '[:lower:]' || true)"
   case "$head_bytes" in
     "") print_rollback; die "the live main script did not answer: $SITE_URL$MAIN_SCRIPT" ;;
@@ -236,7 +244,7 @@ verify_build
 if [ "$DRY_RUN" -eq 1 ]; then
   step "Deploy skipped (dry run)"
   info "would run, in the clean copy: firebase deploy --only hosting --project $GCP_PROJECT"
-  info "would then check that $SITE_URL/index.html names $MAIN_SCRIPT"
+  info "would then check that $SITE_URL/app.html names $MAIN_SCRIPT"
   print_rollback
   print_dry_run_end
   exit 0

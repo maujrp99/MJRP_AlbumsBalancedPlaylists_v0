@@ -1,0 +1,9 @@
+/                  200 Cache-Control: no-cache data-page="entry"
+/?entry            200 Cache-Control: no-cache data-page="entry"
+/index.html        200 Cache-Control: no-cache data-page="entry"
+/home              200 Cache-Control: no-cache /assets/main-C3SNKRCy.js
+/albums/abc123     200 Cache-Control: no-cache /assets/main-C3SNKRCy.js
+/inventory         200 Cache-Control: no-cache /assets/main-C3SNKRCy.js
+/home?signin       200 Cache-Control: no-cache /assets/main-C3SNKRCy.js
+/callback          200 Cache-Control: no-cache /assets/main-C3SNKRCy.js
+/app.html          200 Cache-Control: no-cache /assets/main-C3SNKRCy.js

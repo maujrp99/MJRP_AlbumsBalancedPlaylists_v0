@@ -47,6 +47,9 @@ import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
 import { startPhoneShell } from './components/navigation/PhoneShell.js'
 import { userStore } from './stores/UserStore.js'
 import { startUsageMeasurement } from './services/usage/usageWiring.js'
+import { openSignInWhenAsked } from './components/navigation/signInFromLink.js'
+import { isSignedIn } from './components/navigation/AuthNav.js'
+import { showLoginModal } from './components/LoginModal.js'
 
 const initUI = () => {
     const topNav = new TopNav()
@@ -96,6 +99,14 @@ async function bootstrap() {
     } else {
         router.handleRouteChange()
     }
+
+    // «Sign in» on the entry page (F80) leads to /home?signin: the sign-in window opens here
+    openSignInWhenAsked({
+        location: window.location,
+        signedIn: isSignedIn(user),
+        openSignIn: showLoginModal,
+        setAddress: (address) => router.setAddress(address, { replace: true })
+    })
 
     console.log('🚀 App Bootstrap Complete')
 }

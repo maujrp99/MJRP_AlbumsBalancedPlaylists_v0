@@ -22,8 +22,23 @@ describe('hosting: the page is always asked for again', () => {
         expect(cacheOf('/index.html')).toBe('no-cache')
     })
 
-    it('every address still falls back to the page, after the server routes', () => {
+    it('the app\'s page asked for by name is not kept either (F80: dist/app.html)', () => {
+        expect(cacheOf('/app.html')).toBe('no-cache')
+    })
+
+    it('F80: the root, the entry page, is not kept either (it names the entry page\'s script)', () => {
+        expect(cacheOf('/')).toBe('no-cache')
+    })
+
+    it('every address still falls back to the app, after the server routes', () => {
         const sources = firebase.hosting.rewrites.map(rewrite => rewrite.source)
         expect(sources).toEqual(['/api/**', '**'])
+    })
+
+    it('F80: the fallback is the app (app.html); the root is the entry page, served as the file index.html', () => {
+        const fallback = firebase.hosting.rewrites.find(rewrite => rewrite.source === '**')
+        expect(fallback.destination).toBe('/app.html')
+        expect(firebase.hosting.redirects ?? []).toEqual([])
+        expect(firebase.hosting.cleanUrls ?? false).toBe(false)
     })
 })

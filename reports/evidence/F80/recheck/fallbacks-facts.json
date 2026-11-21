@@ -1,0 +1,230 @@
+{
+ "w1280.nojs.proto": {
+  "text": "see screenshot",
+  "three": false
+ },
+ "w1280.nojs.real": {
+  "text": "see screenshot",
+  "three": false
+ },
+ "w1280.nojs.fict": {
+  "text": "see screenshot",
+  "three": false
+ },
+ "w1280.plain.proto": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 1280,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w1280.plain.real": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 1280,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w1280.plain.fict": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 1280,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.reduced.proto": {
+  "html": "js",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": false,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 467,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.reduced.real": {
+  "html": "js",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": false,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 467,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.reduced.fict": {
+  "html": "js",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": false,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 393,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.nogl.proto": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 467,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.nogl.real": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 467,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.nogl.fict": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 393,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.nojs.proto": {
+  "text": "see screenshot",
+  "three": false
+ },
+ "w393.nojs.real": {
+  "text": "see screenshot",
+  "three": false
+ },
+ "w393.nojs.fict": {
+  "text": "see screenshot",
+  "three": false
+ },
+ "w393.plain.proto": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 467,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.plain.real": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 467,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ },
+ "w393.plain.fict": {
+  "html": "js moving",
+  "stage": "stage",
+  "cssOpacity": "1",
+  "cssVis": "visible",
+  "motionVisible": true,
+  "motionText": "Pause motion",
+  "fonts": [
+   "Syne 700",
+   "Syne 800"
+  ],
+  "scrollW": 393,
+  "h1": "Syne, sans-serif",
+  "bodyBg": "rgb(10, 10, 12)",
+  "accent": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+  "three": false
+ }
+}
