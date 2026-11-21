@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:35] session — conform: as 8 perguntas do relatório viram um lote para o Control Center
+**Branch:** wip/kernel-conform-2-2026-11-21
+Lote `reports/proposals/2026-11-21-1335-v0-conform-questions.md` (proposal-batch@1, 8 itens, recomendada primeiro). Nenhuma pergunta respondida nem registrada como respondida. `proposal_batches.py check` passou. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:34] session — conform: `process-sensors` completo, `sensors.board_states` declarado (CM-0144, 0148, 0150, 0153, 0154, 0155, 0156, 0157)
 **Branch:** wip/kernel-conform-2-2026-11-21
 Com o seed do board já rodado no checkout principal, declarei `sensors.board_states` no contrato (`board_states_check.py`). O sensor saiu com exit 0 («o grafo e o registro conferem») e as 8 notas passaram em `--check-note` antes de serem registradas. Decidido pelo agente, revisável pelo MJRP.
