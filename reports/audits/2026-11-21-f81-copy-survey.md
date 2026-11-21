@@ -190,3 +190,42 @@ Recomendação (opinião): **a**. O app (F78) fica fora.
 - `design/copy/` não existia; foi criada com o mapa, as propostas e a lista de descartados.
 - `scripts/i18n/` é novo; o script precisa de `acorn` (hoje só existe no `node_modules` da pasta da `main`, vem de dependência transitiva do ESLint): `NODE_PATH=/Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/node_modules node scripts/i18n/scan-copy.cjs --out <arquivo>`. Se a F83 trouxer o sensor «sem texto solto no código» (TASK-08), o script é a base.
 - Não foi aberta página de revisão em Artifact, nem rodada a suíte; nenhum arquivo de produto foi tocado.
+
+## Acerto com o deck do MJRPpersonal e a revisão do volume de texto (pedido do orquestrador, 2026-11-21 10:20)
+
+**A forma.** O mapa passou a ter a mesma forma de `design/copy/2026-11-07-copy-deck-pagina-principal.md`: cabeçalho com fonte e contagens, uma tabela por tela, colunas `ID | Onde aparece | Tipo | Português | Status PT | English | Status EN` (nessa ordem, para a mesma ferramenta ler os dois decks), mais as colunas `Car. PT | Pal. PT | Car. EN | Pal. EN | Nota`. «Onde aparece» diz tela, tipo e estado em palavras e traz o arquivo e a linha ao fim.
+
+**Onde diverge, e por quê.**
+- O inglês é o texto **em produção hoje**: «em produção, a revisar»; o português é «tradução do agente, a revisar». Nenhuma linha é «final»: essa marca é do MJRP, na página de revisão.
+- O deck é **gerado do código** por script, não escrito a mão como a cópia do protótipo de lá; por isso há o registro de ids (abaixo) e a lista de descartados.
+- Não há «marca como placeholder»: as marcas (The Album Blender, Spotify, Apple Music…) são linhas normais com a nota `fica`. O nome do produto aparece em 5 formas (IA-02); a decisão de uma só vem antes de virar placeholder.
+- Não montei a página de revisão (pedido: ainda não).
+
+**Ids estáveis, pensados para virar chaves do CMS.** Formato `tela.palavras-do-texto` (`home.series-name`, `blend.blend-it-now`). `design/copy/album-blender-ids.json` registra texto → id e o `build-deck.py --ids` **nunca muda um id já registrado**, mesmo que a tela ou o texto mude; texto novo ganha id novo. Fragilidade a decidir antes do CMS: o id nasce da primeira versão do texto em inglês, então algumas chaves são feias (`pl.n-exported-to-apple-musicnn`, `home.n-is-saved`): vale renomear os 234 textos montados à mão (chave semântica, ex. `home.series-saved`) **uma vez**, antes de a F83 definir o contrato.
+
+**O volume do texto (só medida, sem juízo, sem reescrever).**
+
+| Tela | Textos | Caracteres EN | Palavras EN | Caracteres PT | Palavras PT |
+|---|---:|---:|---:|---:|---:|
+| Inventário | 238 | 7326 | 1384 | 8023 | 1453 |
+| Playlists | 205 | 5434 | 958 | 5937 | 1042 |
+| Séries e álbuns | 144 | 3706 | 679 | 4168 | 725 |
+| Página de entrada | 67 | 2857 | 549 | 2921 | 550 |
+| Home (montar a série) | 80 | 2262 | 461 | 2466 | 467 |
+| Blend | 79 | 1387 | 251 | 1602 | 281 |
+| Ranking e faixas | 62 | 1316 | 217 | 1521 | 243 |
+| Menu, rodapé, aplicação | 58 | 1143 | 208 | 1255 | 218 |
+| Algoritmos e receitas | 44 | 1088 | 194 | 1189 | 205 |
+| Outros | 42 | 933 | 165 | 1062 | 183 |
+| Componentes comuns | 42 | 846 | 146 | 982 | 156 |
+| Conta e conexões | 27 | 818 | 140 | 898 | 150 |
+| Em breve | 12 | 288 | 48 | 293 | 48 |
+| Servidor | 5 | 150 | 25 | 150 | 25 |
+| `index.html` | 1 | 10 | 1 | 13 | 1 |
+| **Total** | **1106** | **29 564** | **5 426** | | |
+
+Cada linha do mapa tem seus caracteres e palavras (inglês e português), e o total de cada tela está abaixo do título dela. **Não medi o que cabe sem rolar a 1280 e a 393 px**: isso exige o navegador com conta e dados reais, e o sensor da F84 ainda não existe. As telas somam o texto do código, não o que aparece de uma vez (um mesmo estado mostra 5 a 40 textos). A régua da revisão vem depois, do harness. O português passa de 8 a 14% mais longo que o inglês, o que pesa para o celular.
+
+**Testes que comparam texto de interface** (`scripts/i18n/tests-with-literal-text.py`): **178 dos 289 arquivos de teste** (`test/`) trazem entre aspas pelo menos um texto do deck (≥ 8 caracteres, sem `{}`), 351 textos distintos. Por pasta: `services` 37, `components` 32, `models` 23, `controllers` 15, `views` 13, `architecture` 12, `server` 9 (o resto tem poucos); os maiores são `test/views/InventoryView.values.test.js` (43 textos), `test/components/playlists/PhonePlaylists.test.js` (22), `test/views/InventoryView.ratings.test.js` (21), `test/views/InventoryView.lowestForSale.test.js` (18), `test/splash/entryPage.test.js` (15). Conta a mais (um texto de fixture que coincide com o da tela) e a menos (texto montado, regex), então é ordem de grandeza. Esses testes vão quebrar quando o texto sair do código; o conserto é lerem o dicionário pelo id em vez de comparar o texto (a TASK-04 da F81 deve dizer isso; fica no plano como risco).
+
+**O que levaria montar a página de revisão do V0 a partir deste deck** (não feito): (1) um `copy.json` no formato que o `build_copy_review.py` do MJRPpersonal lê, gerado do `rows.json` e do `pt.json` (id, seção, onde aparece, tipo, pt, en, status), um passo curto no `build-deck.py`; (2) as 1106 linhas em seções por tela, filtro por «MJRP decide» e por «provável»; (3) a marca «final» só no campo do MJRP, por linha, e a coluna de tamanho visível (a régua de volume); (4) o Artifact publicado com banco para o rascunho; (5) a coleta do documento enviado de volta para `design/copy/`, com regra de conflito (um só escritor por vez: ou o deck gerado, ou a revisão, nunca os dois). É trabalho de meio dia para o formato e um dia com os testes do artefato; o que mais custa é decidir o que a revisão pode mudar (só texto, nunca o id).

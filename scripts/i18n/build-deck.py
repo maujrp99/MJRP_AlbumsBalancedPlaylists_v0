@@ -12,7 +12,7 @@ import json, re, sys, hashlib, collections, argparse
 
 ap = argparse.ArgumentParser()
 ap.add_argument('scan'); ap.add_argument('rows')
-ap.add_argument('--render'); ap.add_argument('--pt'); ap.add_argument('--counts')
+ap.add_argument('--render'); ap.add_argument('--pt'); ap.add_argument('--ids', help='registry text -> id; ids already in it are never changed (they become CMS keys)')
 a = ap.parse_args()
 scan = json.load(open(a.scan))
 
@@ -94,18 +94,24 @@ def slug(t):
 PREFIX = {'Página base (index.html)': 'idx', 'Página de entrada': 'ent', 'Servidor': 'srv', 'Home (montar a série)': 'home', 'Menu, rodapé e aplicação': 'nav',
           'Conta e conexões (login, Spotify, Apple Music)': 'acct', 'Blend': 'blend', 'Inventário': 'inv', 'Playlists': 'pl', 'Ranking e faixas': 'rank',
           'Séries e álbuns': 'ser', 'Componentes comuns (modais, filtros, paginação, avisos)': 'ui', 'Algoritmos e receitas do Blend': 'alg', 'Em breve': 'soon', 'Outros': 'misc'}
-used = set(); out = []
+import os
+registry = json.load(open(a.ids)) if a.ids and os.path.exists(a.ids) else {}
+used = set(registry.values()); out = []
 for key, row in rows.items():
     screen = sorted(row['screens'].items(), key=lambda kv: (-kv[1], kv[0] in ('Página de entrada', 'Página base (index.html)')))[0][0]
     multi = len(row['screens']) > 1
-    base = f"{PREFIX[screen]}.{slug(key)}"
-    i = 1; rid = base
-    while rid in used:
-        i += 1; rid = f"{base}-{i}"
-    used.add(rid)
+    if key in registry:
+        rid = registry[key]
+    else:
+        base = f"{PREFIX[screen]}.{slug(key)}"
+        i = 1; rid = base
+        while rid in used:
+            i += 1; rid = f"{base}-{i}"
+        used.add(rid); registry[key] = rid
     typ = row['types'].most_common(1)[0][0]
     out.append({'id': rid, 'screen': screen, 'also_on': sorted(set(row['screens']) - {screen}), 'type': typ, 'en': key,
                 'built': has_vars(key), 'tier': 'provável' if row['tiers'] == {'maybe'} else 'certo', 'places': row['places']})
+if a.ids: json.dump(registry, open(a.ids, 'w'), ensure_ascii=False, indent=0, sort_keys=True)
 json.dump({'rows': out, 'excluded': excluded, 'fixture': fixture}, open(a.rows, 'w'), ensure_ascii=False, indent=1)
 print(json.dumps({'rows': len(out), 'excluded': len(excluded), 'sites': sum(len(r['places']) for r in out)}))
 
@@ -129,10 +135,15 @@ def vocab(en):
 if a.render:
     pt = {x['id']: x for x in json.load(open(a.pt))} if a.pt else {}
     esc = lambda t: t.replace('|', '\\|').replace('\n', ' ')
+    n = len(out)
+    tw = lambda t: len(t.split())
     L = ['# Documento de copy: The Album Blender (site inteiro, inglês → português do Brasil)', '',
-         '> **Gerado por script** (`scripts/i18n/scan-copy.cjs` + `scripts/i18n/build-deck.py`); não editar à mão: rode de novo. Fonte: o código em `public/` e `server/` no commit do ramo.',
-         '> **A coluna PT é proposta do agente (Sonnet), nunca final.** Nenhuma linha foi aprovada pelo MJRP; a coluna «Marca» diz o que precisa dele. A ordem das telas segue o menu do site.',
-         '> **Limite:** a revisão muda o texto de uma linha; não tira, não põe e não move item de tela.', '']
+         '- **Fonte:** o código em `public/` e `server/` (`scripts/i18n/scan-copy.cjs` + `scripts/i18n/build-deck.py`; gerado, não editar à mão: rode de novo). Mesma forma do deck do MJRPpersonal (`design/copy/2026-11-07-copy-deck-pagina-principal.md`).',
+         f'- **English:** {n} textos distintos em {sum(len(r["places"]) for r in out)} pontos do código; é o texto **em produção hoje, a revisar**. Nenhum está marcado final.',
+         f'- **Português:** {n} de {n} propostos pelo agente (Sonnet), **tradução do agente, a revisar**; nenhum aprovado. A coluna «Nota» diz o que precisa do MJRP.',
+         '- **Final** é marca do MJRP, feita por ele na página de revisão; nenhuma linha daqui foi marcada por agente.',
+         '- **Medidas** (colunas Car./Pal.): caracteres e palavras do texto como está no código, com cada `{}` contado como um caractere e uma palavra; só medida, sem julgamento. Totais por tela abaixo de cada título. O que cabe sem rolar a 1280 e a 393 px **não foi medido** (precisa do navegador com conta e dados: sensor da F84).',
+         '- **Limite:** a revisão muda o texto de uma linha; não tira, não põe e não move item de tela.', '']
     order = ['Página base (index.html)', 'Página de entrada', 'Menu, rodapé e aplicação', 'Conta e conexões (login, Spotify, Apple Music)', 'Home (montar a série)', 'Séries e álbuns',
              'Ranking e faixas', 'Blend', 'Algoritmos e receitas do Blend', 'Playlists', 'Inventário', 'Componentes comuns (modais, filtros, paginação, avisos)', 'Em breve', 'Servidor', 'Outros']
     by = collections.defaultdict(list)
@@ -140,18 +151,21 @@ if a.render:
     for sc in order:
         rs = by.get(sc)
         if not rs: continue
-        L += [f'## {sc} ({len(rs)})', '', '| ID | Onde aparece | Tipo | EN (hoje) | PT (proposta do agente) | Marca |', '|---|---|---|---|---|---|']
+        pe = [pt.get(r['id'], {}).get('pt', '') for r in rs]
+        L += [f'## {sc}', '', f'Totais da tela: {len(rs)} textos · English {sum(len(r["en"]) for r in rs)} caracteres, {sum(tw(r["en"]) for r in rs)} palavras · Português {sum(map(len, pe))} caracteres, {sum(map(tw, pe))} palavras.', '',
+              '| ID | Onde aparece | Tipo | Português | Status PT | English | Status EN | Car. PT | Pal. PT | Car. EN | Pal. EN | Nota |', '|---|---|---|---|---|---|---|---|---|---|---|---|']
         for r in rs:
             x = pt.get(r['id'], {})
             places = r['places']; pl = ', '.join(f'`{q.replace("public/js/","").replace("public/","")}`' for q in places[:2]) + (f' +{len(places)-2}' if len(places) > 2 else '')
-            if r['also_on']: pl += ' · também em: ' + '; '.join(r['also_on'])
-            mark = x.get('mark', '—')
+            where = f"{r['screen']} · {r['type']}" + (' (também em: ' + '; '.join(r['also_on']) + ')' if r['also_on'] else '') + f'; {pl}'
+            note = x.get('mark', '—')
             v = vocab(r['en'])
-            if v and 'MJRP decide' not in mark: mark += ' + MJRP decide'
-            if v and not x.get('why'): mark += ' — ' + '; '.join(v)
-            if r['tier'] == 'provável': mark += ' + provável'
-            if x.get('why'): mark += f' — {x["why"]}'
-            L.append(f"| `{r['id']}` | {esc(pl)} | {r['type']} | {esc(r['en'])} | {esc(x.get('pt', '—'))} | {esc(mark)} |")
+            if v and 'MJRP decide' not in note: note += ' + MJRP decide'
+            if v and not x.get('why'): note += ' — ' + '; '.join(v)
+            if x.get('why'): note += f' — {x["why"]}'
+            if r['tier'] == 'provável': note += ' + provável (uso não provado pela busca)'
+            ptx = x.get('pt', '')
+            L.append(f"| `{r['id']}` | {esc(where)} | {r['type']} | {esc(ptx or '—')} | tradução do agente, a revisar | {esc(r['en'])} | em produção, a revisar | {len(ptx)} | {tw(ptx)} | {len(r['en'])} | {tw(r['en'])} | {esc(note)} |")
         L.append('')
     L += ['## Fora deste mapa', '',
           '- **Nomes de álbuns, artistas e faixas** vindos dos catálogos (Apple Music, Spotify, Discogs, BestEverAlbums): nunca se traduzem.',

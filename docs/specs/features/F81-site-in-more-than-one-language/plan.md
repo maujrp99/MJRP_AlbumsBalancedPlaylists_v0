@@ -40,5 +40,6 @@ Ainda não lidos pelo agente do V0; apontados em 2026-11-21 08:12 pelo orquestra
 - **O país no Firebase Hosting:** a rota `/` hoje é decidida pela F80/F85; ler o país (cabeçalho do Hosting ou do servidor) sem piscar o idioma errado e sem atrapalhar a leitura por buscadores é a parte arriscada (a conferir na proposta).
 - **Conteúdo já gravado em inglês** (nomes de playlists e de lotes) continua em inglês: dizer isso à pessoa, ou não gravar texto de interface.
 - **Rótulos que mudam de sentido ao traduzir** («Series», «Blend», «Owned»): decisão do MJRP no relatório antes da migração, senão se traduz duas vezes.
+- **178 dos 289 arquivos de teste comparam texto de interface** literal (351 textos): vão quebrar ao tirar o texto do código, e quebrariam de novo quando o CMS editar; os testes passam a ler o dicionário pelo id. Lista: `scripts/i18n/tests-with-literal-text.py`.
 - **O mapa envelhece** a cada commit; o sensor da TASK-08 (rodar o script e comparar com o dicionário) segura isso.
 - O levantamento por busca no código não vê texto montado por função externa nem o que o navegador mostra (ver o relatório, «O que a busca não vê»).
