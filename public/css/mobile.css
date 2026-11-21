@@ -19,7 +19,7 @@
   /* ── 1. Measures ─────────────────────────────────────────────────────────────────────────── */
   :root {
     --phone-topbar-h: 56px; /* F88: the home's bar on the phone is 56 px */
-    --phone-tabbar-h: 64px; /* F88: the home's bottom bar is 64 px (+1 px line): 8 px of bars + the tabs */
+    --phone-tabbar-h: var(--pbar-h); /* F88: the bottom menu is ONE component with the home's; its height is written once, in public/splash/bar-menu.css */
     --phone-action-bar-h: 64px;
     --phone-gutter: 16px;
     --phone-target: 44px;
@@ -273,81 +273,8 @@
     top: calc(var(--phone-topbar-h) + var(--phone-safe-top));
   }
 
-  /* ── 5. Tab bar (REQ-03) ─────────────────────────────────────────────────────────────────── */
-  .phone-tabbar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 40;
-    padding: 0 env(safe-area-inset-right, 0px) var(--phone-safe-bottom) env(safe-area-inset-left, 0px);
-    background: var(--phone-bar-bg);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    backdrop-filter: blur(16px) saturate(1.4);
-    border-top: 1px solid var(--phone-bar-line);
-  }
 
-  .phone-tabbar {
-    --muted: #b9b9c2;
-  }
-
-  /* F88: the home's row of bars on top of the tabs; the fire lights the stretch of the current tab */
-  .phone-tabbar__bars {
-    top: 0;
-    bottom: auto;
-    left: 0;
-    right: 0;
-    height: 8px;
-    gap: 1px;
-  }
-
-  .phone-tabbar__tabs {
-    box-sizing: border-box;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    min-height: var(--phone-tabbar-h); /* a floor, not a height: larger text makes the bar taller, never lets a label climb onto the bars */
-    padding-top: 14px; /* the row of bars is the first 8 px: 6 px of gap are guaranteed under it */
-  }
-
-  .phone-tabbar__tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    min-width: 0;
-    min-height: var(--phone-target);
-    color: #b9b9c2;
-    font-size: 12px;
-    line-height: 14px;
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  .phone-tabbar__tab:active {
-    color: #fff;
-  }
-
-  .phone-tabbar__tab.is-current {
-    color: #fb923c; /* F88: the home's lit item, 8.7:1 on the bar */
-  }
-
-  .phone-tabbar__icon {
-    width: 24px;
-    height: 24px;
-    flex: none;
-  }
-
-  .phone-tabbar__tab.is-current .phone-tabbar__icon {
-    filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.55));
-  }
-
-  .phone-tabbar__label {
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  /* ── 5. Tab bar (REQ-03): the bottom menu is the home's, drawn by public/splash/bar-menu.css (F88, `.pbar`) ── */
 
   /* ── 6. Action bar and back to top ───────────────────────────────────────────────────────── */
   /* .phone-action-bar: the main action of a screen, always in view above the tab bar. Give the

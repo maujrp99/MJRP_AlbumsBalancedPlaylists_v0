@@ -13,9 +13,12 @@
 import { PHONE_TABS, currentTab } from './phoneTabs.js'
 import { MENU_TEXT } from './menuText.js'
 import { renderBars } from './bars.js'
+import { stopIcon } from '../../../splash/phoneBar.js'
 
 /** How many bars a bar of the computer has before it is measured (about its width over six). */
 export const DEFAULT_BARS = 104
+/** How many bars the phone's bottom menu has before it is measured (fitBars draws it again for its width). */
+const PHONE_BARS = 64
 const MIN_BARS = 30
 const PIXELS_PER_BAR = 6
 /** The bars move for this long after the screen changes (the home's rest time), then rest. */
@@ -29,21 +32,26 @@ const stopIndexOf = (path) => PHONE_TABS.indexOf(currentTab(path))
 /** @returns {string} the row of bars, the stretch of the current stop lit */
 const barsFor = (count, path) => renderBars(count, stopIndexOf(path), PHONE_TABS.length)
 
-function renderStop(tab, current) {
+function renderStop(tab, current, icons) {
     const isCurrent = tab === current
-    return `<a class="stop${isCurrent ? ' cur' : ''}" href="/${tab.route}" data-link data-for="${tab.id}"${isCurrent ? ' aria-current="page"' : ''}><span class="lb">${tab.label}</span></a>`
+    return `<a class="stop${isCurrent ? ' cur' : ''}" href="/${tab.route}" data-link data-tab="${tab.id}" data-for="${tab.id}"${isCurrent ? ' aria-current="page"' : ''}>${icons ? stopIcon(tab.id) : ''}<span class="lb">${tab.label}</span></a>`
 }
+
+const flipMarkFor = (sideB) => `<span class="flipmark${sideB ? ' on' : ''}" aria-hidden="true" title="${MENU_TEXT.flipMark}">⟲</span>`
 
 /**
  * @param {string} path - the path of the address (no query)
- * @param {{ bars?: number }} [options]
+ * @param {{ bars?: number, icons?: boolean, flip?: boolean }} [options] - `icons`: an icon above each label (the phone's bottom menu); `flip`: the ⟲ between the two sides
  * @returns {string} the bar: a navigation with the five stops, the flip mark and the row of bars
  */
-export function renderBarMenu(path, { bars = DEFAULT_BARS } = {}) {
+export function renderBarMenu(path, { bars = DEFAULT_BARS, icons = false, flip = true } = {}) {
     const current = currentTab(path)
     const sideB = stopIndexOf(path) >= SIDE_B_FROM
-    return `<nav class="ms" aria-label="${MENU_TEXT.mainNav}">${PHONE_TABS.map(tab => renderStop(tab, current)).join('')}<span class="flipmark${sideB ? ' on' : ''}" aria-hidden="true" title="${MENU_TEXT.flipMark}">⟲</span><div class="eqbar" aria-hidden="true">${barsFor(bars, path)}</div></nav>`
+    return `<nav class="ms" aria-label="${MENU_TEXT.mainNav}">${PHONE_TABS.map(tab => renderStop(tab, current, icons)).join('')}${flip ? flipMarkFor(sideB) : ''}<div class="eqbar" aria-hidden="true">${barsFor(bars, path)}</div></nav>`
 }
+
+/** The phone's bottom menu (F88): this same bar, an icon above each label, no ⟲; the home draws the same (public/splash/bar-menu.css, `.pbar`). */
+export const renderPhoneBar = (path) => renderBarMenu(path, { bars: PHONE_BARS, icons: true, flip: false })
 
 /** Draws the row of bars again for the width the bar has now (a resized window). */
 export function fitBars(nav, path) {

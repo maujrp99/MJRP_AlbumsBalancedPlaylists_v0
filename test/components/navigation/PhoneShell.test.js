@@ -10,7 +10,8 @@ vi.mock('../../../public/js/components/LoginModal.js', () => ({ showLoginModal: 
 vi.mock('../../../public/js/components/navigation/AuthNav.js', () => ({ signOut: vi.fn(), isSignedIn: (user) => Boolean(user && !user.guest) }))
 vi.mock('../../../public/js/components/Toast.js', () => ({ default: { success: vi.fn(), error: vi.fn() } }))
 
-import { PHONE_TABS, currentTab, screenName, renderTabBar } from '../../../public/js/components/navigation/phoneTabs.js'
+import { PHONE_TABS, currentTab, screenName } from '../../../public/js/components/navigation/phoneTabs.js'
+import { renderPhoneBar } from '../../../public/js/components/navigation/barMenu.js'
 import { PhoneShell } from '../../../public/js/components/navigation/PhoneShell.js'
 
 describe('the tabs of the phone', () => {
@@ -41,33 +42,33 @@ describe('the tabs of the phone', () => {
     })
 
     it('marks the current tab for the eye and for the screen reader, and only that one', () => {
-        document.body.innerHTML = renderTabBar('/albums/abc123')
+        document.body.innerHTML = renderPhoneBar('/albums/abc123')
         const current = [...document.querySelectorAll('[aria-current="page"]')]
 
         expect(document.querySelectorAll('a[data-link]').length).toBe(5)
         expect(current.map(tab => tab.textContent.trim())).toEqual(['Albums'])
-        expect(current[0].classList.contains('is-current')).toBe(true)
-        expect(document.querySelectorAll('.is-current').length).toBe(1)
+        expect(current[0].classList.contains('cur')).toBe(true)
+        expect(document.querySelectorAll('.stop.cur').length).toBe(1)
         expect(document.querySelector('nav').getAttribute('aria-label')).toBe('Main')
     })
 
     it('F88: the bar carries the home\'s row of bars, the fire on the stretch of the current tab', () => {
-        document.body.innerHTML = renderTabBar('/blend')
-        const row = document.querySelector('.phone-tabbar__bars')
+        document.body.innerHTML = renderPhoneBar('/blend')
+        const row = document.querySelector('.eqbar')
         expect(row.getAttribute('aria-hidden')).toBe('true')
         const bars = [...row.querySelectorAll('i')]
         expect(bars.length).toBeGreaterThanOrEqual(30)
         const lit = bars.filter(bar => bar.classList.contains('on')).length
         expect(lit).toBe(Math.round(bars.length / 5))
-        document.body.innerHTML = renderTabBar('/homework')
-        expect(document.querySelectorAll('.phone-tabbar__bars i.on').length).toBe(0)
+        document.body.innerHTML = renderPhoneBar('/homework')
+        expect(document.querySelectorAll('.eqbar i.on').length).toBe(0)
     })
 
     it('every tab has an icon and a label', () => {
-        document.body.innerHTML = renderTabBar('/start')
+        document.body.innerHTML = renderPhoneBar('/start')
         for (const tab of document.querySelectorAll('a[data-tab]')) {
             expect(tab.querySelector('svg')).not.toBeNull()
-            expect(tab.querySelector('.phone-tabbar__label').textContent.trim()).not.toBe('')
+            expect(tab.querySelector('.lb').textContent.trim()).not.toBe('')
         }
     })
 

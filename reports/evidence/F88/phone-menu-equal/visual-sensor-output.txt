@@ -1,0 +1,4 @@
+bar heights (home / app): {"iPhone 14":{"home":76,"app":76},"iPhone SE":{"home":76,"app":76}}
+bar measures (the same on every page): {"iPhone 14":{"bar":76,"eqbar":{"y":7,"w":390,"h":17},"icon":{"y":29,"w":24,"h":24},"label":{"y":56,"h":14,"font":"Syne, sans-serif 12px 700"},"gapToScreenBottom":0},"iPhone SE":{"bar":76,"eqbar":{"y":7,"w":320,"h":17},"icon":{"y":29,"w":24,"h":24},"label":{"y":56,"h":14,"font":"Syne, sans-serif 12px 700"},"gapToScreenBottom":0}}
+OK: no label meets a bar; gaps >= 6 px; targets >= 44 px; both bars the same height
+---
