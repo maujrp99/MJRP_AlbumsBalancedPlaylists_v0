@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:26] session — conform parcial do V0 depois do kernel de 2026-11-21: 90 para 46 notas, 11 para 10 lacunas
+**Branch:** wip/kernel-conform-2026-11-21
+Relatório em `reports/audits/2026-11-21-mjrpalbumblender-v0-conform.md`: o que foi registrado (38 notas), feito (6), o que ficou (46 notas, 10 lacunas) e as oito perguntas ao MJRP. O critério estrito do portão segue em 1; o que falta depende do MJRP, do orquestrador (`board_move.py seed` no checkout principal) e da auditoria de conteúdo, que vai por último. Não rodei o doctor, os testes nem o build. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:25] session — conform: `delivery-strategy` registrado (CM-0111)
 **Branch:** wip/kernel-conform-2026-11-21
 Escrita a seção `## Delivery strategy` do `docs/specs/arch.md` lendo os scripts de deploy, o workflow de CI, o `firebase.json`, a ADR-0020 e o contrato; marcada **proposta do agente, à espera do MJRP** (a regra de que só o MJRP envia não mudou). O que o repositório não mostra (se existe canal de preview no Firebase, se há projeto de teste separado) está escrito «not checked». `delivery_strategy_check.py` sai verde com o aviso de proposta; `--check-note CM-0111` passou. A confirmação é do MJRP. Decidido pelo agente (a forma), a decisão do conteúdo é do MJRP.
