@@ -1,8 +1,8 @@
 /*
  * The phone (F76). Guide: docs/specs/features/F76-mobile-redesign/mobile-kit.md
  *
- * THE RULE OF THIS FILE: every rule is inside `@media (max-width: 767px)`. Nothing here acts on a
- * screen of 768 px or wider (REQ-12); test/architecture/phoneStylesStayOnThePhone.test.js fails
+ * THE RULE OF THIS FILE: every rule is inside `@media (max-width: 899px)`. Nothing here acts on a
+ * screen of 900 px or wider (REQ-12); test/architecture/phoneStylesStayOnThePhone.test.js fails
  * when a rule is written outside it. `@supports`, `@keyframes` and `prefers-reduced-motion`
  * go INSIDE the media query. The same line is drawn in JavaScript by utils/isPhone.js.
  *
@@ -14,7 +14,7 @@
  *           9 Notices · 10 The menu
  */
 
-@media (max-width: 767px) {
+@media (max-width: 899px) {
 
   /* ── 1. Measures ─────────────────────────────────────────────────────────────────────────── */
   :root {

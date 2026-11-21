@@ -18,7 +18,7 @@
  *     the two references and the duration below.
  */
 
-@media (max-width: 767px) {
+@media (max-width: 899px) {
   /* ── 1. One scroll: the window itself ──────────────────────────────────────────────────── */
   .album-window > .modal-container {
     display: block;

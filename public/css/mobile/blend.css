@@ -11,7 +11,7 @@
  * description; «Blend it!» in the action bar, off while a step is missing and the note says which.
  */
 
-@media (max-width: 767px) {
+@media (max-width: 899px) {
   /* ── 1. The page and its header ──────────────────────────────────────────────────────────── */
   #app > .container:has(#blend-series-selector) {
     padding-top: 4px;

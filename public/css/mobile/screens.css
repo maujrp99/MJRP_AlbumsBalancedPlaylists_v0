@@ -1,6 +1,6 @@
 /*
  * The phone, screen by screen (F76). One file per screen, each wholly inside
- * `@media (max-width: 767px)`; loaded by js/app.js after ../mobile.css, so a screen can adjust
+ * `@media (max-width: 899px)`; loaded by js/app.js after ../mobile.css, so a screen can adjust
  * the base. A new screen: a new file here, one more line below.
  */
 @import './albums.css';

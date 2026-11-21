@@ -71,7 +71,7 @@ const initUI = () => {
         footer.attachListeners()
     }
 
-    // The phone (F76): its top bar, its tab bar and its menu exist only on a screen up to 767 px
+    // The phone (F76): its top bar, its tab bar and its menu exist only on a screen up to 899 px
     startPhoneShell({ router, userStore, clearCaches: clearAppAlbumCaches })
 }
 

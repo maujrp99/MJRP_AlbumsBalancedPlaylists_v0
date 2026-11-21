@@ -38,7 +38,7 @@ const sheet = () => document.querySelector('.sheet:not(.sheet--closing)')
 
 function stubScreen(phone) {
     window.matchMedia = (query) => ({
-        matches: query === '(max-width: 767px)' ? phone : query.includes('prefers-reduced-motion'),
+        matches: query === '(max-width: 899px)' ? phone : query.includes('prefers-reduced-motion'),
         addEventListener() { },
         removeEventListener() { }
     })

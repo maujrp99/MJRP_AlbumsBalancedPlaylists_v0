@@ -88,7 +88,7 @@ describe('PhoneShell', () => {
             scrollY: 0,
             location: { pathname: path },
             matchMedia: (query) => ({
-                matches: query.includes('max-width') ? width <= 767 : false,
+                matches: query.includes('max-width') ? width <= 899 : false,
                 addEventListener: (type, listener) => { if (query.includes('max-width')) phoneListener = listener },
                 removeEventListener: () => { }
             }),

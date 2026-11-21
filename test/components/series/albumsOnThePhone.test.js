@@ -22,7 +22,7 @@ function screenOf(phone) {
     const state = { phone }
     window.matchMedia = (query) => ({
         media: query,
-        get matches() { return query.includes('max-width: 767px') ? state.phone : false },
+        get matches() { return query.includes('max-width: 899px') ? state.phone : false },
         addEventListener: (type, listener) => listeners.add(listener),
         removeEventListener: (type, listener) => listeners.delete(listener)
     })
