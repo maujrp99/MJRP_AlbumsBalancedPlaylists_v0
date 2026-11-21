@@ -198,7 +198,7 @@ O site mede o que as pessoas fazem (a lista está em `shared/usageEvents.js`; o 
 
 ### 2.4d A página de entrada e as capas dela (F80)
 
-A raiz do site (`/`) é a página de entrada para quem não entrou com conta; quem entrou vai direto a `/start` (F85); `/home` é a página de entrada para todos, e o logotipo do app leva a ela; todo outro endereço é o app. No `dist/`, a página é `index.html` e o app é `app.html` (o `deploy-site.sh` confere os dois; o `firebase.json` reescreve `/home` para `/index.html` e, depois, tudo, menos `/api/**` e os arquivos, para `/app.html`).
+A raiz do site (`/`) é a página de entrada para todos, com ou sem conta aberta, sem redirecionar ninguém (F85; MJRP, 2026-11-21, UAT-239: «conta aberta sempre home qdo vc acessa o link principal do site, aí vc teria o botao para start»); o botão da página leva a `/start`; `/home` é a mesma página, e o logotipo do app leva a ela; todo outro endereço é o app. No `dist/`, a página é `index.html` e o app é `app.html` (o `deploy-site.sh` confere os dois; o `firebase.json` reescreve `/home` para `/index.html` e, depois, tudo, menos `/api/**` e os arquivos, para `/app.html`).
 
 **As capas.** O build escolhe o conjunto pela variável `VITE_SPLASH_COVERS` do `.env`:
 - sem ela (o padrão), ou com qualquer valor que não seja `real`: as **capas fictícias** (arte original, «Fictional albums · original art»);

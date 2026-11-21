@@ -1,12 +1,14 @@
 /**
- * F80 (REQ-02) - the root decides before it paints: whoever signed in with an account goes to the
- * app, never seeing the entry page; a new visitor or a guest (anonymous session) sees the page.
- * The sign-in is read where Firebase Auth keeps it in the browser (IndexedDB, or localStorage),
- * without creating the database when it is not there; anything unclear shows the page.
+ * F80 (REQ-02), changed by F85 (MJRP, 2026-11-21): the root no longer decides. The entry page is
+ * shown to everyone, with or without an account; nothing redirects and nothing is hidden. What is
+ * left is the pure reading of «is there an account in this browser» (IndexedDB, or localStorage),
+ * without creating the database when it is not there; anything unclear answers no.
  */
 import { describe, it, expect, vi } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import {
-    FIREBASE_DB, FIREBASE_STORE, USER_KEY_PREFIX, isAccount, accountInStorage, accountInIndexedDb, runGate
+    FIREBASE_DB, FIREBASE_STORE, USER_KEY_PREFIX, isAccount, accountInStorage, accountInIndexedDb, hasAccount
 } from '../../public/splash/gate.js'
 
 const KEY = `${USER_KEY_PREFIX}AIzaFake:[DEFAULT]`
@@ -103,72 +105,33 @@ describe('what counts as signed in', () => {
     })
 })
 
-describe('the root decides', () => {
-    it('a new visitor sees the page, and the page is shown again after the check', async () => {
-        const win = fakeWindow()
-        const where = runGate(win)
-        expect(document.documentElement.classList.contains('gate')).toBe(true) // hidden while the browser is read
-        await expect(where).resolves.toBe('page')
-        expect(document.documentElement.classList.contains('gate')).toBe(false)
-        expect(win.location.replace).not.toHaveBeenCalled()
-    })
-
-    it('a guest sees the page', async () => {
-        const win = fakeWindow({ indexedDB: fakeIndexedDb({ stores: { [FIREBASE_STORE]: [record(guest)] } }) })
-        await expect(runGate(win)).resolves.toBe('page')
-        expect(win.location.replace).not.toHaveBeenCalled()
-    })
-
-    it('an account in IndexedDB goes to the app without the page ever being shown', async () => {
-        const win = fakeWindow({ indexedDB: fakeIndexedDb({ stores: { [FIREBASE_STORE]: [record(account)] } }) })
-        await expect(runGate(win)).resolves.toBe('app')
-        expect(win.location.replace).toHaveBeenCalledWith('/start')
-        expect(document.documentElement.classList.contains('gate')).toBe(true)
-    })
-
-    it('an account in localStorage goes to the app at once', async () => {
+describe('the root no longer decides (MJRP, 2026-11-21: «conta aberta sempre home»)', () => {
+    it('hasAccount: an account in localStorage is found at once, with no wait', async () => {
         const win = fakeWindow({ storage: storageWith({ [KEY]: JSON.stringify(account) }) })
-        await expect(runGate(win)).resolves.toBe('app')
-        expect(win.location.replace).toHaveBeenCalledWith('/start')
-        expect(document.documentElement.classList.contains('gate')).toBe(false)
+        await expect(hasAccount(win)).resolves.toBe(true)
     })
 
-    it('?entry shows the page to anyone, signed in or not', async () => {
-        const win = fakeWindow({ search: '?entry', storage: storageWith({ [KEY]: JSON.stringify(account) }) })
-        await expect(runGate(win)).resolves.toBe('page')
+    it('hasAccount: an account in IndexedDB is found; a guest or an empty browser is not', async () => {
+        await expect(hasAccount(fakeWindow({ indexedDB: fakeIndexedDb({ stores: { [FIREBASE_STORE]: [record(account)] } }) }))).resolves.toBe(true)
+        await expect(hasAccount(fakeWindow({ indexedDB: fakeIndexedDb({ stores: { [FIREBASE_STORE]: [record(guest)] } }) }))).resolves.toBe(false)
+        await expect(hasAccount(fakeWindow())).resolves.toBe(false)
+    })
+
+    it('hasAccount: no IndexedDB, one that throws, or one that stays silent answers false (fails open)', async () => {
+        await expect(hasAccount(fakeWindow({ indexedDB: undefined }))).resolves.toBe(false)
+        await expect(hasAccount(fakeWindow({ indexedDB: { open: () => { throw new Error('blocked') } } }))).resolves.toBe(false)
+        await expect(hasAccount(fakeWindow({ indexedDB: { open: () => ({}) } }), { holdMs: 20 })).resolves.toBe(false)
+    })
+
+    it('reading it never hides the page nor moves the address', async () => {
+        const win = fakeWindow({ storage: storageWith({ [KEY]: JSON.stringify(account) }), indexedDB: fakeIndexedDb({ stores: { [FIREBASE_STORE]: [record(account)] } }) })
+        await hasAccount(win)
         expect(win.location.replace).not.toHaveBeenCalled()
-    })
-
-    it('F85 (MJRP, 2026-11-21): /home IS the entry page: always shown, signed in or not, with or without ?signin', async () => {
-        for (const search of ['', '?signin']) {
-            const win = fakeWindow({ pathname: '/home', search, storage: storageWith({ [KEY]: JSON.stringify(account) }) })
-            await expect(runGate(win)).resolves.toBe('page')
-            expect(win.location.replace).not.toHaveBeenCalled()
-            expect(document.documentElement.classList.contains('gate')).toBe(false)
-        }
-        // an account only in IndexedDB: still no read, no hiding, no redirect
-        const idb = fakeWindow({ pathname: '/home', indexedDB: fakeIndexedDb({ stores: { [FIREBASE_STORE]: [record(account)] } }) })
-        await expect(runGate(idb)).resolves.toBe('page')
-        expect(idb.location.replace).not.toHaveBeenCalled()
-    })
-
-    it('the root without ?entry still sends an account to the app', async () => {
-        const win = fakeWindow({ pathname: '/', storage: storageWith({ [KEY]: JSON.stringify(account) }) })
-        await expect(runGate(win)).resolves.toBe('app')
-    })
-
-    it('a browser with no IndexedDB, or one that throws, shows the page', async () => {
-        const none = fakeWindow({ indexedDB: undefined })
-        await expect(runGate(none)).resolves.toBe('page')
-        const broken = fakeWindow({ indexedDB: { open: () => { throw new Error('blocked') } } })
-        await expect(runGate(broken)).resolves.toBe('page')
         expect(document.documentElement.classList.contains('gate')).toBe(false)
     })
 
-    it('when the browser does not answer in time, the page is shown (fails open)', async () => {
-        const silent = { open: () => ({}) } // never calls back
-        const win = fakeWindow({ indexedDB: silent })
-        await expect(runGate(win, { holdMs: 20 })).resolves.toBe('page')
-        expect(document.documentElement.classList.contains('gate')).toBe(false)
+    it('the module redirects nowhere and hides nothing', () => {
+        const source = readFileSync(resolve(process.cwd(), 'public/splash/gate.js'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
+        expect(source).not.toMatch(/location\.replace|runGate|classList/)
     })
 })

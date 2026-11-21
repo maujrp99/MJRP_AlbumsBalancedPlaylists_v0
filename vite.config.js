@@ -8,12 +8,11 @@ export default defineConfig({
     root: 'public',
     envDir: '../', // Fix: Vite looks in 'root' by default, but our .env is one level up
 
-    // The entry page (F80): public/splash.html, served at the root to whoever has not signed in; in
+    // The entry page (F80): public/splash.html, served at the root and at /home to everyone, signed in or not; in
     // dist/ it is index.html and the app is app.html (scripts/entryPage.mjs, firebase.json).
     // VITE_SPLASH_COVERS=real puts the real covers on it; anything else, the fictional ones.
     plugins: [
         entryPage({
-            root: path.resolve(__dirname, 'public'),
             coverSet: process.env.VITE_SPLASH_COVERS ?? loadEnv(process.env.NODE_ENV || 'development', __dirname, 'VITE_').VITE_SPLASH_COVERS
         })
     ],

@@ -7,10 +7,10 @@
  * file — and the app becomes app.html, the page every other address is rewritten to (firebase.json).
  *
  * The plugin:
- *   - writes into public/splash.html, at the «splash:…» places: the root decision (public/splash/
- *     gate.js as a classic inline script, first in the <head>), the 14 covers of the chosen set, the
+ *   - writes into public/splash.html, at the «splash:…» places: the 14 covers of the chosen set, the
  *     stage's tag, the caption of the front record and the footer's credit (public/splash/covers.js);
- *     the set comes from VITE_SPLASH_COVERS (`real`, else fictional);
+ *     the set comes from VITE_SPLASH_COVERS (`real`, else fictional). It writes no script: the root
+ *     shows the page to everyone, signed in or not (F85, MJRP 2026-11-21);
  *   - renames the two pages in dist/ after the build;
  *   - in the dev server, answers the root and /home with the entry page (the app keeps every other address);
  *   - in `vite preview`, answers /home with the entry page and every other address without an
@@ -23,23 +23,12 @@ import { chooseCoverSet, coverImagesHtml, captionHtml, creditHtml, stageTagHtml 
 
 export const ENTRY_SOURCE = 'splash.html'
 export const APP_BUILT = 'app.html'
-export const PLACES = ['gate', 'covers', 'stage-tag', 'caption', 'credit']
-
-/** The gate module (public/splash/gate.js) as a classic script for the <head>: comments and `export` dropped, runGate(window) called. */
-export function inlineGateScript(source) {
-    const body = source
-        .replace(/\/\*[\s\S]*?\*\//g, '')
-        .replace(/^\s*\/\/.*$/gm, '')
-        .replace(/^export /gm, '')
-        .split('\n').map(line => line.trimEnd()).filter(Boolean).join('\n')
-    return `<script>(function(){\n${body}\nrunGate(window)})();</script>`
-}
+export const PLACES = ['covers', 'stage-tag', 'caption', 'credit']
 
 /** The entry page with every place filled. A missing place is an error: the page is never built half-filled. */
-export function fillEntryPage(html, { set, gateSource }) {
+export function fillEntryPage(html, { set }) {
     const chosen = chooseCoverSet(set)
     const fill = {
-        gate: inlineGateScript(gateSource),
         covers: coverImagesHtml(chosen),
         'stage-tag': stageTagHtml(chosen),
         caption: captionHtml(chosen),
@@ -85,10 +74,9 @@ const wantsPage = (req) => req.method === 'GET' || req.method === 'HEAD'
 
 /**
  * The Vite plugin.
- * @param {{ root: string, coverSet?: string }} options - root: the Vite root (public/); coverSet: VITE_SPLASH_COVERS
+ * @param {{ coverSet?: string }} options - coverSet: VITE_SPLASH_COVERS
  */
-export function entryPage({ root, coverSet }) {
-    const gatePath = path.join(root, 'splash', 'gate.js')
+export function entryPage({ coverSet }) {
     let outDir = null
     return {
         name: 'entry-page',
@@ -97,7 +85,7 @@ export function entryPage({ root, coverSet }) {
             order: 'pre',
             handler(html, ctx) {
                 if (path.basename(ctx.filename) !== ENTRY_SOURCE) return html
-                return fillEntryPage(html, { set: coverSet, gateSource: fs.readFileSync(gatePath, 'utf8') })
+                return fillEntryPage(html, { set: coverSet })
             }
         },
         writeBundle(options) { renameBuiltPages(options.dir || outDir) },

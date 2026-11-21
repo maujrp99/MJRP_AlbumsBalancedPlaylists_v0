@@ -1,6 +1,6 @@
 /**
  * F80 (REQ-01, REQ-02, REQ-05, REQ-06) - the entry page is a second, static HTML of the same Vite
- * build. The plugin writes the root decision, the covers and their credit into it; in dist/ the
+ * build. The plugin writes the covers and their credit into it; in dist/ the
  * entry page is index.html (the root) and the app is app.html (every other address); the dev
  * server and `vite preview` answer the way Firebase Hosting does in production.
  */
@@ -9,13 +9,12 @@ import { readFileSync, mkdtempSync, writeFileSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import {
-    PLACES, inlineGateScript, fillEntryPage, isRootAddress, isEntryAddress, isAppAddress, renameBuiltPages, entryPage
+    PLACES, fillEntryPage, isRootAddress, isEntryAddress, isAppAddress, renameBuiltPages, entryPage
 } from '../../scripts/entryPage.mjs'
 
 const ROOT = process.cwd()
 const source = readFileSync(resolve(ROOT, 'public/splash.html'), 'utf8')
-const gate = readFileSync(resolve(ROOT, 'public/splash/gate.js'), 'utf8')
-const built = (set) => fillEntryPage(source, { set, gateSource: gate })
+const built = (set) => fillEntryPage(source, { set })
 const textOf = (html) => html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ')
     .replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ')
 
@@ -39,13 +38,11 @@ describe('the page as written in the repository', () => {
 describe('the page as served (what a search engine or an assistant reads, without script)', () => {
     const page = built('fictional')
 
-    it('the root decision runs first, inline, before any stylesheet', () => {
+    it('nothing decides before the paint: no inline script in the head, no hidden page', () => {
         const head = page.slice(0, page.indexOf('</head>'))
-        const gateAt = head.indexOf('runGate(window)')
-        expect(gateAt).toBeGreaterThan(0)
-        expect(gateAt).toBeLessThan(head.indexOf('<style>'))
-        expect(gateAt).toBeLessThan(head.indexOf('fonts.googleapis.com/css2'))
-        expect(head).not.toMatch(/\bexport\b/)
+        expect(head).not.toMatch(/runGate|location\.replace/)
+        expect(head).not.toMatch(/<script>\s*\(function/)
+        expect(page).not.toMatch(/html\.gate/)
     })
 
     it('title, description, canonical address, Open Graph and structured data', () => {
@@ -93,25 +90,7 @@ describe('the page as served (what a search engine or an assistant reads, withou
     })
 
     it('a page missing a place is refused, not built half-filled', () => {
-        expect(() => fillEntryPage(source.replace('<!--splash:covers-->', ''), { set: 'fictional', gateSource: gate })).toThrow(/covers/)
-    })
-})
-
-describe('the inline root decision', () => {
-    it('is the gate module as a classic script that calls runGate(window)', () => {
-        const script = inlineGateScript(gate)
-        expect(script.startsWith('<script>')).toBe(true)
-        expect(script).toContain('function runGate(win, options)')
-        expect(script).toMatch(/runGate\(window\)\}\)\(\);?<\/script>$/)
-        expect(script).not.toMatch(/^\s*export /m)
-        expect(script).not.toContain('/**')
-    })
-
-    it('runs in a page with no account and leaves the page shown', async () => {
-        const body = inlineGateScript(gate).replace(/^<script>/, '').replace(/<\/script>$/, '')
-        const win = { document, location: { search: '', replace: () => { throw new Error('should stay') } }, localStorage: undefined, indexedDB: undefined, setTimeout }
-        new Function('window', body)(win)
-        expect(document.documentElement.classList.contains('gate')).toBe(false)
+        expect(() => fillEntryPage(source.replace('<!--splash:covers-->', ''), { set: 'fictional' })).toThrow(/covers/)
     })
 })
 
@@ -144,7 +123,7 @@ describe('F85 (MJRP, 2026-11-21): /home is the entry page too', () => {
     }
 
     it('the dev server answers /home and /home?signin with the entry page, as it does the root', () => {
-        const plugin = entryPage({ root: resolve(ROOT, 'public') })
+        const plugin = entryPage({})
         expect(run(plugin.configureServer, '/home')).toBe('/splash.html')
         expect(run(plugin.configureServer, '/home?signin')).toBe('/splash.html?signin')
         expect(run(plugin.configureServer, '/')).toBe('/splash.html')
@@ -152,7 +131,7 @@ describe('F85 (MJRP, 2026-11-21): /home is the entry page too', () => {
     })
 
     it('vite preview answers /home and /home?signin with the built entry page (index.html), the rest as before', () => {
-        const plugin = entryPage({ root: resolve(ROOT, 'public') })
+        const plugin = entryPage({})
         expect(run(plugin.configurePreviewServer, '/home')).toBe('/index.html')
         expect(run(plugin.configurePreviewServer, '/home?signin')).toBe('/index.html?signin')
         expect(run(plugin.configurePreviewServer, '/start')).toBe('/app.html')

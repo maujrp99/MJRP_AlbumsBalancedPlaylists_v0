@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 12:38] session — F85: a raiz `/` mostra a página de entrada a todos (UAT-239)
+**Branch:** main
+O MJRP: «conta aberta sempre home qdo vc acessa o link principal do site, aí vc teria o botao para start». A raiz deixou de mandar quem tem conta a `/start`: `public/splash/gate.js` perdeu `runGate`, o redirecionamento, a espera e a classe `html.gate`; ficou a leitura pura `hasAccount(win)` (conta no IndexedDB ou localStorage), para o próximo passo trocar o cabeçalho. O plugin `entryPage` não injeta mais script no `<head>` (lugar `gate` removido de `splash.html`). `/home`, `?entry`, `/start`, `/start?signin` e os links diretos como antes; os botões da página seguem para `/start`. Testes de gate e entryPage reescritos; behavior, arch, manual, REQ-03 da F85 e UAT-239 atualizados.
+
 ## [2026-11-21 12:28] session — F85: o /home é a página de entrada, para todos (UAT-238)
 **Branch:** fix/f85-home-is-the-entry-page
 O MJRP, em produção: «o /home agora deveria ser o entry». firebase.json reescreve /home para /index.html antes do **; o plugin entryPage responde /home no dev e no vite preview; o gate.js mostra a página sempre em /home; a rota /home do app sai para o navegador uma vez (leaveToHome, sem laço); o logotipo leva a /home.

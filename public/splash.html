@@ -3,10 +3,9 @@
 <head>
 <meta charset="utf-8">
 <!-- F80 · the entry page, built from the approved prototype «Caixote v2», soft fire (design/inception/splash-crate-v2.html).
-     Served at the site's root (dist/index.html) to whoever has not signed in with an account; the app is dist/app.html.
-     The Vite plugin `entryPage` (vite.config.js) writes the root decision, the covers, the caption and the credit
+     Served at the site's root (dist/index.html) and at /home to everyone, with or without an account; the app is dist/app.html.
+     The Vite plugin `entryPage` (vite.config.js) writes the covers, the caption and the credit
      into the «splash:…» placeholder comments, in the build and in the dev server. -->
-<!--splash:gate-->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://is1-ssl.mzstatic.com; connect-src 'self' https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
 <title>The Album Blender — for people who listen to whole albums</title>
@@ -37,8 +36,6 @@
 }
 *{box-sizing:border-box}
 html{background:var(--bg);color-scheme:dark;scroll-padding-top:calc(var(--top) + var(--thread) + 8px)}
-/* the root decision reads the browser's sign-in before showing the page (public/splash/gate.js) */
-html.gate body{visibility:hidden}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 [hidden]{display:none!important}
