@@ -21,7 +21,7 @@
 ## Verification
 - [x] TASK-09 suíte inteira (`npx vitest run`): 337 passam, as mesmas 28 falhas da linha de base; `npx vite build` compila · implements:: REQ-01, REQ-02, REQ-04, REQ-05, REQ-06, REQ-07 · model:: sonnet · rounds:: 1
 - [x] TASK-10 conferência no navegador, conta do MJRP: sair e voltar no meio da carga; «Try again»; salvar um ranking; «My Ranking» com uma página carregada (sessão de integração) — prova: `reports/evidence/F46-albums-load-state/F46-browser-2026-11-19.json`, `reports/evidence/F46-albums-load-state/F46-ranking-2026-11-19.json` · implements:: REQ-02, REQ-03, REQ-04, REQ-05, REQ-06 · model:: opus · rounds:: 1
-- [ ] TASK-11 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
+- [ ] TASK-11 o que a trava do passo retroativo ainda cobra antes do `Done` (`python3 mjrp-scripts/retro_step_check.py . --staged` com a feature em `Done`, conferido em 2026-11-21): behavior: o plan.md declara `behavior.md` «atualizado», mas nenhum commit da feature toca docs/specs/behavior.md; Reconferência visual: a feature mexeu na tela e não há relatório `visual-parity-recheck` nem nota de Touch ID (`mjrp-visual-ok`) que a cubra; Issues: a UAT-174 na docs/specs/uat.md não está `fixed (F46: <commit> · <teste ou passos → resultado>)` (o Status diz «fixed (F45: ce52f46 · `test/services/albums/AlbumLoadService»). É trabalho de agente; nenhum item é do MJRP. O que falta de verdade é a reconferência visual independente (relatório `reports/audits/<data>-F46-visual-parity-recheck.md`, por quem não implementou, num navegador): nenhum merge traz nota de Touch ID. «Prototype: none» já está gravada na spec (MJRP, 2026-11-20 00:10). · implements:: REQ-01 · model:: opus
 
 ## Documentation
 - [x] `docs/specs/arch.md` seção 18; `docs/manual/` (06, 08, 09, 12, 16, 17, mapa de arquivos, `regression_checklist`); spec, plano e tarefas escritos do que foi feito
@@ -30,5 +30,5 @@
 
 ## For the owner at UAT
 - O MJRP confere no navegador e dá o OK na UAT-173 e na UAT-174.
-- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- Falta o que a tarefa aberta acima descreve (trabalho de agente); o aceite é dele no UAT, depois do `Done`.
 - Push da `main` ao remoto (e, com ele, a primeira rodada da automação do GitHub): é do MJRP.

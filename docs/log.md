@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:42] session — F46: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F46 (cada série termina carregada, vazia ou com aviso): o código está na `main` (merges `40ca80d`, `0f1163c`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: behavior, Reconferência visual, Issues. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
 ## [2026-11-21 11:42] session — F45: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
 **Branch:** claude/batch-close-merged-features
 F45 (carregar vários álbuns ao mesmo tempo): o código está na `main` (merges `ffd414f`, `f295316`, `cdeab21`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: behavior, Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
