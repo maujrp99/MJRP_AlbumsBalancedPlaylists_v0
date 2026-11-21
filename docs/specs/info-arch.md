@@ -3,6 +3,7 @@
 > Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html · a Home (F79): rodada 1, três níveis (design/inception/home-consolidar-v1.html, design/inception/home-elevar-v1.html, design/inception/home-transformar-v1.html); o MJRP escolheu a direção Transformar; rodada 2: design/inception/home-transformar-v2.html (**aprovada pelo MJRP em 2026-11-20, por volta das 22:15** — registro em § Protótipos aprovados)
 > Página de entrada (F80), rodada 1 de exploração, 2026-11-20: três direções, design/inception/splash-ember-v1.html, design/inception/splash-sides-v1.html e design/inception/splash-crate-v1.html (nenhuma aprovada; comparador em design/proposals/f80-splash/comparator.html)
 > Página de entrada (F80), rodada 2 de desenho, 2026-11-20: a direção escolhida pelo MJRP, design/inception/splash-crate-v2.html («Caixote · v2, o fogo e o fio»: o caixote 3D com o fio do Lado A, lado B e o fogo da Brasa, capas reais do Apple Music); aprovada pelo MJRP em 2026-11-20 22:15 no fogo brando (§ Protótipos aprovados); comparador https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e (cópia local design/proposals/f80-splash/comparator.html)
+> Página de entrada (F80), rodada 3, 2026-11-21 (UAT-241, UAT-240): a home com o menu na barra — três prévias num eixo, «quanto o menu e a barra se juntam»: design/inception/splash-menu-stops-v1.html (A, fio com paradas), design/inception/splash-menu-bar-v1.html (B, o menu é a barra; recomendada) e design/inception/splash-menu-deck-v1.html (C, barra embaixo); nenhuma aprovada; a página de hoje como referência em design/proposals/f80-splash/home-menu/today.html; gerador design/proposals/f80-splash/home-menu/build.mjs; mesmo comparador
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -19,7 +20,7 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 - **Playlists** (`/playlists`, `/saved-playlists`): as playlists geradas e os lotes guardados
 - **Inventory** (`/inventory`): a coleção da pessoa, com status, notas e (F75) valor estimado
   - a janela de um álbum do inventário
-- **Página de entrada** (F80, aprovada na v2; mora na raiz `/` só para quem não entrou com conta — quem entrou vai direto a `/start`, e `/home`, a home do site, mostra a página a todos, com ou sem conta; o logotipo do app leva a `/home` (F85); decidido pelo agente — revisável; o comportamento está no `behavior.md` § A raiz do site e a página de entrada): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript.
+- **Página de entrada** (F80, aprovada na v2; mora na raiz `/` só para quem não entrou com conta — quem entrou vai direto a `/start`, e `/home`, a home do site, mostra a página a todos, com ou sem conta; o logotipo do app leva a `/home` (F85); decidido pelo agente — revisável; o comportamento está no `behavior.md` § A raiz do site e a página de entrada): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript. **Decisão do MJRP de 2026-11-21, ainda não construída:** «conta aberta sempre home qdo vc acessa o link principal do site, aí vc teria o botao para start» — o endereço principal mostra a home a todos, e ninguém é levado direto a `/start`; com conta, a home tem o menu e «Start» (rodada 3, UAT-241).
 
 ### O esquema de cada nó
 
@@ -85,6 +86,15 @@ A direção escolhida pelo MJRP em 2026-11-20 (o Caixote, mais a progressão do 
 - **O fio do equalizador é o progresso** — preso sob o topo no computador (um grupo de barras por faixa, cada grupo um link; o da faixa atual respira); no celular desce para a barra de baixo, junto de «Open the app», como progresso sem toque.
 - **O fogo é a luz** — um leito de brasas baixo no palco e a luz que vem de baixo nas capas; forte na primeira tela e no convite final, brando nas faixas do meio; nunca atrás de texto.
 - **No celular:** uma coluna; o título e a frase primeiro; o caixote em CSS logo abaixo; cada faixa traz o seu disco (capa, crédito e link) acima do título.
+
+#### Rodada 3 · a home com o menu na barra (prévias, 2026-11-21)
+
+Pedido do MJRP (UAT-241, UAT-240): com conta, a home com o menu e «Start», sem «Sign in» e «Open the app»; a barra contínua como na «Elevar»; a barra é o menu, e a página conta a história de cada item. Mudam só o topo, a barra e a ordem das histórias; o caixote, o fogo, o palco em diagonal e a capa da banana ficam.
+- **As histórias são o menu**, na ordem do app (`phoneTabs.js`): a abertura; Lado A, o que se faz — Start, Albums, Blend; «Flip the record»; Lado B, o que se guarda — Playlists, Inventory; o convite. Saem «Ranking» (entra em Albums), «Your shelf» (vira Inventory) e «Why whole albums».
+- **A barra-menu**: uma fila contínua de barras, cinco partes iguais, uma por item; o fogo enche conforme a leitura; clicar num item leva à história dele. Três lugares, o eixo: **A** sob o topo (fio com paradas); **B** no próprio topo (o menu é a barra); **C** numa barra de baixo com agulha, igual no computador e no celular.
+- **No celular** não há 3D, e as três viram a barra de baixo com os cinco rótulos (em C, com a agulha): no celular o eixo quase some.
+- **Com conta**: o topo leva «Start» com o fogo; a primeira tela é «Back to the crate. Start a new series.» com «Start» e «Your playlists»; cada história ganha o link para a tela do app («Open Albums →»); o rodapé lista o menu.
+- **Pausar**: um ícone discreto de 44 px no canto do palco.
 
 ## Fluxos
 
@@ -164,6 +174,16 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 - **O movimento que para sozinho.** Dez segundos depois de carregar ou da última rolagem, o fogo e o equalizador param num quadro; o 3D só desenha quando algo muda. «Pause motion» (no fim do fio no computador, sob as chamadas no celular) para tudo; vira «Play motion». ^splash-v2-motion-rest
 - **Sem JavaScript.** Todo o texto e as chamadas; o caixote em CSS parado com as sete capas do lado A, a da frente à vista; o fio aparece sem nada aceso, rotulado na primeira faixa; os discos de cada faixa no celular não aparecem (a legenda e o link do disco da frente ficam). ^splash-v2-no-js
 - **Celular (até 899 px).** Uma coluna; topo com o logotipo e «Sign in»; o caixote em CSS sob a primeira tela; cada faixa abre com o seu disco, a capa com o crédito e o link «Listen on Apple Music»; a barra de baixo presa leva o fio (só progresso) e «Open the app». ^splash-v2-phone
+
+#### Rodada 3 · a home com o menu na barra (`splash-menu-{stops,bar,deck}-v1.html`, prévias)
+
+- **Sem conta, primeira tela.** Topo com o logotipo, a barra-menu (em B, no próprio topo) e «Sign in» e «Open the app»; o título, a frase do que o produto é e as duas chamadas; a barra vazia, nenhum item atual. ^home-menu-out
+- **Com conta, primeira tela.** Topo com o logotipo, a barra-menu e só «Start» com o fogo; «Welcome back», «Back to the crate. Start a new series.», «Start» e «Your playlists». É o que quem tem conta vê toda vez que abre o site. ^home-menu-in
+- **Lendo uma história.** A parte da barra do item enche de fogo conforme a leitura avança; o item fica laranja com `aria-current="step"`, os já lidos em branco; o caixote puxa o disco da história e a legenda troca. ^home-menu-reading
+- **Clicar num item.** A página rola até a história do item (`#start`, `#albums`, `#blend`, `#playlists`, `#inventory`); com conta, a história tem «Open <item> →», que abre a tela do app. ^home-menu-jump
+- **Virando o disco.** Entre Blend e Playlists, o ⟲ acende e o caixote gira para o lado B. ^home-menu-flip
+- **Celular (393).** Sem 3D; a barra-menu é a barra de baixo, presa, com os cinco rótulos de 12 px sob as barras (C mostra também a agulha), alvos de 72 × 56 px; o topo leva «Sign in» sem conta e «Start» com conta; o ícone de pausa de 44 px no canto do caixote. ^home-menu-phone
+- **Movimento pausado ou reduzido.** O ícone alterna pausa e play (`aria-pressed`, nome «Pause motion» / «Play motion»); com movimento reduzido o ícone some e nada se move sozinho; a barra-menu continua enchendo com a rolagem, sem pulsar. ^home-menu-motion
 
 ## O celular (F76)
 
@@ -331,6 +351,7 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 - **Página de entrada:** capas fictícias, desenhadas na página (gradientes e tipo nas cores da marca), nenhuma capa real; os direitos das capas para uma página pública são pergunta ao MJRP.
 - **Página de entrada, rodada 2 (2026-11-20):** o MJRP escolheu capas reais, as do Apple Music que o app já mostra, com crédito e link; a v2 as usa. Os termos da Apple pesquisados nesta rodada só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing: **a confirmar antes de publicar** (`design/proposals/f80-splash/proposal.md` § Rodada 2).
 - **Página de entrada, rodada 2:** cada elemento visual tem um trabalho (caixote = palco, rolagem = disco, fio = progresso e navegação, fogo = luz); os botões ‹ ›, o arrastar, o giro automático, o vinil e o equalizador 3D da v1 saíram para dar lugar à progressão (decisão do agente, a julgar pelo MJRP).
+- **Página de entrada, rodada 3 (2026-11-21):** o menu do app vira o índice da página, e as histórias seguem os rótulos do celular (Start, Albums, Blend, Playlists, Inventory), os mais curtos do app; o Lado A é o que se faz e o Lado B o que se guarda (decisão do agente, a julgar pelo MJRP). Pausar é um ícone (o MJRP: «nao sabia da acessabilidade, coloque um icone discreto entao»). Com conta, a home é a casa de quem volta (o MJRP: «conta aberta sempre home qdo vc acessa o link principal do site, aí vc teria o botao para start»). Em aberto para ele: clicar num item, com conta, leva à história ou à tela do app.
 
 ## Protótipos aprovados
 
@@ -518,4 +539,16 @@ Rodada 2 (`design/inception/splash-crate-v2.html`; wireframes `design/wireframes
 | SPL-17 | «Flip the record»: a seção que gira o caixote | informar (a identidade) | S-62 |
 | SPL-18 | Leito de brasas e a luz de baixo, forte em duas faixas | informar (a identidade) | S-62 |
 | SPL-19 | No celular, o disco de cada faixa com crédito e link | informar, agir | S-62 |
+
+Rodada 3, prévias (`design/inception/splash-menu-{stops,bar,deck}-v1.html`; wireframes `design/wireframes/splash-menu-{stops,bar,deck}-v1-desktop.png` e `-phone.png`): as histórias seguem o menu. A SPL-06 passa a ser Albums (a série e o ranking, com o exemplo ilustrativo); a SPL-07 entra nela; a SPL-16 é Blend; a SPL-08 é Inventory; a SPL-09 («Why whole albums») sai — proposta do agente, pergunta 4 ao MJRP; a SPL-13 dá lugar à SPL-20; a SPL-01 e a SPL-02 a SPL-04 ganham o estado com conta. Novos:
+
+| ID | O que a tela mostra | Função do produto | Destino |
+|---|---|---|---|
+| SPL-20 | Barra-menu: uma fila contínua de barras, cinco partes, uma por item do menu; o fogo enche com a leitura; clicar leva à história (A sob o topo, B no topo, C embaixo) | informar (onde a pessoa está), agir (ir à história) | UAT-240 |
+| SPL-21 | Com conta, o topo só com «Start» com o fogo | agir | UAT-241 |
+| SPL-22 | Com conta, a primeira tela: «Welcome back», «Back to the crate. Start a new series.», «Start» e «Your playlists» | agir | UAT-241 |
+| SPL-23 | Side A · 1 — Start: a história do Start | informar | UAT-240 |
+| SPL-24 | Side B · 1 — Playlists: a história das playlists guardadas | informar | UAT-240 |
+| SPL-25 | Com conta, em cada história, «Open <item> →», que abre a tela do app | agir | UAT-241 (pergunta 2 ao MJRP) |
+| SPL-26 | Pausar o movimento: ícone de 44 px no canto do palco | agir (WCAG 2.2.2) | UAT-240 (decisão do MJRP, 2026-11-21) |
 

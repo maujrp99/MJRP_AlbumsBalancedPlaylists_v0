@@ -3,9 +3,44 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:07] session — rodada 3 de desenho da home na `main`; a issue do ramo foi renumerada de UAT-239 para UAT-241
+**Branch:** main
+O ramo `wip/f80-home-menu-and-slider` usou o número UAT-239 para «com conta, a home com o menu e o botão Start», que na `main` já era a issue da raiz mostrando a home a todos. A ferramenta do trem renumerou a do ramo para UAT-241, e as citações nos arquivos do ramo foram acertadas; as entradas antigas do log do ramo, abaixo, ainda dizem UAT-239 para esse assunto. Comparador republicado no mesmo endereço (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e): uma pergunta, a página de hoje e três prévias (A · Fio com paradas, B · O menu é a barra, C · Barra embaixo), com a chave sem conta / com conta; a crítica separada passou, sem P0.
+
+## [2026-11-21 13:07] decision — ids de UAT renumerados na integração de `wip/f80-home-menu-and-slider`
+
+> Participantes: Claude (Claude Code), integrador · Branch: main
+
+- `UAT-239` da `wip/f80-home-menu-and-slider` colidiu com outra issue de mesmo id e virou `UAT-241` (ordem de chegada).
+  - As referências listadas abaixo ainda citam o id velho `UAT-239` e valem para a issue do ramo (hoje `UAT-241`); a reescrever em um commit seguinte, sem tocar nas que citam a issue da `main`:
+    - `design/inception/splash-menu-bar-v1.html:194: /* ===== F80 · home menu preview (UAT-239, UAT-240): shared ===== */`
+    - `design/inception/splash-menu-deck-v1.html:194: /* ===== F80 · home menu preview (UAT-239, UAT-240): shared ===== */`
+    - `design/inception/splash-menu-stops-v1.html:194: /* ===== F80 · home menu preview (UAT-239, UAT-240): shared ===== */`
+    - `design/proposals/f80-splash/home-menu/build.mjs:2: * F80 · the home with the menu as the slider (UAT-239, UAT-240), 2026-11-21.`
+    - `design/proposals/f80-splash/home-menu/build.mjs:212: /* ===== F80 · home menu preview (UAT-239, UAT-240): shared ===== */`
+    - `design/proposals/f80-splash/proposal.md:225: **Pedido** (UAT-239, UAT-240, as palavras dele estão nas linhas): com conta, a home com o menu e «Start»; a barra contínua da «Elevar»; a ba`
+    - `design/proposals/info-arch/info-arch.html:52: <section id="top"><h1>Info-arch — Album Blender V0</h1><blockquote>Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodad`
+    - `design/proposals/info-arch/info-arch.html:56: <p>Desde a F76 o arquivo descreve também <b>o celular</b> (até 767 px), em duas seções: «O celular (F76)» e «Estados no celular». O que está`
+    - `design/proposals/info-arch/info-arch.html:62: <p>Pedido do MJRP (UAT-239, UAT-240): com conta, a home com o menu e «Start», sem «Sign in» e «Open the app»; a barra contínua como na «Elev`
+    - `design/proposals/info-arch/info-arch.html:103: <div class="table"><table><thead><tr><th>ID</th><th>O que a tela mostra</th><th>Função do produto</th><th>Destino</th></tr></thead><tbody><t`
+    - `docs/log.md:6: ## [2026-11-21 13:04] session — F80: a home com o menu na barra, três prévias no comparador (UAT-239, UAT-240)`
+    - `docs/log.md:8: Pedidos do MJRP (2026-11-21), registrados como UAT-239 e UAT-240 com as palavras dele: com conta, a home com o menu e «Start»; «o slider dev`
+    - `docs/specs/design-system.md:141: Das prévias de 2026-11-21 (`design/inception/splash-menu-{stops,bar,deck}-v1.html`; UAT-239, UAT-240). **Pendentes de aprovação do MJRP**; s`
+    - `docs/specs/info-arch.md:6: > Página de entrada (F80), rodada 3, 2026-11-21 (UAT-239, UAT-240): a home com o menu na barra — três prévias num eixo, «quanto o menu e a b`
+    - `docs/specs/info-arch.md:23: - **Página de entrada** (F80, aprovada na v2; mora na raiz `/` só para quem não entrou com conta — quem entrou vai direto a `/start`, e `/ho`
+    - `docs/specs/info-arch.md:92: Pedido do MJRP (UAT-239, UAT-240): com conta, a home com o menu e «Start», sem «Sign in» e «Open the app»; a barra contínua como na «Elevar»`
+    - `docs/specs/info-arch.md:548: | SPL-21 | Com conta, o topo só com «Start» com o fogo | agir | UAT-239 |`
+    - `docs/specs/info-arch.md:549: | SPL-22 | Com conta, a primeira tela: «Welcome back», «Back to the crate. Start a new series.», «Start» e «Your playlists» | agir | UAT-239`
+    - `docs/specs/info-arch.md:552: | SPL-25 | Com conta, em cada história, «Open <item> →», que abre a tela do app | agir | UAT-239 (pergunta 2 ao MJRP) |`
+    - `reports/audits/2026-11-21-f80-home-menu-previews-ux-audit.md:3: subject: "F80 · página de entrada com o menu como fio (UAT-239, UAT-240): prévias A (paradas), B (menu é a barra), C (deck embaixo), contra `
+
 ## [2026-11-21 13:05] session — limpeza dos worktrees antigos de agentes: os prints saíram para o `_backups/`, a remoção espera a janela de 60 minutos
 **Branch:** main
 Sete worktrees de ramos já na `main` (F76 ×4, f59, f78-app-skeleton, f86) tiveram os arquivos fora do git que seguravam a remoção (prints, `.mjrp/before.mjs`, `app/dist`, `launch.json`) movidos para o `_backups/` do checkout principal com `retire_path`. Nenhum worktree saiu ainda: mexer neles renovou a regra de atividade recente (60 min) do `clean-worktrees`; uma nova passada com `--apply` depois disso os remove. Dois ficaram por serem grandes demais para o `_backups/` (`app/ios` 2,3 GB; saída do spike f78 585 MB). Registro em `reports/audits/2026-11-21-mjrpalbumblender-v0-worktree-cleanup.md`.
+
+## [2026-11-21 13:04] session — F80: a home com o menu na barra, três prévias no comparador (UAT-239, UAT-240)
+**Branch:** wip/f80-home-menu-and-slider
+Pedidos do MJRP (2026-11-21), registrados como UAT-239 e UAT-240 com as palavras dele: com conta, a home com o menu e «Start»; «o slider deveria ser continuo como era na elevar»; a barra é o menu e a página conta «a story de cada item do menu». Decisões dele durante a rodada: «nao sabia da acessabilidade, coloque um icone discreto entao» (pausar vira ícone, em todas as prévias) e «conta aberta sempre home qdo vc acessa o link principal do site, aí vc teria o botao para start» (o estado com conta é a casa de quem volta). Três prévias num eixo, quanto o menu e a barra se juntam, tiradas da página real por `design/proposals/f80-splash/home-menu/build.mjs`: A `splash-menu-stops-v1.html` (fio com paradas), B `splash-menu-bar-v1.html` (o menu é a barra; recomendada), C `splash-menu-deck-v1.html` (barra embaixo); hoje em `home-menu/today.html`. Wireframes das seis telas em `design/wireframes/splash-menu-*-v1-{desktop,phone}.png` (gerador `home-menu/wireframes.py`), inventário SPL-20 a SPL-26 no `info-arch.md`. Crítica separada: passa, 0 P0, 5 P1, 7 P2; corrigidos os rótulos do celular, o ícone em 44 px, o ⟲ no celular, os pendentes no `design-system.md` e a rodada no `info-arch.md` (página regerada). Comparador republicado na mesma URL (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e, versão 9): abre na pergunta «A home: como o menu e a barra se juntam?», **59 palavras na primeira tela**; a vista da caixa passou para `caixa-vistas.html`, atrás de «Rodadas anteriores». Nota e perguntas em `design/proposals/f80-splash/proposal.md` § Rodada 3.
 
 ## [2026-11-21 12:58] session — a proposta do React e dos idiomas na `main`; as oito decisões dela vão ao Control Center
 **Branch:** main
@@ -14,6 +49,9 @@ O ramo `claude/f83-site-screens-in-react` entrou na `main` (`4a63985`) depois de
 ## [2026-11-21 12:58] decision — ADR-0023 registrada na `main` como proposta: as telas do site em React e TypeScript, tela a tela, com os textos num dicionário por idioma
 **Branch:** main
 O trem recusou o ramo `claude/f83-site-screens-in-react` porque a ADR que espera o MJRP nasce na `main`, registrada pelo orquestrador, para o Control Center mostrá-la. Registrada como `docs/decisions/0023-site-screens-in-react-screen-by-screen.md`, `Proposed`, igual ao texto do ramo; a crítica separada deu «pode ir ao MJRP» (0 P0, 10 P1 respondidos na proposta, 3 P2). O aceite é dele, no commit dele; o agente não o escreve. Na `main` desde o último registro: o lote de fecho do board (`9d46df8`), o sensor visual (`79f767d`) e o design system do site refeito do código (`9abc02e`).
+
+## [2026-11-21 12:56] review — mjrp-critiquing-ux-ui: F80 home com o menu como fio (A/B/C) · passa, sem P0
+`reports/audits/2026-11-21-f80-home-menu-previews-ux-audit.md` · P0 0 · P1 5 · P2 7 · quem julgou: agente separado.
 
 ## [2026-11-21 12:50] session — em produção: o `/home` é a página de entrada e a raiz mostra a home a todos
 **Branch:** main

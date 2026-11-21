@@ -219,3 +219,29 @@ Passa, sem P0; 4 P1 e 12 P2 (`reports/audits/2026-11-20-f80-splash-round2-ux-aud
 ## O que não pude conferir
 
 A primeira pintura e os quadros por segundo (acima); o 3D num iPhone ou num computador sem placa de vídeo dedicada; a página sem JavaScript foi lida do HTML e julgada pela crítica, não capturada (a captura sem script falhou); o selo oficial do Apple Music (não baixado); se a regra 4.5.2 da App Store vale para um site.
+
+## Rodada 3 — a home com o menu na barra (2026-11-21, nota para o orquestrador)
+
+**Pedido** (UAT-241, UAT-240, as palavras dele estão nas linhas): com conta, a home com o menu e «Start»; a barra contínua da «Elevar»; a barra é o menu e a página conta a história de cada item. Durante a rodada ele decidiu duas coisas: o pausar vira **ícone discreto** («nao sabia da acessabilidade, coloque um icone discreto entao») e **o endereço principal mostra a home a todos**, com «Start» para quem tem conta («conta aberta sempre home qdo vc acessa o link principal do site, aí vc teria o botao para start»).
+
+**O eixo:** quanto o menu e a barra se juntam. As três prévias saem da página real (`public/splash.html` preenchida pelo mesmo `fillEntryPage` do Vite, capas reais com a banana na frente, módulos embutidos) por um gerador, `design/proposals/f80-splash/home-menu/build.mjs`; mudam só o topo, a barra e a ordem das histórias, iguais nas três.
+
+| Prévia | O que muda | Custo de construir |
+|---|---|---|
+| **A · Fio com paradas** (`splash-menu-stops-v1.html`) | o fio sob o topo vira uma fila contínua de barras com os cinco itens rotulados embaixo; o topo fica com as chamadas | o menor: troca os grupos do fio por uma fila e cinco links (HTML, CSS e ~40 linhas no `splash.js`) |
+| **B · O menu é a barra** (`splash-menu-bar-v1.html`) — **recomendo** | os itens do menu ficam no próprio topo, cada um sobre a sua parte das barras; o fio sob o topo some (48 px a menos); no celular, a barra de baixo com os rótulos | médio: o mesmo de A, mais levar a barra do topo para baixo no celular |
+| **C · Barra embaixo** (`splash-menu-deck-v1.html`) | uma barra de baixo com agulha, igual no computador e no celular; o topo só com o logotipo e as chamadas | médio: o mesmo de A, mais a altura do palco e a navegação principal embaixo no computador (sem decisão anterior que a apoie) |
+
+**Em comum, nas três** (o custo que vem com qualquer escolha): as histórias seguem o menu do app (Start, Albums, Blend | ⟲ | Playlists, Inventory; saem «Ranking», «Your shelf» e «Why whole albums») — muda o `ORDER`/`TRACKS` do `splash.js` e os testes de `test/splash`; o estado com conta na página estática (o `gate.js` já lê a conta do navegador: pôr uma classe e trocar o topo, a primeira tela e o rodapé); a raiz deixa de levar quem tem conta a `/start` (o `gate.js`, o `behavior.md` § A raiz); o ícone de pausa (CSS e três linhas). No celular não há 3D, e as três dão na barra de baixo com os cinco rótulos: o eixo existe no computador.
+
+**O que conferi:** 1280 × 800 e 393 × 852, com e sem conta, no começo e no meio da página (capturas em `design/proposals/f80-splash/home-menu/caps/`); com movimento reduzido o ícone some e nada se move sozinho; sem WebGL fica o caixote em CSS; nenhum erro no console, nenhuma rolagem lateral; clicar em «Blend» leva a `#blend` e o acende; os rótulos do celular têm 72 × 56 px e o ícone 44 × 44; contraste: rótulo atual `#fb923c` 8,7:1, lidos branco 19,8:1, os outros `#b9b9c2` 10,2:1 sobre o preto; o texto preto do botão no fogo segue como hoje (7,0:1 a 4,1:1).
+
+**A crítica** (agente separado, `reports/audits/2026-11-21-f80-home-menu-previews-ux-audit.md`): passa, sem P0; 5 P1 e 7 P2; põe B em primeiro. **Corrigi nesta rodada:** os rótulos do celular em A e C (12 px, C deixou de escondê-los), o ícone de pausa em 44 px, o ⟲ fora do celular, o fio sem repetir o nome do logotipo, os padrões novos como pendentes no `design-system.md`, a rodada no `info-arch.md`. **Fica:** dois destinos para o mesmo nome com conta («Albums» no menu rola para a história; «Open Albums →» abre o app) e dois «Start» no topo — é a pergunta 2; o volume de texto da primeira tela sem conta é o de hoje (52 palavras no título e na frase); o pausar chega tarde no Tab.
+
+**Perguntas para o MJRP** (uma por vez, cada uma com a minha recomendação):
+1. **Como o menu e a barra se juntam?** A · Fio com paradas, B · O menu é a barra, C · Barra embaixo. Recomendo **B**: é o menu de verdade, numa linha só, e economiza a faixa de baixo do topo.
+2. **Com conta, clicar num item do menu leva à história ou à tela do app?** (a) à história, e a história tem «Open Albums →»; (b) direto à tela do app, e a rolagem continua contando a história. Recomendo **(b)**: quem volta quer ir trabalhar, e o «Start» do topo deixa de repetir o item «Start» do menu.
+3. **Sem conta, o botão principal continua «Open the app» ou vira «Start», como com conta?** Recomendo **«Start»**: o mesmo verbo nos dois estados e o mesmo destino, `/start`.
+4. **As histórias que saem** («Why whole albums», «Ranking» como faixa própria) podem sair? Recomendo **sim**: a página fica com uma história por item do menu; o porquê dos álbuns inteiros cabe numa linha da abertura, se ele quiser.
+
+**O que não pude conferir:** um iPhone de verdade e o toque; o 3D num computador sem placa de vídeo; o leitor de tela (só a árvore de acessibilidade); a página publicada no Safari.
