@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 14:24] decision — o MJRP aprova a emenda da constituição para React e TypeScript e o aceite da ADR-0023, condicionado ao ambiente separado
+**Branch:** main
+Palavras do MJRP (2026-11-21): «O firebase não nos dá um ambiente de staging pra homologarmos a versão em react?»; «Eu preferia ver tudo num ambiente separado»; à pergunta «Aprova a emenda da constituição para React e TypeScript e o aceite da decisão de arquitetura do React?», «1) aprovo desde que crie 2» (o item 2 era o ambiente separado para homologar). Como foi entendido (orquestrador, revisável): a emenda e o aceite valem depois que o ambiente separado existir; a ADR-0023 segue `Proposed` até o commit carimbado por ele; nada da F83 nem da home nova vai a produção antes de ele homologar no ambiente separado. Em aberto com ele: o tamanho do ambiente (só o site numa prévia do Firebase, ou um projeto separado com dados, login e servidor próprios).
+
 ## [2026-11-21 13:59] session — segundo relatório do juiz (passa) guardado como veio; 2 P2 viram UAT-256 e UAT-257
 **Branch:** wip/failed-sources-are-shown-2026-11-21
 Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-failed-sources-visual-parity-recheck-2.md` e capturas `reports/evidence/F52/recheck-2/` escritos pelo juiz (F52, F69), copiados sem edição. Os dois P2 restantes (a lista que se mexe no «Try again»; o azul fora da paleta) entram em `uat.md` como UAT-256 e UAT-257, ids reservados por `merge_train.py next-uat-id --reserve`.
