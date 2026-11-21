@@ -16,7 +16,7 @@
 
 ## Verification
 - [x] TASK-07 suíte (2852 testes), lint e build verdes; o desenho do cartão e da janela conferido num navegador com o CSS do build, sem conta e sem servidor, a 1440 e a 390 px · implements:: REQ-01, REQ-02, REQ-03, REQ-07, REQ-08, REQ-11, REQ-12 · model:: opus · rounds:: 1
-- [ ] TASK-08 ligar a fonte e provar em produção · implements:: REQ-04, REQ-05, REQ-06, REQ-09, REQ-10, REQ-13 · model:: opus · waiting:: human — a chamada de preço do Discogs exige o token, que só o integrador mapeia, e a prova pede a conta do MJRP · action:: mapear `discogs-token` em `DISCOGS_TOKEN`, publicar o servidor e depois o site, e provar no navegador com a conta do MJRP
+- [x] TASK-08 ligar a fonte e provar em produção: o servidor e o site da `70e63da` estão no ar, a revisão `mjrp-proxy-00213-qpq` recebe o secret `discogs-token` como `DISCOGS_TOKEN`; a leitura na conta do MJRP deu valor a 198 de 211 álbuns (`reports/evidence/F75/2026-11-20-production-proof.md`). Não verificado: a tela do site publicado, com login, não foi aberta pelo agente (a prova foi o app local falando com o servidor de produção) · implements:: REQ-04, REQ-05, REQ-06, REQ-09, REQ-10, REQ-13 · model:: opus · rounds:: 1
 
 ## Documentation
 - [x] `docs/specs/behavior.md`: a seção «Inventário» (`^inventory-value-card`, `^inventory-value-totals`, `^inventory-value-update`, `^inventory-value-switch`, `^inventory-where-to-buy`)
