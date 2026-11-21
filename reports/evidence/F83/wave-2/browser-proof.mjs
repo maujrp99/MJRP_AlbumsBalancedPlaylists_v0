@@ -19,7 +19,8 @@ import path from 'node:path'
 
 const [oldBase, newBase] = process.argv.slice(2)
 const OUT = path.dirname(new URL(import.meta.url).pathname)
-const CAPTURES = path.join(OUT, 'captures')
+const TAG = process.env.RESULT_TAG || ''
+const CAPTURES = path.join(OUT, 'captures' + TAG)
 fs.mkdirSync(CAPTURES, { recursive: true })
 fs.mkdirSync(path.join(OUT, 'raw'), { recursive: true })
 
@@ -217,6 +218,8 @@ for (const width of [1280, 393]) {
         n += 1
         await step(was.page, ctxOld)
         await step(is.page, ctxNew)
+        // PARK_MOUSE=1: the pointer is taken off the page before the page is read, so a :hover state the old screen lost when it drew anew is not a difference
+        if (process.env.PARK_MOUSE && width > 700) for (const p of [was.page, is.page]) await p.mouse.move(2, 2)
         for (const p of [was.page, is.page]) await p.waitForTimeout(350)
         const a = await is.page.evaluate(`${READ}(document.getElementById('app'))`)
         const b = await was.page.evaluate(`${READ}(document.getElementById('app'))`)
@@ -305,6 +308,6 @@ for (const width of [1280, 393]) {
 }
 
 await browser.close()
-fs.writeFileSync(path.join(OUT, 'raw/browser-proof-results.json'), JSON.stringify(results, null, 2))
+fs.writeFileSync(path.join(OUT, `raw/browser-proof-results${TAG}.json`), JSON.stringify(results, null, 2))
 console.log(`\n${results.filter(r => r.ok).length} of ${results.length} passed`)
 process.exit(results.every(r => r.ok) ? 0 : 1)

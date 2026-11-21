@@ -102,7 +102,7 @@
   {
     "what": "A 1280 · MOUSE DRAG: a track into the empty playlist: screenshot the same",
     "ok": false,
-    "detail": "3 pixels apart"
+    "detail": "2 pixels apart"
   },
   {
     "what": "A 1280 · MOUSE DRAG: a track into the empty playlist: the order of the tracks in the store is the same as on the old screen",

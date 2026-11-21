@@ -24,7 +24,7 @@ import { Playlists, GeneratingFlag } from '../../../public/js/screens/playlists/
 import { PlaylistsController } from '../../../public/js/controllers/PlaylistsController.js'
 import { renderScreen } from '../../support/renderScreen'
 import { registerTexts } from '../../../public/js/i18n/t.js'
-import { SCENARIOS, keyOf, normalize, asPhone, quiet, fakeService, outside } from '../../support/playlistsScenarios.js'
+import { SCENARIOS, generated, keyOf, normalize, asPhone, quiet, fakeService, outside } from '../../support/playlistsScenarios.js'
 import before from '../../fixtures/playlistsBeforeF83.json'
 
 const captured = before as Record<string, Record<string, string | null>>
@@ -115,5 +115,24 @@ describe('the proof catches a difference', () => {
         const scenario = SCENARIOS.find(s => s.name === 'nothing here yet')!
         const snaps = await play(scenario)
         expect(snaps['empty state']!.replace('glass-panel', 'glass-panel-changed')).not.toBe(captured[keyOf(scenario)]['empty state'])
+    })
+})
+
+describe('what a redraw took away from the page: the focus', () => {
+    afterEach(() => { document.body.innerHTML = '' })
+
+    it('a track removed by its X leaves the focus on the page, not on the next track\'s X (the hand-made screen drew anew)', async () => {
+        const seen: Array<string | undefined> = []
+        await play({
+            name: 'focus after a removal', url: '/playlists', playlists: generated(),
+            run: async (h: { click: (selector: string) => Promise<void> }) => {
+                const button = document.querySelector<HTMLElement>('button[data-action="remove-track"][data-playlist-index="0"][data-track-index="0"]')!
+                button.focus()
+                seen.push(document.activeElement?.getAttribute('data-action') ?? undefined)
+                await h.click('button[data-action="remove-track"][data-playlist-index="0"][data-track-index="0"]')
+                seen.push(document.activeElement === document.body ? 'body' : document.activeElement?.getAttribute('data-action') ?? undefined)
+            }
+        } as unknown as (typeof SCENARIOS)[number])
+        expect(seen).toEqual(['remove-track', 'body'])
     })
 })

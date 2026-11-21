@@ -1,0 +1,412 @@
+[
+  {
+    "what": "A 1280 · the set from the blend: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27944 chars"
+  },
+  {
+    "what": "A 1280 · the set from the blend: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · real keystrokes in the batch name: the field keeps the focus and the grid has the name: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27989 chars"
+  },
+  {
+    "what": "A 1280 · real keystrokes in the batch name: the field keeps the focus and the grid has the name: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280: typing: the field kept the focus and the name, the grid has it beside each title (new = old)",
+    "ok": true,
+    "detail": "{\"new\":{\"focused\":true,\"value\":\"Road trip\",\"prefix\":\"1. Road trip - \"},\"old\":{\"focused\":true,\"value\":\"Road trip\",\"prefix\":\"1. Road trip - \"}}"
+  },
+  {
+    "what": "A 1280 · the panel to generate again, open (real click): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27993 chars"
+  },
+  {
+    "what": "A 1280 · the panel to generate again, open (real click): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · the panel closed again: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27989 chars"
+  },
+  {
+    "what": "A 1280 · the panel closed again: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track down inside its playlist: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27977 chars"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track down inside its playlist: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track down inside its playlist: the order of the tracks in the store is the same as on the old screen",
+    "ok": true,
+    "detail": "{\"new\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]],\"old\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]]}"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track down inside its playlist: the page shows the order of the store (React holds the page it wrote)",
+    "ok": true,
+    "detail": "{\"shown\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]],\"store\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]]}"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track down inside its playlist: the order changed (the drag did something)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track to another playlist: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27977 chars"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track to another playlist: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track to another playlist: the order of the tracks in the store is the same as on the old screen",
+    "ok": true,
+    "detail": "{\"new\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]],\"old\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]]}"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track to another playlist: the page shows the order of the store (React holds the page it wrote)",
+    "ok": true,
+    "detail": "{\"shown\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]],\"store\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]]}"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track to another playlist: the order changed (the drag did something)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track into the empty playlist: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27920 chars"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track into the empty playlist: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track into the empty playlist: the order of the tracks in the store is the same as on the old screen",
+    "ok": true,
+    "detail": "{\"new\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Rich Woman\",\"Polly Come Home\"],[\"Gone Gone Gone\"]],\"old\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Rich Woman\",\"Polly Come Home\"],[\"Gone Gone Gone\"]]}"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track into the empty playlist: the page shows the order of the store (React holds the page it wrote)",
+    "ok": true,
+    "detail": "{\"shown\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Rich Woman\",\"Polly Come Home\"],[\"Gone Gone Gone\"]],\"store\":[[\"Ramble On\",\"Kashmir\",\"Time\",\"Money\",\"Us and Them\"],[\"Rich Woman\",\"Polly Come Home\"],[\"Gone Gone Gone\"]]}"
+  },
+  {
+    "what": "A 1280 · MOUSE DRAG: a track into the empty playlist: the order changed (the drag did something)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "A 1280 · undo (real click): the drag is taken back: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27965 chars"
+  },
+  {
+    "what": "A 1280 · undo (real click): the drag is taken back: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · redo: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "27920 chars"
+  },
+  {
+    "what": "A 1280 · redo: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · a track removed (hover, then the X): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "26090 chars"
+  },
+  {
+    "what": "A 1280 · a track removed (hover, then the X): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · the title of a playlist typed over (real keystrokes, Enter): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "26116 chars"
+  },
+  {
+    "what": "A 1280 · the title of a playlist typed over (real keystrokes, Enter): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · a playlist deleted: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "22882 chars"
+  },
+  {
+    "what": "A 1280 · a playlist deleted: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280 · the Spotify window (real click): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "22882 chars"
+  },
+  {
+    "what": "A 1280 · the Spotify window (real click): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280: nothing was saved or written",
+    "ok": true,
+    "detail": "null"
+  },
+  {
+    "what": "A 1280: no page error on either",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "A 393 · the set from the blend, on the phone: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13895 chars"
+  },
+  {
+    "what": "A 393 · the set from the blend, on the phone: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · another chip: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "12713 chars"
+  },
+  {
+    "what": "A 393 · another chip: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · back to the first: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13895 chars"
+  },
+  {
+    "what": "A 393 · back to the first: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · the sheet of a track (real tap on ⋯): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13895 chars"
+  },
+  {
+    "what": "A 393 · the sheet of a track (real tap on ⋯): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · move down by the sheet: the notice with Undo: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13883 chars"
+  },
+  {
+    "what": "A 393 · move down by the sheet: the notice with Undo: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · the notice taken back: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13883 chars"
+  },
+  {
+    "what": "A 393 · the notice taken back: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · TOUCH DRAG: a track by its position handle, inside its playlist: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13883 chars"
+  },
+  {
+    "what": "A 393 · TOUCH DRAG: a track by its position handle, inside its playlist: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · TOUCH DRAG: a track by its position handle, inside its playlist: the order of the tracks in the store is the same as on the old screen",
+    "ok": true,
+    "detail": "{\"new\":[[\"Ramble On\",\"Time\",\"Money\",\"Kashmir\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]],\"old\":[[\"Ramble On\",\"Time\",\"Money\",\"Kashmir\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]]}"
+  },
+  {
+    "what": "A 393 · TOUCH DRAG: a track by its position handle, inside its playlist: the page shows the order of the store (React holds the page it wrote)",
+    "ok": true,
+    "detail": "{\"shown\":[[\"Ramble On\",\"Time\",\"Money\",\"Kashmir\",\"Us and Them\"]],\"store\":[[\"Ramble On\",\"Time\",\"Money\",\"Kashmir\",\"Us and Them\"],[\"Gone Gone Gone\",\"Rich Woman\",\"Polly Come Home\"],[]]}"
+  },
+  {
+    "what": "A 393 · TOUCH DRAG: a track by its position handle, inside its playlist: the order changed (the drag did something)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "A 393 · a finger on a row but NOT on the handle scrolls and does not pick the row up: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13883 chars"
+  },
+  {
+    "what": "A 393 · a finger on a row but NOT on the handle scrolls and does not pick the row up: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · a finger on a row but NOT on the handle scrolls and does not pick the row up: nothing moved (new and old)",
+    "ok": true,
+    "detail": "{\"new\":true,\"old\":true}"
+  },
+  {
+    "what": "A 393 · the sheet of a playlist (real tap on ⋯): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13883 chars"
+  },
+  {
+    "what": "A 393 · the sheet of a playlist (real tap on ⋯): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · the question before deleting a playlist (Cancel): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13883 chars"
+  },
+  {
+    "what": "A 393 · the question before deleting a playlist (Cancel): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · the sheet of the exports: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13883 chars"
+  },
+  {
+    "what": "A 393 · the sheet of the exports: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393 · the sheet closed by Escape: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13883 chars"
+  },
+  {
+    "what": "A 393 · the sheet closed by Escape: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 393: nothing was saved or written",
+    "ok": true,
+    "detail": "null"
+  },
+  {
+    "what": "A 393: no page error on either",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "B 1280 · nothing here yet: #app is the same",
+    "ok": true,
+    "detail": "1493 chars"
+  },
+  {
+    "what": "B 1280 · nothing here yet: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · a saved batch that was not found: #app is the same",
+    "ok": true,
+    "detail": "2314 chars"
+  },
+  {
+    "what": "B 1280 · a saved batch that was not found: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280: no page error on either",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "B 393 · nothing here yet: #app is the same",
+    "ok": true,
+    "detail": "1493 chars"
+  },
+  {
+    "what": "B 393 · nothing here yet: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · a saved batch that was not found: #app is the same",
+    "ok": true,
+    "detail": "2473 chars"
+  },
+  {
+    "what": "B 393 · a saved batch that was not found: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393: no page error on either",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "C: five visits: no playlists screen left in #app, nothing left on the page",
+    "ok": true,
+    "detail": "[{\"path\":\"/start\",\"screens\":0,\"overlays\":0,\"grabbing\":false},{\"path\":\"/start\",\"screens\":0,\"overlays\":0,\"grabbing\":false},{\"path\":\"/start\",\"screens\":0,\"overlays\":0,\"grabbing\":false},{\"path\":\"/start\",\"screens\":0,\"overlays\":0,\"grabbing\":false},{\"path\":\"/start\",\"screens\":0,\"overlays\":0,\"grabbing\":false}]"
+  },
+  {
+    "what": "C: the listeners of window after five visits are the ones before",
+    "ok": true,
+    "detail": "32 -> 32"
+  },
+  {
+    "what": "C: with a change not saved, leaving asks, and «stay» keeps the screen",
+    "ok": true,
+    "detail": "{\"asked\":1,\"path\":\"/playlists\"}"
+  },
+  {
+    "what": "C: no page error",
+    "ok": true,
+    "detail": ""
+  }
+]

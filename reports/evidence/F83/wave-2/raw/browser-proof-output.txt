@@ -18,7 +18,7 @@ PASS  A 1280 · MOUSE DRAG: a track to another playlist: the order of the tracks
 PASS  A 1280 · MOUSE DRAG: a track to another playlist: the page shows the order of the store (React holds the page it wrote)  {"shown":[["Ramble On","Kashmir","Time","Money","Us and Them"],["Gone Gone Gone","Rich Woman","Polly Come Home"],[]],"store":[["Ramble On","Kashmir","Time","Money","Us and Them"],["Gone Gone Gone","Rich Woman","Polly Come Home"],[]]}
 PASS  A 1280 · MOUSE DRAG: a track to another playlist: the order changed (the drag did something)
 PASS  A 1280 · MOUSE DRAG: a track into the empty playlist: #app and what opens over the page are the same  27920 chars
-FAIL  A 1280 · MOUSE DRAG: a track into the empty playlist: screenshot the same  3 pixels apart
+FAIL  A 1280 · MOUSE DRAG: a track into the empty playlist: screenshot the same  2 pixels apart
 PASS  A 1280 · MOUSE DRAG: a track into the empty playlist: the order of the tracks in the store is the same as on the old screen  {"new":[["Ramble On","Kashmir","Time","Money","Us and Them"],["Rich Woman","Polly Come Home"],["Gone Gone Gone"]],"old":[["Ramble On","Kashmir","Time","Money","Us and Them"],["Rich Woman","Polly Come Home"],["Gone Gone Gone"]]}
 PASS  A 1280 · MOUSE DRAG: a track into the empty playlist: the page shows the order of the store (React holds the page it wrote)  {"shown":[["Ramble On","Kashmir","Time","Money","Us and Them"],["Rich Woman","Polly Come Home"],["Gone Gone Gone"]],"store":[["Ramble On","Kashmir","Time","Money","Us and Them"],["Rich Woman","Polly Come Home"],["Gone Gone Gone"]]}
 PASS  A 1280 · MOUSE DRAG: a track into the empty playlist: the order changed (the drag did something)
