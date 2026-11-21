@@ -126,14 +126,25 @@ export class AuthNav {
         this.connections = mountConnections(box, { ...realConnections(), onSummary: (summary) => this.showSummary(summary) });
     }
 
+    /**
+     * The dots and the label of the closed button say only what is known: `apple` is null while Apple Music
+     * is still being asked (or could not be told), and then nothing is said of it, «Nothing connected» included.
+     */
     showSummary({ spotify, apple }) {
         const dots = document.querySelector('[data-connection-dots]');
         const button = document.getElementById('userMenuBtn');
         const dot = (which, on) => (on ? `<b class="top-acct__dot top-acct__dot--${which}"></b>` : '');
-        if (dots) dots.innerHTML = dot('spotify', spotify) + dot('apple', apple);
-        const names = [spotify && 'Spotify', apple && 'Apple Music'].filter(Boolean);
+        if (dots) dots.innerHTML = dot('spotify', spotify) + dot('apple', apple === true);
+        if (!button) return;
+        button.setAttribute('aria-label', this.summaryLabel(spotify, apple));
+        button.dataset.apple = apple === null ? 'pending' : apple ? 'on' : 'off';
+    }
+
+    summaryLabel(spotify, apple) {
+        const names = [spotify && 'Spotify', apple === true && 'Apple Music'].filter(Boolean);
         const base = isSignedIn(this.userState?.currentUser) ? MENU_TEXT.account : MENU_TEXT.connectionsOnly;
-        button?.setAttribute('aria-label', `${base}: ${MENU_TEXT.connectedSummary(names)}`);
+        const nothing = !spotify && apple === false;
+        return names.length || nothing ? `${base}: ${MENU_TEXT.connectedSummary(names)}` : base;
     }
 
     // =========================================

@@ -147,4 +147,35 @@ describe('AuthNav: the account menu (F63, UAT-13)', () => {
         expect(clearCaches).not.toHaveBeenCalled()
         expect(document.getElementById('phone-clear-cache')).not.toBeNull()
     })
+
+    describe('the closed button never states what it does not know (judge P1-1)', () => {
+        const summarize = (summary) => connections.mountConnections.mock.calls.at(-1)[1].onSummary(summary)
+        const label = () => trigger().getAttribute('aria-label')
+        const dots = () => [...document.querySelectorAll('.top-acct__dot')].map(d => d.className)
+
+        it('Apple Music still pending: no «Nothing connected», no dot for it, a neutral label', () => {
+            summarize({ spotify: false, apple: null })
+            expect(label()).toBe('Account and connections')
+            expect(dots()).toEqual([])
+            expect(trigger().dataset.apple).toBe('pending')
+        })
+
+        it('pending, with Spotify connected: says only what it knows', () => {
+            summarize({ spotify: true, apple: null })
+            expect(label()).toBe('Account and connections: Spotify connected')
+            expect(dots()).toHaveLength(1)
+        })
+
+        it('known and connected: the dot and the name', () => {
+            summarize({ spotify: false, apple: true })
+            expect(label()).toBe('Account and connections: Apple Music connected')
+            expect(dots()).toEqual(['top-acct__dot top-acct__dot--apple'])
+        })
+
+        it('both known and absent: only then «Nothing connected»', () => {
+            summarize({ spotify: false, apple: false })
+            expect(label()).toBe('Account and connections: Nothing connected')
+            expect(dots()).toEqual([])
+        })
+    })
 })

@@ -191,7 +191,65 @@ describe('mountConnections', () => {
             withCheck(true)
             const seen = []
             mountConnections(box, { ...deps, onSummary: (x) => seen.push(x) })
+            expect(seen.at(-1)).toEqual({ spotify: false, apple: null })
+        })
+    })
+
+    describe('Apple Music known before the panel is opened (resolved in the background, once)', () => {
+        const shared = (initial) => {
+            let state = initial
+            const listeners = []
+            apple.check = vi.fn(async () => { state = 'connected'; listeners.forEach(fn => fn()) })
+            apple.state = () => state
+            apple.onChange = (fn) => { listeners.push(fn); return () => { } }
+            return { set: (s) => { state = s; listeners.forEach(fn => fn()) } }
+        }
+
+        it('a state already known is drawn at once: no «Checking…», and opening the panel does not ask again', async () => {
+            shared('connected')
+            const seen = []
+            const handle = mountConnections(box, { ...deps, onSummary: (x) => seen.push(x) })
+            expect(status('apple')).toBe('Connected')
+            expect(seen.at(-1)).toEqual({ spotify: false, apple: true })
+            handle.check()
+            await tick()
+            expect(status('apple')).toBe('Connected')
+            expect(apple.check).not.toHaveBeenCalled()
+        })
+
+        it('not authorized, known: says so and the dots say «absent» only now', () => {
+            shared('disconnected')
+            const seen = []
+            mountConnections(box, { ...deps, onSummary: (x) => seen.push(x) })
+            expect(status('apple')).toBe('Not connected')
             expect(seen.at(-1)).toEqual({ spotify: false, apple: false })
+        })
+
+        it('pending: «Checking…» and no claim on the dots; then the answer arrives and the row follows', () => {
+            const control = shared('checking')
+            const seen = []
+            mountConnections(box, { ...deps, onSummary: (x) => seen.push(x) })
+            expect(status('apple')).toBe('Checking…')
+            expect(seen.at(-1).apple).toBeNull()
+            control.set('connected')
+            expect(status('apple')).toBe('Connected')
+            expect(seen.at(-1).apple).toBe(true)
+        })
+
+        it('failed: «Could not connect» with Try again, and the dots claim nothing', () => {
+            shared('failed')
+            const seen = []
+            mountConnections(box, { ...deps, onSummary: (x) => seen.push(x) })
+            expect(status('apple')).toBe('Could not connect')
+            expect(seen.at(-1).apple).toBeNull()
+        })
+
+        it('unknown and then the panel opens: asks (once) and shows «Checking…» meanwhile', () => {
+            shared('unknown')
+            const handle = mountConnections(box, deps)
+            expect(status('apple')).toBe('Checking…')
+            handle.check()
+            expect(apple.check).toHaveBeenCalledTimes(1)
         })
     })
 })

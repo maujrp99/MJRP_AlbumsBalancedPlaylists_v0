@@ -15,6 +15,7 @@ import { dialogService } from '../../services/DialogService.js'
 import toast from '../Toast.js'
 import { MENU_TEXT } from './menuText.js'
 import { NAME_IN_THE_BAR } from './barName.js'
+import { appleState, askApple, APPLE_STATE_EVENT } from './appleState.js'
 
 const el = (tag, props, children) => SafeDOM.create(tag, props, children)
 
@@ -58,12 +59,14 @@ export function realConnections() {
         },
         apple: {
             isConnected: () => musicKitService.isAuthorized(),
-            // MusicKit keeps the authorization across visits, but only says so once started: asked when the menu opens
-            check: () => musicKitService.checkAuthorization(),
+            // MusicKit keeps the authorization across visits, but only says so once started: asked ONCE, in the
+            // background when the page is idle (appleState.js); the panel and the sheet read that answer
+            state: () => appleState(),
+            check: () => askApple(),
             detail: async () => null,
             connect: () => musicKitService.authorize(),
             disconnect: () => musicKitService.unauthorize(),
-            onChange: (listener) => listenTo('applemusic-auth-change', listener)
+            onChange: (listener) => listenAll(['applemusic-auth-change', APPLE_STATE_EVENT], listener)
         },
         confirm: (options) => dialogService.confirm(options),
         notify: (text) => toast.info(text)
@@ -73,6 +76,11 @@ export function realConnections() {
 function listenTo(type, listener) {
     window.addEventListener(type, listener)
     return () => window.removeEventListener(type, listener)
+}
+
+function listenAll(types, listener) {
+    const stops = types.map(type => listenTo(type, listener))
+    return () => stops.forEach(stop => stop())
 }
 
 function rowView(service, view) {
@@ -100,6 +108,9 @@ function glyphOf(service) {
     return SafeDOM.fromHTML(getIcon(service.icon, 'w-4 h-4'))
 }
 
+/** What the dots may say: true, false, or null (not known yet, or could not be told: never a claim of «absent»). */
+const truth = (state) => (state === 'connected' ? true : state === 'disconnected' ? false : null)
+
 /**
  * Draws the connections in `box` and keeps them true: the state of each service is read from it, never kept apart.
  * @param {HTMLElement} box
@@ -111,14 +122,22 @@ export function mountConnections(box, deps = realConnections()) {
     let keepFocusIn = null
     // A service that has to be asked (Apple Music) is «checking» until it is: never a guess
     const asks = (service) => typeof deps[service.key].check === 'function'
+    // What the service knows now: a service that is asked says `checking` (or `unknown`: not asked yet) until it knows
+    const known = (service) => {
+        const state = deps[service.key].state?.()
+        return state === 'unknown' ? 'checking' : state
+    }
     const settle = (service) => {
-        views[service.key] = { state: deps[service.key].isConnected() ? 'connected' : 'disconnected', detail: null }
+        views[service.key] = { state: known(service) || (deps[service.key].isConnected() ? 'connected' : 'disconnected'), detail: null }
     }
     const check = async (service) => {
+        const state = known(service)
+        if (state === 'connected' || state === 'disconnected') return
         views[service.key] = { state: 'checking', detail: null }
         draw()
         try {
-            views[service.key] = { state: (await deps[service.key].check()) ? 'connected' : 'disconnected', detail: null }
+            const answer = await deps[service.key].check()
+            views[service.key] = { state: known(service) || (answer ? 'connected' : 'disconnected'), detail: null }
         } catch (error) {
             console.error(`[connections] ${service.name} could not be checked:`, error)
             views[service.key] = { state: 'failed', detail: null }
@@ -135,7 +154,7 @@ export function mountConnections(box, deps = realConnections()) {
         }))
         const back = keepFocusIn && box.querySelector(`[data-connection="${keepFocusIn}"] button`)
         if (back) { back.focus(); keepFocusIn = null }
-        deps.onSummary?.({ spotify: views.spotify.state === 'connected', apple: views.apple.state === 'connected' })
+        deps.onSummary?.({ spotify: truth(views.spotify.state), apple: truth(views.apple.state) })
     }
     const refresh = async (service) => {
         settle(service)
@@ -173,7 +192,7 @@ export function mountConnections(box, deps = realConnections()) {
         if (service) run(service, button.dataset.action)
     })
     const stops = SERVICES.map(service => deps[service.key].onChange(() => refresh(service)))
-    SERVICES.forEach(service => { if (asks(service)) views[service.key] = { state: 'checking', detail: null }; else settle(service) })
+    SERVICES.forEach(service => { if (asks(service) && !known(service)) views[service.key] = { state: 'checking', detail: null }; else settle(service) })
     draw()
     SERVICES.forEach(service => { if (views[service.key].state === 'connected') refresh(service) })
     return {

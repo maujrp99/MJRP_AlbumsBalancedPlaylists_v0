@@ -53,6 +53,7 @@ import { openSignInWhenAsked } from './components/navigation/signInFromLink.js'
 import { START_PATH, leaveToHome } from './components/navigation/startRoute.js'
 import { isSignedIn } from './components/navigation/AuthNav.js'
 import { showLoginModal } from './components/LoginModal.js'
+import { checkAppleWhenIdle } from './components/navigation/appleState.js'
 
 const initUI = () => {
     const topNav = new TopNav({ clearCaches: clearAppAlbumCaches })
@@ -121,6 +122,10 @@ document.addEventListener('DOMContentLoaded', bootstrap)
 // The measurement of use (F77): off unless the build has a project key and nobody turned it off.
 // Started before the first route, so the first screen is measured; it never holds the app.
 startUsageMeasurement({ router })
+
+// Apple Music's state (the owner uses it): asked once, in the background, when the page is idle after the
+// first paint; the account button, the panel and the phone's sheet read that one answer (F88).
+checkAppleWhenIdle()
 
 // Register Routes
 // V3: SeriesController is instantiated once and passed to view

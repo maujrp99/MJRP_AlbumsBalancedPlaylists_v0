@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:12] session — F88: o botão da conta não nega mais a Apple Music (P1 do juiz): o estado é perguntado uma vez, em segundo plano, com a página ociosa
+**Branch:** feat/f88-top-menu-build
+Novo `navigation/appleState.js`: uma resposta só (desconhecido, conferindo, conectada, não conectada, falhou), pedida uma vez por `checkAppleWhenIdle` (requestIdleCallback com prazo de 4 s; sem ele, 1,5 s; só depois do `load`). O botão mostra um estado neutro até a resposta (sem ponto da Apple Music, sem «Nothing connected», `data-apple="pending"`); o painel e a folha do celular leem a mesma resposta, com «Checking…» só enquanto pendente. Testes primeiro (pendente, autorizada antes, não autorizada, falhou, nada diz «Nothing connected» enquanto pendente). Peso: o script principal de `vite build` foi de 1.096.195 para 1.097.346 bytes (+1.151 B, +0,1%), 17 arquivos nos dois, nenhum pedido novo antes da primeira pintura.
+
 ## [2026-11-21 18:07] step — F80 e F88: o relatório do juiz da reconferência visual e suas capturas entram no ramo, sem mudança
 **Branch:** feat/f88-top-menu-build
 O juiz (agente separado) escreveu o relatório (fail, 0 P0, 1 P1, 6 P2) sobre 481ec94; copiado como veio para reports/audits/ e as capturas para reports/evidence/F88/recheck/.
