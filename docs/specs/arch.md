@@ -103,6 +103,22 @@ Regra: a estabilidade da produção e os dados do usuário não ficam abertos a 
 - Implantação do **backend**: uma receita só, `scripts/deploy-server.sh` (`npm run deploy:server`): exporta a `main`, roda os testes, monta o contexto (`shared/` em `server/_shared_temp`, `config/` em `server/config`), sobe o servidor localmente para conferir, e publica com `gcloud run deploy --source server`, que constrói a imagem pelo `server/Dockerfile`. A segunda receita (`cloudbuild.yaml`), que não copiava `config/`, foi removida na F64. O script imprime a revisão que estava no ar e o comando para voltar a ela.
 - CDN/Assets: o Tailwind não vem mais de CDN: é compilado junto com o site (`tailwind.config.js`, `public/css/tailwind.css`; [[ADR-0021]], F59). A fonte Syne vem do Google Fonts (`public/index.html`); o SDK do Apple MusicKit vem de `js-cdn.music.apple.com` (`services/musickit/MusicKitAuth.js:124`); o conjunto de álbuns do autocompletar é o arquivo estático `albums-autocomplete.json`.
 
+## Delivery strategy
+
+**Status: proposal by the agent, 2026-11-21 13:25, awaiting the MJRP's approval.** Written from what the repository shows (the scripts `scripts/deploy-site.sh` and `scripts/deploy-server.sh`, `.github/workflows/ci.yml`, `firebase.json`, the Infrastructure section above, ADR-0020 and the contract). What the repository does not show is written «not checked».
+
+| Question | Answer |
+|---|---|
+| **Which branches exist** | `main` (local, the truth that gets deployed); `claude/fNN-…`, `feat/fNN-…`, `fix/fNN-…` (one per feature, cut from `main`, the commit hook refuses other names); `wip/…` (conform and similar work, accepted by the hook). Merges into `main` go through `merge_train.py` by the orchestrator. |
+| **What makes a preview** | Nothing automatic: no workflow builds a preview and no Firebase preview channel is used in the repository. A person sees a change by running the site locally (`npx vite`, or `vite preview` on `dist/`). Firebase Hosting preview channels: not checked (no channel is created by any script; whether one exists in the console was not read). |
+| **What goes to production** | Only `main`. The site (Firebase Hosting, project `mjrp-playlist-generator`) by `npm run deploy:site`; the server (Cloud Run `mjrp-proxy`) by `npm run deploy:server`. The two are published apart, so a problem has one cause. `firestore.rules` is not published by either script (see Infrastructure). |
+| **Who sends each one** | The MJRP, from his machine, with his Firebase and Google Cloud logins; the push stays his. CI only runs the tests and deploys nothing (`.github/workflows/ci.yml`: lint and `vitest run` on every push and pull request). |
+| **What is checked at each step** | Before the branch merges: the project's lint and tests (`npm run lint`, `npm test -- --run`), and for a screen the independent visual recheck (`sensors.visual`). Before a deploy, each script exports `main` to a clean folder, runs the tests, builds, and checks what it built; the server script also starts the built server locally. After the deploy, each script checks production (the live main script answers a script, not a page). |
+| **How to go back** | Site: Firebase console, Hosting, release history, pick the previous release and «Rollback» (printed by `deploy-site.sh`). Server: `gcloud run` traffic to the previous revision, which `deploy-server.sh` prints before it deploys; the service stays pinned to it until released (ADR-0020). The MJRP does it. Data in Firestore is not rolled back by either. |
+| **Does the preview use production's credentials and data?** | There is no preview, so nothing to share. A local run reads `server/.env` and the same Firebase project and Firestore as production (the app config points to `mjrp-playlist-generator`): a local run touches real data. Whether a separate Firebase project for tests exists: not checked. |
+
+What waits for the MJRP: confirming or adjusting this table. If he confirms, the Status line becomes «confirmed by the MJRP» with the date. If he does not, it stays a proposal and the harness's default holds: nothing is sent without him.
+
 ## Constraints
 - **Segurança e abuso.**
   - Segredos por variável de ambiente e Secret Manager, nunca no código (constituição v2.0.0, artigo V, item 7; `PRINCIPLES.md` §I.14). A chave do Gemini e a chave privada da Apple ficam só no servidor: por isso o servidor existe.

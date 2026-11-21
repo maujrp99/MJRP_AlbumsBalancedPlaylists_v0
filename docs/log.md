@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:25] session — conform: `delivery-strategy` registrado (CM-0111)
+**Branch:** wip/kernel-conform-2026-11-21
+Escrita a seção `## Delivery strategy` do `docs/specs/arch.md` lendo os scripts de deploy, o workflow de CI, o `firebase.json`, a ADR-0020 e o contrato; marcada **proposta do agente, à espera do MJRP** (a regra de que só o MJRP envia não mudou). O que o repositório não mostra (se existe canal de preview no Firebase, se há projeto de teste separado) está escrito «not checked». `delivery_strategy_check.py` sai verde com o aviso de proposta; `--check-note CM-0111` passou. A confirmação é do MJRP. Decidido pelo agente (a forma), a decisão do conteúdo é do MJRP.
+
 ## [2026-11-21 13:24] session — conform: `uat.md` com a trilha Agente/Juiz separada em 7 issues (uat@4, parcial)
 **Branch:** wip/kernel-conform-2026-11-21
 Acrescentado `**Aberta por:** agente (<quem>)`, lido da evidência que cada issue cita, em UAT-224, 225, 226, 231, 232, 233 e 234, e a coluna `Reportado por` de UAT-231 a 234 passou de «agente (juiz da F80/F79)» para `juiz` (a forma que a regra aceita; o nome do juiz foi para o `Aberta por`). Faltam 3 lacunas, de UAT-224, 225 e 226: a célula «OK do humano» traz a frase do histórico anterior ao harness (regra de 2026-10-18) numa issue de 2026-11-20, que não é anterior ao harness, e a âncora delas é `^UAT-171` (copiada da UAT-171). Não escrevi o OK (`recheck independente:` ou `testes verdes:`) porque nenhuma evidência no repositório o prova, e não mexi na âncora: vai ao MJRP. A CM-0096 segue pendente. Decidido pelo agente, revisável pelo MJRP.
