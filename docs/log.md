@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:36] step — F83 onda 5: as lições das ondas 0 a 4 num arquivo só (wave-lessons.md)
+**Branch:** claude/f83-wave-5-albums
+Foco e teclado, o link que navega uma vez, a auditoria das lojas, a prova (Firebase bloqueado, antiga contra antiga, WebKit no build), o Apple Music em primeiro lugar, as peças partilhadas e o ritual de fechar uma onda, mais as notas que a onda 4 deixou para a onda 5. Para as ondas seguintes lerem um arquivo em vez de redescobrir.
+
 ## [2026-11-21 19:31] step — F83 onda 4: o texto em pedaços sai em um nó só, como na antiga (achado do navegador: 136 pixels na linha da dica)
 **Branch:** claude/f83-wave-4-start
 A dica, a linha do visitante, o título do painel, a linha «foi salva», o «Saving your series…», o aviso do nome e o «ready» da lista levam as palavras e os espaços num nó de texto só, como a antiga (o React os dava em nós separados e o Chromium compõe as pontas de outro jeito). Mais um teste: fechar a folha com um Undo pendente mostra a faixa (diferença de propósito).
