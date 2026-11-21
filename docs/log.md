@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 20:41] step — F88: o relatório do juiz sobre o menu do celular (passou, sem P0 nem P1, 3 P2) e suas capturas entram no ramo; UAT-270 consertada, UAT-271 nova
+**Branch:** fix/f88-phone-menu-equal-in-home-and-app
+O juiz escreveu o relatório sobre 8c09860; copiado como veio para `reports/audits/` e as capturas para `reports/evidence/F88/phone-menu-equal/recheck/`. Dos três P2, o P2-1 (alisamento de fonte) foi consertado em e4f7c46. UAT-270 (os menus diferentes e o ícone do Start) passa a `fixed (F88: 5243644, 8c09860, e4f7c46)`. UAT-271, aberta pelo juiz: no iPhone SE a primeira tela da home mostra só uma fatia do caixote. UAT-263 ganhou a nota de que «Playlists» e «Inventory» também se tocam no app agora que os menus são um só.
+
 ## [2026-11-21 20:40] step — F88: o mesmo alisamento de fonte nos rótulos da barra de baixo, na home e no app (o P2-1 do juiz)
 **Branch:** fix/f88-phone-menu-equal-in-home-and-app
 Esta é a correção do próprio P2-1 do juiz da reconferência do menu do celular, feita depois de o relatório dele ter sido escrito: num Mac os rótulos da home saíam mais finos que os do app, porque o corpo da home alisa a fonte e o do app não. A barra passou a dizer o alisamento ela mesma (`.pbar{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}` em `bar-menu.css`), igual nas duas páginas; um teste em `phoneBarIsOneComponent.test.js` guarda a regra.
