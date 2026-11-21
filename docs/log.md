@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:05] session — limpeza dos worktrees antigos de agentes: os prints saíram para o `_backups/`, a remoção espera a janela de 60 minutos
+**Branch:** main
+Sete worktrees de ramos já na `main` (F76 ×4, f59, f78-app-skeleton, f86) tiveram os arquivos fora do git que seguravam a remoção (prints, `.mjrp/before.mjs`, `app/dist`, `launch.json`) movidos para o `_backups/` do checkout principal com `retire_path`. Nenhum worktree saiu ainda: mexer neles renovou a regra de atividade recente (60 min) do `clean-worktrees`; uma nova passada com `--apply` depois disso os remove. Dois ficaram por serem grandes demais para o `_backups/` (`app/ios` 2,3 GB; saída do spike f78 585 MB). Registro em `reports/audits/2026-11-21-mjrpalbumblender-v0-worktree-cleanup.md`.
+
 ## [2026-11-21 12:58] session — a proposta do React e dos idiomas na `main`; as oito decisões dela vão ao Control Center
 **Branch:** main
 O ramo `claude/f83-site-screens-in-react` entrou na `main` (`4a63985`) depois de a ADR-0023 ser registrada nela como proposta. As oito perguntas da proposta («Decisões do MJRP») estão no lote `reports/proposals/2026-11-21-1258-v0-react-and-languages.md`, para ele responder pelo Control Center: o ritmo, a mudança da constituição, o endereço por idioma, onde fica a escolha do idioma, o idioma sem país, a home em português, a ordem das telas e quando o português abre. O aceite da ADR-0023 não vai no lote: é um commit dele.
