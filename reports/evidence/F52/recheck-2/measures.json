@@ -1,0 +1,733 @@
+{
+ "ratings-1280": {
+  "before": {
+   "present": true,
+   "text": "BestEverAlbums did not answer.Try again",
+   "box": {
+    "x": 113,
+    "y": 326,
+    "w": 1054,
+    "h": 58,
+    "right": 1167
+   },
+   "inViewport": true,
+   "innerWidth": 1280,
+   "innerHeight": 800,
+   "scrollWidth": 1280,
+   "notice": {
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgba(59, 130, 246, 0.1)",
+    "font": "16px 400 Syne"
+   },
+   "text_": {
+    "color": "rgb(96, 165, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "font": "14px 400 Syne"
+   },
+   "under": "rgba(255, 255, 255, 0.03)",
+   "button": {
+    "label": "Try again",
+    "w": 72,
+    "h": 24,
+    "right": 1150,
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgb(37, 99, 235)",
+    "font": "12px 400 Syne"
+   },
+   "spanClipped": false,
+   "scrollerTop": 0,
+   "ratings": true,
+   "popularity": false,
+   "trackRows": 5,
+   "listTop": 408
+  },
+  "asking": {
+   "state": {
+    "ratings": "pending",
+    "popularity": "done"
+   },
+   "m": {
+    "present": true,
+    "text": "Asking BestEverAlbums for ratings…",
+    "box": {
+     "x": 113,
+     "y": 326,
+     "w": 1054,
+     "h": 20,
+     "right": 1167
+    },
+    "inViewport": true,
+    "innerWidth": 1280,
+    "innerHeight": 800,
+    "scrollWidth": 1280,
+    "notice": {
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "16px 400 Syne"
+    },
+    "text_": {
+     "color": "rgb(156, 163, 175)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "14px 400 Syne"
+    },
+    "under": "rgba(255, 255, 255, 0.03)",
+    "button": null,
+    "spanClipped": false,
+    "scrollerTop": 0,
+    "ratings": true,
+    "popularity": false,
+    "trackRows": 5,
+    "listTop": 370
+   }
+  },
+  "after": {
+   "state": {
+    "ratings": "done",
+    "popularity": "done"
+   },
+   "m": {
+    "present": false,
+    "ratings": false,
+    "popularity": false
+   }
+  }
+ },
+ "popularity-1280": {
+  "before": {
+   "present": true,
+   "text": "Spotify did not answer.Try again",
+   "box": {
+    "x": 113,
+    "y": 326,
+    "w": 1054,
+    "h": 58,
+    "right": 1167
+   },
+   "inViewport": true,
+   "innerWidth": 1280,
+   "innerHeight": 800,
+   "scrollWidth": 1280,
+   "notice": {
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgba(59, 130, 246, 0.1)",
+    "font": "16px 400 Syne"
+   },
+   "text_": {
+    "color": "rgb(96, 165, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "font": "14px 400 Syne"
+   },
+   "under": "rgba(255, 255, 255, 0.03)",
+   "button": {
+    "label": "Try again",
+    "w": 72,
+    "h": 24,
+    "right": 1150,
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgb(37, 99, 235)",
+    "font": "12px 400 Syne"
+   },
+   "spanClipped": false,
+   "scrollerTop": 0,
+   "ratings": false,
+   "popularity": true,
+   "trackRows": 5,
+   "listTop": 408
+  },
+  "asking": {
+   "state": {
+    "ratings": "done",
+    "popularity": "pending"
+   },
+   "m": {
+    "present": true,
+    "text": "Asking Spotify for popularity…",
+    "box": {
+     "x": 113,
+     "y": 326,
+     "w": 1054,
+     "h": 20,
+     "right": 1167
+    },
+    "inViewport": true,
+    "innerWidth": 1280,
+    "innerHeight": 800,
+    "scrollWidth": 1280,
+    "notice": {
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "16px 400 Syne"
+    },
+    "text_": {
+     "color": "rgb(156, 163, 175)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "14px 400 Syne"
+    },
+    "under": "rgba(255, 255, 255, 0.03)",
+    "button": null,
+    "spanClipped": false,
+    "scrollerTop": 0,
+    "ratings": false,
+    "popularity": true,
+    "trackRows": 5,
+    "listTop": 370
+   }
+  },
+  "after": {
+   "state": {
+    "ratings": "done",
+    "popularity": "done"
+   },
+   "m": {
+    "present": false,
+    "ratings": false,
+    "popularity": false
+   }
+  }
+ },
+ "both-1280": {
+  "before": {
+   "present": true,
+   "text": "BestEverAlbums did not answer.Try again",
+   "box": {
+    "x": 113,
+    "y": 326,
+    "w": 1054,
+    "h": 58,
+    "right": 1167
+   },
+   "inViewport": true,
+   "innerWidth": 1280,
+   "innerHeight": 800,
+   "scrollWidth": 1280,
+   "notice": {
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgba(59, 130, 246, 0.1)",
+    "font": "16px 400 Syne"
+   },
+   "text_": {
+    "color": "rgb(96, 165, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "font": "14px 400 Syne"
+   },
+   "under": "rgba(255, 255, 255, 0.03)",
+   "button": {
+    "label": "Try again",
+    "w": 72,
+    "h": 24,
+    "right": 1150,
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgb(37, 99, 235)",
+    "font": "12px 400 Syne"
+   },
+   "spanClipped": false,
+   "scrollerTop": 0,
+   "ratings": true,
+   "popularity": true,
+   "trackRows": 5,
+   "listTop": 490
+  }
+ },
+ "ratings-fails-again-1280": {
+  "before": {
+   "present": true,
+   "text": "BestEverAlbums did not answer.Try again",
+   "box": {
+    "x": 113,
+    "y": 326,
+    "w": 1054,
+    "h": 58,
+    "right": 1167
+   },
+   "inViewport": true,
+   "innerWidth": 1280,
+   "innerHeight": 800,
+   "scrollWidth": 1280,
+   "notice": {
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgba(59, 130, 246, 0.1)",
+    "font": "16px 400 Syne"
+   },
+   "text_": {
+    "color": "rgb(96, 165, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "font": "14px 400 Syne"
+   },
+   "under": "rgba(255, 255, 255, 0.03)",
+   "button": {
+    "label": "Try again",
+    "w": 72,
+    "h": 24,
+    "right": 1150,
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgb(37, 99, 235)",
+    "font": "12px 400 Syne"
+   },
+   "spanClipped": false,
+   "scrollerTop": 0,
+   "ratings": true,
+   "popularity": false,
+   "trackRows": 5,
+   "listTop": 408
+  },
+  "asking": {
+   "state": {
+    "ratings": "pending",
+    "popularity": "done"
+   },
+   "m": {
+    "present": true,
+    "text": "Asking BestEverAlbums for ratings…",
+    "box": {
+     "x": 113,
+     "y": 326,
+     "w": 1054,
+     "h": 20,
+     "right": 1167
+    },
+    "inViewport": true,
+    "innerWidth": 1280,
+    "innerHeight": 800,
+    "scrollWidth": 1280,
+    "notice": {
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "16px 400 Syne"
+    },
+    "text_": {
+     "color": "rgb(156, 163, 175)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "14px 400 Syne"
+    },
+    "under": "rgba(255, 255, 255, 0.03)",
+    "button": null,
+    "spanClipped": false,
+    "scrollerTop": 0,
+    "ratings": true,
+    "popularity": false,
+    "trackRows": 5,
+    "listTop": 370
+   }
+  },
+  "after": {
+   "state": {
+    "ratings": "failed",
+    "popularity": "done"
+   },
+   "m": {
+    "present": true,
+    "text": "BestEverAlbums did not answer.Try again",
+    "box": {
+     "x": 113,
+     "y": 326,
+     "w": 1054,
+     "h": 58,
+     "right": 1167
+    },
+    "inViewport": true,
+    "innerWidth": 1280,
+    "innerHeight": 800,
+    "scrollWidth": 1280,
+    "notice": {
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgba(59, 130, 246, 0.1)",
+     "font": "16px 400 Syne"
+    },
+    "text_": {
+     "color": "rgb(96, 165, 250)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "14px 400 Syne"
+    },
+    "under": "rgba(255, 255, 255, 0.03)",
+    "button": {
+     "label": "Try again",
+     "w": 72,
+     "h": 24,
+     "right": 1150,
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgb(59, 130, 246)",
+     "font": "12px 400 Syne"
+    },
+    "spanClipped": false,
+    "scrollerTop": 0,
+    "ratings": true,
+    "popularity": false,
+    "trackRows": 5,
+    "listTop": 408
+   }
+  }
+ },
+ "popularity-with-spotifyid-1280": {
+  "before": {
+   "present": false,
+   "ratings": false,
+   "popularity": false
+  }
+ },
+ "ratings-393": {
+  "before": {
+   "present": true,
+   "text": "BestEverAlbums did not answer.Try again",
+   "box": {
+    "x": 16,
+    "y": 188,
+    "w": 361,
+    "h": 78,
+    "right": 377
+   },
+   "inViewport": true,
+   "innerWidth": 393,
+   "innerHeight": 852,
+   "scrollWidth": 393,
+   "notice": {
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgba(59, 130, 246, 0.1)",
+    "font": "16px 400 -apple-system"
+   },
+   "text_": {
+    "color": "rgb(96, 165, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "font": "14px 400 -apple-system"
+   },
+   "under": "rgb(16, 16, 20)",
+   "button": {
+    "label": "Try again",
+    "w": 76,
+    "h": 44,
+    "right": 360,
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgb(37, 99, 235)",
+    "font": "12px 400 -apple-system"
+   },
+   "spanClipped": false,
+   "scrollerTop": null,
+   "ratings": true,
+   "popularity": false,
+   "trackRows": 5,
+   "listTop": 282
+  },
+  "asking": {
+   "state": {
+    "ratings": "pending",
+    "popularity": "done"
+   },
+   "m": {
+    "present": true,
+    "text": "Asking BestEverAlbums for ratings…",
+    "box": {
+     "x": 16,
+     "y": 188,
+     "w": 361,
+     "h": 20,
+     "right": 377
+    },
+    "inViewport": true,
+    "innerWidth": 393,
+    "innerHeight": 852,
+    "scrollWidth": 393,
+    "notice": {
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "16px 400 -apple-system"
+    },
+    "text_": {
+     "color": "rgb(156, 163, 175)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "14px 400 -apple-system"
+    },
+    "under": "rgb(16, 16, 20)",
+    "button": null,
+    "spanClipped": false,
+    "scrollerTop": null,
+    "ratings": true,
+    "popularity": false,
+    "trackRows": 5,
+    "listTop": 224
+   }
+  },
+  "after": {
+   "state": {
+    "ratings": "done",
+    "popularity": "done"
+   },
+   "m": {
+    "present": false,
+    "ratings": false,
+    "popularity": false
+   }
+  }
+ },
+ "popularity-393": {
+  "before": {
+   "present": true,
+   "text": "Spotify did not answer.Try again",
+   "box": {
+    "x": 16,
+    "y": 188,
+    "w": 361,
+    "h": 78,
+    "right": 377
+   },
+   "inViewport": true,
+   "innerWidth": 393,
+   "innerHeight": 852,
+   "scrollWidth": 393,
+   "notice": {
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgba(59, 130, 246, 0.1)",
+    "font": "16px 400 -apple-system"
+   },
+   "text_": {
+    "color": "rgb(96, 165, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "font": "14px 400 -apple-system"
+   },
+   "under": "rgb(16, 16, 20)",
+   "button": {
+    "label": "Try again",
+    "w": 76,
+    "h": 44,
+    "right": 360,
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgb(37, 99, 235)",
+    "font": "12px 400 -apple-system"
+   },
+   "spanClipped": false,
+   "scrollerTop": null,
+   "ratings": false,
+   "popularity": true,
+   "trackRows": 5,
+   "listTop": 282
+  },
+  "asking": {
+   "state": {
+    "ratings": "done",
+    "popularity": "pending"
+   },
+   "m": {
+    "present": true,
+    "text": "Asking Spotify for popularity…",
+    "box": {
+     "x": 16,
+     "y": 188,
+     "w": 361,
+     "h": 20,
+     "right": 377
+    },
+    "inViewport": true,
+    "innerWidth": 393,
+    "innerHeight": 852,
+    "scrollWidth": 393,
+    "notice": {
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "16px 400 -apple-system"
+    },
+    "text_": {
+     "color": "rgb(156, 163, 175)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "14px 400 -apple-system"
+    },
+    "under": "rgb(16, 16, 20)",
+    "button": null,
+    "spanClipped": false,
+    "scrollerTop": null,
+    "ratings": false,
+    "popularity": true,
+    "trackRows": 5,
+    "listTop": 224
+   }
+  },
+  "after": {
+   "state": {
+    "ratings": "done",
+    "popularity": "done"
+   },
+   "m": {
+    "present": false,
+    "ratings": false,
+    "popularity": false
+   }
+  }
+ },
+ "both-393": {
+  "before": {
+   "present": true,
+   "text": "BestEverAlbums did not answer.Try again",
+   "box": {
+    "x": 16,
+    "y": 188,
+    "w": 361,
+    "h": 78,
+    "right": 377
+   },
+   "inViewport": true,
+   "innerWidth": 393,
+   "innerHeight": 852,
+   "scrollWidth": 393,
+   "notice": {
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgba(59, 130, 246, 0.1)",
+    "font": "16px 400 -apple-system"
+   },
+   "text_": {
+    "color": "rgb(96, 165, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "font": "14px 400 -apple-system"
+   },
+   "under": "rgb(16, 16, 20)",
+   "button": {
+    "label": "Try again",
+    "w": 76,
+    "h": 44,
+    "right": 360,
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgb(37, 99, 235)",
+    "font": "12px 400 -apple-system"
+   },
+   "spanClipped": false,
+   "scrollerTop": 0,
+   "ratings": true,
+   "popularity": true,
+   "trackRows": 5,
+   "listTop": 368
+  }
+ },
+ "ratings-fails-again-393": {
+  "before": {
+   "present": true,
+   "text": "BestEverAlbums did not answer.Try again",
+   "box": {
+    "x": 16,
+    "y": 188,
+    "w": 361,
+    "h": 78,
+    "right": 377
+   },
+   "inViewport": true,
+   "innerWidth": 393,
+   "innerHeight": 852,
+   "scrollWidth": 393,
+   "notice": {
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgba(59, 130, 246, 0.1)",
+    "font": "16px 400 -apple-system"
+   },
+   "text_": {
+    "color": "rgb(96, 165, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "font": "14px 400 -apple-system"
+   },
+   "under": "rgb(16, 16, 20)",
+   "button": {
+    "label": "Try again",
+    "w": 76,
+    "h": 44,
+    "right": 360,
+    "color": "rgb(255, 255, 255)",
+    "bg": "rgb(37, 99, 235)",
+    "font": "12px 400 -apple-system"
+   },
+   "spanClipped": false,
+   "scrollerTop": null,
+   "ratings": true,
+   "popularity": false,
+   "trackRows": 5,
+   "listTop": 282
+  },
+  "asking": {
+   "state": {
+    "ratings": "pending",
+    "popularity": "done"
+   },
+   "m": {
+    "present": true,
+    "text": "Asking BestEverAlbums for ratings…",
+    "box": {
+     "x": 16,
+     "y": 188,
+     "w": 361,
+     "h": 20,
+     "right": 377
+    },
+    "inViewport": true,
+    "innerWidth": 393,
+    "innerHeight": 852,
+    "scrollWidth": 393,
+    "notice": {
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "16px 400 -apple-system"
+    },
+    "text_": {
+     "color": "rgb(156, 163, 175)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "14px 400 -apple-system"
+    },
+    "under": "rgb(16, 16, 20)",
+    "button": null,
+    "spanClipped": false,
+    "scrollerTop": null,
+    "ratings": true,
+    "popularity": false,
+    "trackRows": 5,
+    "listTop": 224
+   }
+  },
+  "after": {
+   "state": {
+    "ratings": "failed",
+    "popularity": "done"
+   },
+   "m": {
+    "present": true,
+    "text": "BestEverAlbums did not answer.Try again",
+    "box": {
+     "x": 16,
+     "y": 188,
+     "w": 361,
+     "h": 78,
+     "right": 377
+    },
+    "inViewport": true,
+    "innerWidth": 393,
+    "innerHeight": 852,
+    "scrollWidth": 393,
+    "notice": {
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgba(59, 130, 246, 0.1)",
+     "font": "16px 400 -apple-system"
+    },
+    "text_": {
+     "color": "rgb(96, 165, 250)",
+     "bg": "rgba(0, 0, 0, 0)",
+     "font": "14px 400 -apple-system"
+    },
+    "under": "rgb(16, 16, 20)",
+    "button": {
+     "label": "Try again",
+     "w": 76,
+     "h": 44,
+     "right": 360,
+     "color": "rgb(255, 255, 255)",
+     "bg": "rgb(59, 130, 246)",
+     "font": "12px 400 -apple-system"
+    },
+    "spanClipped": false,
+    "scrollerTop": null,
+    "ratings": true,
+    "popularity": false,
+    "trackRows": 5,
+    "listTop": 282
+   }
+  }
+ },
+ "popularity-with-spotifyid-393": {
+  "before": {
+   "present": false,
+   "ratings": false,
+   "popularity": false
+  }
+ },
+ "_console": []
+}

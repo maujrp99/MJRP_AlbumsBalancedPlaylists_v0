@@ -290,3 +290,39 @@ A primeira pintura e os quadros por segundo (acima); o 3D num iPhone ou num comp
 2. Sem conta, o botão principal fica «Abrir o app» ou vira «Inicie»? Recomendo «Inicie».
 3. O verbo do ranking no site e no app: «ranquear» ou «classificar»? Recomendo «ranquear», que ele mesmo usa.
 4. O texto em português e em inglês da tabela acima: serve como base, ou quer outra voz?
+
+## Rodada 3 · v3 — o texto em português revisado (2026-11-21, nota para o orquestrador)
+
+**Pedido** (as palavras dele, no log): «Cada faixa Conta em pt está estranho»; «ponha é feio, melhor coloque»; «eu revisaria todo esse copy»; sobre o ranking, «tem que ser Ranqueie/ordene e o uso do blend aqui nao é adequado, pode ser "junte" ou agrupe»; sobre as Playlists, «exporta só para o spotify?»; sobre o Inventário, «Conte as midias fisicas da sua estante». A abertura, escrita por ele: «Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada»; «Embaixo: Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas…» (cada palavra onde ele a pôs: «balanceada» na linha, «equilibradas» na frase). Ela substitui as três opções de título.
+
+**A versão:** `design/inception/splash-menu-bar-v3.html` (gerador `home-menu/build_v3.mjs`, que lê a v2 e troca só o texto; a v2 fica intacta). Tudo o que é visual é o da v2. A abertura é a dele (abaixo).
+
+**Conferido no código do app** (`public/js`): o ranking da pessoa ordena as faixas que ela ranqueou e deixa as outras na ordem em que estavam; a receita «Top Tracks by My Own Ranking» usa essa ordem (`ranking/UserRankingStrategy.js`, `algorithms/TopNUserAlgorithm.js`), daí «a playlist **pode** seguir a sua ordem». A exportação vai para o Spotify, para a Apple Music e para um arquivo JSON (`views/playlists/PlaylistsExport.js`, `components/SpotifyExportModal.js`). O inventário tem CD, vinil e fita cassete ao adicionar, e também DVD, Blu-ray e digital ao editar (`components/InventoryAddModal.js`, `components/InventoryEditModal.js`).
+
+**O texto — proposta do agente, a revisar** (só as linhas que mudaram; as outras seguem a tabela da v2). A abertura em português é final, dele; o inglês dela é proposta.
+
+| Onde | Português: antes → depois | English: antes → depois |
+|---|---|---|
+| Sobretítulo | um app web para quem ouve álbuns inteiros → um app web para quem ama discos | a web app for whole-album listeners → a web app for record lovers |
+| Título (dele) | Mergulhe nos álbuns que você ama. Cada faixa conta. → Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada. | Dig through the albums you love. Every track counts. → Dig through the albums you love. Your albums of the moment, in one balanced playlist. |
+| Frase (dele) | Reúna álbuns em séries, ponha as faixas na ordem que quiser e misture playlists em que nenhum disco fica de fora. → Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas. | Gather albums into series, put the tracks in the order you want, and blend playlists where no record is left out. → Build series from your albums of the moment, rank your tracks and make balanced playlists. |
+| Com conta: sobretítulo | De volta ao caixote → De volta aos discos | Back to the crate → Back to the records |
+| Inicie: frase | Digite um artista ou cole os álbuns que você tem em mente. O Blender junta tudo numa série. → Digite um artista ou cole os álbuns que você quer ouvir. O Blender monta a série. | … the albums you have in mind. The Blender gathers them into a series. → … the albums you want to hear. The Blender builds the series. |
+| Álbuns: título | Ponha no topo as faixas que você quiser. → Ranqueie as faixas do seu jeito. | Rank your tracks, your way. (igual) |
+| Álbuns: frase | Uma só ou várias. As outras ficam como estão, e o Blend pode seguir a sua ordem. → Uma só ou várias, para cima ou para baixo. As outras ficam como estão e, ao juntar os álbuns, a playlist pode seguir a sua ordem. | Just one, or a few. The rest stay as they are, and the Blend can follow your order. → Just one or a few, up or down. The rest stay as they are, and when you bring the albums together, the playlist can follow your order. |
+| Blend: título | Misture a série numa playlist só. → Junte a série numa playlist só. | Blend the series into one playlist. → Bring the series together in one playlist. |
+| Blend: frase | O Blender tira faixas de cada álbum, e nenhum disco abafa os outros. → O Blender pega faixas de cada álbum, sem deixar um disco dominar os outros. | … so no record drowns out the rest. → … so no record takes over the rest. |
+| Playlists: título | Guarde os Blends que você curtiu. → Guarde as playlists que você curtiu. | Keep the blends you love. → Keep the playlists you love. |
+| Playlists: frase | … refazer ou exportar para o Spotify. → … refazer ou exportar para o Spotify ou a Apple Music. | … export to Spotify. → … export to Spotify or Apple Music. |
+| Inventário: título | Conte os discos da sua estante. → Conte as mídias físicas da sua estante. (as palavras dele) | Keep count of the records you own. → Count the physical media on your shelf. |
+| Inventário: frase | Marque os álbuns da sua estante e veja uma estimativa de quanto vale a coleção. → Marque o que você tem em vinil, CD, fita cassete ou outro formato e veja uma estimativa de quanto vale a coleção. | Mark the albums on your shelf … → Mark what you own on vinyl, CD, cassette or another format, and see an estimate of what the collection is worth. |
+| Porta do Blend (com conta) | Fazer um Blend → Gerar uma playlist | Make a blend → Make a playlist |
+| Convite: título | Ponha a agulha na sua primeira série. → Coloque sua primeira série para tocar. | (igual) |
+| Convite: frase | … Entre para guardá-la. → … Entre na sua conta para salvá-la. | (igual) |
+| Convite com conta | Ponha a agulha numa série nova. → Coloque uma série nova para tocar. | (igual) |
+
+«Blend» fica só como nome do item do menu e da história (Lado A · 3 — Blend); «o Blender» segue como o nome do produto.
+
+**O comparador:** abre em «O texto em português ficou natural?», uma linha e dois cartões: a v3 (Nova, a página viva) e a v2 (a que você viu). A pergunta da v2 foi para `home-pt-v2.html`, atrás de «Rodadas anteriores».
+
+**O que conferi:** a v3 a 1280 × 800 e 393 × 852, sem e com conta, PT e EN: nenhuma rolagem lateral (no topo e na história de Álbuns), nenhum título, botão ou rótulo do menu cortado, nenhum erro no console. O comparador a 1280 e 393: sem rolagem lateral, sem erro; a v3 viva troca de idioma com a chave. **Fica:** a abertura dele ocupa o título com a segunda frase em laranja, como na v2 (14 palavras no título, acima da régua de 8 a 12); a 393 o caixote desce para baixo da dobra. Separar a segunda frase num subtítulo menor é uma mudança visual que não fiz.

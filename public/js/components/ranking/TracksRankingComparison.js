@@ -1,6 +1,7 @@
 import { TracksTable } from './TracksTable.js'
 import { TracksTabs } from './TracksTabs.js'
 import { describePopularity } from '../../models/popularityState.js'
+import { describeRatings } from '../../models/ratingsState.js'
 import { mergedTracksOf } from '../../models/albumAverages.js'
 import { SafeDOM } from '../../utils/SafeDOM.js'
 
@@ -17,11 +18,14 @@ export class TracksRankingComparison {
      * @param {Album} props.album - The album model
      * @param {{ status: string, onAsk: Function }|null} [props.popularity] - the state of the
      *        album's Spotify popularity in the album load (EnrichmentStatus) and how to ask for it
-     *        again: (albumId) => void. Without it (the album window) no line is shown.
+     *        again: (albumId) => void. Without it no line is shown.
+     * @param {{ status: string, onAsk: Function }|null} [props.ratings] - the same for the ratings
+     *        (acclaim) of the album: when the source did not answer, one line says so (UAT-244).
      */
-    constructor({ album, popularity = null }) {
+    constructor({ album, popularity = null, ratings = null }) {
         this.album = album
         this.popularity = popularity
+        this.ratings = ratings
         this.state = {
             sortField: 'position', // 'position' | 'rank' | 'spotifyPopularity'
             sortDirection: 'asc',  // 'asc' | 'desc'
@@ -134,8 +138,8 @@ export class TracksRankingComparison {
 
         const children = []
 
-        const notice = this.renderPopularityNotice()
-        if (notice) children.push(notice)
+        const notices = [this.renderRatingsNotice(), this.renderPopularityNotice()]
+        children.push(...notices.filter(Boolean))
 
         // Desktop View Container
         children.push(SafeDOM.div({
@@ -167,26 +171,36 @@ export class TracksRankingComparison {
      */
     renderPopularityNotice() {
         const line = this.album.spotifyId ? null : describePopularity(this.popularity?.status)
+        return this.renderNotice('popularity-notice', line, this.popularity)
+    }
+
+    /** The line about the ratings: BestEverAlbums did not answer («Try again»), or is being asked (UAT-244). */
+    renderRatingsNotice() {
+        return this.renderNotice('ratings-notice', describeRatings(this.ratings?.status), this.ratings)
+    }
+
+    /** One line about one source: quiet when nothing is wrong, a box with «Try again» when it failed. */
+    renderNotice(name, line, source) {
         if (!line) return null
 
         const children = [SafeDOM.span({ className: line.quiet ? 'text-gray-400 text-sm' : 'text-blue-400 text-sm' }, line.text)]
-        if (line.action) children.push(this.renderAskButton(line.action))
+        if (line.action) children.push(this.renderAskButton(line.action, source))
 
         return SafeDOM.div({
-            className: `popularity-notice flex justify-between items-center mb-4 ${line.quiet ? 'px-1' : 'bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl'}`
+            className: `${name} flex justify-between items-center mb-4 ${line.quiet ? 'px-1' : 'bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl'}`
         }, children)
     }
 
-    /** The button that asks the album load for the popularity again; the load redraws the album. */
-    renderAskButton(label) {
+    /** The button that asks the album load for a source again; the load redraws the album. */
+    renderAskButton(label, source = this.popularity) {
         const button = SafeDOM.button({
-            className: 'enrich-btn px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors',
+            className: 'enrich-btn min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors',
             textContent: label
         })
         button.onclick = () => {
             button.disabled = true
             button.textContent = 'Asking…'
-            this.popularity.onAsk(this.album.id)
+            source.onAsk(this.album.id)
         }
         return button
     }
