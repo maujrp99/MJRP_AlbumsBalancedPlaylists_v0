@@ -28,7 +28,7 @@
 - [x] TASK-15 medição no navegador, guardado apagado, 20 séries e 80 álbuns: os 80 aos 8,5 s; sair e voltar mantém 20 blocos e 80 álbuns — a primeira tentativa terminou com 5 séries em aviso de falha (429), a segunda passou; `reports/evidence/F45-albums-load-in-parallel/F45-probe-after-2026-11-19.json` · implements:: REQ-01, REQ-06, REQ-09 · model:: opus · rounds:: 2
 - [x] TASK-16 medição no navegador com 45 séries e 217 álbuns: tudo resolvido aos 31 s, nenhum 429; `reports/evidence/F47-series-list-without-cut/F47-probe-2026-11-19.json` · implements:: REQ-05, REQ-07 · model:: opus · rounds:: 1
 - [x] TASK-17 conferir no navegador o que só tem teste com dublê: clicar em «Try again» numa série com falha e medir a segunda visita, com o guardado cheio — prova: `reports/evidence/F45-albums-load-in-parallel/F45-desktop-failure-notice-2026-11-19.jpg`, `reports/evidence/F45-albums-load-in-parallel/F45-probe-after-2026-11-19.json` · implements:: REQ-08, REQ-10 · model:: opus · rounds:: 1
-- [ ] TASK-18 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
+- [ ] TASK-18 o que a trava do passo retroativo ainda cobra antes do `Done` (`python3 mjrp-scripts/retro_step_check.py . --staged` com a feature em `Done`, conferido em 2026-11-21): behavior: o plan.md declara `behavior.md` «atualizado», mas nenhum commit da feature toca docs/specs/behavior.md; Reconferência visual: a feature mexeu na tela e não há relatório `visual-parity-recheck` nem nota de Touch ID (`mjrp-visual-ok`) que a cubra. É trabalho de agente; nenhum item é do MJRP. O que falta de verdade é a reconferência visual independente (relatório `reports/audits/<data>-F45-visual-parity-recheck.md`, por quem não implementou, num navegador): nenhum merge traz nota de Touch ID. «Prototype: none» já está gravada na spec (MJRP, 2026-11-20 00:10). · implements:: REQ-01 · model:: opus
 
 ## Documentation
 - [x] `docs/manual/` atualizado na área tocada (06, 07, 07b, 08, 09, 11, 17, 19, mapa de arquivos) — commit `12713e2`, 2026-11-19 12:34
@@ -40,5 +40,5 @@
 ## For the owner at UAT
 - O MJRP confere no navegador e dá o OK na UAT-172.
 - resposta do MJRP à decisão 1 da proposta (a carga não regrava mais a coleção `albums`)
-- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- Falta o que a tarefa aberta acima descreve (trabalho de agente); o aceite é dele no UAT, depois do `Done`.
 - Push da `main` ao remoto (e, com ele, a primeira rodada da automação do GitHub): é do MJRP.

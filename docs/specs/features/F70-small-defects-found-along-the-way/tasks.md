@@ -28,7 +28,7 @@
 ## Verification
 - [x] TASK-05 suíte inteira (`npx vitest run`) verde e `npx vite build` compilando no ramo, com os testes de arquitetura (complexidade até 10, nenhum módulo morto, camadas) · implements:: REQ-01, REQ-02, REQ-03, REQ-04 · model:: sonnet · rounds:: 1
 - [x] TASK-06 prova no navegador, do integrador: como visitante numa segunda origem (nenhum pedido a `/api/ai/*` nem a `/api/generate`; status «→ artista») e com a conta do dono (os pedidos saem; uma capa com endereço quebrado mostra o substituto) — prova: `reports/evidence/F70/2026-11-19-small-defects-proof.md` · implements:: REQ-01, REQ-04 · model:: opus · rounds:: 1
-- [ ] TASK-07 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e a reconferência visual independente (relatório `visual-parity-recheck`) · implements:: REQ-01 · model:: opus · waiting:: human — a frase sobre o protótipo é do MJRP; a reconferência é de um agente que não implementou · action:: o MJRP diz «Prototype: none»; o integrador manda fazer a reconferência
+- [x] TASK-07 o passo retroativo da via rápida, a parte do agente: «Prototype: none» gravada na `spec.md` com a frase do MJRP (2026-11-20 00:10); a reconferência visual independente, por quem não implementou: `reports/audits/2026-11-19-F70-visual-parity-recheck.md` (passa, 0 P0, 0 P1); o código está na `main` (merges `ffd414f`, `88adbc4`, `109b656`) e nenhum merge traz nota de Touch ID (não há nota `mjrp-visual-ok` no repositório), então o olhar dele na tela fica na marca `needs_human` da spec, não numa tarefa · implements:: REQ-01 · model:: opus · rounds:: 1
 
 ## Documentation
 - [x] `docs/specs/behavior.md`: `^home-scan-classifying` e `^library-album-failed` (visitante), `^inventory-price-keeps-currency`, `^library-ai-album-ratings`, `^album-cover-stand-in`
@@ -38,4 +38,4 @@
 
 ## For the owner at UAT
 - O MJRP confere as quatro issues (UAT-208, UAT-209, UAT-210 e UAT-63) e julga o substituto único de capa.
-- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- O olhar dele na tela é a marca `needs_human` da spec; o aceite é dele no UAT.

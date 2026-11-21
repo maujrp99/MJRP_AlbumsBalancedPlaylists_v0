@@ -14,7 +14,7 @@
 
 ## Verification
 - [x] TASK-05 suíte (2351 testes), lint e build verdes; prova no navegador em `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md` · implements:: REQ-01, REQ-02, REQ-03, REQ-04 · model:: opus · rounds:: 1
-- [ ] TASK-06 o passo retroativo da via rápida: a reconferência visual por quem não implementou · implements:: REQ-03 · model:: sonnet · waiting:: human — o fecho depende do relatório de reconferência visual · action:: o integrador manda fazer a reconferência e junta o relatório
+- [ ] TASK-06 o que a trava do passo retroativo ainda cobra antes do `Done` (`python3 mjrp-scripts/retro_step_check.py . --staged` com a feature em `Done`, conferido em 2026-11-21): Reconferência visual: a feature mexeu na tela e não há relatório `visual-parity-recheck` nem nota de Touch ID (`mjrp-visual-ok`) que a cubra. É trabalho de agente; nenhum item é do MJRP. O que falta de verdade é a reconferência visual independente (relatório `reports/audits/<data>-F73-visual-parity-recheck.md`, por quem não implementou, num navegador): nenhum merge traz nota de Touch ID. «Prototype: none» já está gravada na spec (MJRP, 2026-11-20 00:10). · implements:: REQ-03 · model:: opus
 
 ## Documentation
 - [x] `docs/specs/behavior.md`: `^playlists-batch-name-live`, `^playlists-no-albums`, `^screens-left-and-stale-tab`

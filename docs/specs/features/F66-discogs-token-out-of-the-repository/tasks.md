@@ -24,5 +24,5 @@
 - [x] TASK-03 `noSecretsInRepo.test.js` verde e `git ls-files` sem os dois scripts; evidência em `reports/evidence/F66/2026-11-20-token-out-of-the-repository.md` · implements:: REQ-01, REQ-02 · model:: sonnet · rounds:: 1
 
 ## Documentation
-- [ ] update the specs affected · mark F66 Done in spec.md · commit: feat: implement discogs-token-out-of-the-repository
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] update the specs affected · mark F66 Done in spec.md (spec e plano preenchidos do registro e da evidência, em 2026-11-21)
+- [x] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde

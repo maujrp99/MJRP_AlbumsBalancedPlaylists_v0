@@ -1,7 +1,8 @@
 ---
-status: In Progress
+status: Done
 lane: fast
 solution_type: fix
+needs_human: "ver: o botão de salvar com «Saving…», a frase ao apagar uma série com playlists, a pergunta ao sair com alteração não salva"
 imports: []
 fixes: ["UAT-196", "UAT-197", "UAT-198", "UAT-05", "UAT-12"]
 planned_for: "[[ROADMAP#^REL-40]]"

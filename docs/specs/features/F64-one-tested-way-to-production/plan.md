@@ -74,6 +74,15 @@ Nenhuma dependência nova no projeto. Na máquina: Firebase CLI e gcloud logados
 - `docs/specs/arch.md` (implantação), `firebase.json`, `vite.config.js`, `vitest.config.js`, `server/index.js`, `server/lib/prompts.js`
 - o serviço `mjrp-proxy` no Cloud Run (só leitura: origem da imagem, nomes das variáveis)
 
+Declarações do passo retroativo da via rápida (conferidas nos commits que citam a F64, em 2026-11-21):
+- `docs/specs/constitution.md` — sem mudança (nenhum commit que cita a F64 toca o arquivo)
+- `docs/specs/arch.md` — atualizado (commits que citam a F64 e tocam o arquivo: `daff4f0`, `872aa42`)
+- `docs/specs/data-model.md` — sem mudança (nenhum commit que cita a F64 toca o arquivo)
+- `docs/specs/tech-stack.md` — atualizado (commits que citam a F64 e tocam o arquivo: `daff4f0`, `872aa42`)
+- `docs/specs/design-system.md` — sem mudança (nenhum commit que cita a F64 toca o arquivo)
+- `docs/specs/behavior.md` — sem mudança (nenhum commit que cita a F64 toca o arquivo)
+- `docs/wiki/` — sem mudança (nenhum commit que cita a F64 toca uma página da wiki do projeto)
+
 ## Risks & Considerations
 - **Node 18 → 26 no servidor.** Muda o comportamento da produção na próxima publicação do servidor. Mostrado: o servidor sobe no Node 26.11 com as dependências do lockfile, responde às rotas de estado, carrega prompts e módulos compartilhados; `jsonwebtoken` assina e verifica ES256 (o algoritmo do token da Apple) com uma chave descartável; `cheerio` e `axios` carregam. Não mostrado: as rotas pagas e os raspadores contra os sites reais, e a imagem `node:26-slim` em si (a etiqueta existe no Docker Hub; a imagem só é construída na publicação). A volta é um comando, para a revisão anterior. Alternativa mais conservadora: `node:24-slim` (também em suporte), que não pôde ser exercitada nesta máquina.
 - **`npm ci --omit=dev` sem queda para `npm install`:** um lockfile do servidor fora de passo passa a reprovar o build em vez de instalar outra coisa calado. O script acusa isso antes, na subida local.

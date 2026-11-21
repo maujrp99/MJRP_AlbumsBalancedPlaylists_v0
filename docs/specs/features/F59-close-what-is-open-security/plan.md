@@ -60,6 +60,9 @@ Declarações do passo retroativo da via rápida (conferidas no histórico do re
 - `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
 - `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
 
+Declarações do passo retroativo da via rápida (conferidas nos commits que citam a F59, em 2026-11-21):
+- `docs/specs/behavior.md` — sem mudança (nenhum commit que cita a F59 toca o arquivo)
+
 ## Risks & Considerations
 - **Ordem de publicação:** o site vai primeiro (passa a mandar o login; o servidor antigo ignora), o servidor depois (passa a exigir). Ao contrário, o app em produção ficaria sem notas e sem a segunda fonte até o site sair.
 - **Quem está com a página aberta desde antes** não manda o login até recarregar: recebe 401 nas notas e vê o aviso de falha; recarregar resolve.

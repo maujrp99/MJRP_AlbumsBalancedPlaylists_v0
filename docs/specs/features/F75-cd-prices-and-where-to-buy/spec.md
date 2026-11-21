@@ -1,7 +1,8 @@
 ---
-status: In Progress
+status: Done
 lane: standard
 solution_type: feature
+needs_human: "decidir: as doze decisões «decidido pelo agente — revisável» do plan.md e se `DISCOGS_VALUES_FOR` fica definida com o id dele"
 imports: ["[[S-57-see-what-a-cd-costs-and-where-to-buy-it]]"]
 planned_for: "[[ROADMAP#^REL-40]]"
 ---
@@ -41,18 +42,31 @@ Termos de uso da API do Discogs lidos em 2026-11-20 01:24 (relatório de viabili
 
 ## Requirements
 - [REQ-01] O cartão do inventário segue o padrão da v5.1: uma superfície com a capa até as bordas e cinco linhas iguais em todo cartão: o rótulo do valor conforme o status («In my collection · worth» ou «Not mine yet · costs»), a origem e o valor, as duas médias, o rótulo das ações, as ações. · fixes S-57
+  verified_by:: `test/views/InventoryView.values.test.js`
 - [REQ-02] As contagens por status do cabeçalho são botões que filtram o inventário por aquele status; o seletor de status sai da barra. · fixes S-57
+  verified_by:: `test/views/InventoryView.values.test.js`
 - [REQ-03] A pessoa escreve o valor de um álbum na janela dele; esse valor aparece com a origem «written by you», é gravado no item e nunca é trocado por uma leitura. Ela pode voltar ao valor do Discogs. · fixes S-57
+  verified_by:: `test/models/inventoryValue.test.js`, `test/repositories/InventoryRepository.value.test.js`
 - [REQ-04] O app lê do Discogs, pelo servidor, a sugestão de preço da edição em CD mais comum do álbum, nos estados «Mint», «Near Mint» e «Very Good Plus»; o valor do álbum é a média dos três; a janela mostra os três, a média, a edição usada e quando foi lido. · fixes S-57
+  verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/server/discogsSource.test.js`, `test/server/valueRoutes.test.js`, `test/services/inventory/InventoryValueService.test.js`
 - [REQ-05] Um valor do Discogs só é mostrado se foi lido há menos de seis horas, e não é guardado além disso; passado esse tempo ele é lido de novo ou deixa de aparecer. · fixes S-57
+  verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/services/inventory/InventoryValueService.test.js`
 - [REQ-06] Ao lado de todo valor vindo do Discogs aparece «Data provided by Discogs.», com link para a página do Discogs daquela edição; o app diz, à vista, que usa a API do Discogs e não é afiliado a ele. · fixes S-57
+  verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/services/inventory/InventoryValueService.test.js`
 - [REQ-07] O cabeçalho mostra «Estimated value of what I own» e «To buy the rest», cada um com quantos álbuns entraram na soma («N of M»). · fixes S-57
+  verified_by:: `test/models/inventoryValue.test.js`, `test/repositories/InventoryRepository.value.test.js`
 - [REQ-08] A pessoa escolhe a moeda (USD, EUR, GBP, BRL); os valores são convertidos pelo câmbio do dia, e fora do dólar a tela diz a taxa usada. Sem a taxa, a tela mostra em dólar e diz por quê. · fixes S-57
+  verified_by:: `test/models/inventoryValue.test.js`, `test/server/valueRoutes.test.js`
 - [REQ-09] «Update values» lê os valores de todo o inventário respeitando o limite de pedidos do Discogs, mostra o progresso, pode ser parado e não trava a tela; um álbum que entra no inventário sem valor é lido na vez seguinte, e a tela diz quantos esperam. · fixes S-57
+  verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/services/inventory/InventoryValueService.test.js`
 - [REQ-10] O valor do Discogs tem um interruptor no servidor: desligado, sem publicar código de novo, o app não mostra valor, botão nem aviso do Discogs, e o valor escrito à mão, o total e os links de compra seguem funcionando. · fixes S-57
+  verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/server/discogsSource.test.js`, `test/server/valueRoutes.test.js`
 - [REQ-11] «Where to buy»: no cartão do álbum que a pessoa não tem, três links (Discogs, Amazon, iMusic) numa busca pronta por artista, título e CD; no cartão do que ela tem, um link que abre a janela do álbum; na janela, os três links. · fixes S-57
+  verified_by:: `test/views/InventoryView.values.test.js`
 - [REQ-12] O inventário ordena pelo valor, nas duas direções; o álbum sem valor fica no fim. · fixes S-57
+  verified_by:: `test/models/inventorySort.test.js`
 - [REQ-13] Cada falha diz o que houve e nada é inventado: o Discogs não tem edição em CD, o Discogs não respondeu, o limite de pedidos foi atingido, o token foi recusado, o câmbio não chegou. · fixes S-57
+  verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/server/discogsSource.test.js`, `test/server/valueRoutes.test.js`, `test/services/inventory/InventoryValueService.test.js`
 
 ## Observable States
 Os estados estão no `docs/specs/info-arch.md`, seção «Estados», cada um com o seu ID de bloco; o comportamento, no `docs/specs/behavior.md`, seção «Inventário».

@@ -129,6 +129,7 @@ Declarações do passo retroativo da via rápida (conferidas no histórico do re
 - `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
 - `docs/specs/behavior.md` — sem mudança: refatoração sem mudança de comportamento
 - `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+- `docs/specs/constitution.md` — sem mudança: o último commit que a tocou antes da feature é de 2026-10-28 (a v2.0.0, de 2026-11-20, é da F78); nenhum commit que cita a F58 a toca
 
 ## Risks & Considerations
 - **Sem navegador.** O implementador não viu nenhuma tela. O que os testes não veem: a ordem de importação no `app.js` (o `userSession.js` precisa do Firebase iniciado; está logo depois do `firebase-init.js`), o menu e a tela de migração montados com o que recebem, e a tela de álbuns com uma espera de verdade. A prova é a TASK-13.

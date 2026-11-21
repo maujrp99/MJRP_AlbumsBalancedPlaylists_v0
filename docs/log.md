@@ -44,6 +44,118 @@ Palavras do MJRP (2026-11-21): «os agentes internos precisam utilizar modelos a
 **Branch:** main
 Palavras do MJRP (2026-11-21): «parece que vc entrou no processo do harness agora, que está te atrapalhando, ontem vc estava mais agil e colocando as coisas em prod, mais rápido»; «vamos matar todas as sessoes e manter o trabalho como ontem, a agilidade do seu trabalho de ontem deve ser o modelo para o fast lane do harness passe esse feedback para o master agent considerar isso na F350 da v2.0 do harness e a partir de agora siga o que vc estava seguindo ontem»; «assuma o trabalho das sessoes e arquivo todas as sessoes»; «ok esse é o resumo do fast lane, coloque no md pls». Feito: as duas sessões que trabalhavam foram paradas; o trabalho sem commit da sessão do design system foi gravado no ramo dela (`91c7c53`); o resumo do processo está em `reports/harness-feedback/2026-11-21-fast-lane-as-worked-on-2026-11-20.md` e foi ao agente mestre. O trabalho das sessões fica nos ramos (`claude/f81-…`, `claude/f81-copy-volume-research`, `claude/f83-…`, `claude/f85-…`, `fix/f80-uat-entry-page`, `claude/f86-…`, `claude/f45-batch-close-merged-features`), que o orquestrador junta. Também de hoje: o push foi feito por ele pelo terminal; a trava de comunicação deixou de pedir reescrita (pedido dele, mudado no harness, commit `c49bf25c8` de lá); a cópia do kernel foi atualizada (`8731582`).
 
+## [2026-11-21 11:46] session — F69: o que ainda impede o `Done` está escrito como trabalho de agente 
+**Branch:** claude/batch-close-merged-features
+F69 (a falha da popularidade do Spotify é falha): o código está na `main` (merges `1e6e6f0`, `8425964`, `822a794`). A tarefa 13 (publicar o servidor e ver nos registros que a falha do Spotify aparece como «could not be asked») não é do MJRP: tirei a marca `waiting:: human` e escrevi que é do integrador, e que a prova só vem quando o Spotify falhar de verdade em produção. Declarei no `plan.md` 7 documento(s) que faltavam, conferido nos commits que citam a feature. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:45] session — F64: o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F64 (um caminho só, testado, para produção): o código está na `main` (merges `4085c49`, `fd9a0a1`, `9424320`). Declarei no `plan.md` 7 documento(s) que faltavam, conferido nos commits que citam a feature. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual, Issues. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:45] session — F51: o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F51 (filtros, busca e paginação na tela de álbuns): o código está na `main` (merges `5268f45`). Declarei no `plan.md` 5 documento(s) que faltavam, conferido nos commits que citam a feature. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual, Issues. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:44] session — F49: o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F49 (o botão de carregar mais álbuns de uma série funciona): o código está na `main` (merges `1d5ed9b`, `36c6ddd`). Declarei no `plan.md` 7 documento(s) que faltavam, conferido nos commits que citam a feature. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:44] session — F73: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F73 (as telas mantêm o campo em uso e largam o que deixaram): o código está na `main` (merges `0c0df5e`, `0db59f6`, `fe6e954`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:44] session — F72: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F72 (a tela de séries diz quantos álbuns e séries mostra): o código está na `main` (merges `8efa91c`, `b467468`, `7f55957`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. Declarei no `plan.md` 7 documento(s) que faltavam, conferido nos commits que citam a feature. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Story, Story, Critérios de aceite, Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:43] session — F68: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F68 (as regras de identidade de álbum revistas): o código está na `main` (merges `7da4418`, `8f36ed9`, `764b495`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:43] session — F67: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F67 (o Scan da Home responde ao clique): o código está na `main` (merges `cdef6d5`, `5dd2198`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: arch, Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:43] session — F61: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F61 (playlists guardadas em poucos segundos): o código está na `main` (merges `4e4555b`, `ad2160b`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:43] session — F59: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F59 (fechar o que estava aberto em segurança): o código está na `main` (merges `a6092a7`, `2cdaf62`, `15ac18b`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. Declarei no `plan.md` 1 documento(s) que faltavam, conferido nos commits que citam a feature. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual, Issues. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:43] session — F57: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F57 (uma peça só para escolher álbuns de um artista): o código está na `main` (merges `b73b159`, `8f36ed9`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. Declarei no `plan.md` 1 documento(s) que faltavam, conferido nos commits que citam a feature. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual, Issues. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:43] session — F55: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F55 (os álbuns pedidos, ou um aviso: uma regra de identidade): o código está na `main` (merges `dd16b01`, `7cd6a68`, `72c0a70`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:43] session — F54: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F54 (fecho da v4.0: apagar do inventário e acabamento): o código está na `main` (merges `cd96ad3`, `3d6e8e7`, `1ca7b39`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:43] session — F50: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F50 (um endereço local só para o login e o Spotify): o código está na `main` (merges `40ca80d`, `987d7d0`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:42] session — F48: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F48 (o guardado de álbuns confiável: nova tentativa e «Clear Cache»): o código está na `main` (merges `40ca80d`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: behavior, Reconferência visual, Issues. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:42] session — F46: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F46 (cada série termina carregada, vazia ou com aviso): o código está na `main` (merges `40ca80d`, `0f1163c`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: behavior, Reconferência visual, Issues. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:42] session — F45: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F45 (carregar vários álbuns ao mesmo tempo): o código está na `main` (merges `ffd414f`, `f295316`, `cdeab21`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: behavior, Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:42] session — F47: a tarefa de aceite saiu; o que ainda impede o `Done` está escrito como trabalho de agente
+**Branch:** claude/batch-close-merged-features
+F47 (a lista de séries sem o corte em 20): o código está na `main` (merges `d893d75`, `0b3946d`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa dele: a frase já estava na `spec.md`, e o ok visual é o aceite, que ele conduz; tirei a tarefa. A feature continua `In Progress` porque a trava do passo retroativo ainda cobra: Reconferência visual. Está escrito na tarefa aberta, como trabalho de agente. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:40] session — F76 fechada na documentação: a tarefa do juízo no iPhone saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F76 (o app no celular, redesenhado): o código está na `main` (merges `6af17ea`, `c8a8e43`, `a1e34a7` e mais). A tarefa «o juízo do MJRP no iPhone dele» era o aceite, que ele conduz: saiu do `tasks.md` e virou `needs_human: "ver: o app no iPhone dele, em produção — …"`, porque o desenho foi decidido pelo agente sem protótipo julgado. A tarefa 08 (a tela de computador igual antes e depois; as medidas a 393x852 e 852x393) já tem prova: `reports/evidence/F76/2026-11-20-foundation-proof.md` e `…-production-proof.md`; marquei como feita, dizendo o que não cobre (nada foi visto num iPhone; a primeira prova foi sem dados). Os `verified_by` dos REQ vieram dos testes e das provas que as tarefas já citam. Não escrevi aceite.
+
+## [2026-11-21 11:40] session — F75 fechada na documentação: a prova em produção registrada, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F75 (preço de CDs e onde comprar): a única tarefa aberta, «ligar a fonte e provar em produção», já estava feita pelo integrador: o servidor e o site no ar, o secret `discogs-token` mapeado em `DISCOGS_TOKEN`, a leitura na conta do MJRP com valor para 198 de 211 álbuns (`reports/evidence/F75/2026-11-20-production-proof.md`). Marquei a tarefa com o que a evidência diz e com o que ela não cobre (a tela do site publicado, com login, não foi aberta pelo agente: não verificado). As doze decisões do agente que o MJRP julga e a escolha do `DISCOGS_VALUES_FOR` ficam em `needs_human: "decidir: …"`. Não escrevi aceite.
+
+## [2026-11-21 11:39] session — F62 fechada na documentação: o fecho do molde feito, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F62 (blend e exportação fazem o que dizem): o código está na `main` (merges `4f022d8`, `904ee33`, `7da4418`). A única tarefa aberta era o fecho pelo molde: declarei os sete documentos no `plan.md`, conferidos pelo histórico (`behavior.md` «atualizado» em `ccd34bd`; os outros «sem mudança»), rodei o `sdd_shape_check.py` e marquei a tarefa. As nove mudanças de comportamento que o MJRP decide estão nas Open Questions da spec: pus `needs_human: "decidir: …"`. Não escrevi aceite.
+
+## [2026-11-21 11:39] session — F66 fechada na documentação: spec e plano preenchidos do registro, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F66 (o token do Discogs fora do repositório): o conserto está na `main` (os scripts saíram na F65, `f9d1abd`; o registro do fecho em `8584971`). Faltavam os campos «a escrever» da spec e do plano e as duas tarefas de documentação: preenchi com o que a evidência (`reports/evidence/F66/2026-11-20-token-out-of-the-repository.md`) e o log dizem, e declarei os sete documentos «sem mudança» (nenhum commit da feature os toca). O token antigo apagado no Discogs é palavra do MJRP (2026-11-20, duas vezes) e o agente não o testou: está dito nos critérios e na marca `needs_human: "segurança: …"`. Não escrevi aceite.
+
+## [2026-11-21 11:37] session — F63 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F63 (Home e navegação que respondem): o código está na `main` (merges `cbd96fa`, `946fc21`, `5c3abda`). A tarefa «o MJRP diz Prototype: none e a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência independente existe (`reports/audits/2026-11-19-F63-visual-parity-recheck.md`: 2 P1, que viraram a UAT-217 e a UAT-218; a UAT-218 está `fixed` pela F63 e a UAT-217 pela F76). Tirei a UAT-10 e a UAT-11 do `fixes:` da spec: quem as consertou foi a F65 (as linhas dizem `fixed (F65: c9f15ec …)`; a própria spec já dizia que o REQ-11 não foi entregue neste ramo), e a trava do passo retroativo exigia `fixed (F63 …)`. Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"`. Nenhum merge traz nota de Touch ID. Nada de `Accepted`.
+
+## [2026-11-21 11:37] session — F65 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F65 (tirar o que nada usa): o código está na `main` (merges `ef1b721`, `7be0701`, `1e6e6f0`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F65-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente; a feature não muda nada que ele veja, então não pus `needs_human`. Declarei `constitution.md` «sem mudança» no `plan.md`, conferido pelo histórico. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:37] session — F58 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F58 (o serviço de carga dentro do limite de complexidade): o código está na `main` (merges `fd9a0a1`, `c780a48`, `822a794`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F58-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente; a feature não muda nada que ele veja, então não pus `needs_human`. Declarei `constitution.md` «sem mudança» no `plan.md`, conferido pelo histórico. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:37] session — F70 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F70 (defeitos pequenos achados no caminho): o código está na `main` (merges `ffd414f`, `88adbc4`, `109b656`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F70-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:37] session — F60 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F60 (nada do que foi salvo se perde): o código está na `main` (merges `bcdd114`, `fa141c0`, `c760592`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F60-visual-parity-recheck.md`: não passou limpo: 1 P1, que virou a UAT-216 (playlists salvas no celular), hoje `fixed` pela F76; o fecho da UAT-216 como `closed` é da reconferência independente). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
+## [2026-11-21 11:36] session — F56 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+Aviso: o ramo deste lote se chama `claude/f45-…` porque a trava de commits só aceita nome com número de feature; por isso o board mostra a F45 («a tela de álbuns carrega vários álbuns ao mesmo tempo») «em branch» enquanto o lote roda — não é trabalho novo dela. F56 (o blend e a edição de playlist pelo serviço de carga): o código está na `main` (merges `042da86`, `06fba84`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente já existe (`reports/audits/2026-11-19-F56-visual-parity-recheck.md`: passa, sem P0 nem P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`. Antes e depois do lote: `reports/audits/2026-11-21-mjrpalbumblender-v0-board-batch-close.md`.
+
 ## [2026-11-21 11:30] review — começou a reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236)
 **Branch:** fix/f80-uat-entry-page
 Um agente que não implementou julga a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md` (por ora `verdict: running`).

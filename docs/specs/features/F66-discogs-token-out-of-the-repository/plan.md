@@ -19,16 +19,25 @@ Nenhuma.
 
 ## Documents Consulted
 <!-- arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, the NFR nodes. -->
-«a escrever: arch.md, data-model.md, info-arch.md, behavior.md, design-system.md, constitution.md, os NFR»
+`reports/evidence/F66/2026-11-20-token-out-of-the-repository.md`, `docs/manual/00_Deployment_and_Setup.md` § 2.4b, `uat.md` (UAT-17).
+
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-21; nenhum commit que cita a F66 toca estes arquivos além do registro do fecho):
+- `docs/specs/constitution.md` — sem mudança
+- `docs/specs/arch.md` — sem mudança: nenhum código novo
+- `docs/specs/data-model.md` — sem mudança
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: nenhuma tela
+- `docs/specs/behavior.md` — sem mudança: nenhum comportamento do app mudou
+- `docs/wiki/` — sem mudança: nenhuma página descreve uma regra do app que esta feature mudou
 
 ## Risks & Considerations
-«a escrever: riscos e o que mais pesa, ou "Nenhum conhecido."»
+- O token antigo está no histórico do git, morto se foi apagado no Discogs; a única prova de que foi apagado é a palavra do MJRP.
 
 ## Test plan
-> Derivado dos REQ do `spec.md` e dos critérios dos requisitos importados · «a escrever: data e hora de Brasília»
+> Derivado dos REQ do `spec.md` e dos critérios dos requisitos importados · 2026-11-21 11:39 (Brasília)
 
 | REQ | Caso de teste | Critério / estado | Camada | Automatizado? |
 |---|---|---|---|---|
-| REQ-01 | «a escrever: o caso de teste que prova o REQ» | «a escrever: critério do nó ou estado observável» | «a escrever: camada» | «a escrever: sim ou não» |
+| REQ-01 | `test/security/noSecretsInRepo.test.js` (a varredura de segredos nos arquivos versionados) | nenhum arquivo versionado traz credencial | teste de repositório | sim |
 
-Bordas fora dos critérios (achados para a `mjrp-writing-reqs` se mudam o comportamento): «a escrever: ou "Nenhuma."»
+Bordas fora dos critérios (achados para a `mjrp-writing-reqs` se mudam o comportamento): Nenhuma.

@@ -25,7 +25,7 @@
 ## Verification
 - [x] TASK-13 suíte inteira (`npx vitest run`): 271 passam, as mesmas 28 falhas da linha de base, nenhuma nova; `npx vite build` compila · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: sonnet · rounds:: 1
 - [x] TASK-14 conferência no navegador, conta do MJRP, pela sessão de integração: nova tentativa (servidor fora), segunda visita sem leitura de ranking por álbum, «Clear Cache» que refaz a busca e mantém o Spotify, «Refetch» que grava sem o ranking pessoal — prova: `reports/evidence/F48-album-cache-and-retry/F48-browser-2026-11-19.json` · implements:: REQ-01, REQ-04, REQ-06, REQ-07, REQ-09 · model:: opus · rounds:: 1
-- [ ] TASK-15 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
+- [ ] TASK-15 o que a trava do passo retroativo ainda cobra antes do `Done` (`python3 mjrp-scripts/retro_step_check.py . --staged` com a feature em `Done`, conferido em 2026-11-21): behavior: o plan.md declara `behavior.md` «atualizado», mas nenhum commit da feature toca docs/specs/behavior.md; Reconferência visual: a feature mexeu na tela e não há relatório `visual-parity-recheck` nem nota de Touch ID (`mjrp-visual-ok`) que a cubra; Issues: a feature conserta UAT-175, UAT-176, UAT-177 e nenhum commit dela toca docs/specs/uat.md (a issue `fixed`, com a evidência). É trabalho de agente; nenhum item é do MJRP. O que falta de verdade é a reconferência visual independente (relatório `reports/audits/<data>-F48-visual-parity-recheck.md`, por quem não implementou, num navegador): nenhum merge traz nota de Touch ID. «Prototype: none» já está gravada na spec (MJRP, 2026-11-20 00:10). · implements:: REQ-01 · model:: opus
 
 ## Documentation
 - [x] `docs/manual/` (00, 06, 07, 07b, 08, 11, 19, 98 e o `regression_checklist`), `docs/specs/data-model.md` (o que se grava em `albums`) e `docs/specs/arch.md` (seção 17 e o achado do Firestore fora dos repositórios)
@@ -35,5 +35,5 @@
 
 ## For the owner at UAT
 - O MJRP julga no navegador, com as duas perguntas abertas da spec, e dá o OK na UAT-175, na UAT-176 e na UAT-177.
-- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- Falta o que a tarefa aberta acima descreve (trabalho de agente); o aceite é dele no UAT, depois do `Done`.
 - Push da `main` ao remoto (e, com ele, a primeira rodada da automação do GitHub): é do MJRP.

@@ -1,7 +1,8 @@
 ---
-status: In Progress
+status: Done
 lane: fast
 solution_type: fix
+needs_human: "ver: o preço do inventário mantendo a moeda do item; a capa que falha com um substituto"
 imports: []
 fixes: ["UAT-208", "UAT-209", "UAT-210", "UAT-63"]
 planned_for: "[[ROADMAP#^REL-40]]"

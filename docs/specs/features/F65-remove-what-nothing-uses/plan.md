@@ -223,6 +223,7 @@ Declarações do passo retroativo da via rápida (conferidas no histórico do re
 - `docs/specs/design-system.md` — sem mudança: o projeto não tem `docs/specs/design-system.md`; nenhum token, fonte ou componente compartilhado mudou
 - `docs/specs/behavior.md` — sem mudança: não descreve as telas nem a rota que saíram
 - `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
+- `docs/specs/constitution.md` — sem mudança: o último commit que a tocou antes da feature é de 2026-10-28 (a v2.0.0, de 2026-11-20, é da F78); nenhum commit que cita a F65 a toca
 
 ## Risks & Considerations
 - **Uma tela pode depender de algo que só o navegador mostra.** A suíte e a build passam, o grafo não acha importação quebrada, mas nenhuma tela foi aberta nesta sessão. A prova é do integrador (roteiro abaixo).

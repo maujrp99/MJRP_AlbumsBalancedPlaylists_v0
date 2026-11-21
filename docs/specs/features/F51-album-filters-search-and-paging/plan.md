@@ -57,6 +57,13 @@ Nenhuma dependência de pacote. A feature depende do código da F45 (o serviço 
 - `docs/manual/` — «atualizado» no commit `12713e2`: 08, 09, 12, 17 e 32 (o paginador, os filtros que leem a série, o campo de busca, `SeriesFactsService`, o documento da série com `facts`).
 - `info-arch.md`, `design-system.md` e wireframes — o projeto não tem; é o que impede o commit do protótipo.
 
+Declarações do passo retroativo da via rápida (conferidas nos commits que citam a F51, em 2026-11-21):
+- `docs/specs/arch.md` — atualizado (commits que citam a F51 e tocam o arquivo: `c6af8e0`, `d4164e8`, `7de148a`)
+- `docs/specs/tech-stack.md` — sem mudança (nenhum commit que cita a F51 toca o arquivo)
+- `docs/specs/design-system.md` — sem mudança (nenhum commit que cita a F51 toca o arquivo)
+- `docs/specs/behavior.md` — sem mudança (nenhum commit que cita a F51 toca o arquivo)
+- `docs/wiki/` — sem mudança (nenhum commit que cita a F51 toca uma página da wiki do projeto)
+
 ## Risks & Considerations
 - O fato gravado envelhece (o álbum ganhou nota depois). A carga da série reescreve a diferença; `checkedAt` diz quando foi conferido.
 - Dois aparelhos editando a mesma série ao mesmo tempo podem perder o `facts` de um: a gravação escreve o campo `albumQueries` inteiro. Aceito para um usuário só.

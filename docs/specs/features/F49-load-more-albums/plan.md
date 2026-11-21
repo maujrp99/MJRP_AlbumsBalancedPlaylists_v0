@@ -47,6 +47,15 @@ Nenhuma.
 - `docs/specs/behavior.md` (estados da biblioteca de séries), `docs/manual/09`, `12`, `15`, `29`
 - `docs/specs/constitution.md` (complexidade até 10 nas funções novas ou mudadas)
 
+Declarações do passo retroativo da via rápida (conferidas nos commits que citam a F49, em 2026-11-21):
+- `docs/specs/constitution.md` — sem mudança (nenhum commit que cita a F49 toca o arquivo)
+- `docs/specs/arch.md` — sem mudança (nenhum commit que cita a F49 toca o arquivo)
+- `docs/specs/data-model.md` — sem mudança (nenhum commit que cita a F49 toca o arquivo)
+- `docs/specs/tech-stack.md` — sem mudança (nenhum commit que cita a F49 toca o arquivo)
+- `docs/specs/design-system.md` — sem mudança (nenhum commit que cita a F49 toca o arquivo)
+- `docs/specs/behavior.md` — atualizado (commits que citam a F49 e tocam o arquivo: `eb2c8f7`)
+- `docs/wiki/` — sem mudança (nenhum commit que cita a F49 toca uma página da wiki do projeto)
+
 ## Risks & Considerations
 - **O esquecimento por escopo depende de a tela ser desenhada no outro escopo.** `syncScope` roda em `updateAlbums`; `loadScope` sempre provoca um desenho (`requestLoad` ou, na falha, `renderFromStore`), então ir a uma série e voltar passa por ele. Um caminho futuro que troque o escopo duas vezes sem desenhar entre elas manteria a escolha.
 - **O foco no primeiro álbum novo dura até o redesenho seguinte.** Com a carga ainda correndo, a grade é redesenhada inteira e o foco cai, como já caía para qualquer botão da grade.

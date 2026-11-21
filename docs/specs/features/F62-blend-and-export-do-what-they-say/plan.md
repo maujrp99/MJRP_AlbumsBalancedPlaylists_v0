@@ -50,6 +50,15 @@ Nenhuma.
 - `docs/specs/behavior.md`, `docs/manual/` (07, 10, 11, 14, 15, 17, 18, 21, 31, 99)
 - `docs/specs/constitution.md` (complexidade até 10 nas funções novas)
 
+Declarações do passo retroativo da via rápida (conferidas no histórico do repositório em 2026-11-21):
+- `docs/specs/constitution.md` — sem mudança
+- `docs/specs/arch.md` — sem mudança: o único commit que cita a F62 e toca o arquivo (`573fa9b`) é da F58
+- `docs/specs/data-model.md` — sem mudança
+- `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nova
+- `docs/specs/design-system.md` — sem mudança: o projeto não tem `design-system.md`; nenhum token, fonte ou componente compartilhado mudou
+- `docs/specs/behavior.md` — atualizado (commit `ccd34bd`: 14 estados reescritos e 8 novos)
+- `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness
+
 ## Risks & Considerations
 - **`SpotifyService._fetch` serve também à carga de popularidade.** Para ela muda uma coisa: um 401 renova o acesso uma vez e repete a chamada (antes: erro). A espera do 429 é só de quem pede (`patient`), e só a exportação pede. O texto do erro de limite mantém «Rate Limited», que `SpotifyEnrichmentService` procura.
 - **O histórico decide pelo objeto na store.** Quem puser na store o mesmo array que o serviço mostrou, alterado no lugar, não é visto como «outro conjunto». Hoje ninguém faz isso no app (um teste da F60 faz, de propósito, para simular a edição).
