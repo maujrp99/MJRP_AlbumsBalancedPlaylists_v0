@@ -1,6 +1,6 @@
 {
-    "//": "F83 (proposal § 11). Gzip bytes. Wave 0 measured on the publishable build (the keys of the .env): main script 301,830 B, react-vendor 68,691 B, the canary 1,986 B (reports/evidence/F83/wave-0/). `main` is the ceiling of the wave (the proposal's 316,000 B); from wave 1 it becomes the value measured in the wave before (301,830 B): it only goes down. `background` is the allowance for what comes after the first screen besides React: the 28,198 B the lazy pieces of today already weigh (SavedPlaylistsView, SpotifyExportModal, crate3d... measured on main@3356113) plus the 20,000 B the proposal gives to new screens and to the Portuguese dictionary.",
-    "main": 316000,
+    "//": "F83 (proposal § 11). Gzip bytes. Wave 0 measured on the publishable build (the keys of the .env): main script 301,830 B, react-vendor 68,691 B, the canary 1,986 B (reports/evidence/F83/wave-0/). `main` was the ceiling of wave 0 (the proposal's 316,000 B); from wave 1 it is the value measured on the integration branch before the wave, on the publishable build (302,542 B: integrate/staging-2026-11-21 at a912eaf, where wave 1 began, 712 B above wave 0's own 301,830 B because `main` was merged in between): it only goes down. Wave 1 measured 302,424 B (reports/evidence/F83/wave-1/bundle-budget-wave-1.txt). `background` is the allowance for what comes after the first screen besides React: the 28,198 B the lazy pieces of today already weigh (SavedPlaylistsView, SpotifyExportModal, crate3d... measured on main@3356113) plus the 20,000 B the proposal gives to new screens and to the Portuguese dictionary.",
+    "main": 302542,
     "mainToday": 301437,
     "reactVendor": 72000,
     "screen": 30000,

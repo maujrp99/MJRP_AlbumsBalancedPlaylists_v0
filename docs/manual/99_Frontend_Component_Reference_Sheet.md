@@ -35,7 +35,7 @@
 | [HomeView.js](file:///public/js/views/HomeView.js) | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ |
 | [BlendingMenuView.js](file:///public/js/views/BlendingMenuView.js) | Blend wizard (`/blend`) | 449 lines | ✅ |
 | [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ |
-| [SavedPlaylistsView.js](file:///public/js/views/SavedPlaylistsView.js) | View saved batches | 325 lines | ✅ |
+| `screens/saved-playlists/SavedPlaylists.tsx` | View saved batches (in React since F83 wave 1; was `views/SavedPlaylistsView.js`) | — | ✅ |
 | [InventoryView.js](file:///public/js/views/InventoryView.js) | Personal collection | 270 lines | ✅ |
 | [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 319 lines | ✅ *(removed in F65: `ConsolidatedRankingView.js`)* |
 | [RankingView.js](file:///public/js/views/RankingView.js) | Single album ranking | 217 lines | ✅ *(removed in F65: `RankingView.js`)* |
@@ -62,8 +62,8 @@
 - `handleEditWithModal(albumId)`, `handleViewWithModal(albumId)`: Open the modals
 - `handleDeleteWithModal(albumId)`: Confirms and calls `InventoryController.handleDelete`, which calls `inventoryService.removeAlbum`.
 
-#### SavedPlaylistsView (325 lines)
-**Purpose**: View all saved playlist batches grouped by series. Since v5.0 (F61) it draws what `SavedPlaylistsStore` holds and waits for no read.
+#### SavedPlaylists (React, `screens/saved-playlists/`; was `SavedPlaylistsView`, 325 lines, until F83 wave 1)
+**Purpose**: View all saved playlist batches grouped by series. Since v5.0 (F61) it draws what `SavedPlaylistsStore` holds and waits for no read. The method names below are those of the hand-made view; in React the list is read with `useStore`, a group is drawn again only when what it shows changes, and the pieces are `SeriesGroup.tsx`, `BatchCard.tsx`, `PhoneParts.tsx` and `PlaylistDetails.tsx`.
 
 **Key Methods**:
 - `mount()`: Listen to the list and ask for it (`SavedPlaylistsController.open`); nothing is awaited

@@ -1,0 +1,5 @@
+Migration status (F83), 2026-11-21
+hand-made screens             94 files, 16389 lines  (the day it began: 94 files, 16544 lines; 0 files gone)
+React screens and pieces      24 files, 1638 lines  (screens 10, ui 5, shell 0, react-bridge 9)
+bridges to old pieces         2 files in react-bridge/legacy/, used by 3 files
+texts outside the dictionary  904  (hand-made 904, React 0; a count good to about 10%)
