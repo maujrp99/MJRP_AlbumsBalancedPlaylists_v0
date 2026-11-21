@@ -136,6 +136,17 @@ Da `design/inception/splash-crate-v2.html` (2026-11-20). **Aprovados pelo MJRP c
 | «Pause motion» no fio | no computador, no fim do fio preso; no celular, sob as chamadas da primeira tela | o canto de baixo cobria o link do Apple Music | **diverge** da posição do «Pausar o movimento» acima |
 | Celular até 899 px | uma coluna abaixo de 900 px (a página tem duas colunas, texto e palco, que não cabem em 768) | o palco preso precisa de ~700 px ao lado do texto | **diverge** do corte de 767 px; só nesta página |
 
+### Página de entrada · rodada 3 (a home com o menu na barra) — propostos, pendentes de aprovação do MJRP
+
+Das prévias de 2026-11-21 (`design/inception/splash-menu-{stops,bar,deck}-v1.html`; UAT-239, UAT-240). **Pendentes de aprovação do MJRP**; só uma das três formas da barra-menu fica, a que ele escolher.
+
+| Padrão | Como é | Por quê | Muda o quê |
+|---|---|---|---|
+| Barra-menu (o fio que é o menu) | UMA fila contínua de barras de equalizador, sem vãos (como a «Elevar», `splash-sides-v1.html`), dividida em cinco partes iguais, uma por item do menu do app (Start, Albums, Blend, Playlists, Inventory, os rótulos de `phoneTabs.js`); o fogo enche da esquerda para a direita conforme a leitura passa por cada história; o item atual em `#fb923c` com `aria-current="step"`, os já lidos em branco, os outros `#b9b9c2`; clicar num item leva à história dele na página; ⟲ marca a virada do disco entre Blend e Playlists. No celular, a barra de baixo: cinco rótulos de 12 px sob as barras, alvos de 72 × 56 px | o MJRP: «o slider deveria ser continuo como era na elevar» e «o slider do menu e a landing page contar a story de cada item do menu» | **diverge** do «Fio do equalizador» aprovado na rodada 2 (um grupo por faixa, com vãos pretos; só progresso no celular) |
+| Onde a barra-menu mora | três prévias num eixo: A sob o topo (fio com paradas); B no próprio topo, os itens sobre as barras (o menu é a barra; **recomendada**); C numa barra de baixo com agulha, igual no computador e no celular | o eixo é quanto o menu e a barra se juntam | novo; uma só fica |
+| Topo com conta | logotipo, a barra-menu (B) e «Start» com o fogo, sem «Sign in» nem «Open the app»; sem conta, «Sign in» e «Open the app» como hoje | o MJRP: «nao faz sentido ter sign in e open the app pra que está signed, mas sim um Start button que vai pra Start» | **diverge** do topo aprovado (sempre «Sign in» e «Open the app») |
+| Pausar o movimento como ícone | botão redondo de 44 px no canto de cima à direita do palco, ícone de pausa / play de 16 px em `#d6d6dc`, contorno a 28 %, `aria-label` e `title` «Pause motion» / «Play motion», `aria-pressed`; some com movimento reduzido | o MJRP, 2026-11-21: «nao sabia da acessabilidade, coloque um icone discreto entao» (WCAG 2.2.2); o canto do palco é onde está o movimento e longe da barra-menu | **diverge** de «"Pause motion" no fio» (botão com texto) |
+
 ## Fontes consultadas (2026-11-20)
 
 - Apple, Human Interface Guidelines: Tab bars, Sheets, Accessibility, Layout, Typography — <https://developer.apple.com/design/human-interface-guidelines/>. As páginas não abriram na ferramenta de leitura (são montadas por script); os valores acima (44 pt, cinco abas, alça e fechar da folha) são os conhecidos da HIG e ficam a conferir pelo MJRP se algum pesar numa decisão.
