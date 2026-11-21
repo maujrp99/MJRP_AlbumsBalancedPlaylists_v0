@@ -17,9 +17,10 @@ import { vi } from 'vitest'
 import { normalize as pageOf } from './savedPlaylistsScenarios.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
 import { router } from '../../public/js/router.js'
+import { albumsStore } from '../../public/js/stores/albums.js'
 
 /**
- * The page as the proof compares it, with the time of the foot and the moment of light of a moved row taken out, and the text of a
+ * The page as the proof compares it, with the moment of light of a moved row taken out, and the text of a
  * field as the field holds it now (what a person typed lives in the property `value`, not in the attribute the page was written
  * with). It reads a COPY: the proof must not touch the live page (`normalize()` of a node joins the text nodes that React holds).
  */
@@ -29,7 +30,7 @@ export const normalize = (element) => {
     const typed = element.querySelectorAll('input')
     copy.querySelectorAll('input').forEach((input, i) => input.setAttribute('value', typed[i].value))
     // the row a track landed on is lit by a timer for a moment: whether a snapshot falls inside that moment is not what the page says
-    return pageOf(copy).replace(/Last updated: [^<]*/g, 'Last updated: #').replace(/\bis-moved ?/g, '')
+    return pageOf(copy).replace(/\bis-moved ?/g, '')
 }
 
 const track = (title, artist, album, duration, extra = {}) => ({ id: `t-${title}`, title, artist, album, duration, ...extra })
@@ -153,6 +154,9 @@ export function asPhone(phone) {
         addEventListener: (_type, listener) => listeners.push(listener),
         removeEventListener: (_type, listener) => { const i = listeners.indexOf(listener); if (i >= 0) listeners.splice(i, 1) }
     }
+    // the time in the foot is the one the scenario says (`h.clock`): a draw of the screen is seen by the time it wrote
+    globalThis.__clock = 'T0'
+    Date.prototype.toLocaleTimeString = () => globalThis.__clock
     window.scrollTo = vi.fn()
     Element.prototype.scrollIntoView = vi.fn()
     window.matchMedia = vi.fn(() => media)
@@ -194,7 +198,25 @@ export const SCENARIOS = [
         }
     },
     {
-        name: 'a default name for the batch', url: '/playlists', playlists: generated(), defaultName: 'TheAlbumBlender Playlist 2026-11-21', run: async (h) => { h.snap('the default name') }
+        name: 'a default name for the batch', url: '/playlists', playlists: generated(), defaultName: 'TheAlbumBlender Playlist 2026-11-21', run: async (h) => {
+            h.snap('the default name')
+            await h.type('#batchNameInput', 'Road trip')
+            await h.type('#batchNameInput', '')
+            h.snap('the name cleared by hand: the field is empty and the grid has no name')
+            await h.publish(() => playlistsStore.setDirty(true))
+            h.snap('the next draw: the default name is back')
+        }
+    },
+    {
+        name: 'the foot', url: '/playlists', playlists: generated(), run: async (h) => {
+            h.snap('the foot at the start', '.last-update')
+            h.clock('T1')
+            await h.publish(() => albumsStore.notify())
+            h.snap('the foot after the albums store told', '.last-update')
+            h.clock('T2')
+            await h.publish(() => playlistsStore.setDirty(false))
+            h.snap('the foot after the playlists store told', '.last-update')
+        }
     },
     {
         name: 'editing the set', url: '/playlists', playlists: generated(), run: async (h) => {

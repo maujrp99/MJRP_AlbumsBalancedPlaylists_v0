@@ -17,7 +17,7 @@ import { countFixedStoreListener, countListener } from './listeners'
 
 /** What a store of the site has in common: one way to hear it change. The listener may receive the state, or nothing. */
 export interface Subscribable {
-    subscribe(listener: (...told: unknown[]) => void): () => void
+    subscribe(listener: (...told: unknown[]) => void): unknown
 }
 
 interface Watch {

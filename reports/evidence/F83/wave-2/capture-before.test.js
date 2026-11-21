@@ -56,6 +56,7 @@ describe('capture of the hand-made playlists screen', () => {
                 focusIn: async (selector) => { field(selector).dispatchEvent(new FocusEvent('focusin', { bubbles: true })) },
                 focusOut: async (selector) => { field(selector).dispatchEvent(new FocusEvent('focusout', { bubbles: true })); await flush() },
                 generating: async (on) => { view.isGenerating = on; view.update(); await flush() },
+                clock: (value) => { globalThis.__clock = value },
                 turn: async (to) => { phone.turn(to); await flush() }
             }
             await scenario.run(h)

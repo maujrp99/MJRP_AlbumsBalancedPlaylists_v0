@@ -67,6 +67,7 @@ export async function play(scenario: (typeof SCENARIOS)[number]): Promise<Record
         focusIn: async (selector: string) => { await rendered.act(async () => { field(selector).dispatchEvent(new FocusEvent('focusin', { bubbles: true })) }) },
         focusOut: async (selector: string) => { await rendered.act(async () => { field(selector).dispatchEvent(new FocusEvent('focusout', { bubbles: true })); await flush() }) },
         generating: async (on: boolean) => { await rendered.act(async () => { generating.isGenerating = on; generating.update(); await flush() }) },
+        clock: (value: string) => { (globalThis as { __clock?: string }).__clock = value },
         turn: async (to: boolean) => { await rendered.act(async () => { phone.turn(to); await flush() }) }
     }
     await settle()

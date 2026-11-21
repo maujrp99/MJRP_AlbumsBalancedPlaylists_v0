@@ -25,6 +25,7 @@ import { navigate } from '../../react-bridge/navigation'
 import { t } from '../../i18n/t.js'
 import { router } from '../../router.js'
 import { playlistsStore } from '../../stores/playlists.js'
+import { albumsStore } from '../../stores/albums.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js'
 import type { PlaylistsController } from '../../controllers/PlaylistsController.js'
@@ -176,6 +177,10 @@ function useTypedName(storeName: string, shown: string): { value: string; onType
         playlistsStore.setBatchName(value)
         setTyped(value)
     }
+    // The screen was drawn again for another reason (the store told something): the field shows what the screen shows, as the hand-made
+    // screen did when it drew everything anew, so a name cleared by hand goes back to the default one. Typing tells nobody (`setBatchName`
+    // is silent), so the cursor stays.
+    useEffect(() => playlistsStore.subscribe(() => setTyped(null)) as () => void, [])
     // the service changed the name under the field (a save, a batch opened): the store's wins again
     return { value: typed !== null && typed === storeName ? typed : shown, onType }
 }
@@ -354,6 +359,7 @@ export function Playlists({ controller, generating }: Props) {
     const phone = usePhone()
     const state = useStore(playlistsStore, store => store.getState())
     const activeSeries = useStore(albumSeriesStore, store => store.getActiveSeries())
+    useStore(albumsStore, () => 0) // the foot says when the screen was drawn: the hand-made screen drew again when the albums store told
     const isGenerating = useSyncExternalStore(generating.subscribe, () => generating.isGenerating)
     const playlists = state.playlists as Playlist[]
     const name = useTypedName(state.batchName, shownNameOf(state))
