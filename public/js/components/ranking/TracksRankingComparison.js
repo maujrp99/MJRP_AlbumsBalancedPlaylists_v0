@@ -171,33 +171,30 @@ export class TracksRankingComparison {
      */
     renderPopularityNotice() {
         const line = this.album.spotifyId ? null : describePopularity(this.popularity?.status)
+        return this.renderNotice('popularity-notice', line, this.popularity)
+    }
+
+    /** The line about the ratings: BestEverAlbums did not answer («Try again»), or is being asked (UAT-244). */
+    renderRatingsNotice() {
+        return this.renderNotice('ratings-notice', describeRatings(this.ratings?.status), this.ratings)
+    }
+
+    /** One line about one source: quiet when nothing is wrong, a box with «Try again» when it failed. */
+    renderNotice(name, line, source) {
         if (!line) return null
 
         const children = [SafeDOM.span({ className: line.quiet ? 'text-gray-400 text-sm' : 'text-blue-400 text-sm' }, line.text)]
-        if (line.action) children.push(this.renderAskButton(line.action))
+        if (line.action) children.push(this.renderAskButton(line.action, source))
 
         return SafeDOM.div({
-            className: `popularity-notice flex justify-between items-center mb-4 ${line.quiet ? 'px-1' : 'bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl'}`
+            className: `${name} flex justify-between items-center mb-4 ${line.quiet ? 'px-1' : 'bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl'}`
         }, children)
-    }
-
-    /** The line about the ratings that did not come: «did not answer» and «Try again» (UAT-244). */
-    renderRatingsNotice() {
-        const line = describeRatings(this.ratings?.status)
-        if (!line) return null
-
-        return SafeDOM.div({
-            className: 'ratings-notice flex justify-between items-center mb-4 bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl'
-        }, [
-            SafeDOM.span({ className: 'text-blue-400 text-sm' }, line.text),
-            this.renderAskButton(line.action, this.ratings)
-        ])
     }
 
     /** The button that asks the album load for a source again; the load redraws the album. */
     renderAskButton(label, source = this.popularity) {
         const button = SafeDOM.button({
-            className: 'enrich-btn px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors',
+            className: 'enrich-btn min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition-colors',
             textContent: label
         })
         button.onclick = () => {

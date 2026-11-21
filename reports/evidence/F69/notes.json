@@ -3,6 +3,7 @@
   "before": {
    "text": "Spotify did not answer.Try again",
    "button": "Try again",
+   "buttonSize": "72x24",
    "width": 1054,
    "right": 1167,
    "innerWidth": 1280,
@@ -15,6 +16,7 @@
   "before": {
    "text": "Spotify did not answer.Try again",
    "button": "Try again",
+   "buttonSize": "76x44",
    "width": 361,
    "right": 377,
    "innerWidth": 393,
