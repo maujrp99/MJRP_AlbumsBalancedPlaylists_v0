@@ -3,6 +3,7 @@
 #
 # Usage:
 #   ./scripts/deploy-preview.sh [channel]             test, build, verify, publish the preview (channel: staging)
+#   ./scripts/deploy-preview.sh --branch <branch> [channel]   publish that LOCAL branch instead of main
 #   ./scripts/deploy-preview.sh --dry-run [channel]   everything except the publication
 #   ./scripts/deploy-preview.sh --keep                do not remove the temporary folder at the end
 #
@@ -11,6 +12,9 @@
 # uses production's data, login and server: it only puts the site at another address. The channel
 # expires in 7 days. The address is printed at the end. It never runs `firebase deploy`, so
 # production is not touched. Needs the same .env and Firebase login as deploy-site.sh.
+# --branch (default main) lets you validate work before it reaches main: the branch is exported and
+# built with every same check; the "clean" check applies to the folder where it is checked out. The
+# .env is still the one of the main checkout. Production (deploy-site.sh) has no such option.
 
 set -euo pipefail
 
@@ -23,19 +27,24 @@ CHANNEL="staging"
 PREVIEW_URL=""
 
 usage() {
-  sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 # Separates the channel name from the flags the common parser understands.
 parse_preview_args() {
-  local rest=() arg
+  local rest=() arg want_branch=0
   for arg in "$@"; do
+    if [ "$want_branch" -eq 1 ]; then DEPLOY_BRANCH="$arg"; want_branch=0; continue; fi
     case "$arg" in
+      --branch) want_branch=1 ;;
+      --branch=*) DEPLOY_BRANCH="${arg#--branch=}" ;;
       --dry-run|--keep|-h|--help) rest+=("$arg") ;;
       -*) usage >&2; die "unknown argument: $arg" ;;
       *) CHANNEL="$arg" ;;
     esac
   done
+  [ "$want_branch" -eq 0 ] || die "--branch needs a branch name"
+  [ -n "$DEPLOY_BRANCH" ] || die "--branch needs a branch name"
   parse_common_args ${rest[@]+"${rest[@]}"}
   case "$CHANNEL" in
     live) die "'live' is the production channel; a preview never uses it" ;;
@@ -65,7 +74,7 @@ require_tool npm "Install Node.js (npm comes with it)."
 locate_repo
 
 if [ "$DRY_RUN" -eq 1 ]; then printf 'DRY RUN: nothing will be published.\n'; fi
-printf 'Preview deploy (channel %s) from %s, branch %s\n' "$CHANNEL" "$REPO_ROOT" "$DEPLOY_BRANCH"
+printf 'Preview deploy (channel %s) from %s, branch %s at commit %s\n' "$CHANNEL" "$REPO_ROOT" "$DEPLOY_BRANCH" "$(git -C "$REPO_ROOT" rev-parse --short "$MAIN_SHA")"
 
 require_clean_main
 step "Looking for the .env with $CLIENT_ID_VAR"
@@ -92,4 +101,4 @@ fi
 deploy_preview
 printf '\nPreview address: %s\n' "$PREVIEW_URL"
 printf 'Expires in 7 days. It shares production data, login and server. Add the address to the authorized domains of Firebase Auth if sign-in is refused (the CLI syncs them unless told not to).\n'
-printf 'Preview published from %s (%s). Production was not touched.\n' "$DEPLOY_BRANCH" "$(git -C "$REPO_ROOT" rev-parse --short "$MAIN_SHA")"
+printf 'Preview published: branch %s, commit %s, channel %s. Production was not touched.\n' "$DEPLOY_BRANCH" "$(git -C "$REPO_ROOT" rev-parse --short "$MAIN_SHA")" "$CHANNEL"

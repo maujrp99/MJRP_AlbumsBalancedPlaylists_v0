@@ -7,6 +7,7 @@
 
 ## Implementation
 - [ ] TASK-01 `scripts/deploy-preview.sh` (fatia A), com teste, sem rodar a publicação · implements:: REQ-01, REQ-02, REQ-03, REQ-05 · model:: sonnet
+- [ ] TASK-01b `deploy-preview.sh --branch <ramo local>` (padrão `main`): exporta e constrói esse ramo com as mesmas checagens; a checagem de «limpo» vale para a pasta onde o ramo está; recusa ramo inexistente; `deploy-site.sh` não ganha a opção (teste prova) · implements:: REQ-01, REQ-02 · model:: sonnet
 - [ ] TASK-02 garantir que a prévia não grava preço do Discogs no Firestore · implements:: REQ-04 · model:: opus
 
 ## Verification
