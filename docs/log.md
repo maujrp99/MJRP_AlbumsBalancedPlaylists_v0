@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:45] step — F83 onda 3: o retrato da moldura antiga (47 cenários) antes de apagá-la
+**Branch:** claude/f83-wave-3-shell
+O registro das páginas que a barra do computador, o rodapé, a moldura do celular, o menu e a janela de entrar à mão desenham (computador a 1280 e a 900, celular a 393), com as chamadas ao que está fora (login, Spotify, avisos, perguntas, medição): test/support/shellScenarios.js (os cenários, uma só vez para a antiga e a nova), test/fixtures/shellBeforeF83.json (o que a antiga desenhou) e o registro reports/evidence/F83/wave-3/capture-before.test.js. O jsdom responde errado a querySelector('#id') quando o id se repete na página (o botão do Spotify da barra e da gaveta): o registro usa a resposta do navegador (scopedIdLookup).
+
 ## [2026-11-21 17:38] step — F83 onda 3: o mapa da moldura (TASK-18)
 **Branch:** claude/f83-wave-3-shell
 Barra do topo, rodapé, moldura do celular, menu, janela de entrar: 1.402 linhas à mão em 10 arquivos; o que redesenha e quando; as três lojas pequenas para as telas antigas falarem com a moldura; o achado de que a barra do computador de hoje não segue o endereço (decidido: a nova segue, revisável); onde o seletor de idioma entra.
