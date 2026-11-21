@@ -9,7 +9,7 @@ Fiz três páginas de entrada que dizem a mesma coisa na mesma ordem e mudam num
 - Comparador (Artifact do Claude, privado): https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e (as três páginas vão como arquivos do próprio Artifact) — cópia local em `design/proposals/f80-splash/comparator.html`.
 - Protótipos: `design/inception/splash-ember-v1.html`, `splash-sides-v1.html`, `splash-crate-v1.html`.
 - Textos: `design/proposals/2026-11-20-splash-copy-proposal.md` (15 linhas, opções e recomendação em cada uma).
-- Pesquisa: `design/references/f80-splash/references.md`. Crítica de UX: `reports/audits/2026-11-20-f80-splash-round1-ux-audit.md`.
+- Pesquisa: `design/references/f80-splash/references.md`. Crítica de UX: `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round1-ux-audit.md`.
 
 ## O que você pediu, e o piso
 
@@ -98,7 +98,7 @@ Recomendo **a raiz, só para quem não entrou**, como um arquivo HTML estático 
 
 - Protótipo: `design/inception/splash-crate-v2.html` (a v1 fica intacta, para comparar).
 - Comparador, o mesmo link: https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e — abre em «Caixote · v2 (o fogo e o fio)», ao lado da prévia do fogo vivo e do «Caixote · v1»; Brasa e Lado A, lado B ficam dobradas em «As outras direções (rodada 1)». Cópia local: `design/proposals/f80-splash/comparator.html`.
-- Crítica separada: `reports/audits/2026-11-20-f80-splash-round2-ux-audit.md`.
+- Crítica separada: `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round2-ux-audit.md`.
 
 ## Como os três se harmonizam: um trabalho para cada um
 
@@ -206,7 +206,7 @@ A página diz o que o produto é na primeira frase depois do título. (Lido do H
 
 ## A crítica (agente separado)
 
-Passa, sem P0; 4 P1 e 12 P2 (`reports/audits/2026-11-20-f80-splash-round2-ux-audit.md`). **Corrigi nesta rodada:** o fio do celular deixou de ser uma fila de alvos pequenos (é progresso, sem toque); cada disco mostrado inteiro no celular tem crédito e link, e a frase do rodapé diz só o que a página faz; o `info-arch.md` descreve a v2; os padrões que divergem estão no `design-system.md` como pendentes; B1 voltou a ter título de seção; sem JavaScript o caixote mostra as capas do lado A. **Fica:** o contraste do texto preto no fim vermelho do degradê (4,1:1 a 18 px peso 800, que a crítica não conta como texto grande) — o botão de texto preto já é pergunta sua (7 da rodada 1); os outros P2 estão no relatório.
+Passa, sem P0; 4 P1 e 12 P2 (`reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round2-ux-audit.md`). **Corrigi nesta rodada:** o fio do celular deixou de ser uma fila de alvos pequenos (é progresso, sem toque); cada disco mostrado inteiro no celular tem crédito e link, e a frase do rodapé diz só o que a página faz; o `info-arch.md` descreve a v2; os padrões que divergem estão no `design-system.md` como pendentes; B1 voltou a ter título de seção; sem JavaScript o caixote mostra as capas do lado A. **Fica:** o contraste do texto preto no fim vermelho do degradê (4,1:1 a 18 px peso 800, que a crítica não conta como texto grande) — o botão de texto preto já é pergunta sua (7 da rodada 1); os outros P2 estão no relatório.
 
 ## O que ainda precisa de você
 

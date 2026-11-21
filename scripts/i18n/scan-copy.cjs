@@ -10,7 +10,7 @@
  * aria-label/title/placeholder/alt, toast/alert/confirm/prompt, HTML text node/attribute,
  * `error`/`message` field of a server response); "maybe" = a string that reads as a sentence
  * or label but whose use the scanner cannot prove (needs a human look).
- * What it cannot see: see reports/audits/2026-11-21-f81-copy-survey.md § "O que a busca não vê".
+ * What it cannot see: see reports/audits/2026-11-21-mjrpalbumblender-v0-f81-copy-survey.md § "O que a busca não vê".
  */
 const fs = require('fs'), path = require('path')
 const acorn = require('acorn')

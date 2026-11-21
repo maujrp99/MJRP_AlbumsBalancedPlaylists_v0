@@ -5,7 +5,7 @@
 - [x] pesquisa de referências de páginas imersivas (com fonte): `design/references/f80-splash/references.md`
 - [x] rodadas de desenho com `mjrp-designing-ui`: três direções (rodada 1) e o Caixote v2 (rodada 2), no comparador
 - [x] texto com `mjrp-copywriting`: `design/proposals/2026-11-20-splash-copy-proposal.md`
-- [x] crítica de UX por agente separado: `reports/audits/2026-11-20-f80-splash-round2-ux-audit.md`
+- [x] crítica de UX por agente separado: `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round2-ux-audit.md`
 - [x] o MJRP aprovou o Caixote v2 no fogo brando (2026-11-20 22:15) e a F80 está na «Priorizada»; o registro da aprovação no `info-arch.md`
 - [x] o ramo `feat/f80-splash-page-for-album-lovers` criado da `main` local (`d75f984`)
 

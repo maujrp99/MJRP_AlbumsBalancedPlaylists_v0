@@ -1,5 +1,6 @@
 ---
-type: architecture-critique
+type: architecture-audit
+status: open
 subject: "Crítica da proposta da F52 («O servidor diz a verdade»), antes do código"
 project: mjrpalbumblender-v0
 judged: "2026-11-19 16:18"

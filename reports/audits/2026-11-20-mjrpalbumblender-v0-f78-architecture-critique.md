@@ -1,5 +1,6 @@
 ---
-type: architecture-critique
+type: architecture-audit
+status: open
 subject: "F78 · proposta de arquitetura guiada por risco do app para iPhone e Android (design/proposals/f78-app-architecture/architecture-proposal.md, ramo feat/f78-app-architecture-proposal @ 99a0327) · sem ADR"
 project: MJRP_AlbumsBalancedPlaylists_v0
 feature: F78

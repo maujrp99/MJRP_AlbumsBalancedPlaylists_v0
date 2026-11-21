@@ -53,7 +53,7 @@ Do CDN jsDelivr, versão fixa `three@0.185.0` (`three.module.min.js` + `three.co
 ## Documents Consulted
 - `design/inception/splash-crate-v2.html` e o gerador `design/proposals/f80-splash/build/`; `design/inception/splash-crate-v1.html` (as capas fictícias).
 - `design/proposals/f80-splash/proposal.md` (as duas rodadas: «Onde a página mora», «As capas», «A exigência da Apple», «O que um buscador ou um assistente lê», «As medidas»).
-- `design/proposals/2026-11-20-splash-copy-proposal.md`; `reports/audits/2026-11-20-f80-splash-round2-ux-audit.md`.
+- `design/proposals/2026-11-20-splash-copy-proposal.md`; `reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round2-ux-audit.md`.
 - `docs/specs/info-arch.md` (estados ^splash-v2-*), `docs/specs/design-system.md` § Página de entrada, `docs/specs/arch.md`, `firebase.json`, `vite.config.js`, `public/js/app.js`, `public/js/router.js`, `public/js/services/AuthService.js`.
 
 ## Risks & Considerations

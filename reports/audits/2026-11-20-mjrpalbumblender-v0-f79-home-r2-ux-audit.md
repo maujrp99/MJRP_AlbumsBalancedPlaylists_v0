@@ -88,7 +88,7 @@ Capturas: tiradas por esta passada pela fila da máquina (`machine_load.py`, `sh
 ### O que esta passada não fez
 
 - Não escreveu a entrada `review` no `docs/log.md` nem copiou capturas para `reports/evidence/`: o pedido foi escrever só este arquivo. A entrada a gravar por quem integrar:
-  `## [2026-11-20 19:47] review — mjrp-critiquing-ux-ui: F79 Home, Transformar v2 · passa (0 P0), 6 P1 no próximo corte` / `- Relatório: reports/audits/2026-11-20-F79-home-r2-ux-audit.md · P0 0 · P1 6 · P2 13 · quem julgou: agente separado.`
+  `## [2026-11-20 19:47] review — mjrp-critiquing-ux-ui: F79 Home, Transformar v2 · passa (0 P0), 6 P1 no próximo corte` / `- Relatório: reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-r2-ux-audit.md · P0 0 · P1 6 · P2 13 · quem julgou: agente separado.`
 
 ## Fora do cânone (candidatos)
 

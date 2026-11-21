@@ -86,5 +86,5 @@ Contagem por nível: Consolidar P1 #1–#5, P2 #9, #10, #17; Elevar P1 #6, P2 #1
 ```markdown
 ## [2026-11-20 18:05] review — mjrp-critiquing-ux-ui: F79 a Home, três níveis · passa para a escolha (0 P0)
 
-- Relatório: `reports/audits/2026-11-20-F79-home-ux-audit.md` · P0 0 · P1 8 · P2 9 · quem julgou: agente separado.
+- Relatório: `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-ux-audit.md` · P0 0 · P1 8 · P2 9 · quem julgou: agente separado.
 ```
