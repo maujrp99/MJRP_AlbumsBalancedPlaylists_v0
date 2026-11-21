@@ -115,6 +115,8 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
 ![[S-61-build-a-series-on-a-home-that-explains-itself]]
 
+![[S-67-reach-the-entry-page-from-the-logo]]
+
 
 
 

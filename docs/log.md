@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:29] session — F85 («Start» no menu, o logotipo leva à página de entrada) em esboço, com a S-67; o roteiro de UAT da F79 e da F80
+**Branch:** main
+O MJRP perguntou se a mudança do menu e do logotipo pode ir a produção já. A F85 nasce na `main` em esboço, via rápida, com a S-67 (EP-01, v6.0 — escolhidos pelo agente). Decidido pelo agente, revisável, porque ele não escolheu: o nome «Start», e com a conta aberta o site continua abrindo direto na tela de trabalho (só o logotipo leva à página de entrada). O ramo espera a F85 na «Priorizada». A pedido dele («uat da f80 e f79»), o roteiro de UAT das duas: `reports/evidence/F79/2026-11-21-f79-f80-uat-script.md`; o aceite é dele, pela tela de aceite do Control Center.
+
 ## [2026-11-21 09:28] decision — F82: os álbuns da página de entrada passam a ser escolhidos no CMS
 **Branch:** main
 Palavras do MJRP (2026-11-21): «ah e gostaria que no CMS fosse configurável os albuns que aparece na nova home». Virou o REQ-03 da F82, com a tarefa. Na mesma mensagem ele abriu uma discussão, ainda sem decisão: o item «Home» do menu virar «Initiate» ou «Start», e o logotipo levar à página de entrada, que passaria a ser a home. As sessões por feature não subiram: ele pediu para discutir isso antes da migração.
