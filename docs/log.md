@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:27] step — F88: testes e código de /artists, /genres e /tracks acendendo Albums
+**Branch:** feat/f88-top-menu-build
+Testes primeiro: `currentTab('/artists')` é Albums (PhoneShell) e a barra do computador acende Albums nas três rotas (barMenu); a rota que nenhum item possui continua sem acender nada. `phoneTabs.js` ganhou as três rotas em `under` de Albums. A linha de baixo (subRow) continua só em Albums e Playlists.
+
 ## [2026-11-21 18:26] session — F88: no computador, o avatar é a inicial, «Sign In» é o botão fantasma da home e confirmar «Disconnect» não fecha o painel (P2-4 e P2-5 do juiz)
 **Branch:** feat/f88-top-menu-build
 Avatar: a inicial do nome em laranja, como no celular e no protótipo, nunca uma imagem (nem a foto da conta nem a imagem antiga do MJRP); a função da inicial foi para `navigation/account.js`, usada pelo celular e pelo computador. «Sign In»: o botão fantasma da home (`.top-menu__signin`, borda branca 62%, 44 px, Syne 16 px). Disconnect: um clique numa janela aberta pelo painel (`.app-modal`) não conta mais como «fora do painel», e o foco volta ao botão da mesma linha. Testes primeiro (TopNav, AuthNav.menu, connections).

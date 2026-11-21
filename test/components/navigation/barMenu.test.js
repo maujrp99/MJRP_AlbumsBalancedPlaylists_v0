@@ -39,8 +39,15 @@ describe('the bar of the top menu', () => {
         expect(stops().filter(a => a.getAttribute('aria-current') === 'page')).toEqual(current)
     })
 
+    it('the other kinds of series light Albums, the stop of today\'s «Music Series» (judge P2-6)', () => {
+        for (const path of ['/artists', '/genres', '/tracks']) {
+            draw(path)
+            expect(stops().filter(a => a.getAttribute('aria-current') === 'page').map(a => a.textContent.trim())).toEqual(['Albums'])
+        }
+    })
+
     it('a screen no stop stands for marks none and lights no bar', () => {
-        draw('/artists')
+        draw('/homework')
         expect(stops().some(a => a.hasAttribute('aria-current'))).toBe(false)
         expect(document.querySelectorAll('.eqbar i.on').length).toBe(0)
     })

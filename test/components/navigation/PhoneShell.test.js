@@ -31,9 +31,13 @@ describe('the tabs of the phone', () => {
         expect(currentTab(path).id).toBe(id)
     })
 
+    it('the other kinds of series (Music Series in today\'s menu) belong to Albums (judge P2-6)', () => {
+        for (const path of ['/artists', '/genres', '/tracks']) expect(currentTab(path).id).toBe('albums')
+    })
+
     it('a screen no tab stands for marks none, and a name that only begins alike is not a match', () => {
-        expect(currentTab('/artists')).toBeNull()
         expect(currentTab('/homework')).toBeNull()
+        expect(currentTab('/artistsx')).toBeNull()
     })
 
     it('marks the current tab for the eye and for the screen reader, and only that one', () => {
@@ -55,7 +59,7 @@ describe('the tabs of the phone', () => {
         expect(bars.length).toBeGreaterThanOrEqual(30)
         const lit = bars.filter(bar => bar.classList.contains('on')).length
         expect(lit).toBe(Math.round(bars.length / 5))
-        document.body.innerHTML = renderTabBar('/artists')
+        document.body.innerHTML = renderTabBar('/homework')
         expect(document.querySelectorAll('.phone-tabbar__bars i.on').length).toBe(0)
     })
 
