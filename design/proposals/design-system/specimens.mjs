@@ -11,6 +11,7 @@
  * Read by build-design-system.mjs; never published alone.
  */
 import { JSDOM } from 'jsdom'
+import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { registerHooks } from 'node:module'
@@ -54,7 +55,12 @@ async function site(root) {
     eq: await load('public/js/components/home/HomeEqualizer.js'),
     tile: await load('public/js/components/ui/AlbumPhoneCard.js'),
     sheet: await load('public/js/components/ui/Sheet.js'),
-    toast: await load('public/js/components/Toast.js')
+    toast: await load('public/js/components/Toast.js'),
+    trackRow: await load('public/js/components/ui/TrackRow.js'),
+    albumCard: await load('public/js/components/ui/AlbumCardRenderer.js'),
+    empty: await load('public/js/components/series/SeriesEmptyState.js'),
+    paste: await load('public/js/components/home/HomePasteList.js'),
+    seriesGrid: await load('public/js/components/series/SeriesGridRenderer.js')
   }
   return ready
 }
@@ -161,45 +167,106 @@ export async function specimens(root) {
 
   const bars = ['.55', '1', '.7', '.4', '.8'].map((h) => `<i style="--h:${Number(h) * 100}%"></i>`).join('')
   const para = 'Gather albums into series, rank every track, and blend them into playlists that keep every record in the mix.'
-  /** The pending decisions of § Pendentes, by the `Mostra` key: today's variants side by side, each in its own CSS. */
+  const ranked = fs.readFileSync(path.join(root, 'public/splash.html'), 'utf8').match(/<div class="ranked"[\s\S]*?<p class="note">[\s\S]*?<\/p>\s*<\/div>/)[0]
+  /**
+   * The three questions of § Pendentes, by the `Mostra` key. Each option is the SAME piece, changed only
+   * where the question is (critique of 2026-11-21, findings 1 and 2); `rec` is the agent's recommendation,
+   * shown without opening anything (finding 3): what he gains and what he pays.
+   */
+  const eqSame = (grad) => `<div class="home-page" style="padding:40px 20px"><div class="home-stage" style="padding:0">${eqHTML(s, 24, 'still').replace('class="home-eq is-still"', `class="home-eq is-still" style="opacity:1;height:84px;--home-eq-grad:${grad}"`)}</div></div>`
   const variants = {
-    'texto-no-fogo': [
-      { css: 'app', w: 800, h: 200, label: 'A · branco (Home)', html: '<div style="padding:72px 28px;text-align:center"><button type="button" class="home-btn is-flame is-big">Create series</button></div>' },
-      { css: 'splash', w: 800, h: 200, label: 'B · preto (página de entrada)', html: '<div style="padding:76px 28px;background:#0a0a0c;text-align:center"><a class="btn btn-primary" href="#">Open the app <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a></div>' }
-    ],
-    'ponta-amarela': [
-      { css: 'app', label: 'A · duas cores (Home)', w: 800, h: 200, html: `<div class="home-page" style="padding:60px 28px"><div class="home-stage" style="padding:0">${eqHTML(s, 24, 'still').replace('is-still', 'is-still" style="opacity:1;height:72px')}</div></div>` },
-      { css: 'splash', w: 800, h: 200, label: 'B · com o amarelo (página de entrada)', html: `<nav class="thread" style="position:static;background:#0a0a0c"><div class="wrap" style="padding:0 28px"><div class="groups" style="height:72px;margin:64px 0"><a class="g on">${bars}</a><a class="g on">${bars}</a><a class="g on">${bars}</a><a class="g on">${bars}</a></div></div></nav>` }
-    ],
-    'fonte-do-corpo': [
-      { css: 'app', w: 800, h: 200, label: 'A · Syne (o app no computador)', html: `<p class="font-syne" style="margin:0;padding:28px;font-size:20px;line-height:1.5;color:rgba(255,255,255,.72)">${para}</p>` },
-      { css: 'app', w: 800, h: 200, label: 'B · texto do sistema (página de entrada, celular)', html: `<p style="margin:0;padding:28px;font:20px/1.5 var(--home-text-font);color:rgba(255,255,255,.72)">${para}</p>` }
-    ]
+    'texto-no-fogo': {
+      rec: 'Recomendo B, texto preto nos dois: passa como texto grande nas duas pontas do fogo (7,0:1 e 4,1:1); o branco não passa na ponta laranja (2,8:1). Custa mudar o botão do app.',
+      options: [
+        { css: 'app', w: 420, h: 170, label: 'A · branco, como no app', html: '<div style="padding:56px 20px;text-align:center"><button type="button" class="home-btn is-flame is-big">Create series</button></div>' },
+        { css: 'splash', w: 420, h: 170, label: 'B · preto, como na página de entrada', html: '<div style="padding:60px 20px;background:#000;text-align:center"><a class="btn btn-primary" href="#">Open the app <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a></div>' }
+      ]
+    },
+    'ponta-amarela': {
+      rec: 'Recomendo A, duas cores nas duas telas: fica só com cores já declaradas. Custa tirar o amarelo da página de entrada.',
+      options: [
+        { css: 'app', w: 420, h: 170, label: 'A · duas cores, como na Home', html: eqSame('linear-gradient(to top, #dc2626, #f97316)') },
+        { css: 'app', w: 420, h: 170, label: 'B · com a ponta amarela, como na página de entrada', html: eqSame('linear-gradient(to top, #dc2626, #f97316, #fbbf24)') }
+      ]
+    },
+    'fonte-do-corpo': {
+      rec: 'Recomendo B, a fonte do sistema no texto corrido: lê melhor a 14–16 px. Custa a Syne sair do corpo no computador.',
+      inline: [
+        { label: 'A · Syne, como o app no computador', font: "'Syne', sans-serif" },
+        { label: 'B · texto do sistema, como a página de entrada e o celular', font: "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif" }
+      ],
+      para
+    }
   }
 
+  // ── pieces the document's component table does not list (shown live, flagged as a finding) ──
+  const failNotice = (() => {
+    const host = s.document.createElement('div')
+    const g = new s.seriesGrid.default({ container: host, props: { seriesStates: { s1: { status: 'done', failed: 2, found: 5 } } } })
+    return g._renderFailureNotice({ id: 's1' })
+  })()
+  // the markup HomeView.drawMessage() builds (SafeDOM, not callable without the view): same classes, same words
+  const homeMsg = (kind) => kind === 'failed'
+    ? '<div class="home-msg is-error" role="alert"><strong>The catalog did not answer.</strong><span>Nothing was changed. Try again in a moment.</span><button type="button" class="home-btn">Try again</button></div>'
+    : '<div class="home-msg" role="status"><strong>No albums found for «Ember Choir».</strong><span>Check the spelling, or paste the albums as a list: one per line, Artist - Album.</span><button type="button" class="home-btn">Paste a list</button></div>'
+  const emptySeries = html(new s.empty.SeriesEmptyState().render())
+  const trackRows = [
+    { id: 't1', title: 'Low Sun Overture', duration: 312, rank: 1, rating: 92, spotifyRank: 2, spotifyPopularity: 64 },
+    { id: 't2', title: 'Pier at Dusk', duration: 254, rank: 2, rating: 88, spotifyRank: 1, spotifyPopularity: 71 },
+    { id: 't3', title: 'Second Side Waltz', duration: 287, rank: 3, rating: 81, spotifyRank: 4, spotifyPopularity: 40 }
+  ].map((track, i) => html(s.trackRow.TrackRow.render({ track, index: i + 1, variant: 'ranking' }))).join('')
+  const albumCards = ALBUMS.slice(0, 4).map((a, i) => s.albumCard.AlbumCardRenderer.renderCompact({ ...a, coverUrl: fictionalCover(i) })).join('')
+  const dockFailed = dockHTML(s, false, DOCK(ALBUMS.slice(0, 3), { create: 'failed', failure: 'Not saved: the connection dropped.' }))
+  const pasted = (() => {
+    const list = new s.paste.HomePasteList({ onAdd() {} })
+    const el = list.render()
+    list.setText('Pink Floyd - Animals\nYes\nJoni Mitchell - Blue')
+    return html(el)
+  })()
+  const extras = [
+    { name: 'Avisos com «Try again»', file: '`HomeView.js`, `HomeDock.js`, `SeriesGridRenderer.js`', line: 'A falha diz o que houve e oferece «Try again» ali mesmo.',
+      spec: { css: 'app', desktop: `<div class="home-page" style="padding:8px 28px 28px">${homeMsg('failed')}<div style="margin-top:22px">${failNotice}</div></div><div class="home-dockwrap" style="bottom:12px">${dockFailed}</div>`, dh: 500 } },
+    { name: 'Estados vazios', file: '`HomeView.js`, `SeriesEmptyState.js`', line: 'O vazio diz por quê e qual é o próximo passo.',
+      spec: { css: 'app', desktop: `<div class="home-page" style="padding:8px 28px 28px;display:grid;gap:22px">${homeMsg('empty')}${emptySeries}</div>`, phone: `<div class="home-page" style="padding:8px 16px">${homeMsg('empty')}</div>`, dh: 720, ph: 300 } },
+    { name: 'Álbum no computador', file: '`AlbumCardRenderer.js`', line: 'O cartão de álbum das telas de séries e de álbuns.',
+      spec: { css: 'app', desktop: `<div style="padding:28px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px">${albumCards}</div>`, dh: 360 } },
+    { name: 'Faixas', file: '`TrackRow.js`', line: 'A linha de faixa do ranking e das playlists.',
+      spec: { css: 'app', desktop: `<div style="padding:20px 28px;max-width:560px">${trackRows}</div>`, phone: `<div style="padding:16px">${trackRows}</div>`, dh: 300, ph: 340 } }
+  ]
+
+  /** Samples of the pending lines (by the `Padrão` cell) that the site's own code draws. */
+  const pendingSamples = {
+    'A lista colada, editável': { css: 'app', w: 760, h: 250, html: `<div class="home-page" style="padding:20px 28px">${pasted}</div>` },
+    'O fechar da folha da série': { css: 'app', w: 390, h: 300, html: (() => { const body = s.document.createElement('div'); body.innerHTML = '<p style="margin:0">3 albums, in this order.</p>'; const sh = s.sheet.openSheet({ variant: 'full', title: 'Your series', content: body }); const out = html(sh.element); sh.element.remove(); return out })() },
+    'Os números na fonte de texto': { css: 'app', w: 760, h: 140, html: `<div class="home-dockwrap" style="bottom:12px">${dockHTML(s, false, DOCK(ALBUMS.slice(0, 4)))}</div>` },
+    'Exemplo ilustrativo': { css: 'splash', w: 600, h: 300, html: `<div style="padding:20px 28px">${ranked}</div>` },
+    'Pausar o movimento': { css: 'splash', w: 420, h: 110, html: '<div style="padding:30px 28px;position:relative;height:110px"><button class="motion-toggle" type="button" aria-pressed="false" style="position:static">Pause motion</button></div>' }
+  }
   return {
     variants,
-    'Botões': { css: 'app', desktop: buttons, phone: buttons, dh: 140, ph: 260 },
+    extras,
+    pendingSamples,
+    'Botões': { css: 'app', desktop: buttons, phone: buttons, dh: 210, ph: 300 },
     'Campos': { css: 'app', desktop: fields, phone: fields, dh: 260, ph: 300 },
     'Fichas': { css: 'app', desktop: chips, phone: chips, dh: 150, ph: 200 },
     'Cartões': {
       css: 'app',
       desktop: `<div style="padding:28px"><div class="home-grid" style="grid-template-columns:repeat(4,minmax(0,1fr))">${cards}</div></div>`,
       phone: phoneShell(s, 'Albums', `<div class="albums-grid-phone" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px">${fixCovers(tiles)}</div>`, '/albums'),
-      dh: 330, ph: 520
+      dh: 330, ph: 470
     },
     'Base da série': {
       css: 'app',
       desktop: dockHTML(s, false, DOCK(ALBUMS.slice(0, 3))),
-      phone: phoneShell(s, 'Home', '<div style="height:300px"></div>', '/home') + dockHTML(s, true, DOCK(ALBUMS.slice(0, 3))),
-      dh: 150, ph: 520
+      phone: phoneShell(s, 'Home', '<div style="height:40px"></div>', '/home') + dockHTML(s, true, DOCK(ALBUMS.slice(0, 3))),
+      dh: 150, ph: 300
     },
     'Barras do celular': {
       css: 'app',
-      phone: phoneShell(s, 'Albums', `<div style="padding:16px;color:rgba(255,255,255,.6);font-size:14px">&nbsp;</div><button type="button" class="phone-to-top" aria-label="Back to top" style="bottom:140px">${icon(s, 'ArrowUp', 'phone-to-top__icon')}</button><div class="phone-action-bar"><span class="phone-action-bar__note">3 albums chosen</span><button type="button" class="btn btn-primary">Blend</button></div>`, '/albums'),
-      ph: 520
+      phone: phoneShell(s, 'Albums', `<div style="padding:16px;color:rgba(255,255,255,.6);font-size:14px">&nbsp;</div><button type="button" class="phone-to-top" aria-label="Back to top" style="bottom:136px">${icon(s, 'ArrowUp', 'phone-to-top__icon')}</button><div class="phone-action-bar"><span class="phone-action-bar__note">3 albums chosen</span><button type="button" class="btn btn-primary">Blend</button></div>`, '/albums'),
+      ph: 330
     },
-    'Folhas': { css: 'app', phone: phoneShell(s, 'Albums', '', '/albums') + sheetHTML(s), ph: 520 },
+    'Folhas': { css: 'app', phone: phoneShell(s, 'Albums', '', '/albums') + sheetHTML(s), ph: 380 },
     'Avisos': {
       css: 'app',
       desktop: `<div style="height:250px"></div>${toastHTML(s)}<div class="home-dockwrap" style="bottom:18px">${html(s.dock.undoStrip({ kind: 'remove', album: { title: 'Afterglow' } }))}</div>`,
@@ -219,7 +286,7 @@ export async function specimens(root) {
       css: 'splash',
       desktop: `{{SPLASH}}`,
       phone: `{{SPLASH}}`,
-      dh: 300, ph: 420
+      dh: 470, ph: 620
     }
   }
 }
