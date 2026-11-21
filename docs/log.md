@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 16:43] session — F88: o Apple Music diz se está conectado e desconecta (a base do painel de conexões do menu)
+**Branch:** feat/f88-top-menu-build
+MusicKitAuth ganha isConnected(), unauthorize() e o sinal applemusic-auth-change (como o spotify-auth-change); o MusicKitService expõe isAuthorized() e unauthorize(). Teste primeiro: test/services/musickit/MusicKitAuth.connection.test.js. O Apple Music só diz «conectado» depois de a pessoa autorizar nesta sessão (o MusicKit não é carregado antes, para não puxar o script de terceiros em toda página).
+
 ## [2026-11-21 16:21] decision — o MJRP escolhe os dois níveis do menu do topo: Elevar no celular, Transformar no computador (F88)
 **Branch:** feat/f88-top-menu-build
 Palavras do MJRP (2026-11-21), aos dois níveis do protótipo (Elevar e Transformar): «Elevar no cel e transformar na web». Como foi entendido: no celular, o nível Elevar (a estrutura de hoje com a cara da home: a marca em fogo, a letra, o item atual aceso, a barra de baixo com ícones mantida); no computador, o nível Transformar (a barra da home segue sem mudança dentro do app; o fogo marca a tela atual; conta, Spotify e Apple Music num painel; uma linha abaixo no lugar do menu suspenso). À pergunta «A Apple Music entra no menu, ao lado do Spotify? Recomendo sim.», o MJRP respondeu «2.sim»: a Apple Music entra no painel de conexões do menu, ao lado do Spotify (decisão do MJRP, não mais do orquestrador). Construção no código de hoje, sem React nem TypeScript (a migração para React vive em outra linha).

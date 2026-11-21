@@ -8,6 +8,11 @@ import { withDeadline } from '../../utils/deadline.js';
 /** How long the start of MusicKit may take: token route, script and `configure` together (F67). */
 export const MUSICKIT_INIT_DEADLINE_MS = 10000;
 
+/** One signal for «the Apple Music connection changed», as Spotify has `spotify-auth-change`. */
+function announceConnection() {
+    window.dispatchEvent(new Event('applemusic-auth-change'));
+}
+
 export class MusicKitAuth {
     constructor() {
         this.music = null;
@@ -158,6 +163,21 @@ export class MusicKitAuth {
         return this.isInitialized && this.music !== null;
     }
 
+    /** Whether the person has authorized Apple Music in this session (the menu shows it, F88). */
+    isConnected() {
+        return this.isAuthorized;
+    }
+
+    /**
+     * Disconnect: MusicKit forgets the person. With MusicKit never started there is nothing to forget.
+     */
+    async unauthorize() {
+        if (!this.music) return;
+        await this.music.unauthorize();
+        this.isAuthorized = false;
+        announceConnection();
+    }
+
     /**
      * Authorize user for library access
      * @returns {Promise<string>} User token
@@ -173,6 +193,7 @@ export class MusicKitAuth {
             const userToken = await this.music.authorize();
             this.isAuthorized = true;
             console.log('[MusicKit] User authorized');
+            announceConnection();
             return userToken;
         } catch (error) {
             console.error('[MusicKit] Authorization failed:', error);
