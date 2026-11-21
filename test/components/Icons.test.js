@@ -22,8 +22,9 @@ describe('Icons', () => {
     })
 
     it('no icon is written twice in the registry', () => {
-        const source = fs.readFileSync(path.resolve(process.cwd(), 'public/js/components/Icons.js'), 'utf8')
-        const names = [...source.matchAll(/^ {2}([A-Za-z0-9_]+):\s*`<svg/gm)].map(match => match[1])
+        // F83: the drawings moved from Icons.js to utils/iconShapes.js (data, read by getIcon and by the React <Icon>)
+        const source = fs.readFileSync(path.resolve(process.cwd(), 'public/js/utils/iconShapes.js'), 'utf8')
+        const names = [...source.matchAll(/^ {4}([A-Za-z0-9_]+): \{"a":/gm)].map(match => match[1])
         const twice = names.filter((name, index) => names.indexOf(name) !== index)
 
         expect(names.length).toBeGreaterThan(30)

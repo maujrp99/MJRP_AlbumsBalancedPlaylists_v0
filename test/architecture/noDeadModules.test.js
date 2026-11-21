@@ -31,7 +31,8 @@ const KEPT_ON_PURPOSE = {
     'public/js/react-bridge/navigation.ts': 'the bridge, until a screen navigates by code',
     'public/js/react-bridge/usePhone.ts': 'the bridge, until a screen asks if it is the phone',
     'public/js/react-bridge/useScreenTitle.ts': 'the bridge, until a screen names itself',
-    'public/js/react-bridge/useStore.ts': 'the bridge, until a screen reads a store'
+    'public/js/react-bridge/useStore.ts': 'the bridge, until a screen reads a store',
+    'public/js/ui/Icon.tsx': 'the icon for the React screens, until the canary screen (F83 TASK-10) draws one'
 }
 
 const graph = graphFrom(allEntryPoints())
