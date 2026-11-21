@@ -1020,6 +1020,8 @@ sequenceDiagram
 
 **Salvar a edição** tem um estado (`models/seriesDraft.js`: parado, salvando, falhou) e o rodapé e a mensagem da janela são desenhados dele.
 
+**A busca de artista tem um estado e um dono (F67).** O estado vive em `models/scanState.js` como funções puras (parada, buscando, resultados, vazio, falhou) e só a peça (`AlbumPickerController`) o muda. Cada busca tem uma geração: a resposta de uma busca mais antiga, ou que chega depois de a busca terminar, não muda nada, e pedir outra busca enquanto uma corre não começa uma segunda. O catálogo tem prazo de 15 s (`CATALOG_DEADLINE_MS`) e o início do MusicKit tem prazo de 10 s (`MUSICKIT_INIT_DEADLINE_MS` em `services/musickit/MusicKitAuth.js`); passado o prazo o estado é «falhou», que nunca é o mesmo que «sem resultados», e a tentativa seguinte começa do zero. Os álbuns aparecem quando o catálogo responde e a lista da IA, pedida depois, só reclassifica. Fora da busca, a F67 também fez o roteador montar uma vez só o destino de duas mudanças de endereço que correm juntas (`router.js`; `test/router.overlap.test.js`).
+
 **Funções de aptidão** (`test/architecture/oneAlbumPicker.test.js`): o classificador não importa nada e só o serviço de busca o chama; nenhum outro módulo lê `isSingle`, `isCompilation`, `contentTraits` ou `genreNames`, nem nomeia um tipo de álbum; só o serviço de busca chama `getArtistAlbums`; só a peça chama `scanArtist` e muda o estado da busca; a peça só é criada nos dois quadros e não importa tela nenhuma; só o `DiscographyRenderer` desenha o cartão; os arquivos antigos não existem.
 
 **Alternativas.**

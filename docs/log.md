@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:47] session — F67: o estado da busca no `arch.md`; Done
+**Branch:** wip/closing-pass-2026-11-21
+F67 (o Scan da Home responde ao clique): o código está na `main`. Faltavam duas linhas da trava. (1) `arch.md`: a declaração dizia «atualizado» pelo commit da F57, que não cita a F67; escrevi na seção do seletor de álbuns o estado da busca, a geração, os prazos e a montagem única do roteador, conferido no código. (2) Reconferência visual: relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md` (os quatro estados estão na tela). Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: a UAT-204 segue com o MJRP.
+
 ## [2026-11-21 13:46] session — F48: o comportamento da nova tentativa no `behavior.md`, os commits certos nas issues; Done
 **Branch:** wip/closing-pass-2026-11-21
 F48 (cache e nova tentativa): o código está na `main`. Faltavam duas linhas da trava. (1) `behavior.md`: escrevi as novas tentativas do servidor e o que não se tenta de novo, conferido em `api/client.js`. (2) Reconferência visual: relatórios do lote de 2026-11-21 (álbuns e casca). Conferi também a linha das issues: UAT-175, 176 e 177 já diziam `fixed (F48: …)`, mas citavam o commit `fe12d90`, que é o da UAT-14; troquei pelos commits que as consertaram (`57ce6bc`, `d57ca5c`, `061bcce`). Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite.
