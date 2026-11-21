@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>F80 · caixa em diagonal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: the comparator's own dark world. One bar (vista · largura · pose), then today and the chosen view side by side, pose by pose. */
+:root{
+  color-scheme:dark;
+  --bg:#0a0908;--panel:#15120f;--line:#2c2620;--fg:#f4efe9;--muted:#b9aea2;--accent:#f97316;--accent-text:#fb923c;--chip:#221c16;
+  --display:'Syne',system-ui,sans-serif;--text:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 var(--text)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.shell{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header h1{font:800 24px/1.1 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+header p{margin:6px 0 0;color:var(--muted);max-width:90ch}
+header p b{color:var(--fg)}
+a{color:var(--accent-text)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:8px;z-index:5}
+.seg{display:flex;flex-wrap:wrap;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.seg button{min-height:44px;padding:0 14px;border-radius:8px;border:0;background:transparent;color:var(--muted);font:600 14px/1 var(--text);cursor:pointer;text-align:left}
+.seg button[aria-pressed="true"]{background:var(--chip);color:var(--fg);box-shadow:inset 0 0 0 1px #3b3128}
+.seg button:focus-visible,a:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
+.seg button .lv{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text);margin-bottom:3px}
+.ruler{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0}
+.ruler div{border-top:2px solid var(--line);padding-top:8px;min-width:0}
+.ruler dt{font:700 11px/1 var(--text);letter-spacing:.1em;text-transform:uppercase;color:var(--accent-text);margin:0 0 6px}
+.ruler dd{margin:0;color:var(--fg)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pair figure{margin:0;border:1px solid var(--line);border-radius:12px;background:#000;padding:10px;min-width:0}
+.pair figcaption{font-size:13px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pair figcaption b{color:var(--fg)}
+.pair img{display:block;width:100%;height:auto;border-radius:6px}
+h2{font:800 18px/1.2 var(--display);margin:8px 0 0}
+.note{border:1px dashed var(--line);border-radius:14px;padding:14px 16px;color:var(--muted)}
+.note b{color:var(--fg)}
+.note ul{margin:6px 0 0;padding-left:18px}
+@media (max-width:860px){.ruler{grid-template-columns:repeat(2,minmax(0,1fr))}.pair{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap">
+</head><body>
+
+<div class="shell">
+  <header>
+    <h1>Página de entrada · UAT-235 · a caixa em diagonal</h1>
+    <p>Você disse: <b>«a caixa de discos fica com um efeito muito 2D quando está reta e a área dela bem limitada… mais em diagonal, mas sem o corte da tela»</b>. As prévias mudam <b>uma coisa só</b>: de que ângulo se vê a caixa e quanto espaço ela ganha. Cada imagem é a página de verdade (as capas do Apple Music que estão no ar), capturada no navegador. À esquerda, a página de hoje; à direita, a vista escolhida, na mesma posição da rolagem.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Escolher a vista, a largura e a pose">
+    <div class="seg" id="views" role="group" aria-label="Vista"></div>
+    <div class="seg" id="widths" role="group" aria-label="Largura da janela"></div>
+  </div>
+
+  <dl class="ruler" id="ruler"></dl>
+
+  <section aria-label="Hoje e a vista escolhida, pose por pose" id="poses"></section>
+
+  <h2>Sem WebGL e com menos movimento</h2>
+  <section class="pair" id="css" aria-label="A caixa em CSS"></section>
+  <div class="note">
+    <b>A caixa em CSS</b> (sem WebGL, com «menos movimento», ou antes do 3D chegar) segue o mesmo ângulo, girada para o mesmo lado. <b>O que ela consegue:</b> o ângulo, as capas, o disco puxado, o lado B. <b>O que não consegue:</b> as laterais de madeira (é uma frente e uma pilha de capas, sem caixa por dentro), a luz do fogo nas capas (o brilho fica atrás) e o giro da virada (ela troca de lado, não gira). O celular (até 899 px) não muda: lá não há caixa 3D, cada faixa traz o seu disco.
+  </div>
+  <div class="note">
+    <b>Como foi conferido:</b> em cada vista, um teste calcula os cantos de cada tábua e de cada capa em todas as poses (abertura, cada disco puxado, a virada passo a passo, o lado B) e confere que caem dentro do quadro, em janelas de 900 a 1920 px. A câmera de hoje passa da borda na virada (a 900 px, mais da metade da caixa sai do quadro); as três vistas novas ficam inteiras em todas.
+  </div>
+</div>
+
+<script>
+const FILES = %%FILES%%;
+const VIEWS = [
+  { id:'a', level:'Prévia 1 de 3', name:'Três-quartos, inteira no quadro',
+    say:'A câmera anda 30° para o lado e sobe um pouco: aparecem a lateral e a frente da caixa. A distância se ajusta ao quadro, para a caixa inteira caber em todas as poses, com uma folga de 6%.',
+    gain:'Profundidade de verdade (lateral, fundo, a fila de capas); nada cortado em nenhuma largura.',
+    cost:'As capas ficam um pouco oblíquas. Para caber o disco puxado e a virada, a caixa fica um pouco menor do que hoje na abertura.' },
+  { id:'b', level:'Prévia 2 de 3', name:'Três-quartos, palco mais largo',
+    say:'O mesmo ângulo da prévia 1, mas o palco passa da coluna e vai até a borda direita da janela. A legenda e o texto não mudam de lugar.',
+    gain:'Mais área: a caixa fica maior, sobretudo em telas largas (1440 e 1920), onde sobrava espaço vazio à direita.',
+    cost:'Em 1280 o ganho é pequeno (só há 16 px de margem). A caixa deixa de ficar centrada sobre a legenda.' },
+  { id:'c', level:'Prévia 3 de 3', name:'Ângulo forte, o disco vira para você',
+    say:'A câmera anda 42° para o lado e sobe mais. O disco puxado gira enquanto sobe e fica de frente para você.',
+    gain:'O efeito mais 3D, e a capa puxada fica de frente, legível.',
+    cost:'As capas paradas ficam bem mais oblíquas; a caixa fica um pouco menor, para caber o disco virando.' },
+];
+const TODAY = 'today';
+const WIDTHS = ['1280x800','1440x900','1920x1080','1024x768'];
+const POSES = [['a1','A abertura'],['a3','Um disco puxado (Lado A · 3)'],['flip','A virada, no meio'],['b1','O lado B (Lado B · 1)']];
+let view = 'a', width = '1440x900';
+try { const h = location.hash.slice(1); if (VIEWS.some(v => v.id === h)) view = h; } catch (e) {}
+
+const pick = (v, w, track, extra) => {
+  const list = FILES.filter(f => f.startsWith(`${v}-${w}-${track}-`) && (extra ? f.includes('-' + extra) : !/nogl|reduce/.test(f)));
+  if (track !== 'flip') return list[0];
+  return list.sort((x, y) => Math.abs(parseFloat(x.split('-')[3]) - .5) - Math.abs(parseFloat(y.split('-')[3]) - .5))[0];
+};
+const fig = (file, who, what) => file ? `<figure><figcaption><b>${who}</b><span>${what}</span></figcaption><img src="${file}" alt="${who}: ${what}" loading="lazy" width="960" height="600"></figure>` : `<figure><figcaption><b>${who}</b><span>sem captura</span></figcaption></figure>`;
+
+document.getElementById('views').innerHTML = VIEWS.map(v => `<button type="button" data-v="${v.id}" aria-pressed="false"><span class="lv">${v.level}</span>${v.name}</button>`).join('');
+document.getElementById('widths').innerHTML = WIDTHS.map(w => `<button type="button" data-w="${w}" aria-pressed="false"><span class="lv">Janela</span>${w.replace('x',' × ')}</button>`).join('');
+
+function render(){
+  const v = VIEWS.find(x => x.id === view);
+  document.querySelectorAll('#views button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === view));
+  document.querySelectorAll('#widths button').forEach(b => b.setAttribute('aria-pressed', b.dataset.w === width));
+  document.getElementById('ruler').innerHTML = `<div><dt>O que muda</dt><dd>${v.say}</dd></div><div><dt>Eixo</dt><dd>De que ângulo se vê a caixa e quanto espaço ela ganha.</dd></div><div><dt>O que ganha</dt><dd>${v.gain}</dd></div><div><dt>O que custa</dt><dd>${v.cost}</dd></div>`;
+  document.getElementById('poses').innerHTML = POSES.map(([t, label]) => `<h2>${label}</h2><div class="pair">${fig(pick(TODAY, width, t), 'Hoje', width.replace('x',' × '))}${fig(pick(view, width, t), v.name, width.replace('x',' × '))}</div>`).join('');
+  document.getElementById('css').innerHTML = fig(pick(TODAY, '1440x900', 'a3', 'nogl'), 'Hoje · caixa em CSS (sem WebGL)', 'Lado A · 3, 1440 × 900') + fig(pick('a', '1440x900', 'a3', 'nogl'), 'Prévia 1 · caixa em CSS (sem WebGL)', 'Lado A · 3, 1440 × 900');
+}
+document.querySelector('.bar').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.v) { view = b.dataset.v; try { history.replaceState(null, '', '#' + view); } catch (err) {} }
+  if (b.dataset.w) width = b.dataset.w;
+  render();
+});
+addEventListener('hashchange', () => { const h = location.hash.slice(1); if (VIEWS.some(v => v.id === h)) { view = h; render(); } });
+render();
+</script>
+</body></html>
