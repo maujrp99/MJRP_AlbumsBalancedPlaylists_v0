@@ -3,6 +3,17 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:11] decision — o MJRP respondeu as oito perguntas do React e dos idiomas: a opção recomendada em todas
+**Branch:** main
+Pelo Control Center, com a passkey (13:11), lote `reports/proposals/2026-11-21-1258-v0-react-and-languages.md`: ritmo em sequência com uma parada depois de duas telas medidas; aceita mudar a constituição para o React e os dois idiomas, juntos; endereço por idioma só na home; a escolha do idioma no aparelho e, depois da regra nova do banco, na conta; sem saber o país, o idioma do navegador; a home em português junto; a ordem das telas começando pela base e pela tela difícil; o português abre de uma vez, com tudo pronto. Está nas specs da F83 e da F81. A primeira etapa da migração (a base) começa agora, num agente interno em Sonnet. A ADR-0023 segue proposta: o aceite é um commit dele.
+
+## [2026-11-21 13:11] answer — lote 2026-11-21-1258-v0-react-and-languages
+
+- Lote: `reports/proposals/2026-11-21-1258-v0-react-and-languages.md`
+- Envio: 581e31df7e83cf2d
+- Recomendações aceitas: D-01, D-02, D-03, D-04, D-05, D-06, D-07, D-08
+- Pela tela do Control Center, com o Touch ID.
+
 ## [2026-11-21 13:07] session — rodada 3 de desenho da home na `main`; a issue do ramo foi renumerada de UAT-239 para UAT-241
 **Branch:** main
 O ramo `wip/f80-home-menu-and-slider` usou o número UAT-239 para «com conta, a home com o menu e o botão Start», que na `main` já era a issue da raiz mostrando a home a todos. A ferramenta do trem renumerou a do ramo para UAT-241, e as citações nos arquivos do ramo foram acertadas; as entradas antigas do log do ramo, abaixo, ainda dizem UAT-239 para esse assunto. Comparador republicado no mesmo endereço (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e): uma pergunta, a página de hoje e três prévias (A · Fio com paradas, B · O menu é a barra, C · Barra embaixo), com a chave sem conta / com conta; a crítica separada passou, sem P0.

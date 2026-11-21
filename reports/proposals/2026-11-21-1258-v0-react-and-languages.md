@@ -13,6 +13,9 @@ Base: média — uma tela fácil foi medida de verdade; as difíceis, não
 - a) Todas em sequência, com uma parada para você rever depois de duas telas medidas (Recomendado)
 - b) Só quando uma tela for mexida por outro motivo
 - c) Em sequência só até a parada; o resto você decide lá
+→ respondida em 2026-11-21 13:11
+  - a
+→ aplicada em 2026-11-21 13:11: registrada nas specs da F83 e da F81; a migração segue esta resposta
 
 ### D-02 · Mudar as regras do projeto para o React e os dois idiomas
 Pergunta: Você aceita mudar as regras do projeto (a constituição) para o site usar React e falar dois idiomas?
@@ -21,6 +24,9 @@ Base: forte — as regras e o registro estão escritos
 - a) Sim, as duas mudanças juntas (Recomendado)
 - b) Só a do React agora; a dos idiomas depois
 - c) Ainda não
+→ respondida em 2026-11-21 13:11
+  - a
+→ aplicada em 2026-11-21 13:11: registrada nas specs da F83 e da F81; a migração segue esta resposta
 
 ### D-03 · O endereço das páginas e o idioma
 Pergunta: O endereço das páginas muda conforme o idioma?
@@ -29,6 +35,9 @@ Base: média — a documentação do Firebase Hosting foi lida; nada foi testado
 - a) Só na home; dentro do app, o mesmo endereço nos dois idiomas (Recomendado)
 - b) Em tudo
 - c) Em nada
+→ respondida em 2026-11-21 13:11
+  - a
+→ aplicada em 2026-11-21 13:11: registrada nas specs da F83 e da F81; a migração segue esta resposta
 
 ### D-04 · Onde fica o idioma escolhido por quem tem conta
 Pergunta: Onde fica guardado o idioma que a pessoa escolheu, quando ela tem conta?
@@ -37,6 +46,9 @@ Base: forte — as regras do banco estão no repositório
 - a) No aparelho desde já, e na conta quando você publicar a regra nova (Recomendado)
 - b) Só no aparelho
 - c) Na conta, numa pasta do banco que já é permitida, feita para outra coisa
+→ respondida em 2026-11-21 13:11
+  - a
+→ aplicada em 2026-11-21 13:11: registrada nas specs da F83 e da F81; a migração segue esta resposta
 
 ### D-05 · O idioma quando o site não sabe o país
 Pergunta: Quando o site não consegue saber o país de quem acessa, que idioma ele abre?
@@ -44,6 +56,9 @@ Contexto: Você decidiu: o país primeiro, depois a escolha da pessoa. Isto só 
 Base: média — a leitura do país pelo Firebase não foi testada em produção
 - a) O idioma do navegador da pessoa (Recomendado)
 - b) Inglês, sempre
+→ respondida em 2026-11-21 13:11
+  - a
+→ aplicada em 2026-11-21 13:11: registrada nas specs da F83 e da F81; a migração segue esta resposta
 
 ### D-06 · A home em português
 Pergunta: A home sai em português junto com o resto do site?
@@ -51,6 +66,9 @@ Contexto: Junto, quem não tem conta e o Google já veem português, e há mais 
 Base: forte
 - a) Sim, desde a primeira publicação dos idiomas (Recomendado)
 - b) Depois, numa segunda etapa
+→ respondida em 2026-11-21 13:11
+  - a
+→ aplicada em 2026-11-21 13:11: registrada nas specs da F83 e da F81; a migração segue esta resposta
 
 ### D-07 · A ordem das telas
 Pergunta: Em que ordem as telas passam para o React?
@@ -59,6 +77,9 @@ Base: média — a tela difícil não foi medida
 - a) Base, playlists guardadas, edição das playlists (a parada), menu e barra, Start, séries e álbuns, inventário, Blend (Recomendado)
 - b) O menu e a barra antes da tela difícil
 - c) O Start primeiro
+→ respondida em 2026-11-21 13:11
+  - a
+→ aplicada em 2026-11-21 13:11: registrada nas specs da F83 e da F81; a migração segue esta resposta
 
 ### D-08 · Quando o português abre para quem usa o site
 Pergunta: Quando o português abre para quem usa o site?
@@ -67,3 +88,6 @@ Base: média — a medição mostrou que tirar os textos custa o mesmo com ou se
 - a) De uma vez, com tudo pronto; até lá só você vê o português (Recomendado)
 - b) Aos poucos, tela a tela
 - c) Antes do fim: as telas antigas ganham os textos traduzidos sem trocar de tecnologia
+→ respondida em 2026-11-21 13:11
+  - a
+→ aplicada em 2026-11-21 13:11: registrada nas specs da F83 e da F81; a migração segue esta resposta

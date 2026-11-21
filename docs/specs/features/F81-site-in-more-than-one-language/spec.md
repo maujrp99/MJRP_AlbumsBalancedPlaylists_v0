@@ -54,6 +54,18 @@ Dito pelo MJRP em 2026-11-21: «As próximas features agora serao de internacion
 - O que ele não disse, decidido pelo agente — revisável: sem saber o lugar, o site abre em inglês (é o idioma de hoje); a escolha da pessoa fica guardada no aparelho e, com conta, na conta.
 - A conferir na proposta: de onde vem o lugar (o país que o Firebase Hosting ou o servidor informa, sem pedir a localização ao navegador) e o que os buscadores veem.
 
+## Decided by the owner (2026-11-21 13:11, Control Center, com a passkey)
+Lote `reports/proposals/2026-11-21-1258-v0-react-and-languages.md`; em todas ele escolheu a opção recomendada:
+- **O ritmo:** todas as telas em sequência, com uma parada para ele rever depois de duas telas medidas.
+- **As regras do projeto:** aceita mudar a constituição para o site usar React e falar dois idiomas, as duas mudanças juntas.
+- **O endereço e o idioma:** só na home (`/en/` e `/pt/`); dentro do app, o mesmo endereço nos dois idiomas.
+- **A escolha do idioma de quem tem conta:** no aparelho desde já, e na conta quando ele publicar a regra nova de acesso ao banco.
+- **Sem saber o país:** o idioma do navegador da pessoa.
+- **A home em português:** junto, desde a primeira publicação dos idiomas.
+- **A ordem das telas:** base; playlists guardadas; edição das playlists (a parada); menu e barra; Start; séries e álbuns; inventário; Blend.
+- **Quando o português abre:** de uma vez, com tudo pronto; até lá só ele vê o português, para revisar.
+O aceite do registro da decisão (ADR-0023) continua sendo um commit dele.
+
 ## Open Questions
 Cada uma virou pergunta numerada em «Decisões do MJRP» no relatório `reports/audits/2026-11-21-f81-copy-survey.md`; o que segue é o resumo:
 - De onde vêm os textos: arquivos no repositório (dicionário), ou o CMS (F82). **Chega com a proposta de arquitetura da F83**, que define o contrato do dicionário.
