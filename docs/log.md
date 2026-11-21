@@ -3,9 +3,33 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:31] step — F83 onda 4: o texto em pedaços sai em um nó só, como na antiga (achado do navegador: 136 pixels na linha da dica)
+**Branch:** claude/f83-wave-4-start
+A dica, a linha do visitante, o título do painel, a linha «foi salva», o «Saving your series…», o aviso do nome e o «ready» da lista levam as palavras e os espaços num nó de texto só, como a antiga (o React os dava em nós separados e o Chromium compõe as pontas de outro jeito). Mais um teste: fechar a folha com um Undo pendente mostra a faixa (diferença de propósito).
+
+## [2026-11-21 19:30] step — F83 onda 4: a prova no navegador, o peso, os documentos
+**Branch:** claude/f83-wave-4-start
+172 conferências por corrida no Chromium (1280 e 393), a antiga (c343830) contra a nova, com o Firebase Auth e o Firestore bloqueados (nenhuma conta anônima em produção): o HTML, a folha e o foco iguais em todos os passos; 30 capturas com 2 a 60 pixels (maior diferença por canal 19 de 255) e 3 de 24 mil pixels na moldura do topo que a antiga contra a antiga também tem; controles de antiga contra antiga com e sem transições (3 a 7 pixels, e a moldura). Uma diferença de propósito afirmada: com um Undo pendente, fechar a folha do celular mostra a faixa. Script principal 285.730 B (294.773 antes; teto 285.874 B); arquivo da Start 12.176 B; placar: 68 arquivos à mão (73), 12.266 linhas (13.348), 653 textos fora do dicionário (729). Evidência: reports/evidence/F83/wave-4/.
+
+## [2026-11-21 19:10] step — F83 onda 4: a tela Start em React (TASK-21); a Home à mão e os pedaços só dela saem
+**Branch:** claude/f83-wave-4-start
+Em public/js/screens/start/: Start, Stage, Results, Dock (com a folha do celular sobre ui/SheetWindow, agora com a variante cheia), PasteList, Equalizer, StartController (o controlador reescrito em TS com os mesmos nomes: o sensor visual da F84 conduz a tela por window.controller), StagingArea, homeSeries e homePaste (as regras com texto, vindas de models/), text, index; dicionário i18n/en/start.js e pt/start.js. A rota baixa o arquivo da tela na abertura, junto do login (é a primeira tela). Saíram views/HomeView.js, controllers/HomeController.js e components/home/* (1.054 linhas à mão); DiscographyRenderer perdeu a capa da Start (111 para 81 linhas); o seletor partilhado ganhou emptyQueryMessage e models/albumPicker.js badgeCodesOf. O teste igual-ao-de-antes passa nos 30 cenários (páginas, foco e chamadas ao que está fora), e acusa uma palavra, uma classe e um foco trocados; os testes antigos da Home foram levados por test/support/startHarness.js. Suíte inteira: 336 arquivos, 4.180 testes.
+
 ## [2026-11-21 19:04] review — F83 onda 3: o juiz independente aprova a moldura do site em React (sem P0, sem P1, 3 P2)
 **Branch:** integrate/staging-2026-11-21
 Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-shell-visual-parity-recheck.md` e capturas em `reports/evidence/F83/wave-3/recheck/`, escritos pelo juiz (não por quem construiu) sobre o commit 1e3c14b, guardados como vieram. 90 pares antigo/novo; as duas diferenças de propósito são melhorias; os pixels do canto são ruído. P2: a primeira tela chega 0,4 s depois em rede lenta (React na largada); a janela de entrar segue sem Escape nem retorno de foco, como a antiga; as provas automáticas devem bloquear o Firebase de produção, para não criar contas anônimas.
+
+## [2026-11-21 18:47] step — F83 onda 4: o teste «igual ao de antes» da Start, vermelho (a tela em React ainda não existe)
+**Branch:** claude/f83-wave-4-start
+test/screens/start/Start.sameAsBefore.test.tsx toca os 30 cenários na tela nova e compara cada página e o foco com test/fixtures/startBeforeF83.json; mais três provas de que ele acusa uma palavra, uma classe e um foco trocados. Falha hoje porque screens/start/ não existe.
+
+## [2026-11-21 18:47] step — F83 onda 4: o retrato da tela Start antiga (30 cenários) antes de apagá-la
+**Branch:** claude/f83-wave-4-start
+O registro das páginas que a Start à mão desenha (computador e celular: a primeira visita, a digitação, a busca, a discografia e os filtros, as capas escolhidas e o Undo, o painel de ordem, o nome, criar, a falha de gravar, a lista colada, o visitante, a folha do celular, virar computador e voltar), com onde fica o foco depois de cada passo e as chamadas ao que está fora (catálogo, gravação, navegação, janela de entrar): test/support/startScenarios.js (os cenários, uma só vez para a antiga e a nova), test/fixtures/startBeforeF83.json (o que a antiga desenhou) e o registro reports/evidence/F83/wave-4/capture-before.test.js. O foco da antiga: a capa e o chip ficam com o foco; no dock o foco volta por seletor; na folha do celular as linhas são refeitas e o foco vai para a página.
+
+## [2026-11-21 18:44] step — F83 onda 4: o mapa da tela Start (TASK-20)
+**Branch:** claude/f83-wave-4-start
+A antiga Home em 1.054 linhas de desenho à mão (5 arquivos) mais o controlador de 409: o que a tela lê (só o userStore; a série e o seletor são do controlador, que troca as listas), como ela redesenha (o dock e a grade de capas; o resto escreve no lugar), o foco que o dock devolve por seletor, a folha do celular, o sensor visual da F84 que conduz a tela por window.controller (os nomes ficam), o arquivo da tela baixado na abertura por ser a primeira tela, os textos que estão dentro de models/ e saem pelo dicionário, e o catálogo (Apple Music; o Spotify não é tocado). Mapa: docs/specs/features/F83-site-screens-in-react/map-wave-4-start.md.
 
 ## [2026-11-21 18:34] step — F83 onda 3: a prova no navegador, o peso, os documentos e o conserto do «voltar ao topo»
 **Branch:** claude/f83-wave-3-shell

@@ -1,0 +1,1095 @@
+{
+  "oldBase": "http://127.0.0.1:5020",
+  "newBase": "http://127.0.0.1:5021",
+  "firebaseBlocked": "identitytoolkit|securetoken|firestore\\.googleapis|firebaseinstallations",
+  "passed": 142,
+  "failed": 30,
+  "results": [
+    {
+      "what": "A 1280 · first visit · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · first visit · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · first visit · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · typing: the hint points to Enter (real keys) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · typing: the hint points to Enter (real keys) · focus and what the page says besides",
+      "ok": true,
+      "detail": "input#artistScanInput / input#artistScanInput"
+    },
+    {
+      "what": "A 1280 · typing: the hint points to Enter (real keys) · pixels",
+      "ok": false,
+      "detail": "24045 px apart · box x 806-1266, y 16-78, largest difference 255 of 255"
+    },
+    {
+      "what": "A 1280 · searching (the catalog held back) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · searching (the catalog held back) · focus and what the page says besides",
+      "ok": true,
+      "detail": "input#artistScanInput / input#artistScanInput"
+    },
+    {
+      "what": "A 1280 · searching (the catalog held back) · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · first visit · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · first visit · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · first visit · pixels",
+      "ok": false,
+      "detail": "2 px apart · box x 275-369, y 315-315, largest difference 6 of 255"
+    },
+    {
+      "what": "P 393 · typing: the hint points to Enter (real keys) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · typing: the hint points to Enter (real keys) · focus and what the page says besides",
+      "ok": true,
+      "detail": "input#artistScanInput / input#artistScanInput"
+    },
+    {
+      "what": "P 393 · typing: the hint points to Enter (real keys) · pixels",
+      "ok": false,
+      "detail": "26650 px apart · box x 16-376, y 56-133, largest difference 255 of 255"
+    },
+    {
+      "what": "P 393 · searching (the catalog held back) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · searching (the catalog held back) · focus and what the page says besides",
+      "ok": true,
+      "detail": "input#artistScanInput / input#artistScanInput"
+    },
+    {
+      "what": "P 393 · searching (the catalog held back) · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the discography · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the discography · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the discography · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · a filter pressed (EPs and Singles on) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · a filter pressed (EPs and Singles on) · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#btnFilterSingles / button#btnFilterSingles"
+    },
+    {
+      "what": "A 1280 · a filter pressed (EPs and Singles on) · pixels",
+      "ok": false,
+      "detail": "24049 px apart · box x 81-1266, y 16-359, largest difference 255 of 255"
+    },
+    {
+      "what": "A 1280 · …and off · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · …and off · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#btnFilterSingles / button#btnFilterSingles"
+    },
+    {
+      "what": "A 1280 · …and off · pixels",
+      "ok": false,
+      "detail": "3 px apart · box x 912-916, y 194-198, largest difference 1 of 255"
+    },
+    {
+      "what": "A 1280 · a cover pressed: the ring, the number, the dock · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · a cover pressed: the ring, the number, the dock · focus and what the page says besides",
+      "ok": true,
+      "detail": "button.home-card.is-in / button.home-card.is-in"
+    },
+    {
+      "what": "A 1280 · a cover pressed: the ring, the number, the dock · pixels",
+      "ok": false,
+      "detail": "12 px apart · box x 81-916, y 194-359, largest difference 5 of 255"
+    },
+    {
+      "what": "A 1280 · three more covers · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · three more covers · focus and what the page says besides",
+      "ok": true,
+      "detail": "button.home-card.is-in / button.home-card.is-in"
+    },
+    {
+      "what": "A 1280 · three more covers · pixels",
+      "ok": false,
+      "detail": "3 px apart · box x 912-916, y 194-198, largest difference 1 of 255"
+    },
+    {
+      "what": "A 1280 · a cover taken out: Undo · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · a cover taken out: Undo · focus and what the page says besides",
+      "ok": true,
+      "detail": "button.home-card / button.home-card"
+    },
+    {
+      "what": "A 1280 · a cover taken out: Undo · pixels",
+      "ok": false,
+      "detail": "14 px apart · box x 606-916, y 194-331, largest difference 5 of 255"
+    },
+    {
+      "what": "A 1280 · Undo pressed · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · Undo pressed · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · Undo pressed · pixels",
+      "ok": false,
+      "detail": "3 px apart · box x 912-916, y 194-198, largest difference 1 of 255"
+    },
+    {
+      "what": "A 1280 · «Add all» · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · «Add all» · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · «Add all» · pixels",
+      "ok": false,
+      "detail": "30 px apart · box x 606-916, y 194-340, largest difference 10 of 255"
+    },
+    {
+      "what": "A 1280 · Undo of «Add all» · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · Undo of «Add all» · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · Undo of «Add all» · pixels",
+      "ok": false,
+      "detail": "19 px apart · box x 610-916, y 194-340, largest difference 10 of 255"
+    },
+    {
+      "what": "A 1280 · Edit order: the panel · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · Edit order: the panel · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#btnEditOrder[toggle] / button#btnEditOrder[toggle]"
+    },
+    {
+      "what": "A 1280 · Edit order: the panel · pixels",
+      "ok": false,
+      "detail": "24 px apart · box x 606-916, y 194-340, largest difference 10 of 255"
+    },
+    {
+      "what": "A 1280 · a row moved up (real click) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · a row moved up (real click) · focus and what the page says besides",
+      "ok": true,
+      "detail": "button[up].home-rbtn__up / button[up].home-rbtn__up"
+    },
+    {
+      "what": "A 1280 · a row moved up (real click) · pixels",
+      "ok": false,
+      "detail": "3 px apart · box x 912-916, y 194-198, largest difference 1 of 255"
+    },
+    {
+      "what": "A 1280 · the next Tab after a move (the focus kept by the dock) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the next Tab after a move (the focus kept by the dock) · focus and what the page says besides",
+      "ok": true,
+      "detail": "button[down].home-rbtn__down / button[down].home-rbtn__down"
+    },
+    {
+      "what": "A 1280 · the next Tab after a move (the focus kept by the dock) · pixels",
+      "ok": false,
+      "detail": "3 px apart · box x 912-916, y 194-198, largest difference 1 of 255"
+    },
+    {
+      "what": "A 1280 · a row removed · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · a row removed · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · a row removed · pixels",
+      "ok": false,
+      "detail": "45 px apart · box x 74-986, y 194-395, largest difference 10 of 255"
+    },
+    {
+      "what": "A 1280 · Done · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · Done · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · Done · pixels",
+      "ok": false,
+      "detail": "35 px apart · box x 74-916, y 194-395, largest difference 10 of 255"
+    },
+    {
+      "what": "A 1280 · the name typed with real keys · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the name typed with real keys · focus and what the page says besides",
+      "ok": true,
+      "detail": "input#seriesNameInput[name] / input#seriesNameInput[name]"
+    },
+    {
+      "what": "A 1280 · the name typed with real keys · pixels",
+      "ok": false,
+      "detail": "54 px apart · box x 74-986, y 194-395, largest difference 10 of 255"
+    },
+    {
+      "what": "A 1280 · the name emptied, «Create series»: it asks for a name, focus on the field · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the name emptied, «Create series»: it asks for a name, focus on the field · focus and what the page says besides",
+      "ok": true,
+      "detail": "input#seriesNameInput[name] / input#seriesNameInput[name]"
+    },
+    {
+      "what": "A 1280 · the name emptied, «Create series»: it asks for a name, focus on the field · pixels",
+      "ok": false,
+      "detail": "45 px apart · box x 74-986, y 194-395, largest difference 10 of 255"
+    },
+    {
+      "what": "A 1280 · «Use …» · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · «Use …» · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · «Use …» · pixels",
+      "ok": false,
+      "detail": "54 px apart · box x 74-986, y 194-395, largest difference 10 of 255"
+    },
+    {
+      "what": "A 1280 · creating (the writing held back) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · creating (the writing held back) · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · creating (the writing held back) · pixels",
+      "ok": false,
+      "detail": "60 px apart · box x 74-986, y 194-395, largest difference 10 of 255"
+    },
+    {
+      "what": "P 393 · the discography · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the discography · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · the discography · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a filter pressed (EPs and Singles on) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a filter pressed (EPs and Singles on) · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#btnFilterSingles / button#btnFilterSingles"
+    },
+    {
+      "what": "P 393 · a filter pressed (EPs and Singles on) · pixels",
+      "ok": false,
+      "detail": "26874 px apart · box x 16-376, y 56-133, largest difference 255 of 255"
+    },
+    {
+      "what": "P 393 · …and off · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · …and off · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#btnFilterSingles / button#btnFilterSingles"
+    },
+    {
+      "what": "P 393 · …and off · pixels",
+      "ok": false,
+      "detail": "10 px apart · box x 35-46, y 103-104, largest difference 19 of 255"
+    },
+    {
+      "what": "P 393 · a cover pressed: the ring, the number, the dock · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a cover pressed: the ring, the number, the dock · focus and what the page says besides",
+      "ok": true,
+      "detail": "button.home-card.is-in / button.home-card.is-in"
+    },
+    {
+      "what": "P 393 · a cover pressed: the ring, the number, the dock · pixels",
+      "ok": false,
+      "detail": "13 px apart · box x 35-297, y 103-130, largest difference 19 of 255"
+    },
+    {
+      "what": "P 393 · three more covers · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · three more covers · focus and what the page says besides",
+      "ok": true,
+      "detail": "button.home-card.is-in / button.home-card.is-in"
+    },
+    {
+      "what": "P 393 · three more covers · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a cover taken out: Undo · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a cover taken out: Undo · focus and what the page says besides",
+      "ok": true,
+      "detail": "button.home-card / button.home-card"
+    },
+    {
+      "what": "P 393 · a cover taken out: Undo · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · Undo pressed · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · Undo pressed · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · Undo pressed · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · «Add all» · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · «Add all» · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · «Add all» · pixels",
+      "ok": false,
+      "detail": "10 px apart · box x 35-46, y 93-94, largest difference 19 of 255"
+    },
+    {
+      "what": "P 393 · Undo of «Add all» · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · Undo of «Add all» · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · Undo of «Add all» · pixels",
+      "ok": false,
+      "detail": "21 px apart · box x 22-373, y 93-385, largest difference 19 of 255"
+    },
+    {
+      "what": "P 393 · the bar is tapped: the sheet · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the bar is tapped: the sheet · focus and what the page says besides",
+      "ok": true,
+      "detail": "div.sheet__panel / div.sheet__panel"
+    },
+    {
+      "what": "P 393 · the bar is tapped: the sheet · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a row moved down in the sheet · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a row moved down in the sheet · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · a row moved down in the sheet · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a row removed in the sheet: Undo is in the sheet · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a row removed in the sheet: Undo is in the sheet · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · a row removed in the sheet: Undo is in the sheet · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the name typed in the sheet with real keys · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the name typed in the sheet with real keys · focus and what the page says besides",
+      "ok": true,
+      "detail": "input#homeChosenName[name] / input#homeChosenName[name]"
+    },
+    {
+      "what": "P 393 · the name typed in the sheet with real keys · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · Undo pressed in the sheet · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · Undo pressed in the sheet · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · Undo pressed in the sheet · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the sheet closed · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the sheet closed · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · the sheet closed · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the sheet closed with an Undo still pending: the old dock hid the strip, the new one shows it (on purpose)",
+      "ok": true,
+      "detail": "[0,1]"
+    },
+    {
+      "what": "P 393 · creating (the writing held back) · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · creating (the writing held back) · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · creating (the writing held back) · pixels",
+      "ok": false,
+      "detail": "10 px apart · box x 35-46, y 93-94, largest difference 19 of 255"
+    },
+    {
+      "what": "A 1280 · created · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · created · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · created · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · another series started · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · another series started · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · another series started · pixels",
+      "ok": false,
+      "detail": "24048 px apart · box x 806-1266, y 16-198, largest difference 255 of 255"
+    },
+    {
+      "what": "A 1280 · the series not saved · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the series not saved · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the series not saved · pixels",
+      "ok": false,
+      "detail": "10 px apart · box x 81-916, y 194-359, largest difference 4 of 255"
+    },
+    {
+      "what": "A 1280 · artist not found · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · artist not found · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · artist not found · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the catalog did not answer · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the catalog did not answer · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the catalog did not answer · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the list · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the list · focus and what the page says besides",
+      "ok": true,
+      "detail": "input.home-line__text / input.home-line__text"
+    },
+    {
+      "what": "A 1280 · the list · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the list added: a line left to fix · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the list added: a line left to fix · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the list added: a line left to fix · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · a visitor · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · a visitor · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · a visitor · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · no error of the page on either side",
+      "ok": true,
+      "detail": "old:  // new: "
+    },
+    {
+      "what": "P 393 · created · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · created · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · created · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · another series started · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · another series started · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · another series started · pixels",
+      "ok": false,
+      "detail": "26874 px apart · box x 16-376, y 56-133, largest difference 255 of 255"
+    },
+    {
+      "what": "P 393 · the series not saved · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the series not saved · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · the series not saved · pixels",
+      "ok": false,
+      "detail": "3 px apart · box x 293-297, y 126-130, largest difference 1 of 255"
+    },
+    {
+      "what": "P 393 · artist not found · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · artist not found · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · artist not found · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the catalog did not answer · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the catalog did not answer · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · the catalog did not answer · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the list · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the list · focus and what the page says besides",
+      "ok": true,
+      "detail": "input.home-line__text / input.home-line__text"
+    },
+    {
+      "what": "P 393 · the list · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the list added: a line left to fix · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the list added: a line left to fix · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · the list added: a line left to fix · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a visitor · the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a visitor · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · a visitor · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · no error of the page on either side",
+      "ok": true,
+      "detail": "old:  // new: "
+    },
+    {
+      "what": "time to the stage, ms (old / new, three loads each, dev server)",
+      "ok": true,
+      "detail": "{\"old\":[476,447,455],\"new\":[517,475,469]}"
+    }
+  ],
+  "pixels": [
+    {
+      "label": "A 1280 · first visit",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · typing: the hint points to Enter (real keys)",
+      "apart": 24045
+    },
+    {
+      "label": "A 1280 · searching (the catalog held back)",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · first visit",
+      "apart": 2
+    },
+    {
+      "label": "P 393 · typing: the hint points to Enter (real keys)",
+      "apart": 26650
+    },
+    {
+      "label": "P 393 · searching (the catalog held back)",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the discography",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · a filter pressed (EPs and Singles on)",
+      "apart": 24049
+    },
+    {
+      "label": "A 1280 · …and off",
+      "apart": 3
+    },
+    {
+      "label": "A 1280 · a cover pressed: the ring, the number, the dock",
+      "apart": 12
+    },
+    {
+      "label": "A 1280 · three more covers",
+      "apart": 3
+    },
+    {
+      "label": "A 1280 · a cover taken out: Undo",
+      "apart": 14
+    },
+    {
+      "label": "A 1280 · Undo pressed",
+      "apart": 3
+    },
+    {
+      "label": "A 1280 · «Add all»",
+      "apart": 30
+    },
+    {
+      "label": "A 1280 · Undo of «Add all»",
+      "apart": 19
+    },
+    {
+      "label": "A 1280 · Edit order: the panel",
+      "apart": 24
+    },
+    {
+      "label": "A 1280 · a row moved up (real click)",
+      "apart": 3
+    },
+    {
+      "label": "A 1280 · the next Tab after a move (the focus kept by the dock)",
+      "apart": 3
+    },
+    {
+      "label": "A 1280 · a row removed",
+      "apart": 45
+    },
+    {
+      "label": "A 1280 · Done",
+      "apart": 35
+    },
+    {
+      "label": "A 1280 · the name typed with real keys",
+      "apart": 54
+    },
+    {
+      "label": "A 1280 · the name emptied, «Create series»: it asks for a name, focus on the field",
+      "apart": 45
+    },
+    {
+      "label": "A 1280 · «Use …»",
+      "apart": 54
+    },
+    {
+      "label": "A 1280 · creating (the writing held back)",
+      "apart": 60
+    },
+    {
+      "label": "P 393 · the discography",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · a filter pressed (EPs and Singles on)",
+      "apart": 26874
+    },
+    {
+      "label": "P 393 · …and off",
+      "apart": 10
+    },
+    {
+      "label": "P 393 · a cover pressed: the ring, the number, the dock",
+      "apart": 13
+    },
+    {
+      "label": "P 393 · three more covers",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · a cover taken out: Undo",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · Undo pressed",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · «Add all»",
+      "apart": 10
+    },
+    {
+      "label": "P 393 · Undo of «Add all»",
+      "apart": 21
+    },
+    {
+      "label": "P 393 · the bar is tapped: the sheet",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · a row moved down in the sheet",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · a row removed in the sheet: Undo is in the sheet",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the name typed in the sheet with real keys",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · Undo pressed in the sheet",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the sheet closed",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · creating (the writing held back)",
+      "apart": 10
+    },
+    {
+      "label": "A 1280 · created",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · another series started",
+      "apart": 24048
+    },
+    {
+      "label": "A 1280 · the series not saved",
+      "apart": 10
+    },
+    {
+      "label": "A 1280 · artist not found",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the catalog did not answer",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the list",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the list added: a line left to fix",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · a visitor",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · created",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · another series started",
+      "apart": 26874
+    },
+    {
+      "label": "P 393 · the series not saved",
+      "apart": 3
+    },
+    {
+      "label": "P 393 · artist not found",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the catalog did not answer",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the list",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the list added: a line left to fix",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · a visitor",
+      "apart": 0
+    }
+  ]
+}

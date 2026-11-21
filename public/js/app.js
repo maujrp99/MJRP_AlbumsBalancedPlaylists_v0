@@ -27,7 +27,6 @@ import './services/auth/userSession.js' // the user store starts hearing who is 
 import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
-import { HomeView } from './views/HomeView.js'
 // V3 Architecture: SeriesView replaces AlbumsView
 import SeriesView from './views/SeriesView.js'
 import SeriesController from './controllers/SeriesController.js'
@@ -108,7 +107,15 @@ startUsageMeasurement({ router })
 // V3: SeriesController is instantiated once and passed to view
 const seriesController = new SeriesController();
 
-router.register(START_PATH, () => new HomeView())
+// The Start screen (F83 wave 4, in React) is the first screen the person sees, so its file starts to come down now, while the login
+// is asked, and not when the route asks for it; the route waits for it. It is also one of the screens that come down in the background.
+const loadStart = loadScreen(() => import('./screens/start/index.ts'))
+const startRoute = async () => {
+    const { startView } = await loadStart()
+    return startView()
+}
+loadStart().catch(() => {}) // no network or a slow one: the route asks again and says so
+router.register(START_PATH, startRoute)
 // F85 (MJRP, 2026-11-21): /home is the entry page, not a screen of the app. If the app is ever asked
 // for it, it leaves to the browser (a full load); a server that answers /home with the app would loop,
 // so the second ask inside the window stays and goes to /start.
@@ -178,7 +185,7 @@ router.register('/series', () => {
 
 // The screens in React come down in the background once the first screen is on the page (F83, REQ-10): changing screens still works
 // with no network after the first load, as it did when everything was in the main script. React itself is already there: the shell is React.
-prefetchScreensAfterTheFirstScreen(router, [loadSavedPlaylists, loadPlaylists, loadComingSoon])
+prefetchScreensAfterTheFirstScreen(router, [loadStart, loadSavedPlaylists, loadPlaylists, loadComingSoon])
 
 // Global Error Handler
 window.addEventListener('error', (e) => {

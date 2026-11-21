@@ -68,7 +68,7 @@ describe('own ranking boundaries', () => {
         // escapeHtml belongs to an HTML template. These files draw with text nodes or hand data on,
         // so escaping there shows "&amp;" on screen or stores it (UAT-180).
         const plain = ['components/ranking/UserRankModal.js', 'components/series/SeriesEditModal.js',
-            'controllers/HomeController.js', 'controllers/SeriesController.js',
+            'screens/start/StartController.ts', 'controllers/SeriesController.js',
             'views/helpers/SeriesComponentFactory.js', 'views/helpers/SeriesViewUpdater.js']
         expect(plain.filter(file => /escapeHtml\s*\(/.test(read(file)))).toEqual([])
     })

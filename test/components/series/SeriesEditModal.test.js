@@ -20,7 +20,7 @@ vi.mock('../../../public/js/stores/albumSeries.js', () => ({
 vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
 
 import { SeriesEditModal } from '../../../public/js/components/series/SeriesEditModal.js'
-import { HomeView } from '../../../public/js/views/HomeView.js'
+import { HomeView } from '../../support/startHarness.js'
 import { DeadlineError } from '../../../public/js/utils/deadline.js'
 
 const album = (title, type = 'Album', releaseDate = '2015-03-15') => ({
@@ -80,9 +80,16 @@ describe('Edit Series modal (F57)', () => {
         })
 
         it('has the same filter buttons as the Home, in the same order', async () => {
+            // the Start screen (the old Home), in React since F83 wave 4: its chips are the ones the picker rules give
             const app = document.createElement('div')
-            app.appendChild(await new HomeView().render({}))
+            app.id = 'app'
+            document.body.appendChild(app)
+            const start = new HomeView()
+            app.appendChild(await start.render({}))
+            await start.mount({})
             const homeLabels = [...app.querySelectorAll('#home-toolbar [data-filter]')].map(b => [b.dataset.filter, b.querySelector('.filter-btn-text').textContent])
+            start.destroy()
+            app.remove()
 
             const modalLabels = $$('[data-album-picker] [data-filter]').map(b => [b.dataset.filter, b.querySelector('.filter-btn-text').textContent])
 

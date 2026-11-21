@@ -1,4 +1,10 @@
 /**
+ * (2026-11-21, wave 4: the Start screen (the old Home) went to React, and these left the list in the commit that deleted them: views/HomeView.js
+ * and components/home/{HomeDock,HomeEqualizer,HomePasteList,StagingAreaController}.js (1.054 lines); the controller moved to
+ * screens/start/StartController.ts. views/renderers/DiscographyRenderer.js lost the Start card (its `stage` form) and went from 111 to 81 lines.
+ * Left in the list, with their reasons: components/album-picker/* and views/renderers/DiscographyRenderer.js (the series edit uses the one
+ * album picker: wave 5).)
+ *
  * (2026-11-21, wave 3: the shell of the site went to React, and these left the list in the commit that deleted them: components/TopNav.js,
  * Footer.js, LoginModal.js, SpotifyConnectButton.js and, in components/navigation, AuthNav, PhoneMenu, PhoneShell, SeriesDropdown, barName and
  * phoneTabs (1.402 lines). Left in components/navigation, with their reasons: startRoute.js and signInFromLink.js, plain functions with no drawing.)
@@ -48,10 +54,6 @@ export const HAND_MADE = {
     'components/blend/BlendSeriesPhonePicker.js': 141,
     'components/blend/BlendSeriesSelector.js': 340,
     'components/common/AlbumCascade.js': 71,
-    'components/home/HomeDock.js': 398,
-    'components/home/HomeEqualizer.js': 38,
-    'components/home/HomePasteList.js': 208,
-    'components/home/StagingAreaController.js': 91,
     'components/navigation/signInFromLink.js': 30,
     'components/navigation/startRoute.js': 62,
     'components/playlists/RegeneratePanel.js': 182,
@@ -87,7 +89,6 @@ export const HAND_MADE = {
     'utils/pageScrollLock.js': 56,
     'views/BaseView.js': 144,
     'views/BlendingMenuView.js': 477,
-    'views/HomeView.js': 319,
     'views/InventoryPhoneSheets.js': 226,
     'views/InventoryView.js': 693,
     'views/SeriesView.js': 254,
@@ -97,7 +98,7 @@ export const HAND_MADE = {
     'views/helpers/SeriesModalsManager.js': 70,
     'views/helpers/SeriesViewUpdater.js': 180,
     'views/playlists/PlaylistsExport.js': 116,
-    'views/renderers/DiscographyRenderer.js': 111,
+    'views/renderers/DiscographyRenderer.js': 81,
     'views/renderers/InventoryCardValue.js': 122,
     'views/renderers/InventoryGridRenderer.js': 212,
     'views/renderers/InventoryPhoneRow.js': 154,

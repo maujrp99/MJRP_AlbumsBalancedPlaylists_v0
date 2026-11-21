@@ -14,11 +14,13 @@ export interface CoverImageProps {
     alt: string
     className?: string
     style?: React.CSSProperties
+    /** `lazy` for a cover far down a long grid. */
+    loading?: 'lazy' | 'eager'
 }
 
 const hasAddress = (src: string | null | undefined): src is string => typeof src === 'string' && src.trim().length > 0
 
-export function CoverImage({ src, alt, className, style }: CoverImageProps) {
+export function CoverImage({ src, alt, className, style, loading }: CoverImageProps) {
     watchCovers() // asked any number of times, it listens once
     const withAddress = hasAddress(src)
     return (
@@ -27,6 +29,7 @@ export function CoverImage({ src, alt, className, style }: CoverImageProps) {
             alt={alt}
             className={className}
             style={style}
+            loading={loading}
             data-cover="true"
             data-cover-stand-in={withAddress ? undefined : 'true'}
             src={withAddress ? src : COVER_STAND_IN}

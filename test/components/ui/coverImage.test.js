@@ -17,7 +17,6 @@ import { AlbumCardRenderer } from '../../../public/js/components/ui/AlbumCardRen
 import { Card } from '../../../public/js/components/ui/Card.js'
 import { AlbumCascade } from '../../../public/js/components/common/AlbumCascade.js'
 import { DiscographyRenderer } from '../../../public/js/views/renderers/DiscographyRenderer.js'
-import { HomeDock } from '../../../public/js/components/home/HomeDock.js'
 import { appFiles, importsOf, read } from '../../architecture/support/sourceImports.js'
 
 const GOOD = 'https://covers.example/album/300x300.jpg'
@@ -151,22 +150,6 @@ describe('every place that draws an album cover uses it', () => {
         expect(isStandIn(img)).toBe(true)
     })
 
-    it('the series being built (the dock of the Home, F79)', () => {
-        const host = document.createElement('div')
-        document.body.appendChild(host)
-        const dock = new HomeDock({ on: {}, phone: () => false })
-        dock.mount(host)
-        const model = (albums) => ({ albums, name: 'x', nameState: 'suggested', suggestion: 'x', create: 'idle', created: null, failure: '', open: false, moved: null, undo: null, guest: false, flame: 'create', coversOnScreen: true })
-
-        dock.draw(model([album()]))
-        expect(isStandIn(coversIn(host)[0])).toBe(true)
-        dock.draw(model([album({ artworkTemplate: 'https://covers.example/{w}x{h}.jpg' })]))
-        const img = coversIn(host)[0]
-        expect(img.getAttribute('src')).toBe('https://covers.example/100x100.jpg')
-        fail(img)
-        expect(isStandIn(img)).toBe(true)
-    })
-
     it.each(['grid', 'list'])('the inventory card (%s), written into the page as text', (variant) => {
         document.body.innerHTML = Card.renderHTML({ variant, entity: album(), title: 'Animals', subtitle: 'Pink Floyd', image: GOOD })
             + Card.renderHTML({ variant, entity: album({ id: 'a2' }), title: 'Wish', subtitle: 'Pink Floyd', image: undefined })
@@ -195,7 +178,7 @@ describe('every place that draws an album cover uses it', () => {
     it('the files that draw an album cover import the helper, and no file writes an inline error handler', () => {
         const drawers = [
             'components/ui/AlbumCardRenderer.js', 'components/ui/Card.js', 'components/common/AlbumCascade.js',
-            'components/ViewAlbumModal.js', 'views/renderers/DiscographyRenderer.js', 'components/home/HomeDock.js'
+            'components/ViewAlbumModal.js', 'views/renderers/DiscographyRenderer.js'
         ]
         const withoutTheHelper = drawers.filter(file => !importsOf(file).some(specifier => /(^|\/)coverImage\.js$/.test(specifier)))
         const inlineHandlers = appFiles().filter(file => /onerror\s*[:=]\s*["'`]/i.test(read(file)))

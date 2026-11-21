@@ -14,7 +14,8 @@ const JS_ROOT = path.join(REPO, 'public/js')
 
 /** Every .js, .ts and .tsx file of the app, absolute (F83: a React screen sets no title of its own either). */
 const jsFiles = (dir) => listSourceFiles(dir).map(file => path.join(dir, file))
-const TITLES = /\.setTitle\(\s*(['"`])(.*?)\1/g
+// `.setTitle('…')` of a hand-made screen, and `useScreenTitle({ tab: '…' })` of a screen in React (F83 wave 4: the Start screen)
+const TITLES = /(?:\.setTitle\(\s*|\btab:\s*)(['"`])(.*?)\1/g
 const WRITES_TITLE = /document\.title\s*=[^=]/
 
 describe('one title for the tab (UAT-192)', () => {

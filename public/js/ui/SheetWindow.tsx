@@ -21,7 +21,15 @@ interface SheetHandle {
 export interface SheetRequest {
     /** The id of the sheet's element. */
     id?: string
+    /** `bottom` (a short choice, the default) or `full` (the whole screen, for something to read or edit). */
+    variant?: 'bottom' | 'full'
     title: string
+    /** Drawn inside the title, after its text (a count, say). */
+    titleExtra?: () => ReactNode
+    /** Called once, when the sheet closes by any way (after the sheet's own bookkeeping). */
+    onClose?: () => void
+    /** Give the focus to the first thing to act on once what is inside is drawn (the default); `false` leaves it where the motor put it (the sheet itself). */
+    focusFirst?: boolean
     /** The classes the sheet takes besides the ones of the motor. */
     className?: string
     closeLabel: string
@@ -35,6 +43,9 @@ interface Shown {
     sheet: SheetHandle
     render: SheetRequest['render']
     footer?: SheetRequest['footer']
+    titleExtra?: SheetRequest['titleExtra']
+    focusFirst: boolean
+    title: HTMLElement | null
 }
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -45,7 +56,7 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
 
     const show = useCallback((request: SheetRequest) => {
         const sheet: SheetHandle = openSheet({
-            variant: 'bottom',
+            variant: request.variant ?? 'bottom',
             id: request.id,
             footer: request.footer ? [] : undefined, // an empty footer: what is in it is drawn by React, through a portal
             title: request.title,
@@ -53,11 +64,12 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
             onClose: () => {
                 if (current.current === sheet) current.current = null
                 setShown(previous => (previous?.sheet === sheet ? null : previous))
+                request.onClose?.()
             }
         })
         if (request.className) sheet.element.classList.add(...request.className.split(' '))
         current.current = sheet
-        setShown({ sheet, render: request.render, footer: request.footer })
+        setShown({ sheet, render: request.render, footer: request.footer, titleExtra: request.titleExtra, focusFirst: request.focusFirst ?? true, title: sheet.element.querySelector<HTMLElement>('.sheet__title') })
     }, [])
 
     const close = useCallback(() => current.current?.close(), [])
@@ -65,6 +77,7 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
 
     // What is drawn inside is in the body now: the first thing to act on gets the focus, as the motor does when it has content.
     useLayoutEffect(() => {
+        if (!shown?.focusFirst) return
         const first = shown?.sheet.body.querySelector<HTMLElement>(FOCUSABLE) ?? shown?.sheet.footer?.querySelector<HTMLElement>(FOCUSABLE)
         first?.focus({ preventScroll: true })
     }, [shown])
@@ -75,6 +88,7 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
         <>
             {createPortal(shown.render(shown.sheet.close), shown.sheet.body)}
             {shown.footer && shown.sheet.footer ? createPortal(shown.footer(shown.sheet.close), shown.sheet.footer) : null}
+            {shown.titleExtra && shown.title ? createPortal(shown.titleExtra(), shown.title) : null}
         </>
     ) : null
     return { show, close, isOpen, layer }
