@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:23] session — conform: ADR-0019 encurtada ao teto e com a via do aceite (adr-names)
+**Branch:** wip/kernel-conform-2026-11-21
+A ADR-0019 (Proposed) tinha 8.553 caracteres, o teto é 6.000: o texto agora traz só a decisão, as alternativas e as consequências, e a lista de «ainda não feito» (que seguia o andamento da F56/F58) aponta para o relatório do cruzamento e para os specs; o texto antigo está no histórico do git. Ganhou `**Acceptance**: tech lead` (escolha técnica; a regra: técnica vai ao tech lead, produto e dinheiro ao MJRP). A ADR-0020 (Accepted) também não tem a linha, mas ADR aceita não se edita: fica para o MJRP (ou o tech lead) dizer se a linha entra no cabeçalho. As três notas (CM-0112, CM-0113, CM-0149) seguem pendentes até lá. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:22] session — conform: `process-sensors` registrado (CM-0107, CM-0121, CM-0129, CM-0135, CM-0140)
 **Branch:** wip/kernel-conform-2026-11-21
 Declarados em `sensors:` do contrato os quatro sensores do processo que passam hoje (`pdlc_vocabulary`, `sdd_shape`, `requirements_graph_check`, `hooks_map`); os quatro saíram com exit 0. Ficam pendentes as 8 notas seguintes (CM-0144 a CM-0157), que pedem também `sensors.board_states`: o juiz acha 54 features sem registro no board, e o conserto é `board_move.py seed`, que grava em `<checkout principal>/.mjrp/board.jsonl` (fora do git e fora deste ramo). Não rodei o seed daqui: é do orquestrador, no checkout principal; depois dele se declara `board_states` e se registram as 8 notas. Decidido pelo agente, revisável pelo MJRP.
