@@ -1,0 +1,1383 @@
+{
+  "1280/artists": {
+    "sameAppHtml": true,
+    "lenBranch": 1729,
+    "lenProd": 1729,
+    "firstDiff": null,
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 443,
+        "y": 306,
+        "w": 394,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 443,
+        "y": 414,
+        "w": 394,
+        "h": 114,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 544,
+        "y": 560,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 3"
+      },
+      "icon": {
+        "x": 592,
+        "y": 186,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/artists|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 800,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 443,
+        "y": 306,
+        "w": 394,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 443,
+        "y": 414,
+        "w": 394,
+        "h": 114,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 544,
+        "y": 560,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22), rgb(220, 38, 38))"
+      },
+      "icon": {
+        "x": 592,
+        "y": 186,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/artists|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 800,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "1280/genres": {
+    "sameAppHtml": true,
+    "lenBranch": 1406,
+    "lenProd": 1406,
+    "firstDiff": null,
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 443,
+        "y": 306,
+        "w": 394,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 443,
+        "y": 414,
+        "w": 394,
+        "h": 114,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 544,
+        "y": 560,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 3"
+      },
+      "icon": {
+        "x": 592,
+        "y": 186,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/genres|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 800,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 443,
+        "y": 306,
+        "w": 394,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 443,
+        "y": 414,
+        "w": 394,
+        "h": 114,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 544,
+        "y": 560,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22), rgb(220, 38, 38))"
+      },
+      "icon": {
+        "x": 592,
+        "y": 186,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/genres|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 800,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "1280/tracks": {
+    "sameAppHtml": true,
+    "lenBranch": 1750,
+    "lenProd": 1750,
+    "firstDiff": null,
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 443,
+        "y": 306,
+        "w": 394,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 443,
+        "y": 414,
+        "w": 394,
+        "h": 114,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 544,
+        "y": 560,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 3"
+      },
+      "icon": {
+        "x": 592,
+        "y": 186,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/tracks|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 800,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 443,
+        "y": 306,
+        "w": 394,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 443,
+        "y": 414,
+        "w": 394,
+        "h": 114,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 544,
+        "y": 560,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22), rgb(220, 38, 38))"
+      },
+      "icon": {
+        "x": 592,
+        "y": 186,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/tracks|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 800,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "1280/start": {
+    "sameAppHtml": true,
+    "lenBranch": 7512,
+    "lenProd": 7512,
+    "firstDiff": null,
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 74,
+        "y": 166,
+        "w": 1132,
+        "h": 110,
+        "font": "Syne",
+        "size": "52px",
+        "weight": "800",
+        "lh": "55.12px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "panel": null,
+      "btn": null,
+      "icon": null,
+      "active": [
+        "/start|",
+        "/start|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 800,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 74,
+        "y": 166,
+        "w": 1132,
+        "h": 110,
+        "font": "Syne",
+        "size": "52px",
+        "weight": "800",
+        "lh": "55.12px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "panel": null,
+      "btn": null,
+      "icon": null,
+      "active": [
+        "/start|",
+        "/start|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 800,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "1280/albums": {
+    "sameAppHtml": false,
+    "lenBranch": 8664,
+    "lenProd": 8664,
+    "firstDiff": {
+      "at": 8605,
+      "branch": "er-white/5 pt-6\"><p class=\"last-update\">Last updated: 2:30:12 PM</p></footer><div id=\"series-modals-mount\"></div></div>",
+      "prod": "er-white/5 pt-6\"><p class=\"last-update\">Last updated: 2:30:16 PM</p></footer><div id=\"series-modals-mount\"></div></div>"
+    },
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 64,
+        "y": 151,
+        "w": 378,
+        "h": 40,
+        "font": "Syne",
+        "size": "36px",
+        "weight": "700",
+        "lh": "40px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "panel": {
+        "x": 64,
+        "y": 228,
+        "w": 1152,
+        "h": 138,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 559,
+        "y": 863,
+        "w": 163,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 3"
+      },
+      "icon": {
+        "x": 592,
+        "y": 647,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "60px",
+        "weight": "400",
+        "lh": "60px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "active": [
+        "/albums|",
+        "/albums|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 944,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 64,
+        "y": 151,
+        "w": 378,
+        "h": 40,
+        "font": "Syne",
+        "size": "36px",
+        "weight": "700",
+        "lh": "40px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "panel": {
+        "x": 64,
+        "y": 228,
+        "w": 1152,
+        "h": 138,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 559,
+        "y": 863,
+        "w": 163,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22), rgb(220, 38, 38))"
+      },
+      "icon": {
+        "x": 592,
+        "y": 647,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "60px",
+        "weight": "400",
+        "lh": "60px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "active": [
+        "/albums|",
+        "/albums|"
+      ],
+      "phoneTitle": null,
+      "scrollW": 1280,
+      "appH": 944,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "393/artists": {
+    "sameAppHtml": true,
+    "lenBranch": 1729,
+    "lenProd": 1729,
+    "firstDiff": null,
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 16,
+        "y": 244,
+        "w": 361,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 16,
+        "y": 352,
+        "w": 361,
+        "h": 134,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 100,
+        "y": 518,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 3"
+      },
+      "icon": {
+        "x": 149,
+        "y": 124,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/artists|"
+      ],
+      "phoneTitle": "Series by Artist",
+      "scrollW": 393,
+      "appH": 748,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 16,
+        "y": 244,
+        "w": 361,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 16,
+        "y": 352,
+        "w": 361,
+        "h": 134,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 100,
+        "y": 518,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22), rgb(220, 38, 38))"
+      },
+      "icon": {
+        "x": 149,
+        "y": 124,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/artists|"
+      ],
+      "phoneTitle": "Series by Artist",
+      "scrollW": 393,
+      "appH": 748,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "393/genres": {
+    "sameAppHtml": true,
+    "lenBranch": 1406,
+    "lenProd": 1406,
+    "firstDiff": null,
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 16,
+        "y": 244,
+        "w": 361,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 16,
+        "y": 352,
+        "w": 361,
+        "h": 134,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 100,
+        "y": 518,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 3"
+      },
+      "icon": {
+        "x": 149,
+        "y": 124,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/genres|"
+      ],
+      "phoneTitle": "Series by Genre",
+      "scrollW": 393,
+      "appH": 748,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 16,
+        "y": 244,
+        "w": 361,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 16,
+        "y": 352,
+        "w": 361,
+        "h": 134,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 100,
+        "y": 518,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22), rgb(220, 38, 38))"
+      },
+      "icon": {
+        "x": 149,
+        "y": 124,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/genres|"
+      ],
+      "phoneTitle": "Series by Genre",
+      "scrollW": 393,
+      "appH": 748,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "393/tracks": {
+    "sameAppHtml": true,
+    "lenBranch": 1750,
+    "lenProd": 1750,
+    "firstDiff": null,
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 16,
+        "y": 244,
+        "w": 361,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 16,
+        "y": 352,
+        "w": 361,
+        "h": 134,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 100,
+        "y": 518,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 3"
+      },
+      "icon": {
+        "x": 149,
+        "y": 124,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/tracks|"
+      ],
+      "phoneTitle": "Series by Track",
+      "scrollW": 393,
+      "appH": 748,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 16,
+        "y": 244,
+        "w": 361,
+        "h": 36,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "700",
+        "lh": "36px",
+        "color": "rgba(0, 0, 0, 0)",
+        "bg": "linear-gradient(to right, rgb(251, 146, 60), rgb(252, 211, 7"
+      },
+      "panel": {
+        "x": 16,
+        "y": 352,
+        "w": 361,
+        "h": 134,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 100,
+        "y": 518,
+        "w": 193,
+        "h": 45,
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22), rgb(220, 38, 38))"
+      },
+      "icon": {
+        "x": 149,
+        "y": 124,
+        "w": 96,
+        "h": 96,
+        "font": "Syne",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(to right bottom, rgba(249, 115, 22, 0.2), rg"
+      },
+      "active": [
+        "/tracks|"
+      ],
+      "phoneTitle": "Series by Track",
+      "scrollW": 393,
+      "appH": 748,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "393/start": {
+    "sameAppHtml": true,
+    "lenBranch": 6511,
+    "lenProd": 6511,
+    "firstDiff": null,
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 16,
+        "y": 76,
+        "w": 361,
+        "h": 127,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "800",
+        "lh": "31.8px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "panel": null,
+      "btn": null,
+      "icon": null,
+      "active": [
+        "/start|",
+        "/start|",
+        "/start|page"
+      ],
+      "phoneTitle": "Start",
+      "scrollW": 393,
+      "appH": 902,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 16,
+        "y": 76,
+        "w": 361,
+        "h": 127,
+        "font": "Syne",
+        "size": "30px",
+        "weight": "800",
+        "lh": "31.8px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "panel": null,
+      "btn": null,
+      "icon": null,
+      "active": [
+        "/start|",
+        "/start|",
+        "/start|page"
+      ],
+      "phoneTitle": "Start",
+      "scrollW": 393,
+      "appH": 902,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "393/albums": {
+    "sameAppHtml": false,
+    "lenBranch": 9194,
+    "lenProd": 9194,
+    "firstDiff": {
+      "at": 9132,
+      "branch": "order-white/5 pt-6\"><p class=\"last-update\">Last updated: 2:30:59 PM</p></footer><div id=\"series-modals-mount\"></div></div>",
+      "prod": "order-white/5 pt-6\"><p class=\"last-update\">Last updated: 2:31:04 PM</p></footer><div id=\"series-modals-mount\"></div></div>"
+    },
+    "pixels": {
+      "diffPx": 0,
+      "pct": 0,
+      "rows": null
+    },
+    "branch": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "font": "Syne",
+        "size": "24px",
+        "weight": "700",
+        "lh": "32px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "panel": {
+        "x": 16,
+        "y": 60,
+        "w": 361,
+        "h": 44,
+        "font": "-apple-system",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 123,
+        "y": 309,
+        "w": 147,
+        "h": 48,
+        "font": "-apple-system",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 3"
+      },
+      "icon": {
+        "x": 173,
+        "y": 157,
+        "w": 48,
+        "h": 48,
+        "font": "-apple-system",
+        "size": "48px",
+        "weight": "400",
+        "lh": "48px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "active": [
+        "/albums|",
+        "/albums|",
+        "/albums|page"
+      ],
+      "phoneTitle": "Albums",
+      "scrollW": 393,
+      "appH": 748,
+      "bodyFont": "Syne"
+    },
+    "prod": {
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "h1": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "font": "Syne",
+        "size": "24px",
+        "weight": "700",
+        "lh": "32px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "panel": {
+        "x": 16,
+        "y": 60,
+        "w": 361,
+        "h": 44,
+        "font": "-apple-system",
+        "size": "16px",
+        "weight": "400",
+        "lh": "24px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "btn": {
+        "x": 123,
+        "y": 309,
+        "w": 147,
+        "h": 48,
+        "font": "-apple-system",
+        "size": "14px",
+        "weight": "700",
+        "lh": "21px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22), rgb(220, 38, 38))"
+      },
+      "icon": {
+        "x": 173,
+        "y": 157,
+        "w": 48,
+        "h": 48,
+        "font": "-apple-system",
+        "size": "48px",
+        "weight": "400",
+        "lh": "48px",
+        "color": "rgb(255, 255, 255)",
+        "bg": "none"
+      },
+      "active": [
+        "/albums|",
+        "/albums|",
+        "/albums|page"
+      ],
+      "phoneTitle": "Albums",
+      "scrollW": 393,
+      "appH": 748,
+      "bodyFont": "Syne"
+    },
+    "errBranch": [],
+    "errProd": []
+  },
+  "back-branch-1280": {
+    "afterBack": {
+      "url": "/start",
+      "h1": "Pick the albums. We blend the playlists.",
+      "screens": 1
+    },
+    "afterFwd": {
+      "url": "/artists",
+      "h1": "Artist Series",
+      "title": "MJRP The Album Blender - Playlist Generator"
+    },
+    "afterOwnBack": {
+      "url": "/albums"
+    }
+  },
+  "back-prod-1280": {
+    "afterBack": {
+      "url": "/start",
+      "h1": "Pick the albums. We blend the playlists.",
+      "screens": 1
+    },
+    "afterFwd": {
+      "url": "/artists",
+      "h1": "Artist Series",
+      "title": "MJRP The Album Blender - Playlist Generator"
+    },
+    "afterOwnBack": {
+      "url": "/albums"
+    }
+  },
+  "back-branch-393": {
+    "afterBack": {
+      "url": "/start",
+      "h1": "Pick the albums. We blend the playlists.",
+      "screens": 1
+    },
+    "afterFwd": {
+      "url": "/artists",
+      "h1": "Artist Series",
+      "title": "MJRP The Album Blender - Playlist Generator"
+    },
+    "afterOwnBack": {
+      "url": "/albums"
+    }
+  },
+  "back-prod-393": {
+    "afterBack": {
+      "url": "/start",
+      "h1": "Pick the albums. We blend the playlists.",
+      "screens": 1
+    },
+    "afterFwd": {
+      "url": "/artists",
+      "h1": "Artist Series",
+      "title": "MJRP The Album Blender - Playlist Generator"
+    },
+    "afterOwnBack": {
+      "url": "/albums"
+    }
+  },
+  "offline-1280": {
+    "msToPanel": 12,
+    "panel": {
+      "text": "No connection\n\nThis screen could not be downloaded. Check your connection and try again; what you have open here is kept.\n\nTry again",
+      "role": "alert",
+      "url": "/artists",
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "btn": {
+        "w": 118,
+        "h": 45,
+        "x": 581,
+        "y": 230,
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+        "radius": "12px",
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700"
+      },
+      "heading": {
+        "color": "rgb(255, 255, 255)",
+        "size": "20px",
+        "weight": "700",
+        "font": "Syne"
+      },
+      "para": {
+        "color": "rgba(255, 255, 255, 0.6)",
+        "size": "16px",
+        "w": 1216
+      },
+      "pageBg": "rgb(0, 0, 0)",
+      "scrollW": 1280,
+      "progressVisible": "none"
+    },
+    "retryWhileOffline": {
+      "hasRetry": true,
+      "text": "No connection\n\nThis screen could not be "
+    },
+    "after": {
+      "h1": "Artist Series",
+      "marker": 1,
+      "origin": 1795282305383,
+      "title": "MJRP The Album Blender - Playlist Generator"
+    },
+    "sameOrigin": true,
+    "loadsDuring": 0,
+    "errors": [
+      "console: Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+      "console: Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+      "console: [Router] Render failed: ScreenOffline: The network did not answer: the screen was not asked for\n    at load (http://127.0.0.1:5791/js/utils/loadScreen.js:55:41)",
+      "console: Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+      "console: [Router] Render failed: ScreenOffline: The network did not answer: the screen was not asked for\n    at load (http://127.0.0.1:5791/js/utils/loadScreen.js:55:41)"
+    ]
+  },
+  "offline-393": {
+    "msToPanel": 13,
+    "panel": {
+      "text": "No connection\n\nThis screen could not be downloaded. Check your connection and try again; what you have open here is kept.\n\nTry again",
+      "role": "alert",
+      "url": "/artists",
+      "title": "MJRP The Album Blender - Playlist Generator",
+      "btn": {
+        "w": 118,
+        "h": 45,
+        "x": 137,
+        "y": 216,
+        "color": "rgb(255, 255, 255)",
+        "bg": "linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(220, 38, 38) 100%)",
+        "radius": "12px",
+        "font": "Syne",
+        "size": "14px",
+        "weight": "700"
+      },
+      "heading": {
+        "color": "rgb(255, 255, 255)",
+        "size": "20px",
+        "weight": "700",
+        "font": "Syne"
+      },
+      "para": {
+        "color": "rgba(255, 255, 255, 0.6)",
+        "size": "16px",
+        "w": 361
+      },
+      "pageBg": "rgb(0, 0, 0)",
+      "scrollW": 393,
+      "progressVisible": "none"
+    },
+    "retryWhileOffline": {
+      "hasRetry": true,
+      "text": "No connection\n\nThis screen could not be "
+    },
+    "after": {
+      "h1": "Artist Series",
+      "marker": 1,
+      "origin": 1795282317639.4,
+      "title": "MJRP The Album Blender - Playlist Generator"
+    },
+    "sameOrigin": true,
+    "loadsDuring": 0,
+    "errors": [
+      "console: Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+      "console: Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+      "console: [Router] Render failed: ScreenOffline: The network did not answer: the screen was not asked for\n    at load (http://127.0.0.1:5791/js/utils/loadScreen.js:55:41)",
+      "console: Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+      "console: [Router] Render failed: ScreenOffline: The network did not answer: the screen was not asked for\n    at load (http://127.0.0.1:5791/js/utils/loadScreen.js:55:41)"
+    ]
+  },
+  "failure-1280": {
+    "text": "View Error\njudge: provoked draw failure\nError: judge: provoked draw failure\n    at ComingSoon (http://127.0.0.1:5791/js/screens/coming-soon/ComingSoon.tsx:1:37)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:57",
+    "html": "<div class=\"p-8 text-center\"><div class=\"text-red-500 text-xl font-bold mb-2\">View Error</div><pre class=\"bg-black/30 p-4 rounded text-left text-sm overflow-auto text-red-300 max-w-2xl mx-auto\">judge: provoked draw failure Error: judge: provoked draw failure at ComingSoon (http://127.0.0.1:5791/js/screens/coming-soon/ComingSoon.tsx:1:37) at Object.react_stack_bottom_frame (http://127.0.0.1:5791/@fs/Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-a0f9da6a9f38c15",
+    "btn": {
+      "w": 116,
+      "h": 47,
+      "cls": "btn btn-secondary mt-4"
+    },
+    "scrollW": 1280
+  },
+  "failure-393": {
+    "text": "View Error\njudge: provoked draw failure\nError: judge: provoked draw failure\n    at ComingSoon (http://127.0.0.1:5791/js/screens/coming-soon/ComingSoon.tsx:1:37)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:57",
+    "html": "<div class=\"p-8 text-center\"><div class=\"text-red-500 text-xl font-bold mb-2\">View Error</div><pre class=\"bg-black/30 p-4 rounded text-left text-sm overflow-auto text-red-300 max-w-2xl mx-auto\">judge: provoked draw failure Error: judge: provoked draw failure at ComingSoon (http://127.0.0.1:5791/js/screens/coming-soon/ComingSoon.tsx:1:37) at Object.react_stack_bottom_frame (http://127.0.0.1:5791/@fs/Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-a0f9da6a9f38c15",
+    "btn": {
+      "w": 116,
+      "h": 47,
+      "cls": "btn btn-secondary mt-4"
+    },
+    "scrollW": 393
+  },
+  "progress": {
+    "navStart": 3106,
+    "slowTimeline": [
+      [
+        153,
+        "block"
+      ]
+    ],
+    "barWhileShown": {
+      "h": 6,
+      "w": 1280,
+      "display": "block"
+    },
+    "fastTimeline": []
+  }
+}
