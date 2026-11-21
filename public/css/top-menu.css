@@ -69,6 +69,11 @@
   min-width: 0;
 }
 
+/* «Sign In» is 44 px tall like the home's buttons (the app's small button is 36) */
+.top-menu__acct .btn {
+  min-height: 44px;
+}
+
 /* The line under the bar: Albums and Playlists have one */
 .top-menu__sub:empty {
   display: none;

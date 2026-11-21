@@ -88,7 +88,7 @@ export class AuthNav {
     /** The one panel: who is in (or the way to sign in), the connections, the cache, sign out. */
     renderPanel(user, signedIn) {
         const who = signedIn
-            ? `<p class="text-xs text-white/50">${MENU_TEXT.signedInAs}</p><p class="text-sm font-bold truncate">${escapeHtml(user.displayName || user.email)}</p>`
+            ? `<p class="text-xs text-white/70">${MENU_TEXT.signedInAs}</p><p class="text-sm font-bold truncate">${escapeHtml(user.displayName || user.email)}</p>`
             : `<p class="text-sm text-white/70">${MENU_TEXT.signInHint}</p>`;
         const signOutRow = signedIn
             ? `<button id="logoutBtn" type="button" class="top-panel__row top-panel__row--danger">${getIcon('Logout', 'w-4 h-4')} ${MENU_TEXT.signOut}</button>`

@@ -188,16 +188,12 @@ describe('text from outside is shown as text', () => {
         expectOnlyText(host, TEXT)
     })
 
-    it('account menu: the name, the e-mail and the picture address of the person', () => {
+    it('account panel (the top menu of the computer; the phone menu is drawn with SafeDOM, see PhoneMenu.test.js): the name, the e-mail and the picture address of the person', () => {
         const nav = new AuthNav({ loading: false, currentUser: { isAnonymous: false, displayName: TEXT, email: TEXT, photoURL: QUOTED, providerData: [] } })
 
         draw(nav.renderDesktop())
         expectOnlyText(host, TEXT)
         expect(host.querySelectorAll('img').length).toBe(1)
-        expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
-
-        draw(nav.renderMobile())
-        expectOnlyText(host, TEXT)
         expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
     })
 
