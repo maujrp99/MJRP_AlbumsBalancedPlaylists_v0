@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 15:41] decision — o MJRP: o menu novo do topo é construído no código de hoje, para a home ir a produção logo (F88, F80)
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Como ficou o menu não seria revisto primeiro, pra podermos mover a f80 pra pros?»; à pergunta «Menu novo no código de hoje, para a home ir a produção logo (a), ou só em React, no fim da migração (b)?», «A)». Como foi entendido (orquestrador, revisável): depois de ele aprovar o protótipo do menu (F88), o menu é construído no código de hoje (sem React) e vai a produção junto com a home nova (F80) e os avisos de falha, com o «publica» dele; o menu é refeito em React na onda da moldura da F83. A migração segue na linha `integrate/staging-2026-11-21` e só vai a produção completa.
+
 ## [2026-11-21 15:11] session — F80: correções da reconferência do juiz na home (1 P1, 4 P2)
 **Branch:** wip/f80-home-bar-is-the-menu-build
 P1: no celular, com conta, 18 px entre o título e o «Inicie» (era 0). P2: PT e EN com 44 px de largura no celular; título em inglês como o da v4 («Dig through the albums you love.»; as demais linhas em inglês conferidas contra a v4 por script, sem outra diferença); a legenda do caixote segue o idioma também no celular; o caixote só aparece depois que o script o posiciona, e a diagonal vai no CSS, então as capas não se mexem mais ao carregar (o que sobra do salto vem da troca de idioma do cabeçalho e do título num navegador em inglês). Testes de test/architecture e test/splash verdes (379), eslint limpo, capturas fix-* em reports/evidence/F80/home-bar-is-the-menu/.
