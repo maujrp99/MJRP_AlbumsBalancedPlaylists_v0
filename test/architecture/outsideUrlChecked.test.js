@@ -181,7 +181,7 @@ describe('addresses from outside the code', () => {
     it('every followed address of public/js is written in the code or goes through safeUrl', () => {
         const offenders = listJs().flatMap(file => {
             const known = WRITTEN_IN_THE_CODE[file] || []
-            return uncheckedAddresses(fs.readFileSync(path.join(ROOT, file), 'utf8'))
+            return uncheckedAddresses(fs.readFileSync(path.join(ROOT, file), 'utf8'), file)
                 .filter(item => !known.includes(item.code))
                 .map(item => `${file}:${item.line} ${item.code} -> safeUrl(${item.code})`)
         })
@@ -190,7 +190,7 @@ describe('addresses from outside the code', () => {
 
     it('the list of addresses written in the code holds only what is still there', () => {
         const stale = Object.entries(WRITTEN_IN_THE_CODE).flatMap(([file, expressions]) => {
-            const present = uncheckedAddresses(fs.readFileSync(path.join(ROOT, file), 'utf8')).map(item => item.code)
+            const present = uncheckedAddresses(fs.readFileSync(path.join(ROOT, file), 'utf8'), file).map(item => item.code)
             return expressions.filter(expression => !present.includes(expression)).map(expression => `${file}: ${expression}`)
         })
         expect(stale).toEqual([])

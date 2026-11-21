@@ -4,7 +4,7 @@
  * Supports clean URLs without hash (#) for OAuth compatibility
  */
 
-import { escapeHtml } from './utils/stringUtils.js'
+import { errorPanelModel, errorPanelHtml } from './utils/failurePanel.js'
 import { isMissingBuildFile, reloadOnceForNewBuild } from './utils/staleBuild.js'
 
 export class Router {
@@ -234,15 +234,7 @@ export class Router {
      * @private
      */
     _failurePanel(error) {
-        if (!isMissingBuildFile(error)) {
-            return `
-                <div class="p-8 text-center">
-                    <div class="text-red-500 text-xl font-bold mb-2">View Error</div>
-                    <pre class="bg-black/30 p-4 rounded text-left text-sm overflow-auto text-red-300 max-w-2xl mx-auto">${escapeHtml(error.message)}\n${escapeHtml(error.stack)}</pre>
-                    <button class="btn btn-secondary mt-4" onclick="window.history.back()">Go Back</button>
-                </div>
-            `
-        }
+        if (!isMissingBuildFile(error)) return errorPanelHtml(errorPanelModel(error)) // the same panel the React bridge draws (F83)
         if (this.reloadForNewBuild()) {
             return '<div class="p-8 text-center text-white/70" role="status">A new version of the app was published. Loading it…</div>'
         }
@@ -340,9 +332,13 @@ export class Router {
      * Add after navigate hook
      * @param {Function} hook - Hook function (path, params, route) => void; `route` is the
      *        pattern that matched, as registered ('/albums/:seriesId'): a name with no ids (F77)
+     * @returns {Function} removes the hook (F83: whoever listens for a screen lets go when the screen is left)
      */
     afterNavigate(hook) {
         this.afterNavigateHooks.push(hook)
+        return () => {
+            this.afterNavigateHooks = this.afterNavigateHooks.filter(h => h !== hook)
+        }
     }
 }
 

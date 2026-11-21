@@ -130,7 +130,7 @@ describe('outside text in HTML strings', () => {
     it('every HTML template of public/js escapes the outside text it carries', () => {
         const offenders = listJs().flatMap(file => {
             const known = WRITTEN_IN_THE_CODE[file] || []
-            return unescapedOutsideText(fs.readFileSync(path.join(ROOT, file), 'utf8'))
+            return unescapedOutsideText(fs.readFileSync(path.join(ROOT, file), 'utf8'), file)
                 .filter(item => !known.includes(item.code))
                 .map(item => `${file}:${item.line} \${${item.code}} -> \${escapeHtml(${item.code})}`)
         })
@@ -139,7 +139,7 @@ describe('outside text in HTML strings', () => {
 
     it('the list of text written in the code holds only what is still there', () => {
         const stale = Object.entries(WRITTEN_IN_THE_CODE).flatMap(([file, expressions]) => {
-            const present = unescapedOutsideText(fs.readFileSync(path.join(ROOT, file), 'utf8')).map(item => item.code)
+            const present = unescapedOutsideText(fs.readFileSync(path.join(ROOT, file), 'utf8'), file).map(item => item.code)
             return expressions.filter(expression => !present.includes(expression)).map(expression => `${file}: ${expression}`)
         })
         expect(stale).toEqual([])

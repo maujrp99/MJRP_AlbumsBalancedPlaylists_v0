@@ -23,7 +23,15 @@ import {
 /** Files under the watched folders that no entry point loads, and stay. */
 const KEPT_ON_PURPOSE = {
     // The model a person copies to public/js/firebase-config.js to point the app at a Firebase project.
-    'public/js/firebase-config.example.js': 'configuration template, copied by hand'
+    'public/js/firebase-config.example.js': 'configuration template, copied by hand',
+    // The React bridge of F83 (TASK-04) waits for its first user, the canary screen of TASK-10, which wires it in app.js.
+    // The commit that wires it takes these lines out: this test fails the moment they stop being true.
+    'public/js/react-bridge/ReactView.tsx': 'the bridge, until the canary screen (F83 TASK-10) uses it',
+    'public/js/react-bridge/listeners.ts': 'the bridge, until the canary screen (F83 TASK-10) uses it',
+    'public/js/react-bridge/navigation.ts': 'the bridge, until a screen navigates by code',
+    'public/js/react-bridge/usePhone.ts': 'the bridge, until a screen asks if it is the phone',
+    'public/js/react-bridge/useScreenTitle.ts': 'the bridge, until a screen names itself',
+    'public/js/react-bridge/useStore.ts': 'the bridge, until a screen reads a store'
 }
 
 const graph = graphFrom(allEntryPoints())
