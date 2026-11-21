@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 14:43] session — F87: os testes de recusa do `--branch` ficam herméticos (repositório temporário próprio)
+**Branch:** wip/f87-preview-tests-hermetic
+Os scripts de publicação rodam a suíte dentro de uma cópia exportada do ramo, que não é repositório git; lá os três testes de recusa (`--branch` inexistente, `--branch` sem nome, `deploy-site.sh --branch x`) falhavam com «must live inside the git repository». Agora cada um roda numa fixture: repositório git temporário com cópia dos scripts, apagado no fim. Provado no repositório e numa exportação por `git archive`.
+
 ## [2026-11-21 14:40] session — F87: a prévia publica um ramo local (`--branch`), antes de ele chegar à `main`
 **Branch:** wip/f87-preview-from-a-branch
 O MJRP quer validar no ambiente separado o que está em ramos (a base em React, a nova home) antes da `main`. `deploy-preview.sh --branch <ramo local>` (padrão `main`) exporta e constrói esse ramo com as mesmas checagens; a de «limpo» vale para a pasta onde ele está; recusa ramo que não existe localmente; o `.env` segue o do checkout principal, sem cópia nem impressão; imprime no começo e no fim o ramo, o commit e o canal. `deploy-site.sh` não ganhou a opção (teste prova que `--branch x` é recusado). Cabeçalho de uso, plan, tasks (TASK-01b) e linha de proposta do `arch.md` § Delivery strategy em dia. Nada foi publicado.
