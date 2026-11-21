@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:18] session — conform: `session-close` registrado (CM-0124, CM-0132, CM-0136, CM-0137, CM-0146, CM-0151, CM-0160, CM-0164, CM-0165)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:18] session — conform: `board` registrado (CM-0095, CM-0123, CM-0141, CM-0145, CM-0147)
 **Branch:** wip/kernel-conform-2026-11-21
 O `--check-note` passou em todas as notas do item sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
