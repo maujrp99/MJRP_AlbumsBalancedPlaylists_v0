@@ -5,16 +5,29 @@
  */
 
 import { errorPanelModel, errorPanelHtml } from './utils/failurePanel.js'
-import { isMissingBuildFile, reloadOnceForNewBuild } from './utils/staleBuild.js'
+import { isMissingBuildFile, isLoadTimeout, reloadOnceForNewBuild, publicationState, PUBLICATION } from './utils/staleBuild.js'
+import { globalProgress } from './components/GlobalProgress.js'
 
 export class Router {
     /**
      * @param {Object} [options]
      * @param {Function} [options.reloadForNewBuild] - () => boolean: loads the app again when the tab
      *        runs a version that is no longer published; false when that was just tried (F64)
+     * @param {Function} [options.checkPublication] - () => Promise<'newer'|'same'|'unreachable'>: whether the site was
+     *        published again since this tab loaded; a lost network is not a new version (F83, REQ-10)
+     * @param {{ start: Function, finish: Function }} [options.progress] - the progress bar shown while a screen file comes
+     * @param {number} [options.progressDelayMs] - how long a screen may take before the bar shows (no blink on a fast move)
      */
-    constructor({ reloadForNewBuild = reloadOnceForNewBuild } = {}) {
+    constructor({
+        reloadForNewBuild = reloadOnceForNewBuild,
+        checkPublication = publicationState,
+        progress = globalProgress,
+        progressDelayMs = 150
+    } = {}) {
         this.reloadForNewBuild = reloadForNewBuild
+        this.checkPublication = checkPublication
+        this.progress = progress
+        this.progressDelayMs = progressDelayMs
         this.routes = new Map()
         this.currentView = null
         this.beforeNavigateHooks = []
@@ -209,8 +222,8 @@ export class Router {
             }
             this.currentView = null
 
-            // Create new view instance
-            const view = await viewFactory()
+            // Create new view instance (the file of a screen may take a while to come: the progress bar says so)
+            const view = await this.withProgress(viewFactory)
             if (leftBehind()) return
             this.currentView = view
             if (!view) return
@@ -222,10 +235,42 @@ export class Router {
                 await view.mount(params)
             }
         } catch (error) {
-            console.error('[Router] Render failed:', error)
-            if (leftBehind()) return
-            container.innerHTML = this._failurePanel(error)
+            await this.showFailure(container, error, leftBehind)
         }
+    }
+
+    /**
+     * Put the panel of a failure in the container, unless a newer route change took the screen meanwhile.
+     * @private
+     */
+    async showFailure(container, error, leftBehind) {
+        console.error('[Router] Render failed:', error)
+        if (leftBehind()) return
+        const panel = await this._failurePanel(error)
+        if (leftBehind()) return
+        container.innerHTML = panel
+        this.wireRetry(container)
+    }
+
+    /**
+     * Runs the factory of a route and shows the progress bar if it takes longer than `progressDelayMs`; the bar is
+     * taken away when the factory ends, well or not. A factory that answers at once never shows it.
+     * @private
+     */
+    async withProgress(viewFactory) {
+        let shown = false
+        const timer = setTimeout(() => { shown = true; this.progress.start() }, this.progressDelayMs)
+        try {
+            return await viewFactory()
+        } finally {
+            clearTimeout(timer)
+            if (shown) this.progress.finish()
+        }
+    }
+
+    /** «Try again» of the «no connection» panel asks for the same screen again; the app is not loaded again. @private */
+    wireRetry(container) {
+        container.querySelector('[data-action="retry-screen"]')?.addEventListener('click', () => this.handleRouteChange())
     }
 
     /**
@@ -233,8 +278,11 @@ export class Router {
      * a failure of the view: the app is loaded again, once, to get the published version (F64).
      * @private
      */
-    _failurePanel(error) {
+    async _failurePanel(error) {
+        if (isLoadTimeout(error)) return this._noConnectionPanel()
         if (!isMissingBuildFile(error)) return errorPanelHtml(errorPanelModel(error)) // the same panel the React bridge draws (F83)
+        // The file is gone, or the network is: only asking the site tells which (a lost network is not a new version, F83)
+        if (await this.checkPublication() === PUBLICATION.UNREACHABLE) return this._noConnectionPanel()
         if (this.reloadForNewBuild()) {
             return '<div class="p-8 text-center text-white/70" role="status">A new version of the app was published. Loading it…</div>'
         }
@@ -243,6 +291,20 @@ export class Router {
                 <div class="text-white text-xl font-bold mb-2">This screen could not be loaded</div>
                 <p class="text-white/60 mb-4">The app was updated and this tab still has the previous version.</p>
                 <button class="btn btn-primary" data-action="reload-app" onclick="window.location.reload()">Load the new version</button>
+            </div>
+        `
+    }
+
+    /**
+     * The screen could not be downloaded and the site does not answer: nothing was published, the person is offline.
+     * @private
+     */
+    _noConnectionPanel() {
+        return `
+            <div class="p-8 text-center" role="alert">
+                <div class="text-white text-xl font-bold mb-2">No connection</div>
+                <p class="text-white/60 mb-4">This screen could not be downloaded. Check your connection and try again; what you have open here is kept.</p>
+                <button class="btn btn-primary" data-action="retry-screen">Try again</button>
             </div>
         `
     }

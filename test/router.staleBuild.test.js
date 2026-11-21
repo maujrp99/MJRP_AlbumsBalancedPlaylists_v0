@@ -4,6 +4,7 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Router } from '../public/js/router.js'
+import { PUBLICATION } from '../public/js/utils/staleBuild.js'
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 10))
 const gone = () => new TypeError('Failed to fetch dynamically imported module: https://x/assets/SavedPlaylistsView-old.js')
@@ -17,7 +18,8 @@ describe('Router: a screen file of an older publication (F64, UAT-207)', () => {
         document.body.appendChild(app)
         window.history.pushState({}, '', '/')
         reloadForNewBuild = vi.fn(() => true)
-        router = new Router({ reloadForNewBuild })
+        // F83: the site is asked whether it was published again; here it was (the network case is in router.offline.test.js)
+        router = new Router({ reloadForNewBuild, checkPublication: async () => PUBLICATION.NEWER })
         vi.spyOn(console, 'log').mockImplementation(() => {})
         vi.spyOn(console, 'error').mockImplementation(() => {})
     })

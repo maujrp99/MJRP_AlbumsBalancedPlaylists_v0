@@ -12,7 +12,8 @@ import '../css/mobile/screens.css' // one file per screen of the phone, each ins
 import '../css/safe-area.css' // a phone lying down: the page keeps clear of the island (F76)
 import './services/platform/platformWiring.js' // the id port gets the browser's source before any module runs (F78)
 import { canonicalLocalUrl } from './utils/localAddress.js'
-import { installStaleBuildGuard } from './utils/staleBuild.js'
+import { installStaleBuildGuard, loadWithDeadline } from './utils/staleBuild.js'
+import { prefetchScreensAfterTheFirstScreen } from './utils/prefetchScreens.js'
 
 // One local address (F50): a page opened at `localhost` goes to the same place at 127.0.0.1,
 // where the logins, the Spotify redirect and the caches live.
@@ -168,18 +169,21 @@ router.register('/album-series', () => {
     router.redirect('/albums')
     return null
 })
-router.register('/playlist-series', async () => {
-    const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
+// The screens loaded late: the file comes with a deadline of 10 s (F83: after it, «no connection», not «new version»), and
+// the screens of the menu are fetched in the background once the first screen is on the page.
+const loadSavedPlaylists = () => import('./views/SavedPlaylistsView.js')
+const savedPlaylistsRoute = async () => {
+    const { SavedPlaylistsView } = await loadWithDeadline(loadSavedPlaylists())
     return new SavedPlaylistsView()
-})
-router.register('/saved-playlists', async () => {
-    const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
-    return new SavedPlaylistsView()
-})
+}
+router.register('/playlist-series', savedPlaylistsRoute)
+router.register('/saved-playlists', savedPlaylistsRoute)
 router.register('/series', () => {
     router.redirect('/albums')
     return null
 })
+
+prefetchScreensAfterTheFirstScreen(router, [loadSavedPlaylists])
 
 // Global Error Handler
 window.addEventListener('error', (e) => {
