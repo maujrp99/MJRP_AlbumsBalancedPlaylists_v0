@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:26] decision — o app (F78) fica em pausa; o foco é React com os idiomas, e o CMS
+**Branch:** main
+Palavras do MJRP (2026-11-21, de volta ao Mac): «agora voltei para o mac, pause a continuacao da app por enqto, vamos nos concentrar na migracao pra react + internacionalizacao e no CMS». A F78 para onde está (o esqueleto no simulador; a rodada de desenho das telas do app, escolhida na D-06, não começa). As sessões por feature sobem agora para a F83 (a proposta de arquitetura do React) e a F81 (o levantamento dos textos), mais a atualização da cópia do kernel. O CMS (F82) depende da F332 do harness, que espera a prioridade dele no board de lá.
+
 ## [2026-11-21 09:10] session — D-06 e D-07 aplicadas: o app segue por uma rodada de desenho; o MJRP já tem a conta de desenvolvedor da Apple
 **Branch:** main
 Respostas do MJRP pelo Control Center, com a passkey (09:09). D-06: «a» — uma rodada de desenho das telas do app, no comparador, antes de mais código; é a próxima coisa da F78 (a tarefa de protótipo julgado que o plano já previa), numa sessão de desenho em Opus quando as sessões puderem subir. D-07, nas palavras dele: «Tenho conta de dev da apple» — a conta da Apple sai das pendências; a do Expo ele não mencionou e fica para quando houver o que testar no aparelho. O lote `2026-11-21-0845-v0-pending-decisions` está todo respondido e aplicado. O conserto da UAT-232 (`361ad29`) está na `main` e ainda não foi publicado: a publicação foi recusada pela trava de permissão desta sessão e espera a palavra dele.
