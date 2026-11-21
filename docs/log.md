@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 15:08] review — F80: reconferência visual independente da home «A barra é o menu» (6cc8863): sem P0, 1 P1, 4 P2
+**Branch:** wip/f80-home-bar-is-the-menu-build
+Relatório escrito pelo juiz independente, copiado sem mudança para reports/audits/2026-11-21-mjrpalbumblender-v0-home-bar-is-the-menu-visual-parity-recheck.md; capturas em reports/evidence/F80/home-bar-is-the-menu/recheck/.
+
 ## [2026-11-21 14:51] session — F80: a v4 (o ritmo da página) aprovada pelo MJRP e construída na home (UAT-240, UAT-241)
 **Branch:** wip/f80-home-bar-is-the-menu-build
 O MJRP aprovou a v4 do protótipo: «v4 ficou sensacional, aprovada!!! Kudos for you». Construída em `public/splash.html` e `public/splash/ambient.js`: as cinco vinhetas (Inicie, Álbuns, Blend, Playlists, Inventário) que entram e saem com a rolagem (só `transform` e `opacity`), paradas pelo ícone de pausa e pelo repouso, imagem parada com movimento reduzido; as alturas das histórias da tabela de entrega (computador `clamp(540px,70dvh,680px)`, convite `clamp(440px,56dvh,560px)`, celular pelo conteúdo). Pedido dele para o celular: «na versao mobile aqui tem muito texto e manteria o mergulhe e seu subtitulo apenas» — abaixo de 900 px a abertura mostra só o título e a linha laranja (o parágrafo fica no computador). «Entrar» da abertura sai no celular (fica o do topo). Os pontos `.ambient` vazios viraram os painéis `.v4-motif`. Testes `test/architecture` + `test/splash` verdes (375), eslint limpo; capturas em `reports/evidence/F80/home-bar-is-the-menu/` (`v4-*`, `measures-v4.json`).
