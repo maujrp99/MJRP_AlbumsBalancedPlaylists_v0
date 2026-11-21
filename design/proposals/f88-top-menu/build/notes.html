@@ -1,0 +1,37 @@
+<h1 class="view">Notas da rodada 1</h1>
+<p class="sub">O detalhe está em <code>design/proposals/f88-top-menu/proposal.md</code>. Aqui, o essencial.</p>
+
+<h2>O que o menu faz hoje, e onde fica em cada nível</h2>
+<table>
+<thead><tr><th>Hoje (computador · celular)</th><th>Elevar</th><th>Transformar</th></tr></thead>
+<tbody>
+<tr><td>Logotipo leva à home</td><td>a marca da home, leva à home</td><td>a marca da home, leva à home</td></tr>
+<tr><td>Start · Albums · Blend · Playlists · Inventory</td><td>os cinco, com o atual aceso no fogo</td><td>os cinco na barra da home; o fogo mostra onde você está</td></tr>
+<tr><td>«Music Series»: por álbum; artista, gênero, faixa (em breve); séries de playlists</td><td>«Álbuns ▾» com a mesma lista</td><td>uma linha embaixo da barra em Álbuns (computador) e em Playlists; no celular, os «em breve» ficam no painel da conta</td></tr>
+<tr><td>Novas playlists (celular, no menu)</td><td>no menu do celular, como hoje</td><td>na linha de Playlists: Salvas · Novas · Séries</td></tr>
+<tr><td>Spotify: conectar, desconectar</td><td>a pílula verde, no estilo da home</td><td>em «Conexões», no botão da conta</td></tr>
+<tr><td>Apple Music (hoje só na hora de exportar)</td><td>igual a hoje</td><td>em «Conexões», ao lado do Spotify (novo)</td></tr>
+<tr><td>Entrar · sair · «Entrou como»</td><td>como hoje, no estilo da home</td><td>no botão da conta; «Entrar» também na barra</td></tr>
+<tr><td>Limpar o cache dos álbuns (rodapé no computador; menu no celular)</td><td>igual a hoje</td><td>no botão da conta, nos dois tamanhos</td></tr>
+<tr><td>Nome da tela na barra do celular</td><td>mantido</td><td>mantido (o idioma vai para o painel da conta no celular)</td></tr>
+<tr><td>Idioma (não existe no app)</td><td colspan="2">PT · EN na barra no computador, como na home; no celular, no menu (a escolha em si é da F81)</td></tr>
+</tbody></table>
+<p class="small">Nada do que o menu faz hoje se perde nos dois níveis.</p>
+
+<h2>Minha recomendação</h2>
+<p><strong>Transformar.</strong> A barra da home é a mesma no app: quem clica em «Inicie» não troca de site, só vê o fogo acender no lugar onde chegou. A barra já existe construída na home e é reaproveitada no código de hoje; o React vem depois, sem mudar o desenho. O risco: a barra de baixo do celular perde os ícones; os rótulos de 12 px e o fogo carregam o lugar.</p>
+
+<h2>Perguntas para você</h2>
+<ol>
+<li><strong>Qual caminho?</strong> Elevar ou Transformar. Recomendo o Transformar, pela passagem sem corte.</li>
+<li><strong>Apple Music no menu?</strong> (a) em «Conexões», ao lado do Spotify; (b) como hoje, só na hora de exportar. Recomendo (a): a home já promete «Spotify ✓ · Apple Music ✓».</li>
+<li><strong>No celular, a barra de baixo com ou sem ícones?</strong> (a) só rótulos e barras, como na home; (b) ícones pequenos sobre os rótulos. Recomendo (a), para ser a mesma barra; se no iPhone ficar difícil achar, voltamos aos ícones.</li>
+</ol>
+
+<h2>O que não pude conferir</h2>
+<ul>
+<li>O iPhone de verdade (Safari, toque, área segura): só a 393 × 852 no Chrome.</li>
+<li>Telas com conta de verdade: a conta é de teste, as telas vêm das capturas de 21/11.</li>
+<li>«Novas playlists» e «Séries de playlists» não têm captura: o protótipo avisa ao tocar.</li>
+<li>Os textos em inglês são proposta; os finais vêm da F81.</li>
+</ul>

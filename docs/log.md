@@ -3,6 +3,18 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 16:14] step — F88: os requisitos 3 e 6 seguem a decisão «A)» do MJRP (código de hoje primeiro; produção junto com a home)
+**Branch:** main
+A spec da F88 ainda pedia React e «nada chega à produção antes do fim da migração»; o MJRP decidiu hoje o contrário («A)», entrada das 16h deste log). REQ-03 e REQ-06 reescritos; o resto da spec não muda.
+
+## [2026-11-21 15:41] decision — o MJRP: o menu novo do topo é construído no código de hoje, para a home ir a produção logo (F88, F80)
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Como ficou o menu não seria revisto primeiro, pra podermos mover a f80 pra pros?»; à pergunta «Menu novo no código de hoje, para a home ir a produção logo (a), ou só em React, no fim da migração (b)?», «A)». Como foi entendido (orquestrador, revisável): depois de ele aprovar o protótipo do menu (F88), o menu é construído no código de hoje (sem React) e vai a produção junto com a home nova (F80) e os avisos de falha, com o «publica» dele; o menu é refeito em React na onda da moldura da F83. A migração segue na linha `integrate/staging-2026-11-21` e só vai a produção completa.
+
+## [2026-11-21 15:27] session — F88: rodada 1 de desenho do menu do topo do app (Elevar e Transformar)
+**Branch:** wip/f88-top-menu-design-round-1
+Pedido do MJRP (2026-11-21): «já fazer o redesign completo do top nave, aí a transicao fica mais suave». Dois níveis como moldura viva sobre as telas reais do app (capturas de 2026-11-21), a 393 e a 1280, PT e EN, com o menu de hoje como «Referência» e a prévia da passagem da home v4 para o app: `design/inception/f88-top-menu-{elevar,transformar}-v1.html`, comparador https://claude.ai/artifact/AtUiGYy1YAL9iLd58yJ3aF (cópia `design/proposals/f88-top-menu/comparator.html`, gerador em `build/`). Inventário do menu de hoje (MENU-01 a 11), estados e Content Map em `docs/specs/info-arch.md`; padrões novos pendentes no `design-system.md`; proposta, viabilidade em React (onda da moldura da F83) e três perguntas em `design/proposals/f88-top-menu/proposal.md`. Recomendação do agente: Transformar (a barra da home continua no app). Viabilidade escrita para construir primeiro no código de hoje (decisão do MJRP «A)»), React depois; o REQ-03 e o REQ-06 da spec da F88 ficam a reescrever pelo orquestrador. Crítica separada (`reports/audits/2026-11-21-f88-top-menu-round-1-ux-audit.md`): sem P0; os 7 P1 e 6 dos 8 P2 consertados antes de mostrar. Nenhum aprovado.
+
 ## [2026-11-21 15:11] session — F80: correções da reconferência do juiz na home (1 P1, 4 P2)
 **Branch:** wip/f80-home-bar-is-the-menu-build
 P1: no celular, com conta, 18 px entre o título e o «Inicie» (era 0). P2: PT e EN com 44 px de largura no celular; título em inglês como o da v4 («Dig through the albums you love.»; as demais linhas em inglês conferidas contra a v4 por script, sem outra diferença); a legenda do caixote segue o idioma também no celular; o caixote só aparece depois que o script o posiciona, e a diagonal vai no CSS, então as capas não se mexem mais ao carregar (o que sobra do salto vem da troca de idioma do cabeçalho e do título num navegador em inglês). Testes de test/architecture e test/splash verdes (379), eslint limpo, capturas fix-* em reports/evidence/F80/home-bar-is-the-menu/.
@@ -10,6 +22,10 @@ P1: no celular, com conta, 18 px entre o título e o «Inicie» (era 0). P2: PT 
 ## [2026-11-21 15:08] review — F80: reconferência visual independente da home «A barra é o menu» (6cc8863): sem P0, 1 P1, 4 P2
 **Branch:** wip/f80-home-bar-is-the-menu-build
 Relatório escrito pelo juiz independente, copiado sem mudança para reports/audits/2026-11-21-mjrpalbumblender-v0-home-bar-is-the-menu-visual-parity-recheck.md; capturas em reports/evidence/F80/home-bar-is-the-menu/recheck/.
+
+## [2026-11-21 14:54] decision — o MJRP: o que está no ambiente separado só vai a produção quando a migração para React terminar
+**Branch:** main
+Palavras do MJRP (2026-11-21): «staging agora só vai pra prod qdo completarmos a migracao». Antes, no mesmo dia: «v4 ficou sensacional, aprovada!!! Kudos for you» (a home v4) e «na versao mobile aqui tem muito texto e manteria o mergulhe e seu subtitulo apenas». Como foi entendido (orquestrador, revisável): o ramo `integrate/staging-2026-11-21` é a linha da migração (F83), publicada só na prévia do Firebase (F87, canal `staging`, https://mjrp-playlist-generator--staging-2nu8kutx.web.app, vence em 7 dias e é republicado a cada onda); o ramo do React não entra na `main` e nada dele vai a produção até a última onda. Em aberto com ele: se a home nova e os avisos de falha, que não dependem do React, vão a produção antes.
 
 ## [2026-11-21 14:51] session — F80: a v4 (o ritmo da página) aprovada pelo MJRP e construída na home (UAT-240, UAT-241)
 **Branch:** wip/f80-home-bar-is-the-menu-build
@@ -493,6 +509,10 @@ A linha da capa da banana na lista de problemas do UAT passa a «fixed (42d4cad)
 ## [2026-11-21 11:29] decision — a capa da banana na frente da caixa de discos da página de entrada (UAT-236)
 **Branch:** fix/f80-uat-entry-page
 Palavras do MJRP: «pode colocar a capa inicial com a do velvet underground & nico a capa da banana?» e «mas mantenha o king crimson so nao ser a primeira». Feito: «The Velvet Underground & Nico» (1967) é o primeiro disco do lado A e o King Crimson vem logo depois; nenhum disco saiu: as capas reais passam a 15 (lado A com 8, lado B com 7; as fictícias seguem 14). «Harvest» foi para o fundo do lado A, para cada faixa continuar puxando os mesmos discos. A busca pública do iTunes achou o álbum certo: a edição de 45 anos com as 11 faixas originais (https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613); a capa vem do servidor de imagens da Apple, como as outras. A caixa em 3D cabe inteira com 15 (o teste do enquadramento roda com 14 e 15); no celular a legenda cabe na largura, mas o nome longo quebra em três linhas ao lado do botão. Antes: o conserto da caixa em diagonal com palco largo (UAT-235) ficou em `d88b0cf`.
+
+## [2026-11-21 14:58] decision — F88 (o menu do topo do app redesenhado na linguagem da nova home) em esboço, com a S-70
+**Branch:** wip/top-nav-redesign-registration
+Palavras do MJRP (2026-11-21): «o que mudaria pra home ir pra prod agora, já fazer o redesign completo do top nave, aí a transicao fica mais suave, o que acha?» e, à proposta do orquestrador (redesenhar o menu na linguagem da home, construí-lo em React dentro da migração F83, e a home esperar o fim da migração para home, menu novo e telas migradas chegarem juntos à produção): «siga». A F88 nasce em esboço (via padrão, tipo feature), com a S-70 (EP-01, escolhido pelo agente). Primeira tarefa: rodada de desenho no comparador, depois a construção na onda da moldura da F83. Depende da F80, F83, F81 e F85.
 
 ## [2026-11-21 11:12] session — kernel do harness atualizado (2026-11-10 → 2026-11-21)
 **Branch:** claude/kernel-refresh-2026-11-21
