@@ -1,0 +1,46 @@
+WIDTH 1280
+H1 5 linhas 9 pal 10 car/linha Dig through the albums you love. Keep every track.
+P 5 linhas 43 pal 45 car/linha The Album Blender is a web app for people who list
+P 1 linhas 6 pal 19 car/linha SIDE A · 2 — SERIES
+H2 4 linhas 6 pal 10 car/linha Gather the albums that belong together.
+P 2 linhas 21 pal 54 car/linha An artist's run, a decade, a mood: a series is a s
+P 1 linhas 6 pal 20 car/linha SIDE A · 3 — RANKING
+H2 3 linhas 7 pal 13 car/linha Rank every track, not just the singles.
+P 3 linhas 31 pal 52 car/linha Order each album's tracks by how often they are pl
+P 2 linhas 16 pal 44 car/linha Bar length = the track's place in the ranking you 
+P 1 linhas 6 pal 18 car/linha SIDE A · 4 — BLEND
+H2 3 linhas 6 pal 12 car/linha Blend the series into one playlist.
+P 3 linhas 30 pal 51 car/linha Pick a recipe and the Blender draws tracks from ev
+P 1 linhas 7 pal 23 car/linha SIDE A · 5 — YOUR SHELF
+H2 3 linhas 7 pal 11 car/linha Keep count of the records you own.
+P 2 linhas 22 pal 59 car/linha Mark the albums on your shelf, see an estimate of 
+P 1 linhas 9 pal 34 car/linha Side B is the why, and the way in.
+H2 1 linhas 8 pal 29 car/linha SIDE B · 1 — WHY WHOLE ALBUMS
+P 3 linhas 27 pal 51 car/linha An album has an order: an opening, a turn, a close
+P 1 linhas 6 pal 18 car/linha SIDE B · 2 — START
+H2 3 linhas 7 pal 12 car/linha Drop the needle on your first series.
+P 2 linhas 23 pal 57 car/linha Open the app and start a series with one album you
+P 3 linhas 43 pal 81 car/linha Album artwork comes from Apple Music and belongs t
+WIDTH 390
+H1 5 linhas 9 pal 10 car/linha Dig through the albums you love. Keep every track.
+P 5 linhas 43 pal 45 car/linha The Album Blender is a web app for people who list
+P 1 linhas 6 pal 19 car/linha SIDE A · 2 — SERIES
+H2 4 linhas 6 pal 10 car/linha Gather the albums that belong together.
+P 3 linhas 21 pal 36 car/linha An artist's run, a decade, a mood: a series is a s
+P 1 linhas 6 pal 20 car/linha SIDE A · 3 — RANKING
+H2 3 linhas 7 pal 13 car/linha Rank every track, not just the singles.
+P 4 linhas 31 pal 39 car/linha Order each album's tracks by how often they are pl
+P 2 linhas 16 pal 44 car/linha Bar length = the track's place in the ranking you 
+P 1 linhas 6 pal 18 car/linha SIDE A · 4 — BLEND
+H2 3 linhas 6 pal 12 car/linha Blend the series into one playlist.
+P 4 linhas 30 pal 38 car/linha Pick a recipe and the Blender draws tracks from ev
+P 1 linhas 7 pal 23 car/linha SIDE A · 5 — YOUR SHELF
+H2 3 linhas 7 pal 11 car/linha Keep count of the records you own.
+P 3 linhas 22 pal 39 car/linha Mark the albums on your shelf, see an estimate of 
+P 1 linhas 9 pal 34 car/linha Side B is the why, and the way in.
+H2 1 linhas 8 pal 29 car/linha SIDE B · 1 — WHY WHOLE ALBUMS
+P 4 linhas 27 pal 38 car/linha An album has an order: an opening, a turn, a close
+P 1 linhas 6 pal 18 car/linha SIDE B · 2 — START
+H2 3 linhas 7 pal 12 car/linha Drop the needle on your first series.
+P 3 linhas 23 pal 38 car/linha Open the app and start a series with one album you
+P 5 linhas 43 pal 49 car/linha Album artwork comes from Apple Music and belongs t
