@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:59] session — segundo relatório do juiz (passa) guardado como veio; 2 P2 viram UAT-256 e UAT-257
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-failed-sources-visual-parity-recheck-2.md` e capturas `reports/evidence/F52/recheck-2/` escritos pelo juiz (F52, F69), copiados sem edição. Os dois P2 restantes (a lista que se mexe no «Try again»; o azul fora da paleta) entram em `uat.md` como UAT-256 e UAT-257, ids reservados por `merge_train.py next-uat-id --reserve`.
+
 ## [2026-11-21 13:55] session — achados do juiz tratados: «Try again» de 44 px no celular, BestEverAlbums nomeada, linha «Asking»
 **Branch:** wip/failed-sources-are-shown-2026-11-21
 P1-1: botão com min-h 44 px até o breakpoint md (computador segue 72x24; celular medido 76x44 a 393). P2-1: «BestEverAlbums did not answer.». P2-3: a nota mostra «Asking BestEverAlbums for ratings…» enquanto pergunta, como a popularidade. Azul mantido (P2-2, issue à parte). Novas capturas em F52/ e F69/.
