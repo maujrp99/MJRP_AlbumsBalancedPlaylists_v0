@@ -1,7 +1,8 @@
 ---
-status: In Progress
+status: Done
 lane: fast
 solution_type: fix
+needs_human: "ver: o blend e a edição de playlist: o texto do progresso, os avisos amarelos, o «Refetch» mostrando o cartão carregando"
 imports: []
 fixes: ["UAT-189", "UAT-191"]
 planned_for: "[[ROADMAP#^REL-40]]"
