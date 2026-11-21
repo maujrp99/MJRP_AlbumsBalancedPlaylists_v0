@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:49] session — F72: o nó S-55 com entrega, estado e critérios; Done
+**Branch:** wip/closing-pass-2026-11-21
+F72 (quantos álbuns e séries a tela diz): o código está na `main`. Faltavam três linhas da trava: no nó S-55 o `delivered_by` (`49c786e`, `274dfe4`), o `points_to` (`behavior#^library-counts`) e os critérios de aceite, escritos do que o MJRP julgou em 2026-11-20 (a contagem ficou na linha da paginação; numa série só não aparece, hoje a UAT-248, aberta pela reconferência); e a reconferência visual (relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Acrescentei `verified_by` ao REQ-01 e ao REQ-02 e marquei o REQ-01 como substituído pelo REQ-03, como o próprio MJRP decidiu. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: o aceite do S-55 é do MJRP.
+
 ## [2026-11-21 13:47] session — F67: o estado da busca no `arch.md`; Done
 **Branch:** wip/closing-pass-2026-11-21
 F67 (o Scan da Home responde ao clique): o código está na `main`. Faltavam duas linhas da trava. (1) `arch.md`: a declaração dizia «atualizado» pelo commit da F57, que não cita a F67; escrevi na seção do seletor de álbuns o estado da busca, a geração, os prazos e a montagem única do roteador, conferido no código. (2) Reconferência visual: relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md` (os quatro estados estão na tela). Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: a UAT-204 segue com o MJRP.
