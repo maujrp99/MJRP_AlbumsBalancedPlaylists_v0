@@ -24,6 +24,9 @@ Base: média — a dependência do kit é relato; o resto vem do código do V0
 - a) O CMS primeiro, depois os idiomas (Recomendado)
 - b) Os idiomas primeiro, com os textos em arquivos; o CMS depois
 - c) As duas juntas, numa proposta de arquitetura só
+→ respondida em 2026-11-21 09:04
+  - (outra) Respondido no chat
+→ aplicada em 2026-11-21 09:05: resposta dele: «Respondido no chat» — no chat ele aceitou a ordem React, idiomas junto com a migração, CMS depois («Bora !») e priorizou F81 > F83 > F82; os planos seguem essa ordem
 
 ### D-03 · Os idiomas do site e o padrão
 Pergunta: Em quais idiomas o site passa a existir, e qual é o padrão para quem chega?

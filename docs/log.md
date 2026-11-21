@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:05] session — D-02 aplicada: a ordem é a do chat
+**Branch:** main
+O MJRP respondeu a D-02 pelo Control Center com «Respondido no chat». No chat ele aceitou a ordem React, idiomas junto com a migração e o CMS depois («Bora !») e priorizou F81 > F83 > F82. Os planos das três features seguem essa ordem; marcado no lote.
+
+## [2026-11-21 09:04] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 3e3afc4b038345ea
+- D-02: (outra) Respondido no chat
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lXRTF0VWpOclkwUmhXVWxKT1dKVGVFaEZWRWxrUTA5a05HRmhXR0pmVW1kWlZUVkpaVWxSZG5obU1DSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek1qazFMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakkyT1RVc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaWNUZ3Rka1JNWHpOa1RuVkNlSFZEVlRWV1JuRlBhV3g2SWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSmxPV0ZsTXpBNVltUTNNV0V3T1dWaE5EaGxaREpqTkRabU9HVmlaREl4TURjd01EVmxNMlV3TVRVd01HWTNOMlF4TVRWaVpqQXlZakkzTVRrMFpUTTNJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJRG9vSGFZdzFfd2xvbkNuZFZnZllSblNjOGI2cnhzcWFLcjNENWF4cURKc0FpRUEwUnFPT20wWHhiTjdkblVvbFZWdm5LUlU3UVQ0TFFHQVlpR1lsU2VTaTZFIn0=
+- folhas: D-02:49a28fc46e60a650
+
 ## [2026-11-21 09:04] session — D-01 aplicada: o kit do CMS mora no harness; o MJRP priorizou F81 > F83 > F82
 **Branch:** main
 O MJRP respondeu pelo Control Center, com a passkey (09:04): o pacote do kit do CMS mora dentro do harness, distribuído como o kernel. Aplicado: o agente mestre e a orquestradora do MJRPpersonal avisados; o plano da F82 atualizado. Ele também priorizou no board F81 > F83 > F82 (`9126a95`; F79 e F80 saíram como entregues). O agente mestre corrigiu o plano das sessões por feature: Sonnet em esforço médio para construir, Opus ou Fable para arquitetura e desenho; ramo `claude/fNN-<slug>` para a sessão de construção; no máximo duas sessões de construção do V0 por vez; atualizar a cópia do kernel no V0 antes. As sessões ainda não subiram: o MJRP está pelo Remote Control, de onde o app não deixa iniciar sessão; sobem quando ele pedir pelo app do Mac.
