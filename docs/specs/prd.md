@@ -225,6 +225,8 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-10
 
 ![[S-66-check-each-screen-against-its-approved-prototype]]
 
+![[S-68-see-the-site-design-system-in-one-page]]
+
 ### Transversais
 
 Os requisitos não funcionais valem para todas as features e não são importados por nenhuma: cada um é um arquivo `docs/specs/requirements/nfr/NFR-xx-<slug>.md`.

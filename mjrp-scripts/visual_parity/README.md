@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # O kit de paridade visual
 
 Compara a tela do produto com a **referência visual aprovada** dela, na mesma tela, no mesmo estado e nas mesmas
@@ -81,7 +81,7 @@ recusa (exit 2) config de outro formato, chave desconhecida e Playwright fora da
 | `servers.mjs` | sobe o servidor da referência viva e o do produto (só loopback; grupo de processos) |
 | `capture.mjs` | cada cenário nos dois lados, em cada condição; na referência estática, a imagem e a diferença visual |
 | `facts.mjs` | o que se lê na página (`collectFacts`): ordem da casca, cards, componentes, papéis tipográficos, tokens do `:root`, fontes carregadas, layout, a gaveta aberta, e a saúde do texto **por componente** (o título do card, `drawer`, a região): markdown cru, texto espremido e a coluna em que o texto quebra, tabelas, transbordo |
-| `rules.mjs` | as regras, funções puras: webfonts, AH-01; markdown cru, texto espremido, tabelas e transbordo, **pareados por componente** (nunca pelo total da página); as gavetas (`drawerChecks`: o clique é julgado no produto — o card que ele tem e não abre a gaveta é P0, mesmo que o protótipo não a tenha aberto; o gesto `click` simples de um cenário de gaveta também conta; o card na tela que não é botão, contado pela ação, é P0 à parte da linha que o dado não tem, desde a 1.3, UAT-427); os grupos (`baseChecks`) e o juiz da referência estática (`staticChecks`). As regras por componente e as das gavetas nasceram no juiz das gavetas e tabelas do Control Center (2026-10-12, UAT-45 e UAT-49) |
+| `rules.mjs` | as regras, funções puras: webfonts, AH-01; markdown cru, texto espremido, tabelas e transbordo, **pareados por componente** (nunca pelo total da página); as gavetas (`drawerChecks`: o clique é julgado no produto — o card que ele tem e não abre a gaveta é P0, mesmo que o protótipo não a tenha aberto; o gesto `click` simples de um cenário de gaveta também conta; o card na tela que não é botão, contado pela ação, é P0 à parte da linha que o dado não tem, desde a 1.3, UAT-427; o `click` simples também leva o `card` e o `cards` chega ao julgamento, desde a 1.3.1, UAT-532); os grupos (`baseChecks`) e o juiz da referência estática (`staticChecks`). As regras por componente e as das gavetas nasceram no juiz das gavetas e tabelas do Control Center (2026-10-12, UAT-45 e UAT-49) |
 | `judge.mjs` | agrega só os registros desta execução, escreve `summary.md` e `diff.json`, desenha os pares, devolve 0/1/2 |
 | `version.mjs` | a versão e a superfície estável do kit |
 | `kit.test.mjs` | os testes: regras, juiz, versão, servidores, e o sensor de ponta a ponta — referência viva e estática |

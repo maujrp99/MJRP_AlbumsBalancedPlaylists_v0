@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-11-01
 fontes: [kernel/ways-of-working/product-discovery, kernel/ways-of-working/loop-engineering-concept, kernel/design/sketch-vs-prototype, kernel/roadmap/requirements-graph, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, wiki/sources/2026-10-07-mjrp-agentic-ai-handbook.md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # PDLC em loops — Intake, Discovery, Design, Delivery, Release, Learn
 
@@ -227,7 +227,11 @@ sem ter feito (`mjrp-ensuring-quality`, `mjrp-ensuring-sdd`, e o crítico no por
   nunca valor aceito calado. Cada divergência confirmada vira, na hora, **issue no `uat.md` reportada por `juiz`** (§ 6).
   O relatório (`reports/audits/<data>-<produto>-visual-parity-recheck[-n].md`, com `verdict: pass | fail | incomplete`
   e `p0: <n>` no frontmatter, em inglês — os únicos campos que o hook lê; a prosa pode dizer "Veredito: passa" para o
-  humano) vai no ramo, depois do último commit de tela.
+  humano) vai no ramo, depois do último commit de tela. **No conserto de bug** (todas as specs de feature mudadas com
+  `solution_type: fix`), vale no lugar o relatório do teste de navegador do próprio bug, rodado no site compilado
+  (`…-bug-browser-test[-n].md`, com `site: compiled` e `test:` apontando o arquivo do teste no ramo); a mesma tabela decide.
+  Em toda reconferência, o juiz também **usa a tela** (clica, troca aba e idioma, salva), além de comparar: todo
+  requisito de tela tem teste de interação do fluxo no navegador.
 - **A 1ª rodada vai para a `main`; o humano também julga.** Feita a primeira rodada de executar ⇄ verificar e o juiz, a
   feature é entregue ao integrador e integrada — mesmo com o juiz achando o que corrigir —, porque a liberação ajuda o humano a ser juiz também: ele
   vê a tela rodando, acha o que o juiz não achou, ou decide que está ok do jeito que está. Cada achado do juiz é uma
@@ -389,6 +393,7 @@ concluída**.
 
 ## History
 
+- **2026-11-17 16:21** · **No conserto de bug, o teste de navegador do bug vale como reconferência; a reconferência usa a tela** (F273, UAT-589; decisão do MJRP de 2026-11-17 14:57, proposta do MJRP Personal): a trava visual (`visual_gate.py`) aceita o relatório `…-bug-browser-test` no branch só de conserto, e as skills de qualidade e de design pedem o teste de interação de todo requisito de tela.
 - **2026-11-05 18:55** · **A conferência de fecho casa a sessão pelo ramo** (§ «O fechamento da sessão»; F198, UAT-516): o `session-check` pedia o id do app (`local_<id>`), que a sessão não conhece, e reprovava sempre. Agora a entrada de fechamento vale se traz `Session:` e o `Branch: <ramo>` do worktree; o `--session` fica opcional. Decidido pelo agente, revisável pelo MJRP.
 - **2026-11-02 00:24** · **A dispensa do aceite sai** (`acceptance_waived:`, a linha de 2026-11-01 23:02): a reconferência a reprovou com um P1, porque é uma válvula do humano que um agente escreve numa linha (`apps/control-center/reports/audits/2026-11-02-recheck-f159-closures.md`). O humano decide de manhã.
 - **2026-11-02 00:20** · **«Pequena» ganha teto na issue de tipo `copy`: até 10 entradas por commit** (§ 2; F158; a reconferência `apps/control-center/reports/audits/2026-11-02-recheck-f158.md`, P2-2; o número é decisão do orquestrador, revisável pelo MJRP, que disse «pequenas mudanças»). A linha que já existe não vira `copy`. O salvar da tela só muda o texto, que continua texto; marcador e texto vazio não se conferem nele, para um salvar recusado não travar o Admin (decisão do orquestrador, revisável pelo MJRP; `2026-11-02-recheck-f158.md`, P2-B).

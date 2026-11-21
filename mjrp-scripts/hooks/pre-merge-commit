@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-merge-commit - a branch that changed a screen is merged with the independent visual recheck's report: evaluated
 # (`verdict: pass` or `fail`, never `incomplete`) and with `p0: 0`. ADR-0017 of the harness, 2026-10-12; revised
 # 2026-10-17 (decision of the MJRP, pdlc-loops § 5): the judge evaluates, it does not block - a `fail` without P0
@@ -22,6 +22,14 @@
 # pre-commit, which runs the same two gates. A fast-forward makes no merge commit and no hook runs (merge with --no-ff).
 ROOT=$(git rev-parse --show-toplevel) || exit 0
 cd "$ROOT" || exit 0
+
+# 2026-11-17 (F282, UAT-596): when this hook ends in success the merge commit is about to be made - leave the one-use ticket that the
+# reference-transaction hook (F278) asks for before it lets the `main` move, in the same format and with the same 10-minute life as the
+# commit-msg's (the tree the merge result has, the HEAD and the branch it sits on, the time). The commit-msg hook does not run on a clean
+# `git merge --no-ff`, so without this the train's merge was refused with «sem bilhete». A merge that stops on a conflict never reaches this
+# hook (no ticket); the commit that closes it goes through commit-msg, which leaves its own. A fast-forward makes no merge commit and runs
+# neither hook, so it still has no ticket. A hook that refuses (exit 1) leaves none; a ticket dies by use, by HEAD/tree mismatch or at 10 min.
+trap 'code=$?; if [ "$code" -eq 0 ]; then t=$(git write-tree 2>/dev/null) && printf "tree=%s\nhead=%s\nref=%s\nts=%s\n" "$t" "$(git rev-parse HEAD 2>/dev/null || echo 0000000000000000000000000000000000000000)" "$(git symbolic-ref -q HEAD)" "$(date +%s)" > "$(git rev-parse --git-common-dir)/mjrp-main-ticket" 2>/dev/null; fi' EXIT
 closing=$(git -c core.quotePath=false diff --cached -U0 --diff-filter=AMR -- ':(glob)**/docs/specs/features/F*/spec.md' 2>/dev/null | grep -Eic '^\+status: *(Done|Accepted)')
 for gate in retro_step_check sdd_shape_check; do
   if [ -f "$ROOT/mjrp-scripts/$gate.py" ] && command -v python3 >/dev/null 2>&1; then
@@ -37,6 +45,17 @@ for gate in retro_step_check sdd_shape_check; do
     echo "  [pre-merge-commit] AVISO: python3 não foi encontrado - $gate.py NÃO conferiu este merge (ele não fecha feature, então entra)." >&2
   fi
 done
+# F305 (UAT-617): the merge result does not carry a git conflict marker either (the same sensor as the pre-commit, on what the merge brings in).
+# A script absent warns; an evaluation that fails (exit 2) refuses: «not checked» is no approval.
+MARKERCHK="$ROOT/mjrp-scripts/conflict_marker_check.py"
+if [ -f "$MARKERCHK" ] && command -v python3 >/dev/null 2>&1; then
+  python3 "$MARKERCHK" "$ROOT" --staged || {
+    echo "  merge bloqueado: há marcador de conflito do git no que o merge traz, ou o sensor não pôde julgar (linhas acima). Corrija no ramo e junte de novo." >&2
+    exit 1
+  }
+else
+  echo "  [pre-merge-commit] AVISO: conflict_marker_check.py (ou o python3) não existe - marcador de conflito NÃO foi conferido neste merge." >&2
+fi
 # UAT-531 (F253): the same fast catalog gate as the pre-commit, on the merge result - F245 reached the trunk by a merge that nothing here judged.
 # F260 (UAT-580): in a child the reader itself exits 0 (the gate is the harness's); the `mjrp-skills/` folder is not what tells them apart.
 CCHK="$ROOT/mjrp-scripts/conformance_check.py"

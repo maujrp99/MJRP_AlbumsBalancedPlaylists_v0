@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """adr_header_check.py - the header of every ADR in `docs/decisions/`: the TITLE line and the STATUS line (catalog item `adr-names`, CM-0076).
 
 The check that passed the file NAME while the Control Center could not READ the file (MJRPpersonal, 2026-10-18: ADRs titled
@@ -51,6 +51,14 @@ NOTICE_MAX = 1500
 # discount is capped in TOTAL per ADR: what the pointers sum beyond NOTICE_TOTAL_MAX counts like any other text. The real ADRs sum at most
 # 3,101 characters in 9 lines. 4,000 is the integrator's call (2026-11-05), open to the MJRP's review.
 NOTICE_TOTAL_MAX = 4000
+# F289 (UAT-599): two ADRs of the Control Center were ACCEPTED over the ceiling (dated after SHORT_SINCE, 10,288 and 8,594 counted characters) and an
+# accepted ADR is not edited, so the ceiling cannot be met by the text. They are listed here, by file name, with the size FROZEN at the day they were
+# found: they pass up to it and fail above it (an amendment goes into a new ADR, never into the old one). The list never takes a new entry for a
+# new ADR: a new one is judged against MAX_CHARS before it is accepted.
+OVER_CEILING_ACCEPTED = {
+    "0044-push-ordered-from-the-iphone-with-the-passkey.md": 10288,
+    "0055-in-progress-from-the-session-reservation.md": 8594,
+}
 STATUS_RE = r"\*\*Status(?:\*\*:|:\*\*)\s*[*_]*\s*(?P<word>[^\s*_.,;:(·]+)"
 
 
@@ -104,14 +112,15 @@ def counted_chars(text):
     return sum(len(line) + 1 for line in lines) - discounted - (0 if text.endswith("\n") else 1), discounted
 
 
-def short_problems(text):
-    """Why a decision@3 record (dated on or after SHORT_SINCE) is not short or does not declare who accepts it; [] for older ones."""
+def short_problems(text, name=None):
+    """Why a decision@3 record (dated on or after SHORT_SINCE) is not short or does not declare who accepts it; [] for older ones.
+    `name` is the file name: an ADR in OVER_CEILING_ACCEPTED is judged against its frozen size instead of MAX_CHARS."""
     date = record_date(text)
     if date is None or date < SHORT_SINCE:
         return []
     found = []
     size, discounted = counted_chars(text)
-    if size > MAX_CHARS:
+    if size > OVER_CEILING_ACCEPTED.get(name, MAX_CHARS):
         found.append(f"a ADR tem {size} caracteres contados ({discounted} descontados nas linhas `Emendada por`/`Superada por` na forma do aviso: "
                      f"o rotulo, o id da ADR e a data, ate {NOTICE_MAX} caracteres por linha e {NOTICE_TOTAL_MAX} no total; fora disso conta inteiro); o teto e {MAX_CHARS} (decision@3): a decisao e o porque, cada alternativa numa "
                      "linha, as consequencias em topicos, os arquivos; a evidencia vai para a critica, o plan.md ou a pagina da wiki")
@@ -138,7 +147,7 @@ def problems(root):
         if not re.match(FILE_RE, f.name):
             continue
         text = f.read_text(encoding="utf-8", errors="replace")
-        for why in (title_problem(text, prefix), status_problem(text), *short_problems(text)):
+        for why in (title_problem(text, prefix), status_problem(text), *short_problems(text, f.name)):
             if why:
                 found.append(f"{DECISIONS_DIR}/{f.name}: {why}")
     return found

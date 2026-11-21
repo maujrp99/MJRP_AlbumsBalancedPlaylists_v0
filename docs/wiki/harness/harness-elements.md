@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-27
 fontes: [pasquadev-loop-engineering, anthropic-context-engineering, ibm-skills-mcp-rag-memory, fowler-guides-sensors]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Os **sete elementos** que compõem o entorno de um modelo de linguagem para que ele produza trabalho confiável — os
@@ -19,6 +19,7 @@ muda o que dá para fazer com ele.
 > **Reorganizado pelo MJRP em 2026-10-27**: as onze peças viram os sete elementos do diagrama, nesta ordem. A versão
 > anterior está em `_archive/2026-10-27-harness-elements/`. Mudança de elemento, domínio ou estado entra datada no `## History`.
 
+- **2026-11-17 14:12** · O HE-5 dizia «26 guias de procedimento … e mais de 150 ferramentas» → diz o que são, sem o número que envelhece (havia 28 skills da fábrica e 224 scripts) (UAT-548)
 ## What it is
 
 Uma tabela para ver de relance, e depois cada elemento com detalhe. A coluna «Junta» diz quais das onze peças de antes
@@ -149,7 +150,7 @@ elemento, mude aqui, com data no `## History`.
 | [[harness-elements#^he-2\|HE-2]] Orchestration & Evals | Quem faz o quê, e quem confere | rodando e evoluindo | Cada etapa tem um responsável. Quem constrói nunca é quem confere: um avaliador independente revisa o trabalho, e o que a pessoa vê ou decide só vale com o aceite dela; o resto fecha pela reconferência independente. | um agente especializado para cada papel; as avaliações rodando sozinhas | [[agents-agentic-concepts]] |
 | [[harness-elements#^he-3\|HE-3]] Governance & Observability | Regras claras e tudo à vista | rodando e evoluindo | O sistema recusa sozinho o que viola as regras. O que a pessoa precisa ver, decidir ou é de segurança pede a aprovação dela. Um painel mostra o estado de cada projeto, os alertas e o custo. | o registro detalhado do que cada agente fez | [[doctor]] |
 | [[harness-elements#^he-4\|HE-4]] Context Engineering | A memória certa na hora certa | rodando | O sistema lembra onde o trabalho parou, as decisões tomadas e o que foi aprendido. Carrega só o que a tarefa pede, e o custo disso é medido. | medir o que cada agente realmente lê | [[context-vs-memory]] |
-| [[harness-elements#^he-5\|HE-5]] Tools & Guides | Os procedimentos e as ferramentas | rodando e em construção | 26 guias de procedimento, um para cada tipo de trabalho, e mais de 150 ferramentas automáticas catalogadas. | o inventário de ferramentas declarado em cada projeto | tools |
+| [[harness-elements#^he-5\|HE-5]] Tools & Guides | Os procedimentos e as ferramentas | rodando e em construção | Um guia de procedimento (skill) para cada tipo de trabalho, e as ferramentas automáticas catalogadas; os números ficam no inventário, que se conta sozinho. | o inventário de ferramentas declarado em cada projeto | tools |
 | [[harness-elements#^he-6\|HE-6]] Security & Sandbox | O ambiente e a segurança | rodando e em construção | Tudo é recuperável. Nenhuma senha ou segredo fica guardado em arquivo. Acessos protegidos. | um ambiente isolado para cada agente trabalhar | [[hooks-concept]] |
 | [[harness-elements#^he-7\|HE-7]] Guardrails & Foundation | As regras que sempre valem | rodando | Cada projeto declara suas regras, seus princípios e seu jeito de trabalhar, e o sistema confere tudo automaticamente. | — | [[project-profiles]] |
 

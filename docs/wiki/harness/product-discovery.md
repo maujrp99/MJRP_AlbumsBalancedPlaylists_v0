@@ -1,13 +1,13 @@
 ---
 title: Product Discovery — do problema à decisão (Rapid × Full)
-aliases: [product-discovery, discovery, enquadrar, FASE 1b, rapid discovery, full discovery, handbook de discovery, quatro riscos, premissa mais arriscada, matar iterar avançar]
+aliases: [product-discovery, discovery, enquadrar, discovery-lite, FASE 1b, rapid discovery, full discovery, handbook de discovery, quatro riscos, premissa mais arriscada, matar iterar avançar]
 summary: o processo da etapa Enquadrar da Discovery do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto
 tags: [kernel, pdlc, discovery, produto]
 status: em formação
-atualizado: 2026-10-09
+atualizado: 2026-11-17
 fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, originals/product-discovery-handbook/2026-10-07-handbook-v1.md, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, kernel/roadmap/requirements-graph, kernel/design/sketch-vs-prototype]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Product Discovery — do problema à decisão (Rapid × Full)
 
@@ -165,6 +165,23 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 | Inventário do protótipo aprovado | `docs/specs/info-arch.md` § *Inventário do protótipo* | `mjrp-designing-ui`, na mesma rodada do protótipo; o coach lê e liga cada item |
 | Requisitos | `docs/specs/requirements/` | `mjrp-writing-reqs` (no nível do problema aqui; Ready no «Pronto para construir») |
 
+## 7. Discovery-lite — o incômodo sobre o que já existe
+
+O tamanho mínimo da Discovery: o humano se incomoda com algo que **já existe** no produto, a evidência está no próprio
+produto (os dados, a regra que gera o comportamento, as páginas) e no mercado, e uma conversa com o agente leva do sinal à
+feature pronta para priorizar. Não há pesquisa com usuários nem resultado novo; se o caso pedir um dos dois, o coach
+oferece o Rapid ou o Full e o humano decide. Quem conduz é a `mjrp-coaching-pm` (as dez etapas, os portões e as nove regras
+estão na skill); a etapa de linguagem é contrato com a `mjrp-copywriting`: **o humano escreve** a primeira versão de cada
+item, e a skill traz ao lado o ajuste mínimo, uma alternativa só quando há uma de verdade, e a recomendação com o porquê.
+
+As etapas: sinal · medir o que existe · benchmark (oferecido) · diagnóstico (o humano confirma; o requisito e a feature
+entram no board em esboço, antes de qualquer protótipo, com as etapas que faltam como perguntas abertas) · modelo (o
+humano corta e aprova) · linguagem · protótipo · arquitetura · teste da premissa (oferecidos quando o caso pede) · fechar — o requisito
+Ready, apontando para o estado aprovado, e a feature sem pergunta aberta. **Nada se constrói antes do fecho e da priorização do
+humano:** «vamos fazer isso agora» no meio da especificação ainda é discovery, e o orquestrador não abre sessão de build
+para feature com pergunta aberta ou em revisão do humano; só a palavra clara dele de abrir o build com a pergunta
+aberta passa por cima, com uma linha no log.
+
 ## Anexo A · Casos citados nos handbooks
 
 - **Waze** — o valor percebido não era "o caminho mais rápido", era a paz de espírito de saber a hora de chegada; o
@@ -188,6 +205,7 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 
 ## History
 
+- **2026-11-17 21:10** · O Discovery-lite (§7, F276, S-243): o incômodo sobre o que já existe, do sinal à feature pronta numa conversa, conduzido pela `mjrp-coaching-pm`; a etapa de linguagem como contrato com a `mjrp-copywriting`; nenhum build com pergunta aberta. Origem: o procedimento extraído no MJRPpersonal (`reports/research/2026-11-17-discovery-lite-procedure.md`), «yes do it pls» do MJRP à proposta.
 - **2026-10-29 20:19** · A medida do resultado é opcional (ordem do MJRP, UAT-409, F127): o passo 2 pede hoje → alvo só quando há medida; sem ela a linha diz `sem medida` ([[conformance-notes]]).
 - **2026-10-13 19:00** · A linha *Épicos e fora de escopo* perde a exceção do subprojeto (ADR-0020): o app dentro do harness tem épicos próprios.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: o inventário do protótipo é escrito pela `mjrp-designing-ui` na mesma rodada da tela (com os wireframes); o coach lê, manda escrever se faltar e liga cada item a uma função do produto ou a um resultado; no subprojeto do harness o `prd.md` organiza por release, sem épicos.

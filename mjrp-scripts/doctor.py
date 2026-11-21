@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -248,7 +248,23 @@ def main():
         sys.exit(2)
 
     t0 = time.time()
-    rep, code = run(root, a.skip_sensors)
+    try:   # F293 (regra 44): one heavy suite at a time on the machine; the turn is taken before the run, and a child inherits it
+        import machine_load
+    except ImportError:
+        machine_load = None
+    if machine_load is None:
+        rep, code = run(root, a.skip_sensors)
+    else:
+        try:
+            turn = machine_load.heavy("doctor", f"doctor.py {root.name}")
+            turn.__enter__()
+        except TimeoutError as exc:
+            print(f"doctor: {exc}: não rodou (exit 2)", file=sys.stderr)
+            sys.exit(2)
+        try:
+            rep, code = run(root, a.skip_sensors)
+        finally:
+            turn.__exit__(None, None, None)
     if rep is None:
         sys.exit(code)
 

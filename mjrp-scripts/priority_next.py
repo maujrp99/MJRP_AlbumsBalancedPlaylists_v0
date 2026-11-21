@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 priority_next.py - what the MJRP prioritized and nobody started: the «Priorizada» column as a command (F125, UAT-407; any item, F134).
 
@@ -33,6 +33,7 @@ The rules are MIRRORS of the Control Center's (stdlib only, ADR-0015: the script
   - "started" .............. `rules/delivery.py` `not_started` (a task ticked, an unmerged branch of the feature, or the spec delivered) plus the
                              spec `In progress` (an `In progress` spec with no tick is work under way too)
   - the branch of a feature  `rules/delivery.py` `features_of` (`feat|fix/fNN-…`, `claude/fNN-…`; a `worktree-agent-*` branch names no feature)
+  - a reserved feature ..... F265 (UAT-582): a feature an active session reserves (`session_lease.py`) started, as on the board
   - a Discovery branch ..... `rules/delivery.py` `DISCOVERY`, `discovery_only` and `building` (F212, UAT-533): a branch whose diff against
                              `main` touches only Discovery artifacts is not a start, unless the spec of the feature at its head started
   - the ticked tasks ....... `rules/delivery.py` `ticked_tasks` (only under `## Implementation…` and `## Verification…`)
@@ -76,7 +77,11 @@ _FEATURE_DIR = re.compile(r"^(F\d{2,})-")
 # feature's sketch -- paths from the repository's root, a project inside `apps/<name>/` under that prefix
 DISCOVERY = re.compile(r"^(?:apps/[^/]+/)?(?:design/.+|daily-checks/.+|MEMORY\.md|docs/log\.md"
                        r"|docs/specs/(?:info-arch|design-system)\.md"
-                       r"|docs/specs/features/F\d{2,}-[^/]+/(?:spec|plan|tasks)\.md)$")
+                       r"|docs/specs/features/F\d{2,}-[^/]+/(?:spec|plan|tasks)\.md"
+                       r"|reports/audits/[^/]*critique[^/]*|reports/research/.+)$")  # F279: the critiques and the research
+# F279 (UAT-533): an ADR is Discovery while its text at the branch's head says `Proposed` (rules/discovery.py `ADR_PATH`)
+_ADR_PATH = re.compile(r"^(?:apps/[^/]+/)?docs/decisions/\d{4}-[^/]+\.md$")
+_ADR_PROPOSED = re.compile(r"^\*\*Status\*\*:\s*Proposed\b", re.M)
 _SPEC_PATH = re.compile(r"^(?:apps/[^/]+/)?docs/specs/features/F(?P<n>\d{2,})-[^/]+/spec\.md$")
 _TITLE = re.compile(r"^#\s+Feature\s+F\d{2,}:\s*(?P<t>.+?)\s*$", re.M)
 _STORY_ID = re.compile(r"(?<![\w-])(?:S|UC|EA)-\d{2,}(?![\w])")
@@ -276,6 +281,21 @@ def branch_features(root):
     return out
 
 
+def session_features(root):
+    """F265 (UAT-582, CC-ADR-0055): the feature numbers a live session reserves (`session_lease.py claimed`: an active lease that names
+    it, or whose worktree's branch names it). The board shows such a feature of the «Priorizada» «Em andamento» from the session's start;
+    here it stops being offered as the next to start, so the orchestrator never opens a second session for it. Only the list's items
+    are asked, so a reservation outside the «Priorizada» changes nothing. Git not listing the worktrees is not «no session»: NotEvaluable."""
+    try:
+        import session_lease
+    except ImportError:   # a kernel copy without the lease script: no reservation is read, the start is the branch's (the rule before F265)
+        return set()
+    found = session_lease.claimed(root)
+    if found is None:
+        raise NotEvaluable("git não listou os worktrees: as reservas das sessões não se leem")
+    return {int(f[1:]) for f, state in found.items() if state == "working"}
+
+
 def discovery_only(changed):
     """The diff touches nothing but Discovery artifacts (rules/discovery.py `discovery_only`). An empty diff (a branch just opened, with no
     commit of its own: the F219 case) touches no construction either: the start is the start commit. A diff git did not give (None)
@@ -291,7 +311,20 @@ def changed_paths(root, base, head):
         r = _git.run(root, "-c", "core.quotepath=false", "diff", "--name-only", "--no-renames", f"{base}...{head}")
     except _git.GitError as exc:
         raise NotEvaluable(f"git diff do ramo: {exc}") from exc
-    return [line for line in r.out.splitlines() if line] if r.code == 0 else None
+    if r.code != 0:
+        return None
+    return [p for p in r.out.splitlines() if p and not _proposed_adr(root, head, p)]
+
+
+def _proposed_adr(root, head, path):
+    """F279 (UAT-533): the path is an ADR whose text at `head` says `Proposed`: Discovery, not construction. An ADR git could not show stays a change."""
+    if not _ADR_PATH.match(path):
+        return False
+    try:
+        r = _git.run(root, "show", f"{head}:{path}")
+    except _git.GitError:
+        return False
+    return r.code == 0 and bool(_ADR_PROPOSED.search(r.out))
 
 
 def building(root, base, head, carried):
@@ -464,7 +497,7 @@ def all_unstarted(root):
     found = projects(root)
     if not found:
         return []
-    branches = branch_features(root)
+    branches = branch_features(root) | session_features(root)
     out = []
     for p in found:
         rows = unstarted(p, branches)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 orchestrator_wait.py - the one wait command of a project's orchestrator: it ends the moment the MJRP acts (F240, S-237).
 
@@ -16,7 +16,9 @@ It ends (exit 0) with what happened as soon as ANY of these is new since the las
   - a change in a `docs/specs/priority.md` at `main` (`priority_next.py`'s reader),
   - an approval of a distance request of this project that he signed (`remote_approval.py`'s folders, read through `_passkey`),
   - a push the iPhone ordered for this project and the service sent (`approvals/pushed/*.json` with `result: ok`; F244, CC-ADR-0045 § 7): it
-    wakes with the SHA that went, to check production.
+    wakes with the SHA that went, to check production,
+  - an alert the supervisor outside the agent opened for this project or for all (`supervisor_state.py`, written by `supervisor.py`; F294): a session that died mid-turn, the
+    Control Center stuck, the orchestrator without its wait, or the supervisor itself stopped.
 Nothing in `--seconds`: exit 3, saying to run it again. Another wait already up for this folder: exit 4. Not the orchestrator: exit 2.
 
 It only READS (git and the account's approval folders) and writes two small files of its own in `<root>/.mjrp/`: the marker «a wait is up» (the
@@ -164,14 +166,25 @@ def _pushed(root):
     return found
 
 
+def _supervisor(root, now):
+    """The alerts the supervisor outside the agent has open for this project (F294, S-245, rule 46), and its own «não avaliável» when it
+    stopped beating. Not installed is no news (nothing to wake for); the session-start line says it."""
+    import supervisor_state
+    verdict, why, alerts = supervisor_state.open_alerts(root, now)
+    found = {f"{a.get('text')} [{a.get('id')}]" for a in alerts}
+    if verdict != "ok" and supervisor_state.state_path().exists():
+        found.add(f"supervisor: não avaliável — {why}")
+    return found
+
+
 def snapshot(root, now=None):
     """What depends on the MJRP in this project right now: {answers, returned, signed, pushed: sorted lists, priority: {folder: hash}}.
     A reader that is not there (an older kernel) or does not answer contributes nothing, and says so under `unread`."""
     now = int(time.time() if now is None else now)
-    out, unread = {"answers": [], "returned": [], "signed": [], "pushed": [], "priority": {}}, []
+    out, unread = {"answers": [], "returned": [], "signed": [], "pushed": [], "priority": {}, "supervisor": []}, []
     for key, reader in (("answers", lambda: _answers(root)), ("returned", lambda: _returned(root, now)),
                         ("signed", lambda: _signed(root, now)), ("pushed", lambda: _pushed(root)),
-                        ("priority", lambda: _priority(root))):
+                        ("priority", lambda: _priority(root)), ("supervisor", lambda: _supervisor(root, now))):
         try:
             value = reader()
         except Exception:  # noqa: BLE001 - a reader that cannot answer leaves its part out; the others still wake the session
@@ -203,6 +216,9 @@ def news(before, after):
     if "pushed" in before:                       # a record from before this reader existed has no baseline: old pushes are not news
         for item in sorted(set(after.get("pushed", [])) - set(before["pushed"])):
             out.append(("pushed", f"push enviado pelo iPhone: {item.split()[-1][:7]} na main  -> confira a produção"))
+    if "supervisor" in before:                   # same as `pushed`: a record from before this reader has no baseline
+        for item in sorted(set(after.get("supervisor", [])) - set(before["supervisor"])):
+            out.append(("supervisor", f"o supervisor avisa: {item}  -> python3 mjrp-scripts/supervisor.py status"))
     was = before.get("priority", {})
     for where, digest in sorted(after.get("priority", {}).items()):
         if where in was and was[where] != digest:
@@ -218,14 +234,25 @@ def is_orchestrator(root):
 
 
 def session_start_line(root, now=None):
-    """The reminder at the start of a session: the orchestrator with no wait up. Empty for a page session (a linked worktree) or a wait up."""
+    """The reminder at the start of a session, for the orchestrator only: no wait up, and what the supervisor outside the agent has open or
+    that it is not evaluable (F294). Empty for a page session (a linked worktree), or with the wait up and nothing from the supervisor."""
     try:
-        if not is_orchestrator(root) or wait_up(Path(root) / ".mjrp", now):
+        if not is_orchestrator(root):
             return ""
+        up = wait_up(Path(root) / ".mjrp", now)
     except Exception:  # noqa: BLE001 - a reminder that cannot decide stays silent
         return ""
-    return ("Orquestrador: deixe a espera de pé, em background, para acordar quando o MJRP aprovar, responder, devolver ou priorizar: "
-            + command())
+    lines = [] if up else ["Orquestrador: deixe a espera de pé, em background, para acordar quando o MJRP aprovar, responder, devolver "
+                           "ou priorizar: " + command()]
+    try:
+        import supervisor_state
+        verdict, why, alerts = supervisor_state.open_alerts(root, now)
+        if verdict != "ok":
+            lines.append(f"Supervisor: não avaliável — {why}")
+        lines += [f"Supervisor avisa: {a.get('text')}" for a in alerts]
+    except Exception:  # noqa: BLE001 - the supervisor's reader missing (an older kernel) leaves only the wait line
+        pass
+    return "\n".join(lines)
 
 
 def gate_block(root, state_dir, sid="", stop_hook_active=False, now=None):

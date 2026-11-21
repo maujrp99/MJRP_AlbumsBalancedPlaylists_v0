@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 r"""
 content_audit_check.py - did the conform's CONTENT audit really run on this project? The judge of the `content-audit`
 catalog item (content-audit@4: CM-0052, CM-0057, CM-0063, CM-0066; F179, UAT-486).
@@ -332,7 +332,8 @@ def _moved_by_approval(root, it, text, when, log_text, cfg=None):
 def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None, warnings=None, hints=None):
     """(gaps, open_p0) for one judge file read for one item. `warnings` (a list, optional) receives the AGING anchors and the
     anchors moved by the MJRP's approval (`anchor_moved_by_approval`). `hints` (a list, optional) receives (judge file, hinted
-    (rel, a, z), where the passage is now) for each anchor that followed its passage - what `--fix-hints` rewrites."""
+    (rel, a, z), where the passage is now, the quoted passage) for each anchor that followed its passage - what `--fix-hints` rewrites.
+    The passage is part of the key: two anchors may cite the same hinted line (UAT-532, A)."""
     rel = f"{AUDITS}/{name}"
     p = Path(root) / AUDITS / name
     if not p.is_file():
@@ -368,7 +369,7 @@ def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None,
     body = text[start:min(nxt) if nxt else len(text)]
     findings = [(m.group(1), m.group(2), m.group(3)) for m in (_FINDING.match(l) for l in body.splitlines()) if m]
     open_p0 = sum(1 for sev, closed, _ in findings if sev == "P0" and not closed)
-    good, why, moved, followed = {}, [], {}, []
+    good, why, moved, followed, quotes = {}, [], {}, [], []
     log_text = _read_log(root)
     for sev, _closed, ftext in findings:
         key, reason = _anchor(root, it, ftext, cfg)
@@ -378,6 +379,7 @@ def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None,
             hint = (am.group(1), int(am.group(2)), int(am.group(3) or am.group(2)))
             if key != hint:                                     # the passage is where it was read, on another line (F179)
                 followed.append((hint, key))
+                quotes.append((am.group(4) or am.group(5) or "").strip())
             continue
         by = _moved_by_approval(root, it, ftext, when, log_text, cfg)
         if by:
@@ -393,7 +395,7 @@ def _judge_file(root, name, it, floor, last_refresh, now, row_verdict, cfg=None,
         warnings.append(f"anchor_line_moved: {len(followed)} âncora(s) de `{it['id']}` em {rel} seguiram o trecho para outra linha ({shown}) - "
                         f"o trecho decide, a linha era dica; nada a reler (`content_audit_check.py <projeto> --fix-hints` reescreve a linha e o aviso some)")
     if hints is not None:
-        hints.extend((p, h, k) for h, k in followed)
+        hints.extend((p, h, k, q) for (h, k), q in zip(followed, quotes))
     # MOVED BY APPROVAL (content-audit@8, CM-0102, F171): the quoted line changed after the judge read it, and the MJRP approved that
     # change. Not a gap and no new judge: the anchor counts, and the warning keeps the gap on the report instead of hiding it.
     if warnings is not None:
@@ -963,8 +965,8 @@ def fix_hints(hints):
     `anchor_line_moved` aviso had no end short of a new judge). Only the line hint changes: the quoted passage, the text and
     `judged:` stay as the judge wrote them - the passage is what was read, and it did not change. Returns the lines rewritten."""
     by_file = {}
-    for path, hint, key in hints:
-        by_file.setdefault(Path(path), {})[hint] = key
+    for path, hint, key, quote in hints:
+        by_file.setdefault(Path(path), {})[(hint, quote)] = key       # (line hint, passage): two anchors on one line stay apart (UAT-532, A)
     done = []
     for path, moves in by_file.items():
         lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
@@ -974,10 +976,11 @@ def fix_hints(hints):
             if not am:
                 continue
             hint = (am.group(1), int(am.group(2)), int(am.group(3) or am.group(2)))
-            if hint not in moves:
+            quote = (am.group(4) or am.group(5) or "").strip()
+            if (hint, quote) not in moves:
                 continue
             old = f"{am.group(1)}:{am.group(2)}" + (f"-{am.group(3)}" if am.group(3) else "")
-            k = moves[hint]
+            k = moves[(hint, quote)]
             new = f"{k[0]}:{k[1]}" + (f"-{k[2]}" if k[2] != k[1] else "")
             lines[i] = line.replace(old, new, 1)
             done.append(f"{path.name}: {old} -> {new}")

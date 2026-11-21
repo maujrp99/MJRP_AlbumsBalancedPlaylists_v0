@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The kit collects what it creates (F52 TASK-00; harness-kaizen 2026-10-19 22:59). A run writes its captures, its facts
 // and its Playwright artifacts next to the verdict; a judge run is ~10 GB, and 400+ of them filled the MJRP's disk. After
 // the verdict is written, the run folder keeps only the summary, the diff and the images PROMOTED to evidence — the

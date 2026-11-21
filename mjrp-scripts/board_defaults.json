@@ -1,11 +1,14 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
-  "_about": "The harness default of the board configuration (board@1; ADR-0025 § 6, ADR-0026). A project's docs/specs/board.json adds record types and boards and replaces the stages of a phase (it may leave one out: ADR-0027), columns, hidden_categories, origin_rules and waiting_after_days; states and structure_types are the harness's. Judged by mjrp-scripts/_board.py (board_config_shape) and read by the Control Center's itemboard. No waiting_after_days here: a project without it falls back to its contract's requirements.stale_days.",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_about": "The harness default of the board configuration (board@1; ADR-0025 § 6, ADR-0026). A project's docs/specs/board.json adds record types and boards and replaces the stages of a phase (it may leave one out: ADR-0027), columns, hidden_categories, origin_rules and waiting_after_days; states and structure_types are the harness's. Judged by mjrp-scripts/_board.py (board_config_shape) and read by the Control Center's itemboard. No waiting_after_days here: a project without it falls back to its contract's requirements.stale_days. F275: as colunas «Esperando o cliente», «Esperando o agente» e «Esperando o merge» recebem só o que o registro do board (board_move.py) gravou; o estágio «Backlog» abre a Discovery (ninguém tocou), separado de «Explorar», e a etapa gravada (lote 1b) põe a fase e o estágio do item.",
   "format": "board@1",
   "phases": [
     {
       "id": "discovery",
       "stages": [
+        {
+          "id": "backlog"
+        },
         {
           "id": "explore"
         },
@@ -180,8 +183,8 @@
         "category": "closed"
       },
       "cancelled": {
-        "stage": "specify",
-        "category": "off"
+        "stage": "homologation",
+        "category": "closed"
       },
       "deferred": {
         "stage": "specify",
@@ -190,8 +193,9 @@
     },
     "story": {
       "backlog": {
-        "stage": "explore",
-        "category": "not_started"
+        "stage": "backlog",
+        "category": "not_started",
+        "fallback": "explore"
       },
       "prioritized": {
         "stage": "frame",
@@ -287,9 +291,27 @@
       ]
     },
     {
+      "id": "waiting_human",
+      "categories": [
+        "waiting_human"
+      ]
+    },
+    {
+      "id": "waiting_agent",
+      "categories": [
+        "waiting_agent"
+      ]
+    },
+    {
       "id": "evaluating",
       "categories": [
         "evaluating"
+      ]
+    },
+    {
+      "id": "awaiting_merge",
+      "categories": [
+        "awaiting_merge"
       ]
     },
     {
@@ -375,10 +397,34 @@
           }
         },
         {
+          "id": "waiting_human",
+          "match": {
+            "categories": [
+              "waiting_human"
+            ]
+          }
+        },
+        {
+          "id": "waiting_agent",
+          "match": {
+            "categories": [
+              "waiting_agent"
+            ]
+          }
+        },
+        {
           "id": "evaluating",
           "match": {
             "categories": [
               "evaluating"
+            ]
+          }
+        },
+        {
+          "id": "awaiting_merge",
+          "match": {
+            "categories": [
+              "awaiting_merge"
             ]
           }
         },
@@ -446,6 +492,30 @@
           "match": {
             "categories": [
               "waiting"
+            ]
+          }
+        },
+        {
+          "id": "waiting_human",
+          "match": {
+            "categories": [
+              "waiting_human"
+            ]
+          }
+        },
+        {
+          "id": "waiting_agent",
+          "match": {
+            "categories": [
+              "waiting_agent"
+            ]
+          }
+        },
+        {
+          "id": "awaiting_merge",
+          "match": {
+            "categories": [
+              "awaiting_merge"
             ]
           }
         },
@@ -538,7 +608,10 @@
               "reopened",
               "in_progress",
               "waiting",
+              "waiting_human",
+              "waiting_agent",
               "evaluating",
+              "awaiting_merge",
               "done",
               "closed"
             ]
@@ -556,7 +629,10 @@
               "reopened",
               "in_progress",
               "waiting",
+              "waiting_human",
+              "waiting_agent",
               "evaluating",
+              "awaiting_merge",
               "done",
               "closed"
             ]
@@ -574,7 +650,10 @@
               "reopened",
               "in_progress",
               "waiting",
+              "waiting_human",
+              "waiting_agent",
               "evaluating",
+              "awaiting_merge",
               "done",
               "closed"
             ]
@@ -592,7 +671,10 @@
               "reopened",
               "in_progress",
               "waiting",
+              "waiting_human",
+              "waiting_agent",
               "evaluating",
+              "awaiting_merge",
               "done",
               "closed",
               "accepted"

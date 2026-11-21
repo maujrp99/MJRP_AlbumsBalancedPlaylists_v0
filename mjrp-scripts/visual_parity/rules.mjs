@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The rules of the visual parity kit, as pure functions: no file, no browser, no clock. They compare the facts of the
 // approved prototype and of the product (facts.mjs) for one screen, one state and one condition, and say what diverges
 // and how much: P0 breaks the identity or misses the component, P1 diverges the form visibly, P2 is detail (does not
@@ -460,7 +460,7 @@ export function drawerChecks(rec, { labels } = {}) {
     const own = (list ?? []).find((a) => a.action === `drawer:${kind}`);
     if (own) return own;
     const click = [...(list ?? [])].reverse().find((a) => /^click(Text)?(:|$)/.test(String(a.action)));
-    return click && { action: click.action, available: click.available, row: !!click.available, opened: !!drawer };
+    return click && { action: click.action, available: click.available, row: !!click.available, opened: !!drawer, cards: click.cards };   // `cards`: UAT-532 (C)
   };
   const pa = find(rec.protoActions, pd);
   const qa = find(rec.productActions, qd);

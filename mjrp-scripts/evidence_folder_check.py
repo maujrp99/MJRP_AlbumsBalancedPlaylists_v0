@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 evidence_folder_check.py - does the evidence of a delivery really live in `reports/evidence/<TASK-ID>/`? The judge of
 the `evidence-folder` catalog item (evidence-folder@2, CM-0026).

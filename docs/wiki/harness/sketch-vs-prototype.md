@@ -1,4 +1,4 @@
-<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # Esboço vs. protótipo — desenhar para descobrir
 
 > Kernel · página conceitual · criada 2026-09-21 19:00 · atualizada 2026-10-09 · fonte: Buxton, *Sketching User Experiences* (2007)

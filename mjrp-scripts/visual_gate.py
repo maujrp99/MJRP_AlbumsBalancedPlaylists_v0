@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """visual_gate.py -- a screen feature is merged with the independent visual recheck's report: evaluated, with no P0.
 
 Born 2026-10-12 (ADR-0017 of the harness, revised after its architecture audit; decision of the MJRP): the Control
@@ -25,8 +25,9 @@ The rule, per project touched by the merged branch (the root, or a nested projec
     changed a screen file (that commit is an ancestor of the report's commit); the NEWEST such report decides;
   - the report is `reports/audits/<YYYY-MM-DD>-<product>-visual-parity-recheck[-n].md` in that project, and it is read
     from its FRONTMATTER only, in English (what the machine reads is English - CLAUDE.md, "Nomes"):
-        verdict: pass | fail | incomplete
+        verdict: pass | fail | incomplete | not-checked
         p0: <n>
+        duration_s: <n>      # S-248 R6: how long the judge took; recorded to measure, not read by the gate
     The prose line for the human ("Veredito: passa") is not read. Transition: the Control Center's recheck reports
     written before 2026-10-12 say `verdict: passes`, a legacy synonym of `pass` accepted in the frontmatter only (a
     report is not rewritten).
@@ -39,6 +40,8 @@ The decision table (the newest report after the last screen commit):
                                                                          `uat.md`, marked "achado do juiz"
     verdict: pass | fail, p0 > 0 ....................................... refuse - a P0 is the owner's call
     verdict: fail without `p0: <n>` .................................... refuse - without p0 there is no way to tell
+    verdict: not-checked ............................................... refuse - the judge hit its time ceiling (5 min,
+                                                                         3 for a bug fix); never an approval (S-248 R5)
     verdict: incomplete ................................................ refuse - the judge could not evaluate (sensor
                                                                          exit 2: no Node or Playwright, no facts, zero
                                                                          scenarios); nothing was compared
@@ -59,6 +62,13 @@ it never reads back. A report with `who_judged: human` - the OK of the chat that
 2026-10-26 to 2026-10-29) - no longer counts as a verdict: an agent wrote it, so it is not his. A branch with any
 standard-lane feature, or with no feature spec, keeps the recheck report; on the Agent track of the fast lane the
 independent recheck writes its report and the finger is not asked.
+
+The bug fix (F273, UAT-589; MJRP, 2026-11-17 14:57): on a branch whose changed feature specs all say `solution_type: fix`, the browser
+test of the bug itself, run on the compiled site, is the visual recheck - the full recheck held every screen commit of a fix back. Its
+report is `reports/audits/<YYYY-MM-DD>-<slug>-bug-browser-test[-n].md`, with the same `verdict` and `p0` and two more fields:
+`site: compiled` (the test ran on the built site, not on the dev server) and `test: <the test file, project-relative>`, a file
+the branch added or changed (never `..`, a folder or a file it did not touch). The same table decides; a `site` other than `compiled`, or a `test` that is not there, does not say. On a
+branch with any feature that is not a fix, or with no feature spec, this report is not read and the full recheck is still asked.
 
 The remote approval (F153, CC-ADR-0038): before asking for the finger, and only in the repository of the harness, the gate looks for a passkey
 signature of this tip, approved on the MJRP's iPhone. A valid one is the verdict: the note says `presence: passkey` and carries the signature,
@@ -98,14 +108,19 @@ UI_SUFFIXES = {".tsx", ".jsx", ".vue", ".svelte", ".html", ".css", ".scss"}
 DOC_NAMES = re.compile(r"(^|/)(readme[^/]*|[^/]*\.md|\.gitkeep|\.gitignore)$", re.I)
 PRUNE = {"node_modules", ".venv", "__pycache__", "dist", "build", ".git"}
 REPORT = re.compile(r"(^|/)reports/audits/\d{4}-\d{2}-\d{2}-[^/]*visual-parity-recheck[^/]*\.md$")
+BUG_REPORT = re.compile(r"(^|/)reports/audits/\d{4}-\d{2}-\d{2}-[^/]*bug-browser-test[^/]*\.md$")   # F273: a fix's own test
 FRONTMATTER = re.compile(r"\A---[ \t]*\n(.*?)\n---[ \t]*(\n|\Z)", re.S)
 VERDICT = re.compile(r"^verdict:[ \t]*[\"']?([A-Za-z-]+)[\"']?[ \t]*(#.*)?$", re.M)
 P0_FIELD = re.compile(r"^p0:[ \t]*[\"']?(\d+)[\"']?[ \t]*(#.*)?$", re.M)
 VERDICTS = {"pass": "pass", "passes": "pass",      # `passes`: legacy, see the docstring
-            "fail": "fail", "incomplete": "incomplete"}
+            "fail": "fail", "incomplete": "incomplete",
+            "not-checked": "not-checked"}      # S-248 R5: the judge hit its time ceiling; never an approval
 WHO_JUDGED = re.compile(r"^who_judged:[ \t]*[\"']?([A-Za-z-]+)", re.M)
 FEATURE_SPEC = re.compile(r"(^|/)docs/specs/features/(F\d+)[^/]*/spec\.md$")
 LANE = re.compile(r"^lane:[ \t]*[\"']?([A-Za-z-]+)", re.M)
+SOLUTION_TYPE = re.compile(r"^solution_type:[ \t]*[\"']?([A-Za-z-]+)", re.M)
+SITE_FIELD = re.compile(r"^site:[ \t]*[\"']?([A-Za-z-]+)[\"']?[ \t]*(#.*)?$", re.M)
+TEST_FIELD = re.compile(r"^test:[ \t]*[\"']?([^\"'#\n]+?)[\"']?[ \t]*(#.*)?$", re.M)
 # The proof of presence of the Control Center (CC-ADR-0031). The home comes from the account, never from $HOME: a variable on the
 # merge's command line must not be able to point the gate at another binary.
 PRESENCE = Path(pwd.getpwuid(os.getuid()).pw_dir) / ".mjrp" / "control-center" / "bin" / "presence"
@@ -222,7 +237,10 @@ def report_decision(text):
     the judge could not evaluate) or "invalid" (refuse: the report does not say)."""
     verdict, p0 = report_fields(text)
     if verdict is None:
-        return "invalid", "o frontmatter não diz `verdict: pass`, `fail` ou `incomplete`"
+        return "invalid", "o frontmatter não diz `verdict: pass`, `fail`, `incomplete` ou `not-checked`"
+    if verdict == "not-checked":
+        return "incomplete", ("o frontmatter diz `verdict: not-checked` - o juiz estourou o teto de tempo (5 min, 3 num bug) "
+                              "e nada foi aprovado (S-248)")
     if verdict == "incomplete":
         return "incomplete", "o frontmatter diz `verdict: incomplete` - o juiz não conseguiu avaliar (nada foi comparado)"
     if p0 is not None and p0 > 0:
@@ -247,6 +265,35 @@ def spec_lane(text):
     fm = FRONTMATTER.match(text or "")
     m = LANE.search(fm.group(1)) if fm else None
     return m.group(1).lower() if m else ""
+
+
+def spec_solution_type(text):
+    """The `solution_type:` of a feature spec's frontmatter, lower case ("fix" | "feature" | ...), or "" when it says none."""
+    fm = FRONTMATTER.match(text or "")
+    m = SOLUTION_TYPE.search(fm.group(1)) if fm else None
+    return m.group(1).lower() if m else ""
+
+
+def bug_test_fields(text):
+    """(site, test) of a bug browser test report's frontmatter (F273): site lower case or None, test the path or None."""
+    fm = FRONTMATTER.match(text or "")
+    if not fm:
+        return None, None
+    site, test = SITE_FIELD.search(fm.group(1)), TEST_FIELD.search(fm.group(1))
+    return (site.group(1).lower() if site else None), (test.group(1).strip() if test else None)
+
+
+def bug_report_decision(text, test_exists):
+    """What the report of a fix's own browser test lets the gate do (F273): the recheck's table, after the two fields of its own.
+    `test_exists(path)` says whether the test file is at the branch's tip."""
+    site, test = bug_test_fields(text)
+    if site != "compiled":
+        return "invalid", "o teste do bug não diz `site: compiled` - só o site compilado vale (sem o build o teste não conferiu o que vai ao ar)"
+    if not test:
+        return "invalid", "o relatório do teste do bug não diz `test: <arquivo do teste>`"
+    if not test_exists(test):
+        return "invalid", f"o relatório aponta `test: {test}`, que não está no ramo"
+    return report_decision(text)
 
 
 def ask_presence(reason, timeout=PRESENCE_TIMEOUT):
@@ -300,6 +347,23 @@ def branch_lanes(root, rev, changed):
             continue
         (fast if spec_lane(_show(root, rev, path)) == "fast" else other).add(m.group(2))
     return fast, other
+
+
+def branch_fix_only(root, rev, changed):
+    """Whether every feature spec the branch changed says `solution_type: fix` at `rev` (and there is at least one): the branch is
+    a bug fix, and the fix's own browser test on the compiled site is its visual recheck (F273)."""
+    kinds = [spec_solution_type(_show(root, rev, p)) for p in changed if FEATURE_SPEC.search(p)]
+    return bool(kinds) and all(k == "fix" for k in kinds)
+
+
+def _bug_test_on_branch(root, rev, prefix, test, changed):
+    """Whether the `test:` of a bug report is a file the branch added or changed (F273 recheck, P2): a path with `..`, a folder or a file
+    the branch did not touch (`README.md`) is not the bug's own test."""
+    rel = test[2:] if test.startswith("./") else test
+    if not rel or rel.startswith("/") or ".." in rel.split("/"):
+        return False
+    path = prefix + rel
+    return path in changed and _git(root, "cat-file", "-t", f"{rev}:{path}")[1].strip() == "blob"
 
 
 def _far_command(root, *args):
@@ -400,6 +464,7 @@ def judge_full(root, rev, base="HEAD", ask=None, label_of_branch=None):
     position = {c: i for i, c in enumerate(order.split())}          # 0 = the newest commit of the branch
     fast, other = branch_lanes(root, rev, changed)
     fast_lane = bool(fast) and not other
+    fix_only = branch_fix_only(root, rev, changed)
     problems, notes, waiting = [], [], []
     for prefix, rels in _projects_of(root, rev, changed).items():
         profile, declared = contract_fields(_show(root, rev, f"{prefix}.mjrp-project.yml"))
@@ -414,7 +479,8 @@ def judge_full(root, rev, base="HEAD", ask=None, label_of_branch=None):
         if not last:
             continue
         _, tree = _git(root, "ls-tree", "-r", "--name-only", rev, "--", f"{prefix}reports/audits/")
-        reports = [p for p in tree.splitlines() if REPORT.search(p[len(prefix):] if p.startswith(prefix) else p)]
+        kinds = (REPORT, BUG_REPORT) if fix_only else (REPORT,)    # F273: the fix's own test counts only on a fix branch
+        reports = [p for p in tree.splitlines() if any(k.search(p[len(prefix):] if p.startswith(prefix) else p) for k in kinds)]
         after = []                          # (position, path): the reports committed after the last screen commit
         for rp in reports:
             _, rc = _git(root, "log", "-1", "--format=%H", rev, "--", rp)
@@ -430,12 +496,18 @@ def judge_full(root, rev, base="HEAD", ask=None, label_of_branch=None):
             waiting.append((name, shown))
             continue
         if not after:
+            bug = (" - ou, por ser conserto de bug, o relatório do teste de navegador do bug no site compilado "
+                   "(reports/audits/<data>-<slug>-bug-browser-test[-n].md, com `site: compiled` e `test: <arquivo>`)") if fix_only else ""
             problems.append(("missing", f"{name}: o ramo mudou a tela ({shown}) e não traz reconferência visual "
                              f"(`verdict: pass` ou `fail`, com `p0: 0`, no frontmatter) commitada depois dele "
-                             f"(reports/audits/<data>-<produto>-visual-parity-recheck[-n].md)"))
+                             f"(reports/audits/<data>-<produto>-visual-parity-recheck[-n].md){bug}"))
             continue
         newest = min(after)[1]                                      # the newest one decides
-        kind, why = report_decision(_show(root, rev, newest))
+        if BUG_REPORT.search(newest):
+            kind, why = bug_report_decision(_show(root, rev, newest),
+                                            lambda t, _p=prefix: _bug_test_on_branch(root, rev, _p, t, changed))
+        else:
+            kind, why = report_decision(_show(root, rev, newest))
         if kind == "ok":
             continue
         if kind == "fail_ok":

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 r"""
 audit_questions_check.py - is the questions section of the conformance audit's report in the shape the screen reads? The second clause of
 the `content-audit` catalog item (content-audit@3, CM-0063); the parse itself is `content_audit_check.parse_questions` (one parse, which the

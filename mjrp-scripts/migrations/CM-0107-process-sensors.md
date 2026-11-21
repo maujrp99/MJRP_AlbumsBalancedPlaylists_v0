@@ -4,7 +4,7 @@ item: process-sensors
 from: 0
 to: 1
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0107 · process-sensors@0 → process-sensors@1
 
 ## Por que

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -1558,7 +1558,7 @@ class Graph:
     def acceptance_candidates(self):
         """(ident, spec or node file, names the stamp may carry) of every Accepted node the stamp rule judges: not the brownfield ones."""
         out = [(nid, n["path"], {fid for fid, ft in self.features.items() if nid in [r for _, r in ft["imports"]]} or {"requirements"})
-               for nid, n in self.nodes.items() if n["type"] == "requirement" and n["status"] == "Accepted"
+               for nid, n in self.nodes.items() if n["type"] in ("requirement", "nfr") and n["status"] == "Accepted"
                and not str(n["accepted_in"]).strip().lower().startswith(self.LEGACY_ACCEPTANCE)]
         return out + [(ft["dir"], self.p["features"] / ft["dir"] / "spec.md", {fid}) for fid, ft in self.features.items() if ft["status"] == "Accepted"
                       and not self.legacy_feature(ft)]       # F128: the legacy feature takes the phrase under the date proof, as the requirement does
