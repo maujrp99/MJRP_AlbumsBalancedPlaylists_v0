@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 14:54] decision — o MJRP: o que está no ambiente separado só vai a produção quando a migração para React terminar
+**Branch:** main
+Palavras do MJRP (2026-11-21): «staging agora só vai pra prod qdo completarmos a migracao». Antes, no mesmo dia: «v4 ficou sensacional, aprovada!!! Kudos for you» (a home v4) e «na versao mobile aqui tem muito texto e manteria o mergulhe e seu subtitulo apenas». Como foi entendido (orquestrador, revisável): o ramo `integrate/staging-2026-11-21` é a linha da migração (F83), publicada só na prévia do Firebase (F87, canal `staging`, https://mjrp-playlist-generator--staging-2nu8kutx.web.app, vence em 7 dias e é republicado a cada onda); o ramo do React não entra na `main` e nada dele vai a produção até a última onda. Em aberto com ele: se a home nova e os avisos de falha, que não dependem do React, vão a produção antes.
+
 ## [2026-11-21 14:43] session — F87: os testes de recusa do `--branch` ficam herméticos (repositório temporário próprio)
 **Branch:** wip/f87-preview-tests-hermetic
 Os scripts de publicação rodam a suíte dentro de uma cópia exportada do ramo, que não é repositório git; lá os três testes de recusa (`--branch` inexistente, `--branch` sem nome, `deploy-site.sh --branch x`) falhavam com «must live inside the git repository». Agora cada um roda numa fixture: repositório git temporário com cópia dos scripts, apagado no fim. Provado no repositório e numa exportação por `git archive`.
