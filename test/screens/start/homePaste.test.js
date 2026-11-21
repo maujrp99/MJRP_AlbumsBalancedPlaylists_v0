@@ -3,8 +3,8 @@
  * before the click (the rule of F63, shown earlier); after «Add», what went in and what stays to fix.
  */
 import { describe, it, expect } from 'vitest'
-import { checkPastedLines, pasteSummary, pasteReport } from '../../public/js/models/homePaste.js'
-import { SkipReason } from '../../public/js/models/bulkPaste.js'
+import { checkPastedLines, pasteSummary, pasteReport } from '../../../public/js/screens/start/homePaste'
+import { SkipReason } from '../../../public/js/models/bulkPaste.js'
 
 describe('the lines of the list, checked as they are typed', () => {
     it('each line is ready or says why; blank lines are not counted', () => {

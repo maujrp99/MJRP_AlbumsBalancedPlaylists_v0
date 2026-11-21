@@ -3,25 +3,19 @@ import { SafeDOM } from '../../utils/SafeDOM.js';
 import { getIcon } from '../../components/Icons.js';
 import { coverImage } from '../../components/ui/coverImage.js';
 
-/** The size of the covers the cards ask for. */
-const COVER_SIZE = '300';
-
 /**
  * The album cards of the album picker (F57): one renderer for every album card.
  * A card carries `data-action="pick-album"` and the id of its album; the screen's frame hears the click.
  *
- * Two forms of the same card: the series edit's (the default) and the Home's (`variant: 'stage'`, F79):
- * a button with the square cover, the «+» that becomes the album's place in the series, the title
- * and the year. The Home marks the chosen ones itself (views/HomeView.js).
+ * The card of the series edit. (The Start screen's own card, a button with the square cover and the album's place in the
+ * series, is drawn in React by screens/start/Results.tsx since F83 wave 4: it was this renderer's `stage` form.)
  */
 export class DiscographyRenderer {
     /**
      * @param {HTMLElement} container - the grid
-     * @param {{ variant?: 'card'|'stage' }} [options]
      */
-    constructor(container, { variant = 'card' } = {}) {
+    constructor(container) {
         this.container = container; // The grid container element
-        this.variant = variant;
     }
 
     render(albums) {
@@ -34,31 +28,7 @@ export class DiscographyRenderer {
             return;
         }
 
-        const draw = this.variant === 'stage' ? (album) => this.createStageCard(album) : (album) => this.createAlbumCard(album);
-        this.container.appendChild(SafeDOM.fragment(albums.map(draw)));
-    }
-
-    /** The Home's card (F79): a button, so the keyboard and the screen reader reach it as one. */
-    createStageCard(album) {
-        const year = album.year || 'Unknown';
-        const badges = badgesOf(album);
-        const coverUrl = album.coverUrl ? album.coverUrl.replace('{w}', COVER_SIZE).replace('{h}', COVER_SIZE) : null;
-        const mark = SafeDOM.span({ className: 'home-card__mark' });
-        mark.appendChild(SafeDOM.fromHTML(getIcon('Plus', 'home-card__plus')));
-
-        return SafeDOM.button({
-            className: 'home-card',
-            dataset: { action: 'pick-album', id: album.id },
-            'aria-pressed': 'false',
-            'aria-label': `${album.title}, ${year}. Click to add it`
-        }, [
-            SafeDOM.span({ className: 'home-card__cover' }, [
-                coverImage({ src: coverUrl, className: 'home-card__img', alt: '', loading: 'lazy' }),
-                mark
-            ]),
-            SafeDOM.span({ className: 'home-card__title' }, album.title),
-            SafeDOM.span({ className: 'home-card__year' }, badges.length ? `${year} · ${badges.join(', ')}` : String(year))
-        ]);
+        this.container.appendChild(SafeDOM.fragment(albums.map((album) => this.createAlbumCard(album))));
     }
 
     createAlbumCard(album) {

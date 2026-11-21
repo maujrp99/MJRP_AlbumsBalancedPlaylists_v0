@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:10] step — F83 onda 4: a tela Start em React (TASK-21); a Home à mão e os pedaços só dela saem
+**Branch:** claude/f83-wave-4-start
+Em public/js/screens/start/: Start, Stage, Results, Dock (com a folha do celular sobre ui/SheetWindow, agora com a variante cheia), PasteList, Equalizer, StartController (o controlador reescrito em TS com os mesmos nomes: o sensor visual da F84 conduz a tela por window.controller), StagingArea, homeSeries e homePaste (as regras com texto, vindas de models/), text, index; dicionário i18n/en/start.js e pt/start.js. A rota baixa o arquivo da tela na abertura, junto do login (é a primeira tela). Saíram views/HomeView.js, controllers/HomeController.js e components/home/* (1.054 linhas à mão); DiscographyRenderer perdeu a capa da Start (111 para 81 linhas); o seletor partilhado ganhou emptyQueryMessage e models/albumPicker.js badgeCodesOf. O teste igual-ao-de-antes passa nos 30 cenários (páginas, foco e chamadas ao que está fora), e acusa uma palavra, uma classe e um foco trocados; os testes antigos da Home foram levados por test/support/startHarness.js. Suíte inteira: 336 arquivos, 4.180 testes.
+
 ## [2026-11-21 18:47] step — F83 onda 4: o teste «igual ao de antes» da Start, vermelho (a tela em React ainda não existe)
 **Branch:** claude/f83-wave-4-start
 test/screens/start/Start.sameAsBefore.test.tsx toca os 30 cenários na tela nova e compara cada página e o foco com test/fixtures/startBeforeF83.json; mais três provas de que ele acusa uma palavra, uma classe e um foco trocados. Falha hoje porque screens/start/ não existe.

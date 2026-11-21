@@ -16,13 +16,12 @@ vi.mock('../../../public/js/components/Toast.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 
-import { HomeView } from '../../../public/js/views/HomeView.js'
+import { HomeView, flush } from '../../support/startHarness.js'
 import { userStore } from '../../../public/js/stores/UserStore.js'
 import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
 
 const album = (title, year) => ({ id: `id-${title}`, title, artist: 'Pavement', type: 'Album', year, releaseDate: `${year}-01-01`, coverUrl: 'https://img/{w}x{h}.jpg' })
 const ALBUMS = [album('Wowee Zowee', '1995'), album('Crooked Rain', '1994'), album('Slanted', '1992')]
-const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 function screenIs(phone) {
     window.matchMedia = (query) => ({

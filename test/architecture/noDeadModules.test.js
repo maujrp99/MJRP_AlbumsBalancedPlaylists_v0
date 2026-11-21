@@ -27,7 +27,6 @@ const KEPT_ON_PURPOSE = {
     // The hook of the React bridge (F83) that no screen has needed yet waits for the screen that does. The line goes out in the
     // commit of the screen that first uses it: this test fails the moment it stops being true. (navigation, usePhone and
     // useStore went out with the saved playlists screen, wave 1; the saved playlists screen sets no title of its own.)
-    'public/js/react-bridge/useScreenTitle.ts': 'the bridge, until a screen names itself (wave 2: the playlists screen)'
 }
 
 const graph = graphFrom(allEntryPoints())

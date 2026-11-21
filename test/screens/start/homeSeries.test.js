@@ -6,9 +6,9 @@ import { describe, it, expect } from 'vitest'
 import {
     suggestName, nameAfterChange, seriesCountLine, flameOf, addAllLabel, typesLine,
     dockEmptyNote, equalizerState, stageIsBig, NameState
-} from '../../public/js/models/homeSeries.js'
-import { ScanStatus } from '../../public/js/models/scanState.js'
-import { defaultFilters, toggleFilter } from '../../public/js/models/albumPicker.js'
+} from '../../../public/js/screens/start/homeSeries'
+import { ScanStatus } from '../../../public/js/models/scanState.js'
+import { defaultFilters, toggleFilter } from '../../../public/js/models/albumPicker.js'
 
 const album = (title, artist = 'Pink Floyd') => ({ id: title, title, artist })
 

@@ -15,12 +15,17 @@ import { normalize as pageOf } from './savedPlaylistsScenarios.js'
 import { router } from '../../public/js/router.js'
 import { loginWindowStore } from '../../public/js/stores/loginWindow.js'
 
-/** The page as the proof compares it: the text of a field as the field holds it now, read from a COPY (the live page is not touched). */
+/**
+ * The page as the proof compares it: the text of a field as the field holds it now, read from a COPY (the live page is not touched).
+ * What stands inside a block that is `hidden` is not compared (the block itself is, with its attributes): the old screen wrote into the
+ * blocks it hid and left there what it wrote the last time, which nobody saw; the blocks it shows are written again every time they show.
+ */
 export const normalize = (element) => {
     if (!element) return null
     const copy = element.cloneNode(true)
     const typed = element.querySelectorAll('input')
     copy.querySelectorAll('input').forEach((input, i) => input.setAttribute('value', typed[i].value))
+    copy.querySelectorAll('[hidden]').forEach(block => block.replaceChildren())
     return pageOf(copy)
 }
 
@@ -386,6 +391,7 @@ export const SCENARIOS = [
             await h.paste('#artistScanInput', 'Joni Mitchell - Hejira\nYes - Close to the Edge')
             h.snap('the list from a paste')
             h.focus('after the paste')
+            await h.caret('.home-line__text', 0, 6)
             await h.paste('.home-line__text', 'Caravan - In the Land of Grey and Pinkk\nOne\nTwo - Three')
             h.snap('lines pasted inside the list')
         }
@@ -483,6 +489,9 @@ export const SCENARIOS = [
             await h.click('#btnCreateSeriesSheet')
             h.snap('the name is missing', '.sheet')
             h.focus('the name is missing')
+            await h.type('#homeChosenName', 'L')
+            h.snap('typing in the name: the sheet keeps what it showed', '.sheet')
+            h.focus('typing in the name')
             await h.click('#homeSeriesSheet [data-dock="use-name"]')
             const write = h.hold('write')
             await h.click('#btnCreateSeriesSheet')

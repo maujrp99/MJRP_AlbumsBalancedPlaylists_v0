@@ -16,7 +16,7 @@ vi.mock('../../../public/js/components/Toast.js', () => ({
 }))
 
 import toast from '../../../public/js/components/Toast.js'
-import { HomeView } from '../../../public/js/views/HomeView.js'
+import { HomeView, flush } from '../../support/startHarness.js'
 import { ScanStatus } from '../../../public/js/models/scanState.js'
 import { DeadlineError } from '../../../public/js/utils/deadline.js'
 
@@ -26,7 +26,6 @@ const deferred = () => {
     const promise = new Promise((res, rej) => { resolve = res; reject = rej })
     return { promise, resolve, reject }
 }
-const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe('Home scan (F67)', () => {
     let app, view, controller
@@ -98,11 +97,12 @@ describe('Home scan (F67)', () => {
         expect(gridText()).toContain('Slanted')
     })
 
-    it('reads the text of the field that is on screen, even after the Home was drawn again', async () => {
-        // The Home DOM replaced without a new mount: the handlers on #app must still answer
-        while (app.firstChild) app.removeChild(app.firstChild)
-        app.appendChild(await view.render({}))
+    it('reads the text of the field as it is on screen when the button is pressed, not as it was last typed', async () => {
+        // the field is the browser's (a value written by code, with no event, is read all the same); the hand-made screen was proved
+        // by drawing the Home again under its handlers: a screen in React has no handlers on #app to survive that
         service.scanArtist.mockReturnValue(new Promise(() => {}))
+        $('#artistScanInput').value = 'first'
+        $('#artistScanInput').dispatchEvent(new Event('input', { bubbles: true }))
         type('pavement')
 
         clickScan()

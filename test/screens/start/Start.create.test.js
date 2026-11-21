@@ -10,19 +10,18 @@ const service = vi.hoisted(() => ({ scanArtist: vi.fn(), search: vi.fn() }))
 const series = vi.hoisted(() => ({ createSeries: vi.fn() }))
 const navigate = vi.hoisted(() => vi.fn())
 
-vi.mock('../../public/js/services/album-search/AlbumSearchService.js', () => ({ albumSearchService: service }))
-vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn(() => series) }))
-vi.mock('../../public/js/router.js', () => ({ router: { navigate } }))
-vi.mock('../../public/js/components/Toast.js', () => ({
+vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', () => ({ albumSearchService: service }))
+vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn(() => series) }))
+vi.mock('../../../public/js/router.js', () => ({ router: { navigate } }))
+vi.mock('../../../public/js/components/Toast.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 
-import { HomeView } from '../../public/js/views/HomeView.js'
-import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
+import { HomeView, flush } from '../../support/startHarness.js'
+import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
 
 const TITLES = ['The Endless River', 'The Division Bell', 'A Momentary Lapse of Reason', 'The Final Cut']
 const albums = TITLES.map((title, i) => ({ id: `a${i}`, title, artist: 'Pink Floyd', type: 'Album', year: String(2014 - i), releaseDate: `${2014 - i}-01-01` }))
-const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe('Home: create the series (F79)', () => {
     let app, view

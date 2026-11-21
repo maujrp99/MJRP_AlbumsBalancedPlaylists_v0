@@ -7,33 +7,36 @@
  *
  * It draws nothing: every change is told through `onChange`, with the list in its order.
  */
-const sameId = (a, b) => String(a) === String(b)
+import type { SeriesAlbum } from './homeSeries'
+
+const sameId = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 export class StagingAreaController {
-    /** @param {{ onChange: (albums: Array<Object>) => void }} options */
-    constructor({ onChange } = {}) {
+    private selectedAlbums: SeriesAlbum[] = []
+    private readonly onChange: (albums: SeriesAlbum[]) => void
+
+    constructor({ onChange }: { onChange?: (albums: SeriesAlbum[]) => void } = {}) {
         this.onChange = onChange || (() => {})
-        this.selectedAlbums = []
     }
 
-    getSelectedAlbums() {
+    getSelectedAlbums(): SeriesAlbum[] {
         return this.selectedAlbums
     }
 
     /** @returns {boolean} whether the album of this id is in the series */
-    hasAlbum(albumId) {
+    hasAlbum(albumId: unknown): boolean {
         return this.selectedAlbums.some(album => sameId(album.id, albumId))
     }
 
-    addAlbum(album) {
+    addAlbum(album: SeriesAlbum): void {
         if (this.hasAlbum(album.id)) return
         this.selectedAlbums = [...this.selectedAlbums, album]
         this.changed()
     }
 
     /** @returns {number} how many of them went in (an album already in the series does not) */
-    addMany(albums) {
-        const fresh = albums.filter((album, index) =>
+    addMany(albums: SeriesAlbum[]): number {
+        const fresh = albums.filter((album: SeriesAlbum, index: number) =>
             !this.hasAlbum(album.id) && albums.findIndex(other => sameId(other.id, album.id)) === index)
         if (fresh.length === 0) return 0
         this.selectedAlbums = [...this.selectedAlbums, ...fresh]
@@ -42,17 +45,17 @@ export class StagingAreaController {
     }
 
     /** @returns {{ album: Object, index: number }|null} what was taken out and where it was */
-    removeAlbum(albumId) {
+    removeAlbum(albumId: unknown): { album: SeriesAlbum; index: number } | null {
         const index = this.selectedAlbums.findIndex(album => sameId(album.id, albumId))
         if (index < 0) return null
         const album = this.selectedAlbums[index]
-        this.selectedAlbums = this.selectedAlbums.filter((_, at) => at !== index)
+        this.selectedAlbums = this.selectedAlbums.filter((_: SeriesAlbum, at: number) => at !== index)
         this.changed()
         return { album, index }
     }
 
     /** Put back an album at its place (the «Undo» of a removal). */
-    insertAlbum(album, index) {
+    insertAlbum(album: SeriesAlbum, index: number): void {
         if (this.hasAlbum(album.id)) return
         const at = Math.max(0, Math.min(index, this.selectedAlbums.length))
         this.selectedAlbums = [...this.selectedAlbums.slice(0, at), album, ...this.selectedAlbums.slice(at)]
@@ -60,7 +63,7 @@ export class StagingAreaController {
     }
 
     /** Move a chosen album one place up (-1) or down (+1). A move past either end does nothing. */
-    moveAlbum(albumId, delta) {
+    moveAlbum(albumId: unknown, delta: number): void {
         const from = this.selectedAlbums.findIndex(album => sameId(album.id, albumId))
         const to = from + delta
         if (from < 0 || to < 0 || to >= this.selectedAlbums.length) return
@@ -72,20 +75,20 @@ export class StagingAreaController {
     }
 
     /** @returns {Array<Object>} the list as it is now, to give back with restore() */
-    snapshot() {
+    snapshot(): SeriesAlbum[] {
         return [...this.selectedAlbums]
     }
 
-    restore(albums) {
+    restore(albums: SeriesAlbum[]): void {
         this.selectedAlbums = [...albums]
         this.changed()
     }
 
-    clear() {
+    clear(): void {
         this.restore([])
     }
 
-    changed() {
+    private changed(): void {
         this.onChange(this.selectedAlbums)
     }
 }

@@ -67,6 +67,7 @@ describe('capture of the hand-made Start screen', () => {
                 key: async (selector, name) => { key(at(selector), name); await flush() },
                 keyIn: async (selector, index, name) => { key(at(selector, index), name); await flush() },
                 paste: async (selector, text) => { paste(at(selector), text); await flush() },
+                caret: async (selector, index, position) => { at(selector, index).setSelectionRange(position, position) },
                 focusIn: async (selector) => { at(selector).focus(); await flush() },
                 focusOut: async (selector) => { at(selector).blur(); await flush() },
                 advance: async (ms) => { vi.advanceTimersByTime(ms); await flush() },

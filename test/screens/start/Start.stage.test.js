@@ -14,10 +14,9 @@ vi.mock('../../../public/js/components/Toast.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 
-import { HomeView } from '../../../public/js/views/HomeView.js'
+import { HomeView, flush } from '../../support/startHarness.js'
 
 const album = (title, releaseDate = '1994-02-14') => ({ id: title, title, artist: 'Pavement', type: 'Album', releaseDate, year: releaseDate.slice(0, 4) })
-const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe('the stage of the Home (F79)', () => {
     let app, view

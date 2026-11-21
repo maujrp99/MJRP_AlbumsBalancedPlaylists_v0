@@ -10,15 +10,15 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 const catalog = vi.hoisted(() => ({ search: vi.fn() }))
 
-vi.mock('../../public/js/services/album-search/AlbumSearchService.js', () => ({
+vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', () => ({
     albumSearchService: { search: (...args) => catalog.search(...args), scanArtist: vi.fn() }
 }))
-vi.mock('../../public/js/components/Toast.js', () => ({
+vi.mock('../../../public/js/components/Toast.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
-vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))
+vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))
 
-import { HomeView } from '../../public/js/views/HomeView.js'
+import { HomeView } from '../../support/startHarness.js'
 
 const found = (artist, title) => ({ id: `${artist}|${title}`, artist, title, year: 2001, coverUrl: 'https://img/{w}x{h}.jpg' })
 const findAll = async (artist, title) => [found(artist, title)]

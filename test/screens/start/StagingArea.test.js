@@ -4,7 +4,7 @@
  * as it was (the «Undo» of «Add all»). Every change is told once, with the list in its order.
  */
 import { describe, it, expect, vi } from 'vitest'
-import { StagingAreaController } from '../../../public/js/components/home/StagingAreaController.js'
+import { StagingAreaController } from '../../../public/js/screens/start/StagingArea'
 
 const album = (id) => ({ id, title: `Album ${id}`, artist: 'Pink Floyd' })
 const ids = (list) => list.getSelectedAlbums().map(a => a.id)

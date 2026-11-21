@@ -77,6 +77,7 @@ export async function play(scenario: Scenario): Promise<Record<string, string | 
         key: async (selector: string, name: string) => { await rendered.act(async () => { key(at(selector), name); for (let i = 0; i < 4; i++) await tick() }) },
         keyIn: async (selector: string, index: number, name: string) => { await rendered.act(async () => { key(at(selector, index), name); for (let i = 0; i < 4; i++) await tick() }) },
         paste: async (selector: string, text: string) => { await rendered.act(async () => { paste(at(selector), text); for (let i = 0; i < 4; i++) await tick() }) },
+        caret: async (selector: string, index: number, position: number) => { (at(selector, index) as HTMLInputElement).setSelectionRange(position, position) },
         focusIn: async (selector: string) => { await rendered.act(async () => { at(selector).focus() }) },
         focusOut: async (selector: string) => { await rendered.act(async () => { at(selector).blur() }) },
         advance: async (ms: number) => { await rendered.act(async () => { vi.advanceTimersByTime(ms); for (let i = 0; i < 4; i++) await tick() }) },
@@ -132,6 +133,6 @@ describe('the proof catches a difference', () => {
     it('a focus left on the wrong control is a failed scenario too', async () => {
         const scenario = SCENARIOS.find(s => s.name === 'choosing covers')!
         const snaps = await play(scenario)
-        expect(snaps['focus · after a cover'].replace('home-card', 'home-other')).not.toBe(captured[keyOf(scenario)]['focus · after a cover'])
+        expect(snaps['focus · after a cover']!.replace('home-card', 'home-other')).not.toBe(captured[keyOf(scenario)]['focus · after a cover'])
     })
 })

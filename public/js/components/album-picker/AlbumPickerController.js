@@ -22,11 +22,13 @@ export class AlbumPickerController {
      * @param {{ scanArtist: Function }} options.service - the one scan of an artist's albums
      * @param {{ drawScan: Function, drawFilters: Function, drawAlbums: Function }} options.view
      * @param {(album: Object) => void} options.onPick - what the screen does with a picked album
+     * @param {() => string} [options.emptyQueryMessage] - what it says when asked to search with no text (a screen that speaks another language gives its own)
      */
-    constructor({ service, view, onPick }) {
+    constructor({ service, view, onPick, emptyQueryMessage = () => 'Type an artist name first.' }) {
         this.service = service
         this.view = view
         this.onPick = onPick || (() => {})
+        this.emptyQueryMessage = emptyQueryMessage
         this.scan = idleScan()
         this.filters = defaultFilters()
         this.disposed = false
@@ -55,7 +57,7 @@ export class AlbumPickerController {
     async searchArtist(query) {
         if (this.scan.status === ScanStatus.SCANNING) return
         if (!canStartScan(this.scan, query)) {
-            toast.warning('Type an artist name first.')
+            toast.warning(this.emptyQueryMessage())
             return
         }
 

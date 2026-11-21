@@ -37,6 +37,8 @@ const SCAN_SERVICE = 'services/album-search/AlbumSearchService.js'
 const PICKER = 'components/album-picker/AlbumPickerController.js'
 const PICKER_PANEL = 'components/album-picker/AlbumPickerPanel.js'
 const CARD = 'views/renderers/DiscographyRenderer.js'
+const START_CONTROLLER = 'screens/start/StartController.ts'
+const START_CARD = 'screens/start/Results.tsx'
 const CATALOG = ['services/MusicKitService.js', 'services/musickit/MusicKitCatalog.js']
 
 describe('one classifier says the type of an album', () => {
@@ -86,8 +88,9 @@ describe('one picker shows them', () => {
         expect(filesWith(transitions, ['models/scanState.js'])).toEqual([PICKER])
     })
 
-    it('the picker is made in two frames only: the Home and the block inside the series edit', () => {
-        expect(filesWith(/new AlbumPickerController\(/).sort()).toEqual([PICKER_PANEL, 'controllers/HomeController.js'].sort())
+    it('the picker is made in two frames only: the Start screen (React, F83 wave 4) and the block inside the series edit', () => {
+        expect(filesWith(/new AlbumPickerController\(/)).toEqual([PICKER_PANEL])
+        expect(code(START_CONTROLLER)).toMatch(/new AlbumPickerController\(/)
         expect(filesWith(/new AlbumPickerPanel\(/)).toEqual(['components/series/SeriesEditModal.js'])
     })
 
@@ -98,16 +101,18 @@ describe('one picker shows them', () => {
         expect(importsOf(PICKER_RULES)).toEqual(['./albumType.js'])
     })
 
-    it('one album card: only the discography renderer draws it', () => {
+    it('one album card for the hand-made screens: only the discography renderer draws it; the Start screen has its own, in React', () => {
         expect(filesWith(/action:\s*['"]pick-album['"]/)).toEqual([CARD])
+        expect(code(START_CARD)).toMatch(/data-action="pick-album"/)
     })
 
     it('one set of filters: only the picker rules name them', () => {
-        expect(filesWith(/['"]Compendiums['"]|['"]Singles\/EPs['"]/, [PICKER_RULES])).toEqual([])
+        // the English dictionary of the Start screen (F83 wave 4) says the names of the filters in words: a text, not a second set of filters
+        expect(filesWith(/['"]Compendiums['"]|['"]Singles\/EPs['"]/, [PICKER_RULES, 'i18n/en/start.js'])).toEqual([])
     })
 
     it('the pickers before F57 are gone', () => {
-        const gone = ['components/home/SearchController.js', 'components/series/ArtistScanner.js',
+        const gone = ['components/home/SearchController.js', 'controllers/HomeController.js', 'views/HomeView.js', 'components/series/ArtistScanner.js',
             'components/search/DiscographyToolbar.js', 'components/search/VariantPickerModal.js']
 
         expect(gone.filter(file => fs.existsSync(path.join(ROOT, file)))).toEqual([])

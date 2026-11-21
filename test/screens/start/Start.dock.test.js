@@ -5,6 +5,7 @@
  * a second click that takes it out, the line of the visitor (^home-guest).
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { act } from 'react'
 
 const service = vi.hoisted(() => ({ scanArtist: vi.fn(), search: vi.fn() }))
 
@@ -14,13 +15,12 @@ vi.mock('../../../public/js/components/Toast.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 
-import { HomeView } from '../../../public/js/views/HomeView.js'
-import { UNDO_MS } from '../../../public/js/controllers/HomeController.js'
+import { HomeView, flush } from '../../support/startHarness.js'
+import { UNDO_MS } from '../../../public/js/screens/start/StartController'
 import { userStore } from '../../../public/js/stores/UserStore.js'
 
 const TITLES = ['The Endless River', 'The Division Bell', 'A Momentary Lapse of Reason', 'The Final Cut', 'The Wall', 'Animals', 'Wish You Were Here', 'The Dark Side of the Moon', 'Obscured by Clouds']
 const albums = TITLES.map((title, i) => ({ id: `a${i}`, title, artist: 'Pink Floyd', type: 'Album', year: String(2014 - i * 3), releaseDate: `${2014 - i * 3}-01-01`, coverUrl: `https://img/${i}/{w}x{h}.jpg` }))
-const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe('the dock of the series, on the computer (F79)', () => {
     let app, view
@@ -90,7 +90,7 @@ describe('the dock of the series, on the computer (F79)', () => {
 
         card(3).click()
         expect($('.home-undo')).not.toBeNull()
-        vi.advanceTimersByTime(UNDO_MS)
+        act(() => { vi.advanceTimersByTime(UNDO_MS) }) // the timer draws the screen again: inside React's act
         expect($('.home-undo')).toBeNull()
     })
 
@@ -155,8 +155,10 @@ describe('the dock of the series, on the computer (F79)', () => {
 
     it('the visitor without an account reads where the series is kept, with «Sign in» (^home-guest)', () => {
         userStore.setUser?.({ uid: 'anon', isAnonymous: true })
-        view.controller.state.guest = true
-        view.controller.redraw()
+        act(() => {
+            view.controller.state.guest = true
+            view.controller.redraw()
+        })
 
         expect(dockText()).toContain("You're not signed in: the series is saved to this browser only. Sign in to keep it on every device.")
         expect($('.home-dock [data-dock="sign-in"]').textContent).toBe('Sign in')
