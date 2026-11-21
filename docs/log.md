@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 23:51] review — F79: a reconferência visual independente começou
+**Branch:** feat/f79-home-that-explains-itself
+Um agente que não implementou a F79 começa a reconferência visual da Home contra `design/inception/home-transformar-v2.html` (18 estados, 1280 e 393). O relatório nasce em `reports/audits/2026-11-20-F79-visual-parity-recheck.md` com `verdict: running`; o veredito sobrescreve o mesmo arquivo.
+
 ## [2026-11-20 23:48] session — F79: a prova no navegador, ao lado do protótipo aprovado; os ajustes que ela mostrou
 **Branch:** feat/f79-home-that-explains-itself
 Os 18 estados capturados a 1280 e a 393, o protótipo e a Home construída lado a lado (`reports/evidence/F79/2026-11-20-home-browser-proof.md`, `pairs/`, `shots/`, `shoot.sh`), num servidor local do ramo, como visitante; o catálogo respondeu com a busca capturada pelo protótipo e a série nunca foi gravada (a escrita trocada na página): nada no Firestore. Criar de verdade está provado por teste, não no navegador. Ajustes que a comparação mostrou: a linha colada sem negrito, as linhas mais baixas no celular, a caixa da lista crescendo no celular, o campo do artista com a altura da caixa (alvo de 44 px), a falha ao gravar no celular com o texto do protótipo («Not saved: the connection dropped», só quando é de rede), a seta ↓ (o conjunto de ícones só tem ↑: girada). TASK-10 e TASK-11 fechadas: a suíte inteira, o lint e o build pelo doctor; o doctor segue vermelho só pelo que já era (I3, I5, I6, F1) e pelo A2, que o registro da aprovação acendeu (sem `sensors.visual` no contrato).
