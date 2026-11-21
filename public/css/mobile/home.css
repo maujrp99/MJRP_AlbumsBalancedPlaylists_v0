@@ -54,11 +54,11 @@
   }
 
   /* 16 px: the iPhone does not zoom into a field of 16 px or more */
-  .home-field input {
+  .home-field > input {
     font: 600 16px var(--phone-font-text);
   }
 
-  .home-field input::placeholder {
+  .home-field > input::placeholder {
     font-size: 15px;
   }
 
@@ -97,15 +97,20 @@
 
   .home-line {
     grid-template-columns: 18px 1fr;
-    gap: 0 10px;
-    padding: 4px 10px;
+    gap: 0 8px;
+    padding: 4px 6px;
     font: 16px var(--phone-font-text);
   }
 
+  /* the room of the line goes to the text: «… Grey and Pinkk» whole at 393 (recheck P2-3) */
   .home-line__text {
     height: 30px;
-    padding: 0 4px;
-    font: 16px var(--phone-font-text);
+    padding: 0 2px;
+    font: 400 16px var(--phone-font-text);
+  }
+
+  .home-line.is-skip .home-line__text {
+    font: 600 16px var(--phone-font-text);
   }
 
   .home-line__tag {
@@ -302,8 +307,26 @@
     text-overflow: ellipsis;
   }
 
+  /* the reason is read whole: two lines, as the prototype (recheck P2-2) */
   .home-dock .home-fail {
     color: #fca5a5;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  /* creating: the small equalizer on the line of «Saving your series…», the bar keeps its height (recheck P1-2) */
+  .home-dock .home-busy {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .home-dock .home-eq--mini {
+    flex: none;
+    width: 30px;
+    height: 14px;
+    margin: 0;
+    gap: 2px;
   }
 
   .home-dock:not(.is-full) .home-dock__meta > strong,
@@ -356,13 +379,20 @@
     padding: 4px 0;
   }
 
-  /* each title read up to its third word: two lines allowed (critique r2, finding 12) */
+  /* a title on one line with «…», as the prototype (recheck P2-1) */
   #homeSeriesSheet .home-rt strong {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    white-space: normal;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font: 700 15px/1.25 'Syne', sans-serif;
+  }
+
+  /* the count beside the title of the sheet, lighter (the prototype's «Your series  4 albums») */
+  .home-sheet__count {
+    margin-left: 8px;
+    font: 400 14px var(--phone-font-text);
+    color: var(--home-soft);
   }
 
   #homeSeriesSheet .home-rt small {

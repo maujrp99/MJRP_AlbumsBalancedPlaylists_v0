@@ -132,8 +132,19 @@ export class HomePasteList {
             this.tagRow(row, i, line.why ? 'skip' : 'blank', line.why)
         })
         this.report = report
-        this.summary.textContent = report.message
+        this.drawReportMessage(report.message)
         this.drawButton(report.button || 'Add albums', !report.button, false)
+    }
+
+    /** «Added 2 albums.» in bold, as the prototype; the rest of the sentence after it. */
+    drawReportMessage(message) {
+        SafeDOM.clear(this.summary)
+        const end = message.indexOf('. ')
+        if (end < 0) {
+            this.summary.appendChild(SafeDOM.strong({}, message))
+            return
+        }
+        this.summary.append(SafeDOM.strong({}, message.slice(0, end + 1)), message.slice(end + 1))
     }
 
     /** «Add» while the lines are searched: busy, and not to be clicked again. */

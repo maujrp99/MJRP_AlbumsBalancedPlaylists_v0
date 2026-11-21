@@ -325,7 +325,7 @@ export class HomeDock {
         }
         this.sheet = openSheet({
             variant: 'full',
-            title: `Your series · ${plural(m.albums.length, 'album')}`,
+            title: 'Your series',
             content: [this.sheetParts.name, SafeDOM.p({ className: 'home-order' }, ORDER), this.sheetParts.rows],
             footer: this.sheetParts.foot,
             closeLabel: 'Done',
@@ -335,6 +335,7 @@ export class HomeDock {
                 this.on.close?.()
             }
         })
+        this.sheet.element.querySelector('.sheet__title')?.appendChild(SafeDOM.span({ className: 'home-sheet__count' }))
         this.sheet.element.addEventListener('click', (event) => this.onClick(event))
         this.sheet.element.addEventListener('input', (event) => this.onInput(event))
         this.sheet.element.addEventListener('keydown', (event) => this.onKeydown(event))
@@ -359,8 +360,8 @@ export class HomeDock {
         rows.appendChild(this.rows(m))
         SafeDOM.clear(foot)
         foot.append(...[undoStrip(m.undo), this.createButton(m, 'btnCreateSeriesSheet')].filter(Boolean))
-        const title = `Your series · ${plural(m.albums.length, 'album')}`
-        this.sheet.setTitle(title)
+        const count = this.sheet.element.querySelector('.home-sheet__count')
+        if (count) count.textContent = plural(m.albums.length, 'album')
     }
 
     // --- the gestures ---

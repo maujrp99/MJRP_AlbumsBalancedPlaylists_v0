@@ -104,6 +104,7 @@ describe('Home: the pasted list (F63, F79)', () => {
 
         expect(selected()).toEqual(['Joni Mitchell / Hejira', 'Yes / Close to the Edge'])
         expect(summary()).toBe('Added 2 albums. 1 line was skipped and is still here to fix.')
+        expect($('#homePasteSummary strong').textContent).toBe('Added 2 albums.')
         expect(lines()).toHaveLength(1)
         expect(lines()[0].classList.contains('is-skip')).toBe(true)
         expect(lines()[0].querySelector('.home-line__tag').textContent).toBe('not found in the catalog: fix the spelling here')

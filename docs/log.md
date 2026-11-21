@@ -3,6 +3,18 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 00:25] session — F79: os achados da reconferência visual corrigidos (P1-1, P1-2 e os P2 da tela)
+**Branch:** feat/f79-home-that-explains-itself
+Lido `reports/audits/2026-11-20-F79-visual-parity-recheck.md` (não tocado). Corrigido, com o teste escrito antes e visto falhar (`test/components/home/HomeRecheckShapes.test.js`, mais asserções em `HomeController.bulk.test.js` e `HomePhone.dock.test.js`):
+- P1-1: a regra do campo do artista alcançava as linhas da lista colada. Agora vale só para `.home-field > input`. As linhas estão em Syne 15/400 (texto 16/400 no celular). A linha pulada está em Syne 18/600, sem caixa. «Added 2 albums.» em negrito.
+- P1-2: o mini equalizador fica na linha de «Saving your series…», e a barra do celular não cresce.
+- P2-2: «Not saved: the connection dropped» aparece inteiro.
+- P2-3: a última linha colada tem mais espaço e termina em «…».
+- P2-6: o ano corre na linha do cartão, e a segunda fileira fica onde o protótipo a põe (medido: igual).
+- P2-1: «Your series» com a contagem mais clara; os títulos da folha em uma linha.
+Deixados de propósito: os números na fonte do sistema (P2-4) e as fichas do celular (P2-5). O P2-7 é do contrato.
+Pares refeitos em `reports/evidence/F79/pairs/`, com a seção nova no relatório da prova. A suíte inteira passou pela fila: 3657 de 3657.
+
 ## [2026-11-21 00:05] review — F79: a reconferência visual independente — não passa, sem P0 (2 P1, 7 P2)
 **Branch:** feat/f79-home-that-explains-itself
 Um agente que não implementou a F79 refez as 72 capturas sobre o código atual (`1d875bc`): os 18 estados a 1280 e a 393, o protótipo `design/inception/home-transformar-v2.html` e a Home construída, como visitante, sem gravar nada. Olhou os 36 pares e mediu fatos nos dois lados (o Syne carregado, o fogo, a tipografia, a rolagem lateral). Bate no leiaute, no texto, no fogo (um botão por estado, igual nos 36 pares), no equalizador, na base, no Undo e no depois de criar. Os dois P1: a tipografia da lista colada (as linhas em Syne 18/600 contra 15/400; a linha pulada num campo de sistema 16/400 contra Syne 18/600) e a barra do celular em «Criando» (o mini equalizador cai para outra linha e a barra cresce). A janela de editar a série não está quebrada. O kit visual não rodou: o contrato não declara `sensors.visual` (o A2). Nenhuma issue foi aberta no `uat.md`, por instrução do orquestrador. Relatório: `reports/audits/2026-11-20-F79-visual-parity-recheck.md`; capturas: `reports/evidence/F79/recheck/`.

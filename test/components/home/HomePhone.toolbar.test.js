@@ -36,7 +36,7 @@ describe('the Home on the phone: the pasted list (F79)', () => {
     })
 
     it('the lines are written at 16 px, so the iPhone does not zoom in', () => {
-        expect(phoneDeclarations('.home-line__text').font).toMatch(/^16px/)
-        expect(phoneDeclarations('.home-field input').font).toMatch(/16px/)
+        expect(phoneDeclarations('.home-line__text').font).toMatch(/\b16px\b/)
+        expect(phoneDeclarations('.home-field > input').font).toMatch(/16px/)
     })
 })

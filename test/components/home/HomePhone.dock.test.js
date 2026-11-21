@@ -98,7 +98,8 @@ describe('the Home on the phone (F79 over F76)', () => {
 
         const sheet = $('#homeSeriesSheet')
         expect(sheet.classList.contains('sheet--full')).toBe(true)
-        expect(sheet.querySelector('.sheet__title').textContent).toBe('Your series · 3 albums')
+        expect(sheet.querySelector('.sheet__title').firstChild.textContent).toBe('Your series')
+        expect(sheet.querySelector('.sheet__title .home-sheet__count').textContent).toBe('3 albums')
         expect(sheet.querySelector('#homeChosenName').value).toBe('Pavement selection')
         expect(sheet.textContent).toContain('The order counts: the Blend reads the albums in this order')
         expect(sheet.querySelectorAll('.home-rows li')).toHaveLength(3)
