@@ -15,11 +15,11 @@ import { PhoneShell } from '../../../public/js/components/navigation/PhoneShell.
 
 describe('the tabs of the phone', () => {
     it('are the five destinations, in the order of the work', () => {
-        expect(PHONE_TABS.map(tab => tab.label)).toEqual(['Home', 'Albums', 'Blend', 'Playlists', 'Inventory'])
+        expect(PHONE_TABS.map(tab => tab.label)).toEqual(['Start', 'Albums', 'Blend', 'Playlists', 'Inventory'])
     })
 
     it.each([
-        ['/home', 'home'],
+        ['/start', 'home'],
         ['/albums', 'albums'],
         ['/albums/abc123', 'albums'],
         ['/blend', 'blend'],
@@ -48,7 +48,7 @@ describe('the tabs of the phone', () => {
     })
 
     it('every tab has an icon and a label', () => {
-        document.body.innerHTML = renderTabBar('/home')
+        document.body.innerHTML = renderTabBar('/start')
         for (const tab of document.querySelectorAll('a[data-tab]')) {
             expect(tab.querySelector('svg')).not.toBeNull()
             expect(tab.querySelector('.phone-tabbar__label').textContent.trim()).not.toBe('')
@@ -56,7 +56,7 @@ describe('the tabs of the phone', () => {
     })
 
     it('names each screen for the top bar', () => {
-        expect(screenName('/home')).toBe('Home')
+        expect(screenName('/start')).toBe('Start')
         expect(screenName('/albums/abc123')).toBe('Albums')
         expect(screenName('/playlists')).toBe('New Playlists')
         expect(screenName('/playlists/edit')).toBe('Edit Playlists')

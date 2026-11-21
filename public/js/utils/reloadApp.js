@@ -6,5 +6,5 @@
  * Decision of the MJRP on 2026-11-19. In its own file so the screens that call it can be tested.
  */
 export function reloadApp() {
-    window.location.assign('/home')
+    window.location.assign('/start')
 }

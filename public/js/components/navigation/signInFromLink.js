@@ -1,5 +1,5 @@
 /**
- * «Sign in» from the entry page (F80, REQ-03): the page links to /home?signin. The app opens the
+ * «Sign in» from the entry page (F80, REQ-03): the page links to /start?signin. The app opens the
  * sign-in window for whoever has not signed in with an account, and takes `signin` out of the
  * address in place (a reload, the back button or a shared link does not open it again).
  */

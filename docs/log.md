@@ -7,6 +7,11 @@
 **Branch:** main
 A publicação que o MJRP mandou («publica») falhou primeiro porque a fila da máquina, na versão que veio com o kernel de hoje, limita os trabalhadores do Vitest sem dar o mínimo, e o Vitest 1.6.1 morre antes de rodar («minThreads and maxThreads must not conflict»); contornado com `VITEST_MIN_THREADS=1` no ambiente de quem chama, confirmado pelo agente mestre, que leva o conserto do harness ao MJRP. Na segunda vez parou no lint: dois escapes desnecessários em `scripts/i18n/scan-copy.cjs` (do ramo dos textos), consertados aqui; a expressão casa o mesmo. Nada foi publicado nas duas vezes; produção intacta. O levantamento de textos (F81) entrou na `main` (`5be6ffd`). O juiz independente dos ajustes da página de entrada deu 0 P0, 0 P1 e 1 P2 (UAT-237, o caixote sem 3D); o MJRP disse que pode ir a produção com o achado.
 
+## [2026-11-21 12:03] review — F85: reconferência visual independente (passa, sem P0 nem P1; 1 P2)
+**Branch:** claude/f85-start-in-the-menu
+Session: claude-code:claude/f85-start-in-the-menu (agente juiz, separado do implementador)
+O ramo em `09a0c61` contra a produção, deslogado, a 1280 e 393: só mudou o rótulo «Start» onde havia «Home» e o botão «Go to Start»; a aba cabe sem corte e a barra mantém 57 px; o logotipo leva a `/?entry`; `/home` e `/home?signin` levam a `/start`. Sem o sensor do projeto; sem telas com conta. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-visual-parity-recheck.md`; capturas em `reports/evidence/F85-visual-recheck/`.
+
 ## [2026-11-21 11:56] review — reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236): fail, sem P0 nem P1
 **Branch:** fix/f80-uat-entry-page
 Um agente que não implementou julgou a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. A caixa em 3D fica em diagonal e inteira no quadro em todas as posições, de 900 a 1920 px. O palco vai até a borda direita. A capa da banana é o primeiro disco e o King Crimson o segundo; são 15 capas reais e 14 fictícias, sem faltar nenhuma. A faixa e «Flip the record» funcionam. O celular fica como antes. O sensor, com a `main` de referência, deu 0 · 0 · 0. Um P2: na caixa em CSS (sem WebGL ou com menos movimento), o disco da frente sai da caixa como uma cunha branca. Abri a UAT-237, `fixing (F80)`. A legenda alta da banana no celular é efeito do nome comprido, não defeito. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md`; capturas em `reports/evidence/F80/recheck-uat235/`.
@@ -105,6 +110,26 @@ O MJRP: «e a questao de sigla, nao me ajuda Uat-235???». Tirei os códigos dos
 **Branch:** fix/f80-uat-entry-page
 O MJRP abriu o comparador e disse: «abri o artefato agora e nao sei o que eu faço e olho, com tanta info na tela». A página de entrada do comparador (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e) agora abre só na decisão em mãos: «A caixa de discos: qual vista?», a página de hoje e as três vistas lado a lado (janela de 1920 px, onde o corte de hoje aparece), cada uma com um nome curto e uma linha, a recomendada marcada, e um seletor do momento da rolagem (a virada, a abertura, um disco puxado, o lado B). Tudo o que estava antes (rodada 2, peso e risco, o fogo, as versões antigas, o celular) foi para `rodadas-anteriores.html`, intacto, atrás de um link no pé. Palavras visíveis sem rolar, numa janela de 1440 × 900: antes 414, depois 61.
 
+## [2026-11-21 10:32] session — F85: fechamento da sessão (o ramo e a sessão, no formato que o `session-check` lê)
+Branch: `claude/f85-start-in-the-menu`, no commit `78ad892` e antes dele.
+Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador, via rápida)
+Mesmo fechamento da entrada anterior, escrito com a linha `Branch:` sem negrito, que o leitor do `session-check` exige. Nada do código mudou.
+
+## [2026-11-21 10:32] session — F85 entregue: tarefas 01 a 03 e a documentação; a TASK-04 espera o integrador
+**Branch:** claude/f85-start-in-the-menu
+Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador, via rápida)
+Fechamento. O ramo leva «Start» no menu e na aba, `/start` (com `/home` e `/home?signin` levando a ela), o logotipo para `/?entry`, a raiz e os botões da página de entrada para `/start`. Provado no servidor de desenvolvimento a 1280 e 393 px, com e sem conta (`reports/evidence/F85/`); não provado: o build sob `vite preview`, a bateria completa e o doctor neste ramo. Decisões do agente, revisáveis: o id de uso `home` fica; «Go to Start» nas telas vazias; migalha e rodapé dizem «Start»; o logotipo é o único caminho para a página de entrada com a conta aberta.
+
+## [2026-11-21 10:32] session — F85: a TASK-04 declara o que espera; a entrada de fechamento nomeia o ramo
+**Branch:** claude/f85-start-in-the-menu
+Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador)
+Conserto de forma exigido pelo grafo de requisitos e pelo `session-check`: `waiting:: resource` com `action::` na TASK-04 (o integrador roda o build, a bateria e o doctor no trem de merge); o fechamento anterior passa a dizer `Session:` com o nome do ramo. Nada do código mudou.
+
+## [2026-11-21 10:31] session — F85: entregue sem o build de produção; provado no servidor de desenvolvimento
+**Branch:** claude/f85-start-in-the-menu
+Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador, via rápida)
+Tarefas 01 a 03 feitas, teste primeiro (555 testes verdes nos arquivos tocados); a TASK-04 fica aberta: provado no servidor de desenvolvimento a 1280 e 393 px, com e sem conta (`reports/evidence/F85/`); NÃO provado: o build sob `vite preview`, a bateria completa e o doctor neste ramo (a fila de trabalhos pesados não andou em mais de uma hora; o orquestrador mandou entregar e cobre isso no trem de merge e na conferência em produção). Decidido pelo agente — revisável: o id de uso `home` não muda; «Go to Start» nas telas vazias; migalha e rodapé dizem «Start».
+
 ## [2026-11-21 10:23] session — UAT-235: o diagnóstico da caixa chapada e cortada, e três prévias no comparador
 **Branch:** fix/f80-uat-entry-page
 Diagnóstico: a câmera do 3D (`public/splash/crate3d.js`) é fixa, de frente, no eixo comprido da caixa, com 30° de campo vertical, e nunca se ajusta ao quadro. O quadro é a coluna do palco: ~690 px de largura em 1280, 1440 e 1920 (a página para em 1280), mas a altura cresce com a janela (604, 704, 884 px), então o campo horizontal encolhe. De frente a caixa parece chapada; o único momento em diagonal é a virada («Flip the record»), quando a caixa (4,3 de comprimento) gira de lado e passa da borda: medido, os cantos chegam a 106% do quadro em 1024, 108% em 1920 e 153% em 900. Entre 900 e 1280 a coluna vai de ~330 a ~700 px e o corte piora quanto mais estreita.
@@ -145,9 +170,17 @@ Levantamento dos textos que uma pessoa vê ou o leitor de tela lê, por árvore 
 **Branch:** main
 O MJRP abriu o UAT da F80 com uma captura: «a caixa de discos, fica com um efeito muito 2 d qdo está reta e a area dela bem limita, que tal melhorarmos pra ficar mais em diagonal, mas sem o corte da tela que temos hj. o que acha?» — UAT-235. Ele propôs uma sessão de UAT para ir passando as issues; ela sobe em Opus (desenho de tela), com prévias no comparador antes de mudar a página. Sobre o board, palavras dele: «se preocupe com o status do board está condizente com o status real … se é esperando meu aceite nao deveriam estar em coluna esperando». Medido: de F45 a F78, 33 features «em andamento»; 23 só esperam o juízo dele (deveriam estar em «Pronto para UAT»), 6 mistas, 4 só com passo do agente. O agente mestre deu o caminho: atualizar a cópia do kernel (sessão aberta por ele) e depois fechar em lote, numa sessão, tirando a tarefa de aceite. Ele também disse para não cobrar os aceites: ele os gerencia.
 
+## [2026-11-21 09:45] session — F85: a documentação no mesmo ramo (passo retroativo da via rápida)
+**Branch:** claude/f85-start-in-the-menu
+`behavior.md` (os endereços antigos e o menu, o rodapé, a raiz, «Sign in» da página, e duas linhas novas: o logotipo e o «Start»), `arch.md`, `info-arch.md` (e `info-arch.html`, gerado com o `build_info_arch_page.py`), as páginas do manual que nomeiam o menu ou o endereço, a spec/plan/tasks. Decidido pelo agente — revisável: o botão das telas vazias passa a dizer «Go to Start» (ia para a tela que se chamava Home); a migalha e o rodapé também dizem «Start». A aprovação da spec segue do MJRP.
+
 ## [2026-11-21 09:41] session — F84: instalar os navegadores do Playwright sempre pelo nome
 **Branch:** main
 A orquestradora do MJRPpersonal repôs o WebKit 2215 que a instalação do V0 tinha tirado do cache da máquina, e avisou a causa: `npx playwright install` sem nome remove as versões dos outros projetos. A regra e o jeito de contornar o travamento ao descompactar estão no plano da F84.
+
+## [2026-11-21 09:40] session — F85 TASK-01..03: «Start» no menu e na aba, `/start`, o logotipo leva à página de entrada, a raiz manda para `/start`
+**Branch:** claude/f85-start-in-the-menu
+Teste primeiro, depois o código. O item «Home» (menu do computador, gaveta, aba do celular, rodapé, migalha) virou «Start»; a rota é `/start`, e `/home` (com a consulta: `/home?signin`) leva a ela por `startRoute.js`. O logotipo (computador e celular) é um link para `/?entry` marcado `data-full-page`: o roteador o deixa ao navegador (carga inteira). A decisão da raiz (`gate.js`) e os botões da página de entrada levam a `/start` (e `/start?signin`). Decidido pelo agente — revisável: o id de uso `home` (medição) não muda.
 
 ## [2026-11-21 09:30] decision — F85: o item do menu se chama «Start», e «Inicie» em português
 **Branch:** main

@@ -203,6 +203,12 @@
     border-bottom: 1px solid var(--phone-bar-line);
   }
 
+  /* F85: the logo leads to the entry page; the link is only as big as the logo */
+  .phone-topbar__logo-link {
+    display: flex;
+    flex: none;
+  }
+
   .phone-topbar__logo {
     width: 28px;
     height: 28px;

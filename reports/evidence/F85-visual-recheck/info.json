@@ -1,0 +1,3412 @@
+{
+ "1280-dev-start": {
+  "url": "/start",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 66,
+    "sw": 66,
+    "cw": 66
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 30,
+    "sw": 30,
+    "cw": 30
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/?entry"
+  ],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "1280-prod-home": {
+  "url": "/home",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 65,
+    "sw": 65,
+    "cw": 65
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 38,
+    "sw": 38,
+    "cw": 38
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/home"
+  ],
+  "tabbarH": null,
+  "hasHome": true,
+  "sx": 0
+ },
+ "1280-dev-albums": {
+  "url": "/albums",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 66,
+    "sw": 66,
+    "cw": 66
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 38,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "›",
+    "h": null,
+    "w": 6,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": null,
+    "w": 53,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 30,
+    "sw": 30,
+    "cw": 30
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/?entry"
+  ],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "1280-prod-albums": {
+  "url": "/albums",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 65,
+    "sw": 65,
+    "cw": 65
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 47,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "›",
+    "h": null,
+    "w": 6,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": null,
+    "w": 53,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 38,
+    "sw": 38,
+    "cw": 38
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/home"
+  ],
+  "tabbarH": null,
+  "hasHome": true,
+  "sx": 0
+ },
+ "1280-dev-inventory": {
+  "url": "/inventory",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 66,
+    "sw": 66,
+    "cw": 66
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 30,
+    "sw": 30,
+    "cw": 30
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/?entry"
+  ],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "1280-prod-inventory": {
+  "url": "/inventory",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 65,
+    "sw": 65,
+    "cw": 65
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 38,
+    "sw": 38,
+    "cw": 38
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/home"
+  ],
+  "tabbarH": null,
+  "hasHome": true,
+  "sx": 0
+ },
+ "1280-dev-blend": {
+  "url": "/blend",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 66,
+    "sw": 66,
+    "cw": 66
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 30,
+    "sw": 30,
+    "cw": 30
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/?entry"
+  ],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "1280-prod-blend": {
+  "url": "/blend",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 65,
+    "sw": 65,
+    "cw": 65
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 38,
+    "sw": 38,
+    "cw": 38
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/home"
+  ],
+  "tabbarH": null,
+  "hasHome": true,
+  "sx": 0
+ },
+ "1280-dev-entry": {
+  "url": "/?entry",
+  "title": "The Album Blender — for people who listen to whole albums",
+  "tabs": [
+   {
+    "t": "Sign in",
+    "h": "/start?signin",
+    "w": 90,
+    "sw": 88,
+    "cw": 88
+   },
+   {
+    "t": "Open the app",
+    "h": "/start",
+    "w": 205,
+    "sw": 205,
+    "cw": 205
+   },
+   {
+    "t": "FLIP",
+    "h": "#flip",
+    "w": 44,
+    "sw": 44,
+    "cw": 44
+   },
+   {
+    "t": "Open the app",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Open the app",
+    "h": "/start",
+    "w": 108,
+    "sw": 108,
+    "cw": 108
+   },
+   {
+    "t": "Sign in",
+    "h": "/start?signin",
+    "w": 64,
+    "sw": 64,
+    "cw": 64
+   }
+  ],
+  "logo": [],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "1280-prod-entry": {
+  "url": "/?entry",
+  "title": "The Album Blender — for people who listen to whole albums",
+  "tabs": [
+   {
+    "t": "Sign in",
+    "h": "/home?signin",
+    "w": 90,
+    "sw": 88,
+    "cw": 88
+   },
+   {
+    "t": "Open the app",
+    "h": "/home",
+    "w": 205,
+    "sw": 205,
+    "cw": 205
+   },
+   {
+    "t": "FLIP",
+    "h": "#flip",
+    "w": 44,
+    "sw": 44,
+    "cw": 44
+   },
+   {
+    "t": "Open the app",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Open the app",
+    "h": "/home",
+    "w": 108,
+    "sw": 108,
+    "cw": 108
+   },
+   {
+    "t": "Sign in",
+    "h": "/home?signin",
+    "w": 64,
+    "sw": 64,
+    "cw": 64
+   }
+  ],
+  "logo": [],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "1280-dev-home-redirect": {
+  "url": "/start",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 66,
+    "sw": 66,
+    "cw": 66
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 30,
+    "sw": 30,
+    "cw": 30
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/?entry"
+  ],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "1280-dev-homesignin": {
+  "url": "/start",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 66,
+    "sw": 66,
+    "cw": 66
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 190,
+    "sw": 190,
+    "cw": 190
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 177,
+    "sw": 177,
+    "cw": 177
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 95,
+    "sw": 95,
+    "cw": 95
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 105,
+    "sw": 105,
+    "cw": 105
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 30,
+    "sw": 30,
+    "cw": 30
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 46,
+    "sw": 46,
+    "cw": 46
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 50,
+    "sw": 50,
+    "cw": 50
+   }
+  ],
+  "logo": [
+   "/?entry"
+  ],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "1280-logo-click": "http://127.0.0.1:5197/?entry",
+ "393-dev-start": {
+  "url": "/start",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/?entry",
+   "/?entry"
+  ],
+  "tabbarH": 57,
+  "hasHome": false,
+  "sx": 0
+ },
+ "393-prod-home": {
+  "url": "/home",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/home"
+  ],
+  "tabbarH": 57,
+  "hasHome": true,
+  "sx": 0
+ },
+ "393-dev-albums": {
+  "url": "/albums",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "›",
+    "h": null,
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": null,
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/?entry",
+   "/?entry"
+  ],
+  "tabbarH": 57,
+  "hasHome": false,
+  "sx": 0
+ },
+ "393-prod-albums": {
+  "url": "/albums",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "›",
+    "h": null,
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": null,
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/home"
+  ],
+  "tabbarH": 57,
+  "hasHome": true,
+  "sx": 0
+ },
+ "393-dev-inventory": {
+  "url": "/inventory",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/?entry",
+   "/?entry"
+  ],
+  "tabbarH": 57,
+  "hasHome": false,
+  "sx": 0
+ },
+ "393-prod-inventory": {
+  "url": "/inventory",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/home"
+  ],
+  "tabbarH": 57,
+  "hasHome": true,
+  "sx": 0
+ },
+ "393-dev-blend": {
+  "url": "/blend",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/?entry",
+   "/?entry"
+  ],
+  "tabbarH": 57,
+  "hasHome": true,
+  "sx": 0
+ },
+ "393-prod-blend": {
+  "url": "/blend",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Home",
+    "h": "/home",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/home"
+  ],
+  "tabbarH": 57,
+  "hasHome": true,
+  "sx": 0
+ },
+ "393-dev-entry": {
+  "url": "/?entry",
+  "title": "The Album Blender — for people who listen to whole albums",
+  "tabs": [
+   {
+    "t": "Sign in",
+    "h": "/start?signin",
+    "w": 90,
+    "sw": 88,
+    "cw": 88
+   },
+   {
+    "t": "Open the app",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "FLIP",
+    "h": "#flip",
+    "w": 24,
+    "sw": 24,
+    "cw": 24
+   },
+   {
+    "t": "Open the app",
+    "h": "/start",
+    "w": 201,
+    "sw": 201,
+    "cw": 201
+   },
+   {
+    "t": "Open the app",
+    "h": "/start",
+    "w": 108,
+    "sw": 108,
+    "cw": 108
+   },
+   {
+    "t": "Sign in",
+    "h": "/start?signin",
+    "w": 64,
+    "sw": 64,
+    "cw": 64
+   }
+  ],
+  "logo": [],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "393-prod-entry": {
+  "url": "/?entry",
+  "title": "The Album Blender — for people who listen to whole albums",
+  "tabs": [
+   {
+    "t": "Sign in",
+    "h": "/home?signin",
+    "w": 90,
+    "sw": 88,
+    "cw": 88
+   },
+   {
+    "t": "Open the app",
+    "h": "/home",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "FLIP",
+    "h": "#flip",
+    "w": 24,
+    "sw": 24,
+    "cw": 24
+   },
+   {
+    "t": "Open the app",
+    "h": "/home",
+    "w": 201,
+    "sw": 201,
+    "cw": 201
+   },
+   {
+    "t": "Open the app",
+    "h": "/home",
+    "w": 108,
+    "sw": 108,
+    "cw": 108
+   },
+   {
+    "t": "Sign in",
+    "h": "/home?signin",
+    "w": 64,
+    "sw": 64,
+    "cw": 64
+   }
+  ],
+  "logo": [],
+  "tabbarH": null,
+  "hasHome": false,
+  "sx": 0
+ },
+ "393-dev-home-redirect": {
+  "url": "/start",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/?entry",
+   "/?entry"
+  ],
+  "tabbarH": 57,
+  "hasHome": false,
+  "sx": 0
+ },
+ "393-dev-homesignin": {
+  "url": "/start",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "tabs": [
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Album",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Artist",
+    "h": "/artists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Genre",
+    "h": "/genres",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "By Track",
+    "h": "/tracks",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlist-series",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "The Blending Menu",
+    "h": "/blend",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Playlists",
+    "h": "/playlists",
+    "w": 0,
+    "sw": 0,
+    "cw": 0
+   },
+   {
+    "t": "Start",
+    "h": "/start",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Albums",
+    "h": "/albums",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Blend",
+    "h": "/blend",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Playlists",
+    "h": "/saved-playlists",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   },
+   {
+    "t": "Inventory",
+    "h": "/inventory",
+    "w": 79,
+    "sw": 79,
+    "cw": 79
+   }
+  ],
+  "logo": [
+   "/?entry",
+   "/?entry"
+  ],
+  "tabbarH": 57,
+  "hasHome": false,
+  "sx": 0
+ },
+ "393-logo-click": "http://127.0.0.1:5197/?entry"
+}

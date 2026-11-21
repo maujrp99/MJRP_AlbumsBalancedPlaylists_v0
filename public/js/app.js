@@ -48,6 +48,7 @@ import { startPhoneShell } from './components/navigation/PhoneShell.js'
 import { userStore } from './stores/UserStore.js'
 import { startUsageMeasurement } from './services/usage/usageWiring.js'
 import { openSignInWhenAsked } from './components/navigation/signInFromLink.js'
+import { START_PATH, oldHomeTarget } from './components/navigation/startRoute.js'
 import { isSignedIn } from './components/navigation/AuthNav.js'
 import { showLoginModal } from './components/LoginModal.js'
 
@@ -95,12 +96,12 @@ async function bootstrap() {
     console.log('✅ Auth ready, handling route...')
 
     if (!window.location.pathname || window.location.pathname === '/' || window.location.pathname === '/index-v2.html') {
-        router.redirect('/home')
+        router.redirect(START_PATH)
     } else {
         router.handleRouteChange()
     }
 
-    // «Sign in» on the entry page (F80) leads to /home?signin: the sign-in window opens here
+    // «Sign in» on the entry page (F80) leads to /start?signin: the sign-in window opens here
     openSignInWhenAsked({
         location: window.location,
         signedIn: isSignedIn(user),
@@ -122,7 +123,12 @@ startUsageMeasurement({ router })
 // V3: SeriesController is instantiated once and passed to view
 const seriesController = new SeriesController();
 
-router.register('/home', () => new HomeView())
+router.register(START_PATH, () => new HomeView())
+// F85: «Home» became «Start»; an old /home (or /home?signin) leads to /start, the query kept
+router.register('/home', () => {
+    router.redirect(oldHomeTarget(window.location.search))
+    return null
+})
 router.register('/albums', () => new SeriesView(seriesController))
 router.register('/albums/:seriesId', () => new SeriesView(seriesController))
 router.register('/playlists', () => new PlaylistsView())
@@ -147,7 +153,7 @@ router.register('/callback', async () => {
         }
     })
 
-    router.redirect('/home')
+    router.redirect(START_PATH)
     return null
 })
 

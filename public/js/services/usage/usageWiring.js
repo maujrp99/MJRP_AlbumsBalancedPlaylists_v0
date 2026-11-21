@@ -21,7 +21,7 @@ import { createMemoryAdapter } from './memoryAdapter.js'
 
 /** The routes of app.js and the screen each one is. A route not here (a redirect) is no screen. */
 const SCREEN_OF_ROUTE = Object.freeze({
-    '/home': 'home',
+    '/start': 'home',
     '/albums': 'albums',
     '/albums/:seriesId': 'series',
     '/playlists': 'playlists',

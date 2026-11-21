@@ -18,24 +18,24 @@ describe('the link that asks for the sign-in window', () => {
     })
 
     it('the address loses only `signin`', () => {
-        expect(addressWithoutSignIn(at('/home', '?signin'))).toBe('/home')
-        expect(addressWithoutSignIn(at('/home', '?x=1&signin', '#top'))).toBe('/home?x=1#top')
+        expect(addressWithoutSignIn(at('/start', '?signin'))).toBe('/start')
+        expect(addressWithoutSignIn(at('/start', '?x=1&signin', '#top'))).toBe('/start?x=1#top')
     })
 })
 
 describe('opening it', () => {
     it('a guest arriving from the entry page gets the window, and the address is cleaned', () => {
         const openSignIn = vi.fn(), setAddress = vi.fn()
-        expect(openSignInWhenAsked({ location: at('/home', '?signin'), signedIn: false, openSignIn, setAddress })).toBe(true)
+        expect(openSignInWhenAsked({ location: at('/start', '?signin'), signedIn: false, openSignIn, setAddress })).toBe(true)
         expect(openSignIn).toHaveBeenCalledTimes(1)
-        expect(setAddress).toHaveBeenCalledWith('/home')
+        expect(setAddress).toHaveBeenCalledWith('/start')
     })
 
     it('someone already signed in only gets the address cleaned', () => {
         const openSignIn = vi.fn(), setAddress = vi.fn()
-        expect(openSignInWhenAsked({ location: at('/home', '?signin'), signedIn: true, openSignIn, setAddress })).toBe(false)
+        expect(openSignInWhenAsked({ location: at('/start', '?signin'), signedIn: true, openSignIn, setAddress })).toBe(false)
         expect(openSignIn).not.toHaveBeenCalled()
-        expect(setAddress).toHaveBeenCalledWith('/home')
+        expect(setAddress).toHaveBeenCalledWith('/start')
     })
 
     it('without the link nothing happens', () => {

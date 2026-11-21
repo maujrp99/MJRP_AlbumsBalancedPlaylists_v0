@@ -73,7 +73,7 @@ describe('the switch picks the adapter', () => {
 
 describe('the screens', () => {
     it('each route has the name of its screen; an address with ids is never the name', () => {
-        expect(screenOfRoute('/home')).toBe('home')
+        expect(screenOfRoute('/start')).toBe('home')
         expect(screenOfRoute('/albums')).toBe('albums')
         expect(screenOfRoute('/albums/:seriesId')).toBe('series')
         expect(screenOfRoute('/playlists/edit')).toBe('playlists_edit')

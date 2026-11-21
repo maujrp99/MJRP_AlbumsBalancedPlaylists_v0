@@ -40,56 +40,56 @@ describe('Router: history (F63)', () => {
 
     describe('redirect', () => {
         it('takes the place of the entry it leaves and shows the destination', async () => {
-            const home = view('<div>Home</div>')
-            router.register('/home', () => home)
+            const home = view('<div>Start</div>')
+            router.register('/start', () => home)
 
-            router.redirect('/home')
+            router.redirect('/start')
             await settle()
 
-            expect(address()).toBe('/home')
+            expect(address()).toBe('/start')
             expect(pushed).not.toHaveBeenCalled()
             expect(replaced).toHaveBeenCalledTimes(1)
             expect(home.mount).toHaveBeenCalledTimes(1)
         })
 
         it('a route that redirects (as /callback) adds one entry, not two', async () => {
-            const home = view('<div>Home</div>')
-            router.register('/home', () => home)
+            const home = view('<div>Start</div>')
+            router.register('/start', () => home)
             router.register('/callback', async () => {
                 await Promise.resolve()
-                router.redirect('/home')
+                router.redirect('/start')
                 return null
             })
 
             router.navigate('/callback')
             await settle()
 
-            expect(address()).toBe('/home')
+            expect(address()).toBe('/start')
             expect(pushed).toHaveBeenCalledTimes(1) // the navigate to /callback; the redirect replaced it
             expect(home.mount).toHaveBeenCalledTimes(1)
-            expect(router.currentUrl).toBe('/home')
+            expect(router.currentUrl).toBe('/start')
         })
 
-        it('an address with no screen is replaced by the Home, not stacked under it', async () => {
-            const home = view('<div>Home</div>')
-            router.register('/home', () => home)
+        it('an address with no screen is replaced by the start screen, not stacked under it', async () => {
+            const home = view('<div>Start</div>')
+            router.register('/start', () => home)
             window.history.replaceState({}, '', '/nowhere')
             replaced.mockClear()
 
             await router.handleRouteChange()
             await settle()
 
-            expect(address()).toBe('/home')
+            expect(address()).toBe('/start')
             expect(pushed).not.toHaveBeenCalled()
             expect(home.mount).toHaveBeenCalledTimes(1)
         })
 
         it('asks the before hooks, as navigate does', async () => {
-            const home = view('<div>Home</div>')
-            router.register('/home', () => home)
+            const home = view('<div>Start</div>')
+            router.register('/start', () => home)
             router.beforeNavigate(() => false)
 
-            router.redirect('/home')
+            router.redirect('/start')
             await settle()
 
             expect(address()).toBe('/start')

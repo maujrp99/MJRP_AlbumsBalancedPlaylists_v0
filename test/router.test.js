@@ -82,7 +82,7 @@ describe('Router', () => {
 
             // it used to call itself until the stack overflowed
             await expect(router.handleRouteChange()).resolves.toBeUndefined()
-            expect(window.location.pathname).toBe('/home')
+            expect(window.location.pathname).toBe('/start')
         })
 
         it('lets a before hook be removed', () => {
@@ -105,8 +105,8 @@ describe('Router', () => {
                 mount: vi.fn()
             }))
 
-            router.register('/home', viewFactory)
-            router.navigate('/home')
+            router.register('/start', viewFactory)
+            router.navigate('/start')
 
             expect(viewFactory).toHaveBeenCalled()
         })
