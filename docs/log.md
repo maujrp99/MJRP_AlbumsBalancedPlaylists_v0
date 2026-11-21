@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:37] session — F70 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F70 (defeitos pequenos achados no caminho): o código está na `main` (merges `ffd414f`, `88adbc4`, `109b656`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F70-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
 ## [2026-11-21 11:37] session — F60 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
 F60 (nada do que foi salvo se perde): o código está na `main` (merges `bcdd114`, `fa141c0`, `c760592`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F60-visual-parity-recheck.md`: não passou limpo: 1 P1, que virou a UAT-216 (playlists salvas no celular), hoje `fixed` pela F76; o fecho da UAT-216 como `closed` é da reconferência independente). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
