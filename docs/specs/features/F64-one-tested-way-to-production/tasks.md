@@ -32,7 +32,8 @@
 - [x] `docs/manual/00_Deployment_and_Setup.md` (seções 1 e 2), `.env.example` e as instruções em `.github/` descrevem o caminho único
 - [x] spec, plano e tarefas escritos do que foi feito (passo retroativo, 2026-11-19)
 - [x] `docs/specs/arch.md` e `docs/specs/tech-stack.md`: tirar os scripts antigos, o `cloudbuild.yaml` e o Node 18 das linhas de implantação (fora dos caminhos desta entrega; fica para a integração) — `arch.md` diz que o `cloudbuild.yaml` foi removido e descreve só os dois scripts; o Node do servidor é o 24
-- [ ] fechar chamando a `mjrp-ensuring-sdd` antes do Done; só então `status: Done` (depende do aceite do MJRP)
+- [ ] TASK-15 fechar chamando a `mjrp-ensuring-sdd` antes do Done; só então `status: Done` (depende da TASK-09: a automação do GitHub rodar uma vez com o `unit-tests` passando; o aceite do MJRP não é tarefa, é dele no UAT depois do `Done`) · implements:: REQ-01 · model:: sonnet
+- [ ] TASK-14 o que a trava do passo retroativo ainda cobra antes do `Done` (`python3 mjrp-scripts/retro_step_check.py . --staged` com a feature em `Done`, conferido em 2026-11-21): Reconferência visual: a feature mexeu na tela e não há relatório `visual-parity-recheck` nem nota de Touch ID (`mjrp-visual-ok`) que a cubra; Issues: a UAT-202 na docs/specs/uat.md não está `fixed (F64: <commit> · <teste ou passos → resultado>)` (o Status diz «open»). É trabalho de agente; nenhum item é do MJRP. O que falta de verdade é a reconferência visual independente (relatório `reports/audits/<data>-F64-visual-parity-recheck.md`, por quem não implementou, num navegador): nenhum merge traz nota de Touch ID. «Prototype: none» já está gravada na spec (MJRP, 2026-11-20 00:10). · implements:: REQ-01 · model:: opus
 
 ## For the owner at UAT
 - O MJRP confere uma publicação feita pelos scripts e dá o OK na UAT-202 e na UAT-22.
