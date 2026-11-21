@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 22:20] decision — F80: o fogo da página de entrada é o brando, não o vivo
+**Branch:** main
+Palavras do MJRP, logo depois da aprovação: «fogo brando na verdade». Corrige a entrada anterior: a página de entrada «Caixote v2» é construída na prévia «fogo brando» (`?fire=soft`, o padrão do protótipo). O resto da entrada anterior vale.
+
 ## [2026-11-20 22:20] decision — F79 e F80 aprovadas para construir: a Home «Transformar v2» e a página de entrada «Caixote v2» com o fogo vivo
 **Branch:** main
 Palavras do MJRP (2026-11-20, por volta das 22:15): «aprovado a home v2, fogo vivo na página de entrada, ficou sensacional! bora implementar». As duas estão na «Priorizada» (`priority.md`: 1. F79, 2. F80).
