@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 15:47] review — F83 onda 1: o juiz independente aprova a tela de playlists salvas em React (sem P0, sem P1, 1 P2)
+**Branch:** integrate/staging-2026-11-21
+Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-saved-playlists-visual-parity-recheck.md` e capturas em `reports/evidence/F83/wave-1/recheck/`, escritos pelo juiz (não por quem construiu) sobre o commit 4582756, guardados como vieram. 31 estados iguais ao pixel contra a tela antiga; os 19 pixels do construtor são ruído da própria produção. P2: a prova do construtor deve comparar a produção consigo mesma.
+
 ## [2026-11-21 15:41] decision — o MJRP: o menu novo do topo é construído no código de hoje, para a home ir a produção logo (F88, F80)
 **Branch:** main
 Palavras do MJRP (2026-11-21): «Como ficou o menu não seria revisto primeiro, pra podermos mover a f80 pra pros?»; à pergunta «Menu novo no código de hoje, para a home ir a produção logo (a), ou só em React, no fim da migração (b)?», «A)». Como foi entendido (orquestrador, revisável): depois de ele aprovar o protótipo do menu (F88), o menu é construído no código de hoje (sem React) e vai a produção junto com a home nova (F80) e os avisos de falha, com o «publica» dele; o menu é refeito em React na onda da moldura da F83. A migração segue na linha `integrate/staging-2026-11-21` e só vai a produção completa.
