@@ -24,10 +24,10 @@ Decidido pelo MJRP em 2026-11-21 («siga»): o menu é redesenhado na linguagem 
 ## Requirements
 - [REQ-01] O menu do topo do app compartilha a aparência e o comportamento do menu da home onde faz sentido: a barra, os nomes Inicie/Start · Álbuns · Blend · Playlists · Inventário (português e inglês), o logotipo que leva à home, o item atual marcado · fixes S-70
 - [REQ-02] O menu mantém tudo o que o menu do app faz hoje: a conta (entrar, sair), a conexão com Spotify e Apple Music e o menu do celular · fixes S-70
-- [REQ-03] É construído em React, na onda da moldura da F83 · fixes S-70
+- [REQ-03] É construído primeiro no código de hoje (sem React), reaproveitando a barra da home; é refeito em React na onda da moldura da F83 (decisão do MJRP, 2026-11-21: «A)») · fixes S-70
 - [REQ-04] Funciona no celular e no computador · fixes S-70
 - [REQ-05] O protótipo passa pelo comparador e pela aprovação do MJRP antes da construção · fixes S-70
-- [REQ-06] Nada disto chega à produção antes de a migração terminar · fixes S-70
+- [REQ-06] Vai a produção junto com a home nova (F80), depois da aprovação do protótipo e do «publica» do MJRP, sem esperar o fim da migração (decisão do MJRP, 2026-11-21: «A)») · fixes S-70
 
 ## Observable States
 A escrever.

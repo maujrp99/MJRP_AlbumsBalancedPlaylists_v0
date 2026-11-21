@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 16:14] step — F88: os requisitos 3 e 6 seguem a decisão «A)» do MJRP (código de hoje primeiro; produção junto com a home)
+**Branch:** main
+A spec da F88 ainda pedia React e «nada chega à produção antes do fim da migração»; o MJRP decidiu hoje o contrário («A)», entrada das 16h deste log). REQ-03 e REQ-06 reescritos; o resto da spec não muda.
+
 ## [2026-11-21 15:41] decision — o MJRP: o menu novo do topo é construído no código de hoje, para a home ir a produção logo (F88, F80)
 **Branch:** main
 Palavras do MJRP (2026-11-21): «Como ficou o menu não seria revisto primeiro, pra podermos mover a f80 pra pros?»; à pergunta «Menu novo no código de hoje, para a home ir a produção logo (a), ou só em React, no fim da migração (b)?», «A)». Como foi entendido (orquestrador, revisável): depois de ele aprovar o protótipo do menu (F88), o menu é construído no código de hoje (sem React) e vai a produção junto com a home nova (F80) e os avisos de falha, com o «publica» dele; o menu é refeito em React na onda da moldura da F83. A migração segue na linha `integrate/staging-2026-11-21` e só vai a produção completa.
