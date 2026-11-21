@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:34] session — conform: `process-sensors` completo, `sensors.board_states` declarado (CM-0144, 0148, 0150, 0153, 0154, 0155, 0156, 0157)
+**Branch:** wip/kernel-conform-2-2026-11-21
+Com o seed do board já rodado no checkout principal, declarei `sensors.board_states` no contrato (`board_states_check.py`). O sensor saiu com exit 0 («o grafo e o registro conferem») e as 8 notas passaram em `--check-note` antes de serem registradas. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:26] session — conform parcial do V0 depois do kernel de 2026-11-21: 90 para 46 notas, 11 para 10 lacunas
 **Branch:** wip/kernel-conform-2026-11-21
 Relatório em `reports/audits/2026-11-21-mjrpalbumblender-v0-conform.md`: o que foi registrado (38 notas), feito (6), o que ficou (46 notas, 10 lacunas) e as oito perguntas ao MJRP. O critério estrito do portão segue em 1; o que falta depende do MJRP, do orquestrador (`board_move.py seed` no checkout principal) e da auditoria de conteúdo, que vai por último. Não rodei o doctor, os testes nem o build. Decidido pelo agente, revisável pelo MJRP.
