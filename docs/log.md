@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:16] session — conform: `releases` registrado (CM-0134, CM-0159)
+**Branch:** wip/kernel-conform-2026-11-21
+O `--check-note` passou nas duas notas (releases@3→4 e @4→5) sem mudar nenhum arquivo do projeto; só o registro em `conformance.applied`. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:05] session — limpeza dos worktrees antigos de agentes: os prints saíram para o `_backups/`, a remoção espera a janela de 60 minutos
 **Branch:** main
 Sete worktrees de ramos já na `main` (F76 ×4, f59, f78-app-skeleton, f86) tiveram os arquivos fora do git que seguravam a remoção (prints, `.mjrp/before.mjs`, `app/dist`, `launch.json`) movidos para o `_backups/` do checkout principal com `retire_path`. Nenhum worktree saiu ainda: mexer neles renovou a regra de atividade recente (60 min) do `clean-worktrees`; uma nova passada com `--apply` depois disso os remove. Dois ficaram por serem grandes demais para o `_backups/` (`app/ios` 2,3 GB; saída do spike f78 585 MB). Registro em `reports/audits/2026-11-21-mjrpalbumblender-v0-worktree-cleanup.md`.
