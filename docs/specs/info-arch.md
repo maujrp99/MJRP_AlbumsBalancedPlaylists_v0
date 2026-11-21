@@ -13,13 +13,13 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 
 ## Sitemap
 
-- **Start** (`/start`; «Home» até a F85, e `/home` ainda leva a ela): criar uma série a partir de um artista ou de uma lista colada
+- **Start** (`/start`; «Home» até a F85; `/home` agora é a página de entrada): criar uma série a partir de um artista ou de uma lista colada
 - **Music Series** (`/albums`): as séries de álbuns e os álbuns de cada uma
 - **The Blending Menu** (`/blend`): escolher série e receita e gerar playlists
 - **Playlists** (`/playlists`, `/saved-playlists`): as playlists geradas e os lotes guardados
 - **Inventory** (`/inventory`): a coleção da pessoa, com status, notas e (F75) valor estimado
   - a janela de um álbum do inventário
-- **Página de entrada** (F80, aprovada na v2; mora na raiz `/` só para quem não entrou com conta — quem entrou vai direto a `/start`, e o logotipo do app leva a ela por `/?entry` (F85); decidido pelo agente — revisável; o comportamento está no `behavior.md` § A raiz do site e a página de entrada): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript.
+- **Página de entrada** (F80, aprovada na v2; mora na raiz `/` só para quem não entrou com conta — quem entrou vai direto a `/start`, e `/home`, a home do site, mostra a página a todos, com ou sem conta; o logotipo do app leva a `/home` (F85); decidido pelo agente — revisável; o comportamento está no `behavior.md` § A raiz do site e a página de entrada): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript.
 
 ### O esquema de cada nó
 
@@ -93,7 +93,7 @@ A direção escolhida pelo MJRP em 2026-11-20 (o Caixote, mais a progressão do 
 3. **Corrigir um valor:** abrir a janela → escrever o valor → «Save» → a etiqueta vira «Yours».
 4. **Comprar:** abrir a janela → «Where to buy» → Discogs, Amazon ou iMusic.
 
-5. **Página de entrada (F80):** chegar pela busca ou por um link à raiz `/` → ler o que é na primeira tela → (rolar pelas faixas do lado A, «Flip the record», o lado B) → «Open the app» leva à Home do app (`/home`); «Sign in» leva ao app com a janela de entrar aberta (`/home?signin`). Quem entrou com conta e abre a raiz cai direto em `/home`.
+5. **Página de entrada (F80):** chegar pela busca ou por um link à raiz `/` → ler o que é na primeira tela → (rolar pelas faixas do lado A, «Flip the record», o lado B) → «Open the app» leva ao Start do app (`/start`); «Sign in» leva ao app com a janela de entrar aberta (`/start?signin`). Quem entrou com conta e abre a raiz cai direto em `/start`; `/home` mostra a página a todos.
 
 ## Template → Épico
 

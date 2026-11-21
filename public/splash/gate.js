@@ -10,7 +10,8 @@
  * Apple); the guest session the app creates for every visitor is not.
  *
  * Rules:
- *   - `?entry` in the address shows the page to anyone (the owner is signed in and must see it);
+ *   - `/home` (F85: the entry page IS the site's home) and `?entry` in the address show the page to
+ *     anyone, signed in or not: only the root `/` sends an account to the app;
  *   - the database is never created when it is not there (Firebase would then find an empty one);
  *   - while IndexedDB is read the page is hidden (`html.gate`, the dark background stays);
  *   - anything unclear — no answer in 600 ms, an error, no IndexedDB — shows the page;
@@ -103,6 +104,7 @@ export function runGate(win, options) {
     const holdMs = (options && options.holdMs) || HOLD_MS
     const html = win.document.documentElement
     try {
+        if (/^\/home\/?$/.test(win.location.pathname || '')) return Promise.resolve('page')
         if (/[?&]entry(=|&|$)/.test(win.location.search || '')) return Promise.resolve('page')
     } catch { /* no address: decide as usual */ }
 

@@ -10,7 +10,7 @@
 -   **UI Setup**: Initializes `TopNav` and `Footer` immediately (independent of auth).
 -   **Event Listeners**:
     -   none for Spotify since F69: `app.js` no longer listens for `spotify-auth-success`. What follows a connection is the album load's own (`services/albums/popularityOnConnect.js`, on `spotify-auth-change`).
--   **Router**: Registers all application routes (`/home`, `/albums`, `/playlists`, etc.).
+-   **Router**: Registers all application routes (`/start`, `/albums`, `/playlists`, etc.; `/home` is the entry page, outside the app: if asked, the route leaves to the browser once, `leaveToHome`).
 
 ### Boot Sequence Diagram
 ```mermaid
@@ -47,7 +47,7 @@ sequenceDiagram
 -   **Mechanism**: History API (`pushState`, `popstate` event).
 -   **Features**:
     -   **Navigation Hooks**: `beforeNavigate` and `afterNavigate`. `beforeNavigate(hook)` returns a function that removes the hook; the hooks are asked on `navigate()` and, since v5.0 (F60), on the browser's back and forward too (`handleHistoryMove`): when a hook refuses, the address of the screen the person stays on is put back. `views/playlists/unsavedChangesGuard.js` uses them to ask before leaving the playlists screen with unsaved changes (and listens to `beforeunload` for closing or reloading the tab).
-    -   **Unknown address**: goes to `/home` once, in place of the entry it leaves (`redirect`); with no `/home` route it stops (it used to call itself until the stack overflowed).
+    -   **Unknown address**: goes to `/start` once, in place of the entry it leaves (`redirect`); with no `/start` route it stops (it used to call itself until the stack overflowed).
     -   **One owner of the history** (F63): `navigate(path)` adds an entry; `redirect(path)` replaces the entry being left and is what a route that only sends the person on uses (`/callback`, `/album-series`, `/series`, an unknown address, the bare `/` in `app.js`), so the back button never lands on an address that sends the person forward again; `setAddress(path, { replace })` is how a screen changes its own address without being drawn again (the scope of the albums screen: `SeriesController.loadScope` replaces on entering, so `/albums/<id>` becomes `/albums?seriesId=<id>` with no new entry, and adds one when the person changes the scope). `test/architecture/historyOwnedByRouter.test.js` fails when another file writes the history (three known exceptions, each with its reason).
     -   **SafeDOM Support**: Renders Views that return DOM Nodes (recommended) or HTML strings (legacy).
     -   **Phantom Click Prevention**: Logic to avoid duplicate navigation or accidental clicks during renders.

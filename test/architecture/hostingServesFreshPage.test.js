@@ -32,7 +32,7 @@ describe('hosting: the page is always asked for again', () => {
 
     it('every address still falls back to the app, after the server routes', () => {
         const sources = firebase.hosting.rewrites.map(rewrite => rewrite.source)
-        expect(sources).toEqual(['/api/**', '**'])
+        expect(sources).toEqual(['/api/**', '/home', '**']) // F85: /home is the entry page, before the catch-all
     })
 
     it('F80: the fallback is the app (app.html); the root is the entry page, served as the file index.html', () => {

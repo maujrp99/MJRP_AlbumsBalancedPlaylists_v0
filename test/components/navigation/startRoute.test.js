@@ -1,7 +1,8 @@
 /**
- * F85 - «Start» is the name and the address (/start) of the screen where a series is built;
- * /home and /home?signin still open (they lead to /start, query kept); the logo leads to the
- * entry page by a full page load, on the computer and on the phone.
+ * F85 - «Start» is the name and the address (/start) of the screen where a series is built; the logo
+ * leads to /home, the entry page (the site's home), by a full page load, on the computer and on the phone.
+ * MJRP, 2026-11-21: «o /home agora deveria ser o entry»: the app never redirects /home to /start; if it
+ * is ever asked for /home it leaves to the browser, once (no loop when a server answers /home with the app).
  */
 import { describe, it, expect, vi } from 'vitest'
 
@@ -10,7 +11,7 @@ vi.mock('../../../public/js/components/navigation/AuthNav.js', () => ({
 }))
 vi.mock('../../../public/js/components/LoginModal.js', () => ({ showLoginModal: vi.fn() }))
 
-import { START_PATH, ENTRY_PATH, oldHomeTarget } from '../../../public/js/components/navigation/startRoute.js'
+import { START_PATH, HOME_PATH, leaveToHome, LEFT_KEY, LEFT_WINDOW_MS } from '../../../public/js/components/navigation/startRoute.js'
 import { TopNav } from '../../../public/js/components/TopNav.js'
 import { Footer } from '../../../public/js/components/Footer.js'
 import { Breadcrumb } from '../../../public/js/components/Breadcrumb.js'
@@ -18,15 +19,52 @@ import { PhoneShell } from '../../../public/js/components/navigation/PhoneShell.
 import { readFileSync } from 'node:fs'
 
 describe('the addresses', () => {
-    it('Start is /start and the logo goes to the entry page', () => {
+    it('Start is /start and the logo goes to /home, the entry page', () => {
         expect(START_PATH).toBe('/start')
-        expect(ENTRY_PATH).toBe('/?entry')
+        expect(HOME_PATH).toBe('/home')
+    })
+})
+
+describe('the app asked for /home (F85, MJRP 2026-11-21)', () => {
+    const fakeWin = (search = '', stored = null) => {
+        const data = stored === null ? {} : { [LEFT_KEY]: stored }
+        return {
+            location: { search, replace: vi.fn() },
+            sessionStorage: { getItem: (k) => data[k] ?? null, setItem: (k, v) => { data[k] = v } },
+            data
+        }
+    }
+
+    it('leaves to the browser: a full load of /home, the query kept; it never goes to /start', () => {
+        const win = fakeWin('?signin')
+        expect(leaveToHome(win, { now: 1000 })).toBe(true)
+        expect(win.location.replace).toHaveBeenCalledWith('/home?signin')
+        expect(win.data[LEFT_KEY]).toBe('1000')
     })
 
-    it('/home leads to /start and keeps the query (the sign-in opener still works)', () => {
-        expect(oldHomeTarget('')).toBe('/start')
-        expect(oldHomeTarget('?signin')).toBe('/start?signin')
-        expect(oldHomeTarget('?x=1&signin')).toBe('/start?x=1&signin')
+    it('no loop: a server that answers /home with the app is left once, then the app stays (the caller goes to /start)', () => {
+        const win = fakeWin('', '1000')
+        expect(leaveToHome(win, { now: 1000 + LEFT_WINDOW_MS - 1 })).toBe(false)
+        expect(win.location.replace).not.toHaveBeenCalled()
+    })
+
+    it('a later, independent ask leaves again', () => {
+        const win = fakeWin('', '1000')
+        expect(leaveToHome(win, { now: 1000 + LEFT_WINDOW_MS + 1 })).toBe(true)
+        expect(win.location.replace).toHaveBeenCalledWith('/home')
+    })
+
+    it('without sessionStorage it still leaves once, and cannot loop in the same page', () => {
+        const win = { location: { search: '', replace: vi.fn() }, get sessionStorage() { throw new Error('blocked') } }
+        expect(leaveToHome(win, { now: 5 })).toBe(true)
+        expect(leaveToHome(win, { now: 6 })).toBe(false)
+    })
+
+    it('app.js registers /home with leaveToHome and no redirect to /start from it', () => {
+        const app = readFileSync('public/js/app.js', 'utf8')
+        const block = app.slice(app.indexOf("router.register('/home'"), app.indexOf("router.register('/albums'"))
+        expect(block).toMatch(/leaveToHome\(/)
+        expect(block).not.toMatch(/oldHomeTarget/)
     })
 })
 
@@ -38,13 +76,13 @@ describe('the menu of the computer', () => {
         const links = [...body.querySelectorAll('a[href="/start"]')].map(a => a.textContent.trim())
         expect(links.length).toBeGreaterThanOrEqual(2) // the bar and the drawer
         links.forEach(text => expect(text).toBe('Start'))
-        expect(body.querySelector('a[href="/home"]')).toBeNull()
+        expect(body.querySelectorAll('a[href="/home"]:not(.nav-logo)').length).toBe(0) // only the logo leads to /home
         expect(body.textContent).not.toMatch(/\bHome\b/)
     })
 
-    it('the logo leads to the entry page, by a full page load (no data-link)', () => {
+    it('the logo leads to /home (the entry page), by a full page load (no data-link)', () => {
         const logo = html().querySelector('a.nav-logo')
-        expect(logo.getAttribute('href')).toBe('/?entry')
+        expect(logo.getAttribute('href')).toBe('/home')
         expect(logo.hasAttribute('data-full-page')).toBe(true)
     })
 
@@ -68,7 +106,7 @@ describe('the top bar of the phone', () => {
         new PhoneShell({ router, userStore, clearCaches: vi.fn(), win }).start()
 
         const link = document.querySelector('a.phone-topbar__logo-link')
-        expect(link.getAttribute('href')).toBe('/?entry')
+        expect(link.getAttribute('href')).toBe('/home')
         expect(link.hasAttribute('data-full-page')).toBe(true)
         expect(link.getAttribute('aria-label')).toMatch(/entry page/)
         expect(link.querySelector('img.phone-topbar__logo')).not.toBeNull()

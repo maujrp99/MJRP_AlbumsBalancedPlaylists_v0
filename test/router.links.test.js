@@ -36,7 +36,7 @@ describe('Router: links (F63)', () => {
     })
 
     it('a link marked data-full-page is left to the browser (F85: the logo leads out of the app)', async () => {
-        holder.innerHTML = '<a href="/?entry" id="out" data-full-page>Logo</a>'
+        holder.innerHTML = '<a href="/home" id="out" data-full-page>Logo</a>'
         const click = new MouseEvent('click', { bubbles: true, cancelable: true })
         holder.querySelector('#out').dispatchEvent(click)
         await settle()

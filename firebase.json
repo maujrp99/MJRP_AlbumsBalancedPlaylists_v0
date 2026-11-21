@@ -18,6 +18,10 @@
         }
       },
       {
+        "source": "/home",
+        "destination": "/index.html"
+      },
+      {
         "source": "**",
         "destination": "/app.html"
       }

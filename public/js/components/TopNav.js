@@ -45,7 +45,7 @@ export class TopNav {
         </button>
 
         <!-- Logo -->
-        <a href="/?entry" class="nav-logo flex items-center gap-3 group flex-1 lg:flex-none lg:shrink-0" data-full-page aria-label="The Album Blender, the entry page">
+        <a href="/home" class="nav-logo flex items-center gap-3 group flex-1 lg:flex-none lg:shrink-0" data-full-page aria-label="The Album Blender, the entry page">
           <div class="logo-icon w-12 h-12 md:w-16 md:h-16 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform shrink-0">
             <img src="/assets/images/logo.png" alt="MJRP Logo" class="w-full h-full object-contain">
           </div>

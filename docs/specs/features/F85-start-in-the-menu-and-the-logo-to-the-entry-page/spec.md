@@ -19,15 +19,16 @@ planned_for: "[[ROADMAP#^REL-41]]"
 Dito pelo MJRP em 2026-11-21: «O item home do menu, deveria mudar para Initiate ou Start e o logo deveria ser a home que deveria ser a splash/landing page, o que acha?» e, depois da opinião do agente: «podemos mudar isso em prod já?»
 
 ## Requirements
-- [REQ-01] O item do menu (computador) e a aba (celular) da tela de montar série dizem «Start»; o endereço passa a ser `/start`, e `/home` leva a ele · fixes S-67
-- [REQ-02] O logotipo, no computador e no celular, leva à página de entrada (`/?entry` para quem tem conta aberta) · fixes S-67
+- [REQ-01] O item do menu (computador) e a aba (celular) da tela de montar série dizem «Start»; o endereço passa a ser `/start` · fixes S-67
+  - Revisto em 2026-11-21 (MJRP, depois de ver em produção: «home está redirecionando pra start, o /home agora deveria ser o entry...»; UAT-238): `/home` **não** leva a `/start`; `/home` é a página de entrada, a home do site, para todos, com ou sem conta, sem redirecionar.
+- [REQ-02] O logotipo, no computador e no celular, leva à página de entrada, em `/home` (era `/?entry`; MJRP, 2026-11-21, UAT-238) · fixes S-67
 - [REQ-03] Abrir o site com a conta aberta continua levando direto à tela de trabalho, sem pintar a página de entrada; os botões «Open the app» da página de entrada levam a `/start` · fixes S-67
 
 ## Observable States
 Os de hoje, com o rótulo novo; nenhum estado novo.
 
 ## Success Criteria
-Os três requisitos vistos no navegador a 1280 e a 393 px, com e sem conta; `/home`, `/home?signin` e os links diretos continuam abrindo.
+Os três requisitos vistos no navegador a 1280 e a 393 px, com e sem conta; `/home` e `/home?signin` mostram a página de entrada, com e sem conta; `/start`, `/start?signin` e os links diretos continuam abrindo.
 
 ## Out of Scope
 Redesenhar a página de entrada para quem tem conta; os álbuns dela escolhidos no CMS (F82, REQ-03).
@@ -36,4 +37,5 @@ Redesenhar a página de entrada para quem tem conta; os álbuns dela escolhidos 
 - **O nome** (MJRP, 2026-11-21, no chat): «pode ser new Series», depois «pensando bem, pode ser Starte e Inicie em pt», e por fim «Start». Como foi lido: o item se chama **«Start»** em inglês e **«Inicie»** em português do Brasil (o português entra com a F81).
 
 ## Open Questions
+- **Fechado pelo MJRP em 2026-11-21** (UAT-238): `/home` é a página de entrada para todos. A raiz `/` não mudou (a página para quem não entrou, direto a `/start` para quem entrou).
 - **Decidido pelo agente — revisável**, porque o MJRP não escolheu: com a conta aberta, abrir o site continua indo direto à tela de trabalho, e só o logotipo leva à página de entrada (a alternativa é a raiz mostrar sempre a página de entrada).

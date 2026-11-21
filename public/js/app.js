@@ -48,7 +48,7 @@ import { startPhoneShell } from './components/navigation/PhoneShell.js'
 import { userStore } from './stores/UserStore.js'
 import { startUsageMeasurement } from './services/usage/usageWiring.js'
 import { openSignInWhenAsked } from './components/navigation/signInFromLink.js'
-import { START_PATH, oldHomeTarget } from './components/navigation/startRoute.js'
+import { START_PATH, leaveToHome } from './components/navigation/startRoute.js'
 import { isSignedIn } from './components/navigation/AuthNav.js'
 import { showLoginModal } from './components/LoginModal.js'
 
@@ -124,9 +124,11 @@ startUsageMeasurement({ router })
 const seriesController = new SeriesController();
 
 router.register(START_PATH, () => new HomeView())
-// F85: «Home» became «Start»; an old /home (or /home?signin) leads to /start, the query kept
+// F85 (MJRP, 2026-11-21): /home is the entry page, not a screen of the app. If the app is ever asked
+// for it, it leaves to the browser (a full load); a server that answers /home with the app would loop,
+// so the second ask inside the window stays and goes to /start.
 router.register('/home', () => {
-    router.redirect(oldHomeTarget(window.location.search))
+    if (!leaveToHome(window)) router.redirect(START_PATH + window.location.search)
     return null
 })
 router.register('/albums', () => new SeriesView(seriesController))

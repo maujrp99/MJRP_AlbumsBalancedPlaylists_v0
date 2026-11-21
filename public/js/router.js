@@ -30,7 +30,7 @@ export class Router {
         // Intercept link clicks for SPA navigation
         document.addEventListener('click', (e) => {
             const link = e.target.closest('a[href^="/"]')
-            // A link marked data-full-page (the logo: out of the app, to the entry page) is the browser's
+            // A link marked data-full-page (the logo: out of the app, to /home, the entry page) is the browser's
             if (link && !link.hasAttribute('data-full-page')) {
                 const targetHref = link.getAttribute('href')
                 const currentPath = window.location.pathname + window.location.search

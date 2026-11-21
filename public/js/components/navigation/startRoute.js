@@ -1,16 +1,42 @@
 /**
- * The addresses F85 names: «Start» is where a series is built (it was «Home», /home); the logo
- * leads to the entry page, the site's home. Written in the code, nothing here comes from outside.
+ * The addresses F85 names: «Start» is where a series is built (it was «Home»); /home is the entry
+ * page, the site's home, for everyone (MJRP, 2026-11-21). Written in the code, nothing here comes
+ * from outside.
  */
 
 /** The screen where a series is built. */
 export const START_PATH = '/start'
 
-/** The entry page for a person with an account open (`?entry` shows it to anyone: the root decision lets it be). */
-export const ENTRY_PATH = '/?entry'
+/** The entry page, the site's home: a static page outside the app (the logo leads to it by a full page load). */
+export const HOME_PATH = '/home'
+
+/** sessionStorage key holding when the app last left to /home (the loop guard). */
+export const LEFT_KEY = 'mjrp:left-to-home'
+
+/** A second ask for /home inside this window means the server answers /home with the app: stay. */
+export const LEFT_WINDOW_MS = 10000
+
+// Used when sessionStorage is not there: one window, one try
+const leftWindows = new WeakSet()
 
 /**
- * Where an old /home address leads: /start, the query kept (`/home?signin` opens the sign-in window as before).
- * @param {string} search - `location.search` of the old address
+ * The app was asked for /home, which is not a screen of the app: leave it to the browser, a full
+ * load of /home (query kept), where the server answers with the entry page. If a server answers
+ * /home with the app (an old dev setup), the app is asked again at once: that second ask inside
+ * the window stays (returns false, the caller goes to /start) instead of looping.
+ * @param {Window} win
+ * @param {{ now?: number }} [options]
+ * @returns {boolean} true: the browser is leaving; false: stay in the app
  */
-export const oldHomeTarget = (search) => `${START_PATH}${search || ''}`
+export function leaveToHome(win, { now = Date.now() } = {}) {
+    let store = null
+    try { store = win.sessionStorage } catch { store = null }
+    let last = NaN
+    try { last = Number(store && store.getItem(LEFT_KEY)) } catch { last = NaN }
+    const recent = (Number.isFinite(last) && last > 0 && now - last < LEFT_WINDOW_MS) || (!store && leftWindows.has(win))
+    if (recent) return false
+    leftWindows.add(win)
+    try { if (store) store.setItem(LEFT_KEY, String(now)) } catch { /* the page-level guard holds */ }
+    win.location.replace(`${HOME_PATH}${win.location.search || ''}`)
+    return true
+}

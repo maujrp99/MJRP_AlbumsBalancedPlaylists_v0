@@ -12,9 +12,10 @@
  *     stage's tag, the caption of the front record and the footer's credit (public/splash/covers.js);
  *     the set comes from VITE_SPLASH_COVERS (`real`, else fictional);
  *   - renames the two pages in dist/ after the build;
- *   - in the dev server, answers the root with the entry page (the app keeps every other address);
- *   - in `vite preview`, answers every address without an extension, but the root, with the app —
- *     what Firebase Hosting does in production.
+ *   - in the dev server, answers the root and /home with the entry page (the app keeps every other address);
+ *   - in `vite preview`, answers /home with the entry page and every other address without an
+ *     extension, but the root, with the app — what Firebase Hosting does in production (F85:
+ *     /home is the entry page, the site's home, rewritten to index.html before the catch-all).
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -58,10 +59,16 @@ const pathOf = (url) => String(url || '/').split(/[?#]/)[0]
 /** The root, with or without a query: the entry page. */
 export const isRootAddress = (url) => pathOf(url) === '/'
 
+/** F85: /home, with or without a query, is the entry page too (the site's home). */
+export const isHomeAddress = (url) => pathOf(url) === '/home'
+
+/** The addresses that show the entry page: the root and /home. */
+export const isEntryAddress = (url) => isRootAddress(url) || isHomeAddress(url)
+
 /** Any other address without a file extension, outside /api and Vite's own: the app. */
 export function isAppAddress(url) {
     const p = pathOf(url)
-    if (p === '/' || p.startsWith('/api/') || p.startsWith('/@')) return false
+    if (p === '/' || p === '/home' || p.startsWith('/api/') || p.startsWith('/@')) return false
     return !path.posix.basename(p).includes('.')
 }
 
@@ -96,13 +103,15 @@ export function entryPage({ root, coverSet }) {
         writeBundle(options) { renameBuiltPages(options.dir || outDir) },
         configureServer(server) {
             server.middlewares.use((req, res, next) => {
-                if (wantsPage(req) && isRootAddress(req.url)) req.url = `/${ENTRY_SOURCE}${req.url.slice(1)}`
+                if (wantsPage(req) && isEntryAddress(req.url)) req.url = `/${ENTRY_SOURCE}${req.url.slice(pathOf(req.url).length)}`
                 next()
             })
         },
         configurePreviewServer(server) {
             server.middlewares.use((req, res, next) => {
-                if (wantsPage(req) && isAppAddress(req.url)) req.url = `/${APP_BUILT}${req.url.slice(pathOf(req.url).length)}`
+                // dist/index.html is the entry page: /home is answered with it, as Firebase's rewrite does
+                if (wantsPage(req) && isHomeAddress(req.url)) req.url = `/index.html${req.url.slice(pathOf(req.url).length)}`
+                else if (wantsPage(req) && isAppAddress(req.url)) req.url = `/${APP_BUILT}${req.url.slice(pathOf(req.url).length)}`
                 next()
             })
         }

@@ -198,13 +198,13 @@ O site mede o que as pessoas fazem (a lista está em `shared/usageEvents.js`; o 
 
 ### 2.4d A página de entrada e as capas dela (F80)
 
-A raiz do site (`/`) é a página de entrada para quem não entrou com conta; quem entrou vai direto a `/start` (F85; o logotipo do app leva à página por `/?entry`), e todo outro endereço é o app. No `dist/`, a página é `index.html` e o app é `app.html` (o `deploy-site.sh` confere os dois; o `firebase.json` reescreve tudo, menos `/api/**` e os arquivos, para `/app.html`).
+A raiz do site (`/`) é a página de entrada para quem não entrou com conta; quem entrou vai direto a `/start` (F85); `/home` é a página de entrada para todos, e o logotipo do app leva a ela; todo outro endereço é o app. No `dist/`, a página é `index.html` e o app é `app.html` (o `deploy-site.sh` confere os dois; o `firebase.json` reescreve `/home` para `/index.html` e, depois, tudo, menos `/api/**` e os arquivos, para `/app.html`).
 
 **As capas.** O build escolhe o conjunto pela variável `VITE_SPLASH_COVERS` do `.env`:
 - sem ela (o padrão), ou com qualquer valor que não seja `real`: as **capas fictícias** (arte original, «Fictional albums · original art»);
 - `VITE_SPLASH_COVERS=real`: as **capas reais** do protótipo aprovado, vindas do CDN da Apple, com crédito, «Listen on Apple Music» e a linha de marcas da Apple. **Só com a decisão do MJRP** sobre os termos da Apple (DPLA 3.3.6(D), App Review 4.5.2(ii)).
 
-Para ver a página localmente: `npx vite` e abrir `http://127.0.0.1:5010/` (sem conta) ou `http://127.0.0.1:5010/?entry` (com conta, a página aparece mesmo assim). Para ver o build como em produção: `npx vite build` e `npx vite preview`.
+Para ver a página localmente: `npx vite` e abrir `http://127.0.0.1:5010/` (sem conta) ou `http://127.0.0.1:5010/home` (com ou sem conta, a página aparece sempre; `/?entry` também). Para ver o build como em produção: `npx vite build` e `npx vite preview`.
 
 ### 2.5 Automação do GitHub
 

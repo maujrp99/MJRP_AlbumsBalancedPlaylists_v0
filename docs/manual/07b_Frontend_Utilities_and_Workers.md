@@ -98,4 +98,4 @@ classDiagram
 `formatDuration(seconds)` is the one formatter of a track duration: "m:ss", "h:mm:ss" from one hour on, and "--:--" when there is none. Durations are kept in **seconds** everywhere (`models/Track.js`; `services/musickit/MusicKitCatalog.js` converts Apple's milliseconds). Used by the ranking window and the track table. `TrackRow.formatDuration` and `PlaylistGrid.calculateDuration` still format on their own (also in seconds).
 
 ### `utils/reloadApp.js`
-`reloadApp()` starts the app again from `/home` in a fresh page. Called after sign-out (`components/navigation/AuthNav.js`), so nothing of the person who left stays in memory or on screen.
+`reloadApp()` starts the app again from `/start` in a fresh page. Called after sign-out (`components/navigation/AuthNav.js`), so nothing of the person who left stays in memory or on screen.

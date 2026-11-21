@@ -125,7 +125,7 @@ export class PhoneShell {
             ? '<span class="phone-avatar" data-account-initial></span>'
             : getIcon('Menu', 'phone-topbar__menu-icon')
         this.parts.topBar.innerHTML = `
-          <a class="phone-topbar__logo-link" href="/?entry" data-full-page aria-label="The Album Blender, the entry page"><img class="phone-topbar__logo" src="/assets/images/logo.png" alt=""></a>
+          <a class="phone-topbar__logo-link" href="/home" data-full-page aria-label="The Album Blender, the entry page"><img class="phone-topbar__logo" src="/assets/images/logo.png" alt=""></a>
           <span class="phone-topbar__title" data-screen-name></span>
           <button type="button" id="phoneMenuBtn" class="phone-topbar__menu" aria-haspopup="dialog" aria-label="Menu and account">${account}</button>`
         // What a person wrote goes in as text, never as HTML

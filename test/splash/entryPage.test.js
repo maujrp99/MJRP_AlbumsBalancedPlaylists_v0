@@ -9,7 +9,7 @@ import { readFileSync, mkdtempSync, writeFileSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import {
-    PLACES, inlineGateScript, fillEntryPage, isRootAddress, isAppAddress, renameBuiltPages
+    PLACES, inlineGateScript, fillEntryPage, isRootAddress, isEntryAddress, isAppAddress, renameBuiltPages, entryPage
 } from '../../scripts/entryPage.mjs'
 
 const ROOT = process.cwd()
@@ -124,8 +124,49 @@ describe('which address is which', () => {
     })
 
     it('every other address without a file extension is the app; files and the API are not', () => {
-        ['/start', '/home', '/albums', '/albums/abc123', '/inventory', '/callback?code=x', '/start?signin', '/home?signin'].forEach(url => expect(isAppAddress(url)).toBe(true));
-        ['/', '/?entry', '/assets/main-abc.js', '/favicon.png', '/api/generate', '/@vite/client', '/splash/main.js'].forEach(url => expect(isAppAddress(url)).toBe(false))
+        ['/start', '/albums', '/albums/abc123', '/inventory', '/callback?code=x', '/start?signin'].forEach(url => expect(isAppAddress(url)).toBe(true));
+        ['/', '/?entry', '/home', '/home?signin', '/assets/main-abc.js', '/favicon.png', '/api/generate', '/@vite/client', '/splash/main.js'].forEach(url => expect(isAppAddress(url)).toBe(false))
+    })
+})
+
+describe('F85 (MJRP, 2026-11-21): /home is the entry page too', () => {
+    it('/home, with or without a query, is an entry address; /homepage and /home/x are not', () => {
+        ;['/', '/?entry', '/home', '/home?signin', '/home#x'].forEach(url => expect(isEntryAddress(url)).toBe(true))
+        ;['/start', '/homepage', '/home/x', '/albums'].forEach(url => expect(isEntryAddress(url)).toBe(false))
+    })
+
+    const run = (hook, url, method = 'GET') => {
+        const middlewares = []
+        hook({ middlewares: { use: (fn) => middlewares.push(fn) } })
+        const req = { url, method }
+        middlewares[0](req, {}, () => {})
+        return req.url
+    }
+
+    it('the dev server answers /home and /home?signin with the entry page, as it does the root', () => {
+        const plugin = entryPage({ root: resolve(ROOT, 'public') })
+        expect(run(plugin.configureServer, '/home')).toBe('/splash.html')
+        expect(run(plugin.configureServer, '/home?signin')).toBe('/splash.html?signin')
+        expect(run(plugin.configureServer, '/')).toBe('/splash.html')
+        expect(run(plugin.configureServer, '/start')).toBe('/start')
+    })
+
+    it('vite preview answers /home and /home?signin with the built entry page (index.html), the rest as before', () => {
+        const plugin = entryPage({ root: resolve(ROOT, 'public') })
+        expect(run(plugin.configurePreviewServer, '/home')).toBe('/index.html')
+        expect(run(plugin.configurePreviewServer, '/home?signin')).toBe('/index.html?signin')
+        expect(run(plugin.configurePreviewServer, '/start')).toBe('/app.html')
+        expect(run(plugin.configurePreviewServer, '/albums/x?a=1')).toBe('/app.html?a=1')
+    })
+
+    it('firebase.json rewrites /home to the entry page file, before the catch-all to the app', () => {
+        const rewrites = JSON.parse(readFileSync(resolve(ROOT, 'firebase.json'), 'utf8')).hosting.rewrites
+        const home = rewrites.findIndex(r => r.source === '/home')
+        const all = rewrites.findIndex(r => r.source === '**')
+        expect(home).toBeGreaterThanOrEqual(0)
+        expect(home).toBeLessThan(all)
+        expect(rewrites[home].destination).toBe('/index.html')
+        expect(rewrites[all].destination).toBe('/app.html')
     })
 })
 

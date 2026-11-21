@@ -59,11 +59,11 @@ function fakeIndexedDb({ stores = null, listDatabases = true, created = [] } = {
 const record = (value) => ({ fbase_key: KEY, value })
 
 /** A window with what the gate reads. */
-function fakeWindow({ search = '', storage = storageWith({}), indexedDB = fakeIndexedDb() } = {}) {
+function fakeWindow({ pathname = '/', search = '', storage = storageWith({}), indexedDB = fakeIndexedDb() } = {}) {
     document.documentElement.className = ''
     return {
         document,
-        location: { search, replace: vi.fn() },
+        location: { pathname, search, replace: vi.fn() },
         localStorage: storage,
         indexedDB,
         setTimeout: (fn, ms) => setTimeout(fn, ms)
@@ -137,6 +137,24 @@ describe('the root decides', () => {
         const win = fakeWindow({ search: '?entry', storage: storageWith({ [KEY]: JSON.stringify(account) }) })
         await expect(runGate(win)).resolves.toBe('page')
         expect(win.location.replace).not.toHaveBeenCalled()
+    })
+
+    it('F85 (MJRP, 2026-11-21): /home IS the entry page: always shown, signed in or not, with or without ?signin', async () => {
+        for (const search of ['', '?signin']) {
+            const win = fakeWindow({ pathname: '/home', search, storage: storageWith({ [KEY]: JSON.stringify(account) }) })
+            await expect(runGate(win)).resolves.toBe('page')
+            expect(win.location.replace).not.toHaveBeenCalled()
+            expect(document.documentElement.classList.contains('gate')).toBe(false)
+        }
+        // an account only in IndexedDB: still no read, no hiding, no redirect
+        const idb = fakeWindow({ pathname: '/home', indexedDB: fakeIndexedDb({ stores: { [FIREBASE_STORE]: [record(account)] } }) })
+        await expect(runGate(idb)).resolves.toBe('page')
+        expect(idb.location.replace).not.toHaveBeenCalled()
+    })
+
+    it('the root without ?entry still sends an account to the app', async () => {
+        const win = fakeWindow({ pathname: '/', storage: storageWith({ [KEY]: JSON.stringify(account) }) })
+        await expect(runGate(win)).resolves.toBe('app')
     })
 
     it('a browser with no IndexedDB, or one that throws, shows the page', async () => {

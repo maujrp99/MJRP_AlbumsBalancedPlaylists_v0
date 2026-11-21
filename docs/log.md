@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 12:28] session — F85: o /home é a página de entrada, para todos (UAT-238)
+**Branch:** fix/f85-home-is-the-entry-page
+O MJRP, em produção: «o /home agora deveria ser o entry». firebase.json reescreve /home para /index.html antes do **; o plugin entryPage responde /home no dev e no vite preview; o gate.js mostra a página sempre em /home; a rota /home do app sai para o navegador uma vez (leaveToHome, sem laço); o logotipo leva a /home.
+
 ## [2026-11-21 12:17] session — em produção: «Start» no menu (F85), a caixa de discos em diagonal e a capa da banana (F80), o contorno laranja (UAT-232)
 **Branch:** main
 Publicado da `main` (`6909689`, `/assets/main-CXGMhC4B.js`; 3748 testes) e conferido em produção: `reports/evidence/F80/2026-11-21-production-proof.md`. Decisão do MJRP que destravou: «album blender tem que ser fila separada do harness, os projetos filhos sao independentes nesse sentido» — o V0 passa a usar a sua própria fila (`MJRP_MACHINE_HOME=~/.mjrp/album-blender` nas chamadas do orquestrador); a publicação roda em prioridade normal (`MJRP_HEAVY_NICE=off`), porque o teste de tempo do inventário estoura em baixa prioridade. Na `main` desde o último registro: a pesquisa da régua de texto (`a6fccb0`), os ajustes da página de entrada (`2e690e2`, reconferência 0 P0, 0 P1, 1 P2 = UAT-237), o «Start» no menu (`6909689`, reconferência passa, 1 P2: a tela de álbuns vazia ainda diz «from the home page»). Faltam juntar: a proposta do React (`claude/f83-…`), o lote de fecho (`claude/f45-batch-close-merged-features`), o design system (`claude/f86-…`), o sensor visual (`claude/f84-…`).
