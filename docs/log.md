@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:13] session — F81: levantamento de todos os textos do site (1106 textos, 1437 pontos) e o mapa para o português
+**Branch:** claude/f81-site-in-more-than-one-language
+Levantamento dos textos que uma pessoa vê ou o leitor de tela lê, por árvore sintática (`scripts/i18n/scan-copy.cjs`, `scripts/i18n/build-deck.py`): 1106 textos distintos em 1437 pontos de `public/` e `server/`; o mapa está em `design/copy/album-blender-copy.md` (uma linha por texto, com id, tela, tipo, EN, PT e marca) e a coluna PT é proposta do agente (subagentes Sonnet), nada aprovado. O relatório `reports/audits/2026-11-21-f81-copy-survey.md` traz as contagens, os casos difíceis, os conceitos com mais de um rótulo (IA-02) e as decisões D-01 a D-13 para o MJRP. Nenhum código de produto foi alterado.
+
 ## [2026-11-21 09:41] session — F84: instalar os navegadores do Playwright sempre pelo nome
 **Branch:** main
 A orquestradora do MJRPpersonal repôs o WebKit 2215 que a instalação do V0 tinha tirado do cache da máquina, e avisou a causa: `npx playwright install` sem nome remove as versões dos outros projetos. A regra e o jeito de contornar o travamento ao descompactar estão no plano da F84.
