@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:16] session — F83 onda 0 (a base) começa, num agente Sonnet
+**Branch:** claude/f83-wave-0-base
+Ramo `claude/f83-wave-0-base` cortado da `main` (`3356113`). Contrato: spec, plano, tarefas TASK-01 a TASK-10, proposta de arquitetura e ADR-0023 (continua Proposed; o aceite é um commit do MJRP). O card da F83 foi movido a «Em andamento» com `board_move.py move F83 in_progress --why`, como o gancho (regra 39) pediu.
+
 ## [2026-11-21 13:11] decision — o MJRP respondeu as oito perguntas do React e dos idiomas: a opção recomendada em todas
 **Branch:** main
 Pelo Control Center, com a passkey (13:11), lote `reports/proposals/2026-11-21-1258-v0-react-and-languages.md`: ritmo em sequência com uma parada depois de duas telas medidas; aceita mudar a constituição para o React e os dois idiomas, juntos; endereço por idioma só na home; a escolha do idioma no aparelho e, depois da regra nova do banco, na conta; sem saber o país, o idioma do navegador; a home em português junto; a ordem das telas começando pela base e pela tela difícil; o português abre de uma vez, com tudo pronto. Está nas specs da F83 e da F81. A primeira etapa da migração (a base) começa agora, num agente interno em Sonnet. A ADR-0023 segue proposta: o aceite é um commit dele.
