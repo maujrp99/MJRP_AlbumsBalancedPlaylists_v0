@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"The Album Blender","url":"https://mjrp-playlist-generator.web.app/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","description":"A web app for people who listen to whole albums: gather albums into series, rank the tracks your way, blend balanced playlists, and keep count of the records you own."}</script>
+<link rel="stylesheet" href="/splash/bar-menu.css">
 <style>
 :root{
   --bg:#0a0a0c;--panel:#121216;--line:rgba(255,255,255,.12);
@@ -63,7 +64,6 @@ header.top .wrap{display:flex;align-items:center;justify-content:space-between;g
 .eqi i{width:3px;border-radius:1px;background:#0b0b0b;height:var(--h);transform-origin:bottom}
 .eqi i:nth-child(1){--h:55%;--d:.71s}.eqi i:nth-child(2){--h:100%;--d:.93s;--o:-.3s}.eqi i:nth-child(3){--h:70%;--d:.62s;--o:-.5s}.eqi i:nth-child(4){--h:40%;--d:1.08s;--o:-.2s}
 html.moving:not(.paused) .eqi i{animation:eqb var(--d) ease-in-out var(--o,0s) infinite alternate}
-@keyframes eqb{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
 
 /* the thread: the record's progress, one group of bars per track; the only navigation motif */
 .thread{position:sticky;top:var(--top);z-index:19;background:rgba(10,10,12,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -172,17 +172,6 @@ html.in .only-out{display:none!important}
 .top .wrap{gap:20px}
 .top .acct{display:flex;gap:8px;align-items:center;flex:0 0 auto}
 /* the slider-menu: five stops on ONE continuous row of bars (Elevar's thread), the fire fills it as you read */
-nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;min-width:0}
-.ms .stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font:600 14px/1 var(--body);border-radius:6px;white-space:nowrap}
-.ms .stop:hover{color:#fff}
-.ms .stop.on{color:#fff}
-.ms .stop.cur{color:var(--orange-text)}
-.ms .flipmark{position:absolute;z-index:2;left:60%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:24px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
-.ms .flipmark.on{color:var(--orange-text)}
-.eqbar{position:absolute;left:0;right:0;display:flex;align-items:flex-end;gap:2px;pointer-events:none}
-.eqbar i{flex:1 1 0;min-width:1px;border-radius:1px 1px 0 0;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom}
-.eqbar i.on{background:linear-gradient(0deg,#dc2626,#f97316 60%,#fbbf24)}
-html.moving:not(.paused) .eqbar i.cur{animation:eqb var(--d) ease-in-out var(--o) infinite alternate}
 .needle{display:none}
 /* the pause: a discreet icon in the stage's corner, where the motion is */
 .motion-icon{position:absolute;z-index:6;top:8px;right:8px;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.28);background:rgba(10,10,12,.6);color:#d6d6dc;cursor:pointer;padding:0}
@@ -202,10 +191,7 @@ html.paused .motion-icon .i-pause{display:none}
 
 :root{--top:72px;--thread:0px}
 .thread{display:none}
-.ms-desk{flex:1 1 auto;min-width:0;max-width:620px;margin:0 auto}
-.ms .stop{justify-content:flex-start;padding-top:8px;min-height:52px}
-.ms .flipmark{top:4px}
-.eqbar{bottom:6px;height:16px}
+.ms-desk{flex:1 1 auto;min-width:0;max-width:620px;margin:0 auto 0 0}
 @media (max-width:899px){
   :root{--top:56px}
   .ms-desk{display:none}
@@ -226,7 +212,6 @@ html.paused .motion-icon .i-pause{display:none}
 .flip-band .fb-title{font:800 22px/1.2 var(--display);margin:0 0 6px;color:var(--orange-text);letter-spacing:-.01em}
 .flip-band .fb-line{margin:0;color:var(--muted)}
 /* Portuguese runs longer: the menu's labels stay on one line */
-.ms .lb{white-space:nowrap}
 @media (max-width:899px){
   .story > section.flip-band{padding:8px 0;margin:0;border-bottom:0;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px}
   .flip-band .fb-title{font-size:14px;margin:0}

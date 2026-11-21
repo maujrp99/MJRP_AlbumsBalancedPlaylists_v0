@@ -36,11 +36,11 @@ describe('top bar: names are not cut at 80 px (UAT-211)', () => {
         NAME_IN_THE_BAR.split(' ').forEach(cls => expect(name.classList.contains(cls)).toBe(true))
     })
 
-    it('the Spotify name uses the same rule (read from the source: the button draws from a live session)', () => {
-        const source = readFileSync(resolve(process.cwd(), 'public/js/components/SpotifyConnectButton.js'), 'utf8')
+    it('the Spotify name uses the same rule and says the whole name on hover (the connections row, F88)', () => {
+        const source = readFileSync(resolve(process.cwd(), 'public/js/components/navigation/connections.js'), 'utf8')
         expect(source).toContain('NAME_IN_THE_BAR')
         expect(source).not.toContain('max-w-[80px]')
-        expect(source).toMatch(/data-spotify-name[^>]*title="\$\{escapeHtml\(userName\)\}"/)
+        expect(source).toMatch(/spotifyName: ''[^)]*title: view\.detail/)
     })
 })
 
@@ -73,18 +73,18 @@ describe('top bar: it never passes the width of the screen (UAT-218)', () => {
         expect(document.querySelector('#userMenuBtn img').classList.contains('shrink-0')).toBe(true)
     })
 
-    it('the links never shrink, the two groups of the bar do, and the menu of links starts at 1024 px', () => {
-        const bar = source('public/js/components/TopNav.js')
-        expect(bar).toMatch(/whitespace-nowrap shrink-0/)
-        expect(bar).toMatch(/<div class="hidden lg:flex items-center [^"]*min-w-0">/)
-        expect(bar).toMatch(/<div id="spotify-connect-desktop" class="min-w-0">/)
-        expect(bar).toMatch(/id="mobileMenuBtn" class="lg:hidden/)
-        expect(bar).not.toMatch(/md:hidden|hidden md:flex/)
+    it('the bar of stops shrinks before the bar passes the screen, and no label wraps (F88)', () => {
+        const top = source('public/css/top-menu.css')
+        const bar = source('public/splash/bar-menu.css')
+        expect(top).toMatch(/\.top-menu__bar\s*\{[^}]*min-width:\s*0/)
+        expect(top).toMatch(/\.top-acct\s*\{[^}]*min-width:\s*0/)
+        expect(bar).toMatch(/\.ms \.lb\s*\{\s*white-space:\s*nowrap/)
+        expect(source('public/js/components/TopNav.js')).not.toMatch(/mobileMenuBtn|mobile-drawer/)
     })
 
-    it('below the wide screen the Spotify button is the icon alone, with the name on hover', () => {
-        const button = source('public/js/components/SpotifyConnectButton.js')
-        expect(button).toMatch(/<div class="hidden xl:flex flex-col leading-none min-w-0">/)
-        expect(button).toMatch(/title="Spotify connected: \$\{escapeHtml\(userName\)\}"/)
+    it('the connections of the panel say the Spotify name whole on hover and cut it with the same rule', () => {
+        const row = source('public/js/components/navigation/connections.js')
+        expect(row).toContain('NAME_IN_THE_BAR')
+        expect(row).toMatch(/title: view\.detail/)
     })
 })

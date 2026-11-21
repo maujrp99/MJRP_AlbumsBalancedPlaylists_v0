@@ -104,7 +104,7 @@ describe('Tailwind is built with the site', () => {
 
     it('the app imports the Tailwind stylesheet, after its own; only the styles of the phone come after it (F76)', () => {
         const imports = [...read(path.join(JS_ROOT, 'app.js')).matchAll(/^import\s+['"](\.\.\/css\/[^'"]+)['"]/gm)].map(match => match[1])
-        expect(imports).toEqual(['../css/index.css', '../css/tailwind.css', '../css/mobile.css', '../css/mobile/screens.css', '../css/safe-area.css'])
+        expect(imports).toEqual(['../css/index.css', '../css/tailwind.css', '../css/top-menu.css', '../css/mobile.css', '../css/mobile/screens.css', '../css/safe-area.css'])
     })
 
     it('every class Tailwind finds in the pages and in public/js is in the built CSS', () => {

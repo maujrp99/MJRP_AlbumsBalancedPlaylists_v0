@@ -1,6 +1,8 @@
 /**
- * F63 (UAT-13) - the account menu opens with a tap or a click and with the keyboard, not only with
- * the mouse over it; it closes on a click outside and on Escape, and says its state (aria-expanded).
+ * F63 (UAT-13), F88 - the account panel opens with a tap or a click and with the keyboard, not only
+ * with the mouse over it; it closes on a click outside and on Escape, and says its state
+ * (aria-expanded). Since F88 it is ONE panel (a dialog) for who is signed in and for who is not: who
+ * is in, the connections, the cache, sign out.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
@@ -10,6 +12,8 @@ vi.mock('../../public/js/components/LoginModal.js', () => ({ showLoginModal: vi.
 vi.mock('../../public/js/components/Toast.js', () => ({ default: { success: vi.fn(), error: vi.fn() } }))
 vi.mock('../../public/js/components/Icons.js', () => ({ getIcon: () => '' }))
 vi.mock('../../public/js/utils/reloadApp.js', () => ({ reloadApp: vi.fn() }))
+const connections = vi.hoisted(() => ({ mountConnections: vi.fn(() => ({ destroy: vi.fn() })), realConnections: vi.fn(() => ({})) }))
+vi.mock('../../public/js/components/navigation/connections.js', () => connections)
 
 import { AuthNav } from '../../public/js/components/navigation/AuthNav.js'
 
@@ -39,9 +43,9 @@ describe('AuthNav: the account menu (F63, UAT-13)', () => {
     it('is drawn closed, and no longer depends on the mouse being over it', () => {
         expect(isOpen()).toBe(false)
         expect(trigger().getAttribute('aria-expanded')).toBe('false')
-        expect(trigger().getAttribute('aria-haspopup')).toBe('menu')
+        expect(trigger().getAttribute('aria-haspopup')).toBe('dialog')
         expect(trigger().getAttribute('aria-controls')).toBe('userMenu')
-        expect(menu().getAttribute('role')).toBe('menu')
+        expect(menu().getAttribute('role')).toBe('dialog')
         expect(document.body.innerHTML).not.toContain('group-hover:visible')
     })
 
@@ -75,14 +79,24 @@ describe('AuthNav: the account menu (F63, UAT-13)', () => {
         expect(document.activeElement).toBe(trigger())
     })
 
-    it('Arrow Down on the avatar opens it with the focus on the first item', () => {
+    it('Arrow Down on the avatar opens it with the focus on the first control inside', () => {
         trigger().focus()
 
         press('ArrowDown', trigger())
 
         expect(isOpen()).toBe(true)
-        expect(document.activeElement).toBe(document.getElementById('logoutBtn'))
-        expect(document.getElementById('logoutBtn').getAttribute('role')).toBe('menuitem')
+        expect(document.activeElement).toBe(menu().querySelector('button'))
+        expect(menu().contains(document.activeElement)).toBe(true)
+    })
+
+    it('holds the connections of Spotify and Apple Music, and asks them to draw into the panel', () => {
+        expect(document.getElementById('accountConnections')).not.toBeNull()
+        expect(connections.mountConnections).toHaveBeenCalledWith(document.getElementById('accountConnections'), expect.any(Object))
+    })
+
+    it('says who is signed in, and has Sign Out inside the panel', () => {
+        expect(menu().textContent).toContain('Ana')
+        expect(menu().querySelector('#logoutBtn')).not.toBeNull()
     })
 
     it('drawn again (the session changed), it still answers once per tap', () => {
@@ -96,12 +110,30 @@ describe('AuthNav: the account menu (F63, UAT-13)', () => {
         expect(isOpen()).toBe(false)
     })
 
-    it('with nobody signed in there is no menu, and nothing breaks on a click or a key', () => {
+    it('with nobody signed in the panel is still there for the connections: no Sign Out, a way to sign in', () => {
         nav.updateState({ currentUser: null, loading: false })
         draw()
 
-        expect(trigger()).toBeNull()
-        document.getElementById('elsewhere').click()
+        expect(trigger().getAttribute('aria-label')).toBe('Connections')
+        expect(document.getElementById('loginBtn')).not.toBeNull()
+        expect(menu().querySelector('#logoutBtn')).toBeNull()
+        expect(document.getElementById('accountConnections')).not.toBeNull()
+        trigger().click()
+        expect(isOpen()).toBe(true)
         press('Escape')
+        expect(isOpen()).toBe(false)
+        document.getElementById('elsewhere').click()
+    })
+
+    it('the panel offers to clear the album cache, and asks first (the caller hands in how)', () => {
+        const clearCaches = vi.fn()
+        nav = new AuthNav(USER, { clearCaches })
+        draw()
+        trigger().click()
+        document.getElementById('panelClearCache').click()
+
+        expect(isOpen()).toBe(false)
+        expect(clearCaches).not.toHaveBeenCalled()
+        expect(document.getElementById('phone-clear-cache')).not.toBeNull()
     })
 })

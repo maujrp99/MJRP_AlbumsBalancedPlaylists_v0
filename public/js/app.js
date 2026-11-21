@@ -7,6 +7,8 @@
 
 import '../css/index.css'
 import '../css/tailwind.css' // Tailwind, built with the site; after the app's own styles (F59)
+import '../splash/bar-menu.css' // the home's bar, shared with the entry page (F88)
+import '../css/top-menu.css' // the top menu of the computer (F88); before the phone's, which hides it
 import '../css/mobile.css' // the phone (F76): after everything, every rule inside the phone's media query
 import '../css/mobile/screens.css' // one file per screen of the phone, each inside the same media query
 import '../css/safe-area.css' // a phone lying down: the page keeps clear of the island (F76)
@@ -53,7 +55,8 @@ import { isSignedIn } from './components/navigation/AuthNav.js'
 import { showLoginModal } from './components/LoginModal.js'
 
 const initUI = () => {
-    const topNav = new TopNav()
+    const topNav = new TopNav({ clearCaches: clearAppAlbumCaches })
+    router.afterNavigate((path) => topNav.followScreen(path))
     const headerEl = document.getElementById('header-container')
     if (headerEl) {
         headerEl.innerHTML = topNav.render()

@@ -47,6 +47,18 @@ describe('the tabs of the phone', () => {
         expect(document.querySelector('nav').getAttribute('aria-label')).toBe('Main')
     })
 
+    it('F88: the bar carries the home\'s row of bars, the fire on the stretch of the current tab', () => {
+        document.body.innerHTML = renderTabBar('/blend')
+        const row = document.querySelector('.phone-tabbar__bars')
+        expect(row.getAttribute('aria-hidden')).toBe('true')
+        const bars = [...row.querySelectorAll('i')]
+        expect(bars.length).toBeGreaterThanOrEqual(30)
+        const lit = bars.filter(bar => bar.classList.contains('on')).length
+        expect(lit).toBe(Math.round(bars.length / 5))
+        document.body.innerHTML = renderTabBar('/artists')
+        expect(document.querySelectorAll('.phone-tabbar__bars i.on').length).toBe(0)
+    })
+
     it('every tab has an icon and a label', () => {
         document.body.innerHTML = renderTabBar('/start')
         for (const tab of document.querySelectorAll('a[data-tab]')) {
@@ -116,6 +128,16 @@ describe('PhoneShell', () => {
 
         expect(document.querySelector('#phone-topbar [data-screen-name]').textContent).toBe('Albums')
         expect(document.querySelector('#phone-tabbar [aria-current="page"]').dataset.tab).toBe('albums')
+    })
+
+    it('F88: the top bar carries the mark of the site in fire, and it still leads to the entry page', () => {
+        start(393, '/albums')
+
+        const link = document.querySelector('#phone-topbar a.phone-topbar__logo-link')
+        expect(link.getAttribute('href')).toBe('/home')
+        expect(link.hasAttribute('data-full-page')).toBe(true)
+        expect(link.getAttribute('aria-label')).toBe('The Album Blender, the entry page')
+        expect(link.querySelector('img').getAttribute('src')).toMatch(/wordmark/)
     })
 
     it('follows the screen: the name and the current tab change, and the new screen starts at its top', () => {

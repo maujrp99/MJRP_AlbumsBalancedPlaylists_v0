@@ -10,7 +10,8 @@ const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn() }))
 vi.mock('../../../public/js/components/LoginModal.js', () => login)
 vi.mock('../../../public/js/components/navigation/AuthNav.js', () => auth)
 vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast }))
-vi.mock('../../../public/js/components/SpotifyConnectButton.js', () => ({ SpotifyConnectButton: class { } }))
+const connections = vi.hoisted(() => ({ mountConnections: vi.fn(() => ({ destroy: vi.fn() })), realConnections: vi.fn(() => ({})) }))
+vi.mock('../../../public/js/components/navigation/connections.js', () => connections)
 
 import { openPhoneMenu, askToClearCache, accountInitial } from '../../../public/js/components/navigation/PhoneMenu.js'
 import { pageScrollLocks } from '../../../public/js/utils/pageScrollLock.js'
@@ -40,6 +41,19 @@ describe('PhoneMenu', () => {
         expect(places).toEqual(['/playlists', '/artists', '/genres', '/tracks'])
         expect(document.querySelectorAll('a.phone-menu__row[data-link]').length).toBe(4)
         sheet.close()
+    })
+
+    it('F88: holds the connections, Spotify and Apple Music, and stops listening when it closes', () => {
+        const destroy = vi.fn()
+        connections.mountConnections.mockReturnValueOnce({ destroy })
+        const sheet = openPhoneMenu({ user: null, clearCaches: vi.fn() })
+
+        const box = document.getElementById('phone-menu-connections')
+        expect(box).not.toBeNull()
+        expect(connections.mountConnections).toHaveBeenCalledWith(box, expect.any(Object))
+        expect(document.querySelector('.phone-menu__section').textContent).toBe('Connections')
+        sheet.close()
+        expect(destroy).toHaveBeenCalledTimes(1)
     })
 
     it('«Playlists» is written once: the tab bar has it, the menu does not repeat it (finding 18)', () => {

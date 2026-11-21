@@ -1,0 +1,331 @@
+/*
+ * top-menu.css - the top menu of the computer (F88, «Transformar»): the home's bar continues inside the
+ * app. The bar itself (stops, row of bars, ⟲) is public/splash/bar-menu.css, shared with the home; here is what
+ * frames it: the header, the mark, the line under the bar, the account button and its panel, the
+ * connections. The values are the home's (public/splash.html): 72 px tall, the mark 30 px, the same
+ * colours and the same focus ring. The phone does not see any of it: its stylesheet hides
+ * #header-container (css/mobile.css) and the phone's shell takes over.
+ */
+.top-menu {
+  --muted: #b9b9c2;
+  --faint: #9a9aa4;
+  --orange-text: #fb923c;
+  --amber: #fbbf24;
+  --line: rgba(255, 255, 255, 0.12);
+  --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  margin-bottom: 24px;
+  background: rgba(10, 10, 12, 0.92);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  font-family: var(--body);
+}
+
+.top-menu :focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 3px;
+}
+
+.top-menu__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px; /* the home's: header.top .wrap */
+  width: 100%;
+  max-width: 1280px;
+  height: 72px;
+  margin: 0 auto;
+  padding: 0 max(16px, env(safe-area-inset-left));
+}
+
+.top-menu__home {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  flex: 0 0 auto;
+  border-radius: 6px;
+}
+
+.top-menu__logo {
+  display: block;
+  height: 30px;
+  width: auto;
+}
+
+.top-menu__bar {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 620px;
+  margin: 0 auto 0 0; /* left after the mark, as on the home (F88): the bar does not move with the account side */
+}
+
+.top-menu__acct {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+/* The line under the bar: Albums and Playlists have one */
+.top-menu__sub:empty {
+  display: none;
+}
+
+.top-menu__sub {
+  border-bottom: 1px solid var(--line);
+}
+
+.sub-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  max-width: 1280px;
+  min-height: 44px;
+  margin: 0 auto;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sub-row a,
+.sub-row > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: #a0a0a8;
+  font: 600 14px/1 var(--body);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sub-row a:hover {
+  color: #fff;
+}
+
+.sub-row a.cur {
+  color: #fff;
+  box-shadow: inset 0 -2px 0 #f97316;
+}
+
+.sub-row > span[aria-disabled] {
+  color: #8a8a94;
+  font-weight: 400;
+}
+
+.sub-soon {
+  padding: 3px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--muted);
+  font: 600 12px/1 var(--body);
+}
+
+/* The account: one button, one panel */
+.top-acct {
+  position: relative;
+  min-width: 0;
+}
+
+.top-acct__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 6px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 22px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.top-acct__btn:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.top-acct__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.top-acct__dots {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: flex;
+  gap: 2px;
+}
+
+.top-acct__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #0a0a0c;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.top-acct__dot--spotify {
+  background: #1ed760;
+}
+
+.top-acct__dot--apple {
+  background: #fa2d48;
+}
+
+.top-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 60;
+  width: 344px;
+  max-width: calc(100vw - 32px);
+  padding: 12px;
+  border-radius: 14px;
+  background: #141418;
+  border: 1px solid var(--line);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.15s;
+}
+
+.top-panel__who {
+  padding: 6px 6px 10px;
+  color: #fff;
+}
+
+.top-panel__section {
+  padding: 10px 6px 6px;
+  color: var(--faint);
+  font: 700 12px/1 var(--body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.top-panel__rule {
+  margin: 8px 4px;
+  border-top: 1px solid var(--line);
+}
+
+.top-panel__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #e6e6ea;
+  font: 600 15px/1.2 var(--body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.top-panel__row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.top-panel__row--danger {
+  color: #f87171;
+}
+
+/* A connection (Spotify, Apple Music): used in this panel and in the phone's sheet */
+.conn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px;
+}
+
+.conn__glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 7px;
+  color: #fff;
+}
+
+.conn__glyph--spotify {
+  border-radius: 50%;
+  background: #000;
+  color: #1ed760;
+  box-shadow: inset 0 0 0 2px #1ed760;
+}
+
+.conn__glyph--apple {
+  background: linear-gradient(160deg, #fb5c74, #fa233b);
+}
+
+.conn__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.conn__name {
+  color: #fff;
+  font: 700 15px/1.25 var(--body, system-ui);
+}
+
+.conn__status {
+  overflow: hidden;
+  color: #b9b9c2;
+  font: 400 13px/1.3 var(--body, system-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conn__status--ok {
+  color: #86efac;
+}
+
+.conn__status--bad {
+  color: #fca5a5;
+}
+
+.conn__button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  font: 700 14px/1 var(--body, system-ui);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.conn__button:hover {
+  border-color: #fff;
+}
+
+.conn__button--disconnect {
+  border-color: transparent;
+  color: #d6d6dc;
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .top-panel {
+    transition: none;
+  }
+}

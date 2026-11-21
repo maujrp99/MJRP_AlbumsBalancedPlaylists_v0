@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { SpotifyAuthService } from '../../../public/js/services/SpotifyAuthService.js'
-import { SpotifyConnectButton } from '../../../public/js/components/SpotifyConnectButton.js'
+import { mountConnections, realConnections } from '../../../public/js/components/navigation/connections.js'
 
-// UAT-182: after connecting, the top button kept saying «Connect» until a reload.
+// UAT-182: after connecting, the top button kept saying «Connect» until a reload. Since F88 the button is the Spotify row of the menu's connections.
 describe('Spotify session signal (UAT-182)', () => {
     beforeEach(() => {
         const kept = new Map()
@@ -31,43 +31,43 @@ describe('Spotify session signal (UAT-182)', () => {
         expect(heard).toHaveBeenCalledTimes(1)
     })
 
-    it('the button drawn as «Connect» turns «Connected», with the account name, when the session arrives', async () => {
+    const row = () => document.querySelector('[data-connection="spotify"]')
+    const status = () => row().querySelector('[data-status]').textContent
+
+    it('the row drawn as «Not connected» turns «Connected», with the account name, when the session arrives', async () => {
         const profile = vi.spyOn(SpotifyAuthService, 'getUserProfile').mockResolvedValue({ display_name: 'Mau' })
-        const button = new SpotifyConnectButton('spotify-mount')
-        expect(document.getElementById('spotifyLoginBtn')).not.toBeNull()
+        mountConnections(document.getElementById('spotify-mount'), realConnections())
+        expect(status()).toBe('Not connected')
 
         SpotifyAuthService.setSession({ access_token: 't', refresh_token: 'r', expires_in: 3600 })
-        await vi.waitFor(() => expect(button.userProfile).toEqual({ display_name: 'Mau' }))
-
-        expect(document.getElementById('spotifyLoginBtn')).toBeNull()
-        expect(document.getElementById('spotify-mount').textContent).toContain('Connected')
-        expect(document.getElementById('spotify-mount').textContent).toContain('Mau')
+        await vi.waitFor(() => expect(status()).toBe('Connected as Mau'))
+        expect(row().querySelector('button').getAttribute('aria-label')).toBe('Disconnect Spotify')
         profile.mockRestore()
     })
 
-    it('the button goes back to «Connect» on logout', () => {
+    it('the row goes back to «Not connected» on logout', () => {
         vi.spyOn(SpotifyAuthService, 'getUserProfile').mockResolvedValue({ display_name: 'Mau' })
         SpotifyAuthService.setSession({ access_token: 't', refresh_token: 'r', expires_in: 3600 })
-        new SpotifyConnectButton('spotify-mount')
+        mountConnections(document.getElementById('spotify-mount'), realConnections())
         SpotifyAuthService.logout()
-        expect(document.getElementById('spotifyLoginBtn')).not.toBeNull()
+        expect(status()).toBe('Not connected')
         vi.restoreAllMocks()
     })
 
-    it('the X asks in the app\'s own dialog, not in the browser\'s confirm(), and disconnects on yes (UAT-183)', async () => {
+    it('Disconnect asks in the app\'s own dialog, not in the browser\'s confirm(), and disconnects on yes (UAT-183)', async () => {
         vi.spyOn(SpotifyAuthService, 'getUserProfile').mockResolvedValue({ display_name: 'Mau' })
         const native = vi.fn(() => false)
         vi.stubGlobal('confirm', native)
         SpotifyAuthService.setSession({ access_token: 't', refresh_token: 'r', expires_in: 3600 })
-        new SpotifyConnectButton('spotify-mount')
+        mountConnections(document.getElementById('spotify-mount'), realConnections())
 
-        document.getElementById('spotifyLogoutBtn').click()
+        row().querySelector('button').click()
         await vi.waitFor(() => expect(document.body.textContent).toContain('Disconnect from Spotify?'))
         expect(native).not.toHaveBeenCalled()
 
-        const yes = [...document.querySelectorAll('button')].find(b => b.textContent.trim() === 'Disconnect')
+        const yes = [...document.querySelectorAll('button')].find(b => b.textContent.trim() === 'Disconnect' && !b.closest('[data-connection]'))
         yes.click()
-        await vi.waitFor(() => expect(document.getElementById('spotifyLoginBtn')).not.toBeNull())
+        await vi.waitFor(() => expect(status()).toBe('Not connected'))
         expect(SpotifyAuthService.isAuthenticated()).toBe(false)
         vi.restoreAllMocks()
     })

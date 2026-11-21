@@ -18,8 +18,8 @@
 
   /* ── 1. Measures ─────────────────────────────────────────────────────────────────────────── */
   :root {
-    --phone-topbar-h: 48px;
-    --phone-tabbar-h: 56px;
+    --phone-topbar-h: 56px; /* F88: the home's bar on the phone is 56 px */
+    --phone-tabbar-h: 68px; /* F88: 8 px of the home's row of bars + the tabs */
     --phone-action-bar-h: 64px;
     --phone-gutter: 16px;
     --phone-target: 44px;
@@ -27,7 +27,7 @@
     --phone-safe-bottom: env(safe-area-inset-bottom, 0px);
     --phone-gutter-left: max(var(--phone-gutter), env(safe-area-inset-left, 0px));
     --phone-gutter-right: max(var(--phone-gutter), env(safe-area-inset-right, 0px));
-    --phone-bar-bg: rgba(8, 8, 10, 0.78);
+    --phone-bar-bg: rgba(10, 10, 12, 0.92); /* F88: the home's bar background */
     --phone-bar-line: rgba(255, 255, 255, 0.1);
     --phone-sheet-bg: #101014;
     --phone-accent: #f97316;
@@ -209,11 +209,17 @@
     flex: none;
   }
 
+  /* F88: the mark of the site in fire, the picture the home's bar carries, 22 px tall as on the home */
   .phone-topbar__logo {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
+    display: block;
+    width: auto;
+    height: 22px;
     flex: none;
+  }
+
+  .phone-topbar__logo-link {
+    min-height: var(--phone-target);
+    align-items: center;
   }
 
   .phone-topbar__title {
@@ -281,10 +287,26 @@
     border-top: 1px solid var(--phone-bar-line);
   }
 
+  .phone-tabbar {
+    --muted: #b9b9c2;
+  }
+
+  /* F88: the home's row of bars on top of the tabs; the fire lights the stretch of the current tab */
+  .phone-tabbar__bars {
+    top: 0;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    height: 8px;
+    gap: 1px;
+  }
+
   .phone-tabbar__tabs {
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     height: var(--phone-tabbar-h);
+    padding-top: 8px;
   }
 
   .phone-tabbar__tab {
@@ -295,7 +317,7 @@
     gap: 3px;
     min-width: 0;
     min-height: var(--phone-target);
-    color: rgba(255, 255, 255, 0.62);
+    color: #b9b9c2;
     font-size: 12px;
     line-height: 14px;
     font-weight: 700;
@@ -307,7 +329,7 @@
   }
 
   .phone-tabbar__tab.is-current {
-    color: var(--phone-accent);
+    color: #fb923c; /* F88: the home's lit item, 8.7:1 on the bar */
   }
 
   .phone-tabbar__icon {
@@ -929,13 +951,19 @@
     color: rgba(255, 255, 255, 0.6);
   }
 
-  .phone-menu__spotify {
+  /* F88: the connections (Spotify, Apple Music) in the sheet; the rows are css/top-menu.css's `.conn` */
+  .phone-menu__section {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 12px 0;
+    padding: 14px 0 4px;
+    color: #9a9aa4;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  .phone-menu__spotify:empty {
-    display: none;
+  .phone-menu__connections {
+    padding: 0 0 8px;
   }
 
   .phone-menu__message {

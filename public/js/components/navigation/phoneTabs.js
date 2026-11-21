@@ -9,6 +9,7 @@
  * (decided by the agent, revisable).
  */
 import { getIcon } from '../Icons.js'
+import { renderBars } from './bars.js'
 
 export const PHONE_TABS = Object.freeze([
     { id: 'home', label: 'Start', route: 'start', icon: 'Home', under: ['/start'] },
@@ -34,6 +35,9 @@ const SCREEN_NAMES = Object.freeze([
 ])
 
 const APP_NAME = 'Album Blender'
+
+/** How many bars the row over the tab bar has (a phone is a narrow screen: a bar about every six pixels). */
+const TAB_BARS = 64
 
 const begins = (path, start) => path === start || path.startsWith(start + '/')
 
@@ -63,5 +67,7 @@ export function renderTabBar(path) {
           <span class="phone-tabbar__label">${tab.label}</span>
         </a>`
     }).join('')
-    return `<nav class="phone-tabbar__tabs" aria-label="Main">${tabs}</nav>`
+    // F88: the home's row of bars on top of the tabs, the fire on the stretch of the current one
+    const bars = renderBars(TAB_BARS, PHONE_TABS.indexOf(current), PHONE_TABS.length)
+    return `<div class="eqbar phone-tabbar__bars" aria-hidden="true">${bars}</div><nav class="phone-tabbar__tabs" aria-label="Main">${tabs}</nav>`
 }
