@@ -165,7 +165,8 @@ export function mountConnections(box, deps = realConnections()) {
     }
     const run = async (service, action) => {
         if (action === 'connect') return connect(service)
-        if (!(await deps.confirm(MENU_TEXT.disconnectAsk(service.name)))) return
+        keepFocusIn = service.key // the question takes the focus away: it comes back to this row, whatever the answer
+        if (!(await deps.confirm(MENU_TEXT.disconnectAsk(service.name)))) return draw()
         await deps[service.key].disconnect()
         deps.notify(MENU_TEXT.disconnectedToast(service.name))
         await refresh(service)

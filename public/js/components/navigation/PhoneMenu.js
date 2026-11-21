@@ -12,6 +12,7 @@ import { mountConnections, realConnections } from './connections.js'
 import { MENU_TEXT } from './menuText.js'
 import { showLoginModal } from '../LoginModal.js'
 import { signOut, isSignedIn } from './AuthNav.js'
+import { accountName, accountInitial } from './account.js'
 
 const el = (tag, props, children) => SafeDOM.create(tag, props, children)
 const icon = (iconName) => SafeDOM.fromHTML(getIcon(iconName, 'phone-menu__icon'))
@@ -26,9 +27,7 @@ const PLACES = [
 
 export { askToClearCache }
 
-export const accountName = (user) => user?.displayName || user?.email || 'User'
-/** The first letter of the person's name: what the account button of the top bar shows. */
-export const accountInitial = (user) => accountName(user).trim().charAt(0).toUpperCase() || 'U'
+export { accountName, accountInitial }
 
 function rowText(place) {
     const text = [el('span', { className: 'phone-menu__label' }, place.label)]

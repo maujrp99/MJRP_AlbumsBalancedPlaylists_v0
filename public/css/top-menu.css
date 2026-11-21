@@ -72,9 +72,25 @@
   min-width: 0;
 }
 
-/* «Sign In» is 44 px tall like the home's buttons (the app's small button is 36) */
-.top-menu__acct .btn {
+/* «Sign In»: the home's ghost button (public/splash.html .btn-ghost .btn-sm), not the app's orange one */
+.top-menu__signin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
   min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 12px;
+  background: transparent;
+  color: #fff;
+  font: 700 16px/1 Syne, var(--body);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.top-menu__signin:hover {
+  border-color: #fff;
 }
 
 /* The line under the bar: Albums and Playlists have one */
@@ -161,15 +177,17 @@
   border-color: rgba(255, 255, 255, 0.6);
 }
 
-.top-acct__avatar {
+.top-acct__initial {
+  display: inline-grid;
+  place-items: center;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  object-fit: cover;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #f97316 0%, #dc2626 100%); /* the phone's .phone-avatar */
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 800;
 }
 
 .top-acct__dots {

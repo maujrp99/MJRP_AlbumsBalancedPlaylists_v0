@@ -70,7 +70,7 @@ describe('top bar: it never passes the width of the screen (UAT-218)', () => {
             const lets = box.classList.contains('min-w-0') || box.classList.contains('max-w-full')
             expect(lets, box.outerHTML.slice(0, 80)).toBe(true)
         }
-        expect(document.querySelector('#userMenuBtn img').classList.contains('shrink-0')).toBe(true)
+        expect(document.querySelector('#userMenuBtn .top-acct__initial').classList.contains('shrink-0')).toBe(true)
     })
 
     it('the bar of stops shrinks before the bar passes the screen, and no label wraps (F88)', () => {

@@ -70,6 +70,14 @@ describe('AuthNav: the account menu (F63, UAT-13)', () => {
         expect(isOpen()).toBe(false)
     })
 
+    it('a click in a window the panel opened (the «Disconnect from…?» question) does not close the panel (judge P2-5)', () => {
+        trigger().click()
+        document.body.insertAdjacentHTML('beforeend', '<div class="app-modal"><div role="dialog"><button id="confirmDisconnect">Disconnect</button></div></div>')
+        document.getElementById('confirmDisconnect').click()
+        expect(isOpen()).toBe(true)
+        document.querySelector('.app-modal').remove()
+    })
+
     it('Escape closes it and gives the focus back to the avatar', () => {
         trigger().click()
         document.getElementById('logoutBtn').focus()

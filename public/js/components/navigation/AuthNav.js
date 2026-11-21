@@ -15,6 +15,7 @@ import { reloadApp } from '../../utils/reloadApp.js';
 import { NAME_IN_THE_BAR } from './barName.js'
 import { track } from '../../services/usage/track.js'
 import { MENU_TEXT } from './menuText.js'
+import { accountInitial } from './account.js'
 import { mountConnections, realConnections } from './connections.js'
 import { askToClearCache } from './clearCache.js'
 
@@ -63,7 +64,7 @@ export class AuthNav {
         const { currentUser, loading } = this.userState;
         if (loading) return `<div class="w-8 h-8 rounded-full bg-white/10 animate-pulse"></div>`;
         const signedIn = isSignedIn(currentUser);
-        const signIn = signedIn ? '' : `<button id="loginBtn" type="button" class="btn btn-sm btn-primary">${MENU_TEXT.signIn}</button>`;
+        const signIn = signedIn ? '' : `<button id="loginBtn" type="button" class="top-menu__signin">${MENU_TEXT.signIn}</button>`;
         return `${signIn}
             <div class="top-acct relative min-w-0" id="userMenuDropdownTrigger">
                 <button id="userMenuBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="userMenu" aria-label="${signedIn ? MENU_TEXT.account : MENU_TEXT.connectionsOnly}" class="top-acct__btn min-w-0 max-w-full">
@@ -79,10 +80,9 @@ export class AuthNav {
         return `<span class="hidden xl:block text-xs font-medium text-white/80 ${NAME_IN_THE_BAR}" data-account-name title="${escapeHtml(user.displayName || 'User')}">${escapeHtml(user.displayName || 'User')}</span>`;
     }
 
+    /** The initial in orange, as on the phone and in the prototype: never a picture (F88). */
     renderAvatar(user) {
-        const isApple = user.providerData?.some(p => p.providerId === 'apple.com');
-        if (isApple) return `<span class="top-acct__avatar shrink-0 bg-gray-800">${getIcon('Apple', 'w-5 h-5 text-white')}</span>`;
-        return `<img src="${escapeHtml(user.photoURL || '/assets/images/logo.png')}" class="top-acct__avatar shrink-0" alt="User">`;
+        return `<span class="top-acct__initial shrink-0" aria-hidden="true">${escapeHtml(accountInitial(user))}</span>`;
     }
 
     /** The one panel: who is in (or the way to sign in), the connections, the cache, sign out. */
@@ -190,7 +190,8 @@ export class AuthNav {
             this.setMenuOpen(!this.isMenuOpen());
             return;
         }
-        if (this.isMenuOpen() && !target?.closest('#userMenu')) this.setMenuOpen(false);
+        // A window the panel opened (the question before a disconnect) is not «outside»: the panel stays and shows the new state
+        if (this.isMenuOpen() && !target?.closest('#userMenu, .app-modal')) this.setMenuOpen(false);
     }
 
     /** Escape closes and gives the focus back; Arrow Down on the button opens on the first control. */

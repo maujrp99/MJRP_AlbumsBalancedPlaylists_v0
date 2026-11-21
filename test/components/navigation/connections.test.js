@@ -66,6 +66,19 @@ describe('mountConnections', () => {
         expect(status('apple')).toBe('Not connected')
     })
 
+    it('after a Disconnect is confirmed (a window took the focus), the focus comes back to the button of the same row (judge P2-5)', async () => {
+        apple.set(true)
+        mountConnections(box, deps)
+        button('apple').focus()
+        button('apple').click()
+        document.body.focus() // the confirmation window had the focus and is gone
+        await tick()
+        await tick()
+        expect(status('apple')).toBe('Not connected')
+        expect(document.activeElement).toBe(button('apple'))
+        expect(button('apple').dataset.action).toBe('connect')
+    })
+
     it('a Connect goes through connecting to connected, and the row says each step', async () => {
         let finish
         apple.connect = vi.fn(() => new Promise(resolve => { finish = () => { apple.set(true); resolve() } }))

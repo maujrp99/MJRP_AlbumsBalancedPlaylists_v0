@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:26] session — F88: no computador, o avatar é a inicial, «Sign In» é o botão fantasma da home e confirmar «Disconnect» não fecha o painel (P2-4 e P2-5 do juiz)
+**Branch:** feat/f88-top-menu-build
+Avatar: a inicial do nome em laranja, como no celular e no protótipo, nunca uma imagem (nem a foto da conta nem a imagem antiga do MJRP); a função da inicial foi para `navigation/account.js`, usada pelo celular e pelo computador. «Sign In»: o botão fantasma da home (`.top-menu__signin`, borda branca 62%, 44 px, Syne 16 px). Disconnect: um clique numa janela aberta pelo painel (`.app-modal`) não conta mais como «fora do painel», e o foco volta ao botão da mesma linha. Testes primeiro (TopNav, AuthNav.menu, connections).
+
+## [2026-11-21 18:27] session — F88: /artists, /genres e /tracks acendem Albums (P2-6 do juiz)
+**Branch:** feat/f88-top-menu-build
+Decisão pelo inventário do menu de hoje: o item «Music Series» da produção fica aceso (`isSeriesActive`) nessas três rotas, e é o item que a parada Albums substitui; então Albums as possui, na barra do computador e na aba do celular. O nome do topo do celular (Series by Artist…) não muda.
+
 ## [2026-11-21 18:22] session — F88: a barra fica no meio da PÁGINA, igual na home e no app, com uma largura só (P2-1 e P2-3 do juiz)
 **Branch:** feat/f88-top-menu-build
 A terceira via do juiz, ajustada ao que cabe: a barra é posicionada no meio da página (`left:50%`), fora do fluxo do lado da conta, com a largura `--bar-w` = min(412 px, 100vw − 526 px), escrita uma vez em `public/splash/bar-menu.css`; `top-menu.css` (app) e `splash.html` (home) dizem o mesmo. 620 px centrados não cabem: a 1280 px o lado direito da home sem conta (idioma, Sign in, Open the app) começa em x = 858, e uma barra de 620 px termina em 950; 412 px é o que cabe, centrada (x = 434 a 846). Abaixo de 1280 px a home tira o botão «Open the app» do cabeçalho (o do corpo da página continua), como já fazia no celular, para a barra centrada caber desde 900 px. A barra não anda mais entre sem e com conta nem entre home e app (medido a 900, 1000, 1280 e 1600 px, as quatro combinações). O ⟲ é uma caixa de 16 px a 59%: vãos de 9,8 e 9,1 px até os rótulos a 1280 px (6,4 e 4,9 px a 900). Com o desenho do celular até 899 px, a largura da barra do app não depende mais da conta onde ela aparece. Teste primeiro: `test/architecture/barIsCentredOnThePage.test.js`.

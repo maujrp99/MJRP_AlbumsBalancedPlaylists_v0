@@ -86,6 +86,23 @@ describe('TopNav (F88)', () => {
         expect(document.getElementById('logoutBtn')).not.toBeNull()
     })
 
+    it('the account button shows the initial in orange, as the phone and the prototype do, never an image (judge P2-4)', () => {
+        mount('/albums', { ...USER, photoURL: null })
+        const initial = document.querySelector('#userMenuBtn .top-acct__initial')
+        expect(initial.textContent).toBe('A')
+        expect(document.querySelector('#userMenuBtn img')).toBeNull()
+        mount('/albums', USER)
+        expect(document.querySelector('#userMenuBtn .top-acct__initial').textContent).toBe('A')
+        expect(document.querySelector('#userMenuBtn img')).toBeNull()
+    })
+
+    it('«Sign In» is the home\'s ghost button, not the app\'s orange one (judge P2-4)', () => {
+        mount('/albums')
+        const button = document.getElementById('loginBtn')
+        expect(button.classList.contains('top-menu__signin')).toBe(true)
+        expect(button.classList.contains('btn-primary')).toBe(false)
+    })
+
     it('the old drawer is gone: no menu button of the phone and no overlay in the bar', () => {
         mount('/start')
         expect(document.getElementById('mobileMenuBtn')).toBeNull()
