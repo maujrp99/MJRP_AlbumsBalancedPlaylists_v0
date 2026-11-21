@@ -1,0 +1,2043 @@
+{
+ "generated-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 5203,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 121,
+  "interactiveBelow44": {
+   "count": 114,
+   "samples": [
+    "a.breadcrumb-link «Start» 38x19",
+    "a.breadcrumb-link «Blend» 44x19",
+    "#batchNameInput «Sunday Morning Prog Rock Dee» 448x40",
+    "button.text-muted.hover:text-red-400 «Delete playlist Greatest Hit» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 114,
+   "samples": [
+    "a.breadcrumb-link «Start» 38x19",
+    "a.breadcrumb-link «Blend» 44x19",
+    "#batchNameInput «Sunday Morning Prog Rock Dee» 448x40",
+    "button.text-muted.hover:text-red-400 «Delete playlist Greatest Hit» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24",
+    "button.p-1.text-gray-400 «Remove Track» 24x24"
+   ]
+  },
+  "textBelow12px": {
+   "count": 315,
+   "samples": [
+    "span.inline-flex.items-center «#1» 10px",
+    "span.flex.items-center «★70» 10px",
+    "span.text-[10px].font-bold «40%» 10px",
+    "span.inline-flex.items-center «#2» 10px",
+    "span.flex.items-center «★71» 10px",
+    "span.text-[10px].font-bold «41%» 10px",
+    "span.inline-flex.items-center «#3» 10px",
+    "span.flex.items-center «★72» 10px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-[11px].text-muted «Builds balanced playlists by»"
+  },
+  "extra": {
+   "batchNameLabel": "Batch Name",
+   "batchNameValue": "Sunday Morning Prog Rock Deep Cuts",
+   "exportButtons": [
+    "Save to Series History",
+    "Export to Spotify",
+    "Export to Apple Music",
+    "Download JSON"
+   ],
+   "playlists": 234
+  }
+ },
+ "empty-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 800,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 3,
+  "interactiveBelow44": {
+   "count": 2,
+   "samples": [
+    "a.breadcrumb-link «Start» 38x19",
+    "a.breadcrumb-link «Blend» 44x19"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 2,
+   "samples": [
+    "a.breadcrumb-link «Start» 38x19",
+    "a.breadcrumb-link «Blend» 44x19"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-muted.mb-6 «Playlists are made in The Bl»"
+  },
+  "extra": {
+   "emptyState": "No playlists here yet Playlists are made in The Blending Menu: pick a series and a recipe, and they open here. Go to The Blending Menu",
+   "linkToBlend": "/blend",
+   "batchNameFieldPresent": false,
+   "exportButtons": 0
+  }
+ },
+ "saved-loading-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 824,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 5,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series» 14px",
+    "#filter-batch «All Playlist Series» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": "Reading playlists: 0 of 6 series",
+   "listFailed": null,
+   "groups": [],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = loading",
+    "Alternative R&B / Psyche = loading",
+    "Brazilian Jazz = loading",
+    "The Beatles = loading",
+    "Krautrock Essentials = loading",
+    "Classic Rock = loading"
+   ]
+  }
+ },
+ "saved-loading-list-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 824,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 5,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series» 14px",
+    "#filter-batch «All Playlist Series» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": "Reading your series...",
+   "listFailed": null,
+   "groups": [],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": []
+  }
+ },
+ "saved-mixed-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 1962,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 31,
+  "interactiveBelow44": {
+   "count": 22,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «Delete batch Sunday Morning » 48x32",
+    "button.btn.btn-secondary «Edit batch Balanced Cascade » 139x38",
+    "button.btn.btn-ghost «Delete batch Balanced Cascad» 48x32",
+    "button.btn.btn-secondary «Edit batch Night drive» 139x38"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 22,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «Delete batch Sunday Morning » 48x32",
+    "button.btn.btn-secondary «Edit batch Balanced Cascade » 139x38",
+    "button.btn.btn-ghost «Delete batch Balanced Cascad» 48x32",
+    "button.btn.btn-secondary «Edit batch Night drive» 139x38"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series Prog Rock » 14px",
+    "#filter-batch «All Playlist Series Balanced» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": "Reading playlists: 5 of 6 series",
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock ClassicsID: Jp93LzaU... Add PlaylistsOpen Albums Series Road trip 4 playlists 58"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the SeventiesID: Jp93LzaU... Add Playl"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "failed",
+     "text": "Krautrock EssentialsID: Jp93LzaU... Add PlaylistsOpen Albums Series The playlists of this "
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic RockID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep "
+    }
+   ],
+   "tryAgainButtons": 1,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = loading",
+    "The Beatles = empty",
+    "Krautrock Essentials = failed",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "saved-ready-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 4063,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 67,
+  "interactiveBelow44": {
+   "count": 56,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «Delete batch Sunday Morning » 48x32",
+    "button.btn.btn-secondary «Edit batch Balanced Cascade » 139x38",
+    "button.btn.btn-ghost «Delete batch Balanced Cascad» 48x32",
+    "button.btn.btn-secondary «Edit batch Night drive» 139x38"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 56,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «Delete batch Sunday Morning » 48x32",
+    "button.btn.btn-secondary «Edit batch Balanced Cascade » 139x38",
+    "button.btn.btn-ghost «Delete batch Balanced Cascad» 48x32",
+    "button.btn.btn-secondary «Edit batch Night drive» 139x38"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series Prog Rock » 14px",
+    "#filter-batch «All Playlist Series Balanced» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock ClassicsID: Jp93LzaU... Add PlaylistsOpen Albums Series Road trip 4 playlists 58"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the SeventiesID: Jp93LzaU... Add Playl"
+    },
+    {
+     "id": "Jp93LzaU2x",
+     "status": "ready",
+     "text": "Brazilian JazzID: Jp93LzaU... Add PlaylistsOpen Albums Series Party 4 playlists 58 tracks "
+    },
+    {
+     "id": "Jp93LzaU3x",
+     "status": "ready",
+     "text": "The BeatlesID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep C"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "ready",
+     "text": "Krautrock EssentialsID: Jp93LzaU... Add PlaylistsOpen Albums Series Night drive 5 4 playli"
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic RockID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep "
+    }
+   ],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = ready",
+    "The Beatles = ready",
+    "Krautrock Essentials = ready",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "saved-empty-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 824,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 6,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series» 14px",
+    "#filter-batch «All Playlist Series» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p. «Generate and save playlists »"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [],
+   "tryAgainButtons": 0,
+   "placeholder": "No Playlists FoundGenerate and save playlists in your series to see them here.Create Series",
+   "seriesStatuses": [
+    "Prog Rock Classics = empty",
+    "Alternative R&B / Psyche = empty",
+    "Brazilian Jazz = empty",
+    "The Beatles = empty",
+    "Krautrock Essentials = empty",
+    "Classic Rock = empty"
+   ]
+  }
+ },
+ "saved-failed-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 3641,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 59,
+  "interactiveBelow44": {
+   "count": 48,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «Delete batch Sunday Morning » 48x32",
+    "button.btn.btn-secondary «Edit batch Balanced Cascade » 139x38",
+    "button.btn.btn-ghost «Delete batch Balanced Cascad» 48x32",
+    "button.btn.btn-secondary «Edit batch Night drive» 139x38"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 48,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «Delete batch Sunday Morning » 48x32",
+    "button.btn.btn-secondary «Edit batch Balanced Cascade » 139x38",
+    "button.btn.btn-ghost «Delete batch Balanced Cascad» 48x32",
+    "button.btn.btn-secondary «Edit batch Night drive» 139x38"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series Prog Rock » 14px",
+    "#filter-batch «All Playlist Series Balanced» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock ClassicsID: Jp93LzaU... Add PlaylistsOpen Albums Series Road trip 4 playlists 58"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the SeventiesID: Jp93LzaU... Add Playl"
+    },
+    {
+     "id": "Jp93LzaU2x",
+     "status": "failed",
+     "text": "Brazilian JazzID: Jp93LzaU... Add PlaylistsOpen Albums Series The playlists of this series"
+    },
+    {
+     "id": "Jp93LzaU3x",
+     "status": "ready",
+     "text": "The BeatlesID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep C"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "ready",
+     "text": "Krautrock EssentialsID: Jp93LzaU... Add PlaylistsOpen Albums Series Night drive 5 4 playli"
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic RockID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep "
+    }
+   ],
+   "tryAgainButtons": 1,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = failed",
+    "The Beatles = ready",
+    "Krautrock Essentials = ready",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "saved-failed-list-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 824,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 6,
+  "interactiveBelow44": {
+   "count": 2,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-secondary «Try again» 104x38"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 2,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-secondary «Try again» 104x38"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series» 14px",
+    "#filter-batch «All Playlist Series» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": "Your series could not be read.Try again",
+   "listFailed": "Your series could not be read.Try again",
+   "groups": [],
+   "tryAgainButtons": 1,
+   "placeholder": null,
+   "seriesStatuses": []
+  }
+ },
+ "saved-retried-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 4063,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 67,
+  "interactiveBelow44": {
+   "count": 56,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «Delete batch Sunday Morning » 48x32",
+    "button.btn.btn-secondary «Edit batch Balanced Cascade » 139x38",
+    "button.btn.btn-ghost «Delete batch Balanced Cascad» 48x32",
+    "button.btn.btn-secondary «Edit batch Night drive» 139x38"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 56,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «Delete batch Sunday Morning » 48x32",
+    "button.btn.btn-secondary «Edit batch Balanced Cascade » 139x38",
+    "button.btn.btn-ghost «Delete batch Balanced Cascad» 48x32",
+    "button.btn.btn-secondary «Edit batch Night drive» 139x38"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series Prog Rock » 14px",
+    "#filter-batch «All Playlist Series Balanced» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock ClassicsID: Jp93LzaU... Add PlaylistsOpen Albums Series Road trip 4 playlists 58"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the SeventiesID: Jp93LzaU... Add Playl"
+    },
+    {
+     "id": "Jp93LzaU2x",
+     "status": "ready",
+     "text": "Brazilian JazzID: Jp93LzaU... Add PlaylistsOpen Albums Series Party 4 playlists 58 tracks "
+    },
+    {
+     "id": "Jp93LzaU3x",
+     "status": "ready",
+     "text": "The BeatlesID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep C"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "ready",
+     "text": "Krautrock EssentialsID: Jp93LzaU... Add PlaylistsOpen Albums Series Night drive 5 4 playli"
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic RockID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep "
+    }
+   ],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = ready",
+    "The Beatles = ready",
+    "Krautrock Essentials = ready",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "saved-open-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 4362,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 71,
+  "interactiveBelow44": {
+   "count": 60,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «View the tracks of Deep Cuts» 32x16",
+    "button.btn.btn-ghost «View the tracks of Greatest » 32x16",
+    "button.btn.btn-ghost «View the tracks of Sunday Mo» 32x16",
+    "button.btn.btn-ghost «View the tracks of The Long » 32x16"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 60,
+   "samples": [
+    "#genericSort «Recently Updated Name (A-Z) » 146x26",
+    "button.btn.btn-primary «Add Playlists» 150x38",
+    "button.btn.btn-secondary «Open Albums Series» 216x38",
+    "button.btn.btn-ghost «Delete all playlists in Prog» 48x38",
+    "button.btn.btn-secondary «Edit batch Road trip» 139x38",
+    "button.btn.btn-ghost «Delete batch Road trip» 48x32",
+    "button.btn.btn-ghost «View the tracks of Deep Cuts» 32x16",
+    "button.btn.btn-ghost «View the tracks of Greatest » 32x16",
+    "button.btn.btn-ghost «View the tracks of Sunday Mo» 32x16",
+    "button.btn.btn-ghost «View the tracks of The Long » 32x16"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 4,
+   "samples": [
+    "#genericSearch «» 14px",
+    "#filter-series «All Albums Series Prog Rock » 14px",
+    "#filter-batch «All Playlist Series Balanced» 14px",
+    "#genericSort «Recently Updated Name (A-Z) » 12px"
+   ]
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock ClassicsID: Jp93LzaU... Add PlaylistsOpen Albums Series Road trip 4 playlists 58"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the SeventiesID: Jp93LzaU... Add Playl"
+    },
+    {
+     "id": "Jp93LzaU2x",
+     "status": "ready",
+     "text": "Brazilian JazzID: Jp93LzaU... Add PlaylistsOpen Albums Series Party 4 playlists 58 tracks "
+    },
+    {
+     "id": "Jp93LzaU3x",
+     "status": "ready",
+     "text": "The BeatlesID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep C"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "ready",
+     "text": "Krautrock EssentialsID: Jp93LzaU... Add PlaylistsOpen Albums Series Night drive 5 4 playli"
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic RockID: Jp93LzaU... Add PlaylistsOpen Albums Series Sunday Morning Prog Rock Deep "
+    }
+   ],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = ready",
+    "The Beatles = ready",
+    "Krautrock Essentials = ready",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "blend-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 929,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 9,
+  "interactiveBelow44": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 0,
+   "samples": []
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-muted.text-lg «\"Your Music, Your Recipe\"»"
+  },
+  "extra": {
+   "title": "The Blending Menu",
+   "steps": [
+    "Choose Your Mix",
+    "Choose Your Recipe"
+   ],
+   "seriesListed": 8
+  }
+ },
+ "blend-recipe-1280": {
+  "ready": "true",
+  "innerWidth": 1280,
+  "innerHeight": 800,
+  "scrollWidth": 1280,
+  "scrollHeight": 1267,
+  "phoneMedia": false,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 9,
+  "interactiveBelow44": {
+   "count": 0,
+   "samples": []
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 0,
+   "samples": []
+  },
+  "textBelow12px": {
+   "count": 9,
+   "samples": [
+    "div.absolute.-top-2 «★ RECOMMENDED» 10px",
+    "span.inline-block.px-2 «RECOMMENDED» 10px",
+    "p.text-[11px].text-muted «Builds balanced playlists by» 11px",
+    "span.inline-block.px-2 «SPOTIFY» 10px",
+    "p.text-[11px].text-muted «Pick your favorite tracks, b» 11px",
+    "span.inline-block.px-2 «BEA» 10px",
+    "p.text-[11px].text-muted «Pick the critically acclaime» 11px",
+    "span.inline-block.px-2 «USER» 10px"
+   ]
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-muted.text-lg «\"Your Music, Your Recipe\"»"
+  },
+  "extra": {
+   "steps": [
+    "Choose Your Mix",
+    "Choose Your Recipe",
+    "Blend It!"
+   ],
+   "recipeCards": 4
+  }
+ },
+ "generated-typing-1280": {
+  "typed": "albumblender",
+  "length": 12,
+  "redrawsTriggered": 4,
+  "nodeReplacedByRedraw": true,
+  "focusKeptAfterEveryKey": true,
+  "finalValue": "albumblender",
+  "finalValueIsAllTwelveLetters": true,
+  "stepsFocusAndValue": [
+   "batchNameInput:a",
+   "batchNameInput:al",
+   "batchNameInput:alb",
+   "batchNameInput:albu",
+   "batchNameInput:album",
+   "batchNameInput:albumb",
+   "batchNameInput:albumbl",
+   "batchNameInput:albumble",
+   "batchNameInput:albumblen",
+   "batchNameInput:albumblend",
+   "batchNameInput:albumblende",
+   "batchNameInput:albumblender"
+  ]
+ },
+ "generated-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 1348,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 14,
+   "samples": [
+    "button.phone-pl-chip «2 · Deep Cuts and Hidden Gem» right=431",
+    "span.phone-pl-chip__name «2 · Deep Cuts and Hidden Gem» right=416",
+    "button.phone-pl-chip «3 · The Long Ones 10 tracks » right=601",
+    "span.phone-pl-chip__name «3 · The Long Ones» right=586",
+    "span.phone-pl-chip__meta «10 tracks · 1 h 10 min» right=578"
+   ]
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 33,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, -apple-system, \"system-ui\", \"SF Pro Text\", system-ui, Inter, \"Segoe UI\", Roboto, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-[11px].text-muted «Builds balanced playlists by»"
+  },
+  "extra": {
+   "batchNameLabel": "Batch name",
+   "batchNameValue": "Sunday Morning Prog Rock Deep Cuts",
+   "exportButtons": [],
+   "playlists": 38
+  }
+ },
+ "generated-export-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 14,
+   "samples": [
+    "button.phone-pl-chip «2 · Deep Cuts and Hidden Gem» right=431",
+    "span.phone-pl-chip__name «2 · Deep Cuts and Hidden Gem» right=416",
+    "button.phone-pl-chip «3 · The Long Ones 10 tracks » right=601",
+    "span.phone-pl-chip__name «3 · The Long Ones» right=586",
+    "span.phone-pl-chip__meta «10 tracks · 1 h 10 min» right=578"
+   ]
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 37,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, -apple-system, \"system-ui\", \"SF Pro Text\", system-ui, Inter, \"Segoe UI\", Roboto, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-[11px].text-muted «Builds balanced playlists by»"
+  },
+  "extra": {
+   "sheet": "Export playlists",
+   "buttons": [
+    "Export to Spotify",
+    "Export to Apple Music",
+    "Download JSON"
+   ]
+  }
+ },
+ "empty-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 8,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-muted.mb-6 «Playlists are made in The Bl»"
+  },
+  "extra": {
+   "emptyState": "No playlists here yet Playlists are made in The Blending Menu: pick a series and a recipe, and they open here. Go to The Blending Menu",
+   "linkToBlend": "/blend",
+   "batchNameFieldPresent": false,
+   "exportButtons": 0
+  }
+ },
+ "saved-loading-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 9,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": "Reading playlists: 0 of 6 series",
+   "listFailed": null,
+   "groups": [],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = loading",
+    "Alternative R&B / Psyche = loading",
+    "Brazilian Jazz = loading",
+    "The Beatles = loading",
+    "Krautrock Essentials = loading",
+    "Classic Rock = loading"
+   ]
+  }
+ },
+ "saved-loading-list-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 9,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": "Reading your series...",
+   "listFailed": null,
+   "groups": [],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": []
+  }
+ },
+ "saved-mixed-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 18,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": "Reading playlists: 5 of 6 series",
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock Classics2 batches · 7 playlistsRoad trip4 playlists · 58 tracks · 6 h 40 min · 2"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the Seventies3 batches · 15 playlistsB"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "failed",
+     "text": "Krautrock Essentials0 batches · 0 playlistsThe playlists of this series could not be read."
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic Rock2 batches · 9 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    }
+   ],
+   "tryAgainButtons": 1,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = loading",
+    "The Beatles = empty",
+    "Krautrock Essentials = failed",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "saved-ready-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 21,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock Classics2 batches · 7 playlistsRoad trip4 playlists · 58 tracks · 6 h 40 min · 2"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the Seventies3 batches · 15 playlistsB"
+    },
+    {
+     "id": "Jp93LzaU2x",
+     "status": "ready",
+     "text": "Brazilian Jazz4 batches · 18 playlistsParty4 playlists · 58 tracks · 7 h 23 min · 4 Nov 20"
+    },
+    {
+     "id": "Jp93LzaU3x",
+     "status": "ready",
+     "text": "The Beatles5 batches · 24 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "ready",
+     "text": "Krautrock Essentials6 batches · 25 playlistsNight drive 54 playlists · 58 tracks · 7 h 45 "
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic Rock2 batches · 9 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    }
+   ],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = ready",
+    "The Beatles = ready",
+    "Krautrock Essentials = ready",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "saved-empty-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 10,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p. «Generate and save playlists »"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [],
+   "tryAgainButtons": 0,
+   "placeholder": "No Playlists FoundGenerate and save playlists in your series to see them here.Create Series",
+   "seriesStatuses": [
+    "Prog Rock Classics = empty",
+    "Alternative R&B / Psyche = empty",
+    "Brazilian Jazz = empty",
+    "The Beatles = empty",
+    "Krautrock Essentials = empty",
+    "Classic Rock = empty"
+   ]
+  }
+ },
+ "saved-failed-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 22,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock Classics2 batches · 7 playlistsRoad trip4 playlists · 58 tracks · 6 h 40 min · 2"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the Seventies3 batches · 15 playlistsB"
+    },
+    {
+     "id": "Jp93LzaU2x",
+     "status": "failed",
+     "text": "Brazilian Jazz0 batches · 0 playlistsThe playlists of this series could not be read.Try ag"
+    },
+    {
+     "id": "Jp93LzaU3x",
+     "status": "ready",
+     "text": "The Beatles5 batches · 24 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "ready",
+     "text": "Krautrock Essentials6 batches · 25 playlistsNight drive 54 playlists · 58 tracks · 7 h 45 "
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic Rock2 batches · 9 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    }
+   ],
+   "tryAgainButtons": 1,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = failed",
+    "The Beatles = ready",
+    "Krautrock Essentials = ready",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "saved-failed-list-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 10,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": "Your series could not be read.Try again",
+   "listFailed": "Your series could not be read.Try again",
+   "groups": [],
+   "tryAgainButtons": 1,
+   "placeholder": null,
+   "seriesStatuses": []
+  }
+ },
+ "saved-retried-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 21,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock Classics2 batches · 7 playlistsRoad trip4 playlists · 58 tracks · 6 h 40 min · 2"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the Seventies3 batches · 15 playlistsB"
+    },
+    {
+     "id": "Jp93LzaU2x",
+     "status": "ready",
+     "text": "Brazilian Jazz4 batches · 18 playlistsParty4 playlists · 58 tracks · 7 h 23 min · 4 Nov 20"
+    },
+    {
+     "id": "Jp93LzaU3x",
+     "status": "ready",
+     "text": "The Beatles5 batches · 24 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "ready",
+     "text": "Krautrock Essentials6 batches · 25 playlistsNight drive 54 playlists · 58 tracks · 7 h 45 "
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic Rock2 batches · 9 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    }
+   ],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = ready",
+    "The Beatles = ready",
+    "Krautrock Essentials = ready",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "saved-open-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 1018,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 29,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": null,
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "span.absolute.left-3 «»"
+  },
+  "extra": {
+   "status": null,
+   "listFailed": null,
+   "groups": [
+    {
+     "id": "Jp93LzaU0x",
+     "status": "ready",
+     "text": "Prog Rock Classics2 batches · 7 playlistsRoad trip4 playlists · 58 tracks · 6 h 40 min · 2"
+    },
+    {
+     "id": "Jp93LzaU1x",
+     "status": "ready",
+     "text": "Alternative R&B / Psychedelic / Avant-Garde Soul of the Seventies3 batches · 15 playlistsB"
+    },
+    {
+     "id": "Jp93LzaU2x",
+     "status": "ready",
+     "text": "Brazilian Jazz4 batches · 18 playlistsParty4 playlists · 58 tracks · 7 h 23 min · 4 Nov 20"
+    },
+    {
+     "id": "Jp93LzaU3x",
+     "status": "ready",
+     "text": "The Beatles5 batches · 24 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    },
+    {
+     "id": "Jp93LzaU4x",
+     "status": "ready",
+     "text": "Krautrock Essentials6 batches · 25 playlistsNight drive 54 playlists · 58 tracks · 7 h 45 "
+    },
+    {
+     "id": "Jp93LzaU5x",
+     "status": "ready",
+     "text": "Classic Rock2 batches · 9 playlistsSunday Morning Prog Rock Deep Cuts - Extended Remastere"
+    }
+   ],
+   "tryAgainButtons": 0,
+   "placeholder": null,
+   "seriesStatuses": [
+    "Prog Rock Classics = ready",
+    "Alternative R&B / Psyche = ready",
+    "Brazilian Jazz = ready",
+    "The Beatles = ready",
+    "Krautrock Essentials = ready",
+    "Classic Rock = ready"
+   ]
+  }
+ },
+ "blend-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 852,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 10,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-muted.text-lg «\"Your Music, Your Recipe\"»"
+  },
+  "extra": {
+   "title": "The Blending Menu",
+   "steps": [
+    "Choose Your Mix",
+    "Choose Your Recipe"
+   ],
+   "seriesListed": 1
+  }
+ },
+ "blend-recipe-393": {
+  "ready": "true",
+  "innerWidth": 393,
+  "innerHeight": 852,
+  "scrollWidth": 393,
+  "scrollHeight": 1510,
+  "phoneMedia": true,
+  "pastRightEdgeInApp": {
+   "count": 0,
+   "samples": []
+  },
+  "pastRightEdgeOutsideApp": {
+   "count": 0,
+   "samples": []
+  },
+  "interactive": 10,
+  "interactiveBelow44": {
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "interactiveBelow44WithHitArea": {
+   "note": "counts an ::after hit area as F76 did",
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the entry» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "count": 0,
+   "samples": []
+  },
+  "fonts": {
+   "h1": "Syne, sans-serif",
+   "h2": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "bodyText": "Syne, sans-serif",
+   "bodyTextSample": "p.text-muted.text-lg «\"Your Music, Your Recipe\"»"
+  },
+  "extra": {
+   "steps": [
+    "Choose Your Mix",
+    "Choose Your Recipe",
+    "Blend It!"
+   ],
+   "recipeCards": 4
+  }
+ },
+ "generated-typing-393": {
+  "typed": "albumblender",
+  "length": 12,
+  "redrawsTriggered": 4,
+  "nodeReplacedByRedraw": true,
+  "focusKeptAfterEveryKey": true,
+  "finalValue": "albumblender",
+  "finalValueIsAllTwelveLetters": true,
+  "stepsFocusAndValue": [
+   "batchNameInput:a",
+   "batchNameInput:al",
+   "batchNameInput:alb",
+   "batchNameInput:albu",
+   "batchNameInput:album",
+   "batchNameInput:albumb",
+   "batchNameInput:albumbl",
+   "batchNameInput:albumble",
+   "batchNameInput:albumblen",
+   "batchNameInput:albumblend",
+   "batchNameInput:albumblende",
+   "batchNameInput:albumblender"
+  ]
+ }
+}

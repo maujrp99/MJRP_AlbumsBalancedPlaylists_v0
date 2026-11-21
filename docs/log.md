@@ -3,9 +3,33 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:35] decision — ids de UAT renumerados na integração de `wip/visual-recheck-batch-2026-11-21`
+
+> Participantes: Claude (Claude Code), integrador · Branch: main
+
+- `UAT-240` da `wip/visual-recheck-batch-2026-11-21` colidiu com outra issue de mesmo id e virou `UAT-254` (ordem de chegada).
+  - As referências listadas abaixo ainda citam o id velho `UAT-240` e valem para a issue do ramo (hoje `UAT-254`); a reescrever em um commit seguinte, sem tocar nas que citam a issue da `main`:
+    - `docs/log.md:20: Juiz separado (Opus) olhou a tela de hoje, em produção e no servidor de desenvolvimento da `main`, a 1280 e 393, contra o design system; nen`
+    - `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md:43: - **P2-1 · F57 · a janela «Edit Series» não acompanhou a Start.** Mesma peça e mesmos dados, mas a ficha escolhida é laranja preenchida (o d`
+- `UAT-241` da `wip/visual-recheck-batch-2026-11-21` colidiu com outra issue de mesmo id e virou `UAT-255` (ordem de chegada).
+  - As referências listadas abaixo ainda citam o id velho `UAT-241` e valem para a issue do ramo (hoje `UAT-255`); a reescrever em um commit seguinte, sem tocar nas que citam a issue da `main`:
+    - `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md:44: - **P2-2 · F48 · no computador, em `/start`, o rodapé (com «Clear Cache») fica sob a base fixa da série,** mesmo com a página rolada até o f`
+
+## [2026-11-21 13:33] review — reconferência visual em lote, grupo playlists, playlists guardadas, blend e exportar (F61, F73): fail sem P0, sem P1, 2 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou as playlists geradas, as guardadas e o Blending Menu de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (as telas, o controlador e o leitor reais com uma fonte de mentira; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-playlists-blend-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/playlists/`. Dois P2 (UAT-252, UAT-253). Fecha a série de quatro relatórios do lote; nada fechado no board.
+
+## [2026-11-21 13:32] review — reconferência visual em lote, grupo inventário (F54, F71, F73): fail sem P0, sem P1, 1 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou o inventário e a janela do álbum de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (as telas reais com 211 itens de fixture e o serviço real sobre um repositório em memória; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/inventory/` e o ajudante comum `cdp-lib-inventory-playlists.mjs`. O filtro de situação da F71 foi trocado pela F75 pelos três botões de contagem: registrado, sem issue. Um P2 (UAT-251). Nada fechado.
+
 ## [2026-11-21 13:31] session — F80: a home em português, «A barra é o menu» v2, no comparador (UAT-241, UAT-240)
 **Branch:** wip/f80-home-menu-and-slider
 Palavras do MJRP (2026-11-21): «sugiro rever o prototipo já com texto tudo me portugues pls»; sobre o ranking, «o user nao deve rank every track, ele ranqueia o que ele quer, as vezes ele que colocar so uma track no topo, entao o copy aqui deve mudar. Rank your tracks...algo mais flexivel em termos de copy»; sobre o cartão ilustrativo, «isso aqui tb nao deve ser ilustrativo, vamos colocar dados rais de album pls»; sobre a tela «End of side A · Flip the record», «faz sentido isso aqui ?». A direção, nas palavras dele: «a barra é o menu» e «mas pode falar pra ele fazer só para a opcao recomendada» — a B, só ela refeita. Nova versão `design/inception/splash-menu-bar-v2.html` (gerador `home-menu/build_v2.mjs`, wireframes `design/wireframes/splash-menu-bar-v2-*.png`): todo o texto em português com chave PT/EN; o ranking parcial («Ponha no topo as faixas que você quiser.» / «Rank your tracks, your way.»); o cartão com The Velvet Underground & Nico e as faixas reais (busca pública do iTunes), sem notas de terceiros; a virada como faixa curta, filete no celular. Padrões aplicados como «decidido pelo agente — revisável» (`proposal.md` § Rodada 3 · v2, com a tabela PT/EN, proposta a revisar). Crítica separada: passa, 0 P0, 5 P1, 8 P2; corrigidos antes de publicar a capa da história de Álbuns no celular, os 11 px abaixo de 380 px, o sobretítulo repetido, o verbo do ranking, as portas, a chave de idioma, o filete da virada e o registro no `info-arch.md` e no `design-system.md`. Comparador republicado na mesma URL (versão 10): abre em «A home em português: é este o caminho?», a v2 ao lado da prévia que ele viu, chaves PT/EN e sem conta/com conta; **48 palavras na primeira tela**; as três prévias em `home-menu-abc.html`, atrás de «Rodadas anteriores».
+
+## [2026-11-21 13:30] review — reconferência visual em lote, grupo álbuns e séries (F45, F46, F47, F48, F49, F51, F52, F55, F68, F69, F72, F74): fail sem P0, 2 P1, 5 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou a tela de álbuns e a janela do álbum de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (a `SeriesView` e as janelas reais com dados de fixture; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/albums/`. Os dois P1 são estados de falha que os requisitos descrevem e que nenhuma tela mostra: a nota que falhou (F52, UAT-244) e a popularidade que falhou (F69, UAT-245). P2 em UAT-246 a UAT-250. Nada fechado.
 
 ## [2026-11-21 13:26] session — conform parcial do V0 depois do kernel de 2026-11-21: 90 para 46 notas, 11 para 10 lacunas
 **Branch:** wip/kernel-conform-2026-11-21
@@ -25,6 +49,10 @@ Acrescentado `**Aberta por:** agente (<quem>)`, lido da evidência que cada issu
 ## [2026-11-21 13:23] session — conform: ADR-0019 encurtada ao teto e com a via do aceite (adr-names)
 **Branch:** wip/kernel-conform-2026-11-21
 A ADR-0019 (Proposed) tinha 8.553 caracteres, o teto é 6.000: o texto agora traz só a decisão, as alternativas e as consequências, e a lista de «ainda não feito» (que seguia o andamento da F56/F58) aponta para o relatório do cruzamento e para os specs; o texto antigo está no histórico do git. Ganhou `**Acceptance**: tech lead` (escolha técnica; a regra: técnica vai ao tech lead, produto e dinheiro ao MJRP). A ADR-0020 (Accepted) também não tem a linha, mas ADR aceita não se edita: fica para o MJRP (ou o tech lead) dizer se a linha entra no cabeçalho. As três notas (CM-0112, CM-0113, CM-0149) seguem pendentes até lá. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:23] review — reconferência visual em lote, grupo Start, navegação e casca (F48, F50, F54, F57, F59, F64, F67): fail sem P0, 4 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou a tela de hoje, em produção e no servidor de desenvolvimento da `main`, a 1280 e 393, contra o design system; nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/shell/`. Sem entrar com senha, nada gravado. Achados abertos como UAT-254 a UAT-243 (P2). O ramo começou como `claude/f45-visual-recheck-batch` (o número de uma feature do lote, para o gancho de commit) e virou `wip/…` porque a trava «o estado primeiro» pedia a F45 «Em andamento» no board, que só o MJRP move; o orquestrador mandou trocar o nome. Nada fechado: o `Done` fica para o passo de fecho.
 
 ## [2026-11-21 13:22] session — conform: `process-sensors` registrado (CM-0107, CM-0121, CM-0129, CM-0135, CM-0140)
 **Branch:** wip/kernel-conform-2026-11-21

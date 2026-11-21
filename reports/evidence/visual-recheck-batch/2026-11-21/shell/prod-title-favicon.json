@@ -1,0 +1,364 @@
+{
+ "root-1280": {
+  "requested": "/",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/",
+  "title": "The Album Blender — for people who listen to whole albums",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "fetched": {
+     "status": 200,
+     "type": "image/png",
+     "bytes": 7227
+    },
+    "savedAs": "prod-favicon-1.png"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "fetched": {
+     "status": 200,
+     "type": "image/png",
+     "bytes": 16823
+    },
+    "savedAs": "prod-favicon-2.png"
+   }
+  ]
+ },
+ "home-1280": {
+  "requested": "/home",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/home",
+  "title": "The Album Blender — for people who listen to whole albums",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "start-1280": {
+  "requested": "/start",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/start",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "albums-1280": {
+  "requested": "/albums",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/albums",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "inventory-1280": {
+  "requested": "/inventory",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/inventory",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "playlists-1280": {
+  "requested": "/playlists",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/playlists",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "savedplaylists-1280": {
+  "requested": "/saved-playlists",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/saved-playlists",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "blend-1280": {
+  "requested": "/blend",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/blend",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "root-393": {
+  "requested": "/",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/",
+  "title": "The Album Blender — for people who listen to whole albums",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "home-393": {
+  "requested": "/home",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/home",
+  "title": "The Album Blender — for people who listen to whole albums",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "start-393": {
+  "requested": "/start",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/start",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "albums-393": {
+  "requested": "/albums",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/albums",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "inventory-393": {
+  "requested": "/inventory",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/inventory",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "playlists-393": {
+  "requested": "/playlists",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/playlists",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "savedplaylists-393": {
+  "requested": "/saved-playlists",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/saved-playlists",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ },
+ "blend-393": {
+  "requested": "/blend",
+  "finalUrl": "https://mjrp-playlist-generator.web.app/blend",
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "titleElements": 1,
+  "icons": [
+   {
+    "rel": "icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/favicon-DVBstM4o.png",
+    "type": "image/png",
+    "sizes": "",
+    "savedAs": "same as an earlier one"
+   },
+   {
+    "rel": "apple-touch-icon",
+    "href": "https://mjrp-playlist-generator.web.app/assets/app-icon-180-BQfbuP-v.png",
+    "type": "",
+    "sizes": "180x180",
+    "savedAs": "same as an earlier one"
+   }
+  ]
+ }
+}

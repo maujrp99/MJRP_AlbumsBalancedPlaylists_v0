@@ -1,0 +1,480 @@
+{
+ "prod-root-1280.png": {
+  "url": "https://mjrp-playlist-generator.web.app/",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "pastRightEdge": {
+   "count": 1,
+   "samples": [
+    "div.glow «» right=1351"
+   ]
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "-apple-system, \"system-ui\", \"Segoe UI\", Inter, system-ui, sans-serif",
+   "firstP": "-apple-system, \"system-ui\", \"Segoe UI\", Inter, system-ui, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/"
+ },
+ "prod-home-1280.png": {
+  "url": "https://mjrp-playlist-generator.web.app/home",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "pastRightEdge": {
+   "count": 1,
+   "samples": [
+    "div.glow «» right=1351"
+   ]
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "-apple-system, \"system-ui\", \"Segoe UI\", Inter, system-ui, sans-serif",
+   "firstP": "-apple-system, \"system-ui\", \"Segoe UI\", Inter, system-ui, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/home"
+ },
+ "prod-start-1280.png": {
+  "url": "https://mjrp-playlist-generator.web.app/start",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/start"
+ },
+ "prod-albums-1280.png": {
+  "url": "https://mjrp-playlist-generator.web.app/albums",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/albums"
+ },
+ "prod-inventory-1280.png": {
+  "url": "https://mjrp-playlist-generator.web.app/inventory",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/inventory"
+ },
+ "prod-playlists-1280.png": {
+  "url": "https://mjrp-playlist-generator.web.app/playlists",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/playlists"
+ },
+ "prod-savedplaylists-1280.png": {
+  "url": "https://mjrp-playlist-generator.web.app/saved-playlists",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/saved-playlists"
+ },
+ "prod-blend-1280.png": {
+  "url": "https://mjrp-playlist-generator.web.app/blend",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/blend"
+ },
+ "prod-root-393.png": {
+  "url": "https://mjrp-playlist-generator.web.app/",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "pastRightEdge": {
+   "count": 2,
+   "samples": [
+    "div.glow «» right=432",
+    "div.glow «» right=432"
+   ]
+  },
+  "targetsBelow44": {
+   "of": 26,
+   "count": 9,
+   "samples": [
+    "a.skip «Skip to content» 110x25",
+    "a.g.on «Side A, track 1: The Alb» 13x44",
+    "a.g «Side A, track 2: Series» 13x44",
+    "a.g «Side A, track 3: Rank ev» 13x44",
+    "a.g «Side A, track 4: Blend» 13x44",
+    "a.g «Side A, track 5: Your sh» 13x44",
+    "a.turn «Flip the record» 24x44",
+    "a.g «Side B, track 1: Why who» 13x44",
+    "a.g «Side B, track 2: Start» 13x44"
+   ]
+  },
+  "textBelow12px": {
+   "count": 1,
+   "samples": [
+    "a.turn «Flip the record» 0px"
+   ]
+  },
+  "inputsBelow16px": {
+   "of": 0,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "-apple-system, \"system-ui\", \"Segoe UI\", Inter, system-ui, sans-serif",
+   "firstP": "-apple-system, \"system-ui\", \"Segoe UI\", Inter, system-ui, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/"
+ },
+ "prod-home-393.png": {
+  "url": "https://mjrp-playlist-generator.web.app/home",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "pastRightEdge": {
+   "count": 2,
+   "samples": [
+    "div.glow «» right=432",
+    "div.glow «» right=432"
+   ]
+  },
+  "targetsBelow44": {
+   "of": 26,
+   "count": 9,
+   "samples": [
+    "a.skip «Skip to content» 110x25",
+    "a.g.on «Side A, track 1: The Alb» 13x44",
+    "a.g «Side A, track 2: Series» 13x44",
+    "a.g «Side A, track 3: Rank ev» 13x44",
+    "a.g «Side A, track 4: Blend» 13x44",
+    "a.g «Side A, track 5: Your sh» 13x44",
+    "a.turn «Flip the record» 24x44",
+    "a.g «Side B, track 1: Why who» 13x44",
+    "a.g «Side B, track 2: Start» 13x44"
+   ]
+  },
+  "textBelow12px": {
+   "count": 1,
+   "samples": [
+    "a.turn «Flip the record» 0px"
+   ]
+  },
+  "inputsBelow16px": {
+   "of": 0,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "-apple-system, \"system-ui\", \"Segoe UI\", Inter, system-ui, sans-serif",
+   "firstP": "-apple-system, \"system-ui\", \"Segoe UI\", Inter, system-ui, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/home"
+ },
+ "prod-start-393.png": {
+  "url": "https://mjrp-playlist-generator.web.app/start",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": {
+   "of": 12,
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "of": 1,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/start"
+ },
+ "prod-albums-393.png": {
+  "url": "https://mjrp-playlist-generator.web.app/albums",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": {
+   "of": 10,
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "of": 1,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/albums"
+ },
+ "prod-inventory-393.png": {
+  "url": "https://mjrp-playlist-generator.web.app/inventory",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": {
+   "of": 20,
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "of": 1,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "-apple-system, \"system-ui\", \"SF Pro Text\", Inter, system-ui, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/inventory"
+ },
+ "prod-playlists-393.png": {
+  "url": "https://mjrp-playlist-generator.web.app/playlists",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": {
+   "of": 8,
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "of": 0,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/playlists"
+ },
+ "prod-savedplaylists-393.png": {
+  "url": "https://mjrp-playlist-generator.web.app/saved-playlists",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": {
+   "of": 10,
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "of": 1,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/saved-playlists"
+ },
+ "prod-blend-393.png": {
+  "url": "https://mjrp-playlist-generator.web.app/blend",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": {
+   "of": 10,
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "of": 1,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [],
+  "requested": "/blend"
+ }
+}

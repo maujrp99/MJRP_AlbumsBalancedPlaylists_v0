@@ -1,0 +1,179 @@
+{
+ "shell-account-top-1280.png": {
+  "url": "http://127.0.0.1:5404/start",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [
+   "console.error: [2026-11-21T16:17:40.392Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typically indicates that your device does not have a healthy Inter"
+  ],
+  "spotify": {
+   "spotify-connect-desktop": {
+    "visible": true,
+    "text": "Connect",
+    "size": "109x30"
+   },
+   "spotify-connect-mobile": {
+    "visible": false,
+    "text": "Connect",
+    "size": "0x0"
+   },
+   "phone-menu-spotify": "absent"
+  },
+  "who": {
+   "phoneMenuBtnHtml": null,
+   "navText": "START MUSIC SERIES THE BLENDING MENU PLAYLISTS INVENTORY Connect Test Account"
+  }
+ },
+ "shell-account-footer-1280.png": {
+  "url": "http://127.0.0.1:5404/start",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": "phone only",
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": "phone only",
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [
+   "console.error: [2026-11-21T16:17:40.392Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typically indicates that your device does not have a healthy Inter"
+  ],
+  "footer": {
+   "text": "Clear Cache",
+   "rect": [
+    263,
+    714,
+    77,
+    20
+   ]
+  }
+ },
+ "shell-account-top-393.png": {
+  "url": "http://127.0.0.1:5404/start",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": {
+   "of": 11,
+   "count": 1,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "of": 1,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [
+   "console.error: [2026-11-21T16:17:46.333Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typically indicates that your device does not have a healthy Inter"
+  ],
+  "spotify": {
+   "spotify-connect-desktop": {
+    "visible": false,
+    "text": "Connect",
+    "size": "0x0"
+   },
+   "spotify-connect-mobile": {
+    "visible": false,
+    "text": "Connect",
+    "size": "0x0"
+   },
+   "phone-menu-spotify": "absent"
+  },
+  "who": {
+   "phoneMenuBtnHtml": "<span class=\"phone-avatar\" data-account-initial=\"\">T</span>",
+   "navText": " Start Music Series By Album By Artist Soon By Genre Soon By Track Soon Playlists The Blending Menu Playlists Inventory Connect Test Account Signed in as Test Account Sign Out Menu Start Music Series "
+  }
+ },
+ "shell-account-menu-393.png": {
+  "url": "http://127.0.0.1:5404/start",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "title": "MJRP The Album Blender - Playlist Generator",
+  "pastRightEdge": {
+   "count": 0,
+   "samples": []
+  },
+  "targetsBelow44": {
+   "of": 19,
+   "count": 2,
+   "samples": [
+    "a.phone-topbar__logo-link «The Album Blender, the e» 28x28",
+    "#spotifyLoginBtn «Connect» 109x30"
+   ]
+  },
+  "textBelow12px": {
+   "count": 0,
+   "samples": []
+  },
+  "inputsBelow16px": {
+   "of": 1,
+   "count": 0,
+   "samples": []
+  },
+  "fontFamily": {
+   "h1": "Syne, sans-serif",
+   "body": "Syne, sans-serif",
+   "firstP": "Syne, sans-serif"
+  },
+  "consoleErrors": [
+   "console.error: [2026-11-21T16:17:46.333Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typically indicates that your device does not have a healthy Inter"
+  ],
+  "spotifyInMenu": {
+   "spotify-connect-desktop": {
+    "visible": false,
+    "text": "Connect",
+    "size": "0x0"
+   },
+   "spotify-connect-mobile": {
+    "visible": false,
+    "text": "Connect",
+    "size": "0x0"
+   },
+   "phone-menu-spotify": {
+    "visible": true,
+    "text": "Connect",
+    "size": "361x55"
+   }
+  }
+ }
+}
