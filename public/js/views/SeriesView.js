@@ -23,7 +23,7 @@ import { SafeDOM } from '../utils/SafeDOM.js';
 import Pager from '../components/ui/Pager.js';
 import { SeriesExpansion, SERIES_ALBUM_LIMIT } from '../models/seriesExpansion.js';
 import { onPhoneChange } from '../utils/isPhone.js';
-import { nameThisScreen } from '../components/navigation/PhoneShell.js';
+import { nameThisScreen } from '../stores/screenName.js';
 
 export default class SeriesView extends BaseView {
     constructor(controller) {

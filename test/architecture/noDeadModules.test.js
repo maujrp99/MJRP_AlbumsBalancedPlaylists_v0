@@ -27,11 +27,7 @@ const KEPT_ON_PURPOSE = {
     // The hook of the React bridge (F83) that no screen has needed yet waits for the screen that does. The line goes out in the
     // commit of the screen that first uses it: this test fails the moment it stops being true. (navigation, usePhone and
     // useStore went out with the saved playlists screen, wave 1; the saved playlists screen sets no title of its own.)
-    'public/js/react-bridge/useScreenTitle.ts': 'the bridge, until a screen names itself (wave 2: the playlists screen)',
-    // The background download of the menu's screens (F83 wave 0). Its one user was the hand-made saved playlists screen; the
-    // screens in React are not fetched in the background until the shell is React (wave 3, REQ-07: the first load downloads no
-    // React), and no hand-made screen is loaded late any more. It goes back to app.js in wave 3, with the test it already has.
-    'public/js/utils/prefetchScreens.js': 'the background download of the menu\'s screens, until the shell is React (wave 3)'
+    'public/js/react-bridge/useScreenTitle.ts': 'the bridge, until a screen names itself (wave 2: the playlists screen)'
 }
 
 const graph = graphFrom(allEntryPoints())

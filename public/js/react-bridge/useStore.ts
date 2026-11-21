@@ -66,3 +66,13 @@ export function useStore<S extends Subscribable, R>(store: S, read: (store: S) =
     useSyncExternalStore(watched.subscribe, watched.getVersion)
     return read(store)
 }
+
+/**
+ * How many notices of the store the bridge has heard. The number goes up at each one, even when what a screen reads is the same. A part
+ * of the page that the hand-made code drew anew at each notice (the focus it held gone, what it had open closed) takes this number as its
+ * `key`: React makes it again, as the hand-made code did (F83 wave 3, the shell).
+ */
+export function useNotices(store: Subscribable): number {
+    const watched = watch(store)
+    return useSyncExternalStore(watched.subscribe, watched.getVersion)
+}

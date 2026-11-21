@@ -2,6 +2,7 @@
 import { comingSoon } from './comingSoon.js'
 import { playlists } from './playlists.js'
 import { savedPlaylists } from './savedPlaylists.js'
+import { shell } from './shell.js'
 import { ui } from './ui.js'
 
-export const pt = { ...comingSoon, ...playlists, ...savedPlaylists, ...ui }
+export const pt = { ...comingSoon, ...playlists, ...savedPlaylists, ...shell, ...ui }

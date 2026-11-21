@@ -13,32 +13,41 @@ import { openSheet } from '../components/ui/Sheet.js'
 interface SheetHandle {
     element: HTMLElement
     body: HTMLElement
+    footer: HTMLElement | null
     close: () => void
+    isOpen: () => boolean
 }
 
 export interface SheetRequest {
+    /** The id of the sheet's element. */
+    id?: string
     title: string
     /** The classes the sheet takes besides the ones of the motor. */
     className?: string
     closeLabel: string
     /** What is inside; `close` shuts the sheet. */
     render: (close: () => void) => ReactNode
+    /** What is in the footer that stays in view (the main action); no footer when it is left out. */
+    footer?: (close: () => void) => ReactNode
 }
 
 interface Shown {
     sheet: SheetHandle
     render: SheetRequest['render']
+    footer?: SheetRequest['footer']
 }
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
-export function useSheetWindow(): { show: (request: SheetRequest) => void; layer: ReactNode } {
+export function useSheetWindow(): { show: (request: SheetRequest) => void; close: () => void; isOpen: () => boolean; layer: ReactNode } {
     const [shown, setShown] = useState<Shown | null>(null)
     const current = useRef<SheetHandle | null>(null)
 
     const show = useCallback((request: SheetRequest) => {
         const sheet: SheetHandle = openSheet({
             variant: 'bottom',
+            id: request.id,
+            footer: request.footer ? [] : undefined, // an empty footer: what is in it is drawn by React, through a portal
             title: request.title,
             closeLabel: request.closeLabel,
             onClose: () => {
@@ -48,17 +57,25 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; layer
         })
         if (request.className) sheet.element.classList.add(...request.className.split(' '))
         current.current = sheet
-        setShown({ sheet, render: request.render })
+        setShown({ sheet, render: request.render, footer: request.footer })
     }, [])
+
+    const close = useCallback(() => current.current?.close(), [])
+    const isOpen = useCallback(() => Boolean(current.current?.isOpen()), [])
 
     // What is drawn inside is in the body now: the first thing to act on gets the focus, as the motor does when it has content.
     useLayoutEffect(() => {
-        const first = shown?.sheet.body.querySelector<HTMLElement>(FOCUSABLE)
+        const first = shown?.sheet.body.querySelector<HTMLElement>(FOCUSABLE) ?? shown?.sheet.footer?.querySelector<HTMLElement>(FOCUSABLE)
         first?.focus({ preventScroll: true })
     }, [shown])
 
     useEffect(() => () => current.current?.close(), [])
 
-    const layer = shown ? createPortal(shown.render(shown.sheet.close), shown.sheet.body) : null
-    return { show, layer }
+    const layer = shown ? (
+        <>
+            {createPortal(shown.render(shown.sheet.close), shown.sheet.body)}
+            {shown.footer && shown.sheet.footer ? createPortal(shown.footer(shown.sheet.close), shown.sheet.footer) : null}
+        </>
+    ) : null
+    return { show, close, isOpen, layer }
 }

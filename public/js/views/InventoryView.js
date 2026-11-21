@@ -9,10 +9,10 @@ import { redrawKeepingField } from '../utils/keepField.js'
 import { InventoryStatus, statusCountLabel } from '../models/inventoryStatus.js'
 import { SORT_OPTIONS, choiceOf } from '../models/inventorySort.js'
 import { SourceState } from '../models/inventoryValue.js'
-import { showDiscogsNotice } from '../components/Footer.js'
+import { showDiscogsNotice } from '../stores/discogsNotice.js'
 import { phoneValuesDetails, renderNotices, renderPhoneNotices, renderPhoneTotals, renderTotals } from './renderers/InventoryValueHeader.js'
 import { isPhone, onPhoneChange } from '../utils/isPhone.js'
-import { DISCOGS_NOTICE } from '../components/Footer.js'
+import { t } from '../i18n/t.js'
 import { PHONE_CHUNK, jumpTargets, jumpsByLetter, shownFor } from '../models/inventoryJump.js'
 import { MORE_ICON, phoneEmpty, phoneList, phoneLoading, phoneProgress, phoneRow } from './renderers/InventoryPhoneRow.js'
 import { openActionsSheet, openFiltersSheet, openItemSheet, openJumpSheet, openStatusSheet, openValuesSheet } from './InventoryPhoneSheets.js'
@@ -138,7 +138,7 @@ export class InventoryView extends BaseView {
       SafeDOM.div({ id: GRID_ID }, [SafeDOM.fromHTML(this.renderPhoneGrid(state))])
     )
     // The footer that says it on the computer is not on the phone (F75, REQ-06)
-    if (state.value?.source === SourceState.ON) container.appendChild(SafeDOM.p({ className: 'inv-discogs-notice' }, DISCOGS_NOTICE))
+    if (state.value?.source === SourceState.ON) container.appendChild(SafeDOM.p({ className: 'inv-discogs-notice' }, t('shell.footer.discogsNotice')))
     return container
   }
 

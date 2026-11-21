@@ -23,7 +23,9 @@ export const rude = () => user({ displayName: '<b>Mau</b> "&"', photoURL: '/a"b.
 
 /** What the shell asked of the world outside, and the answers the world gives it. */
 export const world = {
+    /** @type {unknown[][]} */
     calls: [],
+    /** @type {{ connected: boolean, profile: { display_name: string } | null }} */
     spotify: { connected: false, profile: null },
     signIn: { fail: null },
     confirmAnswer: true,
@@ -87,6 +89,15 @@ export function scopedIdLookup() {
     Element.prototype.querySelector = scoped
 }
 
+/**
+ * The classes of an icon as a set. `normalize` writes the class of an svg as it stands (a string), and the hand-made shell moved some of them
+ * with `classList` (a menu opened and closed leaves no space at the end of «duration-200 »): the string differs, the set does not.
+ */
+/** @param {string|null} page */
+export const tidy = (page) => (typeof page === 'string'
+    ? page.replace(/<svg class="([^"]*)"/g, (_, classes) => `<svg class="${classes.split(/\s+/).filter(Boolean).sort().join(' ')}"`)
+    : page)
+
 const SECTIONS = ['#header-container', '#footer-container', '#phone-topbar', '#phone-tabbar', '.phone-to-top']
 /** What the page has over the app, put straight in the body: the sheets and the windows. */
 const OVER_THE_PAGE = '.sheet, .modal-overlay, .app-modal'
@@ -146,11 +157,11 @@ export const SCENARIOS = [
     {
         name: 'the computer: the link of each address is the current one', url: '/blend', user: null, run: async (h) => {
             h.snap('blend', '#header-container nav > div.hidden')
-            h.restart('/saved-playlists')
+            await h.restart('/saved-playlists')
             h.snap('saved playlists', '#header-container nav > div.hidden')
-            h.restart('/playlist-series')
+            await h.restart('/playlist-series')
             h.snap('the playlists of the series menu', '#header-container nav > div.hidden')
-            h.restart('/artists')
+            await h.restart('/artists')
             h.snap('soon: artists', '#header-container nav > div.hidden')
         }
     },
@@ -597,7 +608,7 @@ export function driver({ adapter, snaps, scenario }) {
         name: async (text) => { await adapter.act(async () => { adapter.nameThisScreen(text); await flush() }) },
         discogs: async (on) => { await adapter.act(async () => { adapter.showDiscogsNotice(on); await flush() }) },
         openLogin: async () => { await adapter.act(async () => { adapter.openLogin(); await flush() }) },
-        restart: (path) => { adapter.stop(); document.body.innerHTML = adapter.skeleton(); window.history.replaceState({}, '', path); adapter.start() }
+        restart: async (path) => { adapter.stop(); document.body.innerHTML = adapter.skeleton(); window.history.replaceState({}, '', path); adapter.start(); await settle() }
     }
     return { h, scenario }
 }

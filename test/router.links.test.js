@@ -5,10 +5,13 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-vi.mock('../public/js/components/Icons.js', () => ({ getIcon: () => '' }))
+vi.mock('../public/js/services/auth/signIn.js', async () => ({ authService: (await import('./support/shellScenarios.js')).stand.login }))
+vi.mock('../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('./support/shellScenarios.js')).stand.spotify }))
+vi.mock('../public/js/components/Toast.js', async () => ({ default: (await import('./support/shellScenarios.js')).stand.toast }))
+vi.mock('../public/js/services/DialogService.js', async () => ({ dialogService: (await import('./support/shellScenarios.js')).stand.dialog }))
 
 import { Router } from '../public/js/router.js'
-import { SeriesDropdown } from '../public/js/components/navigation/SeriesDropdown.js'
+import { startOn } from './support/renderShell'
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 10))
 const address = () => window.location.pathname + window.location.search
@@ -53,13 +56,12 @@ describe('Router: links (F63)', () => {
     })
 
     it('the "Soon" items of the Music Series menu do not navigate; "By Album" does', async () => {
-        const dropdown = new SeriesDropdown({ currentPath: '/home' })
-        holder.innerHTML = dropdown.render()
-        dropdown.attachListeners()
-        const menu = holder.querySelector('#seriesDropdownMenu')
+        // the menu of series of the top bar, in React (F83 wave 3), on the page next to the router: its links are the router's to follow
+        const shell = await startOn('/home')
+        const menu = document.querySelector('#seriesDropdownMenu')
         const soon = [...menu.querySelectorAll('[aria-disabled="true"]')]
 
-        expect(soon.map(item => item.textContent.replace(/\s+/g, ' ').trim())).toEqual(['By Artist Soon', 'By Genre Soon', 'By Track Soon'])
+        expect(soon.map(item => [...item.querySelectorAll('span')].map(span => span.textContent).join(' '))).toEqual(['By Artist Soon', 'By Genre Soon', 'By Track Soon'])
         expect(menu.querySelector('a[href="/artists"], a[href="/genres"], a[href="/tracks"]')).toBeNull()
         for (const item of soon) {
             item.click()
@@ -70,6 +72,6 @@ describe('Router: links (F63)', () => {
         menu.querySelector('a[href="/albums"]').click()
         await settle()
         expect(address()).toBe('/albums')
-        document.removeEventListener('click', dropdown.handleOutsideClick)
+        shell.stop()
     })
 })

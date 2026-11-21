@@ -10,7 +10,7 @@ import { useScreenTitle } from '../../../public/js/react-bridge/useScreenTitle'
 import { navigate } from '../../../public/js/react-bridge/navigation'
 import { bridgeListenerCount } from '../../../public/js/react-bridge/listeners'
 import { router } from '../../../public/js/router.js'
-import * as phoneShell from '../../../public/js/components/navigation/PhoneShell.js'
+import * as screenName from '../../../public/js/stores/screenName.js'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
@@ -71,7 +71,7 @@ describe('usePhone', () => {
 
 describe('useScreenTitle', () => {
     it('names the screen in the top bar of the phone, and sets the tab title through the one place for it', async () => {
-        const named = vi.spyOn(phoneShell, 'nameThisScreen').mockImplementation(() => {})
+        const named = vi.spyOn(screenName, 'nameThisScreen').mockImplementation(() => {})
         function Screen() { useScreenTitle({ name: 'Series', tab: 'MJRP The Album Blender - Playlist Generator' }); return null }
 
         await act(async () => { root.render(<Screen />) })
@@ -81,7 +81,7 @@ describe('useScreenTitle', () => {
     })
 
     it('a screen with no name leaves the bar and the tab as the router left them', async () => {
-        const named = vi.spyOn(phoneShell, 'nameThisScreen').mockImplementation(() => {})
+        const named = vi.spyOn(screenName, 'nameThisScreen').mockImplementation(() => {})
         document.title = 'kept'
         function Screen() { useScreenTitle({}); return null }
 

@@ -57,7 +57,7 @@ export async function renderScreen<P extends object>(Screen: ComponentType<P & S
 }
 
 /** Counts the listeners added to and removed from `window` while `work` runs; what is left is what leaked. */
-async function windowListenersLeftBy(work: () => Promise<void>): Promise<number> {
+export async function windowListenersLeftBy(work: () => Promise<void>): Promise<number> {
     const live = new Set<string>()
     const ids = new WeakMap<object, number>()
     let next = 0
