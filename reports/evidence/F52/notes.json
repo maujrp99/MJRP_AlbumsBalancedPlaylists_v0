@@ -1,0 +1,27 @@
+{
+ "ratings-failed-1280": {
+  "before": {
+   "text": "The ratings source did not answer.Try again",
+   "button": "Try again",
+   "width": 1054,
+   "right": 1167,
+   "innerWidth": 1280,
+   "scrollWidth": 1280,
+   "otherNotice": false
+  },
+  "noticeStillThereAfterTryAgain": false
+ },
+ "ratings-failed-393": {
+  "before": {
+   "text": "The ratings source did not answer.Try again",
+   "button": "Try again",
+   "width": 361,
+   "right": 377,
+   "innerWidth": 393,
+   "scrollWidth": 393,
+   "otherNotice": false
+  },
+  "noticeStillThereAfterTryAgain": false
+ },
+ "_console": []
+}

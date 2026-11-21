@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:46] session — prova no navegador da nota e da popularidade que falharam na janela do álbum (UAT-244, UAT-245)
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Capturas a 1280 e 393 em `reports/evidence/F52/ratings-failed-*.png` e `reports/evidence/F69/popularity-failed-*.png`, com a janela real do álbum, o CSS real e o fixture da reconferência; a carga é um substituto no roteiro (`reports/evidence/F52/harness/`, `shoot.mjs`). Nada passa da borda; «Try again» pede a fonte e o aviso some. O aviso usa o azul que o aviso da popularidade já tinha (a janela de ranking fora da paleta é a UAT-250); não inventei cor.
+
 ## [2026-11-21 13:44] session — a janela do álbum mostra a nota e a popularidade que falharam, com «Try again» (UAT-244, UAT-245)
 **Branch:** wip/failed-sources-are-shown-2026-11-21
 A tela de séries dá à janela do álbum `sources` (ler, pedir, observar a carga): a nota (`enrichment.acclaim`) em «failed» mostra «The ratings source did not answer.» e a popularidade em «failed» mostra o aviso que já existia («Spotify did not answer.»), ambos com «Try again» via `albumLoadService.refreshSource`; a janela se redesenha quando a carga muda. Reuso do componente e das cores do aviso da popularidade, sem padrão novo. Não mudei o status das linhas no uat.md: o fecho é do integrador/MJRP.
