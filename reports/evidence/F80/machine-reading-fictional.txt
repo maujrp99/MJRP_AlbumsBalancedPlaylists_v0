@@ -1,0 +1,22 @@
+TITLE: The Album Blender — for people who listen to whole albums
+DESCRIPTION: The Album Blender is a web app for people who listen to whole albums: gather albums into series, rank every track, blend them into balanced playlists, and keep count of the records you own.
+JSON-LD: {"@context":"https://schema.org","@type":"WebApplication","name":"The Album Blender","url":"https://mjrp-playlist-generator.web.app/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","description":"A web app for people who listen to whole albums: gather albums into series, rank every track, blend them into balanced playlists, and keep count of the records you own."}
+
+Skip to content Sign in Open the app Side A · 1 — The Blender FLIP Open the app Pause motion For whole-album listeners Dig through the albums you love. Keep every track. The Album Blender is a web app for people who listen to whole albums. Gather albums into series, rank every track, and blend them into playlists that keep every record in the mix — then keep count of the ones on your shelf. Open the app Sign in Side A · 2 — Series Gather the albums that belong together. An artist's run, a decade, a mood: a series is a shelf of whole albums you choose. Every blend starts there. Side A · 3 — Ranking Rank every track, not just the singles. Order each album's tracks by how often they are played, by published rankings where the app has them, or by your own ear. The deep cuts get a place in line. Illustrative · fictional album Copper Year 1 Low Sun Overture 2 Pier at Dusk 3 Second Side Waltz 4 The Long Player Bar length = the track's place in the ranking you choose. Example data, not real scores. Side A · 4 — Blend Blend the series into one playlist. Pick a recipe and the Blender draws tracks from every album in the series, so no record drowns out the rest. You choose how long it runs and what leads. Side A · 5 — Your shelf Keep count of the records you own. Mark the albums on your shelf, see an estimate of what the collection is worth, and what the missing ones would cost. End of Side A Flip the record. Side B is the why, and the way in. Side B · 1 — Why whole albums Shuffle keeps the hits and loses the record. The Blender starts from the record. An album has an order: an opening, a turn, a closer. Ranking brings the deep cuts back; blending keeps every playlist rooted in albums you chose, whole. Side B · 2 — Start Drop the needle on your first series. Open the app and start a series with one album you love. Sign in to keep your series, rankings and shelf with you. Open the app Sign in Fictional albums · original art Copper Year North Atlas · fictional album Fictional album · original art The Album Blender Open the app Sign in The albums on this page are fictional, with original artwork made for this page.
+
+IMAGES (alt):
+ - The Album Blender
+ - Copper Year by North Atlas, a fictional album with original artwork
+ - Night Ferry by Ilse & the Harbour, a fictional album with original artwork
+ - Lantern Hymnal by The Hollow Lanterns, a fictional album with original artwork
+ - Glass Orchard by Velvet Meridian, a fictional album with original artwork
+ - Static Bloom by Juno Reyes, a fictional album with original artwork
+ - Ember Suite by Kofi Arden Trio, a fictional album with original artwork
+ - Second Side by The Long Players, a fictional album with original artwork
+ - Slow Burn Atlas by Mara Quell, a fictional album with original artwork
+ - Lamplit Pier by Odile Vance, a fictional album with original artwork
+ - Paper Satellites by The Quiet Cartographers, a fictional album with original artwork
+ - Harbour Static by Nadia Morrow, a fictional album with original artwork
+ - Low Tide Choir by Saltmarsh, a fictional album with original artwork
+ - Signal Fires by Amara Lund, a fictional album with original artwork
+ - Midnight Orchard by The Fennel Brothers, a fictional album with original artwork

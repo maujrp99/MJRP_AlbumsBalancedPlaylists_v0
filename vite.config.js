@@ -1,12 +1,22 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import tailwindcss from 'tailwindcss'
 import tailwindConfig from './tailwind.config.js'
+import { entryPage } from './scripts/entryPage.mjs'
 
 export default defineConfig({
     root: 'public',
     envDir: '../', // Fix: Vite looks in 'root' by default, but our .env is one level up
 
+    // The entry page (F80): public/splash.html, served at the root to whoever has not signed in; in
+    // dist/ it is index.html and the app is app.html (scripts/entryPage.mjs, firebase.json).
+    // VITE_SPLASH_COVERS=real puts the real covers on it; anything else, the fictional ones.
+    plugins: [
+        entryPage({
+            root: path.resolve(__dirname, 'public'),
+            coverSet: process.env.VITE_SPLASH_COVERS ?? loadEnv(process.env.NODE_ENV || 'development', __dirname, 'VITE_').VITE_SPLASH_COVERS
+        })
+    ],
 
     build: {
         outDir: '../dist',
@@ -14,7 +24,8 @@ export default defineConfig({
         sourcemap: false, // the published site does not hand out its source (F59)
         rollupOptions: {
             input: {
-                main: path.resolve(__dirname, 'public/index.html')
+                main: path.resolve(__dirname, 'public/index.html'),
+                splash: path.resolve(__dirname, 'public/splash.html')
             }
         }
     },

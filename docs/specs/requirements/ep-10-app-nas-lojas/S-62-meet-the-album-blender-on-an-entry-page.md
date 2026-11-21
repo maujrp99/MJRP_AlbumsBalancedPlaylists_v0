@@ -3,7 +3,7 @@ id: S-62
 aliases: [S-62]
 type: requirement
 format: story
-status: In progress
+status: Done
 epic: "[[prd#^EP-10]]"
 points_to: ["[[info-arch#^splash-v2-hero]]", "[[info-arch#^splash-v2-track]]", "[[info-arch#^splash-v2-flip]]", "[[info-arch#^splash-v2-side-b]]", "[[info-arch#^splash-v2-css-crate]]", "[[info-arch#^splash-v2-reduced-motion]]", "[[info-arch#^splash-v2-motion-rest]]", "[[info-arch#^splash-v2-no-js]]", "[[info-arch#^splash-v2-phone]]", "[[behavior#^entry-root-signed-out]]", "[[behavior#^entry-root-signed-in]]", "[[behavior#^entry-app-addresses]]", "[[behavior#^entry-sign-in-link]]", "[[behavior#^entry-machine-reading]]", "[[behavior#^entry-covers-switch]]"]
 planned_for: "[[ROADMAP#^REL-41]]"

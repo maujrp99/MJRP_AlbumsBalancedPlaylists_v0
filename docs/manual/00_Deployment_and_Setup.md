@@ -196,6 +196,16 @@ O site mede o que as pessoas fazem (a lista está em `shared/usageEvents.js`; o 
 
 **Um host próprio** (proxy reverso do PostHog) exige acrescentar o host ao `connect-src` do CSP em `public/index.html`; hoje só as duas nuvens estão liberadas.
 
+### 2.4d A página de entrada e as capas dela (F80)
+
+A raiz do site (`/`) é a página de entrada para quem não entrou com conta; quem entrou vai direto a `/home`, e todo outro endereço é o app. No `dist/`, a página é `index.html` e o app é `app.html` (o `deploy-site.sh` confere os dois; o `firebase.json` reescreve tudo, menos `/api/**` e os arquivos, para `/app.html`).
+
+**As capas.** O build escolhe o conjunto pela variável `VITE_SPLASH_COVERS` do `.env`:
+- sem ela (o padrão), ou com qualquer valor que não seja `real`: as **capas fictícias** (arte original, «Fictional albums · original art»);
+- `VITE_SPLASH_COVERS=real`: as **capas reais** do protótipo aprovado, vindas do CDN da Apple, com crédito, «Listen on Apple Music» e a linha de marcas da Apple. **Só com a decisão do MJRP** sobre os termos da Apple (DPLA 3.3.6(D), App Review 4.5.2(ii)).
+
+Para ver a página localmente: `npx vite` e abrir `http://127.0.0.1:5010/` (sem conta) ou `http://127.0.0.1:5010/?entry` (com conta, a página aparece mesmo assim). Para ver o build como em produção: `npx vite build` e `npx vite preview`.
+
 ### 2.5 Automação do GitHub
 
 `.github/workflows/ci.yml` roda a verificação de código (`npx eslint . --quiet`) e depois
@@ -317,6 +327,7 @@ VITE_SPOTIFY_CLIENT_ID=...         # Client ID do app no painel do Spotify (valo
 VITE_POSTHOG_KEY=...               # Optional: a chave do projeto do PostHog (valor público); sem ela, nada é medido
 VITE_POSTHOG_HOST=...              # Optional: o host de ingestão; vazio = https://eu.i.posthog.com (EUA: https://us.i.posthog.com)
 VITE_USAGE_MEASUREMENT=off         # Optional: constrói um site que não mede nada, mesmo com a chave
+VITE_SPLASH_COVERS=real            # Optional: as capas reais na página de entrada (F80); vazio = as fictícias. Só com a palavra do MJRP
 ```
 Sem `VITE_SPOTIFY_CLIENT_ID` a conexão com o Spotify quebra, no ambiente local e no build que vai para produção. As três da medição estão na seção 2.4c.
 
