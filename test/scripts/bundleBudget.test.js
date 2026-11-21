@@ -163,10 +163,21 @@ describe('the build and the publication use the budget', () => {
         expect(manualChunks('/repo/public/js/react-bridge/ReactView.tsx')).toBeUndefined()
     })
 
-    it('scripts/deploy-site.sh refuses to publish a build over the budget, and the budget file has the ceilings', () => {
-        const script = fs.readFileSync('scripts/deploy-site.sh', 'utf8')
-        expect(script).toMatch(/node scripts\/bundle-budget\.mjs "\$dist"/)
-        expect(script).toMatch(/over the weight budget/)
+    it('the budget check lives in the shared build (scripts/lib/site-build.sh), so the production AND the preview publication run it', () => {
+        const shared = fs.readFileSync('scripts/lib/site-build.sh', 'utf8')
+        expect(shared).toMatch(/node scripts\/bundle-budget\.mjs "\$dist"/)
+        expect(shared).toMatch(/over the weight budget/)
+        for (const script of ['scripts/deploy-site.sh', 'scripts/deploy-preview.sh']) {
+            const text = fs.readFileSync(script, 'utf8')
+            expect(text, script).toMatch(/^verify_build$/m) // each one calls the shared check...
+            expect(text, script).not.toMatch(/bundle-budget/) // ...and keeps none of its own: one place
+        }
+        // the types go with the lint, also shared
+        expect(fs.readFileSync('scripts/lib/deploy-common.sh', 'utf8')).toMatch(/npm run typecheck --silent && npx eslint \. --quiet/)
+        for (const script of ['scripts/deploy-site.sh', 'scripts/deploy-preview.sh']) expect(fs.readFileSync(script, 'utf8'), script).toMatch(/^run_lint$/m)
+    })
+
+    it('the budget file has the ceilings', () => {
         const budget = JSON.parse(fs.readFileSync('scripts/bundle-budget.json', 'utf8'))
         for (const key of ['main', 'mainToday', 'reactVendor', 'screen', 'background']) expect(budget[key], key).toBeGreaterThan(0)
         expect(typeof budget.reactAtStart).toBe('boolean')

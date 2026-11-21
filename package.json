@@ -24,6 +24,7 @@
         "golden-core:hermes": "node scripts/golden-core.mjs --hermes",
         "deploy:site": "./scripts/deploy-site.sh",
         "deploy:site:dry-run": "./scripts/deploy-site.sh --dry-run",
+        "deploy:preview": "./scripts/deploy-preview.sh",
         "deploy:server": "./scripts/deploy-server.sh",
         "deploy:server:dry-run": "./scripts/deploy-server.sh --dry-run"
     },
