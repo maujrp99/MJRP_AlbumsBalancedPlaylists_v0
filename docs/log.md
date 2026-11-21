@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:33] session — F88: prova no navegador (1280 e 393, sem conta e com a conta de teste), documentação e tarefas
+**Branch:** feat/f88-top-menu-build
+Evidência em reports/evidence/F88/ (shoot.mjs, compose.mjs, measures.json, capturas): a barra da home e a do app a 1280 px têm a mesma altura (72), a mesma marca (181 x 30 px a 16 px da borda) e a mesma posição da barra (209,2 px) e da fila de barras, sem e com conta; o item atual aceso nas sete rotas nos dois tamanhos; o painel e a folha do celular abertos com Spotify e Apple Music; sem rolagem para o lado; sem erro no console além dos esperados da bancada (login anônimo e Firestore bloqueados). behavior.md, info-arch.md e design-system.md em dia, o que espera aceite do MJRP marcado «pendente»; tasks.md: TASK-00 a 03 marcadas, TASK-04 (produção junto com a home) aberta.
+
 ## [2026-11-21 17:33] session — F88: ajustes do menu depois da prova no navegador (Sign In de 44 px, contraste do painel, teste de segurança do painel)
 **Branch:** feat/f88-top-menu-build
 Da prova a 1280 e 393: o botão «Sign In» da barra do computador passa a 44 px (era 36, o botão pequeno do app), o «Signed in as» do painel sobe de 50 % para 70 % de branco (contraste AA), e o teste de segurança do texto de fora troca o menu em gaveta (que saiu) pelo painel. A barra do computador ficou à esquerda, depois da marca, também na home (margin do .ms-desk), para a posição não depender do lado da conta.

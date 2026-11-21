@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: standard
 solution_type: feature
 imports: ["[[S-70-move-from-the-home-to-the-app-without-a-jolt]]"]

@@ -621,6 +621,15 @@ O que o menu faz hoje (`TopNav.js`, `navigation/PhoneShell.js`, `PhoneMenu.js`, 
 | MENU-10 | Idioma: não existe no app | PT · EN na barra do computador e no menu do celular (como a home; a escolha é da F81) | PT · EN na barra do computador e no painel do celular | agir | F81 |
 | MENU-11 | Pular para o conteúdo (não existe) | primeiro foco da página | igual ao Elevar | agir (teclado) | S-70 |
 
+### Construído (F88) · o que a construção escolheu e onde difere do protótipo
+
+Decidido pelo MJRP em 2026-11-21 («Elevar no cel e transformar na web»; Apple Music no menu: «2.sim»): **computador = Transformar, celular = Elevar.** Construído no código de hoje, sem React (a migração é outra linha). Pendente de aceite do MJRP.
+
+- **MENU-01, MENU-02, MENU-03, MENU-04, MENU-05, MENU-06, MENU-07, MENU-08, MENU-09** construídos como descritos acima, no nível escolhido para cada tamanho; MENU-06 (Apple Music) entra no painel do computador e na folha do celular.
+- **MENU-10 (idioma) e MENU-11 (pular para o conteúdo): não construídos.** O app é só em inglês e não há mecanismo de idioma (a F81 trará); os textos do menu estão num lugar só (`components/navigation/menuText.js`, os nomes dos destinos em `phoneTabs.js`) para a F81 achá-los. O «pular para o conteúdo» não existe hoje no app; fica para a verificação de acessibilidade. **Pendente.**
+- **Mudou em relação ao protótipo:** a barra tem 72 px e fica **à esquerda, logo depois da marca**, como a da home (a da home passou a ficar também à esquerda: antes centrava entre a marca e a conta e andava até 92 px entre «sem conta» e «com conta»); a linha de baixo de Álbuns mostra os três tipos que vêm (By Artist, By Genre, By Track, «Soon») em vez de um só «outros tipos»; o painel junta «Clear album cache» também no computador (o rodapé continua).
+- **Computador a partir de 768 px (o `md` do projeto); a home troca para a barra de baixo até 899 px.** Entre 768 e 899 px a home mostra a barra no rodapé e o app a barra do topo: a diferença fica até a home e o app dividirem o mesmo ponto. **Pendente.**
+
 ### Estados · o menu do topo (F88)
 
 - **Sem conta.** Elevar: «Entrar» na barra (computador) ou no menu (celular), a pílula «Conectar» do Spotify. Transformar: «Entrar» e o botão de conexões no computador; no celular, o botão da pessoa abre o painel com «Entrar». ^f88-menu-signed-out
