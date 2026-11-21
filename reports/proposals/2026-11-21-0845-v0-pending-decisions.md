@@ -69,6 +69,7 @@ Base: forte — reports/evidence/F78/2026-11-20-first-simulator-run.md
 - c) Pausar o app até o CMS e os idiomas saírem
 → respondida em 2026-11-21 09:09
   - a
+→ aplicada em 2026-11-21 09:10: a rodada de desenho das telas do app é o próximo passo da F78, numa sessão de desenho; nenhum código novo do app antes dela
 
 ### D-07 · As contas da Apple e do Expo
 Pergunta: Quando você abre a conta de desenvolvedor da Apple e a conta do Expo?
@@ -78,3 +79,4 @@ Base: média — o preço da Apple é o público; o momento é opinião
 - b) Agora, para o TestFlight já ficar pronto
 → respondida em 2026-11-21 09:09
   - (outra) Tenho conta de dev da apple
+→ aplicada em 2026-11-21 09:10: resposta dele: «Tenho conta de dev da apple» — a conta da Apple saiu das pendências; a do Expo fica para quando houver o que testar no aparelho
