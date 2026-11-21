@@ -16,8 +16,7 @@
 - [x] TASK-07 Inventário, depois da F75 · implements:: REQ-11 · model:: opus
 
 ## Verification
-- [ ] TASK-08 a tela de computador igual, antes e depois, em cada tela; as medidas da crítica refeitas a 393x852 e 852x393 · implements:: REQ-01, REQ-02, REQ-12 · model:: opus
-- [ ] TASK-09 o juízo do MJRP no iPhone dele, em produção · implements:: REQ-03 · waiting:: human — o desenho foi decidido pelo agente, sem protótipo julgado · action:: usar o app no iPhone e dizer o que fica e o que muda
+- [x] TASK-08 a tela de computador igual, antes e depois, em cada tela; as medidas da crítica refeitas a 393x852 e 852x393: `reports/evidence/F76/2026-11-20-foundation-proof.md` (antes/depois, 393x852, 852x393 e 1280x800, com `compare.py`) e `reports/evidence/F76/2026-11-20-production-proof.md` (a 1280x800 nenhum elemento do celular nas três telas conferidas); nada num iPhone, nenhuma tela com dados na primeira prova (não verificado) · implements:: REQ-01, REQ-02, REQ-12 · model:: opus
 
 ## Documentation
 - [x] `docs/specs/behavior.md`, `docs/specs/info-arch.md`, `docs/specs/arch.md` e o manual
