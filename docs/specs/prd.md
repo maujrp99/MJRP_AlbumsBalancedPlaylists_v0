@@ -117,6 +117,8 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
 ![[S-67-reach-the-entry-page-from-the-logo]]
 
+![[S-70-move-from-the-home-to-the-app-without-a-jolt]]
+
 
 
 
