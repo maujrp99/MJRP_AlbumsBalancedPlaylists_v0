@@ -19,6 +19,7 @@
 - [x] TASK-09 (UAT-240, UAT-241) o texto todo num dicionário só, em português e inglês (`public/splash/copy.js`), escrito na página pelo plugin `entryPage` (`fillCopy`) e trocado no navegador pela chave PT · EN (`public/splash/lang.js`: idioma do navegador, escolha no `localStorage`); testes `test/splash/copy.test.js`, `lang.test.js` · implements:: REQ-01 · model:: sonnet · rounds:: 1
 - [x] TASK-10 (UAT-240) a barra é o menu: a barra contínua com as cinco paradas e uma história por item, a flip como faixa curta, o ícone de pausa, o ponto de ambiente de cada história (`public/splash/menu.js`, `public/splash.html`, `splash.js`); teste `test/splash/menu.test.js` · implements:: REQ-01, REQ-04 · model:: sonnet · rounds:: 1
 - [x] TASK-11 (UAT-241) com conta: o menu e só o «Inicie»; um item do menu vai à tela do app (`hasAccount` de `gate.js` em `splash.js`, `applyAccount` em `menu.js`); testes em `test/splash/menu.test.js` e `splash.test.js` · implements:: REQ-03 · model:: sonnet · rounds:: 1
+- [x] TASK-12 (UAT-240) a v4, o ritmo da página: uma vinheta por história (`public/splash/ambient.js` e o CSS da `public/splash.html`), as alturas da tabela de entrega, a abertura do celular só com o título e a linha; teste `test/splash/ambient.test.js` · implements:: REQ-01, REQ-04 · model:: sonnet · rounds:: 1
 
 ## Verification
 - [x] TASK-07 suíte, lint e build verdes; o roteamento do Firebase conferido no emulador de Hosting (raiz = página, `/home` e `/albums/<id>` = app) · implements:: REQ-02, REQ-05 · model:: opus · rounds:: 2
