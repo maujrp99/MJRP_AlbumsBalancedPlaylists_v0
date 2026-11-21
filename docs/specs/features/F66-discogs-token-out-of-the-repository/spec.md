@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: fast
 solution_type: fix
 imports: []
@@ -30,13 +30,15 @@ O MJRP, em 2026-11-19: «Fatia D deixe pra depois, pode até abrir uma feat nova
 ## Requirements
 <!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.
      Functional and non-functional (performance, security, accessibility) alike are REQ-xx. -->
-- [REQ-01] «a escrever: o que o sistema faz — O QUÊ, nunca COMO» · fixes UAT-17
-  verified_by:: «a escrever: teste ou [[uat#^UAT-01]] — obrigatório antes do Done»
+- [REQ-01] Nenhum arquivo versionado do repositório traz um token ou outra credencial escrita. · fixes UAT-17
+  verified_by:: `test/security/noSecretsInRepo.test.js`
+- [REQ-02] O token do Discogs que esteve escrito no repositório não vale mais no Discogs, e o token em uso fica fora do repositório. · fixes UAT-17
+  verified_by:: [[uat#^UAT-17]]
 
 ## Observable States
 <!-- What the imported nodes point_to: the screen state in info-arch.md (the prototype the human judged —
      PRINCIPLES.md §I.13) or the behavior state in behavior.md. N/A only if the nodes point to none. -->
-«a escrever: o estado de tela do info-arch.md ou de comportamento do behavior.md que os nós apontam — ou N/A se não apontam nenhum»
+N/A: não importa nenhum nó de requisito; conserta a issue UAT-17.
 
 **Prototype**: none — MJRP, 2026-11-20 00:10: «eu dispenso prototipo por que estávamos arrumando e consertando problemas passados com pequenas melhorias e nao trabalhando em grande features nova, portanto por ora os prototipos estao dispensados.»
 
