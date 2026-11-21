@@ -7,6 +7,7 @@
 > Página de entrada (F80), rodada 3 · v2 em português, 2026-11-21: design/inception/splash-menu-bar-v2.html («A barra é o menu», a direção que o MJRP escolheu para esta rodada: «a barra é o menu», «mas pode falar pra ele fazer só para a opcao recomendada»); todo o texto em português com chave PT/EN, o ranking parcial com um disco real, a virada como faixa curta; nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v2.mjs; mesmo comparador
 > Página de entrada (F80), rodada 3 · v3, 2026-11-21: design/inception/splash-menu-bar-v3.html (o texto em português revisado depois da leitura do MJRP; a abertura é dele; o visual é o da v2); nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v3.mjs; mesmo comparador
 > Página de entrada (F80), rodada 3 · v4, 2026-11-21: design/inception/splash-menu-bar-v4.html (o ritmo da rolagem: histórias mais curtas e uma vinheta viva por história; a abertura com título curto e linha menor); nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v4.mjs; mesmo comparador
+> O menu do topo do app (F88), rodada 1 de desenho, 2026-11-21: dois níveis, design/inception/f88-top-menu-elevar-v1.html e design/inception/f88-top-menu-transformar-v1.html, com o menu de hoje como «Referência»; nenhum aprovado; comparador https://claude.ai/artifact/AtUiGYy1YAL9iLd58yJ3aF (cópia local design/proposals/f88-top-menu/comparator.html; gerador design/proposals/f88-top-menu/build/)
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -595,4 +596,52 @@ v4, o ritmo (`design/inception/splash-menu-bar-v4.html`; wireframes `design/wire
 |---|---|---|---|
 | SPL-29 | A linha menor sob o título: «Seus álbuns do momento, numa playlist balanceada.» | informar | o MJRP, 2026-11-21 (a abertura) |
 | SPL-30 | A vinheta da história: um painel decorativo, sem texto, que diz a história (Inicie, a busca; Álbuns, a faixa que sobe; Blend, três discos numa lista; Playlists, as salvas e a exportação; Inventário, a prateleira); aparece e some com a rolagem | encantar, explicar | o MJRP, 2026-11-21 («o espçamento aqui tem um vázio muito grande…») |
+
+## O menu do topo (F88) · rodada 1 de desenho
+
+Fonte: `design/inception/f88-top-menu-elevar-v1.html` e `design/inception/f88-top-menu-transformar-v1.html` (2026-11-21; nenhum aprovado) · comparador `design/proposals/f88-top-menu/comparator.html` · proposta `design/proposals/f88-top-menu/proposal.md` · capturas da rodada em `reports/evidence/F88/round-1/`. O menu é desenhado sobre as telas reais do app (capturas de 2026-11-21, `reports/evidence/visual-recheck-batch/2026-11-21/`); o que muda é só a moldura.
+
+**O eixo:** a ambição (primeira rodada de redesenho de uma peça que o MJRP já viu). Dois níveis, como ele pediu: **Elevar** (o menu de hoje com a cara da barra da home) e **Transformar** (a barra da home continua no app). O Consolidar não entrou: o MJRP pediu «o redesign completo do top nave», e apertar o menu de hoje não muda a passagem da home para o app.
+
+### Inventário do protótipo · o menu do topo (F88)
+
+O que o menu faz hoje (`TopNav.js`, `navigation/PhoneShell.js`, `PhoneMenu.js`, `AuthNav.js`, `SeriesDropdown.js`, `phoneTabs.js`, `SpotifyConnectButton.js`, `Footer.js`) e onde fica em cada nível. Nada sai.
+
+| ID | Hoje | Elevar | Transformar | Função do produto | Destino |
+|---|---|---|---|---|---|
+| MENU-01 | Logotipo (imagem MJRP e «The Album Blender») leva a `/home` | a marca em fogo da home, leva a `/home` | igual ao Elevar | agir (voltar à home) | S-70 |
+| MENU-02 | Start · Music Series ▾ · The Blending Menu · Playlists · Inventory (computador); Start · Albums · Blend · Playlists · Inventory (barra de baixo do celular) | Inicie · Álbuns ▾ · Blend · Playlists · Inventário nos dois tamanhos; o atual em `#fb923c` com o seu trecho de barras aceso | os cinco na barra-menu da home (a mesma fila de barras); o fogo acende só o trecho de onde você está; ⟲ aceso no lado B | agir (ir), informar (onde está) | S-70 |
+| MENU-03 | «Music Series»: By Album; By Artist, By Genre, By Track («Soon»); Playlists (séries de playlists) | «Álbuns ▾» abre a mesma lista | computador: a linha de baixo em Álbuns (Séries de álbuns · «Por artista, gênero ou faixa · em breve»); celular: o «em breve» no painel da conta; séries de playlists na linha de Playlists | agir | S-70 |
+| MENU-04 | «New playlists» (menu do celular) | no menu do celular, como hoje | a linha de Playlists: Salvas · Novas · Séries de playlists | agir | S-70 |
+| MENU-05 | Spotify: «Connect» / «Connected» com o nome e «×» para desconectar (com pergunta) | a pílula verde no estilo da home: «Conectar» / «Spotify ✓» e «×» de 44 px | em «Conexões», no painel da conta, com o estado em texto; ponto verde no botão da conta | agir | S-70 |
+| MENU-06 | Apple Music: não está no menu; é pedida na hora de exportar | igual a hoje | em «Conexões», ao lado do Spotify — **novo**, pergunta 2 ao MJRP | agir | S-70 (a decidir) |
+| MENU-07 | Conta: «Sign In» / inicial do nome, «Signed in as», «Sign Out» | «Entrar» (botão fantasma da home) / avatar com o nome e o menu «Entrou como» · «Sair» | computador: «Entrar» na barra e o botão de conexões; com conta, o avatar abre o painel; celular: um botão só, que abre o painel | agir | S-70 |
+| MENU-08 | «Clear album cache» (rodapé no computador; menu do celular, com pergunta) | igual a hoje | no painel da conta nos dois tamanhos (o rodapé continua) | agir | S-70 |
+| MENU-09 | Nome da tela na barra do topo do celular | mantido | mantido | informar (onde está) | S-70 |
+| MENU-10 | Idioma: não existe no app | PT · EN na barra do computador e no menu do celular (como a home; a escolha é da F81) | PT · EN na barra do computador e no painel do celular | agir | F81 |
+| MENU-11 | Pular para o conteúdo (não existe) | primeiro foco da página | igual ao Elevar | agir (teclado) | S-70 |
+
+### Estados · o menu do topo (F88)
+
+- **Sem conta.** Elevar: «Entrar» na barra (computador) ou no menu (celular), a pílula «Conectar» do Spotify. Transformar: «Entrar» e o botão de conexões no computador; no celular, o botão da pessoa abre o painel com «Entrar». ^f88-menu-signed-out
+- **Com conta.** O avatar com a inicial no lugar de «Entrar»; no Transformar, pontos verde (Spotify) e rosa (Apple Music) no avatar quando conectados. ^f88-menu-signed-in
+- **Item atual.** Em cada uma das cinco telas o item fica `#fb923c` com `aria-current="page"` e o seu trecho de barras em fogo; no Transformar, nas telas do lado B (Playlists, Inventário) o ⟲ também acende. ^f88-menu-current
+- **Linha de baixo (Transformar).** Em Álbuns (só computador) e em Playlists (Salvas · Novas · Séries de playlists), 44 px. ^f88-menu-subrow
+- **Menu do celular aberto.** Elevar: a folha «Menu» de hoje, no estilo novo. Transformar: a folha «Conta e conexões» (conta ou «Entrar», Spotify, Apple Music, idioma, os tipos de série em breve, limpar o cache, sair). Fecha por Esc, pelo botão, tocando fora; o foco fica preso na folha e volta ao botão. ^f88-menu-phone-open
+- **Painel da conta aberto (computador).** Elevar: «Entrou como» e «Sair»; «Álbuns ▾» abre a lista de séries. Transformar: o painel de conta e conexões sob o avatar. ^f88-menu-desktop-open
+- **Spotify e Apple Music.** Conectado: «Conectado · <conta>» e «Desconectar»; não conectado: «Para exportar suas playlists» e «Conectar». No Elevar, só o Spotify, como hoje. ^f88-menu-connections
+- **Idioma.** PT: Inicie · Álbuns · Blend · Playlists · Inventário; EN: Start · Albums · Blend · Playlists · Inventory; nenhum rótulo quebra ou corta a 393 px. ^f88-menu-language
+- **Teclado.** Contorno âmbar de 3 px em todo foco; Enter e espaço ativam; o foco volta ao controle usado depois de conectar, limpar ou sair. ^f88-menu-keyboard
+- **Movimento.** As barras do item atual se mexem e param depois de 10 s sem interação (como a home); com movimento reduzido, nada se mexe. ^f88-menu-motion
+- **A passagem da home.** Clicar «Inicie» (com conta) ou «Abrir o app» (sem conta) na home leva a Inicie; com conta, cada item da barra da home leva à sua tela (como `public/splash/menu.js`): no Transformar a barra fica onde está e o trecho de Inicie acende; no Elevar a barra troca de forma; hoje, a página troca inteira. ^f88-menu-passage
+
+### Content Map · o menu do topo (F88)
+
+| Elemento | Português | English | Nota |
+|---|---|---|---|
+| Itens | Inicie · Álbuns · Blend · Playlists · Inventário | Start · Albums · Blend · Playlists · Inventory | os da home (F80 v4) e de `phoneTabs.js` |
+| Linha de Álbuns | Séries de álbuns · Por artista, gênero ou faixa · em breve | Album series · By artist, genre or track · soon | proposta do agente |
+| Linha de Playlists | Salvas · Novas · Séries de playlists | Saved · New · Playlist series | proposta do agente |
+| Painel | Conta e conexões · Entrou como · Conexões · Conectado · <conta> · Para exportar suas playlists · Conectar · Desconectar · Idioma · Limpar o cache dos álbuns · Sair | Account and connections · Signed in as · Connections · Connected · <account> · To export your playlists · Connect · Disconnect · Language · Clear album cache · Sign out | proposta do agente; texto final pela F81 |
+| Sem conta (painel do celular) | Entre para guardar suas séries em qualquer aparelho. · Entrar | Sign in to keep your series on every device. · Sign in | proposta do agente |
 
