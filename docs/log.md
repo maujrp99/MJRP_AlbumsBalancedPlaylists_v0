@@ -172,6 +172,24 @@ F60 (nada do que foi salvo se perde): o código está na `main` (merges `bcdd114
 **Branch:** claude/batch-close-merged-features
 Aviso: o ramo deste lote se chama `claude/f45-…` porque a trava de commits só aceita nome com número de feature; por isso o board mostra a F45 («a tela de álbuns carrega vários álbuns ao mesmo tempo») «em branch» enquanto o lote roda — não é trabalho novo dela. F56 (o blend e a edição de playlist pelo serviço de carga): o código está na `main` (merges `042da86`, `06fba84`). A tarefa «o MJRP diz Prototype: none e dá o ok visual» não era tarefa: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente já existe (`reports/audits/2026-11-19-F56-visual-parity-recheck.md`: passa, sem P0 nem P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`. Antes e depois do lote: `reports/audits/2026-11-21-mjrpalbumblender-v0-board-batch-close.md`.
 
+## [2026-11-21 11:32] session — save: F83, o fecho nomeia o ramo
+**Branch:** claude/f83-site-screens-in-react
+> Participantes: sessão de desenho aberta pelo orquestrador do V0 (Claude Code) · Branch: claude/f83-site-screens-in-react
+> Session: claude/f83-site-screens-in-react (sessão de página, no worktree `f83-site-screens-in-react-83ca31`)
+
+A conferência de fecho só reconhece a entrada que traz o ramo na linha dos participantes; as duas entradas anteriores não a tinham. Nenhum trabalho depois de `ba10b43`. O conteúdo do fecho está nas entradas de 10:32 e de 11:31 deste ramo.
+
+## [2026-11-21 11:32] session — save: F83, sessão de desenho fechada
+**Branch:** claude/f83-site-screens-in-react
+> Participantes: sessão de desenho aberta pelo orquestrador do V0 (Claude Code) · Branch: claude/f83-site-screens-in-react
+> Session: claude/f83-site-screens-in-react (sessão de página, no worktree `f83-site-screens-in-react-83ca31`)
+
+Fecho depois do último commit de trabalho (`ba10b43`). O conteúdo está nas duas entradas anteriores deste ramo: a de 10:32 (resumo, decisões do agente, próxima sessão, dados) e a de 11:31 (as decisões para o MJRP reescritas; o doctor fica com o orquestrador, na junção). Nada mudou depois delas.
+
+## [2026-11-21 11:31] session — save: F83, as decisões para o MJRP reescritas no jeito que ele pediu; o doctor fica com o orquestrador
+**Branch:** claude/f83-site-screens-in-react
+> Session: claude/f83-site-screens-in-react (sessão de página, no worktree `f83-site-screens-in-react-83ca31`). Fecha a sessão; a entrada de 10:32 continua valendo para o resumo, as decisões do agente, a próxima sessão e os dados. O que mudou depois dela: a seção «Decisões do MJRP» da proposta foi reescrita pela regra nova dele (uma pergunta por vez, o ganho e o custo de cada opção numa linha, a recomendação, sem sigla solta). O doctor não fecha este turno: por regra nova do orquestrador do V0 (fila da máquina com 17 trabalhos), as sessões do V0 não rodam mais o doctor nem a suíte inteira, e o trabalho desta sessão na fila foi retirado; a única execução que terminou saiu vermelha com 524 erros, com a saída cortada, sem que se saiba se algum é deste ramo — o orquestrador roda o doctor na junção. Conferido só no que este ramo mudou: `adr_header_check` (a ADR-0023 passa), `loop.py --check-tasks` (32 tarefas, 0 problemas), `sdd_shape_check`, os ganchos de commit e `session-check` (saiu 0).
+
 ## [2026-11-21 11:30] review — começou a reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236)
 **Branch:** fix/f80-uat-entry-page
 Um agente que não implementou julga a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md` (por ora `verdict: running`).
@@ -277,10 +295,54 @@ Fechamento. O ramo leva «Start» no menu e na aba, `/start` (com `/home` e `/ho
 Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador)
 Conserto de forma exigido pelo grafo de requisitos e pelo `session-check`: `waiting:: resource` com `action::` na TASK-04 (o integrador roda o build, a bateria e o doctor no trem de merge); o fechamento anterior passa a dizer `Session:` com o nome do ramo. Nada do código mudou.
 
+## [2026-11-21 10:32] session — save: F83, a proposta de arquitetura das telas em React com os idiomas, criticada, e a ADR-0023 em «Proposed»
+**Branch:** claude/f83-site-screens-in-react
+
+> Participantes: sessão de desenho aberta pelo orquestrador do V0 (Claude Code) · Branch: claude/f83-site-screens-in-react
+> Session: claude/f83-site-screens-in-react (sessão de página, no worktree `f83-site-screens-in-react-83ca31`)
+
+### Executive Summary
+Entrega de desenho, sem código de produto e sem tela migrada. A proposta guiada por risco (`design/proposals/f83-react-screens/architecture-proposal.md`) decide como as telas em React convivem com as antigas, o que fica, a camada do celular, os testes, o contrato dos idiomas com a F81, a ordem das telas e o build. Foi julgada por um agente separado (pode ir ao MJRP: 0 P0, 10 P1, 3 P2) e revista: a resposta a cada achado está na seção 17. A ADR-0023 está em «Proposed», à espera dele; spec, plano e tarefas da F83 saíram do esboço, com «Approved» pendente.
+
+### Decisions
+Nenhuma do MJRP nesta sessão. Decidido pelo agente, na proposta, revisável, tudo à espera da aceitação dele:
+- A tela em React é mais uma «view» do roteador da casa, no mesmo `#app`; o roteador só é revisto quando a última tela antiga sair.
+- Ficam como estão: controladores, stores (sem biblioteca de estado), serviços, modelos, repositórios, `shared/`, o CSS e a camada do celular; TypeScript só no código novo (`screens/`, `ui/`, `shell/`, `react-bridge/`).
+- Os textos num dicionário por idioma em JavaScript puro (`i18n/en`, `i18n/pt`), usado pelas telas antigas e novas; o conteúdo editável como par `{ en, pt }`; o app sem prefixo de idioma no endereço; a página de entrada com `/en/` e `/pt/`.
+- O país de acesso pelo Firebase Hosting (reescritas de i18n e um `geo.json`), **a conferir** num canal de prévia; a escolha da pessoa vale acima; o palpite do país nunca é gravado como escolha.
+- O português fica fechado em produção por uma chave (`OPEN_LOCALES`) até a cobertura que o MJRP escolher.
+- A ordem: base e canário; playlists guardadas; edição das playlists (a medição difícil e o ponto de revisão dele); a moldura; Start; séries e álbuns; inventário; Blend; fecho.
+
+### Next Session
+1. O orquestrador leva ao MJRP, pelo Control Center, as decisões D-1 a D-8 da proposta (o ritmo; as emendas da constituição; os endereços por idioma; onde a escolha de idioma fica na conta; o idioma quando o país não é sabido; a página de entrada em português; a ordem das telas; quando o português abre) e a aceitação da ADR-0023, que é o commit dele com o carimbo.
+2. Quando a medição (`wip/react-measurement-spike`) for entregue: trocar as marcas «prévia» e «a medir» da proposta pelos números dela.
+3. A sessão da F81 lê o contrato dos idiomas: a nota `f83-languages-contract-for-f81.md` na pasta de notas das sessões, e a proposta § 5.2 a § 5.4, § 6 e § 7.
+4. Depois da aceitação: a onda 0 (ferramentas, sensores, a ponte, «sem rede», o ícone, o teto de peso, o canário).
+
+### Key Data
+- Commits: `5a3be3f` (proposta e crítica), `fee3c2d` (ADR-0023), `a8bfc53` (spec, plano, tarefas), mais este de fechamento.
+- Crítica: `reports/audits/2026-11-21-mjrpalbumblender-v0-f83-architecture-critique.md`, `verdict: can-go`, `status: open` até a decisão dele.
+- Ainda «a medir»: o script principal depois da onda 0, o dicionário em português, as telas do menu em segundo plano, o tempo até a primeira tela, o tempo do build e da suíte com React, o custo de uma tela difícil (arrastar e soltar), o redesenho com listas grandes. Do rascunho da medição já se usa: React 68.922 B comprimidos (a análise estimava 45 KB), script principal +177 B, HTML idêntico em 4 estados, 0 asserções mudadas de 39.
+- Não conferido: as reescritas de i18n do Firebase Hosting junto com a reescrita para `/app.html` e o cache por país; a ponte com as stores e o ícone sem HTML cru (desenho, não medida); o sensor da F84 com telas com dados.
+- A proposta não tem página visual publicada; o arquivo é a fonte.
+- O `status_sync` passou a spec da F83 de «Draft» a «In Progress» no commit das tarefas (derivado pelo gancho, não escolhido).
+
 ## [2026-11-21 10:31] session — F85: entregue sem o build de produção; provado no servidor de desenvolvimento
 **Branch:** claude/f85-start-in-the-menu
 Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador, via rápida)
 Tarefas 01 a 03 feitas, teste primeiro (555 testes verdes nos arquivos tocados); a TASK-04 fica aberta: provado no servidor de desenvolvimento a 1280 e 393 px, com e sem conta (`reports/evidence/F85/`); NÃO provado: o build sob `vite preview`, a bateria completa e o doctor neste ramo (a fila de trabalhos pesados não andou em mais de uma hora; o orquestrador mandou entregar e cobre isso no trem de merge e na conferência em produção). Decidido pelo agente — revisável: o id de uso `home` não muda; «Go to Start» nas telas vazias; migalha e rodapé dizem «Start».
+
+## [2026-11-21 10:31] session — F83: spec, plano e tarefas saem do esboço; a nota do contrato dos idiomas para a sessão da F81
+**Branch:** claude/f83-site-screens-in-react
+A spec ganha dez requisitos (a tela em React sob o mesmo roteador; nenhuma mudança para quem usa; a regra da casa e as listas que só encolhem; o que fica debaixo da tela; a camada do celular e o design system; os sensores e os tipos; o teto de peso; os textos pelo dicionário da F81; todas as telas, em ondas; publicar, voltar atrás e «sem rede»). O plano aponta para a proposta e lista os módulos. As tarefas são 32, em nove ondas (0 a 8): as de desenho em Opus, as de construção em Sonnet; todas esperam a ADR-0023 aceita. «Approved» segue pendente. Fora do repositório, na pasta de notas das sessões: `f83-languages-contract-for-f81.md`, o contrato do dicionário, da escolha de idioma e da chave que mantém o português fechado.
+
+## [2026-11-21 10:31] decision — ADR-0023 em «Proposed»: as telas do site em React e TypeScript, tela a tela, com os textos num dicionário por idioma
+**Branch:** claude/f83-site-screens-in-react
+Rascunho do agente, à espera do MJRP (a rota é dele: traz um framework de interface para o site e emenda a constituição que ele ratificou). Registra a escolha dele de 2026-11-21 («sim vamos com react») e o como: a tela em React é mais uma «view» do roteador da casa; o que fica debaixo da tela não muda; todo texto visível vem de um dicionário em JavaScript puro, em inglês e português. A análise fica na proposta, não na ADR. Nunca «Accepted» pelo agente: a aceitação é o commit dele com o carimbo. `docs/decisions/0023-site-screens-in-react-screen-by-screen.md`.
+
+## [2026-11-21 10:30] review — F83: a crítica separada da proposta de arquitetura e da ADR-0023 — pode ir ao MJRP (0 P0, 10 P1, 3 P2)
+**Branch:** claude/f83-site-screens-in-react
+Proposta de arquitetura guiada por risco das telas do site em React com os idiomas (`design/proposals/f83-react-screens/architecture-proposal.md`), julgada por um agente separado que recebeu só a skill e os artefatos: `reports/audits/2026-11-21-mjrpalbumblender-v0-f83-architecture-critique.md`. Os seis vetos passam ou não se aplicam. Os 10 P1 foram consertados no texto (seção 17 da proposta): a leitura da preferência que falha não apaga a escolha da conta; o idioma deduzido do país é palpite e não escolha; o português fica fechado por uma chave até a cobertura que o MJRP escolher; o contrato da ponte com as stores; «sem rede» distinto de «versão nova»; uma fonte só por peça partilhada; consertar à frente; a tela difícil medida antes da moldura; os sensores e o que nenhum prova; o teto de peso com número. Ficam abertos: a ponte e o ícone a provar na onda 0, arrastar e soltar (onda 2), o país pelo Firebase Hosting (a conferir), o sinal de erro em produção (a medição está desligada). Um ponteiro em `docs/specs/arch.md` § Propostas em avaliação. Os números da medição ainda não entregue estão como «prévia» ou «a medir».
 
 ## [2026-11-21 10:23] session — UAT-235: o diagnóstico da caixa chapada e cortada, e três prévias no comparador
 **Branch:** fix/f80-uat-entry-page
