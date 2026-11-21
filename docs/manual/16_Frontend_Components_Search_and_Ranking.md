@@ -6,14 +6,14 @@ This document audits the components responsible for the core "Discovery" loop: S
 
 Located in `components/album-picker/` and `components/home/`, these components manage the user's initial interaction with the application.
 
-> **v4.0 notes.** The artist field of the Home (`#artistScanInput`) is drawn once by `HomeView` and `HomeController` only listens for Enter and for the Scan button, and asks the album picker: nothing redraws it while the person types. The album queries of a new series are built by `toAlbumQuery` (`models/albumQuery.js`), the same function the series edit modal uses, so the stored text is always plain (UAT-180).
+> **v4.0 notes.** The artist field of the Home (`#artistScanInput`) is drawn once by `HomeView` and `HomeController` only listens for Enter and for the Search button (F79; «Scan» until then), and asks the album picker: nothing redraws it while the person types. The album queries of a new series are built by `toAlbumQuery` (`models/albumQuery.js`), the same function the series edit modal uses, so the stored text is always plain (UAT-180).
 
 | Component | Role | Architecture & Patterns |
 | :--- | :--- | :--- |
 | **`album-picker/AlbumPickerController.js`** | **The one album picker** (F57): search an artist, see the albums by type, pick some. Used by the Home and by the series edit modal. | • **State Management**: Owns the scan state (`this.scan`, rules in `models/scanState.js`) and the filters (`this.filters`, rules in `models/albumPicker.js`); the screen is drawn from the state through a view port (`drawScan`, `drawFilters`, `drawAlbums`).<br>• **Logic**: "Newest -> Oldest" by default; one scan at a time; late answers change nothing.<br>• **Integration**: asks `albumSearchService.scanArtist` and nothing else; knows no screen: what a screen does with a pick comes in as `onPick`. |
 | **`album-picker/AlbumPickerPanel.js`** | **The picker as one block**, inside the series edit modal. | • A frame only: field, Scan button, status line, filter buttons, cards; every click asks the controller. |
 | **`album-picker/pickerParts.js`** | **Drawn parts** shared by the two frames. | • `createFilterButton` / `drawFilterButton` (active state with the "Flame Gradient", count), `drawScanButton`, `createScanPanel` (idle, scanning, empty, failed with "Try again"). |
-| **`StagingAreaController.js`** | **Selection Manager**. Manages the "Stack" of albums waiting to be turned into a playlist. | • **SortableJS**: Integrates 3rd-party lib for drag-and-drop reordering.<br>• **State Sync**: Manually synchronizes the internal `selectedAlbums` array with DOM changes on drag end. |
+| **`StagingAreaController.js`** | **The series being built** (F79): the chosen albums of the new series, in their order. | • **No dragging**: ↑ ↓ move one place (`moveAlbum`); `removeAlbum` gives back the album and its place for «Undo»; `addMany` / `snapshot` / `restore` serve «Add all» and its «Undo».<br>• **State Sync**: draws nothing; every change goes to `onChange` (the Home redraws the dock and the covers). |
 
 ---
 

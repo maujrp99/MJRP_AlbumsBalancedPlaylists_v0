@@ -24,10 +24,11 @@
 ## 🟡 Modular Checklists
 
 ### [HOME] Entry & Search
-- [ ] **Scan Artist**: "Scan Artist" finds results (e.g., "Pink Floyd").
-- [ ] **Staging**: Clicking album adds to stack with animation.
-- [ ] **Initialize**: "Initialize Load Sequence" creates series -> navigates to `/albums`.
-- [ ] **Bulk Paste**: Validates "Artist - Album" format correctly.
+- [ ] **Search**: «Search» finds an artist (e.g., "Pink Floyd"): the artist, «N studio albums · newest first», the chips, the covers.
+- [ ] **The series**: clicking a cover puts it in the dock with its number; clicking it again takes it out, with «Undo».
+- [ ] **Edit order**: «Edit order» opens the panel; ↑ ↓ ✕ change the series.
+- [ ] **Create**: «Create series» with the suggested name says «"name" is saved»; «Blend it now» opens the Blend with the series chosen; «Open the series» opens `/albums/<id>`.
+- [ ] **Paste a list**: each line says «ready» or what to fix; «Add N albums» adds them; a line not found stays with its reason.
 
 ### [SERIES] Albums & Ranking
 - [ ] **Save a ranking (v4.0)**: rank the tracks of an album and save -> the modal closes, "Rankings saved" shows, and that album shows the ranking; no other album reloads.

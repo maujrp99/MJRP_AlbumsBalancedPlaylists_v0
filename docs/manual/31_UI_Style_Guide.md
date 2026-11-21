@@ -13,13 +13,14 @@ Use these IDs to reference specific UI elements:
 
 | Element ID | Description | Current Size |
 |------------|-------------|--------------|
-| `home.header-icon` | Orange square with the Music icon (`#home-header`) | 40px (`w-10 h-10 rounded-lg`) |
-| `home.header-title` | "Album Blender V3" | text-xl font-syne font-bold |
-| `home.header-subtitle` | "Balanced Playlist Generator" | text-xs uppercase tracking-widest |
-| `home.create-button` | "Initialize Load Sequence" (`#btnInitializeLoad`) | h-12, rounded-xl, `bg-flame-gradient` |
-| `home.step-01` | "01 // Series Configuration" | text-xs uppercase |
-| `home.step-02a` | "02a // Artist Filter" | text-xs uppercase |
-| `home.step-02b` | "02b // Discography Scan" | text-xs uppercase |
+| `home.title` | «Pick the albums. We blend the playlists.» (`#homeHero h1`; the second line in the flame as text) | Syne 800, 52 px (30 px on the phone) |
+| `home.field` | the one field, «An artist, or paste a list of albums» (`#homeField`, `#artistScanInput`) | 64 px (56 on the phone), radius 18 |
+| `home.search` | «Search» (`#btnScanArtist`): the flame only while nothing was found nor chosen | 48 px; 19 px 800 on the flame |
+| `home.equalizer` | 48 bars (32 on the phone) under the field: still, live, flat (`.home-eq`) | 36 px high |
+| `home.chips` | the type chips with their counts (`#home-toolbar .home-chip`); the one on is white | 44 px, round |
+| `home.card` | the cover button (`.home-card`), «+» or the place in the series (`.home-card__mark`, 44 px) | square, radius 10 |
+| `home.dock` | the series, fixed at the bottom (`.home-dock`); on the phone the `.phone-action-bar` | covers 52 px, «Create series» 56 px |
+| `home.create-button` | «Create series» (`#btnCreateSeries`) | 56 px, 19 px 800, `--home-flame` |
 
 ### TopNav Elements
 
@@ -73,10 +74,10 @@ The albums screen is `views/SeriesView.js` today (there is no `AlbumsView.js`); 
 
 | View | Element | Current Classes |
 |------|---------|-----------------|
-| **HomeView** | Header title | `font-syne font-bold text-xl` |
-| **HomeView** | Header subtitle | `text-xs uppercase tracking-widest` |
-| **HomeView** | Create button | `font-bold` (default size) |
-| **HomeView** | Section headers | `text-xs uppercase tracking-widest` |
+| **HomeView** | Title | `.home-hero h1`: Syne 800, 52 px |
+| **HomeView** | Artist | `.home-artist h2`: Syne 800, 32 px |
+| **HomeView** | Create button | `.home-btn.is-big.is-flame`: 19 px, 800 |
+| **HomeView** | Numbers (places, counts) | the text face (`--home-text-font`): the «1» of Syne reads as «ı» |
 | **SeriesView** (albums screen) | Page header | `text-2xl md:text-4xl font-bold` |
 | **SeriesView** (albums screen) | Card title | `text-lg font-bold` |
 | **InventoryView** | Page header | TBD |
@@ -230,18 +231,8 @@ Use consistent colors to visually distinguish data sources:
 }
 ```
 
-### Tech Panel (HomeView)
-```css
-.tech-panel {
-  /* Bordered sections with glow */
-}
-.tech-header-bar {
-  /* Orange accent left border */
-}
-.tech-input {
-  /* Input with tech styling */
-}
-```
+### The Home (F79)
+The classes of the Home are prefixed `home-` and live in `public/css/views/home.css` (the computer) and `public/css/mobile/home.css` (the phone, inside its media query). The tokens of the flame are custom properties on `:root`: `--home-flame` (`#f97316 → #dc2626`), `--home-flame-text`, `--home-eq-grad`. The old tech panel of the Home is gone.
 
 ### Animations
 
@@ -259,9 +250,8 @@ Use consistent colors to visually distinguish data sources:
 ## View-Specific Elements
 
 ### HomeView
-- Header: `#home-header`, `p-6 border-b border-white/5`; background image `hero_bg.svg` at 30% opacity
-- Tech panels: `tech-panel` (`#home-tech-panel`)
-- Create button: `w-full bg-flame-gradient font-bold h-12 rounded-xl`
+- One stage (`.home-page`, max 1180 px): `.home-stage` (title, field, hint, equalizer), `.home-results` (steps, wait, message, artist, chips, grid), the dock (`.home-dockwrap`, fixed at the bottom, the page keeps its height free)
+- Create button: `.home-btn.is-big`, the flame only when it is the next step
 
 ### Albums screen (`SeriesView`)
 - Expanded card: `glass-panel p-6 rounded-2xl`

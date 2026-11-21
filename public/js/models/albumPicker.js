@@ -16,7 +16,7 @@ export const PICKER_FILTERS = Object.freeze([
     Object.freeze({ key: 'singles', type: AlbumType.SINGLE, label: 'Singles', icon: 'Music2' }),
     Object.freeze({ key: 'live', type: AlbumType.LIVE, label: 'Live', icon: 'Mic2' }),
     Object.freeze({ key: 'compilations', type: AlbumType.COMPILATION, label: 'Compendiums', icon: 'Library' }),
-    Object.freeze({ key: 'uncategorized', type: AlbumType.UNKNOWN, label: '?', icon: 'HelpCircle' })
+    Object.freeze({ key: 'uncategorized', type: AlbumType.UNKNOWN, label: 'Other', icon: 'HelpCircle' })
 ])
 
 const FILTER_OF_TYPE = Object.freeze(Object.fromEntries(PICKER_FILTERS.map(filter => [filter.type, filter.key])))

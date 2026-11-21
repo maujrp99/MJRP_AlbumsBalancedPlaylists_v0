@@ -1,6 +1,6 @@
 # Info-arch — Album Blender V0
 
-> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html · a Home (F79): rodada 1, três níveis (design/inception/home-consolidar-v1.html, design/inception/home-elevar-v1.html, design/inception/home-transformar-v1.html); o MJRP escolheu a direção Transformar; rodada 2: design/inception/home-transformar-v2.html (não aprovada)
+> Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html · a Home (F79): rodada 1, três níveis (design/inception/home-consolidar-v1.html, design/inception/home-elevar-v1.html, design/inception/home-transformar-v1.html); o MJRP escolheu a direção Transformar; rodada 2: design/inception/home-transformar-v2.html (**aprovada pelo MJRP em 2026-11-20, por volta das 22:15** — registro em § Protótipos aprovados)
 > Página de entrada (F80), rodada 1 de exploração, 2026-11-20: três direções, design/inception/splash-ember-v1.html, design/inception/splash-sides-v1.html e design/inception/splash-crate-v1.html (nenhuma aprovada; comparador em design/proposals/f80-splash/comparator.html)
 > Página de entrada (F80), rodada 2 de desenho, 2026-11-20: a direção escolhida pelo MJRP, design/inception/splash-crate-v2.html («Caixote · v2, o fogo e o fio»: o caixote 3D com o fio do Lado A, lado B e o fogo da Brasa, capas reais do Apple Music); aprovada pelo MJRP em 2026-11-20 22:15 no fogo brando (§ Protótipos aprovados); comparador https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e (cópia local design/proposals/f80-splash/comparator.html)
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
@@ -349,6 +349,19 @@ A rodada 1 da F75 é de exploração (nenhum protótipo dela aprovado).
 - shows:: [[#^splash-v2-hero]], [[#^splash-v2-track]], [[#^splash-v2-flip]], [[#^splash-v2-side-b]], [[#^splash-v2-css-crate]], [[#^splash-v2-reduced-motion]], [[#^splash-v2-motion-rest]], [[#^splash-v2-no-js]], [[#^splash-v2-phone]]
 - Mudou em relação à versão anterior: primeira versão aprovada da página de entrada (a v1 e as outras direções da rodada 1 ficam como registro, não aprovadas)
 
+### Home (F79) · Transformar v2
+- Ferramenta: HTML gerado (`design/proposals/f79-home/build/build.py --round2`, a Home real capturada mais `core-v2.js`, `transformar-v2.js` e `transformar-v2.css`) · Referência: comparador https://claude.ai/artifact/AsiVV2i3595LqpLEadm61h · Cópia: design/inception/home-transformar-v2.html
+- reference_kind:: live
+- reference_path:: design/inception/home-transformar-v2.html
+- Níveis propostos (MP-01): eixo "a ambição" · Consolidar / Elevar / Transformar · escolhido: Transformar (MJRP, 2026-11-20 19:19, «home 3 niveis transformar»); a rodada 2 é a versão nova do Transformar
+- Auditoria: reports/audits/2026-11-20-F79-home-r2-ux-audit.md — veredito: passa (2026-11-20 19:47), 0 P0, os 6 P1 consertados na rodada
+- Aprovado por: MJRP em 2026-11-20, por volta das 22:15 (registrado às 22:27)
+- Palavras do humano: «aprovado a home v2, fogo vivo na página de entrada, ficou sensacional! bora implementar»
+- Como foi entendido: aprova o protótipo `design/inception/home-transformar-v2.html` («Transformar · v2», a versão nova no comparador) como a referência julgada da F79, nas duas larguras (1280 e 393), com os 18 estados do seletor listados em `shows::` abaixo; «bora implementar» pede a construção. «fogo vivo na página de entrada» é da F80 (corrigido por ele logo depois: «fogo brando na verdade») e não toca este registro.
+- Ressalvas: nenhuma dita por ele. **O que ele não respondeu, decidido pelo agente — revisável (dispensa de 2026-11-19):** a cor A (o degradê declarado `#f97316 → #dc2626`, sem a terceira parada; a prévia B não foi escolhida e fica fora); os padrões D1 a D9 como a v2 mostra; «Compendiums» mantido; o texto sobre o fogo como a v2 mostra (branco a 19 px, peso 800); o texto em inglês é proposta do agente, não copy deck. Arrastar para mudar a ordem fica fora (↑ ↓ basta).
+- shows:: [[#^home-empty]], [[#^home-typing]], [[#^home-searching]], [[#^home-discography]], [[#^home-dock-one]], [[#^home-albums-chosen]], [[#^home-dock-many]], [[#^home-dock-reorder]], [[#^home-dock-removed-undo]], [[#^home-paste-list]], [[#^home-paste-report]], [[#^home-artist-not-found]], [[#^home-catalog-error]], [[#^home-name-missing]], [[#^home-creating]], [[#^home-created]], [[#^home-create-failed]], [[#^home-guest]]
+- Mudou em relação à versão anterior: primeira versão aprovada da Home. Nenhum requisito apontava para os estados da Home antes deste registro; a S-61 passa a apontar (Pronto para construir).
+
 ## Inventário do protótipo
 
 Fonte: `design/inception/inventory-value-v5.1.html`, escolhida pelo MJRP em 2026-11-20 01:20 entre ela e a v5 (a v5, com borda no lugar do fundo, fica como registro) (a tela real do inventário, capturada como o app a desenha, com o que a F75 propõe; as versões anteriores ficam para comparar) · wireframes: `design/wireframes/inventory-value-v5.1-inventory.png`, `design/wireframes/inventory-value-v5.1-album-window.png` · prévia de como o cartão se segura: `design/proposals/inventory-card-border-proposal.html` · prévia do cartão em três níveis: `design/proposals/inventory-card-proposal.html` · comparador: https://claude.ai/artifact/R6r5dLJ48JXJZDSRy6T5Ck (Artifact do Claude, privado; a cópia local é `design/proposals/inventory/comparator.html`).
@@ -448,6 +461,8 @@ Fonte: os três protótipos acima; cada item tem a mesma etiqueta nos wireframes
 - Depois de criar: hoje o site abre a série na tela de séries (`controllers/HomeController.js` linha 235). Na v2 a Home fica e oferece «Blend it now» primeiro e «Open the series» (decidido pelo agente — revisável; a rota `/blend?seriesId=` já existe, `views/BlendingMenuView.js` linha 306).
 - Arrastar para mudar a ordem: fora da v2 (↑ ↓ basta e funciona igual no toque).
 - As capas dos álbuns que vêm de uma lista colada são marcadores no protótipo (só as capas de Pink Floyd foram capturadas).
+
+- **Construção (F79, ramo `feat/f79-home-that-explains-itself`):** os 18 estados foram construídos nas duas larguras e capturados ao lado do protótipo (`reports/evidence/F79/`). O que a construção decidiu onde o protótipo não dizia (decidido pelo agente — revisável): a lista colada é editável linha a linha (um campo por linha); a folha da série no celular fecha pelo botão da própria Folha (✕, «Done» para o leitor de tela); a falha ao gravar só diz «the connection dropped» quando a falha é de rede. Os estados de hoje que a v2 não desenhava ficam com o texto novo, em `behavior.md` § Tela inicial: campo vazio (`^home-scan-empty-field`), tipos sendo confirmados (`^home-scan-classifying`), filtro sem álbum (`^home-discography-filter-empty`), lista sem nenhum álbum (`^home-bulk-nothing-found`), linha já na série (`^home-bulk-skipped`).
 
 ### Content Map · Home (F79)
 

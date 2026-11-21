@@ -1,0 +1,2486 @@
+{
+ "proto-empty-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list"
+  ]
+ },
+ "built-empty-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Your series is empty",
+   "Search an artist, then click a cover to add it. You name the series at the end.",
+   "Add one album to create the series"
+  ]
+ },
+ "proto-typing-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "Press Enter or Search to see their albums. A list with one album per line works too."
+  ]
+ },
+ "built-typing-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "Press Enter or Search to see their albums. A list with one album per line works too.",
+   "Your series is empty",
+   "Search an artist, then click a cover to add it. You name the series at the end.",
+   "Add one album to create the series"
+  ]
+ },
+ "proto-scanning-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Searching…"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Searching…",
+   "paste a list",
+   "Looking for «Pink Floyd» in the catalog… the covers appear as soon as it answers."
+  ]
+ },
+ "built-scanning-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Searching…"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Searching…",
+   "paste a list",
+   "Looking for «Pink Floyd» in the catalog… the covers appear as soon as it answers.",
+   "Your series is empty",
+   "Search an artist, then click a cover to add it. You name the series at the end.",
+   "Add one album to create the series"
+  ]
+ },
+ "proto-results-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other"
+  ]
+ },
+ "built-results-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Your series is empty",
+   "Click a cover to add it. You name the series at the end.",
+   "Add one album to create the series"
+  ]
+ },
+ "proto-chosen1-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Edit order"
+  ]
+ },
+ "built-chosen1-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "1",
+   "suggested · edit it",
+   "1 album from 1 artist · the order counts",
+   "Edit order",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-chosen-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Edit order"
+  ]
+ },
+ "built-chosen-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "1",
+   "2",
+   "3",
+   "4",
+   "suggested · edit it",
+   "4 albums from 1 artist · the order counts",
+   "Edit order",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-many-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Undo",
+   "Series name",
+   "Edit order"
+  ]
+ },
+ "built-many-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Undo",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7",
+   "+10",
+   "Series name",
+   "17 albums from 1 artist · the order counts",
+   "Edit order",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-reorder-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Done",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it."
+  ]
+ },
+ "built-reorder-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Done",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it.",
+   "1",
+   "2",
+   "3",
+   "4",
+   "suggested · edit it",
+   "4 albums from 1 artist · the order counts",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-removed-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Done",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it.",
+   "Undo"
+  ]
+ },
+ "built-removed-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Done",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it.",
+   "Undo",
+   "1",
+   "2",
+   "3",
+   "suggested · edit it",
+   "3 albums from 1 artist · the order counts",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-paste-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Add 3 albums"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Your list · one album per line, as Artist - Album",
+   "Add 3 albums",
+   "Search an artist instead"
+  ]
+ },
+ "built-paste-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Add 3 albums"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Your list · one album per line, as Artist - Album",
+   "4 lines: 3 ready, 1 to fix. Lines to fix are skipped; the rest go in.",
+   "Add 3 albums",
+   "Search an artist instead",
+   "Your series is empty",
+   "Search an artist, then click a cover to add it. You name the series at the end.",
+   "Add one album to create the series"
+  ]
+ },
+ "proto-pastereport-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Your list · one album per line, as Artist - Album",
+   "Add this line",
+   "Search an artist instead",
+   "The two albums from the list are in your series below. Their covers here are placeholders: the prototype has only the Pink Floyd covers.",
+   "Edit order"
+  ]
+ },
+ "built-pastereport-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Your list · one album per line, as Artist - Album",
+   "Add this line",
+   "Search an artist instead",
+   "1",
+   "2",
+   "suggested · edit it",
+   "2 albums from 2 artists · the order counts",
+   "Edit order",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-notfound-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Paste a list"
+  ]
+ },
+ "built-notfound-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Paste a list",
+   "Your series is empty",
+   "Search an artist, then click a cover to add it. You name the series at the end.",
+   "Add one album to create the series"
+  ]
+ },
+ "proto-error-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Try again",
+   "Edit order"
+  ]
+ },
+ "built-error-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Try again",
+   "1",
+   "2",
+   "3",
+   "4",
+   "suggested · edit it",
+   "4 albums from 1 artist · the order counts",
+   "Edit order",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-noname-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Series name",
+   "Use «Pink Floyd selection»",
+   "Edit order"
+  ]
+ },
+ "built-noname-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "1",
+   "2",
+   "3",
+   "4",
+   "Series name",
+   "Use «Pink Floyd selection»",
+   "4 albums from 1 artist · the order counts",
+   "Edit order",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-creating-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Creating…"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Edit order",
+   "Creating…"
+  ]
+ },
+ "built-creating-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Creating…"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "1",
+   "2",
+   "3",
+   "4",
+   "suggested · edit it",
+   "Edit order",
+   "Creating…",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-created-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Blend it now"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "«Pink Floyd selection» is saved and won't change here. Click a cover to start another series.",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Open the series",
+   "Start another series"
+  ]
+ },
+ "built-created-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Blend it now"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "«Pink Floyd selection» is saved and won't change here. Click a cover to start another series.",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "1",
+   "2",
+   "3",
+   "4",
+   "4 albums · find it any time in Music Series.",
+   "Open the series",
+   "Start another series"
+  ]
+ },
+ "proto-createfail-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Sign In",
+   "Try again"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Edit order"
+  ]
+ },
+ "built-createfail-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Try again"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "1",
+   "2",
+   "3",
+   "4",
+   "suggested · edit it",
+   "The series was not saved: the connection dropped. Your albums are still here.",
+   "Edit order",
+   "Next: the Blend turns the series into playlists."
+  ]
+ },
+ "proto-guest-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Sign in"
+  ]
+ },
+ "built-guest-1280.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "52px",
+   "weight": "800"
+  },
+  "fire": [
+   "Sign In",
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Sign In",
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Sign in",
+   "Your series is empty",
+   "Search an artist, then click a cover to add it. You name the series at the end.",
+   "Add one album to create the series"
+  ]
+ },
+ "proto-empty-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Create series"
+  ]
+ },
+ "built-empty-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "No albums yet",
+   "Search, then tap a cover",
+   "Create series"
+  ]
+ },
+ "proto-typing-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "Press Enter or Search to see their albums. A list with one album per line works too.",
+   "Create series"
+  ]
+ },
+ "built-typing-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "Press Enter or Search to see their albums. A list with one album per line works too.",
+   "No albums yet",
+   "Search, then tap a cover",
+   "Create series"
+  ]
+ },
+ "proto-scanning-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "unloaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Searching…"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Searching…",
+   "paste a list",
+   "Looking for «Pink Floyd» in the catalog… the covers appear as soon as it answers.",
+   "Create series"
+  ]
+ },
+ "built-scanning-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Searching…"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Searching…",
+   "paste a list",
+   "Looking for «Pink Floyd» in the catalog… the covers appear as soon as it answers.",
+   "No albums yet",
+   "Search, then tap a cover",
+   "Create series"
+  ]
+ },
+ "proto-results-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Create series"
+  ]
+ },
+ "built-results-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "No albums yet",
+   "Tap a cover to add it",
+   "Create series"
+  ]
+ },
+ "proto-chosen1-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Create series"
+  ]
+ },
+ "built-chosen1-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Pink Floyd selection",
+   "1 album from 1 artist · the order counts",
+   "Tap to edit or reorder",
+   "Create series"
+  ]
+ },
+ "proto-chosen-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Create series"
+  ]
+ },
+ "built-chosen-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Pink Floyd selection",
+   "4 albums from 1 artist · the order counts",
+   "Tap to edit or reorder",
+   "Create series"
+  ]
+ },
+ "proto-many-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Undo",
+   "Create series"
+  ]
+ },
+ "built-many-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Undo",
+   "Pink Floyd, the studio years",
+   "17 albums from 1 artist · the order counts",
+   "Tap to edit or reorder",
+   "Create series"
+  ]
+ },
+ "proto-reorder-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Create series",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Create series",
+   "Done",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it."
+  ]
+ },
+ "built-reorder-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Create series",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Pink Floyd selection",
+   "4 albums from 1 artist · the order counts",
+   "Tap to edit or reorder",
+   "Create series",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it."
+  ]
+ },
+ "proto-removed-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Create series",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Create series",
+   "Done",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it.",
+   "Undo"
+  ]
+ },
+ "built-removed-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Create series",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Pink Floyd selection",
+   "3 albums from 1 artist · the order counts",
+   "Tap to edit or reorder",
+   "Create series",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it.",
+   "Undo"
+  ]
+ },
+ "proto-paste-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "unloaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Add 3 albums"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Your list · one album per line, as Artist - Album",
+   "Add 3 albums",
+   "Search an artist instead",
+   "Create series"
+  ]
+ },
+ "built-paste-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Add 3 albums"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Your list · one album per line, as Artist - Album",
+   "4 lines: 3 ready, 1 to fix. Lines to fix are skipped; the rest go in.",
+   "Add 3 albums",
+   "Search an artist instead",
+   "No albums yet",
+   "Search, then tap a cover",
+   "Create series"
+  ]
+ },
+ "proto-pastereport-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Your list · one album per line, as Artist - Album",
+   "Add this line",
+   "Search an artist instead",
+   "The two albums from the list are in your series below. Their covers here are placeholders: the prototype has only the Pink Floyd covers.",
+   "Create series"
+  ]
+ },
+ "built-pastereport-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Your list · one album per line, as Artist - Album",
+   "Add this line",
+   "Search an artist instead",
+   "Joni Mitchell and Yes",
+   "2 albums from 2 artists · the order counts",
+   "Tap to edit or reorder",
+   "Create series"
+  ]
+ },
+ "proto-notfound-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Paste a list",
+   "Create series"
+  ]
+ },
+ "built-notfound-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Paste a list",
+   "No albums yet",
+   "Search, then tap a cover",
+   "Create series"
+  ]
+ },
+ "proto-error-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "unloaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Try again",
+   "Create series"
+  ]
+ },
+ "built-error-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Try again",
+   "Pink Floyd selection",
+   "4 albums from 1 artist · the order counts",
+   "Tap to edit or reorder",
+   "Create series"
+  ]
+ },
+ "proto-noname-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Create series",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Create series",
+   "Done",
+   "Series name",
+   "Use «Pink Floyd selection»",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it."
+  ]
+ },
+ "built-noname-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Create series",
+   "Create series"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "No name yet",
+   "4 albums from 1 artist · the order counts",
+   "Tap to edit or reorder",
+   "Create series",
+   "Series name",
+   "Use «Pink Floyd selection»",
+   "The order counts: the Blend reads the albums in this order when it spreads their tracks over the playlists. Use ↑ ↓ to change it."
+  ]
+ },
+ "proto-creating-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Creating…"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Creating…"
+  ]
+ },
+ "built-creating-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Creating…"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Pink Floyd selection",
+   "Tap to edit or reorder",
+   "Creating…"
+  ]
+ },
+ "proto-created-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Blend it now"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "«Pink Floyd selection» is saved and won't change here. Tap a cover to start another series.",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Open the series",
+   "Blend it now"
+  ]
+ },
+ "built-created-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Blend it now"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "«Pink Floyd selection» is saved and won't change here. Tap a cover to start another series.",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Open the series",
+   "Blend it now"
+  ]
+ },
+ "proto-createfail-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": null,
+  "fire": [
+   "Try again"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "Studio · 17",
+   "EPs",
+   "Singles · 15",
+   "Live · 5",
+   "Compendiums · 15",
+   "Other",
+   "Try again"
+  ]
+ },
+ "built-createfail-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Try again"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "Search",
+   "paste a list",
+   "Pink Floyd",
+   "17 studio albums · newest first",
+   "Pink Floyd selection",
+   "Not saved: the connection dropped",
+   "Tap to edit or reorder",
+   "Try again"
+  ]
+ },
+ "proto-guest-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Sign in",
+   "Create series"
+  ]
+ },
+ "built-guest-393.jpg": {
+  "syneLoaded": true,
+  "syneStatus": [
+   "unloaded:400",
+   "unloaded:400",
+   "loaded:400",
+   "unloaded:700",
+   "unloaded:700",
+   "loaded:700",
+   "unloaded:800",
+   "unloaded:800",
+   "loaded:800"
+  ],
+  "h1": {
+   "text": "Pick the albums. We blend the playlists.",
+   "font": "Syne, sans-serif",
+   "size": "30px",
+   "weight": "800"
+  },
+  "fire": [
+   "Search"
+  ],
+  "solid": [],
+  "hscroll": false,
+  "texts": [
+   "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+   "Search",
+   "paste a list",
+   "Sign in",
+   "No albums yet",
+   "Search, then tap a cover",
+   "Create series"
+  ]
+ }
+}

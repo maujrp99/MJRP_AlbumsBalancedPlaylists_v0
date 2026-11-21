@@ -87,7 +87,7 @@ describe('Edit Series modal (F57)', () => {
             const modalLabels = $$('[data-album-picker] [data-filter]').map(b => [b.dataset.filter, b.querySelector('.filter-btn-text').textContent])
 
             expect(modalLabels).toEqual(homeLabels)
-            expect(modalLabels.map(([, label]) => label)).toEqual(['Studio', 'EPs', 'Singles', 'Live', 'Compendiums', '?'])
+            expect(modalLabels.map(([, label]) => label)).toEqual(['Studio', 'EPs', 'Singles', 'Live', 'Compendiums', 'Other'])
         })
 
         it('answers the click at once: button busy and disabled, the wait in the panel', () => {

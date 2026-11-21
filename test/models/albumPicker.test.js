@@ -12,7 +12,7 @@ const album = (title, type = 'Album', releaseDate = '2000-01-01') => ({ id: titl
 
 describe('albumPicker: filters', () => {
     it('one filter for each album type, the unknown one included, in the order of the buttons', () => {
-        expect(PICKER_FILTERS.map(filter => filter.label)).toEqual(['Studio', 'EPs', 'Singles', 'Live', 'Compendiums', '?'])
+        expect(PICKER_FILTERS.map(filter => filter.label)).toEqual(['Studio', 'EPs', 'Singles', 'Live', 'Compendiums', 'Other'])
         expect(PICKER_FILTERS.map(filter => filter.type).sort()).toEqual([...ALBUM_TYPES].sort())
     })
 

@@ -1,0 +1,24 @@
+proto-paste-1280.jpg {"out":["Joni Mitchell - Hejira | SPAN Syne, sans-serif 15px 400","Radiohead OK Computer | SPAN Syne, sans-serif 15px 400"],"badges":["1 Syne, sans-serif 12px 400","2 Syne, sans-serif 12px 400","3 Syne, sans-serif 12px 400"]}
+built-paste-1280.jpg {"out":["Joni Mitchell - Hejira | INPUT Syne, sans-serif 15px 400","Radiohead OK Computer | INPUT Syne, sans-serif 15px 400"],"badges":["1 -apple-system, \"syst 12px 400","2 -apple-system, \"syst 12px 400","3 -apple-system, \"syst 12px 400"]}
+proto-pastereport-1280.jpg {"out":["Added 2 albums. | B Syne, sans-serif 14px 700"],"badges":["1 Syne, sans-serif 12px 400","1 -apple-system, syste 12px 800","2 -apple-system, syste 12px 800"]}
+built-pastereport-1280.jpg {"out":["Added 2 albums. | STRONG Syne, sans-serif 14px 700"],"badges":["1 -apple-system, \"syst 12px 400","1 -apple-system, \"syst 12px 700","2 -apple-system, \"syst 12px 700"]}
+proto-many-1280.jpg {"out":["Added 13 albums. | SPAN Syne, sans-serif 14px 400"],"badges":["1 -apple-system, syste 19px 800","5 -apple-system, syste 19px 800","2 -apple-system, syste 19px 800"]}
+built-many-1280.jpg {"out":["Added 17 albums. | SPAN Syne, sans-serif 14px 400"],"badges":["1 -apple-system, \"syst 19px 800","2 -apple-system, \"syst 19px 800","3 -apple-system, \"syst 19px 800"]}
+proto-creating-1280.jpg {"out":[],"badges":["1 -apple-system, syste 19px 800","2 -apple-system, syste 19px 800","3 -apple-system, syste 19px 800"]}
+built-creating-1280.jpg {"out":[],"badges":["1 -apple-system, \"syst 19px 800","2 -apple-system, \"syst 19px 800","3 -apple-system, \"syst 19px 800"]}
+proto-createfail-1280.jpg {"out":[],"badges":["1 -apple-system, syste 19px 800","2 -apple-system, syste 19px 800","3 -apple-system, syste 19px 800"]}
+built-createfail-1280.jpg {"out":[],"badges":["1 -apple-system, \"syst 19px 800","2 -apple-system, \"syst 19px 800","3 -apple-system, \"syst 19px 800"]}
+proto-reorder-1280.jpg {"out":[],"badges":["1 -apple-system, syste 19px 800","3 -apple-system, syste 19px 800","2 -apple-system, syste 19px 800"]}
+built-reorder-1280.jpg {"out":[],"badges":["1 -apple-system, \"syst 19px 800","3 -apple-system, \"syst 19px 800","2 -apple-system, \"syst 19px 800"]}
+proto-paste-393.jpg {"out":["Joni Mitchell - Hejira | SPAN -apple-system, syste 16px 400","Radiohead OK Computer | SPAN -apple-system, syste 16px 400"],"badges":["1 -apple-system, syste 12px 400","2 -apple-system, syste 12px 400","3 -apple-system, syste 12px 400"]}
+built-paste-393.jpg {"out":["Joni Mitchell - Hejira | INPUT -apple-system, \"syst 16px 400","Radiohead OK Computer | INPUT -apple-system, \"syst 16px 400"],"badges":["1 -apple-system, \"syst 12px 400","2 -apple-system, \"syst 12px 400","3 -apple-system, \"syst 12px 400"]}
+proto-pastereport-393.jpg {"out":["Added 2 albums. | B Syne, sans-serif 14px 700"],"badges":["1 -apple-system, syste 12px 400"]}
+built-pastereport-393.jpg {"out":["Added 2 albums. | STRONG Syne, sans-serif 14px 700"],"badges":["1 -apple-system, \"syst 12px 400"]}
+proto-many-393.jpg {"out":["Added 13 albums. | SPAN Syne, sans-serif 14px 400"],"badges":["1 -apple-system, syste 19px 800","5 -apple-system, syste 19px 800","2 -apple-system, syste 19px 800"]}
+built-many-393.jpg {"out":["Added 17 albums. | SPAN -apple-system, \"syst 14px 400"],"badges":["1 -apple-system, \"syst 19px 800","2 -apple-system, \"syst 19px 800","3 -apple-system, \"syst 19px 800"]}
+proto-creating-393.jpg {"out":[],"badges":["1 -apple-system, syste 19px 800","2 -apple-system, syste 19px 800","3 -apple-system, syste 19px 800"]}
+built-creating-393.jpg {"out":[],"badges":["1 -apple-system, \"syst 19px 800","2 -apple-system, \"syst 19px 800","3 -apple-system, \"syst 19px 800"]}
+proto-createfail-393.jpg {"out":[],"badges":["1 -apple-system, syste 19px 800","2 -apple-system, syste 19px 800","3 -apple-system, syste 19px 800"]}
+built-createfail-393.jpg {"out":[],"badges":["1 -apple-system, \"syst 19px 800","2 -apple-system, \"syst 19px 800","3 -apple-system, \"syst 19px 800"]}
+proto-reorder-393.jpg {"out":[],"badges":["1 -apple-system, syste 19px 800","3 -apple-system, syste 19px 800","2 -apple-system, syste 19px 800"]}
+built-reorder-393.jpg {"out":[],"badges":["1 -apple-system, \"syst 19px 800","3 -apple-system, \"syst 19px 800","2 -apple-system, \"syst 19px 800"]}

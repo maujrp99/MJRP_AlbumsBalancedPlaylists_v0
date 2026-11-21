@@ -1,61 +1,197 @@
-/* HomeView Specific Styles */
-
-/* 
- * Mobile Layout Reordering 
- * Spec: "Discography Scan" (02B - Toolbar) must appear before "Staging Area" (03 - LeftPanel)
- * Solution: "Unwrap" the panels using display: contents so children become siblings in the main container.
+/*
+ * The Home that explains itself (F79) - the computer, and what the phone keeps of it.
+ * Baseline: design/inception/home-transformar-v2.html, approved by the MJRP on 2026-11-20 (info-arch.md
+ * § Protótipos aprovados); measures from design/proposals/f79-home/build/transformar-v2.css, renamed to
+ * the home- prefix. Tokens of design-system.md: black, panel #101014, orange #f97316, the flame
+ * #f97316 → #dc2626 (two stops: colour A, decided by the agent — revisável), Syne. The phone's
+ * layer is public/css/mobile/home.css, inside the phone's media query.
  */
-@media (max-width: 768px) {
-    /* Unwrap the main structural panels */
-    #home-left-panel, 
-    #home-right-panel,
-    #home-left-content {
-        display: contents;
-    }
+:root {
+  --home-flame-a: #f97316;
+  --home-flame-b: #dc2626;
+  --home-flame: linear-gradient(135deg, var(--home-flame-a), var(--home-flame-b));
+  --home-flame-text: linear-gradient(90deg, var(--home-flame-a), var(--home-flame-b));
+  --home-eq-grad: linear-gradient(to top, var(--home-flame-b), var(--home-flame-a));
+  --home-panel: #101014;
+  --home-muted: rgba(255, 255, 255, 0.72);
+  --home-soft: rgba(255, 255, 255, 0.64);
+  --home-line: rgba(255, 255, 255, 0.12);
+  --home-dock-h: 112px;
+  --home-text-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
 
-    /* 
-     * Now all children are direct flex items of the main container.
-     * We use `order` property to rearrange them.
-     */
-    
-    /* 1. Header (LeftPanel child) */
-    #home-header {
-        order: 1;
-    }
+.home-page { position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px calc(var(--home-dock-h) + 48px); font-family: 'Syne', sans-serif; color: #fff; }
+.home-page [hidden], .home-dockwrap [hidden], .sheet [hidden] { display: none !important; }
+.home-ico { width: 18px; height: 18px; flex: none; }
 
-    /* 2. Series Config (LeftContent child) */
-    #home-series-config {
-        order: 2;
-    }
+/* ── The stage ─────────────────────────────────────────────────────────────────────────────── */
+.home-stage { position: relative; text-align: center; padding: 24px 0 6px; }
+.home-stage.is-big { padding: 44px 0 12px; }
+.home-stage::before { content: ""; position: absolute; left: 50%; top: -40px; width: 900px; max-width: 100vw; height: 420px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(249, 115, 22, 0.2), rgba(220, 38, 38, 0.07) 60%, transparent); pointer-events: none; }
+.home-stage.is-small::before { height: 200px; opacity: 0.6; }
+.home-hero { position: relative; }
+.home-hero h1 { font: 800 52px/1.06 'Syne', sans-serif; margin: 0 0 14px; letter-spacing: -0.01em; text-wrap: balance; }
+.home-hero h1 span { display: inline-block; }
+.home-hero__l2 { background: var(--home-flame-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.home-hero p { max-width: 640px; margin: 0 auto 24px; font-size: 16px; line-height: 1.5; color: var(--home-muted); text-wrap: pretty; }
 
-    /* 3. Tech Panel (LeftContent child) - 02a */
-    #home-tech-panel {
-        order: 3;
-    }
+.home-field { position: relative; display: flex; align-items: center; gap: 12px; max-width: 760px; margin: 0 auto; height: 64px; padding: 0 8px 0 20px; border-radius: 18px; background: rgba(16, 16, 20, 0.94); border: 1px solid var(--home-line); color: #a0a0a8; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+.home-field:focus-within { border-color: var(--home-flame-a); box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15), 0 10px 40px rgba(0, 0, 0, 0.5); }
+.home-field__ico { width: 22px; height: 22px; flex: none; }
+/* the field of the artist styles its own input only: `.home-field input` reached the lines of the pasted list (recheck P1-1) */
+.home-field > input { flex: 1; min-width: 0; align-self: stretch; background: none; border: 0; outline: 0; color: #fff; font: 600 18px 'Syne', sans-serif; }
+.home-field > input::placeholder { color: #a0a0a8; }
 
-    /* 4. Toolbar (RightPanel child) - 02b */
-    #home-toolbar {
-        order: 4;
-        /* Ensure it sticks or behaves nicely */
-        position: sticky;
-        top: 0;
-        z-index: 30; /* Higher than others */
-    }
+/* Buttons: neutral by default; one fire at a time (.is-flame, D8); white on the fire at 19 px, 800 (large text) */
+.home-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; height: 48px; padding: 0 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.14); background: #1c1c22; color: #fff; font: 700 15px 'Syne', sans-serif; cursor: pointer; white-space: nowrap; }
+.home-btn.is-flame { font-size: 19px; font-weight: 800; background: var(--home-flame); border-color: transparent; box-shadow: 0 0 24px rgba(249, 115, 22, 0.3); }
+.home-btn.is-ghost { background: transparent; height: 44px; }
+.home-btn.is-big { height: 56px; padding: 0 26px; font-size: 19px; font-weight: 800; }
+.home-btn[disabled] { opacity: 0.45; box-shadow: none; cursor: not-allowed; }
+.home-btn[aria-busy="true"] { cursor: wait; }
+.home-btn:focus-visible, .home-card:focus-visible, .home-rbtn button:focus-visible, .home-chip:focus-visible, .home-link:focus-visible, .home-undo__btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.home-ico--arrow { width: 18px; height: 18px; }
+/* the icon set has one arrow: down is up, turned (as the phone sheet of F76 did) */
+.home-ico--down { transform: rotate(180deg); }
 
-    /* 5. Staging Area (LeftContent child) - 03 */
-    #home-staging-area {
-        order: 5;
-    }
+/* Links: white, underlined in orange (no orange text: #fb923c is declared only for the BestEverAlbums source) */
+.home-hint { position: relative; margin: 12px 0 0; font-size: 14px; color: var(--home-soft); }
+.home-link { background: none; border: 0; padding: 12px 2px; margin: -12px 0; color: #fff; font: inherit; font-weight: 700; text-decoration: underline; text-decoration-color: var(--home-flame-a); text-decoration-thickness: 2px; text-underline-offset: 4px; cursor: pointer; }
+.home-guest { margin: 0 0 4px; font-size: 13px; color: var(--home-muted); text-align: left; }
+.home-guest .home-link { padding-block: 13px; margin-block: -13px; }
 
-    /* 6. Grid Container (RightPanel child) */
-    #discographyGridContainer {
-        order: 6;
-        /* Ensure it matches the remaining height behavior if possible, 
-           or just lets the body scroll (which is default on mobile) */
-    }
+/* The pasted list: each line checked as it is typed; after «Add», the line that did not go in stays, with why */
+.home-paste { height: auto; flex-direction: column; align-items: stretch; padding: 14px; text-align: left; gap: 8px; }
+.home-paste__label { margin: 0; font-size: 13px; color: var(--home-soft); padding: 0 10px; }
+.home-lines { display: grid; gap: 2px; }
+.home-line { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 12px; min-height: 40px; padding: 2px 10px; border-radius: 8px; color: #fff; font-size: 15px; }
+.home-line__n { color: #a0a0a8; font: 12px var(--home-text-font); text-align: right; }
+.home-line__text { min-width: 0; height: 36px; background: transparent; border: 0; border-radius: 6px; outline: 0; color: #fff; font: 400 15px 'Syne', sans-serif; padding: 0 6px; text-overflow: ellipsis; }
+.home-line__text:focus { background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 -2px 0 var(--home-flame-a); }
+.home-line.is-bad, .home-line.is-skip { background: rgba(220, 38, 38, 0.14); box-shadow: inset 3px 0 0 #f87171; }
+/* the line that stays to fix, as the prototype shows it: Syne 18/600 straight on the red band, no box around it
+   (the band, its red line and the reason beside it say «fix me»; the focus underline says «typing here») */
+.home-line.is-skip .home-line__text { background: transparent; border: 0; height: 40px; font: 600 18px 'Syne', sans-serif; padding: 0 6px; }
+.home-line__tag { font-size: 13px; display: inline-flex; align-items: center; gap: 4px; }
+.home-line.is-ok .home-line__tag { color: #4ade80; }
+.home-line.is-bad .home-line__tag, .home-line.is-skip .home-line__tag { color: #fca5a5; }
+.home-line__check { width: 16px; height: 16px; }
+.home-paste__summary strong { color: #fff; font-weight: 700; }
+.home-paste__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0 0 10px; font-size: 14px; color: var(--home-muted); }
 
-    /* 7. Footer (LeftPanel child) */
-    #home-left-footer {
-        order: 7;
-    }
+/* The equalizer (D6): still = ready; moving = waiting for an answer; flat = no answer came. Fire colours only. */
+.home-eq { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 36px; margin: 22px auto 0; max-width: 760px; opacity: 0.5; }
+.home-eq i { flex: 1; max-width: 8px; height: calc(var(--h) * 100%); border-radius: 2px 2px 0 0; background: var(--home-eq-grad); transform-origin: bottom; transition: transform 0.4s; }
+.home-stage.is-small .home-eq { height: 18px; margin-top: 14px; }
+.home-eq.is-live { opacity: 1; }
+.home-eq.is-live i { animation: home-eq 0.7s ease-in-out infinite alternate; animation-delay: var(--d); }
+.home-eq.is-flat { opacity: 0.35; }
+.home-eq.is-flat i { transform: scaleY(0.1); }
+@keyframes home-eq { from { transform: scaleY(0.2); } to { transform: scaleY(1); } }
+
+/* ── The results ───────────────────────────────────────────────────────────────────────────── */
+.home-results { margin-top: 22px; }
+.home-how { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 900px; margin: 34px auto 0; padding: 0; }
+.home-how li { display: flex; gap: 14px; align-items: flex-start; padding: 18px; border-radius: 16px; background: rgba(16, 16, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.08); text-align: left; }
+.home-how__n { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #1c1c22; border: 1px solid rgba(249, 115, 22, 0.6); font: 800 15px var(--home-text-font); }
+.home-how span strong { display: block; font-size: 15px; }
+.home-how span { color: var(--home-muted); font-size: 14px; line-height: 1.4; }
+.home-how span strong { color: #fff; }
+
+.home-after { margin: 0 0 14px; padding: 10px 14px; border-radius: 12px; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.35); font-size: 14px; color: #e4e4e7; }
+.home-wait { text-align: center; color: var(--home-muted); margin: 0 0 18px; }
+.home-msg { display: flex; flex-direction: column; align-items: center; gap: 6px; max-width: 620px; margin: 30px auto 0; padding: 26px; border-radius: 16px; text-align: center; background: rgba(16, 16, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); }
+.home-msg strong { font-size: 18px; }
+.home-msg span { color: var(--home-muted); font-size: 14px; }
+.home-msg.is-error { border-color: rgba(248, 113, 113, 0.55); }
+.home-msg .home-btn { margin-top: 10px; }
+
+.home-artist { display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.home-artist__t { display: flex; align-items: baseline; gap: 14px; }
+.home-artist h2 { font: 800 32px 'Syne', sans-serif; margin: 0; }
+#statusArtistName { color: var(--home-soft); font-size: 14px; }
+.home-chips { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.home-chip { height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.14); background: transparent; color: #d4d4d8; font: 600 13px 'Syne', sans-serif; cursor: pointer; white-space: nowrap; }
+.home-chip.is-on { background: #fff; color: #000; border-color: #fff; }
+.home-addall { font-size: 14px; }
+
+.home-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 22px 18px; }
+.home-card { display: block; background: none; border: 0; padding: 0; text-align: left; color: #fff; cursor: pointer; font: inherit; border-radius: 10px; }
+/* the frame is square whatever the catalog's image is (critique r2, finding 10) */
+.home-card__cover { position: relative; display: block; aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: #121216; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6); transition: transform 0.2s; }
+.home-card__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.home-card:hover .home-card__cover { transform: translateY(-3px); }
+.home-card.is-in .home-card__cover { outline: 3px solid var(--home-flame-a); outline-offset: 2px; }
+.home-card.is-in .home-card__img { opacity: 0.55; border-radius: 10px; }
+.home-card__mark { position: absolute; right: 8px; bottom: 8px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(0, 0, 0, 0.66); font: 800 15px var(--home-text-font); color: #fff; }
+.home-card__plus { width: 16px; height: 16px; }
+.home-card.is-in .home-card__mark { background: var(--home-flame); font-size: 19px; }
+.home-card__title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 10px; font-weight: 700; font-size: 14px; line-height: 1.25; }
+/* inline in the line of the card, as the prototype: the card keeps its height and the second row its place under the dock (recheck P2-6) */
+.home-card__year { display: inline; font-size: 12px; color: #a0a0a8; }
+.home-skel { aspect-ratio: 1; border-radius: 10px; background: linear-gradient(90deg, #121216, #1f1f25, #121216); background-size: 200% 100%; animation: home-shim 1.2s linear infinite; }
+@keyframes home-shim { to { background-position: -200% 0; } }
+
+/* ── The dock: the series, fixed at the bottom of the window; the page keeps its height free ─── */
+.home-dockwrap { position: fixed; left: 50%; transform: translateX(-50%); bottom: 18px; width: min(1132px, calc(100% - 48px)); z-index: 40; display: flex; flex-direction: column; gap: 8px; font-family: 'Syne', sans-serif; color: #fff; }
+.home-dock { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px 10px 18px; border-radius: 20px; background: rgba(12, 12, 15, 0.94); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6); }
+.home-dock.is-full { border-color: rgba(249, 115, 22, 0.5); }
+.home-dock.is-done { border-color: rgba(74, 222, 128, 0.45); }
+.home-dock__row { display: flex; align-items: center; gap: 18px; }
+.home-pile { display: flex; align-items: center; gap: 6px; height: 60px; flex: none; }
+.home-dcv { position: relative; width: 52px; height: 52px; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); flex: none; background: #1c1c22; }
+.home-dcv__img, .home-rcv__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.home-dn { position: absolute; left: 3px; top: 3px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: rgba(0, 0, 0, 0.78); font: 700 12px/18px var(--home-text-font); text-align: center; }
+.home-more { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 6px; background: #1c1c22; border: 1px solid var(--home-line); font: 700 14px var(--home-text-font); }
+.home-slot { width: 44px; height: 44px; border-radius: 6px; border: 2px dashed rgba(255, 255, 255, 0.22); }
+.home-dock__meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; }
+.home-dock__meta > strong { font-size: 16px; }
+.home-dock__meta > span { font-size: 13px; color: var(--home-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.home-namebox { display: flex; flex-direction: column; min-width: 0; }
+.home-name__label { font-size: 12px; color: var(--home-soft); display: flex; gap: 8px; align-items: center; }
+.home-name__sugg { font-size: 12px; padding: 0 6px; border-radius: 6px; border: 1px dashed rgba(255, 255, 255, 0.35); color: #e4e4e7; }
+.home-name { height: 44px; background: transparent; border: 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.35); color: #fff; font: 800 20px 'Syne', sans-serif; padding: 2px 0; outline: 0; width: 100%; max-width: 440px; text-overflow: ellipsis; }
+.home-name:focus { border-bottom-color: var(--home-flame-a); }
+.home-namebox.is-need .home-name { border-bottom: 2px solid #f87171; }
+.home-name__error { margin: 4px 0 0; font-size: 13px; color: #fca5a5; }
+.home-count { font-size: 13px; color: var(--home-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.home-go { display: flex; align-items: center; gap: 10px; flex: none; }
+.home-go small { font-size: 12px; color: var(--home-soft); max-width: 150px; text-align: right; }
+.home-next { display: block; text-align: right; font-size: 12px; color: var(--home-soft); padding-right: 4px; }
+.home-busy { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--home-soft); }
+.home-eq--mini { margin: 0; height: 14px; width: 30px; gap: 2px; opacity: 1; }
+.home-fail { color: #fca5a5; font-size: 13px; white-space: normal; }
+.home-saved { display: inline-flex; gap: 8px; align-items: center; font-size: 16px; }
+.home-saved__ico { color: #4ade80; }
+.home-restart { align-self: flex-end; font-size: 13px; }
+.home-undo { align-self: center; display: flex; align-items: center; gap: 14px; padding: 4px 6px 4px 16px; border-radius: 12px; background: #f4f4f5; color: #000; font-size: 14px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); }
+.home-undo__btn { height: 44px; padding: 0 14px; border: 0; border-radius: 10px; background: transparent; color: #000; font: 800 14px var(--home-text-font); text-decoration: underline; text-decoration-color: var(--home-flame-b); text-decoration-thickness: 2px; text-underline-offset: 4px; cursor: pointer; }
+
+/* The series panel, above the dock (computer); the same rows fill the phone's sheet */
+.home-panel { background: rgba(16, 16, 20, 0.98); border: 1px solid var(--home-line); border-radius: 18px; padding: 14px 16px 10px; box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.7); max-height: min(440px, calc(100vh - 260px)); display: flex; flex-direction: column; text-align: left; }
+.home-panel__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.home-panel__head h3 { margin: 0; font: 800 18px 'Syne', sans-serif; }
+.home-panel__head h3 span { font: 400 14px var(--home-text-font); color: var(--home-soft); margin-left: 8px; }
+.home-order { margin: 4px 0 8px; font-size: 14px; color: var(--home-muted); }
+.home-rows { list-style: none; margin: 0; padding: 0; overflow: auto; display: grid; gap: 4px; align-content: start; }
+.home-rows li { display: grid; grid-template-columns: 28px 44px 1fr auto; align-items: center; gap: 12px; padding: 4px 6px; border-radius: 10px; }
+.home-rows li:hover { background: rgba(255, 255, 255, 0.04); }
+.home-rows li.is-moved { background: rgba(249, 115, 22, 0.12); box-shadow: inset 3px 0 0 var(--home-flame-a); }
+.home-num { font: 800 16px var(--home-text-font); text-align: center; }
+.home-rcv { width: 44px; height: 44px; border-radius: 6px; overflow: hidden; display: block; background: #1c1c22; }
+.home-rt { min-width: 0; display: flex; flex-direction: column; }
+.home-rt strong { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.home-rt small { font-size: 13px; color: var(--home-soft); }
+.home-rbtn { display: flex; gap: 4px; }
+.home-rbtn button { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.14); background: #1c1c22; color: #fff; cursor: pointer; }
+.home-rbtn button[disabled] { opacity: 0.3; cursor: default; }
+.home-rbtn__remove { color: #fca5a5 !important; }
+
+/* Nothing moves for who asked the system for less motion (REQ-10): waiting, the bars stand still at full height
+   and the words («Searching…», «Saving your series…») carry the state */
+@media (prefers-reduced-motion: reduce) {
+  .home-eq i, .home-skel { animation: none !important; }
+  .home-card__cover, .home-eq i { transition: none !important; }
+  .home-eq.is-live i { transform: none; }
+  .home-card:hover .home-card__cover { transform: none; }
 }
