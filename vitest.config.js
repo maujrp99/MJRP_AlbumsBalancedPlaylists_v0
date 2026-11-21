@@ -7,7 +7,7 @@ export default defineConfig({
         globals: true,
         setupFiles: ['./test/setup.js'],
         include: ['test/**/*.test.js'], // the server's tests are in test/server
-        exclude: ['node_modules/**'],
+        exclude: ['node_modules/**', 'test/visual/**'], // test/visual/ is the Playwright visual sensor (mjrp-scripts/visual_parity), not the app's tests
         coverage: {
             provider: 'v8',
             reporter: ['text', 'html', 'json'],

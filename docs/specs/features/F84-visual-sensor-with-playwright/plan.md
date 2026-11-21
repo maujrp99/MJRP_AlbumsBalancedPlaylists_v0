@@ -5,7 +5,7 @@
 O kit do harness (`mjrp-scripts/visual_parity/`) com uma configuração do projeto em `test/visual/visual.config.mjs`. O trabalho já existe, sem commit, num worktree (`.claude/worktrees/agent-acfc7b768bff35219`, ramo `chore/visual-sensor-setup`): o gancho de nomes recusou o ramo, que precisa ser `claude/f84-<slug>` depois de a feature estar na «Priorizada».
 
 ## Technical Design
-`@playwright/test` 1.63.0 (a versão do harness; a 1.56.1 não baixou o WebKit); `vitest.config.js` exclui `test/visual/**`; `sensors.visual` com `when: pre-merge`.
+`@playwright/test` 1.63.0 (a versão do harness; a 1.56.1 não baixou o WebKit); `vitest.config.js` exclui `test/visual/**`; `sensors.visual` com `when: pre-merge`. As regiões da casca na configuração são as do app (`#header-container nav.top-nav`, `#app`, `footer.site-footer`), não as etiquetas genéricas; a rota da Home vem de `VISUAL_HOME_PATH` (padrão `/home`; `/start` depois da F85).
 
 ## Dependencies
 O kit `mjrp-scripts/visual_parity/`.

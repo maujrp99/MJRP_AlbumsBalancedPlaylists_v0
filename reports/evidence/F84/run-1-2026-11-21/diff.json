@@ -1,0 +1,588 @@
+{
+  "date": "2026-11-21",
+  "total": {
+    "P0": 18,
+    "P1": 0,
+    "P2": 27
+  },
+  "lines": [
+    {
+      "scenario": "f79-chosen",
+      "title": "Home · vários",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-chosen1",
+      "title": "Home · um álbum",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-created",
+      "title": "Home · criada",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-createfail",
+      "title": "Home · não deu para gravar",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-creating",
+      "title": "Home · criando",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-empty",
+      "title": "Home · primeira visita",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "footer"
+    },
+    {
+      "scenario": "f79-error",
+      "title": "Home · o catálogo não respondeu",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "footer"
+    },
+    {
+      "scenario": "f79-guest",
+      "title": "Home · visitante",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "footer"
+    },
+    {
+      "scenario": "f79-many",
+      "title": "Home · muitos",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-noname",
+      "title": "Home · nome faltando",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-notfound",
+      "title": "Home · artista não encontrado",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "footer"
+    },
+    {
+      "scenario": "f79-paste",
+      "title": "Home · colando uma lista",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "footer"
+    },
+    {
+      "scenario": "f79-pastereport",
+      "title": "Home · lista adicionada, uma linha pulada",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "footer"
+    },
+    {
+      "scenario": "f79-removed",
+      "title": "Home · removido, com Undo",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-reorder",
+      "title": "Home · mudando a ordem",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-results",
+      "title": "Home · discografia",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "header › footer"
+    },
+    {
+      "scenario": "f79-scanning",
+      "title": "Home · buscando",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "footer"
+    },
+    {
+      "scenario": "f79-typing",
+      "title": "Home · digitando",
+      "id": "shell-order",
+      "sev": "P0",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "header",
+      "product": "footer"
+    },
+    {
+      "scenario": "f79-empty",
+      "title": "Home · primeira visita",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "611px",
+      "product": "0px"
+    },
+    {
+      "scenario": "f79-error",
+      "title": "Home · o catálogo não respondeu",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "611px",
+      "product": "0px"
+    },
+    {
+      "scenario": "f79-guest",
+      "title": "Home · visitante",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "611px",
+      "product": "0px"
+    },
+    {
+      "scenario": "f79-many",
+      "title": "Home · muitos",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "100px",
+      "product": "44px"
+    },
+    {
+      "scenario": "f79-notfound",
+      "title": "Home · artista não encontrado",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "611px",
+      "product": "0px"
+    },
+    {
+      "scenario": "f79-paste",
+      "title": "Home · colando uma lista",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "611px",
+      "product": "0px"
+    },
+    {
+      "scenario": "f79-pastereport",
+      "title": "Home · lista adicionada, uma linha pulada",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "611px",
+      "product": "0px"
+    },
+    {
+      "scenario": "f79-scanning",
+      "title": "Home · buscando",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "611px",
+      "product": "0px"
+    },
+    {
+      "scenario": "f79-typing",
+      "title": "Home · digitando",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "webkit-w1280-dark"
+      ],
+      "proto": "611px",
+      "product": "0px"
+    },
+    {
+      "scenario": "f79-chosen",
+      "title": "Home · vários",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-chosen1",
+      "title": "Home · um álbum",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-created",
+      "title": "Home · criada",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-createfail",
+      "title": "Home · não deu para gravar",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-creating",
+      "title": "Home · criando",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-empty",
+      "title": "Home · primeira visita",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-error",
+      "title": "Home · o catálogo não respondeu",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-guest",
+      "title": "Home · visitante",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-many",
+      "title": "Home · muitos",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-noname",
+      "title": "Home · nome faltando",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-notfound",
+      "title": "Home · artista não encontrado",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-paste",
+      "title": "Home · colando uma lista",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-pastereport",
+      "title": "Home · lista adicionada, uma linha pulada",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-removed",
+      "title": "Home · removido, com Undo",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-reorder",
+      "title": "Home · mudando a ordem",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-results",
+      "title": "Home · discografia",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-scanning",
+      "title": "Home · buscando",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    },
+    {
+      "scenario": "f79-typing",
+      "title": "Home · digitando",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w1280-dark",
+        "chromium-w393-dark",
+        "webkit-w1280-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --eq-grad --flame --flame-a --flame-b --flame-text --t-dock-h --t-line --t-muted --t-panel --t-soft",
+      "product": "só no produto: --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font"
+    }
+  ]
+}

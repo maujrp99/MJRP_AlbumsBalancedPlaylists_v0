@@ -101,6 +101,15 @@ sequenceDiagram
 
 ---
 
+### The visual sensor (Playwright, `test/visual/`)
+Beside the tests of the app, the project has a sensor that compares the screen with its **approved visual references** (`docs/specs/info-arch.md` § Protótipos aprovados): it is the harness kit `mjrp-scripts/visual_parity/` run with the project's config, `test/visual/visual.config.mjs`, declared in `.mjrp-project.yml` as `sensors.visual` (`when: pre-merge`: the visual recheck runs it; the doctor only checks that it is declared and reaches the kit - rule A2).
+
+- **Not part of `npx vitest run`.** `vitest.config.js` excludes `test/visual/**` and the config is not a `*.test.js`; the app's own tests never pick up Playwright files.
+- **What it covers.** F79, the Home (`design/inception/home-transformar-v2.html`): the 18 states, at 1280 and 393. F80, the entry page (`design/inception/splash-crate-v2.html`, fire `?fire=soft`, the default fictional covers): the first screen and the scroll positions of the track (A2, A3, A5, flip, B1, B2), at 1280 and 393. Chromium and WebKit, dark only. What the kit cannot express as a condition (reduced motion, no WebGL, no JavaScript) stays with the recheck's own captures.
+- **No account, nothing written.** The product is this tree's Vite dev server on `127.0.0.1` (port `5391`, `VISUAL_PRODUCT_PORT` changes it); the page is a visitor. The two seams of the F79 browser proof are set inside the page and nowhere else: the catalog answers with the «Pink Floyd» scan the prototype captured, and `HomeController.writeSeries` is replaced, so no series is saved. Nothing is written to Firestore.
+- **How to run it** (heavy: always through the machine's queue): `python3 <harness>/mjrp-scripts/machine_load.py run --label v0-visual-sensor --wait 3600 -- node mjrp-scripts/visual_parity/run.mjs test/visual/visual.config.mjs`. Exit 0 parity, 1 a real P0/P1 divergence, 2 not evaluable. The verdict (`summary.md`, `diff.json`, the pairs of what diverged) lands in `reports/evidence/F84/<date>/`.
+- **Setup once.** `npm ci` in the root installs `@playwright/test` (pinned, 1.56.1; the kit accepts 1.51 up to 2.0); then `npx playwright install chromium webkit`.
+
 ## 3. Analysis Verdict
 *   **Status**: **Healthy / Active**.
 *   **Tech Stack**: Modern (Vitest; the Puppeteer scripts left in F65).

@@ -98,10 +98,10 @@ mjrp_harness:
     lint:  "npm run lint"
     test:  "npm test -- --run"
     build:  "npm run build"
-    # visual:                 # projeto com tela e referência visual aprovada (info-arch.md § Protótipos aprovados): o doctor (A2) exige
-    #   cmd: "node mjrp-scripts/visual_parity/run.mjs web/visual.config.mjs"   # o kit do kernel (só em projeto com tela)
-    #   config: web/visual.config.mjs   # o config visual do projeto: referência (viva ou estática), cenários, condições
-    #   when: pre-merge         # só o visual pode: roda na reconferência visual; o hook pre-merge-commit cobra o relatório
+    visual:                   # F79 (Home) e F80 (página de entrada): referências visuais aprovadas em info-arch.md § Protótipos aprovados
+      cmd: "node mjrp-scripts/visual_parity/run.mjs test/visual/visual.config.mjs"   # o kit do kernel; pela fila da máquina (machine_load.py run)
+      config: test/visual/visual.config.mjs   # o config visual do projeto: as duas referências vivas, os cenários, as condições
+      when: pre-merge         # só o visual pode: roda na reconferência visual; o hook pre-merge-commit cobra o relatório
   kernel:                    # as páginas da wiki do harness que este projeto carrega (I5)
     version: 2026-11-21
     source: 61d4f2a91
