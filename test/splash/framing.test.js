@@ -47,8 +47,8 @@ describe('UAT-235 · the crate on a diagonal, whole in its frame', () => {
         expect(recordAt(3, 15)).toBe(3)
         expect(recordAt(10, 15)).toBe(11)
         expect(recordAt(13, 15)).toBe(14)
-        expect(sleeveTargets('b1', 1, TRACKS, 15)[11].lift).toBe(1)
-        expect(sleeveTargets('a3', 0, TRACKS, 15)[3].lift).toBe(1)
+        expect(sleeveTargets('playlists', 1, TRACKS, 15)[11].lift).toBe(1)
+        expect(sleeveTargets('blend', 0, TRACKS, 15)[5].lift).toBe(1)
     })
 
     it('a record turning to you picks the cover nearest the camera, never more than a quarter turn', () => {

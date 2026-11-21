@@ -7,6 +7,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { COPY } from '../../public/splash/copy.js'
+import { USER_KEY_PREFIX } from '../../public/splash/gate.js'
 import {
     FIRE, ORDER, TRACKS, MOTION_WINDOW_MS, trackAt, flipProgress, captionIndex, cssCrateLayout, shouldLoad3d,
     threadBarStyle, captionLine, startSplash
@@ -14,45 +16,45 @@ import {
 import { coverImagesHtml, captionHtml } from '../../public/splash/covers.js'
 
 describe('the record playing', () => {
-    it('eight tracks: five on side A, the flip, two on side B', () => {
-        expect(ORDER).toEqual(['a1', 'a2', 'a3', 'a4', 'a5', 'flip', 'b1', 'b2'])
-        expect(TRACKS.a3.label).toBe('Side A · 3 — Ranking')
-        expect(TRACKS.b1.side).toBe('B')
+    it('eight parts: the opening, three stories on side A, the flip band, two stories on side B, the close', () => {
+        expect(ORDER).toEqual(['a1', 'start', 'albums', 'blend', 'flip', 'playlists', 'inventory', 'end'])
+        expect(TRACKS.playlists.side).toBe('B')
     })
 
     it('the fire is the soft one: strong on the first screen and the invitation, low in between', () => {
         expect(FIRE).toEqual({ peak: 0.72, low: 0.28 })
         expect(TRACKS.a1.fire).toBe(0.72)
-        expect(TRACKS.b2.fire).toBe(0.72)
-        expect(TRACKS.a4.fire).toBe(0.28)
+        expect(TRACKS.end.fire).toBe(0.72)
+        expect(TRACKS.blend.fire).toBe(0.28)
         expect(TRACKS.flip.fire).toBeCloseTo(0.5)
     })
 
     it('the track is the last section whose top passed 55% of the screen', () => {
         const vh = 800
         expect(trackAt([0, 900, 1800, 2700, 3600, 4500, 5400, 6300], vh)).toBe('a1')
-        expect(trackAt([-1900, -1000, 300, 1200, 2100, 3000, 3900, 4800], vh)).toBe('a3')
-        expect(trackAt([-9000, -8000, -7000, -6000, -5000, -4000, -3000, 100], vh)).toBe('b2')
+        expect(trackAt([-1900, -1000, 300, 1200, 2100, 3000, 3900, 4800], vh)).toBe('albums')
+        expect(trackAt([-9000, -8000, -7000, -6000, -5000, -4000, -3000, 100], vh)).toBe('end')
     })
 
     it('the crate turns through «Flip the record» and stays turned on side B', () => {
-        expect(flipProgress(900, 600, 800, 'a5')).toBe(0)
+        expect(flipProgress(900, 600, 800, 'blend')).toBe(0)
         expect(flipProgress(300, 600, 800, 'flip')).toBeCloseTo((600 - 300) / 800)
         expect(flipProgress(-1000, 600, 800, 'flip')).toBe(1)
-        expect(flipProgress(5000, 600, 800, 'b1')).toBe(1)
+        expect(flipProgress(5000, 600, 800, 'playlists')).toBe(1)
     })
 
     it('the caption names the pulled record, or the one in front', () => {
         expect(captionIndex('a1')).toBe(0)
-        expect(captionIndex('a3')).toBe(3)
-        expect(captionIndex('b1')).toBe(10)
-        expect(captionIndex('b2')).toBe(13)
+        expect(captionIndex('start')).toBe(2)
+        expect(captionIndex('playlists')).toBe(10)
+        expect(captionIndex('end')).toBe(13)
         // a crate of 15 (the real set): side A has eight, side B keeps its records
-        expect(captionIndex('a3', 15)).toBe(3)
-        expect(captionIndex('b1', 15)).toBe(11)
-        expect(captionIndex('b2', 15)).toBe(14)
+        expect(captionIndex('start', 15)).toBe(2)
+        expect(captionIndex('playlists', 15)).toBe(11)
+        expect(captionIndex('end', 15)).toBe(14)
         expect(captionLine({ a: 'Nas', y: '1994' })).toBe('Nas · 1994')
-        expect(captionLine({ a: 'North Atlas', y: '' })).toBe('North Atlas · fictional album')
+        expect(captionLine({ a: 'North Atlas', y: '' })).toBe('North Atlas · álbum fictício')
+        expect(captionLine({ a: 'North Atlas', y: '' }, 'en')).toBe('North Atlas · fictional album')
     })
 })
 
@@ -61,7 +63,7 @@ describe('the CSS crate', () => {
         const a = cssCrateLayout('a1', 15)
         expect(a.slice(0, 8).every(p => p.visible)).toBe(true)
         expect(a.slice(8).some(p => p.visible)).toBe(false)
-        const b = cssCrateLayout('b1', 15)
+        const b = cssCrateLayout('playlists', 15)
         expect(b.slice(8).every(p => p.visible)).toBe(true)
         expect(b[11].zIndex).toBe('30')
     })
@@ -74,14 +76,14 @@ describe('the CSS crate', () => {
     })
 
     it('a track lifts its record and leans the ones in front of it', () => {
-        const places = cssCrateLayout('a4') // pulls record 5
+        const places = cssCrateLayout('blend') // pulls record 5
         expect(places[5]).toEqual({ visible: true, transform: 'translate3d(0,-46%,-152px) rotateX(3deg)', zIndex: '30' })
         expect(places[2].transform).toContain('rotateX(-38deg)')
         expect(places[6].transform).toContain('rotateX(-6deg)')
     })
 
     it('side B is the other seven records, the last one in front', () => {
-        const places = cssCrateLayout('b2')
+        const places = cssCrateLayout('end')
         expect(places.slice(0, 7).some(p => p.visible)).toBe(false)
         expect(places[13].transform).toBe('translate3d(0,0%,0px) rotateX(-6deg)')
     })
@@ -116,7 +118,7 @@ function loadPage(set = 'fictional') {
     document.documentElement.className = ''
 }
 
-function fakeWindow({ reduce = false, phone = false } = {}) {
+function fakeWindow({ reduce = false, phone = false, languages = ['pt-BR'], store = undefined } = {}) {
     const listeners = {}
     class Observer { observe() {} unobserve() {} disconnect() {} }
     return {
@@ -127,7 +129,9 @@ function fakeWindow({ reduce = false, phone = false } = {}) {
         Event, CustomEvent,
         IntersectionObserver: Observer,
         ResizeObserver: Observer,
-        matchMedia: (q) => ({ matches: (q.includes('reduce') && reduce) || (q.includes('max-width') && phone) }),
+        matchMedia: (q) => ({ matches: (q.includes('reduce') && reduce) || (q.includes('max-width') && phone), addEventListener() {} }),
+        navigator: { languages },
+        localStorage: store,
         getComputedStyle: () => ({ getPropertyValue: () => '0.72' }),
         requestAnimationFrame: () => 1,
         setTimeout: (fn, ms) => setTimeout(fn, ms),
@@ -141,18 +145,18 @@ describe('the page wired', () => {
     beforeEach(() => { vi.useFakeTimers(); loadPage() })
     afterEach(() => { vi.useRealTimers() })
 
-    it('marks the page as scripted, fills the thread and starts on side A, track 1', () => {
+    it('marks the page as scripted, builds the bar and starts on the opening, side A', () => {
         const page = startSplash(fakeWindow())
         expect(document.documentElement.classList.contains('js')).toBe(true)
-        expect(document.querySelectorAll('#groups .g i')).toHaveLength(35)
+        expect(document.querySelectorAll('#eqbar i').length).toBeGreaterThanOrEqual(30)
         expect(page.state.track).toBe('a1')
-        expect(document.getElementById('now-track').textContent).toBe('Side A · 1 — The Blender')
-        expect(document.querySelector('#groups [data-for="a1"]').getAttribute('aria-current')).toBe('step')
-        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · fictional album')
+        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · álbum fictício')
         expect(document.querySelectorAll('#box .sl.vis')).toHaveLength(7)
+        expect(document.getElementById('a1').classList.contains('is-current')).toBe(true)
+        expect(document.documentElement.lang).not.toBe('en')
     })
 
-    it('«Pause motion» shows, stops everything and says «Play motion»; the motion rests by itself', () => {
+    it('the pause icon shows, stops everything and says «Retomar o movimento»; the motion rests by itself', () => {
         startSplash(fakeWindow())
         const html = document.documentElement
         const button = document.getElementById('motion')
@@ -160,28 +164,27 @@ describe('the page wired', () => {
         expect(html.classList.contains('moving')).toBe(true)
         button.click()
         expect(html.classList.contains('paused')).toBe(true)
-        expect(button.textContent).toBe('Play motion')
+        expect(button.getAttribute('aria-label')).toBe(COPY.pt.play)
         expect(button.getAttribute('aria-pressed')).toBe('true')
         button.click()
+        expect(button.getAttribute('aria-label')).toBe(COPY.pt.pause)
         vi.advanceTimersByTime(MOTION_WINDOW_MS + 1)
         expect(html.classList.contains('moving')).toBe(false)
     })
 
-    it('with reduced motion nothing moves and there is no «Pause motion»', () => {
+    it('with reduced motion nothing moves and the pause icon is hidden', () => {
         startSplash(fakeWindow({ reduce: true }))
         expect(document.documentElement.classList.contains('moving')).toBe(false)
         expect(document.getElementById('motion').hidden).toBe(true)
     })
 
-    it('on the phone each track brings its record with its credit; the thread leaves the tab order', () => {
+    it('on the phone each story brings its record with its credit', () => {
         loadPage('real')
         startSplash(fakeWindow({ phone: true }))
-        const slot = document.querySelector('#a3 .slot')
+        const slot = document.querySelector('#blend .slot')
         expect(slot.querySelector('img').alt).toBe('')
-        expect(slot.querySelector('a.slot-am').textContent).toBe('Low · David Bowie — Listen on Apple Music')
+        expect(slot.querySelector('a.slot-am').textContent).toBe(`Dummy · Portishead — ${COPY.pt['c.listen']}`)
         expect(slot.hasAttribute('aria-hidden')).toBe(false)
-        expect(document.querySelector('#groups a').tabIndex).toBe(-1)
-        expect(document.getElementById('hero-ctas').contains(document.getElementById('motion'))).toBe(true)
     })
 
     it('on a computer the CSS crate turns to the same diagonal as the 3D one; on the phone it does not (UAT-235)', () => {
@@ -195,8 +198,51 @@ describe('the page wired', () => {
 
     it('fictional records on the phone carry their tag and no link', () => {
         startSplash(fakeWindow({ phone: true }))
-        const credit = document.querySelector('#a2 .slot .slot-am')
+        const credit = document.querySelector('#start .slot .slot-am')
         expect(credit.tagName).toBe('SPAN')
-        expect(credit.textContent).toBe('Lantern Hymnal · The Hollow Lanterns — fictional album')
+        expect(credit.textContent).toBe(`Lantern Hymnal · The Hollow Lanterns — ${COPY.pt['c.fictional']}`)
+    })
+})
+
+describe('the language and the account, wired (UAT-240, UAT-241)', () => {
+    const accountStore = () => {
+        const key = `${USER_KEY_PREFIX}AIzaFake:[DEFAULT]`
+        return { length: 1, key: () => key, getItem: () => JSON.stringify({ uid: 'u1', isAnonymous: false }), setItem() {}, removeItem() {} }
+    }
+    beforeEach(() => { vi.useFakeTimers(); loadPage() })
+    afterEach(() => { vi.useRealTimers() })
+
+    it('a browser in English opens the page in English; the switch changes it and remembers the choice', () => {
+        const saved = {}
+        const store = { getItem: (k) => saved[k] ?? null, setItem: (k, v) => { saved[k] = v } }
+        startSplash(fakeWindow({ languages: ['en-US'], store }))
+        expect(document.documentElement.lang).toBe('en')
+        expect(document.getElementById('h1').innerHTML).toBe(COPY.en['h.title'])
+        document.querySelector('[data-lang="pt"]').click()
+        expect(document.documentElement.lang).toBe('pt-BR')
+        expect(document.getElementById('h1').innerHTML).toBe(COPY.pt['h.title'])
+        expect(saved['albumblender:lang']).toBe('pt')
+        expect(document.querySelector('[data-lang="pt"]').getAttribute('aria-pressed')).toBe('true')
+    })
+
+    it('the caption and the pause label follow the language', () => {
+        startSplash(fakeWindow({ languages: ['en'] }))
+        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · fictional album')
+        expect(document.getElementById('motion').getAttribute('aria-label')).toBe(COPY.en.pause)
+    })
+
+    it('signed out (the default) the menu scrolls to the stories', async () => {
+        startSplash(fakeWindow())
+        await vi.advanceTimersByTimeAsync(0)
+        expect(document.documentElement.classList.contains('in')).toBe(false)
+        expect(document.querySelector('.stop[data-for="albums"]').getAttribute('href')).toBe('#albums')
+    })
+
+    it('signed in (an account in the browser) the page shows the menu and the «Inicie» button; an item goes to its screen', async () => {
+        startSplash(fakeWindow({ store: accountStore() }))
+        await vi.advanceTimersByTimeAsync(0)
+        expect(document.documentElement.classList.contains('in')).toBe(true)
+        expect(document.querySelector('.stop[data-for="playlists"]').getAttribute('href')).toBe('/saved-playlists')
+        expect(document.querySelector('.btn-start').getAttribute('href')).toBe('/start')
     })
 })

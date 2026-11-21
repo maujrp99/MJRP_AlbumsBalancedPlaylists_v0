@@ -1,20 +1,22 @@
 <!doctype html>
-<html lang="en" data-page="entry">
+<html lang="pt-BR" data-page="entry">
 <head>
 <meta charset="utf-8">
-<!-- F80 · the entry page, built from the approved prototype «Caixote v2», soft fire (design/inception/splash-crate-v2.html).
+<!-- F80 · the entry page, the home «A barra é o menu» (UAT-240, UAT-241), built from the approved prototype
+     design/inception/splash-menu-bar-v2.html on the Caixote v2 (design/inception/splash-crate-v2.html), soft fire.
      Served at the site's root (dist/index.html) and at /home to everyone, with or without an account; the app is dist/app.html.
-     The Vite plugin `entryPage` (vite.config.js) writes the covers, the caption and the credit
-     into the «splash:…» placeholder comments, in the build and in the dev server. -->
+     ALL visible text lives in public/splash/copy.js (pt, en): the Vite plugin `entryPage` writes the Portuguese into every
+     data-i18n… element, and the covers, the caption and the credit into the «splash:…» placeholder comments, in the build
+     and in the dev server; lang.js swaps the language in the browser. -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://is1-ssl.mzstatic.com; connect-src 'self' https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
-<title>The Album Blender — for people who listen to whole albums</title>
-<meta name="description" content="The Album Blender is a web app for people who listen to whole albums: gather albums into series, rank every track, blend them into balanced playlists, and keep count of the records you own.">
+<title data-i18n="meta.title"></title>
+<meta name="description" content="" data-i18n-content="meta.desc">
 <link rel="canonical" href="https://mjrp-playlist-generator.web.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Album Blender">
-<meta property="og:title" content="The Album Blender — for people who listen to whole albums">
-<meta property="og:description" content="Gather albums into series, rank every track, blend them into balanced playlists, and keep count of the records you own.">
+<meta property="og:title" content="" data-i18n-content="meta.title">
+<meta property="og:description" content="" data-i18n-content="meta.ogdesc">
 <meta property="og:url" content="https://mjrp-playlist-generator.web.app/">
 <meta name="theme-color" content="#0a0a0c">
 <link rel="icon" type="image/png" href="/favicon.png">
@@ -22,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"The Album Blender","url":"https://mjrp-playlist-generator.web.app/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","description":"A web app for people who listen to whole albums: gather albums into series, rank every track, blend them into balanced playlists, and keep count of the records you own."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"The Album Blender","url":"https://mjrp-playlist-generator.web.app/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","description":"A web app for people who listen to whole albums: gather albums into series, rank the tracks your way, blend balanced playlists, and keep count of the records you own."}</script>
 <style>
 :root{
   --bg:#0a0a0c;--panel:#121216;--line:rgba(255,255,255,.12);
@@ -66,16 +68,6 @@ html.moving:not(.paused) .eqi i{animation:eqb var(--d) ease-in-out var(--o,0s) i
 /* the thread: the record's progress, one group of bars per track; the only navigation motif */
 .thread{position:sticky;top:var(--top);z-index:19;background:rgba(10,10,12,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .thread .wrap{display:flex;align-items:center;gap:16px;height:var(--thread)}
-.thread .now-track{font:700 13px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--orange-text);white-space:nowrap;min-width:13.5em}
-.thread .groups{flex:1;display:flex;align-items:stretch;gap:10px;height:44px}
-.thread .g{flex:1;display:flex;align-items:center;gap:3px;text-decoration:none;min-width:24px;border-radius:6px;padding:0 2px}
-.thread .g:hover i{background:rgba(255,255,255,.34)}
-.thread .g i{flex:1;min-width:2px;max-width:7px;border-radius:2px 2px 1px 1px;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom;align-self:center}
-.thread .g.on i{background:linear-gradient(0deg,#dc2626,#f97316 60%,#fbbf24)}
-html.moving:not(.paused) .thread .g.cur i{animation:eqb var(--d) ease-in-out var(--o) infinite alternate}
-.thread .turn{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:44px;font:700 12px/1 var(--body);letter-spacing:.1em;color:var(--faint);text-decoration:none;border-radius:6px}
-.thread .turn.on{color:var(--orange-text)}
-.thread .bar-cta{display:none}
 
 /* story: text column + the stage */
 .story{display:grid;grid-template-columns:minmax(0,500px) minmax(0,1fr);column-gap:clamp(24px,4vw,64px);align-items:start}
@@ -90,17 +82,11 @@ h1 em{font-style:normal;color:var(--orange)}
 .ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 h2.t{font:800 clamp(30px,3.3vw,44px)/1.05 var(--display);letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance}
 section p{color:var(--muted);margin:0 0 14px;max-width:44ch}
-.flip h2.t{font-size:clamp(40px,5vw,68px)}
-.why blockquote{margin:0 0 20px;font:700 clamp(26px,2.8vw,38px)/1.14 var(--display);text-wrap:balance}
-.why blockquote em{font-style:normal;color:var(--orange-text)}
 .ranked{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--panel);margin-top:12px;max-width:440px}
 .ranked .tag{font:700 12px/1.3 var(--body);letter-spacing:.1em;text-transform:uppercase;color:#d6d6dc;display:flex;justify-content:space-between;gap:8px;margin-bottom:8px}
 .ranked .tag b{color:var(--orange-text)}
 .ranked ol{list-style:none;margin:0;padding:0}
 .ranked li{display:grid;grid-template-columns:20px 1fr 84px;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(255,255,255,.07);font-size:15px}
-.ranked li span:first-child{color:var(--faint)}
-.ranked .bar{height:8px;border-radius:4px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
-.ranked .bar::after{content:"";position:absolute;inset:0;width:var(--w);background:var(--flame)}
 .ranked .note{font-size:13px;color:var(--faint);margin:8px 0 0}
 .slot{display:none}
 
@@ -137,9 +123,6 @@ footer nav{display:flex;gap:4px;flex-wrap:wrap}
 footer nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;text-decoration:none;color:#d6d6dc}
 footer p{margin:12px 0 0;max-width:80ch}
 footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
-.motion-toggle{flex:0 0 auto;min-height:44px;padding:0 16px;border-radius:22px;border:1px solid rgba(255,255,255,.4);background:rgba(10,10,12,.85);color:#fff;font:600 14px/1 var(--body);cursor:pointer}
-.motion-toggle:hover{border-color:#fff}
-.motion-toggle.inline{position:static;background:transparent;border:0;text-decoration:underline;color:#d6d6dc;padding:0 6px}
 .b2-fire{display:none}
 
 /* PHONE: one column; the crate is a short CSS fan under the hero; each track brings its sleeve; the thread and the main action live in the bottom bar */
@@ -162,17 +145,7 @@ footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
   .credit-tag{left:var(--gutter)}
   .thread{position:fixed;top:auto;bottom:0;left:0;right:0;border-bottom:0;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
   .thread .wrap{height:72px;gap:12px}
-  .thread .now-track{display:none}
-  .thread .groups{gap:5px}
-  .thread .groups{min-width:0}
-  .thread .g{min-width:0;flex:1 1 0;gap:2px;padding:0}
-  .thread .g i{max-width:4px}
-  .thread .g i:nth-child(n+4){display:none}
   .caption .who b{white-space:normal}
-  .thread .g,.thread .turn{pointer-events:none}
-  .thread .turn{min-width:24px;font-size:0}
-  .thread .turn::before{content:"⟲";font-size:16px}
-  .thread .bar-cta{display:inline-flex;flex:0 0 auto;padding:0 14px;font-size:16px}
   .slot{display:block;width:180px;height:180px;margin:0 0 22px;position:relative;perspective:700px}
   html:not(.js) .slot{display:none}
   .slot img{position:absolute;inset:0;width:100%;height:100%;border-radius:3px;box-shadow:0 18px 36px rgba(0,0,0,.7);transform-origin:50% 100%;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
@@ -190,105 +163,230 @@ footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
   .slot.pre img{transform:none}
 }
 html.paused *,html.paused *::before,html.paused *::after{animation-play-state:paused!important}
+/* ===== F80 · home menu preview (UAT-241, UAT-240): shared ===== */
+html:not(.in) .only-in{display:none!important}
+html.in .only-out{display:none!important}
+.door{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:var(--orange-text);font:700 16px/1 var(--body);text-decoration:none;margin-top:6px}
+.door:hover{text-decoration:underline}
+.top .wrap{gap:20px}
+.top .acct{display:flex;gap:8px;align-items:center;flex:0 0 auto}
+/* the slider-menu: five stops on ONE continuous row of bars (Elevar's thread), the fire fills it as you read */
+nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;min-width:0}
+.ms .stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font:600 14px/1 var(--body);border-radius:6px;white-space:nowrap}
+.ms .stop:hover{color:#fff}
+.ms .stop.on{color:#fff}
+.ms .stop.cur{color:var(--orange-text)}
+.ms .flipmark{position:absolute;z-index:2;left:60%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:24px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
+.ms .flipmark.on{color:var(--orange-text)}
+.eqbar{position:absolute;left:0;right:0;display:flex;align-items:flex-end;gap:2px;pointer-events:none}
+.eqbar i{flex:1 1 0;min-width:1px;border-radius:1px 1px 0 0;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom}
+.eqbar i.on{background:linear-gradient(0deg,#dc2626,#f97316 60%,#fbbf24)}
+html.moving:not(.paused) .eqbar i.cur{animation:eqb var(--d) ease-in-out var(--o) infinite alternate}
+.needle{display:none}
+/* the pause: a discreet icon in the stage's corner, where the motion is */
+.motion-icon{position:absolute;z-index:6;top:8px;right:8px;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.28);background:rgba(10,10,12,.6);color:#d6d6dc;cursor:pointer;padding:0}
+.motion-icon:hover{color:#fff;border-color:rgba(255,255,255,.6)}
+.motion-icon svg{fill:currentColor}
+.motion-icon .i-play{display:none}
+html.paused .motion-icon .i-play{display:block}
+html.paused .motion-icon .i-pause{display:none}
+@media (max-width:899px){
+  .motion-icon{width:44px;height:44px;border-radius:22px;top:6px;right:var(--gutter)}
+  html.in .top .btn-start{display:inline-flex}
+  .top .acct .btn-primary.only-out{display:none}
+  .ms .flipmark{display:none}
+  .thread .wrap{padding-top:4px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+:root{--top:72px;--thread:0px}
+.thread{display:none}
+.ms-desk{flex:1 1 auto;min-width:0;max-width:620px;margin:0 auto}
+.ms .stop{justify-content:flex-start;padding-top:8px;min-height:52px}
+.ms .flipmark{top:4px}
+.eqbar{bottom:6px;height:16px}
+@media (max-width:899px){
+  :root{--top:56px}
+  .ms-desk{display:none}
+  .thread{display:block}
+  .thread .wrap{height:64px}
+  .ms .stop{justify-content:flex-end;padding:0 0 8px;font-size:12px;min-height:56px}
+  .eqbar{top:8px;bottom:auto;height:18px}
+  .ms .flipmark{top:4px;font-size:0}
+}
+/* ===== v2: Portuguese first, the real ranking card, the flip as a band ===== */
+.rank-real .tag{flex-direction:column;gap:4px}
+.rank-real li{grid-template-columns:20px 1fr auto}
+.rank-real li.up .tt{color:#fff;font-weight:600}
+.rank-real .mv{font:700 12px/1.2 var(--body);color:var(--orange-text);white-space:nowrap}
+.rank-real .more-tracks{font-size:14px;color:var(--muted);margin:8px 0 0}
+/* the flip: a short band, not a screen; the crate still turns while it passes */
+.story > section.flip-band{min-height:0;padding:28px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:24px 0}
+.flip-band .fb-title{font:800 22px/1.2 var(--display);margin:0 0 6px;color:var(--orange-text);letter-spacing:-.01em}
+.flip-band .fb-line{margin:0;color:var(--muted)}
+/* Portuguese runs longer: the menu's labels stay on one line */
+.ms .lb{white-space:nowrap}
+@media (max-width:899px){
+  .story > section.flip-band{padding:8px 0;margin:0;border-bottom:0;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px}
+  .flip-band .fb-title{font-size:14px;margin:0}
+  .flip-band .fb-line{font-size:13px;line-height:1.35}
+  .ms .stop{font-size:12px}
+}
+/* ===== F80 · the home as built: the hero's lines, the language switch, the menu without script ===== */
+.what{font-size:20px;color:#fff;max-width:38ch;margin:18px 0 10px}
+.para{font-size:17px;color:var(--muted);max-width:44ch;margin:0 0 28px}
+.top .acct{gap:10px}
+.lang{display:inline-flex;border:1px solid rgba(255,255,255,.28);border-radius:22px;overflow:hidden;flex:0 0 auto}
+.lang button{min-width:44px;min-height:44px;padding:0 10px;border:0;background:transparent;color:var(--muted);font:700 13px/1 var(--body);letter-spacing:.06em;cursor:pointer}
+.lang button:hover{color:#fff}
+.lang button[aria-pressed="true"]{color:#fff;background:rgba(255,255,255,.14)}
+@media (max-width:899px){
+  .lang button{min-width:40px;padding:0 6px}
+  .top .acct{gap:6px}
+  html:not(.js) .ms-desk{display:block;position:static;width:100%}
+  html:not(.js) .thread{display:none}
+}
+
+/* ===== the stories' height and the ambient slot (v4 of the prototype fills them) =====
+   Height of a story: --story-min (computer) and --story-min-phone; change them here, per story with #id{--story-min:...}.
+   The ambient slot: an empty, aria-hidden layer behind the text of each text-only story (<div class="ambient" data-ambient="id">).
+   Hooks: the story being read has .is-current (splash.js, on the scroll); the pause icon puts .paused on <html>;
+   reduced motion leaves <html> without .moving. Nothing is drawn in it yet. */
+.story > section{position:relative;isolation:isolate;min-height:var(--story-min,calc(88dvh - var(--top) - var(--thread)))}
+.ambient{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .6s}
+section.is-current .ambient{opacity:1}
+@media (max-width:899px){
+  .story > section{min-height:var(--story-min-phone,0)}
+  .story > section.hero{min-height:0}
+}
+@media (prefers-reduced-motion:reduce){.ambient{transition:none}}
+
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
+<a class="skip" href="#main" data-i18n="skip"></a>
 
 <header class="top"><div class="wrap">
-  <a class="home" href="#a1" aria-label="The Album Blender, top of the page"><img class="logo" alt="The Album Blender" src="/splash/wordmark.jpg" width="900" height="149"></a>
-  <nav aria-label="Account"><a class="btn btn-ghost btn-sm" href="/start?signin">Sign in</a><a class="btn btn-primary btn-sm" href="/start">Open the app</a></nav>
+  <a class="home" href="#a1" aria-label="" data-i18n-aria="home.aria"><img class="logo" alt="The Album Blender" src="/splash/wordmark.jpg" width="900" height="149"></a>
+  <div class="ms-desk" id="slot-header"><nav class="ms" id="ms" aria-label="" data-i18n-aria="menu.aria">
+      <a class="stop" href="#start" data-for="start"><span class="lb" data-i18n="m.start"></span></a>
+      <a class="stop" href="#albums" data-for="albums"><span class="lb" data-i18n="m.albums"></span></a>
+      <a class="stop" href="#blend" data-for="blend"><span class="lb" data-i18n="m.blend"></span></a>
+      <a class="stop" href="#playlists" data-for="playlists"><span class="lb" data-i18n="m.playlists"></span></a>
+      <a class="stop" href="#inventory" data-for="inventory"><span class="lb" data-i18n="m.inventory"></span></a>
+      <a class="flipmark" href="#flip" aria-label="" data-i18n-aria="flip.aria"><span aria-hidden="true">⟲</span></a>
+      <div class="eqbar" id="eqbar" aria-hidden="true"></div>
+    </nav></div>
+  <div class="acct">
+    <div class="lang" role="group" aria-label="" data-i18n-aria="lang.aria"><button type="button" data-lang="pt" aria-pressed="true" lang="pt-BR">PT</button><button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button></div>
+    <a class="btn btn-ghost btn-sm only-out" href="/start?signin" data-i18n="signin"></a><a class="btn btn-primary btn-sm only-out" href="/start" data-i18n="openapp"></a>
+    <a class="btn btn-primary btn-sm btn-start only-in" href="/start"><span data-i18n="m.start"></span> <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a>
+  </div>
 </div></header>
 
-<nav class="thread" aria-label="Tracks of this page"><div class="wrap">
-  <span class="now-track" id="now-track">Side A · 1 — The Blender</span>
-  <div class="groups" id="groups">
-    <a class="g" href="#a1" data-for="a1" aria-label="Side A, track 1: The Album Blender"></a>
-    <a class="g" href="#a2" data-for="a2" aria-label="Side A, track 2: Series"></a>
-    <a class="g" href="#a3" data-for="a3" aria-label="Side A, track 3: Rank every track"></a>
-    <a class="g" href="#a4" data-for="a4" aria-label="Side A, track 4: Blend"></a>
-    <a class="g" href="#a5" data-for="a5" aria-label="Side A, track 5: Your shelf"></a>
-    <a class="turn" href="#flip" data-for="flip" aria-label="Flip the record">FLIP</a>
-    <a class="g" href="#b1" data-for="b1" aria-label="Side B, track 1: Why whole albums"></a>
-    <a class="g" href="#b2" data-for="b2" aria-label="Side B, track 2: Start"></a>
-  </div>
-  <a class="btn btn-primary bar-cta" href="/start">Open the app</a>
-  <button class="motion-toggle" id="motion" type="button" aria-pressed="false" hidden>Pause motion</button>
-</div></nav>
+<div class="thread"><div class="wrap">
+  <div class="ms-slot" id="slot-thread" style="flex:1;min-width:0"></div>
+</div></div>
 
 <main id="main" class="wrap story">
   <section class="hero" id="a1" data-track="a1" aria-labelledby="h1">
-    <p class="kicker">For whole-album listeners</p>
-    <h1 id="h1">Dig through the albums you love. <em>Keep every track.</em></h1>
-    <p class="what"><strong>The Album Blender is a web app for people who listen to whole albums.</strong> Gather albums into series, rank every track, and blend them into playlists that keep every record in the mix — then keep count of the ones on your shelf.</p>
-    <div class="ctas" id="hero-ctas"><a class="btn btn-primary" href="/start" id="app">Open the app <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a><a class="btn btn-ghost" href="/start?signin" id="signin">Sign in</a></div>
-  </section>
-
-  <section id="a2" data-track="a2" aria-labelledby="t2">
-    <div class="slot pre" data-pull="2" aria-hidden="true"></div>
-    <p class="kicker">Side A · 2 — Series</p>
-    <h2 class="t" id="t2">Gather the albums that belong together.</h2>
-    <p>An artist's run, a decade, a mood: a series is a shelf of whole albums you choose. Every blend starts there.</p>
-  </section>
-
-  <section id="a3" data-track="a3" aria-labelledby="t3">
-    <div class="slot pre" data-pull="3" aria-hidden="true"></div>
-    <p class="kicker">Side A · 3 — Ranking</p>
-    <h2 class="t" id="t3">Rank every track, not just the singles.</h2>
-    <p>Order each album's tracks by how often they are played, by published rankings where the app has them, or by your own ear. The deep cuts get a place in line.</p>
-    <div class="ranked" role="group" aria-label="Illustrative example of one album's tracks ranked">
-      <div class="tag"><span>Illustrative · fictional album</span><b>Copper Year</b></div>
-      <ol>
-        <li><span>1</span><span>Low Sun Overture</span><span class="bar" style="--w:92%"></span></li>
-        <li><span>2</span><span>Pier at Dusk</span><span class="bar" style="--w:78%"></span></li>
-        <li><span>3</span><span>Second Side Waltz</span><span class="bar" style="--w:64%"></span></li>
-        <li><span>4</span><span>The Long Player</span><span class="bar" style="--w:51%"></span></li>
-      </ol>
-      <p class="note">Bar length = the track's place in the ranking you choose. Example data, not real scores.</p>
+    <div class="only-out">
+      <p class="kicker" data-i18n="h.kick"></p>
+      <h1 id="h1" data-i18n="h.title"></h1>
+      <p class="what" data-i18n="h.what"></p>
+      <p class="para" data-i18n="h.para"></p>
+      <div class="ctas" id="hero-ctas"><a class="btn btn-primary" href="/start" id="app"><span data-i18n="openapp"></span> <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a><a class="btn btn-ghost" href="/start?signin" id="signin" data-i18n="signin"></a></div>
+    </div>
+    <div class="only-in">
+      <p class="kicker" data-i18n="hi.kick"></p>
+      <h1 id="h1in" data-i18n="hi.title"></h1>
+      <p class="what" data-i18n="hi.what"></p>
+      <div class="ctas"><a class="btn btn-primary" href="/start"><span data-i18n="m.start"></span> <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a></div>
     </div>
   </section>
 
-  <section id="a4" data-track="a4" aria-labelledby="t4">
+  <section id="start" data-track="start" aria-labelledby="t-start">
+    <div class="ambient" data-ambient="start" aria-hidden="true"></div>
+    <div class="slot pre" data-pull="2" aria-hidden="true"></div>
+    <p class="kicker" data-i18n="k.start"></p>
+    <h2 class="t" id="t-start" data-i18n="t.start"></h2>
+    <p data-i18n="p.start"></p>
+    <a class="door only-in" href="/start"><span data-i18n="d.start"></span> <span aria-hidden="true">→</span></a>
+  </section>
+
+  <section id="albums" data-track="albums" aria-labelledby="t-albums">
+    <div class="slot pre" data-pull="0" aria-hidden="true"></div>
+    <p class="kicker" data-i18n="k.albums"></p>
+    <h2 class="t" id="t-albums" data-i18n="t.albums"></h2>
+    <p data-i18n="p.albums"></p>
+    <div class="ranked rank-real" role="group" aria-label="" data-i18n-aria="r.aria">
+      <div class="tag"><span data-i18n="r.tag"></span><b>The Velvet Underground &amp; Nico · 1967</b></div>
+      <ol>
+        <li class="up"><span>1</span><span class="tt">Venus In Furs</span><span class="mv"><span aria-hidden="true">↑</span> <span data-i18n="r.up"></span></span></li>
+        <li><span>2</span><span class="tt">Sunday Morning</span><span></span></li>
+        <li><span>3</span><span class="tt">I'm Waiting for the Man</span><span></span></li>
+        <li><span>4</span><span class="tt">Femme Fatale</span><span></span></li>
+      </ol>
+      <p class="more-tracks" data-i18n="r.more"></p>
+      <p class="note" data-i18n="r.note"></p>
+    </div>
+    <a class="door only-in" href="/albums"><span data-i18n="d.albums"></span> <span aria-hidden="true">→</span></a>
+  </section>
+
+  <section id="blend" data-track="blend" aria-labelledby="t-blend">
+    <div class="ambient" data-ambient="blend" aria-hidden="true"></div>
     <div class="slot pre" data-pull="5" aria-hidden="true"></div>
-    <p class="kicker">Side A · 4 — Blend</p>
-    <h2 class="t" id="t4">Blend the series into one playlist.</h2>
-    <p>Pick a recipe and the Blender draws tracks from every album in the series, so no record drowns out the rest. You choose how long it runs and what leads.</p>
+    <p class="kicker" data-i18n="k.blend"></p>
+    <h2 class="t" id="t-blend" data-i18n="t.blend"></h2>
+    <p data-i18n="p.blend"></p>
+    <a class="door only-in" href="/blend"><span data-i18n="d.blend"></span> <span aria-hidden="true">→</span></a>
   </section>
 
-  <section id="a5" data-track="a5" aria-labelledby="t5">
-    <div class="slot pre" data-pull="6" aria-hidden="true"></div>
-    <p class="kicker">Side A · 5 — Your shelf</p>
-    <h2 class="t" id="t5">Keep count of the records you own.</h2>
-    <p>Mark the albums on your shelf, see an estimate of what the collection is worth, and what the missing ones would cost.</p>
+  <section class="flip flip-band" id="flip" data-track="flip" aria-labelledby="tf">
+    <h2 class="fb-title" id="tf"><span aria-hidden="true">⟲</span> <span data-i18n="f.title"></span></h2>
+    <p class="fb-line" data-i18n="f.line"></p>
   </section>
 
-  <section class="flip" id="flip" data-track="flip" aria-labelledby="tf">
-    <div class="slot pre" data-pull="13" aria-hidden="true"></div>
-    <p class="kicker">End of Side A</p>
-    <h2 class="t" id="tf">Flip the record.</h2>
-    <p>Side B is the why, and the way in.</p>
-  </section>
-
-  <section class="why" id="b1" data-track="b1" aria-labelledby="t6">
+  <section id="playlists" data-track="playlists" aria-labelledby="t-playlists">
+    <div class="ambient" data-ambient="playlists" aria-hidden="true"></div>
     <div class="slot pre" data-pull="10" aria-hidden="true"></div>
-    <h2 class="kicker" id="t6">Side B · 1 — Why whole albums</h2>
-    <blockquote>Shuffle keeps the hits and loses the record. <em>The Blender starts from the record.</em></blockquote>
-    <p>An album has an order: an opening, a turn, a closer. Ranking brings the deep cuts back; blending keeps every playlist rooted in albums you chose, whole.</p>
+    <p class="kicker" data-i18n="k.playlists"></p>
+    <h2 class="t" id="t-playlists" data-i18n="t.playlists"></h2>
+    <p data-i18n="p.playlists"></p>
+    <a class="door only-in" href="/saved-playlists"><span data-i18n="d.playlists"></span> <span aria-hidden="true">→</span></a>
   </section>
 
-  <section class="final" id="b2" data-track="b2" aria-labelledby="t7">
-    <p class="kicker">Side B · 2 — Start</p>
-    <h2 class="t" id="t7">Drop the needle on your first series.</h2>
-    <p>Open the app and start a series with one album you love. Sign in to keep your series, rankings and shelf with you.</p>
-    <div class="ctas"><a class="btn btn-primary" href="/start">Open the app <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a><a class="btn btn-ghost" href="/start?signin">Sign in</a></div>
+  <section id="inventory" data-track="inventory" aria-labelledby="t-inventory">
+    <div class="ambient" data-ambient="inventory" aria-hidden="true"></div>
+    <div class="slot pre" data-pull="12" aria-hidden="true"></div>
+    <p class="kicker" data-i18n="k.inventory"></p>
+    <h2 class="t" id="t-inventory" data-i18n="t.inventory"></h2>
+    <p data-i18n="p.inventory"></p>
+    <a class="door only-in" href="/inventory"><span data-i18n="d.inventory"></span> <span aria-hidden="true">→</span></a>
+  </section>
+
+  <section class="final" id="end" data-track="end" aria-labelledby="t-end">
+    <div class="only-out">
+      <h2 class="t" id="t-end" data-i18n="e.title"></h2>
+      <p data-i18n="e.what"></p>
+      <div class="ctas"><a class="btn btn-primary" href="/start"><span data-i18n="openapp"></span> <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a><a class="btn btn-ghost" href="/start?signin" data-i18n="signin"></a></div>
+    </div>
+    <div class="only-in">
+      <h2 class="t" data-i18n="ei.title"></h2>
+      <div class="ctas"><a class="btn btn-primary" href="/start"><span data-i18n="m.start"></span> <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a></div>
+    </div>
     <div class="b2-fire" aria-hidden="true"><div class="glow"></div><canvas id="embers-b2"></canvas></div>
   </section>
 
   <div class="stage-col">
-    <figure class="stage" id="stage" aria-label="A crate of albums; the page pulls one record forward for each part">
+    <figure class="stage" id="stage" aria-label="" data-i18n-aria="stage.aria">
       <div class="scene" id="scene">
         <div class="glow" aria-hidden="true"></div>
         <canvas class="embers" id="embers" aria-hidden="true"></canvas>
+        <button class="motion-icon" id="motion" type="button" aria-pressed="false" aria-label="" title="" data-i18n-aria="pause" data-i18n-title="pause" hidden>
+          <svg class="i-pause" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>
+          <svg class="i-play" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.5 2.8v10.4a.6.6 0 0 0 .9.5l8.2-5.2a.6.6 0 0 0 0-1L5.4 2.3a.6.6 0 0 0-.9.5z"/></svg>
+        </button>
         <div class="crate-css" id="crate-css">
           <div class="box" id="box">
         <!--splash:covers-->
@@ -305,7 +403,7 @@ html.paused *,html.paused *::before,html.paused *::after{animation-play-state:pa
 </main>
 
 <footer><div class="wrap">
-  <div class="row"><span>The Album Blender</span><nav aria-label="Footer"><a href="/start">Open the app</a><a href="/start?signin">Sign in</a></nav></div>
+  <div class="row"><span>The Album Blender</span><nav aria-label="" data-i18n-aria="footer.aria"><a class="only-out" href="/start" data-i18n="openapp"></a><a class="only-out" href="/start?signin" data-i18n="signin"></a><a class="only-in" href="/start" data-i18n="m.start"></a><a class="only-in" href="/albums" data-i18n="m.albums"></a><a class="only-in" href="/blend" data-i18n="m.blend"></a><a class="only-in" href="/saved-playlists" data-i18n="m.playlists"></a><a class="only-in" href="/inventory" data-i18n="m.inventory"></a></nav></div>
   <!--splash:credit-->
 </div></footer>
 
