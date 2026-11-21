@@ -10,7 +10,8 @@ p0: 0
 p1: 6
 p2: 13
 human_decisions: 3
-status: open
+status: closed
+closed_by: "aprovação do MJRP da Transformar v2, 2026-11-20 por volta das 22:15 (docs/specs/info-arch.md § Protótipos aprovados · Home (F79) · Transformar v2); as decisões que eram dele e ele não respondeu ficaram decididas pelo agente — revisáveis"
 ---
 <!-- o frontmatter é o que o Control Center lê (System Monitor · Health Check). status: closed quando o veredito
      passa (passes) e não sobra P0, P1 nem decisão sua (p0: 0, p1: 0, human_decisions: 0) — uma passada limpa já

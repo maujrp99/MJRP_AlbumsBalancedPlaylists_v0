@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 22:31] decision — F79: o registro da aprovação da Home «Transformar v2»; a S-61 pronta para construir; spec, plan e tasks
+**Branch:** feat/f79-home-that-explains-itself
+Palavras do MJRP (2026-11-20, por volta das 22:15): «aprovado a home v2, fogo vivo na página de entrada, ficou sensacional! bora implementar». Registrado em `docs/specs/info-arch.md` § Protótipos aprovados: o protótipo `design/inception/home-transformar-v2.html`, nas duas larguras, com os 18 estados em `shows::`; a parte do fogo é da F80. A crítica da rodada 2 fechada (`closed_by:` aponta a aprovação); «· Aprovada» no comparador local (o Artifact publicado não foi republicado). `design-system.md`: os padrões da rodada 2 valem para a Home.
+O que ele não respondeu, decidido pelo agente — revisável (dispensa de 2026-11-19): a cor A, os padrões D1 a D9, «Compendiums», o texto sobre o fogo como a v2 mostra; o texto em inglês é proposta do agente. A S-61 passa a «Ready» com os critérios apontando para os estados julgados; `spec.md`, `plan.md` e `tasks.md` da F79 escritos a partir do protótipo (o «Approved» deles é «decidido pelo agente — revisável», não aprovação do MJRP).
+
 ## [2026-11-20 22:20] decision — F80: o fogo da página de entrada é o brando, não o vivo
 **Branch:** main
 Palavras do MJRP, logo depois da aprovação: «fogo brando na verdade». Corrige a entrada anterior: a página de entrada «Caixote v2» é construída na prévia «fogo brando» (`?fire=soft`, o padrão do protótipo). O resto da entrada anterior vale.
