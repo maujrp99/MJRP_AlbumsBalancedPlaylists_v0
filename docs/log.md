@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:30] decision — F85: o item do menu se chama «Start», e «Inicie» em português
+**Branch:** main
+Palavras do MJRP (2026-11-21, no chat): «pode ser new Series», «pensando bem, pode ser Starte e Inicie em pt», «Start». Na spec da F85: «Start» em inglês, «Inicie» em português do Brasil (que entra com a F81). Continua decidido pelo agente, revisável: com a conta aberta, o site abre direto na tela de trabalho e só o logotipo leva à página de entrada.
+
 ## [2026-11-21 09:29] session — F85 («Start» no menu, o logotipo leva à página de entrada) em esboço, com a S-67; o roteiro de UAT da F79 e da F80
 **Branch:** main
 O MJRP perguntou se a mudança do menu e do logotipo pode ir a produção já. A F85 nasce na `main` em esboço, via rápida, com a S-67 (EP-01, v6.0 — escolhidos pelo agente). Decidido pelo agente, revisável, porque ele não escolheu: o nome «Start», e com a conta aberta o site continua abrindo direto na tela de trabalho (só o logotipo leva à página de entrada). O ramo espera a F85 na «Priorizada». A pedido dele («uat da f80 e f79»), o roteiro de UAT das duas: `reports/evidence/F79/2026-11-21-f79-f80-uat-script.md`; o aceite é dele, pela tela de aceite do Control Center.

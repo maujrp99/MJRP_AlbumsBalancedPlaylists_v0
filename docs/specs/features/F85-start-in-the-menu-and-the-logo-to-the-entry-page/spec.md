@@ -32,5 +32,8 @@ Os três requisitos vistos no navegador a 1280 e a 393 px, com e sem conta; `/ho
 ## Out of Scope
 Redesenhar a página de entrada para quem tem conta; os álbuns dela escolhidos no CMS (F82, REQ-03).
 
+## Decided by the owner
+- **O nome** (MJRP, 2026-11-21, no chat): «pode ser new Series», depois «pensando bem, pode ser Starte e Inicie em pt», e por fim «Start». Como foi lido: o item se chama **«Start»** em inglês e **«Inicie»** em português do Brasil (o português entra com a F81).
+
 ## Open Questions
-- **Decidido pelo agente — revisável**, porque o MJRP perguntou e pediu a mudança em produção sem escolher: o nome é «Start» (e não «Initiate», que lembra a voz de console tirada na F79; «New series» é a alternativa); com a conta aberta, abrir o site continua indo direto à tela de trabalho, e só o logotipo leva à página de entrada (a alternativa é a raiz mostrar sempre a página de entrada).
+- **Decidido pelo agente — revisável**, porque o MJRP não escolheu: com a conta aberta, abrir o site continua indo direto à tela de trabalho, e só o logotipo leva à página de entrada (a alternativa é a raiz mostrar sempre a página de entrada).
