@@ -21,7 +21,8 @@ vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService: { c
 
 import { InventoryView } from '../../public/js/views/InventoryView.js'
 import { InventoryGridRenderer } from '../../public/js/views/renderers/InventoryGridRenderer.js'
-import { Footer, DISCOGS_NOTICE } from '../../public/js/components/Footer.js'
+import { discogsNoticeStore } from '../../public/js/stores/discogsNotice.js'
+import { t } from '../../public/js/i18n/t.js'
 import { inventoryStore } from '../../public/js/stores/inventory.js'
 
 const averages = { rating: 88.2, popularity: 71.4, ratedTracks: 10, popTracks: 9, tracks: 12 }
@@ -42,8 +43,8 @@ describe('the inventory screen: values (F75)', () => {
 
     async function open(values, items = ITEMS) {
         holder.values = values
-        const footer = new Footer({ clearCaches: vi.fn() })
-        document.body.innerHTML = `<div id="app"></div>${footer.render()}`
+        // the footer is the shell's (React, F83 wave 3): the screen turns the sentence about Discogs on and off in a small store the footer reads
+        document.body.innerHTML = '<div id="app"></div>'
         inventoryStore.setAlbums(items)
         view = new InventoryView()
         await view.mount()
@@ -289,7 +290,7 @@ describe('the inventory screen: values (F75)', () => {
             expect(text(line('owned', 2))).toBe('No value yet —')
             const said = text(document.getElementById('app')).replace(/Discogs ↗/g, '')
             expect(said).not.toContain('Discogs')
-            expect(document.getElementById('discogsApiNotice').hidden).toBe(true)
+            expect(discogsNoticeStore.isOn()).toBe(false)
         })
 
         it('the value written by hand, the totals, the currency, the order and the buy links go on working', () => {
@@ -307,11 +308,8 @@ describe('the inventory screen: values (F75)', () => {
     describe('what the app says of the Discogs API (REQ-06)', () => {
         it('the footer says it uses the API and is not affiliated, while the values are on', async () => {
             await open(valuesWith())
-            const notice = document.getElementById('discogsApiNotice')
-
-            expect(notice.hidden).toBe(false)
-            expect(notice.textContent).toBe(DISCOGS_NOTICE)
-            expect(DISCOGS_NOTICE).toBe("This application uses Discogs' API but is not affiliated with, sponsored or endorsed by Discogs. 'Discogs' is a trademark of Zink Media, LLC.")
+            expect(discogsNoticeStore.isOn()).toBe(true)
+            expect(t('shell.footer.discogsNotice')).toBe("This application uses Discogs' API but is not affiliated with, sponsored or endorsed by Discogs. 'Discogs' is a trademark of Zink Media, LLC.")
         })
     })
 

@@ -1,0 +1,814 @@
+{
+  "oldBase": "http://127.0.0.1:5031",
+  "newBase": "http://127.0.0.1:5031",
+  "passed": 130,
+  "failed": 2,
+  "results": [
+    {
+      "what": "A 1280 · the shell at the start, signed out · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the shell at the start, signed out · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the shell at the start, signed out · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · a person signed in (Google): the bar is drawn again · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · a person signed in (Google): the bar is drawn again · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · a person signed in (Google): the bar is drawn again · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the account menu opened by a real click · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the account menu opened by a real click · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#userMenuBtn / button#userMenuBtn"
+    },
+    {
+      "what": "A 1280 · the account menu opened by a real click · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the account menu closed by a real click outside · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the account menu closed by a real click outside · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the account menu closed by a real click outside · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the account menu opened by the keyboard (arrow down on the avatar) · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the account menu opened by the keyboard (arrow down on the avatar) · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#logoutBtn / button#logoutBtn"
+    },
+    {
+      "what": "A 1280 · the account menu opened by the keyboard (arrow down on the avatar) · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the account menu closed by Escape: the focus goes back to the avatar · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the account menu closed by Escape: the focus goes back to the avatar · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#userMenuBtn / button#userMenuBtn"
+    },
+    {
+      "what": "A 1280 · the account menu closed by Escape: the focus goes back to the avatar · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the menu of series opened by a real click · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the menu of series opened by a real click · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#seriesDropdownBtn / button#seriesDropdownBtn"
+    },
+    {
+      "what": "A 1280 · the menu of series opened by a real click · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the menu of series: «Soon» does nothing · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the menu of series: «Soon» does nothing · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body · [\"/start\",\"/start\"]"
+    },
+    {
+      "what": "A 1280 · the menu of series: «Soon» does nothing · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the menu of series closed by a click outside · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the menu of series closed by a click outside · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the menu of series closed by a click outside · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · Apple: the avatar of an Apple sign-in · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · Apple: the avatar of an Apple sign-in · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · Apple: the avatar of an Apple sign-in · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · nobody again: Sign In · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · nobody again: Sign In · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · nobody again: Sign In · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the window to sign in opened by a real click · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the window to sign in opened by a real click · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#loginBtn / button#loginBtn"
+    },
+    {
+      "what": "A 1280 · the window to sign in opened by a real click · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the window closed by «Continue as Guest» · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the window closed by «Continue as Guest» · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the window closed by «Continue as Guest» · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · the window opened and closed by a click on the background · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the window opened and closed by a click on the background · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · the window opened and closed by a click on the background · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "A 1280 · a link of the bar: Inventory: the router moves once · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · a link of the bar: Inventory: the router moves once · focus and what the page says besides",
+      "ok": true,
+      "detail": "a / a · [\"/inventory 3\",\"/inventory 3\"]"
+    },
+    {
+      "what": "A 1280 · after the move the old bar still marks «Start» and the new one marks «Inventory» (decided, revisable: the highlight follows the address)",
+      "ok": false,
+      "detail": "[[\"/start\"],[\"/start\"]]"
+    },
+    {
+      "what": "A 1280 · the bar drawn again while a button holds the focus: the focus is the page, the next Tab starts at the top · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · the bar drawn again while a button holds the focus: the focus is the page, the next Tab starts at the top · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "A 1280 · …and the next Tab · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "A 1280 · …and the next Tab · focus and what the page says besides",
+      "ok": true,
+      "detail": "a / a"
+    },
+    {
+      "what": "A 1280 · no error of the page on either side",
+      "ok": true,
+      "detail": "old:  // new: "
+    },
+    {
+      "what": "S 1280 · Spotify connected: the pill with the account name · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "S 1280 · Spotify connected: the pill with the account name · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "S 1280 · Spotify connected: the pill with the account name · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "S 1280 · the X asks first (the app's own question) · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "S 1280 · the X asks first (the app's own question) · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#spotifyLogoutBtn / button#spotifyLogoutBtn"
+    },
+    {
+      "what": "S 1280 · the X asks first (the app's own question) · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "S 1280 · the question answered No: still connected · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "S 1280 · the question answered No: still connected · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#spotifyLogoutBtn / button#spotifyLogoutBtn"
+    },
+    {
+      "what": "S 1280 · the question answered No: still connected · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "S 1280 · no error of the page on either side",
+      "ok": true,
+      "detail": "old:  // new: "
+    },
+    {
+      "what": "F 1280 · the footer and the notice of the Discogs API hidden · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "F 1280 · the footer and the notice of the Discogs API hidden · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "F 1280 · the footer and the notice of the Discogs API hidden · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "F 1280 · the notice of the Discogs API turned on by a screen · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "F 1280 · the notice of the Discogs API turned on by a screen · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "F 1280 · the notice of the Discogs API turned on by a screen · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "M 900 · the drawer closed · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "M 900 · the drawer closed · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "M 900 · the drawer closed · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "M 900 · the drawer opened by a real click: the page is held · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "M 900 · the drawer opened by a real click: the page is held · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#mobileMenuBtn / button#mobileMenuBtn · [\"hidden\",\"hidden\"]"
+    },
+    {
+      "what": "M 900 · the drawer opened by a real click: the page is held · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "M 900 · the series of the drawer opened (the icons of that button are masked: the old drawer turned the music note, the new one turns the chevron) · the shell's DOM (without #mobileSeriesToggle svg)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "M 900 · the series of the drawer opened (the icons of that button are masked: the old drawer turned the music note, the new one turns the chevron) · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#mobileSeriesToggle / button#mobileSeriesToggle"
+    },
+    {
+      "what": "M 900 · which icon of «Music Series» turned: the old turned the note, the new turns the chevron",
+      "ok": false,
+      "detail": "[[true,false],[true,false]]"
+    },
+    {
+      "what": "M 900 · the drawer closed by the background (the click is sent to the background itself) · the shell's DOM (without #mobileSeriesToggle svg)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "M 900 · the drawer closed by the background (the click is sent to the background itself) · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#mobileSeriesToggle / button#mobileSeriesToggle · [\"\",\"\"]"
+    },
+    {
+      "what": "M 900 · the drawer closed by the background (the click is sent to the background itself) · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "M 900 · the drawer opened, then closed by a link · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "M 900 · the drawer opened, then closed by a link · focus and what the page says besides",
+      "ok": true,
+      "detail": "a / a · [\"/saved-playlists \",\"/saved-playlists \"]"
+    },
+    {
+      "what": "M 900 · signed in: the foot of the drawer · the shell's DOM (without #mobileSeriesToggle svg)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "M 900 · signed in: the foot of the drawer · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#mobileMenuBtn / button#mobileMenuBtn"
+    },
+    {
+      "what": "M 900 · signed in: the foot of the drawer · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "M 900 · no error of the page on either side",
+      "ok": true,
+      "detail": "old:  // new: "
+    },
+    {
+      "what": "P 393 · the shell of the phone at the start · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the shell of the phone at the start · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · the shell of the phone at the start · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the menu opened by a real tap on the top bar · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the menu opened by a real tap on the top bar · focus and what the page says besides",
+      "ok": true,
+      "detail": "button / button"
+    },
+    {
+      "what": "P 393 · the menu opened by a real tap on the top bar · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the menu closed by Escape · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the menu closed by Escape · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#phoneMenuBtn / button#phoneMenuBtn"
+    },
+    {
+      "what": "P 393 · the menu closed by Escape · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the question before clearing the cache: Cancel · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the question before clearing the cache: Cancel · focus and what the page says besides",
+      "ok": true,
+      "detail": "button / button"
+    },
+    {
+      "what": "P 393 · the question before clearing the cache: Cancel · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · …cancelled · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · …cancelled · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#phoneMenuBtn / button#phoneMenuBtn"
+    },
+    {
+      "what": "P 393 · …cancelled · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the window to sign in, from the menu · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the window to sign in, from the menu · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#phoneMenuBtn / button#phoneMenuBtn"
+    },
+    {
+      "what": "P 393 · the window to sign in, from the menu · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the window closed · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the window closed · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · the window closed · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a tap on a tab goes there: Playlists · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a tap on a tab goes there: Playlists · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body · [\"/saved-playlists\",\"/saved-playlists\"]"
+    },
+    {
+      "what": "P 393 · a tap on a tab goes there: Playlists · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a tap on the tab of the screen the person is on stays and goes to the top · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a tap on the tab of the screen the person is on stays and goes to the top · focus and what the page says besides",
+      "ok": true,
+      "detail": "a[playlists] / a[playlists] · [\"/saved-playlists 3\",\"/saved-playlists 3\"]"
+    },
+    {
+      "what": "P 393 · a tap on the tab of the screen the person is on stays and goes to the top · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a screen names itself in the top bar · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a screen names itself in the top bar · focus and what the page says besides",
+      "ok": true,
+      "detail": "a[playlists] / a[playlists]"
+    },
+    {
+      "what": "P 393 · signed in: the initial and the menu with Sign Out · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · signed in: the initial and the menu with Sign Out · focus and what the page says besides",
+      "ok": true,
+      "detail": "a / a"
+    },
+    {
+      "what": "P 393 · signed in: the initial and the menu with Sign Out · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · …closed · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · …closed · focus and what the page says besides",
+      "ok": true,
+      "detail": "button#phoneMenuBtn / button#phoneMenuBtn"
+    },
+    {
+      "what": "P 393 · …closed · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · the tab drawn again while it holds the focus: the focus is the page · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · the tab drawn again while it holds the focus: the focus is the page · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body"
+    },
+    {
+      "what": "P 393 · «back to top» appears after two screens of scroll · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · «back to top» appears after two screens of scroll · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body · [2000,2000]"
+    },
+    {
+      "what": "P 393 · «back to top» appears after two screens of scroll · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · «back to top» tapped · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · «back to top» tapped · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body · [0,0]"
+    },
+    {
+      "what": "P 393 · «back to top» tapped · pixels",
+      "ok": true,
+      "detail": "0 px apart"
+    },
+    {
+      "what": "P 393 · a screen on a phone turned to a computer and back (the viewport) · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · a screen on a phone turned to a computer and back (the viewport) · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body · [\"globalProgress | header-container | app | footer-container | SCRIPT | SCRIPT\",\"globalProgress | header-container | app | footer-container | SCRIPT | SCRIPT\"]"
+    },
+    {
+      "what": "P 393 · …a phone again · the shell's DOM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "P 393 · …a phone again · focus and what the page says besides",
+      "ok": true,
+      "detail": "body / body · [\"globalProgress | header-container | app | footer-container | SCRIPT | SCRIPT | phone-topbar | phone-tabbar | phone-to-top\",\"globalProgress | header-container | app | footer-container | SCRIPT | SCRIPT | phone-topbar | phone-tabbar | phone-to-top\"]"
+    },
+    {
+      "what": "P 393 · no error of the page on either side",
+      "ok": true,
+      "detail": "old:  // new: "
+    }
+  ],
+  "pixels": [
+    {
+      "label": "A 1280 · the shell at the start, signed out",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · a person signed in (Google): the bar is drawn again",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the account menu opened by a real click",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the account menu closed by a real click outside",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the account menu opened by the keyboard (arrow down on the avatar)",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the account menu closed by Escape: the focus goes back to the avatar",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the menu of series opened by a real click",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the menu of series: «Soon» does nothing",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the menu of series closed by a click outside",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · Apple: the avatar of an Apple sign-in",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · nobody again: Sign In",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the window to sign in opened by a real click",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the window closed by «Continue as Guest»",
+      "apart": 0
+    },
+    {
+      "label": "A 1280 · the window opened and closed by a click on the background",
+      "apart": 0
+    },
+    {
+      "label": "S 1280 · Spotify connected: the pill with the account name",
+      "apart": 0
+    },
+    {
+      "label": "S 1280 · the X asks first (the app's own question)",
+      "apart": 0
+    },
+    {
+      "label": "S 1280 · the question answered No: still connected",
+      "apart": 0
+    },
+    {
+      "label": "F 1280 · the footer and the notice of the Discogs API hidden",
+      "apart": 0
+    },
+    {
+      "label": "F 1280 · the notice of the Discogs API turned on by a screen",
+      "apart": 0
+    },
+    {
+      "label": "M 900 · the drawer closed",
+      "apart": 0
+    },
+    {
+      "label": "M 900 · the drawer opened by a real click: the page is held",
+      "apart": 0
+    },
+    {
+      "label": "M 900 · the drawer closed by the background (the click is sent to the background itself)",
+      "apart": 0
+    },
+    {
+      "label": "M 900 · signed in: the foot of the drawer",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the shell of the phone at the start",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the menu opened by a real tap on the top bar",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the menu closed by Escape",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the question before clearing the cache: Cancel",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · …cancelled",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the window to sign in, from the menu",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · the window closed",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · a tap on a tab goes there: Playlists",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · a tap on the tab of the screen the person is on stays and goes to the top",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · signed in: the initial and the menu with Sign Out",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · …closed",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · «back to top» appears after two screens of scroll",
+      "apart": 0
+    },
+    {
+      "label": "P 393 · «back to top» tapped",
+      "apart": 0
+    }
+  ]
+}

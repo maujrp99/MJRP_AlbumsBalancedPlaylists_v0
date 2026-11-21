@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
 }))
 
 vi.mock('@/services/auth/signIn.js', () => ({ authService: auth }))
-vi.mock('../../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthService: { logout: vi.fn() } }))
+vi.mock('../../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthService: { logout: vi.fn(), isAuthenticated: () => false, getUserProfile: async () => null, login: vi.fn() } }))
 vi.mock('../../../public/js/components/Toast.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
@@ -35,8 +35,16 @@ import { cardValueBlock } from '../../../public/js/views/renderers/InventoryCard
 import { createBuyLinksSection, createPhoneBuyLinks } from '../../../public/js/components/InventoryValueSection.js'
 import { openItemSheet } from '../../../public/js/views/InventoryPhoneSheets.js'
 import SeriesController from '../../../public/js/controllers/SeriesController.js'
-import { signOut } from '../../../public/js/components/navigation/AuthNav.js'
-import { showLoginModal } from '../../../public/js/components/LoginModal.js'
+import { signOut } from '../../../public/js/shell/signOut'
+import { startOn } from '../../support/renderShell'
+import { openLoginWindow } from '../../../public/js/stores/loginWindow.js'
+
+// the window to sign in is the shell's (React, F83 wave 3): opened as the screens open it, then clicked
+const openSignIn = async () => {
+    const shell = await startOn('/start')
+    await shell.act(async () => { openLoginWindow() })
+    return shell
+}
 
 const notOwned = { id: 'i1', artist: 'Joni Mitchell', title: 'Hejira', owned: null }
 const linksIn = (root) => [...root.querySelectorAll('a[data-buy-store]')].map(link => [link.dataset.buyStore, link.dataset.buyPlace])
@@ -122,17 +130,19 @@ describe('filter_used on the albums screen', () => {
 
 describe('sign_in and sign_out', () => {
     it('sign_in with the provider, after the sign-in worked', async () => {
-        showLoginModal()
-        document.querySelector('#appleLoginBtn').click()
+        const shell = await openSignIn()
+        await shell.act(async () => { document.querySelector('#appleLoginBtn').click() })
         await vi.waitFor(() => expect(sent).toEqual([['sign_in', { provider: 'apple' }]]))
+        shell.stop()
     })
 
     it('not when the sign-in failed', async () => {
         auth.signInWithGoogle.mockRejectedValueOnce(Object.assign(new Error('closed'), { code: 'auth/popup-closed-by-user' }))
-        showLoginModal()
-        document.querySelector('#googleLoginBtn').click()
+        const shell = await openSignIn()
+        await shell.act(async () => { document.querySelector('#googleLoginBtn').click() })
         await new Promise(resolve => setTimeout(resolve, 0))
         expect(sent).toEqual([])
+        shell.stop()
     })
 
     it('sign_out, after the sign-out worked', async () => {

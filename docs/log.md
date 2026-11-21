@@ -3,9 +3,25 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:34] step — F83 onda 3: a prova no navegador, o peso, os documentos e o conserto do «voltar ao topo»
+**Branch:** claude/f83-wave-3-shell
+133 conferências no Chromium (1280, 900, 393), 130 passaram; as 3 são 2 a 12 pixels no canto do topo à direita; antiga contra antiga: 0 pixel, com e sem transições. O navegador achou que o «voltar ao topo» parava no meio com um toque de verdade (o React devolve a rolagem quando um desenho tira o foco): o botão solta o foco antes de rolar. Primeiro carregamento com o React na abertura: +85 kB e cerca de +0,4 s (rede lenta, CPU x4). Mapa, tarefas 18, 19, 30 e 31, arch.md e design-system.md.
+
+## [2026-11-21 18:03] step — F83 onda 3: a moldura do site em React (TASK-19): barra do topo, rodapé, moldura do celular, menu, janela de entrar
+**Branch:** claude/f83-wave-3-shell
+Em public/js/shell/: TopNav, SeriesDropdown, Account, SpotifyConnect, Footer, PhoneShell, PhoneMenu, LoginWindow, Shell (startShell: três raízes, uma para #header-container, uma para #footer-container e uma sem lugar que escreve no body); três lojas pequenas (screenName, loginWindow, discogsNotice) e utils/isSignedIn.js para as telas antigas falarem com a moldura sem importar shell/; dicionário shell em inglês e português. Os 10 arquivos à mão (1.402 linhas) e os testes deles saíram; 47 cenários da moldura antiga contra a nova, mais os testes levados. react-vendor passa a ser baixado na abertura (reactAtStart true; teto do script principal 290.750 para 294.897 B: o script principal cresceu 4.147 B); as telas do menu em React descem em segundo plano (prefetchScreens volta ao app.js). Diferença: o chevron da gaveta gira, não a nota; a barra segue o endereço.
+
 ## [2026-11-21 17:55] session — estado do dia: duas linhas (home e menu para produção; React na prévia), `## Now` atualizado
 **Branch:** main
 `MEMORY.md ## Now` reescrito com as duas linhas de trabalho, os dois endereços de prévia, o que está na `main` sem publicar e o que espera o MJRP.
+
+## [2026-11-21 17:45] step — F83 onda 3: o retrato da moldura antiga (47 cenários) antes de apagá-la
+**Branch:** claude/f83-wave-3-shell
+O registro das páginas que a barra do computador, o rodapé, a moldura do celular, o menu e a janela de entrar à mão desenham (computador a 1280 e a 900, celular a 393), com as chamadas ao que está fora (login, Spotify, avisos, perguntas, medição): test/support/shellScenarios.js (os cenários, uma só vez para a antiga e a nova), test/fixtures/shellBeforeF83.json (o que a antiga desenhou) e o registro reports/evidence/F83/wave-3/capture-before.test.js. O jsdom responde errado a querySelector('#id') quando o id se repete na página (o botão do Spotify da barra e da gaveta): o registro usa a resposta do navegador (scopedIdLookup).
+
+## [2026-11-21 17:38] step — F83 onda 3: o mapa da moldura (TASK-18)
+**Branch:** claude/f83-wave-3-shell
+Barra do topo, rodapé, moldura do celular, menu, janela de entrar: 1.402 linhas à mão em 10 arquivos; o que redesenha e quando; as três lojas pequenas para as telas antigas falarem com a moldura; o achado de que a barra do computador de hoje não segue o endereço (decidido: a nova segue, revisável); onde o seletor de idioma entra.
 
 ## [2026-11-21 17:26] step — F83 onda 2: o ponto de partida do Tab volta ao começo da tela depois de uma ação (conferido no navegador contra a tela antiga)
 **Branch:** claude/f83-wave-2-playlists-edit

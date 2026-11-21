@@ -6,16 +6,7 @@
  */
 import { describe, it, expect, vi } from 'vitest'
 
-vi.mock('../../../public/js/components/navigation/AuthNav.js', () => ({
-    signOut: vi.fn(), isSignedIn: () => false, AuthNav: class { renderDesktop() { return '' } renderMobile() { return '' } attachListeners() {} }
-}))
-vi.mock('../../../public/js/components/LoginModal.js', () => ({ showLoginModal: vi.fn() }))
-
 import { START_PATH, HOME_PATH, leaveToHome, LEFT_KEY, LEFT_WINDOW_MS } from '../../../public/js/components/navigation/startRoute.js'
-import { TopNav } from '../../../public/js/components/TopNav.js'
-import { Footer } from '../../../public/js/components/Footer.js'
-import { Breadcrumb } from '../../../public/js/components/Breadcrumb.js'
-import { PhoneShell } from '../../../public/js/components/navigation/PhoneShell.js'
 import { readFileSync } from 'node:fs'
 
 describe('the addresses', () => {
@@ -68,51 +59,8 @@ describe('the app asked for /home (F85, MJRP 2026-11-21)', () => {
     })
 })
 
-describe('the menu of the computer', () => {
-    const html = () => { document.body.innerHTML = new TopNav().render(); return document.body }
-
-    it('says «Start» and goes to /start; nothing says Home', () => {
-        const body = html()
-        const links = [...body.querySelectorAll('a[href="/start"]')].map(a => a.textContent.trim())
-        expect(links.length).toBeGreaterThanOrEqual(2) // the bar and the drawer
-        links.forEach(text => expect(text).toBe('Start'))
-        expect(body.querySelectorAll('a[href="/home"]:not(.nav-logo)').length).toBe(0) // only the logo leads to /home
-        expect(body.textContent).not.toMatch(/\bHome\b/)
-    })
-
-    it('the logo leads to /home (the entry page), by a full page load (no data-link)', () => {
-        const logo = html().querySelector('a.nav-logo')
-        expect(logo.getAttribute('href')).toBe('/home')
-        expect(logo.hasAttribute('data-full-page')).toBe(true)
-    })
-
-    it('the footer and the breadcrumb say Start', () => {
-        expect(new Footer({}).render()).toContain('href="/start"')
-        expect(Breadcrumb.getCrumbs('/albums', {})[0]).toEqual({ label: 'Start', path: '/start' })
-    })
-})
-
-describe('the top bar of the phone', () => {
-    it('the logo is a link to the entry page, by a full page load', () => {
-        document.body.innerHTML = '<div id="app"></div>'
-        const win = {
-            document, innerHeight: 800, scrollY: 0, location: { pathname: '/albums' },
-            matchMedia: (query) => ({ matches: query.includes('max-width'), addEventListener() {}, removeEventListener() {} }),
-            MutationObserver: class { observe() {} disconnect() {} },
-            addEventListener: vi.fn(), removeEventListener: vi.fn(), scrollTo: vi.fn()
-        }
-        const router = { afterNavigate: () => {} }
-        const userStore = { getState: () => ({ currentUser: null }), subscribe: () => {} }
-        new PhoneShell({ router, userStore, clearCaches: vi.fn(), win }).start()
-
-        const link = document.querySelector('a.phone-topbar__logo-link')
-        expect(link.getAttribute('href')).toBe('/home')
-        expect(link.hasAttribute('data-full-page')).toBe(true)
-        expect(link.getAttribute('aria-label')).toMatch(/entry page/)
-        expect(link.querySelector('img.phone-topbar__logo')).not.toBeNull()
-        expect(document.querySelector('a[data-tab="home"]').textContent.trim()).toBe('Start')
-    })
-})
+// The menu of the computer, the footer and the top bar of the phone say «Start» and lead the logo to /home: carried to the shell in React,
+// test/shell/Shell.carried.test.tsx (the menu of the computer, the top bar of the phone).
 
 describe('the router', () => {
     const router = readFileSync('public/js/router.js', 'utf8')

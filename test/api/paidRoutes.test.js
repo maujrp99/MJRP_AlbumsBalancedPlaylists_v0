@@ -145,7 +145,8 @@ describe('every caller of a paid route asks the one place', () => {
     it('the guest login is read for the paid routes nowhere else', () => {
         const readers = appFiles().filter(file => /isAnonymous/.test(read(file)))
 
-        // AuthNav draws the person's menu; it decides nothing about the server
-        expect(readers.sort()).toEqual(['api/paidRoutes.js', 'components/navigation/AuthNav.js'])
+        // utils/isSignedIn.js says whether somebody signed in with an account (the shell and the Start screen draw from it) and shell/context.ts
+        // names the field in the type of the person the shell reads; neither decides anything about the server
+        expect(readers.sort()).toEqual(['api/paidRoutes.js', 'shell/context.ts', 'utils/isSignedIn.js'])
     })
 })

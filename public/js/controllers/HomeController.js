@@ -6,8 +6,8 @@ import { albumSeriesStore } from '../stores/albumSeries.js';
 import { userStore } from '../stores/UserStore.js';
 import { getSeriesService } from '../services/SeriesService.js';
 import { router } from '../router.js';
-import { showLoginModal } from '../components/LoginModal.js';
-import { isSignedIn } from '../components/navigation/AuthNav.js';
+import { openLoginWindow } from '../stores/loginWindow.js';
+import { isSignedIn } from '../utils/isSignedIn.js';
 import { toAlbumQuery } from '../models/albumQuery.js';
 import { decodeEntities } from '../models/text.js';
 import { isPhone } from '../utils/isPhone.js';
@@ -372,7 +372,7 @@ export class HomeController {
     }
 
     signIn() {
-        showLoginModal();
+        openLoginWindow();
     }
 
     /** The screen became a phone or stopped being one: the dock takes the other form. */

@@ -39,35 +39,21 @@ import toast from './components/Toast.js'
 // app.js exports nothing: no module imports the file that mounts the app (UAT-19). Who needs the
 // database or the login is handed it where it is put together (the *Wiring.js files of services/).
 
-// Initialize UI Components
-import { TopNav } from './components/TopNav.js'
-import { Footer } from './components/Footer.js'
+// The shell: the top bar and the footer of the computer, the shell of the phone, the window to sign in (F83 wave 3, in React). Its code is in
+// the main script and React comes with it, as a file of its own (react-vendor), at the start; the screens in React come after the first screen.
+import { startShell } from './shell/Shell.tsx'
 import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
-import { startPhoneShell } from './components/navigation/PhoneShell.js'
 import { userStore } from './stores/UserStore.js'
 import { startUsageMeasurement } from './services/usage/usageWiring.js'
 import { openSignInWhenAsked } from './components/navigation/signInFromLink.js'
 import { START_PATH, leaveToHome } from './components/navigation/startRoute.js'
-import { isSignedIn } from './components/navigation/AuthNav.js'
-import { showLoginModal } from './components/LoginModal.js'
+import { isSignedIn } from './utils/isSignedIn.js'
+import { openLoginWindow } from './stores/loginWindow.js'
+import { prefetchScreensAfterTheFirstScreen } from './utils/prefetchScreens.js'
 
 const initUI = () => {
-    const topNav = new TopNav()
-    const headerEl = document.getElementById('header-container')
-    if (headerEl) {
-        headerEl.innerHTML = topNav.render()
-        topNav.attachListeners()
-    }
-
-    const footer = new Footer({ clearCaches: clearAppAlbumCaches })
-    const footerEl = document.getElementById('footer-container')
-    if (footerEl) {
-        footerEl.innerHTML = footer.render()
-        footer.attachListeners()
-    }
-
-    // The phone (F76): its top bar, its tab bar and its menu exist only on a screen up to 767 px
-    startPhoneShell({ router, userStore, clearCaches: clearAppAlbumCaches })
+    // The top bar, the footer and the shell of the phone, in React, in their own places outside #app
+    startShell({ router, userStore, clearCaches: clearAppAlbumCaches })
 }
 
 /**
@@ -77,7 +63,7 @@ const initUI = () => {
 async function bootstrap() {
     console.log('🚀 App Bootstrap Starting...')
 
-    // 1. Initialize UI (TopNav, Footer) - doesn't depend on auth
+    // 1. Initialize UI (the shell) - doesn't depend on auth
     initUI()
 
     // 2. Wait for authentication to be ready
@@ -104,7 +90,7 @@ async function bootstrap() {
     openSignInWhenAsked({
         location: window.location,
         signedIn: isSignedIn(user),
-        openSignIn: showLoginModal,
+        openSignIn: openLoginWindow,
         setAddress: (address) => router.setAddress(address, { replace: true })
     })
 
@@ -190,8 +176,9 @@ router.register('/series', () => {
     return null
 })
 
-// The screens in React are not fetched in the background: until the shell is React (wave 3), the site's first load downloads no
-// React (F83, REQ-07). Wave 3 hands the menu's screens to prefetchScreensAfterTheFirstScreen (utils/prefetchScreens.js).
+// The screens in React come down in the background once the first screen is on the page (F83, REQ-10): changing screens still works
+// with no network after the first load, as it did when everything was in the main script. React itself is already there: the shell is React.
+prefetchScreensAfterTheFirstScreen(router, [loadSavedPlaylists, loadPlaylists, loadComingSoon])
 
 // Global Error Handler
 window.addEventListener('error', (e) => {

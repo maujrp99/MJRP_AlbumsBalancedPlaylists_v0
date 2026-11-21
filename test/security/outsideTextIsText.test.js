@@ -7,6 +7,9 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
+// the login of the app is Firebase's: the shell is drawn without it here (what is under test is how the shell writes a person's name and picture)
+vi.mock('../../public/js/services/auth/signIn.js', async () => ({ authService: (await import('../support/shellScenarios.js')).stand.login }))
+
 import { AlbumCardRenderer } from '../../public/js/components/ui/AlbumCardRenderer.js'
 import { Album } from '../../public/js/models/Album.js'
 import { renderSeriesHeader } from '../../public/js/views/albums/AlbumsScopedRenderer.js'
@@ -15,7 +18,7 @@ import { Router } from '../../public/js/router.js'
 import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
 import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSeriesSelector.js'
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
-import { AuthNav } from '../../public/js/components/navigation/AuthNav.js'
+import { startOn } from '../support/renderShell'
 import { DiscographyRenderer } from '../../public/js/views/renderers/DiscographyRenderer.js'
 import FilterToolbar from '../../public/js/components/ui/FilterToolbar.js'
 
@@ -163,17 +166,18 @@ describe('text from outside is shown as text', () => {
         expectOnlyText(host, TEXT)
     })
 
-    it('account menu: the name, the e-mail and the picture address of the person', () => {
-        const nav = new AuthNav({ loading: false, currentUser: { isAnonymous: false, displayName: TEXT, email: TEXT, photoURL: QUOTED, providerData: [] } })
+    it('account menu: the name, the e-mail and the picture address of the person', async () => {
+        // the shell in React (F83 wave 3) draws the person in the bar and in the drawer of the middle screen
+        const shell = await startOn('/start', { user: { isAnonymous: false, displayName: TEXT, email: TEXT, photoURL: QUOTED, providerData: [] } })
+        const bar = document.getElementById('header-container')
 
-        draw(nav.renderDesktop())
-        expectOnlyText(host, TEXT)
-        expect(host.querySelectorAll('img').length).toBe(1)
-        expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
+        expectOnlyText(bar, TEXT)
+        expect(bar.querySelectorAll('#userMenuDropdownTrigger img').length).toBe(1)
+        expect(bar.querySelector('#userMenuBtn img').getAttribute('src')).toBe(QUOTED)
 
-        draw(nav.renderMobile())
-        expectOnlyText(host, TEXT)
-        expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
+        expect(bar.querySelectorAll('#mobileMenu .rounded-full[src]').length).toBe(1)
+        expect(bar.querySelector('#mobileMenu .rounded-full[src]').getAttribute('src')).toBe(QUOTED)
+        shell.stop()
     })
 
     it('album picker card (Home and series edit): title, id, year and cover address', () => {

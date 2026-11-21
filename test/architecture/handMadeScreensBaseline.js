@@ -1,4 +1,8 @@
 /**
+ * (2026-11-21, wave 3: the shell of the site went to React, and these left the list in the commit that deleted them: components/TopNav.js,
+ * Footer.js, LoginModal.js, SpotifyConnectButton.js and, in components/navigation, AuthNav, PhoneMenu, PhoneShell, SeriesDropdown, barName and
+ * phoneTabs (1.402 lines). Left in components/navigation, with their reasons: startRoute.js and signInFromLink.js, plain functions with no drawing.)
+ *
  * (2026-11-21, wave 2: the playlists screen went to React, and these left the list in the commit that deleted them: views/PlaylistsView.js,
  * views/playlists/{index,phonePlaylistActions,playlistEditActions,unsavedChangesGuard}.js and, in components, playlists/{PhonePlaylists,
  * PhoneUndoNotice,PlaylistGrid,PlaylistsDragHandler,PlaylistsGridRenderer}.js and ui/TrackRow.js. Left in the list, with their reasons:
@@ -26,17 +30,13 @@
  */
 export const HAND_MADE = {
     'components/Breadcrumb.js': 63,
-    'components/Footer.js': 97,
     'components/GlobalProgress.js': 80,
     'components/Icons.js': 178,
     'components/InventoryAddModal.js': 180,
     'components/InventoryEditModal.js': 157,
     'components/InventoryValueSection.js': 316,
-    'components/LoginModal.js': 128,
-    'components/SpotifyConnectButton.js': 116,
     'components/SpotifyExportModal.js': 434,
     'components/Toast.js': 154,
-    'components/TopNav.js': 271,
     'components/ViewAlbumModal.js': 382,
     'components/album-picker/AlbumPickerController.js': 121,
     'components/album-picker/AlbumPickerPanel.js': 109,
@@ -52,12 +52,6 @@ export const HAND_MADE = {
     'components/home/HomeEqualizer.js': 38,
     'components/home/HomePasteList.js': 208,
     'components/home/StagingAreaController.js': 91,
-    'components/navigation/AuthNav.js': 182,
-    'components/navigation/PhoneMenu.js': 134,
-    'components/navigation/PhoneShell.js': 183,
-    'components/navigation/SeriesDropdown.js': 216,
-    'components/navigation/barName.js': 8,
-    'components/navigation/phoneTabs.js': 67,
     'components/navigation/signInFromLink.js': 30,
     'components/navigation/startRoute.js': 62,
     'components/playlists/RegeneratePanel.js': 182,
