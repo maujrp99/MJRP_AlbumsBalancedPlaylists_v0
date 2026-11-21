@@ -56,11 +56,21 @@ const scrollY = (page) => page.evaluate(() => Math.round(window.scrollY))
 
 const browser = await chromium.launch()
 const png = (buffer) => PNG.sync.read(buffer)
+let lastBox = ''
 function pixelsApart(a, b) {
     const one = png(a), two = png(b)
     if (one.width !== two.width || one.height !== two.height) return Infinity
     let apart = 0
-    for (let i = 0; i < one.data.length; i += 4) if (one.data[i] !== two.data[i] || one.data[i + 1] !== two.data[i + 1] || one.data[i + 2] !== two.data[i + 2]) apart++
+    let x0 = Infinity, y0 = Infinity, x1 = -1, y1 = -1, delta = 0
+    for (let i = 0; i < one.data.length; i += 4) {
+        if (one.data[i] !== two.data[i] || one.data[i + 1] !== two.data[i + 1] || one.data[i + 2] !== two.data[i + 2]) {
+            apart++
+            delta = Math.max(delta, Math.abs(one.data[i] - two.data[i]), Math.abs(one.data[i + 1] - two.data[i + 1]), Math.abs(one.data[i + 2] - two.data[i + 2]))
+            const x = (i / 4) % one.width, y = Math.floor(i / 4 / one.width)
+            x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y)
+        }
+    }
+    lastBox = apart ? `box x ${x0}-${x1}, y ${y0}-${y1}, largest difference ${delta} of 255` : ''
     return apart
 }
 
@@ -81,7 +91,7 @@ async function open(base, width) {
     // the covers of the catalog (Apple's image host) are answered with a plain picture: the same bytes on both sides
     await page.route(/mzstatic\.com/, (route) => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="300" height="300" fill="#556"/></svg>' }))
     page.on('pageerror', (e) => errors.push(e.message.slice(0, 200)))
-    page.on('console', (m) => { if (m.type() === 'error' && !/favicon|net::ERR|Failed to load resource|posthog|firestore|permission|api\/|ERR_|identitytoolkit|auth\//i.test(m.text())) errors.push(m.text().slice(0, 200)) })
+    page.on('console', (m) => { if (m.type() === 'error' && !/favicon|net::ERR|Failed to load resource|posthog|firestore|permission|api\/|ERR_|identitytoolkit|auth\/|The series was not saved|Scan failed/i.test(m.text())) errors.push(m.text().slice(0, 200)) })
     if (process.env.NO_TRANSITIONS) await page.addInitScript(() => { document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}'; document.head.appendChild(s) }) })
     const started = Date.now()
     await page.goto(base + '/start', { waitUntil: 'load' })
@@ -112,7 +122,8 @@ async function step(label, sides, action, { shot = true, extra = null, wait = 50
     }
     const [before, after] = taken
     const domOk = JSON.stringify(before.dom) === JSON.stringify(after.dom)
-    note(`${label} · the page`, domOk, domOk ? '' : `differs in ${before.dom.map(([s, v], i) => (v !== after.dom[i][1] ? s : null)).filter(Boolean).join(', ')}`)
+    const where = (one, two) => { let i = 0; while (i < one.length && one[i] === two[i]) i++; return `old …${one.slice(Math.max(0, i - 60), i + 120)} // new …${two.slice(Math.max(0, i - 60), i + 120)}` }
+    note(`${label} · the page`, domOk, domOk ? '' : `differs in ${before.dom.map(([s, v], i) => (v !== after.dom[i][1] ? s + ' ' + where(v, after.dom[i][1]) : null)).filter(Boolean).join(', ')}`)
     note(`${label} · focus and what the page says besides`, before.focus === after.focus && JSON.stringify(before.extra) === JSON.stringify(after.extra), `${before.focus} / ${after.focus}${extra ? ' · ' + JSON.stringify([before.extra, after.extra]) : ''}`)
     if (shot) {
         const apart = pixelsApart(before.shot, after.shot)
@@ -120,7 +131,7 @@ async function step(label, sides, action, { shot = true, extra = null, wait = 50
         fs.writeFileSync(path.join(CAPTURES, `${name}.old.png`), before.shot)
         fs.writeFileSync(path.join(CAPTURES, `${name}.new.png`), after.shot)
         pixels.push({ label, apart })
-        note(`${label} · pixels`, apart === 0, apart === Infinity ? 'different sizes' : `${apart} px apart`)
+        note(`${label} · pixels`, apart === 0, apart === Infinity ? 'different sizes' : `${apart} px apart${lastBox ? ' · ' + lastBox : ''}`)
     }
 }
 
@@ -161,15 +172,28 @@ for (const width of [1280, 393]) {
         await step(`${tag} · the next Tab after a move (the focus kept by the dock)`, sides, (page) => page.keyboard.press('Tab'))
         await step(`${tag} · a row removed`, sides, (page) => press(page, '.home-rows li:nth-child(2) .home-rbtn__remove'))
         await step(`${tag} · Done`, sides, (page) => press(page, '[data-dock="close"]'))
-        await step(`${tag} · the name typed with real keys`, sides, async (page) => { await page.click('#seriesNameInput'); await page.keyboard.press('Control+A'); await page.keyboard.type('Late nights') })
-        await step(`${tag} · the name emptied, «Create series»: it asks for a name, focus on the field`, sides, async (page) => { await page.keyboard.press('Control+A'); await page.keyboard.press('Delete'); await page.keyboard.press('Enter') })
+        await step(`${tag} · the name typed with real keys`, sides, async (page) => { await page.click('#seriesNameInput'); await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.type('Late nights') })
+        await step(`${tag} · the name emptied, «Create series»: it asks for a name, focus on the field`, sides, async (page) => { await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.press('Delete'); await page.keyboard.press('Enter') })
         await step(`${tag} · «Use …»`, sides, (page) => press(page, '[data-dock="use-name"]'))
     } else {
         await step(`${tag} · the bar is tapped: the sheet`, sides, (page) => press(page, '.home-dock__open'))
         await step(`${tag} · a row moved down in the sheet`, sides, (page) => press(page, '#homeSeriesSheet .home-rows li:nth-child(1) .home-rbtn__down'))
         await step(`${tag} · a row removed in the sheet: Undo is in the sheet`, sides, (page) => press(page, '#homeSeriesSheet .home-rows li:nth-child(2) .home-rbtn__remove'))
-        await step(`${tag} · the name typed in the sheet with real keys`, sides, async (page) => { await page.tap('#homeChosenName'); await page.keyboard.press('Control+A'); await page.keyboard.type('Late nights') })
+        await step(`${tag} · the name typed in the sheet with real keys`, sides, async (page) => { await page.tap('#homeChosenName'); await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.type('Late nights') })
+        await step(`${tag} · Undo pressed in the sheet`, sides, (page) => press(page, '#homeSeriesSheet .home-undo button'))
         await step(`${tag} · the sheet closed`, sides, (page) => press(page, '#homeSeriesSheet .sheet__close'), { wait: 700 })
+        // A DIFFERENCE ON PURPOSE (decided by the agent, revisable): a removal in the sheet offers Undo for 8 s; the old dock, drawn while the sheet was
+        // open, had no strip and did not draw again when the sheet closed, so the Undo that was still good stayed hidden. The new dock shows it again.
+        await sides.reduce((chain, side) => chain.then(async () => {
+            await side.page.tap('.home-dock__open')
+            await side.page.tap('#homeSeriesSheet .home-rows li:nth-child(2) .home-rbtn__remove')
+            await side.page.tap('#homeSeriesSheet .sheet__close')
+            await side.page.waitForTimeout(700)
+        }), Promise.resolve())
+        {
+            const strips = await Promise.all(sides.map((side) => side.page.evaluate(() => document.querySelectorAll('#homeDockHost .home-undo').length)))
+            note(`${tag} · the sheet closed with an Undo still pending: the old dock hid the strip, the new one shows it (on purpose)`, JSON.stringify(strips) === JSON.stringify(process.env.OLD_AGAINST_OLD ? [0, 0] : [0, 1]), JSON.stringify(strips))
+        }
     }
     await step(`${tag} · creating (the writing held back)`, sides, (page) => page.evaluate(() => { window.controller.writeSeries = () => new Promise(() => {}); window.controller.createSeries() }))
     await close(sides)

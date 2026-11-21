@@ -64,4 +64,11 @@ Os 18 estados do protótipo da F79, a 1280 e a 393, **mais** os que o protótipo
 
 ## Onde parou (atualizado ao fim da onda)
 
-(a preencher)
+A onda 4 foi construída inteira (TASK-20 e TASK-21; a reconferência visual, TASK-32, é de quem não construiu). O que saiu diferente do mapa:
+
+- **A tela é desenhada de uma «foto» do controlador, como a antiga:** o dock é refeito (com `key`) a cada `redraw()` e devolve o foco por seletor; a grade de capas é refeita a cada passo do seletor; as capas escolhidas só mudam de classe. O teste «igual ao de antes» compara 30 cenários com páginas, foco e chamadas ao que está fora (os blocos `hidden` só pelos atributos: o que a antiga deixava escrito dentro de um bloco escondido nunca esteve na tela).
+- **Uma diferença de propósito (revisável):** com um Undo ainda valendo, fechar a folha do celular mostra de novo a faixa de Undo; a antiga desenhava o dock com a folha aberta, sem a faixa, e não o desenhava de novo ao fechar, então o Undo bom ficava escondido. O navegador afirma os dois lados (0 e 1 faixas).
+- **Dois defeitos da antiga mantidos de propósito:** na folha do celular as linhas e o rodapé são refeitos a cada desenho e o foco vai para a página depois de cada botão de linha; o nome da folha não é desenhado de novo enquanto se digita nele (o aviso «falta o nome» fica até se sair do campo). A contagem de capas da frase «Your series still has its N albums» é a do momento da busca, como na antiga.
+- **Lições aplicadas:** o StrictMode roda duas vezes o efeito que devolve o foco: ele só devolve se o foco está na página (sem isso roubava o foco do campo do nome que o gesto acabava de dar); os textos em pedaços (a dica, a linha do visitante) são um nó de texto só, como na antiga (separados, o Chromium compõe o texto com 136 pixels de diferença).
+- **O arquivo da tela baixa na abertura** (junto do login): o tempo até o palco apareceu foi o mesmo da antiga num servidor de desenvolvimento (três cargas cada, 426 a 470 ms contra 445 a 464 ms); o script principal encolheu 9.043 B (285.730 contra 294.773 B) e o arquivo da Start é de 12.176 B.
+- **O que não se pôde exercitar:** o MusicKit de verdade (o token de desenvolvedor vem do servidor e a busca precisa do catálogo da Apple): a prova troca o catálogo pela costura do sensor visual. O Spotify não é tocado por esta tela. A janela de entrar (aberta pelo visitante) é chamada, não percorrida: é da moldura.

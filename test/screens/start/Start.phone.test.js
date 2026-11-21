@@ -158,6 +158,18 @@ describe('the Home on the phone (F79 over F76)', () => {
         expect(bar().textContent).not.toContain('not signed in')
     })
 
+    it('closing the sheet with an Undo still pending shows the strip above the bar again (a difference of F83 wave 4, on purpose: the hand-made dock left it hidden)', async () => {
+        await open(true)
+        ;['Wowee Zowee', 'Crooked Rain'].forEach(title => card(title).click())
+        $('.home-dock__open').click()
+        $('#homeSeriesSheet .home-rows li:nth-child(2) .home-rbtn__remove').click()
+        expect($('.home-dockwrap .home-undo')).toBeNull()
+
+        $('#homeSeriesSheet .sheet__close').click()
+
+        expect($('.home-dockwrap .home-undo').textContent).toContain('Removed «Crooked Rain».')
+    })
+
     it('on the computer there is no action bar: the dock is the bar at the bottom', async () => {
         await open(false)
 
