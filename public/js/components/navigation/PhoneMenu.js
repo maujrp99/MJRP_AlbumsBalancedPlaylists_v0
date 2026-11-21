@@ -93,5 +93,6 @@ export function openPhoneMenu({ user, clearCaches }) {
         ]
     })
     connections = mountConnections(document.getElementById('phone-menu-connections'), realConnections())
+    connections.check() // Apple Music keeps its authorization across visits: ask now, the sheet says «Checking…» meanwhile
     return sheet
 }

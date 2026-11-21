@@ -10,7 +10,7 @@ const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn() }))
 vi.mock('../../../public/js/components/LoginModal.js', () => login)
 vi.mock('../../../public/js/components/navigation/AuthNav.js', () => auth)
 vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast }))
-const connections = vi.hoisted(() => ({ mountConnections: vi.fn(() => ({ destroy: vi.fn() })), realConnections: vi.fn(() => ({})) }))
+const connections = vi.hoisted(() => ({ mountConnections: vi.fn(() => ({ destroy: vi.fn(), check: vi.fn() })), realConnections: vi.fn(() => ({})) }))
 vi.mock('../../../public/js/components/navigation/connections.js', () => connections)
 
 import { openPhoneMenu, askToClearCache, accountInitial } from '../../../public/js/components/navigation/PhoneMenu.js'
@@ -45,13 +45,15 @@ describe('PhoneMenu', () => {
 
     it('F88: holds the connections, Spotify and Apple Music, and stops listening when it closes', () => {
         const destroy = vi.fn()
-        connections.mountConnections.mockReturnValueOnce({ destroy })
+        const check = vi.fn()
+        connections.mountConnections.mockReturnValueOnce({ destroy, check })
         const sheet = openPhoneMenu({ user: null, clearCaches: vi.fn() })
 
         const box = document.getElementById('phone-menu-connections')
         expect(box).not.toBeNull()
         expect(connections.mountConnections).toHaveBeenCalledWith(box, expect.any(Object))
         expect(document.querySelector('.phone-menu__section').textContent).toBe('Connections')
+        expect(check).toHaveBeenCalledTimes(1) // the true state is asked when the menu opens
         sheet.close()
         expect(destroy).toHaveBeenCalledTimes(1)
     })

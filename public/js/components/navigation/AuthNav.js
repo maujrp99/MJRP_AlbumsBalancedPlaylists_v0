@@ -168,6 +168,7 @@ export class AuthNav {
         trigger.setAttribute('aria-expanded', String(open));
         menu.classList.toggle('opacity-0', !open);
         menu.classList.toggle('invisible', !open);
+        if (open) this.connections?.check();
         return true;
     }
 

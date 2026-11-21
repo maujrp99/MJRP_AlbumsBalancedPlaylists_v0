@@ -169,6 +169,21 @@ export class MusicKitAuth {
     }
 
     /**
+     * Whether the person authorized Apple Music on this or an EARLIER visit: MusicKit keeps the
+     * authorization in the browser and says so once it is started. Starting it loads the MusicKit
+     * script, so only the menu asks, and only when it opens (F88).
+     * @returns {Promise<boolean>}
+     */
+    async checkConnection() {
+        const music = await this.init();
+        const authorized = Boolean(music?.isAuthorized);
+        const changed = authorized !== this.isAuthorized;
+        this.isAuthorized = authorized;
+        if (changed) announceConnection();
+        return authorized;
+    }
+
+    /**
      * Disconnect: MusicKit forgets the person. With MusicKit never started there is nothing to forget.
      */
     async unauthorize() {

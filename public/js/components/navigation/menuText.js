@@ -31,6 +31,7 @@ export const MENU_TEXT = Object.freeze({
     // The connections
     notConnected: 'Not connected',
     connecting: 'Connecting…',
+    checking: 'Checking…',
     failed: 'Could not connect',
     connected: 'Connected',
     connectedAs: (name) => `Connected as ${name}`,

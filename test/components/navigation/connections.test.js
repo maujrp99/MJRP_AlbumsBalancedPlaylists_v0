@@ -12,6 +12,7 @@ describe('describeConnection', () => {
     it('says each state in words and offers the action that fits', () => {
         expect(describeConnection({ state: 'disconnected' })).toMatchObject({ text: 'Not connected', action: 'connect', actionLabel: 'Connect' })
         expect(describeConnection({ state: 'connecting' })).toMatchObject({ text: 'Connecting…', action: null, busy: true })
+        expect(describeConnection({ state: 'checking' })).toMatchObject({ text: 'Checking…', action: null, busy: true })
         expect(describeConnection({ state: 'failed' })).toMatchObject({ text: 'Could not connect', action: 'connect', actionLabel: 'Try again' })
         expect(describeConnection({ state: 'connected' })).toMatchObject({ text: 'Connected', action: 'disconnect', actionLabel: 'Disconnect' })
         expect(describeConnection({ state: 'connected', detail: 'Ana' }).text).toBe('Connected as Ana')
@@ -48,7 +49,7 @@ describe('mountConnections', () => {
 
     it('draws Spotify and Apple Music, each not connected, each with a Connect button named for it', () => {
         mountConnections(box, deps)
-        expect([...box.querySelectorAll('[data-connection]')].map(r => r.dataset.connection)).toEqual(['spotify', 'apple'])
+        expect([...box.querySelectorAll('[data-connection]')].map(r => r.dataset.connection)).toEqual(['apple', 'spotify']) // alphabetical: Apple Music is not an afterthought
         expect(row('spotify').textContent).toContain('Spotify')
         expect(row('apple').textContent).toContain('Apple Music')
         expect(status('spotify')).toBe('Not connected')
@@ -139,5 +140,58 @@ describe('mountConnections', () => {
         spotify.set(true)
         mountConnections(box, { ...deps, onSummary: (s) => seen.push(s) })
         expect(seen.at(-1)).toEqual({ spotify: true, apple: false })
+    })
+
+    describe('Apple Music across visits (the owner uses it): the state is asked when the panel opens', () => {
+        const withCheck = (answer) => { apple.check = vi.fn(typeof answer === 'function' ? answer : async () => answer) }
+
+        it('says «Checking…» until asked, and never guesses «Connected» or «Not connected»', () => {
+            withCheck(true)
+            mountConnections(box, deps)
+            expect(status('apple')).toBe('Checking…')
+            expect(row('apple').querySelector('button')).toBeNull()
+            expect(apple.check).not.toHaveBeenCalled()
+        })
+
+        it('authorized on an earlier visit: Connected, with the Disconnect button', async () => {
+            withCheck(true)
+            const handle = mountConnections(box, deps)
+            handle.check()
+            expect(status('apple')).toBe('Checking…')
+            await tick()
+            expect(apple.check).toHaveBeenCalledTimes(1)
+            expect(status('apple')).toBe('Connected')
+            expect(button('apple').getAttribute('aria-label')).toBe('Disconnect Apple Music')
+        })
+
+        it('not authorized: Not connected, with Connect', async () => {
+            withCheck(false)
+            mountConnections(box, deps).check()
+            await tick()
+            expect(status('apple')).toBe('Not connected')
+            expect(button('apple').getAttribute('aria-label')).toBe('Connect Apple Music')
+        })
+
+        it('the check fails (MusicKit did not start): says it could not tell, and offers Try again', async () => {
+            withCheck(async () => { throw new Error('token route down') })
+            mountConnections(box, deps).check()
+            await tick()
+            expect(status('apple')).toBe('Could not connect')
+            expect(button('apple').textContent).toContain('Try again')
+        })
+
+        it('Spotify does not wait: its state is known at once', () => {
+            withCheck(true)
+            spotify.set(true)
+            mountConnections(box, deps)
+            expect(status('spotify')).toBe('Connected')
+        })
+
+        it('the dots do not count a service still being checked as connected', () => {
+            withCheck(true)
+            const seen = []
+            mountConnections(box, { ...deps, onSummary: (x) => seen.push(x) })
+            expect(seen.at(-1)).toEqual({ spotify: false, apple: false })
+        })
     })
 })

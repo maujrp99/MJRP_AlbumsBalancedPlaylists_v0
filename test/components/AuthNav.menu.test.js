@@ -12,7 +12,8 @@ vi.mock('../../public/js/components/LoginModal.js', () => ({ showLoginModal: vi.
 vi.mock('../../public/js/components/Toast.js', () => ({ default: { success: vi.fn(), error: vi.fn() } }))
 vi.mock('../../public/js/components/Icons.js', () => ({ getIcon: () => '' }))
 vi.mock('../../public/js/utils/reloadApp.js', () => ({ reloadApp: vi.fn() }))
-const connections = vi.hoisted(() => ({ mountConnections: vi.fn(() => ({ destroy: vi.fn() })), realConnections: vi.fn(() => ({})) }))
+const connectionCheck = vi.hoisted(() => vi.fn())
+const connections = vi.hoisted(() => ({ mountConnections: vi.fn(() => ({ destroy: vi.fn(), check: connectionCheck })), realConnections: vi.fn(() => ({})) }))
 vi.mock('../../public/js/components/navigation/connections.js', () => connections)
 
 import { AuthNav } from '../../public/js/components/navigation/AuthNav.js'
@@ -92,6 +93,16 @@ describe('AuthNav: the account menu (F63, UAT-13)', () => {
     it('holds the connections of Spotify and Apple Music, and asks them to draw into the panel', () => {
         expect(document.getElementById('accountConnections')).not.toBeNull()
         expect(connections.mountConnections).toHaveBeenCalledWith(document.getElementById('accountConnections'), expect.any(Object))
+    })
+
+    it('asks the connections for their true state when the panel opens, not before (nothing heavier at load)', () => {
+        connectionCheck.mockClear()
+        expect(connectionCheck).not.toHaveBeenCalled()
+        trigger().click()
+        expect(connectionCheck).toHaveBeenCalledTimes(1)
+        trigger().click()
+        trigger().click()
+        expect(connectionCheck).toHaveBeenCalledTimes(2)
     })
 
     it('says who is signed in, and has Sign Out inside the panel', () => {

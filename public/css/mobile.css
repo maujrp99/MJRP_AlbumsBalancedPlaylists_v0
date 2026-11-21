@@ -19,7 +19,7 @@
   /* ── 1. Measures ─────────────────────────────────────────────────────────────────────────── */
   :root {
     --phone-topbar-h: 56px; /* F88: the home's bar on the phone is 56 px */
-    --phone-tabbar-h: 68px; /* F88: 8 px of the home's row of bars + the tabs */
+    --phone-tabbar-h: 64px; /* F88: the home's bottom bar is 64 px (+1 px line): 8 px of bars + the tabs */
     --phone-action-bar-h: 64px;
     --phone-gutter: 16px;
     --phone-target: 44px;

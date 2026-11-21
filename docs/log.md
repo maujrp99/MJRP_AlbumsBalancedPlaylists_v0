@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:39] session — F88: o estado verdadeiro do Apple Music, a barra de baixo igual à da home, e um ponto de quebra só (não cabe na home)
+**Branch:** feat/f88-top-menu-build
+Apple Music: o MusicKit guarda a autorização entre visitas e só diz depois de iniciado (music.isAuthorized); MusicKitAuth.checkConnection() inicia o MusicKit e lê; o painel (ao abrir) e a folha do celular (ao abrir) perguntam, com «Checking…» antes, «Connected», «Not connected» ou «Could not connect» + «Try again»; a carga da página não muda; ordem alfabética. Testes primeiro (connections, MusicKitAuth.connection, AuthNav.menu, PhoneMenu). /api/musickit-status só diz se o servidor tem a chave, não a autorização da pessoa. Barra de baixo do celular: --phone-tabbar-h de 68 para 64 px: 65 px como a da home (medido). Ponto de quebra: a home com a barra no cabeçalho a 800 px sem conta fica com paradas de 31 px e rótulos de 33 a 48 px (sobrepõem), então a home segue até 899 px (tentei, medi e desfiz) e a passagem entre 768 e 899 px continua mudando de forma; evidência em reports/evidence/F88/ (apple-*, heights.json, passage-out-800.png).
+
+## [2026-11-21 17:39] decision — o MJRP usa o Apple Music, não o Spotify: o estado do Apple Music no menu tem de ser o verdadeiro (F88)
+**Branch:** feat/f88-top-menu-build
+Palavras do MJRP (2026-11-21): «eu pessoalmente, uso Apple Music e não Spotify». Como foi entendido (orquestrador): quem autorizou o Apple Music numa visita anterior não pode ver «não conectado»; o painel e a folha listam Apple Music primeiro (ordem alfabética).
+
 ## [2026-11-21 17:33] session — F88: prova no navegador (1280 e 393, sem conta e com a conta de teste), documentação e tarefas
 **Branch:** feat/f88-top-menu-build
 Evidência em reports/evidence/F88/ (shoot.mjs, compose.mjs, measures.json, capturas): a barra da home e a do app a 1280 px têm a mesma altura (72), a mesma marca (181 x 30 px a 16 px da borda) e a mesma posição da barra (209,2 px) e da fila de barras, sem e com conta; o item atual aceso nas sete rotas nos dois tamanhos; o painel e a folha do celular abertos com Spotify e Apple Music; sem rolagem para o lado; sem erro no console além dos esperados da bancada (login anônimo e Firestore bloqueados). behavior.md, info-arch.md e design-system.md em dia, o que espera aceite do MJRP marcado «pendente»; tasks.md: TASK-00 a 03 marcadas, TASK-04 (produção junto com a home) aberta.

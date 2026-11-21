@@ -18,10 +18,10 @@ import { NAME_IN_THE_BAR } from './barName.js'
 
 const el = (tag, props, children) => SafeDOM.create(tag, props, children)
 
-/** The services the panel shows, in order: the key, the name, the icon. */
+/** The services the panel shows, in alphabetical order (Apple Music is not an afterthought): the key, the name, the icon. */
 const SERVICES = Object.freeze([
-    { key: 'spotify', name: 'Spotify', icon: 'SpotifyConfig' },
-    { key: 'apple', name: 'Apple Music', icon: 'Apple' }
+    { key: 'apple', name: 'Apple Music', icon: 'Apple' },
+    { key: 'spotify', name: 'Spotify', icon: 'SpotifyConfig' }
 ])
 
 /** What a connect returns when the browser is leaving for the service's own page: the state waits there. */
@@ -35,6 +35,8 @@ export function describeConnection({ state, detail = null }) {
     switch (state) {
         case 'connected':
             return { text: detail ? MENU_TEXT.connectedAs(detail) : MENU_TEXT.connected, action: 'disconnect', actionLabel: MENU_TEXT.disconnect, busy: false, tone: 'ok' }
+        case 'checking':
+            return { text: MENU_TEXT.checking, action: null, actionLabel: null, busy: true, tone: 'wait' }
         case 'connecting':
             return { text: MENU_TEXT.connecting, action: null, actionLabel: null, busy: true, tone: 'wait' }
         case 'failed':
@@ -56,6 +58,8 @@ export function realConnections() {
         },
         apple: {
             isConnected: () => musicKitService.isAuthorized(),
+            // MusicKit keeps the authorization across visits, but only says so once started: asked when the menu opens
+            check: () => musicKitService.checkAuthorization(),
             detail: async () => null,
             connect: () => musicKitService.authorize(),
             disconnect: () => musicKitService.unauthorize(),
@@ -100,13 +104,26 @@ function glyphOf(service) {
  * Draws the connections in `box` and keeps them true: the state of each service is read from it, never kept apart.
  * @param {HTMLElement} box
  * @param {Object} [deps] - the adapters of `realConnections()`, and `onSummary({spotify, apple})` heard on every change
- * @returns {{ destroy: Function }}
+ * @returns {{ destroy: Function, check: Function }} `check()` asks the services that cannot know at once (Apple Music) for their true state; call it when the menu opens
  */
 export function mountConnections(box, deps = realConnections()) {
     const views = {}
     let keepFocusIn = null
+    // A service that has to be asked (Apple Music) is «checking» until it is: never a guess
+    const asks = (service) => typeof deps[service.key].check === 'function'
     const settle = (service) => {
         views[service.key] = { state: deps[service.key].isConnected() ? 'connected' : 'disconnected', detail: null }
+    }
+    const check = async (service) => {
+        views[service.key] = { state: 'checking', detail: null }
+        draw()
+        try {
+            views[service.key] = { state: (await deps[service.key].check()) ? 'connected' : 'disconnected', detail: null }
+        } catch (error) {
+            console.error(`[connections] ${service.name} could not be checked:`, error)
+            views[service.key] = { state: 'failed', detail: null }
+        }
+        draw()
     }
     const draw = () => {
         // The focus stays in the row the person is using, even while its button is gone (connecting)
@@ -156,8 +173,11 @@ export function mountConnections(box, deps = realConnections()) {
         if (service) run(service, button.dataset.action)
     })
     const stops = SERVICES.map(service => deps[service.key].onChange(() => refresh(service)))
-    SERVICES.forEach(settle)
+    SERVICES.forEach(service => { if (asks(service)) views[service.key] = { state: 'checking', detail: null }; else settle(service) })
     draw()
     SERVICES.forEach(service => { if (views[service.key].state === 'connected') refresh(service) })
-    return { destroy: () => stops.forEach(stop => stop?.()) }
+    return {
+        destroy: () => stops.forEach(stop => stop?.()),
+        check: () => SERVICES.filter(asks).forEach(check)
+    }
 }

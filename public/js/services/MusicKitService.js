@@ -42,6 +42,11 @@ class MusicKitService {
         return musicKitAuth.isConnected();
     }
 
+    /** Whether the person authorized Apple Music on an earlier visit too; starts MusicKit (the menu asks when it opens). */
+    async checkAuthorization() {
+        return musicKitAuth.checkConnection();
+    }
+
     async unauthorize() {
         return musicKitAuth.unauthorize();
     }

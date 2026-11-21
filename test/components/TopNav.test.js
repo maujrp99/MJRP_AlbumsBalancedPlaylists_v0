@@ -11,7 +11,7 @@ vi.mock('../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthSe
 vi.mock('../../public/js/components/LoginModal.js', () => ({ showLoginModal: vi.fn() }))
 vi.mock('../../public/js/components/Toast.js', () => ({ default: { success: vi.fn(), error: vi.fn() } }))
 vi.mock('../../public/js/utils/reloadApp.js', () => ({ reloadApp: vi.fn() }))
-vi.mock('../../public/js/components/navigation/connections.js', () => ({ mountConnections: vi.fn(() => ({ destroy: vi.fn() })), realConnections: vi.fn(() => ({})) }))
+vi.mock('../../public/js/components/navigation/connections.js', () => ({ mountConnections: vi.fn(() => ({ destroy: vi.fn(), check: vi.fn() })), realConnections: vi.fn(() => ({})) }))
 
 import { userStore } from '../../public/js/stores/UserStore.js'
 import { TopNav } from '../../public/js/components/TopNav.js'
