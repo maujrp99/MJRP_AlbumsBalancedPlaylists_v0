@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:48] session — o comparador da página de entrada sem siglas
+**Branch:** fix/f80-uat-entry-page
+O MJRP: «e a questao de sigla, nao me ajuda Uat-235???». Tirei os códigos dos títulos e botões do comparador: a primeira tela não tem nenhum; o aviso das rodadas anteriores diz «A caixa de discos em diagonal, sem corte» e o botão «Ver as prévias da caixa em diagonal»; a página das prévias se chama «A caixa em diagonal».
+
 ## [2026-11-21 10:47] session — o comparador da F80 abre na decisão da caixa de discos
 **Branch:** fix/f80-uat-entry-page
 O MJRP abriu o comparador e disse: «abri o artefato agora e nao sei o que eu faço e olho, com tanta info na tela». A página de entrada do comparador (https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e) agora abre só na decisão em mãos: «A caixa de discos: qual vista?», a página de hoje e as três vistas lado a lado (janela de 1920 px, onde o corte de hoje aparece), cada uma com um nome curto e uma linha, a recomendada marcada, e um seletor do momento da rolagem (a virada, a abertura, um disco puxado, o lado B). Tudo o que estava antes (rodada 2, peso e risco, o fogo, as versões antigas, o celular) foi para `rodadas-anteriores.html`, intacto, atrás de um link no pé. Palavras visíveis sem rolar, numa janela de 1440 × 900: antes 414, depois 61.
