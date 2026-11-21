@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 00:26] review — F79: a segunda passada da reconferência visual começou
+**Branch:** feat/f79-home-that-explains-itself
+O mesmo agente juiz (que não implementou) refaz os 36 pares sobre `b12e751`, as correções dos achados da primeira passada. Relatório novo em `reports/audits/2026-11-21-F79-visual-parity-recheck-2.md`, `verdict: running`; o da primeira passada fica como está.
+
 ## [2026-11-21 00:25] session — F79: os achados da reconferência visual corrigidos (P1-1, P1-2 e os P2 da tela)
 **Branch:** feat/f79-home-that-explains-itself
 Lido `reports/audits/2026-11-20-F79-visual-parity-recheck.md` (não tocado). Corrigido, com o teste escrito antes e visto falhar (`test/components/home/HomeRecheckShapes.test.js`, mais asserções em `HomeController.bulk.test.js` e `HomePhone.dock.test.js`):
