@@ -59,6 +59,24 @@ export function handleExportJson(playlists) {
     track('playlists_exported', { target: 'json', outcome: 'complete', playlist_count: exportData.length })
 }
 
+/** Where the progress of the Apple export is written: told to the screen that draws its own button, or written on the button given. */
+function progressWriter({ btn, onStatus }) {
+    if (onStatus) return onStatus
+    return (text) => {
+        if (!btn) return
+        btn.disabled = true
+        btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} ${escapeHtml(text)}`
+    }
+}
+
+/** The end of the export: the screen is told it is over, or the button is given back as it was. */
+function giveBackButton({ btn, onStatus, originalText }) {
+    if (onStatus) onStatus(null)
+    if (!btn) return
+    btn.disabled = false
+    btn.innerHTML = originalText || 'Export to Apple Music'
+}
+
 /** How long the report of an export stays: it names playlists, it is not read at a glance. */
 const REPORT_MS = 12000
 
@@ -72,9 +90,11 @@ let appleExportRunning = false
  *
  * @param {Object} options - Options
  * @param {HTMLElement} [options.btn] - the button pressed: it shows the progress and is given back
+ * @param {(text: string|null) => void} [options.onStatus] - a screen that draws its own button is told the progress instead
+ *   (a text while it runs, null when it is over)
  */
 export async function handleExportToAppleMusic(options = {}) {
-    const { btn } = options
+    const { btn, onStatus } = options
 
     if (appleExportRunning) {
         toast.info('The export to Apple Music is already running.')
@@ -88,11 +108,7 @@ export async function handleExportToAppleMusic(options = {}) {
 
     appleExportRunning = true
     const originalText = btn?.innerHTML
-    const say = (text) => {
-        if (!btn) return
-        btn.disabled = true
-        btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} ${escapeHtml(text)}`
-    }
+    const say = progressWriter({ btn, onStatus })
     say('Connecting...')
 
     try {
@@ -108,9 +124,6 @@ export async function handleExportToAppleMusic(options = {}) {
         toast.error(`The export to Apple Music failed: ${error.message}`, REPORT_MS)
     } finally {
         appleExportRunning = false
-        if (btn) {
-            btn.disabled = false
-            btn.innerHTML = originalText || 'Export to Apple Music'
-        }
+        giveBackButton({ btn, onStatus, originalText })
     }
 }

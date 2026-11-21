@@ -34,8 +34,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'components/ui/AlbumCardRenderer.js:arrow function': 17, // no feature yet
     'components/ui/AlbumCardRenderer.js:arrow function#2': 18, // no feature yet
     'components/ui/Card.js:renderRankingBadge': 17, // no feature yet
-    'components/ui/TrackRow.js:render': 11, // no feature yet
-    'components/ui/TrackRow.js:buildBadges': 14, // no feature yet
     'controllers/SeriesController.js:arrow function': 16, // no feature yet; 20 until F78 took the «recent» orders to shared/seriesOrder.js
     'models/Album.js:constructor': 16, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/Track.js:constructor': 39, // no feature yet: the constructor normalizes every shape an album or a track ever had

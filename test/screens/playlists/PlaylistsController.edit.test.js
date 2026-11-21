@@ -1,5 +1,5 @@
 /**
- * F62 - the edits of the playlists screen seen from the database: the controller and the service
+ * F62 (taken to test/screens/playlists in F83 wave 2; the card it draws is the React one) - the edits of the playlists screen seen from the database: the controller and the service
  * are the real ones, Firestore is the in-memory double.
  *
  * - UAT-04: the title typed for a playlist is saved with the batch, comes back when the batch is
@@ -10,39 +10,47 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('firebase/firestore', async () => (await import('../helpers/fakeFirestore.js')).firestoreModule)
-vi.mock('../../public/js/firebase-init.js', () => ({ db: { fake: true }, auth: { currentUser: { uid: 'u1' } } }))
-vi.mock('../../public/js/cache/CacheManager.js', () => {
+vi.mock('firebase/firestore', async () => (await import('../../helpers/fakeFirestore.js')).firestoreModule)
+vi.mock('../../../public/js/firebase-init.js', () => ({ db: { fake: true }, auth: { currentUser: { uid: 'u1' } } }))
+vi.mock('../../../public/js/cache/CacheManager.js', () => {
     const cacheManager = { get: async () => null, set: async () => { }, invalidate: async () => { } }
     return { cacheManager, CacheManager: class { } }
 })
-vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))
-vi.mock('../../public/js/controllers/BlendingController.js', () => ({ blendingController: { regenerate: vi.fn() } }))
-vi.mock('../../public/js/services/albums/albumLoading.js', () => ({
+vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))
+vi.mock('../../../public/js/controllers/BlendingController.js', () => ({ blendingController: { regenerate: vi.fn() } }))
+vi.mock('../../../public/js/services/albums/albumLoading.js', () => ({
     albumAsks: { albumsOf: vi.fn(async () => ({ albums: [{ id: 'a1' }], bySeries: {}, failed: [], missingSources: [], total: 1, aborted: false })) }
 }))
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../../public/js/components/Toast.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
 
-import { fake } from '../helpers/fakeFirestore.js'
-import { PlaylistsController } from '../../public/js/controllers/PlaylistsController.js'
-import { getPlaylistsService } from '../../public/js/services/playlists/playlistsWiring.js'
-import { PlaylistGrid } from '../../public/js/components/playlists/PlaylistGrid.js'
-import { PlaylistsGridRenderer } from '../../public/js/components/playlists/PlaylistsGridRenderer.js'
-import { playlistGenerationService } from '../../public/js/services/PlaylistGenerationService.js'
-import { playlistsStore } from '../../public/js/stores/playlists.js'
-import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
-import toast from '../../public/js/components/Toast.js'
+import { fake } from '../../helpers/fakeFirestore.js'
+import { PlaylistsController } from '../../../public/js/controllers/PlaylistsController.js'
+import { getPlaylistsService } from '../../../public/js/services/playlists/playlistsWiring.js'
+import { createElement } from 'react'
+import { createRoot } from 'react-dom/client'
+import { flushSync } from 'react-dom'
+import { PlaylistCards } from '../../../public/js/screens/playlists/PlaylistCards'
+import { generatedWithOf } from '../../../public/js/screens/playlists/text'
+import { playlistGenerationService } from '../../../public/js/services/PlaylistGenerationService.js'
+import { playlistsStore } from '../../../public/js/stores/playlists.js'
+import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
+import toast from '../../../public/js/components/Toast.js'
 
 const SERIES_PATH = 'artifacts/mjrp-albums/users/u1/curator/data/series'
 const saved = () => fake.list(`${SERIES_PATH}/sA/playlists`).sort((a, b) => a.order - b.order)
 const onScreen = () => playlistsStore.getPlaylists()
+/** The titles the cards of the screen show for the set on screen (the real card, drawn in a page of its own). */
 const drawnTitles = () => {
     const host = document.createElement('div')
-    host.innerHTML = PlaylistGrid.render({ playlists: onScreen(), batchName: 'Mix' })
-    return [...host.querySelectorAll('.playlist-name')].map(el => el.textContent)
+    const root = createRoot(host)
+    const nothing = () => {}
+    flushSync(() => root.render(createElement(PlaylistCards, { playlists: onScreen(), batchName: 'Mix', actions: { removeTrack: nothing, deletePlaylist: nothing, renamePlaylist: nothing } })))
+    const titles = [...host.querySelectorAll('.playlist-name')].map(el => el.textContent)
+    root.unmount()
+    return titles
 }
 
 /** A new page: nothing in memory, the batch opened for editing from the database. */
@@ -174,7 +182,7 @@ describe('PlaylistsController: the edits of the set on screen (F62)', () => {
             await controller.handleSave('Mix')
             await reopenForEditing(controller, 'Mix')
 
-            expect(PlaylistsGridRenderer.generatedWith(onScreen())).toEqual({ ...config, rankingId: 'bea' })
+            expect(generatedWithOf(onScreen())).toEqual({ ...config, rankingId: 'bea' })
         })
     })
 })

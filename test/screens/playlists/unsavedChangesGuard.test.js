@@ -18,8 +18,8 @@ const windowListeners = vi.hoisted(() => {
     return recorded
 })
 
-import { Router } from '../../public/js/router.js'
-import { installUnsavedChangesGuard } from '../../public/js/views/playlists/unsavedChangesGuard.js'
+import { Router } from '../../../public/js/router.js'
+import { installUnsavedChangesGuard } from '../../../public/js/screens/playlists/unsavedChangesGuard'
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 20))
 const address = () => window.location.pathname + window.location.search

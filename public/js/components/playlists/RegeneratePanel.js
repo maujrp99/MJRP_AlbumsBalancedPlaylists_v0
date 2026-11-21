@@ -18,6 +18,7 @@ import { BlendIngredientsPanel } from '../blend/BlendIngredientsPanel.js'
  * @property {string} seriesId - Current series ID
  * @property {string} batchName - Current batch name
  * @property {string[]} existingPlaylistIds - IDs to preserve on regenerate
+ * @property {number} [count] - how many playlists the panel says it holds (the length of the ids when not given)
  * @property {Object|null} generatedWith - the recipe the playlists on screen were generated with
  * @property {boolean} [expanded=false] - Initial expanded state
  */

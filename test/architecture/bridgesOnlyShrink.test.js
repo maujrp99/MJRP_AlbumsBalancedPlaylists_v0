@@ -16,8 +16,10 @@ import { siteFiles, importsOfFiles, folderOf } from './support/siteImports.js'
  */
 export const BRIDGE_USES = {
     'screens/saved-playlists/SavedPlaylists.tsx': 'the filter bar (and its sheet) is also on the albums screen: it goes when that screen is in React (wave 5)',
-    'screens/saved-playlists/BatchCard.tsx': 'the row of a track is also in the playlists screen: it is ported once, to ui/, in wave 2',
-    'screens/saved-playlists/PlaylistDetails.tsx': 'the row of a track is also in the playlists screen: it is ported once, to ui/, in wave 2'
+    // wave 2 (the playlists screen) took the two entries of the row of a track out (it is ported once, to ui/TrackRow.tsx) and put in these:
+    'screens/playlists/Playlists.tsx': 'the panel to generate again (also the Blend controller\'s, so it goes with the Blend screen, wave 7) and the Spotify window and the exports (hand-made, ported on their own)',
+    'screens/playlists/PhoneParts.tsx': 'the exports of the sheet of the phone: the Spotify window and the file and Apple Music exports stay hand-made',
+    'screens/playlists/index.ts': 'the panel to generate again opens on the recipe of the playlists of the screen that opens (wave 7)'
 }
 
 const LEGACY = 'react-bridge/legacy/'

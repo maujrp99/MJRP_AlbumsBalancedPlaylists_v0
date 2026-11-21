@@ -1,11 +1,11 @@
 /**
  * The window of one saved playlist: its number of tracks, how long it is and its tracks (F83 wave 1; it was
  * components/playlists/PlaylistDetailsModal.js). The shell of the window is the app's (ui/ModalWindow); what is inside is React,
- * the rows of tracks the hand-made row (react-bridge/legacy/TrackRows).
+ * the rows of tracks the piece of ui/ (TrackRow).
  */
 import type { ReactNode } from 'react'
 import { useModalWindow } from '../../ui/ModalWindow'
-import { TrackRows, formatTrackDuration } from '../../react-bridge/legacy/TrackRows'
+import { TrackRow, formatTrackDuration } from '../../ui/TrackRow'
 import { t } from '../../i18n/t.js'
 import type { SavedPlaylist } from './types'
 
@@ -18,7 +18,9 @@ function Details({ playlist }: { playlist: SavedPlaylist }) {
                 <span><span className="text-white font-bold">{tracks.length}</span>{` ${t('savedPlaylists.details.tracks')}`}</span>
                 <span><span className="text-white font-bold">{formatTrackDuration(seconds)}</span>{` ${t('savedPlaylists.details.duration')}`}</span>
             </div>
-            <TrackRows tracks={tracks} kind="compact" className="space-y-1" />
+            <div className="space-y-1">
+                {tracks.map((track, i) => <TrackRow key={i} track={track} index={i + 1} variant="compact" />)}
+            </div>
         </>
     )
 }

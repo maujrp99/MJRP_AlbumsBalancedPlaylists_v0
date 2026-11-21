@@ -33,6 +33,10 @@ export interface ScreenProps {
 export interface ReactViewOptions {
     /** The name of the screen in the measurement of use (shared/usageEvents.js SCREENS): a name, never an address. */
     screen: string
+    /** What the screen needs before it is drawn (a read that decides what it shows): the router waits for it, as it waits for a hand-made `render`. */
+    prepare?: (params: RouteParams) => Promise<unknown>
+    /** What the screen lets go of when it is left, once, however many times the strict mode starts and stops its effects. */
+    dispose?: () => void
 }
 
 /** The panel of the router, drawn as elements: the same classes, the same text, the same button. */
@@ -84,8 +88,9 @@ export class ReactView<P extends object> {
     ) {}
 
     /** The router puts what render returns in #app: an empty fragment empties it. */
-    render(): DocumentFragment {
-        return document.createDocumentFragment()
+    render(params: RouteParams = {}): DocumentFragment | Promise<DocumentFragment> {
+        const empty = document.createDocumentFragment()
+        return this.options.prepare ? this.options.prepare(params).then(() => empty) : empty
     }
 
     mount(params: RouteParams = {}): void {
@@ -104,6 +109,7 @@ export class ReactView<P extends object> {
 
     destroy(): void {
         this.root?.unmount()
+        this.options.dispose?.()
         this.root = null
         this.container = null
     }

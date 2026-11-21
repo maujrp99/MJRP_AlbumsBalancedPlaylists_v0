@@ -41,6 +41,7 @@ describe('capture of the hand-made playlists screen', () => {
             const view = new PlaylistsView()
             app.appendChild(await view.render({}))
             await view.mount({})
+            await flush() // the panel to generate again is mounted by a later task: the page is read once it has settled
 
             const snaps = {}
             const field = (selector) => document.querySelector(selector)

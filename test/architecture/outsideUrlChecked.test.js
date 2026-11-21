@@ -36,6 +36,8 @@ const WRITTEN_IN_THE_CODE = {
     'components/navigation/SeriesDropdown.js': ['entity.route'],
     // paths written in the same file, and the path of the page itself (it starts with '/')
     'components/Breadcrumb.js': ['escapeHtml(crumb.path)'],
+    // the same trail in React: the paths are written in ui/Breadcrumb.tsx (playlistsTrail) and the callers
+    'ui/Breadcrumb.tsx': ['crumb.path'],
     // an option given by the view, '/home' in the one caller
     'components/series/SeriesEmptyState.js': ['this.ctaHref'],
     // a blob: address made in the line above, for the download of the person's own playlists

@@ -233,6 +233,7 @@ export class PlaylistsController {
      * Save the playlists on screen. The rule of a save (which series, what is replaced, one save
      * at a time) lives in PlaylistsService.saveCurrentBatch; here the person is told the result.
      * The button shows the save in progress from the store (`isSaving`), not from here.
+     * @param {string|null} [typedBatchName] - what is in the field of the batch name
      */
     async handleSave(typedBatchName = null) {
         const service = await this._service()

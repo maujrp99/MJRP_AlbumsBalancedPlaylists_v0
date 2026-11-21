@@ -18,10 +18,18 @@ import { normalize as pageOf } from './savedPlaylistsScenarios.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
 import { router } from '../../public/js/router.js'
 
-/** The page as the proof compares it, with the time of the foot taken out. */
+/**
+ * The page as the proof compares it, with the time of the foot and the moment of light of a moved row taken out, and the text of a
+ * field as the field holds it now (what a person typed lives in the property `value`, not in the attribute the page was written
+ * with). It reads a COPY: the proof must not touch the live page (`normalize()` of a node joins the text nodes that React holds).
+ */
 export const normalize = (element) => {
-    const page = pageOf(element)
-    return page === null ? null : page.replace(/Last updated: [^<]*/g, 'Last updated: #')
+    if (!element) return null
+    const copy = element.cloneNode(true)
+    const typed = element.querySelectorAll('input')
+    copy.querySelectorAll('input').forEach((input, i) => input.setAttribute('value', typed[i].value))
+    // the row a track landed on is lit by a timer for a moment: whether a snapshot falls inside that moment is not what the page says
+    return pageOf(copy).replace(/Last updated: [^<]*/g, 'Last updated: #').replace(/\bis-moved ?/g, '')
 }
 
 const track = (title, artist, album, duration, extra = {}) => ({ id: `t-${title}`, title, artist, album, duration, ...extra })

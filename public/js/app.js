@@ -31,7 +31,6 @@ import { HomeView } from './views/HomeView.js'
 // V3 Architecture: SeriesView replaces AlbumsView
 import SeriesView from './views/SeriesView.js'
 import SeriesController from './controllers/SeriesController.js'
-import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
 import { BlendingMenuView } from './views/BlendingMenuView.js'
 
@@ -133,7 +132,6 @@ router.register('/home', () => {
 })
 router.register('/albums', () => new SeriesView(seriesController))
 router.register('/albums/:seriesId', () => new SeriesView(seriesController))
-router.register('/playlists', () => new PlaylistsView())
 router.register('/inventory', () => new InventoryView())
 
 // TopNav v2: New entity type routes (Coming Soon). The first screen in React (F83): its file, and React with it, come when
@@ -165,10 +163,6 @@ router.register('/callback', async () => {
     return null
 })
 
-// Sprint 11: EditPlaylistView for editing existing batches
-// ARCH-1 Refactor: Consolidated into PlaylistsView
-router.register('/playlists/edit', () => new PlaylistsView())
-
 // Redirect routes
 router.register('/album-series', () => {
     router.redirect('/albums')
@@ -181,6 +175,14 @@ const savedPlaylistsRoute = async () => {
     const { savedPlaylistsView } = await loadSavedPlaylists()
     return savedPlaylistsView()
 }
+const loadPlaylists = loadScreen(() => import('./screens/playlists/index.ts'))
+const playlistsRoute = async () => {
+    const { playlistsView } = await loadPlaylists()
+    return playlistsView()
+}
+// The playlists screen (F83 wave 2): the set the blend made, or a saved batch being edited (/playlists/edit), the same screen
+router.register('/playlists', playlistsRoute)
+router.register('/playlists/edit', playlistsRoute)
 router.register('/playlist-series', savedPlaylistsRoute)
 router.register('/saved-playlists', savedPlaylistsRoute)
 router.register('/series', () => {
