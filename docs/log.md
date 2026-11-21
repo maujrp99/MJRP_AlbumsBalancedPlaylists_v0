@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:30] review — começou a reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236)
+**Branch:** fix/f80-uat-entry-page
+Um agente que não implementou julga a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md` (por ora `verdict: running`).
+
 ## [2026-11-21 11:29] session — a capa da banana marcada como feita (UAT-236)
 **Branch:** fix/f80-uat-entry-page
 A linha da capa da banana na lista de problemas do UAT passa a «fixed (42d4cad)»; faltam a reconferência visual e a publicação, com o orquestrador.
