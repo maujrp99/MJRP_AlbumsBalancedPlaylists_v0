@@ -5,7 +5,7 @@
  */
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { PHONE_TABS } from '../../../public/js/components/navigation/phoneTabs.js'
-import { renderBarMenu, fitBars, wakeBars, BAR_REST_MS } from '../../../public/js/components/navigation/barMenu.js'
+import { renderBarMenu, renderPhoneBar, fitBars, wakeBars, BAR_REST_MS } from '../../../public/js/components/navigation/barMenu.js'
 import { threadBarStyle } from '../../../public/splash/menu.js'
 
 const draw = (path, options) => {
@@ -113,5 +113,44 @@ describe('the motion of the bars', () => {
     it('does not move at all when the person asked the system for less motion', () => {
         wakeBars(win(true))
         expect(document.documentElement.classList.contains('moving')).toBe(false)
+    })
+})
+
+describe('the phone\'s bottom menu is this same bar (F88: «Os menus não eram pra ser iguais?»)', () => {
+    const drawPhone = (path) => {
+        document.body.innerHTML = renderPhoneBar(path)
+        return document.querySelector('nav.ms')
+    }
+
+    it('is the bar of the computer with an icon above each label and without the ⟲', () => {
+        const nav = drawPhone('/blend')
+        expect(nav.querySelector('.flipmark')).toBeNull()
+        const all = [...nav.querySelectorAll('a.stop')]
+        expect(all.length).toBe(5)
+        all.forEach(a => {
+            expect(a.firstElementChild.matches('svg.ic')).toBe(true)
+            expect(a.lastElementChild.matches('span.lb')).toBe(true)
+        })
+        expect(all.map(a => a.dataset.tab)).toEqual(PHONE_TABS.map(tab => tab.id))
+    })
+
+    it('the computer\'s bar has no icons', () => {
+        draw('/blend')
+        expect(document.querySelectorAll('nav.ms svg').length).toBe(0)
+    })
+
+    it('the current stop is lit in fire on the row of bars and marked for the reader', () => {
+        const nav = drawPhone('/blend')
+        expect(nav.querySelector('a.stop.cur').dataset.tab).toBe('blend')
+        expect(nav.querySelector('a.stop[aria-current="page"]').dataset.tab).toBe('blend')
+        const bars = [...nav.querySelectorAll('.eqbar i')]
+        expect(bars.filter(bar => bar.classList.contains('on')).length).toBe(Math.round(bars.length / 5))
+        expect(nav.getAttribute('aria-label')).toBe('Main')
+    })
+
+    it('a screen no stop stands for lights no bar and marks no stop', () => {
+        const nav = drawPhone('/homework')
+        expect(nav.querySelectorAll('.eqbar i.on').length).toBe(0)
+        expect(nav.querySelectorAll('[aria-current]').length).toBe(0)
     })
 })

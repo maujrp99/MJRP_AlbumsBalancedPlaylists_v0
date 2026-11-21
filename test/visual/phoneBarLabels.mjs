@@ -32,18 +32,23 @@ const site = `http://127.0.0.1:${server.address().port}`
 const MEASURE = `(() => {
   const vis = (e) => { const b = e.getBoundingClientRect(); return b.width > 0 && b.height > 0 }
   const box = (e) => { const g = document.createRange(); g.selectNodeContents(e); const b = g.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom } }
-  const labels = [...document.querySelectorAll('.phone-tabbar__label, .thread .stop .lb')].filter(vis).map(box)
-  const bars = [...document.querySelectorAll('.phone-tabbar__bars i, .thread .eqbar i')].filter(vis).map(e => { const b = e.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom } })
+  const labels = [...document.querySelectorAll('.pbar .ms .stop .lb')].filter(vis).map(box)
+  const bars = [...document.querySelectorAll('.pbar .eqbar i')].filter(vis).map(e => { const b = e.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom } })
   const hits = labels.flatMap(l => bars.filter(b => l.l < b.r && l.r > b.l && l.t < b.b && l.b > b.t)).length
   const gap = Math.min(...labels.map(l => l.t)) - Math.max(...bars.map(b => b.b))
-  const bar = document.querySelector('.phone-tabbar, .thread').getBoundingClientRect()
-  const stops = [...document.querySelectorAll('.phone-tabbar__tab, .thread .stop')].filter(vis).map(e => e.getBoundingClientRect().height)
-  return { hits, gap, height: bar.height, bottom: bar.bottom, ih: innerHeight, minTarget: Math.min(...stops), labels: labels.length }
+  const bar = document.querySelector('.pbar').getBoundingClientRect()
+  const stops = [...document.querySelectorAll('.pbar .ms .stop')].filter(vis).map(e => e.getBoundingClientRect().height)
+  const r2 = (n) => Math.round(n * 100) / 100
+  const rel = (e, top) => { const b = e.getBoundingClientRect(); return { y: r2(b.top - top), w: r2(b.width), h: r2(b.height) } }
+  const stop0 = document.querySelector('.pbar .ms .stop'), lb0 = stop0.querySelector('.lb'), cs = getComputedStyle(lb0)
+  const sig = { bar: r2(bar.height), eqbar: rel(document.querySelector('.pbar .eqbar'), bar.top), icon: rel(stop0.querySelector('.ic'), bar.top), label: { y: r2(lb0.getBoundingClientRect().top - bar.top), h: r2(lb0.getBoundingClientRect().height), font: cs.fontFamily + ' ' + cs.fontSize + ' ' + cs.fontWeight }, gapToScreenBottom: r2(innerHeight - bar.bottom) }
+  return { hits, gap, height: bar.height, bottom: bar.bottom, ih: innerHeight, minTarget: Math.min(...stops), labels: labels.length, sig }
 })()`
-const STRESS = '.phone-tabbar__label,.thread .ms .stop{font-size:15.6px!important;line-height:18px!important}' // iOS larger text, 130 %
+const STRESS = '.pbar .ms .lb,.pbar .ms .stop{font-size:15.6px!important;line-height:18px!important}' // iOS larger text, 130 %
 const browser = await webkit.launch()
 const failures = []
 const heights = {}
+const signatures = {} // the first page measured per profile; every other page, the home's and the app's, must measure the same (bar, row of bars, icon, label, font)
 for (const name of ['iPhone 14', 'iPhone SE']) for (const stress of [false, true]) {
     const ctx = await browser.newContext({ ...devices[name] })
     await ctx.route(/identitytoolkit|securetoken|firestore\.googleapis|js-cdn\.music\.apple|api\.spotify/, (r) => r.abort())
@@ -58,6 +63,7 @@ for (const name of ['iPhone 14', 'iPhone SE']) for (const stress of [false, true
         const key = `${name.replace(/ /g, '')}${stress ? '-text130' : ''}${route.replace('/', '-')}${lang ? '-' + lang : ''}`
         if (m.hits > 0 || !(m.gap >= 6) || m.minTarget < 44 || m.labels === 0) failures.push(`${key}: ${JSON.stringify(m)}`)
         if (!stress) (heights[name] ||= {})[route.startsWith('/home') ? 'home' : 'app'] = Math.round(m.height)
+        if (!stress) { const first = (signatures[name] ||= { key, sig: JSON.stringify(m.sig) }); if (first.sig !== JSON.stringify(m.sig)) failures.push(`${key}: the bar measures ${JSON.stringify(m.sig)} and ${first.key} measured ${first.sig}`) }
         if (out) {
             fs.mkdirSync(out, { recursive: true })
             const vp = page.viewportSize()
@@ -69,5 +75,6 @@ for (const name of ['iPhone 14', 'iPhone SE']) for (const stress of [false, true
 await browser.close(); server.close(); fs.rmSync(dist, { recursive: true, force: true })
 for (const [name, h] of Object.entries(heights)) if (h.home !== h.app) failures.push(`${name}: the home's bar is ${h.home} px and the app's is ${h.app} px`)
 console.log('bar heights (home / app):', JSON.stringify(heights))
+console.log('bar measures (the same on every page):', JSON.stringify(Object.fromEntries(Object.entries(signatures).map(([k, v]) => [k, JSON.parse(v.sig)]))))
 if (failures.length) { console.error('FAIL\n' + failures.join('\n')); process.exit(1) }
 console.log('OK: no label meets a bar; gaps >= 6 px; targets >= 44 px; both bars the same height')

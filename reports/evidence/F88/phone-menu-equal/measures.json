@@ -1,0 +1,896 @@
+{
+  "verdict": {
+    "iPhone14": {
+      "reference": "iPhone14-home-pt-out",
+      "equal": true,
+      "differing": []
+    },
+    "iPhoneSE": {
+      "reference": "iPhoneSE-home-pt-out",
+      "equal": true,
+      "differing": []
+    }
+  },
+  "results": {
+    "iPhone14-home-pt-out": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 390,
+        "h": 17
+      },
+      "barsCount": 65,
+      "iconBox": {
+        "x": 27,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 22.56,
+        "y": 56,
+        "w": 32.86,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": null,
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Inicie",
+        "Álbuns",
+        "Blend",
+        "Playlists",
+        "Inventário"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhone14-home-en-out": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 390,
+        "h": 17
+      },
+      "barsCount": 65,
+      "iconBox": {
+        "x": 27,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 23.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": null,
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhone14-home-en-in": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 390,
+        "h": 17
+      },
+      "barsCount": 65,
+      "iconBox": {
+        "x": 27,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 23.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": null,
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhone14-app-start": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 390,
+        "h": 17
+      },
+      "barsCount": 65,
+      "iconBox": {
+        "x": 27,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 23.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhone14-app-albums": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 390,
+        "h": 17
+      },
+      "barsCount": 65,
+      "iconBox": {
+        "x": 27,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 23.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhone14-app-blend": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 390,
+        "h": 17
+      },
+      "barsCount": 65,
+      "iconBox": {
+        "x": 27,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 23.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhone14-app-saved-playlists": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 390,
+        "h": 17
+      },
+      "barsCount": 65,
+      "iconBox": {
+        "x": 27,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 23.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhone14-app-inventory": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 390,
+        "h": 17
+      },
+      "barsCount": 65,
+      "iconBox": {
+        "x": 27,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 23.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhoneSE-home-pt-out": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 320,
+        "h": 17
+      },
+      "barsCount": 53,
+      "iconBox": {
+        "x": 20,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 15.56,
+        "y": 56,
+        "w": 32.86,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": null,
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Inicie",
+        "Álbuns",
+        "Blend",
+        "Playlists",
+        "Inventário"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhoneSE-home-en-out": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 320,
+        "h": 17
+      },
+      "barsCount": 53,
+      "iconBox": {
+        "x": 20,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 16.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": null,
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhoneSE-home-en-in": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 320,
+        "h": 17
+      },
+      "barsCount": 53,
+      "iconBox": {
+        "x": 20,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 16.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": null,
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhoneSE-app-start": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 320,
+        "h": 17
+      },
+      "barsCount": 53,
+      "iconBox": {
+        "x": 20,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 16.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhoneSE-app-albums": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 320,
+        "h": 17
+      },
+      "barsCount": 53,
+      "iconBox": {
+        "x": 20,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 16.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhoneSE-app-blend": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 320,
+        "h": 17
+      },
+      "barsCount": 53,
+      "iconBox": {
+        "x": 20,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 16.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhoneSE-app-saved-playlists": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 320,
+        "h": 17
+      },
+      "barsCount": 53,
+      "iconBox": {
+        "x": 20,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 16.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    },
+    "iPhoneSE-app-inventory": {
+      "barHeight": 76,
+      "barToScreenBottom": 0,
+      "barsRow": {
+        "x": 0,
+        "y": 7,
+        "w": 320,
+        "h": 17
+      },
+      "barsCount": 53,
+      "iconBox": {
+        "x": 20,
+        "y": 29,
+        "w": 24,
+        "h": 24
+      },
+      "labelBox": {
+        "x": 16.8,
+        "y": 56,
+        "w": 30.39,
+        "h": 14
+      },
+      "labelFont": "Syne, sans-serif / 12px / 700",
+      "iconTops": [
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "labelTops": [
+        56,
+        56,
+        56,
+        56,
+        56
+      ],
+      "stopHeights": [
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "currentColour": "rgb(251, 146, 60)",
+      "otherColour": "rgb(185, 185, 194)",
+      "labels": [
+        "Start",
+        "Albums",
+        "Blend",
+        "Playlists",
+        "Inventory"
+      ],
+      "bodyPaddingBottom": "76px"
+    }
+  }
+}
