@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:44] step — F83 onda 4: o mapa da tela Start (TASK-20)
+**Branch:** claude/f83-wave-4-start
+A antiga Home em 1.054 linhas de desenho à mão (5 arquivos) mais o controlador de 409: o que a tela lê (só o userStore; a série e o seletor são do controlador, que troca as listas), como ela redesenha (o dock e a grade de capas; o resto escreve no lugar), o foco que o dock devolve por seletor, a folha do celular, o sensor visual da F84 que conduz a tela por window.controller (os nomes ficam), o arquivo da tela baixado na abertura por ser a primeira tela, os textos que estão dentro de models/ e saem pelo dicionário, e o catálogo (Apple Music; o Spotify não é tocado). Mapa: docs/specs/features/F83-site-screens-in-react/map-wave-4-start.md.
+
 ## [2026-11-21 18:34] step — F83 onda 3: a prova no navegador, o peso, os documentos e o conserto do «voltar ao topo»
 **Branch:** claude/f83-wave-3-shell
 133 conferências no Chromium (1280, 900, 393), 130 passaram; as 3 são 2 a 12 pixels no canto do topo à direita; antiga contra antiga: 0 pixel, com e sem transições. O navegador achou que o «voltar ao topo» parava no meio com um toque de verdade (o React devolve a rolagem quando um desenho tira o foco): o botão solta o foco antes de rolar. Primeiro carregamento com o React na abertura: +85 kB e cerca de +0,4 s (rede lenta, CPU x4). Mapa, tarefas 18, 19, 30 e 31, arch.md e design-system.md.
