@@ -81,6 +81,15 @@ describe('the vignettes on the page', () => {
         expect(page).toMatch(/\.hero \.ctas \.btn-ghost\{display:none\}/)
     })
 
+    it('on the phone: the language buttons are 44 px wide, and the signed-in title keeps a gap above «Inicie»', () => {
+        expect(page).toContain('.lang button{min-width:44px;padding:0 6px}')
+        expect(page).toContain('.hero .only-in h1{margin-bottom:18px}')
+    })
+
+    it('the crate\'s diagonal is in the style on a computer, so the covers do not move when the script arrives', () => {
+        expect(page).toContain('@media (min-width:900px){.crate-css{--yaw:-15deg}}')
+    })
+
     it('loops only run on a live vignette, and reduced motion removes them', () => {
         expect(page).toContain('html:not(.moving) .v4-motif *')
         expect(page).toMatch(/prefers-reduced-motion:reduce\)\{\.v4-motif,/)

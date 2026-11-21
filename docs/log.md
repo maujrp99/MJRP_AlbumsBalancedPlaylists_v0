@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 15:11] session — F80: correções da reconferência do juiz na home (1 P1, 4 P2)
+**Branch:** wip/f80-home-bar-is-the-menu-build
+P1: no celular, com conta, 18 px entre o título e o «Inicie» (era 0). P2: PT e EN com 44 px de largura no celular; título em inglês como o da v4 («Dig through the albums you love.»; as demais linhas em inglês conferidas contra a v4 por script, sem outra diferença); a legenda do caixote segue o idioma também no celular; o caixote só aparece depois que o script o posiciona, e a diagonal vai no CSS, então as capas não se mexem mais ao carregar (o que sobra do salto vem da troca de idioma do cabeçalho e do título num navegador em inglês). Testes de test/architecture e test/splash verdes (379), eslint limpo, capturas fix-* em reports/evidence/F80/home-bar-is-the-menu/.
+
+## [2026-11-21 15:08] review — F80: reconferência visual independente da home «A barra é o menu» (6cc8863): sem P0, 1 P1, 4 P2
+**Branch:** wip/f80-home-bar-is-the-menu-build
+Relatório escrito pelo juiz independente, copiado sem mudança para reports/audits/2026-11-21-mjrpalbumblender-v0-home-bar-is-the-menu-visual-parity-recheck.md; capturas em reports/evidence/F80/home-bar-is-the-menu/recheck/.
+
 ## [2026-11-21 14:54] decision — o MJRP: o que está no ambiente separado só vai a produção quando a migração para React terminar
 **Branch:** main
 Palavras do MJRP (2026-11-21): «staging agora só vai pra prod qdo completarmos a migracao». Antes, no mesmo dia: «v4 ficou sensacional, aprovada!!! Kudos for you» (a home v4) e «na versao mobile aqui tem muito texto e manteria o mergulhe e seu subtitulo apenas». Como foi entendido (orquestrador, revisável): o ramo `integrate/staging-2026-11-21` é a linha da migração (F83), publicada só na prévia do Firebase (F87, canal `staging`, https://mjrp-playlist-generator--staging-2nu8kutx.web.app, vence em 7 dias e é republicado a cada onda); o ramo do React não entra na `main` e nada dele vai a produção até a última onda. Em aberto com ele: se a home nova e os avisos de falha, que não dependem do React, vão a produção antes.
