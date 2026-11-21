@@ -38,7 +38,7 @@
 - [x] `docs/specs/behavior.md` (14 estados reescritos e 8 novos) e `docs/manual/` (00 mapa de arquivos, 07, 10, 11 seção 4.2, 14, 15, 17, 18, 21 seções 3 e 4, 31, 99) dizem o que o código faz agora
 - [x] spec, plano e tarefas preenchidos no ramo
 - [x] `docs/specs/uat.md`, `MEMORY.md` e `ROADMAP.md`: do agente integrador — conferido: as issues da feature em `fixed` no `uat.md`, `## Now` do `MEMORY.md` e a v5.0 do `ROADMAP.md` em dia
-- [ ] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
+- [x] fechar chamando a `mjrp-ensuring-sdd` (a forma e o cruzamento dos artefatos) antes do Done — o `sdd_shape_check.py` recusa o fecho fora do molde
 
 ## For the owner at UAT
 - O MJRP julga as nove mudanças de comportamento e os textos novos listados nas Open Questions da spec

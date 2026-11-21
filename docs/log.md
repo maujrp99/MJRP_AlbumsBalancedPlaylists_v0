@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:39] session — F62 fechada na documentação: o fecho do molde feito, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F62 (blend e exportação fazem o que dizem): o código está na `main` (merges `4f022d8`, `904ee33`, `7da4418`). A única tarefa aberta era o fecho pelo molde: declarei os sete documentos no `plan.md`, conferidos pelo histórico (`behavior.md` «atualizado» em `ccd34bd`; os outros «sem mudança»), rodei o `sdd_shape_check.py` e marquei a tarefa. As nove mudanças de comportamento que o MJRP decide estão nas Open Questions da spec: pus `needs_human: "decidir: …"`. Não escrevi aceite.
+
 ## [2026-11-21 11:39] session — F66 fechada na documentação: spec e plano preenchidos do registro, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
 F66 (o token do Discogs fora do repositório): o conserto está na `main` (os scripts saíram na F65, `f9d1abd`; o registro do fecho em `8584971`). Faltavam os campos «a escrever» da spec e do plano e as duas tarefas de documentação: preenchi com o que a evidência (`reports/evidence/F66/2026-11-20-token-out-of-the-repository.md`) e o log dizem, e declarei os sete documentos «sem mudança» (nenhum commit da feature os toca). O token antigo apagado no Discogs é palavra do MJRP (2026-11-20, duas vezes) e o agente não o testou: está dito nos critérios e na marca `needs_human: "segurança: …"`. Não escrevi aceite.

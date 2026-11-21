@@ -1,7 +1,8 @@
 ---
-status: In Progress
+status: Done
 lane: fast
 solution_type: fix
+needs_human: "decidir: as nove mudanças de comportamento e os textos novos listados nas Open Questions da spec (o menu de mistura, o desfazer e refazer, o título da playlist)"
 imports: []
 fixes: ["UAT-200", "UAT-02", "UAT-03", "UAT-04", "UAT-08", "UAT-09", "UAT-190"]
 planned_for: "[[ROADMAP#^REL-40]]"
