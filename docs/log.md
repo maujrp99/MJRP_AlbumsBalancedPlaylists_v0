@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:41] session — F84: instalar os navegadores do Playwright sempre pelo nome
+**Branch:** main
+A orquestradora do MJRPpersonal repôs o WebKit 2215 que a instalação do V0 tinha tirado do cache da máquina, e avisou a causa: `npx playwright install` sem nome remove as versões dos outros projetos. A regra e o jeito de contornar o travamento ao descompactar estão no plano da F84.
+
 ## [2026-11-21 09:30] decision — F85: o item do menu se chama «Start», e «Inicie» em português
 **Branch:** main
 Palavras do MJRP (2026-11-21, no chat): «pode ser new Series», «pensando bem, pode ser Starte e Inicie em pt», «Start». Na spec da F85: «Start» em inglês, «Inicie» em português do Brasil (que entra com a F81). Continua decidido pelo agente, revisável: com a conta aberta, o site abre direto na tela de trabalho e só o logotipo leva à página de entrada.

@@ -15,3 +15,4 @@ O kit `mjrp-scripts/visual_parity/`.
 
 ## Risks & Considerations
 Um sensor que acusa diferença falsa vira ruído e passa a ser ignorado: os seletores da Home precisam ser acertados antes de ele valer no pré-merge.
+Os navegadores do Playwright moram num cache da máquina, comum a todos os projetos: `npx playwright install` sem nome de navegador remove as versões que outros projetos usam (aconteceu em 2026-11-21 com o WebKit 2215 do MJRPpersonal, já reposto por eles). Instalar sempre pelo nome (`npx playwright install chromium webkit`). Se o WebKit travar ao descompactar: baixar o zip da URL que o `--dry-run` mostra, descompactar numa pasta `webkit-<build>` e criar os marcadores `INSTALLATION_COMPLETE` e `DEPENDENCIES_VALIDATED` (relato da orquestradora do MJRPpersonal).
