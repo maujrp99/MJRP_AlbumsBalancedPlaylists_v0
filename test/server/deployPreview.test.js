@@ -4,13 +4,33 @@
  * `--help` and its refusals; none of them deploys anything.
  */
 // @vitest-environment node
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterAll } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
+import os from 'node:os'
 import { spawnSync } from 'node:child_process'
 
 const scriptPath = path.resolve(__dirname, '../../scripts/deploy-preview.sh')
 const read = file => fs.readFileSync(path.resolve(__dirname, '../..', file), 'utf8')
+
+// Hermetic fixture: the deploy scripts also run their unit tests inside an exported copy of the
+// branch that is not a git repository, so the refusals are tested in a temporary repository
+// built here, with a copy of the scripts, never in the surrounding checkout.
+let fixture
+const fixtureRepo = () => {
+    if (fixture) return fixture
+    fixture = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'f87-fixture-'))
+    fs.cpSync(path.resolve(__dirname, '../../scripts'), path.join(fixture, 'scripts'), { recursive: true })
+    fs.writeFileSync(path.join(fixture, 'package.json'), '{}\n')
+    const git = (...args) => spawnSync('git', ['-c', 'core.hooksPath=/dev/null', '-c', 'user.name=t', '-c', 'user.email=t@example.com', '-c', 'commit.gpgsign=false', ...args], { cwd: fixture, encoding: 'utf8' })
+    git('init', '-q', '-b', 'main')
+    git('add', '-A')
+    git('commit', '-q', '-m', 'fixture')
+    return fixture
+}
+const runIn = (script, args) => spawnSync('bash', [path.join(fixtureRepo(), 'scripts', script), ...args], { encoding: 'utf8', cwd: fixtureRepo() })
+afterAll(() => { if (fixture) fs.rmSync(fixture, { recursive: true, force: true }) })
+
 const code = () => read('scripts/deploy-preview.sh').split('\n').filter(l => !/^\s*#/.test(l)).join('\n').replace(/\\\n\s*/g, ' ')
 
 describe('the preview deploy script', () => {
@@ -71,13 +91,13 @@ describe('the preview deploy script', () => {
     })
 
     it('refuses a branch that does not exist locally, with a plain message', () => {
-        const run = spawnSync('bash', [scriptPath, '--branch', 'no-such-branch-f87-xyz'], { encoding: 'utf8' })
+        const run = runIn('deploy-preview.sh', ['--branch', 'no-such-branch-f87-xyz'])
         expect(run.status).not.toBe(0)
         expect(run.stderr).toMatch(/no local branch named 'no-such-branch-f87-xyz'/)
     })
 
     it('refuses --branch without a name', () => {
-        const run = spawnSync('bash', [scriptPath, '--branch'], { encoding: 'utf8' })
+        const run = runIn('deploy-preview.sh', ['--branch'])
         expect(run.status).not.toBe(0)
         expect(run.stderr).toMatch(/--branch needs a branch name/)
     })
@@ -94,10 +114,8 @@ describe('the preview deploy script', () => {
 })
 
 describe('production publishes only main', () => {
-    const siteScript = path.resolve(__dirname, '../../scripts/deploy-site.sh')
-
     it('refuses deploy-site.sh --branch x', () => {
-        const run = spawnSync('bash', [siteScript, '--branch', 'x'], { encoding: 'utf8' })
+        const run = runIn('deploy-site.sh', ['--branch', 'x'])
         expect(run.status).not.toBe(0)
         expect(run.stderr).toMatch(/unknown argument: --branch/)
     })
