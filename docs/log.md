@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 08:47] session — análise: adotar um framework no site (React, Vue ou Next)
+**Branch:** main
+A pedido do MJRP («acha que está na hora de usar um framework mais moderno? React, vue ou o next?»). `reports/audits/2026-11-21-mjrpalbumblender-v0-frontend-framework-analysis.md`: o site medido (105 arquivos e 19.461 linhas de tela feita à mão; 141 arquivos de regras, serviços e núcleo que não dependem de tela), as quatro opções com ganhos e perdas, e a recomendação do agente, que é opinião: React com o Vite atual, em TypeScript, tela a tela, começando pela página do CMS (F82); o Next fica como porta aberta. Nenhum código mudou; adotar pede uma ADR aceita por ele.
+
 ## [2026-11-21 08:45] session — as pendências com o MJRP vão ao Control Center, num lote de propostas
 **Branch:** main
 Palavras do MJRP (2026-11-21): «Pergunte para o master agent como vc faz propostas/perguntas usando o harness control center e use-o para fazer peeguntas e enderecar suas pendencias comigo. Responderei via harness remote». O agente mestre explicou o mecanismo (`proposal-batch@1`, `mjrp-scripts/proposal_batches.py`). Lote `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`, sete itens: onde mora o pacote do kit do CMS, a ordem entre F82 e F81, os idiomas, os três P2 da Home, a medição de uso, o próximo passo do app, as contas da Apple e do Expo. Fora do lote, porque são válvulas dele: o aceite da F71 à F80 e o carimbo da ADR-0022. Cada resposta se aplica e se marca com `proposal_batches.py mark`.
