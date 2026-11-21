@@ -41,6 +41,7 @@ html.moving:not(.paused) .eqbar i.cur{animation:eqb var(--d) ease-in-out var(--o
 :root{--pbar-h:76px}
 @media (max-width:899px){
   .pbar{position:fixed;left:0;right:0;bottom:0;z-index:40;box-sizing:border-box;padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);background:#0a0a0c;border-top:1px solid rgba(255,255,255,.12);--muted:#b9b9c2;--faint:#9a9aa4;--orange-text:#fb923c}
+  .pbar{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
   .pbar .ms{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%}
   .pbar .ms .stop{box-sizing:border-box;justify-content:flex-start;gap:3px;padding:28px 0 6px;min-height:75px;font:700 12px/14px 'Syne',sans-serif;color:var(--muted)}
   .pbar .ms .stop:active{color:#fff}

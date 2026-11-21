@@ -47,6 +47,11 @@ describe('the phone\'s bottom menu is one component', () => {
         expect(bar).not.toMatch(/rgba\(10,\s*10,\s*12/)
     })
 
+    it('the labels are smoothed the same way on both pages (on a Mac the home\'s, smoothed by its body, rendered thinner than the app\'s): the bar says it itself', () => {
+        const smoothing = shared.split('\n').find(line => line.startsWith('  .pbar{-webkit-font-smoothing:antialiased'))
+        expect(smoothing).toMatch(/-moz-osx-font-smoothing:grayscale/)
+    })
+
     it('touch targets: the stop is at least 44 px tall', () => {
         const stop = shared.split('\n').find(line => line.startsWith('  .pbar .ms .stop{'))
         const height = Number((stop.match(/min-height:\s*(\d+)px/) || [])[1])

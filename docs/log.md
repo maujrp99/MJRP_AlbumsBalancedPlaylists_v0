@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 20:40] step — F88: o mesmo alisamento de fonte nos rótulos da barra de baixo, na home e no app (o P2-1 do juiz)
+**Branch:** fix/f88-phone-menu-equal-in-home-and-app
+Esta é a correção do próprio P2-1 do juiz da reconferência do menu do celular, feita depois de o relatório dele ter sido escrito: num Mac os rótulos da home saíam mais finos que os do app, porque o corpo da home alisa a fonte e o do app não. A barra passou a dizer o alisamento ela mesma (`.pbar{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}` em `bar-menu.css`), igual nas duas páginas; um teste em `phoneBarIsOneComponent.test.js` guarda a regra.
+
 ## [2026-11-21 20:24] step — F88: a barra de baixo do celular passa a ser opaca (UAT-270)
 **Branch:** fix/f88-phone-menu-equal-in-home-and-app
 Pedido do orquestrador: nas capturas do app o texto da tela aparecia por trás dos ícones e rótulos. Antes: `rgba(10,10,12,.92)` com desfoque, que só lê bem se o navegador pinta o desfoque. Agora: `#0a0a0c` opaco, a superfície do design system, igual na home e no app (um teste guarda). Rótulo `#b9b9c2` (10:1) e laranja `#fb923c` (8,7:1) leem-se sobre qualquer conteúdo. A doca da Start («No albums yet») já era translúcida (`rgba(8,8,10,.9)`, F76), não vem desta mudança e ficou como está. Medidas de novo no WebKit sobre o site construído: iguais na home e no app (iPhone 14 e SE); imagens regeneradas.
