@@ -2,7 +2,7 @@
 
 > Aprovado por: ainda não aprovado (nasceu em 2026-11-20 00:28, com a rodada 1 da F75) · fonte: design/inception/inventory-value-v5.1.html · a Home (F79): rodada 1, três níveis (design/inception/home-consolidar-v1.html, design/inception/home-elevar-v1.html, design/inception/home-transformar-v1.html); o MJRP escolheu a direção Transformar; rodada 2: design/inception/home-transformar-v2.html (não aprovada)
 > Página de entrada (F80), rodada 1 de exploração, 2026-11-20: três direções, design/inception/splash-ember-v1.html, design/inception/splash-sides-v1.html e design/inception/splash-crate-v1.html (nenhuma aprovada; comparador em design/proposals/f80-splash/comparator.html)
-> Página de entrada (F80), rodada 2 de desenho, 2026-11-20: a direção escolhida pelo MJRP, design/inception/splash-crate-v2.html («Caixote · v2, o fogo e o fio»: o caixote 3D com o fio do Lado A, lado B e o fogo da Brasa, capas reais do Apple Music); não aprovada ainda; comparador https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e (cópia local design/proposals/f80-splash/comparator.html)
+> Página de entrada (F80), rodada 2 de desenho, 2026-11-20: a direção escolhida pelo MJRP, design/inception/splash-crate-v2.html («Caixote · v2, o fogo e o fio»: o caixote 3D com o fio do Lado A, lado B e o fogo da Brasa, capas reais do Apple Music); aprovada pelo MJRP em 2026-11-20 22:15 no fogo brando (§ Protótipos aprovados); comparador https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e (cópia local design/proposals/f80-splash/comparator.html)
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -19,7 +19,7 @@ Desde a F76 o arquivo descreve também **o celular** (até 767 px), em duas seç
 - **Playlists** (`/playlists`, `/saved-playlists`): as playlists geradas e os lotes guardados
 - **Inventory** (`/inventory`): a coleção da pessoa, com status, notas e (F75) valor estimado
   - a janela de um álbum do inventário
-- **Página de entrada** (proposta, F80; o endereço é pergunta ao MJRP: a raiz `/` antes de entrar, ou um endereço próprio): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript.
+- **Página de entrada** (F80, aprovada na v2; mora na raiz `/` só para quem não entrou com conta — quem entrou vai direto a `/home`; decidido pelo agente — revisável; o comportamento está no `behavior.md` § A raiz do site e a página de entrada): o que o produto é, os três momentos, por que álbuns inteiros, «Open the app» e «Sign in». Pública, legível sem JavaScript.
 
 ### O esquema de cada nó
 
@@ -93,7 +93,7 @@ A direção escolhida pelo MJRP em 2026-11-20 (o Caixote, mais a progressão do 
 3. **Corrigir um valor:** abrir a janela → escrever o valor → «Save» → a etiqueta vira «Yours».
 4. **Comprar:** abrir a janela → «Where to buy» → Discogs, Amazon ou iMusic.
 
-5. **Página de entrada (F80, proposta):** chegar pela busca ou por um link → ler o que é na primeira tela → (rolar pelos três momentos e pela prova) → «Open the app» leva ao app; «Sign in» abre a entrada com a conta.
+5. **Página de entrada (F80):** chegar pela busca ou por um link à raiz `/` → ler o que é na primeira tela → (rolar pelas faixas do lado A, «Flip the record», o lado B) → «Open the app» leva à Home do app (`/home`); «Sign in» leva ao app com a janela de entrar aberta (`/home?signin`). Quem entrou com conta e abre a raiz cai direto em `/home`.
 
 ## Template → Épico
 
@@ -334,7 +334,20 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 
 ## Protótipos aprovados
 
-Nenhum ainda. A rodada 1 da F75 é de exploração.
+A rodada 1 da F75 é de exploração (nenhum protótipo dela aprovado).
+
+### Página de entrada (F80) v2 — Caixote v2, o fogo e o fio
+- Ferramenta: HTML à mão, gerado por `design/proposals/f80-splash/build/build_v2.py` · Referência: comparador https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e · Cópia: design/inception/splash-crate-v2.html
+- reference_kind:: live
+- reference_path:: design/inception/splash-crate-v2.html
+- Níveis propostos (MP-01): eixo "quanto 3D, e de onde vem a profundidade" · Consolidar (Brasa) / Elevar (Lado A, lado B) / Transformar (Caixote) · escolhido: Transformar, com a progressão do Elevar e o fogo do Consolidar (pedido do MJRP de 2026-11-20 19:49)
+- Auditoria: reports/audits/2026-11-20-f80-splash-round2-ux-audit.md — veredito: passa, sem P0 (2026-11-20 20:10)
+- Aprovado por: MJRP em 2026-11-20 22:15
+- Palavras do humano: «aprovado a home v2, fogo vivo na página de entrada, ficou sensacional! bora implementar» e, logo depois, «fogo brando na verdade»
+- Como foi entendido: aprovada para construir a página de entrada «Caixote v2» (`design/inception/splash-crate-v2.html`) na prévia **fogo brando** (`?fire=soft`, o padrão do protótipo): a segunda mensagem corrige a primeira só no fogo. Cobre a página nas duas larguras (computador e celular até 899 px) e os nove estados abaixo. A «home v2» da mesma frase é a Home da F79 (registro dela, à parte).
+- Ressalvas: o fogo vivo (`?fire=bright`) fica de fora, pela correção dele. Ele não respondeu, e seguem abertos: as capas reais em público (os termos da Apple — a página é construída com as capas num arquivo trocável, o padrão fictício); o texto em inglês (proposta do agente, não copy deck); o texto preto no botão de fogo (fica como o protótipo mostra, decidido pelo agente — revisável); onde a página mora (a raiz só para quem não entrou, decidido pelo agente — revisável).
+- shows:: [[#^splash-v2-hero]], [[#^splash-v2-track]], [[#^splash-v2-flip]], [[#^splash-v2-side-b]], [[#^splash-v2-css-crate]], [[#^splash-v2-reduced-motion]], [[#^splash-v2-motion-rest]], [[#^splash-v2-no-js]], [[#^splash-v2-phone]]
+- Mudou em relação à versão anterior: primeira versão aprovada da página de entrada (a v1 e as outras direções da rodada 1 ficam como registro, não aprovadas)
 
 ## Inventário do protótipo
 
