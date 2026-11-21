@@ -21,6 +21,7 @@ import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import { albumLoadStore } from '../../public/js/stores/albumLoad.js'
 import { albumsStore } from '../../public/js/stores/albums.js'
 import { ownRankingsStore } from '../../public/js/stores/ownRankings.js'
+import { releasePageScroll } from '../../public/js/utils/pageScrollLock.js'
 import { createEntry, AlbumStatus, EnrichmentStatus, FailureReason } from '../../public/js/models/albumLoadState.js'
 
 export const outside = []
@@ -35,6 +36,8 @@ export const normalize = (element) => {
     // browser does not draw: the `selected` attribute is not compared (React chooses by the property, the old screen by the attribute)
     const chosen = element.querySelectorAll('select')
     copy.querySelectorAll('select').forEach((select, i) => { select.setAttribute('data-value', chosen[i].value) })
+    // the box a hand-made piece is drawn in by React takes no room and is no part of what the page says (the old page had the piece directly)
+    copy.querySelectorAll('[data-legacy-host]').forEach(host => host.replaceWith(...host.childNodes))
     copy.querySelectorAll('option').forEach(option => { option.removeAttribute('selected'); option.textContent = option.textContent.trim() })
     return pageOf(copy)
 }
@@ -213,6 +216,7 @@ export const modalsModule = {
 /** Puts the stores and the world as a scenario wants them, before the screen opens. */
 export function prepare(scenario) {
     outside.length = 0
+    releasePageScroll(window) // the hold a sheet puts on the page is counted by the module: one scenario does not inherit another's
     const store = new Map()
     vi.stubGlobal('localStorage', { getItem: (k) => store.get(k) ?? null, setItem: (k, v) => { store.set(k, String(v)) }, removeItem: (k) => { store.delete(k) } })
     if (scenario.storage) Object.entries(scenario.storage).forEach(([k, v]) => store.set(k, v))
@@ -565,6 +569,8 @@ export const SCENARIOS = [
             await h.click('.filters-phone-button')
             await h.turn(false)
             h.snap('the page after the turn')
+            h.snap('the sheet after the turn (none when it closed)', '.sheet')
+            // the focus right after this turn is not compared: see the test «a decided difference» of the same-as-before test
             h.note('what was asked')
         }
     }
