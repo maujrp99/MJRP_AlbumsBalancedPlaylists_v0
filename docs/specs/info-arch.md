@@ -5,6 +5,7 @@
 > Página de entrada (F80), rodada 2 de desenho, 2026-11-20: a direção escolhida pelo MJRP, design/inception/splash-crate-v2.html («Caixote · v2, o fogo e o fio»: o caixote 3D com o fio do Lado A, lado B e o fogo da Brasa, capas reais do Apple Music); aprovada pelo MJRP em 2026-11-20 22:15 no fogo brando (§ Protótipos aprovados); comparador https://claude.ai/artifact/5hDJr8qToYkAEsgCrfUK8e (cópia local design/proposals/f80-splash/comparator.html)
 > Página de entrada (F80), rodada 3, 2026-11-21 (UAT-241, UAT-240): a home com o menu na barra — três prévias num eixo, «quanto o menu e a barra se juntam»: design/inception/splash-menu-stops-v1.html (A, fio com paradas), design/inception/splash-menu-bar-v1.html (B, o menu é a barra; recomendada) e design/inception/splash-menu-deck-v1.html (C, barra embaixo); nenhuma aprovada; a página de hoje como referência em design/proposals/f80-splash/home-menu/today.html; gerador design/proposals/f80-splash/home-menu/build.mjs; mesmo comparador
 > Página de entrada (F80), rodada 3 · v2 em português, 2026-11-21: design/inception/splash-menu-bar-v2.html («A barra é o menu», a direção que o MJRP escolheu para esta rodada: «a barra é o menu», «mas pode falar pra ele fazer só para a opcao recomendada»); todo o texto em português com chave PT/EN, o ranking parcial com um disco real, a virada como faixa curta; nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v2.mjs; mesmo comparador
+> Página de entrada (F80), rodada 3 · v3, 2026-11-21: design/inception/splash-menu-bar-v3.html (o texto em português revisado depois da leitura do MJRP; a abertura é dele; o visual é o da v2); nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v3.mjs; mesmo comparador
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -100,6 +101,10 @@ Pedido do MJRP (UAT-241, UAT-240): com conta, a home com o menu e «Start», sem
 #### Rodada 3 · v2 em português (`splash-menu-bar-v2.html`)
 
 A direção B, que o MJRP chama «A barra é o menu», com o texto todo em português (chave PT/EN no protótipo). Muda: o texto; a história de Álbuns, que diz que se ranqueia o que se quer («Ponha no topo as faixas que você quiser.») e mostra um disco real, The Velvet Underground & Nico, com as faixas de verdade e uma delas no topo como exemplo do ranking da pessoa (o caixote puxa a banana nessa história); a virada, que deixa de ser uma tela e vira uma faixa curta com uma linha sobre o lado B (no celular, um filete). Rótulos do menu: Inicie · Álbuns · Blend · Playlists · Inventário. Ficam em inglês: o nome do produto, «Blend», «Playlists», Apple Music e Spotify.
+
+#### Rodada 3 · v3, o texto revisado (`splash-menu-bar-v3.html`)
+
+A v2 com o texto em português revisado pelo ouvido do MJRP; nada visual muda. A abertura é dele: «Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada.» e «Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas.». A história de Álbuns passa a «Ranqueie as faixas do seu jeito.» (para cima ou para baixo, uma só ou várias; a playlist pode seguir a sua ordem); «Blend» fica só como rótulo do menu; Playlists exporta para o Spotify ou a Apple Music; Inventário conta as mídias físicas (vinil, CD, fita cassete). Sem «ponha» e sem «misture». Tabela antes → depois em `design/proposals/f80-splash/proposal.md` § Rodada 3 · v3.
 
 ## Fluxos
 
@@ -197,6 +202,10 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 - **Em inglês.** A mesma página, cada texto trocado pelo inglês revisado com as mesmas mudanças («Rank your tracks, your way.»); `lang` da página acompanha. ^home-en
 - **O ranking com um disco real.** Cartão «Seu ranking · exemplo» com The Velvet Underground & Nico · 1967: «Venus In Furs» no topo, marcada «você subiu», depois Sunday Morning, I'm Waiting for the Man, Femme Fatale e «+ 7 faixas»; a nota «Exemplo: uma faixa subiu para o topo.»; nenhuma nota de terceiros. ^home-rank-real
 - **A virada curta.** Uma faixa entre Blend e Playlists: «⟲ Vire o disco» e «No lado B fica o que você guarda: suas playlists e seu inventário.»; no computador o caixote gira enquanto ela passa; no celular, um filete de uma ou duas linhas. ^home-flip-band
+
+#### Rodada 3 · v3, o texto revisado (`splash-menu-bar-v3.html`)
+
+- **Os mesmos estados da v2**, com o texto da v3: sem conta, com conta, em inglês, o ranking com um disco real, a virada curta. Com conta, a porta do Blend passa a «Gerar uma playlist →» e o sobretítulo a «De volta aos discos». ^home-v3-copy
 
 ## O celular (F76)
 
@@ -572,4 +581,6 @@ v2 em português (`design/inception/splash-menu-bar-v2.html`; wireframes `design
 |---|---|---|---|
 | SPL-27 | O cartão do ranking com um disco real (The Velvet Underground & Nico, faixas reais), uma faixa no topo como exemplo do ranking da pessoa | informar | UAT-240 (o MJRP: «vamos colocar dados rais de album pls») |
 | SPL-28 | Chave PT / EN do protótipo (no site, o idioma vem da F81) | — | só no protótipo |
+
+v3, o texto revisado (`design/inception/splash-menu-bar-v3.html`; wireframes `design/wireframes/splash-menu-bar-v3-desktop.png` e `-phone.png`): os mesmos itens da v2; muda só o texto de SPL-02, SPL-03, SPL-06, SPL-08, SPL-10, SPL-16, SPL-22, SPL-23, SPL-24 e SPL-25 (a porta do Blend). Nenhum item novo.
 
