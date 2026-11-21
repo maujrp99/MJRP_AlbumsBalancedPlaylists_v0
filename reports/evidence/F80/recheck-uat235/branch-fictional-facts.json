@@ -1,0 +1,258 @@
+[
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   654,
+   113,
+   1344,
+   893
+  ],
+  "scene": [
+   654,
+   113,
+   1440,
+   817
+  ],
+  "caption": "Copper Year | North Atlas · fictional album",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "Glass Orchard | Velvet Meridian · fictional album",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.5005524861878453,
+  "now": "Flip the record",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "Copper Year | North Atlas · fictional album",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "h": 900,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   654,
+   112,
+   1344,
+   892
+  ],
+  "scene": [
+   654,
+   112,
+   1440,
+   816
+  ],
+  "caption": "Harbour Static | Nadia Morrow · fictional album",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1440,
+  "cw": 1440,
+  "live": true
+ },
+ {
+  "w": 1440,
+  "info": {
+   "albums": [
+    "{\"t\":\"Copper Year\",\"a\":\"North Atlas\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Night Ferry\",\"a\":\"Ilse & the Harbour\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Lantern Hymnal\",\"a\":\"The Hollow Lanterns\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Glass Orchard\",\"a\":\"Velvet Meridian\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Static Bloom\",\"a\":\"Juno Reyes\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Ember Suite\",\"a\":\"Kofi Arden Trio\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Second Side\",\"a\":\"The Long Players\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Slow Burn Atlas\",\"a\":\"Mara Quell\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Lamplit Pier\",\"a\":\"Odile Vance\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Paper Satellites\",\"a\":\"The Quiet Cartographers\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Harbour Static\",\"a\":\"Nadia Morrow\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Low Tide Choir\",\"a\":\"Saltmarsh\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Signal Fires\",\"a\":\"Amara Lund\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Midnight Orchard\",\"a\":\"The Fennel Brothers\",\"y\":\"\",\"href\":\"\"}"
+   ],
+   "live": true,
+   "html": "js moving"
+  },
+  "errs": []
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "a1",
+  "track": "a1",
+  "flip": 0,
+  "now": "Side A · 1 — The Blender",
+  "stage": [
+   567,
+   113,
+   1264,
+   793
+  ],
+  "scene": [
+   567,
+   113,
+   1280,
+   717
+  ],
+  "caption": "Copper Year | North Atlas · fictional album",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "a3",
+  "track": "a3",
+  "flip": 0,
+  "now": "Side A · 3 — Ranking",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "Glass Orchard | Velvet Meridian · fictional album",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "flip50",
+  "track": "flip",
+  "flip": 0.5000789141414141,
+  "now": "Flip the record",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "Copper Year | North Atlas · fictional album",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "h": 800,
+  "p": "b1",
+  "track": "b1",
+  "flip": 1,
+  "now": "Side B · 1 — Why whole albums",
+  "stage": [
+   567,
+   112,
+   1264,
+   792
+  ],
+  "scene": [
+   567,
+   112,
+   1280,
+   716
+  ],
+  "caption": "Harbour Static | Nadia Morrow · fictional album",
+  "capH": 76,
+  "capLines": 2,
+  "sw": 1280,
+  "cw": 1280,
+  "live": true
+ },
+ {
+  "w": 1280,
+  "info": {
+   "albums": [
+    "{\"t\":\"Copper Year\",\"a\":\"North Atlas\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Night Ferry\",\"a\":\"Ilse & the Harbour\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Lantern Hymnal\",\"a\":\"The Hollow Lanterns\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Glass Orchard\",\"a\":\"Velvet Meridian\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Static Bloom\",\"a\":\"Juno Reyes\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Ember Suite\",\"a\":\"Kofi Arden Trio\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Second Side\",\"a\":\"The Long Players\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Slow Burn Atlas\",\"a\":\"Mara Quell\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Lamplit Pier\",\"a\":\"Odile Vance\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Paper Satellites\",\"a\":\"The Quiet Cartographers\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Harbour Static\",\"a\":\"Nadia Morrow\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Low Tide Choir\",\"a\":\"Saltmarsh\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Signal Fires\",\"a\":\"Amara Lund\",\"y\":\"\",\"href\":\"\"}",
+    "{\"t\":\"Midnight Orchard\",\"a\":\"The Fennel Brothers\",\"y\":\"\",\"href\":\"\"}"
+   ],
+   "live": true,
+   "html": "js moving"
+  },
+  "errs": []
+ }
+]

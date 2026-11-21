@@ -1,0 +1,15 @@
+# Paridade visual — F80 UAT-235/236 — main vs fix/f80-uat-entry-page (capas reais) × produto (2026-11-21)
+
+Gerado por `mjrp-scripts/visual_parity/run.mjs`. Linhas: (cenário, checagem) que divergem; "projetos" são as condições (navegador-viewport-paleta) onde diverge. Dado diferente não conta.
+
+**Totais (linhas):** P0 0 · P1 0 · P2 0
+
+## Por checagem
+
+| Sev | Checagem | Cenários | Condições |
+|---|---|---|---|
+
+## Por cenário
+
+| Sev | Checagem | Cenário | Condições | Protótipo | Produto |
+|---|---|---|---|---|---|

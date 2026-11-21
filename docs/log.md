@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:56] review — reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236): fail, sem P0 nem P1
+**Branch:** fix/f80-uat-entry-page
+Um agente que não implementou julgou a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. A caixa em 3D fica em diagonal e inteira no quadro em todas as posições, de 900 a 1920 px. O palco vai até a borda direita. A capa da banana é o primeiro disco e o King Crimson o segundo; são 15 capas reais e 14 fictícias, sem faltar nenhuma. A faixa e «Flip the record» funcionam. O celular fica como antes. O sensor, com a `main` de referência, deu 0 · 0 · 0. Um P2: na caixa em CSS (sem WebGL ou com menos movimento), o disco da frente sai da caixa como uma cunha branca. Abri a UAT-237, `fixing (F80)`. A legenda alta da banana no celular é efeito do nome comprido, não defeito. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md`; capturas em `reports/evidence/F80/recheck-uat235/`.
+
 ## [2026-11-21 11:30] review — começou a reconferência visual da caixa em diagonal e da capa da banana (UAT-235, UAT-236)
 **Branch:** fix/f80-uat-entry-page
 Um agente que não implementou julga a página de entrada do ramo contra a prévia 2 («Palco largo») e as palavras do MJRP. Relatório: `reports/audits/2026-11-21-F80-visual-parity-recheck.md` (por ora `verdict: running`).
