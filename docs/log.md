@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:07] step — F80 e F88: o relatório do juiz da reconferência visual e suas capturas entram no ramo, sem mudança
+**Branch:** feat/f88-top-menu-build
+O juiz (agente separado) escreveu o relatório (fail, 0 P0, 1 P1, 6 P2) sobre 481ec94; copiado como veio para reports/audits/ e as capturas para reports/evidence/F88/recheck/.
+
 ## [2026-11-21 17:40] step — F88: o status derivado da spec (Draft para In Progress), gravado pelo hook de commit
 **Branch:** feat/f88-top-menu-build
 O hook de commit derivou o status da F88 ao começar a construção; só registro, sem mudar a spec.
