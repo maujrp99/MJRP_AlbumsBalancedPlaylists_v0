@@ -33,7 +33,6 @@ import SeriesView from './views/SeriesView.js'
 import SeriesController from './controllers/SeriesController.js'
 import { PlaylistsView } from './views/PlaylistsView.js'
 import { InventoryView } from './views/InventoryView.js'
-import { ComingSoonView } from './views/ComingSoonView.js'
 import { BlendingMenuView } from './views/BlendingMenuView.js'
 
 import toast from './components/Toast.js'
@@ -137,10 +136,16 @@ router.register('/albums/:seriesId', () => new SeriesView(seriesController))
 router.register('/playlists', () => new PlaylistsView())
 router.register('/inventory', () => new InventoryView())
 
-// TopNav v2: New entity type routes (Coming Soon)
-router.register('/artists', () => new ComingSoonView())
-router.register('/genres', () => new ComingSoonView())
-router.register('/tracks', () => new ComingSoonView())
+// TopNav v2: New entity type routes (Coming Soon). The first screen in React (F83): its file, and React with it, come when
+// the person opens one of the three; the main script carries neither.
+const loadComingSoon = () => import('./screens/coming-soon/index.ts')
+const comingSoonRoute = (kind) => async () => {
+    const { comingSoonView } = await loadWithDeadline(loadComingSoon())
+    return comingSoonView(kind)
+}
+router.register('/artists', comingSoonRoute('artists'))
+router.register('/genres', comingSoonRoute('genres'))
+router.register('/tracks', comingSoonRoute('tracks'))
 router.register('/blend', () => new BlendingMenuView())
 
 // Sprint 11 Phase 1: Spotify Auth Callback
@@ -183,6 +188,7 @@ router.register('/series', () => {
     return null
 })
 
+// Not the screens in React: until the shell is React (wave 3), the site's first load downloads no React (F83, REQ-07)
 prefetchScreensAfterTheFirstScreen(router, [loadSavedPlaylists])
 
 // Global Error Handler

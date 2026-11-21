@@ -13,7 +13,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const REPO = process.cwd()
-const MOLD_CALL = 'itLeavesNoListeners('
+const MOLD_CALL = /\bitLeavesNoListeners\s*(<[^>]*>)?\(/ // with or without the type argument of TypeScript
 
 const folders = (dir) => fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }).filter(entry => entry.isDirectory()).map(entry => entry.name) : []
 const testsIn = (dir) => fs.existsSync(dir)
@@ -22,7 +22,7 @@ const testsIn = (dir) => fs.existsSync(dir)
 
 /** The folders that have no leave test, given the folders and a reader of the tests of each. */
 export function withoutTheLeaveTest(names, testTextsOf) {
-    return names.filter(name => !testTextsOf(name).some(text => text.includes(MOLD_CALL)))
+    return names.filter(name => !testTextsOf(name).some(text => MOLD_CALL.test(text)))
 }
 
 const screenTexts = (name) => testsIn(path.join(REPO, 'test/screens', name)).map(file => fs.readFileSync(file, 'utf8'))
@@ -39,7 +39,7 @@ describe('every screen has the leave test (F83)', () => {
     })
 
     it('a screen with no test, or with a test that does not call the mold, is accused (the wrong examples)', () => {
-        const texts = { 'a-screen': ["it('draws', () => {})"], 'b-screen': ["itLeavesNoListeners('b', B)"], 'c-screen': [] }
+        const texts = { 'a-screen': ["it('draws', () => {})"], 'b-screen': ["itLeavesNoListeners<Props>('b', B, {})"], 'c-screen': [] }
         expect(withoutTheLeaveTest(Object.keys(texts), name => texts[name])).toEqual(['a-screen', 'c-screen'])
     })
 })

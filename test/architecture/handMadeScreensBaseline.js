@@ -93,7 +93,6 @@ export const HAND_MADE = {
     'utils/pageScrollLock.js': 56,
     'views/BaseView.js': 144,
     'views/BlendingMenuView.js': 477,
-    'views/ComingSoonView.js': 66,
     'views/HomeView.js': 319,
     'views/InventoryPhoneSheets.js': 226,
     'views/InventoryView.js': 693,

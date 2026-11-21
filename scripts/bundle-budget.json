@@ -1,10 +1,10 @@
 {
-    "//": "F83 (proposal § 11). Gzip bytes. `main` only goes down from one wave to the next. The numbers of wave 0 were measured on the publishable build (with the keys of the .env) in reports/evidence/F83/wave-0/.",
+    "//": "F83 (proposal § 11). Gzip bytes. Wave 0 measured on the publishable build (the keys of the .env): main script 301,830 B, react-vendor 68,691 B, the canary 1,986 B (reports/evidence/F83/wave-0/). `main` is the ceiling of the wave (the proposal's 316,000 B); from wave 1 it becomes the value measured in the wave before (301,830 B): it only goes down. `background` is the allowance for what comes after the first screen besides React: the 28,198 B the lazy pieces of today already weigh (SavedPlaylistsView, SpotifyExportModal, crate3d... measured on main@3356113) plus the 20,000 B the proposal gives to new screens and to the Portuguese dictionary.",
     "main": 316000,
     "mainToday": 301437,
     "reactVendor": 72000,
     "screen": 30000,
-    "background": 20000,
+    "background": 48198,
     "reactAtStart": false,
     "allowed": {
         "posthogAdapter": "F77: the measurement adapter (PostHog), 129,204 B; downloaded only when the build has a project key and nobody turned the measurement off"

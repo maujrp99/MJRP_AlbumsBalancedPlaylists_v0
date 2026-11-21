@@ -57,10 +57,10 @@ Qualquer passo que falha interrompe tudo; nada é publicado.
 | 1 | Recusa se a `main` tem mudança não commitada em arquivo versionado | o mesmo |
 | 2 | Confere o `.env` e o login do Firebase | Confere o login do gcloud; lê e mostra a revisão que serve agora (o ponto de volta) |
 | 3 | Exporta a `main` para a pasta temporária; `npm ci` | o mesmo |
-| 4 | `npx vitest run`; um teste falhando interrompe | o mesmo |
+| 4 | `npm run typecheck` e `npx eslint . --quiet` (o tipo e o lint: F83, ADR-0023), depois `npx vitest run`; um erro ou um teste falhando interrompe | o mesmo |
 | 5 | Copia o `.env` para a cópia limpa; `npx vite build` | Monta o contexto da imagem: `shared/` vira `server/_shared_temp` (com um `package.json` `{"type": "module"}`) e `config/` vira `server/config` |
 | 6 | Copia o que o Vite não empacota: `public/js/firebase-config.js`, `public/css/`, `public/assets/`, `public/favicon.ico` | — |
-| 7 | Confere o que construiu: o script principal que o `index.html` nomeia existe; o Client ID do Spotify está nos scripts; nenhum arquivo `.map`; todo arquivo local que o `index.html` aponta está em `dist/`; `css/` e `assets/` chegaram inteiros | Confere o contexto (`Dockerfile`, `index.js`, lockfile, `config/prompts.json`, sem `.env`) e **sobe o servidor localmente**, numa cópia arrumada como a imagem arruma, com as dependências do lockfile e sem segredo nenhum: `/_health` e `/api/musickit-status` respondem 200, `/api/debug/files` responde 404, os prompts e os módulos de `shared/` carregam. Nenhuma rota paga é chamada. |
+| 7 | Confere o que construiu: o script principal que o `index.html` nomeia existe; o Client ID do Spotify está nos scripts; nenhum arquivo `.map`; todo arquivo local que o `index.html` aponta está em `dist/`; `css/` e `assets/` chegaram inteiros; **o teto de peso** (`scripts/bundle-budget.mjs` sobre `dist/`, com os tetos de `scripts/bundle-budget.json`; F83): o script principal sob o teto, o React em um só arquivo `react-vendor`, e nenhum outro arquivo acima do alarme de uma tela fora da lista com o motivo | Confere o contexto (`Dockerfile`, `index.js`, lockfile, `config/prompts.json`, sem `.env`) e **sobe o servidor localmente**, numa cópia arrumada como a imagem arruma, com as dependências do lockfile e sem segredo nenhum: `/_health` e `/api/musickit-status` respondem 200, `/api/debug/files` responde 404, os prompts e os módulos de `shared/` carregam. Nenhuma rota paga é chamada. |
 | 8 | `firebase deploy --only hosting --project mjrp-playlist-generator` | `gcloud run deploy mjrp-proxy --source server --region southamerica-east1 --project mjrp-playlist-generator --allow-unauthenticated --max-instances 3` |
 | 9 | Confere a produção: o `index.html` no ar nomeia o script recém-construído, e esse endereço devolve um script (o Hosting responde 200 com a página do app para arquivo que não existe) | Confere a produção: a revisão nova recebe 100% do tráfego; `/api/musickit-status` responde 200 e `/api/debug/files` responde 404 |
 | 10 | Mostra como voltar atrás | Mostra o comando para voltar à revisão anterior, com o nome dela |
@@ -208,11 +208,11 @@ Para ver a página localmente: `npx vite` e abrir `http://127.0.0.1:5010/` (sem 
 
 ### 2.5 Automação do GitHub
 
-`.github/workflows/ci.yml` roda a verificação de código (`npx eslint . --quiet`) e depois
+`.github/workflows/ci.yml` roda a verificação de tipos (`npm run typecheck`, F83), a verificação de código (`npx eslint . --quiet`) e depois
 `npx vitest run` em todo push e pull request, e mais nada: não publica. O repositório não tem
 segredo de publicação, e um build feito lá sairia sem o Client ID do Spotify.
 
-O lint (`npm run lint`, que é `npx eslint .`) **é uma trava** desde 2026-11-19 (F64, UAT-20): os
+O lint (`npm run lint`, que é `npm run typecheck && eslint .`: os tipos das telas em React primeiro, F83) **é uma trava** desde 2026-11-19 (F64, UAT-20): os
 dois comandos de publicação rodam `npx eslint . --quiet` na cópia limpa, antes dos testes, e um
 erro recusa a publicação («the code check (lint) found errors: nothing was deployed»). Avisos (23,
 todos `no-unused-vars`) não recusam. Eram 22 erros; todos foram consertados.

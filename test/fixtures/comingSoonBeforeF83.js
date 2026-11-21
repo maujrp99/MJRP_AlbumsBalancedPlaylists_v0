@@ -1,32 +1,20 @@
 /**
- * ComingSoonView.js
- * 
- * Placeholder view for features under development
- * Used for: /artists, /genres, /tracks, /blend
+ * The «Coming soon» screen as it was before F83 moved it to React (public/js/views/ComingSoonView.js, deleted in the same
+ * commit that wired the new one): the template of its render(), copied as it was, with the texts in it. The proof of the move
+ * (test/screens/coming-soon/ComingSoon.test.tsx) compares what the new screen draws in #app with what this draws.
  */
+import { getIcon } from '../../public/js/components/Icons.js'
 
-import { BaseView } from './BaseView.js';
-import { getIcon } from '../components/Icons.js';
+const features = {
+    '/artists': { name: 'Artist Series', icon: 'User', description: 'Organize your music by artists' },
+    '/genres': { name: 'Genre Series', icon: 'Tag', description: 'Categorize music by genres' },
+    '/tracks': { name: 'Track Series', icon: 'Music', description: 'Create collections of individual tracks' }
+}
 
-export class ComingSoonView extends BaseView {
-    constructor() {
-        super();
-        this.featureName = 'This Feature';
-    }
+export function legacyComingSoonHtml(path) {
+    const feature = features[path]
 
-    async render(params) {
-        // Determine feature name from route
-        const path = window.location.pathname;
-        const features = {
-            '/artists': { name: 'Artist Series', icon: 'User', description: 'Organize your music by artists' },
-            '/genres': { name: 'Genre Series', icon: 'Tag', description: 'Categorize music by genres' },
-            '/tracks': { name: 'Track Series', icon: 'Music', description: 'Create collections of individual tracks' },
-            '/blend': { name: 'The Blending Menu', icon: 'Sliders', description: 'Mix and blend your series into perfect playlists' }
-        };
-
-        const feature = features[path] || { name: 'This Feature', icon: 'Clock', description: 'Coming soon' };
-
-        return `
+    return `
             <div class="container mx-auto px-4 py-16 min-h-[60vh] flex items-center justify-center">
                 <div class="text-center max-w-md">
                     <div class="mb-8">
@@ -38,7 +26,7 @@ export class ComingSoonView extends BaseView {
                         </h1>
                         <p class="text-muted text-lg mb-2">${feature.description}</p>
                     </div>
-                    
+
                     <div class="glass-panel rounded-xl p-6 mb-8">
                         <div class="flex items-center justify-center gap-3 mb-4">
                             ${getIcon('Clock', 'w-5 h-5 text-orange-400')}
@@ -48,19 +36,12 @@ export class ComingSoonView extends BaseView {
                             We're working hard to bring you this feature. Stay tuned!
                         </p>
                     </div>
-                    
+
                     <a href="/albums" class="btn btn-primary" data-link>
                         ${getIcon('ArrowLeft', 'w-4 h-4')}
                         Back to Albums
                     </a>
                 </div>
             </div>
-        `;
-    }
-
-    async mount() {
-        // No special mounting needed
-    }
+        `
 }
-
-export default ComingSoonView;
