@@ -15,6 +15,14 @@
   - As referências listadas abaixo ainda citam o id velho `UAT-241` e valem para a issue do ramo (hoje `UAT-255`); a reescrever em um commit seguinte, sem tocar nas que citam a issue da `main`:
     - `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md:44: - **P2-2 · F48 · no computador, em `/start`, o rodapé (com «Clear Cache») fica sob a base fixa da série,** mesmo com a página rolada até o f`
 
+## [2026-11-21 13:35] session — conform: as 8 perguntas do relatório viram um lote para o Control Center
+**Branch:** wip/kernel-conform-2-2026-11-21
+Lote `reports/proposals/2026-11-21-1335-v0-conform-questions.md` (proposal-batch@1, 8 itens, recomendada primeiro). Nenhuma pergunta respondida nem registrada como respondida. `proposal_batches.py check` passou. Decidido pelo agente, revisável pelo MJRP.
+
+## [2026-11-21 13:34] session — conform: `process-sensors` completo, `sensors.board_states` declarado (CM-0144, 0148, 0150, 0153, 0154, 0155, 0156, 0157)
+**Branch:** wip/kernel-conform-2-2026-11-21
+Com o seed do board já rodado no checkout principal, declarei `sensors.board_states` no contrato (`board_states_check.py`). O sensor saiu com exit 0 («o grafo e o registro conferem») e as 8 notas passaram em `--check-note` antes de serem registradas. Decidido pelo agente, revisável pelo MJRP.
+
 ## [2026-11-21 13:33] review — reconferência visual em lote, grupo playlists, playlists guardadas, blend e exportar (F61, F73): fail sem P0, sem P1, 2 P2
 **Branch:** wip/visual-recheck-batch-2026-11-21
 Juiz separado (Opus) olhou as playlists geradas, as guardadas e o Blending Menu de hoje, a 1280 e 393, contra o design system, pela costura das provas da F76 (as telas, o controlador e o leitor reais com uma fonte de mentira; sem entrar, nada gravado); nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-playlists-blend-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/playlists/`. Dois P2 (UAT-252, UAT-253). Fecha a série de quatro relatórios do lote; nada fechado no board.
