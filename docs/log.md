@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:41] session — publicado em produção: a home nova (F80), o menu novo do topo (F88) e os avisos de falha (F52, F69)
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Pública mas o menu não está completo no iPhone ainda né?»; depois de ver que o menu de baixo da home e o do app diferem no iPhone, «Os menus não eram pra ser iguais?»; e à pergunta se segurava a publicação, «mas publica sim pls, pra uma primeira iteracao está ótimo». Site publicado da `main` (`3f3393b`, `/assets/main-TMIDBwtr.js`) pelo `deploy-site.sh`, na fila do Album Blender; conferido: `/`, `/home`, `/start` e `/albums` respondem 200, o `app.html` aponta o script novo, `/api/musickit-status` responde 200. Aberto, em conserto no ramo `fix/f88-phone-menu-equal-in-home-and-app`: no celular o menu de baixo deve ser o mesmo na home e no app.
+
 ## [2026-11-21 19:33] step — UAT-266 na forma das partes (a issue que o MJRP viu no iPhone)
 **Branch:** main
 A linha da UAT-266 trazia rótulos em negrito que não são partes («Causa», «Conserto») e «Aberta por» com o nome e a citação; a conferência da estrutura reprovava. Os rótulos viraram texto e «Aberta por» ficou `humano`; as palavras do MJRP seguem na coluna «Reportado por».
