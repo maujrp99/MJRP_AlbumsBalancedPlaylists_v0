@@ -15,9 +15,48 @@ Palavras do MJRP (2026-11-21): «parece que vc entrou no processo do harness ago
 **Branch:** claude/kernel-refresh-2026-11-21
 Rodei `new_project.py --refresh-kernel` a partir do harness: 31 páginas da wiki, scripts vendorizados (entre eles `machine_load.py`, a fila de máquina), hooks e catálogo na versão de 2026-11-21. O contrato, o `board.json` e o `AGENTS.md` do projeto ficaram como estavam (o contrato só ganhou `received:` e o carimbo do kernel). Nenhuma nota de conformidade foi executada; a lista do que fica pendente está em `reports/audits/2026-11-21-mjrpalbumblender-v0-kernel-refresh.md`.
 
+## [2026-11-21 11:04] session — save: pesquisa da régua do volume de copy (F81), o fecho com a falha aceita
+
+> Participantes: orquestrador do V0 + Claude Code (Opus 5.5) · Branch: claude/f81-copy-volume-research
+> Session: sessão de página iniciada pelo orquestrador do V0 (local_12b5ff2f-ff3a-4682-b761-b99d85bbc840)
+
+### Executive Summary
+Fecho da pesquisa da régua do volume de texto (relatório `reports/research/2026-11-21-copy-volume-ruler.md`, commit `10b5dad`). Nada mudou desde a entrada anterior, além desta nota.
+
+### Decisions
+- A conferência de fechamento falha só nas tarefas TASK-01 e TASK-02 do `tasks.md` da F81, que são da sessão da F81. O orquestrador do V0 aceitou a falha e reconcilia o arquivo no merge; esta sessão não o tocou.
+
+### Next Session
+1. O integrador junta este ramo na `main`; o orquestrador do harness leva a disciplina CV (volume de copy) ao MJRP.
+
+### Key Data
+- Ramo `claude/f81-copy-volume-research`; pesquisa em `10b5dad`; save anterior em `c0b9027`.
+
 ## [2026-11-21 11:01] decision — F86 (o design system do site, como artefato) em esboço, com a S-68; «copy deck» é o nome dele para o artefato de revisão dos textos
 **Branch:** main
 Palavras do MJRP (2026-11-21), ao ver a página de revisão dos textos (https://claude.ai/artifact/DDE57759QtWJkM4qKVHzBF): «copy está ótimo, eu só colocaria no design-system do site e alias precisamos do artefato do design-system do site tb»; antes: «o artefato do claude que estou chamando de copydeck». Conferido: o site tem o documento `docs/specs/design-system.md`, mas nenhuma página de design system publicada (os artefatos «MJRP PRO DS» e «Control Center Design System» são de outros projetos). A F86 nasce na `main` em esboço (S-68; épico e versão escolhidos pelo agente). Outras palavras dele de hoje, para tudo o que se gera para ele: «abri o artefato agora e nao sei o que eu faço e olho, com tanta info na tela»; «tem gasto de muita info ique acaba de torando inutil por ser overwhelming». Escolhas dele na página de entrada: a vista «2- palco largo» para a caixa de discos; a capa de «The Velvet Underground & Nico» como a primeira, «mas mantenha o king crimson so nao ser a primeira».
+
+## [2026-11-21 11:00] session — save: pesquisa da régua do volume de copy (F81) fechada
+
+> Participantes: orquestrador do V0 + Claude Code (Opus 5.5) · Branch: claude/f81-copy-volume-research
+> Session: sessão de página iniciada pelo orquestrador do V0 (local_12b5ff2f-ff3a-4682-b761-b99d85bbc840)
+
+### Executive Summary
+A pesquisa da régua do volume de texto está pronta: as fontes abertas com data, a medida de Spotify, Bandcamp e Linear a 1280 e a 390 px, a régua por elemento e por tela, e o V0 e os três comparadores medidos contra ela. Só medida e proposta: nada do site, do cânone ou das skills foi editado.
+
+### Decisions
+- O ramo é da F81, não uma feature nova, por decisão do orquestrador do V0. A trava de commit recusou o nome `claude/research-copy-volume`.
+- Os números de elemento e de tela sem fonte são proposta do agente, revisável; o relatório marca cada um.
+
+### Next Session
+1. O orquestrador do harness leva ao MJRP, como uma decisão só, a disciplina CV (CV-01 a CV-07) e os passos das três skills.
+2. O integrador junta este ramo na `main`.
+3. Falta medir no navegador, com a conta, as telas de trabalho (F84).
+
+### Key Data
+- Primeira tela da página de entrada do V0: 84 palavras no computador e 64 no telefone. O topo (título e subtítulo) tem 52 palavras, acima do teto de 40.
+- Primeira tela dos comparadores, no computador / no telefone: Home 179 / 132; página de entrada 359 / 454; Inventário 106 / 86. O teto de tela de trabalho é 100 / 50.
+- Commit da pesquisa: `10b5dad`.
 
 ## [2026-11-21 10:55] session — F81: fechamento depois da página de revisão
 Branch: claude/f81-site-in-more-than-one-language
@@ -29,6 +68,10 @@ Key Data: último commit de trabalho `9c622de`.
 ## [2026-11-21 10:55] session — F81: a página «Revisão de texto do Album Blender», onde o MJRP decide os textos, publicada como Artifact privado
 Branch: claude/f81-site-in-more-than-one-language
 Pedido do orquestrador (o MJRP disse sim). Gerada por `design/proposals/copy-review/build_copy_review.py` a partir de `design/copy/album-blender-copy.md` (o molde `copy-review.template.html` é o único arquivo escrito à mão); Artifact: https://claude.ai/artifact/DDE57759QtWJkM4qKVHzBF. Abre numa tela do site por vez (a página de entrada primeiro, depois Start); cada linha mostra onde aparece em palavras comuns, o inglês de hoje, o português proposto e o tamanho; código, arquivo, tipo e nota ficam em «detalhes». Filtros «Só o que precisa de mim» e «Mais longos primeiro». Ele edita os dois textos e marca «Final» por conta própria; nenhuma marca vem do agente. Guarda em três camadas: navegador, conta (db) e arquivo `.md` no formato do documento (baixar e abrir de volta). Palavras visíveis na primeira tela sem rolar: 238 a 1280×800 (cerca de 150 são os próprios textos do site nas caixas) e 92 a 390 px. Testado no navegador do app: editar, marcar final, filtros, exportar e reabrir o arquivo; a gravação na conta e o download só funcionam com o Artifact aberto no claude.ai e não foram exercitados por mim.
+
+## [2026-11-21 10:52] session — pesquisa: uma régua para o volume de texto por tela, no computador e no telefone
+**Branch:** claude/f81-copy-volume-research
+A pedido do orquestrador do harness, a partir das palavras do MJRP («o copy … está bem verbose … tanto para web qto para mobile»). O relatório está em `reports/research/2026-11-21-copy-volume-ruler.md`. Ele traz as fontes primárias abertas com data, a medida de Spotify, Bandcamp e Linear a 1280 e a 390 px, a régua por tipo de elemento e por tela, o V0 contra a régua e uma proposta de disciplina nova no cânone (CV-01 a CV-07, só proposta). O script de medida e as medidas brutas estão ao lado. No V0, a primeira tela está na faixa dos produtos medidos (84 e 64 palavras). O excesso está no topo (título e subtítulo, 52 palavras) e no número de textos por tela (Inventário, 231). Também mediu os três comparadores publicados (Home, página de entrada, Inventário). A primeira tela deles tem 179, 359 e 106 palavras no computador; os tetos de tela de trabalho são 100 no computador e 50 no telefone. O ramo é da F81, por decisão do orquestrador. Nada do cânone, das skills ou do site foi editado.
 
 ## [2026-11-21 10:17] session — F81: fechamento depois do acerto com o deck do MJRPpersonal
 Branch: claude/f81-site-in-more-than-one-language

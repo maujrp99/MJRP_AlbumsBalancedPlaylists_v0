@@ -1,0 +1,3704 @@
+[
+  {
+    "name": "cmp-home",
+    "url": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/f79-home/comparator.html",
+    "device": "desktop",
+    "width": 1280,
+    "height": 800,
+    "measuredAt": "2026-11-21T13:58:50.097Z",
+    "finalUrl": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/f79-home/comparator.html",
+    "title": "Home · Transformar v2",
+    "foldCopy": {
+      "words": 179,
+      "chars": 1006
+    },
+    "pageCopy": {
+      "words": 383,
+      "chars": 2126
+    },
+    "fold": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 2,
+          "words": 5,
+          "chars": 29
+        },
+        "heading": {
+          "items": 8,
+          "words": 19,
+          "chars": 105
+        },
+        "lede": {
+          "items": 5,
+          "words": 73,
+          "chars": 414
+        },
+        "button": {
+          "items": 6,
+          "words": 16,
+          "chars": 97
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 1,
+          "words": 1,
+          "chars": 6
+        },
+        "helper": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 3,
+          "words": 61,
+          "chars": 325
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 2,
+          "words": 4,
+          "chars": 30
+        }
+      },
+      "words": 179,
+      "chars": 1006,
+      "items": 27,
+      "textShare": 0.1157,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "A Home:",
+          "words": 2,
+          "chars": 7
+        },
+        {
+          "kind": "title",
+          "text": "Transformar · rodada 2",
+          "words": 3,
+          "chars": 22
+        },
+        {
+          "kind": "lede",
+          "text": "Você escolheu o nível",
+          "words": 4,
+          "chars": 21
+        },
+        {
+          "kind": "lede",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "lede",
+          "text": "(«home 3 niveis transformar»). A v2 fecha o que a crítica deixou aberto (mudar a ordem e tirar álbuns da base, com Undo), responde às perguntas da rodada 1 e mostra",
+          "words": 31,
+          "chars": 164
+        },
+        {
+          "kind": "lede",
+          "text": "todos os estados",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "lede",
+          "text": ". Ao lado, a v1 que você viu, intacta. Ligue «marcar decisões» para ver, em amarelo, cada padrão que o agente escolheu sozinho («decidido pelo agente — revisável»). O texto da tela é proposta do agent",
+          "words": 34,
+          "chars": 202
+        },
+        {
+          "kind": "button",
+          "text": "Computador · 1280",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "button",
+          "text": "Celular · 393",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "label",
+          "text": "Estado",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Sem a Referência",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Com a Referência",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Sem marcas",
+          "words": 2,
+          "chars": 10
+        },
+        {
+          "kind": "button",
+          "text": "Marcar decisões do agente",
+          "words": 4,
+          "chars": 25
+        },
+        {
+          "kind": "heading",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "heading",
+          "text": "v2 · Aprovada",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "body",
+          "text": "A base abre para mudar a ordem e tirar álbuns (↑ ↓ ✕ de 44 px, Undo); o nome sugerido pelo artista; «Add all»; depois de criar, «Blend it now»; um fogo por vez; todos os estados.",
+          "words": 34,
+          "chars": 178
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "heading",
+          "text": "v1 · a que você escolheu",
+          "words": 5,
+          "chars": 24
+        },
+        {
+          "kind": "body",
+          "text": "A versão da rodada 1, como você a viu. Tem 7 estados: os outros mostram o mais próximo.",
+          "words": 18,
+          "chars": 87
+        },
+        {
+          "kind": "body",
+          "text": "Este estado não existe nesta versão: mostra «Vários álbuns».",
+          "words": 9,
+          "chars": 60
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "A cor",
+          "words": 2,
+          "chars": 5
+        },
+        {
+          "kind": "heading",
+          "text": "#fdba74",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "heading",
+          "text": ": prévia A ou prévia B?",
+          "words": 5,
+          "chars": 23
+        },
+        {
+          "kind": "heading",
+          "text": "decisão sua",
+          "words": 2,
+          "chars": 11
+        }
+      ]
+    },
+    "page": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 2,
+          "words": 5,
+          "chars": 29
+        },
+        "heading": {
+          "items": 12,
+          "words": 28,
+          "chars": 157
+        },
+        "lede": {
+          "items": 5,
+          "words": 73,
+          "chars": 414
+        },
+        "button": {
+          "items": 6,
+          "words": 16,
+          "chars": 97
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 1,
+          "words": 1,
+          "chars": 6
+        },
+        "helper": {
+          "items": 1,
+          "words": 11,
+          "chars": 67
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 15,
+          "words": 237,
+          "chars": 1275
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 5,
+          "words": 12,
+          "chars": 81
+        }
+      },
+      "words": 383,
+      "chars": 2126,
+      "items": 47,
+      "distinct": 43,
+      "height": 1568,
+      "screens": 2,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "A Home:",
+          "words": 2,
+          "chars": 7
+        },
+        {
+          "kind": "title",
+          "text": "Transformar · rodada 2",
+          "words": 3,
+          "chars": 22
+        },
+        {
+          "kind": "lede",
+          "text": "Você escolheu o nível",
+          "words": 4,
+          "chars": 21
+        },
+        {
+          "kind": "lede",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "lede",
+          "text": "(«home 3 niveis transformar»). A v2 fecha o que a crítica deixou aberto (mudar a ordem e tirar álbuns da base, com Undo), responde às perguntas da rodada 1 e mostra",
+          "words": 31,
+          "chars": 164
+        },
+        {
+          "kind": "lede",
+          "text": "todos os estados",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "lede",
+          "text": ". Ao lado, a v1 que você viu, intacta. Ligue «marcar decisões» para ver, em amarelo, cada padrão que o agente escolheu sozinho («decidido pelo agente — revisável»). O texto da tela é proposta do agent",
+          "words": 34,
+          "chars": 202
+        },
+        {
+          "kind": "button",
+          "text": "Computador · 1280",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "button",
+          "text": "Celular · 393",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "label",
+          "text": "Estado",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Sem a Referência",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Com a Referência",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Sem marcas",
+          "words": 2,
+          "chars": 10
+        },
+        {
+          "kind": "button",
+          "text": "Marcar decisões do agente",
+          "words": 4,
+          "chars": 25
+        },
+        {
+          "kind": "heading",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "heading",
+          "text": "v2 · Aprovada",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "body",
+          "text": "A base abre para mudar a ordem e tirar álbuns (↑ ↓ ✕ de 44 px, Undo); o nome sugerido pelo artista; «Add all»; depois de criar, «Blend it now»; um fogo por vez; todos os estados.",
+          "words": 34,
+          "chars": 178
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "heading",
+          "text": "v1 · a que você escolheu",
+          "words": 5,
+          "chars": 24
+        },
+        {
+          "kind": "body",
+          "text": "A versão da rodada 1, como você a viu. Tem 7 estados: os outros mostram o mais próximo.",
+          "words": 18,
+          "chars": 87
+        },
+        {
+          "kind": "body",
+          "text": "Este estado não existe nesta versão: mostra «Vários álbuns».",
+          "words": 9,
+          "chars": 60
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "A cor",
+          "words": 2,
+          "chars": 5
+        },
+        {
+          "kind": "heading",
+          "text": "#fdba74",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "heading",
+          "text": ": prévia A ou prévia B?",
+          "words": 5,
+          "chars": 23
+        },
+        {
+          "kind": "heading",
+          "text": "decisão sua",
+          "words": 2,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": "A v1 começava o degradê do título e do equalizador em",
+          "words": 11,
+          "chars": 53
+        },
+        {
+          "kind": "body",
+          "text": "#fdba74",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "body",
+          "text": "(laranja claro), que o design system não declara (o fogo declarado é",
+          "words": 12,
+          "chars": 68
+        },
+        {
+          "kind": "body",
+          "text": "#f97316 → #dc2626",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "body",
+          "text": "). A: sem ele (é o que a v2 usa). B: com ele, como na v1. Só a cor muda; veja em «Vazio» e «Buscando».",
+          "words": 24,
+          "chars": 102
+        },
+        {
+          "kind": "body",
+          "text": "Recomendo A",
+          "words": 2,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": ": fica dentro da identidade declarada e o título ainda passa de 3:1 em toda a extensão (7,5:1 no laranja, 4,35:1 no vermelho; é texto grande, o piso é 3:1). Se você preferir B, a terceira parada entra",
+          "words": 53,
+          "chars": 283
+        },
+        {
+          "kind": "body",
+          "text": "#fbbf24",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "body",
+          "text": ".",
+          "words": 0,
+          "chars": 1
+        },
+        {
+          "kind": "heading",
+          "text": "Prévia A",
+          "words": 2,
+          "chars": 8
+        },
+        {
+          "kind": "heading",
+          "text": "sem #fdba74 · recomendada",
+          "words": 3,
+          "chars": 25
+        },
+        {
+          "kind": "body",
+          "text": "O fogo declarado, #f97316 → #dc2626, no título e no equalizador. É o da v2.",
+          "words": 14,
+          "chars": 75
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "Prévia B",
+          "words": 2,
+          "chars": 8
+        },
+        {
+          "kind": "heading",
+          "text": "com #fdba74",
+          "words": 2,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": "A terceira parada da v1, #fdba74, no começo do título e no topo das barras.",
+          "words": 15,
+          "chars": 75
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "other",
+          "text": "Decididos na rodada 1",
+          "words": 4,
+          "chars": 21
+        },
+        {
+          "kind": "helper",
+          "text": "Consolidar e Elevar, os níveis que você não escolheu, como registro",
+          "words": 11,
+          "chars": 67
+        },
+        {
+          "kind": "body",
+          "text": "Cada versão funciona sozinha: «abrir sozinha» abre o protótipo inteiro, com todos os estados num seletor e cliques que funcionam (escolher capas, «Add all», ↑ ↓ ✕, Undo, colar, criar). A versão que vo",
+          "words": 41,
+          "chars": 251
+        }
+      ]
+    },
+    "placeholders": []
+  },
+  {
+    "name": "cmp-home",
+    "url": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/f79-home/comparator.html",
+    "device": "phone",
+    "width": 390,
+    "height": 844,
+    "measuredAt": "2026-11-21T13:58:55.549Z",
+    "finalUrl": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/f79-home/comparator.html",
+    "title": "Home · Transformar v2",
+    "foldCopy": {
+      "words": 132,
+      "chars": 748
+    },
+    "pageCopy": {
+      "words": 383,
+      "chars": 2126
+    },
+    "fold": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 2,
+          "words": 5,
+          "chars": 29
+        },
+        "heading": {
+          "items": 2,
+          "words": 3,
+          "chars": 24
+        },
+        "lede": {
+          "items": 5,
+          "words": 73,
+          "chars": 414
+        },
+        "button": {
+          "items": 6,
+          "words": 16,
+          "chars": 97
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 1,
+          "words": 1,
+          "chars": 6
+        },
+        "helper": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 1,
+          "words": 34,
+          "chars": 178
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        }
+      },
+      "words": 132,
+      "chars": 748,
+      "items": 17,
+      "textShare": 0.273,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "A Home:",
+          "words": 2,
+          "chars": 7
+        },
+        {
+          "kind": "title",
+          "text": "Transformar · rodada 2",
+          "words": 3,
+          "chars": 22
+        },
+        {
+          "kind": "lede",
+          "text": "Você escolheu o nível",
+          "words": 4,
+          "chars": 21
+        },
+        {
+          "kind": "lede",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "lede",
+          "text": "(«home 3 niveis transformar»). A v2 fecha o que a crítica deixou aberto (mudar a ordem e tirar álbuns da base, com Undo), responde às perguntas da rodada 1 e mostra",
+          "words": 31,
+          "chars": 164
+        },
+        {
+          "kind": "lede",
+          "text": "todos os estados",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "lede",
+          "text": ". Ao lado, a v1 que você viu, intacta. Ligue «marcar decisões» para ver, em amarelo, cada padrão que o agente escolheu sozinho («decidido pelo agente — revisável»). O texto da tela é proposta do agent",
+          "words": 34,
+          "chars": 202
+        },
+        {
+          "kind": "button",
+          "text": "Computador · 1280",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "button",
+          "text": "Celular · 393",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "label",
+          "text": "Estado",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Sem a Referência",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Com a Referência",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Sem marcas",
+          "words": 2,
+          "chars": 10
+        },
+        {
+          "kind": "button",
+          "text": "Marcar decisões do agente",
+          "words": 4,
+          "chars": 25
+        },
+        {
+          "kind": "heading",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "heading",
+          "text": "v2 · Aprovada",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "body",
+          "text": "A base abre para mudar a ordem e tirar álbuns (↑ ↓ ✕ de 44 px, Undo); o nome sugerido pelo artista; «Add all»; depois de criar, «Blend it now»; um fogo por vez; todos os estados.",
+          "words": 34,
+          "chars": 178
+        }
+      ]
+    },
+    "page": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 2,
+          "words": 5,
+          "chars": 29
+        },
+        "heading": {
+          "items": 12,
+          "words": 28,
+          "chars": 157
+        },
+        "lede": {
+          "items": 5,
+          "words": 73,
+          "chars": 414
+        },
+        "button": {
+          "items": 6,
+          "words": 16,
+          "chars": 97
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 1,
+          "words": 1,
+          "chars": 6
+        },
+        "helper": {
+          "items": 1,
+          "words": 11,
+          "chars": 67
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 15,
+          "words": 237,
+          "chars": 1275
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 5,
+          "words": 12,
+          "chars": 81
+        }
+      },
+      "words": 383,
+      "chars": 2126,
+      "items": 47,
+      "distinct": 43,
+      "height": 1757,
+      "screens": 2.1,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "A Home:",
+          "words": 2,
+          "chars": 7
+        },
+        {
+          "kind": "title",
+          "text": "Transformar · rodada 2",
+          "words": 3,
+          "chars": 22
+        },
+        {
+          "kind": "lede",
+          "text": "Você escolheu o nível",
+          "words": 4,
+          "chars": 21
+        },
+        {
+          "kind": "lede",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "lede",
+          "text": "(«home 3 niveis transformar»). A v2 fecha o que a crítica deixou aberto (mudar a ordem e tirar álbuns da base, com Undo), responde às perguntas da rodada 1 e mostra",
+          "words": 31,
+          "chars": 164
+        },
+        {
+          "kind": "lede",
+          "text": "todos os estados",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "lede",
+          "text": ". Ao lado, a v1 que você viu, intacta. Ligue «marcar decisões» para ver, em amarelo, cada padrão que o agente escolheu sozinho («decidido pelo agente — revisável»). O texto da tela é proposta do agent",
+          "words": 34,
+          "chars": 202
+        },
+        {
+          "kind": "button",
+          "text": "Computador · 1280",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "button",
+          "text": "Celular · 393",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "label",
+          "text": "Estado",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Sem a Referência",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Com a Referência",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Sem marcas",
+          "words": 2,
+          "chars": 10
+        },
+        {
+          "kind": "button",
+          "text": "Marcar decisões do agente",
+          "words": 4,
+          "chars": 25
+        },
+        {
+          "kind": "heading",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "heading",
+          "text": "v2 · Aprovada",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "body",
+          "text": "A base abre para mudar a ordem e tirar álbuns (↑ ↓ ✕ de 44 px, Undo); o nome sugerido pelo artista; «Add all»; depois de criar, «Blend it now»; um fogo por vez; todos os estados.",
+          "words": 34,
+          "chars": 178
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "Transformar",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "heading",
+          "text": "v1 · a que você escolheu",
+          "words": 5,
+          "chars": 24
+        },
+        {
+          "kind": "body",
+          "text": "A versão da rodada 1, como você a viu. Tem 7 estados: os outros mostram o mais próximo.",
+          "words": 18,
+          "chars": 87
+        },
+        {
+          "kind": "body",
+          "text": "Este estado não existe nesta versão: mostra «Vários álbuns».",
+          "words": 9,
+          "chars": 60
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "A cor",
+          "words": 2,
+          "chars": 5
+        },
+        {
+          "kind": "heading",
+          "text": "#fdba74",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "heading",
+          "text": ": prévia A ou prévia B?",
+          "words": 5,
+          "chars": 23
+        },
+        {
+          "kind": "heading",
+          "text": "decisão sua",
+          "words": 2,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": "A v1 começava o degradê do título e do equalizador em",
+          "words": 11,
+          "chars": 53
+        },
+        {
+          "kind": "body",
+          "text": "#fdba74",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "body",
+          "text": "(laranja claro), que o design system não declara (o fogo declarado é",
+          "words": 12,
+          "chars": 68
+        },
+        {
+          "kind": "body",
+          "text": "#f97316 → #dc2626",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "body",
+          "text": "). A: sem ele (é o que a v2 usa). B: com ele, como na v1. Só a cor muda; veja em «Vazio» e «Buscando».",
+          "words": 24,
+          "chars": 102
+        },
+        {
+          "kind": "body",
+          "text": "Recomendo A",
+          "words": 2,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": ": fica dentro da identidade declarada e o título ainda passa de 3:1 em toda a extensão (7,5:1 no laranja, 4,35:1 no vermelho; é texto grande, o piso é 3:1). Se você preferir B, a terceira parada entra",
+          "words": 53,
+          "chars": 283
+        },
+        {
+          "kind": "body",
+          "text": "#fbbf24",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "body",
+          "text": ".",
+          "words": 0,
+          "chars": 1
+        },
+        {
+          "kind": "heading",
+          "text": "Prévia A",
+          "words": 2,
+          "chars": 8
+        },
+        {
+          "kind": "heading",
+          "text": "sem #fdba74 · recomendada",
+          "words": 3,
+          "chars": 25
+        },
+        {
+          "kind": "body",
+          "text": "O fogo declarado, #f97316 → #dc2626, no título e no equalizador. É o da v2.",
+          "words": 14,
+          "chars": 75
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "Prévia B",
+          "words": 2,
+          "chars": 8
+        },
+        {
+          "kind": "heading",
+          "text": "com #fdba74",
+          "words": 2,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": "A terceira parada da v1, #fdba74, no começo do título e no topo das barras.",
+          "words": 15,
+          "chars": 75
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "other",
+          "text": "Decididos na rodada 1",
+          "words": 4,
+          "chars": 21
+        },
+        {
+          "kind": "helper",
+          "text": "Consolidar e Elevar, os níveis que você não escolheu, como registro",
+          "words": 11,
+          "chars": 67
+        },
+        {
+          "kind": "body",
+          "text": "Cada versão funciona sozinha: «abrir sozinha» abre o protótipo inteiro, com todos os estados num seletor e cliques que funcionam (escolher capas, «Add all», ↑ ↓ ✕, Undo, colar, criar). A versão que vo",
+          "words": 41,
+          "chars": 251
+        }
+      ]
+    },
+    "placeholders": []
+  },
+  {
+    "name": "cmp-entry",
+    "url": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/f80-splash/comparator.html",
+    "device": "desktop",
+    "width": 1280,
+    "height": 800,
+    "measuredAt": "2026-11-21T13:59:00.899Z",
+    "finalUrl": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/f80-splash/comparator.html",
+    "title": "Página de entrada F80",
+    "foldCopy": {
+      "words": 359,
+      "chars": 1858
+    },
+    "pageCopy": {
+      "words": 729,
+      "chars": 3855
+    },
+    "fold": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 1,
+          "words": 5,
+          "chars": 28
+        },
+        "heading": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "lede": {
+          "items": 11,
+          "words": 92,
+          "chars": 436
+        },
+        "button": {
+          "items": 12,
+          "words": 40,
+          "chars": 228
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "helper": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 11,
+          "words": 222,
+          "chars": 1166
+        }
+      },
+      "words": 359,
+      "chars": 1858,
+      "items": 35,
+      "textShare": 0.2329,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "Página de entrada · rodada 2",
+          "words": 5,
+          "chars": 28
+        },
+        {
+          "kind": "lede",
+          "text": "Você escolheu o",
+          "words": 3,
+          "chars": 15
+        },
+        {
+          "kind": "lede",
+          "text": "Caixote",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "lede",
+          "text": "com o fio do",
+          "words": 4,
+          "chars": 12
+        },
+        {
+          "kind": "lede",
+          "text": "Lado A, lado B",
+          "words": 4,
+          "chars": 14
+        },
+        {
+          "kind": "lede",
+          "text": "e o fogo da",
+          "words": 4,
+          "chars": 11
+        },
+        {
+          "kind": "lede",
+          "text": "Brasa",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "lede",
+          "text": ", e capas reais. A v2 dá um trabalho a cada um: o caixote é o palco, a rolagem é o disco tocando (cada faixa puxa um disco; «Flip the record» gira o caixote), o fogo é a luz que vem de baixo. A dúvida",
+          "words": 46,
+          "chars": 209
+        },
+        {
+          "kind": "lede",
+          "text": "a força do fogo",
+          "words": 4,
+          "chars": 15
+        },
+        {
+          "kind": "lede",
+          "text": ": brando ou vivo, a mesma página. Capas reais do Apple Music:",
+          "words": 11,
+          "chars": 61
+        },
+        {
+          "kind": "lede",
+          "text": "uso público ainda não liberado",
+          "words": 5,
+          "chars": 30
+        },
+        {
+          "kind": "lede",
+          "text": "(ver a proposta). Textos em inglês propostos pelo agente.",
+          "words": 9,
+          "chars": 57
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2 (o fogo e o fio) · Nova · fogo brando",
+          "words": 10,
+          "chars": 50
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2 · prévia: fogo vivo",
+          "words": 5,
+          "chars": 32
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v1",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v1 (rodada 1)",
+          "words": 4,
+          "chars": 23
+        },
+        {
+          "kind": "other",
+          "text": "As outras direções (rodada 1)",
+          "words": 5,
+          "chars": 29
+        },
+        {
+          "kind": "button",
+          "text": "Elevar",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Lado A, lado B (rodada 1)",
+          "words": 6,
+          "chars": 25
+        },
+        {
+          "kind": "button",
+          "text": "Consolidar",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "button",
+          "text": "Brasa (rodada 1)",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Computador · 1280",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "button",
+          "text": "Celular · 393",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "other",
+          "text": "O que muda",
+          "words": 3,
+          "chars": 10
+        },
+        {
+          "kind": "other",
+          "text": "O caixote é o palco, com 14 capas reais; cada faixa da rolagem puxa um disco (série, ranking, mistura, coleção); «Flip the record» gira o caixote para o lado B. O fio do equalizador no topo é o progre",
+          "words": 70,
+          "chars": 352
+        },
+        {
+          "kind": "other",
+          "text": "Eixo",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "other",
+          "text": "Prévia da força do fogo, opção 1 de 2: brando (o padrão que recomendo).",
+          "words": 14,
+          "chars": 71
+        },
+        {
+          "kind": "other",
+          "text": "Peso",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "other",
+          "text": "≈ 405 KB na primeira visita sem cache, comprimido (página 358 KB, 213 KB com gzip, das quais 211 KB são as 14 capas em WebP 360 px; fonte Syne 35 KB; three.js 0.185.0 155 KB comprimido, só no computad",
+          "words": 49,
+          "chars": 258
+        },
+        {
+          "kind": "other",
+          "text": "Risco",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "other",
+          "text": "Capas reais: os termos da Apple só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing — a confirmar antes de publicar. 3D só no computador; o c",
+          "words": 63,
+          "chars": 349
+        },
+        {
+          "kind": "other",
+          "text": "1280 × 800 px · reduzida a 94% · role dentro do quadro",
+          "words": 10,
+          "chars": 54
+        },
+        {
+          "kind": "other",
+          "text": "Abrir sozinha, em tela cheia ↗",
+          "words": 5,
+          "chars": 30
+        }
+      ]
+    },
+    "page": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 1,
+          "words": 5,
+          "chars": 28
+        },
+        "heading": {
+          "items": 8,
+          "words": 26,
+          "chars": 133
+        },
+        "lede": {
+          "items": 11,
+          "words": 92,
+          "chars": 436
+        },
+        "button": {
+          "items": 12,
+          "words": 40,
+          "chars": 228
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "helper": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 24,
+          "words": 311,
+          "chars": 1697
+        },
+        "body": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 13,
+          "words": 255,
+          "chars": 1333
+        }
+      },
+      "words": 729,
+      "chars": 3855,
+      "items": 69,
+      "distinct": 59,
+      "height": 2136,
+      "screens": 2.7,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "Página de entrada · rodada 2",
+          "words": 5,
+          "chars": 28
+        },
+        {
+          "kind": "lede",
+          "text": "Você escolheu o",
+          "words": 3,
+          "chars": 15
+        },
+        {
+          "kind": "lede",
+          "text": "Caixote",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "lede",
+          "text": "com o fio do",
+          "words": 4,
+          "chars": 12
+        },
+        {
+          "kind": "lede",
+          "text": "Lado A, lado B",
+          "words": 4,
+          "chars": 14
+        },
+        {
+          "kind": "lede",
+          "text": "e o fogo da",
+          "words": 4,
+          "chars": 11
+        },
+        {
+          "kind": "lede",
+          "text": "Brasa",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "lede",
+          "text": ", e capas reais. A v2 dá um trabalho a cada um: o caixote é o palco, a rolagem é o disco tocando (cada faixa puxa um disco; «Flip the record» gira o caixote), o fogo é a luz que vem de baixo. A dúvida",
+          "words": 46,
+          "chars": 209
+        },
+        {
+          "kind": "lede",
+          "text": "a força do fogo",
+          "words": 4,
+          "chars": 15
+        },
+        {
+          "kind": "lede",
+          "text": ": brando ou vivo, a mesma página. Capas reais do Apple Music:",
+          "words": 11,
+          "chars": 61
+        },
+        {
+          "kind": "lede",
+          "text": "uso público ainda não liberado",
+          "words": 5,
+          "chars": 30
+        },
+        {
+          "kind": "lede",
+          "text": "(ver a proposta). Textos em inglês propostos pelo agente.",
+          "words": 9,
+          "chars": 57
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2 (o fogo e o fio) · Nova · fogo brando",
+          "words": 10,
+          "chars": 50
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2 · prévia: fogo vivo",
+          "words": 5,
+          "chars": 32
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v1",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v1 (rodada 1)",
+          "words": 4,
+          "chars": 23
+        },
+        {
+          "kind": "other",
+          "text": "As outras direções (rodada 1)",
+          "words": 5,
+          "chars": 29
+        },
+        {
+          "kind": "button",
+          "text": "Elevar",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Lado A, lado B (rodada 1)",
+          "words": 6,
+          "chars": 25
+        },
+        {
+          "kind": "button",
+          "text": "Consolidar",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "button",
+          "text": "Brasa (rodada 1)",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Computador · 1280",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "button",
+          "text": "Celular · 393",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "other",
+          "text": "O que muda",
+          "words": 3,
+          "chars": 10
+        },
+        {
+          "kind": "other",
+          "text": "O caixote é o palco, com 14 capas reais; cada faixa da rolagem puxa um disco (série, ranking, mistura, coleção); «Flip the record» gira o caixote para o lado B. O fio do equalizador no topo é o progre",
+          "words": 70,
+          "chars": 352
+        },
+        {
+          "kind": "other",
+          "text": "Eixo",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "other",
+          "text": "Prévia da força do fogo, opção 1 de 2: brando (o padrão que recomendo).",
+          "words": 14,
+          "chars": 71
+        },
+        {
+          "kind": "other",
+          "text": "Peso",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "other",
+          "text": "≈ 405 KB na primeira visita sem cache, comprimido (página 358 KB, 213 KB com gzip, das quais 211 KB são as 14 capas em WebP 360 px; fonte Syne 35 KB; three.js 0.185.0 155 KB comprimido, só no computad",
+          "words": 49,
+          "chars": 258
+        },
+        {
+          "kind": "other",
+          "text": "Risco",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "other",
+          "text": "Capas reais: os termos da Apple só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing — a confirmar antes de publicar. 3D só no computador; o c",
+          "words": 63,
+          "chars": 349
+        },
+        {
+          "kind": "other",
+          "text": "1280 × 800 px · reduzida a 94% · role dentro do quadro",
+          "words": 10,
+          "chars": 54
+        },
+        {
+          "kind": "other",
+          "text": "Abrir sozinha, em tela cheia ↗",
+          "words": 5,
+          "chars": 30
+        },
+        {
+          "kind": "other",
+          "text": "Referência · hoje:",
+          "words": 2,
+          "chars": 18
+        },
+        {
+          "kind": "other",
+          "text": "não há página de entrada. Quem chega ao site cai direto no app (a Home, que cria uma série); não há nada para um buscador ou um assistente de IA ler.",
+          "words": 31,
+          "chars": 149
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v2 (o fogo e o fio)",
+          "words": 7,
+          "chars": 29
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "Prévia da força do fogo, opção 1 de 2: brando (o padrão que recomendo).",
+          "words": 14,
+          "chars": 71
+        },
+        {
+          "kind": "card",
+          "text": "Peso.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "≈ 405 KB na primeira visita sem cache, comprimido (página 358 KB, 213 KB com gzip, das quais 211 KB são as 14 capas em WebP 360 px; fonte Syne 35 KB; three.js 0.185.0 155 KB comprimido, só no computad",
+          "words": 49,
+          "chars": 258
+        },
+        {
+          "kind": "card",
+          "text": "Risco.",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "Capas reais: os termos da Apple só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing — a confirmar antes de publicar. 3D só no computador; o c",
+          "words": 63,
+          "chars": 349
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v1 (rodada 1)",
+          "words": 4,
+          "chars": 23
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v1",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "Máximo de 3D: a profundidade é uma cena WebGL (three.js 0.185.0).",
+          "words": 11,
+          "chars": 65
+        },
+        {
+          "kind": "card",
+          "text": "Peso.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "≈ 254 KB na primeira visita (página 64 KB; fonte 35 KB; three.js 0.185.0, 155 KB comprimido, baixado depois do texto)",
+          "words": 20,
+          "chars": 117
+        },
+        {
+          "kind": "card",
+          "text": "Risco.",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "O mais caro: o three.js é baixado depois do texto; no celular, bateria e calor com a cena aberta. Sem WebGL ou com menos movimento, cai num leque de capas em CSS, parado.",
+          "words": 33,
+          "chars": 170
+        },
+        {
+          "kind": "heading",
+          "text": "Lado A, lado B (rodada 1)",
+          "words": 6,
+          "chars": 25
+        },
+        {
+          "kind": "heading",
+          "text": "Elevar",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "3D médio: profundidade em CSS (perspectiva), movimento ligado à rolagem, sem biblioteca.",
+          "words": 12,
+          "chars": 88
+        },
+        {
+          "kind": "card",
+          "text": "Peso.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "≈ 91 KB na primeira visita (página 56 KB, 34 KB comprimida; fonte 35 KB); nenhuma biblioteca",
+          "words": 16,
+          "chars": 92
+        },
+        {
+          "kind": "card",
+          "text": "Risco.",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "Animação ligada à rolagem é nova em parte dos navegadores (Safari 26, Firefox 159); nos antigos, um script curto faz o giro. Não tem fogo em movimento, só o do logotipo.",
+          "words": 31,
+          "chars": 169
+        },
+        {
+          "kind": "heading",
+          "text": "Brasa (rodada 1)",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "heading",
+          "text": "Consolidar",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "Sem 3D: a profundidade vem da luz do fogo e do tamanho do tipo.",
+          "words": 14,
+          "chars": 63
+        },
+        {
+          "kind": "card",
+          "text": "Peso.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "≈ 88 KB na primeira visita (página 53 KB, 34 KB comprimida; fonte Syne 35 KB); nenhuma biblioteca",
+          "words": 17,
+          "chars": 97
+        },
+        {
+          "kind": "card",
+          "text": "Risco.",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "O mais leve e o mais seguro; o risco é parecer simples demais para o pedido de «imersivo, 3D».",
+          "words": 19,
+          "chars": 94
+        }
+      ]
+    },
+    "placeholders": []
+  },
+  {
+    "name": "cmp-entry",
+    "url": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/f80-splash/comparator.html",
+    "device": "phone",
+    "width": 390,
+    "height": 844,
+    "measuredAt": "2026-11-21T13:59:06.256Z",
+    "finalUrl": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/f80-splash/comparator.html",
+    "title": "Página de entrada F80",
+    "foldCopy": {
+      "words": 454,
+      "chars": 2371
+    },
+    "pageCopy": {
+      "words": 729,
+      "chars": 3855
+    },
+    "fold": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 1,
+          "words": 5,
+          "chars": 28
+        },
+        "heading": {
+          "items": 6,
+          "words": 22,
+          "chars": 107
+        },
+        "lede": {
+          "items": 11,
+          "words": 92,
+          "chars": 436
+        },
+        "button": {
+          "items": 12,
+          "words": 40,
+          "chars": 228
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "helper": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 6,
+          "words": 40,
+          "chars": 239
+        },
+        "body": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 13,
+          "words": 255,
+          "chars": 1333
+        }
+      },
+      "words": 454,
+      "chars": 2371,
+      "items": 49,
+      "textShare": 0.3405,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "Página de entrada · rodada 2",
+          "words": 5,
+          "chars": 28
+        },
+        {
+          "kind": "lede",
+          "text": "Você escolheu o",
+          "words": 3,
+          "chars": 15
+        },
+        {
+          "kind": "lede",
+          "text": "Caixote",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "lede",
+          "text": "com o fio do",
+          "words": 4,
+          "chars": 12
+        },
+        {
+          "kind": "lede",
+          "text": "Lado A, lado B",
+          "words": 4,
+          "chars": 14
+        },
+        {
+          "kind": "lede",
+          "text": "e o fogo da",
+          "words": 4,
+          "chars": 11
+        },
+        {
+          "kind": "lede",
+          "text": "Brasa",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "lede",
+          "text": ", e capas reais. A v2 dá um trabalho a cada um: o caixote é o palco, a rolagem é o disco tocando (cada faixa puxa um disco; «Flip the record» gira o caixote), o fogo é a luz que vem de baixo. A dúvida",
+          "words": 46,
+          "chars": 209
+        },
+        {
+          "kind": "lede",
+          "text": "a força do fogo",
+          "words": 4,
+          "chars": 15
+        },
+        {
+          "kind": "lede",
+          "text": ": brando ou vivo, a mesma página. Capas reais do Apple Music:",
+          "words": 11,
+          "chars": 61
+        },
+        {
+          "kind": "lede",
+          "text": "uso público ainda não liberado",
+          "words": 5,
+          "chars": 30
+        },
+        {
+          "kind": "lede",
+          "text": "(ver a proposta). Textos em inglês propostos pelo agente.",
+          "words": 9,
+          "chars": 57
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2 (o fogo e o fio) · Nova · fogo brando",
+          "words": 10,
+          "chars": 50
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2 · prévia: fogo vivo",
+          "words": 5,
+          "chars": 32
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v1",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v1 (rodada 1)",
+          "words": 4,
+          "chars": 23
+        },
+        {
+          "kind": "other",
+          "text": "As outras direções (rodada 1)",
+          "words": 5,
+          "chars": 29
+        },
+        {
+          "kind": "button",
+          "text": "Elevar",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Lado A, lado B (rodada 1)",
+          "words": 6,
+          "chars": 25
+        },
+        {
+          "kind": "button",
+          "text": "Consolidar",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "button",
+          "text": "Brasa (rodada 1)",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Computador · 1280",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "button",
+          "text": "Celular · 393",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "other",
+          "text": "O que muda",
+          "words": 3,
+          "chars": 10
+        },
+        {
+          "kind": "other",
+          "text": "O caixote é o palco, com 14 capas reais; cada faixa da rolagem puxa um disco (série, ranking, mistura, coleção); «Flip the record» gira o caixote para o lado B. O fio do equalizador no topo é o progre",
+          "words": 70,
+          "chars": 352
+        },
+        {
+          "kind": "other",
+          "text": "Eixo",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "other",
+          "text": "Prévia da força do fogo, opção 1 de 2: brando (o padrão que recomendo).",
+          "words": 14,
+          "chars": 71
+        },
+        {
+          "kind": "other",
+          "text": "Peso",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "other",
+          "text": "≈ 405 KB na primeira visita sem cache, comprimido (página 358 KB, 213 KB com gzip, das quais 211 KB são as 14 capas em WebP 360 px; fonte Syne 35 KB; three.js 0.185.0 155 KB comprimido, só no computad",
+          "words": 49,
+          "chars": 258
+        },
+        {
+          "kind": "other",
+          "text": "Risco",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "other",
+          "text": "Capas reais: os termos da Apple só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing — a confirmar antes de publicar. 3D só no computador; o c",
+          "words": 63,
+          "chars": 349
+        },
+        {
+          "kind": "other",
+          "text": "1280 × 800 px · reduzida a 71% · role dentro do quadro",
+          "words": 10,
+          "chars": 54
+        },
+        {
+          "kind": "other",
+          "text": "Abrir sozinha, em tela cheia ↗",
+          "words": 5,
+          "chars": 30
+        },
+        {
+          "kind": "other",
+          "text": "Referência · hoje:",
+          "words": 2,
+          "chars": 18
+        },
+        {
+          "kind": "other",
+          "text": "não há página de entrada. Quem chega ao site cai direto no app (a Home, que cria uma série); não há nada para um buscador ou um assistente de IA ler.",
+          "words": 31,
+          "chars": 149
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v2 (o fogo e o fio)",
+          "words": 7,
+          "chars": 29
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "Prévia da força do fogo, opção 1 de 2: brando (o padrão que recomendo).",
+          "words": 14,
+          "chars": 71
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v1 (rodada 1)",
+          "words": 4,
+          "chars": 23
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v1",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "Máximo de 3D: a profundidade é uma cena WebGL (three.js 0.185.0).",
+          "words": 11,
+          "chars": 65
+        },
+        {
+          "kind": "heading",
+          "text": "Lado A, lado B (rodada 1)",
+          "words": 6,
+          "chars": 25
+        },
+        {
+          "kind": "heading",
+          "text": "Elevar",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "3D médio: profundidade em CSS (perspectiva), movimento ligado à rolagem, sem biblioteca.",
+          "words": 12,
+          "chars": 88
+        }
+      ]
+    },
+    "page": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 1,
+          "words": 5,
+          "chars": 28
+        },
+        "heading": {
+          "items": 8,
+          "words": 26,
+          "chars": 133
+        },
+        "lede": {
+          "items": 11,
+          "words": 92,
+          "chars": 436
+        },
+        "button": {
+          "items": 12,
+          "words": 40,
+          "chars": 228
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "helper": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 24,
+          "words": 311,
+          "chars": 1697
+        },
+        "body": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 13,
+          "words": 255,
+          "chars": 1333
+        }
+      },
+      "words": 729,
+      "chars": 3855,
+      "items": 69,
+      "distinct": 59,
+      "height": 6516,
+      "screens": 7.7,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "Página de entrada · rodada 2",
+          "words": 5,
+          "chars": 28
+        },
+        {
+          "kind": "lede",
+          "text": "Você escolheu o",
+          "words": 3,
+          "chars": 15
+        },
+        {
+          "kind": "lede",
+          "text": "Caixote",
+          "words": 1,
+          "chars": 7
+        },
+        {
+          "kind": "lede",
+          "text": "com o fio do",
+          "words": 4,
+          "chars": 12
+        },
+        {
+          "kind": "lede",
+          "text": "Lado A, lado B",
+          "words": 4,
+          "chars": 14
+        },
+        {
+          "kind": "lede",
+          "text": "e o fogo da",
+          "words": 4,
+          "chars": 11
+        },
+        {
+          "kind": "lede",
+          "text": "Brasa",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "lede",
+          "text": ", e capas reais. A v2 dá um trabalho a cada um: o caixote é o palco, a rolagem é o disco tocando (cada faixa puxa um disco; «Flip the record» gira o caixote), o fogo é a luz que vem de baixo. A dúvida",
+          "words": 46,
+          "chars": 209
+        },
+        {
+          "kind": "lede",
+          "text": "a força do fogo",
+          "words": 4,
+          "chars": 15
+        },
+        {
+          "kind": "lede",
+          "text": ": brando ou vivo, a mesma página. Capas reais do Apple Music:",
+          "words": 11,
+          "chars": 61
+        },
+        {
+          "kind": "lede",
+          "text": "uso público ainda não liberado",
+          "words": 5,
+          "chars": 30
+        },
+        {
+          "kind": "lede",
+          "text": "(ver a proposta). Textos em inglês propostos pelo agente.",
+          "words": 9,
+          "chars": 57
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2 (o fogo e o fio) · Nova · fogo brando",
+          "words": 10,
+          "chars": 50
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v2 · prévia: fogo vivo",
+          "words": 5,
+          "chars": 32
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v1",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Caixote · v1 (rodada 1)",
+          "words": 4,
+          "chars": 23
+        },
+        {
+          "kind": "other",
+          "text": "As outras direções (rodada 1)",
+          "words": 5,
+          "chars": 29
+        },
+        {
+          "kind": "button",
+          "text": "Elevar",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Lado A, lado B (rodada 1)",
+          "words": 6,
+          "chars": 25
+        },
+        {
+          "kind": "button",
+          "text": "Consolidar",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "button",
+          "text": "Brasa (rodada 1)",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "button",
+          "text": "Computador · 1280",
+          "words": 2,
+          "chars": 17
+        },
+        {
+          "kind": "button",
+          "text": "Celular · 393",
+          "words": 2,
+          "chars": 13
+        },
+        {
+          "kind": "other",
+          "text": "O que muda",
+          "words": 3,
+          "chars": 10
+        },
+        {
+          "kind": "other",
+          "text": "O caixote é o palco, com 14 capas reais; cada faixa da rolagem puxa um disco (série, ranking, mistura, coleção); «Flip the record» gira o caixote para o lado B. O fio do equalizador no topo é o progre",
+          "words": 70,
+          "chars": 352
+        },
+        {
+          "kind": "other",
+          "text": "Eixo",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "other",
+          "text": "Prévia da força do fogo, opção 1 de 2: brando (o padrão que recomendo).",
+          "words": 14,
+          "chars": 71
+        },
+        {
+          "kind": "other",
+          "text": "Peso",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "other",
+          "text": "≈ 405 KB na primeira visita sem cache, comprimido (página 358 KB, 213 KB com gzip, das quais 211 KB são as 14 capas em WebP 360 px; fonte Syne 35 KB; three.js 0.185.0 155 KB comprimido, só no computad",
+          "words": 49,
+          "chars": 258
+        },
+        {
+          "kind": "other",
+          "text": "Risco",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "other",
+          "text": "Capas reais: os termos da Apple só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing — a confirmar antes de publicar. 3D só no computador; o c",
+          "words": 63,
+          "chars": 349
+        },
+        {
+          "kind": "other",
+          "text": "1280 × 800 px · reduzida a 71% · role dentro do quadro",
+          "words": 10,
+          "chars": 54
+        },
+        {
+          "kind": "other",
+          "text": "Abrir sozinha, em tela cheia ↗",
+          "words": 5,
+          "chars": 30
+        },
+        {
+          "kind": "other",
+          "text": "Referência · hoje:",
+          "words": 2,
+          "chars": 18
+        },
+        {
+          "kind": "other",
+          "text": "não há página de entrada. Quem chega ao site cai direto no app (a Home, que cria uma série); não há nada para um buscador ou um assistente de IA ler.",
+          "words": 31,
+          "chars": 149
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v2 (o fogo e o fio)",
+          "words": 7,
+          "chars": 29
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v2",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "Prévia da força do fogo, opção 1 de 2: brando (o padrão que recomendo).",
+          "words": 14,
+          "chars": 71
+        },
+        {
+          "kind": "card",
+          "text": "Peso.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "≈ 405 KB na primeira visita sem cache, comprimido (página 358 KB, 213 KB com gzip, das quais 211 KB são as 14 capas em WebP 360 px; fonte Syne 35 KB; three.js 0.185.0 155 KB comprimido, só no computad",
+          "words": 49,
+          "chars": 258
+        },
+        {
+          "kind": "card",
+          "text": "Risco.",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "Capas reais: os termos da Apple só preveem a capa junto da reprodução ou da playlist e pedem autorização dos donos dos direitos para marketing — a confirmar antes de publicar. 3D só no computador; o c",
+          "words": 63,
+          "chars": 349
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v1 (rodada 1)",
+          "words": 4,
+          "chars": 23
+        },
+        {
+          "kind": "heading",
+          "text": "Caixote · v1",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "Máximo de 3D: a profundidade é uma cena WebGL (three.js 0.185.0).",
+          "words": 11,
+          "chars": 65
+        },
+        {
+          "kind": "card",
+          "text": "Peso.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "≈ 254 KB na primeira visita (página 64 KB; fonte 35 KB; three.js 0.185.0, 155 KB comprimido, baixado depois do texto)",
+          "words": 20,
+          "chars": 117
+        },
+        {
+          "kind": "card",
+          "text": "Risco.",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "O mais caro: o three.js é baixado depois do texto; no celular, bateria e calor com a cena aberta. Sem WebGL ou com menos movimento, cai num leque de capas em CSS, parado.",
+          "words": 33,
+          "chars": 170
+        },
+        {
+          "kind": "heading",
+          "text": "Lado A, lado B (rodada 1)",
+          "words": 6,
+          "chars": 25
+        },
+        {
+          "kind": "heading",
+          "text": "Elevar",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "3D médio: profundidade em CSS (perspectiva), movimento ligado à rolagem, sem biblioteca.",
+          "words": 12,
+          "chars": 88
+        },
+        {
+          "kind": "card",
+          "text": "Peso.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "≈ 91 KB na primeira visita (página 56 KB, 34 KB comprimida; fonte 35 KB); nenhuma biblioteca",
+          "words": 16,
+          "chars": 92
+        },
+        {
+          "kind": "card",
+          "text": "Risco.",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "Animação ligada à rolagem é nova em parte dos navegadores (Safari 26, Firefox 159); nos antigos, um script curto faz o giro. Não tem fogo em movimento, só o do logotipo.",
+          "words": 31,
+          "chars": 169
+        },
+        {
+          "kind": "heading",
+          "text": "Brasa (rodada 1)",
+          "words": 3,
+          "chars": 16
+        },
+        {
+          "kind": "heading",
+          "text": "Consolidar",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "card",
+          "text": "Eixo.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "Sem 3D: a profundidade vem da luz do fogo e do tamanho do tipo.",
+          "words": 14,
+          "chars": 63
+        },
+        {
+          "kind": "card",
+          "text": "Peso.",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "card",
+          "text": "≈ 88 KB na primeira visita (página 53 KB, 34 KB comprimida; fonte Syne 35 KB); nenhuma biblioteca",
+          "words": 17,
+          "chars": 97
+        },
+        {
+          "kind": "card",
+          "text": "Risco.",
+          "words": 1,
+          "chars": 6
+        },
+        {
+          "kind": "card",
+          "text": "O mais leve e o mais seguro; o risco é parecer simples demais para o pedido de «imersivo, 3D».",
+          "words": 19,
+          "chars": 94
+        }
+      ]
+    },
+    "placeholders": []
+  },
+  {
+    "name": "cmp-inventory",
+    "url": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/inventory/comparator.html",
+    "device": "desktop",
+    "width": 1280,
+    "height": 800,
+    "measuredAt": "2026-11-21T13:59:12.395Z",
+    "finalUrl": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/inventory/comparator.html",
+    "title": "Comparador · Inventário",
+    "foldCopy": {
+      "words": 106,
+      "chars": 610
+    },
+    "pageCopy": {
+      "words": 134,
+      "chars": 774
+    },
+    "fold": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 1,
+          "words": 2,
+          "chars": 23
+        },
+        "heading": {
+          "items": 4,
+          "words": 7,
+          "chars": 41
+        },
+        "lede": {
+          "items": 3,
+          "words": 27,
+          "chars": 184
+        },
+        "button": {
+          "items": 4,
+          "words": 7,
+          "chars": 30
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 1,
+          "words": 3,
+          "chars": 20
+        },
+        "helper": {
+          "items": 1,
+          "words": 21,
+          "chars": 102
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 2,
+          "words": 35,
+          "chars": 180
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 2,
+          "words": 4,
+          "chars": 30
+        }
+      },
+      "words": 106,
+      "chars": 610,
+      "items": 18,
+      "textShare": 0.0601,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "Comparador · Inventário",
+          "words": 2,
+          "chars": 23
+        },
+        {
+          "kind": "lede",
+          "text": "A tela de hoje ao lado de cada versão do protótipo. Abra pelo servidor local (",
+          "words": 15,
+          "chars": 78
+        },
+        {
+          "kind": "lede",
+          "text": "http://127.0.0.1:5010/_compare-inventory.html",
+          "words": 1,
+          "chars": 45
+        },
+        {
+          "kind": "lede",
+          "text": "), com a sua conta: a «Referência» é o inventário de verdade.",
+          "words": 11,
+          "chars": 61
+        },
+        {
+          "kind": "button",
+          "text": "1440 px",
+          "words": 2,
+          "chars": 7
+        },
+        {
+          "kind": "button",
+          "text": "390 px",
+          "words": 2,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Últimas duas",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Todas",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "label",
+          "text": "Cenário do protótipo",
+          "words": 3,
+          "chars": 20
+        },
+        {
+          "kind": "heading",
+          "text": "Referência",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "heading",
+          "text": "· a tela de hoje",
+          "words": 4,
+          "chars": 16
+        },
+        {
+          "kind": "body",
+          "text": "O inventário como está em produção: sem valor estimado; o total «Total Owned» soma só o que você pagou.",
+          "words": 19,
+          "chars": 103
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "v5.1",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "heading",
+          "text": "· Escolhida",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": "A v5 com o cartão como superfície: fundo próprio e a capa indo até as bordas.",
+          "words": 16,
+          "chars": 77
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "helper",
+          "text": "Uma versão nova entra aqui com um nome que diz o que mudou. A versão que você viu nunca é sobrescrita.",
+          "words": 21,
+          "chars": 102
+        }
+      ]
+    },
+    "page": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 1,
+          "words": 2,
+          "chars": 23
+        },
+        "heading": {
+          "items": 6,
+          "words": 9,
+          "chars": 53
+        },
+        "lede": {
+          "items": 3,
+          "words": 27,
+          "chars": 184
+        },
+        "button": {
+          "items": 4,
+          "words": 7,
+          "chars": 30
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 1,
+          "words": 3,
+          "chars": 20
+        },
+        "helper": {
+          "items": 1,
+          "words": 21,
+          "chars": 102
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 3,
+          "words": 59,
+          "chars": 317
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 3,
+          "words": 6,
+          "chars": 45
+        }
+      },
+      "words": 134,
+      "chars": 774,
+      "items": 22,
+      "distinct": 20,
+      "height": 800,
+      "screens": 1,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "Comparador · Inventário",
+          "words": 2,
+          "chars": 23
+        },
+        {
+          "kind": "lede",
+          "text": "A tela de hoje ao lado de cada versão do protótipo. Abra pelo servidor local (",
+          "words": 15,
+          "chars": 78
+        },
+        {
+          "kind": "lede",
+          "text": "http://127.0.0.1:5010/_compare-inventory.html",
+          "words": 1,
+          "chars": 45
+        },
+        {
+          "kind": "lede",
+          "text": "), com a sua conta: a «Referência» é o inventário de verdade.",
+          "words": 11,
+          "chars": 61
+        },
+        {
+          "kind": "button",
+          "text": "1440 px",
+          "words": 2,
+          "chars": 7
+        },
+        {
+          "kind": "button",
+          "text": "390 px",
+          "words": 2,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Últimas duas",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Todas",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "label",
+          "text": "Cenário do protótipo",
+          "words": 3,
+          "chars": 20
+        },
+        {
+          "kind": "heading",
+          "text": "Referência",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "heading",
+          "text": "· a tela de hoje",
+          "words": 4,
+          "chars": 16
+        },
+        {
+          "kind": "body",
+          "text": "O inventário como está em produção: sem valor estimado; o total «Total Owned» soma só o que você pagou.",
+          "words": 19,
+          "chars": 103
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "v5.1",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "heading",
+          "text": "· Escolhida",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": "A v5 com o cartão como superfície: fundo próprio e a capa indo até as bordas.",
+          "words": 16,
+          "chars": 77
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "v5",
+          "words": 1,
+          "chars": 2
+        },
+        {
+          "kind": "heading",
+          "text": "· Recusada",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "body",
+          "text": "Um padrão único para as seções do cartão: as mesmas linhas em todo cartão, alinhadas entre vizinhos; as ações viraram uma linha de links.",
+          "words": 24,
+          "chars": 137
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "helper",
+          "text": "Uma versão nova entra aqui com um nome que diz o que mudou. A versão que você viu nunca é sobrescrita.",
+          "words": 21,
+          "chars": 102
+        }
+      ]
+    },
+    "placeholders": []
+  },
+  {
+    "name": "cmp-inventory",
+    "url": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/inventory/comparator.html",
+    "device": "phone",
+    "width": 390,
+    "height": 844,
+    "measuredAt": "2026-11-21T13:59:16.920Z",
+    "finalUrl": "file:///Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/focused-curie-5a7d2f/design/proposals/inventory/comparator.html",
+    "title": "Comparador · Inventário",
+    "foldCopy": {
+      "words": 86,
+      "chars": 503
+    },
+    "pageCopy": {
+      "words": 134,
+      "chars": 774
+    },
+    "fold": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 1,
+          "words": 2,
+          "chars": 23
+        },
+        "heading": {
+          "items": 2,
+          "words": 5,
+          "chars": 26
+        },
+        "lede": {
+          "items": 3,
+          "words": 27,
+          "chars": 184
+        },
+        "button": {
+          "items": 4,
+          "words": 7,
+          "chars": 30
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 1,
+          "words": 3,
+          "chars": 20
+        },
+        "helper": {
+          "items": 1,
+          "words": 21,
+          "chars": 102
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 1,
+          "words": 19,
+          "chars": 103
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 1,
+          "words": 2,
+          "chars": 15
+        }
+      },
+      "words": 86,
+      "chars": 503,
+      "items": 14,
+      "textShare": 0.1353,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "Comparador · Inventário",
+          "words": 2,
+          "chars": 23
+        },
+        {
+          "kind": "lede",
+          "text": "A tela de hoje ao lado de cada versão do protótipo. Abra pelo servidor local (",
+          "words": 15,
+          "chars": 78
+        },
+        {
+          "kind": "lede",
+          "text": "http://127.0.0.1:5010/_compare-inventory.html",
+          "words": 1,
+          "chars": 45
+        },
+        {
+          "kind": "lede",
+          "text": "), com a sua conta: a «Referência» é o inventário de verdade.",
+          "words": 11,
+          "chars": 61
+        },
+        {
+          "kind": "button",
+          "text": "1440 px",
+          "words": 2,
+          "chars": 7
+        },
+        {
+          "kind": "button",
+          "text": "390 px",
+          "words": 2,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Últimas duas",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Todas",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "label",
+          "text": "Cenário do protótipo",
+          "words": 3,
+          "chars": 20
+        },
+        {
+          "kind": "heading",
+          "text": "Referência",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "heading",
+          "text": "· a tela de hoje",
+          "words": 4,
+          "chars": 16
+        },
+        {
+          "kind": "body",
+          "text": "O inventário como está em produção: sem valor estimado; o total «Total Owned» soma só o que você pagou.",
+          "words": 19,
+          "chars": 103
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "helper",
+          "text": "Uma versão nova entra aqui com um nome que diz o que mudou. A versão que você viu nunca é sobrescrita.",
+          "words": 21,
+          "chars": 102
+        }
+      ]
+    },
+    "page": {
+      "byKind": {
+        "consent": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "data": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "title": {
+          "items": 1,
+          "words": 2,
+          "chars": 23
+        },
+        "heading": {
+          "items": 6,
+          "words": 9,
+          "chars": 53
+        },
+        "lede": {
+          "items": 3,
+          "words": 27,
+          "chars": 184
+        },
+        "button": {
+          "items": 4,
+          "words": 7,
+          "chars": 30
+        },
+        "nav": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "label": {
+          "items": 1,
+          "words": 3,
+          "chars": 20
+        },
+        "helper": {
+          "items": 1,
+          "words": 21,
+          "chars": 102
+        },
+        "status": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "card": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "body": {
+          "items": 3,
+          "words": 59,
+          "chars": 317
+        },
+        "footer": {
+          "items": 0,
+          "words": 0,
+          "chars": 0
+        },
+        "other": {
+          "items": 3,
+          "words": 6,
+          "chars": 45
+        }
+      },
+      "words": 134,
+      "chars": 774,
+      "items": 22,
+      "distinct": 20,
+      "height": 879,
+      "screens": 1,
+      "texts": [
+        {
+          "kind": "title",
+          "text": "Comparador · Inventário",
+          "words": 2,
+          "chars": 23
+        },
+        {
+          "kind": "lede",
+          "text": "A tela de hoje ao lado de cada versão do protótipo. Abra pelo servidor local (",
+          "words": 15,
+          "chars": 78
+        },
+        {
+          "kind": "lede",
+          "text": "http://127.0.0.1:5010/_compare-inventory.html",
+          "words": 1,
+          "chars": 45
+        },
+        {
+          "kind": "lede",
+          "text": "), com a sua conta: a «Referência» é o inventário de verdade.",
+          "words": 11,
+          "chars": 61
+        },
+        {
+          "kind": "button",
+          "text": "1440 px",
+          "words": 2,
+          "chars": 7
+        },
+        {
+          "kind": "button",
+          "text": "390 px",
+          "words": 2,
+          "chars": 6
+        },
+        {
+          "kind": "button",
+          "text": "Últimas duas",
+          "words": 2,
+          "chars": 12
+        },
+        {
+          "kind": "button",
+          "text": "Todas",
+          "words": 1,
+          "chars": 5
+        },
+        {
+          "kind": "label",
+          "text": "Cenário do protótipo",
+          "words": 3,
+          "chars": 20
+        },
+        {
+          "kind": "heading",
+          "text": "Referência",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "heading",
+          "text": "· a tela de hoje",
+          "words": 4,
+          "chars": 16
+        },
+        {
+          "kind": "body",
+          "text": "O inventário como está em produção: sem valor estimado; o total «Total Owned» soma só o que você pagou.",
+          "words": 19,
+          "chars": 103
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "v5.1",
+          "words": 1,
+          "chars": 4
+        },
+        {
+          "kind": "heading",
+          "text": "· Escolhida",
+          "words": 1,
+          "chars": 11
+        },
+        {
+          "kind": "body",
+          "text": "A v5 com o cartão como superfície: fundo próprio e a capa indo até as bordas.",
+          "words": 16,
+          "chars": 77
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "heading",
+          "text": "v5",
+          "words": 1,
+          "chars": 2
+        },
+        {
+          "kind": "heading",
+          "text": "· Recusada",
+          "words": 1,
+          "chars": 10
+        },
+        {
+          "kind": "body",
+          "text": "Um padrão único para as seções do cartão: as mesmas linhas em todo cartão, alinhadas entre vizinhos; as ações viraram uma linha de links.",
+          "words": 24,
+          "chars": 137
+        },
+        {
+          "kind": "other",
+          "text": "abrir sozinha ↗",
+          "words": 2,
+          "chars": 15
+        },
+        {
+          "kind": "helper",
+          "text": "Uma versão nova entra aqui com um nome que diz o que mudou. A versão que você viu nunca é sobrescrita.",
+          "words": 21,
+          "chars": 102
+        }
+      ]
+    },
+    "placeholders": []
+  }
+]
