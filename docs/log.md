@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 20:09] step — duas issues do MJRP sobre o menu novo do app (F88): o cabeçalho e a home fora do menu
+**Branch:** wip/inventory-values-reread-investigation
+Palavras do MJRP (2026-11-21): «acho que precisamos melhora o header da app tb» (UAT-268: no celular o cabeçalho do app — a marca, o nome da tela ao lado, a conta — precisa de redesenho na linguagem da home nova; melhoria, passa por rodada de design) e «a home parece algo muito separado por nao estar no meu» (ele diz o menu; UAT-269: a home não é item do menu e parece à parte; melhoria, rodada de design sobre como chegar à home de dentro do app além da marca). Só registradas; nada desenhado nem construído.
+
 ## [2026-11-21 20:10] step — investigação: o valor do inventário lido do Discogs fica no navegador? (F75)
 **Branch:** wip/inventory-values-reread-investigation
 Palavras do MJRP (2026-11-21): «temos um bug no inventory, a questao dos preços não é persistida no banco né, toda vez tenho que clicar no read them, é by design isso ou bug?». Achado: a leitura fica em IndexedDB por seis horas, por pessoa e por item, e sobrevive a recarregar e a fechar a aba (nove conferências em Chromium real, servidor falso, sem Firebase nem Discogs); passadas as seis horas, o app pede o clique em «Read them now» e nunca lê sozinho (REQ-09, desenho); é por aparelho (desenho). Defeito pequeno: «Clear Cache» apaga também as leituras de valor, contra o que o comportamento diz (UAT-267). Opções para o desenho, sem construir, no relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-values-reread.md`. Verificação: `test/visual/inventoryValuesStayInBrowser.mjs`.
