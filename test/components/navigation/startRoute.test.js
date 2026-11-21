@@ -35,10 +35,10 @@ describe('the app asked for /home (F85, MJRP 2026-11-21)', () => {
         }
     }
 
-    it('leaves to the browser: a full load of /home, the query kept; it never goes to /start', () => {
+    it('leaves to the browser: a full load of /home, the address written in the code (the old query is dropped); it never goes to /start', () => {
         const win = fakeWin('?signin')
         expect(leaveToHome(win, { now: 1000 })).toBe(true)
-        expect(win.location.replace).toHaveBeenCalledWith('/home?signin')
+        expect(win.location.replace).toHaveBeenCalledWith('/home')
         expect(win.data[LEFT_KEY]).toBe('1000')
     })
 
