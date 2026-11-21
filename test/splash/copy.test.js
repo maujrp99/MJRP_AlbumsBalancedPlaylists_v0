@@ -52,6 +52,11 @@ describe('the dictionary', () => {
         expect(t('h.what', 'pt')).toBe('Seus álbuns do momento, numa playlist balanceada.')
     })
 
+    it('the English opening is the v4 prototype\'s', () => {
+        expect(t('h.title', 'en')).toBe('Dig through the albums you love.')
+        expect(t('h.what', 'en')).toBe('Your albums of the moment, in one balanced playlist.')
+    })
+
     it('the ranking is optional and partial: never «every track»', () => {
         expect(t('t.albums', 'en')).not.toMatch(/every track/i)
         expect(t('p.albums', 'pt')).toMatch(/Uma só ou várias, para cima ou para baixo/)

@@ -348,7 +348,7 @@ export function startSplash(win) {
     let lang = 'pt'
     const view = crateView(win, imgs, albums, () => lang)
     const redrawCredits = phoneSlots(win, imgs, albums)
-    const language = languageControl(win, (next) => { lang = next; redrawCredits(next); if (!phone) view.caption(page.state.track) })
+    const language = languageControl(win, (next) => { lang = next; redrawCredits(next); view.caption(phone ? 'a1' : page.state.track) })
     lang = language.current()
     redrawCredits(lang)
     const onScroll = watchTracks(win, page, scene, view)

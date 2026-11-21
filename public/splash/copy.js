@@ -88,7 +88,7 @@ const en = {
     'pause': 'Pause motion', 'play': 'Play motion',
     'lang.aria': 'Language',
     'h.kick': 'The Album Blender · a web app for record lovers',
-    'h.title': 'Dive into the albums you love.',
+    'h.title': 'Dig through the albums you love.',
     'h.what': 'Your albums of the moment, in one balanced playlist.',
     'h.para': 'Build series from your albums of the moment, rank your tracks and make balanced playlists.',
     'hi.kick': 'Back to the records',

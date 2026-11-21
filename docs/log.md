@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 15:11] session — F80: correções da reconferência do juiz na home (1 P1, 4 P2)
+**Branch:** wip/f80-home-bar-is-the-menu-build
+P1: no celular, com conta, 18 px entre o título e o «Inicie» (era 0). P2: PT e EN com 44 px de largura no celular; título em inglês como o da v4 («Dig through the albums you love.»; as demais linhas em inglês conferidas contra a v4 por script, sem outra diferença); a legenda do caixote segue o idioma também no celular; o caixote só aparece depois que o script o posiciona, e a diagonal vai no CSS, então as capas não se mexem mais ao carregar (o que sobra do salto vem da troca de idioma do cabeçalho e do título num navegador em inglês). Testes de test/architecture e test/splash verdes (379), eslint limpo, capturas fix-* em reports/evidence/F80/home-bar-is-the-menu/.
+
 ## [2026-11-21 15:08] review — F80: reconferência visual independente da home «A barra é o menu» (6cc8863): sem P0, 1 P1, 4 P2
 **Branch:** wip/f80-home-bar-is-the-menu-build
 Relatório escrito pelo juiz independente, copiado sem mudança para reports/audits/2026-11-21-mjrpalbumblender-v0-home-bar-is-the-menu-visual-parity-recheck.md; capturas em reports/evidence/F80/home-bar-is-the-menu/recheck/.

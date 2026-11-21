@@ -230,6 +230,13 @@ describe('the language and the account, wired (UAT-240, UAT-241)', () => {
         expect(document.getElementById('motion').getAttribute('aria-label')).toBe(COPY.en.pause)
     })
 
+    it('the caption of the front record follows the language, on the phone too', () => {
+        startSplash(fakeWindow({ phone: true, languages: ['en'] }))
+        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · fictional album')
+        document.querySelector('[data-lang="pt"]').click()
+        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · álbum fictício')
+    })
+
     it('signed out (the default) the menu scrolls to the stories', async () => {
         startSplash(fakeWindow())
         await vi.advanceTimersByTimeAsync(0)
