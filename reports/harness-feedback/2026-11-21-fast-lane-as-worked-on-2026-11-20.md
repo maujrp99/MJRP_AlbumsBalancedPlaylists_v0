@@ -11,6 +11,15 @@ Escrito em 2026-11-21 11:47, a pedido do MJRP: «a agilidade do seu trabalho de 
 5. **Outro agente, que não construiu, confere a tela** contra o que o MJRP aprovou. O que for importante volta ao construtor e passa de novo.
 6. **O orquestrador junta, roda todos os testes e o build, publica com a palavra dele e confere em produção**, dizendo o que não foi visto.
 
+## O modelo de cada agente interno (regra do MJRP)
+
+Dita por ele em 2026-11-21: «os agentes internos precisam utilizar modelos adequados nao podem derivar tudo do seu modelo, isso importante adicionar no seu processo, é crítico pra gesta de tokens e eficiencia das taregas».
+
+- **Todo agente interno declara o modelo ao ser aberto;** nenhum herda o do orquestrador.
+- **Sonnet, esforço médio, é o padrão:** construir, consertar, testar, fechar documentação, buscas e capturas.
+- **Opus** só para desenho de tela, arquitetura, pesquisa e o juiz independente de uma tela.
+- **O modelo do orquestrador (Fable)** fica na conversa com ele e na junção; agente interno nesse modelo só para uma decisão de arquitetura, dita no pedido.
+
 Quando a feature tem tela nova, antes do passo 4 há uma rodada de desenho: protótipos no comparador, e ele escolhe com uma frase.
 
 ## O que isso entregou
