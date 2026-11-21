@@ -6,13 +6,17 @@
  * --orange-text, --body) and may place the bar (the home moves it to the bottom on the phone).
  * Written for the computer: the stop's label on top of the row of bars, 52 px tall.
  */
+/* ONE width for the bar in the home and in the app (F88): a function of the screen, never of the account side.
+   412 px is what fits between the mark and the home's widest right side (language, Sign in, Open the app) when
+   the bar is centred on the page; below 938 px it gives way to what is left. */
+:root{--bar-w:min(412px,calc(100vw - 526px))}
 @keyframes eqb{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
 nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;min-width:0}
 .ms .stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font:600 14px/1 var(--body);border-radius:6px;white-space:nowrap}
 .ms .stop:hover{color:#fff}
 .ms .stop.on{color:#fff}
 .ms .stop.cur{color:var(--orange-text)}
-.ms .flipmark{position:absolute;z-index:2;left:60%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:24px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
+.ms .flipmark{position:absolute;z-index:2;left:59%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:16px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
 .ms .flipmark.on{color:var(--orange-text)}
 .eqbar{position:absolute;left:0;right:0;display:flex;align-items:flex-end;gap:2px;pointer-events:none}
 .eqbar i{flex:1 1 0;min-width:1px;border-radius:1px 1px 0 0;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom}
