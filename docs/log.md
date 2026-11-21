@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:17] session — F81: fechamento depois do acerto com o deck do MJRPpersonal
+Branch: claude/f81-site-in-more-than-one-language
+Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21)
+Resumo: mapa na forma do deck do MJRPpersonal, ids congelados em `design/copy/album-blender-ids.json`, medidas de tamanho por linha e por tela, testes com texto literal contados (178 de 289 arquivos). Nenhuma decisão do MJRP; nada final; a página de revisão não foi montada.
+Próxima sessão: o MJRP responde D-01 a D-13; renomear à mão as chaves feias dos textos montados antes do contrato da F83; depois a F81 é priorizada.
+Key Data: último commit de trabalho `4ebb97b`.
+
 ## [2026-11-21 10:16] session — F81: o mapa passa à forma do deck do MJRPpersonal, com ids congelados, medidas de tamanho e os testes que comparam texto
 Branch: claude/f81-site-in-more-than-one-language
 Pedido do orquestrador (palavras do MJRP: «vc cria o artefato do copy deck pra funcionar como o site MJRP pro»). `design/copy/album-blender-copy.md` agora tem as colunas `ID | Onde aparece | Tipo | Português | Status PT | English | Status EN` mais caracteres e palavras por linha e por tela; o inglês é «em produção, a revisar», o português «tradução do agente, a revisar», nada final. `design/copy/album-blender-ids.json` congela os ids (viram chaves do CMS). 178 de 289 arquivos de teste comparam texto de interface (`scripts/i18n/tests-with-literal-text.py`). O que cabe sem rolar a 1280 e a 393 px não foi medido. Relatório e plan atualizados.
