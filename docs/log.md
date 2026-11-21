@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:55] session — estado do dia: duas linhas (home e menu para produção; React na prévia), `## Now` atualizado
+**Branch:** main
+`MEMORY.md ## Now` reescrito com as duas linhas de trabalho, os dois endereços de prévia, o que está na `main` sem publicar e o que espera o MJRP.
+
 ## [2026-11-21 16:24] step — F87: o servidor passa a aceitar os canais de prévia do próprio site (UAT-261)
 **Branch:** fix/f87-server-accepts-the-preview-address
 Medido hoje: o `Origin` da prévia (`...--staging-2nu8kutx.web.app`) dava 500 no servidor de produção. Função pura `isOriginAllowed` em `server/lib/corsOrigin.js` (lista de `ALLOWED_ORIGIN`, sem `Origin`, ou `https://<site>--<canal>-<hash>.web.app` ancorado nas duas pontas, site vindo da primeira origem da lista); testes em `test/server/corsOrigin.test.js`; arch, spec e tasks da F87 em dia; issue UAT-261. Servidor não publicado: vale só depois de `npm run deploy:server`.
