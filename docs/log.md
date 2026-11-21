@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:04] session — Playwright instalado como devDependency da raiz
+**Branch:** claude/f84-visual-sensor-with-playwright
+Palavras do MJRP: «Instala o playwright». O `@playwright/test` entrou como devDependency da raiz, fixado em `1.63.0` (a versão que o harness usa), não na 1.56.1 do juiz: o WebKit da 1.56.1 (build 2215) não baixou nesta máquina (o download parava depois de 16 MB, em três tentativas, e o outro servidor de download respondeu 403), e o Chromium 1243 e o WebKit 2359 que a 1.63.0 usa já estavam instalados; o kit aceita da 1.51 até a 2.0. O `vitest.config.js` passa a excluir `test/visual/**`: nenhum arquivo do Playwright entra nos testes do app. Só a dependência e o `package-lock.json`; o sensor vem no commit seguinte.
+
 ## [2026-11-21 08:01] session — F79 e F80 publicadas em produção
 **Branch:** main
 Palavras do MJRP: «Bom dia pode publicar!». O site foi publicado da `main` (`14e4f9c`) pelo `scripts/deploy-site.sh` (script principal `/assets/main-D712PA9d.js`); o servidor não mudou. Conferido em produção: a raiz serve a página de entrada com as capas fictícias; os links diretos abrem o app; com a conta aberta, `/` leva à Home nova e `/?entry` mostra a página de entrada. Não visto: a raiz como visitante num navegador, criar uma série, iPhone e Safari. Relatório: `reports/evidence/F80/2026-11-21-production-proof.md`. As capas reais em público continuam esperando a palavra dele.
