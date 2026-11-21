@@ -46,6 +46,9 @@ Base: forte — medido pelo juiz independente, reports/audits/2026-11-21-F79-vis
 - a) Tirar o contorno laranja ao abrir (UAT-232) e deixar as outras duas como estão (Recomendado)
 - b) Consertar as três, para bater com o protótipo
 - c) Deixar as três como estão
+→ respondida em 2026-11-21 09:08
+  - a
+→ aplicada em 2026-11-21 09:09: o contorno laranja da caixa de «paste a list» saiu (UAT-232, com teste); UAT-233 e UAT-234 ficam como estão, com a decisão escrita na linha
 
 ### D-05 · Ligar a medição de uso (PostHog)
 Pergunta: Ligo a medição de uso do site agora?
@@ -53,6 +56,9 @@ Contexto: A F77 está em produção desligada, sem chave. Para ligar, você cria
 Base: forte — o estado da F77 está no código e no script de publicação
 - a) Deixar desligada até o site ter outros usuários (Recomendado)
 - b) Ligar agora: eu crio o projeto e ponho a chave, você publica e confere
+→ respondida em 2026-11-21 09:08
+  - (outra) Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS
+→ aplicada em 2026-11-21 09:09: a medição segue desligada; a chave de ligar no CMS virou o REQ-02 da F82, e a peça de chave é assunto do kit (F332 do harness)
 
 ### D-06 · O próximo passo do app (F78)
 Pergunta: Como o app para iPhone e Android segue?
@@ -61,6 +67,8 @@ Base: forte — reports/evidence/F78/2026-11-20-first-simulator-run.md
 - a) Uma rodada de desenho das telas do app, no comparador, antes de mais código (Recomendado)
 - b) Seguir pelas fatias técnicas e desenhar depois
 - c) Pausar o app até o CMS e os idiomas saírem
+→ respondida em 2026-11-21 09:09
+  - a
 
 ### D-07 · As contas da Apple e do Expo
 Pergunta: Quando você abre a conta de desenvolvedor da Apple e a conta do Expo?
@@ -68,3 +76,5 @@ Contexto: Sem elas o app não chega ao seu iPhone pelo TestFlight; no simulador 
 Base: média — o preço da Apple é o público; o momento é opinião
 - a) Depois da rodada de desenho do app, quando houver o que testar no aparelho (Recomendado)
 - b) Agora, para o TestFlight já ficar pronto
+→ respondida em 2026-11-21 09:09
+  - (outra) Tenho conta de dev da apple

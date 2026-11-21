@@ -62,6 +62,8 @@
 
 /* The pasted list: each line checked as it is typed; after «Add», the line that did not go in stays, with why */
 .home-paste { height: auto; flex-direction: column; align-items: stretch; padding: 14px; text-align: left; gap: 8px; }
+/* UAT-232: the box does not light up when the list opens with the focus on a line; the line shows the focus (below). */
+.home-paste:focus-within { border-color: var(--home-line); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
 .home-paste__label { margin: 0; font-size: 13px; color: var(--home-soft); padding: 0 10px; }
 .home-lines { display: grid; gap: 2px; }
 .home-line { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 12px; min-height: 40px; padding: 2px 10px; border-radius: 8px; color: #fff; font-size: 15px; }

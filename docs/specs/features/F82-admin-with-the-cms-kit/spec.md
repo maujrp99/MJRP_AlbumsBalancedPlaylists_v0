@@ -21,6 +21,8 @@ Dito pelo MJRP em 2026-11-21: «As próximas features agora serao de internacion
 ## Requirements
 - [REQ-01] «a escrever depois das conversas com o MJRPpersonal e o harness e da proposta de arquitetura» · fixes S-64
 
+- [REQ-02] O CMS traz uma chave para ligar e desligar a medição de uso do site (F77, PostHog), que nasce desligada. Palavras do MJRP (Control Center, D-05, 2026-11-21 09:08): «Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS». Como foi lido: a medição continua desligada agora; a chave entra no CMS, e ele liga depois da migração para o React e de o CMS estar construído. A regra dele para o kit vale: recurso de CMS nasce no kit e serve a todos os CMS, então a peça «chave de liga e desliga» é assunto da F332 do harness · fixes S-64
+
 ## Observable States
 A escrever.
 

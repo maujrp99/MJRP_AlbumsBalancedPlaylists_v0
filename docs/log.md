@@ -3,6 +3,20 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:09] session — D-04 e D-05 aplicadas: o contorno laranja sai (UAT-232); a medição fica desligada e ganha uma chave no CMS
+**Branch:** main
+Respostas do MJRP pelo Control Center, com a passkey (09:08). D-04: aceita a recomendação — tirar o contorno laranja ao abrir «paste a list» e deixar as outras duas diferenças como estão. Feito: a caixa da lista colada não acende mais em laranja com o foco dentro; a linha em foco continua marcada (`public/css/views/home.css`, teste `test/components/home/HomePasteBoxFocus.test.js`, que falhou antes e passa depois). UAT-233 e UAT-234 ficam como estão, com a decisão dele escrita na linha; o fecho delas é dele. D-05, nas palavras dele: «Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS» — virou o REQ-02 da F82; a medição segue desligada.
+
+## [2026-11-21 09:09] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 006863e0abbe691f
+- Recomendações aceitas: D-06
+- D-07: (outra) Tenho conta de dev da apple
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lOSFpWUVV3MVNXOTJhbGg2VlhaaGRHUjVTMGREYVdsaE5XVmljVXh4U0dwa2FXNVZaWFZFUW5ZeU9DSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek5UYzVMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakk1Tnprc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaWVtcHVPVEV5VEdkSVMwbzFkV2RFUm1Sd2RXeEZlRlZISWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSTBaV0kxWm1FM1lqWmtOREF3TkRGalltTXlNelUzWXpVMU4yRmhObU5tWVRVeE56Rm1OREkyTkRRNE5XVmpOVEV4WVdJeU0yTmhNekZrWkRFNFlUWXhJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FUUNJQUZ0YmpYQ1JKX0c3TThyTnFPSHhwSHdVem1oZnJHSDg5M00zUy0tdEtGMEFpQXBiOWM5N2VWdTBudGhOcDBuRnc4TlVOeGJUTGppNmp3c0kyUnp1X0xKTXcifQ==
+- folhas: D-06:f389280df56ef970 D-07:3091725cd9e4f1bc
+
 ## [2026-11-21 09:08] session — F84 (o sensor visual, com o Playwright) em esboço, com a S-66; o trabalho montado espera a prioridade
 **Branch:** main
 O agente montou o sensor num worktree (Playwright 1.63.0, `test/visual/visual.config.mjs`, `sensors.visual`), mas o gancho de nomes recusou o ramo `chore/visual-sensor-setup`: o trabalho precisa de uma feature no board. A F84 nasce na `main` em esboço (via rápida; S-66; épico e versão escolhidos pelo agente). O que está montado fica sem commit no worktree até o MJRP pôr a F84 na «Priorizada». Primeira rodada do sensor, sem ajuste: 18 P0, 0 P1, 27 P2 — os 18 P0 são todos «ordem de região» na Home a 1280, que o agente atribui aos seletores da configuração e não à tela; a conferir par a par (REQ-02). Com o sensor declarado o doctor deixa de acusar o A2. Efeito colateral a avisar: a instalação dos navegadores tirou da pasta de cache o WebKit 2215, que pode ser o do Playwright 1.56.1 do MJRPpersonal.

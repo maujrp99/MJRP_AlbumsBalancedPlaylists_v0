@@ -9,6 +9,7 @@
 
 ## Implementation
 - [ ] TASK-01 a escrever depois da proposta aprovada · implements:: REQ-01 · model:: opus
+- [ ] TASK-03 a chave de ligar e desligar a medição de uso no CMS, desligada de início (a peça nasce no kit, F332 do harness) · implements:: REQ-02 · model:: sonnet
 
 ## Verification
 - [ ] TASK-02 a escrever · implements:: REQ-01 · model:: opus
