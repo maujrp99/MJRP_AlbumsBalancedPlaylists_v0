@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:23] review — reconferência visual em lote, grupo Start, navegação e casca (F48, F50, F54, F57, F59, F64, F67): fail sem P0, 4 P2
+**Branch:** wip/visual-recheck-batch-2026-11-21
+Juiz separado (Opus) olhou a tela de hoje, em produção e no servidor de desenvolvimento da `main`, a 1280 e 393, contra o design system; nenhuma dessas features teve protótipo aprovado. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`; capturas em `reports/evidence/visual-recheck-batch/2026-11-21/shell/`. Sem entrar com senha, nada gravado. Achados abertos como UAT-240 a UAT-243 (P2). O ramo começou como `claude/f45-visual-recheck-batch` (o número de uma feature do lote, para o gancho de commit) e virou `wip/…` porque a trava «o estado primeiro» pedia a F45 «Em andamento» no board, que só o MJRP move; o orquestrador mandou trocar o nome. Nada fechado: o `Done` fica para o passo de fecho.
+
 ## [2026-11-21 12:58] session — a proposta do React e dos idiomas na `main`; as oito decisões dela vão ao Control Center
 **Branch:** main
 O ramo `claude/f83-site-screens-in-react` entrou na `main` (`4a63985`) depois de a ADR-0023 ser registrada nela como proposta. As oito perguntas da proposta («Decisões do MJRP») estão no lote `reports/proposals/2026-11-21-1258-v0-react-and-languages.md`, para ele responder pelo Control Center: o ritmo, a mudança da constituição, o endereço por idioma, onde fica a escolha do idioma, o idioma sem país, a home em português, a ordem das telas e quando o português abre. O aceite da ADR-0023 não vai no lote: é um commit dele.
