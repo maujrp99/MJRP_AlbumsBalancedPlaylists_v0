@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:58] step — F83 onda 5: o mapa das telas de álbuns (TASK-22) e o tempo de redesenho de hoje; a onda não foi construída
+**Branch:** claude/f83-wave-5-albums
+O mapa (map-wave-5-albums.md): 49 arquivos e 8.569 linhas alcançados, 4.765 só desta tela; a auditoria das quatro lojas; como a tela redesenha hoje; os pontos difíceis (a janela de editar série e o seletor, a tabela de faixas partilhada com o inventário, a janela de classificar com o sortablejs); os estados a 1280 e a 393; o Apple Music como único caminho de catálogo. Medição na tela de hoje com 300 capas (grade a 1280: 48,4 ms em 25 séries de 12 e 38,3 ms em uma de 300; a 393 de 16 a 20 ms; a lista do computador não foi reconhecida pelo roteiro e não vale como teto). A onda 5 não foi construída: a decisão de dividi-la (a tela e as janelas) é do MJRP, recomendação: dividir. Sem código de produto.
+
 ## [2026-11-21 19:36] step — F83 onda 5: as lições das ondas 0 a 4 num arquivo só (wave-lessons.md)
 **Branch:** claude/f83-wave-5-albums
 Foco e teclado, o link que navega uma vez, a auditoria das lojas, a prova (Firebase bloqueado, antiga contra antiga, WebKit no build), o Apple Music em primeiro lugar, as peças partilhadas e o ritual de fechar uma onda, mais as notas que a onda 4 deixou para a onda 5. Para as ondas seguintes lerem um arquivo em vez de redescobrir.
