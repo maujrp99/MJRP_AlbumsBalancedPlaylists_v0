@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:29] session — a capa da banana marcada como feita (UAT-236)
+**Branch:** fix/f80-uat-entry-page
+A linha da capa da banana na lista de problemas do UAT passa a «fixed (42d4cad)»; faltam a reconferência visual e a publicação, com o orquestrador.
+
 ## [2026-11-21 11:29] decision — a capa da banana na frente da caixa de discos da página de entrada (UAT-236)
 **Branch:** fix/f80-uat-entry-page
 Palavras do MJRP: «pode colocar a capa inicial com a do velvet underground & nico a capa da banana?» e «mas mantenha o king crimson so nao ser a primeira». Feito: «The Velvet Underground & Nico» (1967) é o primeiro disco do lado A e o King Crimson vem logo depois; nenhum disco saiu: as capas reais passam a 15 (lado A com 8, lado B com 7; as fictícias seguem 14). «Harvest» foi para o fundo do lado A, para cada faixa continuar puxando os mesmos discos. A busca pública do iTunes achou o álbum certo: a edição de 45 anos com as 11 faixas originais (https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613); a capa vem do servidor de imagens da Apple, como as outras. A caixa em 3D cabe inteira com 15 (o teste do enquadramento roda com 14 e 15); no celular a legenda cabe na largura, mas o nome longo quebra em três linhas ao lado do botão. Antes: o conserto da caixa em diagonal com palco largo (UAT-235) ficou em `d88b0cf`.
