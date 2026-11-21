@@ -24,7 +24,7 @@ describe('the bar of the menu is centred on the page, the same in the home and i
     const home = read('public/splash.html')
 
     it('has one width, a function of the screen only, written once', () => {
-        expect(flat(shared)).toMatch(/--bar-w:min\(412px,calc\(100vw-526px\)\)/)
+        expect(flat(shared)).toMatch(/--bar-w:min\(620px,calc\(100vw-502px\)\)/)
         expect(home).not.toMatch(/--bar-w\s*:/)
         expect(app).not.toMatch(/--bar-w\s*:/)
     })
@@ -43,7 +43,12 @@ describe('the bar of the menu is centred on the page, the same in the home and i
         expect(body).toContain('left:59%')
     })
 
-    it('the home keeps «Open the app» out of the header where the page-centred bar would meet it', () => {
-        expect(flat(home)).toMatch(/@media\(max-width:1279px\)\{\.top\.acct\.btn-primary\.only-out\{display:none\}/)
+    it('the bar is the 620 px of the approved v4 and of the Transformar prototype (the owner chose «A», 2026-11-21), giving way only when the sides need the room', () => {
+        expect(flat(shared)).toContain('min(620px,')
+    })
+
+    it('the home\'s header signed out has only «Entrar»: the main button stays in the page, at every width of the computer', () => {
+        expect(home).toMatch(/\n\.top \.acct \.btn-primary\.only-out\{display:none\}/)
+        expect(flat(home)).not.toMatch(/@media\(max-width:1279px\)/)
     })
 })

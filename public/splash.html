@@ -192,7 +192,8 @@ html.paused .motion-icon .i-pause{display:none}
 :root{--top:72px;--thread:0px}
 .thread{display:none}
 .ms-desk{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:var(--bar-w);min-width:0}
-@media (max-width:1279px){.top .acct .btn-primary.only-out{display:none}}
+/* the header, signed out, has only «Entrar»: the main button stays in the middle of the page (the owner's choice «A», F88) */
+.top .acct .btn-primary.only-out{display:none}
 @media (max-width:899px){
   :root{--top:56px}
   .ms-desk{display:none}
