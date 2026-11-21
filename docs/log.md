@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 20:10] review — F83 onda 4: o juiz independente aprova a tela Start em React (sem P0, sem P1, 1 P2)
+**Branch:** integrate/staging-2026-11-21
+Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-start-visual-parity-recheck.md` e capturas em `reports/evidence/F83/wave-4/recheck/`, escritos pelo juiz (não por quem construiu) sobre o commit 9e57182, guardados como vieram, menos as capturas passo a passo das rodadas (`captures/run*/`, cerca de 70 MB), que ficam fora do git, na pasta de rascunho da sessão do orquestrador. 82 passos por rodada a 1280 e 393: HTML, foco, cursor, título, endereço e chamadas ao catálogo iguais; os pixels diferentes são ruído (re-raster zera). P2, diferença conhecida: se o arquivo da própria tela Start não baixa, a nova mostra «No connection» (e «Try again» recupera), onde a antiga abria a tela; é o custo aceito das telas carregadas sob demanda. Não visto: Apple Music de verdade (falta uma busca de artista e uma lista colada no site publicado), Safari, iPhone real.
+
 ## [2026-11-21 19:31] step — F83 onda 4: o texto em pedaços sai em um nó só, como na antiga (achado do navegador: 136 pixels na linha da dica)
 **Branch:** claude/f83-wave-4-start
 A dica, a linha do visitante, o título do painel, a linha «foi salva», o «Saving your series…», o aviso do nome e o «ready» da lista levam as palavras e os espaços num nó de texto só, como a antiga (o React os dava em nós separados e o Chromium compõe as pontas de outro jeito). Mais um teste: fechar a folha com um Undo pendente mostra a faixa (diferença de propósito).
