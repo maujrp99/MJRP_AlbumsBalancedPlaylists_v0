@@ -3,6 +3,20 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:08] session — F84 (o sensor visual, com o Playwright) em esboço, com a S-66; o trabalho montado espera a prioridade
+**Branch:** main
+O agente montou o sensor num worktree (Playwright 1.63.0, `test/visual/visual.config.mjs`, `sensors.visual`), mas o gancho de nomes recusou o ramo `chore/visual-sensor-setup`: o trabalho precisa de uma feature no board. A F84 nasce na `main` em esboço (via rápida; S-66; épico e versão escolhidos pelo agente). O que está montado fica sem commit no worktree até o MJRP pôr a F84 na «Priorizada». Primeira rodada do sensor, sem ajuste: 18 P0, 0 P1, 27 P2 — os 18 P0 são todos «ordem de região» na Home a 1280, que o agente atribui aos seletores da configuração e não à tela; a conferir par a par (REQ-02). Com o sensor declarado o doctor deixa de acusar o A2. Efeito colateral a avisar: a instalação dos navegadores tirou da pasta de cache o WebKit 2215, que pode ser o do Playwright 1.56.1 do MJRPpersonal.
+
+## [2026-11-21 09:08] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 837c03887231f8aa
+- Recomendações aceitas: D-04
+- D-05: (outra) Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2laamxNTlRCTGIxZFlWa3RJVEc1clRYcEpkbEE0VG1WdVZEaHlVbXRaVWpkNFlsQlRkV0ZETW5wUVFTSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek5URXlMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakk1TVRJc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaVlsSTNMWEJxVjBwelV6aERabGxmZEhOeGFrVXhkVGt5SWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSXlORGN6WTJNME1qTTJNRGRpWWpRNU1qTmtZemcwTXpJM01XWTNZbUUyTW1JNU0yRXdOREJoWmpGaVlqTmxNVFZqTWpCbFlXWmhNV014TjJJd01tTmtJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJQW9vbGhlVTNPWGttVWVDcWNfYmZHQU9jb2ItTUpackdKWXl1NGxEU0NIVkFpRUFsY0RTM1lBdjFsX0tjMGdKNGlXRFZ5XzN6cGRvbXF6bTRVaUZMUUp1cW5ZIn0=
+- folhas: D-04:ce84bed217e0c7cd D-05:20e14caef230cd38
+
 ## [2026-11-21 09:06] decision — F81: o idioma vem do lugar de quem acessa, e a escolha da pessoa vale acima
 **Branch:** main
 Palavras do MJRP (Control Center, com a passkey, D-03, 09:05): «De acordo com a geo location primeiro e depois a selecao do user toma precedencia». Como foi lido: primeira visita pelo país de acesso (Brasil → português do Brasil; fora → inglês); a escolha da pessoa passa a valer acima disso. Decidido pelo agente, revisável: sem saber o lugar, inglês; a escolha guardada no aparelho e, com conta, na conta. Está na spec da F81. O agente mestre registrou no harness a F332 (o kit do CMS mora no harness, S-253 de lá, commit `82c7ebfec`, em esboço): a F82 do V0 declara a dependência no plano.
