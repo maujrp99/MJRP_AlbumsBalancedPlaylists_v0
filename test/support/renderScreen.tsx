@@ -13,7 +13,7 @@
  */
 import { act, type ComponentType } from 'react'
 import { it, expect } from 'vitest'
-import { ReactView, type RouteParams, type ScreenProps } from '../../public/js/react-bridge/ReactView'
+import { ReactView, type ReactViewOptions, type RouteParams, type ScreenProps } from '../../public/js/react-bridge/ReactView'
 import { bridgeListenerCount } from '../../public/js/react-bridge/listeners'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
@@ -23,6 +23,8 @@ export interface RenderOptions {
     screen?: string
     /** What the router would hand the screen (the params of the route and `query`). */
     params?: RouteParams
+    /** What the route gives the view besides the name (`prepare`, `dispose`). */
+    view?: Omit<ReactViewOptions, 'screen'>
 }
 
 export interface RenderedScreen {
@@ -39,9 +41,9 @@ export async function renderScreen<P extends object>(Screen: ComponentType<P & S
     const app = document.createElement('div')
     app.id = 'app'
     document.body.appendChild(app)
-    const view = new ReactView(Screen, props, { screen: options.screen ?? 'coming_soon' })
+    const view = new ReactView(Screen, props, { screen: options.screen ?? 'coming_soon', ...options.view })
     await act(async () => {
-        view.render()
+        await view.render(options.params ?? {})
         view.mount(options.params ?? {})
     })
     return {

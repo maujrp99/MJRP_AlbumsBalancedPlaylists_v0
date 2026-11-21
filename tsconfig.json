@@ -23,5 +23,5 @@
             "@shared/*": ["./shared/*"]
         }
     },
-    "include": ["public/js/**/*.ts", "public/js/**/*.tsx", "test/**/*.ts", "test/**/*.tsx"]
+    "include": ["public/js/**/*.ts", "public/js/**/*.tsx", "test/**/*.ts", "test/**/*.tsx", "types/**/*.d.ts"]
 }

@@ -436,7 +436,9 @@ Nenhuma peça é redesenhada: o mesmo HTML, as mesmas classes e as mesmas folhas
 | `components/ui/Sheet.js` (a Folha) | `ui/SheetWindow.tsx` (`useSheetWindow`) | 1 | o motor fica; o conteúdo da Folha é React, por um portal |
 | `components/ui/BaseModal.js` (a janela) | `ui/ModalWindow.tsx` (`useModalWindow`) | 1 | a casca fica; corpo e rodapé são React, por dois portais |
 | `components/ui/FilterToolbar.js` e `FilterSheet.js` | **ainda a antiga**, por `react-bridge/legacy/FilterToolbar.tsx` | 5 | a tela dos álbuns, antiga, também a usa e carrega no script principal; um porte para React lá faria o script principal chamar o React |
-| `components/ui/TrackRow.js` | **ainda a antiga**, por `react-bridge/legacy/TrackRows.tsx` | 2 | a tela das playlists (onda 2) também a usa; porta-se uma vez, para `ui/`, nela |
+| `components/ui/TrackRow.js` | `ui/TrackRow.tsx` | 2 | porte único: as telas das playlists guardadas e das playlists o usam; mesmo HTML e mesmas classes (a prova é a página das duas telas), os rótulos dos selos vêm do dicionário (`ui.trackRow.*`); o invólucro `TrackRows` saiu |
+| `components/Breadcrumb.js` | `ui/Breadcrumb.tsx` | 2 | a trilha da tela das playlists; a antiga fica para as telas de séries e de inventário até elas migrarem (ondas 5 e 6) |
+| `components/playlists/RegeneratePanel.js` | **ainda a antiga**, por `react-bridge/legacy/RegeneratePanel.tsx` | 7 | o controlador da Blend também a usa; reescrita junto com a Blend |
 
 ## Arquivo
 

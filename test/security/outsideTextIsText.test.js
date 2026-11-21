@@ -9,7 +9,6 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 import { AlbumCardRenderer } from '../../public/js/components/ui/AlbumCardRenderer.js'
 import { Album } from '../../public/js/models/Album.js'
-import { TrackRow } from '../../public/js/components/ui/TrackRow.js'
 import { renderSeriesHeader } from '../../public/js/views/albums/AlbumsScopedRenderer.js'
 import { InventoryGridRenderer } from '../../public/js/views/renderers/InventoryGridRenderer.js'
 import { Router } from '../../public/js/router.js'
@@ -17,7 +16,6 @@ import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
 import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSeriesSelector.js'
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
 import { AuthNav } from '../../public/js/components/navigation/AuthNav.js'
-import { PlaylistGrid } from '../../public/js/components/playlists/PlaylistGrid.js'
 import { DiscographyRenderer } from '../../public/js/views/renderers/DiscographyRenderer.js'
 import FilterToolbar from '../../public/js/components/ui/FilterToolbar.js'
 
@@ -78,21 +76,7 @@ describe('text from outside is shown as text', () => {
         expect(host.textContent).not.toContain('&amp;')
     })
 
-    it('track row', () => {
-        const track = { id: QUOTED, title: TEXT, artist: TEXT, album: TEXT, duration: 185, rank: 2, spotifyRank: 3 }
-        draw(TrackRow.renderHTML({ track, index: 1, playlistIndex: 0, trackIndex: 0, draggable: true }))
-        expectOnlyText(host, TEXT)
-
-        draw(TrackRow.renderHTML({ track: { ...track, title: AMPERSAND }, index: 1 }))
-        expect(host.textContent).toContain(AMPERSAND)
-        expect(host.textContent).not.toContain('&amp;')
-    })
-
-    it('playlist card: the playlist name', () => {
-        draw(PlaylistGrid.renderCard({ playlist: { name: TEXT, tracks: [{ title: TEXT, artist: TEXT, duration: 60 }] }, index: 0, editable: true }))
-        expectOnlyText(host, TEXT)
-        expect(host.querySelector('.playlist-name').textContent).toBe(TEXT)
-    })
+    // the track row and the card of a playlist are React (F83 wave 2): test/screens/playlists/outsideText.test.tsx
 
     it('series header: the name and the id on the buttons', () => {
         draw(renderSeriesHeader({ id: QUOTED, name: TEXT }, 3))

@@ -1,0 +1,46 @@
+# F83 wave 2 - the weight budget, build without the publishable keys (sizes are the same: the keys are strings), gzip level 6
+# BEFORE = e719b9a (the parent of the wave's code commit: the hand-made playlists screen in the main script); AFTER = the wave's code
+
+## BEFORE
+main script   main-BctKyN--.js                               302292 B   (ceiling 302542 B)
+react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
+file          InventoryEditModal-51i_qV4-.js                   1188 B   (ceiling 30000 B)
+file          SpotifyConnectButton-nw97iSQI.js                 1069 B   (ceiling 30000 B)
+file          SpotifyExportModal-CYAKuyrB.js                   5046 B   (ceiling 30000 B)
+file          crate3d-C6EbChIP.js                              2178 B   (ceiling 30000 B)
+file          exportOutcome-DbgW7yUg.js                         325 B   (ceiling 30000 B)
+file          index-BMl1ddME.js                                 710 B   (ceiling 30000 B)
+file          index-DSzMN37Y.js                               10845 B   (ceiling 30000 B)
+file          index-XWLv9YsO.js                                2604 B   (ceiling 30000 B)
+file (listed) posthogAdapter-zbCZhxi6.js                     129204 B
+file          preload-helper-BxaVoaJg.js                        901 B   (ceiling 30000 B)
+file          search.worker-saFDN5Ff.js                        4632 B   (ceiling 30000 B)
+file          splash-C9Z_K8lX.js                               9913 B   (ceiling 30000 B)
+file          useLocale-BzUWhFca.js                            2659 B   (ceiling 30000 B)
+stylesheet    main-Cufjooey.css                               29013 B
+after 1st     React + screens, downloaded after the first screen   100848 B
+1st screen    main script + the biggest screen               313137 B   (ceiling 332542 B)
+bundle-budget: inside the budget
+
+## AFTER
+main script   main-OB0z3GmT.js                               290606 B   (ceiling 302542 B)
+react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
+file          InventoryEditModal-CYYJJlz0.js                   1190 B   (ceiling 30000 B)
+file          PlaylistsExport-CIe9vXeN.js                      2669 B   (ceiling 30000 B)
+file          SpotifyConnectButton-DAhGBfSl.js                 1069 B   (ceiling 30000 B)
+file          SpotifyExportModal-BXjyIfds.js                   5046 B   (ceiling 30000 B)
+file          crate3d-C6EbChIP.js                              2178 B   (ceiling 30000 B)
+file          exportOutcome-DbgW7yUg.js                         325 B   (ceiling 30000 B)
+file          index-Be8cyFMd.js                               11259 B   (ceiling 30000 B)
+file          index-C_9Z96jD.js                                9084 B   (ceiling 30000 B)
+file          index-DHfdjian.js                                 710 B   (ceiling 30000 B)
+file          listText-BQO5Ymr_.js                             3553 B   (ceiling 30000 B)
+file (listed) posthogAdapter-zbCZhxi6.js                     129204 B
+file          preload-helper-BxaVoaJg.js                        901 B   (ceiling 30000 B)
+file          search.worker-saFDN5Ff.js                        4632 B   (ceiling 30000 B)
+file          splash-C9Z_K8lX.js                               9913 B   (ceiling 30000 B)
+file          useLocale-DpzmSkDA.js                            3742 B   (ceiling 30000 B)
+stylesheet    main-Cufjooey.css                               29013 B
+after 1st     React + screens, downloaded after the first screen   115049 B
+1st screen    main script + the biggest screen               301865 B   (ceiling 332542 B)
+bundle-budget: inside the budget

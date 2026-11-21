@@ -49,7 +49,7 @@ const PUT_TOGETHER_AT_RUN_TIME = {
     // ids of elements, not classes
     'components/ui/FilterToolbar.js': ['filter-${group.id}', 'this.container.querySelector(`#filter-${group.id}`);'],
     // a class of the app's own, with its rules written in a <style> beside it
-    'components/playlists/PlaylistGrid.js': ['.custom-scrollbar-${index}::-webkit-scrollbar', '.custom-scrollbar-${index}::-webkit-scrollbar-track', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb:hover', 'custom-scrollbar-${index}']
+    'screens/playlists/PlaylistCards.tsx': ['.custom-scrollbar-${index}::-webkit-scrollbar', '.custom-scrollbar-${index}::-webkit-scrollbar-track', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb:hover', 'custom-scrollbar-${index}']
 }
 
 const GLUED = /[^\s"'<>]*(?:[a-z0-9\]]-\$\{|\$\{[^}]*\}-[a-z0-9[]|\}\/\d|[a-z]-['"]\s*\+|\+\s*['"][-/][a-z0-9])[^\s"'<>]*/g

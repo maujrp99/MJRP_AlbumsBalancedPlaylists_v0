@@ -3,21 +3,61 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:26] step — F83 onda 2: o ponto de partida do Tab volta ao começo da tela depois de uma ação (conferido no navegador contra a tela antiga)
+**Branch:** claude/f83-wave-2-playlists-edit
+No navegador (1280 e 393, a tela antiga em 5011 e a nova em 5012): migalhas com Cancelar, 1 pergunta e 1 navegação nas duas; depois de remover pelo X com Enter e de desfazer com Enter, o foco é a página e o próximo Tab vai ao «Start» das migalhas nas duas; no celular, depois de mover e de remover pela folha, o foco é a página nas duas. Para o X, o `blur` sozinho deixava o Tab recomeçar no controle; `useFocusLikeAfterAnewDraw` agora põe o foco na tela e solta, que é de onde o Tab recomeça. Servidores parados.
+
+## [2026-11-21 17:21] step — F83 onda 2: as migalhas navegam uma vez só; o foco depois de cada desenho volta à página num lugar só (achados do juiz: 1 P1, 2 P2)
+**Branch:** claude/f83-wave-2-playlists-edit
+P1: `ui/Breadcrumb.tsx` para a propagação do clique, então só `navigate` do ponte move (antes o ouvinte de links do roteador movia de novo e o guarda de sair perguntava duas vezes ao cancelar); a única tela que usa a migalha é a das playlists (a dos salvos não usa). P2 (celular e computador): `useFocusLikeAfterAnewDraw` em `Playlists.tsx` solta o foco de um controle (não de campo, folha ou janela) depois de cada desenho e põe o ponto de partida do Tab no começo da tela, como a tela antiga que se desenhava de novo; o `blur` só da remoção em `PlaylistCards.tsx` saiu. Testes vermelhos sem as correções (3 falhas) em `test/ui/Breadcrumb.test.tsx` e `Playlists.sameAsBefore.test.tsx`.
+
+## [2026-11-21 17:16] review — F83 onda 2: a reconferência visual independente da tela das playlists em React (relatório do juiz, copiado sem mudança)
+**Branch:** claude/f83-wave-2-playlists-edit
+O juiz escreveu o relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-playlists-visual-parity-recheck.md` e as capturas em `reports/evidence/F83/wave-2/recheck/`; copiados aqui sem mudança. Veredito dele: não passa, 0 P0, 1 P1 (as migalhas perguntam duas vezes ao cancelar), 2 P2 (o foco depois de uma ação, no celular e no computador); o resto igual à antiga e o ruído de pixels se sustenta.
+
+## [2026-11-21 16:42] step — F83 onda 2: o placar de pixels com os controles; o foco que ficava no X da faixa seguinte devolvido à página
+**Branch:** claude/f83-wave-2-playlists-edit
+Controles novos em `reports/evidence/F83/wave-2/pixel-noise-wave-2.md`: antiga contra antiga com transições desligadas (0 px nos dois tamanhos), nova contra antiga com o mouse fora da página (o mouse não é a causa). O controle achou uma diferença real: ao remover uma faixa, o botão X ficava com o foco na faixa seguinte (linhas por posição), e a tela antiga, que desenhava de novo, devolvia o foco à página (462 px com o mouse fora); `PlaylistCards.tsx` solta o foco antes de remover, com teste vermelho sem a correção. O resto (até 176 px depois de desfazer e refazer, 2 a 28 px com transições desligadas) é a rasterização do Chrome em nós mantidos: mesmo DOM, mesmos estilos e caixas, e 0 px depois de forçar um novo desenho de `#app`.
+
+## [2026-11-21 16:30] step — F83 onda 2: dois comportamentos da tela antiga devolvidos (o nome do lote apagado volta ao padrão; o «Última atualização» do rodapé segue a loja de álbuns)
+**Branch:** claude/f83-wave-2-playlists-edit
+O nome do lote apagado à mão volta ao nome padrão no próximo redesenho (o estado digitado zera quando a loja de playlists avisa; digitar não avisa, então o cursor fica) e o rodapé redesenha quando a loja de álbuns avisa (`useStore(albumsStore)`); `Subscribable` em `react-bridge/useStore.ts` passou a devolver `unknown` do `subscribe` (só o tipo; a trava de `test/architecture` não o usa). Cenários dourados novos em `test/support/playlistsScenarios.js` e na fixture. O teste vermelho e a correção vão num commit só: o agente anterior já tinha mostrado o vermelho (2 falhas sem a correção; `test/screens/playlists` 83 de 83 e `test/architecture` 43 arquivos verdes com ela).
+
 ## [2026-11-21 16:24] step — F87: o servidor passa a aceitar os canais de prévia do próprio site (UAT-261)
 **Branch:** fix/f87-server-accepts-the-preview-address
 Medido hoje: o `Origin` da prévia (`...--staging-2nu8kutx.web.app`) dava 500 no servidor de produção. Função pura `isOriginAllowed` em `server/lib/corsOrigin.js` (lista de `ALLOWED_ORIGIN`, sem `Origin`, ou `https://<site>--<canal>-<hash>.web.app` ancorado nas duas pontas, site vindo da primeira origem da lista); testes em `test/server/corsOrigin.test.js`; arch, spec e tasks da F87 em dia; issue UAT-261. Servidor não publicado: vale só depois de `npm run deploy:server`.
+
+## [2026-11-21 16:18] step — F83 onda 2: o arrastar medido, a prova no navegador, o peso, o placar e os documentos
+**Branch:** claude/f83-wave-2-playlists-edit
+Relatório do arrastar (`reports/audits/2026-11-21-mjrpalbumblender-v0-f83-wave-2-drag-and-drop.md`; decidido pelo agente — revisável): fica o `sortablejs` atrás da ponte; no Chromium, com o mouse (dentro de uma playlist, entre playlists, para a vazia) e com toque emulado pela alça (393), a ordem das faixas é a da tela antiga e a página mostra a ordem da loja; um dedo fora da alça não pega a linha. `reports/evidence/F83/wave-2/`: 82 conferências, 70 passaram; o `#app` e o que abre sobre a página são iguais em todos os passos, e as 12 que não passaram são capturas de tela de 2 a 173 pixels (a de 173 some com as transições desligadas). Peso: script principal 302.292 → 290.606 B sem as chaves; teto `main` de 302.542 para 290.750 B. Placar: telas à mão 94 → 83 arquivos, 16.389 → 14.750 linhas; 3 invólucros em `react-bridge/legacy/` usados por 4 arquivos. `tasks.md` (TASK-14, 16; 30 a 32 anotadas), mapa, `design-system.md` e `behavior.md` atualizados. Ficam para o coordenador: TASK-17 e a reconferência visual por quem não construiu.
 
 ## [2026-11-21 16:14] step — F88: os requisitos 3 e 6 seguem a decisão «A)» do MJRP (código de hoje primeiro; produção junto com a home)
 **Branch:** main
 A spec da F88 ainda pedia React e «nada chega à produção antes do fim da migração»; o MJRP decidiu hoje o contrário («A)», entrada das 16h deste log). REQ-03 e REQ-06 reescritos; o resto da spec não muda.
 
+## [2026-11-21 16:02] step — F83 onda 2: a tela das playlists em React, a linha de faixa portada uma vez, a tela antiga apagada
+**Branch:** claude/f83-wave-2-playlists-edit
+`screens/playlists/` (a tela, os cartões, as peças do celular, o guarda de sair, a rota carregada sob demanda para `/playlists` e `/playlists/edit`), `ui/TrackRow.tsx` e `ui/Breadcrumb.tsx`, a ponte do `sortablejs` (`react-bridge/sortableTracks.ts`), os invólucros do painel de gerar de novo e das janelas de saída em `react-bridge/legacy/`; o invólucro `TrackRows` e dois usos de ponte saíram. Apagados no mesmo commit: `views/PlaylistsView.js`, 4 arquivos de `views/playlists/`, 5 de `components/playlists/`, `components/ui/TrackRow.js` e os testes deles (levados para `test/screens/playlists`, `test/ui`, `test/components/playlists`). A prova de HTML igual: 13 cenários contra `test/fixtures/playlistsBeforeF83.json`, todos iguais, e um teste que prova que ela acusa uma palavra e uma classe trocadas. `ReactView` ganhou `prepare` e `dispose` (o roteador espera a leitura do lote guardado, como esperava o `render` antigo). Desvios pequenos: o campo do nome vazio (apagado à mão) continua vazio até o próximo nome, em vez de voltar ao nome padrão no desenho seguinte; o rodapé «Last updated» não se atualiza mais quando a loja de álbuns avisa (a tela não lia nada dela). Falta: o navegador (arrastar com mouse e toque), o relatório do arrastar, o peso, o placar, as tarefas.
+
 ## [2026-11-21 15:47] review — F83 onda 1: o juiz independente aprova a tela de playlists salvas em React (sem P0, sem P1, 1 P2)
 **Branch:** integrate/staging-2026-11-21
 Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-saved-playlists-visual-parity-recheck.md` e capturas em `reports/evidence/F83/wave-1/recheck/`, escritos pelo juiz (não por quem construiu) sobre o commit 4582756, guardados como vieram. 31 estados iguais ao pixel contra a tela antiga; os 19 pixels do construtor são ruído da própria produção. P2: a prova do construtor deve comparar a produção consigo mesma.
 
+## [2026-11-21 15:46] step — F83 onda 2: o retrato das páginas da tela antiga das playlists (a prova de HTML igual)
+**Branch:** claude/f83-wave-2-playlists-edit
+Escrito antes de qualquer código da tela nova: `test/support/playlistsScenarios.js` (13 cenários: vazio, lote não achado, gerada pela Blend, nome digitado, painel de gerar aberto, faixa movida, removida, playlist apagada, desfazer e refazer, título digitado, gerando, salvando, lote guardado em edição, os três exportar; no celular: os chips, as folhas, o aviso de desfazer, virar computador) e o retrato `test/fixtures/playlistsBeforeF83.json` (44 páginas), tirado da `PlaylistsView` à mão por `reports/evidence/F83/wave-2/capture-before.test.js`. O serviço das playlists é um substituto que guarda o histórico (o que se testa é a tela lendo a loja). A janela do Spotify e os exportar são conferidos pelo que a tela pede, não pelo conteúdo deles.
+
+## [2026-11-21 15:43] step — F83 onda 2: a resposta sobre as listas do serviço de playlists
+**Branch:** claude/f83-wave-2-playlists-edit
+Conferido em `services/PlaylistsService.js`: as edições (mover, reordenar, remover faixa, remover e renomear playlist, desfazer, refazer) **trocam** a lista por uma nova; só `applyBatchName` escreve dentro das playlists que estão na loja. A tela nova lê a lista a cada desenho, sem `useMemo` nem `React.memo`, e usa a posição como chave da linha. Escrito no mapa da onda 2.
+
 ## [2026-11-21 15:41] decision — o MJRP: o menu novo do topo é construído no código de hoje, para a home ir a produção logo (F88, F80)
 **Branch:** main
 Palavras do MJRP (2026-11-21): «Como ficou o menu não seria revisto primeiro, pra podermos mover a f80 pra pros?»; à pergunta «Menu novo no código de hoje, para a home ir a produção logo (a), ou só em React, no fim da migração (b)?», «A)». Como foi entendido (orquestrador, revisável): depois de ele aprovar o protótipo do menu (F88), o menu é construído no código de hoje (sem React) e vai a produção junto com a home nova (F80) e os avisos de falha, com o «publica» dele; o menu é refeito em React na onda da moldura da F83. A migração segue na linha `integrate/staging-2026-11-21` e só vai a produção completa.
+
+## [2026-11-21 15:40] step — F83 TASK-15: o mapa das telas das playlists (onda 2); a tela ainda não foi construída
+**Branch:** claude/f83-wave-2-playlists-edit
+Ramo empilhado sobre o da onda 1. `docs/specs/features/F83-site-screens-in-react/map-wave-2-playlists.md`: os pedaços (~2.600 linhas), o que a tela lê e a auditoria dos `set` de `playlistsStore` (todos avisam, menos `setBatchName`, de propósito), os estados a conferir a 1280 e a 393, e a decisão do arrastar (decidido pelo agente — revisável: manter o `sortablejs` atrás de uma ponte que devolve o nó ao React antes de pedir o `moveTrack`; o `@dnd-kit` muda o comportamento e iria ao MJRP antes). Achados: o `RegeneratePanel` também é do `BlendingController` (fica o antigo atrás de invólucro até a onda 7), a `TrackRow` é portada uma vez para `ui/` (o invólucro da onda 1 sai da lista), a tela tem migalhas (a das playlists guardadas não tinha). Não foram feitos: a medição do arrastar (TASK-14, pede navegador com toque) nem a tela (TASK-16). Nenhum código de produto mudou.
 
 ## [2026-11-21 15:38] decision — F83 onda 1: a barra de filtros e a linha de faixa ficam as antigas atrás de invólucros (decidido pelo agente — revisável)
 **Branch:** claude/f83-wave-1-saved-playlists

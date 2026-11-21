@@ -10,7 +10,7 @@
 import { useState } from 'react'
 import { AlbumCascade } from '../../ui/AlbumCascade'
 import { Icon } from '../../ui/Icon'
-import { TrackRows } from '../../react-bridge/legacy/TrackRows'
+import { TrackRow } from '../../ui/TrackRow'
 import { batchTotals, formatMinutes, toMillis } from '../../models/savedPlaylists.js'
 import { t } from '../../i18n/t.js'
 import type { Batch, Handlers, SavedPlaylist } from './types'
@@ -65,14 +65,10 @@ function PlaylistRow({ playlist, seriesId, index, onOpen }: {
                     </button>
                 </div>
             </div>
-            <TrackRows
-                tracks={touched ? tracks : []}
-                kind="detailed"
-                className={`playlist-tracks-list bg-black/30 pl-16 pr-4 py-2${open ? '' : ' hidden'}`}
-                filled={touched}
-            >
-                {touched ? <div className="text-sm text-muted italic py-2">{t('savedPlaylists.playlist.noTracks')}</div> : null}
-            </TrackRows>
+            <div className={`playlist-tracks-list bg-black/30 pl-16 pr-4 py-2${open ? '' : ' hidden'}`} data-filled={touched ? 'true' : undefined}>
+                {touched && tracks.length === 0 ? <div className="text-sm text-muted italic py-2">{t('savedPlaylists.playlist.noTracks')}</div> : null}
+                {touched ? tracks.map((track, i) => <TrackRow key={i} track={track} index={i + 1} variant="detailed" playlistIndex={-1} trackIndex={i} />) : null}
+            </div>
         </div>
     )
 }

@@ -1,4 +1,10 @@
 /**
+ * (2026-11-21, wave 2: the playlists screen went to React, and these left the list in the commit that deleted them: views/PlaylistsView.js,
+ * views/playlists/{index,phonePlaylistActions,playlistEditActions,unsavedChangesGuard}.js and, in components, playlists/{PhonePlaylists,
+ * PhoneUndoNotice,PlaylistGrid,PlaylistsDragHandler,PlaylistsGridRenderer}.js and ui/TrackRow.js. Left in the list, with their reasons:
+ * playlists/RegeneratePanel.js (the Blend controller uses it: wave 7), views/playlists/PlaylistsExport.js (the exports, ported on their own),
+ * SpotifyExportModal.js, Breadcrumb.js (the screens of waves 5 and 6 still draw their own).)
+ *
  * (2026-11-21, wave 1: the saved playlists screen went to React, and these left the list in the commit that deleted them:
  * views/SavedPlaylistsView.js and, in components/playlists, SavedSeriesGroup, SavedPlaylistCard, SavedPlaylistRow,
  * SavedPlaylistActions, SavedPlaylistsPhone, PlaylistDetailsModal and batchNames; the controller moved to controllers/.)
@@ -54,11 +60,6 @@ export const HAND_MADE = {
     'components/navigation/phoneTabs.js': 67,
     'components/navigation/signInFromLink.js': 30,
     'components/navigation/startRoute.js': 62,
-    'components/playlists/PhonePlaylists.js': 187,
-    'components/playlists/PhoneUndoNotice.js': 45,
-    'components/playlists/PlaylistGrid.js': 187,
-    'components/playlists/PlaylistsDragHandler.js': 85,
-    'components/playlists/PlaylistsGridRenderer.js': 183,
     'components/playlists/RegeneratePanel.js': 182,
     'components/ranking/TracksRankingComparison.js': 207,
     'components/ranking/TracksTable.js': 314,
@@ -81,7 +82,6 @@ export const HAND_MADE = {
     'components/ui/LoadMoreButton.js': 26,
     'components/ui/Pager.js': 250,
     'components/ui/Sheet.js': 173,
-    'components/ui/TrackRow.js': 247,
     'components/ui/coverImage.js': 67,
     'components/ui/modals/ConfirmModal.js': 67,
     'components/ui/modals/InputModal.js': 113,
@@ -96,7 +96,6 @@ export const HAND_MADE = {
     'views/HomeView.js': 319,
     'views/InventoryPhoneSheets.js': 226,
     'views/InventoryView.js': 693,
-    'views/PlaylistsView.js': 383,
     'views/SeriesView.js': 254,
     'views/albums/AlbumsGridRenderer.js': 129,
     'views/albums/AlbumsScopedRenderer.js': 233,
@@ -104,10 +103,6 @@ export const HAND_MADE = {
     'views/helpers/SeriesModalsManager.js': 70,
     'views/helpers/SeriesViewUpdater.js': 180,
     'views/playlists/PlaylistsExport.js': 116,
-    'views/playlists/index.js': 11,
-    'views/playlists/phonePlaylistActions.js': 206,
-    'views/playlists/playlistEditActions.js': 81,
-    'views/playlists/unsavedChangesGuard.js': 39,
     'views/renderers/DiscographyRenderer.js': 111,
     'views/renderers/InventoryCardValue.js': 122,
     'views/renderers/InventoryGridRenderer.js': 212,
