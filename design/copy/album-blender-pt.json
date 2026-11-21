@@ -1,0 +1,6638 @@
+[
+ {
+  "id": "home.mjrp-the-album-blender-playlist",
+  "pt": "MJRP The Album Blender - Gerador de Playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "idx.loading",
+  "pt": "Carregando...",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.abstract-base-class-do-not",
+  "pt": "Abstract base class - do not use directly",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "misc.unknown-album",
+  "pt": "Álbum desconhecido",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.unknown-artist",
+  "pt": "Artista desconhecido",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.orphan-tracks",
+  "pt": "Faixas órfãs",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.trimmed-due-to-duration-limits",
+  "pt": "Cortado pelos limites de duração",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.trimmed-to-orphan-tracks",
+  "pt": "Cortado para Faixas órfãs",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.swap-moved-to-n",
+  "pt": "Troca: movida para {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o destino (playlist); «movida» concorda com faixa"
+ },
+ {
+  "id": "alg.mjrp-z-s-balanced-playlists",
+  "pt": "[MJRP] Playlists equilibradas do Zé",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.builds-balanced-playlists-by-blending",
+  "pt": "Monta playlists equilibradas misturando as melhores faixas de cada álbum. Playlists curtas são unidas automaticamente.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.mjrp-z-s-full-balanced",
+  "pt": "MJRP Playlists equilibradas completas do Zé",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.mjrp-balanced-cascade-curation",
+  "pt": "Curadoria MJRP Cascata Equilibrada",
+  "mark": "MJRP decide",
+  "why": "Nome de receita: traduzir «Balanced Cascade» ou manter em inglês."
+ },
+ {
+  "id": "alg.greatest-hit-1",
+  "pt": "Maior sucesso #1",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.greatest-hit-2",
+  "pt": "Maior sucesso #2",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.greatest-hits",
+  "pt": "Maiores sucessos",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.rank-1-and-2-from",
+  "pt": "Ranking #1 e #2 de cada álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.greatest-hits-vol-1",
+  "pt": "Maiores sucessos Vol. 1",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.rank-1-from-each-album",
+  "pt": "Ranking #1 de cada álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.greatest-hits-vol-2",
+  "pt": "Maiores sucessos Vol. 2",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.rank-2-from-each-album",
+  "pt": "Ranking #2 de cada álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.deep-cuts-vol-n",
+  "pt": "Deep Cuts Vol. {}",
+  "mark": "fica + montado",
+  "why": "{} é o número do volume"
+ },
+ {
+  "id": "alg.mjrp-balanced-cascade",
+  "pt": "MJRP Cascata Equilibrada",
+  "mark": "MJRP decide",
+  "why": "Nome de receita: traduzir «Balanced Cascade» ou manter em inglês."
+ },
+ {
+  "id": "alg.serpentine-odd-dcn",
+  "pt": "Serpentina ímpar: DC{}",
+  "mark": "traduzir + montado",
+  "why": "{} é o número do Deep Cuts; DC mantido como sigla"
+ },
+ {
+  "id": "alg.serpentine-even-dcn",
+  "pt": "Serpentina par: DC{}",
+  "mark": "traduzir + montado",
+  "why": "{} é o número do Deep Cuts; DC mantido como sigla"
+ },
+ {
+  "id": "alg.cascade-n-dcn",
+  "pt": "Cascata #{}: DC{}",
+  "mark": "traduzir + montado",
+  "why": "{} números da cascata e do Deep Cuts"
+ },
+ {
+  "id": "alg.merged-from-n",
+  "pt": "Mesclado de {}",
+  "mark": "traduzir + montado",
+  "why": "{} é a origem (playlists); gênero masculino fixo"
+ },
+ {
+  "id": "alg.deep-cuts-vol-n-n",
+  "pt": "Deep Cuts Vol. {}-{}",
+  "mark": "fica + montado",
+  "why": "{} números dos volumes (faixa de volumes)"
+ },
+ {
+  "id": "alg.deep-cuts",
+  "pt": "Deep Cuts",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "alg.vol-n",
+  "pt": "Vol. {}-",
+  "mark": "fica + montado",
+  "why": "{} número do volume; hífen final como no original"
+ },
+ {
+  "id": "alg.top-acclaimed-tracks-on-besteveralbums",
+  "pt": "Top faixas aclamadas no BestEverAlbums",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.pick-the-critically-acclaimed-tracks",
+  "pt": "Escolha as faixas mais aclamadas pela crítica, com base no BestEverAlbums.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.bea-top-nn",
+  "pt": "BEA Top {}{}",
+  "mark": "fica + montado",
+  "why": "as duas {} são número e sufixo; verificar se o sufixo do EN (plural) precisa de tratamento"
+ },
+ {
+  "id": "alg.top-n-algorithm",
+  "pt": "Algoritmo Top N",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.base-class-for-top-n",
+  "pt": "Base class for Top N selection - do not use directly",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "alg.top-n-selection",
+  "pt": "Seleção Top {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o N"
+ },
+ {
+  "id": "alg.top-n-of-n",
+  "pt": "Top {} de {}",
+  "mark": "traduzir + montado",
+  "why": "{} N e total"
+ },
+ {
+  "id": "alg.top-n-from-each-album",
+  "pt": "Top {} de cada álbum",
+  "mark": "traduzir + montado",
+  "why": "{} é o N"
+ },
+ {
+  "id": "alg.n-vol-n",
+  "pt": "{} Vol. {}",
+  "mark": "fica + montado",
+  "why": "{} nome da receita e número do volume"
+ },
+ {
+  "id": "nav.by-album",
+  "pt": "Por álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.by-rank",
+  "pt": "Por ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.by-artist",
+  "pt": "Por artista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.bal-intv",
+  "pt": "Interc. equil.",
+  "mark": "MJRP decide",
+  "why": "Abreviação de «Balanced Interleave»; escolher sigla curta em pt."
+ },
+ {
+  "id": "alg.top-nn",
+  "pt": "Top {}{}",
+  "mark": "fica + montado",
+  "why": "{} número e sufixo"
+ },
+ {
+  "id": "alg.top-tracks-by-spotify-popularity",
+  "pt": "Top faixas por popularidade no Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.pick-your-favorite-tracks-based",
+  "pt": "Escolha suas faixas favoritas, com base na popularidade no Spotify.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.spfy-top-nn",
+  "pt": "SPFY Top {}{}",
+  "mark": "fica + montado",
+  "why": "{} número e sufixo"
+ },
+ {
+  "id": "alg.top-tracks-by-my-own",
+  "pt": "Top faixas pelo meu próprio ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.create-playlists-from-your-personal",
+  "pt": "Crie playlists a partir dos seus rankings pessoais de faixas.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "alg.ugr-top-nn",
+  "pt": "UGR Top {}{}",
+  "mark": "fica + montado",
+  "why": "sigla UGR mantida; {} número e sufixo"
+ },
+ {
+  "id": "misc.post-n",
+  "pt": "POST {}",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "misc.n-answered-http-n-n",
+  "pt": "{} answered HTTP {} ({})",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "nav.authentication-issue-some-features-may",
+  "pt": "Problema de autenticação. Alguns recursos podem ficar limitados.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.connected-to-spotify",
+  "pt": "Conectado ao Spotify!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.failed-to-connect-to-spotify",
+  "pt": "Não foi possível conectar ao Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.type-an-artist-name-first",
+  "pt": "Digite primeiro o nome de um artista.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.enter-artist-name-e-g",
+  "pt": "Digite o nome do artista (ex.: Pink Floyd, T-Rex)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.artist-name",
+  "pt": "Nome do artista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.enter",
+  "pt": "Entrar",
+  "mark": "MJRP decide",
+  "why": "Colide com «Sign in» (Entrar); decidir se a página de entrada usa «Entrar» ou «Começar»."
+ },
+ {
+  "id": "ser.search",
+  "pt": "Buscar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.try-again",
+  "pt": "Tente de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.component-requires-a-container-element",
+  "pt": "Component requires a container element.",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "blend.one-playlist-with-all-tracks",
+  "pt": "Uma playlist com todas as faixas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.single-playlist",
+  "pt": "Playlist única",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.multiple-playlists",
+  "pt": "Várias playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.split-by-duration-limits",
+  "pt": "Dividida pelos limites de duração",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.auto",
+  "pt": "Auto",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "blend.one-playlist-split-when-over",
+  "pt": "Uma playlist, dividida quando passa da meta",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.based-on-play-counts",
+  "pt": "Com base no número de reproduções",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.spotify-popularity",
+  "pt": "Popularidade no Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.based-on-bea-rankings",
+  "pt": "Com base nos rankings do BEA",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.critics-choice",
+  "pt": "Escolha da crítica",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.acclaim-first-popularity-where-unrated",
+  "pt": "Aclamação primeiro, popularidade onde não há nota",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.combined",
+  "pt": "Combinado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.keep-album-sequence",
+  "pt": "Mantém a sequência do álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.by-ranking",
+  "pt": "Por ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.every-1-then-every-2",
+  "pt": "Todos os #1, depois todos os #2...",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.by-artist-then-by-rank",
+  "pt": "Por artista e depois por ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.cluster-by-artist",
+  "pt": "Agrupa por artista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.balanced-interleave",
+  "pt": "Intercalação equilibrada",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.round-robin-by-rank",
+  "pt": "Rodízio por ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.surprise-me",
+  "pt": "Surpreenda-me",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.nchoose-your-top",
+  "pt": "{}Escolha seu Top #",
+  "mark": "traduzir + montado",
+  "why": "{} vem colado antes (número do passo ou ícone); manter a ordem"
+ },
+ {
+  "id": "blend.select-how-many-top-tracks",
+  "pt": "Escolha quantas faixas do topo pegar de cada álbum.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.top-n",
+  "pt": "Top {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o N"
+ },
+ {
+  "id": "blend.ntarget-duration-minutes",
+  "pt": "{}Duração desejada (minutos)",
+  "mark": "traduzir + montado",
+  "why": "{} vem colado antes (número do passo ou ícone)"
+ },
+ {
+  "id": "blend.how-long-should-each-volume",
+  "pt": "Qual deve ser a duração de cada volume?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.nplaylist-structure",
+  "pt": "{}Estrutura da playlist",
+  "mark": "traduzir + montado",
+  "why": "{} vem colado antes (número do passo ou ícone)"
+ },
+ {
+  "id": "blend.nranking-source",
+  "pt": "{}Fonte do ranking",
+  "mark": "traduzir + montado",
+  "why": "{} vem colado antes (número do passo ou ícone)"
+ },
+ {
+  "id": "blend.ngrouping-tracks",
+  "pt": "{}Agrupamento das faixas",
+  "mark": "traduzir + montado",
+  "why": "{} vem colado antes (número do passo ou ícone)"
+ },
+ {
+  "id": "blend.top-3",
+  "pt": "TOP 3",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "blend.top-5",
+  "pt": "TOP 5",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "blend.recommended",
+  "pt": "★ RECOMENDADO",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.untitled-series",
+  "pt": "Série sem título",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.choose-a-series",
+  "pt": "Escolha uma série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.change",
+  "pt": "Alterar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.choose",
+  "pt": "Escolher",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.loading-your-series",
+  "pt": "Carregando suas séries…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.no-series-yet-create-one",
+  "pt": "Nenhuma série ainda: crie uma em Início",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.search-series",
+  "pt": "Buscar séries",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.no-series-with-that-name",
+  "pt": "Nenhuma série com esse nome.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.albums",
+  "pt": "Álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.artists",
+  "pt": "Artistas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.genres",
+  "pt": "Gêneros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.tracks",
+  "pt": "Faixas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.coming-soon",
+  "pt": "(Em breve)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.no-series-found-for-this",
+  "pt": "Nenhuma série encontrada para este tipo de item",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.blend-your-music-by",
+  "pt": "Faça o Blend da sua música por",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.select-series",
+  "pt": "Selecione a série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.series",
+  "pt": "Séries",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.n-albumn",
+  "pt": "{} álbum{}",
+  "mark": "montado + traduzir",
+  "why": "plural: 1 álbum / n álbuns; o sufixo «s» do EN não serve em pt (álbum→álbuns), o código deve escolher a forma"
+ },
+ {
+  "id": "misc.breadcrumb",
+  "pt": "Trilha de navegação",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.saved-playlists",
+  "pt": "Playlists salvas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.edit-batch",
+  "pt": "Editar lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.playlists",
+  "pt": "Playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.album-cover",
+  "pt": "Capa do álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.cache-cleared",
+  "pt": "Cache limpo!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.could-not-clear-the-cache",
+  "pt": "Não foi possível limpar o cache",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.this-application-uses-discogs-api",
+  "pt": "Este aplicativo usa a API do Discogs, mas não é afiliado, patrocinado nem endossado pelo Discogs. 'Discogs' é uma marca registrada da Zink Media, LLC.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.clear-cache",
+  "pt": "Limpar cache",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.home",
+  "pt": "Início",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.last-updated-n",
+  "pt": "Última atualização: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é uma data/hora"
+ },
+ {
+  "id": "nav.mjrp-software",
+  "pt": "MJRP Software",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "nav.powered-by",
+  "pt": "Com tecnologia de",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.next-the-blend-turns-the",
+  "pt": "Em seguida: o Blend transforma a série em playlists.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.the-order-counts-the-blend",
+  "pt": "A ordem importa: o Blend lê os álbuns nesta ordem ao distribuir as faixas pelas playlists. Use ↑ ↓ para mudar.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.you-re-not-signed-in",
+  "pt": "Você não entrou: a série fica salva só neste navegador.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.added-n",
+  "pt": "Adicionado: {}.",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do álbum; escrito para evitar concordância de gênero"
+ },
+ {
+  "id": "home.removed-n",
+  "pt": "Removido: «{}».",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do álbum; escrito para evitar concordância de gênero"
+ },
+ {
+  "id": "ent.sign-in",
+  "pt": "Entrar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.your-series",
+  "pt": "Sua série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.find-it-any-time-in",
+  "pt": "encontre quando quiser em Séries musicais",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.n-is-saved",
+  "pt": "«{}» está salva",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome da série; «salva» concorda com série (feminino)"
+ },
+ {
+  "id": "home.series-name",
+  "pt": "Nome da série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.suggested-edit-it",
+  "pt": "sugerido · edite",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.give-the-series-a-name",
+  "pt": "Dê um nome à série primeiro.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.use-n",
+  "pt": "Use «{}»",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome sugerido"
+ },
+ {
+  "id": "home.saving-your-series",
+  "pt": "Salvando sua série…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.creating",
+  "pt": "Criando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.create-series",
+  "pt": "Criar série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.blend-it-now",
+  "pt": "Faça o Blend agora",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.open-the-series",
+  "pt": "Abra a série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.add-one-album-to-create",
+  "pt": "Adicione um álbum para criar a série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.done",
+  "pt": "Pronto",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.edit-order",
+  "pt": "Editar ordem",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.start-another-series",
+  "pt": "Comece outra série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.your-series-in-order",
+  "pt": "Sua série, em ordem",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.moved-n",
+  "pt": "· movido {}",
+  "mark": "traduzir + montado",
+  "why": "não sei o que {} traz (ex.: posição ou sentido); revisar a concordância"
+ },
+ {
+  "id": "home.move-n-up",
+  "pt": "Mover «{}» para cima",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do álbum"
+ },
+ {
+  "id": "home.move-n-down",
+  "pt": "Mover «{}» para baixo",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do álbum"
+ },
+ {
+  "id": "home.remove-n-from-the-series",
+  "pt": "Remover «{}» da série",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do álbum"
+ },
+ {
+  "id": "home.not-saved",
+  "pt": "Não salva",
+  "mark": "traduzir",
+  "why": "concorda com série (feminino)"
+ },
+ {
+  "id": "home.not-saved-the-connection-dropped",
+  "pt": "Não salva: a conexão caiu",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.your-series-n-n-tap",
+  "pt": "Sua série: {}, {}. Toque para editar ou reordenar",
+  "mark": "traduzir + montado",
+  "why": "{} nome e quantidade de álbuns (provável); plural: 1 álbum / n álbuns"
+ },
+ {
+  "id": "home.no-name-yet",
+  "pt": "Sem nome ainda",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.tap-to-edit-or-reorder",
+  "pt": "Toque para editar ou reordenar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.your-list",
+  "pt": "Sua lista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.add-albums",
+  "pt": "Adicionar álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.your-list-one-album-per",
+  "pt": "Sua lista · um álbum por linha, no formato Artista - Álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.artist-album",
+  "pt": "Artista - Álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.line-nn",
+  "pt": "Linha {}{}",
+  "mark": "traduzir + montado",
+  "why": "{} número da linha e possível sufixo"
+ },
+ {
+  "id": "home.adding",
+  "pt": "Adicionando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.unknown-title",
+  "pt": "Título desconhecido",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.cd",
+  "pt": "CD",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.vinyl",
+  "pt": "Vinil",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.cassette",
+  "pt": "Fita cassete",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.dvd",
+  "pt": "DVD",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.blu-ray",
+  "pt": "Blu-ray",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.digital",
+  "pt": "Digital",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.format",
+  "pt": "Formato:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.currency",
+  "pt": "Moeda:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.r",
+  "pt": "R$",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.purchase-price",
+  "pt": "Preço de compra:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.e-g-mint-condition-japanese",
+  "pt": "ex.: Estado de novo, importado do Japão...",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.condition-notes",
+  "pt": "Estado / Observações:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.album-added-to-inventory",
+  "pt": "Álbum adicionado ao Inventário!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.album-is-already-in-your",
+  "pt": "O álbum já está no seu Inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.failed-to-add-n",
+  "pt": "Não foi possível adicionar: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é a mensagem de erro"
+ },
+ {
+  "id": "misc.unknown",
+  "pt": "Desconhecido",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.add-to-inventory",
+  "pt": "Adicionar ao Inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.not-set",
+  "pt": "Não definido",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.condition-edition-etc",
+  "pt": "Estado, edição etc.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.notes",
+  "pt": "Observações:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.inventory-item-updated",
+  "pt": "Item do Inventário atualizado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.failed-to-update-item-n",
+  "pt": "Não foi possível atualizar o item: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é a mensagem de erro"
+ },
+ {
+  "id": "inv.unknown-error",
+  "pt": "Erro desconhecido",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.save-changes",
+  "pt": "Salvar alterações",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.edit-inventory-item",
+  "pt": "Editar item do inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.written-in-n-and-kept",
+  "pt": "Escrito em {} e guardado em USD, na cotação de hoje.",
+  "mark": "traduzir + montado",
+  "why": "{} = moeda"
+ },
+ {
+  "id": "inv.save",
+  "pt": "Salvar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.disabled-title-update-values-is",
+  "pt": "disabled title=\"Update values is running: this album is read in its turn\"",
+  "mark": "técnico",
+  "why": "Parece fragmento de código (atributo disabled title); confirmar se o texto chega ao usuário."
+ },
+ {
+  "id": "inv.remove-my-value",
+  "pt": "Remover meu valor",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.use-the-discogs-value-instead",
+  "pt": "Usar o valor do Discogs",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reading-values-from-discogs-never",
+  "pt": "Ler os valores do Discogs nunca altera o seu valor.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.written-by-youn-n",
+  "pt": "Escrito por você{}. {}",
+  "mark": "traduzir + montado",
+  "why": "{} são pedaços montados pelo código (data/complemento)"
+ },
+ {
+  "id": "inv.you-wrote-this-value-n",
+  "pt": "Você escreveu este valor.{}",
+  "mark": "traduzir + montado",
+  "why": "{} é complemento montado pelo código"
+ },
+ {
+  "id": "inv.yours",
+  "pt": "Seu",
+  "mark": "traduzir",
+  "why": "Concorda com «valor» (masculino)"
+ },
+ {
+  "id": "inv.change-it",
+  "pt": "Alterar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.n-cd-the",
+  "pt": "{} (CD), a",
+  "mark": "traduzir + montado",
+  "why": "Fragmento: o artigo «a» concorda com «edição»; frase é montada com a próxima"
+ },
+ {
+  "id": "inv.the",
+  "pt": "A",
+  "mark": "traduzir",
+  "why": "Fragmento: artigo concorda com «edição»; depende da frase montada"
+ },
+ {
+  "id": "inv.edition-n-most-common-cd",
+  "pt": "Edição: {} edição de CD mais comum no Discogs. {}",
+  "mark": "traduzir + montado",
+  "why": "{} provavelmente é «a»/«A» (ver inv.the); a ordem pode precisar de ajuste"
+ },
+ {
+  "id": "inv.see-it-on-discogs",
+  "pt": "Ver no Discogs",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.read-on-nn-n",
+  "pt": "Lido em {}{}. {}",
+  "mark": "traduzir + montado",
+  "why": "{} são data e complementos montados pelo código"
+ },
+ {
+  "id": "inv.what-this-cd-sells-for",
+  "pt": "Por quanto este CD é vendido no Discogs, conforme o estado do disco. O valor do álbum é a média dos três.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.mean-of-the-three",
+  "pt": "Média dos três",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.mint",
+  "pt": "Mint",
+  "mark": "MJRP decide",
+  "why": "Grau de conservação do Discogs; lá aparece em inglês. Manter ou traduzir (Novo)?"
+ },
+ {
+  "id": "inv.near-mint",
+  "pt": "Near Mint",
+  "mark": "MJRP decide",
+  "why": "Grau de conservação do Discogs; lá aparece em inglês. Manter ou traduzir (Quase novo)?"
+ },
+ {
+  "id": "inv.very-good-plus",
+  "pt": "Very Good Plus",
+  "mark": "MJRP decide",
+  "why": "Grau de conservação do Discogs; lá aparece em inglês. Manter ou traduzir (Muito bom+)?"
+ },
+ {
+  "id": "inv.read-again",
+  "pt": "Ler de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.write-your-own-value",
+  "pt": "Escrever seu próprio valor",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.n-for-sale",
+  "pt": "({} à venda)",
+  "mark": "traduzir + montado",
+  "why": "{} = quantidade"
+ },
+ {
+  "id": "inv.lowest-price-for-sale-on",
+  "pt": "Menor preço à venda no Discogs:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.the-lowest-price-this-cd",
+  "pt": "O menor preço pelo qual este CD está à venda no Discogs agora. É um preço pedido, não o valor pelo qual o disco costuma ser vendido.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-gives-a-suggestion-by",
+  "pt": "O Discogs só dá uma sugestão por estado do disco (Mint, Near Mint, Very Good Plus) a contas com as configurações de vendedor preenchidas.",
+  "mark": "traduzir",
+  "why": "Os graus entre parênteses seguem inv.mint etc."
+ },
+ {
+  "id": "inv.nobody-sells-this-cd-edition",
+  "pt": "Ninguém vende esta edição de CD no Discogs agora, então não há preço para ler.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.none-for-sale-on-discogs",
+  "pt": "Nenhum à venda no Discogs agora",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.write-the-value-yourself",
+  "pt": "Escreva você mesmo o valor",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.look-again",
+  "pt": "Procurar de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.looked-for-on-n-n",
+  "pt": "Procurado em {}. {}",
+  "mark": "traduzir + montado",
+  "why": "{} são data e complemento montados pelo código"
+ },
+ {
+  "id": "inv.discogs-has-no-cd-edition",
+  "pt": "O Discogs não tem edição de CD com este artista e título, então não há valor para ler.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.no-cd-edition-found-on",
+  "pt": "Nenhuma edição de CD encontrada no Discogs",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-has-this-cd-edition",
+  "pt": "O Discogs tem esta edição de CD, mas não sugere preço para ela, então não há valor para ler.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.no-price-suggested-on-discogs",
+  "pt": "Nenhum preço sugerido no Discogs",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.no-value-was-read-for",
+  "pt": "Nenhum valor foi lido para este álbum ainda.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.read-the-value-now",
+  "pt": "Ler o valor agora",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.or-write-it-yourself",
+  "pt": "Ou escreva você mesmo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reading-the-value-from-discogs",
+  "pt": "Lendo o valor do Discogs…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reading",
+  "pt": "Lendo…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.n-the-value-was-not",
+  "pt": "{}. O valor não foi lido.",
+  "mark": "traduzir + montado",
+  "why": "{} = motivo montado pelo código"
+ },
+ {
+  "id": "inv.no-value-was-written-for",
+  "pt": "Nenhum valor foi escrito para este álbum ainda.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.estimated-value",
+  "pt": "Valor estimado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.where-to-buy",
+  "pt": "Onde comprar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs",
+  "pt": "Discogs",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "acct.by-signing-in-you-agree",
+  "pt": "Ao entrar, você concorda com os Termos e a Política de Privacidade.",
+  "mark": "traduzir",
+  "why": "Termos e Política podem ser links"
+ },
+ {
+  "id": "acct.continue-as-guest",
+  "pt": "Continuar como visitante",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.google",
+  "pt": "Google",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "acct.or-continue-as-guest",
+  "pt": "ou continue como visitante",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.series-playlists-and-inventory-made",
+  "pt": "Séries, playlists e inventário feitos como visitante ficam na sessão de visitante. Eles não são copiados para a sua conta quando você entra.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.sign-in-to-sync-your",
+  "pt": "Entre para sincronizar suas playlists entre dispositivos",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.sign-in-with-apple",
+  "pt": "Entrar com Apple",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.sign-in-with-google",
+  "pt": "Entrar com Google",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.welcome-back",
+  "pt": "Que bom ver você de novo",
+  "mark": "traduzir",
+  "why": "Evita gênero de «bem-vindo/a»"
+ },
+ {
+  "id": "acct.successfully-signed-in",
+  "pt": "Você entrou com sucesso!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.login-failed-n",
+  "pt": "Falha ao entrar: {}",
+  "mark": "traduzir + montado",
+  "why": "{} = motivo do erro"
+ },
+ {
+  "id": "acct.login-provider-not-enabled-please",
+  "pt": "Provedor de login não ativado. Ative o login com Google/Apple no Firebase Console.",
+  "mark": "traduzir",
+  "why": "Mensagem de desenvolvedor, mas visível; traduzida"
+ },
+ {
+  "id": "acct.sign-in-cancelled",
+  "pt": "Login cancelado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.signed-out-successfully",
+  "pt": "Você saiu com sucesso",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.sign-out-failed",
+  "pt": "Não foi possível sair",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.n-sign-out",
+  "pt": "{} Sair",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone/emoji"
+ },
+ {
+  "id": "nav.account-menu",
+  "pt": "Menu da conta",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.signed-in-as",
+  "pt": "Você entrou como",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.sign-in",
+  "pt": "Entrar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.sign-out",
+  "pt": "Sair",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.sign-in-to-sync",
+  "pt": "Entrar para sincronizar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.escape",
+  "pt": "Escape",
+  "mark": "fica",
+  "why": "Nome da tecla; pode virar «Esc»"
+ },
+ {
+  "id": "nav.new-playlists",
+  "pt": "Novas playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.the-playlists-of-your-last",
+  "pt": "As playlists do seu último Blend",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.series-by-artist",
+  "pt": "Séries por artista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.series-by-genre",
+  "pt": "Séries por gênero",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.series-by-track",
+  "pt": "Séries por faixa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.soon",
+  "pt": "Em breve",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.cache-cleared-2",
+  "pt": "Cache limpo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.cancel",
+  "pt": "Cancelar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.clear-cache-2",
+  "pt": "Limpar cache",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.clear-the-album-cache",
+  "pt": "Limpar o cache de álbuns?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.the-albums-are-loaded-again",
+  "pt": "Os álbuns são carregados de novo das fontes na próxima vez que você os abrir. Suas séries, rankings, playlists e inventário são mantidos.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.clear-album-cache",
+  "pt": "Limpar cache de álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.menu",
+  "pt": "Menu",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "nav.back-to-top",
+  "pt": "Voltar ao topo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.menu-and-account",
+  "pt": "Menu e conta",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.inventory",
+  "pt": "Inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.edit-playlists",
+  "pt": "Editar playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.new-playlists-2",
+  "pt": "Novas playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.series-by-artist-2",
+  "pt": "Séries por artista",
+  "mark": "traduzir",
+  "why": "Em inglês está em Title Case; em português fica igual ao rótulo minúsculo"
+ },
+ {
+  "id": "nav.series-by-genre-2",
+  "pt": "Séries por gênero",
+  "mark": "traduzir",
+  "why": "Idem"
+ },
+ {
+  "id": "nav.series-by-track-2",
+  "pt": "Séries por faixa",
+  "mark": "traduzir",
+  "why": "Idem"
+ },
+ {
+  "id": "nav.album-blender",
+  "pt": "Album Blender",
+  "mark": "MJRP decide",
+  "why": "Parte do nome da marca (The Album Blender): manter ou traduzir?"
+ },
+ {
+  "id": "nav.main",
+  "pt": "Principal",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.by-genre",
+  "pt": "Por gênero",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.by-track",
+  "pt": "Por faixa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.music-series",
+  "pt": "Séries musicais",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.saved-n",
+  "pt": "Salvo em {}",
+  "mark": "traduzir + montado",
+  "why": "{} = data; acrescentei «em»"
+ },
+ {
+  "id": "pl.untitled-batch",
+  "pt": "Lote sem título",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.playlist-n",
+  "pt": "Playlist {}",
+  "mark": "traduzir + montado",
+  "why": "{} = número"
+ },
+ {
+  "id": "pl.actions-for-playlist-n",
+  "pt": "Ações da playlist {}",
+  "mark": "traduzir + montado",
+  "why": "{} = número"
+ },
+ {
+  "id": "pl.playlist-n-of-the-set",
+  "pt": "Playlist {} do conjunto · {}",
+  "mark": "traduzir + montado",
+  "why": "{} = número e nome/total"
+ },
+ {
+  "id": "pl.title-of-playlist-n",
+  "pt": "Título da playlist {}",
+  "mark": "traduzir + montado",
+  "why": "{} = número"
+ },
+ {
+  "id": "pl.no-tracks-in-this-playlist",
+  "pt": "Nenhuma faixa nesta playlist",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.untitled",
+  "pt": "Sem título",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.actions-for-n",
+  "pt": "Ações de {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome; «de» pode virar «da/do» conforme o nome"
+ },
+ {
+  "id": "pl.n-saving",
+  "pt": "{} Salvando...",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.n-save",
+  "pt": "{} Salvar",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.n-export",
+  "pt": "{} Exportar",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.batch-name",
+  "pt": "Nome do lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.name-this-batch",
+  "pt": "Dê um nome a este lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.undo-the-last-change",
+  "pt": "Desfazer a última alteração",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.redo-the-change-that-was",
+  "pt": "Refazer a alteração desfeita",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.undo",
+  "pt": "Desfazer",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.tracks",
+  "pt": "faixas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.duration",
+  "pt": "duração",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.close",
+  "pt": "Fechar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.no-playlists-generated-yet",
+  "pt": "Nenhuma playlist gerada ainda.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.use-the-settings-above-to",
+  "pt": "Use as configurações acima para gerar playlists.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.remove-track",
+  "pt": "Remover faixa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.delete-playlist-n",
+  "pt": "Excluir playlist {}",
+  "mark": "traduzir + montado",
+  "why": "{} = número"
+ },
+ {
+  "id": "pl.delete-this-playlist",
+  "pt": "Excluir esta playlist",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.no-tracks",
+  "pt": "Nenhuma faixa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.new-batch",
+  "pt": "Novo lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.edit-playlist-batch",
+  "pt": "Editar lote de playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.playlist-management",
+  "pt": "Gerenciar playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.editing-n",
+  "pt": "Editando: {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome do lote"
+ },
+ {
+  "id": "pl.n-save-to-series-history",
+  "pt": "{} Salvar no histórico da série",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.n-actions-export",
+  "pt": "{} Ações e exportação",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.n-download-json",
+  "pt": "{} Baixar JSON",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.n-export-to-apple-music",
+  "pt": "{} Exportar para Apple Music",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.n-export-to-spotify",
+  "pt": "{} Exportar para Spotify",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.batch-name-2",
+  "pt": "Nome do lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.enter-batch-name-e-g",
+  "pt": "Digite o nome do lote (ex.: 'Meu mix dos Beatles')",
+  "mark": "traduzir",
+  "why": "Beatles é nome de artista e fica"
+ },
+ {
+  "id": "pl.n-no-playlists-here-yet",
+  "pt": "{} Ainda não há playlists aqui",
+  "mark": "traduzir + montado",
+  "why": "{} = ícone"
+ },
+ {
+  "id": "pl.go-to-the-blending-menu",
+  "pt": "Vá para The Blending Menu",
+  "mark": "MJRP decide",
+  "why": "Nome de tela do produto: manter «The Blending Menu» ou traduzir?"
+ },
+ {
+  "id": "pl.playlists-are-made-in-the",
+  "pt": "As playlists são feitas em The Blending Menu: escolha uma série e uma receita, e elas abrem aqui.",
+  "mark": "MJRP decide",
+  "why": "Contém o nome «The Blending Menu»: manter ou traduzir?"
+ },
+ {
+  "id": "pl.n-playlistn",
+  "pt": "({} playlist{})",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 playlist / n playlists"
+ },
+ {
+  "id": "pl.reconfigure-your-music-playlist-blend",
+  "pt": "Reconfigure o Blend das suas playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.regenerate-playlists",
+  "pt": "Gerar as playlists de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.edit-this-batch",
+  "pt": "Editar este lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.edit-batch-n",
+  "pt": "Editar lote {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome"
+ },
+ {
+  "id": "pl.delete-entire-batch",
+  "pt": "Excluir o lote inteiro",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.delete-batch-n",
+  "pt": "Excluir lote {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome"
+ },
+ {
+  "id": "inv.delete",
+  "pt": "Excluir",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.add-playlists",
+  "pt": "Adicionar playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.open-albums-series",
+  "pt": "Abrir série de álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.delete-all-playlists-in-this",
+  "pt": "Excluir todas as playlists desta série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.view-details",
+  "pt": "Ver detalhes",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.calendar",
+  "pt": "Calendário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.no-playlists-in-this-batch",
+  "pt": "Nenhuma playlist neste lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.n-tracks-n",
+  "pt": "{} faixas • {}",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 faixa / n faixas"
+ },
+ {
+  "id": "pl.view-the-tracks-of-n",
+  "pt": "Ver as faixas de {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome da playlist"
+ },
+ {
+  "id": "pl.deleted-batch-n",
+  "pt": "Lote excluído: {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome do lote"
+ },
+ {
+  "id": "pl.failed-to-delete-batch",
+  "pt": "Não foi possível excluir o lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.deleted-playlists-for-n",
+  "pt": "Playlists excluídas de {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome da série"
+ },
+ {
+  "id": "pl.failed-to-delete-playlists",
+  "pt": "Não foi possível excluir as playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.add-playlists-2",
+  "pt": "Adicionar playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.open-the-album-series",
+  "pt": "Abrir a série de álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.delete-all-playlists-of-this",
+  "pt": "Excluir todas as playlists desta série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.saved-as-n",
+  "pt": "Salvo como “{}”",
+  "mark": "traduzir + montado",
+  "why": "{} = nome do lote"
+ },
+ {
+  "id": "pl.edit-batch",
+  "pt": "Editar lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.delete-batch",
+  "pt": "Excluir lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.open-the-tracks-of-n",
+  "pt": "Abrir as faixas de {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome da playlist"
+ },
+ {
+  "id": "pl.playlist",
+  "pt": "Playlist",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.actions-for-batch-n",
+  "pt": "Ações do lote {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome"
+ },
+ {
+  "id": "pl.actions-for-series-n",
+  "pt": "Ações da série {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome"
+ },
+ {
+  "id": "pl.n-n-n-playlistn",
+  "pt": "{} {} · {} playlist{}",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 playlist / n playlists"
+ },
+ {
+  "id": "pl.id-n",
+  "pt": "ID: {}...",
+  "mark": "fica + montado",
+  "why": "{} = identificador"
+ },
+ {
+  "id": "pl.delete-all-playlists-in-n",
+  "pt": "Excluir todas as playlists de {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome da série"
+ },
+ {
+  "id": "pl.the-playlists-of-this-series",
+  "pt": "Não foi possível atualizar as playlists desta série. O que você vê pode estar desatualizado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.the-playlists-of-this-series-2",
+  "pt": "Não foi possível ler as playlists desta série.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.my-ranking",
+  "pt": "Meu ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.tap-a-track-to-move",
+  "pt": "Toque em uma faixa para movê-la com os botões abaixo, ou arraste-a pela alça.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.bea-and-spotify-ranks-are",
+  "pt": "Os rankings do BEA e do Spotify aparecem só como referência. Seu ranking é usado pela receita \"Principais faixas pelo meu próprio ranking\".",
+  "mark": "MJRP decide",
+  "why": "Nome da receita entre aspas: traduzir ou manter o inglês, igual ao nome na tela das receitas?"
+ },
+ {
+  "id": "rank.back-to-the-order-of",
+  "pt": "Volta à ordem do álbum.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.discard-changes",
+  "pt": "Descartar alterações?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.your-new-order-has-not",
+  "pt": "Sua nova ordem não foi salva.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.keep-editing",
+  "pt": "Continuar editando",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.discard",
+  "pt": "Descartar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.bea-n",
+  "pt": "BEA #{}",
+  "mark": "fica + montado",
+  "why": "{} = posição"
+ },
+ {
+  "id": "rank.spotify-n",
+  "pt": "Spotify #{}",
+  "mark": "fica + montado",
+  "why": "{} = posição"
+ },
+ {
+  "id": "rank.back",
+  "pt": "Voltar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.reset",
+  "pt": "Redefinir",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.move-the-track",
+  "pt": "Mover a faixa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.move-up",
+  "pt": "Mover para cima",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.down",
+  "pt": "Para baixo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.move-down",
+  "pt": "Mover para baixo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.move-to",
+  "pt": "Mover para…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.save-ranking",
+  "pt": "Salvar ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.n-is-now-number-n",
+  "pt": "{} agora é o número {}",
+  "mark": "montado",
+  "why": "muda o nome da faixa e o número"
+ },
+ {
+  "id": "rank.number-n",
+  "pt": "Número {}",
+  "mark": "montado",
+  "why": "muda o número"
+ },
+ {
+  "id": "rank.number-n-where-it-is",
+  "pt": "Número {}, onde está",
+  "mark": "montado",
+  "why": "muda o número"
+ },
+ {
+  "id": "rank.move-n-to",
+  "pt": "Mover \"{}\" para",
+  "mark": "montado",
+  "why": "muda o nome da faixa"
+ },
+ {
+  "id": "rank.asking",
+  "pt": "Perguntando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.track-name",
+  "pt": "Nome da faixa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.my-rank",
+  "pt": "Meu ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.popularity",
+  "pt": "Popularidade",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.time",
+  "pt": "Tempo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.your-rank",
+  "pt": "Seu ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.aggregated-rating",
+  "pt": "Nota agregada",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.score",
+  "pt": "Pontuação",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.not-linked",
+  "pt": "Não vinculado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.my-avg",
+  "pt": "Minha média:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.avg-rating",
+  "pt": "Nota média:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.avg-pop",
+  "pt": "Pop. média:",
+  "mark": "traduzir",
+  "why": "abreviação de popularidade"
+ },
+ {
+  "id": "rank.the-order-of-the-album",
+  "pt": "A ordem do álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.track-listing",
+  "pt": "Lista de faixas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.the-besteveralbums-rank",
+  "pt": "O ranking do BestEverAlbums",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.the-spotify-popularity",
+  "pt": "A popularidade no Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.besteveralbums-rating",
+  "pt": "Nota no BestEverAlbums",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.spotify-popularity-2",
+  "pt": "Popularidade no Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.order-the-tracks-by",
+  "pt": "Ordene as faixas por",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.ranking-saved",
+  "pt": "Ranking salvo!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.failed-to-save-please-try",
+  "pt": "Não foi possível salvar. Tente de novo.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.rank-your-album",
+  "pt": "Classifique seu álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.drag-tracks-to-set-your",
+  "pt": "Arraste as faixas para definir seu ranking pessoal:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.bea-and-spotify-ranks-shown",
+  "pt": "Os rankings do BEA e do Spotify aparecem como referência. Seu ranking será usado na receita \"Top Tracks by My Own Ranking\".",
+  "mark": "traduzir + MJRP decide",
+  "why": "O nome da receita entre aspas ficou em inglês; traduzir ou manter depende do nome na lista de receitas."
+ },
+ {
+  "id": "rank.besteveralbums-rank",
+  "pt": "Ranking do BestEverAlbums",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.n-bea",
+  "pt": "#{} BEA",
+  "mark": "fica + montado",
+  "why": "muda o número"
+ },
+ {
+  "id": "rank.spotify-rank",
+  "pt": "Ranking do Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.n-spfy",
+  "pt": "#{} SPFY",
+  "mark": "fica + montado",
+  "why": "muda o número"
+ },
+ {
+  "id": "ser.series-not-found",
+  "pt": "Série não encontrada",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.series-name",
+  "pt": "Nome da série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.albums-in-series",
+  "pt": "Álbuns na série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.edit-series",
+  "pt": "Editar série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.album-already-in-list",
+  "pt": "O álbum já está na lista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.added-n",
+  "pt": "Adicionado: {}",
+  "mark": "montado",
+  "why": "muda o nome do álbum"
+ },
+ {
+  "id": "ser.n-albums",
+  "pt": "{} álbuns",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 álbum / n álbuns"
+ },
+ {
+  "id": "ser.no-albums-yet",
+  "pt": "Nenhum álbum ainda.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.remove-album",
+  "pt": "Remover álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.remove-n",
+  "pt": "Remover {}",
+  "mark": "montado",
+  "why": "muda o nome do álbum"
+ },
+ {
+  "id": "ser.x",
+  "pt": "x",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "ser.series-updated",
+  "pt": "Série atualizada",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.no-albums-in-library",
+  "pt": "Nenhum álbum na biblioteca",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.create-a-series-from-the",
+  "pt": "Crie uma série na página inicial para começar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.go-to-home",
+  "pt": "Ir para o Início",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.remove-album-2",
+  "pt": "Remover álbum?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.are-you-sure-you-want",
+  "pt": "Tem certeza de que quer remover \"{} - {}\" desta série?",
+  "mark": "montado",
+  "why": "muda artista e álbum"
+ },
+ {
+  "id": "ser.remove",
+  "pt": "Remover",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.album-removed-from-series",
+  "pt": "Álbum removido da série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.could-not-find-album-query",
+  "pt": "Não foi possível encontrar a consulta do álbum na série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.manual-removal-required",
+  "pt": "Remoção manual necessária",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.we-couldn-t-automatically-match",
+  "pt": "Não conseguimos associar este álbum automaticamente a um registro da sua série. Digite o nome/consulta exato para remover na lista abaixo: {}{}",
+  "mark": "montado",
+  "why": "os dois {} são pedaços montados pelo código (provavelmente HTML); ordem mantida"
+ },
+ {
+  "id": "ser.remove-query",
+  "pt": "Remover consulta",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.album-removed-manually",
+  "pt": "Álbum removido manualmente",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.manual-removal-failed-n",
+  "pt": "Falha na remoção manual: {}",
+  "mark": "montado",
+  "why": "muda a mensagem de erro"
+ },
+ {
+  "id": "ser.failed-to-remove-album-n",
+  "pt": "Não foi possível remover o álbum: {}",
+  "mark": "montado",
+  "why": "muda a mensagem de erro"
+ },
+ {
+  "id": "ser.rankings-saved-for-n",
+  "pt": "Rankings salvos para \"{}\"",
+  "mark": "montado",
+  "why": "muda o nome do álbum"
+ },
+ {
+  "id": "ser.uncategorized",
+  "pt": "Sem categoria",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.all-albums-series",
+  "pt": "Série de todos os álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.blend-your-albums",
+  "pt": "Faça o Blend dos seus álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.actions-for-the-series-n",
+  "pt": "Ações da série {}",
+  "mark": "montado",
+  "why": "muda o nome da série"
+ },
+ {
+  "id": "ser.database-not-initialized",
+  "pt": "Banco de dados não inicializado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.could-not-check-the-saved",
+  "pt": "Não foi possível verificar as playlists salvas desta série. Nada foi excluído.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.delete-series",
+  "pt": "Excluir série?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.are-you-sure-you-want-2",
+  "pt": "Tem certeza de que quer excluir \"{}\"? {}Os álbuns NÃO serão excluídos do inventário.",
+  "mark": "montado",
+  "why": "o primeiro {} é o nome da série; o segundo é um aviso opcional montado pelo código"
+ },
+ {
+  "id": "ser.delete-series-2",
+  "pt": "Excluir série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.series-deleted-successfully",
+  "pt": "Série excluída com sucesso",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.failed-to-delete-series",
+  "pt": "Não foi possível excluir a série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.its-n-n-will-be",
+  "pt": "Seus {} ({}) também serão excluídos.",
+  "mark": "montado",
+  "why": "plural/gênero: «Sua playlist (1)» / «Suas playlists (n)»; o código deve concordar"
+ },
+ {
+  "id": "ser.open-in-spotify",
+  "pt": "Abrir no Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.see-on-besteveralbums",
+  "pt": "Ver no BestEverAlbums",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.view-album-and-tracks",
+  "pt": "Ver álbum e faixas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.edit-my-ranking",
+  "pt": "Editar meu ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.rank-the-tracks",
+  "pt": "Classificar as faixas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.add-to-inventory",
+  "pt": "Adicionar ao inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.fetch-the-details-again",
+  "pt": "Buscar os detalhes de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.remove-from-this-series",
+  "pt": "Remover desta série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.album",
+  "pt": "Álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.edit-series-2",
+  "pt": "Editar série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.delete-series-3",
+  "pt": "Excluir série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.connected",
+  "pt": "Conectado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.disconnect",
+  "pt": "Desconectar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.spotify-connected-n",
+  "pt": "Spotify conectado: {}",
+  "mark": "montado",
+  "why": "muda a conta"
+ },
+ {
+  "id": "acct.connect",
+  "pt": "Conectar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.disconnect-from-spotify",
+  "pt": "Desconectar do Spotify?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.you-can-connect-again-at",
+  "pt": "Você pode conectar de novo quando quiser.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.disconnected-from-spotify",
+  "pt": "Desconectado do Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.all-playlists-will-be-merged",
+  "pt": "Todas as playlists serão reunidas em uma única playlist do Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.each-playlist-becomes-its-own",
+  "pt": "Cada playlist vira uma playlist própria no Spotify, com este nome e o título dela",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.export-failed",
+  "pt": "Falha na exportação",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.mjrp-playlist",
+  "pt": "Playlist MJRP",
+  "mark": "traduzir",
+  "why": "MJRP é marca e fica"
+ },
+ {
+  "id": "pl.no-playlists-to-export",
+  "pt": "Nenhuma playlist para exportar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.export-to-spotify",
+  "pt": "Exportar para o Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.enter-playlist-name",
+  "pt": "Digite o nome da playlist…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.export-mode",
+  "pt": "Modo de exportação",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.merge-all",
+  "pt": "Reunir tudo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.playlist-name",
+  "pt": "Nome da playlist",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.separate-playlists",
+  "pt": "Playlists separadas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.total-tracks",
+  "pt": "Total de faixas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.searching-tracks",
+  "pt": "Buscando faixas…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.creating-playlist",
+  "pt": "Criando a playlist…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.adding-tracks",
+  "pt": "Adicionando faixas…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.export-complete",
+  "pt": "Exportação concluída! 🎉",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.export-failed-2",
+  "pt": "Falha na exportação",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.export-stopped-part-of-the",
+  "pt": "A exportação parou no meio do caminho",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.created-without-all-their-tracks",
+  "pt": "Criadas sem todas as faixas",
+  "mark": "traduzir",
+  "why": "título de grupo no plural"
+ },
+ {
+  "id": "pl.not-created",
+  "pt": "Não criadas",
+  "mark": "traduzir",
+  "why": "título de grupo no plural"
+ },
+ {
+  "id": "pl.no-track-found",
+  "pt": "Nenhuma faixa encontrada",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.n-open-in-spotify",
+  "pt": "{} Abrir no Spotify",
+  "mark": "montado",
+  "why": "{} é um ícone/símbolo montado pelo código"
+ },
+ {
+  "id": "pl.n-tracks",
+  "pt": "· {} faixas",
+  "mark": "montado",
+  "why": "plural: 1 faixa / n faixas"
+ },
+ {
+  "id": "pl.already-exported-in-this-session",
+  "pt": "(já exportada nesta sessão, não foi criada de novo)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.created-n",
+  "pt": "Criadas ({})",
+  "mark": "montado",
+  "why": "título de grupo; se for 1: «Criada (1)»"
+ },
+ {
+  "id": "pl.tracks-matched",
+  "pt": "Faixas encontradas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.n-n-tracks-not-found",
+  "pt": "{} {} faixas não encontradas",
+  "mark": "montado",
+  "why": "plural: 1 faixa não encontrada / n faixas não encontradas; o primeiro {} é ícone"
+ },
+ {
+  "id": "pl.style-background-linear-gradient-135deg",
+  "pt": "style=\"background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);\"",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "pl.n-connect-to-spotify-again",
+  "pt": "{} Conectar ao Spotify de novo",
+  "mark": "montado",
+  "why": "{} é um ícone/símbolo"
+ },
+ {
+  "id": "pl.you-will-leave-this-page",
+  "pt": "Você vai sair desta página para entrar no Spotify. Exporte de novo quando voltar: o que foi criado não é criado duas vezes na mesma visita, mas é depois que a página recarrega.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.n-try-again",
+  "pt": "{} Tentar de novo",
+  "mark": "montado",
+  "why": "{} é um ícone/símbolo"
+ },
+ {
+  "id": "pl.what-was-already-created-is",
+  "pt": "O que já foi criado não é criado de novo.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.mjrp-logo",
+  "pt": "Logotipo MJRP",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.the-album-blender",
+  "pt": "The Album Blender",
+  "mark": "fica",
+  "why": "nome da marca"
+ },
+ {
+  "id": "nav.the-blending-menu",
+  "pt": "O Menu do Blend",
+  "mark": "MJRP decide",
+  "why": "nome próprio do menu: traduzir «Blending Menu» ou manter em inglês?"
+ },
+ {
+  "id": "ser.rank",
+  "pt": "Classificar",
+  "mark": "traduzir",
+  "why": "verbo, ação de classificar as faixas"
+ },
+ {
+  "id": "ser.ranked",
+  "pt": "Classificado",
+  "mark": "traduzir",
+  "why": "estado: já classificado"
+ },
+ {
+  "id": "ser.add",
+  "pt": "Adicionar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.del",
+  "pt": "Excl.",
+  "mark": "traduzir",
+  "why": "abreviação de Excluir"
+ },
+ {
+  "id": "ser.refetch",
+  "pt": "Buscar de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.no-tracks-available",
+  "pt": "Nenhuma faixa disponível",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.open-n",
+  "pt": "Abrir {}",
+  "mark": "montado",
+  "why": "muda o nome do álbum"
+ },
+ {
+  "id": "ui.confirm",
+  "pt": "Confirmar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.your-personal-ranking",
+  "pt": "Seu ranking pessoal",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.my-ranking",
+  "pt": "MEU RANKING",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.ranking-by-besteveralbums",
+  "pt": "Ranking do BestEverAlbums",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.spotify",
+  "pt": "Spotify",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "ui.no-cover",
+  "pt": "Sem capa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.view",
+  "pt": "Ver",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.sort-series-by",
+  "pt": "Ordenar séries por",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.reload-albums-from-the-sources",
+  "pt": "Recarregar os álbuns das fontes",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.filters",
+  "pt": "Filtros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.filters-n-on",
+  "pt": "Filtros · {} ativos",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 ativo / n ativos"
+ },
+ {
+  "id": "ui.clear-filters",
+  "pt": "Limpar filtros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.show-albums",
+  "pt": "Mostrar álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.search",
+  "pt": "Buscar…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.filters-n-on-2",
+  "pt": "Filtros, {} ativos",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 ativo / n ativos"
+ },
+ {
+  "id": "ui.remove-the-filter-n-n",
+  "pt": "Remover o filtro {}: {}",
+  "mark": "montado",
+  "why": "muda o nome do filtro e o valor"
+ },
+ {
+  "id": "ui.clear-all",
+  "pt": "Limpar tudo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.dynamic-filter-groups-n-sort",
+  "pt": "<!-- Dynamic Filter Groups --> {} <!-- Sort Dropdown (if options provided) --> {} <!-- Refresh Action --> {} <!-- View Mode Toggles --> {}",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "ui.n-refresh",
+  "pt": "{} Atualizar",
+  "mark": "montado",
+  "why": "{} é um ícone/símbolo"
+ },
+ {
+  "id": "ui.reload",
+  "pt": "Recarregar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.grid-view",
+  "pt": "Visualização em grade",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.list-view",
+  "pt": "Visualização em lista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.load-n-more-albums",
+  "pt": "Carregar mais {} álbuns",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 álbum / n álbuns (há texto próprio para 1)"
+ },
+ {
+  "id": "ui.load-1-more-album",
+  "pt": "Carregar mais 1 álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.showing",
+  "pt": "Mostrando",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.no-series-matches-these-filters",
+  "pt": "Nenhuma série corresponde a esses filtros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.of",
+  "pt": "de",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.pages",
+  "pt": "Páginas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.paging-form",
+  "pt": "Formulário de paginação",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.scroll",
+  "pt": "Rolagem",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.series-per-page",
+  "pt": "Séries por página",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.class-series-pager-step-series",
+  "pt": "class=\"series-pager-step series-pager-step--back\" aria-label=\"Página anterior\"",
+  "mark": "traduzir",
+  "why": "só o valor de aria-label muda; o resto é código"
+ },
+ {
+  "id": "ui.class-series-pager-step-aria",
+  "pt": "class=\"series-pager-step\" aria-label=\"Próxima página\"",
+  "mark": "traduzir",
+  "why": "só o valor de aria-label muda; o resto é código"
+ },
+ {
+  "id": "ui.page-n-of-n",
+  "pt": "Página {} de {}",
+  "mark": "montado",
+  "why": "muda página atual e total"
+ },
+ {
+  "id": "ui.go-to-page",
+  "pt": "Ir para a página",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.n-not-been-checked-against",
+  "pt": "{} ainda não foi verificado nas fontes, então este filtro pode deixar de fora {}. Um álbum é verificado na primeira vez que a série dele é carregada.",
+  "mark": "montado",
+  "why": "singular/plural e gênero: «1 álbum ainda não foi verificado… deixar de fora ele» / «n álbuns ainda não foram verificados… deixar de fora eles»; o código deve fornecer a concordância"
+ },
+ {
+  "id": "ui.previous",
+  "pt": "Anterior",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.next",
+  "pt": "Próxima",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ui.all-n-series-are-on",
+  "pt": "Todas as {} séries estão na tela.",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 série / n séries"
+ },
+ {
+  "id": "ui.load-n-more",
+  "pt": "Carregar mais {}",
+  "mark": "montado",
+  "why": "muda o número"
+ },
+ {
+  "id": "ui.tab",
+  "pt": "Aba",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.media-hover-hover-opacity-0",
+  "pt": "[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 focus-within:opacity-100",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "rank.besteveralbums-rating-2",
+  "pt": "Nota do BestEverAlbums",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.loading-the-tracks-of-this",
+  "pt": "Carregando as faixas deste álbum…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.the-tracks-of-this-album",
+  "pt": "Não foi possível carregar as faixas deste álbum. Feche esta janela e abra de novo para tentar mais uma vez.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.no-tracks-are-kept-for",
+  "pt": "Não há faixas guardadas para este álbum.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.notes",
+  "pt": "Notas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.paid",
+  "pt": "Pago:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.cond",
+  "pt": "Cond.:",
+  "mark": "traduzir",
+  "why": "abreviação de Condição (estado do disco)"
+ },
+ {
+  "id": "blend.the-blend-was-cancelled",
+  "pt": "O Blend foi cancelado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.series-not-found-n",
+  "pt": "Série não encontrada: {}",
+  "mark": "traduzir + montado",
+  "why": "{} = nome da série"
+ },
+ {
+  "id": "blend.generating-playlists-with-n",
+  "pt": "Gerando playlists com {}…",
+  "mark": "traduzir + montado",
+  "why": "{} = nome/origem; usei «…» no lugar de «...»"
+ },
+ {
+  "id": "blend.no-series-to-take-the",
+  "pt": "Nenhuma série de onde tirar os álbuns. Abra a série primeiro.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.the-series-was-not-saved",
+  "pt": "A série não foi salva: a conexão caiu. Seus álbuns continuam aqui.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.the-series-was-not-saved-2",
+  "pt": "A série não foi salva. Seus álbuns continuam aqui.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.add-the-albums-of-your",
+  "pt": "Adicionar os álbuns das suas séries?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.add-n",
+  "pt": "Adicionar {}",
+  "mark": "traduzir + montado",
+  "why": "{} = quantidade e/ou rótulo; vem pronto do código"
+ },
+ {
+  "id": "inv.failed-to-load-inventory",
+  "pt": "Não foi possível carregar o inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.failed-to-update-status",
+  "pt": "Não foi possível atualizar o status",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reading-your-series",
+  "pt": "Lendo suas séries…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.could-not-read-your-series",
+  "pt": "Não foi possível ler suas séries e seu inventário. Nada foi adicionado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.your-inventory-has-no-albums",
+  "pt": "Seu inventário ainda não tem álbuns. Não há notas para ler.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reading-ratings",
+  "pt": "Lendo as notas…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.could-not-update-the-ratings",
+  "pt": "Não foi possível atualizar as notas. Seu inventário não foi alterado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.price-updated",
+  "pt": "Preço atualizado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.failed-to-update-price",
+  "pt": "Não foi possível atualizar o preço",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.album-updated",
+  "pt": "Álbum atualizado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.failed-to-update-album",
+  "pt": "Não foi possível atualizar o álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.failed-to-delete-album",
+  "pt": "Não foi possível excluir o álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.album-removed-from-inventory",
+  "pt": "Álbum removido do inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.every-album-already-has-a",
+  "pt": "Todos os álbuns já têm um valor escrito por você ou lido nas últimas seis horas.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.write-the-value-as-a",
+  "pt": "Escreva o valor como um número maior que zero, por exemplo 12,50.",
+  "mark": "traduzir",
+  "why": "Exemplo com vírgula decimal em pt-BR; o código pode precisar aceitar vírgula."
+ },
+ {
+  "id": "inv.value-saved",
+  "pt": "Valor salvo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.your-value-was-removed",
+  "pt": "Seu valor foi removido",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.the-value-could-not-be",
+  "pt": "Não foi possível salvar o valor. Seu inventário está como estava.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-values-are-turned-off",
+  "pt": "Os valores do Discogs estão desligados no servidor.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.your-unsaved-playlists-were-restored",
+  "pt": "Suas playlists não salvas foram restauradas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.no-series-context-found",
+  "pt": "Nenhum contexto de série encontrado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.no-playlists-found-for-batch",
+  "pt": "Nenhuma playlist encontrada para o lote \"{}\"",
+  "mark": "traduzir + montado",
+  "why": "{} = nome do lote"
+ },
+ {
+  "id": "pl.failed-to-load-playlists",
+  "pt": "Não foi possível carregar as playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.this-series-has-no-albums",
+  "pt": "Esta série não tem álbuns para gerar playlists.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.could-not-load-albums-for",
+  "pt": "Não foi possível carregar os álbuns para reconfigurar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.playlist-n-removed",
+  "pt": "Playlist \"{}\" removida",
+  "mark": "traduzir + montado",
+  "why": "{} = nome; «removida» concorda com «Playlist» (feminino)"
+ },
+ {
+  "id": "pl.nothing-to-undo",
+  "pt": "Nada para desfazer",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.nothing-to-redo",
+  "pt": "Nada para refazer",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.generated-n-playlists",
+  "pt": "{} playlists geradas",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 playlist gerada / n playlists geradas"
+ },
+ {
+  "id": "pl.batch-name-required",
+  "pt": "Nome do lote obrigatório",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.saved-n-successfully",
+  "pt": "\"{}\" salva com sucesso!",
+  "mark": "traduzir + montado",
+  "why": "{} = nome; gênero: «salva» (playlist); para lote seria «salvo»"
+ },
+ {
+  "id": "pl.save-failed-n-nothing-was",
+  "pt": "Falha ao salvar: {}. Nada foi alterado: o que foi salvo antes continua lá.",
+  "mark": "traduzir + montado",
+  "why": "{} = motivo da falha"
+ },
+ {
+  "id": "ser.failed-to-load-series-data",
+  "pt": "Não foi possível carregar os dados da série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.loading-n-again",
+  "pt": "Carregando \"{}\" de novo…",
+  "mark": "traduzir + montado",
+  "why": "{} = nome do álbum"
+ },
+ {
+  "id": "ser.n-is-not-loaded-on",
+  "pt": "\"{}\" não está carregado nesta tela",
+  "mark": "traduzir + montado",
+  "why": "{} = nome; «carregado» pode variar com o gênero do item"
+ },
+ {
+  "id": "ser.acclaim-ratings",
+  "pt": "Notas da crítica",
+  "mark": "MJRP decide",
+  "why": "«Acclaim» é a nota agregada da crítica; escolhi «Notas da crítica», mas «Aclamação» também serve."
+ },
+ {
+  "id": "ser.your-own-ranking",
+  "pt": "Seu próprio ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.because-spotify-is-not-connected",
+  "pt": "porque o Spotify não está conectado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.the-server-paused-the-load",
+  "pt": "O servidor pausou o carregamento antes de este álbum ser encontrado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.its",
+  "pt": "Sua",
+  "mark": "traduzir + montado",
+  "why": "concorda em gênero com o item seguinte (Sua/Seu); EN «Its» é ambíguo"
+ },
+ {
+  "id": "ser.their",
+  "pt": "Sua",
+  "mark": "traduzir + montado",
+  "why": "concorda em gênero/número com o item seguinte (Sua/Seu/Suas/Seus); EN «Their» é ambíguo"
+ },
+ {
+  "id": "ser.this-series-has-no-albums",
+  "pt": "Esta série não tem álbuns.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.none-of-the-n-n",
+  "pt": "Nenhum dos {} {} pôde ser carregado: {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = número, «álbum/álbuns» e motivo; plural: 1 álbum / n álbuns"
+ },
+ {
+  "id": "ser.loading-albums-n-of-n",
+  "pt": "Carregando álbuns: {} de {}…",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens"
+ },
+ {
+  "id": "ser.waiting-for-the-ratings-of",
+  "pt": "Aguardando as notas de {} de {} {}…",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens e «álbum/álbuns»; plural"
+ },
+ {
+  "id": "misc.avg-rating-n",
+  "pt": "Nota média: {}",
+  "mark": "traduzir + montado",
+  "why": "{} = valor"
+ },
+ {
+  "id": "misc.avg-pop-n",
+  "pt": "Pop. média: {}",
+  "mark": "traduzir + montado",
+  "why": "{} = valor; «Pop.» abrevia Popularidade"
+ },
+ {
+  "id": "ser.your-sign-in-could-not",
+  "pt": "Não foi possível confirmar sua entrada. Entre de novo para continuar carregando as notas.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.it-resumes-by-itself-at",
+  "pt": "Ela continua sozinha às {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = horário; «ela» se refere à carga (feminino)"
+ },
+ {
+  "id": "ser.the-ratings-source-asked-to",
+  "pt": "A fonte das notas pediu para ir mais devagar. O carregamento das notas está pausado.{}",
+  "mark": "traduzir + montado",
+  "why": "{} = frase opcional (ex.: «Ela continua sozinha às …»)"
+ },
+ {
+  "id": "ser.spotify-asked-to-slow-down",
+  "pt": "O Spotify pediu para ir mais devagar. O carregamento da popularidade está pausado.{}",
+  "mark": "traduzir + montado",
+  "why": "{} = frase opcional"
+ },
+ {
+  "id": "ser.the-server-asked-to-slow",
+  "pt": "O servidor pediu para ir mais devagar. O carregamento está pausado.{}",
+  "mark": "traduzir + montado",
+  "why": "{} = frase opcional"
+ },
+ {
+  "id": "misc.studio",
+  "pt": "Estúdio",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.singles",
+  "pt": "Singles",
+  "mark": "fica",
+  "why": "«Singles» é usado como está no meio musical em pt-BR"
+ },
+ {
+  "id": "misc.live",
+  "pt": "Ao vivo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.compendiums",
+  "pt": "Coletâneas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.other",
+  "pt": "Outros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.deluxe",
+  "pt": "Deluxe",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "misc.remaster",
+  "pt": "Remaster",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "misc.single",
+  "pt": "Single",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "misc.compilation",
+  "pt": "Coletânea",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.asked-for-by-its-short",
+  "pt": "Pedido pelo título curto: o catálogo só tem este, com um subtítulo.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.asked-for-by-its-short-2",
+  "pt": "Pedido pelo título curto: o catálogo só tem este, com mais coisa entre parênteses.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.asked-for-by-the-name",
+  "pt": "Pedido pelo nome que o catálogo escreve entre parênteses.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.asked-for-by-its-title",
+  "pt": "Pedido pelo título: o catálogo escreve o nome do artista na frente.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.asked-for-in-another-spelling",
+  "pt": "Pedido com outra grafia: o catálogo escreve o título assim.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.thealbumblender-playlist-n-n-n",
+  "pt": "TheAlbumBlender Playlist {} {}:{}",
+  "mark": "MJRP decide + montado",
+  "why": "Nome gerado de playlist, com 3 {}. Manter «TheAlbumBlender Playlist» em inglês (marca) ou traduzir é escolha do produto."
+ },
+ {
+  "id": "misc.no-album-was-added",
+  "pt": "Nenhum álbum foi adicionado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.amazon",
+  "pt": "Amazon",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "misc.n-n-cd",
+  "pt": "{} {} CD",
+  "mark": "traduzir + montado",
+  "why": "{} = artista e álbum; fica «CD»"
+ },
+ {
+  "id": "misc.each-link-opens-the-store",
+  "pt": "Cada link abre a loja neste álbum, em CD. O app não ganha nada com esses links hoje.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.selling-and-trading-between-collectors",
+  "pt": "Venda e troca entre colecionadores: ainda não está no app",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.add-between-artist-and-album",
+  "pt": "coloque « - » entre o artista e o álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.add-the-album-name-after",
+  "pt": "coloque o nome do álbum depois de « - »",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.n-n-ready-n-to",
+  "pt": "{}: {} prontas, {} para corrigir. As linhas para corrigir são ignoradas; as outras entram.",
+  "mark": "traduzir + montado",
+  "why": "{} = nome, contagens; gênero/plural de «pronta(s)» (linhas): 1 pronta / n prontas"
+ },
+ {
+  "id": "home.add-this-line",
+  "pt": "Adicionar esta linha",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.add-these-n-lines",
+  "pt": "Adicionar estas {} linhas",
+  "mark": "traduzir + montado",
+  "why": "{} = número; plural"
+ },
+ {
+  "id": "home.n-from-n-the-order",
+  "pt": "{} de {} · a ordem conta",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens/rótulos"
+ },
+ {
+  "id": "home.add-the-other-n",
+  "pt": "Adicionar os outros {}",
+  "mark": "traduzir + montado",
+  "why": "{} = número; «os outros» concorda com álbuns (masculino plural)"
+ },
+ {
+  "id": "home.add-all-n-n",
+  "pt": "Adicionar todos os {} {}",
+  "mark": "traduzir + montado",
+  "why": "{} = número e «álbum/álbuns»; plural"
+ },
+ {
+  "id": "home.add-the-1-n",
+  "pt": "Adicionar o 1 {}",
+  "mark": "traduzir + montado",
+  "why": "{} = «álbum»; singular, gênero masculino"
+ },
+ {
+  "id": "home.n-n-newest-first",
+  "pt": "{} {} · mais recentes primeiro",
+  "mark": "traduzir + montado",
+  "why": "{} = número e «álbum/álbuns»; plural"
+ },
+ {
+  "id": "home.n-confirming-album-types",
+  "pt": "{} · confirmando os tipos de álbum…",
+  "mark": "traduzir + montado",
+  "why": "{} = texto anterior"
+ },
+ {
+  "id": "home.no-albums-yet",
+  "pt": "Nenhum álbum ainda",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.search-then-tap-a-cover",
+  "pt": "Busque e toque numa capa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.tap-a-cover-to-add",
+  "pt": "Toque numa capa para adicionar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.click-a-cover-to-add",
+  "pt": "Clique numa capa para adicioná-la.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.search-an-artist-then-click",
+  "pt": "Busque um artista e clique numa capa para adicioná-la.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.n-you-name-the-series",
+  "pt": "{} Você dá nome à série no final.",
+  "mark": "traduzir + montado",
+  "why": "{} = frase anterior"
+ },
+ {
+  "id": "home.your-series-is-empty",
+  "pt": "Sua série está vazia",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.apple-music",
+  "pt": "Apple Music",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.n-from-your-n-series",
+  "pt": "{} das suas {} séries serão adicionados como Não tenho.",
+  "mark": "traduzir + montado",
+  "why": "{} = número e rótulo; plural: 1 álbum / n álbuns, e «série(s)»"
+ },
+ {
+  "id": "inv.every-album-of-your-series",
+  "pt": "Todos os álbuns das suas séries já estão no seu inventário. Nada foi adicionado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.your-series-have-no-albums",
+  "pt": "Suas séries não têm álbuns para adicionar. Nada foi adicionado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.adding-n",
+  "pt": "Adicionando {}…",
+  "mark": "traduzir + montado",
+  "why": "{} = número/rótulo"
+ },
+ {
+  "id": "inv.adding-albums-n-of-n",
+  "pt": "Adicionando álbuns… {} de {}",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens"
+ },
+ {
+  "id": "inv.reload-the-page-to-see",
+  "pt": "Recarregue a página para vê-los.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.added-n-as-not-owned",
+  "pt": "{} adicionados como Não tenho.{}",
+  "mark": "traduzir + montado",
+  "why": "{} = número e rótulo (plural: 1 adicionado / n adicionados), segundo {} = frase opcional"
+ },
+ {
+  "id": "inv.no-album-was-added-the",
+  "pt": "Nenhum álbum foi adicionado: a gravação falhou e seu inventário está como estava. Tente de novo.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.added-n-of-n-as",
+  "pt": "{} de {} adicionados como Não tenho, e depois uma gravação falhou. {} {} não adicionados: execute a ação de novo para adicionar o resto.",
+  "mark": "traduzir + montado",
+  "why": "plural/gênero: 1 não adicionado / n não adicionados; {} = contagens e rótulo"
+ },
+ {
+  "id": "inv.update-ratings",
+  "pt": "Atualizar notas?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.read-the-ratings-of-n",
+  "pt": "Ler as notas de {}? Isso pode levar alguns minutos.",
+  "mark": "traduzir + montado",
+  "why": "{} = número e rótulo; plural"
+ },
+ {
+  "id": "inv.read-ratings",
+  "pt": "Ler notas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reading-ratings-n-of-n",
+  "pt": "Lendo notas… {} de {}",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens"
+ },
+ {
+  "id": "inv.saving-ratings",
+  "pt": "Salvando notas…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.spotify-is-not-connected-popularity",
+  "pt": "O Spotify não está conectado: a popularidade não foi lida para {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = nome/quantidade"
+ },
+ {
+  "id": "inv.a-source-did-not-answer",
+  "pt": "Uma fonte não respondeu para {}: os números que {} tinha antes foram mantidos.",
+  "mark": "traduzir + montado",
+  "why": "{} = álbum(ns); o segundo {} = «ele/eles» — pode precisar de concordância (ele tinha / eles tinham)"
+ },
+ {
+  "id": "inv.ratings-updated-for-n-of",
+  "pt": "Notas atualizadas para {} de {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens"
+ },
+ {
+  "id": "inv.no-ratings-were-saved-the",
+  "pt": "Nenhuma nota foi salva: a gravação falhou e seu inventário está como estava. Tente de novo.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.saved-ratings-for-n-of",
+  "pt": "Notas salvas para {} de {}, e depois uma gravação falhou. Execute Atualizar notas de novo para salvar o resto.",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens; «Atualizar notas» repete o rótulo do botão"
+ },
+ {
+  "id": "inv.artist-a-z",
+  "pt": "Artista (A-Z)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.artist-z-a",
+  "pt": "Artista (Z-A)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.avg-rating",
+  "pt": "Nota média (↓)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.avg-rating-2",
+  "pt": "Nota média (↑)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.avg-pop",
+  "pt": "Pop. média (↓)",
+  "mark": "traduzir",
+  "why": "«Pop.» abrevia Popularidade"
+ },
+ {
+  "id": "inv.avg-pop-2",
+  "pt": "Pop. média (↑)",
+  "mark": "traduzir",
+  "why": "«Pop.» abrevia Popularidade"
+ },
+ {
+  "id": "inv.value",
+  "pt": "Valor (↓)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.value-2",
+  "pt": "Valor (↑)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.newest",
+  "pt": "Mais recentes",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.oldest",
+  "pt": "Mais antigos",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.not-owned",
+  "pt": "Não tenho",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.moved-to-collection",
+  "pt": "Movido para a Coleção",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.marked-as-not-owned",
+  "pt": "Marcado como Não tenho",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.moved-to-wishlist",
+  "pt": "Movido para a Lista de desejos",
+  "mark": "traduzir",
+  "why": "Wishlist não está no glossário: usei «Lista de desejos»."
+ },
+ {
+  "id": "inv.all",
+  "pt": "Todos",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-did-not-answer",
+  "pt": "O Discogs não respondeu",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-limit-reached",
+  "pt": "Limite do Discogs atingido",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-refused-the-token",
+  "pt": "O Discogs recusou o token",
+  "mark": "traduzir",
+  "why": "«token» fica; é palavra técnica comum."
+ },
+ {
+  "id": "inv.sign-in-to-read-values",
+  "pt": "Entre para ler os valores",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.the-value-could-not-be-2",
+  "pt": "Não foi possível ler o valor",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.no-value-yet",
+  "pt": "Ainda sem valor",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.waiting-for-a-value",
+  "pt": "Aguardando um valor",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.no-cd-edition-found",
+  "pt": "Nenhuma edição em CD encontrada",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.in-my-collection-worth",
+  "pt": "Na minha coleção · vale",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.not-mine-yet-costs",
+  "pt": "Ainda não é meu · custa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.mean-of-mint-near-mint",
+  "pt": "Média de Mint, Near Mint e Very Good Plus no Discogs, para a edição em CD mais comum",
+  "mark": "traduzir",
+  "why": "Graus de conservação (Mint etc.) ficam em inglês, como no Discogs."
+ },
+ {
+  "id": "inv.data-provided-by-discogs",
+  "pt": "Dados fornecidos pelo Discogs.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.lowest-price-this-cd-edition",
+  "pt": "Menor preço pelo qual esta edição em CD está à venda no Discogs agora",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-values-are-lowest-asking",
+  "pt": "Os valores do Discogs são, por ora, os menores preços pedidos.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.exchange-rates-are-not-available",
+  "pt": "As taxas de câmbio não estão disponíveis: os valores aparecem em USD.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.converted-from-usd-at-today",
+  "pt": "Convertido de USD pela taxa de hoje (1 USD = {} {}).",
+  "mark": "traduzir + montado",
+  "why": "{} = valor e moeda"
+ },
+ {
+  "id": "inv.reading-values-n-of-n",
+  "pt": "Lendo valores… {} de {}",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens"
+ },
+ {
+  "id": "inv.you-can-keep-using-the",
+  "pt": "Você pode continuar usando o inventário. Isso leva {} para {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = tempo e quantidade/rótulo"
+ },
+ {
+  "id": "inv.reading-n-takes-n",
+  "pt": "Ler {} leva {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = o que se lê e tempo"
+ },
+ {
+  "id": "inv.read-it-now",
+  "pt": "Ler agora",
+  "mark": "traduzir",
+  "why": "Mesmo texto de «Read them now»: em pt-BR serve para singular e plural"
+ },
+ {
+  "id": "inv.read-them-now",
+  "pt": "Ler agora",
+  "mark": "traduzir",
+  "why": "Mesmo texto de «Read it now»: em pt-BR serve para singular e plural"
+ },
+ {
+  "id": "inv.discogs-refused-the-token-of",
+  "pt": "O Discogs recusou o token do app, então a leitura parou. O token no servidor precisa ser trocado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reading-values-needs-you-signed",
+  "pt": "Ler os valores exige que você esteja conectado com uma conta, então a leitura parou.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.the-limit-of-requests-was",
+  "pt": "O limite de requisições foi atingido e pede uma espera longa, então a leitura parou. Tente de novo mais tarde.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-values-were-turned-off",
+  "pt": "Os valores do Discogs foram desligados no servidor, então a leitura parou.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.values-read-for-n-of",
+  "pt": "Valores lidos para {} de {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens"
+ },
+ {
+  "id": "inv.n-n-no-cd-edition",
+  "pt": "{} {} sem edição em CD no Discogs.",
+  "mark": "traduzir + montado",
+  "why": "{} = número e «álbum/álbuns»; plural: 1 está / n estão (o código escolhe o verbo)"
+ },
+ {
+  "id": "inv.discogs-suggests-no-price-for",
+  "pt": "O Discogs não sugere preço para {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = álbum(ns)"
+ },
+ {
+  "id": "inv.stopped-by-you-after-n",
+  "pt": "Interrompido por você após {} de {}.",
+  "mark": "traduzir + montado",
+  "why": "{} = contagens"
+ },
+ {
+  "id": "ser.asking-spotify-for-popularity",
+  "pt": "Perguntando ao Spotify pela popularidade…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.connect-spotify-to-see-popularity",
+  "pt": "Conecte o Spotify para ver a popularidade.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.spotify-did-not-answer",
+  "pt": "O Spotify não respondeu.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.ask-again",
+  "pt": "Perguntar de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.spotify-has-no-popularity-for",
+  "pt": "O Spotify não tem popularidade para este álbum.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.by-spotify-popularity-where-there",
+  "pt": "pela popularidade do Spotify, onde houver, e senão na ordem do álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.the-catalog-did-not-answer",
+  "pt": "O catálogo não respondeu em {} segundos.",
+  "mark": "traduzir + montado",
+  "why": "{} = número; plural: 1 segundo / n segundos"
+ },
+ {
+  "id": "ser.the-search-could-not-be",
+  "pt": "Não foi possível concluir a busca.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.search-for-an-artist-to",
+  "pt": "Busque um artista para começar a escanear.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.searching-the-catalog-for-n",
+  "pt": "Buscando «{}» no catálogo…",
+  "mark": "traduzir + montado",
+  "why": "{} = nome do artista"
+ },
+ {
+  "id": "ser.the-albums-appear-as-soon",
+  "pt": "Os álbuns aparecem assim que o catálogo responder.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.check-the-spelling-or-try",
+  "pt": "Confira a grafia ou tente outro nome.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.no-albums-found-for-n",
+  "pt": "Nenhum álbum encontrado para «{}».",
+  "mark": "traduzir + montado",
+  "why": "{} = nome do artista"
+ },
+ {
+  "id": "ser.nothing-was-changed-you-can",
+  "pt": "Nada foi alterado. Você pode perguntar de novo.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.scanning",
+  "pt": "Escaneando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.confirming-album-types",
+  "pt": "· confirmando os tipos de álbum…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.not-found",
+  "pt": "→ Não encontrado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.search-failed",
+  "pt": "→ Falha na busca",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.scan",
+  "pt": "Escanear",
+  "mark": "MJRP decide",
+  "why": "«Scan» é verbo de botão da busca no catálogo; «Escanear» ou «Varrer» (e «Varrendo…» na linha 175)? Usei Escanear."
+ },
+ {
+  "id": "ser.give-the-series-a-name",
+  "pt": "Dê um nome à série antes de salvar.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.the-database-is-not-ready",
+  "pt": "O banco de dados ainda não está pronto. Nada foi salvo; suas alterações continuam aqui.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.the-series-could-not-be",
+  "pt": "Não foi possível salvar a série. Suas alterações continuam aqui: você pode tentar de novo.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.saving",
+  "pt": "Salvando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.unknown-track",
+  "pt": "Faixa desconhecida",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.balanced-default",
+  "pt": "Equilibrado (padrão)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.prioritizes-acclaim-rank-then-rating",
+  "pt": "Dá prioridade ao ranking de aclamação, depois à nota e depois à pontuação.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.track-n",
+  "pt": "Faixa {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o número da faixa"
+ },
+ {
+  "id": "rank.bea-rating",
+  "pt": "Nota BEA",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.prioritizes-besteveralbums-ratings",
+  "pt": "Dá prioridade às notas do BestEverAlbums.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.abstract-strategy",
+  "pt": "Estratégia abstrata",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.base-class",
+  "pt": "Classe base",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.prioritizes-spotify-popularity-0-100",
+  "pt": "Dá prioridade à popularidade no Spotify (0-100).",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.my-ranking",
+  "pt": "Meu ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "rank.your-personal-track-order-based",
+  "pt": "Sua ordem pessoal de faixas, baseada nas suas preferências.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.go-back",
+  "pt": "Voltar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.view-error",
+  "pt": "Ver o erro",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.a-new-version-of-the",
+  "pt": "Uma nova versão do app foi publicada. Carregando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.load-the-new-version",
+  "pt": "Carregar a nova versão",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.the-app-was-updated-and",
+  "pt": "O app foi atualizado e esta aba ainda está com a versão anterior.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.this-screen-could-not-be",
+  "pt": "Não foi possível carregar esta tela",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.the-ai-list",
+  "pt": "a lista da IA",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.http-n-n",
+  "pt": "HTTP {} {}",
+  "mark": "técnico + montado",
+  "why": "dois {}: código e texto do HTTP"
+ },
+ {
+  "id": "ser.robert-plant-jimmy-page",
+  "pt": "robert plant & jimmy page",
+  "mark": "fica",
+  "why": "Nome de artista, não se traduz."
+ },
+ {
+  "id": "ser.page-plant",
+  "pt": "page & plant",
+  "mark": "fica",
+  "why": "Nome de artista, não se traduz."
+ },
+ {
+  "id": "ser.simon-garfunkel",
+  "pt": "simon & garfunkel",
+  "mark": "fica",
+  "why": "Nome de artista, não se traduz."
+ },
+ {
+  "id": "ser.crosby-stills-nash-young",
+  "pt": "crosby, stills, nash & young",
+  "mark": "fica",
+  "why": "Nome de artista, não se traduz."
+ },
+ {
+  "id": "ser.emerson-lake-palmer",
+  "pt": "emerson, lake & palmer",
+  "mark": "fica",
+  "why": "Nome de artista, não se traduz."
+ },
+ {
+  "id": "ser.failed-to-load-albums-data",
+  "pt": "Não foi possível carregar os dados dos álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.n-passed-n-ms",
+  "pt": "{} passou de {} ms",
+  "mark": "traduzir + montado",
+  "why": "primeiro {} é o nome da fonte, segundo é o prazo em ms"
+ },
+ {
+  "id": "ser.no-catalog-has-n",
+  "pt": "Nenhum catálogo tem \"{}\"",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome buscado"
+ },
+ {
+  "id": "ser.apple-music-search",
+  "pt": "Busca no Apple Music",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.the-ratings-request-failed",
+  "pt": "O pedido das notas falhou",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.album-not-found",
+  "pt": "Álbum não encontrado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.apple-music-did-not-answer",
+  "pt": "O Apple Music não respondeu",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.connecting",
+  "pt": "Conectando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.authorizing",
+  "pt": "Autorizando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.creating-folder",
+  "pt": "Criando a pasta…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.exporting-n",
+  "pt": "Exportando {}…",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome da playlist"
+ },
+ {
+  "id": "pl.apple-music-is-not-set",
+  "pt": "O Apple Music não está configurado neste site: nada foi exportado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.apple-music-was-not-authorized",
+  "pt": "O Apple Music não foi autorizado: nada foi exportado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.the-export-to-apple-music",
+  "pt": "A exportação para o Apple Music falhou antes de criar qualquer coisa: {}.",
+  "mark": "traduzir + montado",
+  "why": "{} é o motivo do erro"
+ },
+ {
+  "id": "pl.apple-music-did-not-create",
+  "pt": "O Apple Music não criou {} de {}: {}. Exporte de novo para criar o que falta: o que já foi criado não é criado duas vezes.",
+  "mark": "traduzir + montado",
+  "why": "{} = quantidade, total e motivo; «playlist(s)» não aparece, sem plural a tratar"
+ },
+ {
+  "id": "pl.export-again-to-create-what",
+  "pt": "Exporte de novo para criar o que falta: o que já foi criado não é criado duas vezes.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.n-exported-to-apple-musicnn",
+  "pt": "{} exportada(s) para o Apple Music{}{}.",
+  "mark": "traduzir + montado",
+  "why": "concordância: 1 exportada / n exportadas (o código monta o que vem antes, e os dois últimos {} são sufixos)"
+ },
+ {
+  "id": "pl.the-folder-n-could-not",
+  "pt": "A pasta \"{}\" não pôde ser criada no Apple Music: as playlists ficam no topo da sua biblioteca.",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome da pasta"
+ },
+ {
+  "id": "pl.no-track-was-found-in",
+  "pt": "Nenhuma faixa foi encontrada no Apple Music para {}: não criada.",
+  "mark": "traduzir + montado",
+  "why": "gênero: «não criada» concorda com a playlist; {} é o nome dela"
+ },
+ {
+  "id": "pl.n-n-not-found-in",
+  "pt": "{} {} não encontrada(s) no Apple Music e {} de fora: {}.",
+  "mark": "traduzir + montado",
+  "why": "plural/gênero: 1 faixa / n faixas; o código monta número e palavra, e a concordância de «de fora»"
+ },
+ {
+  "id": "misc.ok",
+  "pt": "OK",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.album-already-in-inventory",
+  "pt": "O álbum já está no inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.price-cannot-be-negative",
+  "pt": "O preço não pode ser negativo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.the-series-and-the-inventory",
+  "pt": "A série e o inventário ainda não são da mesma pessoa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.token-fetch-failed-n",
+  "pt": "Falha ao buscar o token: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o motivo do erro"
+ },
+ {
+  "id": "acct.musickit-start-left-behind-by",
+  "pt": "A inicialização do MusicKit passou do prazo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.failed-to-load-musickit-js",
+  "pt": "Não foi possível carregar o MusicKit JS",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.created-by-mjrp-s-the",
+  "pt": "Criada pelo The Album Blender do MJRP",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.invalid-config-n",
+  "pt": "Configuração inválida: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o motivo"
+ },
+ {
+  "id": "misc.unknown-algorithm-n",
+  "pt": "Algoritmo desconhecido: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o id do algoritmo"
+ },
+ {
+  "id": "misc.algorithm-id-is-required",
+  "pt": "O ID do algoritmo é obrigatório",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.target-duration-must-be-positive",
+  "pt": "A duração desejada deve ser positiva",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.update",
+  "pt": "Atualização",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.moved-track-from-n-to",
+  "pt": "Faixa movida de {} para {}",
+  "mark": "traduzir + montado",
+  "why": "{} são posições ou playlists"
+ },
+ {
+  "id": "pl.reordered-track-in-n",
+  "pt": "Faixa reordenada em {}",
+  "mark": "traduzir + montado",
+  "why": "{} é a playlist"
+ },
+ {
+  "id": "pl.removed-n-from-n",
+  "pt": "\"{}\" removida de {}",
+  "mark": "traduzir + montado",
+  "why": "gênero: «removida» concorda com «faixa»; {} faixa e playlist"
+ },
+ {
+  "id": "pl.removed-playlist-n",
+  "pt": "Playlist {} removida",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome da playlist"
+ },
+ {
+  "id": "pl.renamed-n-to-n",
+  "pt": "{} renomeada para {}",
+  "mark": "traduzir + montado",
+  "why": "gênero: «renomeada» concorda com a playlist"
+ },
+ {
+  "id": "pl.untitled-playlist",
+  "pt": "Playlist sem título",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.generated-by-album-blender",
+  "pt": "Gerada pelo Album Blender",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.as-it-came-to-the",
+  "pt": "Como chegou à tela",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.restored-after-reload",
+  "pt": "Restaurada após recarregar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.there-are-no-playlists-to",
+  "pt": "Não há playlists para salvar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.cannot-save-missing-database-or",
+  "pt": "Não foi possível salvar: faltam o banco de dados ou o ID da série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.cannot-save-the-playlists-on",
+  "pt": "Não foi possível salvar: as playlists na tela não são da série do lote que está sendo editado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.the-series-of-these-playlists",
+  "pt": "a série destas playlists não existe mais",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.saved",
+  "pt": "Salvo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.cannot-delete-missing-database-or",
+  "pt": "Não foi possível excluir: faltam o banco de dados ou o ID da série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.initial-generation",
+  "pt": "Geração inicial",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.untitled-series",
+  "pt": "Série sem título",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.could-not-find-album-n",
+  "pt": "Não foi possível encontrar o álbum \"{}\" na série",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do álbum"
+ },
+ {
+  "id": "misc.spotify-needs-you-to-connect",
+  "pt": "O Spotify precisa que você conecte de novo.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.spotify-asked-to-wait-n",
+  "pt": "O Spotify pediu para esperar {} segundos antes do próximo pedido (limite de requisições).",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 segundo / n segundos (o código trata)"
+ },
+ {
+  "id": "misc.spotify-asked-to-wait-before",
+  "pt": "O Spotify pediu para esperar antes do próximo pedido (limite de requisições).",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.spotify-is-not-set-up",
+  "pt": "O Spotify não está configurado neste site: falta o client id.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.failed-to-exchange-token",
+  "pt": "Falha ao trocar o token",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "acct.refresh-failed",
+  "pt": "Falha ao renovar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.spotify-did-not-answer",
+  "pt": "O Spotify não respondeu",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.part-of-n",
+  "pt": "Parte de {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome da série ou do lote"
+ },
+ {
+  "id": "pl.searching-n",
+  "pt": "Buscando: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é o termo buscado"
+ },
+ {
+  "id": "pl.no-tracks-found-on-spotify",
+  "pt": "Nenhuma faixa encontrada no Spotify",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.creating-n",
+  "pt": "Criando \"{}\"…",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome da playlist"
+ },
+ {
+  "id": "pl.generated-by-mjrp-album-blender",
+  "pt": "Gerada pelo MJRP Album Blender • {}/{} faixas",
+  "mark": "traduzir + montado",
+  "why": "{}/{} = encontradas/total; «faixas» fica no plural"
+ },
+ {
+  "id": "pl.adding-n-tracks-to-n",
+  "pt": "Adicionando {} faixas a \"{}\"…",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 faixa / n faixas"
+ },
+ {
+  "id": "misc.spotify-api-error-n",
+  "pt": "Erro da API do Spotify: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é a mensagem do erro"
+ },
+ {
+  "id": "misc.could-not-get-user-profile",
+  "pt": "Não foi possível obter o perfil do usuário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.created-by-mjrp-album-blender",
+  "pt": "Criada pelo MJRP Album Blender",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.task-passed-its-deadline-of",
+  "pt": "A tarefa passou do prazo de {} ms",
+  "mark": "traduzir + montado",
+  "why": "{} é o prazo em ms"
+ },
+ {
+  "id": "misc.task-cancelled",
+  "pt": "Tarefa cancelada",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.loading-albums",
+  "pt": "Carregando álbuns…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.add-albums-from-the-home",
+  "pt": "Adicione álbuns pela página Início para começar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.no-albums-match-your-filters",
+  "pt": "Nenhum álbum corresponde aos seus filtros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.try-adjusting-your-search-or",
+  "pt": "Tente ajustar a busca ou os filtros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.just-now",
+  "pt": "Agora há pouco",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "nav.yesterday",
+  "pt": "Ontem",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.your-music-your-recipe",
+  "pt": "\"Sua música, sua receita\"",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.choose-your-mix",
+  "pt": "Escolha sua mistura",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.step-1",
+  "pt": "Passo 1",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.choose-your-recipe",
+  "pt": "Escolha sua receita",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.step-2",
+  "pt": "Passo 2",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.complete-step-1-to-unlock",
+  "pt": "Conclua o passo 1 para liberar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.pick-your-ingredients",
+  "pt": "Escolha seus ingredientes",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.step-3",
+  "pt": "Passo 3",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.blend-it",
+  "pt": "Faça o Blend!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.step-4",
+  "pt": "Passo 4",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.complete-previous-steps-to-unlock",
+  "pt": "Conclua os passos anteriores para liberar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.mix",
+  "pt": "Mistura",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.recipe",
+  "pt": "Receita",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.ingredients",
+  "pt": "Ingredientes",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.blend-it-ready",
+  "pt": "Faça o Blend! Pronto!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.blend-it-2",
+  "pt": "Faça o Blend!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.blending",
+  "pt": "Misturando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.step-1-of-4-choose",
+  "pt": "Passo 1 de 4: escolha uma série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.step-2-of-4-choose",
+  "pt": "Passo 2 de 4: escolha uma receita",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.n-n-min",
+  "pt": "{} · {} min",
+  "mark": "traduzir + montado",
+  "why": "nome da receita e duração em minutos"
+ },
+ {
+  "id": "blend.select-a-series",
+  "pt": "👈 Selecione uma série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.select-a-recipe",
+  "pt": "👈 Selecione uma receita",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.blending-2",
+  "pt": "Misturando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.nblend-your-n-playlistn",
+  "pt": "{}Faça o Blend de {} playlist{}!",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 playlist / n playlists (o último {} é o «s»); o primeiro {} é um prefixo (emoji)"
+ },
+ {
+  "id": "blend.n-min-n-mode",
+  "pt": "({} min, modo {})",
+  "mark": "traduzir + montado",
+  "why": "minutos e nome do modo, na mesma ordem do EN"
+ },
+ {
+  "id": "blend.on",
+  "pt": "em",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.using",
+  "pt": "Usando",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "blend.generated-n-playlist-s",
+  "pt": "{} playlist(s) gerada(s)!",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 playlist gerada / n playlists geradas"
+ },
+ {
+  "id": "blend.generation-failed",
+  "pt": "Falha ao gerar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.this-feature",
+  "pt": "Este recurso",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.artist-series",
+  "pt": "Séries por artista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.organize-your-music-by-artists",
+  "pt": "Organize sua música por artista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.categorize-music-by-genres",
+  "pt": "Classifique a música por gênero",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.genre-series",
+  "pt": "Séries por gênero",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.create-collections-of-individual-tracks",
+  "pt": "Crie coleções de faixas avulsas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.track-series",
+  "pt": "Séries de faixas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.mix-and-blend-your-series",
+  "pt": "Misture suas séries em playlists perfeitas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.coming-soon",
+  "pt": "Em breve",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.n-back-to-albums",
+  "pt": "{} Voltar aos álbuns",
+  "mark": "traduzir + montado",
+  "why": "{} é um ícone"
+ },
+ {
+  "id": "soon.coming-soon-2",
+  "pt": "Em breve",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "soon.we-re-working-hard-to",
+  "pt": "Estamos trabalhando para trazer este recurso. Fique ligado!",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.all-years",
+  "pt": "Todos os anos",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.all-sources",
+  "pt": "Todas as fontes",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.pending",
+  "pt": "Pendente",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.ai-enriched",
+  "pt": "Enriquecido por IA",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.name-a-z",
+  "pt": "Nome (A-Z)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.name-z-a",
+  "pt": "Nome (Z-A)",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.all-artists",
+  "pt": "Todos os artistas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ser.all-series",
+  "pt": "Todas as séries",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.click",
+  "pt": "Clique em",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.tap",
+  "pt": "Toque em",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.an-artist-or-paste-a",
+  "pt": "Um artista, ou cole uma lista de álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.search-an-artist-or-paste",
+  "pt": "Busque um artista, ou cole uma lista de álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.pick-the-albums",
+  "pt": "Escolha os álbuns.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.we-blend-the-playlists",
+  "pt": "A gente faz o Blend das playlists.",
+  "mark": "traduzir",
+  "why": "«Blend» como verbo: «fazer o Blend»."
+ },
+ {
+  "id": "home.a-series-is-the-set",
+  "pt": "Uma série é o conjunto de álbuns que você quer ouvir juntos, de um artista ou de vários: o Blend a transforma em playlists equilibradas.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.find",
+  "pt": "Encontrar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.create",
+  "pt": "Criar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.album-types",
+  "pt": "Tipos de álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.searching",
+  "pt": "Buscando…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.paste-or-type-one-album",
+  "pt": "Cole ou digite um álbum por linha.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.search-an-artist-instead",
+  "pt": "Buscar um artista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.press-enter-or-search-to",
+  "pt": "Pressione Enter ou Buscar para ver os álbuns. Uma lista com um álbum por linha também funciona.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.type-an-artist-to-see",
+  "pt": "Digite um artista para ver os álbuns dele, ou",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.looking-for-n-in-the",
+  "pt": "Procurando «{}» no catálogo… as capas aparecem assim que ele responder.",
+  "mark": "traduzir + montado",
+  "why": "{} é o termo buscado"
+ },
+ {
+  "id": "home.check-the-spelling-or-paste",
+  "pt": "Confira a grafia ou cole os álbuns como lista: um por linha, Artista - Álbum.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.paste-a-list",
+  "pt": "Colar uma lista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.nothing-was-changed-try-again",
+  "pt": "Nada foi alterado. Tente de novo daqui a pouco.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "home.your-series-still-has-its",
+  "pt": "Sua série continua com {} álbum{}. Tente de novo daqui a pouco.",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 álbum / n álbuns; o segundo {} é o sufixo («ns»/vazio) — em pt «álbum»→«álbuns» não é só «s», o código precisa tratar"
+ },
+ {
+  "id": "home.n-is-saved-and-won",
+  "pt": "«{}» está salva e não vai mudar aqui. {} uma capa para começar outra série.",
+  "mark": "traduzir + montado",
+  "why": "{} nome da série; o segundo {} é «Clique em»/«Toque em» (home.click / home.tap)"
+ },
+ {
+  "id": "inv.status",
+  "pt": "Status",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.written-by-you",
+  "pt": "Escrito por você.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.this-edition-on-discogs",
+  "pt": "Esta edição no Discogs ↗",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.sell",
+  "pt": "Vender",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.sell-or-trade",
+  "pt": "Vender ou trocar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.trade",
+  "pt": "Trocar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.open-album",
+  "pt": "Abrir álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.remove-from-inventory",
+  "pt": "Remover do inventário",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.format-2",
+  "pt": "Formato",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.sort-by",
+  "pt": "Ordenar por",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.show-n-n",
+  "pt": "Mostrar {} {}",
+  "mark": "traduzir + montado",
+  "why": "quantidade e palavra (ex.: 1 álbum / n álbuns); o código trata o plural"
+ },
+ {
+  "id": "inv.filters-and-order",
+  "pt": "Filtros e ordem",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.collection-actions",
+  "pt": "Ações da coleção",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.jump-to-a-position",
+  "pt": "Ir para uma posição",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.jump-to-an-artist",
+  "pt": "Ir para um artista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.about-the-values",
+  "pt": "Sobre os valores",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.why-lowest-asking-prices",
+  "pt": "Por que os menores preços pedidos?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.add-the-albums-of-my",
+  "pt": "Adicione os álbuns das minhas séries",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.update-ratings-2",
+  "pt": "Atualizar notas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.update-values",
+  "pt": "Atualizar valores",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.puts-every-album-of-your",
+  "pt": "Coloca todos os álbuns das suas séries no inventário, como Não tenho. Você vê quantos são e confirma antes.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reads-the-besteveralbums-rating-and",
+  "pt": "Lê a nota do BestEverAlbums e a popularidade no Spotify de cada álbum, para ordenar o inventário por elas.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reads-the-estimated-value-of",
+  "pt": "Lê do Discogs o valor estimado de cada álbum. Você pode interromper, e o inventário continua utilizável.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.search-collection",
+  "pt": "Buscar na coleção",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.1-n",
+  "pt": "1–N",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.a-z",
+  "pt": "A–Z",
+  "mark": "fica",
+  "why": ""
+ },
+ {
+  "id": "inv.filters-and-order-n-on",
+  "pt": "Filtros e ordem, {} ativos",
+  "mark": "traduzir + montado",
+  "why": "{} é a quantidade de filtros ativos; «ativos» concorda em plural (1 ativo / n ativos); o código deve tratar"
+ },
+ {
+  "id": "inv.stop",
+  "pt": "Parar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.my-collection",
+  "pt": "Minha Coleção",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.filter-by-status",
+  "pt": "Filtrar por status",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.show-only-these-albums-press",
+  "pt": "Mostrar só estes álbuns; toque de novo para mostrar todos",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.put-every-album-of-your",
+  "pt": "Colocar todos os álbuns das suas séries no inventário, como Não tenho",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.read-the-besteveralbums-rating-and",
+  "pt": "Ler a nota do BestEverAlbums e a popularidade no Spotify de cada álbum, para ordenar o inventário por elas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.read-the-estimated-value-of",
+  "pt": "Ler do Discogs o valor estimado de cada álbum",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.search-collection-2",
+  "pt": "Buscar na coleção...",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.all-formats",
+  "pt": "Todos os formatos",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.toggle-grid-list-view",
+  "pt": "Alternar entre grade e lista",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.remove-from-inventory-2",
+  "pt": "Remover do Inventário?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.are-you-sure-you-want",
+  "pt": "Tem certeza de que quer remover \"{}\" da sua coleção?",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do álbum"
+ },
+ {
+  "id": "pl.move-to-the-top",
+  "pt": "Mover para o topo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.move-to-the-end",
+  "pt": "Mover para o fim",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.removed-n",
+  "pt": "\"{}\" removida",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome de uma faixa; gênero: «faixa» é feminino, «removida»; se for outro item, o código trata"
+ },
+ {
+  "id": "pl.moved-n-to-n",
+  "pt": "\"{}\" movida para {}",
+  "mark": "traduzir + montado",
+  "why": "{} é faixa e depois a playlist de destino; «movida» concorda com faixa (feminino)"
+ },
+ {
+  "id": "pl.move-to-another-playlist",
+  "pt": "Mover para outra playlist",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.remove-from-this-playlist",
+  "pt": "Remover desta playlist",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.track",
+  "pt": "Faixa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.delete-playlist",
+  "pt": "Excluir playlist?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.n-and-its-tracks-leave",
+  "pt": "\"{}\" e as faixas dela saem deste conjunto. Você pode desfazer até salvar.",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome da playlist; «dela» concorda com playlist (feminino)"
+ },
+ {
+  "id": "pl.delete-playlist-2",
+  "pt": "Excluir playlist",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.rename",
+  "pt": "Renomear",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.reconfigure-and-regenerate",
+  "pt": "Reconfigurar e gerar de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.export-playlists",
+  "pt": "Exportar playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.export-to-apple-music",
+  "pt": "Exportar para o Apple Music",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.download-json",
+  "pt": "Baixar JSON",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.unsaved-batch",
+  "pt": "Lote não salvo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.the-export-to-apple-music-2",
+  "pt": "A exportação para o Apple Music já está em andamento.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.mjrp-playlists",
+  "pt": "MJRP Playlists",
+  "mark": "fica",
+  "why": "Nome de playlist criada no Apple Music; marca, fica igual."
+ },
+ {
+  "id": "pl.the-export-to-apple-music-3",
+  "pt": "A exportação para o Apple Music falhou: {}",
+  "mark": "traduzir + montado",
+  "why": "{} é a mensagem de erro"
+ },
+ {
+  "id": "pl.you-have-changes-to-these",
+  "pt": "Você tem alterações nestas playlists que não foram salvas. Sair sem salvar?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.batch-not-found",
+  "pt": "Lote não encontrado",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.could-not-load-playlists-for",
+  "pt": "Não foi possível carregar as playlists do lote \"{}\".",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do lote"
+ },
+ {
+  "id": "pl.return-to-saved-playlists",
+  "pt": "Voltar para as Playlists salvas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.the-batch-may-have-been",
+  "pt": "O lote pode ter sido excluído ou o nome e os atributos da série não conferem.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.generating-balanced-playlists",
+  "pt": "Gerando playlists equilibradas...",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.no-albums-of-the-selected",
+  "pt": "Nenhum álbum dos tipos selecionados.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.n-n-click-to-add",
+  "pt": "{}, {}. Clique para adicionar",
+  "mark": "traduzir + montado",
+  "why": "{} são título e artista"
+ },
+ {
+  "id": "inv.n-open-this-edition-on",
+  "pt": "{} Abrir esta edição no Discogs",
+  "mark": "traduzir + montado",
+  "why": "{} é um valor (preço) colocado antes"
+ },
+ {
+  "id": "inv.cd-n-lowest-for-sale",
+  "pt": "CD · {} · menor preço à venda",
+  "mark": "traduzir + montado",
+  "why": "{} é o valor"
+ },
+ {
+  "id": "inv.cd-n",
+  "pt": "CD · {}",
+  "mark": "fica + montado",
+  "why": "{} é o valor"
+ },
+ {
+  "id": "inv.n-written-by-you",
+  "pt": "{} · escrito por você",
+  "mark": "traduzir + montado",
+  "why": "{} é o valor"
+ },
+ {
+  "id": "inv.avg-rating-3",
+  "pt": "Nota média",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.mean-besteveralbums-rating-of-the",
+  "pt": "Média das notas do BestEverAlbums das faixas; entre parênteses, de quantas faixas do álbum ela foi feita",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.avg-pop-3",
+  "pt": "Pop. média",
+  "mark": "traduzir",
+  "why": "Abreviação de popularidade média; rótulo curto."
+ },
+ {
+  "id": "inv.mean-spotify-popularity-of-the",
+  "pt": "Média da popularidade no Spotify das faixas; entre parênteses, de quantas faixas do álbum ela foi feita",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.sell-trade-or-buy",
+  "pt": "Vender, trocar ou comprar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.background-15151a-border-1px-solid",
+  "pt": "background:#15151a;border:1px solid rgba(255,255,255,.08)",
+  "mark": "técnico",
+  "why": "CSS, não é texto para pessoas."
+ },
+ {
+  "id": "inv.loading-inventory",
+  "pt": "Carregando inventário...",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.no-albums-found-matching-your",
+  "pt": "Nenhum álbum encontrado com esses filtros.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.mean-of-the-besteveralbums-rating",
+  "pt": "Média da nota do BestEverAlbums e da popularidade no Spotify das faixas; entre parênteses, de quantas faixas do álbum cada média foi feita",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.open-n-n",
+  "pt": "Abrir {}, {}",
+  "mark": "traduzir + montado",
+  "why": "{} são título e artista"
+ },
+ {
+  "id": "inv.status-n-change-it",
+  "pt": "Status: {}. Alterar",
+  "mark": "traduzir + montado",
+  "why": "{} é o status (Tenho / Não tenho)"
+ },
+ {
+  "id": "inv.all-n-albums",
+  "pt": "Todos os {} álbuns",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 álbum / n álbuns; com 1, «O álbum»"
+ },
+ {
+  "id": "inv.showing-n-of-n",
+  "pt": "Mostrando {} de {}",
+  "mark": "traduzir + montado",
+  "why": "duas quantidades"
+ },
+ {
+  "id": "inv.show-n-more",
+  "pt": "Mostrar mais {}",
+  "mark": "traduzir + montado",
+  "why": "{} é a quantidade"
+ },
+ {
+  "id": "inv.clear-search-and-filters",
+  "pt": "Limpar busca e filtros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.no-albums-match",
+  "pt": "Nenhum álbum corresponde",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.nothing-in-your-collection-matches",
+  "pt": "Nada na sua coleção corresponde à busca e aos filtros.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.albums-you-add-from-the",
+  "pt": "Os álbuns que você adiciona pela tela Álbuns aparecem aqui. Você também pode colocar todos os álbuns das suas séries aqui de uma vez, como Não tenho.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.your-collection-is-empty",
+  "pt": "Sua coleção está vazia",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.adding-the-albums-of-your",
+  "pt": "Adicionando os álbuns das suas séries…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.reading-values",
+  "pt": "Lendo valores…",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.currency-2",
+  "pt": "Moeda",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.each-value-links-to-its",
+  "pt": "Cada valor leva à sua edição no Discogs.{}",
+  "mark": "traduzir + montado",
+  "why": "{} é um trecho opcional que segue a frase (ex.: aviso adicional)"
+ },
+ {
+  "id": "inv.estimated-value-of-what-i",
+  "pt": "Valor estimado do que tenho:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.to-buy-the-rest",
+  "pt": "Para comprar o resto:",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.the-suggestions-are-tried-again",
+  "pt": ": as sugestões são tentadas de novo na próxima vez que os valores forem lidos.",
+  "mark": "traduzir",
+  "why": "Texto vem logo após um link; manter os dois-pontos iniciais."
+ },
+ {
+  "id": "inv.discogs-suggests-prices-only-to",
+  "pt": "O Discogs só sugere preços a contas com as configurações de vendedor preenchidas.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.discogs-com-settings-seller",
+  "pt": "discogs.com/settings/seller",
+  "mark": "fica",
+  "why": "Endereço de site."
+ },
+ {
+  "id": "inv.until-then-the-values-here",
+  "pt": "Até lá, os valores aqui são o menor preço pelo qual cada CD está à venda. Preencha as configurações em",
+  "mark": "traduzir",
+  "why": "Texto vem logo antes de um link."
+ },
+ {
+  "id": "inv.owned",
+  "pt": "Tenho",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.to-buy",
+  "pt": "Para comprar",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.lowest-asking-prices-why",
+  "pt": "Menores preços pedidos · Por quê?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.estimated-value-of-what-i-2",
+  "pt": "Valor estimado do que tenho",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.to-buy-the-rest-2",
+  "pt": "Para comprar o resto",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "inv.each-value-links-to-its-2",
+  "pt": "Cada valor leva à sua edição no Discogs.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.your-playlists-series",
+  "pt": "Suas Séries de Playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.recently-updated",
+  "pt": "Atualizadas recentemente",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.read-the-saved-playlists-again",
+  "pt": "Ler as playlists salvas de novo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.show-series",
+  "pt": "Mostrar séries",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.album-series",
+  "pt": "Séries de álbuns",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.batch",
+  "pt": "Lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.all-playlist-series",
+  "pt": "Todas as Séries de Playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.updating",
+  "pt": "Atualizando...",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.reading-your-series",
+  "pt": "Lendo suas séries...",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.reading-playlists-n-of-n",
+  "pt": "Lendo playlists: {} de {} séries",
+  "mark": "traduzir + montado",
+  "why": "plural: 1 série / n séries"
+ },
+ {
+  "id": "pl.the-list-could-not-be",
+  "pt": "Não foi possível atualizar a lista. O que você vê pode estar desatualizado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.your-series-could-not-be",
+  "pt": "Não foi possível ler suas séries.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.no-matches-found",
+  "pt": "Nada encontrado.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.no-playlists-found",
+  "pt": "Nenhuma playlist encontrada",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.generate-and-save-playlists-in",
+  "pt": "Gere e salve playlists nas suas séries para vê-las aqui.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.create-series",
+  "pt": "Criar série",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.delete-batch-2",
+  "pt": "Excluir lote?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.are-you-sure-you-want",
+  "pt": "Tem certeza de que quer excluir o lote \"{}\"? Contém {} playlists.",
+  "mark": "traduzir + montado",
+  "why": "{} nome do lote; quantidade com plural: 1 playlist / n playlists"
+ },
+ {
+  "id": "pl.delete-batch-3",
+  "pt": "Excluir lote",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.delete-all-playlists",
+  "pt": "Excluir todas as playlists?",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "pl.this-will-permanently-delete-all",
+  "pt": "Isso vai excluir para sempre todas as playlists de \"{}\". A série e seus álbuns permanecem.",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome da série"
+ },
+ {
+  "id": "pl.delete-all-playlists-2",
+  "pt": "Excluir todas as playlists",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "misc.network-error",
+  "pt": "Erro de rede",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.the-album-blender-for-people",
+  "pt": "The Album Blender — para quem ouve álbuns inteiros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.the-album-blender-is-a",
+  "pt": "The Album Blender é um app web para quem ouve álbuns inteiros: reúna álbuns em séries, classifique cada faixa, misture em playlists equilibradas e mantenha a conta dos discos que você tem.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.gather-albums-into-series-rank",
+  "pt": "Reúna álbuns em séries, classifique cada faixa, misture em playlists equilibradas e mantenha a conta dos discos que você tem.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.skip-to-content",
+  "pt": "Pular para o conteúdo",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.the-album-blender-top-of",
+  "pt": "The Album Blender, topo da página",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.account",
+  "pt": "Conta",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.open-the-app",
+  "pt": "Abrir o app",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.tracks-of-this-page",
+  "pt": "Faixas desta página",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-a-1-the-blender",
+  "pt": "Lado A · 1 — O Blender",
+  "mark": "traduzir + MJRP decide",
+  "why": "«The Blender» é a marca do produto; aqui virou «O Blender»; decidir se mantém o nome em inglês."
+ },
+ {
+  "id": "ent.side-a-track-1-the",
+  "pt": "Lado A, faixa 1: The Album Blender",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-a-track-2-series",
+  "pt": "Lado A, faixa 2: Séries",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-a-track-3-rank",
+  "pt": "Lado A, faixa 3: Classifique cada faixa",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-a-track-4-blend",
+  "pt": "Lado A, faixa 4: Blend",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-a-track-5-your",
+  "pt": "Lado A, faixa 5: Sua estante",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.flip",
+  "pt": "VIRAR",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.flip-the-record",
+  "pt": "Vire o disco",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-b-track-1-why",
+  "pt": "Lado B, faixa 1: Por que álbuns inteiros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-b-track-2-start",
+  "pt": "Lado B, faixa 2: Comece",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.pause-motion",
+  "pt": "Pausar movimento",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.for-whole-album-listeners",
+  "pt": "Para quem ouve álbuns inteiros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.dig-through-the-albums-you",
+  "pt": "Mergulhe nos álbuns que você ama.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.keep-every-track",
+  "pt": "Guarde cada faixa.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.gather-albums-into-series-rank-2",
+  "pt": "Reúna álbuns em séries, classifique cada faixa e misture em playlists que mantêm cada disco no mix — depois mantenha a conta dos que estão na sua estante.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.the-album-blender-is-a-2",
+  "pt": "The Album Blender é um app web para quem ouve álbuns inteiros.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-a-2-series",
+  "pt": "Lado A · 2 — Séries",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.gather-the-albums-that-belong",
+  "pt": "Reúna os álbuns que combinam.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.an-artist-s-run-a",
+  "pt": "A fase de um artista, uma década, um clima: uma série é uma estante de álbuns inteiros que você escolhe. Todo Blend começa aí.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-a-3-ranking",
+  "pt": "Lado A · 3 — Ranking",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.rank-every-track-not-just",
+  "pt": "Classifique cada faixa, não só os singles.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.order-each-album-s-tracks",
+  "pt": "Ordene as faixas de cada álbum por quantas vezes são tocadas, por rankings publicados onde o app os tem, ou pelo seu ouvido. As deep cuts ganham seu lugar na fila.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.illustrative-example-of-one-album",
+  "pt": "Exemplo ilustrativo das faixas de um álbum classificadas",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.copper-year",
+  "pt": "Copper Year",
+  "mark": "fica",
+  "why": "Nome de álbum fictício; não se traduz."
+ },
+ {
+  "id": "ent.illustrative-fictional-album",
+  "pt": "Ilustrativo · álbum fictício",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.low-sun-overture",
+  "pt": "Low Sun Overture",
+  "mark": "fica",
+  "why": "Nome de faixa fictícia."
+ },
+ {
+  "id": "ent.pier-at-dusk",
+  "pt": "Pier at Dusk",
+  "mark": "fica",
+  "why": "Nome de faixa fictícia."
+ },
+ {
+  "id": "ent.second-side-waltz",
+  "pt": "Second Side Waltz",
+  "mark": "fica",
+  "why": "Nome de faixa fictícia."
+ },
+ {
+  "id": "ent.the-long-player",
+  "pt": "The Long Player",
+  "mark": "fica",
+  "why": "Nome de faixa fictícia."
+ },
+ {
+  "id": "ent.bar-length-the-track-s",
+  "pt": "Comprimento da barra = posição da faixa no ranking que você escolher. Dados de exemplo, não notas reais.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-a-4-blend",
+  "pt": "Lado A · 4 — Blend",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.blend-the-series-into-one",
+  "pt": "Misture a série em uma só playlist.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.pick-a-recipe-and-the",
+  "pt": "Escolha uma receita e o Blender tira faixas de cada álbum da série, para que nenhum disco abafe os outros. Você decide a duração e quem abre.",
+  "mark": "traduzir + MJRP decide",
+  "why": "«Blender» (o produto) fica; «recipe» virou «receita» pelo glossário."
+ },
+ {
+  "id": "ent.side-a-5-your-shelf",
+  "pt": "Lado A · 5 — Sua estante",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.keep-count-of-the-records",
+  "pt": "Mantenha a conta dos discos que você tem.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.mark-the-albums-on-your",
+  "pt": "Marque os álbuns da sua estante, veja uma estimativa de quanto vale a coleção e quanto custariam os que faltam.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.end-of-side-a",
+  "pt": "Fim do Lado A",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.flip-the-record-2",
+  "pt": "Vire o disco.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-b-is-the-why",
+  "pt": "O Lado B é o porquê, e a entrada.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-b-1-why-whole",
+  "pt": "Lado B · 1 — Por que álbuns inteiros",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.shuffle-keeps-the-hits-and",
+  "pt": "O aleatório guarda os hits e perde o disco.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.the-blender-starts-from-the",
+  "pt": "O Blender parte do disco.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.an-album-has-an-order",
+  "pt": "Um álbum tem uma ordem: uma abertura, uma virada, um final. O ranking traz as deep cuts de volta; o Blend mantém cada playlist enraizada em álbuns que você escolheu, inteiros.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.side-b-2-start",
+  "pt": "Lado B · 2 — Comece",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.drop-the-needle-on-your",
+  "pt": "Ponha a agulha na sua primeira série.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.open-the-app-and-start",
+  "pt": "Abra o app e comece uma série com um álbum que você ama. Entre para manter suas séries, rankings e estante com você.",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.a-crate-of-albums-the",
+  "pt": "Uma caixa de álbuns; a página puxa um disco para a frente a cada parte",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.footer",
+  "pt": "Rodapé",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.firebase-authuser",
+  "pt": "firebase:authUser:",
+  "mark": "técnico",
+  "why": "Chave de armazenamento do Firebase."
+ },
+ {
+  "id": "ent.translate3d-0-46-npx-rotatex",
+  "pt": "translate3d(0,-46%,{}px) rotateX(3deg)",
+  "mark": "técnico",
+  "why": "CSS."
+ },
+ {
+  "id": "ent.translate3d-0-n-npx-rotatex",
+  "pt": "translate3d(0,{}%,{}px) rotateX(-38deg)",
+  "mark": "técnico",
+  "why": "CSS."
+ },
+ {
+  "id": "ent.translate3d-0-n-npx-rotatex-2",
+  "pt": "translate3d(0,{}%,{}px) rotateX(-6deg)",
+  "mark": "técnico",
+  "why": "CSS."
+ },
+ {
+  "id": "ent.n-fictional-album",
+  "pt": "{} · álbum fictício",
+  "mark": "traduzir + montado",
+  "why": "{} é o nome do álbum"
+ },
+ {
+  "id": "ent.play-motion",
+  "pt": "Retomar movimento",
+  "mark": "traduzir",
+  "why": ""
+ },
+ {
+  "id": "ent.listen-to-n-by-n",
+  "pt": "Ouvir {} de {} no Apple Music (abre em nova aba)",
+  "mark": "traduzir + montado",
+  "why": "{} são álbum e artista"
+ },
+ {
+  "id": "ent.n-n-listen-on-apple",
+  "pt": "{} · {} — Ouvir no Apple Music",
+  "mark": "traduzir + montado",
+  "why": "{} são álbum e artista"
+ },
+ {
+  "id": "ent.n-n-fictional-album",
+  "pt": "{} · {} — álbum fictício",
+  "mark": "traduzir + montado",
+  "why": "{} são álbum e artista"
+ },
+ {
+  "id": "srv.ai-api-key-not-configured",
+  "pt": "AI API key not configured on server",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "srv.missing-albumquery-in-request-body",
+  "pt": "Missing albumQuery in request body",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "srv.ai-api-key-not-configured-2",
+  "pt": "AI API key not configured",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "srv.musickit-not-configured",
+  "pt": "MusicKit not configured",
+  "mark": "técnico",
+  "why": ""
+ },
+ {
+  "id": "srv.failed-to-generate-musickit-token",
+  "pt": "Failed to generate MusicKit token",
+  "mark": "técnico",
+  "why": ""
+ }
+]

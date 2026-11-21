@@ -15,6 +15,48 @@ Rodei `new_project.py --refresh-kernel` a partir do harness: 31 páginas da wiki
 **Branch:** main
 Palavras do MJRP (2026-11-21), ao ver a página de revisão dos textos (https://claude.ai/artifact/DDE57759QtWJkM4qKVHzBF): «copy está ótimo, eu só colocaria no design-system do site e alias precisamos do artefato do design-system do site tb»; antes: «o artefato do claude que estou chamando de copydeck». Conferido: o site tem o documento `docs/specs/design-system.md`, mas nenhuma página de design system publicada (os artefatos «MJRP PRO DS» e «Control Center Design System» são de outros projetos). A F86 nasce na `main` em esboço (S-68; épico e versão escolhidos pelo agente). Outras palavras dele de hoje, para tudo o que se gera para ele: «abri o artefato agora e nao sei o que eu faço e olho, com tanta info na tela»; «tem gasto de muita info ique acaba de torando inutil por ser overwhelming». Escolhas dele na página de entrada: a vista «2- palco largo» para a caixa de discos; a capa de «The Velvet Underground & Nico» como a primeira, «mas mantenha o king crimson so nao ser a primeira».
 
+## [2026-11-21 10:55] session — F81: fechamento depois da página de revisão
+Branch: claude/f81-site-in-more-than-one-language
+Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21)
+Resumo: página de revisão publicada (Artifact privado), gerada do deck; nada de código de produto tocado; nada final marcado por agente.
+Próxima sessão: o MJRP revisa pela página (telas Entrada e Start primeiro), baixa o arquivo e devolve; depois D-01 a D-13.
+Key Data: último commit de trabalho `9c622de`.
+
+## [2026-11-21 10:55] session — F81: a página «Revisão de texto do Album Blender», onde o MJRP decide os textos, publicada como Artifact privado
+Branch: claude/f81-site-in-more-than-one-language
+Pedido do orquestrador (o MJRP disse sim). Gerada por `design/proposals/copy-review/build_copy_review.py` a partir de `design/copy/album-blender-copy.md` (o molde `copy-review.template.html` é o único arquivo escrito à mão); Artifact: https://claude.ai/artifact/DDE57759QtWJkM4qKVHzBF. Abre numa tela do site por vez (a página de entrada primeiro, depois Start); cada linha mostra onde aparece em palavras comuns, o inglês de hoje, o português proposto e o tamanho; código, arquivo, tipo e nota ficam em «detalhes». Filtros «Só o que precisa de mim» e «Mais longos primeiro». Ele edita os dois textos e marca «Final» por conta própria; nenhuma marca vem do agente. Guarda em três camadas: navegador, conta (db) e arquivo `.md` no formato do documento (baixar e abrir de volta). Palavras visíveis na primeira tela sem rolar: 238 a 1280×800 (cerca de 150 são os próprios textos do site nas caixas) e 92 a 390 px. Testado no navegador do app: editar, marcar final, filtros, exportar e reabrir o arquivo; a gravação na conta e o download só funcionam com o Artifact aberto no claude.ai e não foram exercitados por mim.
+
+## [2026-11-21 10:17] session — F81: fechamento depois do acerto com o deck do MJRPpersonal
+Branch: claude/f81-site-in-more-than-one-language
+Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21)
+Resumo: mapa na forma do deck do MJRPpersonal, ids congelados em `design/copy/album-blender-ids.json`, medidas de tamanho por linha e por tela, testes com texto literal contados (178 de 289 arquivos). Nenhuma decisão do MJRP; nada final; a página de revisão não foi montada.
+Próxima sessão: o MJRP responde D-01 a D-13; renomear à mão as chaves feias dos textos montados antes do contrato da F83; depois a F81 é priorizada.
+Key Data: último commit de trabalho `4ebb97b`.
+
+## [2026-11-21 10:16] session — F81: o mapa passa à forma do deck do MJRPpersonal, com ids congelados, medidas de tamanho e os testes que comparam texto
+Branch: claude/f81-site-in-more-than-one-language
+Pedido do orquestrador (palavras do MJRP: «vc cria o artefato do copy deck pra funcionar como o site MJRP pro»). `design/copy/album-blender-copy.md` agora tem as colunas `ID | Onde aparece | Tipo | Português | Status PT | English | Status EN` mais caracteres e palavras por linha e por tela; o inglês é «em produção, a revisar», o português «tradução do agente, a revisar», nada final. `design/copy/album-blender-ids.json` congela os ids (viram chaves do CMS). 178 de 289 arquivos de teste comparam texto de interface (`scripts/i18n/tests-with-literal-text.py`). O que cabe sem rolar a 1280 e a 393 px não foi medido. Relatório e plan atualizados.
+
+## [2026-11-21 10:14] session — F81: fechamento (levantamento dos textos e rascunho da feature entregues)
+Branch: claude/f81-site-in-more-than-one-language
+Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21)
+Resumo: 1106 textos em 1437 pontos mapeados (`design/copy/album-blender-copy.md`, `scripts/i18n/`), relatório `reports/audits/2026-11-21-f81-copy-survey.md` com as decisões D-01 a D-13, spec/plan/tasks da F81 em rascunho (`**Approved**` pendente; tasks esperam o MJRP). Nenhum código de produto foi tocado; nada foi enviado ao remoto.
+Decisões gravadas: nenhuma decisão do MJRP; a coluna PT do mapa é proposta do agente, nada aprovado.
+Próxima sessão: o MJRP responde D-01 a D-13; a proposta da F83 define o contrato do dicionário; depois a F81 é priorizada e construída (TASK-01).
+Key Data: commits `4dfc9db`, `ba9cc27`, `ad26f1f` neste ramo.
+
+## [2026-11-21 10:14] session — F81: spec, plan e tasks saem do esboço; fechamento da sessão do levantamento
+**Branch:** claude/f81-site-in-more-than-one-language
+Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21 («levantar todos os textos do site e entregar o mapa de que a F81 vai traduzir»).)
+Resumo: a spec da F81 ganhou 9 requisitos (REQ-01 a REQ-09: dicionário por idioma, país na primeira visita, escolha da pessoa acima do país, seletor de idioma, rótulo único, o que não se traduz, textos montados, falhas sem mensagem crua, página de entrada e `index.html`), estados observáveis e critérios; o plan guarda o que o levantamento mostrou do código e deixa o desenho técnico «a escrever: vem da proposta de arquitetura da F83»; as tasks (TASK-01 a TASK-09, construção em sonnet, `rounds:: 1`). `**Approved**` continua «pendente» nos três.
+Decisões gravadas: nenhuma decisão do MJRP nesta sessão; as perguntas D-01 a D-13 (Blend, Series, Compendiums, Deep Cuts e Greatest Hits, Batch, Inventory/Collection, Home, cozinha, Rank/Popularity, idioma do que é gravado, caixa e reticências, como revisar, a página de entrada) esperam o MJRP no relatório, cada uma com a recomendação do agente marcada como opinião.
+Próxima sessão: o MJRP responde as decisões; a proposta de arquitetura da F83 define o contrato do dicionário; só então a F81 é priorizada e construída (TASK-01 em diante). A busca não vê texto que vem de dado, de imagem, do manifesto, de janelas de login de terceiros nem o que só aparece em estados reais; 391 linhas do mapa são «provável».
+Key Data: 1106 textos / 1437 pontos; 234 montados de pedaços; 23 pontos mostram `error.message`; 13 pontos de data/moeda; 87 descartados; commit do mapa `4dfc9db`.
+
+## [2026-11-21 10:13] session — F81: levantamento de todos os textos do site (1106 textos, 1437 pontos) e o mapa para o português
+**Branch:** claude/f81-site-in-more-than-one-language
+Levantamento dos textos que uma pessoa vê ou o leitor de tela lê, por árvore sintática (`scripts/i18n/scan-copy.cjs`, `scripts/i18n/build-deck.py`): 1106 textos distintos em 1437 pontos de `public/` e `server/`; o mapa está em `design/copy/album-blender-copy.md` (uma linha por texto, com id, tela, tipo, EN, PT e marca) e a coluna PT é proposta do agente (subagentes Sonnet), nada aprovado. O relatório `reports/audits/2026-11-21-f81-copy-survey.md` traz as contagens, os casos difíceis, os conceitos com mais de um rótulo (IA-02) e as decisões D-01 a D-13 para o MJRP. Nenhum código de produto foi alterado.
+
 ## [2026-11-21 10:08] session — UAT da F80: a caixa de discos mais em diagonal e sem corte (UAT-235); o board fora de passo com o estado real
 **Branch:** main
 O MJRP abriu o UAT da F80 com uma captura: «a caixa de discos, fica com um efeito muito 2 d qdo está reta e a area dela bem limita, que tal melhorarmos pra ficar mais em diagonal, mas sem o corte da tela que temos hj. o que acha?» — UAT-235. Ele propôs uma sessão de UAT para ir passando as issues; ela sobe em Opus (desenho de tela), com prévias no comparador antes de mudar a página. Sobre o board, palavras dele: «se preocupe com o status do board está condizente com o status real … se é esperando meu aceite nao deveriam estar em coluna esperando». Medido: de F45 a F78, 33 features «em andamento»; 23 só esperam o juízo dele (deveriam estar em «Pronto para UAT»), 6 mistas, 4 só com passo do agente. O agente mestre deu o caminho: atualizar a cópia do kernel (sessão aberta por ele) e depois fechar em lote, numa sessão, tirando a tarefa de aceite. Ele também disse para não cobrar os aceites: ele os gerencia.
