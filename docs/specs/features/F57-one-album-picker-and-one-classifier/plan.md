@@ -119,6 +119,9 @@ Declarações do passo retroativo da via rápida (conferidas no histórico do re
 - `docs/specs/behavior.md` — atualizado (commit `7f152fc`)
 - `docs/wiki/` — sem mudança: as páginas de `docs/wiki/` do projeto são só as do harness; nenhuma descreve uma regra do app que esta feature mudou
 
+Declarações do passo retroativo da via rápida (conferidas nos commits que citam a F57, em 2026-11-21):
+- `docs/specs/constitution.md` — sem mudança (nenhum commit que cita a F57 toca o arquivo)
+
 ## Risks & Considerations
 - **O classificador mudou para todos os artistas, não só para o caso da issue.** As mudanças de resultado estão medidas acima e listadas nas Open Questions da spec. O conjunto medido não tem as marcas do catálogo (`isSingle`, `isCompilation`), que continuam valendo primeiro.
 - **Artistas eletrônicos não foram vistos com a lista da IA de verdade.** O caminho deles foi reescrito mantendo as regras (quantidade de faixas, resgate pela lista, palavras de outro produto), com três mudanças conscientes: sem lista o álbum é de estúdio; o casamento por palavras só vale num sentido (as palavras da lista dentro do título do álbum); número sobrando não casa.

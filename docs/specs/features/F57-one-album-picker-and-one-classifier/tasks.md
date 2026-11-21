@@ -33,7 +33,7 @@
 ## Verification
 - [x] TASK-10 suíte (`npx vitest run`: 1521 passando, 1417 antes), `npx vite build` e complexidade até 10 nas funções novas e editadas (`npx eslint --rule '{"complexity":["error",10]}'` nos arquivos tocados; a única acima é `AlbumSearchService.search`, 11, de antes e não tocada) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08 · model:: sonnet · rounds:: 1
 - [x] TASK-11 prova no navegador pelo roteiro do relatório de entrega (o mesmo artista na Home e na janela «Edit Series»: filtros, quantidades e cartões iguais; os dois álbuns do Kendrick Lamar em «Studio»; um artista eletrônico com a lista da IA chegando depois; falha com «Try again»; «Saving…» ao salvar) — prova: `reports/evidence/F57/2026-11-19-one-picker-one-classifier-proof.md` · implements:: REQ-02, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · rounds:: 1
-- [ ] TASK-12 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
+- [ ] TASK-12 o que a trava do passo retroativo ainda cobra antes do `Done` (`python3 mjrp-scripts/retro_step_check.py . --staged` com a feature em `Done`, conferido em 2026-11-21): Reconferência visual: a feature mexeu na tela e não há relatório `visual-parity-recheck` nem nota de Touch ID (`mjrp-visual-ok`) que a cubra; Issues: a UAT-193 na docs/specs/uat.md não está `fixed (F57: <commit> · <teste ou passos → resultado>)` (o Status diz «open»). É trabalho de agente; nenhum item é do MJRP. O que falta de verdade é a reconferência visual independente (relatório `reports/audits/<data>-F57-visual-parity-recheck.md`, por quem não implementou, num navegador): nenhum merge traz nota de Touch ID. «Prototype: none» já está gravada na spec (MJRP, 2026-11-20 00:10). · implements:: REQ-01 · model:: opus
 
 ## Documentation
 - [x] `docs/specs/arch.md` (seção nova), `docs/specs/behavior.md` (os estados da busca nas duas telas, o classificador, o salvamento) e `docs/manual/` (00, 01, 10, 14, 15, 16, 21, 22, 29) dizem o que o código faz agora
@@ -43,4 +43,4 @@
 ## For the owner at UAT
 - O MJRP julga as mudanças de comportamento do classificador e a aparência nova da busca na janela de edição
 - `docs/specs/constitution.md`, artigo dos padrões: a linha do Strategy (`DP-04`) ainda cita `public/js/services/album-search/classification/`, pasta que saiu; a constituição tem cópia gerada (`.specify/memory/constitution.md`) e a emenda é de quem a regenera (integrador, com o MJRP)
-- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- Falta o que a tarefa aberta acima descreve (trabalho de agente); o aceite é dele no UAT, depois do `Done`.
