@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-20 22:22] session — F79 e F80: a construção começa, dois agentes em paralelo
+**Branch:** main
+Um agente (Opus 5.5) por feature, cada um no seu worktree: `feat/f79-home-that-explains-itself` e `feat/f80-splash-page-for-album-lovers`. Cada um grava o registro da aprovação, escreve spec, plano e tarefas a partir do protótipo aprovado, constrói com o teste primeiro e prova no navegador; o orquestrador junta na `main`. A F80 não toca os arquivos da Home; a F79 não toca a entrada nem as rotas. O `MEMORY.md ## Now` diz o mesmo.
+
 ## [2026-11-20 22:20] decision — F80: o fogo da página de entrada é o brando, não o vivo
 **Branch:** main
 Palavras do MJRP, logo depois da aprovação: «fogo brando na verdade». Corrige a entrada anterior: a página de entrada «Caixote v2» é construída na prévia «fogo brando» (`?fire=soft`, o padrão do protótipo). O resto da entrada anterior vale.
