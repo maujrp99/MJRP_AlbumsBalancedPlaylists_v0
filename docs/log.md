@@ -3,6 +3,22 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:59] session — segundo relatório do juiz (passa) guardado como veio; 2 P2 viram UAT-256 e UAT-257
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-failed-sources-visual-parity-recheck-2.md` e capturas `reports/evidence/F52/recheck-2/` escritos pelo juiz (F52, F69), copiados sem edição. Os dois P2 restantes (a lista que se mexe no «Try again»; o azul fora da paleta) entram em `uat.md` como UAT-256 e UAT-257, ids reservados por `merge_train.py next-uat-id --reserve`.
+
+## [2026-11-21 13:55] session — achados do juiz tratados: «Try again» de 44 px no celular, BestEverAlbums nomeada, linha «Asking»
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+P1-1: botão com min-h 44 px até o breakpoint md (computador segue 72x24; celular medido 76x44 a 393). P2-1: «BestEverAlbums did not answer.». P2-3: a nota mostra «Asking BestEverAlbums for ratings…» enquanto pergunta, como a popularidade. Azul mantido (P2-2, issue à parte). Novas capturas em F52/ e F69/.
+
+## [2026-11-21 13:54] session — teste vermelho dos achados do juiz: alvo de 44 px, nome da fonte, linha «Asking»
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Quatro testes falham (F52/F69, UAT-244/245), cobrindo P1-1, P2-1 e P2-3 do relatório do juiz.
+
+## [2026-11-21 13:53] session — relatório e capturas do juiz sobre a prova de F52 e F69, guardados como vieram
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+O juiz independente escreveu o relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-failed-sources-visual-parity-recheck.md` e as capturas `reports/evidence/F52/recheck/`; o agente só os copiou, sem editar o veredito nem os achados.
+
 ## [2026-11-21 13:49] session — F72: o nó S-55 com entrega, estado e critérios; Done
 **Branch:** wip/closing-pass-2026-11-21
 F72 (quantos álbuns e séries a tela diz): o código está na `main`. Faltavam três linhas da trava: no nó S-55 o `delivered_by` (`49c786e`, `274dfe4`), o `points_to` (`behavior#^library-counts`) e os critérios de aceite, escritos do que o MJRP julgou em 2026-11-20 (a contagem ficou na linha da paginação; numa série só não aparece, hoje a UAT-248, aberta pela reconferência); e a reconferência visual (relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Acrescentei `verified_by` ao REQ-01 e ao REQ-02 e marquei o REQ-01 como substituído pelo REQ-03, como o próprio MJRP decidiu. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: o aceite do S-55 é do MJRP.
@@ -15,6 +31,10 @@ F67 (o Scan da Home responde ao clique): o código está na `main`. Faltavam dua
 **Branch:** wip/closing-pass-2026-11-21
 F48 (cache e nova tentativa): o código está na `main`. Faltavam duas linhas da trava. (1) `behavior.md`: escrevi as novas tentativas do servidor e o que não se tenta de novo, conferido em `api/client.js`. (2) Reconferência visual: relatórios do lote de 2026-11-21 (álbuns e casca). Conferi também a linha das issues: UAT-175, 176 e 177 já diziam `fixed (F48: …)`, mas citavam o commit `fe12d90`, que é o da UAT-14; troquei pelos commits que as consertaram (`57ce6bc`, `d57ca5c`, `061bcce`). Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite.
 
+## [2026-11-21 13:46] session — prova no navegador da nota e da popularidade que falharam na janela do álbum (UAT-244, UAT-245)
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Capturas a 1280 e 393 em `reports/evidence/F52/ratings-failed-*.png` e `reports/evidence/F69/popularity-failed-*.png`, com a janela real do álbum, o CSS real e o fixture da reconferência; a carga é um substituto no roteiro (`reports/evidence/F52/harness/`, `shoot.mjs`). Nada passa da borda; «Try again» pede a fonte e o aviso some. O aviso usa o azul que o aviso da popularidade já tinha (a janela de ranking fora da paleta é a UAT-250); não inventei cor.
+
 ## [2026-11-21 13:45] session — F46: o estado por série no `behavior.md`, a UAT-174 devolvida à F45; Done
 **Branch:** wip/closing-pass-2026-11-21
 F46 (estado claro por série): o código está na `main`. Faltavam três linhas da trava do passo retroativo. (1) `behavior.md`: escrevi o estado por série e que a série sem álbum não é desenhada (UAT-247). (2) Issues: a UAT-174 foi fechada pelo commit `ce52f46`, da F45, e diz `fixed (F45: …)`; não marquei nada como consertado pela F46 e tirei a UAT-174 do `fixes:` da F46 (a UAT-173 segue `fixed (F46: 510a840 …)`); decisão que cabe ao MJRP rever, se ele preferir a UAT-174 no `fixes:` da F45. (3) Reconferência visual: relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite.
@@ -22,6 +42,10 @@ F46 (estado claro por série): o código está na `main`. Faltavam três linhas 
 ## [2026-11-21 13:44] session — F45: o comportamento da carga paralela escrito no `behavior.md`; Done
 **Branch:** wip/closing-pass-2026-11-21
 F45 (carga de álbuns em paralelo): o código está na `main`. Faltavam duas linhas da trava do passo retroativo: o `behavior.md` (a declaração dizia «atualizado», mas só o commit da v4.0, que não cita a F45, o tocava) e a reconferência visual. Escrevi no `^library-loading-skeleton` o que `LOAD_LIMITS` faz (3 buscas no catálogo juntas, séries de cima primeiro, prazo de 45 s por álbum e 20 s por fonte), conferido no código; a reconferência é a do lote `reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`. Tarefa fechada, spec em `Done`. Nenhum carimbo de aceite: a UAT-172 segue com o MJRP.
+
+## [2026-11-21 13:44] session — a janela do álbum mostra a nota e a popularidade que falharam, com «Try again» (UAT-244, UAT-245)
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+A tela de séries dá à janela do álbum `sources` (ler, pedir, observar a carga): a nota (`enrichment.acclaim`) em «failed» mostra «The ratings source did not answer.» e a popularidade em «failed» mostra o aviso que já existia («Spotify did not answer.»), ambos com «Try again» via `albumLoadService.refreshSource`; a janela se redesenha quando a carga muda. Reuso do componente e das cores do aviso da popularidade, sem padrão novo. Não mudei o status das linhas no uat.md: o fecho é do integrador/MJRP.
 
 ## [2026-11-21 13:42] session — F68: a reconferência visual do lote fecha a linha que faltava; Done
 **Branch:** wip/closing-pass-2026-11-21
@@ -46,6 +70,10 @@ F50 (F50-one-local-address): o código está na `main`. A trava do passo retroat
 ## [2026-11-21 13:40] session — F49: a reconferência visual do lote fecha a linha que faltava; Done
 **Branch:** wip/closing-pass-2026-11-21
 F49 (F49-load-more-albums): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
+## [2026-11-21 13:40] session — teste vermelho: a janela do álbum mostra a nota e a popularidade que falharam (UAT-244, UAT-245)
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Teste que falha por falta do modelo e da ligação da janela com a carga (`test/components/ViewAlbumModal.failedSources.test.js`). Decidido pelo agente, revisável: a janela recebe `sources` (ler, pedir, observar) da tela de séries.
 
 ## [2026-11-21 13:39] session — F47: a reconferência visual do lote fecha a linha que faltava; Done
 **Branch:** wip/closing-pass-2026-11-21
