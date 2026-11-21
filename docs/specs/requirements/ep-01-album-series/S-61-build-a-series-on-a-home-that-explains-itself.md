@@ -12,7 +12,7 @@ planned_for: "[[ROADMAP#^REL-41]]"
 
 ## pt-BR
 
-Protótipo: design/inception/home-transformar-v2.html («Transformar · v2», aprovado pelo MJRP em 2026-11-20, por volta das 22:15; registro em `info-arch.md` § Protótipos aprovados) · ux-audit: passa (2026-11-20 19:47, `reports/audits/2026-11-20-F79-home-r2-ux-audit.md`)
+Protótipo: design/inception/home-transformar-v2.html («Transformar · v2», aprovado pelo MJRP em 2026-11-20, por volta das 22:15; registro em `info-arch.md` § Protótipos aprovados) · ux-audit: passa (2026-11-20 19:47, `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-r2-ux-audit.md`)
 Regras: R1 a tela diz o que é uma série e o que fazer antes de qualquer controle · R2 um campo só acha os álbuns, por artista ou por lista colada, e cada espera e cada falha diz o que ainda vale · R3 a série sendo montada fica sempre à vista, com a ação que conclui · R4 mudar a ordem e tirar um álbum não pede arrastar, e tirar se desfaz · R5 o nome é sugerido, nunca imposto em silêncio · R6 criar diz o que está acontecendo, onde a série ficou e o que vem depois · R7 quem não entrou sabe onde a série fica guardada
 AC (computador a 1280 px e celular a 393 px; no celular a base da série é a barra de ação):
 - Given a Home aberta pela primeira vez, When ela aparece, Then o título «Pick the albums. We blend the playlists.», a frase do que é uma série, o campo «An artist, or paste a list of albums» com «Search» (o único botão com o fogo), os três passos e a base vazia «Your series is empty» com «Create series» apagado e «Add one album to create the series»  (R1 · ^home-empty)

@@ -31,7 +31,7 @@ A referência é `design/inception/home-transformar-v2.html` (os 18 estados, `#s
 Nenhuma nova. Sai o uso do `sortablejs` na Home (o pacote continua, se outra tela o usa).
 
 ## Documents Consulted
-`design/proposals/f79-home/proposal.md` (Rodada 2, «Entregar para construir»), `docs/specs/info-arch.md` (Estados da Home F79), `reports/audits/2026-11-20-F79-home-r2-ux-audit.md`, `docs/specs/design-system.md`, `docs/specs/behavior.md` (§ Home), `test/architecture/oneAlbumPicker.test.js` (as regras da F57), `test/architecture/phoneStylesStayOnThePhone.test.js`, `test/architecture/complexityLimit.test.js`, `public/js/components/ui/Sheet.js`, `public/css/mobile.css`.
+`design/proposals/f79-home/proposal.md` (Rodada 2, «Entregar para construir»), `docs/specs/info-arch.md` (Estados da Home F79), `reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-r2-ux-audit.md`, `docs/specs/design-system.md`, `docs/specs/behavior.md` (§ Home), `test/architecture/oneAlbumPicker.test.js` (as regras da F57), `test/architecture/phoneStylesStayOnThePhone.test.js`, `test/architecture/complexityLimit.test.js`, `public/js/components/ui/Sheet.js`, `public/css/mobile.css`.
 
 ## Risks & Considerations
 - **A peça compartilhada.** A edição de série usa o mesmo picker, o mesmo cartão e os mesmos filtros: a Home ganha uma forma do cartão por opção, e o teste da edição roda a cada tarefa.

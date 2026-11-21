@@ -1,5 +1,5 @@
 ---
-type: benchmark
+type: research
 subject: "Album Blender V0 no celular: como as diretrizes de plataforma e os melhores apps resolvem as tarefas do app (navegar álbuns, álbum, ranking, playlists, criar série, inventário, Blend), e a linguagem visual para o iPhone"
 project: MJRP_AlbumsBalancedPlaylists_v0
 feature: F76

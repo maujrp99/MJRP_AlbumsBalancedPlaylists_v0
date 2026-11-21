@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # reference-transaction - F278 (UAT-594): the `main` only moves by the doors that ran the commit hooks. The pre-commit, commit-msg and
 # pre-merge-commit judge a COMMIT; a fast-forward, a rebase, a cherry-pick, a `reset` or an `update-ref` move the ref and no hook ran (tested by
 # the F275 session). This hook looks at the one thing every door shares - the ref update - in the `prepared` phase, before it is written.

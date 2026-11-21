@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -591,5 +591,34 @@
         "when": "0.1 GB, about 50 folders of 2 MB; normally empty between prints, so above it prints are dying and nothing printed since"
       }
     ]
-  }
+  },
+  "valve_paths": [
+    "mjrp-scripts/hooks/",
+    "mjrp-scripts/visual_gate.py",
+    "mjrp-scripts/_passkey.py",
+    "mjrp-scripts/remote_approval.py",
+    "mjrp-scripts/merge_train.py",
+    "mjrp-scripts/fix_release.py",
+    "mjrp-scripts/structure_rules.json",
+    "mjrp-scripts/*_guard.py",
+    "apps/control-center/ops/passkeys/",
+    "apps/control-center/ops/presence/",
+    ".mjrp-project.yml",
+    "apps/control-center/src/control_center/rules/push.py",
+    "apps/control-center/src/control_center/rules/remote_approval.py",
+    "apps/control-center/src/control_center/contract/approval.py",
+    "apps/control-center/src/control_center/ports_remote_approval.py",
+    "apps/control-center/src/control_center/usecases/remote_approval*.py",
+    "apps/control-center/src/control_center/usecases/remote_push*.py",
+    "apps/control-center/src/control_center/usecases/remote_fix_release.py",
+    "apps/control-center/src/control_center/adapters/passkey/",
+    "apps/control-center/src/control_center/adapters/remote_push/",
+    "apps/control-center/src/control_center/adapters/http_server/remote.py",
+    "apps/control-center/web/remote/",
+    "apps/control-center/schemas/approval.schema.json",
+    "apps/control-center/web/src/contract/approval.ts"
+  ],
+  "_valve_paths": "CC-ADR-0058 § 1: o que, tocado por um branch, tira o conserto de bug da passkey única (as duas passkeys valem). Prefixo com `/` no fim, ou padrão fnmatch. Lido por mjrp-scripts/fix_release.py (o hook e o serviço).",
+  "fix_release_line_ceiling": 500,
+  "_fix_release_line_ceiling": "CC-ADR-0058 item 2: linhas mudadas fora de teste que um conserto pode ter e ainda usar a passkey única. Decidido pelo MJRP, 2026-11-20 23:40 (resposta «500» no Harness Remote)."
 }

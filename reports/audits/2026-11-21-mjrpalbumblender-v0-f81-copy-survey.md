@@ -1,3 +1,6 @@
+---
+type: content-audit
+---
 # Album Blender · levantamento de todos os textos do site, para a F81 (idiomas)
 
 Escrito em 2026-11-21 pelo agente do V0 (sessão da F81), a pedido do orquestrador. Isto é o levantamento e o rascunho dos documentos da feature: **nenhum código de produto foi mexido e o site não foi traduzido.** O mapa está em [`design/copy/album-blender-copy.md`](../../design/copy/album-blender-copy.md). A coluna PT é **proposta do agente (feita por subagentes Sonnet), nunca final; nenhum texto foi aprovado pelo MJRP.**

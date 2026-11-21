@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 merge_train.py - the tools of the integrator's train (F60, S-161): the mechanical parts of merging
 several branches into main, so that the integrator decides instead of retyping.
@@ -1468,21 +1468,6 @@ def _run_kernel_selftests(branch, cwd, timeout):
             pass
 
 
-def mark_end_of_train(cwd=None):
-    """F324 (A9 of the UAT-630 analysis): the Control Center service waits for the code to be quiet before it restarts; the end of a train
-    is the quiet it can trust, so the train leaves the mark (`restart-now`, in the service's home) that makes it restart once, at once.
-    Only in the harness checkout (the one with the app) and only where the service's home exists; never raises."""
-    try:
-        top = Path(toplevel(cwd))
-        home = Path(os.environ.get("CC_HOME") or Path.home() / ".mjrp" / "control-center")
-        if (top / "apps" / "control-center" / "pyproject.toml").exists() and home.is_dir():
-            (home / "restart-now").touch()
-            return ["  fim do trem: o serviço do Control Center pode reiniciar já (marca `restart-now`)"]
-    except Exception:  # noqa: BLE001 - the merge stays made; the service restarts by itself once the code is quiet
-        pass
-    return []
-
-
 def end_of_train_cleanup(cwd=None, branch_to_watch="main"):
     """The train ends when a merge lands on `main` (F120, UAT-401): the owner of the worktrees (`clean-worktrees --apply`) runs by itself, so
     the merged ones do not wait for someone to remember. On any other branch (the integration branch, mid-train) nothing happens: what that
@@ -1494,8 +1479,8 @@ def end_of_train_cleanup(cwd=None, branch_to_watch="main"):
     try:
         cleaned, failures = clean_worktrees(cwd=cwd, apply=True)
     except Exception as e:                                         # noqa: BLE001 - the merge stays made whatever the cleanup does
-        return mark_end_of_train(cwd) + [f"  fim do trem: a limpeza dos worktrees não rodou ({type(e).__name__}: {e}); rode `clean-worktrees --apply`"]
-    out = mark_end_of_train(cwd) + [f"  fim do trem (limpeza dos worktrees): {x}" for x in cleaned]
+        return [f"  fim do trem: a limpeza dos worktrees não rodou ({type(e).__name__}: {e}); rode `clean-worktrees --apply`"]
+    out = [f"  fim do trem (limpeza dos worktrees): {x}" for x in cleaned]
     if failures:
         out.append(f"  fim do trem: {failures} worktree(s) não saíram; rode `clean-worktrees --apply` e veja o motivo")
     return out

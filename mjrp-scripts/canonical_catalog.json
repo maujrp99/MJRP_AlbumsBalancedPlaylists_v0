@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "version": "2026-10-14",
   "default_grace_days": 30,
   "open_warning_notes": {
@@ -728,7 +728,7 @@
     },
     {
       "id": "visual-sensor",
-      "version": 11,
+      "version": 12,
       "title": "sensors.visual no contrato (paridade visual)",
       "path": ".mjrp-project.yml",
       "applies_to": {
@@ -744,7 +744,7 @@
       },
       "since": "2026-10-13",
       "grace_days": 30,
-      "born_of": "ADR-0017 do harness, 2026-10-12 (o Control Center 1.0 chegou ao UAT longe do protótipo, com todos os sensores verdes) · v10 (2026-11-17): F273 (UAT-589, decisão do MJRP de 2026-11-17 14:57): no ramo de conserto de bug (`solution_type: fix` em todas as specs mudadas), o relatório do teste de navegador do próprio bug no site compilado (`…-bug-browser-test.md`, com `site: compiled` e `test:`) vale como reconferência visual; o check é o mesmo · v11 (2026-11-20): F316 (S-248, MJRP 2026-11-20 17:01): o juiz visual julga em 5 minutos (3 num conserto de bug); o veredito `not-checked` (estourou o teto) é recusado pelo portão como `incomplete`, e `duration_s` é gravado no relatório e não lido; o check é o mesmo",
+      "born_of": "ADR-0017 do harness, 2026-10-12 (o Control Center 1.0 chegou ao UAT longe do protótipo, com todos os sensores verdes) · v10 (2026-11-17): F273 (UAT-589, decisão do MJRP de 2026-11-17 14:57): no ramo de conserto de bug (`solution_type: fix` em todas as specs mudadas), o relatório do teste de navegador do próprio bug no site compilado (`…-bug-browser-test.md`, com `site: compiled` e `test:`) vale como reconferência visual; o check é o mesmo · v11 (2026-11-20): F316 (S-248, MJRP 2026-11-20 17:01): o juiz visual julga em 5 minutos (3 num conserto de bug); o veredito `not-checked` (estourou o teto) é recusado pelo portão como `incomplete`, e `duration_s` é gravado no relatório e não lido; o check é o mesmo · v12 (2026-11-21): F280 (UAT-589, CC-ADR-0058, MJRP 2026-11-17 20:31): o portão confere a passkey única do conserto de bug (`fix-release`: `main == base` e a árvore do merge igual à da ponta) e grava a nota e o carimbo `merge`; o check é o mesmo",
       "owner_skill": "mjrp-pdlc-bootstrap",
       "judge_skill": "mjrp-ensuring-quality",
       "check": [
@@ -773,9 +773,9 @@
         "mjrp-scripts/visual_gate.py"
       ],
       "pattern_digest": {
-        "mjrp-scripts/visual_gate.py": "sha256:8781e847963146b4975f81137e35dc96b440cce4b31667f0ed3d867419d2a8cf"
+        "mjrp-scripts/visual_gate.py": "sha256:30d9d191eb5ff8c1e5834811dc916220e4de4bd874915e471793f1df1c1efa93"
       },
-      "migration": "CM-0162",
+      "migration": "CM-0166",
       "superseded": [
         {
           "version": 10,
@@ -1014,6 +1014,32 @@
         {
           "version": 9,
           "migration": "CM-0125",
+          "check": [
+            {
+              "kind": "contract_key",
+              "key": "sensors.visual"
+            },
+            {
+              "kind": "delegated",
+              "code": "A2",
+              "requires": [
+                {
+                  "kind": "contract_key",
+                  "key": "screen"
+                },
+                {
+                  "kind": "contains",
+                  "pattern": "Aprovado por:",
+                  "label": "sem referência visual aprovada (`Aprovado por:`)",
+                  "path": "docs/specs/info-arch.md"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "version": 11,
+          "migration": "CM-0162",
           "check": [
             {
               "kind": "contract_key",
@@ -6236,6 +6262,10 @@
     {
       "at": "2026-11-21 03:41",
       "change": "session-close: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-21 00:14",
+      "change": "visual-sensor: pattern_digest reestampado"
     }
   ]
 }

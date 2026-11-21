@@ -14,14 +14,14 @@ p1: 0
 p2: 4
 human_decisions: 1
 status: open
-supersedes: reports/audits/2026-11-20-F79-visual-parity-recheck.md
+supersedes: reports/audits/2026-11-20-mjrpalbumblender-v0-f79-visual-parity-recheck.md
 ---
 
 # Reconferência visual da F79, segunda passada
 
 **Veredito: passa (`pass`), sem P0 e sem P1; ficam 4 P2.** As correções de `b12e751` fecham os dois P1 da primeira passada e quatro dos P2 (P2-1, P2-2, P2-6 e o corte de P2-3). Nada regrediu nos 36 pares. Os P2 que ficam são os três que o implementador deixou de propósito (P2-4, P2-5 e P2-7) e um resto do P2-3 no celular (o contorno de foco e a caixa da lista colada mais alta). Pela regra, os P2 reais viram issues e o MJRP decide cada um. O relatório fica `open` até essa decisão.
 
-O relatório da primeira passada (`reports/audits/2026-11-20-F79-visual-parity-recheck.md`, `fail`, 2 P1, 7 P2) fica como está. O mais novo decide o portão.
+O relatório da primeira passada (`reports/audits/2026-11-20-mjrpalbumblender-v0-f79-visual-parity-recheck.md`, `fail`, 2 P1, 7 P2) fica como está. O mais novo decide o portão.
 
 ## Como foi feito
 

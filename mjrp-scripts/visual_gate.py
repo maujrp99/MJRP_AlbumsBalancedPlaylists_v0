@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """visual_gate.py -- a screen feature is merged with the independent visual recheck's report: evaluated, with no P0.
 
 Born 2026-10-12 (ADR-0017 of the harness, revised after its architecture audit; decision of the MJRP): the Control
@@ -388,6 +388,46 @@ def _other_tip(root, full, scope):
     return max(found)[1:3] if found else None
 
 
+FIX_OK = set()   # F280: the tips whose single passkey (CC-ADR-0058) was spent in this merge: it is the MJRP's OK, no Touch ID on top of it
+
+
+def fix_release_step(root, revs):
+    """The use 1 of the single passkey of a bug fix (CC-ADR-0058 § 3), for the hook, in the harness. Looks for the `fix-release` of each merged
+    tip, even when a report already satisfies the gate (the push needs the stamp). Valid: the note and the `merge` stamp are written and the
+    use is spent. A record that does not hold spends the use and the merge goes as today, with the reason. Returns the lines to print."""
+    out = []
+    if _passkey is None:
+        return out
+    for rev, label in revs:
+        full = _git(root, "rev-parse", rev)[1].strip() or rev
+        name = label or rev
+        state, why, record, payload = _passkey.judge_fix_release(root, full, name)
+        if state == "none":
+            continue
+        if state == "unavailable":
+            out.append(f"passkey única de {name}: não pôde ser avaliada ({why}); o merge segue como hoje")
+            continue
+        nonce = (payload or {}).get("nonce")
+        if state == "invalid":
+            if nonce:
+                _passkey.consume_nonce(_passkey.use_key(nonce, "merge"), "visual_gate.py")
+            out.append(f"passkey única de {name} recusada: {why}; o uso foi gasto e o merge segue como hoje (valem as duas passkeys)")
+            continue
+        when = time.strftime("%Y-%m-%d %H:%M")
+        note = (f"visual-ok: fix-release\npresence: passkey\nkind: fix-release\nat: {when}\nbranch: {name}\ntip: {full}\nbase: {payload.get('base')}\n"
+                f"signature: {_passkey.signature_line(record)}\nby: visual_gate.py (F280, CC-ADR-0058)\n")
+        if _git(root, "notes", f"--ref={NOTES_REF}", "add", "-f", "-m", note, full)[0] != 0:
+            out.append(f"passkey única de {name}: a nota de auditoria não foi gravada; o merge segue como hoje")
+            continue
+        if not _passkey.consume_nonce(_passkey.use_key(nonce, "merge"), "visual_gate.py"):
+            out.append(f"passkey única de {name}: o uso do merge já foi gasto; o merge segue como hoje")
+            continue
+        _passkey.write_stamp(payload, record, time.time())
+        FIX_OK.add(full)
+        out.append(f"passkey única de {name}: o MJRP aprovou o conserto de longe ({when}); o push vai com a mesma assinatura")
+    return out
+
+
 def _human_ok(root, rev, label, fast, waiting, ask):
     """The MJRP's OK on the screen for a fast-lane branch: ([(kind, message)], [note]). `waiting` is [(project name, what changed)];
     `ask` is None outside the hook (nothing is asked: the merge will ask) or ask_presence."""
@@ -400,6 +440,8 @@ def _human_ok(root, rev, label, fast, waiting, ask):
     tip = _git(root, "rev-parse", "--short=8", rev)[1].strip() or rev
     into = _git(root, "rev-parse", "--abbrev-ref", "HEAD")[1].strip() or "a main"
     full = _git(root, "rev-parse", rev)[1].strip() or rev
+    if full in FIX_OK:
+        return [], [f"via rápida ({ids}): o MJRP aprovou o conserto de longe com a passkey única (F280) - é o veredito visual"]
     state, why, record, payload = _passkey.judge_tip(root, full, label or rev) if _passkey else ("none", "", None, None)
     notes = []
     if state == "invalid":
@@ -610,6 +652,9 @@ def main(argv):
     # only a merge asks for the finger (--check says what the merge will ask), and not one the human already released
     released = bool(os.environ.get(SKIP_VAR, "").strip())
     ask = ask_presence if "--hook" in argv and not released else None
+    if "--hook" in argv and not released and _passkey:
+        for line in fix_release_step(root, revs):
+            print(f"  [visual] {line}")
     for rev, label in revs:
         p, n = judge_full(root, rev, base, ask=ask, label_of_branch=label)
         problems += p

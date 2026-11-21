@@ -23,7 +23,7 @@ Dito pelo MJRP em 2026-11-21: «As próximas features agora serao de internacion
 - [REQ-02] Na primeira visita, o idioma vem do país de onde a pessoa acessa, sem pedir a localização ao navegador: Brasil → português do Brasil; qualquer outro país, ou país desconhecido → inglês · fixes S-63
 - [REQ-03] Quando a pessoa escolhe um idioma, a escolha vale acima do país, em toda visita seguinte: guardada no aparelho e, com conta aberta, na conta (a conta vale em outro aparelho) · fixes S-63
 - [REQ-04] Há um seletor de idioma à vista em todas as telas, na página de entrada e no celular, que mostra o idioma de agora e troca a tela inteira sem recarregar o trabalho em curso (série montada, playlists não salvas) · fixes S-63
-- [REQ-05] Um conceito tem um rótulo só, em todas as telas e nos dois idiomas (cânone IA-02): as divergências de hoje listadas no relatório (`reports/audits/2026-11-21-f81-copy-survey.md`) ficam resolvidas antes da migração, na decisão do MJRP · fixes S-63
+- [REQ-05] Um conceito tem um rótulo só, em todas as telas e nos dois idiomas (cânone IA-02): as divergências de hoje listadas no relatório (`reports/audits/2026-11-21-mjrpalbumblender-v0-f81-copy-survey.md`) ficam resolvidas antes da migração, na decisão do MJRP · fixes S-63
 - [REQ-06] Nomes de álbuns, artistas e faixas, e as marcas (The Album Blender, Spotify, Apple Music, Discogs, BestEverAlbums), nunca são traduzidos · fixes S-63
 - [REQ-07] Texto montado de pedaços (contagens, plurais, «Added 13 albums. Undo», datas, horas, moedas) segue o idioma da tela: o plural, a ordem das palavras, o formato da data e o da moeda · fixes S-63
 - [REQ-08] Uma falha nunca mostra a mensagem crua de um erro: mostra o texto do idioma da tela para aquele caso (os 23 pontos que hoje repassam `error.message`; o servidor responde só um código) · fixes S-63
@@ -67,7 +67,7 @@ Lote `reports/proposals/2026-11-21-1258-v0-react-and-languages.md`; em todas ele
 O aceite do registro da decisão (ADR-0023) continua sendo um commit dele.
 
 ## Open Questions
-Cada uma virou pergunta numerada em «Decisões do MJRP» no relatório `reports/audits/2026-11-21-f81-copy-survey.md`; o que segue é o resumo:
+Cada uma virou pergunta numerada em «Decisões do MJRP» no relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-f81-copy-survey.md`; o que segue é o resumo:
 - De onde vêm os textos: arquivos no repositório (dicionário), ou o CMS (F82). **Chega com a proposta de arquitetura da F83**, que define o contrato do dicionário.
 - A página de entrada (F80) entra nesta feature (recomendação do agente: sim, é o primeiro texto que um visitante lê) e o app (F78) fica fora.
 - O vocabulário do produto (Blend, Series, Compendiums, Deep Cuts, Greatest Hits…) e as divergências de rótulo (IA-02): perguntas D-01 a D-10 do relatório.

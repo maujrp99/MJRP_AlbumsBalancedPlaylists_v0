@@ -362,7 +362,7 @@ A rodada 1 da F75 é de exploração (nenhum protótipo dela aprovado).
 - reference_kind:: live
 - reference_path:: design/inception/splash-crate-v2.html
 - Níveis propostos (MP-01): eixo "quanto 3D, e de onde vem a profundidade" · Consolidar (Brasa) / Elevar (Lado A, lado B) / Transformar (Caixote) · escolhido: Transformar, com a progressão do Elevar e o fogo do Consolidar (pedido do MJRP de 2026-11-20 19:49)
-- Auditoria: reports/audits/2026-11-20-f80-splash-round2-ux-audit.md — veredito: passa, sem P0 (2026-11-20 20:10)
+- Auditoria: reports/audits/2026-11-20-mjrpalbumblender-v0-f80-splash-round2-ux-audit.md — veredito: passa, sem P0 (2026-11-20 20:10)
 - Aprovado por: MJRP em 2026-11-20 22:15
 - Palavras do humano: «aprovado a home v2, fogo vivo na página de entrada, ficou sensacional! bora implementar» e, logo depois, «fogo brando na verdade»
 - Como foi entendido: aprovada para construir a página de entrada «Caixote v2» (`design/inception/splash-crate-v2.html`) na prévia **fogo brando** (`?fire=soft`, o padrão do protótipo): a segunda mensagem corrige a primeira só no fogo. Cobre a página nas duas larguras (computador e celular até 899 px) e os nove estados abaixo. A «home v2» da mesma frase é a Home da F79 (registro dela, à parte).
@@ -375,7 +375,7 @@ A rodada 1 da F75 é de exploração (nenhum protótipo dela aprovado).
 - reference_kind:: live
 - reference_path:: design/inception/home-transformar-v2.html
 - Níveis propostos (MP-01): eixo "a ambição" · Consolidar / Elevar / Transformar · escolhido: Transformar (MJRP, 2026-11-20 19:19, «home 3 niveis transformar»); a rodada 2 é a versão nova do Transformar
-- Auditoria: reports/audits/2026-11-20-F79-home-r2-ux-audit.md — veredito: passa (2026-11-20 19:47), 0 P0, os 6 P1 consertados na rodada
+- Auditoria: reports/audits/2026-11-20-mjrpalbumblender-v0-f79-home-r2-ux-audit.md — veredito: passa (2026-11-20 19:47), 0 P0, os 6 P1 consertados na rodada
 - Aprovado por: MJRP em 2026-11-20, por volta das 22:15 (registrado às 22:27)
 - Palavras do humano: «aprovado a home v2, fogo vivo na página de entrada, ficou sensacional! bora implementar»
 - Como foi entendido: aprova o protótipo `design/inception/home-transformar-v2.html` («Transformar · v2», a versão nova no comparador) como a referência julgada da F79, nas duas larguras (1280 e 393), com os 18 estados do seletor listados em `shows::` abaixo; «bora implementar» pede a construção. «fogo vivo na página de entrada» é da F80 (corrigido por ele logo depois: «fogo brando na verdade») e não toca este registro.

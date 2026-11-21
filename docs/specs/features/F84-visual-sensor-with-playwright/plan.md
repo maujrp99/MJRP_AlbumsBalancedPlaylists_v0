@@ -11,7 +11,7 @@ O kit do harness (`mjrp-scripts/visual_parity/`) com uma configuração do proje
 O kit `mjrp-scripts/visual_parity/`.
 
 ## Documents Consulted
-`reports/audits/2026-11-20-F80-visual-parity-recheck.md`, `reports/audits/2026-11-21-F79-visual-parity-recheck-2.md`.
+`reports/audits/2026-11-20-mjrpalbumblender-v0-f80-visual-parity-recheck.md`, `reports/audits/2026-11-21-mjrpalbumblender-v0-f79-visual-parity-recheck-2.md`.
 
 ## Risks & Considerations
 Um sensor que acusa diferença falsa vira ruído e passa a ser ignorado: os seletores da Home precisam ser acertados antes de ele valer no pré-merge.

@@ -42,7 +42,7 @@ Base: forte — o estado do site está no código; o do MJRPpersonal é relato d
 ### D-04 · Os três P2 que ficaram na Home nova
 Pergunta: O que faço com as três diferenças pequenas entre a Home construída e o protótipo?
 Contexto: UAT-232: ao abrir «paste a list» a caixa ganha um contorno laranja de foco, e no celular fica uns 50 px mais alta (cada linha é um campo de 44 px, o tamanho de toque). UAT-233: os números das linhas coladas e o aviso de Undo no celular usam a fonte do sistema, porque o «1» da Syne parece «ı». UAT-234: no celular a ficha «Compendiums · 15» fica numa linha só e a fila de fichas uns 4 px mais baixa. Nenhuma atrapalha o uso.
-Base: forte — medido pelo juiz independente, reports/audits/2026-11-21-F79-visual-parity-recheck-2.md
+Base: forte — medido pelo juiz independente, reports/audits/2026-11-21-mjrpalbumblender-v0-f79-visual-parity-recheck-2.md
 - a) Tirar o contorno laranja ao abrir (UAT-232) e deixar as outras duas como estão (Recomendado)
 - b) Consertar as três, para bater com o protótipo
 - c) Deixar as três como estão
