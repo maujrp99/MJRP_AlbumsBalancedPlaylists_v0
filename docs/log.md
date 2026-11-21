@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:31] step — F83 onda 4: o texto em pedaços sai em um nó só, como na antiga (achado do navegador: 136 pixels na linha da dica)
+**Branch:** claude/f83-wave-4-start
+A dica, a linha do visitante, o título do painel, a linha «foi salva», o «Saving your series…», o aviso do nome e o «ready» da lista levam as palavras e os espaços num nó de texto só, como a antiga (o React os dava em nós separados e o Chromium compõe as pontas de outro jeito). Mais um teste: fechar a folha com um Undo pendente mostra a faixa (diferença de propósito).
+
 ## [2026-11-21 19:30] step — F83 onda 4: a prova no navegador, o peso, os documentos
 **Branch:** claude/f83-wave-4-start
 172 conferências por corrida no Chromium (1280 e 393), a antiga (c343830) contra a nova, com o Firebase Auth e o Firestore bloqueados (nenhuma conta anônima em produção): o HTML, a folha e o foco iguais em todos os passos; 30 capturas com 2 a 60 pixels (maior diferença por canal 19 de 255) e 3 de 24 mil pixels na moldura do topo que a antiga contra a antiga também tem; controles de antiga contra antiga com e sem transições (3 a 7 pixels, e a moldura). Uma diferença de propósito afirmada: com um Undo pendente, fechar a folha do celular mostra a faixa. Script principal 285.730 B (294.773 antes; teto 285.874 B); arquivo da Start 12.176 B; placar: 68 arquivos à mão (73), 12.266 linhas (13.348), 653 textos fora do dicionário (729). Evidência: reports/evidence/F83/wave-4/.

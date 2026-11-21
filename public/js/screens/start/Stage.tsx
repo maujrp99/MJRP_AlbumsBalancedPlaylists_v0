@@ -26,9 +26,9 @@ function ModeLink({ controller, mode, children }: { controller: StartController;
 }
 
 function Hint({ controller, paste, typing }: { controller: StartController; paste: boolean; typing: boolean }) {
-    if (paste) return <>{t('start.hint.paste.before')}{' '}<ModeLink controller={controller} mode="artist">{t('start.hint.paste.link')}</ModeLink></>
+    if (paste) return <>{`${t('start.hint.paste.before')} `}<ModeLink controller={controller} mode="artist">{t('start.hint.paste.link')}</ModeLink></>
     if (typing) return <>{t('start.hint.typing')}</>
-    return <>{t('start.hint.artist.before')}{' '}<ModeLink controller={controller} mode="paste">{t('start.hint.artist.link')}</ModeLink>{' '}{t('start.hint.artist.after')}</>
+    return <>{`${t('start.hint.artist.before')} `}<ModeLink controller={controller} mode="paste">{t('start.hint.artist.link')}</ModeLink>{` ${t('start.hint.artist.after')}`}</>
 }
 
 export function Stage({ controller, phone }: { controller: StartController; phone: boolean }) {

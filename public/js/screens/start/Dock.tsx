@@ -65,9 +65,9 @@ function UndoStrip({ controller, undo }: { controller: StartController; undo: Un
 export function GuestLine({ controller, action = 'sign-in' }: { controller: StartController; action?: string }) {
     return (
         <p className="home-guest">
-            {t('start.guest.before')}{' '}
+            {`${t('start.guest.before')} `}
             <DockButton text={t('start.guest.signIn')} className="home-link" action={action} onClick={() => controller.signIn()} />
-            {' '}{t('start.guest.after')}
+            {` ${t('start.guest.after')}`}
         </p>
     )
 }
@@ -110,7 +110,7 @@ function NameBox({ controller, model, id }: { controller: StartController; model
             />
             {need
                 ? <p className="home-name__error" id={`${id}Error`} role="alert">
-                    {t('start.dock.name.missing')}{' '}
+                    {`${t('start.dock.name.missing')} `}
                     <DockButton text={t('start.dock.name.use', { name: model.suggestion })} className="home-link" action="use-name" onClick={() => controller.useSuggestedName()} />
                 </p>
                 : null}
@@ -120,7 +120,7 @@ function NameBox({ controller, model, id }: { controller: StartController; model
 
 function Status({ model }: { model: DockModel }) {
     if (model.create === 'creating') {
-        return <span className="home-busy" role="status"><Equalizer bars={5} state="live" className="home-eq--mini" />{' '}{t('start.dock.saving')}</span>
+        return <span className="home-busy" role="status"><Equalizer bars={5} state="live" className="home-eq--mini" />{` ${t('start.dock.saving')}`}</span>
     }
     if (model.create === 'failed') return <span className="home-fail" role="alert">{model.failure}</span>
     return <span className="home-count">{seriesCountLine(model.albums)}</span>
@@ -152,7 +152,7 @@ function AfterButtons({ controller, phone }: { controller: StartController; phon
 
 function SavedLine({ model }: { model: DockModel }) {
     return (
-        <strong className="home-saved"><Icon name="Check" className="home-ico home-saved__ico" />{' '}{t('start.dock.saved', { name: model.created?.name ?? '' })}</strong>
+        <strong className="home-saved"><Icon name="Check" className="home-ico home-saved__ico" />{` ${t('start.dock.saved', { name: model.created?.name ?? '' })}`}</strong>
     )
 }
 
@@ -195,7 +195,7 @@ function Panel({ controller, model }: { controller: StartController; model: Dock
     return (
         <div className="home-panel" role="region" aria-label={t('start.panel.region')} id="homeSeriesPanel">
             <div className="home-panel__head">
-                <h3>{t('start.panel.title')}{' '}<span>{plural(model.albums.length)}</span></h3>
+                <h3>{`${t('start.panel.title')} `}<span>{plural(model.albums.length)}</span></h3>
                 <DockButton text={t('start.dock.done')} className="home-btn is-ghost" action="close" onClick={() => controller.closePanel()} />
             </div>
             <p className="home-order">{t('start.panel.order')}</p>

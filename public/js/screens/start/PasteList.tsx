@@ -77,7 +77,7 @@ function Line({ controller, id, text, number, state, why, only, register }: Line
                 onPaste={(event) => onLinePaste(controller, id, event)}
             />
             <span className="home-line__tag" id={`homeLineWhy${number}`}>
-                {state === 'ok' ? <><Icon name="Check" className="home-line__check" />{' '}{t('start.list.ready')}</> : why}
+                {state === 'ok' ? <><Icon name="Check" className="home-line__check" />{` ${t('start.list.ready')}`}</> : why}
             </span>
         </div>
     )
