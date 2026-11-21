@@ -47,12 +47,25 @@ describe('the record playing', () => {
         expect(captionIndex('a3')).toBe(3)
         expect(captionIndex('b1')).toBe(10)
         expect(captionIndex('b2')).toBe(13)
+        // a crate of 15 (the real set): side A has eight, side B keeps its records
+        expect(captionIndex('a3', 15)).toBe(3)
+        expect(captionIndex('b1', 15)).toBe(11)
+        expect(captionIndex('b2', 15)).toBe(14)
         expect(captionLine({ a: 'Nas', y: '1994' })).toBe('Nas · 1994')
         expect(captionLine({ a: 'North Atlas', y: '' })).toBe('North Atlas · fictional album')
     })
 })
 
 describe('the CSS crate', () => {
+    it('a crate of 15 shows eight records on side A and the last seven on side B', () => {
+        const a = cssCrateLayout('a1', 15)
+        expect(a.slice(0, 8).every(p => p.visible)).toBe(true)
+        expect(a.slice(8).some(p => p.visible)).toBe(false)
+        const b = cssCrateLayout('b1', 15)
+        expect(b.slice(8).every(p => p.visible)).toBe(true)
+        expect(b[11].zIndex).toBe('30')
+    })
+
     it('side A faces you on the first track, nothing pulled', () => {
         const places = cssCrateLayout('a1')
         expect(places.slice(0, 7).every(p => p.visible)).toBe(true)

@@ -8,7 +8,16 @@
  */
 
 /** The crate: width, depth, height, plank thickness; the sleeves: side, spacing, first position. */
-export const GEOM = Object.freeze({ W: 2.62, DEP: 4.3, HT: 1.05, T: 0.08, SZ: 2.3, Z0: 1.82, STEP: 0.28, COUNT: 14, LIFT: 1.55, FWD: 0.55 })
+export const GEOM = Object.freeze({ W: 2.62, DEP: 4.3, HT: 1.05, T: 0.08, SZ: 2.3, Z0: 1.82, SPAN: 3.64, COUNT: 14, LIFT: 1.55, FWD: 0.55 })
+
+/** The gap between two sleeves: the row keeps its length (front to back of the crate), whatever the count. */
+export const stepOf = (count) => GEOM.SPAN / (count - 1)
+
+/**
+ * The record a track names, in a crate of `count`: the tracks count side B from the back of the crate
+ * (its last seven records), so a set with more records on side A keeps side B's records in place.
+ */
+export const recordAt = (i, count) => (i >= 7 ? i + count - 14 : i)
 
 const DEG = Math.PI / 180
 
@@ -33,10 +42,11 @@ export const PAGE_VIEW = 'b'
 export function sleeveTargets(track, flip, tracks, count = GEOM.COUNT) {
     const tr = tracks[track], s = flip < 0.5 ? 1 : -1
     const lean = -0.16 * s
+    const pull = tr.pull >= 0 ? recordAt(tr.pull, count) : -1
     return Array.from({ length: count }, (_, i) => {
         let lift = 0, tilt = lean
-        if (tr.pull >= 0 && flip % 1 === 0) {
-            if (i === tr.pull) { lift = 1; tilt = 0.04 * s } else if ((s > 0 && i < tr.pull) || (s < 0 && i > tr.pull)) tilt = 0.62 * s
+        if (pull >= 0 && flip % 1 === 0) {
+            if (i === pull) { lift = 1; tilt = 0.04 * s } else if ((s > 0 && i < pull) || (s < 0 && i > pull)) tilt = 0.62 * s
         }
         return { lift, tilt }
     })
@@ -59,9 +69,9 @@ export function faceTurn(azimuthRad, rot) {
 }
 
 /** Where a sleeve stands in the crate's own space: its position and its turns. */
-export function sleevePlace(i, lift, tilt, rot, view) {
+export function sleevePlace(i, lift, tilt, rot, view, count = GEOM.COUNT) {
     const azimuth = (view.azimuth || 0) * DEG
-    const z = GEOM.Z0 - i * GEOM.STEP
+    const z = GEOM.Z0 - i * stepOf(count)
     return {
         x: 0,
         y: GEOM.T / 2 + lift * GEOM.LIFT,
@@ -91,7 +101,7 @@ export function scenePoints(pose, view) {
         for (const p of box(x - w / 2, x + w / 2, y - h / 2, y + h / 2, z - d / 2, z + d / 2)) pts.push(rotY(p, pose.rot))
     }
     pose.sleeves.forEach((s, i) => {
-        const pl = sleevePlace(i, s.lift, s.tilt, pose.rot, view)
+        const pl = sleevePlace(i, s.lift, s.tilt, pose.rot, view, pose.sleeves.length)
         for (const c of box(-SZ / 2, SZ / 2, 0, SZ, -0.0175, 0.0175)) {
             // the sleeve's own turns (tilt about x first, then the turn about y), then its place, then the crate's turn
             const local = rotY(rotX(c, pl.tilt), pl.turn)
@@ -106,10 +116,10 @@ export function scenePoints(pose, view) {
  * pose of the page (each track, on either side), at this turn. The camera is fitted to this, so it
  * stays still while records come and go, and only breathes back while the crate turns.
  */
-export function envelopePoints(rot, view, tracks) {
+export function envelopePoints(rot, view, tracks, count = GEOM.COUNT) {
     const pts = []
     for (const track of Object.keys(tracks)) {
-        for (const flip of [0, 1]) pts.push(...scenePoints({ rot, sleeves: sleeveTargets(track, flip, tracks) }, view))
+        for (const flip of [0, 1]) pts.push(...scenePoints({ rot, sleeves: sleeveTargets(track, flip, tracks, count) }, view))
     }
     return pts
 }
@@ -171,7 +181,7 @@ export function fitCamera(points, view, aspect) {
 export const TODAY_CAMERA = Object.freeze({ position: [0, 4.9, 10.6], target: [0, 1.75, 0], fov: 30 })
 
 /** The camera for a view at a turn of the crate and a frame's aspect. */
-export function cameraFor(view, rot, aspect, tracks) {
+export function cameraFor(view, rot, aspect, tracks, count = GEOM.COUNT) {
     if (view.fixed) return { ...TODAY_CAMERA, aspect }
-    return fitCamera(envelopePoints(rot, view, tracks), view, aspect)
+    return fitCamera(envelopePoints(rot, view, tracks, count), view, aspect)
 }

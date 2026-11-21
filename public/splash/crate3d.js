@@ -8,7 +8,7 @@
  * three.js comes from the jsDelivr CDN at the version the proposal measured (0.185.0, ~155 KB
  * compressed); a full URL, so Vite leaves it out of the build. If it does not arrive, the CSS crate stays.
  */
-import { VIEWS, cameraFor, sleevePlace, sleeveTargets, turnOf, GEOM } from './framing.js'
+import { VIEWS, cameraFor, sleevePlace, sleeveTargets, turnOf, stepOf, GEOM } from './framing.js'
 
 export const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.min.js'
 
@@ -45,7 +45,7 @@ export async function startCrate3d(win, page) {
     const fireB = new THREE.PointLight(0xdc2626, 8, 0, 1.1); around(fireB, 1.6, 0, 3.3); scene.add(fireB)
     let aspect = 1, camRot = NaN
     const aim = (rot) => {
-        const c = cameraFor(view, rot, aspect, page.TRACKS)
+        const c = cameraFor(view, rot, aspect, page.TRACKS, imgs.length)
         camera.position.set(...c.position); camera.lookAt(...c.target); camera.updateProjectionMatrix()
         camRot = rot
     }
@@ -78,7 +78,7 @@ export async function startCrate3d(win, page) {
         const m = new THREE.Mesh(geo, [edge, edge, edge, edge, face, face])
         m.userData = { lift: 0, tilt: -0.16 }
         m.rotation.order = 'YXZ'
-        m.position.set(0, T / 2, GEOM.Z0 - i * GEOM.STEP); crate.add(m)
+        m.position.set(0, T / 2, GEOM.Z0 - i * stepOf(imgs.length)); crate.add(m)
         return m
     })
 
@@ -110,7 +110,7 @@ export async function startCrate3d(win, page) {
             const dl = t.lift - u.lift, dti = t.tilt - u.tilt
             if (Math.abs(dl) > 0.001 || Math.abs(dti) > 0.001) moving = true
             u.lift += dl * k; u.tilt += dti * k
-            const pl = sleevePlace(i, u.lift, u.tilt, rot, view)
+            const pl = sleevePlace(i, u.lift, u.tilt, rot, view, sleeves.length)
             m.position.set(pl.x, pl.y, pl.z)
             m.rotation.set(pl.tilt, pl.turn, 0, 'YXZ')
         })

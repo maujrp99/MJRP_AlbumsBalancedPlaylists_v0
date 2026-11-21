@@ -1,7 +1,8 @@
 /**
  * The covers of the entry page (F80, REQ-06): ONE data file, two sets, one build-time switch.
  *
- *   real       the 14 records of the approved prototype (design/inception/splash-crate-v2.html).
+ *   real       the 14 records of the approved prototype (design/inception/splash-crate-v2.html), plus
+ *              the owner's banana cover in front (2026-11-21): 15.
  *              The image is Apple Music artwork, served by Apple's image CDN (is1-ssl.mzstatic.com,
  *              which answers with `access-control-allow-origin: *`, so WebGL may use it); nothing of
  *              it is kept in this repository. The rights belong to the artists and labels, and
@@ -14,8 +15,10 @@
  * Vite plugin `entryPage` (vite.config.js) writes the chosen set into public/splash.html, in the
  * build and in the dev server. Pure: no browser API, no import.
  *
- * Order matters: records 0-6 are side A of the crate (0 in front), 7-13 side B (13 in front when
- * the crate is turned). The page pulls 2, 3, 5, 6 on side A and 10 on side B (splash.js TRACKS).
+ * Order matters: the last seven records are side B of the crate (the last in front when the crate is
+ * turned), every one before them side A (0 in front): 7 + 7 in the fictional set, 8 + 7 in the real
+ * one. The page pulls 2, 3, 5, 6 on side A and the fourth from the back on side B (splash.js TRACKS,
+ * framing.js recordAt). Harvest went to the back of side A so the pulled records stayed the same.
  */
 
 export const COVER_SWITCH = 'VITE_SPLASH_COVERS'
@@ -25,14 +28,16 @@ const SIZE = 360
 
 /** Real records: title, artist, year, the artwork path on Apple's CDN, the Apple Music page. */
 const REAL = [
+    // the first record of side A, the owner's (2026-11-21): «a capa da banana»; King Crimson stays, second
+    ['vu-nico', 'The Velvet Underground & Nico', 'The Velvet Underground & Nico', 1967, 'Music112/v4/92/93/39/9293397f-a707-237e-ec7e-0ca613a67e3c/06UMGIM04143.rgb.jpg', 'https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613'],
     ['crimson', 'In the Court of the Crimson King', 'King Crimson', 1969, 'Music5/v4/2f/c7/19/2fc71988-6871-be2c-6731-a3d0f2a6b232/Court_2500px.jpg', 'https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711'],
-    ['harvest', 'Harvest', 'Neil Young', 1972, 'Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg', 'https://music.apple.com/us/album/harvest/1015739190'],
     // The iTunes search did not resolve these two to the right album: the Apple Music search, as in the prototype
     ['dsotm', 'The Dark Side of the Moon', 'Pink Floyd', 1973, 'Music221/v4/3e/76/b0/3e76b0e3-762b-2286-a019-8afb19cee541/886445635829.jpg', 'https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon'],
     ['low', 'Low', 'David Bowie', 1977, 'Music124/v4/f7/49/2d/f7492da6-164e-b023-4b17-937329c35458/190295842895.jpg', 'https://music.apple.com/us/album/low-2017-remaster/1347895593'],
     ['pcl', 'Power, Corruption & Lies', 'New Order', 1983, 'Music115/v4/d2/3f/c8/d23fc8e7-3baa-eae3-7301-7a868d00ab09/825646053803.jpg', 'https://music.apple.com/us/album/power-corruption-lies/1040981945'],
     ['dummy', 'Dummy', 'Portishead', 1994, 'Music115/v4/c1/71/93/c1719342-df7d-e9c5-c87c-53dae5afb289/00042282855329.rgb.jpg', 'https://music.apple.com/us/album/dummy/1440653096'],
     ['illmatic', 'Illmatic', 'Nas', 1994, 'Music125/v4/e8/13/50/e813500d-51cd-6c37-c405-53a668cbde97/886444072496.jpg', 'https://music.apple.com/us/album/illmatic/856131729'],
+    ['harvest', 'Harvest', 'Neil Young', 1972, 'Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg', 'https://music.apple.com/us/album/harvest/1015739190'],
     ['edge', 'Close to the Edge', 'Yes', 1972, 'Music6/v4/94/d8/a2/94d8a2bf-797b-c9d2-1602-671c0b79a765/603497886074.jpg', 'https://music.apple.com/us/album/close-to-the-edge/1049014094'],
     ['homogenic', 'Homogenic', 'Björk', 1997, 'Music126/v4/7f/bd/d0/7fbdd0e0-c588-ef4b-a6dd-4dca21f8b41f/081227607364.jpg', 'https://music.apple.com/us/search?term=Bj%C3%B6rk%20Homogenic'],
     ['mezzanine', 'Mezzanine', 'Massive Attack', 1998, 'Music115/v4/0a/98/55/0a98555b-8d9d-3b46-660a-b91261557d17/00724384559953.rgb.jpg', 'https://music.apple.com/us/album/mezzanine/724466069'],
@@ -171,7 +176,7 @@ const altOf = (album) => album.kind === 'real'
     ? `${album.t} by ${album.a} (${album.y}), album cover`
     : `${album.t} by ${album.a}, a fictional album with original artwork`
 
-/** The 14 sleeves of the crate, as the page's CSS crate and the 3D crate read them (data-* carry the caption). */
+/** The sleeves of the crate, as the page's CSS crate and the 3D crate read them (data-* carry the caption). */
 export function coverImagesHtml(setName) {
     return albumsOf(setName).map((album, i) => '<img'
         + ` class="sl s${i}" style="--p:${i}" data-i="${i}" data-k="${album.k}"`

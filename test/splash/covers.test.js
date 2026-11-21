@@ -25,18 +25,20 @@ describe('the switch', () => {
 })
 
 describe('the two sets', () => {
-    it('each has 14 records, seven for each side of the crate', () => {
+    it('the real set has 15 records (eight on side A, seven on side B), the fictional 14', () => {
         expect(Object.keys(COVER_SETS).sort()).toEqual(['fictional', 'real'])
-        expect(COVER_SETS.real).toHaveLength(14)
+        expect(COVER_SETS.real).toHaveLength(15)
         expect(COVER_SETS.fictional).toHaveLength(14)
     })
 
-    it('the real set is the prototype\'s, in its order, each with an Apple Music link', () => {
+    it('the real set opens with the banana cover, then King Crimson (the owner, 2026-11-21), each with an Apple Music link', () => {
         const real = albumsOf('real')
-        expect(real.map(a => a.k)).toEqual(['crimson', 'harvest', 'dsotm', 'low', 'pcl', 'dummy', 'illmatic',
+        expect(real.map(a => a.k)).toEqual(['vu-nico', 'crimson', 'dsotm', 'low', 'pcl', 'dummy', 'illmatic', 'harvest',
             'edge', 'homogenic', 'mezzanine', 'aeroplane', 'pitty', 'desire', 'tpab'])
-        expect(real[0]).toMatchObject({ t: 'In the Court of the Crimson King', a: 'King Crimson', y: 1969 })
-        expect(real[13]).toMatchObject({ t: 'To Pimp a Butterfly', a: 'Kendrick Lamar', y: 2015 })
+        expect(real[0]).toMatchObject({ t: 'The Velvet Underground & Nico', a: 'The Velvet Underground & Nico', y: 1967 })
+        expect(real[0].href).toBe('https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613')
+        expect(real[1]).toMatchObject({ t: 'In the Court of the Crimson King', a: 'King Crimson', y: 1969 })
+        expect(real[14]).toMatchObject({ t: 'To Pimp a Butterfly', a: 'Kendrick Lamar', y: 2015 })
         real.forEach(a => expect(a.href).toMatch(/^https:\/\/music\.apple\.com\/us\//))
     })
 
@@ -78,7 +80,7 @@ describe('what the page receives', () => {
     it('one <img> per record, with the data the page reads and the alt text', () => {
         const html = coverImagesHtml('real')
         const imgs = html.match(/<img [^>]+>/g)
-        expect(imgs).toHaveLength(14)
+        expect(imgs).toHaveLength(15)
         expect(imgs[4]).toContain('class="sl s4"')
         expect(imgs[4]).toContain('style="--p:4"')
         expect(imgs[4]).toContain('data-t="Power, Corruption &amp; Lies"')
@@ -90,9 +92,9 @@ describe('what the page receives', () => {
 
     it('the caption names the front record: real with the credit and the link, fictional with the tag', () => {
         const real = captionHtml('real')
-        expect(real).toContain('<b>In the Court of the Crimson King</b>King Crimson · 1969')
+        expect(real).toContain('<b>The Velvet Underground &amp; Nico</b>The Velvet Underground &amp; Nico · 1967')
         expect(real).toContain('Artwork from Apple Music')
-        expect(real).toContain('href="https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711"')
+        expect(real).toContain('href="https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"')
         expect(real).toContain('Listen on Apple Music')
         const fictional = captionHtml('fictional')
         expect(fictional).toContain('<b>Copper Year</b>North Atlas · fictional album')
