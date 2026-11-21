@@ -1,0 +1,229 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+ "version": 1,
+ "about": "O mapa dos hooks (F291, S-245): por hook, o que recusa, avisa, informa ou grava, e a regra do orquestrador que ele garante. O que é verdade sobre o hook (evento, matcher, script, onde roda) é lido do disco por hooks_map.py; aqui só entra o que o disco não diz. Chave: `agent:<script> <arg>` ou `git:<hook>`. O filho pode somar `hooks-catalog.local.json`.",
+ "rule_guards": {
+  "40": "o brief gerado, `delegation_brief.py` (não é hook: o orquestrador o roda antes de abrir cada sessão e cola o texto, que traz o movimento no board como primeiro passo e o critério de saída)",
+  "46": "o supervisor fora do agente, `supervisor.py` (launchd `com.mjrp.supervisor`, a cada 60 s; o MJRP o instala com `python3 mjrp-scripts/supervisor.py install`): não é hook, porque a sessão morta não roda hook; avisa pela espera do orquestrador (`orchestrator_wait.py`) e pela notificação do macOS",
+  "47": "o juiz deste mapa, `hooks_map_check.py` (declarado como sensor no contrato; reprova o hook que falta no mapa)"
+ },
+ "hooks": {
+  "agent:doctor.py .": {
+   "kind": "informs",
+   "does": "Roda o doctor no início da sessão e mostra o resumo (as 20 últimas linhas); não recusa nada.",
+   "rules": []
+  },
+  "agent:stop_gate.py --hook session-start": {
+   "kind": "warns",
+   "does": "Avisa o orquestrador que está sem a espera de pé (`orchestrator_wait.py`) e marca o início da sessão para a trava do fim do turno.",
+   "rules": [
+    22
+   ]
+  },
+  "agent:priority_next.py --session-start": {
+   "kind": "informs",
+   "does": "Lista os itens da «Priorizada» que ainda não começaram, na ordem do MJRP.",
+   "rules": [
+    2,
+    4
+   ]
+  },
+  "agent:pile_up_check.py --session-start": {
+   "kind": "warns",
+   "does": "Avisa o board que acumula fora do «Pronto para UAT»: mais de 3 em «Esperando», ou backlog acima do teto, ou item da «Priorizada» parado com vaga livre.",
+   "rules": [
+    5
+   ]
+  },
+  "agent:screen_answers.py --session-start": {
+   "kind": "informs",
+   "does": "Lista as respostas do MJRP na tela que nenhum agente executou ainda.",
+   "rules": []
+  },
+  "agent:remote_approval.py returned --session-start": {
+   "kind": "informs",
+   "does": "Mostra o que o MJRP devolveu pelo iPhone e ainda não recebeu ação do agente.",
+   "rules": [
+    6
+   ]
+  },
+  "agent:token_ledger_hook.py session-start": {
+   "kind": "records",
+   "does": "Abre o registro de tokens da sessão, atribuído à feature em que ela trabalha.",
+   "rules": []
+  },
+  "agent:token_ledger_hook.py stop": {
+   "kind": "records",
+   "does": "Grava o custo de tokens do turno que terminou.",
+   "rules": []
+  },
+  "agent:token_ledger_hook.py subagent-stop": {
+   "kind": "records",
+   "does": "Grava o custo de tokens do subagente que terminou.",
+   "rules": []
+  },
+  "agent:token_ledger_hook.py session-end": {
+   "kind": "records",
+   "does": "Fecha o registro de tokens da sessão.",
+   "rules": []
+  },
+  "agent:session_close.py session-start": {
+   "kind": "warns",
+   "does": "No checkout principal, mostra a sessão que não se arquivou e tira os worktrees mesclados e limpos.",
+   "rules": [
+    10,
+    34
+   ]
+  },
+  "agent:session_close.py stop-hook": {
+   "kind": "refuses",
+   "does": "Ao fim do turno de uma sessão de página com a entrada de fechamento escrita: fecho verde manda arquivar a sessão; vermelho devolve a lista do que falta.",
+   "rules": [
+    10,
+    34
+   ]
+  },
+  "agent:session_lease.py hook": {
+   "kind": "records",
+   "does": "Registra e renova a reserva da sessão (a feature que ela pegou), no início e no fim de cada turno; é o que põe a feature em «Em andamento». No início recusa a segunda sessão viva no mesmo worktree (com o nome da que já está lá) e, no fim da sessão, libera o worktree.",
+   "rules": [
+    7,
+    45
+   ]
+  },
+  "agent:session_journal.py reinject": {
+   "kind": "informs",
+   "does": "Depois de uma compactação, devolve o `## Now`, o log recente e o diário da sessão.",
+   "rules": []
+  },
+  "agent:session_journal.py gate": {
+   "kind": "refuses",
+   "does": "Barra o fim do turno enquanto uma resposta do MJRP é mais nova que a última entrada do log (decisão não registrada).",
+   "rules": []
+  },
+  "agent:session_journal.py precompact": {
+   "kind": "records",
+   "does": "Antes da compactação, grava no diário o que o MJRP disse e as skills usadas.",
+   "rules": []
+  },
+  "agent:session_journal.py skill": {
+   "kind": "records",
+   "does": "Registra o uso de cada skill em `data/raw/skill-usage.csv`.",
+   "rules": []
+  },
+  "agent:stop_gate.py": {
+   "kind": "refuses",
+   "does": "Barra o fim do turno do agente que mexeu em arquivos sem critério de saída que passou (doctor e sensores); separa «reprovou» (1) de «não avaliável» (2).",
+   "rules": []
+  },
+  "agent:stop_gate.py --hook bash-pre": {
+   "kind": "records",
+   "does": "Antes de um comando Bash: fotografa os arquivos modificados, para saber depois o que o comando tocou; nunca recusa.",
+   "rules": []
+  },
+  "agent:stop_gate.py --hook bash-post": {
+   "kind": "records",
+   "does": "Depois de um comando Bash: compara com a foto e anota os arquivos que ele tocou, para a trava do fim do turno; nunca recusa.",
+   "rules": []
+  },
+  "agent:stop_gate.py --hook record-edit": {
+   "kind": "records",
+   "does": "Depois de cada escrita: anota o arquivo tocado no turno, para a trava do fim do turno; nunca recusa.",
+   "rules": []
+  },
+  "agent:requirements_graph_check.py . --changed --gate": {
+   "kind": "refuses",
+   "does": "Barra o fim do turno se o grafo de requisitos que o agente tocou ficou órfão ou com elo quebrado.",
+   "rules": []
+  },
+  "agent:path_guard.py": {
+   "kind": "refuses",
+   "does": "Antes de criar um arquivo: recusa o que está na pasta errada para a sua natureza e diz para onde vai.",
+   "rules": []
+  },
+  "agent:catalog_marks_guard.py": {
+   "kind": "refuses",
+   "does": "Antes de um Bash: recusa o comando do agente que produziria a válvula do MJRP (marcação do catálogo, aceite, ordem da «Priorizada», passkey).",
+   "rules": []
+  },
+  "agent:human_valves_guard.py": {
+   "kind": "refuses",
+   "does": "Antes de um Bash: recusa o push, `--no-verify`, a troca do caminho dos hooks e o que move a `main` por fora do trem.",
+   "rules": [
+    1
+   ]
+  },
+  "agent:deletion_guard.py": {
+   "kind": "refuses",
+   "does": "Antes de um Bash: recusa apagar o que não se recupera (rm, git clean, reset --hard...) fora do `_safe.py`.",
+   "rules": []
+  },
+  "agent:archive_guard.py": {
+   "kind": "refuses",
+   "does": "Antes de arquivar uma sessão: recusa a de papel (orquestradora, designer), a que não se acha e a de fecho vermelho, com o que falta (o `session-check`).",
+   "rules": [
+    42
+   ]
+  },
+  "git:pre-commit": {
+   "kind": "refuses",
+   "does": "Recusa o commit que traz o que está fora da sua natureza, grafo de requisitos quebrado, feature fora da «Priorizada», nome de branch fora da convenção, spec fora do molde, a `main` congelada para o branch com aprovação aberta, a ADR que espera o MJRP escrita só num branch (ela nasce na `main`), marcador de conflito do git em arquivo de texto (F305), o commit num worktree de feature com o card fora de «Em andamento» (F295), entre outros; julga só o que o commit adiciona.",
+   "rules": [
+    3,
+    39,
+    43
+   ]
+  },
+  "git:commit-msg": {
+   "kind": "refuses",
+   "does": "Recusa o commit sem entrada nova no log e os trailers que são válvula do MJRP; deixa o bilhete de uso único que a `main` exige.",
+   "rules": []
+  },
+  "git:pre-merge-commit": {
+   "kind": "refuses",
+   "does": "Recusa o merge de branch que mudou tela sem relatório de reconferência visual avaliado e sem P0, ou que traz marcador de conflito do git (F305); fecha o que o fecho da feature exige.",
+   "rules": [
+    23
+   ]
+  },
+  "git:post-commit": {
+   "kind": "records",
+   "does": "Alinha o índice com o status derivado que o pre-commit gravou no commit; nunca falha.",
+   "rules": []
+  },
+  "git:post-merge": {
+   "kind": "records",
+   "does": "Depois de um merge na `main`, lista a feature mesclada que segue aberta (task sem marca, spec fora de `Done`); no filho, sem trem, é o único aviso; nunca falha.",
+   "rules": [
+    48
+   ]
+  },
+  "git:reference-transaction": {
+   "kind": "refuses",
+   "does": "Recusa mover `refs/heads/main` por qualquer porta que não rodou os hooks de commit (fast-forward, reset, update-ref); a `main` só se move pelo commit por pathspec e pelo merge do trem.",
+   "rules": [
+    1
+   ]
+  },
+  "git:pre-push": {
+   "kind": "refuses",
+   "does": "Do filho: o envio de código ao `main` passa pela trava do merge; só conteúdo ou outro branch não roda checagem de código.",
+   "rules": []
+  },
+  "agent:machine_load_guard.py": {
+   "kind": "refuses",
+   "does": "Antes de um Bash: recusa a suíte pesada solta (o doctor completo, a bateria inteira do pytest ou do front) e dá o comando na fila de `machine_load.py run`, que deixa uma por vez na máquina; diz quem roda agora e há quanto tempo.",
+   "rules": [
+    37,
+    44
+   ]
+  },
+  "agent:state_first_guard.py": {
+   "kind": "refuses",
+   "does": "Antes de um Write, Edit, MultiEdit ou NotebookEdit num worktree de feature: recusa a primeira escrita enquanto o card dela não está em «Em andamento» (ou «Esperando…»), e dá o comando que move o card. Conversa, leitura, a `main` e arquivo fora de worktree de feature passam; o pre-commit (`state_first_check.py`) é a rede do agente sem hooks.",
+   "rules": [
+    39
+   ]
+  }
+ }
+}

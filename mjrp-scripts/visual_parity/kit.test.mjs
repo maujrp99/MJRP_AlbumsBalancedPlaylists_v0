@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // Tests of the visual parity kit: the rules on sample facts (a pair that must pass, one that must fail), the judge on
 // facts written to a temporary folder, and — when the consuming project's Playwright is reachable — the whole sensor
 // end to end on two small pages (a prototype and a product that differ in the menu, the font and a component).
@@ -324,6 +324,8 @@ test('drawers: a card the product has and that opens nothing is a P0, whatever t
   assert.deepEqual(drawerChecks({ ...story, product: drawerSide(open) }), []);
   // the gesture found no target: a row the data may not have, as before (P2 when the prototype has it)
   assert.deepEqual(drawerChecks({ ...story, productActions: [{ action: 'click', available: false }] }).map((c) => `${c.sev} ${c.id}`), ['P2 drawer board-story: no-row']);
+  // UAT-532 (C): the plain `click` carries `cards` too (the scenario's `card` selector), so -story and -epic tell a card that is no button
+  assert.deepEqual(drawerChecks({ ...story, productActions: [{ action: 'click', available: false, cards: 3 }] }).map((c) => `${c.sev} ${c.id}`), ['P0 drawer board-story: card-not-a-button']);
   // cards on screen and none of them a button: its own rule (P0), not the no-row the data may explain
   const notButton = { ...feature, productActions: [{ action: 'drawer:delivery-feature', available: false, row: false, opened: false, cards: 4 }] };
   assert.deepEqual(drawerChecks(notButton).map((c) => `${c.sev} ${c.id}`), ['P0 drawer delivery-feature: card-not-a-button']);

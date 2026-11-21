@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 board_mapping_check.py - the judge of how a project's existing items enter the board (F136, S-202; the board@1 of ADR-0025,
 ADR-0026 and ADR-0027, read by _board.py).
@@ -59,7 +59,9 @@ STAGE_LABEL = {"explore": "Explorar", "frame": "Enquadrar", "draw": "Desenhar", 
                "homologation": "Homologação", "deploy": "Deploy", "accepted": "Aceito"}
 PHASE_LABEL = {"discovery": "Discovery", "design": "Design", "delivery": "Delivery", "release": "Release"}
 CATEGORY_LABEL = {"not_started": "Não começado", "queued": "Na fila", "reopened": "Reaberto", "in_progress": "Em andamento", "waiting": "Esperando",
-                  "evaluating": "Em avaliação (Evals)", "done": "Feito", "closed": "Fechado", "accepted": "Aceito", "off": "Fora"}
+                  "evaluating": "Em avaliação (Evals)", "done": "Feito", "closed": "Fechado", "accepted": "Aceito", "off": "Fora",
+                  # F275: only the board's record (board_move.py) gives these
+                  "waiting_human": "Esperando o cliente", "waiting_agent": "Esperando o agente", "awaiting_merge": "Esperando o merge"}
 KIND_LABEL = {"release": "versão do produto", "sprint": "sprint", "milestone": "milestone"}   # «Release» alone is the phase
 BOARD_LABEL = {"all": "Tudo", "epics": "Épicos", "features": "Features", "stories": "Stories", "tasks": "Tasks",
                "discovery": "Discovery", "design": "Design", "delivery": "Delivery", "release": "Release",
@@ -204,6 +206,8 @@ def judge(m, proposal=False, defaults=_board.DEFAULTS):
             continue
         if gid in groups:
             bad("duplicate_id", f"groupings.{gid}", f"o agrupamento {gid!r} aparece duas vezes")
+        if "empty_reason" in g and (g["kind"] != "release" or not _text(g["empty_reason"])):
+            bad("grouping_shape", f"groupings.{gid}", "empty_reason é a justificativa de uma versão do produto (release) entregue sem item: uma linha de texto (F285)")
         groups[gid] = g
 
     items = {}

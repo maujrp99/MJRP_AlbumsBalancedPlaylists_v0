@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """session_journal.py -- the AI Platform hooks of S-61: no decision is lost to a context compaction.
 
 Born 2026-10-04: a compaction found the human's latest answers only in the AI Platform's own summary, not in the

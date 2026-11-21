@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // Starts the two sides of the comparison — the server of the approved prototype and the product — from the
 // project's commands, and hands back their URLs. A side whose URL is already given (config `url`, or the
 // environment variable named in `env`) is not started: the project may point at a running server.

@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _board.py - the board configuration (board@1) as the harness sensors judge it: the default merged with the project's file, every
 shape refusal and the coverage of each board (F134; ADR-0025 § 6, ADR-0026, ADR-0027).
@@ -36,7 +36,8 @@ from pathlib import Path
 FORMAT = "board@1"
 DEFAULTS = Path(__file__).resolve().parent / "board_defaults.json"
 PROJECT_REL = "docs/specs/board.json"
-CATEGORIES = ("not_started", "queued", "reopened", "in_progress", "waiting", "evaluating", "done", "closed", "accepted", "off")
+CATEGORIES = ("not_started", "queued", "reopened", "in_progress", "waiting", "waiting_human", "waiting_agent", "evaluating",
+              "awaiting_merge", "done", "closed", "accepted", "off")
 # the state table may give only these; queued, reopened, waiting, evaluating and accepted come from facts (ADR-0026 § Consequences;
 # F143; F146)
 TABLE_CATEGORIES = ("not_started", "in_progress", "done", "closed", "off")
@@ -48,6 +49,8 @@ STRUCTURE_FLAGS = ("in_filter", "follows_parent", "accept_by_children", "reopens
 GROWS = {"not_started": {"queued"}, "in_progress": {"waiting"}}   # R1, R2/R4, in the same stage
 REOPENS = ("in_progress", "done", "closed")                       # R6, a type that `reopens`, in the same stage (F143)
 JUDGED = {"in_progress": {"evaluating", "done"}}                  # R7, of an `evaluated` type only (F146)
+# F275: waiting_human, waiting_agent and awaiting_merge come only from the record (board_move.py) and are never required of a board:
+# where no column takes them, the item stands in «Esperando» (itemboard/category.py, the RR rule)
 SPAN = re.compile(r"^\s*(\d+)\s*([mhd])\s*$")                    # `waiting_after_days` with its unit (F146)
 
 
@@ -261,6 +264,8 @@ def _states(spec, structure, records, stage_phase, accepted, bad):
         for s, row in rows.items():
             where = f"states.{t}.{s}"
             row = row if isinstance(row, dict) else {}
+            if row.get("stage") not in stage_phase and row.get("fallback") in stage_phase:
+                row = {**row, "stage": row["fallback"]}  # F275: a project whose phases lack the stage (`backlog`) takes the fallback
             if row.get("stage") not in stage_phase:
                 bad("state_stage", where, f"a etapa {row.get('stage')!r} não está declarada")
             elif row.get("stage") == accepted:

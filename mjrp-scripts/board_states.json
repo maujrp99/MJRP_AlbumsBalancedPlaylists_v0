@@ -1,0 +1,638 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "format": "board-states@1",
+  "about": "O grafo único dos estados de um item de trabalho (F275, UAT-592): os nomes são os do board, as passagens permitidas e quem faz cada uma. O board desenha só o que o `board_move.py` gravou por uma destas arestas; o juiz é o `board_states_check.py`. `actor`: `agent` (qualquer sessão, o humano também), `order` (decisão do MJRP que o agente grava citando as palavras dele, `--order`) e `signed` (só pelo commit com o carimbo do MJRP, `stamp`; o agente nunca). `category` é a categoria do board (`itemboard`); `requires: closure`: a passagem só vale com a regra de fecho do kernel (`feature_closure.py`) aceitando o `closed_by:` da spec. `spec_status`, o status que a spec de uma feature carrega nesse estado (uma lista quando são vários: a feature aceita pelas stories ou pelas issues fica `Done`).",
+  "initial": "prep",
+  "states": {
+    "prep": {
+      "label": {
+        "pt": "Preparação",
+        "en": "Preparation"
+      },
+      "category": "not_started",
+      "spec_status": "Draft"
+    },
+    "queued": {
+      "label": {
+        "pt": "Priorizada",
+        "en": "Prioritized"
+      },
+      "category": "queued",
+      "spec_status": "Draft"
+    },
+    "in_progress": {
+      "label": {
+        "pt": "Em andamento",
+        "en": "In progress"
+      },
+      "category": "in_progress",
+      "spec_status": "In progress"
+    },
+    "waiting_human": {
+      "label": {
+        "pt": "Esperando o cliente",
+        "en": "Waiting for the client"
+      },
+      "category": "waiting_human",
+      "spec_status": "In progress",
+      "waits_on": "human"
+    },
+    "waiting_agent": {
+      "label": {
+        "pt": "Esperando o agente",
+        "en": "Waiting for the agent"
+      },
+      "category": "waiting_agent",
+      "spec_status": "In progress",
+      "waits_on": "agent"
+    },
+    "evaluating": {
+      "label": {
+        "pt": "Em avaliação (Evals)",
+        "en": "Evaluating"
+      },
+      "category": "evaluating",
+      "spec_status": "In progress"
+    },
+    "awaiting_merge": {
+      "label": {
+        "pt": "Esperando o merge",
+        "en": "Waiting for the merge"
+      },
+      "category": "awaiting_merge",
+      "spec_status": "In progress",
+      "waits_on": "agent"
+    },
+    "ready": {
+      "label": {
+        "pt": "Pronto para UAT",
+        "en": "Ready for UAT"
+      },
+      "category": "done",
+      "spec_status": "Done"
+    },
+    "accepted": {
+      "label": {
+        "pt": "Aceito",
+        "en": "Accepted"
+      },
+      "category": "accepted",
+      "spec_status": [
+        "Accepted",
+        "Done"
+      ]
+    },
+    "reopened": {
+      "label": {
+        "pt": "Reaberto",
+        "en": "Reopened"
+      },
+      "category": "reopened",
+      "spec_status": "In progress"
+    },
+    "closed": {
+      "label": {
+        "pt": "Encerrado",
+        "en": "Closed"
+      },
+      "category": "closed",
+      "spec_status": "Done"
+    },
+    "cancelled": {
+      "label": {
+        "pt": "Cancelado",
+        "en": "Cancelled"
+      },
+      "category": "closed",
+      "spec_status": "Cancelled"
+    },
+    "deferred": {
+      "label": {
+        "pt": "Adiado",
+        "en": "Deferred"
+      },
+      "category": "off",
+      "spec_status": "Deferred"
+    }
+  },
+  "edges": [
+    {
+      "from": "prep",
+      "to": "queued",
+      "actor": "signed",
+      "stamp": "Human-prioritized",
+      "says": "o MJRP prioriza"
+    },
+    {
+      "from": "queued",
+      "to": "prep",
+      "actor": "signed",
+      "stamp": "Human-prioritized",
+      "says": "o MJRP tira da «Priorizada»"
+    },
+    {
+      "from": "queued",
+      "to": "in_progress",
+      "actor": "agent",
+      "says": "uma sessão começa"
+    },
+    {
+      "from": "prep",
+      "to": "in_progress",
+      "actor": "agent",
+      "says": "começa fora da «Priorizada» só a feature que conserta uma issue aberta (a trilha do agente, a issue de UAT, a cópia: o hook confere), ou por ordem do MJRP"
+    },
+    {
+      "from": "reopened",
+      "to": "in_progress",
+      "actor": "agent",
+      "says": "o conserto começa"
+    },
+    {
+      "from": "in_progress",
+      "to": "waiting_human",
+      "actor": "agent",
+      "says": "pede algo ao cliente (decisão, aprovação, protótipo)"
+    },
+    {
+      "from": "in_progress",
+      "to": "waiting_agent",
+      "actor": "agent",
+      "says": "depende de outro agente ou de outro item"
+    },
+    {
+      "from": "waiting_human",
+      "to": "in_progress",
+      "actor": "agent",
+      "says": "o cliente respondeu"
+    },
+    {
+      "from": "waiting_agent",
+      "to": "in_progress",
+      "actor": "agent",
+      "says": "o outro agente entregou"
+    },
+    {
+      "from": "waiting_human",
+      "to": "waiting_agent",
+      "actor": "agent",
+      "says": "a espera passa a ser de um agente"
+    },
+    {
+      "from": "waiting_agent",
+      "to": "waiting_human",
+      "actor": "agent",
+      "says": "a espera passa a ser do cliente"
+    },
+    {
+      "from": "in_progress",
+      "to": "evaluating",
+      "actor": "agent",
+      "says": "o juiz começa"
+    },
+    {
+      "from": "evaluating",
+      "to": "in_progress",
+      "actor": "agent",
+      "says": "o juiz achou P0: volta ao trabalho"
+    },
+    {
+      "from": "evaluating",
+      "to": "awaiting_merge",
+      "actor": "agent",
+      "says": "o juiz passou: entregue ao integrador"
+    },
+    {
+      "from": "in_progress",
+      "to": "awaiting_merge",
+      "actor": "agent",
+      "says": "entregue ao integrador (via rápida da trilha Humano: o dedo dele no merge é o veredito)"
+    },
+    {
+      "from": "awaiting_merge",
+      "to": "in_progress",
+      "actor": "agent",
+      "says": "o merge foi recusado: volta ao trabalho"
+    },
+    {
+      "from": "awaiting_merge",
+      "to": "ready",
+      "actor": "agent",
+      "says": "o trem juntou na `main` e há o que o MJRP ver"
+    },
+    {
+      "from": "awaiting_merge",
+      "to": "closed",
+      "actor": "agent",
+      "requires": "closure",
+      "says": "o trem juntou na `main` e a reconferência fecha"
+    },
+    {
+      "from": "ready",
+      "to": "accepted",
+      "actor": "signed",
+      "stamp": "Human-accepted",
+      "says": "o MJRP aceita"
+    },
+    {
+      "from": "ready",
+      "to": "reopened",
+      "actor": "signed",
+      "stamp": "Human-reopened",
+      "says": "o MJRP reabre"
+    },
+    {
+      "from": "accepted",
+      "to": "reopened",
+      "actor": "signed",
+      "stamp": "Human-reopened",
+      "says": "o MJRP reabre"
+    },
+    {
+      "from": "closed",
+      "to": "reopened",
+      "actor": "signed",
+      "stamp": "Human-reopened",
+      "says": "o MJRP reabre"
+    },
+    {
+      "from": "ready",
+      "to": "closed",
+      "actor": "agent",
+      "requires": "closure",
+      "says": "a reconferência fecha o que não tem nada para o MJRP ver"
+    },
+    {
+      "from": "prep",
+      "to": "cancelled",
+      "actor": "order",
+      "says": "o MJRP cancela"
+    },
+    {
+      "from": "queued",
+      "to": "cancelled",
+      "actor": "order",
+      "says": "o MJRP cancela"
+    },
+    {
+      "from": "in_progress",
+      "to": "queued",
+      "actor": "agent",
+      "says": "a sessão parou sem entregar: o card volta ao estado de onde veio (a «Priorizada» ou uma espera)"
+    },
+    {
+      "from": "in_progress",
+      "to": "cancelled",
+      "actor": "order",
+      "says": "o MJRP cancela"
+    },
+    {
+      "from": "waiting_human",
+      "to": "cancelled",
+      "actor": "order",
+      "says": "o MJRP cancela"
+    },
+    {
+      "from": "waiting_agent",
+      "to": "cancelled",
+      "actor": "order",
+      "says": "o MJRP cancela"
+    },
+    {
+      "from": "awaiting_merge",
+      "to": "cancelled",
+      "actor": "order",
+      "says": "o MJRP cancela"
+    },
+    {
+      "from": "prep",
+      "to": "deferred",
+      "actor": "order",
+      "says": "o MJRP adia"
+    },
+    {
+      "from": "queued",
+      "to": "deferred",
+      "actor": "order",
+      "says": "o MJRP adia"
+    },
+    {
+      "from": "deferred",
+      "to": "prep",
+      "actor": "order",
+      "says": "o MJRP retoma"
+    },
+    {
+      "from": "cancelled",
+      "to": "prep",
+      "actor": "order",
+      "says": "o MJRP retoma"
+    }
+  ],
+  "lifecycle": {
+    "about": "A segunda dimensão do mesmo grafo (F275, lote 1b; MJRP, 2026-11-17: «o grafo passar por todas as etapas»): a etapa do ciclo de uma story e de uma feature, de Backlog a Deploy. Cada etapa é movida pelo `board_move.py stage`, por quem a fecha, com a evidência que a aresta pede (`evidence`): `commit` (um commit que toca o item), `path` (um artefato que cita o item), `prototype_approved` (a entrada do item em «Protótipos aprovados» do info-arch.md, na `main`), `plan`, `tasks`, `first_task` (o arquivo da feature, ou a primeira task marcada), `merged` (a spec `Done` na `main`), `order` (as palavras do MJRP). Uma aresta com `signed` só passa pelo commit carimbado dele. `phase` é a fase do board; o id da etapa é o estágio do board.",
+    "initial": {
+      "story": "backlog",
+      "feature": "specify"
+    },
+    "stages": {
+      "backlog": {
+        "label": {
+          "pt": "Backlog",
+          "en": "Backlog"
+        },
+        "phase": "discovery",
+        "types": [
+          "story"
+        ]
+      },
+      "explore": {
+        "label": {
+          "pt": "Explorar",
+          "en": "Explore"
+        },
+        "phase": "discovery",
+        "types": [
+          "story"
+        ]
+      },
+      "frame": {
+        "label": {
+          "pt": "Enquadrar",
+          "en": "Frame"
+        },
+        "phase": "discovery",
+        "types": [
+          "story"
+        ]
+      },
+      "draw": {
+        "label": {
+          "pt": "Desenhar",
+          "en": "Draw"
+        },
+        "phase": "design",
+        "types": [
+          "story"
+        ]
+      },
+      "ready": {
+        "label": {
+          "pt": "Pronto para construir",
+          "en": "Ready to build"
+        },
+        "phase": "design",
+        "types": [
+          "story"
+        ]
+      },
+      "specify": {
+        "label": {
+          "pt": "Especificar",
+          "en": "Specify"
+        },
+        "phase": "delivery",
+        "types": [
+          "feature"
+        ]
+      },
+      "plan": {
+        "label": {
+          "pt": "Planejar",
+          "en": "Plan"
+        },
+        "phase": "delivery",
+        "types": [
+          "feature"
+        ]
+      },
+      "tasks": {
+        "label": {
+          "pt": "Tasks",
+          "en": "Tasks"
+        },
+        "phase": "delivery",
+        "types": [
+          "feature"
+        ]
+      },
+      "execute_verify": {
+        "label": {
+          "pt": "Executar e verificar",
+          "en": "Execute and verify"
+        },
+        "phase": "delivery",
+        "types": [
+          "feature",
+          "story"
+        ]
+      },
+      "homologation": {
+        "label": {
+          "pt": "Homologação",
+          "en": "Homologation"
+        },
+        "phase": "release",
+        "types": [
+          "feature",
+          "story"
+        ]
+      },
+      "accepted": {
+        "label": {
+          "pt": "Aceito",
+          "en": "Accepted"
+        },
+        "phase": "release",
+        "types": [
+          "feature",
+          "story"
+        ]
+      },
+      "deploy": {
+        "label": {
+          "pt": "Deploy",
+          "en": "Deploy"
+        },
+        "phase": "release",
+        "types": [
+          "feature",
+          "story"
+        ]
+      }
+    },
+    "edges": [
+      {
+        "from": "backlog",
+        "to": "explore",
+        "actor": "agent",
+        "evidence": [
+          "commit",
+          "path"
+        ],
+        "says": "a Discovery da story começa: o primeiro trabalho que a cita"
+      },
+      {
+        "from": "explore",
+        "to": "frame",
+        "actor": "agent",
+        "evidence": [
+          "path",
+          "commit"
+        ],
+        "says": "o problema explorado: a proposta, a pesquisa ou a nota que a enquadra"
+      },
+      {
+        "from": "frame",
+        "to": "draw",
+        "actor": "agent",
+        "evidence": [
+          "path",
+          "commit"
+        ],
+        "says": "enquadrada: a story escrita com os critérios, o desenho começa"
+      },
+      {
+        "from": "draw",
+        "to": "ready",
+        "actor": "agent",
+        "evidence": [
+          "prototype_approved",
+          "order"
+        ],
+        "says": "o MJRP aprovou o protótipo, ou disse que está pronta (sem tela)"
+      },
+      {
+        "from": "frame",
+        "to": "ready",
+        "actor": "agent",
+        "evidence": [
+          "order"
+        ],
+        "says": "sem tela: o MJRP diz que está pronta para construir"
+      },
+      {
+        "from": "explore",
+        "to": "backlog",
+        "actor": "agent",
+        "evidence": [
+          "order"
+        ],
+        "says": "o MJRP devolve ao backlog"
+      },
+      {
+        "from": "frame",
+        "to": "explore",
+        "actor": "agent",
+        "evidence": [
+          "commit",
+          "path"
+        ],
+        "says": "volta a explorar"
+      },
+      {
+        "from": "draw",
+        "to": "frame",
+        "actor": "agent",
+        "evidence": [
+          "commit",
+          "path"
+        ],
+        "says": "volta a enquadrar"
+      },
+      {
+        "from": "ready",
+        "to": "execute_verify",
+        "actor": "agent",
+        "evidence": [
+          "commit"
+        ],
+        "says": "uma feature que a importa começa a construir"
+      },
+      {
+        "from": "backlog",
+        "to": "execute_verify",
+        "actor": "agent",
+        "evidence": [
+          "order"
+        ],
+        "says": "via rápida: a Discovery comprimida, por ordem do MJRP"
+      },
+      {
+        "from": "specify",
+        "to": "plan",
+        "actor": "agent",
+        "evidence": [
+          "plan"
+        ],
+        "says": "a spec fechou: o plan nasce"
+      },
+      {
+        "from": "plan",
+        "to": "tasks",
+        "actor": "agent",
+        "evidence": [
+          "tasks"
+        ],
+        "says": "o plan fechou: as tasks nascem"
+      },
+      {
+        "from": "tasks",
+        "to": "execute_verify",
+        "actor": "agent",
+        "evidence": [
+          "first_task"
+        ],
+        "says": "a primeira task fechou"
+      },
+      {
+        "from": "specify",
+        "to": "execute_verify",
+        "actor": "agent",
+        "evidence": [
+          "first_task"
+        ],
+        "says": "via rápida: a primeira task fechou, os documentos vêm depois"
+      },
+      {
+        "from": "execute_verify",
+        "to": "homologation",
+        "actor": "agent",
+        "evidence": [
+          "merged"
+        ],
+        "says": "o trem juntou na `main`"
+      },
+      {
+        "from": "homologation",
+        "to": "accepted",
+        "actor": "signed",
+        "stamp": "Human-accepted",
+        "says": "o MJRP aceita"
+      },
+      {
+        "from": "accepted",
+        "to": "execute_verify",
+        "actor": "signed",
+        "stamp": "Human-reopened",
+        "says": "o MJRP reabre"
+      },
+      {
+        "from": "homologation",
+        "to": "execute_verify",
+        "actor": "signed",
+        "stamp": "Human-reopened",
+        "says": "o MJRP reabre"
+      },
+      {
+        "from": "accepted",
+        "to": "deploy",
+        "actor": "agent",
+        "evidence": [
+          "commit"
+        ],
+        "says": "foi ao ar: o commit da produção"
+      }
+    ]
+  }
+}

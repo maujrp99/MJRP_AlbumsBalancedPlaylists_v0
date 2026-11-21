@@ -1,0 +1,12 @@
+#!/bin/sh
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# post-merge - F290 (UAT-600): the fast lane leaves the `Done` for after the merge, and a child has no merge train to say so. After a merge
+# that lands on the trunk, session_close.py lists the features the merge touched that are still open (a task unmarked, a spec short of
+# `Done`); the same list stays on the orchestrator's start and Stop until they close. It never fails: the merge is already made.
+#
+# Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+if [ -f "$ROOT/mjrp-scripts/session_close.py" ] && command -v python3 >/dev/null 2>&1; then
+  python3 "$ROOT/mjrp-scripts/session_close.py" post-merge || true
+fi
+exit 0

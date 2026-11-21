@@ -4,10 +4,10 @@ aliases: [architecture-review, architecture review, revisão de arquitetura, cr�
 summary: as regras com ID estável que a crítica de arquitetura cita — governança, anatomia da ADR, macroarquitetura, dados, comunicação, resiliência, invariantes com teste binário, vetos imediatos e sensores — destiladas do Handbook MJRP de Architecture Review (v0)
 tags: [harness, arquitetura, revisao, kernel]
 status: em formação
-atualizado: 2026-10-09
+atualizado: 2026-11-17
 fontes: [originals/architecture-review-handbook/2026-10-09-handbook-v0.md, wiki/sources/2026-10-09-mjrp-architecture-review-handbook.md, kernel/architecture/engineering-canon]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Architecture Review — o cânone da crítica de arquitetura
 
@@ -46,13 +46,13 @@ nunca recita a regra; quem quer o porquê abre esta página, e quem quer o porqu
 |---|---|---|---|
 | **GV** | Governança da revisão | §1 | 6 |
 | **AD** | Anatomia da ADR | §2 + crítica 2026-10-09 | 14 |
-| **MA** | Macroarquitetura | §3, nível 1 | 6 |
+| **MA** | Macroarquitetura | §3, nível 1 + 2026-11-17 | 8 |
 | **DD** | Consistência e modelagem de dados | §3, nível 2 A | 3 |
 | **CM** | Comunicação e protocolos | §3, nível 2 B | 3 |
 | **RS** | Modos de falha, resiliência e recursos | §3, nível 2 C | 4 |
 | **IV** | Invariantes de engenharia, com teste binário | §4 | 11 |
 | **VT** | Vetos imediatos (*hard stop gates*) | §5 | 6 |
-| **SN** | Sensores e verificação contínua | §6 | 8 |
+| **SN** | Sensores e verificação contínua | §6 + 2026-11-17 | 9 |
 
 Os prefixos não colidem com os do [[design-canon]] (HI, DE, CO, CP, IN, AH, RC, MP).
 
@@ -101,6 +101,8 @@ arquitetura, e aí é técnico.
 | **MA-04** | **FinOps e economia unitária.** O custo marginal por transação e os custos ocultos (tráfego entre zonas, NAT, indexação de NoSQL, cobrança por uso) estão previstos. *Aplica-se quando* a decisão tem custo variável: infraestrutura paga, API cobrada por chamada, tokens. | O custo por unidade de uso está estimado, com os custos ocultos? |
 | **MA-05** | **Modelagem de ameaças (Zero Trust).** A superfície está explícita — onde escuta, o que grava, o que lê; a comunicação interna se autentica ponta a ponta (mTLS, *aplica-se quando* há mais de um serviço em rede); segredos são injetados sem nunca residir em código ou repositório. | A superfície está escrita e nenhum segredo passa por código ou repositório? |
 | **MA-06** | **A estrutura grita o propósito** *(crítica 2026-10-09; [[engineering-canon]] § Componentização)*. A árvore de pastas fala do domínio, não do framework. | Quem lê a árvore entende o que o sistema faz antes de saber com que foi feito? |
+| **MA-07** | **Complexidade estrutural sem ciclos** *(2026-11-17; Robert C. Martin, *Clean Architecture*: dependências acíclicas, dependências estáveis, instabilidade I = Ce / (Ca + Ce) e abstração A)*. O grafo de dependências entre componentes não tem ciclo; cada componente depende só de outros mais estáveis; o componente de que muitos dependem (fan-in alto) é estável e abstrato. Na decisão, o desenho diz que arestas novas cria e se alguma fecha um ciclo ou faz de um módulo instável um centro; no marco, mede-se nos módulos tocados. | O grafo entre componentes é acíclico e toda dependência aponta para um componente mais estável? |
+| **MA-08** | **Decisões concentradas, com limite declarado** *(2026-11-17; McCabe, complexidade ciclomática: caminhos independentes = pontos de decisão + 1)*. Na decisão, a proposta nomeia onde a lógica concentra decisões (os pontos de complexidade ciclomática alta) e como os contém (tabela de regras, máquina de estados, estratégia por caso), com o limite por função que o projeto adota. No marco, a tendência da complexidade nos módulos tocados, lida da medida da `mjrp-assessing-code-quality` (a dona da medida, por função) ou do sensor, contra o limite que o projeto declarou; **projeto sem limite declarado é achado** (até declarar, vale o 10 de McCabe). | Os pontos de muitas decisões estão nomeados, contidos e dentro de um limite que o projeto declarou? |
 
 ## DD · Consistência e modelagem de dados (nível 2 A)
 
@@ -177,6 +179,7 @@ integração. Na decisão, cada regra que a ADR impõe nomeia o seu sensor (GV-0
 | **SN-06** | **Testes de idempotência e resiliência** — injetar a mesma mensagem várias vezes; forçar exceção para conferir o roteamento à DLQ. | há mensageria ou retentativa (CM-01, VT-03) | Há teste que repete a mensagem e teste que força a DLQ? |
 | **SN-07** | **Sensores de invariantes (SLO/SLI)** — telemetria e alerta conferem, em operação, os limites prometidos na ADR (AD-01). | há meta numérica em operação | Cada meta da ADR tem uma medida que alerta quando é rompida? |
 | **SN-08** | **Chaos engineering e game days** — desligar réplicas e injetar latência em homologação para ver o *circuit breaker* e a degradação graciosa atuarem. | há réplicas, *circuit breakers* ou degradação declarada | A degradação declarada foi exercitada de propósito pelo menos uma vez? |
+| **SN-09** | **Funções de aptidão da complexidade** *(2026-11-17; Ford, Parsons e Kua, *Building Evolutionary Architectures*)* — o lint quebra o build quando uma função passa do limite de complexidade ciclomática (MA-08); a detecção de ciclos do SN-01 cobre o MA-07. Na decisão, a proposta lista essas funções de aptidão; no marco, elas existem e estão verdes. | há código, ou uma proposta que nomeia um ponto de muitas decisões | Uma função acima do limite de complexidade quebra o build antes do merge? |
 
 ## Como a crítica usa esta página
 
@@ -233,6 +236,8 @@ ou numa ADR `Accepted` dele, e não contrarie a Parte I do `PRINCIPLES.md`.
 - **2026-10-09 20:55** · Página criada a partir do handbook do MJRP (*Handbook MJRP: Architecture Review, Crítica a ADRs e Verificação Contínua (v0)*, original em `docs/originals/architecture-review-handbook/`). Decisões dele na revisão geral de 2026-10-09: o handbook vira página do kernel com ID estável por regra, como o [[design-canon]] para a crítica de UX; os vetos valem quando se aplicam ("não se aplica" quando o elemento não existe); a separação da crítica é troca de chapéu declarada ou agente separado. As regras marcadas *(crítica 2026-10-09)* vêm das 12 lacunas que a primeira passada real da `mjrp-critiquing-architecture` (ADR-0002 do Control Center, 20:05) encontrou.
 
 - **2026-10-09 22:55** · **O veredito é técnico** (MJRP, 22:30: o foco da crítica é técnico, não processual; os P0 de processo da ADR-0002 não são P0). Dois eixos: o técnico (as regras do handbook, mais GV-03 e GV-06) dá o veredito e só ele tem P0; AD-06…AD-14 e GV-05 viram *higiene da decisão*, notas sem severidade. O AD-12 e o AD-14 saem dos gatilhos de P0; o contrato com forma de tela é P1 na decisão. A tabela dos momentos perde a coluna "o que roda" (a fonte única é a skill); cita-se ID e nome curto; a crítica aparece no log (entrada `review`) e no Control Center. Proposta e diagramas: `design/proposals/2026-10-09-2234-critiquing-architecture-refocus-proposal.md`.
+
+- **2026-11-17 21:04** · **Complexidade como regra** (MJRP, 2026-11-17: «das 2 skills a critiquing precisa vericar a complexidade ciclomatica tb»). Entram o MA-07 (complexidade estrutural sem ciclos, de Robert C. Martin), o MA-08 (decisões concentradas, com limite declarado, de McCabe) e o SN-09 (funções de aptidão da complexidade, de Ford, Parsons e Kua). A medida fina do código segue com a `mjrp-assessing-code-quality`; a crítica confere a estrutura e se os sensores existem. Veio com a F281 (a proposta de arquitetura guiada por risco).
 
 ## Related
 [[engineering-canon]] · [[adr-practice]] · [[design-canon]] · [[pdlc-loops]] · [[doctor]]

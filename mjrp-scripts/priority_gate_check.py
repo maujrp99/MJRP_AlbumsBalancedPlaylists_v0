@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 priority_gate_check.py - the «Priorizada» column governs what starts: the pre-commit's gate (F125, UAT-407).
 
@@ -23,6 +23,8 @@ commit started too). "Started" is `priority_next.has_started` (the app's `not_st
   - a merge that brings the start in ................ passes: the feature's index state is the one of MERGE_HEAD, so it started on the
                                                       branch that comes in, which this gate judged there (UAT-417: merging `main` with the
                                                       F134 done into the F135 branch was refused)
+  - the feature's work is already merged into main .. passes: the commit closes it, it does not start it (F312, UAT-626: the close of the
+                                                      F281, a branch `claude/f281-*` merged, was refused as a start)
   - the branch already worked on the feature ........ passes: commits of its own on the feature's folder since it left `main` - the open
                                                       branch is "started" for the board too (CC-ADR-0029's `not_started`; UAT-417)
   - a project with no `priority.md` ................. no column, no gate (the app reads an absent file as an empty list too); the file
@@ -108,6 +110,11 @@ def starts(top, proj, folder):
         return None                                   # UAT-417: it started on the branch that comes in, not here
     if worked_on_branch(top, proj, folder):
         return None                                   # UAT-417: the branch already worked on it - started, as the board says
+    if after["status"].strip().casefold() in ("done", "accepted") and merged_into_main(top, proj, folder):
+        missing = unverified_reqs(top, proj, folder)
+        if not missing:
+            return None                               # F312 (UAT-626): its work is already in main - this commit closes it, not starts it
+        after = dict(after, _unverified=missing)      # the close is refused with the list of what is not verified
     return after
 
 
@@ -134,6 +141,98 @@ def worked_on_branch(top, proj, folder):
     if r.code != 0 or not r.out.strip():
         return False
     return not pn.discovery_only(pn.changed_paths(top, "refs/heads/main", "HEAD"))
+
+
+_WORK_BRANCH = re.compile(r"^(?:claude|feat|fix)/f(?P<n>\d+)-")
+
+
+def merged_into_main(top, proj, folder):
+    """F312 (UAT-626): a work branch of the feature (`claude|feat|fix/fNN-*`) is merged into `main` with construction in it. The commit that
+    takes the spec to Done / ticks the tasks of such a feature CLOSES it (session_close's upkeep asks for it): nothing starts. A branch whose
+    tip sits on main's first-parent line has no commit of its own (just opened: not merged); a branch whose merge brought only Discovery
+    artifacts did not start the work either (F212), so the real start of the feature is still judged by the list. A git that does not answer is
+    NOT EVALUABLE (exit 2), never a pass. The exemption is for the CLOSE only (the caller requires the spec to go to Done/Accepted): a commit that merely
+    starts (In progress, a first tick) is judged by the list, whatever was merged (the third recheck's P0). Decided by the agent: a Draft spec on
+    main with work merged under the feature's own folder, taken to Done, is a close - the real case of the F281;
+    a fast-forward merge leaves no branch tip off the first-parent line and stays refused (the safe side, as does a squash)."""
+    num = int(re.match(r"F(\d+)", folder)[1])
+    try:
+        if _git.run(top, "rev-parse", "--verify", "-q", "refs/heads/main").code != 0:
+            return False                              # no `main`: nothing is merged, the gate judges by the index (as has_main says)
+        found = _git.run(top, "for-each-ref", "--merged=refs/heads/main", "--format=%(refname:short) %(objectname)",
+                         "refs/heads/claude", "refs/heads/feat", "refs/heads/fix")
+        line = _git.run(top, "rev-list", "--first-parent", "refs/heads/main")
+        if found.code != 0 or line.code != 0:
+            raise pn.NotEvaluable(f"git não disse os ramos mesclados da `main`: {((found.err or line.err) or '').strip()[:200]}")
+        on_line = set(line.out.split())
+        for row in found.out.splitlines():
+            name, _, tip = row.partition(" ")
+            m = _WORK_BRANCH.match(name)
+            if not m or int(m["n"]) != num or tip in on_line:
+                continue
+            merges = _git.run(top, "rev-list", "--first-parent", "--ancestry-path", "--merges", f"{tip}..refs/heads/main")
+            if merges.code != 0:
+                raise pn.NotEvaluable(f"git rev-list dos merges de {name}: {(merges.err or merges.out).strip()[:200]}")
+            last = merges.out.split()[-1:]
+            if not last:
+                continue
+            paths = pn.changed_paths(top, f"{last[0]}^1", tip)
+            # the branch must have worked on the feature's own folder (the second recheck's P0: construction merged with no commit in the
+            # folder never passed through this gate as that feature's start) and brought more than Discovery
+            if paths and any(x.startswith(f"{proj}{pn.FEATURES_REL}/{folder}/") for x in paths) and not pn.discovery_only(paths):
+                return True
+    except _git.GitError as exc:
+        raise pn.NotEvaluable(f"git ramos mesclados da feature: {exc}") from exc
+    return False
+
+
+_REQ_LINE = re.compile(r"^\s*(?:[-*]\s*)?\[(REQ-\d+)\]")
+_NOT_CONSTRUCTION_DIRS = {"docs", "_backups", "reports"}
+_CODE_EXT = {"py", "js", "mjs", "cjs", "ts", "tsx", "jsx", "sh", "bash", "zsh", "swift", "kt", "java", "go", "rs", "rb", "php", "c", "h", "cpp", "sql", "css"}
+_SKILL_TEST_DIRS = {"evals"}
+_PATH_TOKEN = re.compile(r"[\w][\w.\-/]*\.\w{1,5}\b")
+
+
+def unverified_reqs(top, proj, folder):
+    """The REQs of the feature's spec (in the index) whose `verified_by::` names no file that exists in `main` (the recheck's P1: the exemption
+    must not let a Done with only spec and tasks through; the other locks read the form, not the construction). A `verified_by::` is prose; a path-like
+    token (`dir/file.ext`, `file.ext`) counts when a tracked file of `main` equals it or ends with `/token` (the F281's `evals/scenarios.md` is a
+    skill's file), outside the feature's own folder. No REQ at all, or a REQ with no `verified_by::`, is a gap. Decided by the agent
+    (the orchestrator's criterion, 2026-11-20): reversible, technical."""
+    spec_text = blob(top, ":", f"{proj}{pn.FEATURES_REL}/{folder}/spec.md") or ""
+    reqs, cur = {}, None
+    for line in spec_text.splitlines():
+        m = _REQ_LINE.match(line)
+        if m:
+            cur = m[1]
+            reqs.setdefault(cur, [])
+        elif cur and "verified_by::" in line:
+            reqs[cur].append(line.split("verified_by::", 1)[1])
+    if not reqs:
+        return ["nenhum REQ na spec"]
+    try:
+        tree = _git.run(top, "ls-tree", "-r", "--name-only", "refs/heads/main")
+    except _git.GitError as exc:
+        raise pn.NotEvaluable(f"git ls-tree da main: {exc}") from exc
+    if tree.code != 0:
+        raise pn.NotEvaluable(f"git ls-tree da main: {(tree.err or tree.out).strip()[:200]}")
+    own = f"{proj}{pn.FEATURES_REL}/{folder}/"
+    # only CODE is construction (the rechecks 3-6 kept finding another kind of document that counted: AGENTS.md, VISION.md, a skill's plan.md, a PDF): an
+    # allowlist of code extensions, plus a skill's eval (anything under `evals/`, which is its test); `docs/`, `reports/` and the backups never count
+    files = []
+    for f in tree.out.splitlines():
+        dirs, name = set(f.split("/")[:-1]), f.rsplit("/", 1)[-1]
+        if f.startswith(own) or dirs & _NOT_CONSTRUCTION_DIRS:
+            continue
+        if name.rsplit(".", 1)[-1].lower() not in _CODE_EXT and not dirs & _SKILL_TEST_DIRS:
+            continue
+        files.append(f)
+    missing = []
+    for req, notes in reqs.items():
+        tokens = {t.strip("./") for note in notes for t in _PATH_TOKEN.findall(note)}
+        if not any(f == t or f.endswith("/" + t) for t in tokens for f in files):
+            missing.append(f"{req} (verified_by não aponta arquivo que exista na main)")
+    return missing
 
 
 def judge(top):
@@ -172,7 +271,9 @@ def judge(top):
             epics = items.epics_of(fields["imports"]) if has_epic else ()
             rank = pn.rank_of(fid, order, pn.linked_items(fields["imports"], fields["fixes"], epics))
             if rank is None:
-                refused.append(f"a {fid} não está na «Priorizada»: o humano a arrasta no board ({pn.RULE})")
+                gap = fields.get("_unverified")
+                extra = f"; e o fecho de feature mesclada pede cada REQ com `verified_by::` num arquivo da main, faltam: {', '.join(gap)}" if gap else ""
+                refused.append(f"a {fid} não está na «Priorizada»: o humano a arrasta no board ({pn.RULE}){extra}")
                 continue
             above = [(i, t) for i, _, t in pn.unstarted(project, branches, order[:rank - 1], items)
                      if i not in starting and pn.feature_of(i) not in starting]

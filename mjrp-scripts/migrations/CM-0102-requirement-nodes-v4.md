@@ -4,7 +4,7 @@ item: requirement-nodes
 from: 3
 to: 4
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0102 · requirement-nodes@3 → requirement-nodes@4
 
 ## Por que

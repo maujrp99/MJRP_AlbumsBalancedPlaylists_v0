@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
   "version": 1,
   "paths": {
@@ -70,7 +70,7 @@
       "field": "uat.md, the `Status` cell of the row",
       "fixing_to_fixed_when": ["Done", "Accepted"],
       "and_cited_by": "the feature's folder (spec.md, plan.md, tasks.md) cites the issue id: its `fixes:`, a task, the text. UAT-429: a feature already Done does not fix the issue opened after it.",
-      "note": "`fixing (Fxx)` becomes `fixed (Fxx)` when Fxx is Done or Accepted AND its folder cites the issue (also the old rows whose feature is already Accepted, UAT-312 with F48). A feature already Done when the issue was opened, and that never cites it, leaves it `fixing`: the fixer writes `fixed (Fxx: <commit> · ...)` himself. `closed` is never derived: it is the human's OK, or the independent recheck on the agent track."
+      "note": "`fixing (Fxx)` becomes `fixed (Fxx)` when Fxx is Done or Accepted AND its folder cites the issue (also the old rows whose feature is already Accepted, UAT-312 with F48). A feature already Done when the issue was opened, and that never cites it, leaves it `fixing`: the fixer writes `fixed (Fxx: <commit> · ...)` himself. F221 (UAT-545): and only when the Status cell already carries the evidence uat.md demands (`fixing (Fxx: <commit> · <test>)`, or the re-run steps), and never for an issue of the human track (`MJRP`, or `agente · prioridade: humano`): what the derivation cannot decide goes to the sensor ledger as a warning (`uat-fixing-without-evidence`, `uat-waits-for-human`). `closed` is never derived: it is the human's OK, or the independent recheck on the agent track."
     },
     "epic": "computed, never stored: from its requirements",
     "release": "computed, never stored: from what is planned_for it",

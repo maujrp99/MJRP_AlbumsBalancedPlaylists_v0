@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 merge_train.py - the tools of the integrator's train (F60, S-161): the mechanical parts of merging
 several branches into main, so that the integrator decides instead of retyping.
@@ -20,15 +20,23 @@ Subcommands
                              through `git show`; `--reserve` writes the id to a reservation shared by all worktrees.
   next-item-id               the same for a new story, feature or epic (`--kind`, `--project`, F145, CC-ADR-0036): the highest on main, on the
                              open branches and in the checkout; `--reserve` keeps it, the epic per project with the contract's `id_prefix`.
+  next-adr-id                the next free ADR id of a project (`--project`, F300, UAT-595): the highest on main, on the open branches and in the
+                             checkout; `--reserve` keeps it for the one who asked. An ADR that waits for the MJRP is born on main with it.
   preflight                  before a train: an open merge, orphan locks, a running git. Exit 1 on any finding.
   check-open-merge MSGFILE   the commit-msg hook: warns (never blocks) when a merge is open and this commit is not it.
   memory-merge BASE OURS THEIRS  3-way merge of a MEMORY.md (git merge driver signature; UAT-503): the sentences two branches prepended to the
                              same `## Now` block are joined (newer first), the list lines both added too; a block one side rewrote keeps the markers.
   install-driver             sets `merge.mjrp-log.driver` and `merge.mjrp-memory.driver` in the clone's git config and ties `docs/log.md`
                              and `MEMORY.md` to them in `.gitattributes`; says «instalado» only when `git check-attr` confirms (F218).
-  merge BRANCH               one call per branch: preflight, the retroactive step of the fast-lane features the branch takes to Done
+  merge BRANCH               one call per branch: preflight, the fix-wait gate (F318, S-250: with a bug fix merged and not yet pushed, only
+                             another bug fix goes in; the rest waits for the push), the retroactive step of the fast-lane features the branch takes to Done
                              (F101: refused before the merge starts), `merge --no-ff`, and the check of the UAT ids when it went in
                              clean; on a conflict, lists each conflicted file with the subcommand that resolves it (F60 TASK-10).
+  approve BRANCH             the iPhone's approval, opened by the train (F263, UAT-510): for a branch that needs the MJRP's OK on the screen, brings
+                             `main` INTO the branch first, and only then opens the remote approval request for the tip that results, so a later
+                             `main` never costs the MJRP a second approval. The signature stays the exact commit's (nothing here touches what the
+                             passkey signs). `merge` does the same by itself when the second listener is up (`--touch-id` skips it). Exit 0 request
+                             open (or the tip is already approved), 1 the branch cannot be prepared, 2 not evaluable (no listener: nothing changed).
   dist-resolve [--rebuild]   a conflict in a build folder (`apps/control-center/web/dist`, hashed file names). Where either side no
                              longer versions it (the Control Center's since F57, CC-ADR-0027) it keeps the removal: the build leaves the
                              index, the disk keeps it (derived). Where both sides version it: drops both sides, builds again from the
@@ -62,6 +70,7 @@ from pathlib import Path
 
 import _clock
 import _git
+import machine_load
 from session_close import clean_worktrees, session_check  # the close check and the worktree cleanup are the kernel's since F206 (children too)
 
 ENTRY_HEAD = re.compile(r"(?=^## \[)", re.M)
@@ -678,6 +687,37 @@ def next_item_id(kind, project=".", cwd=None, reserve=False, branches=True):
         mine, _ = _reservations(key, cwd)
         new = max([top] + mine) + 1
     return {"story": f"S-{new:02d}", "feature": f"F{new:02d}"}.get(kind) or f"{_id_prefix(project, cwd)}EP-{new:02d}"
+
+
+# --------------------------------------------------------------------------------------------- next-adr-id
+
+def _adr_dir(project):
+    return "docs/decisions" if project in (".", "") else f"{project.rstrip('/')}/docs/decisions"
+
+
+def _highest_adr(project, refs, cwd):
+    """The highest ADR number of a project's `docs/decisions/`: an ADR number is unique in the project, on main, on the open branches and in
+    the checkout (UAT-595: two branches wrote a CC-ADR-0057)."""
+    pattern = re.compile(rf"^{re.escape(_adr_dir(project))}/(\d{{4}})-[^/]*\.md$")
+    lists = [git(["ls-tree", "-r", "--name-only", ref], cwd=cwd, check=False).stdout for ref in refs]
+    lists.append(git(["ls-files", "-co", "--exclude-standard", ":(top)"], cwd=cwd, check=False).stdout)
+    return max((int(m.group(1)) for text in lists for line in text.split("\n") if (m := pattern.match(line))), default=0)
+
+
+def next_adr_id(project=".", cwd=None, reserve=False, branches=True):
+    """The next free ADR id of `project` (F300, UAT-595): `CC-ADR-0061`, with the project's `id_prefix` when its contract declares one. An ADR
+    that waits for the MJRP is born on `main` with this number, never only on a branch; `--reserve` keeps the number for the one who asked,
+    in the reservation shared by every worktree (the file of the UAT ids, under a key of its own)."""
+    refs = ["main"] + (open_branches(cwd) if branches else [])
+    top = _highest_adr(project, refs, cwd)
+    key = f"next-adr-id:{project}"
+    if reserve:
+        _, new = _reservations(key, cwd, take=top)
+    else:
+        mine, _ = _reservations(key, cwd)
+        new = max([top] + mine) + 1
+    prefix = _id_prefix(project, cwd)
+    return f"{prefix}ADR-{new:04d}"
 
 
 # --------------------------------------------------------------------------------------------- preflight / hook
@@ -1362,6 +1402,87 @@ def copy_retype_gate(branch, cwd=None):
             f"nasce `copy`, porque isso troca o tipo e a trilha da issue ({ccc.RULE}). Devolva o ramo à sessão dele, com o tipo de antes"], 1
 
 
+# F307 (UAT-619): the kernel's own selftests. F292 and F293 entered `main` with their rechecks in `pass` and left three of them red (`_boot_selftest`,
+# `new_project_selftest`, `conformance_check_selftest`): nobody ran the kernel's selftests whole. A branch that touches `mjrp-scripts/` (or the hooks'
+# wiring in `.claude/settings.json`) is judged by them, run on the branch's own tree, before the merge starts.
+KERNEL_SELFTESTS = ("_boot_selftest.py", "new_project_selftest.py", "conformance_check_selftest.py")
+KERNEL_SELFTEST_TIMEOUT = 900      # F311 (UAT-627): counts the RUN only; the wait for the machine's turn has its own ceiling below
+KERNEL_SELFTEST_WAIT = 3600        # ceiling of the wait for the heavy-suite turn (`machine_load.py`); `MJRP_KERNEL_SELFTEST_WAIT` overrides it (tests)
+
+
+def kernel_selftests_gate(branch, cwd=None, timeout=KERNEL_SELFTEST_TIMEOUT):
+    """Runs `KERNEL_SELFTESTS` (the ones the branch's tree has) in a throwaway worktree of `branch` when the branch changed `mjrp-scripts/` or
+    `.claude/settings.json` against where it forked. Red: (lines, 1), the merge does not start. A run that cannot finish (timeout, no worktree):
+    (lines, 2) - «not checked» is no approval. Untouched kernel: ([], 0). The worktree is the gate's own and goes at the end."""
+    r = git(["merge-base", "HEAD", branch], cwd=cwd, check=False)
+    base = r.stdout.strip() if r.returncode == 0 else ""
+    if not base:
+        return [], 0
+    d = git(["-c", "core.quotePath=false", "diff", "--name-only", "--no-renames", base, branch], cwd=cwd, check=False)
+    if not any(p.startswith("mjrp-scripts/") or p == ".claude/settings.json" for p in d.stdout.splitlines()):
+        return [], 0
+    # F311 (UAT-627): the selftests are a heavy suite: take the turn (`machine_load.heavy`) BEFORE the clock of `timeout` starts. On a busy machine the
+    # gate used to run without queueing and gave up with «passou de 900 s». A wait that runs out is «not checked» (exit 2), never an approval.
+    wait = float(os.environ.get("MJRP_KERNEL_SELFTEST_WAIT") or KERNEL_SELFTEST_WAIT)
+    try:
+        with machine_load.heavy("kernel-selftests", f"merge_train kernel_selftests_gate {branch}", wait=wait):
+            return _run_kernel_selftests(branch, cwd, timeout)
+    except TimeoutError as e:
+        return [f"o ramo {branch} mexe no kernel e a máquina não liberou a vez dos autotestes ({e}): NÃO foi conferido; não comecei o merge. Tente de novo quando a fila andar"], 2
+
+
+def _run_kernel_selftests(branch, cwd, timeout):
+    parent = tempfile.mkdtemp(prefix="cc-kernel-selftests-")
+    wt = os.path.join(parent, "tree")
+    try:
+        made = git(["worktree", "add", "--detach", "-q", wt, branch], cwd=cwd, check=False)
+        if made.returncode != 0:
+            return [f"o ramo {branch} mexe no kernel e não consegui abrir uma cópia dele para rodar os autotestes ({(made.stderr or made.stdout).strip()[:200]}); "
+                    f"não comecei o merge"], 2
+        red = []
+        for name in KERNEL_SELFTESTS:
+            script = os.path.join(wt, "mjrp-scripts", name)
+            if not os.path.isfile(script):
+                # absent in the branch: fine only if `main` does not have it either (a child without the whole kernel); a branch that deleted or
+                # moved the selftest is the way to dodge the gate, so it is red (recheck P1-1/P1-2)
+                if git(["cat-file", "-e", f"HEAD:mjrp-scripts/{name}"], cwd=cwd, check=False).returncode == 0:
+                    red.append(f"  {name} existe na main e não existe no ramo (apagado ou movido): o autoteste do kernel não sai do caminho do merge")
+                continue
+            try:
+                run = subprocess.run([sys.executable, script], cwd=wt, capture_output=True, text=True, timeout=timeout)
+            except subprocess.TimeoutExpired:
+                return [f"o autoteste do kernel {name} passou de {timeout} s no ramo {branch}: NÃO foi conferido; não comecei o merge"], 2
+            except Exception as e:   # noqa: BLE001 - «not checked» is exit 2, never a crash that reads as a refusal
+                return [f"o autoteste do kernel {name} não pôde rodar no ramo {branch} ({type(e).__name__}: {str(e)[:120]}): NÃO foi conferido; não comecei o merge"], 2
+            if run.returncode != 0:
+                tail = [ln for ln in (run.stdout + run.stderr).splitlines() if "FAIL" in ln or "Traceback" in ln or "Error" in ln][:3]
+                red.append(f"  {name} saiu {run.returncode}" + "".join(f"\n    {ln[:200]}" for ln in tail))
+        if red:
+            return ([f"o ramo {branch} mexe no kernel e deixa autotestes do kernel vermelhos; não comecei o merge. Conserte no ramo (UAT-619):"] + red), 1
+        return [], 0
+    finally:
+        git(["worktree", "remove", "--force", wt], cwd=cwd, check=False)
+        try:
+            os.rmdir(parent)
+        except OSError:
+            pass
+
+
+def mark_end_of_train(cwd=None):
+    """F324 (A9 of the UAT-630 analysis): the Control Center service waits for the code to be quiet before it restarts; the end of a train
+    is the quiet it can trust, so the train leaves the mark (`restart-now`, in the service's home) that makes it restart once, at once.
+    Only in the harness checkout (the one with the app) and only where the service's home exists; never raises."""
+    try:
+        top = Path(toplevel(cwd))
+        home = Path(os.environ.get("CC_HOME") or Path.home() / ".mjrp" / "control-center")
+        if (top / "apps" / "control-center" / "pyproject.toml").exists() and home.is_dir():
+            (home / "restart-now").touch()
+            return ["  fim do trem: o serviço do Control Center pode reiniciar já (marca `restart-now`)"]
+    except Exception:  # noqa: BLE001 - the merge stays made; the service restarts by itself once the code is quiet
+        pass
+    return []
+
+
 def end_of_train_cleanup(cwd=None, branch_to_watch="main"):
     """The train ends when a merge lands on `main` (F120, UAT-401): the owner of the worktrees (`clean-worktrees --apply`) runs by itself, so
     the merged ones do not wait for someone to remember. On any other branch (the integration branch, mid-train) nothing happens: what that
@@ -1373,8 +1494,8 @@ def end_of_train_cleanup(cwd=None, branch_to_watch="main"):
     try:
         cleaned, failures = clean_worktrees(cwd=cwd, apply=True)
     except Exception as e:                                         # noqa: BLE001 - the merge stays made whatever the cleanup does
-        return [f"  fim do trem: a limpeza dos worktrees não rodou ({type(e).__name__}: {e}); rode `clean-worktrees --apply`"]
-    out = [f"  fim do trem (limpeza dos worktrees): {x}" for x in cleaned]
+        return mark_end_of_train(cwd) + [f"  fim do trem: a limpeza dos worktrees não rodou ({type(e).__name__}: {e}); rode `clean-worktrees --apply`"]
+    out = mark_end_of_train(cwd) + [f"  fim do trem (limpeza dos worktrees): {x}" for x in cleaned]
     if failures:
         out.append(f"  fim do trem: {failures} worktree(s) não saíram; rode `clean-worktrees --apply` e veja o motivo")
     return out
@@ -1417,7 +1538,82 @@ def _timed_out_merge(branch, head_before, cwd=None):
             "rode de novo com a máquina mais livre; se o Touch ID não foi atendido a tempo, o que faltou foi o dedo, não o trem."]
 
 
-def train_merge(branch, message=None, cwd=None):
+def adr_gate(branch, cwd=None):
+    """F300 (UAT-595): a branch that adds, as new, an ADR `Proposed` routed to the MJRP, or one whose number another ref holds, does not enter the
+    train: the record is born on `main` first. The pre-commit guard refuses the same commit on the branch; this catches the commit made with the
+    hooks off. Returns (lines, code): code 0 passes, 1 refuses, 2 could not judge (never an approval)."""
+    import adr_on_main
+    try:
+        problems = adr_on_main.run("branch", branch, "main", cwd)
+    except adr_on_main.Unevaluable as exc:
+        return [f"a ADR que nasce na main não foi conferida em {branch} ({exc}); nada foi mesclado"], 2
+    if problems:
+        return [f"{branch} traz ADR que não pode nascer no branch; nada foi mesclado:"] + [f"  {x}" for x in problems], 1
+    return [], 0
+
+
+def _branch_is_fix(branch_ref, base, cwd=None):
+    """True | False | None (the gate module is not here): whether every feature spec `branch_ref` changed against `base` says
+    `solution_type: fix` (visual_gate.branch_fix_only, F273) - the one definition of «a bug fix» the kernel has."""
+    gate = _gate_module()
+    if gate is None:
+        return None
+    r = git(["-c", "core.quotePath=false", "diff", "--name-only", "--no-renames", f"{base}...{branch_ref}"], cwd=cwd, check=False)
+    if r.returncode != 0:
+        return None
+    return gate.branch_fix_only(toplevel(cwd), branch_ref, set(r.stdout.splitlines()))
+
+
+def waiting_fixes(cwd=None):
+    """F318 (S-250): the bug fixes that went into `main` and are not on the remote yet - [(merge sha, branch name)] - or None when it cannot be told
+    (no `main`, no remote ref: nothing awaits a push; the caller treats None as nothing waiting, an unreadable git as RuntimeError).
+    A fix waits from its merge until `origin/<main>` contains it: the push is the MJRP's, and what the project's gate approved is one exact tip."""
+    main = _main_ref(cwd)
+    if main is None or git(["rev-parse", "--verify", "-q", f"refs/remotes/origin/{main}"], cwd=cwd, check=False).returncode != 0:
+        return None
+    r = git(["log", "--first-parent", "--merges", "--format=%H %P|%s", f"origin/{main}..{main}"], cwd=cwd, check=False)
+    if r.returncode != 0:
+        raise RuntimeError("git log origin/main..main")
+    waiting = []
+    for line in r.stdout.splitlines():
+        head, _, subject = line.partition("|")
+        parts = head.split()
+        if len(parts) != 3:   # not a two-parent merge
+            continue
+        sha, first, second = parts
+        verdict = _branch_is_fix(second, first, cwd)
+        if verdict is None:   # «not judged» is never «not a fix»: a waiting fix must not vanish because the gate module is missing
+            raise RuntimeError("a trava visual não está aqui ou o git não respondeu")
+        if verdict:
+            m = re.match(r"merge: (\S+)", subject)
+            waiting.append((sha, m.group(1) if m else second[:8]))
+    return waiting
+
+
+def fix_wait_gate(branch, cwd=None):
+    """F318 (S-250): while a bug fix waits for the MJRP's push, the train takes only bug fixes: a feature, a document or a feature's birth would
+    move `main` and cost the approved tip another gate (15-25 min; 2026-11-20). Returns (lines, code): 0 passes (nothing waits, or `branch` is
+    itself a fix), 1 refuses naming the fix it waits for, 2 could not judge (never an approval). A fix is what visual_gate calls one (F273)."""
+    try:
+        waiting = waiting_fixes(cwd)
+    except RuntimeError as exc:
+        return [f"não consegui ver se há conserto esperando o push ({exc}); nada foi mesclado"], 2
+    if not waiting:
+        return [], 0
+    main = _main_ref(cwd) or "main"
+    is_fix = _branch_is_fix(branch, main, cwd)
+    if is_fix is None:
+        return [f"há conserto esperando o push e não consegui julgar se {branch} é conserto (a trava visual não está aqui); nada foi mesclado"], 2
+    if is_fix:
+        return [], 0
+    names = ", ".join(f"{b} ({s[:8]})" for s, b in waiting)
+    return [f"{branch} não é conserto de bug e o conserto {names} espera o push do MJRP: a main só aceita conserto enquanto isso, "
+            f"senão a aprovação da ponta pela trava do projeto se perde e ela roda de novo. {branch} espera e entra depois do push "
+            f"(`git fetch` e de novo `merge_train.py merge {branch}`); o nascimento de uma feature também espera, no próprio ramo. "
+            f"A válvula é do MJRP: pedir para quebrar a regra."], 1
+
+
+def train_merge(branch, message=None, cwd=None, remote=True):
     """One call per branch: `preflight` (an open merge, a lock, a dirty daily-checks stop it), `git merge --no-ff`, and - when the
     merge went in - the ids check. On a conflict the merge stays open and the output says what resolves each file. Returns (lines, code).
     The merge commits by itself, so the `pre-merge-commit` hook (the visual recheck gate) runs as in any `git merge`."""
@@ -1426,13 +1622,21 @@ def train_merge(branch, message=None, cwd=None):
         return ["preflight não está limpo, não comecei o merge:"] + [f"  {x}" for x in found], 1
     if git(["rev-parse", "--verify", "-q", f"{branch}^{{commit}}"], cwd=cwd, check=False).returncode != 0:
         return [f"o ramo '{branch}' não existe"], 2
+    waited, code = fix_wait_gate(branch, cwd)   # F318: first, before any gate spends time on a branch that cannot enter now
+    if code:
+        return waited, code
     notes, code = retro_gate(branch, cwd)
     if code:
         return notes, code
-    for gate in (catalog_gate, copy_retype_gate):
+    for gate in (catalog_gate, copy_retype_gate, adr_gate, kernel_selftests_gate):
         refused, code = gate(branch, cwd)
         if code:
             return refused, code
+    if remote:   # F263: the train opens the iPhone's request itself, for a tip that already has `main` in it
+        stopped, code = approve_branch(branch, cwd, explicit=False)
+        if code is not None and code != 0:
+            return ["o merge de " + branch + " espera a aprovação do MJRP no iPhone; nada foi mesclado:"] + [f"  {x}" for x in stopped], code
+        notes += stopped
     head_before = git(["rev-parse", "HEAD"], cwd=cwd).stdout.strip()
     try:
         r = git(["merge", "--no-ff", "-m", message or f"merge: {branch}", branch], cwd=cwd, check=False, timeout=MERGE_TIMEOUT)
@@ -1446,6 +1650,16 @@ def train_merge(branch, message=None, cwd=None):
         built = built_screen_check(cwd)
         lines += [f"  uat-check: {x}" for x in chk] + [f"  ACUSA {x}" for x in findings + built]
         lines += [f"  -> {x}" for x in uat_advice(findings)]
+        try:  # F275: the merge is the passage to «Pronto para UAT» (or «Encerrado»), recorded at once; it never undoes the merge
+            import board_move
+            lines += [f"  {x}" for x in board_move.on_merged(cwd or ".", branch)]
+        except Exception as exc:  # noqa: BLE001
+            lines.append(f"  o board não registrou o merge ({type(exc).__name__}: {exc})")
+        try:  # F290 (UAT-600): the fast lane leaves the `Done` for after the merge; the feature still open is listed, and stays on the orchestrator's list
+            from session_close import merged_feature_pending
+            lines += merged_feature_pending(cwd or ".", branch)
+        except Exception as exc:  # noqa: BLE001
+            lines.append(f"  a pendência da feature mesclada não foi conferida ({type(exc).__name__}: {exc})")
         lines += end_of_train_cleanup(cwd)
         return lines, 1 if findings or built else 0
     unmerged = unmerged_paths(cwd)
@@ -1463,6 +1677,213 @@ def train_merge(branch, message=None, cwd=None):
             + ["não feche esse merge com `git commit`: o portão visual não roda nele. O caminho é o do portão (a reconferência visual, o "
                "relatório do juiz do lote); um P0 só o MJRP libera."], 1
     return [f"o git recusou o merge de {branch}:"] + [f"  {x}" for x in said[-15:]], 1
+
+
+# --------------------------------------------------------------------------------------------- approve (F263, UAT-510)
+
+MAIN_NAMES = ("main", "master")                          # the line a branch brings: `main`, or `master` where a child still has it
+WAIT_HINT = 30                                           # minutes the `wait` of the remote approval holds (remote_approval.py WAIT_SECONDS)
+
+
+def _main_ref(cwd=None):
+    for name in MAIN_NAMES:
+        if git(["rev-parse", "--verify", "-q", f"refs/heads/{name}"], cwd=cwd, check=False).returncode == 0:
+            return name
+    return None
+
+
+def _worktree_of(branch, cwd=None):
+    """The worktree where `branch` is checked out, or None (git allows a branch in one worktree only)."""
+    out = git(["worktree", "list", "--porcelain"], cwd=cwd, check=False).stdout
+    here = None
+    for line in out.splitlines():
+        if line.startswith("worktree "):
+            here = line[len("worktree "):]
+        elif line.startswith("branch ") and line[len("branch "):] == f"refs/heads/{branch}":
+            return here
+    return None
+
+
+def prepare_branch(branch, cwd=None):
+    """F263 (UAT-510): brings `main` into `branch`, so that the tip an approval is asked for is the tip that will go in. Returns (lines, code):
+    0 the branch has `main` now (or had it), 1 it cannot be prepared: a dirty or half-merged worktree, or `main` conflicts with it. Nothing is left
+    half done: a conflict is aborted. Where a worktree holds the branch the merge runs there, through git and its hooks, as the session's own would;
+    with no worktree it is done by git's plumbing (a tree git merges with no conflict, a commit with the two parents, the ref moved from the old
+    tip), never over `main`."""
+    base = _main_ref(cwd)
+    if base is None:
+        return [f"o repositório não tem `main` nem `master`: não há o que trazer ao ramo {branch}"], 1
+    if branch == base:
+        return [f"{branch} é a própria linha principal: não se prepara"], 1
+    if git(["merge-base", "--is-ancestor", base, branch], cwd=cwd, check=False).returncode == 0:
+        return [f"o ramo {branch} já traz a {base}: nada a preparar"], 0
+    old = git(["rev-parse", branch], cwd=cwd).stdout.strip()
+    message = f"merge: {base} no ramo {branch} (o trem prepara a ponta antes do pedido de aprovação, F263)"
+    wt = _worktree_of(branch, cwd)
+    if wt is not None:
+        try:
+            dirty = git(["status", "--porcelain"], cwd=wt, check=False).stdout.strip()
+        except _git.GitError:   # the folder is gone (a worktree removed by hand): nothing can be merged there
+            return [f"o worktree de {branch} ({wt}) não está mais no disco: `git worktree prune` e rode de novo; não trouxe a {base}"], 1
+        if dirty:
+            return [f"o worktree de {branch} ({wt}) tem edição sem commit: a sessão dele ainda trabalha ou não fechou (rastro que uma ferramenta reescreveu: "
+                    f"`python3 mjrp-scripts/_safe.py restore <arquivo>`); não trouxe a {base}"], 1
+        if git_path("MERGE_HEAD", wt).exists():
+            return [f"o worktree de {branch} ({wt}) está no meio de um merge: termine ou aborte, e rode de novo"], 1
+        try:
+            r = git(["merge", "--no-edit", "-m", message, base], cwd=wt, check=False, timeout=MERGE_TIMEOUT)
+        except _git.GitTimeout:
+            r = None
+        if r is None or r.returncode != 0:
+            said = (r.stdout + r.stderr).strip().splitlines()[-8:] if r is not None else ["o git não respondeu a tempo"]
+            conflicted = unmerged_paths(wt) if r is not None else []
+            if git_path("MERGE_HEAD", wt).exists():
+                git(["merge", "--abort"], cwd=wt, check=False)
+            if conflicted:
+                return [f"a {base} conflita com {branch} em {len(conflicted)} caminho(s); desfiz o merge, o ramo ficou como estava:"] \
+                    + [f"  {x}" for x in conflicted[:12]] \
+                    + [f"  -> traga a {base} no worktree do ramo ({wt}) como em reference/conflicts.md, commite lá e rode `approve {branch}` de novo"], 1
+            return [f"não consegui trazer a {base} para {branch}; o git disse:"] + [f"  {x}" for x in said], 1
+    else:
+        made = git(["merge-tree", "--write-tree", "--no-messages", branch, base], cwd=cwd, check=False)
+        lines = made.stdout.strip().splitlines()
+        if made.returncode != 0 or not lines:
+            return [f"a {base} conflita com {branch} (ou o git não conseguiu juntar): {branch} não está em nenhum worktree, então a conta é do integrador:",
+                    f"  -> `git worktree add <pasta> {branch}`, `git merge {base}` lá, resolva e commite; depois `approve {branch}` de novo"], 1
+        new = git(["commit-tree", lines[0], "-p", branch, "-p", base, "-m", message], cwd=cwd).stdout.strip()
+        if git(["update-ref", f"refs/heads/{branch}", new, old], cwd=cwd, check=False).returncode != 0:
+            return [f"o ramo {branch} andou enquanto eu o preparava; rode `approve {branch}` de novo"], 1
+    tip = git(["rev-parse", branch], cwd=cwd).stdout.strip()
+    return [f"a {base} entrou no ramo {branch}: a ponta passou de {old[:8]} para {tip[:8]}"], 0
+
+
+def _gate_module():
+    try:
+        import visual_gate
+        return visual_gate
+    except ImportError:
+        return None
+
+
+def _remote_module(top):
+    """The harness's `remote_approval.py` as a module (a child runs the harness's copy, as the gate's own command does), or None."""
+    import importlib.util
+    here = Path(__file__).resolve().parent / "remote_approval.py"
+    path = here if here.is_file() else None
+    if path is None:
+        try:
+            import _passkey
+            path = _passkey.harness_path() / "mjrp-scripts" / "remote_approval.py"
+        except ImportError:
+            return None
+    if not path.is_file():
+        return None
+    try:
+        spec = importlib.util.spec_from_file_location("mjrp_remote_approval", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+    except Exception:   # a copy that does not load is "not evaluable", never an approval
+        return None
+
+
+def needs_human_ok(branch, cwd=None):
+    """(True|False|None, reason): whether merging `branch` asks for the MJRP's OK on the screen (the gate's own `human_ok` verdict, read with
+    nothing asked). None when the gate is not here or cannot judge: not evaluable is never "no OK needed"."""
+    gate = _gate_module()
+    if gate is None:
+        return None, "visual_gate.py não está neste repositório"
+    base = _main_ref(cwd) or "HEAD"
+    try:
+        problems, _notes = gate.judge_full(toplevel(cwd), branch, base, ask=None, label_of_branch=branch)
+    except Exception as e:   # noqa: BLE001 - a gate that raises did not judge
+        return None, f"a trava visual não avaliou ({type(e).__name__})"
+    return any(kind == "human_ok" for kind, _m in problems), ""
+
+
+def _capture(fn, *args):
+    import contextlib
+    import io
+    out, err = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+        code = fn(*args)
+    return code, out.getvalue().strip(), err.getvalue().strip()
+
+
+def request_approval(branch, cwd=None, ra=None):
+    """Opens the remote approval request of `branch`'s tip as it is NOW (the caller prepared it), after leaving without effect the unanswered
+    request of an older tip of the same branch. Returns (lines, code, id): 0 open, 2 no listener or the request refused. It only runs
+    `remote_approval.py`'s own `request` and `discard`: it never signs, never answers, never reads a signature."""
+    top = str(toplevel(cwd))
+    ra = ra or _remote_module(top)
+    if ra is None:
+        return ["remote_approval.py não está aqui: a aprovação de longe não pôde ser avaliada (o Touch ID segue valendo)"], 2, None
+    if ra.listener() is None:
+        return ["o segundo ouvinte não está no ar (a Tailscale, o `--remote-host` e o serviço são do MJRP): nenhum pedido aberto, nada mudou no ramo; "
+                "o Touch ID na frente do Mac segue valendo"], 2, None
+    tip = git(["rev-parse", "--verify", f"{branch}^{{commit}}"], cwd=cwd).stdout.strip()
+    import argparse as _ap
+    lines = []
+    try:
+        mine = ra._passkey.project_of(Path(top))
+    except Exception:   # noqa: BLE001
+        mine = None
+    for old in ra.open_requests():
+        if old.get("kind") == "merge" and old.get("scope") == branch and mine is not None and old.get("project") == mine and old.get("tip") != tip:
+            code, said, err = _capture(ra.cmd_discard, _ap.Namespace(id=old["id"], reason="o trem preparou a ponta nova do ramo", root=top))
+            lines.append(f"pedido {old['id']} da ponta {str(old.get('tip', ''))[:8]} deixado sem efeito" if code == 0
+                         else f"pedido {old['id']} de uma ponta antiga não saiu ({err or said})")
+    code, said, err = _capture(ra.cmd_request, _ap.Namespace(branch=branch, root=top))
+    first = said.splitlines()[0].split() if said else []
+    if code != 0 or len(first) < 2:
+        return lines + [f"o pedido não abriu: {err or said or f'exit {code}'}"], 2, None
+    return lines + [f"pedido {first[0]} aberto para a ponta {tip[:8]} de {branch}: {first[1]}"], 0, first[0]
+
+
+def approval_state(branch, cwd=None):
+    """'valid' | 'invalid' | 'none' | 'unavailable' for the tip of `branch` as it is now: the passkey judgement the merge's hook will make."""
+    try:
+        import _passkey
+    except ImportError:
+        return "unavailable", "_passkey.py não está aqui"
+    full = git(["rev-parse", "--verify", f"{branch}^{{commit}}"], cwd=cwd).stdout.strip()
+    state, why, _record, _payload = _passkey.judge_tip(toplevel(cwd), full, branch)
+    return state, why
+
+
+def approve_branch(branch, cwd=None, explicit=True):
+    """The train's step before the merge of a branch that asks for the MJRP's OK on the screen (F263). Returns (lines, code):
+    code 0 the tip is approved (or no OK is asked): the merge may go; 1 stop - a request is open (say where) or the branch cannot be prepared;
+    2 not evaluable. With `explicit` False (the `merge` path) a branch needing nothing, or a listener that is down, returns code None: the
+    merge goes on as it always did (the Touch ID)."""
+    if git(["rev-parse", "--verify", "-q", f"{branch}^{{commit}}"], cwd=cwd, check=False).returncode != 0:
+        return [f"o ramo '{branch}' não existe"], 2
+    needs, why = needs_human_ok(branch, cwd)
+    if needs is None:
+        return ([f"a aprovação do iPhone NÃO foi avaliada ({why})"], 2) if explicit else ([f"  aprovação do iPhone: não avaliada ({why}); o merge pede o Touch ID"], None)
+    if not needs:
+        return ([f"{branch}: não pede o OK do MJRP na tela; nada a aprovar, o merge pode ir"], 0) if explicit else ([], None)
+    state, why = approval_state(branch, cwd)
+    if state == "valid":
+        return ([f"{branch}: a ponta de agora já está aprovada pelo iPhone; rode o `merge` (ele gasta a assinatura)"], 0) if explicit else ([], None)
+    if state == "invalid":
+        return [f"{branch}: a aprovação do iPhone desta ponta foi recusada ({why}); o merge não pede o Touch ID por cima"], 1
+    if state == "unavailable":   # the passkey cannot be judged here (no verifier, no list): a request nobody could check is not opened
+        return ([f"{branch}: a aprovação do iPhone não pôde ser avaliada ({why})"], 2) if explicit else ([f"  aprovação do iPhone: não avaliada ({why}); o merge pede o Touch ID"], None)
+    ra = _remote_module(str(toplevel(cwd)))
+    if ra is None or ra.listener() is None:   # nothing is touched while no request can be opened
+        lines, code, _rid = request_approval(branch, cwd, ra)
+        return (lines, 2) if explicit else (["  aprovação do iPhone: " + lines[0]], None)
+    prep, code = prepare_branch(branch, cwd)
+    if code:
+        return prep, 1
+    lines, code, rid = request_approval(branch, cwd, ra)
+    if code:   # the request did not open (ceiling, project, name): the branch has `main` now, and the finger at the Mac still works
+        return (prep + lines, 2) if explicit else (prep + ["  aprovação do iPhone: " + lines[-1], "  o merge pede o Touch ID (`--touch-id` pula este passo de vez)"], None)
+    return prep + lines + [
+        f"  -> avise o MJRP, com o link, pelo meio que a sessão tem (o iPhone mostra o pedido novo quando a tela abre); "
+        f"espere com `python3 mjrp-scripts/remote_approval.py wait {rid}` (até {WAIT_HINT} min por vez);",
+        f"     aprovado, rode `merge_train.py merge {branch}` de novo. A ponta pedida é a de agora: um commit novo no ramo pede outro pedido."], 1
 
 
 # --------------------------------------------------------------------------------------------- CLI
@@ -1486,11 +1907,15 @@ def main(argv=None):
     p = sub.add_parser("next-item-id")
     p.add_argument("--kind", required=True, choices=("story", "feature", "epic")); p.add_argument("--project", default=".")
     p.add_argument("--reserve", action="store_true"); p.add_argument("--no-branches", action="store_true")
+    p = sub.add_parser("next-adr-id")
+    p.add_argument("--project", default="."); p.add_argument("--reserve", action="store_true"); p.add_argument("--no-branches", action="store_true")
     p = sub.add_parser("preflight"); p.add_argument("--retire-orphans", action="store_true")
     p = sub.add_parser("check-open-merge"); p.add_argument("msgfile")
     sub.add_parser("install-driver")
     p = sub.add_parser("clean-worktrees"); p.add_argument("--apply", action="store_true")
     p = sub.add_parser("merge"); p.add_argument("branch"); p.add_argument("--message", help="the merge commit's subject (default: merge: <branch>)")
+    p.add_argument("--touch-id", action="store_true", help="skip the iPhone's request (F263): the merge asks for the finger at the Mac, as before")
+    p = sub.add_parser("approve"); p.add_argument("branch")
     p = sub.add_parser("session-check"); p.add_argument("worktree"); p.add_argument("--session", help="an id the closing entry may name instead of the branch (F198), and the lease must carry")
     p.add_argument("--base", default="main", help="the integration branch (default main)")
     p = sub.add_parser("dist-resolve")
@@ -1575,6 +2000,9 @@ def main(argv=None):
     if a.cmd == "next-item-id":
         print(next_item_id(a.kind, a.project, reserve=a.reserve, branches=not a.no_branches))
         return 0
+    if a.cmd == "next-adr-id":
+        print(next_adr_id(a.project, reserve=a.reserve, branches=not a.no_branches))
+        return 0
     if a.cmd == "preflight":
         f = preflight(retire=a.retire_orphans)
         for x in f:
@@ -1588,7 +2016,11 @@ def main(argv=None):
         print(f"clean-worktrees: {len(lines)} worktree(s) vistos" + (f", {failures} falhou(aram)" if failures else ""))
         return 1 if failures else 0
     if a.cmd == "merge":
-        lines, code = train_merge(a.branch, a.message)
+        lines, code = train_merge(a.branch, a.message, remote=not a.touch_id)
+        print("\n".join(lines))
+        return code
+    if a.cmd == "approve":
+        lines, code = approve_branch(a.branch, explicit=True)
         print("\n".join(lines))
         return code
     if a.cmd == "session-check":

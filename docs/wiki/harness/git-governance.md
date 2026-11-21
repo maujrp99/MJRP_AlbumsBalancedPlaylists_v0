@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-11-04
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 **Regra master** (MJRP, 2026-11-05 09:11): se o MJRP pedir para quebrar uma regra, todo agente aceita, inclusive os juízes: diz o que quebra, segue e registra no log com as palavras dele. Não alcança o que a máquina recusa (hook, Touch ID, classificador), que volta a ele sem contorno.
 
@@ -96,7 +96,7 @@ Um trem é um branch temporário que junta vários branches de feature, é verif
    - código com duas intenções: desfaz-se o merge, e o branch volta ao dono.
 4. **Verificação no branch do trem:** o doctor e a suíte completa. Os conflitos entre features só aparecem aqui.
 5. **Juiz:** um agente independente faz a reconferência visual. O relatório precisa estar committado depois do último commit de tela. Confere-se isso antes de pedir a aprovação.
-6. **A aprovação do humano:** `remote_approval.py request` vincula o pedido ao commit exato da ponta do trem. Um commit novo invalida o pedido.
+6. **A aprovação do humano:** `merge_train.py approve <branch>` traz a `main` ao branch e só então abre o pedido (`remote_approval.py request`), que vincula a aprovação ao commit exato da ponta que vai entrar; o `merge` abre o pedido sozinho quando o segundo ouvinte está no ar. Um commit novo depois do pedido invalida a aprovação (F263).
 7. **Merge na `main`:** um único `git merge --no-ff`. O hook `pre-merge-commit` roda a trava visual e confere a aprovação. Reverter o trem é reverter esse commit.
 8. **Depois:** build da tela, reinício do serviço, registro no log e limpeza dos worktrees.
 
@@ -210,6 +210,7 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
   **Sem a lista não há trava** (F173, UAT-480): um projeto sem `docs/specs/priority.md` não tem ordem nenhuma (o app lê o arquivo ausente
   como lista vazia), e o `priority_gate_check.py` deixa passar os commits dele. Com a lista, a trilha Humano só começa o que está nela, e o que já começou quando ela existe segue
   (não é recusado). O refresh do kernel não cria a lista nem liga a trava. O primeiro arraste dele cria a lista com a ordem que ele deu, com o título `# Prioridade` (emenda à CC-ADR-0029 § 3, aceita pelo MJRP como CC-ADR-0040): o commit de ordem leva o arquivo novo, e a lista passa a existir.
+- **O começo é a reserva da sessão, não o commit** (F265, UAT-582, CC-ADR-0055; o MJRP, 2026-11-16): o lease da sessão (`session_lease.py`, registrado e renovado pelo hook `SessionStart`/`Stop`) reserva a feature que o branch do worktree nomeia pela `branch-convention@2`, ou a que o `session_lease.py claim --feature FNN` declara. O board (`rules/sessions.py`) e o `priority_next.py` leem os leases de todos os worktrees (`git worktree list`): a feature da «Priorizada» com sessão ativa está «Em andamento» desde o primeiro turno; a de sessão encerrada ou 12 h sem sinal, sem commit, fica na «Priorizada» com «parou sem entregar». Fora da lista a reserva não começa nada. A trava do pre-commit acima e a recusa do arraste seguem julgando pelo git.
 - **`pre-commit` e a tela compilada (F57, CC-ADR-0027):** recusa qualquer entrada do índice sob `apps/control-center/web/dist/`,
   que não é versionada (o serviço compila a tela). Num merge de ramo anterior à F57, `merge_train.py dist-resolve` mantém a
   remoção (`git rm --cached`; o disco fica, derivado).
@@ -219,6 +220,9 @@ clean` passam. Se o próprio hook falha, sai 0 com «nao avaliou». Portas que e
 - **Duas sessões no mesmo repositório:** commit só por *pathspec* — nunca `git add -A` com outra sessão ativa.
 
 ## History
+
+- **2026-11-17 09:09** · **O trem prepara o branch antes de pedir a aprovação do iPhone** (F263, UAT-510): a assinatura é do commit exato, então trazer a `main` depois da aprovação a perdia e o MJRP aprovava duas vezes. `merge_train.py approve` (e o `merge`, com o ouvinte no ar) traz a `main` ao branch primeiro e abre o pedido para a ponta resultante. O que a passkey assina não mudou. Aviso no iPhone: só com a tela aberta (leitura ao voltar à página); push de verdade fica como proposta, pois exige serviço externo.
+- **2026-11-16 12:16** · **«Em andamento» pela reserva da sessão** (F265, UAT-582, CC-ADR-0055; pedido do MJRP pelo MJRP Personal: «em andamento nao pode depender de um commit, pq vc nao começa comitando»). O primeiro passo de quem começa deixou de ser o commit de início e passou a ser a reserva: o branch do worktree com o nome da convenção, ou o `claim`; o lease vira automático por hook e o board lê os de todos os worktrees.
 - **2026-11-08 22:22** · **O trem, passo a passo** (pedido do MJRP: o texto da explicação técnica vai ao material de CI/CD): a nova seção descreve os oito passos, por que existe e o custo.
 - **2026-11-07 13:49** · **Driver de merge só vale ligado** (F218, UAT-539): no `MJRPpersonal` o `install-driver` dizia «instalado» e os merges seguiam em conflito no log e no `## Now`, porque o filho não tinha as linhas do `.gitattributes` nem o `merge_train.py` que o driver chama; um desses conflitos custou ao MJRP uma segunda passkey. O kernel passou a levar o script e as linhas, o `install-driver` confere a ligação e o I5 do doctor a cobra (decidido pelo agente, revisável pelo MJRP).
 - **2026-11-07 13:16** · **Todo lote da tela grava na `main`, e a ordem se lê lá** (F217, UAT-537; decidido pelo agente, revisável pelo MJRP). No trem de 2026-11-07 o checkout da raiz estava no `integrate/…`; o lote anotava o ramo do checkout e o comando commitava nele, e os arrastes do MJRP (a F205 entre eles) ficaram fora da `main` que o orquestrador e o `priority_next.py` liam, enquanto o board lia o disco do checkout. Agora o lote (aceite, reabertura, troca de chaves, ordem) é preparado com os arquivos da `main` e commitado nela: no worktree que a tem, ou num worktree temporário (`$TMPDIR/cc-main.*`) que o comando abre e remove; `main` ausente ou presa num merge recusa com o motivo. A marcação do catálogo recusa com a raiz fora da `main`. O board, o `priority_next.py` (e o hook de início de sessão) e a trava leem a lista na `main`. A regra: **o checkout não diz para onde vai um commit da tela**.

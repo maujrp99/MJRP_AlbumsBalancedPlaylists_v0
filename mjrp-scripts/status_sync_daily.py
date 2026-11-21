@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 status_sync_daily.py - the daily pass applies the derived status and proposes to the MJRP only what is his (F67 TASK-03).
 
@@ -18,7 +18,7 @@ What it does, and what it does not:
   4. It NEVER commits (integrator's decision, 2026-10-27: only the integrator writes to `main`, and every commit carries a log entry).
      It leaves the derived status in the files and says in the report what it wrote - how many and which nodes; the integrator, or the
      next commit (the pre-commit aligns the index), takes it.
-  5. It never demotes (the derivation moves only forward, F94), never writes Accepted, never closes an issue, and a second run
+  5. It never demotes (the derivation moves only forward, F94), never writes Accepted, never closes an issue, never writes `fixed` without the evidence uat.md demands (F221, UAT-545: and not an issue of the human track either), and a second run
      changes nothing.
 
 Then it splits what is left in two lists:
@@ -43,7 +43,6 @@ import status_sync as ss  # noqa: E402
 MAIN_BRANCH = "main"
 LEDGER_OWNER = "status_sync"
 OPEN_OPERATIONS = ("MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "rebase-merge", "rebase-apply", "index.lock")
-HUMAN_TRACK_MARK = "prioridade: humano"
 FIXED = re.compile(r"^fixed\s*\(\s*(F\d{2,})\b")      # `fixed (F77: ...)`: the feature that delivered it (a `fixed (UAT-375: ...)` has none)
 
 
@@ -89,9 +88,7 @@ def _delivered(rules):
     return {s.casefold() for s in rules["derivation"]["requirement"]["delivered_feature_statuses"]}
 
 
-def _is_human_row(row):
-    by = row.get("by", "")
-    return by == "MJRP" or HUMAN_TRACK_MARK in by
+_is_human_row = ss.is_human_row
 
 
 def lists(feats, reqs, rows, rules):
@@ -136,6 +133,17 @@ def lists(feats, reqs, rows, rules):
     for fid, ids in sorted(ahead.items()):
         contradictions.append((f"{fid}:issues-fixed-ahead", f"{len(ids)} issue(s) estão fixed ({', '.join(ids[:4])}"
                                f"{'…' if len(ids) > 4 else ''}) e a {fid} segue {feats[fid]['status']}: a issue está à frente da feature"))
+    effective = {fid: ft["status"] for fid, ft in feats.items()}
+    cites = {fid: ft.get("cites", ()) for fid, ft in feats.items()}
+    for row in rows:                                      # F221 (UAT-545): a `fixing` the pass will not close, and why: an agent looks
+        why = ss.uat_block(row, effective, rules, cites)
+        if why == "human":
+            contradictions.append((f"{row['id']}:uat-waits-for-human", f"{row['id']} está `{row['status']}` e a feature já entregou, mas a "
+                                   "issue é da trilha do MJRP: a passada não a fecha (só o OK dele); um agente confere a prova e a leva a fixed"))
+        elif why == "no-evidence":
+            contradictions.append((f"{row['id']}:uat-fixing-without-evidence", f"{row['id']} está `{row['status']}` e a feature já entregou, "
+                                   "mas a célula não traz a evidência (commit e teste, ou os passos refeitos): a passada não escreve fixed sem ela; "
+                                   "quem conserta a escreve"))
     refused = []                                          # F169: a story the graph gate would refuse, and the derivation does not write
     ss.derive(feats, reqs, rows, rules, refused=refused)
     for rid, want, threshold in refused:

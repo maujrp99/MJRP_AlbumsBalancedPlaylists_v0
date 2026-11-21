@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-11-01
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -237,10 +237,12 @@ está na última seção, separado de propósito.
 | **[Hooks — o conceito](hooks-concept.md)** | Um **hook** é um evento que dispara um script: **o evento responde *quando* o código roda; o script responde *o que* ele faz**. |
 | **[Knowledge graph e ontologia — o conceito](knowledge-graph-concept.md)** | Um **knowledge graph** é um grafo de dados sobre um domínio: os **nós** são as entidades de interesse e as **arestas** são as relações entre elas. |
 | **[Loop engineering — o conceito](loop-engineering-concept.md)** | **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e ajusta até atingir um objetivo. |
+| **Mapa dos hooks** | O **mapa dos hooks** diz, para cada hook que o harness e os projetos filhos têm no disco, **quando dispara**, **o que roda**, **onde vale** e **o que recusa ou avisa**, e a **regra do orquestrador** (orchestrator-rules) que ele garante. |
 | **[Notas ligadas (o modelo "Obsidian-like") — o conceito](linked-notes-concept.md)** | O modelo **"Obsidian-like"** é organizar conhecimento em **notas atômicas e densamente ligadas**, em arquivos de texto simples, navegadas pelos links entre elas e não pela hierarquia de pastas. |
 | **[O doctor](doctor.md)** | O **doctor** é o sensor do harness: um script que lê a instância e devolve verde, amarelo ou vermelho por critério nomeado. |
 | **O mapa de artefatos do PDLC** | O **mapa de artefatos** diz, para cada arquivo que o PDLC gera, **onde mora**, **quem o cria**, **em que etapa**, **quando a via padrão e a via rápida o atualizam** e **se o passo retroativo da via rápida o cobra** ([[pdlc-loops]] § 2.1): **■ entra**, **◩ só se** a feature mexeu no que ele descreve, ou **□ não entra**. |
 | **Opções para construir agentes — as quatro abordagens** | Existem **quatro caminhos** para construir um agente de IA hoje, e eles variam num único eixo central: quanto de infraestrutura, loop de execução e orquestração você **possui** versus quanto o provedor **cuida para você**. |
+| **Os grafos do harness** | Os **grafos do harness** são as estruturas de nós e arestas que o harness usa para ligar o que faz: requisitos, páginas, skills, artefatos, sensores, checagens, estados do board e papéis. |
 | **[PDLC em loops — Intake, Discovery, Design, Delivery, Release, Learn](pdlc-loops.md)** | O **PDLC do MJRP** é uma **fundação** e **cinco loops** — **Discovery** (o que construir), **Design** (como a tela e a descrição dela ficam), **Delivery** (construir certo), **Release** (a versão chega a quem usa) e **Learn** (deu certo?) — alimentados por uma porta de entrada única, o **Intake**, que põe cada demanda numa de duas **vias** (a **padrão** e a **rápida**, que comprime a Discovery e o Design, não os pula). |
 | **[Perfis de projeto](project-profiles.md)** | **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara: `code-app` (software), `content` (vault, dossiê, pipeline editorial) ou `meta` (o próprio harness). |
 | **[Product Discovery — do problema à decisão (Rapid × Full)](product-discovery.md)** | O **Enquadrar** é a etapa da Discovery ([[pdlc-loops]] §3) em que o responsável pelo produto (o PM), com o agente coach, transforma o que o Explorar mostrou numa decisão: o problema que vale resolver, o resultado que se quer mover e como medi-lo, os quatro riscos do produto convertidos em testes, a premissa mais arriscada e o desenho do teste dela — e então **matar, iterar ou avançar**. |

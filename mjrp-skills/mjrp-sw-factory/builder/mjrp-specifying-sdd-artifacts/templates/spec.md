@@ -4,7 +4,7 @@ lane: standard          # standard | fast — the PDLC lane the feature runs (pd
 solution_type: feature  # feature | fix — fix pays a debt (`fixes:` issues, or an NFR by `violates::`); feature delivers a new requirement
 imports: ["[[S-xx-<slug>]]"]
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
      status: In progress while the cycle runs; Done when every task is closed and every REQ has verified_by.
      imports: the requirement nodes this feature delivers (1..n), each Ready, each in no other open feature.

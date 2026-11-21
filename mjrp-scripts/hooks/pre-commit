@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-commit - structure by nature (EP-09) and the coherence of the requirements graph (S-67). Blocks a commit that ADDS something outside its nature
 # (docs/ only memory; reports/, design/, data/ with their declared subfolders). Only what this commit
 # adds is judged - an old misplacement is the doctor's W9 warning, not a blocked commit.
@@ -31,7 +31,7 @@ fi
 # closing_feature_staged: the index takes a feature's spec.md to Done/Accepted (F182, UAT-489). Read from the diff, not from a script: it must work
 # in the very repository whose checker script is missing, which is the case it exists for.
 closing_feature_staged() {
-  git -c core.quotePath=false diff --cached -U0 --diff-filter=AMR -- ':(glob)**/docs/specs/features/F*/spec.md' | grep -Eiq '^\+status: *(Done|Accepted)'
+  git -c core.quotePath=false diff --cached -U0 --diff-filter=AMR -- ':(glob)**/docs/specs/features/F*/spec.md' | grep -Eiq '^\+status: *["'"'"']?(Done|Accepted)'
 }
 
 # run_sensor <label> <command...>: prints the sensor's output; returns 0 passed, 1 failed, 2 not evaluated.
@@ -63,17 +63,50 @@ if [ -f "$VGATE" ] && git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1 && [ 
     exit 1
   fi
 fi
+# F305 (UAT-617): no text file enters a commit with a git conflict marker (the open, the lone middle inside a block, the close); the merge of `main` on F304 was
+# committed with the blocks still in `uat.md` and in the `## Now`, and no hook said so. It judges the lines the commit adds and every commit, before the early exits below, the one that ends a
+# conflicted merge included. «Not evaluable» (exit 2) refuses; where the script is absent (a child that did not refresh the kernel) the hook warns, never in silence.
+MARKERCHK="$ROOT/mjrp-scripts/conflict_marker_check.py"
+if [ ! -f "$MARKERCHK" ] || ! command -v python3 >/dev/null 2>&1; then
+  echo "  [pre-commit] AVISO: mjrp-scripts/conflict_marker_check.py (ou o python3) não existe - marcador de conflito NÃO foi conferido neste commit." >&2
+else
+  run_sensor "marcador de conflito" python3 "$MARKERCHK" "$ROOT" --staged
+  code=$?
+  if [ "$code" -eq 1 ]; then
+    echo "  commit bloqueado: REPROVOU - há marcador de conflito do git no que o commit traz (arquivo e linha acima)." >&2
+    exit 1
+  elif [ "$code" -eq 2 ]; then
+    exit 1
+  fi
+fi
+# F295 (S-245, regra 39 «o estado primeiro»): the net for the agent that has no PreToolUse hook - a commit in a feature's worktree whose card is not «Em andamento» is refused,
+# with the command that moves it. It judges only a LINKED worktree on a feature branch; the main checkout and every other commit pass. Absent script (a child that did not refresh the kernel): warns.
+STATEFIRST="$ROOT/mjrp-scripts/state_first_check.py"
+if [ -f "$STATEFIRST" ] && command -v python3 >/dev/null 2>&1; then
+  run_sensor "estado primeiro" python3 "$STATEFIRST" check "$ROOT"
+  code=$?
+  if [ "$code" -ne 0 ]; then
+    echo "  commit bloqueado: REPROVOU - o card da feature não está em «Em andamento» (regra 39; o comando que move está acima)." >&2
+    exit 1
+  fi
+fi
 CHECK="$ROOT/mjrp-scripts/structure_check.py"
 GRAPH="$ROOT/mjrp-scripts/requirements_graph_check.py"
 # UAT-501 (F209): both early exits used to skip the closing gates below too, so a commit that takes a feature to Done (the one that ends a
 # conflicted merge, in a child with neither sensor) went in unjudged. A closing goes on to the gates; one that cannot be judged is refused (F182).
-if [ ! -f "$CHECK" ] && [ ! -f "$GRAPH" ] && ! closing_feature_staged; then
+# F289 (UAT-599, recheck P1-1/P1-2): the same holds for the schema-bump gate below: a commit that stages a schema file is not let through by either early exit.
+schema_staged() { git -c core.quotePath=false diff --cached --name-only --diff-filter=AM --no-renames | grep -Eq '(^|/)schemas/[^/]+\.schema\.json$'; }
+if [ ! -f "$CHECK" ] && [ ! -f "$GRAPH" ] && ! closing_feature_staged && ! schema_staged; then
   exit 0                                   # a project that carries neither sensor and closes nothing: nothing to run, nothing to warn about
 fi
 if ! command -v python3 >/dev/null 2>&1; then
   echo "  [pre-commit] AVISO: python3 não foi encontrado - a estrutura por natureza e o grafo de requisitos NÃO foram conferidos neste commit." >&2
   if closing_feature_staged; then
     echo "  commit bloqueado: este commit fecha uma feature (Done/Accepted) e, sem o python3, as travas do fecho não têm como conferir." >&2
+    exit 1
+  fi
+  if schema_staged; then
+    echo "  commit bloqueado: este commit mexe num schema e, sem o python3, a trava da subida de versão não tem como conferir (não conferido não é aprovação)." >&2
     exit 1
   fi
   exit 0
@@ -219,6 +252,34 @@ if git -c core.quotePath=false diff --cached --name-only --diff-filter=AMR | gre
     fi
   fi
 fi
+# F292 (S-245, orchestrator rule 43): the main is frozen for a branch whose merge approval is open on the MJRP's iPhone. A commit made ON the main
+# that touches a file that branch also changes is refused: the signature is worth one tip of one branch, and such a commit invalidates it
+# (2026-11-18, two signatures lost). The check reads the account's open requests (remote_approval); the MJRP's MAIN_REF_OVERRIDE passes it.
+FREEZE="$ROOT/mjrp-scripts/main_freeze.py"
+if [ -f "$FREEZE" ] && [ "$(git rev-parse --abbrev-ref HEAD 2>/dev/null)" = "main" ]; then
+  run_sensor "main congelada (aprovação aberta)" python3 "$FREEZE" --root "$ROOT"
+  code=$?
+  if [ "$code" -ne 0 ]; then
+    exit 1
+  fi
+fi
+# F300 (UAT-595): the ADR that waits for the MJRP is born on the main, with a number nobody else holds. A commit on a branch that ADDS an ADR
+# `Proposed` routed to the MJRP (or whose number another ref holds) is refused: the Control Center reads the main and the MJRP never saw the
+# CC-ADR-0057 that lived only on a branch. Judged only when the index adds an ADR file; the main itself is where it is born.
+ADRMAIN="$ROOT/mjrp-scripts/adr_on_main.py"
+if [ "$(git rev-parse --abbrev-ref HEAD 2>/dev/null)" != "main" ] && git -c core.quotePath=false diff --cached --name-only --diff-filter=ARM | grep -Eiq '(^|/)docs/decisions/[0-9]{4}-[^/]*\.md$'; then
+  if [ -f "$ADRMAIN" ]; then
+    run_sensor "a ADR nasce na main" python3 "$ADRMAIN" --staged --root "$ROOT"
+    code=$?
+    if [ "$code" -ne 0 ]; then
+      exit 1
+    fi
+  else
+    echo "  [pre-commit] a ADR nasce na main: o sensor adr_on_main.py não existe neste clone - NÃO AVALIOU, e não conferido não é aprovado." >&2
+    echo "  traga o kernel: python3 mjrp-scripts/new_project.py <este projeto> --refresh-kernel (a regra está na skill mjrp-recording-decisions)" >&2
+    exit 1
+  fi
+fi
 # F101 (S-186, REQ-04): the maps generated from one source stay in step with it. A commit that touches a skill (mjrp-skills/: the SKILL.md
 # frontmatter feeds the skills map, the templates feed the SDD), the artifact registry, the skills map's generator, or a mapped folder
 # (docs/specs/, design/, reports/ of any project: a new kind of file nobody mapped) runs the catalog sensor, which checks the README
@@ -286,6 +347,37 @@ if [ -n "$COPY_AMEND" ] || git -c core.quotePath=false diff --cached --name-only
     elif [ "$code" -eq 2 ]; then
       exit 1
     fi
+  fi
+fi
+# F289 (UAT-599): a version bump of a bundle schema (or a new schema file) does not enter a commit without a file of the same app's tests/compat; the
+# incident was F271 raising the `state` to v8 and leaving four compatibility tests red on `main`. Runs only when the commit stages a schema file.
+SCHEMABUMP="$ROOT/mjrp-scripts/schema_bump_check.py"
+if schema_staged; then
+  if [ ! -f "$SCHEMABUMP" ]; then
+    echo "  [pre-commit] AVISO: mjrp-scripts/schema_bump_check.py não existe - a subida de versão dos schemas NÃO foi conferida neste commit." >&2
+  else
+    run_sensor "subida de versão do schema" python3 "$SCHEMABUMP" "$ROOT" --staged
+    code=$?
+    if [ "$code" -eq 1 ]; then
+      echo "  commit bloqueado: REPROVOU - a subida de versão de um schema vai sem os testes de compatibilidade (linhas acima)." >&2
+      exit 1
+    elif [ "$code" -eq 2 ]; then
+      exit 1
+    fi
+  fi
+fi
+# F297 (UAT-603): a NEW template in a skill (`mjrp-skills/**/templates/*`) does not enter a commit without the canonical catalog owning it (an item's
+# pattern_sources, `not_canonical` or `awaiting_item`); F273's bug-browser-test.md reached `main` with no owner and the learn gate went red for every session.
+# Harness-only: where the script is absent (a child) nothing is judged.
+TEMPLATECHK="$ROOT/mjrp-scripts/template_catalog_check.py"
+if [ -f "$TEMPLATECHK" ] && git -c core.quotePath=false diff --cached --name-only --diff-filter=A --no-renames | grep -Eq '^mjrp-skills/.*/templates/[^/]+$'; then
+  run_sensor "modelo novo no catálogo" python3 "$TEMPLATECHK" "$ROOT" --staged
+  code=$?
+  if [ "$code" -eq 1 ]; then
+    echo "  commit bloqueado: REPROVOU - um modelo novo numa skill vai sem o catálogo canônico (linhas acima)." >&2
+    exit 1
+  elif [ "$code" -eq 2 ]; then
+    exit 1
   fi
 fi
 # F73 TASK-02b (UAT-347): conformance_check.py is GENERATED from mjrp-scripts/conformance/*.py. A commit that touches the generated

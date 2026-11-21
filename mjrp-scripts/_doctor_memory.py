@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_memory.py - the doctor's checks of the memory layer: MEMORY.md, the shape of the log and the growth of the
 Ways of Working (F1).

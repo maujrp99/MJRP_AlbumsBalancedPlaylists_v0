@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 human_valves_guard.py - the PreToolUse(Bash) hook that refuses an AGENT's command that would use one of the human's valves
 (F72, R20; AGENTS.md "Push - e do humano" and "Commit so por pathspec": the push, `--no-verify` and `VISUAL_RECHECK_SKIP` are the
@@ -12,7 +12,11 @@ It refuses (exit 2, one line on stderr that Claude Code hands back to the agent)
   2. `git commit|merge|am|rebase|cherry-pick|revert|push` with `--no-verify` (for `commit` also its short form `-n`, alone or inside
      a cluster such as `-nm msg`): skipping the hooks is the human's valve.
   3. any `git` command given `-c core.hooksPath=...` or `git config core.hooksPath ...`: the same valve by another door.
-  4. a command that SETS `VISUAL_RECHECK_SKIP`: as `VAR=1 cmd`, after `env`/`export`, inside `sh -c`/`bash -c`/`eval`, or inside the
+  5. `gh api` that WRITES git data or a branch (F320, CC-ADR-0064 critique): a REST call to `git/refs`, `git/commits`, `git/trees`,
+     `git/blobs`, `git/tags`, `merges` or `contents` with a writing method (`-X`/`--method` other than GET, or a field or an `--input`,
+     which make gh POST), or a GraphQL mutation that moves a ref (`createCommitOnBranch`, `updateRef(s)`, `createRef`, `mergeBranch`).
+     It is the push without git: the CI's note (`refs/notes/mjrp-push-gate`) or `refs/heads/main` written through the API. Reads pass.
+  4. a command that SETS `VISUAL_RECHECK_SKIP` (or `MAIN_REF_OVERRIDE`, the valve of the reference-transaction hook, F278): as `VAR=1 cmd`, after `env`/`export`, inside `sh -c`/`bash -c`/`eval`, or inside the
      inline program or heredoc of an interpreter (`python3 -c "os.environ['VISUAL_RECHECK_SKIP']='1'"`). Reading it passes.
 
 How it avoids false positives: only `Bash`; only the COMMAND position counts (`echo git push`, `grep -r "git push" docs`,
@@ -21,7 +25,7 @@ How it avoids false positives: only `Bash`; only the COMMAND position counts (`e
 
 What it does NOT catch, by design (an honest limit of a text reader; the second line of defence is the written rule): a script FILE
 that pushes (`sh run.sh` - not read here), an alias (`git -c alias.p=push p`), a URL or command assembled by a variable, another
-platform (Codex, Gemini, Cursor), and the push made by a program other than git or push.py (`gh`, a library).
+platform (Codex, Gemini, Cursor), and the push made by a program other than git, push.py or `gh api` (a library, `curl` to the API).
 
 Any doubt of its own - unreadable input, an error in the hook - exits 0 with `human-valves-guard: nao avaliou (<reason>)` on
 stderr: a gate that blocks what it should not gets switched off (the lesson of stop_gate.py).
@@ -43,9 +47,18 @@ REFUSAL_VERIFY = ("human-valves-guard: pular os hooks (--no-verify, core.hooksPa
                   "corrija o que ele aponta (AGENTS.md, valvulas do humano)")
 REFUSAL_VISUAL = ("human-valves-guard: VISUAL_RECHECK_SKIP e a valvula do MJRP no merge de tela - o agente nao a liga "
                   "(AGENTS.md, valvulas do humano)")
+REFUSAL_MAIN = ("human-valves-guard: MAIN_REF_OVERRIDE e a valvula do MJRP na main (a trava reference-transaction, F278) - o agente "
+                "nao a liga (AGENTS.md, valvulas do humano)")
+REFUSAL_API = ("human-valves-guard: escrever ref, commit ou arquivo no GitHub pelo `gh api` e o push por outra porta - e do MJRP "
+               "(AGENTS.md, \"Push - e do humano\"; CC-ADR-0064)")
+GH_WRITE_PATH = re.compile(r"(?:^|/)(?:git/(?:refs|commits|trees|blobs|tags)|merges|contents)(?:/|$|\?)")
+GH_WRITE_MUTATION = re.compile(r"\b(?:createCommitOnBranch|updateRefs?|createRef|mergeBranch)\b")
+GH_FIELD = ("-f", "-F", "--field", "--raw-field", "--input")
 SKIP_VAR = "VISUAL_RECHECK_SKIP"
+MAIN_VAR = "MAIN_REF_OVERRIDE"
 # the variable being SET inside a program: `os.environ['VAR'] = 1`, `process.env.VAR = 1`, `{VAR: 1}`, `putenv('VAR', 1)`; not `== '1'`
 VAR_SET = re.compile(SKIP_VAR + r"[\"']?\]?\s*(?:=(?!=)|:|,)")
+MAIN_SET = re.compile(MAIN_VAR + r"[\"']?\]?\s*(?:=(?!=)|:|,)")
 HOOKS_PATH = re.compile(r"^core\.hookspath(?:=|$)", re.IGNORECASE)
 NO_VERIFY_SUBS = {"commit", "merge", "am", "rebase", "cherry-pick", "revert", "push"}
 SHORT_WITH_VALUE = set("mFCctS")                    # `git commit` short options that take a value: after one, the cluster is its value
@@ -105,13 +118,48 @@ def has_long_no_verify(rest):
 
 
 def sets_skip_var(argv, heredocs, g):
-    """VISUAL_RECHECK_SKIP being set: a word `VAR=...`, an `export VAR=...`, or inside the program an interpreter runs."""
+    """The refusal text when VISUAL_RECHECK_SKIP or MAIN_REF_OVERRIDE (F278) is being set, else None: a word `VAR=...`, an `export VAR=...`, or inside the program an interpreter runs."""
     if any(w.startswith(SKIP_VAR + "=") for w in argv):
-        return True
+        return REFUSAL_VISUAL
+    if any(w.startswith(MAIN_VAR + "=") for w in argv):
+        return REFUSAL_MAIN
     programs = g.inline_programs(argv)
     if any(g.ROUTE_INTERPRETERS.match(os.path.basename(w)) for w in argv):
         programs += heredocs
-    return any(VAR_SET.search(p) for p in programs)
+    if any(VAR_SET.search(p) for p in programs):
+        return REFUSAL_VISUAL
+    return REFUSAL_MAIN if any(MAIN_SET.search(p) for p in programs) else None
+
+
+def gh_api_writes(args):
+    """`gh ... api <endpoint> ...` that writes git data or a branch (rule 5). `args` is the argv after `gh`."""
+    if "api" not in args:
+        return False
+    rest = args[args.index("api") + 1:]
+    method, fields, endpoint, skip = None, False, "", False
+    for k, w in enumerate(rest):
+        if skip:
+            skip = False
+            continue
+        if w in ("-X", "--method"):
+            method = rest[k + 1].upper() if k + 1 < len(rest) else method
+            skip = True
+        elif w.startswith("--method="):
+            method = w.split("=", 1)[1].upper()
+        elif w.startswith("-X") and len(w) > 2:
+            method = w[2:].upper()
+        elif w in GH_FIELD:
+            fields, skip = True, True
+        elif w.startswith(("--field=", "--raw-field=", "--input=")):
+            fields = True
+        elif w in ("-H", "--header", "-q", "--jq", "-t", "--template", "--hostname", "--cache", "-p", "--preview"):
+            skip = True
+        elif not w.startswith("-") and not endpoint:
+            endpoint = w
+    if endpoint == "graphql":
+        return any(GH_WRITE_MUTATION.search(w) for w in rest)
+    writes = method not in (None, "GET") or (method is None and fields)
+    return writes and bool(GH_WRITE_PATH.search(endpoint))
 
 
 def judge(command, depth=0):
@@ -121,14 +169,17 @@ def judge(command, depth=0):
         raise RuntimeError("catalog_marks_guard.py nao esta ao lado deste hook")
     flat, heredocs = g.lift_heredocs(command)
     for argv in g.simple_commands(flat):
-        if sets_skip_var(argv, heredocs, g):
-            return REFUSAL_VISUAL
+        hit_var = sets_skip_var(argv, heredocs, g)
+        if hit_var:
+            return hit_var
         a = g.strip_prefix(argv)
         if not a:
             continue
         base = os.path.basename(a[0])
         if base == "export" and any(w.startswith(SKIP_VAR) for w in a[1:]):
             return REFUSAL_VISUAL
+        if base == "export" and any(w.startswith(MAIN_VAR) for w in a[1:]):
+            return REFUSAL_MAIN
         if depth < MAX_DEPTH:
             if base in g.SHELLS:
                 for k, w in enumerate(a[1:], 1):
@@ -148,6 +199,8 @@ def judge(command, depth=0):
                     return hit
         if re.match(r"^python[0-9.]*$", base) and any(os.path.basename(w) == "push.py" for w in a[1:3]):
             return REFUSAL_PUSH
+        if base == "gh" and gh_api_writes(a[1:]):
+            return REFUSAL_API
         parts = g.git_parts(a)
         if parts is None:
             continue
@@ -167,10 +220,17 @@ def crude(command):
     """The fallback when shlex cannot read the command: two signals together, never one alone."""
     if re.search(r"(?:^|[\s;&|(])" + SKIP_VAR + "=", command) or VAR_SET.search(command):
         return REFUSAL_VISUAL
+    if re.search(r"(?:^|[\s;&|(])" + MAIN_VAR + "=", command) or MAIN_SET.search(command):
+        return REFUSAL_MAIN
     if re.search(r"\bgit\b", command) and re.search(r"(?:^|[\s;&|(])git(?:\s+-\S+(?:\s+\S+)?)*\s+push\b", command):
         return REFUSAL_PUSH
     if re.search(r"\bgit\b", command) and re.search(r"\s--no-verify\b", command):
         return REFUSAL_VERIFY
+    if re.search(r"\bgh\s+api\b", command) and (GH_WRITE_MUTATION.search(command) or (
+            re.search(r"git/(?:refs|commits|trees|blobs|tags)|merges|contents/", command)
+            and re.search(r"\s(?:-X|--method|-f|-F|--field|--raw-field|--input)\b", command)
+            and not re.search(r"\s(?:-X\s*|--method[\s=])GET\b", command))):
+        return REFUSAL_API
     return None
 
 

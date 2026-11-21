@@ -50,6 +50,26 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "G=\"${CLAUDE_PROJECT_DIR:-.}/mjrp-scripts/hooks/state_first_guard.py\"; [ -f \"$G\" ] || exit 0; python3 \"$G\"",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "G=\"${CLAUDE_PROJECT_DIR:-.}/mjrp-scripts/hooks/machine_load_guard.py\"; [ -f \"$G\" ] || exit 0; python3 \"$G\"",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PreCompact": [
@@ -100,6 +120,15 @@
             "timeout": 60
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_lease.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" hook",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [
@@ -138,6 +167,15 @@
             "timeout": 30
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_lease.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" hook",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -167,6 +205,17 @@
           {
             "type": "command",
             "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/stop_gate.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" --hook record-edit",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=\"${CLAUDE_PROJECT_DIR:-.}\"; S=\"$P/mjrp-scripts/session_lease.py\"; [ -f \"$S\" ] || { echo \"hook: $S ausente\" >&2; exit 0; }; cd \"$P\" && python3 \"$S\" hook",
             "timeout": 10
           }
         ]

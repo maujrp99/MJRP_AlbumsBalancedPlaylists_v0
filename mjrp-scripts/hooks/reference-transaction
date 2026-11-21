@@ -1,0 +1,56 @@
+#!/bin/sh
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# reference-transaction - F278 (UAT-594): the `main` only moves by the doors that ran the commit hooks. The pre-commit, commit-msg and
+# pre-merge-commit judge a COMMIT; a fast-forward, a rebase, a cherry-pick, a `reset` or an `update-ref` move the ref and no hook ran (tested by
+# the F275 session). This hook looks at the one thing every door shares - the ref update - in the `prepared` phase, before it is written.
+#
+# What passes on `refs/heads/main` (the commit-msg hook leaves a one-use ticket, `mjrp-main-ticket`, only when the commit it judged is
+# about to be made: the tree it saw, the HEAD and the branch it saw, the time):
+#   1. the commit by pathspec made on the `main` itself, and the merge commit of the train (`git merge --no-ff`): the new commit has the
+#      ticket's tree, the ticket's HEAD is the ref's old value, and the new commit's first parent is that old value (or, for an `--amend`, its
+#      parent). The ticket is consumed. Anything that never ran the commit hooks has no ticket, so it is refused.
+#   2. the human's valve: MAIN_REF_OVERRIDE="<reason>" in the environment of the git command (the agent never sets it: human_valves_guard).
+#   3. no-ops (old == new), the creation of the ref (the ref does not exist yet: a clone, `git init`, a rename), and every other ref.
+# What does NOT break: `git clone` and `git fetch` (they write refs/remotes/*, and a fresh clone has no core.hooksPath yet), `git push` (it
+# moves the remote's refs, not this one), a feature branch (another ref). `git pull` on the main is a fast-forward: it needs the valve.
+# A ticket older than 10 minutes is dead. Without the one-use ticket the refusal is the answer: «not checked» is no approval.
+#
+# Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
+[ "$1" = "prepared" ] || { cat >/dev/null; exit 0; }
+REFS=$(cat)
+printf '%s\n' "$REFS" | grep -q ' refs/heads/main$' || exit 0
+ZERO=0000000000000000000000000000000000000000
+TICKET=$(git rev-parse --git-common-dir 2>/dev/null)/mjrp-main-ticket
+refuse() {
+  echo "  reference-transaction: a main só recebe o commit por pathspec feito nela ou o merge do trem (merge_train.py): $1." >&2
+  echo "  Avanço rápido, rebase, cherry-pick, reset e update-ref não passam pelas travas. Quem decide quebrar a regra é o MJRP: MAIN_REF_OVERRIDE=\"<motivo>\" no comando (F278, UAT-594)." >&2
+  exit 1
+}
+printf '%s\n' "$REFS" | while read -r old new ref; do
+  [ "$ref" = "refs/heads/main" ] || continue
+  # git hands over an all-zero old value when the caller did not state one (`update-ref <ref> <new>`): read the real one
+  [ "$old" = "$ZERO" ] && old=$(git rev-parse -q --verify refs/heads/main 2>/dev/null || echo "$ZERO")
+  [ "$old" = "$new" ] && continue
+  [ "$old" = "$ZERO" ] && continue
+  if [ -n "$MAIN_REF_OVERRIDE" ]; then
+    echo "  reference-transaction: quebrado por ordem do MJRP (MAIN_REF_OVERRIDE): $MAIN_REF_OVERRIDE" >&2
+    continue
+  fi
+  [ "$new" = "$ZERO" ] && refuse "apagar a main"
+  [ -f "$TICKET" ] || refuse "nenhum hook de commit rodou para esta atualização (sem bilhete)"
+  t_tree=; t_head=; t_ts=; t_ref=
+  while IFS='=' read -r k v; do
+    case "$k" in tree) t_tree=$v ;; head) t_head=$v ;; ts) t_ts=$v ;; ref) t_ref=$v ;; esac
+  done < "$TICKET"
+  now=$(date +%s)
+  [ -n "$t_ts" ] && [ $((now - t_ts)) -le 600 ] 2>/dev/null || refuse "o bilhete dos hooks de commit venceu"
+  [ "$t_ref" = "refs/heads/main" ] || refuse "o bilhete é de um commit feito em outro ramo"
+  [ "$t_head" = "$old" ] || refuse "o bilhete é de outro HEAD"
+  [ "$(git rev-parse "$new^{tree}" 2>/dev/null)" = "$t_tree" ] || refuse "o commit novo não é o que os hooks de commit conferiram"
+  p1=$(git rev-parse "$new^1" 2>/dev/null)
+  if [ "$p1" != "$old" ] && [ "$p1" != "$(git rev-parse "$old^1" 2>/dev/null)" ]; then
+    refuse "o commit novo não descende do HEAD (reescreve a história)"
+  fi
+  rm -f "$TICKET"
+done
+exit $?

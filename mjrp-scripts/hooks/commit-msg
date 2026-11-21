@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # commit-msg - every commit brings a new entry in the project log (S-61). Born 2026-10-03/04: commits
 # without a log entry, and decisions that survived a context compaction only in the AI Platform's summary.
 # It runs wherever git runs, so it guards local and cloud sessions alike.
@@ -10,6 +10,12 @@
 # 2026-10-25 (F72, R25): as in pre-commit, a sensor's exit 1 is REPROVOU and anything else (2, or a traceback) is NÃO AVALIOU, with
 # the message that says which; and a missing python3 or sensor is a warning on stderr, never a silent pass.
 ROOT=$(git rev-parse --show-toplevel) || exit 0
+
+# 2026-11-17 (F278, UAT-594): when this hook ends in success the commit is about to be made - leave the one-use ticket that the
+# reference-transaction hook asks for before it lets the `main` move (the tree this commit has, the HEAD and the branch it sits on, the time). Only a commit that
+# ran the commit hooks has a ticket: a fast-forward, a rebase or a cherry-pick has none. No python needed.
+# F282: when this hook REFUSES, the ticket goes too - on a clean merge the pre-merge-commit already left one, and a refused merge must not leave it valid.
+trap 'code=$?; if [ "$code" -eq 0 ]; then t=$(git write-tree 2>/dev/null) && printf "tree=%s\nhead=%s\nref=%s\nts=%s\n" "$t" "$(git rev-parse HEAD 2>/dev/null || echo 0000000000000000000000000000000000000000)" "$(git symbolic-ref -q HEAD)" "$(date +%s)" > "$(git rev-parse --git-common-dir)/mjrp-main-ticket" 2>/dev/null; else rm -f "$(git rev-parse --git-common-dir)/mjrp-main-ticket" 2>/dev/null; fi' EXIT
 
 # run_sensor <label> <command...>: prints the sensor's output; returns 0 passed, 1 failed, 2 not evaluated.
 run_sensor() {

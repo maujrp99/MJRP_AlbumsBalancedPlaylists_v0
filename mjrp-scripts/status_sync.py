@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 status_sync.py - each status has ONE source; what derives from it is written in the same commit (F67, S-168).
 
@@ -187,16 +187,51 @@ def requirement_target(req, importers, rules, fast_only=False, refused=None):
     return want
 
 
+HUMAN_TRACK_MARK = "prioridade: humano"
+COMMIT_HASH = re.compile(r"\b[0-9a-f]{7,40}\b")
+EVIDENCE_WORDS = re.compile(r"\b(teste|test|testes|passos)\b", re.I)
+
+
+def is_human_row(row):
+    """An issue of the human track: opened by the MJRP, or raised to him (`agente · prioridade: humano`). Only his OK closes it."""
+    by = row.get("by", "")
+    return by == "MJRP" or HUMAN_TRACK_MARK in by
+
+
+def has_evidence(status):
+    """`fixing (Fxx: <evidence>)` carries what uat.md demands for `fixed`: a colon, then a commit hash and the test, or the steps re-run.
+    A bare `fixing (Fxx)` carries none: the derivation cannot invent it (UAT-545)."""
+    _head, colon, rest = status.partition(":")
+    return bool(colon) and bool(COMMIT_HASH.search(rest)) and bool(EVIDENCE_WORDS.search(rest))
+
+
+def uat_block(row, feature_status, rules, cites=None):
+    """Why a `fixing (Fxx)` whose feature is delivered and cites it is NOT derived to `fixed`: 'human' (it waits for the MJRP: the
+    derivation never closes what is his) or 'no-evidence' (the Status cell holds no commit and test, or re-run steps). None when
+    nothing stops it or the row is not in that spot. UAT-545: the daily pass turned a P1 that asked the MJRP a question into `fixed`."""
+    m = FIXING.match(row["status"])
+    if not m or m.group(2) not in feature_status or row["id"] not in (cites or {}).get(m.group(2), ()):
+        return None
+    if feature_status[m.group(2)].casefold() not in {s.casefold() for s in rules["derivation"]["uat_issue"]["fixing_to_fixed_when"]}:
+        return None
+    if is_human_row(row):
+        return "human"
+    return None if has_evidence(row["status"]) else "no-evidence"
+
+
 def uat_target(row, feature_status, rules, cites=None):
-    """`fixing (Fxx)` -> `fixed (Fxx)` when Fxx is delivered AND its folder cites the issue (`cites`: {Fxx: {UAT ids}}).
+    """`fixing (Fxx: <evidence>)` -> `fixed (Fxx: <evidence>)` when Fxx is delivered AND its folder cites the issue (`cites`: {Fxx: {UAT ids}}).
     UAT-429: a feature that was already Done when the issue was opened used to close it in the commit that opened it; the
-    issue is fixed by a conserto that names it, never by the feature's status alone."""
+    issue is fixed by a conserto that names it, never by the feature's status alone.
+    UAT-545: and never without the evidence uat.md demands, and never an issue of the human track (`uat_block` says which)."""
     m = FIXING.match(row["status"])
     if not m or m.group(2) not in feature_status:
         return None
     if row["id"] not in (cites or {}).get(m.group(2), ()):
         return None
     if feature_status[m.group(2)].casefold() in {s.casefold() for s in rules["derivation"]["uat_issue"]["fixing_to_fixed_when"]}:
+        if uat_block(row, feature_status, rules, cites):
+            return None
         return "fixed" + row["status"][len("fixing"):]
     return None
 

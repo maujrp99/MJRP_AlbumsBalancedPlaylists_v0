@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-10 · fonte 77b3a80a7 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The kit's contract with the projects that consume it — versioned (architecture audit of ADR-0017, 2026-10-12,
 // finding 7). The kit is vendored into a child that IMPORTS it (the Control Center's judge imports rules.mjs and
 // judge.mjs), so its surface is a contract like any other.
@@ -11,7 +11,7 @@
 // kit.test.mjs fails when a stable export disappears; run.mjs refuses a config whose `format` is not CONFIG_FORMAT and
 // a Playwright outside PLAYWRIGHT_RANGE (both exit 2, not evaluable).
 
-export const KIT_VERSION = '1.3.0';
+export const KIT_VERSION = '1.3.1';
 
 /** The format of the project's visual.config (its `format` key; absent reads as 1). */
 export const CONFIG_FORMAT = 1;
