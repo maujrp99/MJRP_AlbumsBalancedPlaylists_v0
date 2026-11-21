@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 board_move.py - the one way a work item changes state on the board (F275, UAT-592): it checks the passage on the single graph
 (`board_states.json`) and records it; the board draws only what this recorded (the Jira principle: the state changes by an

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 delivery_strategy_check.py - does the project say how IT delivers? The judge of the `delivery-strategy` catalog item
 (F186, UAT-496): `docs/specs/arch.md` carries a `## Delivery strategy` section written for the project.

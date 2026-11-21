@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _board.py - the board configuration (board@1) as the harness sensors judge it: the default merged with the project's file, every
 shape refusal and the coverage of each board (F134; ADR-0025 § 6, ADR-0026, ADR-0027).

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """machine_load.py - one heavy suite at a time on the machine (F293, S-245, orchestrator rules 37 and 44).
 
 Incident (2026-11-18): more than 40 doctors ran together, the load went past 50 and the machine stopped answering; the rule «uma bateria
@@ -229,6 +229,10 @@ def worker_env(env=None) -> dict:
     for key in ("VITEST_MAX_WORKERS", "VITEST_MAX_THREADS", "VITEST_MAX_FORKS", "JEST_WORKERS", "UV_THREADPOOL_SIZE",
                 "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "PYTEST_XDIST_AUTO_NUM_WORKERS"):
         env.setdefault(key, n)
+    # F337 (UAT-638): vitest refuses a max below its own default minimum ("minThreads and maxThreads must not conflict"),
+    # so the ceiling brings the floor with it. The caller's own value still wins.
+    for key in ("VITEST_MIN_THREADS", "VITEST_MIN_FORKS"):
+        env.setdefault(key, "1")
     return env
 
 

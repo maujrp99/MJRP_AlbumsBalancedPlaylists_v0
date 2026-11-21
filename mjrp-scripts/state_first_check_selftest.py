@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """state_first_check_selftest.py - proves «o estado primeiro» (F295, orchestrator rule 39) on throwaway repositories in $TMPDIR, with the REAL PreToolUse hook and
 the REAL pre-commit: a write in a feature's linked worktree is refused while the card is not «Em andamento» (with the command that moves it) and passes
 once it is; an «Esperando…» card passes; the main checkout, a branch that carries no feature, a file outside a repository, a project with no board record and

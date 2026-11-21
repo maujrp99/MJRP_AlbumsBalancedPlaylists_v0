@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "format": "board-states@1",
   "about": "O grafo único dos estados de um item de trabalho (F275, UAT-592): os nomes são os do board, as passagens permitidas e quem faz cada uma. O board desenha só o que o `board_move.py` gravou por uma destas arestas; o juiz é o `board_states_check.py`. `actor`: `agent` (qualquer sessão, o humano também), `order` (decisão do MJRP que o agente grava citando as palavras dele, `--order`) e `signed` (só pelo commit com o carimbo do MJRP, `stamp`; o agente nunca). `category` é a categoria do board (`itemboard`); `requires: closure`: a passagem só vale com a regra de fecho do kernel (`feature_closure.py`) aceitando o `closed_by:` da spec. `spec_status`, o status que a spec de uma feature carrega nesse estado (uma lista quando são vários: a feature aceita pelas stories ou pelas issues fica `Done`).",
   "initial": "prep",

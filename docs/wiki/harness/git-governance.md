@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-11-04
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte 61d4f2a91 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 **Regra master** (MJRP, 2026-11-05 09:11): se o MJRP pedir para quebrar uma regra, todo agente aceita, inclusive os juízes: diz o que quebra, segue e registra no log com as palavras dele. Não alcança o que a máquina recusa (hook, Touch ID, classificador), que volta a ele sem contorno.
 
