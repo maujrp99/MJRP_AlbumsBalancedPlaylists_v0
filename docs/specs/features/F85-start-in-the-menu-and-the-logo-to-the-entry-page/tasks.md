@@ -10,7 +10,7 @@
 - [x] TASK-03 a decisão da raiz e os botões da página de entrada apontam para `/start` · implements:: REQ-03 · model:: sonnet
 
 ## Verification
-- [ ] TASK-04 (aberta: provado no servidor de desenvolvimento a 1280 e 393, com e sem conta, `reports/evidence/F85/2026-11-21-f85-browser-proof.md`; FALTA o build de produção sob `vite preview`, a bateria completa e o doctor neste ramo) no navegador, a 1280 e a 393 px, com e sem conta: o rótulo, o logotipo, a raiz, os links antigos · implements:: REQ-01, REQ-02, REQ-03 · model:: sonnet
+- [ ] TASK-04 no navegador, a 1280 e a 393 px, com e sem conta: o rótulo, o logotipo, a raiz, os links antigos (provado no servidor de desenvolvimento, `reports/evidence/F85/2026-11-21-f85-browser-proof.md`; falta o build de produção sob `vite preview`) · implements:: REQ-01, REQ-02, REQ-03 · model:: sonnet · waiting:: resource — a fila de trabalhos pesados da máquina · action:: o integrador roda o build, a bateria completa e o doctor no trem de merge e confere a raiz em produção
 
 ## Documentation
 - [x] `behavior.md`, o manual, `info-arch.md`, a evidência em `reports/evidence/F85/`
