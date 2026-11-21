@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:04] review — F83 onda 3: o juiz independente aprova a moldura do site em React (sem P0, sem P1, 3 P2)
+**Branch:** integrate/staging-2026-11-21
+Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-shell-visual-parity-recheck.md` e capturas em `reports/evidence/F83/wave-3/recheck/`, escritos pelo juiz (não por quem construiu) sobre o commit 1e3c14b, guardados como vieram. 90 pares antigo/novo; as duas diferenças de propósito são melhorias; os pixels do canto são ruído. P2: a primeira tela chega 0,4 s depois em rede lenta (React na largada); a janela de entrar segue sem Escape nem retorno de foco, como a antiga; as provas automáticas devem bloquear o Firebase de produção, para não criar contas anônimas.
+
 ## [2026-11-21 18:34] step — F83 onda 3: a prova no navegador, o peso, os documentos e o conserto do «voltar ao topo»
 **Branch:** claude/f83-wave-3-shell
 133 conferências no Chromium (1280, 900, 393), 130 passaram; as 3 são 2 a 12 pixels no canto do topo à direita; antiga contra antiga: 0 pixel, com e sem transições. O navegador achou que o «voltar ao topo» parava no meio com um toque de verdade (o React devolve a rolagem quando um desenho tira o foco): o botão solta o foco antes de rolar. Primeiro carregamento com o React na abertura: +85 kB e cerca de +0,4 s (rede lenta, CPU x4). Mapa, tarefas 18, 19, 30 e 31, arch.md e design-system.md.
