@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 08:10] session — F80: as capas reais em produção; a UAT-231 consertada
+**Branch:** main
+Site publicado da `main` (`e79ac58`, `/assets/main-NTQyvnTw.js`) com `VITE_SPLASH_COVERS=real` no `.env` da pasta da `main` desta máquina (fora do repositório: um build feito noutra máquina, sem essa linha, volta às capas fictícias). Em produção, a 393 px: as capas vêm do servidor de imagens da Apple, a página não passa da largura da tela e o crédito mais longo cabe (termina em 377 px). Relatório: `reports/evidence/F80/2026-11-21-production-proof.md`. A prévia local (porta 5010) foi encerrada pela limpeza do harness e, ao subir de novo, serviu a pasta da sessão, com código antigo: a conferência foi feita em produção.
+
 ## [2026-11-21 08:03] decision — F80: as capas reais do Apple Music vão ao ar; o sensor visual é instalado
 **Branch:** main
 Palavras do MJRP (2026-11-21): «Instala o playwright e vamos com as capas da Apple pq por enqto só eu uso». Como foi lido: a página de entrada passa a ser publicada com o conjunto real de capas (`VITE_SPLASH_COVERS=real`), enquanto só ele usa o site; a leitura dos termos da Apple feita na proposta continua valendo para quando o site for público. Antes de ligar, o conserto da UAT-231: no celular o crédito sob cada disco quebra linha e ocupa a largura da coluna (`public/splash.html`, teste `test/splash/creditWrapsOnThePhone.test.js`, que falhou na página antiga e passa na nova). O sensor visual (Playwright) está sendo montado num ramo próprio, `chore/visual-sensor-setup`.

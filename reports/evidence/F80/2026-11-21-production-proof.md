@@ -14,3 +14,13 @@ Publicado pelo `scripts/deploy-site.sh`, da `main` em `14e4f9c`, depois da palav
 
 ## Voltar
 Console do Firebase > Hosting > histórico de versões > «Rollback» para a versão anterior (o build da `5c95f18`).
+
+## Capas reais em produção (2026-11-21 08:10)
+
+Palavras do MJRP: «vamos com as capas da Apple pq por enqto só eu uso». Publicado da `main` em `e79ac58` (script principal `/assets/main-NTQyvnTw.js`; 3722 testes passaram no script de publicação), com `VITE_SPLASH_COVERS=real` no `.env` da pasta da `main` desta máquina (o arquivo que o script de publicação lê; não está no repositório).
+
+Visto em `https://mjrp-playlist-generator.web.app/?entry`, a 393 px, com a conta dele aberta:
+- a página traz as 14 capas reais; as 6 mostradas inteiras no celular carregaram do servidor de imagens da Apple (`is1-ssl.mzstatic.com`); a marca «Fictional albums» saiu;
+- UAT-231: a página mede 393 px de largura (sem rolagem lateral); o crédito mais longo («In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music») termina em 377 px.
+
+Não visto: a captura da tela rolada (a ferramenta recusou a rolagem depois da troca de largura), o computador com o 3D, iPhone de verdade, Safari.
