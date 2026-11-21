@@ -1,7 +1,7 @@
 # Design system — Album Blender V0
 
 **Status: Draft** — os padrões da Home (F79) e da página de entrada (F80) aprovados pelo MJRP com os protótipos em 2026-11-20; o resto é o que o código usa, decidido pelo agente — revisável; as perguntas abertas estão em § Pendentes.
-> **Página do design system:** a publicar (F86) — gerada deste documento por `design/proposals/design-system/build-design-system.mjs`, nunca editada à mão.
+> **Página do design system:** https://claude.ai/artifact/RHR5zAhDUhQowiEn5BeCgj (F86, rascunho) — gerada deste documento por `design/proposals/design-system/build-design-system.mjs`, nunca editada à mão.
 
 O que as telas do site compartilham: cores, tipo, medidas e componentes. Este documento nasceu com a F76 (o celular) e foi refeito na F86 (2026-11-21) a partir de um levantamento do código (`public/css/`, `tailwind.config.js`, `public/splash.html`, as views e os componentes): o que está aqui é o que o site **usa**, não o que deveria usar. Onde o código tem dois valores para a mesma coisa, § Conflitos no código diz quais e propõe um; nada foi mudado no código. A migração para React (F83) vai consumir os tokens daqui. O app nativo (`app/`, em pausa) fica fora.
 
@@ -13,7 +13,7 @@ Uma loja de discos à noite: tela preta, o fogo (o logotipo da chama sobre o vin
 
 ## Paleta
 
-Um tema só, escuro. O laranja é a ação principal, a aba atual e o item escolhido; o vermelho é a outra ponta do fogo e o perigo. As cores de estado (verde, rosa, vermelho claro) não vêm da marca (AH-08). Contraste medido (WCAG) sobre o preto e, entre parênteses, sobre o painel `#101014`: branco 21:1 (18,6:1); `#a0a0a8` 8,1:1 (7,3:1); branco a 72 % 10,6:1 (9,6:1); branco a 64 % 8,3:1 (7,5:1); `#fb923c` 9,3:1 (8,4:1); `#4ade80` 12,1:1 (10,9:1); `#fca5a5` 11,1:1 (10,0:1); `#f87171` 7,6:1 (6,9:1). Branco sobre o fogo: 2,8:1 na ponta laranja, 4,8:1 na vermelha — só passa como texto grande (19 px, peso 800); ver § Pendentes, P1.
+Um tema só, escuro. O laranja é a ação principal, a aba atual e o item escolhido; o vermelho é a outra ponta do fogo e o perigo. As cores de estado (verde, rosa, vermelho claro) não vêm da marca (AH-08). Contraste medido (WCAG) sobre o preto e, entre parênteses, sobre o painel `#101014`: branco 21:1 (19,0:1); `#a0a0a8` 8,1:1 (7,3:1); branco a 72 % 10,5:1 (10,0:1); branco a 64 % 8,3:1 (8,1:1); `#fb923c` 9,3:1 (8,4:1); `#4ade80` 12,1:1 (10,9:1); `#fca5a5` 11,1:1 (10,0:1); `#f87171` 7,6:1 (6,9:1). Branco sobre o fogo: 2,8:1 na ponta laranja, 4,8:1 na vermelha — só passa como texto grande (19 px, peso 800); ver § Pendentes, P1. Os números do painel (19,0, 10,0 e 8,1; antes 18,6, 9,6 e 7,5) e o 10,5 do branco a 72 % (antes 10,6) foram medidos de novo com o branco apagado composto sobre o próprio painel. *(corrigido na F86, 2026-11-21, conferido no CSS — pendente de aprovação do MJRP)*
 
 ### Cores
 
@@ -71,7 +71,7 @@ Só a Syne é carregada (400, 700 e 800 no app; 700 e 800 na página de entrada)
 | Nome da série | Syne | 20 px | 800 | `.home-name` |
 | Botão de fogo | Syne | 19 px | 800 | `.home-btn.is-flame` |
 | Título da barra e da folha (celular) | Syne | 17/22 px | 700 | `.phone-topbar__title`, `.sheet__title` |
-| Corpo | Syne no computador · texto do sistema no celular | 16/22 px | 400 | `.home-hero p`, `.sheet__body` |
+| Corpo | Syne no computador · texto do sistema no celular | 16/24 px no computador · 15/22 no celular | 400 | `.home-hero p` (antes «16/22» e `.sheet__body`, que não declara tamanho) *(corrigido na F86, 2026-11-21, conferido no CSS — pendente de aprovação do MJRP)* |
 | Botão | Syne | 15 px | 700 | `.home-btn` |
 | Secundário | texto do sistema | 14/18 px | 400 | `.home-hint`, `.phone-action-bar__note` |
 | Rótulo pequeno | texto do sistema | 12/16 px | 700 | abas da barra de baixo (12/14), selos, anos: o piso |
@@ -93,7 +93,7 @@ Só a Syne é carregada (400, 700 e 800 no app; 700 e 800 na página de entrada)
 | sombra de capa | `0 8px 24px rgba(0, 0, 0, 0.6)` | `.home-card__cover` |
 | sombra da base | `0 -10px 40px rgba(0, 0, 0, 0.6)` | `.home-dock`, `.sheet--bottom` |
 | brilho do fogo | `0 0 24px rgba(249, 115, 22, 0.3)` | `.home-btn.is-flame` |
-| vidro | `blur(16px)` sobre `rgba(8, 8, 10, 0.78)` | `.phone-topbar`, `.phone-tabbar`, `.home-dock` |
+| vidro | `blur(16px)` sobre `rgba(8, 8, 10, 0.78)` (`--phone-bar-bg`); a base da série da Home, `blur(16px)` sobre `rgba(12, 12, 15, 0.94)` | `.phone-topbar`, `.phone-tabbar`; `.home-dock` *(corrigido na F86, 2026-11-21, conferido no CSS — pendente de aprovação do MJRP)* |
 | barras do celular | topo 48 px · ação 64 px · abas 56 px, mais as áreas seguras | `--phone-topbar-h`, `--phone-action-bar-h`, `--phone-tabbar-h` |
 | movimento | 200 ms (folha), 0,7 s (equalizador); nada se mexe com menos movimento | `--phone-slide`, `.home-eq` |
 
@@ -150,7 +150,7 @@ Padrões que o site já usa, decididos pelo agente, que pedem a palavra do MJRP.
 | # | Padrão | Pergunta | Mostra | Hoje no código |
 |---|---|---|---|---|
 | P1 | Texto sobre o fogo | No botão de fogo, o texto fica branco (como no app) ou preto (como na página de entrada)? | texto-no-fogo | Branco no app (`.btn-primary`, `.home-btn.is-flame`: 2,8:1 na ponta laranja, passa só como texto grande, 19 px peso 800); preto na página de entrada (`#0b0b0b`: 7,0:1 na ponta laranja e 4,1:1 na vermelha). Recomendação do agente: preto nos dois, porque passa em qualquer tamanho. |
-| P2 | Ponta amarela do fogo | O equalizador termina em amarelo (página de entrada) ou só laranja e vermelho (Home)? | ponta-amarela | Home: duas cores (`#dc2626 → #f97316`, a cor A, decidida pelo agente na F79). Página de entrada: três (`… → #fbbf24`). `#fdba74`, a ponta clara da prévia da F79, não está no código. Uma só para as duas telas. |
+| P2 | Ponta amarela do fogo | O equalizador termina em amarelo (página de entrada) ou só laranja e vermelho (Home)? | ponta-amarela | Home: duas cores (`#dc2626 → #f97316`, a cor A, decidida pelo agente na F79). Página de entrada: três (`… → #fbbf24`). `#fdba74`, a ponta clara da prévia da F79, não está no código. Uma só para as duas telas. Recomendação do agente (F86, revisável): duas cores nas duas telas, só com as cores já declaradas; custa tirar o amarelo da página de entrada. |
 | P3 | Fonte do texto corrido no computador | No computador, o texto corrido fica em Syne (app) ou na fonte do sistema (página de entrada e celular)? | fonte-do-corpo | App no computador: tudo em Syne. Página de entrada e celular: títulos em Syne, o resto na fonte do sistema. Recomendação do agente: a fonte do sistema, que a 14–16 px lê melhor. |
 
 ## Conflitos no código
@@ -311,7 +311,7 @@ Nasceram na rodada 1 de exploração da página de entrada (2026-11-20, `design/
 
 | Padrão | Como é | Por quê | Muda o quê |
 |---|---|---|---|
-| Botão principal da página pública | degradê «flame», **texto preto** `#0b0b0b`, Syne 800 a 18 px, 48 px de altura, brilho laranja | branco sobre o degradê dá 2,8:1 na ponta laranja `#f97316` e 4,8:1 na vermelha; preto dá 7,5:1 e 4,35:1, e a 18 px peso 800 o texto conta como grande (3:1) | **diverge** do `.btn-primary` do app (texto branco); pendente de aprovação do MJRP. Se aprovado, vale rever o botão do app também |
+| Botão principal da página pública | degradê «flame», **texto preto** `#0b0b0b`, Syne 800 a 18 px, 48 px de altura, brilho laranja | branco sobre o degradê dá 2,8:1 na ponta laranja `#f97316` e 4,8:1 na vermelha; preto `#0b0b0b` dá 7,0:1 e 4,1:1 (antes «7,5:1 e 4,35:1») *(corrigido na F86, 2026-11-21, conferido no CSS — pendente de aprovação do MJRP)*, e a 18 px peso 800 o texto conta como grande (3:1) | **diverge** do `.btn-primary` do app (texto branco); pendente de aprovação do MJRP. Se aprovado, vale rever o botão do app também |
 | Fonte do texto corrido no computador | Syne só nos títulos; o corpo na fonte de texto do sistema (`-apple-system`, Inter, `system-ui`) | a regra do celular («título em Syne, o resto na fonte de texto») estendida ao computador numa página de leitura longa | **diverge** do app no computador (tudo em Syne); pendente de aprovação do MJRP |
 | Equalizador | barras de 5 a 8 px, cantos de 3 px no topo, degradê de baixo para cima `#dc2626 → #f97316 → #fbbf24`, cada barra com altura, duração (0,6 a 1,5 s) e atraso próprios, nunca em uníssono; com movimento reduzido, alturas fixas e variadas | o equalizador é elemento da identidade (palavras do MJRP); é o primeiro desenho declarado dele | novo; pendente de aprovação do MJRP |
 | Fogo em movimento | leito de fogo em canvas 2D (partículas aditivas de três cores: âmbar, `#f97316`, `#dc2626`), sempre abaixo do texto, nunca atrás dele; no 3D, luz de fogo laranja e vermelha que tremula por senos sobrepostos | o fogo do logotipo e da imagem de herói (`public/assets/herobanne-for-reference.png`) como movimento; atrás do texto ele derruba o contraste | novo; pendente de aprovação do MJRP |
