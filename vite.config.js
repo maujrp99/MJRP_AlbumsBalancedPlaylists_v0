@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
+import react from '@vitejs/plugin-react'
 import tailwindcss from 'tailwindcss'
 import tailwindConfig from './tailwind.config.js'
 import { entryPage } from './scripts/entryPage.mjs'
@@ -12,6 +13,7 @@ export default defineConfig({
     // dist/ it is index.html and the app is app.html (scripts/entryPage.mjs, firebase.json).
     // VITE_SPLASH_COVERS=real puts the real covers on it; anything else, the fictional ones.
     plugins: [
+        react(), // the React screens (F83, ADR-0023): the plugin of the Vite that already builds the site
         entryPage({
             coverSet: process.env.VITE_SPLASH_COVERS ?? loadEnv(process.env.NODE_ENV || 'development', __dirname, 'VITE_').VITE_SPLASH_COVERS
         })

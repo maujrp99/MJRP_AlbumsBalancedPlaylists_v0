@@ -1,12 +1,14 @@
 import { defineConfig } from 'vitest/config'
 import path from 'path'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+    plugins: [react()],
     test: {
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./test/setup.js'],
-        include: ['test/**/*.test.js'], // the server's tests are in test/server
+        include: ['test/**/*.test.{js,ts,tsx}'], // .ts/.tsx: the React screens (F83); the server's tests are in test/server
         exclude: ['node_modules/**', 'test/visual/**'], // test/visual/ is the Playwright visual sensor (mjrp-scripts/visual_parity), not the app's tests
         coverage: {
             provider: 'v8',

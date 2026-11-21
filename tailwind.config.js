@@ -35,7 +35,7 @@ const RECIPE_GRADIENT_AT_10 = [
 export default {
     content: [
         path.join(here, 'public/index.html'),
-        path.join(here, 'public/js/**/*.js')
+        path.join(here, 'public/js/**/*.{js,ts,tsx}') // .tsx too: a class written only in JSX must reach the CSS (F83)
     ],
     safelist: [...RECIPE_GRADIENT_AT_10],
     theme: {

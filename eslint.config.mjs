@@ -21,6 +21,8 @@
  */
 import globals from "globals";
 import pluginJs from "@eslint/js";
+import tseslint from "typescript-eslint";
+import reactHooks from "eslint-plugin-react-hooks";
 
 /** Vitest's globals (vitest.config.js sets `globals: true`). */
 const vitestGlobals = Object.fromEntries(
@@ -81,6 +83,41 @@ export default [
         // the entry page (F80): its own small modules, in the browser; covers.js is also read by the build (Node)
         files: ["public/splash/**/*.js"],
         languageOptions: { sourceType: "module", globals: globals.browser }
+    },
+    {
+        // The React screens (F83, ADR-0023): TypeScript and JSX in public/js and in the tests that read them.
+        // The ceiling of 10 holds here with no list of exceptions; the hooks rules are errors; HTML never goes
+        // in as a string; `any` and `as unknown as` are refused where the screens are written (the casts live in
+        // react-bridge/, in a list that only shrinks: test/architecture/reactStaysAtTheEdge.test.js).
+        files: ["public/js/**/*.{ts,tsx}", "test/**/*.{ts,tsx}"],
+        languageOptions: {
+            parser: tseslint.parser,
+            sourceType: "module",
+            globals: { ...globals.browser, ...vitestGlobals }
+        },
+        plugins: { "@typescript-eslint": tseslint.plugin, "react-hooks": reactHooks },
+        rules: {
+            "react-hooks/rules-of-hooks": "error",
+            "react-hooks/exhaustive-deps": "error",
+            complexity: ["error", 10],
+            "no-restricted-syntax": ["error", {
+                selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+                message: "No HTML as a string in a React screen (ADR-0023): build the element."
+            }],
+            "no-undef": "off", // the type check says it better
+            "no-unused-vars": "off",
+            "@typescript-eslint/no-unused-vars": "warn"
+        }
+    },
+    {
+        files: ["public/js/screens/**/*.{ts,tsx}", "public/js/ui/**/*.{ts,tsx}", "public/js/shell/**/*.{ts,tsx}"],
+        rules: {
+            "@typescript-eslint/no-explicit-any": "error",
+            "no-restricted-syntax": ["error",
+                { selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']", message: "No HTML as a string in a React screen (ADR-0023): build the element." },
+                { selector: "TSAsExpression[expression.type='TSAsExpression'][expression.typeAnnotation.type='TSUnknownKeyword']", message: "No `as unknown as` in a screen: the casts live in react-bridge/." }
+            ]
+        }
     },
     {
         files: ["public/js/workers/**/*.js"],

@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:19] step — F83 TASK-01: as ferramentas do React no site (React 19.3.0 exato, TypeScript, plugin do Vite, tsconfig, lint, typecheck)
+**Branch:** claude/f83-wave-0-base
+`react` e `react-dom` 19.3.0 exatos (o `overrides` da raiz vale para o site e o app: um React só), `typescript` 6.0.3, `@types/react`, `@types/react-dom`, `@vitejs/plugin-react` 4.7.0, `typescript-eslint`, `eslint-plugin-react-hooks`. `vite.config.js` e `vitest.config.js` com o plugin; o Vitest roda `.test.ts(x)`; `tsconfig.json` estrito (`allowJs`, sem `checkJs`); `npm run typecheck` dentro de `npm run lint`, no CI e em `run_lint` dos scripts de publicação; bloco de `.ts/.tsx` no ESLint (complexidade 10, hooks, sem `dangerouslySetInnerHTML`, sem `any` nem `as unknown as` em `screens/`, `ui/`, `shell/`); o Tailwind lê `.tsx`. Prova: `test/architecture/reactToolchain.test.js` (8) e `test/react/toolchain.test.tsx` (1); `test/architecture` inteira 262 verdes; typecheck e lint sem erro. Nenhuma tela mudou. Feito sob a decisão do MJRP de 2026-11-21 (Control Center); a ADR-0023 continua Proposed.
+
 ## [2026-11-21 13:16] session — F83 onda 0 (a base) começa, num agente Sonnet
 **Branch:** claude/f83-wave-0-base
 Ramo `claude/f83-wave-0-base` cortado da `main` (`3356113`). Contrato: spec, plano, tarefas TASK-01 a TASK-10, proposta de arquitetura e ADR-0023 (continua Proposed; o aceite é um commit do MJRP). O card da F83 foi movido a «Em andamento» com `board_move.py move F83 in_progress --why`, como o gancho (regra 39) pediu.
