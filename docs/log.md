@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:50] step — F80 e F88: o segundo relatório do juiz (reconferência 2) e suas capturas entram no ramo, sem mudança
+**Branch:** feat/f88-top-menu-build
+O juiz escreveu o relatório sobre c51abfc; copiado como veio para reports/audits/ e as capturas para reports/evidence/F88/recheck-2/.
+
 ## [2026-11-21 18:32] step — F88: o teste de onPhoneChange usava 852 px como «não celular»; agora o corte é 899 px
 **Branch:** feat/f88-top-menu-build
 Só o teste: o celular deitado (852 px) passa a ser celular, então o teste vira de 393 para 1024 px. Pego na suíte inteira.
