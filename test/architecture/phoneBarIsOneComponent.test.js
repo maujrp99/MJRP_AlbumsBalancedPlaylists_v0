@@ -41,6 +41,12 @@ describe('the phone\'s bottom menu is one component', () => {
         expect(home).toMatch(/var\(--pbar-h\)/)
     })
 
+    it('the bar is opaque, in the design system\'s surface colour: labels and icons never depend on a blur to be readable over the screen behind', () => {
+        const bar = shared.split('\n').find(line => line.startsWith('  .pbar{'))
+        expect(bar).toMatch(/background:#0a0a0c[;}]/)
+        expect(bar).not.toMatch(/rgba\(10,\s*10,\s*12/)
+    })
+
     it('touch targets: the stop is at least 44 px tall', () => {
         const stop = shared.split('\n').find(line => line.startsWith('  .pbar .ms .stop{'))
         const height = Number((stop.match(/min-height:\s*(\d+)px/) || [])[1])
