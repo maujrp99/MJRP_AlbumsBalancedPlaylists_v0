@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:54] session — teste vermelho dos achados do juiz: alvo de 44 px, nome da fonte, linha «Asking»
+**Branch:** wip/failed-sources-are-shown-2026-11-21
+Quatro testes falham (F52/F69, UAT-244/245), cobrindo P1-1, P2-1 e P2-3 do relatório do juiz.
+
 ## [2026-11-21 13:53] session — relatório e capturas do juiz sobre a prova de F52 e F69, guardados como vieram
 **Branch:** wip/failed-sources-are-shown-2026-11-21
 O juiz independente escreveu o relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-failed-sources-visual-parity-recheck.md` e as capturas `reports/evidence/F52/recheck/`; o agente só os copiou, sem editar o veredito nem os achados.
