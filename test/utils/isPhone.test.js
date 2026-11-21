@@ -56,7 +56,7 @@ describe('onPhoneChange', () => {
 
         win.resizeTo(393)
         win.resizeTo(500) // still a phone: nothing to tell
-        win.resizeTo(852) // the phone lying down is not "the phone"
+        win.resizeTo(1024) // a screen of 900 px or more is not "the phone" (a phone lying down, 852 px, still is)
 
         expect(heard.mock.calls).toEqual([[true], [false]])
     })

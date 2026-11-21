@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 18:32] step — F88: o teste de onPhoneChange usava 852 px como «não celular»; agora o corte é 899 px
+**Branch:** feat/f88-top-menu-build
+Só o teste: o celular deitado (852 px) passa a ser celular, então o teste vira de 393 para 1024 px. Pego na suíte inteira.
+
 ## [2026-11-21 18:30] step — F88: provas no navegador dos consertos do juiz e dois testes antigos ajustados aos novos cortes
 **Branch:** feat/f88-top-menu-build
 Provas em `reports/evidence/F88/fixes/` (393, 800 e 1280, sem e com conta, costuras de teste do `reports/evidence/F88/`, nada de login real): `fixes.json` (rótulo e pontos do botão da conta pendente e depois, o painel, o foco após Disconnect, as três rotas de séries, sem rolagem lateral em 4 telas × 3 larguras × 2 estados, sem erro de console do menu), `p3.json` (800 px: o desenho do celular nas duas páginas), `m1.json` e `p2.json` (a barra a 900, 1000, 1280 e 1600 px, e os vãos do ⟲). Os testes `isPhone.test.js` e `outsideTextIsText.test.js` (a foto da conta não é mais desenhada) acompanham o corte de 899 px e o avatar de inicial; apareceram na suíte inteira.
