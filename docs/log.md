@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 20:51] step — F75: o relatório do juiz sobre o «Clear Cache» (passou, sem P0 nem P1, 1 P2) e suas capturas entram no ramo
+**Branch:** fix/f75-clear-cache-keeps-the-inventory-values
+O juiz escreveu o relatório sobre 01d26d9; copiado como veio para `reports/audits/` e as capturas para `reports/evidence/F75/clear-cache-recheck/`. UAT-272 (melhoria, aberta pelo juiz): o rodapé ainda diz «Clear Cache» / «Cache Cleared!» embora agora guarde os valores do inventário e o câmbio; o texto visível não foi mudado, é do MJRP aprovar.
+
 ## [2026-11-21 20:41] step — F88: o relatório do juiz sobre o menu do celular (passou, sem P0 nem P1, 3 P2) e suas capturas entram no ramo; UAT-270 consertada, UAT-271 nova
 **Branch:** fix/f88-phone-menu-equal-in-home-and-app
 O juiz escreveu o relatório sobre 8c09860; copiado como veio para `reports/audits/` e as capturas para `reports/evidence/F88/phone-menu-equal/recheck/`. Dos três P2, o P2-1 (alisamento de fonte) foi consertado em e4f7c46. UAT-270 (os menus diferentes e o ícone do Start) passa a `fixed (F88: 5243644, 8c09860, e4f7c46)`. UAT-271, aberta pelo juiz: no iPhone SE a primeira tela da home mostra só uma fatia do caixote. UAT-263 ganhou a nota de que «Playlists» e «Inventory» também se tocam no app agora que os menus são um só.
@@ -14,6 +18,14 @@ Esta é a correção do próprio P2-1 do juiz da reconferência do menu do celul
 ## [2026-11-21 20:24] step — F88: a barra de baixo do celular passa a ser opaca (UAT-270)
 **Branch:** fix/f88-phone-menu-equal-in-home-and-app
 Pedido do orquestrador: nas capturas do app o texto da tela aparecia por trás dos ícones e rótulos. Antes: `rgba(10,10,12,.92)` com desfoque, que só lê bem se o navegador pinta o desfoque. Agora: `#0a0a0c` opaco, a superfície do design system, igual na home e no app (um teste guarda). Rótulo `#b9b9c2` (10:1) e laranja `#fb923c` (8,7:1) leem-se sobre qualquer conteúdo. A doca da Start («No albums yet») já era translúcida (`rgba(8,8,10,.9)`, F76), não vem desta mudança e ficou como está. Medidas de novo no WebKit sobre o site construído: iguais na home e no app (iPhone 14 e SE); imagens regeneradas.
+
+## [2026-11-21 20:22] step — UAT-267 registrada como consertada pelo agente (F75: ad88323)
+**Branch:** fix/f75-clear-cache-keeps-the-inventory-values
+A linha da UAT-267 passa de `open` a `fixed (F75: ad88323)`, como a UAT-266; o aceite é do MJRP.
+
+## [2026-11-21 20:22] step — «Clear Cache» deixa os valores lidos do Discogs (F75, UAT-267)
+**Branch:** fix/f75-clear-cache-keeps-the-inventory-values
+O botão apagava o IndexedDB inteiro e levava junto as leituras de valor e o câmbio. Agora apaga por nome (`ALBUM_CACHE_KEY_PREFIXES`: `albumload:`, `userRanking:`, `spotify_enrichment:`, `artifacts/`) por `CacheManager.clearPrefixes`; ficam `inventoryvalue:` e `exchangerates:` (vencem sozinhos) e qualquer armazém futuro não nomeado. `behavior.md` (^app-clear-cache) diz o que apaga e o que guarda. Conferência em Chromium real: 15 de 15 (valor lido, Clear Cache, recarregar: o valor segue e não há aviso de espera; os caches de álbuns somem). Nenhum texto visível mudou.
 
 ## [2026-11-21 20:09] step — duas issues do MJRP sobre o menu novo do app (F88): o cabeçalho e a home fora do menu
 **Branch:** wip/inventory-values-reread-investigation
