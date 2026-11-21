@@ -16,7 +16,8 @@ Nenhum código de produto antes da proposta aprovada.
 A escrever depois da proposta.
 
 ## Dependencies
-A declarar.
+- **Depende da F332 do harness** («o kit do admin passa a morar no harness e vai aos filhos», S-253 de lá; registrada em esboço no commit `82c7ebfec` do harness, ainda não priorizada). O caminho, a versão e o que o V0 importa saem da proposta de arquitetura da F332; o V0 não copia a pasta do kit.
+- A F81 (o dicionário de textos, no formato de par pt/en) e a F83 (React no site).
 
 ## Documents Consulted
 Ainda não lidos pelo agente do V0; apontados em 2026-11-21 08:12 pelo orquestrador do MJRPpersonal e pelo agente mestre do harness (o que segue é o relato deles, a conferir na proposta):

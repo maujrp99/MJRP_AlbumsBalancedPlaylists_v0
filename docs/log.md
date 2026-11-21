@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:06] decision — F81: o idioma vem do lugar de quem acessa, e a escolha da pessoa vale acima
+**Branch:** main
+Palavras do MJRP (Control Center, com a passkey, D-03, 09:05): «De acordo com a geo location primeiro e depois a selecao do user toma precedencia». Como foi lido: primeira visita pelo país de acesso (Brasil → português do Brasil; fora → inglês); a escolha da pessoa passa a valer acima disso. Decidido pelo agente, revisável: sem saber o lugar, inglês; a escolha guardada no aparelho e, com conta, na conta. Está na spec da F81. O agente mestre registrou no harness a F332 (o kit do CMS mora no harness, S-253 de lá, commit `82c7ebfec`, em esboço): a F82 do V0 declara a dependência no plano.
+
+## [2026-11-21 09:05] answer — lote 2026-11-21-0845-v0-pending-decisions
+
+- Lote: `reports/proposals/2026-11-21-0845-v0-pending-decisions.md`
+- Envio: 1c32b72c6db272f7
+- D-03: (outra) De acordo com a geo location primeiro e depois a selecao do user toma precedencia
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2llbXBOTlVodlQxOWtWRGhuY0dWUGMwbHZlVGhMVXpWNVMycERkVlZ5ZG5scmIxZHNhSHBTY1hoUWR5SXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTWpZek16UTVMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVXlOakkzTkRrc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaVdtMUlRMmRKUVhnMVIyUTFUeTFJY25OS2VDMTBNa1ZWSWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1EZzBOUzEyTUMxd1pXNWthVzVuTFdSbFkybHphVzl1Y3lJc0luTjFZbXBsWTNRaU9pSTFaRGsxWXpSalpERmxNalF6TVRRMU1qVmtOMlprWWpObFlUZGlOMlUyTTJJd05HSXpZakUzT0dFeFpHVTRZMk01Tm1RME5HRXdOVE16WTJJME5HRmlJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJUUNZUWhkVVNkSzBidTN5MzBocmVHVkFpNVlqTHdSM2E0SUpPTlVsMGhxM3hRSWdQX1VKUllDY3pzOWFlcm9vVFZaUC11MjVJUzhNdmM2dm9DOFdHX3RPbUNVIn0=
+- folhas: D-03:50fe081b61df3bb1
+
 ## [2026-11-21 09:05] session — D-02 aplicada: a ordem é a do chat
 **Branch:** main
 O MJRP respondeu a D-02 pelo Control Center com «Respondido no chat». No chat ele aceitou a ordem React, idiomas junto com a migração e o CMS depois («Bora !») e priorizou F81 > F83 > F82. Os planos das três features seguem essa ordem; marcado no lote.

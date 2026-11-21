@@ -35,6 +35,9 @@ Base: forte — o estado do site está no código; o do MJRPpersonal é relato d
 - a) Inglês (padrão) e português do Brasil, com a primeira visita pelo idioma do navegador (Recomendado)
 - b) Português do Brasil (padrão) e inglês, como no MJRPpersonal
 - c) Só inglês e português por ora, e o padrão eu decido depois de ver os dois
+→ respondida em 2026-11-21 09:05
+  - (outra) De acordo com a geo location primeiro e depois a selecao do user toma precedencia
+→ aplicada em 2026-11-21 09:06: na spec da F81: primeira visita pelo país de acesso (Brasil → pt-BR, fora → inglês), a escolha da pessoa vale acima; sem saber o lugar, inglês (decidido pelo agente, revisável)
 
 ### D-04 · Os três P2 que ficaram na Home nova
 Pergunta: O que faço com as três diferenças pequenas entre a Home construída e o protótipo?
