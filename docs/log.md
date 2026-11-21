@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 16:24] step — F87: o servidor passa a aceitar os canais de prévia do próprio site (UAT-261)
+**Branch:** fix/f87-server-accepts-the-preview-address
+Medido hoje: o `Origin` da prévia (`...--staging-2nu8kutx.web.app`) dava 500 no servidor de produção. Função pura `isOriginAllowed` em `server/lib/corsOrigin.js` (lista de `ALLOWED_ORIGIN`, sem `Origin`, ou `https://<site>--<canal>-<hash>.web.app` ancorado nas duas pontas, site vindo da primeira origem da lista); testes em `test/server/corsOrigin.test.js`; arch, spec e tasks da F87 em dia; issue UAT-261. Servidor não publicado: vale só depois de `npm run deploy:server`.
+
+## [2026-11-21 16:14] step — F88: os requisitos 3 e 6 seguem a decisão «A)» do MJRP (código de hoje primeiro; produção junto com a home)
+**Branch:** main
+A spec da F88 ainda pedia React e «nada chega à produção antes do fim da migração»; o MJRP decidiu hoje o contrário («A)», entrada das 16h deste log). REQ-03 e REQ-06 reescritos; o resto da spec não muda.
+
 ## [2026-11-21 15:47] review — F83 onda 1: o juiz independente aprova a tela de playlists salvas em React (sem P0, sem P1, 1 P2)
 **Branch:** integrate/staging-2026-11-21
 Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-saved-playlists-visual-parity-recheck.md` e capturas em `reports/evidence/F83/wave-1/recheck/`, escritos pelo juiz (não por quem construiu) sobre o commit 4582756, guardados como vieram. 31 estados iguais ao pixel contra a tela antiga; os 19 pixels do construtor são ruído da própria produção. P2: a prova do construtor deve comparar a produção consigo mesma.
@@ -26,6 +34,10 @@ Correção ao registro das 15:37: as chaves do dicionário desta tela são 79 (s
 ## [2026-11-21 15:33] step — F83 TASK-11: o mapa da tela das playlists guardadas (onda 1)
 **Branch:** claude/f83-wave-1-saved-playlists
 O ramo da onda 1 parte de `integrate/staging-2026-11-21` (a base React da onda 0 está nessa linha, não na `main`; a migração só chega à produção completa, decisão do MJRP de hoje). O mapa fica em `docs/specs/features/F83-site-screens-in-react/map-wave-1-saved-playlists.md`: os pedaços da tela antiga e o que cada um vira, os estados a conferir a 1280 e a 393, a auditoria dos `set` da `SavedPlaylistsStore` (todos avisam; a entrada é trocada, nunca mudada; o aviso é em lote, sem foto: a forma «em lote» do `useStore`), o que o controlador faz (nada no DOM), e as peças partilhadas com telas de outras ondas. Achado, para o MJRP decidir (também no `plan.md`): a proposta (§ 4.4, caso 3) manda portar a peça partilhada uma vez e montá-la nas telas antigas por `mountReactPiece`; mas as telas antigas estão no script principal, e uma peça em React ali o faz importar o React, contra a decisão da onda 0 (a primeira carga não baixa React). Por isso, nesta onda, a barra de filtros e a linha de faixa ficam as antigas, alcançadas por invólucros em `react-bridge/legacy/` (cada uso na lista `BRIDGE_USES`), e só a cascata de capas, que a Blend escreve como texto, ganha um porte com duas escritas até a onda 7.
+
+## [2026-11-21 15:27] session — F88: rodada 1 de desenho do menu do topo do app (Elevar e Transformar)
+**Branch:** wip/f88-top-menu-design-round-1
+Pedido do MJRP (2026-11-21): «já fazer o redesign completo do top nave, aí a transicao fica mais suave». Dois níveis como moldura viva sobre as telas reais do app (capturas de 2026-11-21), a 393 e a 1280, PT e EN, com o menu de hoje como «Referência» e a prévia da passagem da home v4 para o app: `design/inception/f88-top-menu-{elevar,transformar}-v1.html`, comparador https://claude.ai/artifact/AtUiGYy1YAL9iLd58yJ3aF (cópia `design/proposals/f88-top-menu/comparator.html`, gerador em `build/`). Inventário do menu de hoje (MENU-01 a 11), estados e Content Map em `docs/specs/info-arch.md`; padrões novos pendentes no `design-system.md`; proposta, viabilidade em React (onda da moldura da F83) e três perguntas em `design/proposals/f88-top-menu/proposal.md`. Recomendação do agente: Transformar (a barra da home continua no app). Viabilidade escrita para construir primeiro no código de hoje (decisão do MJRP «A)»), React depois; o REQ-03 e o REQ-06 da spec da F88 ficam a reescrever pelo orquestrador. Crítica separada (`reports/audits/2026-11-21-f88-top-menu-round-1-ux-audit.md`): sem P0; os 7 P1 e 6 dos 8 P2 consertados antes de mostrar. Nenhum aprovado.
 
 ## [2026-11-21 15:11] session — F80: correções da reconferência do juiz na home (1 P1, 4 P2)
 **Branch:** wip/f80-home-bar-is-the-menu-build
