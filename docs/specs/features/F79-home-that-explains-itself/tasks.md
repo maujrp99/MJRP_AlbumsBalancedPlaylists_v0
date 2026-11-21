@@ -20,8 +20,8 @@
 - [x] TASK-09 o movimento: o equalizador e o esqueleto param com `prefers-reduced-motion` (nada se mexe) — `test/components/home/HomeMotion.test.js` verde · implements:: REQ-10 · model:: opus · rounds:: 1
 
 ## Verification
-- [ ] TASK-10 a suíte inteira, o lint e o build pela fila da máquina; a edição de série sem regressão · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10, REQ-11 · model:: opus
-- [ ] TASK-11 paridade visual com o protótipo aprovado: os estados construídos capturados a 1280 e a 393 ao lado dos do protótipo, num servidor local deste ramo, sem gravar no Firestore de produção; evidência em `reports/evidence/F79/` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: opus
+- [x] TASK-10 a suíte inteira, o lint e o build pela fila da máquina; a edição de série sem regressão · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10, REQ-11 · model:: opus · rounds:: 2
+- [x] TASK-11 paridade visual com o protótipo aprovado: os estados construídos capturados a 1280 e a 393 ao lado dos do protótipo, num servidor local deste ramo, sem gravar no Firestore de produção; evidência em `reports/evidence/F79/` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08, REQ-09, REQ-10 · model:: opus · rounds:: 2
 
 ## Documentation
-- [ ] `docs/specs/behavior.md` (a Home nova; `^home-album-added-to-stack` vira «clicar de novo tira, com Undo»), o manual da Home, `info-arch.md` (e a página gerada), `design-system.md`, uma entrada do `docs/log.md` por commit
+- [x] `docs/specs/behavior.md` (a Home nova; `^home-album-added-to-stack` vira «clicar de novo tira, com Undo»), o manual da Home, `info-arch.md` (e a página gerada), `design-system.md`, uma entrada do `docs/log.md` por commit

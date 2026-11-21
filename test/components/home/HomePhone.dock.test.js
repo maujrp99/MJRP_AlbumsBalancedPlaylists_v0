@@ -18,6 +18,7 @@ vi.mock('../../../public/js/components/Toast.js', () => ({
 
 import { HomeView } from '../../../public/js/views/HomeView.js'
 import { userStore } from '../../../public/js/stores/UserStore.js'
+import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
 
 const album = (title, year) => ({ id: `id-${title}`, title, artist: 'Pavement', type: 'Album', year, releaseDate: `${year}-01-01`, coverUrl: 'https://img/{w}x{h}.jpg' })
 const ALBUMS = [album('Wowee Zowee', '1995'), album('Crooked Rain', '1994'), album('Slanted', '1992')]
@@ -133,6 +134,20 @@ describe('the Home on the phone (F79 over F76)', () => {
         expect(document.querySelectorAll('#homeSeriesSheet')).toHaveLength(1)
         expect($('#homeChosenNameError').textContent).toContain('Give the series a name first.')
         expect(document.activeElement).toBe($('#homeChosenName'))
+    })
+
+    it('not saved: the bar says so in short, the albums stay, and the button becomes «Try again» (^home-create-failed)', async () => {
+        await open(true)
+        card('Slanted').click()
+        vi.spyOn(albumSeriesStore, 'getDb').mockReturnValue({})
+        series.createSeries.mockRejectedValueOnce(Object.assign(new Error('Failed to fetch'), { code: 'unavailable' }))
+
+        $('#btnCreateSeriesPhone').click()
+        await flush()
+
+        expect(bar().textContent).toContain('Not saved: the connection dropped')
+        expect($('#btnCreateSeriesPhone').textContent).toBe('Try again')
+        expect(chosen()).toEqual(['Slanted'])
     })
 
     it('the visitor reads where the series is kept under the field, not in the bar', async () => {

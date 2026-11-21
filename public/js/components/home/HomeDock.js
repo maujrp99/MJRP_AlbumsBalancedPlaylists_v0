@@ -299,7 +299,8 @@ export class HomeDock {
             return SafeDOM.div({ className: 'home-dock__meta' }, [SafeDOM.strong({}, empty.title), SafeDOM.span({}, empty.note)])
         }
         const n = m.albums.length
-        const status = m.create === 'failed' ? SafeDOM.span({ className: 'home-fail' }, 'Not saved: try again') : this.status(m)
+        const short = m.failure.includes('connection dropped') ? 'Not saved: the connection dropped' : 'Not saved'
+        const status = m.create === 'failed' ? SafeDOM.span({ className: 'home-fail', role: 'alert' }, short) : this.status(m)
         const open = SafeDOM.button({
             className: 'home-dock__open',
             dataset: { dock: 'open' },

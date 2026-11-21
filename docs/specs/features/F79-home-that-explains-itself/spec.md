@@ -1,5 +1,5 @@
 ---
-status: In progress
+status: Done
 lane: standard
 solution_type: feature
 imports: ["[[S-61-build-a-series-on-a-home-that-explains-itself]]"]
