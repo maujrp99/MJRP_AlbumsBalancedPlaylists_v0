@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:55] session — F81: a página «Revisão de texto do Album Blender», onde o MJRP decide os textos, publicada como Artifact privado
+Branch: claude/f81-site-in-more-than-one-language
+Pedido do orquestrador (o MJRP disse sim). Gerada por `design/proposals/copy-review/build_copy_review.py` a partir de `design/copy/album-blender-copy.md` (o molde `copy-review.template.html` é o único arquivo escrito à mão); Artifact: https://claude.ai/artifact/DDE57759QtWJkM4qKVHzBF. Abre numa tela do site por vez (a página de entrada primeiro, depois Start); cada linha mostra onde aparece em palavras comuns, o inglês de hoje, o português proposto e o tamanho; código, arquivo, tipo e nota ficam em «detalhes». Filtros «Só o que precisa de mim» e «Mais longos primeiro». Ele edita os dois textos e marca «Final» por conta própria; nenhuma marca vem do agente. Guarda em três camadas: navegador, conta (db) e arquivo `.md` no formato do documento (baixar e abrir de volta). Palavras visíveis na primeira tela sem rolar: 238 a 1280×800 (cerca de 150 são os próprios textos do site nas caixas) e 92 a 390 px. Testado no navegador do app: editar, marcar final, filtros, exportar e reabrir o arquivo; a gravação na conta e o download só funcionam com o Artifact aberto no claude.ai e não foram exercitados por mim.
+
 ## [2026-11-21 10:17] session — F81: fechamento depois do acerto com o deck do MJRPpersonal
 Branch: claude/f81-site-in-more-than-one-language
 Session: claude-code:claude/f81-site-in-more-than-one-language (sessão da F81 aberta pelo orquestrador do V0 em 2026-11-21)
