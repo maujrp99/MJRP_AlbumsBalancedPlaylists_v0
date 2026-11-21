@@ -23,6 +23,8 @@ Dito pelo MJRP em 2026-11-21: «As próximas features agora serao de internacion
 
 - [REQ-02] O CMS traz uma chave para ligar e desligar a medição de uso do site (F77, PostHog), que nasce desligada. Palavras do MJRP (Control Center, D-05, 2026-11-21 09:08): «Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS». Como foi lido: a medição continua desligada agora; a chave entra no CMS, e ele liga depois da migração para o React e de o CMS estar construído. A regra dele para o kit vale: recurso de CMS nasce no kit e serve a todos os CMS, então a peça «chave de liga e desliga» é assunto da F332 do harness · fixes S-64
 
+- [REQ-03] No CMS o dono escolhe quais álbuns aparecem na página de entrada (a «nova home», o caixote da F80), e em que lado e ordem. Palavras do MJRP (2026-11-21): «ah e gostaria que no CMS fosse configurável os albuns que aparece na nova home». Hoje os álbuns são um arquivo de dados fixo (`public/splash/covers.js`, 14 álbuns, lados A e B). A resolver na proposta: a página de entrada é estática e lida sem script, então como a escolha feita no CMS chega a ela (leitura em tempo de execução com o conjunto fixo como reserva, ou publicação que refaz a página) · fixes S-64
+
 ## Observable States
 A escrever.
 

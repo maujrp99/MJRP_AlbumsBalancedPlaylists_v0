@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 09:28] decision — F82: os álbuns da página de entrada passam a ser escolhidos no CMS
+**Branch:** main
+Palavras do MJRP (2026-11-21): «ah e gostaria que no CMS fosse configurável os albuns que aparece na nova home». Virou o REQ-03 da F82, com a tarefa. Na mesma mensagem ele abriu uma discussão, ainda sem decisão: o item «Home» do menu virar «Initiate» ou «Start», e o logotipo levar à página de entrada, que passaria a ser a home. As sessões por feature não subiram: ele pediu para discutir isso antes da migração.
+
 ## [2026-11-21 09:26] decision — o app (F78) fica em pausa; o foco é React com os idiomas, e o CMS
 **Branch:** main
 Palavras do MJRP (2026-11-21, de volta ao Mac): «agora voltei para o mac, pause a continuacao da app por enqto, vamos nos concentrar na migracao pra react + internacionalizacao e no CMS». A F78 para onde está (o esqueleto no simulador; a rodada de desenho das telas do app, escolhida na D-06, não começa). As sessões por feature sobem agora para a F83 (a proposta de arquitetura do React) e a F81 (o levantamento dos textos), mais a atualização da cópia do kernel. O CMS (F82) depende da F332 do harness, que espera a prioridade dele no board de lá.
