@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:26] step — F83 onda 2: o ponto de partida do Tab volta ao começo da tela depois de uma ação (conferido no navegador contra a tela antiga)
+**Branch:** claude/f83-wave-2-playlists-edit
+No navegador (1280 e 393, a tela antiga em 5011 e a nova em 5012): migalhas com Cancelar, 1 pergunta e 1 navegação nas duas; depois de remover pelo X com Enter e de desfazer com Enter, o foco é a página e o próximo Tab vai ao «Start» das migalhas nas duas; no celular, depois de mover e de remover pela folha, o foco é a página nas duas. Para o X, o `blur` sozinho deixava o Tab recomeçar no controle; `useFocusLikeAfterAnewDraw` agora põe o foco na tela e solta, que é de onde o Tab recomeça. Servidores parados.
+
 ## [2026-11-21 17:21] step — F83 onda 2: as migalhas navegam uma vez só; o foco depois de cada desenho volta à página num lugar só (achados do juiz: 1 P1, 2 P2)
 **Branch:** claude/f83-wave-2-playlists-edit
 P1: `ui/Breadcrumb.tsx` para a propagação do clique, então só `navigate` do ponte move (antes o ouvinte de links do roteador movia de novo e o guarda de sair perguntava duas vezes ao cancelar); a única tela que usa a migalha é a das playlists (a dos salvos não usa). P2 (celular e computador): `useFocusLikeAfterAnewDraw` em `Playlists.tsx` solta o foco de um controle (não de campo, folha ou janela) depois de cada desenho e põe o ponto de partida do Tab no começo da tela, como a tela antiga que se desenhava de novo; o `blur` só da remoção em `PlaylistCards.tsx` saiu. Testes vermelhos sem as correções (3 falhas) em `test/ui/Breadcrumb.test.tsx` e `Playlists.sameAsBefore.test.tsx`.

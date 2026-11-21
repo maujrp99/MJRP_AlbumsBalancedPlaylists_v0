@@ -367,7 +367,11 @@ function useFocusLikeAfterAnewDraw(): void {
         const app = document.getElementById('app')
         if (!(held instanceof HTMLElement) || !app || held === app || !app.contains(held)) return
         if (held.closest('input, textarea, select, [contenteditable], dialog, .sheet, .modal-overlay, .app-modal')) return
-        held.blur()
+        // the screen takes the focus for a moment and lets it go: that is where the next Tab starts (a plain blur leaves it at the control)
+        app.setAttribute('tabindex', '-1')
+        app.focus({ preventScroll: true })
+        app.blur()
+        app.removeAttribute('tabindex')
         document.getSelection()?.collapse(app, 0)
     })
 }
