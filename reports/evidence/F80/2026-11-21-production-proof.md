@@ -24,3 +24,17 @@ Visto em `https://mjrp-playlist-generator.web.app/?entry`, a 393 px, com a conta
 - UAT-231: a página mede 393 px de largura (sem rolagem lateral); o crédito mais longo («In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music») termina em 377 px.
 
 Não visto: a captura da tela rolada (a ferramenta recusou a rolagem depois da troca de largura), o computador com o 3D, iPhone de verdade, Safari.
+
+## «Start» no menu, a caixa em diagonal e a capa da banana em produção (2026-11-21 12:17)
+
+Publicado da `main` em `6909689` (script principal `/assets/main-CXGMhC4B.js`; 3748 testes passaram no script de publicação), pela fila própria do Album Blender, com a palavra do MJRP («publica»; «já podemos publicar pra prod com o achado?»).
+
+Visto em https://mjrp-playlist-generator.web.app:
+- a raiz, `/start`, `/home`, `/home?signin`, `/albums`, `/inventory` e `/app.html` respondem 200; a raiz serve a página de entrada, com 15 capas reais e «The Velvet Underground & Nico»; os botões dela apontam para `/start` e `/start?signin`;
+- com a conta dele aberta, a 1002 px: `/` leva a `/start`, a Home; o menu e o rodapé dizem «Start»; o logotipo aponta para `/?entry`;
+- `/?entry`: a página de entrada com o 3D ligado, a capa da banana na frente, sem rolagem lateral e sem erro no console;
+- o conserto do contorno laranja da lista colada (UAT-232) está no CSS servido.
+
+Não visto: o computador em tela larga (o painel do navegador tem 1002 px), cada posição da rolagem em produção, iPhone de verdade, Safari, criar uma série.
+
+A publicação falhou quatro vezes antes desta, sem publicar nada: uma hora na fila sem rodar; o limite de trabalhadores da fila quebrando o executor de testes; dois erros de lint num script do levantamento de textos; e um teste de tempo do inventário que estoura em baixa prioridade (passou em prioridade normal).
