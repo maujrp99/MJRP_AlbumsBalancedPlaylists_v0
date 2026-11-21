@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 13:41] session — F55: a reconferência visual do lote fecha a linha que faltava; Done
+**Branch:** wip/closing-pass-2026-11-21
+F55 (F55-the-album-asked-for-or-a-notice): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-albums-series-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
+
 ## [2026-11-21 13:40] session — F54: a reconferência visual do lote fecha a linha que faltava; Done
 **Branch:** wip/closing-pass-2026-11-21
 F54 (F54-close-v4-inventory-delete-and-polish): o código está na `main`. A trava do passo retroativo (`retro_step_check.py . --staged`, feature em `Done`) passa sem nenhuma falta; a única linha que faltava, a reconferência visual, está coberta pelo relatório do lote de 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-visual-parity-recheck.md`, `reports/audits/2026-11-21-mjrpalbumblender-v0-shell-start-visual-parity-recheck.md`). Tarefa de reconferência marcada feita, spec em `Done`. Nenhum carimbo de aceite: o aceite no UAT é do MJRP.
