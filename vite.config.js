@@ -27,6 +27,14 @@ export default defineConfig({
             input: {
                 main: path.resolve(__dirname, 'public/index.html'),
                 splash: path.resolve(__dirname, 'public/splash.html')
+            },
+            output: {
+                // React and its renderer in a file of their own (F83, REQ-07): the main script does not grow with them, they are
+                // downloaded once, when the first screen in React opens, and the browser keeps them between publications while
+                // the version stays. scripts/bundle-budget.mjs checks that there is exactly one such file and its weight.
+                manualChunks(id) {
+                    if (/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) return 'react-vendor'
+                }
             }
         }
     },

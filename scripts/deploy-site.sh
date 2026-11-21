@@ -129,6 +129,14 @@ verify_build() {
   [ "$maps" = "0" ] || die "$maps source map file(s) in dist/: the site must not hand out its source"
   ok "no .map files"
 
+  # The weight the browser downloads (F83, REQ-07): the main script, React in one file of its own, the screens. The ceilings are
+  # in scripts/bundle-budget.json; a build over them is not published.
+  step "Checking the weight budget (scripts/bundle-budget.mjs)"
+  ( cd "$SRC_DIR" && node scripts/bundle-budget.mjs "$dist" ) >"$WORK_DIR/bundle-budget.log" 2>&1 \
+    || { cat "$WORK_DIR/bundle-budget.log" >&2; die "the build is over the weight budget (scripts/bundle-budget.json): nothing was deployed"; }
+  grep -E 'main script|react-vendor' "$WORK_DIR/bundle-budget.log" | sed 's/^ */    /' || true
+  ok "inside the weight budget"
+
   # Every local file the two pages point to must be in dist. Firebase answers a
   # missing path with app.html (status 200), so a missing file is silent in production.
   # An address of the app (no extension: /start, /start?signin) is not a file.
