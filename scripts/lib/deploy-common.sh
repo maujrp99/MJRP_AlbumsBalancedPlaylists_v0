@@ -54,7 +54,7 @@ locate_repo() {
   REPO_ROOT="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null)" \
     || die "this script must live inside the git repository"
   MAIN_SHA="$(git -C "$REPO_ROOT" rev-parse --verify --quiet "refs/heads/$DEPLOY_BRANCH")" \
-    || die "there is no local branch '$DEPLOY_BRANCH' in this repository"
+    || die "there is no local branch named '$DEPLOY_BRANCH' in this repository. Only local branches can be published (check: git branch --list)."
   # The folder where `main` is checked out, if any (worktrees included).
   MAIN_CHECKOUT="$(git -C "$REPO_ROOT" worktree list --porcelain | awk -v want="refs/heads/$DEPLOY_BRANCH" '
     /^worktree / { path = substr($0, 10) }
