@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 08:53] decision — o site vai para React; F83 em esboço, com a S-65
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Ok transforme a opiniao em fato checado e sim vamos com react, qual a vantagem de fazer a migracao e internacionalizacao juntas? O cms nao deveria surgir depois?» Como foi lido: a adoção do React no site está decidida; falta transformar em fato o que a análise deu como opinião, e responder sobre a ordem. Conferido lendo o kit do CMS: é React puro (só `react`, `clsx` e `@dnd-kit`), sem o Next. A F83 «As telas do site em React, tela a tela» nasce na `main` em esboço (S-65, EP-10, v6.0 — épico e versão escolhidos pelo agente). O esforço e o peso estão sendo medidos numa tela real, num ramo de experimento que não entra na `main`. A adoção pede uma ADR, que só ele aceita. Sobre a ordem, o agente reviu a própria recomendação: migração e idiomas juntos, tela a tela; o CMS depois.
+
 ## [2026-11-21 08:47] session — análise: adotar um framework no site (React, Vue ou Next)
 **Branch:** main
 A pedido do MJRP («acha que está na hora de usar um framework mais moderno? React, vue ou o next?»). `reports/audits/2026-11-21-mjrpalbumblender-v0-frontend-framework-analysis.md`: o site medido (105 arquivos e 19.461 linhas de tela feita à mão; 141 arquivos de regras, serviços e núcleo que não dependem de tela), as quatro opções com ganhos e perdas, e a recomendação do agente, que é opinião: React com o Vite atual, em TypeScript, tela a tela, começando pela página do CMS (F82); o Next fica como porta aberta. Nenhum código mudou; adotar pede uma ADR aceita por ele.

@@ -85,3 +85,13 @@ Leitura: pouco mais da metade do código da tela é trabalho que um framework fa
 - O peso do React (≈ 45 KB comprimidos) é o número público da biblioteca, não medido neste build.
 - Não avaliei Svelte, Solid nem outros: você perguntou por React, Vue e Next, e nenhum dos outros tem a ponte com o kit e com o app.
 - A constituição v2 e a ADR-0022 tratam do app; adotar React no site pede uma ADR própria, com a sua aceitação.
+
+## Conferido depois (2026-11-21 08:53)
+
+**O kit do CMS é React puro, sem o Next — conferido lendo a pasta** `/Users/maujrp/mjrp/projects/MJRPpersonal/src/admin-kit/` (32 arquivos TypeScript, 4.946 linhas, 526 de CSS):
+- os únicos pacotes importados são `react` (16 arquivos), `clsx`, `@dnd-kit/core`, `@dnd-kit/sortable` e `@dnd-kit/utilities`; nenhum `next/…`, nenhum `process.env`, nenhum `server-only`;
+- nenhum import com `@/` para fora da pasta; a lista permitida é guardada pelo sensor `KIT_ALLOWED` em `scripts/merge_gate.mjs`;
+- as cinco menções a «next» são comentários do lint dizendo que o kit não importa o Next (ADR-0011); 18 arquivos trazem a diretiva `use client`, que fora do Next é só um texto sem efeito;
+- o MJRPpersonal roda `react` 19.2.3 e `next` 16.1.6; o app do V0 usa `react` 19.3.0.
+
+**Decisão do MJRP (2026-11-21): «sim vamos com react».** Registrada como a feature F83, em esboço. O esforço, o peso baixado e a convivência com o roteador estão sendo medidos numa tela real, num ramo de experimento; os números entram aqui quando a medição terminar.

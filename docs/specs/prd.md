@@ -219,6 +219,8 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-10
 
 ![[S-64-edit-the-site-content-from-an-admin]]
 
+![[S-65-keep-the-site-screens-on-one-framework]]
+
 ### Transversais
 
 Os requisitos não funcionais valem para todas as features e não são importados por nenhuma: cada um é um arquivo `docs/specs/requirements/nfr/NFR-xx-<slug>.md`.
