@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:03] decision — a caixa de discos da página de entrada em diagonal, com o palco largo (UAT-235)
+**Branch:** fix/f80-uat-entry-page
+Palavras do MJRP: «escolha: 2- palco largo». Feito: a câmera do 3D vê a caixa a 30° do lado e se ajusta ao quadro, de modo que a caixa fica inteira em todas as poses (antes passava da borda na virada); no computador o palco vai até a borda direita da janela; a caixa em CSS (sem WebGL ou com menos movimento) gira para o mesmo lado, pela metade do ângulo, porque sem laterais os discos inclinados saíam da frente; no celular nada muda. Teste da regra escrito antes (vermelho na câmera de hoje). Prova: `reports/evidence/F80/uat/2026-11-21-uat-235-crate-diagonal-proof.md`.
+
 ## [2026-11-21 10:48] session — o comparador da página de entrada sem siglas
 **Branch:** fix/f80-uat-entry-page
 O MJRP: «e a questao de sigla, nao me ajuda Uat-235???». Tirei os códigos dos títulos e botões do comparador: a primeira tela não tem nenhum; o aviso das rodadas anteriores diz «A caixa de discos em diagonal, sem corte» e o botão «Ver as prévias da caixa em diagonal»; a página das prévias se chama «A caixa em diagonal».

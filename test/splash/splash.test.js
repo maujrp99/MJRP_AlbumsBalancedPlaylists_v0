@@ -171,6 +171,15 @@ describe('the page wired', () => {
         expect(document.getElementById('hero-ctas').contains(document.getElementById('motion'))).toBe(true)
     })
 
+    it('on a computer the CSS crate turns to the same diagonal as the 3D one; on the phone it does not (UAT-235)', () => {
+        startSplash(fakeWindow())
+        expect(document.getElementById('crate-css').style.getPropertyValue('--yaw')).toBe('-15deg')
+        loadPage()
+        startSplash(fakeWindow({ phone: true }))
+        expect(document.getElementById('crate-css').style.getPropertyValue('--yaw')).toBe('')
+        expect(document.getElementById('scene').style.marginRight).toBe('')
+    })
+
     it('fictional records on the phone carry their tag and no link', () => {
         startSplash(fakeWindow({ phone: true }))
         const credit = document.querySelector('#a2 .slot .slot-am')

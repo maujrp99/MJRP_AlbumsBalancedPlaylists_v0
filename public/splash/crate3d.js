@@ -8,6 +8,8 @@
  * three.js comes from the jsDelivr CDN at the version the proposal measured (0.185.0, ~155 KB
  * compressed); a full URL, so Vite leaves it out of the build. If it does not arrive, the CSS crate stays.
  */
+import { VIEWS, cameraFor, sleevePlace, sleeveTargets, turnOf, GEOM } from './framing.js'
+
 export const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.min.js'
 
 /**
@@ -32,12 +34,21 @@ export async function startCrate3d(win, page) {
     renderer.setPixelRatio(Math.min(win.devicePixelRatio || 1, 2))
     renderer.outputColorSpace = THREE.SRGBColorSpace
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 60)
-    camera.position.set(0, 4.9, 10.6); camera.lookAt(0, 1.75, 0)
+    const view = page.view || VIEWS.today
+    const camera = new THREE.PerspectiveCamera(view.fov, 1, 0.1, 80)
+    // the lights walk around with the camera, so the fire still lights the crate from below, in front
+    const az = (view.azimuth * Math.PI) / 180
+    const around = (l, x, y, z) => l.position.set(x * Math.cos(az) + z * Math.sin(az), y, -x * Math.sin(az) + z * Math.cos(az))
     scene.add(new THREE.AmbientLight(0x3a2414, 1.1))
-    const key = new THREE.DirectionalLight(0xfff4e8, 0.85); key.position.set(-2, 6, 5); scene.add(key)
-    const fireA = new THREE.PointLight(0xf97316, 10, 0, 1.1); fireA.position.set(-1.4, 0.15, 3.6); scene.add(fireA)
-    const fireB = new THREE.PointLight(0xdc2626, 8, 0, 1.1); fireB.position.set(1.6, 0, 3.3); scene.add(fireB)
+    const key = new THREE.DirectionalLight(0xfff4e8, 0.85); around(key, -2, 6, 5); scene.add(key)
+    const fireA = new THREE.PointLight(0xf97316, 10, 0, 1.1); around(fireA, -1.4, 0.15, 3.6); scene.add(fireA)
+    const fireB = new THREE.PointLight(0xdc2626, 8, 0, 1.1); around(fireB, 1.6, 0, 3.3); scene.add(fireB)
+    let aspect = 1, camRot = NaN
+    const aim = (rot) => {
+        const c = cameraFor(view, rot, aspect, page.TRACKS)
+        camera.position.set(...c.position); camera.lookAt(...c.target); camera.updateProjectionMatrix()
+        camRot = rot
+    }
     const crate = new THREE.Group(); scene.add(crate)
 
     // the crate: an open box of dark planks
@@ -50,12 +61,12 @@ export async function startCrate3d(win, page) {
     }
     const wt = new THREE.CanvasTexture(pc); wt.colorSpace = THREE.SRGBColorSpace
     const wood = new THREE.MeshStandardMaterial({ map: wt, roughness: 0.85 })
-    const W = 2.62, DEP = 4.3, HT = 1.05, T = 0.08
+    const { W, DEP, HT, T } = GEOM
     const plank = (w, h, d, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wood); m.position.set(x, y, z); crate.add(m) }
     plank(W, T, DEP, 0, 0, 0); plank(W, HT, T, 0, HT / 2, DEP / 2); plank(W, HT, T, 0, HT / 2, -DEP / 2); plank(T, HT, DEP, W / 2, HT / 2, 0); plank(T, HT, DEP, -W / 2, HT / 2, 0)
 
     // the sleeves: the page's covers on both faces, standing on the crate floor, pivoting from their bottom edge
-    const SZ = 2.3
+    const SZ = GEOM.SZ
     const edge = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.8 })
     const geo = new THREE.BoxGeometry(SZ, SZ, 0.035); geo.translate(0, SZ / 2, 0)
     const imgs = [...D.querySelectorAll('#box .sl')]
@@ -65,8 +76,9 @@ export async function startCrate3d(win, page) {
         const tex = new THREE.Texture(im); tex.needsUpdate = true; tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = maxAniso
         const face = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.55 })
         const m = new THREE.Mesh(geo, [edge, edge, edge, edge, face, face])
-        m.userData = { z: 1.82 - i * 0.28, lift: 0, tilt: -0.16 }
-        m.position.set(0, T / 2, m.userData.z); crate.add(m)
+        m.userData = { lift: 0, tilt: -0.16 }
+        m.rotation.order = 'YXZ'
+        m.position.set(0, T / 2, GEOM.Z0 - i * GEOM.STEP); crate.add(m)
         return m
     })
 
@@ -74,22 +86,12 @@ export async function startCrate3d(win, page) {
     const resize = () => {
         const r = canvas.getBoundingClientRect()
         if (!r.width) return
-        renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix(); dirty = true
+        renderer.setSize(r.width, r.height, false); aspect = camera.aspect = r.width / r.height; camRot = NaN; dirty = true
     }
     new win.ResizeObserver(resize).observe(canvas)
 
     // where each sleeve should be, from the scroll state
-    const targets = () => {
-        const st = page.state, tr = page.TRACKS[st.track], f = st.flip, s = f < 0.5 ? 1 : -1
-        const lean = -0.16 * s
-        return sleeves.map((m, i) => {
-            let lift = 0, tilt = lean
-            if (tr.pull >= 0 && f % 1 === 0) {
-                if (i === tr.pull) { lift = 1; tilt = 0.04 * s } else if ((s > 0 && i < tr.pull) || (s < 0 && i > tr.pull)) tilt = 0.62 * s
-            }
-            return { lift, tilt }
-        })
-    }
+    const targets = () => sleeveTargets(page.state.track, page.state.flip, page.TRACKS, sleeves.length)
     const fireOf = () => Number(win.getComputedStyle(scene3).getPropertyValue('--fire')) || 1
     let rot = 0, fireLv = fireOf(), tt = 0, raf = 0, visible = true, last = 0
     const step = (dt) => {
@@ -97,19 +99,20 @@ export async function startCrate3d(win, page) {
         let moving = dirty
         dirty = false
         const k = Math.min(1, dt * 4.2)
-        const rT = Math.PI * (st.flip < 0.5 ? 2 * st.flip * st.flip : 1 - 2 * (1 - st.flip) * (1 - st.flip))
+        const rT = turnOf(st.flip)
         const dr = rT - rot
         rot += Math.abs(dr) > 0.0005 ? dr * Math.min(1, dt * 6) : dr
         if (Math.abs(dr) > 0.0005) moving = true
         crate.rotation.y = rot
+        if (!(Math.abs(rot - camRot) < 0.0005)) aim(rot)
         sleeves.forEach((m, i) => {
             const u = m.userData, t = tg[i]
             const dl = t.lift - u.lift, dti = t.tilt - u.tilt
             if (Math.abs(dl) > 0.001 || Math.abs(dti) > 0.001) moving = true
             u.lift += dl * k; u.tilt += dti * k
-            m.position.y = T / 2 + u.lift * 1.55
-            m.position.z = u.z + u.lift * 0.55 * (rot < Math.PI / 2 ? 1 : -1)
-            m.rotation.x = u.tilt
+            const pl = sleevePlace(i, u.lift, u.tilt, rot, view)
+            m.position.set(pl.x, pl.y, pl.z)
+            m.rotation.set(pl.tilt, pl.turn, 0, 'YXZ')
         })
         const fT = fireOf()
         fireLv += (fT - fireLv) * Math.min(1, dt * 3)

@@ -12,6 +12,8 @@
  * Pure parts are exported for the tests; `startSplash(window)` wires them to the page.
  */
 
+import { VIEWS, PAGE_VIEW } from './framing.js'
+
 /** The soft fire, the owner's choice (2026-11-20 «fogo brando na verdade»): peak on A1 and B2, low in between. */
 export const FIRE = Object.freeze({ peak: 0.72, low: 0.28 })
 
@@ -186,6 +188,21 @@ export function startSplash(win) {
         moving: () => H.classList.contains('moving') && !H.classList.contains('paused')
     }
     win.__splash = page
+
+    // the crate on a diagonal (UAT-235): the camera's view, and the CSS crate turned the same way, half as far
+    // (it has no side walls: at the full turn the leaning records stick out past its front);
+    // on a computer the stage reaches the window's right edge, past its column («Palco largo»)
+    page.view = VIEWS[PAGE_VIEW]
+    const crateCss = D.getElementById('crate-css')
+    if (crateCss && page.view.azimuth && !phone) crateCss.style.setProperty('--yaw', `${-page.view.azimuth / 2}deg`)
+    if (page.view.bleed && !phone) {
+        const bleed = () => {
+            scene.style.marginRight = '0px'
+            const st = D.getElementById('stage').getBoundingClientRect()
+            scene.style.marginRight = `${-Math.max(0, H.clientWidth - st.right)}px`
+        }
+        bleed(); win.addEventListener('resize', bleed)
+    }
 
     // the motion window: the automatic motion runs 10 s after load or after the last scroll, then rests
     let restTimer = 0
