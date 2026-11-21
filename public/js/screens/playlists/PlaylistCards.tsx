@@ -119,11 +119,7 @@ function PlaylistCard({ playlist, index, batchName, actions }: { playlist: Playl
             <style>{scrollbarRules(index)}</style>
             <div className={`playlist-tracks custom-scrollbar-${index} p-3 space-y-2 max-h-[260px] overflow-y-auto md:max-h-none md:overflow-visible`} data-playlist-index={index}>
                 {tracks.length === 0 ? <div className="text-center text-muted py-8">{t('playlists.card.noTracks')}</div> : tracks.map((track, trackIndex) => {
-                    const remove: RowAction = { icon: 'X', label: t('playlists.card.removeTrack'), action: 'remove-track', class: 'text-muted hover:text-red-400 p-1', onSelect: () => {
-            // the hand-made screen drew the list anew, so the pressed button was gone and the focus went back to the page; the row stays here (keyed by place) and would keep the focus on the next track
-            if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
-            actions.removeTrack(index, trackIndex)
-        } }
+                    const remove: RowAction = { icon: 'X', label: t('playlists.card.removeTrack'), action: 'remove-track', class: 'text-muted hover:text-red-400 p-1', onSelect: () => actions.removeTrack(index, trackIndex) }
                     return <TrackRow key={trackIndex} track={track} index={trackIndex + 1} playlistIndex={index} trackIndex={trackIndex} primaryRanking={primaryRanking} draggable variant="compact" actions={[remove]} />
                 })}
             </div>

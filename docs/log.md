@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 17:21] step — F83 onda 2: as migalhas navegam uma vez só; o foco depois de cada desenho volta à página num lugar só (achados do juiz: 1 P1, 2 P2)
+**Branch:** claude/f83-wave-2-playlists-edit
+P1: `ui/Breadcrumb.tsx` para a propagação do clique, então só `navigate` do ponte move (antes o ouvinte de links do roteador movia de novo e o guarda de sair perguntava duas vezes ao cancelar); a única tela que usa a migalha é a das playlists (a dos salvos não usa). P2 (celular e computador): `useFocusLikeAfterAnewDraw` em `Playlists.tsx` solta o foco de um controle (não de campo, folha ou janela) depois de cada desenho e põe o ponto de partida do Tab no começo da tela, como a tela antiga que se desenhava de novo; o `blur` só da remoção em `PlaylistCards.tsx` saiu. Testes vermelhos sem as correções (3 falhas) em `test/ui/Breadcrumb.test.tsx` e `Playlists.sameAsBefore.test.tsx`.
+
 ## [2026-11-21 17:16] review — F83 onda 2: a reconferência visual independente da tela das playlists em React (relatório do juiz, copiado sem mudança)
 **Branch:** claude/f83-wave-2-playlists-edit
 O juiz escreveu o relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-playlists-visual-parity-recheck.md` e as capturas em `reports/evidence/F83/wave-2/recheck/`; copiados aqui sem mudança. Veredito dele: não passa, 0 P0, 1 P1 (as migalhas perguntam duas vezes ao cancelar), 2 P2 (o foco depois de uma ação, no celular e no computador); o resto igual à antiga e o ruído de pixels se sustenta.

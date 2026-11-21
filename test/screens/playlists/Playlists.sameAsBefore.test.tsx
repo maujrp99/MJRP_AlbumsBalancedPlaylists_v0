@@ -136,3 +136,40 @@ describe('what a redraw took away from the page: the focus', () => {
         expect(seen).toEqual(['remove-track', 'body'])
     })
 })
+
+describe('the focus after a draw: the page, as when the hand-made screen drew anew (judge\'s recheck, P2)', () => {
+    afterEach(() => { document.body.innerHTML = '' })
+
+    const focusAfter = async (scenario: { phone?: boolean; run: (h: any) => Promise<void> }) => {
+        const seen: string[] = []
+        await play({ name: 'focus', url: '/playlists', playlists: generated(), ...scenario, run: async (h: any) => { await scenario.run({ ...h, seen }) } } as unknown as (typeof SCENARIOS)[number])
+        return seen
+    }
+    const now = () => (document.activeElement === document.body ? 'body' : document.activeElement?.getAttribute('data-action') || document.activeElement?.getAttribute('data-phone-action') || document.activeElement?.tagName)
+    const startsAtTop = () => document.getSelection()?.anchorNode === document.getElementById('app')
+
+    it('on the computer, undo by the keyboard (focus on the button) leaves the focus on the page and the next Tab at the top', async () => {
+        const seen = await focusAfter({ run: async (h) => {
+            await h.publish(() => fakeService.moveTrack(0, 1, 0, 2))
+            await h.publish(() => fakeService.moveTrack(0, 0, 0, 1)) // two steps back: undo stays on after the click
+            const undo = document.querySelector<HTMLElement>('[data-action="undo-edit"]')!
+            undo.focus()
+            await h.click('[data-action="undo-edit"]')
+            h.seen.push(now() as string, String(startsAtTop()))
+        } })
+        expect(seen).toEqual(['body', 'true'])
+    })
+
+    it('on the phone, a move and a remove from the sheet of a track leave the focus on the page, not on another track\'s ⋯', async () => {
+        const seen = await focusAfter({ phone: true, run: async (h) => {
+            for (const text of ['Move down', 'Remove from this playlist']) {
+                const opener = document.querySelector<HTMLElement>('[data-phone-action="track-options"][data-track-index="1"]')!
+                opener.focus()
+                await h.click('[data-phone-action="track-options"][data-track-index="1"]')
+                await h.clickWhere('.phone-sheet-action', text)
+                h.seen.push(now() as string)
+            }
+        } })
+        expect(seen).toEqual(['body', 'body'])
+    })
+})

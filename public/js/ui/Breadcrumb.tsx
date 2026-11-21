@@ -33,7 +33,8 @@ export function Breadcrumb({ crumbs, onNavigate }: { crumbs: Crumb[]; onNavigate
                                 href={crumb.path}
                                 className="breadcrumb-link"
                                 data-path={crumb.path}
-                                onClick={(event) => { event.preventDefault(); onNavigate(crumb.path) }}
+                                // the router listens to every link of the page too: the click stops here, so the move (and the question before leaving) happens once
+                                onClick={(event) => { event.preventDefault(); event.stopPropagation(); onNavigate(crumb.path) }}
                             >{` ${crumb.label} `}</a>
                             {' '}
                             <span className="breadcrumb-separator">›</span>

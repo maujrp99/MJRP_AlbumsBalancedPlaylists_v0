@@ -354,7 +354,26 @@ function Layout({ box, state, playlists, editing, phone, isGenerating, activeSer
     )
 }
 
+/**
+ * The focus after a draw, in one place. The hand-made screen drew everything anew on each notice, so a pressed button was gone: the
+ * focus went back to the page and the next Tab began at the top of the screen. Here the buttons stay (and rows are keyed by place), so
+ * the focus would stay on a control that now belongs to another track, and the sheet of a track hands it back to its opener. After every
+ * draw a control (not a field being typed in, not what is in a sheet or a window) that holds the focus lets it go, and the next Tab
+ * starts at the top of the screen again.
+ */
+function useFocusLikeAfterAnewDraw(): void {
+    useEffect(() => {
+        const held = document.activeElement
+        const app = document.getElementById('app')
+        if (!(held instanceof HTMLElement) || !app || held === app || !app.contains(held)) return
+        if (held.closest('input, textarea, select, [contenteditable], dialog, .sheet, .modal-overlay, .app-modal')) return
+        held.blur()
+        document.getSelection()?.collapse(app, 0)
+    })
+}
+
 export function Playlists({ controller, generating }: Props) {
+    useFocusLikeAfterAnewDraw()
     useLocale()
     const phone = usePhone()
     const state = useStore(playlistsStore, store => store.getState())
