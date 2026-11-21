@@ -1,0 +1,80 @@
+{
+ "apple-no-sign": {
+  "requests": [
+   "musickit-token",
+   "musickit.js"
+  ],
+  "musicErrorsInConsole": [],
+  "button": {
+   "label": "Connections",
+   "apple": "pending"
+  },
+  "afterOpen": {
+   "requests": [
+    "musickit-token",
+    "musickit.js"
+   ],
+   "status": "Could not connect",
+   "musicErrorsInConsole": []
+  }
+ },
+ "apple-with-flag": {
+  "requests": [
+   "musickit-token",
+   "musickit.js"
+  ],
+  "musicErrorsInConsole": [],
+  "button": {
+   "label": "Connections",
+   "apple": "pending"
+  }
+ },
+ "grids-800": {
+  "albums": {
+   "columns": 3,
+   "width": 256
+  },
+  "startResults": 3,
+  "picker": {
+   "columns": 3,
+   "width": 256
+  },
+  "inventoryPhoneList": false
+ },
+ "grids-900": {
+  "albums": {
+   "columns": 3,
+   "width": 284
+  },
+  "startResults": 6,
+  "picker": {
+   "columns": 4,
+   "width": 213
+  },
+  "inventoryPhoneList": false
+ },
+ "flip-albums-900": {
+  "left": 8.4,
+  "right": 6.9
+ },
+ "flip-home-900": {
+  "left": 8.4,
+  "right": 6.9
+ },
+ "flip-albums-1000": {
+  "left": 11.8,
+  "right": 11.1
+ },
+ "flip-home-1000": {
+  "left": 11.8,
+  "right": 11.1
+ },
+ "flip-albums-1280": {
+  "left": 11.8,
+  "right": 11.1
+ },
+ "flip-home-1280": {
+  "left": 11.8,
+  "right": 11.1
+ }
+}

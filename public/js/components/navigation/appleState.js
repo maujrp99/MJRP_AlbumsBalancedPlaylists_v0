@@ -4,6 +4,8 @@
  * is asked ONCE, in the background, when the page is idle after the first paint, and everyone who shows
  * it (the dots on the account button, the panel, the phone's sheet) reads this answer instead of asking.
  * Until it is known nothing says «not connected»: the state is `unknown` or `checking`, never a guess.
+ * The background ask is made ONLY where the browser shows a sign of an earlier authorization (hasSignOfAuthorization);
+ * for everyone else nothing is loaded from Apple until the panel or the sheet is opened.
  */
 import { musicKitService } from '../../services/MusicKitService.js'
 
@@ -13,6 +15,34 @@ export const APPLE_STATE_EVENT = 'applemusic-state-known'
 /** The longest the idle wait lasts before the check goes anyway; and, without requestIdleCallback, the wait. */
 const IDLE_TIMEOUT_MS = 4000
 const FALLBACK_DELAY_MS = 1500
+
+/** What our own code leaves in this browser when Apple Music is authorized: a bare flag, no personal data. */
+export const APPLE_FLAG = 'albumBlender.appleMusic.authorized'
+/** The key MusicKit itself keeps after an authorization (music.<id>.media-user-token). */
+const MUSICKIT_TOKEN_KEY = /^music\..*media-user-token$/
+
+const browserStorage = () => { try { return window.localStorage } catch { return null } }
+
+/**
+ * Whether this browser shows a sign that Apple Music was authorized before, read from storage alone:
+ * Apple's script is not loaded to find out.
+ */
+export function hasSignOfAuthorization(storage = browserStorage()) {
+    try {
+        if (!storage) return false
+        if (storage.getItem(APPLE_FLAG)) return true
+        for (let i = 0; i < storage.length; i++) if (MUSICKIT_TOKEN_KEY.test(storage.key(i) || '')) return true
+    } catch { /* storage blocked: no sign */ }
+    return false
+}
+
+/** Leaves the flag after a connection, takes it away after a disconnect. */
+export function rememberApple(connected, storage = browserStorage()) {
+    try {
+        if (connected) storage?.setItem(APPLE_FLAG, '1')
+        else storage?.removeItem(APPLE_FLAG)
+    } catch { /* storage blocked: nothing to remember */ }
+}
 
 let answered = false
 let failed = false
@@ -43,16 +73,13 @@ export function appleState(service = musicKitService) {
  * Asks MusicKit once; whoever asks while it is on its way gets the same wait. Never rejects: a failure is a state.
  * @returns {Promise<void>}
  */
-export function askApple(service = musicKitService, win = window) {
+export function askApple(service = musicKitService, win = window, storage = browserStorage()) {
     const state = appleState(service)
     if (state === 'connected' || state === 'disconnected') return Promise.resolve()
     if (pending) return pending
     failed = false
     pending = service.checkAuthorization()
-        .then(() => { answered = true }, (error) => {
-            failed = true
-            console.error('[appleState] Apple Music could not be checked:', error)
-        })
+        .then(() => { answered = true; rememberApple(service.isAuthorized(), storage) }, () => { failed = true }) // a failure is a state, never a line in the console
         .finally(() => {
             pending = null
             win.dispatchEvent(new Event(APPLE_STATE_EVENT))
@@ -61,8 +88,10 @@ export function askApple(service = musicKitService, win = window) {
 }
 
 /** Starts the check when the page has loaded and is idle: after the first paint, never before. */
-export function checkAppleWhenIdle(win = window, service = musicKitService) {
-    const run = () => { askApple(service, win) }
+export function checkAppleWhenIdle(win = window, service = musicKitService, storage = browserStorage()) {
+    // Nothing shows that this browser ever authorized Apple Music: nothing is loaded from Apple; the panel asks when it opens
+    if (!hasSignOfAuthorization(storage)) return
+    const run = () => { askApple(service, win, storage) }
     const schedule = () => {
         if (typeof win.requestIdleCallback === 'function') win.requestIdleCallback(run, { timeout: IDLE_TIMEOUT_MS })
         else win.setTimeout(run, FALLBACK_DELAY_MS)

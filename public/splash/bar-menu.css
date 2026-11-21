@@ -16,7 +16,7 @@ nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:re
 .ms .stop:hover{color:#fff}
 .ms .stop.on{color:#fff}
 .ms .stop.cur{color:var(--orange-text)}
-.ms .flipmark{position:absolute;z-index:2;left:59%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:16px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
+.ms .flipmark{position:absolute;z-index:2;left:59%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:12px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
 .ms .flipmark.on{color:var(--orange-text)}
 .eqbar{position:absolute;left:0;right:0;display:flex;align-items:flex-end;gap:2px;pointer-events:none}
 .eqbar i{flex:1 1 0;min-width:1px;border-radius:1px 1px 0 0;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom}

@@ -15,7 +15,7 @@ import { dialogService } from '../../services/DialogService.js'
 import toast from '../Toast.js'
 import { MENU_TEXT } from './menuText.js'
 import { NAME_IN_THE_BAR } from './barName.js'
-import { appleState, askApple, APPLE_STATE_EVENT } from './appleState.js'
+import { appleState, askApple, rememberApple, APPLE_STATE_EVENT } from './appleState.js'
 
 const el = (tag, props, children) => SafeDOM.create(tag, props, children)
 
@@ -64,8 +64,8 @@ export function realConnections() {
             state: () => appleState(),
             check: () => askApple(),
             detail: async () => null,
-            connect: () => musicKitService.authorize(),
-            disconnect: () => musicKitService.unauthorize(),
+            connect: async () => { const token = await musicKitService.authorize(); rememberApple(true); return token },
+            disconnect: async () => { await musicKitService.unauthorize(); rememberApple(false) },
             onChange: (listener) => listenAll(['applemusic-auth-change', APPLE_STATE_EVENT], listener)
         },
         confirm: (options) => dialogService.confirm(options),

@@ -37,9 +37,9 @@ describe('the bar of the menu is centred on the page, the same in the home and i
         expect(body).not.toContain('margin:0auto0')
     })
 
-    it('the ⟲ is a narrow box with a gap on each side of it', () => {
+    it('the ⟲ is a narrow box (12 px) with a real gap on each side of it, 7 px at the narrowest bar (judge, second look P2-3)', () => {
         const body = rule(shared, '.ms .flipmark')
-        expect(body).toContain('width:16px')
+        expect(body).toContain('width:12px')
         expect(body).toContain('left:59%')
     })
 

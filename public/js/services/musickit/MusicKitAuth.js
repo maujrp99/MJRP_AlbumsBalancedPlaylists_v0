@@ -64,7 +64,7 @@ export class MusicKitAuth {
      * DeadlineError and the next ask starts again from zero.
      * @returns {Promise<MusicKit.MusicKitInstance>}
      */
-    async init() {
+    async init({ quiet = false } = {}) {
         // Return existing promise if initialization is in progress
         if (this.initPromise) {
             return this.initPromise;
@@ -78,7 +78,7 @@ export class MusicKitAuth {
         const attempt = ++this._initAttempt;
         this.initPromise = withDeadline(this._doInit(attempt), MUSICKIT_INIT_DEADLINE_MS, 'MusicKit')
             .catch(error => {
-                console.error('[MusicKit] Initialization failed:', error);
+                if (!quiet) console.error('[MusicKit] Initialization failed:', error);
                 if (this._initAttempt === attempt) {
                     this._initAttempt++; // what is left of this start marks nothing when it ends late
                     this.initPromise = null; // Allow retry
@@ -175,7 +175,7 @@ export class MusicKitAuth {
      * @returns {Promise<boolean>}
      */
     async checkConnection() {
-        const music = await this.init();
+        const music = await this.init({ quiet: true }); // a blocked script is a state of the menu, not a line in the console
         const authorized = Boolean(music?.isAuthorized);
         const changed = authorized !== this.isAuthorized;
         this.isAuthorized = authorized;
