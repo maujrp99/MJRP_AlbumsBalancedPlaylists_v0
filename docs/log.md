@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 10:08] session — UAT da F80: a caixa de discos mais em diagonal e sem corte (UAT-235); o board fora de passo com o estado real
+**Branch:** main
+O MJRP abriu o UAT da F80 com uma captura: «a caixa de discos, fica com um efeito muito 2 d qdo está reta e a area dela bem limita, que tal melhorarmos pra ficar mais em diagonal, mas sem o corte da tela que temos hj. o que acha?» — UAT-235. Ele propôs uma sessão de UAT para ir passando as issues; ela sobe em Opus (desenho de tela), com prévias no comparador antes de mudar a página. Sobre o board, palavras dele: «se preocupe com o status do board está condizente com o status real … se é esperando meu aceite nao deveriam estar em coluna esperando». Medido: de F45 a F78, 33 features «em andamento»; 23 só esperam o juízo dele (deveriam estar em «Pronto para UAT»), 6 mistas, 4 só com passo do agente. O agente mestre deu o caminho: atualizar a cópia do kernel (sessão aberta por ele) e depois fechar em lote, numa sessão, tirando a tarefa de aceite. Ele também disse para não cobrar os aceites: ele os gerencia.
+
 ## [2026-11-21 09:41] session — F84: instalar os navegadores do Playwright sempre pelo nome
 **Branch:** main
 A orquestradora do MJRPpersonal repôs o WebKit 2215 que a instalação do V0 tinha tirado do cache da máquina, e avisou a causa: `npx playwright install` sem nome remove as versões dos outros projetos. A regra e o jeito de contornar o travamento ao descompactar estão no plano da F84.
