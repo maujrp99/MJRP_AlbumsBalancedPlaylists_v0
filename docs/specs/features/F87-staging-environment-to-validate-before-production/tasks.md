@@ -10,6 +10,8 @@
 - [ ] TASK-01b `deploy-preview.sh --branch <ramo local>` (padrão `main`): exporta e constrói esse ramo com as mesmas checagens; a checagem de «limpo» vale para a pasta onde o ramo está; recusa ramo inexistente; `deploy-site.sh` não ganha a opção (teste prova) · implements:: REQ-01, REQ-02 · model:: sonnet
 - [ ] TASK-02 garantir que a prévia não grava preço do Discogs no Firestore · implements:: REQ-04 · model:: opus
 
+- [ ] TASK-04 o servidor aceita os canais de prévia do próprio site (`server/lib/corsOrigin.js`, teste `test/server/corsOrigin.test.js`); fica em produção só depois de `npm run deploy:server` · implements:: REQ-01, REQ-03 · fixes:: UAT-261 · model:: sonnet
+
 ## Verification
 - [ ] TASK-03 o MJRP abre o endereço da prévia e vê a versão nova · implements:: REQ-01, REQ-03 · model:: sonnet
 

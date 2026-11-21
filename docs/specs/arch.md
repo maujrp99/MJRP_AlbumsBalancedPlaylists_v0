@@ -119,6 +119,8 @@ Regra: a estabilidade da produção e os dados do usuário não ficam abertos a 
 
 **Proposal (F87, awaiting the MJRP's approval):** a preview before production through a Firebase Hosting preview channel: `npm run deploy:preview` (`scripts/deploy-preview.sh`, same checks as `deploy-site.sh`, ending in `firebase hosting:channel:deploy staging --expires 7d`; `--branch <local branch>` publishes a branch that has not reached `main` yet, so work is validated before `main`; production, `deploy-site.sh`, accepts only `main`). It shares production's data, login and server, so nothing in it may write a Discogs price to Firestore; the row «What makes a preview» above changes only if he approves.
 
+**Proposal (F87, awaiting the MJRP's approval): the preview shares production's server.** In production the server accepts the origins of `ALLOWED_ORIGIN` and the preview channels of its own Hosting site (`https://<site>--<channel>-<hash>.web.app`, `server/lib/corsOrigin.js`); the server must be published (`npm run deploy:server`) for a preview to call it.
+
 What waits for the MJRP: confirming or adjusting this table. If he confirms, the Status line becomes «confirmed by the MJRP» with the date. If he does not, it stays a proposal and the harness's default holds: nothing is sent without him.
 
 ## Constraints
