@@ -1,5 +1,5 @@
 /**
- * F63 (UAT-201) - the "Soon" items of the Music Series menu go nowhere. Before, each was a link
+ * F63 (UAT-201), F88 - the "Soon" items of the line under the top bar (before F88, the Music Series menu) go nowhere. Before, each was a link
  * with an address: its own listener refused the click, and the router, which listens to every link
  * of the app, navigated all the same.
  */
@@ -8,7 +8,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 vi.mock('../public/js/components/Icons.js', () => ({ getIcon: () => '' }))
 
 import { Router } from '../public/js/router.js'
-import { SeriesDropdown } from '../public/js/components/navigation/SeriesDropdown.js'
+import { renderSubRow } from '../public/js/components/navigation/subRow.js'
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 10))
 const address = () => window.location.pathname + window.location.search
@@ -52,24 +52,21 @@ describe('Router: links (F63)', () => {
         expect(address()).toBe('/albums')
     })
 
-    it('the "Soon" items of the Music Series menu do not navigate; "By Album" does', async () => {
-        const dropdown = new SeriesDropdown({ currentPath: '/home' })
-        holder.innerHTML = dropdown.render()
-        dropdown.attachListeners()
-        const menu = holder.querySelector('#seriesDropdownMenu')
-        const soon = [...menu.querySelectorAll('[aria-disabled="true"]')]
+    it('the "Soon" items of the line under the bar do not navigate; "By Album" does', async () => {
+        holder.innerHTML = renderSubRow('/albums')
+        const row = holder.querySelector('nav')
+        const soon = [...row.querySelectorAll('[aria-disabled="true"]')]
 
         expect(soon.map(item => item.textContent.replace(/\s+/g, ' ').trim())).toEqual(['By Artist Soon', 'By Genre Soon', 'By Track Soon'])
-        expect(menu.querySelector('a[href="/artists"], a[href="/genres"], a[href="/tracks"]')).toBeNull()
+        expect(row.querySelector('a[href="/artists"], a[href="/genres"], a[href="/tracks"]')).toBeNull()
         for (const item of soon) {
             item.click()
             await settle()
             expect(address()).toBe('/home')
         }
 
-        menu.querySelector('a[href="/albums"]').click()
+        row.querySelector('a[href="/albums"]').click()
         await settle()
         expect(address()).toBe('/albums')
-        document.removeEventListener('click', dropdown.handleOutsideClick)
     })
 })

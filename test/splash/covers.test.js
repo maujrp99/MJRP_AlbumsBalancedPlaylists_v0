@@ -93,23 +93,22 @@ describe('what the page receives', () => {
     it('the caption names the front record: real with the credit and the link, fictional with the tag', () => {
         const real = captionHtml('real')
         expect(real).toContain('<b>The Velvet Underground &amp; Nico</b>The Velvet Underground &amp; Nico · 1967')
-        expect(real).toContain('Artwork from Apple Music')
+        expect(real).toContain('data-i18n="c.src"')
         expect(real).toContain('href="https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"')
-        expect(real).toContain('Listen on Apple Music')
+        expect(real).toContain('data-i18n="c.listen"')
         const fictional = captionHtml('fictional')
-        expect(fictional).toContain('<b>Copper Year</b>North Atlas · fictional album')
-        expect(fictional).toContain('Fictional album · original art')
+        expect(fictional).toContain('<b>Copper Year</b>North Atlas · álbum fictício')
+        expect(fictional).toContain('data-i18n="c.src.fict"')
         expect(fictional).not.toContain('Apple Music')
     })
 
     it('the footer credit says what the covers are, and names Apple only for the real ones', () => {
-        expect(creditHtml('real')).toContain('Apple and Apple Music are trademarks of Apple Inc., registered in the U.S. and other countries.')
-        expect(creditHtml('fictional')).toContain('fictional')
-        expect(creditHtml('fictional')).not.toContain('Apple')
+        expect(creditHtml('real')).toBe('<p data-i18n="credit.real"></p>')
+        expect(creditHtml('fictional')).toBe('<p data-i18n="credit.fict"></p>')
     })
 
     it('the stage says "Fictional albums · original art" only over invented covers', () => {
-        expect(stageTagHtml('fictional')).toContain('Fictional albums · original art')
+        expect(stageTagHtml('fictional')).toContain('data-i18n="tag.fict"')
         expect(stageTagHtml('real')).toBe('')
     })
 })

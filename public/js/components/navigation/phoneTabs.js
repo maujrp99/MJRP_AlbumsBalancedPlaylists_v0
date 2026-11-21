@@ -6,13 +6,15 @@
  * an address of the app itself). `under` lists the beginnings of the addresses a tab stands for:
  * the tab is the current one on any of them. Playlists stands for the saved playlists (where the
  * tab goes: what the computer's top bar calls «Playlists») and for the playlists just generated
- * (decided by the agent, revisable).
+ * (decided by the agent, revisable). Albums also stands for the other kinds of series (artist, genre, track):
+ * today's «Music Series» item of the computer's menu lit on them, and it is the item the Albums stop replaces (F88).
  */
 import { getIcon } from '../Icons.js'
+import { renderBars } from './bars.js'
 
 export const PHONE_TABS = Object.freeze([
     { id: 'home', label: 'Start', route: 'start', icon: 'Home', under: ['/start'] },
-    { id: 'albums', label: 'Albums', route: 'albums', icon: 'Disc', under: ['/albums', '/album-series', '/series'] },
+    { id: 'albums', label: 'Albums', route: 'albums', icon: 'Disc', under: ['/albums', '/album-series', '/series', '/artists', '/genres', '/tracks'] },
     { id: 'blend', label: 'Blend', route: 'blend', icon: 'Blend', under: ['/blend'] },
     { id: 'playlists', label: 'Playlists', route: 'saved-playlists', icon: 'ListMusic', under: ['/saved-playlists', '/playlist-series', '/playlists'] },
     { id: 'inventory', label: 'Inventory', route: 'inventory', icon: 'Archive', under: ['/inventory'] }
@@ -34,6 +36,9 @@ const SCREEN_NAMES = Object.freeze([
 ])
 
 const APP_NAME = 'Album Blender'
+
+/** How many bars the row over the tab bar has (a phone is a narrow screen: a bar about every six pixels). */
+const TAB_BARS = 64
 
 const begins = (path, start) => path === start || path.startsWith(start + '/')
 
@@ -63,5 +68,7 @@ export function renderTabBar(path) {
           <span class="phone-tabbar__label">${tab.label}</span>
         </a>`
     }).join('')
-    return `<nav class="phone-tabbar__tabs" aria-label="Main">${tabs}</nav>`
+    // F88: the home's row of bars on top of the tabs, the fire on the stretch of the current one
+    const bars = renderBars(TAB_BARS, PHONE_TABS.indexOf(current), PHONE_TABS.length)
+    return `<div class="eqbar phone-tabbar__bars" aria-hidden="true">${bars}</div><nav class="phone-tabbar__tabs" aria-label="Main">${tabs}</nav>`
 }

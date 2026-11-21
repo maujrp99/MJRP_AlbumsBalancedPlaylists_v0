@@ -8,6 +8,11 @@ import { withDeadline } from '../../utils/deadline.js';
 /** How long the start of MusicKit may take: token route, script and `configure` together (F67). */
 export const MUSICKIT_INIT_DEADLINE_MS = 10000;
 
+/** One signal for «the Apple Music connection changed», as Spotify has `spotify-auth-change`. */
+function announceConnection() {
+    window.dispatchEvent(new Event('applemusic-auth-change'));
+}
+
 export class MusicKitAuth {
     constructor() {
         this.music = null;
@@ -59,7 +64,7 @@ export class MusicKitAuth {
      * DeadlineError and the next ask starts again from zero.
      * @returns {Promise<MusicKit.MusicKitInstance>}
      */
-    async init() {
+    async init({ quiet = false } = {}) {
         // Return existing promise if initialization is in progress
         if (this.initPromise) {
             return this.initPromise;
@@ -73,7 +78,7 @@ export class MusicKitAuth {
         const attempt = ++this._initAttempt;
         this.initPromise = withDeadline(this._doInit(attempt), MUSICKIT_INIT_DEADLINE_MS, 'MusicKit')
             .catch(error => {
-                console.error('[MusicKit] Initialization failed:', error);
+                if (!quiet) console.error('[MusicKit] Initialization failed:', error);
                 if (this._initAttempt === attempt) {
                     this._initAttempt++; // what is left of this start marks nothing when it ends late
                     this.initPromise = null; // Allow retry
@@ -158,6 +163,36 @@ export class MusicKitAuth {
         return this.isInitialized && this.music !== null;
     }
 
+    /** Whether the person has authorized Apple Music in this session (the menu shows it, F88). */
+    isConnected() {
+        return this.isAuthorized;
+    }
+
+    /**
+     * Whether the person authorized Apple Music on this or an EARLIER visit: MusicKit keeps the
+     * authorization in the browser and says so once it is started. Starting it loads the MusicKit
+     * script, so only the menu asks, and only when it opens (F88).
+     * @returns {Promise<boolean>}
+     */
+    async checkConnection() {
+        const music = await this.init({ quiet: true }); // a blocked script is a state of the menu, not a line in the console
+        const authorized = Boolean(music?.isAuthorized);
+        const changed = authorized !== this.isAuthorized;
+        this.isAuthorized = authorized;
+        if (changed) announceConnection();
+        return authorized;
+    }
+
+    /**
+     * Disconnect: MusicKit forgets the person. With MusicKit never started there is nothing to forget.
+     */
+    async unauthorize() {
+        if (!this.music) return;
+        await this.music.unauthorize();
+        this.isAuthorized = false;
+        announceConnection();
+    }
+
     /**
      * Authorize user for library access
      * @returns {Promise<string>} User token
@@ -173,6 +208,7 @@ export class MusicKitAuth {
             const userToken = await this.music.authorize();
             this.isAuthorized = true;
             console.log('[MusicKit] User authorized');
+            announceConnection();
             return userToken;
         } catch (error) {
             console.error('[MusicKit] Authorization failed:', error);

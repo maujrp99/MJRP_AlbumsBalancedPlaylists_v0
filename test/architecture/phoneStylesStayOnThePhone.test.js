@@ -3,7 +3,7 @@
  * Fitness function of F76 (REQ-12): the redesign of the phone does not touch the computer.
  *
  * Every rule of the phone's stylesheets - public/css/mobile.css, the base, and one file per screen
- * under public/css/mobile/ - is written inside `@media (max-width: 767px)`. A rule outside it
+ * under public/css/mobile/ - is written inside `@media (max-width: 899px)`. A rule outside it
  * would act on the computer's screen too, and nothing else would warn. `@supports`, `@keyframes`
  * and other media queries are fine INSIDE that one.
  *
@@ -49,14 +49,20 @@ export function outsideThePhone(css) {
 
 describe('the styles of the phone stay on the phone (F76, REQ-12)', () => {
     it('the phone is the same screen for the stylesheets and for the code', () => {
-        expect(PHONE_QUERY).toBe('(max-width: 767px)')
+        expect(PHONE_QUERY).toBe('(max-width: 899px)')
+    })
+
+    it('Tailwind\'s md breakpoint is the first screen that is not a phone, so a screen never mixes the two (judge P2-2, F88)', async () => {
+        const { default: config } = await import('../../tailwind.config.js')
+        expect(config.theme.extend.screens.md).toBe('900px')
+        expect(PHONE_QUERY).toBe('(max-width: 899px)')
     })
 
     it('the check sees a rule written outside the media query, and lets pass what is inside', () => {
-        expect(outsideThePhone('.a { color: red } @media (max-width: 767px) { .b { color: red } }')).toEqual(['.a'])
-        expect(outsideThePhone('@media (max-width: 768px) { .b { color: red } }')).toEqual(['@media (max-width: 768px)'])
+        expect(outsideThePhone('.a { color: red } @media (max-width: 899px) { .b { color: red } }')).toEqual(['.a'])
+        expect(outsideThePhone('@media (max-width: 900px) { .b { color: red } }')).toEqual(['@media (max-width: 900px)'])
         expect(outsideThePhone('@keyframes x { from { opacity: 0 } }')).toEqual(['@keyframes x'])
-        const inside = '/* note */ @media (max-width: 767px) { .b { color: red } @supports (x: y) { .c { color: red } } @keyframes x { from { opacity: 0 } } }'
+        const inside = '/* note */ @media (max-width: 899px) { .b { color: red } @supports (x: y) { .c { color: red } } @keyframes x { from { opacity: 0 } } }'
         expect(outsideThePhone(inside)).toEqual([])
     })
 

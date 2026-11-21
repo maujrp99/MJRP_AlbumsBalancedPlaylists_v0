@@ -40,6 +40,9 @@ export default {
     safelist: [...RECIPE_GRADIENT_AT_10],
     theme: {
         extend: {
+            // `md` is the first screen that is not a phone: 900 px, the line of the phone's shell (js/utils/isPhone.js,
+            // css/mobile.css) and of the entry page, so that a screen never mixes the phone's frame with the computer's content (F88)
+            screens: { md: '900px' },
             fontFamily: {
                 syne: ['Syne', 'sans-serif']
             },

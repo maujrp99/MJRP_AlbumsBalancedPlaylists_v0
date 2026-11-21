@@ -7,6 +7,8 @@
 
 import '../css/index.css'
 import '../css/tailwind.css' // Tailwind, built with the site; after the app's own styles (F59)
+import '../splash/bar-menu.css' // the home's bar, shared with the entry page (F88)
+import '../css/top-menu.css' // the top menu of the computer (F88); before the phone's, which hides it
 import '../css/mobile.css' // the phone (F76): after everything, every rule inside the phone's media query
 import '../css/mobile/screens.css' // one file per screen of the phone, each inside the same media query
 import '../css/safe-area.css' // a phone lying down: the page keeps clear of the island (F76)
@@ -51,9 +53,11 @@ import { openSignInWhenAsked } from './components/navigation/signInFromLink.js'
 import { START_PATH, leaveToHome } from './components/navigation/startRoute.js'
 import { isSignedIn } from './components/navigation/AuthNav.js'
 import { showLoginModal } from './components/LoginModal.js'
+import { checkAppleWhenIdle } from './components/navigation/appleState.js'
 
 const initUI = () => {
-    const topNav = new TopNav()
+    const topNav = new TopNav({ clearCaches: clearAppAlbumCaches })
+    router.afterNavigate((path) => topNav.followScreen(path))
     const headerEl = document.getElementById('header-container')
     if (headerEl) {
         headerEl.innerHTML = topNav.render()
@@ -67,7 +71,7 @@ const initUI = () => {
         footer.attachListeners()
     }
 
-    // The phone (F76): its top bar, its tab bar and its menu exist only on a screen up to 767 px
+    // The phone (F76): its top bar, its tab bar and its menu exist only on a screen up to 899 px
     startPhoneShell({ router, userStore, clearCaches: clearAppAlbumCaches })
 }
 
@@ -118,6 +122,10 @@ document.addEventListener('DOMContentLoaded', bootstrap)
 // The measurement of use (F77): off unless the build has a project key and nobody turned it off.
 // Started before the first route, so the first screen is measured; it never holds the app.
 startUsageMeasurement({ router })
+
+// Apple Music's state (the owner uses it): asked once, in the background, when the page is idle after the
+// first paint; the account button, the panel and the phone's sheet read that one answer (F88).
+checkAppleWhenIdle()
 
 // Register Routes
 // V3: SeriesController is instantiated once and passed to view

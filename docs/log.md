@@ -3,13 +3,101 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 19:30] step — F80 e F88: o terceiro relatório do juiz (passou, sem P0 nem P1) e suas capturas entram no ramo; cinco linhas na uat.md
+**Branch:** feat/f88-top-menu-build
+O juiz escreveu o relatório sobre 6d518c2; copiado como veio para reports/audits/ e as capturas para reports/evidence/F88/recheck-3/. UAT-262 a UAT-265: os três P2 do juiz e o nome não confirmado da chave do MusicKit (abertas); UAT-266: o defeito do iPhone achado pelo MJRP, já consertado em a4b3933.
+
+## [2026-11-21 19:15] decision — o MJRP escolheu «A» para a barra do computador: 620 px centrados na página, só «Entrar» no cabeçalho da home (F88)
+**Branch:** feat/f88-top-menu-build
+Pergunta ao MJRP (opções do juiz): (a) 620 px, a largura aprovada na v4, centrada na página, com o cabeçalho da home só com «Entrar» e «Abrir o app» no meio da página; (b) 620 px encostados à esquerda; (c) 412 px centrados, como construído. Resposta do MJRP (2026-11-21): «A». Construído: `--bar-w` = min(620 px, 100vw − 502 px), centrada, no mesmo x na home e no app, sem e com conta; a home tira «Abrir o app» do cabeçalho em toda largura do computador (o botão do corpo da página continua); o idioma e o botão da conta ficam. Abaixo de 1122 px a barra encolhe sem encostar nos lados nem quebrar rótulos, até 900 px (398 px). Medido (x, largura; as quatro combinações iguais em cada largura): 900 px: 251, 398; 1000: 251, 498; 1100: 251, 598; 1280: 330, 620; 1600: 490, 620. Testes atualizados (`barIsCentredOnThePage`); capturas em `reports/evidence/F88/bar-620/`.
+
+## [2026-11-21 19:12] session — F88: a Apple Music só é perguntada em segundo plano a quem já a autorizou; grades de 3 colunas no tablet; ⟲ com vão (P2 da segunda reconferência)
+**Branch:** feat/f88-top-menu-build
+Apple Music: o sinal de «autorizada antes» é lido do armazenamento do navegador, sem carregar o script da Apple: a marca do próprio app `albumBlender.appleMusic.authorized` (gravada ao conectar e na resposta «conectada», tirada ao desconectar e na resposta «não conectada»; só o valor 1, nenhum dado pessoal) ou a chave `music.*.media-user-token` que o MusicKit guarda (o nome da chave é de memória, não conferi num navegador com conta). Sem o sinal: nada é carregado da Apple, o botão fica neutro, e o estado é perguntado ao abrir o painel ou a folha, com «Checking…». Com o sinal: pergunta em segundo plano, como antes. Uma falha ou um script bloqueado não escreve no console (a verificação inicia o MusicKit em modo quieto; o `appleState` não registra); o estado «Could not connect» aparece onde a pessoa perguntou. Grades: de 640 px, Albums, resultados da Start e o seletor de séries têm 3 colunas no desenho do celular (a 800 px: 3 colunas de 256 px). ⟲: caixa de 12 px, vãos de 8,4 e 6,9 px a 900 px e de 11,8 e 11,1 px de 1000 px para cima. A mudança do corte do celular (767 para 899 px) fica registrada na F76 (REQ-12) e no design-system C6 como feita pela F88, pendente do aceite do dono.
+
+## [2026-11-21 19:08] session — F88: no iPhone os rótulos da barra de baixo da home ficavam em cima das barras (P1 do dono, achado na prévia)
+**Branch:** feat/f88-top-menu-build
+Palavras do MJRP (2026-11-21): «Na prévia do menu no cel, os copies dos menus estão em cima das barras de gráficos». Reproduzido no WebKit (Playwright, `iPhone 14` e `iPhone SE`) só na página CONSTRUÍDA (`vite build`), na barra de baixo da HOME (44 a 46 interseções, vão de −17 px, em PT e EN; o ⟲ também aparecia): o Vite coloca a folha `bar-menu.css` DEPOIS do `<style>` da home, e as regras do celular da home (`.ms .stop`, `.eqbar`, `.ms .flipmark`), de mesma especificidade que as dela, perdiam; no servidor de desenvolvimento a ordem é outra e nada aparecia (por isso o Chromium e o dev passaram). A barra do app não tinha o defeito. Conserto: as regras da home no celular passam a `.thread …` (vencem em qualquer ordem); a parada deixa 36 px acima do rótulo (as barras ocupam os 26 primeiros) por padding, e a altura é piso (`min-height`), não fixa; o mesmo na barra do app (`min-height` e padding-top de 14 px). Medido no WebKit: as duas barras com 65 px (iPhone 14 e SE), vão entre barras e rótulos ≥ 6 px, alvos ≥ 44 px, também com texto a 130%. Teste novo: `test/architecture/phoneBarLabelsStayOffTheBars.test.js` e o sensor `test/visual/phoneBarLabels.mjs` (WebKit sobre o site construído). Não reproduzi o tamanho de texto do iOS (o WebKit do Playwright não o tem); simulei 130% por CSS.
+
+## [2026-11-21 18:50] step — F80 e F88: o segundo relatório do juiz (reconferência 2) e suas capturas entram no ramo, sem mudança
+**Branch:** feat/f88-top-menu-build
+O juiz escreveu o relatório sobre c51abfc; copiado como veio para reports/audits/ e as capturas para reports/evidence/F88/recheck-2/.
+
+## [2026-11-21 18:32] step — F88: o teste de onPhoneChange usava 852 px como «não celular»; agora o corte é 899 px
+**Branch:** feat/f88-top-menu-build
+Só o teste: o celular deitado (852 px) passa a ser celular, então o teste vira de 393 para 1024 px. Pego na suíte inteira.
+
+## [2026-11-21 18:30] step — F88: provas no navegador dos consertos do juiz e dois testes antigos ajustados aos novos cortes
+**Branch:** feat/f88-top-menu-build
+Provas em `reports/evidence/F88/fixes/` (393, 800 e 1280, sem e com conta, costuras de teste do `reports/evidence/F88/`, nada de login real): `fixes.json` (rótulo e pontos do botão da conta pendente e depois, o painel, o foco após Disconnect, as três rotas de séries, sem rolagem lateral em 4 telas × 3 larguras × 2 estados, sem erro de console do menu), `p3.json` (800 px: o desenho do celular nas duas páginas), `m1.json` e `p2.json` (a barra a 900, 1000, 1280 e 1600 px, e os vãos do ⟲). Os testes `isPhone.test.js` e `outsideTextIsText.test.js` (a foto da conta não é mais desenhada) acompanham o corte de 899 px e o avatar de inicial; apareceram na suíte inteira.
+
+## [2026-11-21 18:27] step — F88: testes e código de /artists, /genres e /tracks acendendo Albums
+**Branch:** feat/f88-top-menu-build
+Testes primeiro: `currentTab('/artists')` é Albums (PhoneShell) e a barra do computador acende Albums nas três rotas (barMenu); a rota que nenhum item possui continua sem acender nada. `phoneTabs.js` ganhou as três rotas em `under` de Albums. A linha de baixo (subRow) continua só em Albums e Playlists.
+
+## [2026-11-21 18:26] session — F88: no computador, o avatar é a inicial, «Sign In» é o botão fantasma da home e confirmar «Disconnect» não fecha o painel (P2-4 e P2-5 do juiz)
+**Branch:** feat/f88-top-menu-build
+Avatar: a inicial do nome em laranja, como no celular e no protótipo, nunca uma imagem (nem a foto da conta nem a imagem antiga do MJRP); a função da inicial foi para `navigation/account.js`, usada pelo celular e pelo computador. «Sign In»: o botão fantasma da home (`.top-menu__signin`, borda branca 62%, 44 px, Syne 16 px). Disconnect: um clique numa janela aberta pelo painel (`.app-modal`) não conta mais como «fora do painel», e o foco volta ao botão da mesma linha. Testes primeiro (TopNav, AuthNav.menu, connections).
+
+## [2026-11-21 18:27] session — F88: /artists, /genres e /tracks acendem Albums (P2-6 do juiz)
+**Branch:** feat/f88-top-menu-build
+Decisão pelo inventário do menu de hoje: o item «Music Series» da produção fica aceso (`isSeriesActive`) nessas três rotas, e é o item que a parada Albums substitui; então Albums as possui, na barra do computador e na aba do celular. O nome do topo do celular (Series by Artist…) não muda.
+
+## [2026-11-21 18:22] session — F88: a barra fica no meio da PÁGINA, igual na home e no app, com uma largura só (P2-1 e P2-3 do juiz)
+**Branch:** feat/f88-top-menu-build
+A terceira via do juiz, ajustada ao que cabe: a barra é posicionada no meio da página (`left:50%`), fora do fluxo do lado da conta, com a largura `--bar-w` = min(412 px, 100vw − 526 px), escrita uma vez em `public/splash/bar-menu.css`; `top-menu.css` (app) e `splash.html` (home) dizem o mesmo. 620 px centrados não cabem: a 1280 px o lado direito da home sem conta (idioma, Sign in, Open the app) começa em x = 858, e uma barra de 620 px termina em 950; 412 px é o que cabe, centrada (x = 434 a 846). Abaixo de 1280 px a home tira o botão «Open the app» do cabeçalho (o do corpo da página continua), como já fazia no celular, para a barra centrada caber desde 900 px. A barra não anda mais entre sem e com conta nem entre home e app (medido a 900, 1000, 1280 e 1600 px, as quatro combinações). O ⟲ é uma caixa de 16 px a 59%: vãos de 9,8 e 9,1 px até os rótulos a 1280 px (6,4 e 4,9 px a 900). Com o desenho do celular até 899 px, a largura da barra do app não depende mais da conta onde ela aparece. Teste primeiro: `test/architecture/barIsCentredOnThePage.test.js`.
+
+## [2026-11-21 18:16] session — F88: de 768 a 899 px a home e o app usam o MESMO desenho, o do celular (P2 do juiz)
+**Branch:** feat/f88-top-menu-build
+Escolha: o app usa o desenho do celular (topo de 56 px, marca de 22 px, barra de baixo de 65 px) até 899 px, o corte que a home já tinha; a outra via (a barra do app no topo da home a partir de 768 px) não cabe: a marca de 181 px, a barra e o lado da conta (Sign in e Open the app) não cabem em 736 px sem sobrepor rótulos, que foi o que o construtor anterior mediu. O corte vira 899 px no CSS do celular (mobile.css e mobile/*.css), em `isPhone.js` e no `UserRankModal`; o `md` do Tailwind passa a 900 px (`tailwind.config.js`) para uma tela nunca misturar a moldura do celular com o conteúdo do computador. Testes primeiro (a fitness function do celular, `md` = 900). Medido a 800 px (Albums, Playlists, Inventory, Blend, Start; sem e com conta): topo 56 px, marca 22 px, barra de baixo y = 835, igual à da home; sem rolagem lateral. Muda a regra «768 px para cima não muda» da F76 (REQ-12) para «900 px para cima»; `docs/specs/design-system.md` C6 atualizado.
+
+## [2026-11-21 18:12] session — F88: o botão da conta não nega mais a Apple Music (P1 do juiz): o estado é perguntado uma vez, em segundo plano, com a página ociosa
+**Branch:** feat/f88-top-menu-build
+Novo `navigation/appleState.js`: uma resposta só (desconhecido, conferindo, conectada, não conectada, falhou), pedida uma vez por `checkAppleWhenIdle` (requestIdleCallback com prazo de 4 s; sem ele, 1,5 s; só depois do `load`). O botão mostra um estado neutro até a resposta (sem ponto da Apple Music, sem «Nothing connected», `data-apple="pending"`); o painel e a folha do celular leem a mesma resposta, com «Checking…» só enquanto pendente. Testes primeiro (pendente, autorizada antes, não autorizada, falhou, nada diz «Nothing connected» enquanto pendente). Peso: o script principal de `vite build` foi de 1.096.195 para 1.097.346 bytes (+1.151 B, +0,1%), 17 arquivos nos dois, nenhum pedido novo antes da primeira pintura.
+
+## [2026-11-21 18:07] step — F80 e F88: o relatório do juiz da reconferência visual e suas capturas entram no ramo, sem mudança
+**Branch:** feat/f88-top-menu-build
+O juiz (agente separado) escreveu o relatório (fail, 0 P0, 1 P1, 6 P2) sobre 481ec94; copiado como veio para reports/audits/ e as capturas para reports/evidence/F88/recheck/.
+
 ## [2026-11-21 17:55] session — estado do dia: duas linhas (home e menu para produção; React na prévia), `## Now` atualizado
 **Branch:** main
 `MEMORY.md ## Now` reescrito com as duas linhas de trabalho, os dois endereços de prévia, o que está na `main` sem publicar e o que espera o MJRP.
 
+## [2026-11-21 17:40] step — F88: o status derivado da spec (Draft para In Progress), gravado pelo hook de commit
+**Branch:** feat/f88-top-menu-build
+O hook de commit derivou o status da F88 ao começar a construção; só registro, sem mudar a spec.
+
+## [2026-11-21 17:39] session — F88: o estado verdadeiro do Apple Music, a barra de baixo igual à da home, e um ponto de quebra só (não cabe na home)
+**Branch:** feat/f88-top-menu-build
+Apple Music: o MusicKit guarda a autorização entre visitas e só diz depois de iniciado (music.isAuthorized); MusicKitAuth.checkConnection() inicia o MusicKit e lê; o painel (ao abrir) e a folha do celular (ao abrir) perguntam, com «Checking…» antes, «Connected», «Not connected» ou «Could not connect» + «Try again»; a carga da página não muda; ordem alfabética. Testes primeiro (connections, MusicKitAuth.connection, AuthNav.menu, PhoneMenu). /api/musickit-status só diz se o servidor tem a chave, não a autorização da pessoa. Barra de baixo do celular: --phone-tabbar-h de 68 para 64 px: 65 px como a da home (medido). Ponto de quebra: a home com a barra no cabeçalho a 800 px sem conta fica com paradas de 31 px e rótulos de 33 a 48 px (sobrepõem), então a home segue até 899 px (tentei, medi e desfiz) e a passagem entre 768 e 899 px continua mudando de forma; evidência em reports/evidence/F88/ (apple-*, heights.json, passage-out-800.png).
+
+## [2026-11-21 17:39] decision — o MJRP usa o Apple Music, não o Spotify: o estado do Apple Music no menu tem de ser o verdadeiro (F88)
+**Branch:** feat/f88-top-menu-build
+Palavras do MJRP (2026-11-21): «eu pessoalmente, uso Apple Music e não Spotify». Como foi entendido (orquestrador): quem autorizou o Apple Music numa visita anterior não pode ver «não conectado»; o painel e a folha listam Apple Music primeiro (ordem alfabética).
+
+## [2026-11-21 17:33] session — F88: prova no navegador (1280 e 393, sem conta e com a conta de teste), documentação e tarefas
+**Branch:** feat/f88-top-menu-build
+Evidência em reports/evidence/F88/ (shoot.mjs, compose.mjs, measures.json, capturas): a barra da home e a do app a 1280 px têm a mesma altura (72), a mesma marca (181 x 30 px a 16 px da borda) e a mesma posição da barra (209,2 px) e da fila de barras, sem e com conta; o item atual aceso nas sete rotas nos dois tamanhos; o painel e a folha do celular abertos com Spotify e Apple Music; sem rolagem para o lado; sem erro no console além dos esperados da bancada (login anônimo e Firestore bloqueados). behavior.md, info-arch.md e design-system.md em dia, o que espera aceite do MJRP marcado «pendente»; tasks.md: TASK-00 a 03 marcadas, TASK-04 (produção junto com a home) aberta.
+
+## [2026-11-21 17:33] session — F88: ajustes do menu depois da prova no navegador (Sign In de 44 px, contraste do painel, teste de segurança do painel)
+**Branch:** feat/f88-top-menu-build
+Da prova a 1280 e 393: o botão «Sign In» da barra do computador passa a 44 px (era 36, o botão pequeno do app), o «Signed in as» do painel sobe de 50 % para 70 % de branco (contraste AA), e o teste de segurança do texto de fora troca o menu em gaveta (que saiu) pelo painel. A barra do computador ficou à esquerda, depois da marca, também na home (margin do .ms-desk), para a posição não depender do lado da conta.
+
+## [2026-11-21 16:43] session — F88: o menu do topo do app na linguagem da home, construído no código de hoje (Transformar no computador, Elevar no celular)
+**Branch:** feat/f88-top-menu-build
+Computador (a partir de 768 px): a barra da home continua no app (marca em fogo, cinco destinos sobre uma fila de barras, ⟲, o fogo na tela atual, aria-current em toda rota, acompanhando o roteador), uma linha de baixo em Álbuns e em Playlists no lugar do menu suspenso, e um painel só de conta e conexões com Spotify e Apple Music (estados: conectado, não conectado, conectando, falhou) ligados aos serviços de verdade. Celular: a estrutura de hoje com a cara da home (marca em fogo, a barra de baixo com ícones e a fila de barras da home, o item atual em #fb923c, a folha «Menu» com as duas conexões). A barra do computador e a da home dividem public/splash/bar-menu.css e ficam as duas à esquerda, depois da marca (antes a da home andava até 92 px entre sem conta e com conta). Saíram a gaveta antiga, o SeriesDropdown e o SpotifyConnectButton. Textos do menu num lugar só (menuText.js). Testes primeiro: barMenu, subRow, connections, TopNav; os de navegação existentes atualizados, nenhum apagado sem o que testavam ter saído. Sem chave de idioma no app (a F81 traz).
+
+## [2026-11-21 16:43] session — F88: o Apple Music diz se está conectado e desconecta (a base do painel de conexões do menu)
+**Branch:** feat/f88-top-menu-build
+MusicKitAuth ganha isConnected(), unauthorize() e o sinal applemusic-auth-change (como o spotify-auth-change); o MusicKitService expõe isAuthorized() e unauthorize(). Teste primeiro: test/services/musickit/MusicKitAuth.connection.test.js. O Apple Music só diz «conectado» depois de a pessoa autorizar nesta sessão (o MusicKit não é carregado antes, para não puxar o script de terceiros em toda página).
+
 ## [2026-11-21 16:24] step — F87: o servidor passa a aceitar os canais de prévia do próprio site (UAT-261)
 **Branch:** fix/f87-server-accepts-the-preview-address
 Medido hoje: o `Origin` da prévia (`...--staging-2nu8kutx.web.app`) dava 500 no servidor de produção. Função pura `isOriginAllowed` em `server/lib/corsOrigin.js` (lista de `ALLOWED_ORIGIN`, sem `Origin`, ou `https://<site>--<canal>-<hash>.web.app` ancorado nas duas pontas, site vindo da primeira origem da lista); testes em `test/server/corsOrigin.test.js`; arch, spec e tasks da F87 em dia; issue UAT-261. Servidor não publicado: vale só depois de `npm run deploy:server`.
+
+## [2026-11-21 16:21] decision — o MJRP escolhe os dois níveis do menu do topo: Elevar no celular, Transformar no computador (F88)
+**Branch:** feat/f88-top-menu-build
+Palavras do MJRP (2026-11-21), aos dois níveis do protótipo (Elevar e Transformar): «Elevar no cel e transformar na web». Como foi entendido: no celular, o nível Elevar (a estrutura de hoje com a cara da home: a marca em fogo, a letra, o item atual aceso, a barra de baixo com ícones mantida); no computador, o nível Transformar (a barra da home segue sem mudança dentro do app; o fogo marca a tela atual; conta, Spotify e Apple Music num painel; uma linha abaixo no lugar do menu suspenso). À pergunta «A Apple Music entra no menu, ao lado do Spotify? Recomendo sim.», o MJRP respondeu «2.sim»: a Apple Music entra no painel de conexões do menu, ao lado do Spotify (decisão do MJRP, não mais do orquestrador). Construção no código de hoje, sem React nem TypeScript (a migração para React vive em outra linha).
 
 ## [2026-11-21 16:16] step — F86: a página do design system do site terminada e publicada
 **Branch:** feat/f86-design-system-artifact
@@ -27,9 +115,21 @@ Palavras do MJRP (2026-11-21): «Como ficou o menu não seria revisto primeiro, 
 **Branch:** wip/f88-top-menu-design-round-1
 Pedido do MJRP (2026-11-21): «já fazer o redesign completo do top nave, aí a transicao fica mais suave». Dois níveis como moldura viva sobre as telas reais do app (capturas de 2026-11-21), a 393 e a 1280, PT e EN, com o menu de hoje como «Referência» e a prévia da passagem da home v4 para o app: `design/inception/f88-top-menu-{elevar,transformar}-v1.html`, comparador https://claude.ai/artifact/AtUiGYy1YAL9iLd58yJ3aF (cópia `design/proposals/f88-top-menu/comparator.html`, gerador em `build/`). Inventário do menu de hoje (MENU-01 a 11), estados e Content Map em `docs/specs/info-arch.md`; padrões novos pendentes no `design-system.md`; proposta, viabilidade em React (onda da moldura da F83) e três perguntas em `design/proposals/f88-top-menu/proposal.md`. Recomendação do agente: Transformar (a barra da home continua no app). Viabilidade escrita para construir primeiro no código de hoje (decisão do MJRP «A)»), React depois; o REQ-03 e o REQ-06 da spec da F88 ficam a reescrever pelo orquestrador. Crítica separada (`reports/audits/2026-11-21-f88-top-menu-round-1-ux-audit.md`): sem P0; os 7 P1 e 6 dos 8 P2 consertados antes de mostrar. Nenhum aprovado.
 
+## [2026-11-21 15:11] session — F80: correções da reconferência do juiz na home (1 P1, 4 P2)
+**Branch:** wip/f80-home-bar-is-the-menu-build
+P1: no celular, com conta, 18 px entre o título e o «Inicie» (era 0). P2: PT e EN com 44 px de largura no celular; título em inglês como o da v4 («Dig through the albums you love.»; as demais linhas em inglês conferidas contra a v4 por script, sem outra diferença); a legenda do caixote segue o idioma também no celular; o caixote só aparece depois que o script o posiciona, e a diagonal vai no CSS, então as capas não se mexem mais ao carregar (o que sobra do salto vem da troca de idioma do cabeçalho e do título num navegador em inglês). Testes de test/architecture e test/splash verdes (379), eslint limpo, capturas fix-* em reports/evidence/F80/home-bar-is-the-menu/.
+
+## [2026-11-21 15:08] review — F80: reconferência visual independente da home «A barra é o menu» (6cc8863): sem P0, 1 P1, 4 P2
+**Branch:** wip/f80-home-bar-is-the-menu-build
+Relatório escrito pelo juiz independente, copiado sem mudança para reports/audits/2026-11-21-mjrpalbumblender-v0-home-bar-is-the-menu-visual-parity-recheck.md; capturas em reports/evidence/F80/home-bar-is-the-menu/recheck/.
+
 ## [2026-11-21 14:54] decision — o MJRP: o que está no ambiente separado só vai a produção quando a migração para React terminar
 **Branch:** main
 Palavras do MJRP (2026-11-21): «staging agora só vai pra prod qdo completarmos a migracao». Antes, no mesmo dia: «v4 ficou sensacional, aprovada!!! Kudos for you» (a home v4) e «na versao mobile aqui tem muito texto e manteria o mergulhe e seu subtitulo apenas». Como foi entendido (orquestrador, revisável): o ramo `integrate/staging-2026-11-21` é a linha da migração (F83), publicada só na prévia do Firebase (F87, canal `staging`, https://mjrp-playlist-generator--staging-2nu8kutx.web.app, vence em 7 dias e é republicado a cada onda); o ramo do React não entra na `main` e nada dele vai a produção até a última onda. Em aberto com ele: se a home nova e os avisos de falha, que não dependem do React, vão a produção antes.
+
+## [2026-11-21 14:51] session — F80: a v4 (o ritmo da página) aprovada pelo MJRP e construída na home (UAT-240, UAT-241)
+**Branch:** wip/f80-home-bar-is-the-menu-build
+O MJRP aprovou a v4 do protótipo: «v4 ficou sensacional, aprovada!!! Kudos for you». Construída em `public/splash.html` e `public/splash/ambient.js`: as cinco vinhetas (Inicie, Álbuns, Blend, Playlists, Inventário) que entram e saem com a rolagem (só `transform` e `opacity`), paradas pelo ícone de pausa e pelo repouso, imagem parada com movimento reduzido; as alturas das histórias da tabela de entrega (computador `clamp(540px,70dvh,680px)`, convite `clamp(440px,56dvh,560px)`, celular pelo conteúdo). Pedido dele para o celular: «na versao mobile aqui tem muito texto e manteria o mergulhe e seu subtitulo apenas» — abaixo de 900 px a abertura mostra só o título e a linha laranja (o parágrafo fica no computador). «Entrar» da abertura sai no celular (fica o do topo). Os pontos `.ambient` vazios viraram os painéis `.v4-motif`. Testes `test/architecture` + `test/splash` verdes (375), eslint limpo; capturas em `reports/evidence/F80/home-bar-is-the-menu/` (`v4-*`, `measures-v4.json`).
 
 ## [2026-11-21 14:43] session — F87: os testes de recusa do `--branch` ficam herméticos (repositório temporário próprio)
 **Branch:** wip/f87-preview-tests-hermetic
@@ -54,6 +154,14 @@ Palavras do MJRP (2026-11-21), sobre validar a versão em React e a nova home: �
 ## [2026-11-21 14:24] decision — o MJRP aprova a emenda da constituição para React e TypeScript e o aceite da ADR-0023, condicionado ao ambiente separado
 **Branch:** main
 Palavras do MJRP (2026-11-21): «O firebase não nos dá um ambiente de staging pra homologarmos a versão em react?»; «Eu preferia ver tudo num ambiente separado»; à pergunta «Aprova a emenda da constituição para React e TypeScript e o aceite da decisão de arquitetura do React?», «1) aprovo desde que crie 2» (o item 2 era o ambiente separado para homologar). Como foi entendido (orquestrador, revisável): a emenda e o aceite valem depois que o ambiente separado existir; a ADR-0023 segue `Proposed` até o commit carimbado por ele; nada da F83 nem da home nova vai a produção antes de ele homologar no ambiente separado. Em aberto com ele: o tamanho do ambiente (só o site numa prévia do Firebase, ou um projeto separado com dados, login e servidor próprios).
+
+## [2026-11-21 14:16] session — F80: o dicionário da home no texto v3 e o «Inicie» sozinho com conta (UAT-240, UAT-241)
+**Branch:** wip/f80-home-bar-is-the-menu-build
+Todas as linhas de `public/splash/copy.js` (pt e en) na tabela v3 de `design/proposals/f80-splash/proposal.md`, com o título da abertura só «Mergulhe nos álbuns que você ama.» e a linha menor e o parágrafo embaixo; com conta, o botão «Suas playlists» saiu e fica só o «Inicie». A `main` entrou no ramo por merge. Capturas da primeira tela a 1280 e 393, sem e com conta, em `reports/evidence/F80/home-bar-is-the-menu/`; o caixote aparece na primeira tela a 393.
+
+## [2026-11-21 14:01] session — F80: a home «A barra é o menu» v2 construída na página de entrada (UAT-240, UAT-241)
+**Branch:** wip/f80-home-bar-is-the-menu-build
+A página real (`public/splash.html`) vira o protótipo aprovado: a barra contínua é o menu (Inicie, Álbuns, Blend, Playlists, Inventário), uma história por item, a virada como faixa curta, o ícone de pausa; com conta, só o menu e o «Inicie» (um item do menu vai à tela do app; decidido pelo orquestrador, revisável); português e inglês pela chave PT · EN (idioma do navegador, escolha no localStorage). Todo texto visível em `public/splash/copy.js`; o título, a linha e o parágrafo da abertura são do MJRP. Cada história só de texto tem um ponto de ambiente vazio (`.ambient`) e a altura em `--story-min`, para a v4 do espaçamento. Testes de `test/splash` e `test/architecture` verdes (359), eslint limpo, prova no navegador em `reports/evidence/F80/home-bar-is-the-menu/`. Docs: `tasks.md` da F80 (TASK-09 a 11) e `behavior.md` (^entry-home-menu).
 
 ## [2026-11-21 13:59] session — segundo relatório do juiz (passa) guardado como veio; 2 P2 viram UAT-256 e UAT-257
 **Branch:** wip/failed-sources-are-shown-2026-11-21

@@ -31,9 +31,13 @@ describe('the tabs of the phone', () => {
         expect(currentTab(path).id).toBe(id)
     })
 
+    it('the other kinds of series (Music Series in today\'s menu) belong to Albums (judge P2-6)', () => {
+        for (const path of ['/artists', '/genres', '/tracks']) expect(currentTab(path).id).toBe('albums')
+    })
+
     it('a screen no tab stands for marks none, and a name that only begins alike is not a match', () => {
-        expect(currentTab('/artists')).toBeNull()
         expect(currentTab('/homework')).toBeNull()
+        expect(currentTab('/artistsx')).toBeNull()
     })
 
     it('marks the current tab for the eye and for the screen reader, and only that one', () => {
@@ -45,6 +49,18 @@ describe('the tabs of the phone', () => {
         expect(current[0].classList.contains('is-current')).toBe(true)
         expect(document.querySelectorAll('.is-current').length).toBe(1)
         expect(document.querySelector('nav').getAttribute('aria-label')).toBe('Main')
+    })
+
+    it('F88: the bar carries the home\'s row of bars, the fire on the stretch of the current tab', () => {
+        document.body.innerHTML = renderTabBar('/blend')
+        const row = document.querySelector('.phone-tabbar__bars')
+        expect(row.getAttribute('aria-hidden')).toBe('true')
+        const bars = [...row.querySelectorAll('i')]
+        expect(bars.length).toBeGreaterThanOrEqual(30)
+        const lit = bars.filter(bar => bar.classList.contains('on')).length
+        expect(lit).toBe(Math.round(bars.length / 5))
+        document.body.innerHTML = renderTabBar('/homework')
+        expect(document.querySelectorAll('.phone-tabbar__bars i.on').length).toBe(0)
     })
 
     it('every tab has an icon and a label', () => {
@@ -76,7 +92,7 @@ describe('PhoneShell', () => {
             scrollY: 0,
             location: { pathname: path },
             matchMedia: (query) => ({
-                matches: query.includes('max-width') ? width <= 767 : false,
+                matches: query.includes('max-width') ? width <= 899 : false,
                 addEventListener: (type, listener) => { if (query.includes('max-width')) phoneListener = listener },
                 removeEventListener: () => { }
             }),
@@ -116,6 +132,16 @@ describe('PhoneShell', () => {
 
         expect(document.querySelector('#phone-topbar [data-screen-name]').textContent).toBe('Albums')
         expect(document.querySelector('#phone-tabbar [aria-current="page"]').dataset.tab).toBe('albums')
+    })
+
+    it('F88: the top bar carries the mark of the site in fire, and it still leads to the entry page', () => {
+        start(393, '/albums')
+
+        const link = document.querySelector('#phone-topbar a.phone-topbar__logo-link')
+        expect(link.getAttribute('href')).toBe('/home')
+        expect(link.hasAttribute('data-full-page')).toBe(true)
+        expect(link.getAttribute('aria-label')).toBe('The Album Blender, the entry page')
+        expect(link.querySelector('img').getAttribute('src')).toMatch(/wordmark/)
     })
 
     it('follows the screen: the name and the current tab change, and the new screen starts at its top', () => {

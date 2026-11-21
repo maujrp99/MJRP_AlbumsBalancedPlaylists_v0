@@ -16,6 +16,10 @@
 - [x] TASK-04 a página viva: faixas, fio, caixote em CSS, legenda, disco por faixa no celular, brasas, janela de movimento e «Pause motion» (`public/splash/splash.js`, `main.js`); teste `test/splash/splash.test.js` · implements:: REQ-01, REQ-04, REQ-07 · model:: opus · rounds:: 1
 - [x] TASK-05 o caixote em 3D, carregado só quando cabe (`public/splash/crate3d.js`; `shouldLoad3d` em `splash.js`) · implements:: REQ-04, REQ-08 · model:: opus · rounds:: 1
 - [x] TASK-06 «Sign in» da página abre a janela de entrar no app (`public/js/components/navigation/signInFromLink.js`, uma linha no `app.js`); teste `test/components/navigation/signInFromLink.test.js` · implements:: REQ-03 · model:: opus · rounds:: 1
+- [x] TASK-09 (UAT-240, UAT-241) o texto todo num dicionário só, em português e inglês (`public/splash/copy.js`), escrito na página pelo plugin `entryPage` (`fillCopy`) e trocado no navegador pela chave PT · EN (`public/splash/lang.js`: idioma do navegador, escolha no `localStorage`); testes `test/splash/copy.test.js`, `lang.test.js` · implements:: REQ-01 · model:: sonnet · rounds:: 1
+- [x] TASK-10 (UAT-240) a barra é o menu: a barra contínua com as cinco paradas e uma história por item, a flip como faixa curta, o ícone de pausa, o ponto de ambiente de cada história (`public/splash/menu.js`, `public/splash.html`, `splash.js`); teste `test/splash/menu.test.js` · implements:: REQ-01, REQ-04 · model:: sonnet · rounds:: 1
+- [x] TASK-11 (UAT-241) com conta: o menu e só o «Inicie»; um item do menu vai à tela do app (`hasAccount` de `gate.js` em `splash.js`, `applyAccount` em `menu.js`); testes em `test/splash/menu.test.js` e `splash.test.js` · implements:: REQ-03 · model:: sonnet · rounds:: 1
+- [x] TASK-12 (UAT-240) a v4, o ritmo da página: uma vinheta por história (`public/splash/ambient.js` e o CSS da `public/splash.html`), as alturas da tabela de entrega, a abertura do celular só com o título e a linha; teste `test/splash/ambient.test.js` · implements:: REQ-01, REQ-04 · model:: sonnet · rounds:: 1
 
 ## Verification
 - [x] TASK-07 suíte, lint e build verdes; o roteamento do Firebase conferido no emulador de Hosting (raiz = página, `/home` e `/albums/<id>` = app) · implements:: REQ-02, REQ-05 · model:: opus · rounds:: 2
@@ -24,6 +28,8 @@
 ## Results
 - TASK-07: `npx eslint . --quiet` sem erro; `npx vitest run` 284 arquivos, 3663 testes, todos passando; `npx vite build` verde (a segunda rodada consertou a pasta de saída do plugin). Emulador do Hosting: a raiz é a página, `/home`, `/albums/abc123`, `/inventory`, `/callback`, `/app.html` são o app, todos sem cache.
 - TASK-08: `reports/evidence/F80/2026-11-20-entry-page-proof.md` (capturas, medidas e o que não foi conferido). No caminho, a capa fictícia saía quebrada (aspas dentro do SVG): consertada em `covers.js`, com um teste que lê cada SVG.
+
+- TASK-09 a 11: `npx vitest run test/architecture test/splash` 37 arquivos, 359 testes, verdes; `npx eslint public/splash scripts/entryPage.mjs test/splash` sem erro; nenhuma função acima de complexidade 10 em `public/splash`. Navegador (Chrome sem interface, servidor de desenvolvimento, capas reais), 1280 e 393, sem conta e com conta (pela chave do `gate.js` no `localStorage`), PT e EN: sem rolagem lateral, sem erro no console, nenhum rótulo do menu cortado; evidência em `reports/evidence/F80/home-bar-is-the-menu/` (`measures.json`).
 
 ## Documentation
 - [x] `docs/specs/behavior.md`: a seção «A raiz do site e a página de entrada (F80)»

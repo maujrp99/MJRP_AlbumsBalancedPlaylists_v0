@@ -3,32 +3,41 @@
  * (design/inception/splash-crate-v2.html), soft fire, as a module.
  *
  * The record playing: the browser's own scroll decides the track (nothing is hijacked); each track
- * pulls one record from the crate, the caption names it, the thread of equalizer bars lights up to
- * it; «Flip the record» turns the crate to side B. The fire is the light from below: strong on the
- * first screen and on the invitation, soft in between. The automatic motion (fire, breathing bars)
- * rests 10 s after load or after the last scroll; «Pause motion» stops everything. With reduced
- * motion nothing moves and the 3D is not even fetched. The text never waits for any of this.
+ * pulls one record from the crate, the caption names it, the menu bar of equalizer bars fills up to
+ * it (menu.js: the bar is the menu, one story per item); «Vire o disco» turns the crate to side B.
+ * The fire is the light from below: strong on the first screen and on the invitation, soft in
+ * between. The automatic motion (fire, breathing bars) rests 10 s after load or after the last
+ * scroll; the pause icon stops everything. With reduced motion nothing moves, the icon is hidden
+ * and the 3D is not even fetched. The text never waits for any of this. The page's language and
+ * the account (signed in: the menu and one «Inicie» button) are decided here too (UAT-240, UAT-241).
  *
  * Pure parts are exported for the tests; `startSplash(window)` wires them to the page.
  */
 
 import { VIEWS, PAGE_VIEW, recordAt } from './framing.js'
+import { t } from './copy.js'
+import { chooseLanguage, readStoredLanguage, storeLanguage, pageStorage, applyLanguage } from './lang.js'
+import { startMenuBar, applyAccount, threadBarStyle } from './menu.js'
+import { hasAccount } from './gate.js'
+import { startAmbient } from './ambient.js'
+
+export { threadBarStyle }
 
 /** The soft fire, the owner's choice (2026-11-20 «fogo brando na verdade»): peak on A1 and B2, low in between. */
 export const FIRE = Object.freeze({ peak: 0.72, low: 0.28 })
 
-export const ORDER = Object.freeze(['a1', 'a2', 'a3', 'a4', 'a5', 'flip', 'b1', 'b2'])
+export const ORDER = Object.freeze(['a1', 'start', 'albums', 'blend', 'flip', 'playlists', 'inventory', 'end'])
 
-/** Where each track stands: which side faces you, which record is pulled, how strong the fire is. */
+/** Where each part stands: which side faces you, which record is pulled, how strong the fire is. The flip is a band: it pulls nothing, the crate turns while it passes. */
 export const TRACKS = Object.freeze({
-    a1: { side: 'A', pull: -1, face: 0, fire: FIRE.peak, label: 'Side A · 1 — The Blender' },
-    a2: { side: 'A', pull: 2, fire: FIRE.low, label: 'Side A · 2 — Series' },
-    a3: { side: 'A', pull: 3, fire: FIRE.low, label: 'Side A · 3 — Ranking' },
-    a4: { side: 'A', pull: 5, fire: FIRE.low, label: 'Side A · 4 — Blend' },
-    a5: { side: 'A', pull: 6, fire: FIRE.low, label: 'Side A · 5 — Your shelf' },
-    flip: { side: 'A', pull: -1, face: 0, fire: (FIRE.low + FIRE.peak) / 2, label: 'Flip the record' },
-    b1: { side: 'B', pull: 10, fire: FIRE.low, label: 'Side B · 1 — Why whole albums' },
-    b2: { side: 'B', pull: -1, face: 13, fire: FIRE.peak, label: 'Side B · 2 — Start' }
+    a1: { side: 'A', pull: -1, face: 0, fire: FIRE.peak },
+    start: { side: 'A', pull: 2, fire: FIRE.low },
+    albums: { side: 'A', pull: 0, fire: FIRE.low },
+    blend: { side: 'A', pull: 5, fire: FIRE.low },
+    flip: { side: 'A', pull: -1, face: 0, fire: (FIRE.low + FIRE.peak) / 2 },
+    playlists: { side: 'B', pull: 10, fire: FIRE.low },
+    inventory: { side: 'B', pull: 12, fire: FIRE.low },
+    end: { side: 'B', pull: -1, face: 13, fire: FIRE.peak }
 })
 
 /** The automatic motion rests this long after load or after the last scroll. */
@@ -85,21 +94,13 @@ export function cssCrateLayout(track, count = 14) {
 /** The 3D crate comes only to a computer, with WebGL, without a request for less motion. */
 export const shouldLoad3d = ({ reduce, phone, webgl, nogl }) => !reduce && !phone && !nogl && webgl
 
-/** The bars of the thread: each its own height, duration and offset, never in unison. */
-export function threadBarStyle(k) {
-    const h = 38 + Math.round(58 * Math.abs(Math.sin(k * 1.93 + 0.4)))
-    const d = (0.55 + ((k * 37) % 9) / 10).toFixed(2)
-    const o = (((k * 53) % 7) / 10).toFixed(1)
-    return `--h:${h}%;--d:${d}s;--o:-${o}s`
-}
-
 /** The record as the page knows it, from the data the build wrote on each sleeve. */
 export const albumOf = (img) => ({
     t: img.dataset.t || '', a: img.dataset.a || '', y: img.dataset.y || '', href: img.dataset.href || ''
 })
 
-/** "Artist · Year", or "Artist · fictional album". */
-export const captionLine = (album) => (album.y ? `${album.a} · ${album.y}` : `${album.a} · fictional album`)
+/** "Artist · Year", or "Artist · fictional album" (in the page's language). */
+export const captionLine = (album, lang = 'pt') => (album.y ? `${album.a} · ${album.y}` : `${album.a} · ${t('c.fictional', lang)}`)
 
 function hasWebGL(D) {
     try {
@@ -161,103 +162,87 @@ function embers(win, cv, getLevel, page) {
     kick()
 }
 
-/**
- * Wire the page. Returns the page's state (for the 3D crate and for checks in the browser).
- * @param {Window} win
- */
-export function startSplash(win) {
+/** The stage on a diagonal (UAT-235): the camera's view and the CSS crate turned the same way, half as far (it has no side walls: at the full turn the leaning records stick out past its front); on a computer the stage reaches the window's right edge, past its column («Palco largo»). */
+function setupStage(win, page, scene) {
     const D = win.document
-    const H = D.documentElement
-    H.classList.add('js')
-    const reduce = win.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const phone = win.matchMedia('(max-width:899px)').matches
-    const sections = ORDER.map(id => D.getElementById(id))
-    const imgs = [...D.querySelectorAll('#box .sl')]
-    const albums = imgs.map(albumOf)
-    const scene = D.getElementById('scene')
-
-    // the bars of the thread
-    let gi = 0
-    D.querySelectorAll('#groups .g').forEach((g) => {
-        let bars = ''
-        for (let i = 0; i < 5; i++) bars += `<i style="${threadBarStyle(gi * 5 + i)}"></i>`
-        g.innerHTML = bars
-        gi++
-    })
-
-    const page = {
-        TRACKS, ORDER, albums, reduce, phone,
-        state: { track: 'a1', flip: 0 },
-        moving: () => H.classList.contains('moving') && !H.classList.contains('paused')
-    }
-    win.__splash = page
-
-    // the crate on a diagonal (UAT-235): the camera's view, and the CSS crate turned the same way, half as far
-    // (it has no side walls: at the full turn the leaning records stick out past its front);
-    // on a computer the stage reaches the window's right edge, past its column («Palco largo»)
     page.view = VIEWS[PAGE_VIEW]
+    if (page.phone) return
     const crateCss = D.getElementById('crate-css')
-    if (crateCss && page.view.azimuth && !phone) crateCss.style.setProperty('--yaw', `${-page.view.azimuth / 2}deg`)
-    if (page.view.bleed && !phone) {
-        const bleed = () => {
-            scene.style.marginRight = '0px'
-            const st = D.getElementById('stage').getBoundingClientRect()
-            scene.style.marginRight = `${-Math.max(0, H.clientWidth - st.right)}px`
-        }
-        bleed(); win.addEventListener('resize', bleed)
+    if (crateCss && page.view.azimuth) crateCss.style.setProperty('--yaw', `${-page.view.azimuth / 2}deg`)
+    if (!page.view.bleed) return
+    const bleed = () => {
+        scene.style.marginRight = '0px'
+        const st = D.getElementById('stage').getBoundingClientRect()
+        scene.style.marginRight = `${-Math.max(0, D.documentElement.clientWidth - st.right)}px`
     }
+    bleed(); win.addEventListener('resize', bleed)
+}
 
-    // the motion window: the automatic motion runs 10 s after load or after the last scroll, then rests
+/** The motion window: the automatic motion runs 10 s after load or after the last scroll, then rests. Returns `wake`. */
+function motionWindow(win, reduce) {
+    const D = win.document
     let restTimer = 0
-    const wake = () => {
+    return () => {
         if (reduce) return
-        H.classList.add('moving')
+        D.documentElement.classList.add('moving')
         win.clearTimeout(restTimer)
-        restTimer = win.setTimeout(() => { H.classList.remove('moving'); D.dispatchEvent(new win.Event('motionchange')) }, MOTION_WINDOW_MS)
+        restTimer = win.setTimeout(() => { D.documentElement.classList.remove('moving'); D.dispatchEvent(new win.Event('motionchange')) }, MOTION_WINDOW_MS)
         D.dispatchEvent(new win.Event('motionchange'))
     }
+}
 
-    // on the phone the thread is progress only, out of the tab order
-    if (phone) D.querySelectorAll('#groups a').forEach(a => { a.tabIndex = -1; a.setAttribute('aria-hidden', 'true') })
-    // «Pause motion»: shown unless the system already asks for less motion
+/** The pause icon: shown unless the system already asks for less motion; its label is the dictionary's. */
+function pauseIcon(win, reduce, wake) {
+    const D = win.document
+    const H = D.documentElement
     const mb = D.getElementById('motion')
-    if (mb && !reduce) {
-        mb.hidden = false
-        if (phone) { D.getElementById('hero-ctas').appendChild(mb); mb.classList.add('inline') }
+    if (!mb) return
+    mb.hidden = reduce
+    mb.onclick = () => {
+        const paused = H.classList.toggle('paused')
+        const key = paused ? 'play' : 'pause'
+        const label = t(key, H.lang === 'en' ? 'en' : 'pt')
+        mb.setAttribute('aria-pressed', paused ? 'true' : 'false')
+        mb.setAttribute('data-i18n-aria', key)
+        mb.setAttribute('data-i18n-title', key)
+        mb.setAttribute('aria-label', label)
+        mb.title = label
+        if (!paused) wake()
+        D.dispatchEvent(new win.Event('motionchange'))
     }
-    if (mb) {
-        mb.onclick = () => {
-            const paused = H.classList.toggle('paused')
-            mb.setAttribute('aria-pressed', paused ? 'true' : 'false')
-            mb.textContent = paused ? 'Play motion' : 'Pause motion'
-            if (!paused) wake()
-            D.dispatchEvent(new win.Event('motionchange'))
+}
+
+/** The CSS crate and the caption of the front record; `caption` is drawn again when the language changes. */
+function crateView(win, imgs, albums, langOf) {
+    const D = win.document
+    return {
+        layoutCss(track) {
+            cssCrateLayout(track, imgs.length).forEach((place, i) => {
+                const im = imgs[i]
+                im.classList.toggle('vis', place.visible)
+                if (place.visible) { im.style.transform = place.transform; im.style.zIndex = place.zIndex }
+            })
+        },
+        caption(track) {
+            const album = albums[captionIndex(track, albums.length)]
+            if (!album) return
+            const lang = langOf()
+            const b = D.createElement('b')
+            b.textContent = album.t
+            D.getElementById('who').replaceChildren(b, D.createTextNode(captionLine(album, lang)))
+            const am = D.getElementById('am')
+            if (am && album.href) {
+                am.href = album.href
+                am.setAttribute('aria-label', `${t('c.listen', lang)}: ${album.t}, ${album.a}${t('c.newtab', lang)}`)
+            }
         }
     }
+}
 
-    // the CSS crate and the caption
-    const layoutCss = (track) => {
-        cssCrateLayout(track, imgs.length).forEach((place, i) => {
-            const im = imgs[i]
-            im.classList.toggle('vis', place.visible)
-            if (place.visible) { im.style.transform = place.transform; im.style.zIndex = place.zIndex }
-        })
-    }
-    const caption = (track) => {
-        const album = albums[captionIndex(track, albums.length)]
-        if (!album) return
-        const who = D.getElementById('who')
-        const b = D.createElement('b')
-        b.textContent = album.t
-        who.replaceChildren(b, D.createTextNode(captionLine(album)))
-        const am = D.getElementById('am')
-        if (am && album.href) {
-            am.href = album.href
-            am.setAttribute('aria-label', `Listen to ${album.t} by ${album.a} on Apple Music (opens in a new tab)`)
-        }
-    }
-
-    // phone: each track brings its own record (a copy of the crate's image, no extra bytes on the wire)
+/** Phone: each part brings its own record (a copy of the crate's image, no extra bytes on the wire). Returns the redraw of the credits for a language. */
+function phoneSlots(win, imgs, albums) {
+    const D = win.document
+    const credits = []
     D.querySelectorAll('.slot').forEach((slot) => {
         const i = recordAt(Number(slot.dataset.pull), imgs.length)
         if (!imgs[i]) return
@@ -267,14 +252,10 @@ export function startSplash(win) {
         const album = albums[i]
         const credit = D.createElement(album.href ? 'a' : 'span')
         credit.className = 'slot-am'
-        if (album.href) {
-            credit.href = album.href; credit.target = '_blank'; credit.rel = 'noopener'
-            credit.textContent = `${album.t} · ${album.a} — Listen on Apple Music`
-        } else {
-            credit.textContent = `${album.t} · ${album.a} — fictional album`
-        }
+        if (album.href) { credit.href = album.href; credit.target = '_blank'; credit.rel = 'noopener' }
         slot.appendChild(credit)
         slot.removeAttribute('aria-hidden')
+        credits.push([credit, album])
     })
     const pending = D.querySelectorAll('.slot.pre')
     if ('IntersectionObserver' in win) {
@@ -285,10 +266,17 @@ export function startSplash(win) {
     } else {
         pending.forEach(s => s.classList.remove('pre'))
     }
+    return (lang) => credits.forEach(([credit, album]) => {
+        credit.textContent = `${album.t} · ${album.a} — ${album.href ? t('c.listen', lang) : t('c.fictional', lang)}`
+    })
+}
 
-    // the record playing: the browser's scroll decides the track
+/** The record playing: the browser's scroll decides the track. Returns the scroll handler. */
+function watchTracks(win, page, scene, view) {
+    const D = win.document
+    const sections = ORDER.map(id => D.getElementById(id))
     let current = ''
-    const onScroll = () => {
+    return () => {
         const vh = win.innerHeight
         const track = trackAt(sections.map(s => s.getBoundingClientRect().top), vh)
         const fr = D.getElementById('flip').getBoundingClientRect()
@@ -296,37 +284,86 @@ export function startSplash(win) {
         page.state.track = track
         if (track !== current) {
             current = track
-            const s = TRACKS[track]
-            D.getElementById('now-track').textContent = s.label
-            const ti = ORDER.indexOf(track)
-            D.querySelectorAll('#groups [data-for]').forEach((g) => {
-                const i = ORDER.indexOf(g.dataset.for)
-                g.classList.toggle('on', i <= ti)
-                g.classList.toggle('cur', i === ti)
-                if (i === ti) g.setAttribute('aria-current', 'step'); else g.removeAttribute('aria-current')
-            })
-            scene.style.setProperty('--fire', s.fire)
-            if (!phone) { layoutCss(track); caption(track) }
+            scene.style.setProperty('--fire', TRACKS[track].fire)
+            if (!page.phone) { view.layoutCss(track); view.caption(track) }
             D.dispatchEvent(new win.CustomEvent('trackchange', { detail: track }))
         }
         D.dispatchEvent(new win.Event('scrollstate'))
     }
+}
+
+/** The language: the remembered choice, else the browser's; the switch (PT · EN) changes and remembers it. */
+function languageControl(win, onChange) {
+    const D = win.document
+    const storage = pageStorage(win)
+    const nav = win.navigator || {}
+    const languages = nav.languages && nav.languages.length ? nav.languages : [nav.language]
+    let lang = chooseLanguage({ stored: readStoredLanguage(storage), languages })
+    const set = (next, remember) => {
+        lang = next
+        applyLanguage(D, lang)
+        if (remember) storeLanguage(storage, lang)
+        onChange(lang)
+    }
+    D.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => set(b.getAttribute('data-lang'), true)))
+    return { current: () => lang, start: () => { if (lang !== 'pt') set(lang, false) } }
+}
+
+/** The real 3D crate: after the page has loaded, when it fits. */
+function load3d(win, page) {
+    const D = win.document
+    const nogl = new URLSearchParams(win.location.search).has('nogl')
+    const { reduce, phone } = page
+    if (!shouldLoad3d({ reduce, phone, nogl, webgl: !reduce && !phone && !nogl && hasWebGL(D) })) return
+    const go = () => {
+        const run = () => import('./crate3d.js').then(m => m.startCrate3d(win, page)).catch(() => { /* the CSS crate stays */ })
+        if ('requestIdleCallback' in win) win.requestIdleCallback(run, { timeout: 1500 }); else win.setTimeout(run, 200)
+    }
+    if (D.readyState === 'complete') go(); else win.addEventListener('load', go, { once: true })
+}
+
+/**
+ * Wire the page. Returns the page's state (for the 3D crate and for checks in the browser).
+ * @param {Window} win
+ */
+export function startSplash(win) {
+    const D = win.document
+    const H = D.documentElement
+    H.classList.add('js')
+    const reduce = win.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const phone = win.matchMedia('(max-width:899px)').matches
+    const imgs = [...D.querySelectorAll('#box .sl')]
+    const albums = imgs.map(albumOf)
+    const scene = D.getElementById('scene')
+    const page = {
+        TRACKS, ORDER, albums, reduce, phone,
+        state: { track: 'a1', flip: 0 },
+        moving: () => H.classList.contains('moving') && !H.classList.contains('paused')
+    }
+    win.__splash = page
+    setupStage(win, page, scene)
+    const wake = motionWindow(win, reduce)
+    pauseIcon(win, reduce, wake)
+
+    let lang = 'pt'
+    const view = crateView(win, imgs, albums, () => lang)
+    const redrawCredits = phoneSlots(win, imgs, albums)
+    const language = languageControl(win, (next) => { lang = next; redrawCredits(next); view.caption(phone ? 'a1' : page.state.track) })
+    lang = language.current()
+    redrawCredits(lang)
+    const onScroll = watchTracks(win, page, scene, view)
     win.addEventListener('scroll', () => { onScroll(); wake() }, { passive: true })
     win.addEventListener('resize', onScroll)
-    layoutCss('a1'); caption('a1'); onScroll(); wake()
+    view.layoutCss('a1'); view.caption('a1'); onScroll(); wake()
+    language.start()
+
+    startMenuBar(win)
+    startAmbient(win)
+    hasAccount(win).then((signedIn) => applyAccount(D, signedIn))
 
     const fireLevel = () => Number(win.getComputedStyle(scene).getPropertyValue('--fire')) || FIRE.peak
     embers(win, D.getElementById('embers'), fireLevel, page)
     if (phone) embers(win, D.getElementById('embers-b2'), () => FIRE.peak, page)
-
-    // the real 3D crate: after the page has loaded, when it fits
-    const nogl = new URLSearchParams(win.location.search).has('nogl')
-    if (shouldLoad3d({ reduce, phone, nogl, webgl: !reduce && !phone && !nogl && hasWebGL(D) })) {
-        const go = () => {
-            const run = () => import('./crate3d.js').then(m => m.startCrate3d(win, page)).catch(() => { /* the CSS crate stays */ })
-            if ('requestIdleCallback' in win) win.requestIdleCallback(run, { timeout: 1500 }); else win.setTimeout(run, 200)
-        }
-        if (D.readyState === 'complete') go(); else win.addEventListener('load', go, { once: true })
-    }
+    load3d(win, page)
     return page
 }

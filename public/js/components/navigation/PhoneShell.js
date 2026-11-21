@@ -14,6 +14,8 @@ import { giveBackAStrayHold, holdPageBehindWindows } from '../ui/windowsHoldTheP
 import { renderTabBar, screenName, currentTab } from './phoneTabs.js'
 import { openPhoneMenu, accountInitial } from './PhoneMenu.js'
 import { isSignedIn } from './AuthNav.js'
+import { MENU_TEXT } from './menuText.js'
+import { WORDMARK_URL, WORDMARK_WIDTH, WORDMARK_HEIGHT } from './wordmark.js'
 
 /** «Back to top» shows after this many screens of scroll (finding 23 of the UX audit). */
 const SCREENS_BEFORE_TO_TOP = 2
@@ -125,7 +127,7 @@ export class PhoneShell {
             ? '<span class="phone-avatar" data-account-initial></span>'
             : getIcon('Menu', 'phone-topbar__menu-icon')
         this.parts.topBar.innerHTML = `
-          <a class="phone-topbar__logo-link" href="/home" data-full-page aria-label="The Album Blender, the entry page"><img class="phone-topbar__logo" src="/assets/images/logo.png" alt=""></a>
+          <a class="phone-topbar__logo-link" href="/home" data-full-page aria-label="${MENU_TEXT.entryPage}"><img class="phone-topbar__logo" src="${WORDMARK_URL}" alt="" width="${WORDMARK_WIDTH}" height="${WORDMARK_HEIGHT}"></a>
           <span class="phone-topbar__title" data-screen-name></span>
           <button type="button" id="phoneMenuBtn" class="phone-topbar__menu" aria-haspopup="dialog" aria-label="Menu and account">${account}</button>`
         // What a person wrote goes in as text, never as HTML

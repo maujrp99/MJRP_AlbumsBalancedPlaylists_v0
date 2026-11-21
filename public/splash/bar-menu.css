@@ -1,0 +1,29 @@
+/*
+ * bar-menu.css - the home's bar, shared (F88): five stops over ONE row of equalizer bars, ⟲ between the
+ * two sides, the fire on the lit stretch. Loaded by the home (public/splash.html) and by the app
+ * (public/js/app.js; it lives with the home's files because the home names nothing of the app's), so that the two bars cannot drift apart: the passage from the home to the app
+ * does not change the bar. The page that uses it sets the colours it reads (--muted, --faint,
+ * --orange-text, --body) and may place the bar (the home moves it to the bottom on the phone).
+ * Written for the computer: the stop's label on top of the row of bars, 52 px tall.
+ */
+/* ONE width for the bar in the home and in the app (F88): a function of the screen, never of the account side.
+   620 px (the approved v4 and Transformar), centred on the page; it gives way, never overlapping, only below 1122 px,
+   where 251 px a side (the mark, or the home's widest right side: language and Start) no longer leave it the room. */
+:root{--bar-w:min(620px,calc(100vw - 502px))}
+@keyframes eqb{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;min-width:0}
+.ms .stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font:600 14px/1 var(--body);border-radius:6px;white-space:nowrap}
+.ms .stop:hover{color:#fff}
+.ms .stop.on{color:#fff}
+.ms .stop.cur{color:var(--orange-text)}
+.ms .flipmark{position:absolute;z-index:2;left:59%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:12px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
+.ms .flipmark.on{color:var(--orange-text)}
+.eqbar{position:absolute;left:0;right:0;display:flex;align-items:flex-end;gap:2px;pointer-events:none}
+.eqbar i{flex:1 1 0;min-width:1px;border-radius:1px 1px 0 0;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom}
+.eqbar i.on{background:linear-gradient(0deg,#dc2626,#f97316 60%,#fbbf24)}
+html.moving:not(.paused) .eqbar i.cur{animation:eqb var(--d) ease-in-out var(--o) infinite alternate}
+.ms .stop{justify-content:flex-start;padding-top:8px;min-height:52px}
+.ms .flipmark{top:4px}
+.eqbar{bottom:6px;height:16px}
+.ms .lb{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){html.moving:not(.paused) .eqbar i.cur{animation:none}}

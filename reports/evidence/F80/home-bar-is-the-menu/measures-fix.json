@@ -1,0 +1,242 @@
+{
+  "report": {
+    "fix-1280-first-in-pt": {
+      "sideways": false,
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "lang": "pt-BR",
+      "signedIn": true,
+      "h1": "Sua próxima série começa aqui.",
+      "labels": [
+        {
+          "t": "Inicie",
+          "w": 36,
+          "stopW": 124,
+          "clipped": false
+        },
+        {
+          "t": "Álbuns",
+          "w": 47,
+          "stopW": 124,
+          "clipped": false
+        },
+        {
+          "t": "Blend",
+          "w": 39,
+          "stopW": 124,
+          "clipped": false
+        },
+        {
+          "t": "Playlists",
+          "w": 56,
+          "stopW": 124,
+          "clipped": false
+        },
+        {
+          "t": "Inventário",
+          "w": 67,
+          "stopW": 124,
+          "clipped": false
+        }
+      ],
+      "anyClipped": false,
+      "menuHrefs": [
+        "/start",
+        "/albums",
+        "/blend",
+        "/saved-playlists",
+        "/inventory"
+      ],
+      "pause": {
+        "hidden": false,
+        "label": "Pausar o movimento"
+      },
+      "gl": true,
+      "consoleErrors": []
+    },
+    "fix-1280-first-out-en-to-pt": {
+      "sideways": false,
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "lang": "en",
+      "signedIn": false,
+      "h1": "Dig through the albums you love.",
+      "labels": [
+        {
+          "t": "Start",
+          "w": 34,
+          "stopW": 124,
+          "clipped": false
+        },
+        {
+          "t": "Albums",
+          "w": 51,
+          "stopW": 124,
+          "clipped": false
+        },
+        {
+          "t": "Blend",
+          "w": 39,
+          "stopW": 124,
+          "clipped": false
+        },
+        {
+          "t": "Playlists",
+          "w": 56,
+          "stopW": 124,
+          "clipped": false
+        },
+        {
+          "t": "Inventory",
+          "w": 64,
+          "stopW": 124,
+          "clipped": false
+        }
+      ],
+      "anyClipped": false,
+      "menuHrefs": [
+        "#start",
+        "#albums",
+        "#blend",
+        "#playlists",
+        "#inventory"
+      ],
+      "pause": {
+        "hidden": false,
+        "label": "Pause motion"
+      },
+      "gl": true,
+      "consoleErrors": []
+    },
+    "fix-393-first-in-pt": {
+      "sideways": false,
+      "scrollWidth": 393,
+      "clientWidth": 393,
+      "lang": "pt-BR",
+      "signedIn": true,
+      "h1": "Sua próxima série começa aqui.",
+      "labels": [
+        {
+          "t": "Inicie",
+          "w": 32,
+          "stopW": 72,
+          "clipped": false
+        },
+        {
+          "t": "Álbuns",
+          "w": 41,
+          "stopW": 72,
+          "clipped": false
+        },
+        {
+          "t": "Blend",
+          "w": 34,
+          "stopW": 72,
+          "clipped": false
+        },
+        {
+          "t": "Playlists",
+          "w": 50,
+          "stopW": 72,
+          "clipped": false
+        },
+        {
+          "t": "Inventário",
+          "w": 59,
+          "stopW": 72,
+          "clipped": false
+        }
+      ],
+      "anyClipped": false,
+      "menuHrefs": [
+        "/start",
+        "/albums",
+        "/blend",
+        "/saved-playlists",
+        "/inventory"
+      ],
+      "pause": {
+        "hidden": false,
+        "label": "Pausar o movimento"
+      },
+      "gl": false,
+      "consoleErrors": []
+    },
+    "fix-393-first-out-en-to-pt": {
+      "sideways": false,
+      "scrollWidth": 393,
+      "clientWidth": 393,
+      "lang": "en",
+      "signedIn": false,
+      "h1": "Dig through the albums you love.",
+      "labels": [
+        {
+          "t": "Start",
+          "w": 30,
+          "stopW": 72,
+          "clipped": false
+        },
+        {
+          "t": "Albums",
+          "w": 45,
+          "stopW": 72,
+          "clipped": false
+        },
+        {
+          "t": "Blend",
+          "w": 34,
+          "stopW": 72,
+          "clipped": false
+        },
+        {
+          "t": "Playlists",
+          "w": 50,
+          "stopW": 72,
+          "clipped": false
+        },
+        {
+          "t": "Inventory",
+          "w": 56,
+          "stopW": 72,
+          "clipped": false
+        }
+      ],
+      "anyClipped": false,
+      "menuHrefs": [
+        "#start",
+        "#albums",
+        "#blend",
+        "#playlists",
+        "#inventory"
+      ],
+      "pause": {
+        "hidden": false,
+        "label": "Pause motion"
+      },
+      "gl": false,
+      "consoleErrors": []
+    }
+  },
+  "extra": {
+    "gap-1280": {
+      "titleBottom": 400,
+      "buttonTop": 537,
+      "gapPx": 136,
+      "langButtons": [
+        "44x44",
+        "44x44"
+      ]
+    },
+    "caption-1280": "The Velvet Underground & NicoThe Velvet Underground & Nico · 1967 | Capa do Apple Music",
+    "gap-393": {
+      "titleBottom": 255,
+      "buttonTop": 273,
+      "gapPx": 18,
+      "langButtons": [
+        "44x44",
+        "44x44"
+      ]
+    },
+    "caption-393": "The Velvet Underground & NicoThe Velvet Underground & Nico · 1967 | Capa do Apple Music"
+  }
+}

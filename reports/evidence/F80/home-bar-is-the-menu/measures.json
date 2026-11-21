@@ -1,0 +1,218 @@
+{
+  "home-1280-out-pt": {
+    "sideways": false,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "lang": "pt-BR",
+    "signedIn": false,
+    "h1": "Mergulhe nos álbuns que você ama.",
+    "labels": [
+      {
+        "t": "Inicie",
+        "w": 36,
+        "stopW": 124,
+        "clipped": false
+      },
+      {
+        "t": "Álbuns",
+        "w": 47,
+        "stopW": 124,
+        "clipped": false
+      },
+      {
+        "t": "Blend",
+        "w": 39,
+        "stopW": 124,
+        "clipped": false
+      },
+      {
+        "t": "Playlists",
+        "w": 56,
+        "stopW": 124,
+        "clipped": false
+      },
+      {
+        "t": "Inventário",
+        "w": 67,
+        "stopW": 124,
+        "clipped": false
+      }
+    ],
+    "anyClipped": false,
+    "menuHrefs": [
+      "#start",
+      "#albums",
+      "#blend",
+      "#playlists",
+      "#inventory"
+    ],
+    "pause": {
+      "hidden": false,
+      "label": "Pausar o movimento"
+    },
+    "gl": true,
+    "consoleErrors": []
+  },
+  "home-1280-in-pt": {
+    "sideways": false,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "lang": "pt-BR",
+    "signedIn": true,
+    "h1": "Sua próxima série começa aqui.",
+    "labels": [
+      {
+        "t": "Inicie",
+        "w": 36,
+        "stopW": 124,
+        "clipped": false
+      },
+      {
+        "t": "Álbuns",
+        "w": 47,
+        "stopW": 124,
+        "clipped": false
+      },
+      {
+        "t": "Blend",
+        "w": 39,
+        "stopW": 124,
+        "clipped": false
+      },
+      {
+        "t": "Playlists",
+        "w": 56,
+        "stopW": 124,
+        "clipped": false
+      },
+      {
+        "t": "Inventário",
+        "w": 67,
+        "stopW": 124,
+        "clipped": false
+      }
+    ],
+    "anyClipped": false,
+    "menuHrefs": [
+      "/start",
+      "/albums",
+      "/blend",
+      "/saved-playlists",
+      "/inventory"
+    ],
+    "pause": {
+      "hidden": false,
+      "label": "Pausar o movimento"
+    },
+    "gl": true,
+    "consoleErrors": []
+  },
+  "home-393-out-pt": {
+    "sideways": false,
+    "scrollWidth": 393,
+    "clientWidth": 393,
+    "lang": "pt-BR",
+    "signedIn": false,
+    "h1": "Mergulhe nos álbuns que você ama.",
+    "labels": [
+      {
+        "t": "Inicie",
+        "w": 32,
+        "stopW": 72,
+        "clipped": false
+      },
+      {
+        "t": "Álbuns",
+        "w": 41,
+        "stopW": 72,
+        "clipped": false
+      },
+      {
+        "t": "Blend",
+        "w": 34,
+        "stopW": 72,
+        "clipped": false
+      },
+      {
+        "t": "Playlists",
+        "w": 50,
+        "stopW": 72,
+        "clipped": false
+      },
+      {
+        "t": "Inventário",
+        "w": 59,
+        "stopW": 72,
+        "clipped": false
+      }
+    ],
+    "anyClipped": false,
+    "menuHrefs": [
+      "#start",
+      "#albums",
+      "#blend",
+      "#playlists",
+      "#inventory"
+    ],
+    "pause": {
+      "hidden": false,
+      "label": "Pausar o movimento"
+    },
+    "gl": false,
+    "consoleErrors": []
+  },
+  "home-393-in-pt": {
+    "sideways": false,
+    "scrollWidth": 393,
+    "clientWidth": 393,
+    "lang": "pt-BR",
+    "signedIn": true,
+    "h1": "Sua próxima série começa aqui.",
+    "labels": [
+      {
+        "t": "Inicie",
+        "w": 32,
+        "stopW": 72,
+        "clipped": false
+      },
+      {
+        "t": "Álbuns",
+        "w": 41,
+        "stopW": 72,
+        "clipped": false
+      },
+      {
+        "t": "Blend",
+        "w": 34,
+        "stopW": 72,
+        "clipped": false
+      },
+      {
+        "t": "Playlists",
+        "w": 50,
+        "stopW": 72,
+        "clipped": false
+      },
+      {
+        "t": "Inventário",
+        "w": 59,
+        "stopW": 72,
+        "clipped": false
+      }
+    ],
+    "anyClipped": false,
+    "menuHrefs": [
+      "/start",
+      "/albums",
+      "/blend",
+      "/saved-playlists",
+      "/inventory"
+    ],
+    "pause": {
+      "hidden": false,
+      "label": "Pausar o movimento"
+    },
+    "gl": false,
+    "consoleErrors": []
+  }
+}

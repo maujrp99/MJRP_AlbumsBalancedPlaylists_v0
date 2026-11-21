@@ -74,14 +74,14 @@ describe('the menu of the computer', () => {
     it('says «Start» and goes to /start; nothing says Home', () => {
         const body = html()
         const links = [...body.querySelectorAll('a[href="/start"]')].map(a => a.textContent.trim())
-        expect(links.length).toBeGreaterThanOrEqual(2) // the bar and the drawer
+        expect(links.length).toBeGreaterThanOrEqual(1) // the bar (the drawer is gone, F88)
         links.forEach(text => expect(text).toBe('Start'))
-        expect(body.querySelectorAll('a[href="/home"]:not(.nav-logo)').length).toBe(0) // only the logo leads to /home
+        expect(body.querySelectorAll('a[href="/home"]:not(.top-menu__home)').length).toBe(0) // only the logo leads to /home
         expect(body.textContent).not.toMatch(/\bHome\b/)
     })
 
     it('the logo leads to /home (the entry page), by a full page load (no data-link)', () => {
-        const logo = html().querySelector('a.nav-logo')
+        const logo = html().querySelector('a.top-menu__home')
         expect(logo.getAttribute('href')).toBe('/home')
         expect(logo.hasAttribute('data-full-page')).toBe(true)
     })

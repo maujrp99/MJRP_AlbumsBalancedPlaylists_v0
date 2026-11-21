@@ -44,7 +44,7 @@ A crítica de UX está em `reports/audits/2026-11-20-mjrpalbumblender-v0-mobile-
   verified_by:: `reports/evidence/F76/2026-11-20-production-proof.md`
 - [REQ-11] Inventário no celular: uma linha compacta por álbum (capa, título, artista, status, valor), com paginação; mudar o status, editar, ver o álbum e os links de compra com alvos de 44 px; os totais e os filtros por status à vista. · fixes S-58
   verified_by:: `reports/evidence/F76/2026-11-20-production-proof.md`
-- [REQ-12] A tela de 768 px para cima não muda: nenhuma regra, marcação ou comportamento desta feature age fora do celular, e isso é provado por comparação antes e depois. · fixes S-58
+- [REQ-12] A tela de 768 px para cima não muda: **Mudança feita pela F88, pendente do aceite do dono (2026-11-21):** o corte do celular passou de 767 px para 899 px (o da página de entrada), e o `md` do Tailwind para 900 px, para a passagem home → app não mudar de forma de 768 a 899 px; nessa faixa o app usa o desenho do celular. A regra vale agora a partir de 900 px. Texto original: nenhuma regra, marcação ou comportamento desta feature age fora do celular, e isso é provado por comparação antes e depois. · fixes S-58
   verified_by:: `reports/evidence/F76/2026-11-20-foundation-proof.md`, `reports/evidence/F76/2026-11-20-production-proof.md`
 - [REQ-13] O app aberto pelo ícone da tela de início do iPhone ocupa a tela inteira, com o nome e o ícone do app, e respeita as áreas seguras. · fixes S-58
   verified_by:: `reports/evidence/F76/2026-11-20-production-proof.md`

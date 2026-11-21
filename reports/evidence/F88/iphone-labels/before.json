@@ -1,0 +1,314 @@
+{
+ "iPhone14-t100-home-pt": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 60,
+  "gap": 8.9,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t100-home-en": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 60,
+  "gap": 8.9,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t100-start": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t100-albums": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t100-playlists": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t100-inventory": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.2,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t130-home-pt": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 60,
+  "gap": 8.9,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t130-home-en": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 60,
+  "gap": 8.9,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t130-start": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t130-albums": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t130-playlists": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhone14-t130-inventory": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.2,
+  "barRect": [
+   599,
+   65
+  ],
+  "ih": 664,
+  "sw": 390,
+  "iw": 390
+ },
+ "iPhoneSE-t100-home-pt": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 48,
+  "gap": 8.9,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 346,
+  "iw": 320
+ },
+ "iPhoneSE-t100-home-en": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 48,
+  "gap": 8.9,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 347,
+  "iw": 320
+ },
+ "iPhoneSE-t100-start": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 320,
+  "iw": 320
+ },
+ "iPhoneSE-t100-albums": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.2,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 320,
+  "iw": 320
+ },
+ "iPhoneSE-t100-playlists": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 320,
+  "iw": 320
+ },
+ "iPhoneSE-t100-inventory": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.2,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 320,
+  "iw": 320
+ },
+ "iPhoneSE-t130-home-pt": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 48,
+  "gap": 8.9,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 346,
+  "iw": 320
+ },
+ "iPhoneSE-t130-home-en": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 48,
+  "gap": 8.9,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 347,
+  "iw": 320
+ },
+ "iPhoneSE-t130-start": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 320,
+  "iw": 320
+ },
+ "iPhoneSE-t130-albums": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.2,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 320,
+  "iw": 320
+ },
+ "iPhoneSE-t130-playlists": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.3,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 320,
+  "iw": 320
+ },
+ "iPhoneSE-t130-inventory": {
+  "hits": 0,
+  "labels": 5,
+  "bars": 64,
+  "gap": 34.2,
+  "barRect": [
+   503,
+   65
+  ],
+  "ih": 568,
+  "sw": 320,
+  "iw": 320
+ }
+}

@@ -9,7 +9,9 @@
  * The plugin:
  *   - writes into public/splash.html, at the «splash:…» places: the 14 covers of the chosen set, the
  *     stage's tag, the caption of the front record and the footer's credit (public/splash/covers.js);
- *     the set comes from VITE_SPLASH_COVERS (`real`, else fictional). It writes no script: the root
+ *     the set comes from VITE_SPLASH_COVERS (`real`, else fictional). It also writes the page's text,
+ *     in Portuguese, from the dictionary (public/splash/copy.js) into every `data-i18n…` element: the
+ *     page reads whole without JavaScript and holds no text of its own. It writes no script: the root
  *     shows the page to everyone, signed in or not (F85, MJRP 2026-11-21);
  *   - renames the two pages in dist/ after the build;
  *   - in the dev server, answers the root and /home with the entry page (the app keeps every other address);
@@ -20,10 +22,34 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { chooseCoverSet, coverImagesHtml, captionHtml, creditHtml, stageTagHtml } from '../public/splash/covers.js'
+import { t } from '../public/splash/copy.js'
 
 export const ENTRY_SOURCE = 'splash.html'
 export const APP_BUILT = 'app.html'
 export const PLACES = ['covers', 'stage-tag', 'caption', 'credit']
+
+const attrEscape = (v) => v.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+const ATTR_MARKERS = { 'data-i18n-aria': 'aria-label', 'data-i18n-title': 'title', 'data-i18n-content': 'content' }
+
+/**
+ * Every marked element of the page filled from the dictionary: the text of the empty ones (`data-i18n`)
+ * and the labels (`data-i18n-aria|title|content`). lang.js does the same in the browser for the
+ * language the visitor chooses. A key the dictionary lacks is an error.
+ */
+export function fillCopy(html, lang = 'pt') {
+    const need = (key) => {
+        const text = t(key, lang)
+        if (text === key) throw new Error(`entryPage: no text for «${key}» in public/splash/copy.js`)
+        return text
+    }
+    let out = html.replace(/(<([a-z0-9]+)\b[^>]*?\sdata-i18n="([^"]+)"[^>]*>)<\/\2>/g, (m, open, tag, key) => `${open}${need(key)}</${tag}>`)
+    for (const [marker, attr] of Object.entries(ATTR_MARKERS)) {
+        const tagRe = new RegExp(`<[a-z0-9]+\\b[^>]*\\s${marker}="([^"]+)"[^>]*>`, 'g')
+        const attrRe = new RegExp(`\\s${attr}="[^"]*"`)
+        out = out.replace(tagRe, (tag, key) => tag.replace(attrRe, () => ` ${attr}="${attrEscape(need(key))}"`))
+    }
+    return out
+}
 
 /** The entry page with every place filled. A missing place is an error: the page is never built half-filled. */
 export function fillEntryPage(html, { set }) {
@@ -40,7 +66,7 @@ export function fillEntryPage(html, { set }) {
         if (!out.includes(mark)) throw new Error(`entryPage: public/${ENTRY_SOURCE} has no place for «${place}» (${mark})`)
         out = out.replace(mark, () => fill[place])
     }
-    return out
+    return fillCopy(out)
 }
 
 const pathOf = (url) => String(url || '/').split(/[?#]/)[0]
