@@ -33,7 +33,7 @@
 ## Verification
 - [x] TASK-10 suíte (`npx vitest run`: 1046 passando, 982 antes), `npx vite build` e complexidade até 10 nas funções novas (`npx eslint --rule 'complexity: ["error", 10]'` nos arquivos tocados) · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-08 · model:: sonnet · rounds:: 1
 - [x] TASK-11 prova no navegador com a conta do MJRP, com o tempo medido pelo roteiro do relatório de entrega: tempo até a primeira série e até a lista inteira (antes: 20,1 s e 19,9 s), volta à tela, «Try again» numa série com a rede cortada, apagar um lote sem reler a lista, abrir um lote e uma playlist — prova: `reports/evidence/F61/2026-11-19-saved-playlists-timing.md` · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07 · model:: opus · rounds:: 1
-- [ ] TASK-12 o passo retroativo da via rápida: «Prototype: none» dito pelo MJRP e o ok visual dele (Touch ID no merge) · implements:: REQ-01 · model:: opus · waiting:: human — o protótipo e o ok visual são do MJRP · action:: o MJRP diz «Prototype: none» para os consertos e dá o ok visual no merge
+- [ ] TASK-12 o que a trava do passo retroativo ainda cobra antes do `Done` (`python3 mjrp-scripts/retro_step_check.py . --staged` com a feature em `Done`, conferido em 2026-11-21): Reconferência visual: a feature mexeu na tela e não há relatório `visual-parity-recheck` nem nota de Touch ID (`mjrp-visual-ok`) que a cubra. É trabalho de agente; nenhum item é do MJRP. O que falta de verdade é a reconferência visual independente (relatório `reports/audits/<data>-F61-visual-parity-recheck.md`, por quem não implementou, num navegador): nenhum merge traz nota de Touch ID. «Prototype: none» já está gravada na spec (MJRP, 2026-11-20 00:10). · implements:: REQ-01 · model:: opus
 
 ## Documentation
 - [x] `docs/specs/arch.md` (seção «Leitura das playlists guardadas»), `docs/specs/behavior.md` (os estados da tela) e `docs/manual/` (00, 01, 06, 09, 14, 17, 21, 24, 29, 99 e a lista de regressão) dizem o que o código faz agora
@@ -42,4 +42,4 @@
 
 ## For the owner at UAT
 - O MJRP julga os textos novos, o limite de 8 leituras juntas e a lista que aparece na hora ao voltar
-- Fecha quando o MJRP disser «Prototype: none» e der o ok visual (passo retroativo da via rápida); depois, o aceite é dele no UAT.
+- Falta o que a tarefa aberta acima descreve (trabalho de agente); o aceite é dele no UAT, depois do `Done`.
