@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 11:37] session — F58 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
+**Branch:** claude/batch-close-merged-features
+F58 (o serviço de carga dentro do limite de complexidade): o código está na `main` (merges `fd9a0a1`, `c780a48`, `822a794`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F58-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente; a feature não muda nada que ele veja, então não pus `needs_human`. Declarei `constitution.md` «sem mudança» no `plan.md`, conferido pelo histórico. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
+
 ## [2026-11-21 11:37] session — F70 fechada na documentação: a tarefa de aceite saiu, a feature vai a `Done`
 **Branch:** claude/batch-close-merged-features
 F70 (defeitos pequenos achados no caminho): o código está na `main` (merges `ffd414f`, `88adbc4`, `109b656`). A tarefa «o MJRP diz Prototype: none e dá o ok visual / a reconferência» não era tarefa do MJRP: a frase dele já estava na `spec.md` (2026-11-20 00:10) e a reconferência visual independente existe (`reports/audits/2026-11-19-F70-visual-parity-recheck.md`: passa, 0 P0, 0 P1). Marquei a tarefa como feita na parte do agente e pus `needs_human: "ver: …"` na spec. Nenhum merge traz nota de Touch ID, então não escrevi que houve ok visual. Nada de `Accepted`.
