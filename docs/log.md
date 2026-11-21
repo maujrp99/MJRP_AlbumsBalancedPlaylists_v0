@@ -3,6 +3,11 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 12:03] review — F85: reconferência visual independente (passa, sem P0 nem P1; 1 P2)
+**Branch:** claude/f85-start-in-the-menu
+Session: claude-code:claude/f85-start-in-the-menu (agente juiz, separado do implementador)
+O ramo em `09a0c61` contra a produção, deslogado, a 1280 e 393: só mudou o rótulo «Start» onde havia «Home» e o botão «Go to Start»; a aba cabe sem corte e a barra mantém 57 px; o logotipo leva a `/?entry`; `/home` e `/home?signin` levam a `/start`. Sem o sensor do projeto; sem telas com conta. Relatório: `reports/audits/2026-11-21-mjrpalbumblender-v0-visual-parity-recheck.md`; capturas em `reports/evidence/F85-visual-recheck/`.
+
 ## [2026-11-21 10:32] session — F85: fechamento da sessão (o ramo e a sessão, no formato que o `session-check` lê)
 Branch: `claude/f85-start-in-the-menu`, no commit `78ad892` e antes dele.
 Session: claude-code:claude/f85-start-in-the-menu (sessão do V0 aberta pelo orquestrador, via rápida)
