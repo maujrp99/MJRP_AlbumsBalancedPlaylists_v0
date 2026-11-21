@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 00:33] review — F79: a segunda passada da reconferência visual — passa, sem P0 e sem P1 (4 P2)
+**Branch:** feat/f79-home-that-explains-itself
+Os 36 pares refeitos sobre `b12e751` e olhados um a um; os fatos medidos nos 72 cenários: zero diferenças no fogo, o Syne carregado, nenhuma rolagem lateral. Fechados os achados da primeira passada: P1-1 (a lista colada em Syne 15/400 e a linha pulada sem caixa, em Syne bold), P1-2 (o mini equalizador na linha de «Saving your series…»), P2-1, P2-2, P2-6 e o corte do P2-3. Ficam P2-4, P2-5 e P2-7 (de propósito) e P2-3' (o contorno de foco e a altura da caixa colada no celular). Nenhuma regressão, nem na janela de editar a série. Nenhuma issue foi aberta no `uat.md`, por instrução do orquestrador. Relatório: `reports/audits/2026-11-21-F79-visual-parity-recheck-2.md`; capturas: `reports/evidence/F79/recheck-2/`.
+
 ## [2026-11-21 00:26] review — F79: a segunda passada da reconferência visual começou
 **Branch:** feat/f79-home-that-explains-itself
 O mesmo agente juiz (que não implementou) refaz os 36 pares sobre `b12e751`, as correções dos achados da primeira passada. Relatório novo em `reports/audits/2026-11-21-F79-visual-parity-recheck-2.md`, `verdict: running`; o da primeira passada fica como está.
