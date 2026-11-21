@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 08:12] session — F81 e F82: o que o agente mestre e o orquestrador do MJRPpersonal responderam
+**Branch:** main
+O kit do CMS é uma pasta do MJRPpersonal (`src/admin-kit/`, ADR-0011 de lá): núcleo em TypeScript sem framework, interface em React, com portas de ler, gravar, imagem e traduzir; o login e o banco são do projeto. Para o V0 os dois recomendam uma ilha React em `/admin`, as portas sobre o Firestore, o Firebase Auth que já existe e a tradução no servidor Node; para os idiomas, um dicionário por idioma e o conteúdo como par `{pt, en}`. A ADR-0011 diz que o kit vira pacote no segundo projeto e proíbe copiar a pasta: onde o pacote mora é decisão do MJRP. Tudo isso está nos planos das duas features como relato a conferir; nada foi lido no kit ainda, nenhum ramo aberto.
+
 ## [2026-11-21 08:11] decision — F81 (o site em mais de um idioma) e F82 (um admin com o CMS-kit), em esboço, com S-63 e S-64
 **Branch:** main
 Palavras do MJRP (2026-11-21): «As próximas features agora serao de internacionalizar o site e criar um admin como temos nos sites do MJRP personal, utilizando o CMS-kit nosso.» «Pode falar com o master agent sobre isso e com o orchestrator do MJRP personal tb». As duas nascem na `main`, em esboço (via padrão, tipo feature), com as histórias S-63 e S-64 no PRD, sob o EP-10 e planejadas para a v6.0 — o épico e a versão foram escolhidos pelo agente, revisáveis. Nenhum ramo, protótipo ou código antes das conversas com o agente mestre do harness e o orquestrador do MJRPpersonal e de o MJRP priorizar.
