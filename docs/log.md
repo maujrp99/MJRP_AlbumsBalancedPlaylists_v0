@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 04:28] review — F79: o juiz independente passou o conserto do toque em «Search» (UAT-282)
+
+**Branch:** fix/f79-search-tap-starts-the-search
+
+- Veredito: passa (0 P0, 0 P1, 0 P2), julgado na `42afedc` contra a `main` na `b8947e0`, nos sites construídos: em WebKit (iPhone 14 por clique e por toque, computador) a `main` dá 0 capas e o ramo 9; 18 comparações de pixel com 0 de diferença. Relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-start-search-tap-visual-parity-recheck.md`.
+- Não visto: um iPhone real.
+
 ## [2026-11-22 04:12] step — Start no celular: tocar em «Search» depois de digitar inicia a busca no WebKit (F79, UAT-282)
 
 **Branch:** fix/f79-search-tap-starts-the-search
