@@ -167,13 +167,25 @@ export const loadModule = { albumLoadService: loadService, ALL_SERIES_CONTEXT: '
 
 export const rankingModule = { ownRankingService: { ensureLoaded: async () => true, save: async (album, rankings) => { outside.push(['saveRanking', album.id, JSON.stringify(rankings)]); return true } } }
 
-/** What the series service does when an album is removed: a scenario changes it. */
-export const behaviour = { remove: async () => {} }
+/** What the series service does when an album is removed (and when the series are read): a scenario changes it. */
+export const behaviour = { remove: async () => {}, read: async () => {} }
 export const seriesServiceModule = {
     getSeriesService: () => ({
         removeAlbumFromSeries: (seriesId, album) => { outside.push(['removeAlbumFromSeries', seriesId, album.title ?? '', album.artist ?? '']); return behaviour.remove(seriesId, album) },
-        loadFromFirestore: async () => {}
+        loadFromFirestore: () => behaviour.read()
     })
+}
+
+/**
+ * The read of the series, held (F79, P1-1): a scenario with `read: 'held'` opens the screen signed in (there is a database to read) and the
+ * read waits until the scenario says how it ends. `release(series)` ends it well (the series are known, the read is marked as ended, as the
+ * real service does at the end); `fail(message)` ends it badly (the error is kept, the read is marked as ended). The calls go inside `h.change`.
+ */
+export const readOfSeries = {
+    release(series) { world.reset(series); albumSeriesStore.setSeries(series.map(item => ({ ...item }))); albumSeriesStore.markRead(); this.end?.() },
+    fail(message) { albumSeriesStore.setError(message); albumSeriesStore.markRead(); this.refuse?.(new Error(message)) }, // the real service sets the error and throws
+    end: null,
+    refuse: null
 }
 
 /** The dialogs: what they answer is set by the scenario. */
@@ -210,6 +222,8 @@ export const windowsModule = { useAlbumWindows: (handlers) => { windowsStandIn.g
 
 /** Puts the stores and the world as a scenario wants them, before the screen opens. */
 export function prepare(scenario) {
+    albumSeriesStore.reset() // the read of the series has not ended (F79): a scenario starts from a store that has read nothing
+    albumSeriesStore.setDb(scenario.read === 'held' ? {} : null) // held: signed in, the series are read from the database; otherwise nothing to read
     outside.length = 0
     releasePageScroll(window) // the hold a sheet puts on the page is counted by the module: one scenario does not inherit another's
     const store = new Map()
@@ -225,6 +239,8 @@ export function prepare(scenario) {
     dialogs.confirm = true
     dialogs.prompt = null
     behaviour.remove = async () => {}
+    behaviour.read = async () => {}
+    if (scenario.read === 'held') behaviour.read = () => new Promise((resolve, reject) => { readOfSeries.end = resolve; readOfSeries.refuse = reject })
     albumSeriesStore.setSeries(world.series.map(series => ({ ...series })))
     albumSeriesStore.setActiveSeries(null)
     albumLoadStore.startGeneration(albumLoadStore.getGeneration() + 1)
@@ -391,6 +407,47 @@ export const SCENARIOS = [
             h.snap('the empty state with Go and create!')
             await h.click('#emptyStateContainer button')
             h.note('what was asked')
+        }
+    },
+    {
+        name: 'the series are being read, then there are some', series: () => [], read: 'held', run: async (h) => {
+            h.snap('loading: the list area says so, not that the library is empty')
+            await h.change(() => h.read.release(DEFAULT_SERIES()))
+            h.snap('the read ended with three series: the list')
+        }
+    },
+    {
+        name: 'the series are being read, then there are none', series: () => [], read: 'held', run: async (h) => {
+            h.snap('loading, as before')
+            await h.change(() => h.read.release([]))
+            h.snap('the read ended with none: the empty state')
+        }
+    },
+    {
+        name: 'the read of the series fails', series: () => [], read: 'held', run: async (h) => {
+            await h.change(() => h.read.fail('offline'))
+            h.snap('the read failed: the empty state, as before')
+        }
+    },
+    {
+        name: 'the series are read again with a list on screen', read: 'held', run: async (h) => {
+            h.snap('the list stays while the series are read again')
+            await h.change(() => h.read.release(DEFAULT_SERIES()))
+            h.snap('the read ended: the same list')
+        }
+    },
+    {
+        name: 'the phone: the series are being read, then there are some', phone: true, series: () => [], read: 'held', run: async (h) => {
+            h.snap('loading: «Loading your series…», not the empty state')
+            await h.change(() => h.read.release(DEFAULT_SERIES()))
+            h.snap('the read ended with three series: the tiles')
+        }
+    },
+    {
+        name: 'the phone: the series are being read, then there are none', phone: true, series: () => [], read: 'held', run: async (h) => {
+            h.snap('loading, as before')
+            await h.change(() => h.read.release([]))
+            h.snap('the read ended with none: the empty state')
         }
     },
     {

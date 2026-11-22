@@ -15,6 +15,7 @@ import { t } from '../../i18n/t.js'
 import { decodeEntities } from '../../models/text.js'
 import { listArtists } from '../../models/seriesFilter.js'
 import { SERIES_ALBUM_LIMIT } from '../../models/seriesExpansion.js'
+import { ListState } from '../../models/albumsListState.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { useAlbumWindows } from './useAlbumWindows'
 import { navigate } from '../../react-bridge/navigation'
@@ -27,6 +28,7 @@ import { Header } from './Header'
 import { Pager } from './Pager'
 import { usePhoneSheets } from './PhoneSheets'
 import { SeriesGroups } from './SeriesGroups'
+import { LoadingReserve, LoadingSlot } from './SeriesLoading'
 import { runAlbumAction } from './albumActions'
 import type { AlbumAction } from './AlbumCard'
 import type { AlbumsBridge } from './AlbumsBridge'
@@ -105,6 +107,9 @@ function EmptyState() {
     )
 }
 
+/** The empty state: no series on the page and no albums, and no load going on. */
+const emptyStateShows = (totalSeries: number, albumCount: number, isLoading: boolean): boolean => (totalSeries > 0 ? 1 : albumCount) === 0 && !isLoading
+
 export function Albums({ controller, bridge, route }: Props) {
     const purposeFocus = useRef<HTMLElement | null>(null)
     const notices = useSyncExternalStore(bridge.subscribe, bridge.getVersion)
@@ -157,7 +162,9 @@ export function Albums({ controller, bridge, route }: Props) {
         onMode: (mode: string) => controller.handlePagingMode(mode),
         onMore
     }
-    const showEmpty = (paging.totalSeries > 0 ? 1 : bridge.albums.length) === 0 && !bridge.isLoading
+    // F79: while the first read of the series is out and none is known the list area says it is loading, never «No albums in library»
+    const waiting = controller.getListState() === ListState.LOADING
+    const showEmpty = !waiting && emptyStateShows(paging.totalSeries, bridge.albums.length, bridge.isLoading)
 
     return (
         <div className="albums-view container">
@@ -177,8 +184,9 @@ export function Albums({ controller, bridge, route }: Props) {
                 <div id="series-toolbar-mount"><FilterToolbar {...toolbarOf(controller, state, route)} /></div>
             </header>
             <div id="series-pager-top-mount"><Pager {...pagerProps} place="top" /></div>
-            <div id="series-grid-mount">
-                <div id="series-grid-inner" className="pb-8" key={notices}>
+            <div id="series-grid-mount" className={waiting ? 'relative' : undefined}>
+                {waiting ? <LoadingSlot phone={phone} /> : null}
+                <div id="series-grid-inner" className="pb-8" key={notices} style={waiting ? { visibility: 'hidden' } : undefined}>
                     <SeriesGroups
                         albums={bridge.albums}
                         seriesList={seriesList}
@@ -205,7 +213,7 @@ export function Albums({ controller, bridge, route }: Props) {
                 </div>
             </div>
             <div id="series-pager-mount"><Pager {...pagerProps} /></div>
-            <div id="emptyStateContainer">{showEmpty ? <EmptyState /> : null}</div>
+            <div id="emptyStateContainer">{waiting ? <LoadingReserve phone={phone} /> : showEmpty ? <EmptyState /> : null}</div>
             <footer className="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
                 <p className="last-update">{t('albums.footer.lastUpdated', { time: openedAt })}</p>
             </footer>

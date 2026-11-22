@@ -75,6 +75,8 @@ export interface AlbumsController {
     getPageView: () => PageView
     getHeaderData: () => HeaderData
     getSeriesStates: () => Record<string, SeriesState>
+    /** What the list area shows (F79): loading while the first read of the series is out and none is known, empty once it ended with none, the list otherwise. */
+    getListState: () => 'loading' | 'empty' | 'list'
     refresh: () => void
     requestLoad: (fresh?: boolean) => void
     handleSearch: (query: string) => void

@@ -2,7 +2,7 @@
  * The route of the albums screen: what app.js asks for when the person opens /albums or /albums/:seriesId. A view the router can mount (the
  * bridge makes it one), named `albums` for the measurement of use. The controller is the session's one (it lives on after the screen, with
  * the load going on in the service); each time the screen opens it is handed the bridge it draws into, and the scope the address asked for
- * is loaded before the screen is drawn, as the hand-made screen loaded it as soon as it was mounted. The controller lets go of the bridge
+ * starts loading before the screen is drawn and goes on while it is drawn (the read of the series is not waited for: the screen says it is loading). The controller lets go of the bridge
  * once, when the screen is left.
  */
 import { ReactView, type RouteParams } from '../../react-bridge/ReactView'
@@ -28,7 +28,9 @@ export function albumsView(controller: AlbumsController = sessionSeriesControlle
             Object.assign(route, routeOf(params))
             controller.setView(bridge)
             controller.init(null, bridge)
-            await controller.loadScope(route.scope, route.seriesId, false, { entering: true })
+            // The screen is drawn WHILE the series are read (F79): it says it is loading, instead of waiting for the read to show anything.
+            // The first part of `loadScope` (the scope, the address, the albums already known) runs before it is drawn; the read goes on.
+            void controller.loadScope(route.scope, route.seriesId, false, { entering: true })
         },
         // the album window and the window to add to the inventory are not kept over the next screen (on purpose: the hand-made album window stayed)
         dispose: () => { bridge.dispose(); closeAllWindows() }

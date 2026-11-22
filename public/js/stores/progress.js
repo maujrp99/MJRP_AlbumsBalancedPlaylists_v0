@@ -1,6 +1,6 @@
 /**
  * progress - the thin bar at the top of the page that says something is loading (F83 wave 8b; it was components/GlobalProgress.js, which built the
- * bar by hand). The router and the series service call `start()` and `finish()`; the shell draws the bar (shell/GlobalProgress.tsx).
+ * bar by hand). The router calls `start()` and `finish()` when a screen's file takes longer than 150 ms to arrive (what the series service did too was taken out on 2026-11-22: the bar no longer shows while the series are read); the shell draws the bar (shell/GlobalProgress.tsx).
  *
  * Several callers can start: the bar stays until all of them finish, and it leaves 200 ms after the last one (a loader that starts inside those 200 ms
  * keeps it). `forceHide()` hides it at once and drops the count of loaders.

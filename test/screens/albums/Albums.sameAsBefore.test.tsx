@@ -26,7 +26,7 @@ vi.mock('../../../public/js/screens/albums/useAlbumWindows', async () => (await 
 import { act } from 'react'
 import SeriesController from '../../../public/js/controllers/SeriesController.js'
 import { albumsView } from '../../../public/js/screens/albums/index'
-import { SCENARIOS, keyOf, normalize, focusOf, asPhone, quiet, outside, prepare, answer, world, dialogs, behaviour } from '../../support/albumsScenarios.js'
+import { SCENARIOS, keyOf, normalize, focusOf, asPhone, quiet, outside, prepare, answer, world, dialogs, behaviour, readOfSeries } from '../../support/albumsScenarios.js'
 import before from '../../fixtures/albumsBeforeF83.json'
 
 const captured = before as Record<string, Record<string, string | null>>
@@ -49,6 +49,53 @@ const sameNote = (text: string | null): string | null => {
 const asHandMadeSaw = (asked: unknown[][]): unknown[][] => asked
     .filter(entry => !(entry[0] === 'watches' && entry[1] === 'series-group-skeleton'))
     .filter((entry, i, all) => !(entry[0] === 'watches' && i > 0 && all[i - 1][0] === 'watches' && all[i - 1][1] === entry[1]))
+
+/**
+ * THE DECIDED DIFFERENCE of F79 (the loading state). The hand-made screen kept the grid invisible (`visibility: hidden` on `#series-grid-mount`,
+ * and an empty `style=""` left there afterwards), drew the loading block in `#emptyStateContainer` with the height of the empty card, and lifted
+ * its content over the grid with a transform by a height it measured once (stale in WebKit: the judge's finding). The screen in React does it by
+ * layout: the content is drawn in the grid's own slot (`relative` mount, `absolute inset-x-0 top-0`), the grid under it is invisible, and an empty
+ * block with the height of the empty card stands in `#emptyStateContainer`. So for the scenarios that hold the read, both pages are put in one
+ * canonical form before they are compared: the words or the spinner, the height reserved, whether the grid is invisible, and everything else of
+ * the page, to the letter. Nothing else is compared loosely.
+ */
+const LOADING_SCENARIOS = new Set(SCENARIOS.filter(s => (s as { read?: string }).read === 'held').map(keyOf))
+
+/** The words or the spinner of the loading state, the room reserved for it, and whether the grid is invisible: wherever each page keeps them. */
+function takeLoading(box: HTMLElement): { content: string; height: string; hidden: boolean } | null {
+    const block = box.querySelector<HTMLElement>('[data-testid="series-loading"]')
+    if (!block) return null
+    const hand = block.querySelector<HTMLElement>('[data-testid="series-loading-content"]') // only the hand-made block has it
+    const reserve = box.querySelector<HTMLElement>('[data-testid="series-loading-reserve"]')
+    const hidden = box.querySelector<HTMLElement>('#series-grid-mount')?.style.visibility === 'hidden' || box.querySelector<HTMLElement>('#series-grid-inner')?.style.visibility === 'hidden'
+    const found = { content: (hand ?? block).innerHTML, height: (hand ? block : reserve)?.style.minHeight ?? '', hidden }
+    block.remove()
+    reserve?.remove()
+    return found
+}
+
+export function canonLoading(html: string | null): string | null {
+    if (!html) return html
+    const box = document.createElement('div')
+    box.innerHTML = html
+    const mount = box.querySelector<HTMLElement>('#series-grid-mount')
+    const container = box.querySelector<HTMLElement>('#emptyStateContainer')
+    if (!mount || !container) return html
+    const found = takeLoading(box)
+    if (found) {
+        const canon = document.createElement('div')
+        canon.setAttribute('data-canon', 'loading')
+        canon.setAttribute('data-height', found.height)
+        canon.setAttribute('data-grid-hidden', String(found.hidden))
+        canon.innerHTML = found.content
+        container.appendChild(canon)
+    }
+    mount.removeAttribute('style')
+    mount.classList.remove('relative')
+    if (!mount.getAttribute('class')) mount.removeAttribute('class')
+    box.querySelector('#series-grid-inner')?.removeAttribute('style')
+    return box.innerHTML
+}
 
 /** Plays a scenario on the new screen and gives what it wrote down. */
 export async function play(scenario: Scenario): Promise<Record<string, string | null>> {
@@ -73,7 +120,7 @@ export async function play(scenario: Scenario): Promise<Record<string, string | 
     const snaps: Record<string, string | null> = {}
     const at = (selector: string, index = 0) => document.querySelectorAll<HTMLElement>(selector)[index]
     const h = {
-        dialogs, behaviour, world,
+        dialogs, behaviour, world, read: readOfSeries,
         snap: (label: string, selector?: string) => { snaps[label] = normalize(selector ? document.querySelector(selector) : app) },
         note: (label: string) => { snaps[label] = JSON.stringify(asHandMadeSaw(outside.splice(0))) },
         focus: (label: string) => { snaps[`focus · ${label}`] = focusOf() },
@@ -118,8 +165,9 @@ describe('the albums screen in React draws what the hand-made one drew', () => {
             const snaps = await play(scenario)
             if (process.env.F83_DUMP) (await import('node:fs')).writeFileSync(`${process.env.F83_DUMP}/${key.replace(/\W+/g, '_')}.json`, JSON.stringify(snaps))
             expect(Object.keys(snaps)).toEqual(Object.keys(captured[key]))
+            const same = LOADING_SCENARIOS.has(key) ? (page: string | null) => canonLoading(sameNote(page)) : sameNote
             for (const [label, page] of Object.entries(snaps)) {
-                expect(sameNote(page), `${key} · ${label}`).toBe(sameNote(captured[key][label]))
+                expect(same(page), `${key} · ${label}`).toBe(same(captured[key][label]))
             }
         })
     }
@@ -152,6 +200,34 @@ describe('the proof catches a difference', () => {
         const snaps = await play(scenario)
         expect(snaps['focus · after the list button']).toBe(captured[keyOf(scenario)]['focus · after the list button'])
         expect('button#viewModeList').not.toBe(captured[keyOf(scenario)]['focus · after the list button'])
+    })
+})
+
+describe('the proof of the loading state catches a difference', () => {
+    afterEach(() => { document.body.innerHTML = ''; vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals() })
+
+    const scenario = () => SCENARIOS.find(s => s.name === 'the phone: the series are being read, then there are some')!
+    const label = 'loading: «Loading your series…», not the empty state'
+
+    it('the words of the phone are in the canonical form, and the empty card is not', async () => {
+        const snaps = await play(scenario())
+        const canon = canonLoading(snaps[label])!
+        expect(canon).toContain('data-canon="loading"')
+        expect(canon).toContain('Loading your series…')
+        expect(canon).not.toContain('No albums in library')
+        expect(canon).toContain('data-height="282px"')
+        expect(canon).toContain('data-grid-hidden="true"')
+    })
+
+    it('a changed word of the loading state is a failed scenario (the canonical form is not a rubber stamp)', async () => {
+        const { registerTexts } = await import('../../../public/js/i18n/t.js')
+        registerTexts('en', { 'ui.loadingSeries.text': 'Reading your series…' })
+        try {
+            const snaps = await play(scenario())
+            expect(canonLoading(snaps[label])).not.toBe(canonLoading(captured[keyOf(scenario())][label]))
+        } finally {
+            registerTexts('en', { 'ui.loadingSeries.text': 'Loading your series…' })
+        }
     })
 })
 

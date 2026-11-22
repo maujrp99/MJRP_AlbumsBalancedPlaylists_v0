@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { Icon } from '../../../ui/Icon'
 import { AlbumCascade } from '../../../ui/AlbumCascade'
 import { useSheetWindow } from '../../../ui/SheetWindow'
+import { loadingSeriesText } from '../../../ui/LoadingSeries'
 import { t, tPlural } from '../../../i18n/t.js'
 import { decodeEntities } from '../../../models/text.js'
 import { EntityOptions, albumsText } from '../SeriesStep'
@@ -29,7 +30,7 @@ interface StepProps {
 export function PhoneStep({ visit, chosen, onChoose, onEntity }: StepProps) {
     const sheet = useSheetWindow()
     const count = visit.series.length
-    const meta = visit.loading ? t('blend.phone.loading') : count === 0 ? t('blend.phone.noSeries') : chosen ? albumsText(chosen) : t('blend.phone.toChoose', { count })
+    const meta = visit.loading ? loadingSeriesText() : count === 0 ? t('blend.phone.noSeries') : chosen ? albumsText(chosen) : t('blend.phone.toChoose', { count })
     const open = () => {
         if (sheet.isOpen()) return
         sheet.show({

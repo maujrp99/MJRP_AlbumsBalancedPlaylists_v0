@@ -31,6 +31,7 @@ export const ui = {
     'ui.filter.list': 'Lista',
     'ui.filter.sortBy': 'Ordenar as séries por',
     'ui.filter.close': 'Fechar',
+    'ui.loadingSeries.text': 'Carregando as suas séries…',
     'ui.window.close': 'Fechar',
     'ui.dialog.confirm': 'Confirmar',
     'ui.dialog.cancel': 'Cancelar',

@@ -1,6 +1,6 @@
 /**
  * GlobalProgress - the bar at the top of the page that says something is loading, drawn (F83 wave 8b; it was components/GlobalProgress.js). The count
- * of loaders is in stores/progress.js, which the router and the series service call; this draws the bar into the end of `body` (a portal), always there
+ * of loaders is in stores/progress.js, which the router calls (the series service no longer does, since 2026-11-22); this draws the bar into the end of `body` (a portal), always there
  * and shown only while something loads. The id (`#globalProgress`) and the classes are the hand-made ones: css/mobile.css moves it under the top bar of the
  * phone. The hand-made bar was put at the START of `body`; it is fixed and above the page, so where it sits in the list of children changes nothing a person sees.
  */
