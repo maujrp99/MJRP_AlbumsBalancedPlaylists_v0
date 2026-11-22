@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 20:49] step — proposta do conteúdo publicado do CMS revista depois da crítica, e movida para design/proposals/f82-cms/
+
+**Branch:** wip/cms-architecture-proposal
+
+- A proposta saiu de `reports/proposals/` para a convenção do projeto, `design/proposals/f82-cms/architecture-proposal.md`, e o ponteiro em `docs/specs/arch.md` foi atualizado.
+- Respondidos os 9 P1 e os P2: a cópia no navegador só desliga chaves, vale até 30 dias e some quando o documento some; a página de entrada valida, escreve por `textContent` e confere endereços, com a política de `splash.html` nomeada; as regras provadas no emulador (tecnologia nova: ADR e `tech-stack.md`); camadas fixas no `t()` e uma versão dos textos em `useLocale`; um motor de receitas com teste de equivalência; a fatia 0 reduzida ao que tem usuário; o servidor responde `unknown`; o App Check como gatilho; a perda da primeira tela da medição dita na decisão 3.
+- Próximo: o MJRP aprova (4 decisões); depois o ADR.
+
 ## [2026-11-22 20:48] review — mjrp-critiquing-architecture: proposta do conteúdo publicado do CMS (F82, F92, F93) · can-go
 
 **Branch:** wip/cms-architecture-proposal
