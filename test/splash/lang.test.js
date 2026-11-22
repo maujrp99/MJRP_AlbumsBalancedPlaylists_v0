@@ -1,6 +1,5 @@
 /**
- * F80 (UAT-240, UAT-241): Portuguese and English with a switch; the default comes from the browser's
- * language, the choice is remembered in localStorage (which may be missing or throw).
+ * F80 (UAT-240, UAT-241): Portuguese and English with a switch; the page opens in Portuguese, the choice is remembered in localStorage (which may be missing or throw).
  */
 import { describe, it, expect } from 'vitest'
 import { LANG_KEY, chooseLanguage, readStoredLanguage, storeLanguage, applyLanguage } from '../../public/splash/lang.js'
@@ -12,23 +11,25 @@ const storageOf = (entries = {}) => ({
 })
 const throwing = { getItem() { throw new Error('denied') }, setItem() { throw new Error('denied') } }
 
-describe('which language the page opens in', () => {
-    it('a remembered choice wins over the browser', () => {
+describe('which language the page opens in (MJRP, 2026-11-21: the home opens in Portuguese for everyone)', () => {
+    it('a remembered choice wins, whatever the browser speaks', () => {
         expect(chooseLanguage({ stored: 'en', languages: ['pt-BR'] })).toBe('en')
         expect(chooseLanguage({ stored: 'pt', languages: ['en-US'] })).toBe('pt')
     })
 
-    it('without a choice, the first of the browser\'s languages the page speaks', () => {
-        expect(chooseLanguage({ stored: null, languages: ['pt-BR', 'en'] })).toBe('pt')
-        expect(chooseLanguage({ stored: null, languages: ['en-GB', 'pt'] })).toBe('en')
-        expect(chooseLanguage({ stored: null, languages: ['es-AR', 'pt-PT'] })).toBe('pt')
+    it('nothing remembered: Portuguese, even with an English browser', () => {
+        expect(chooseLanguage({ stored: null, languages: ['en-US'] })).toBe('pt')
+        expect(chooseLanguage({ stored: null, languages: ['en-GB', 'pt'] })).toBe('pt')
+        expect(chooseLanguage({ stored: null, languages: ['de-DE'] })).toBe('pt')
+        expect(chooseLanguage({})).toBe('pt')
     })
 
-    it('a language the page does not speak, or nothing at all, opens in English; a bad stored value is ignored', () => {
-        expect(chooseLanguage({ stored: null, languages: ['de-DE'] })).toBe('en')
-        expect(chooseLanguage({ stored: null, languages: [] })).toBe('en')
-        expect(chooseLanguage({})).toBe('en')
-        expect(chooseLanguage({ stored: 'fr', languages: ['pt-BR'] })).toBe('pt')
+    it('a bad stored value is ignored: Portuguese', () => {
+        expect(chooseLanguage({ stored: 'fr', languages: ['en-US'] })).toBe('pt')
+    })
+
+    it('a storage that throws leaves the English browser on Portuguese', () => {
+        expect(chooseLanguage({ stored: readStoredLanguage(throwing), languages: ['en-US'] })).toBe('pt')
     })
 })
 
