@@ -1,0 +1,613 @@
+[
+ {
+  "run": "blend-chromium-1280-parent-vs-parent2",
+  "steps": 33,
+  "checks": 611,
+  "failed": 2,
+  "picturesDiffer": 2,
+  "maxPx": 24,
+  "maxIntensity": 5,
+  "failures": [
+   "series chosen picture 0 | {\"dims\":true,\"count\":8,\"max\":5,\"box\":[432,313,437,315],\"width\":1280,\"height\":800}",
+   "generate fails (judge): mjrp-balanced-cascade picture 0 | {\"dims\":true,\"count\":24,\"max\":2,\"box\":[1261,27,1263,44],\"width\":1280,\"height\":800}"
+  ]
+ },
+ {
+  "run": "blend-chromium-1280-parentwords-vs-new",
+  "steps": 33,
+  "checks": 611,
+  "failed": 7,
+  "picturesDiffer": 3,
+  "maxPx": 25,
+  "maxIntensity": 6,
+  "failures": [
+   "series chosen picture 0 | {\"dims\":true,\"count\":25,\"max\":5,\"box\":[427,235,435,310],\"width\":1280,\"height\":800}",
+   "recipe top-n-popular picture 1 | {\"dims\":true,\"count\":12,\"max\":6,\"box\":[149,281,158,286],\"width\":1280,\"height\":800}",
+   "recipe top-n-user picture 1 | {\"dims\":true,\"count\":12,\"max\":6,\"box\":[149,281,158,286],\"width\":1280,\"height\":800}",
+   "generate fails (judge): single #app boxes | @13: A«\"0:DIV:128,-1197,1024,1986.25;1:DIV:144,-1165,992,190;2:DIV:450,-1165,379.98,40;3:SPAN:450,-1165,36,40;4:H1:498,-1165,331.98,40;5:P:1",
+   "generate fails (judge): single #app scrollY | @1: A«1293» B«1435»",
+   "generate fails (real, sources blocked) #app boxes | @8002: A«;286:STRONG:685.53,559.25,116.69,16;287:SECTION:144,651.25,992,130;288:DIV:144,651.25,992,130;289:DIV:612.07,668.32,55.85,55.85;290",
+   "generating #app boxes | @7854: A«353.25,940,134;280:DIV:170,369.25,940,102;281:BUTTON:528.59,369.25,222.81,66;282:SPAN:561.59,386.25,156.81,28;283:DIV:561.59,390.25"
+  ]
+ },
+ {
+  "run": "blend-webkit-iphone14-parent-vs-parent2",
+  "steps": 35,
+  "checks": 746,
+  "failed": 3,
+  "picturesDiffer": 0,
+  "maxPx": 0,
+  "maxIntensity": 0,
+  "failures": [
+   "generate fails (real, sources blocked) #app boxes | @6717: A«ONG:34,1733,207.49,36;267:STRONG:169.39,1753,116.68,16;268:SECTION:16,1841,358,174;269:DIV:32,1857,326,130;270:DIV:166.77,1873.77,5",
+   "page errors A | FLOW: page.evaluate: TypeError: window.__release is not a function. (In 'window.__release()', 'window.__release' is undefined)",
+   "page errors B | FLOW: page.evaluate: TypeError: window.__release is not a function. (In 'window.__release()', 'window.__release' is undefined)"
+  ]
+ },
+ {
+  "run": "blend-webkit-iphone14-parentwords-vs-new",
+  "steps": 35,
+  "checks": 746,
+  "failed": 3,
+  "picturesDiffer": 0,
+  "maxPx": 0,
+  "maxIntensity": 0,
+  "failures": [
+   "generate fails (real, sources blocked) #app boxes | @6717: A«ONG:34,1733,207.49,36;267:STRONG:169.39,1753,116.68,16;268:SECTION:16,1841,358,174;269:DIV:32,1857,326,130;270:DIV:166.81,1873.81,5",
+   "page errors A | FLOW: page.evaluate: TypeError: window.__release is not a function. (In 'window.__release()', 'window.__release' is undefined)",
+   "page errors B | FLOW: page.evaluate: TypeError: window.__release is not a function. (In 'window.__release()', 'window.__release' is undefined)"
+  ]
+ },
+ {
+  "run": "empty-chromium-1280-main-vs-main",
+  "checks": 10,
+  "failed": 0,
+  "pictures": 1,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "empty-chromium-1280-main-vs-react",
+  "checks": 10,
+  "failed": 0,
+  "pictures": 1,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "empty-webkit-1280-main-vs-main",
+  "checks": 10,
+  "failed": 1,
+  "pictures": 1,
+  "maxPx": 4886,
+  "failures": [
+   "albums with nothing picture 0 | {\"dims\":true,\"count\":4886,\"max\":116,\"box\":[16,21,196,50]}"
+  ]
+ },
+ {
+  "run": "empty-webkit-1280-main-vs-react",
+  "checks": 10,
+  "failed": 0,
+  "pictures": 1,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "empty-webkit-iphone14-main-vs-main",
+  "checks": 10,
+  "failed": 0,
+  "pictures": 1,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "empty-webkit-iphone14-main-vs-react",
+  "checks": 10,
+  "failed": 0,
+  "pictures": 1,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "empty-webkit-se-main-vs-main",
+  "checks": 10,
+  "failed": 0,
+  "pictures": 1,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "empty-webkit-se-main-vs-react",
+  "checks": 10,
+  "failed": 0,
+  "pictures": 1,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "home-chromium-1280-main-vs-main",
+  "checks": 48,
+  "failed": 0,
+  "pictures": 8,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "home-chromium-1280-main-vs-react",
+  "checks": 48,
+  "failed": 0,
+  "pictures": 8,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "home-webkit-1280-main-vs-main",
+  "checks": 48,
+  "failed": 4,
+  "pictures": 8,
+  "maxPx": 166001,
+  "failures": [
+   "home pt signed out picture 1 | {\"dims\":true,\"count\":43096,\"max\":1,\"box\":[16,1058,435,3740]}",
+   "home en signed in w | @1: A«1280» B«1312»",
+   "home en signed in picture 0 | {\"dims\":true,\"count\":166001,\"max\":250,\"box\":[336,41,1263,716]}",
+   "home en signed in picture 1 | {\"dims\":false,\"count\":-1,\"sizes\":\"1280x4508 vs 1312x4508\"}"
+  ]
+ },
+ {
+  "run": "home-webkit-1280-main-vs-react",
+  "checks": 48,
+  "failed": 6,
+  "pictures": 8,
+  "maxPx": 166700,
+  "failures": [
+   "home pt signed out w | @1: A«1280» B«1312»",
+   "home pt signed out picture 0 | {\"dims\":true,\"count\":166700,\"max\":250,\"box\":[330,41,1263,716]}",
+   "home pt signed out picture 1 | {\"dims\":false,\"count\":-1,\"sizes\":\"1280x4406 vs 1312x4406\"}",
+   "home en signed in w | @1: A«1280» B«1312»",
+   "home en signed in picture 0 | {\"dims\":true,\"count\":166001,\"max\":250,\"box\":[336,41,1263,716]}",
+   "home en signed in picture 1 | {\"dims\":false,\"count\":-1,\"sizes\":\"1280x4508 vs 1312x4508\"}"
+  ]
+ },
+ {
+  "run": "home-webkit-iphone14-main-vs-main",
+  "checks": 48,
+  "failed": 0,
+  "pictures": 8,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "home-webkit-iphone14-main-vs-react",
+  "checks": 48,
+  "failed": 0,
+  "pictures": 8,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "home-webkit-se-main-vs-main",
+  "checks": 48,
+  "failed": 0,
+  "pictures": 8,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "home-webkit-se-main-vs-react",
+  "checks": 48,
+  "failed": 4,
+  "pictures": 8,
+  "maxPx": 26292,
+  "failures": [
+   "home pt signed out picture 1 | {\"dims\":true,\"count\":26292,\"max\":1,\"box\":[404,2550,607,6677]}",
+   "home pt signed in picture 1 | {\"dims\":true,\"count\":26292,\"max\":1,\"box\":[404,2650,607,7077]}",
+   "home en signed out picture 1 | {\"dims\":true,\"count\":26292,\"max\":1,\"box\":[404,2476,607,6665]}",
+   "home en signed in picture 1 | {\"dims\":true,\"count\":26292,\"max\":1,\"box\":[404,2576,607,7065]}"
+  ]
+ },
+ {
+  "run": "menu-chromium-1280-main-vs-main",
+  "checks": 67,
+  "failed": 0,
+  "pictures": 5,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "menu-chromium-1280-main-vs-react",
+  "checks": 67,
+  "failed": 0,
+  "pictures": 5,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "menu-webkit-1280-main-vs-main",
+  "checks": 67,
+  "failed": 0,
+  "pictures": 5,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "menu-webkit-1280-main-vs-react",
+  "checks": 67,
+  "failed": 0,
+  "pictures": 5,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "menu-webkit-iphone14-main-vs-main",
+  "checks": 67,
+  "failed": 0,
+  "pictures": 5,
+  "maxPx": 0,
+  "failures": []
+ },
+ {
+  "run": "menu-webkit-iphone14-main-vs-react",
+  "checks": 67,
+  "failed": 13,
+  "pictures": 5,
+  "maxPx": 22533,
+  "failures": [
+   "route /start footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /start headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /albums footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /albums headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /blend footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /blend headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /blend picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115]}",
+   "route /saved-playlists footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /saved-playlists headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115]}",
+   "route /inventory footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /inventory headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /inventory picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115]}"
+  ]
+ },
+ {
+  "run": "menu-webkit-se-main-vs-main",
+  "checks": 67,
+  "failed": 1,
+  "pictures": 5,
+  "maxPx": 9780,
+  "failures": [
+   "route /inventory picture 0 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76]}"
+  ]
+ },
+ {
+  "run": "menu-webkit-se-main-vs-react",
+  "checks": 67,
+  "failed": 12,
+  "pictures": 5,
+  "maxPx": 9780,
+  "failures": [
+   "route /start footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /start headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /albums footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /albums headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /blend footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /blend headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /saved-playlists footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /saved-playlists headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76]}",
+   "route /inventory footerText | @7: A«\"Create Albums Playlists Clear Cache Cache Cleared! Powered by MJRP Software Last updated: 11/22/2026, 12:00:00 PM This applica» B«\"Cr",
+   "route /inventory headerText | @37: A«\"CreateAlbumsBlendPlaylistsInventory⟲ Sign In Sign in to keep your series and playlists. Connections Apple MusicChecking…SpotifyNot c",
+   "route /inventory picture 0 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76]}"
+  ]
+ },
+ {
+  "run": "scroll2-chromium-1280-parent-vs-parent2",
+  "steps": 3,
+  "checks": 41,
+  "failed": 0,
+  "picturesDiffer": 0,
+  "maxPx": 0,
+  "maxIntensity": 0,
+  "failures": []
+ },
+ {
+  "run": "scroll2-chromium-1280-parentwords-vs-new",
+  "steps": 3,
+  "checks": 41,
+  "failed": 3,
+  "picturesDiffer": 0,
+  "maxPx": 0,
+  "maxIntensity": 0,
+  "failures": [
+   "C after single #app boxes | @13: A«\"0:DIV:128,-1197,1024,1986.25;1:DIV:144,-1165,992,190;2:DIV:450,-1165,379.98,40;3:SPAN:450,-1165,36,40;4:H1:498,-1165,331.98,40;5:P:1",
+   "C after single #app scrollY | @1: A«1293» B«1435»",
+   "scroll sequence 2 | @154: A«:null,\\\"y\\\":1439,\\\"h\\\":2239,\\\"singleTop\\\":142,\\\"genTop\\\":475,\\\"anchor\\\":\\\"auto\\\"}\",\"A after single {\\\"bar\\\":null,\\\"y\\\":1209,\\\"h\\\":21"
+  ]
+ },
+ {
+  "run": "scroll2-webkit-iphone14-parent-vs-parent2",
+  "steps": 3,
+  "checks": 45,
+  "failed": 0,
+  "picturesDiffer": 0,
+  "maxPx": 0,
+  "maxIntensity": 0,
+  "failures": []
+ },
+ {
+  "run": "scroll2-webkit-iphone14-parentwords-vs-new",
+  "steps": 3,
+  "checks": 45,
+  "failed": 0,
+  "picturesDiffer": 0,
+  "maxPx": 0,
+  "maxIntensity": 0,
+  "failures": []
+ },
+ {
+  "run": "sweep-chromium-1280-parent-vs-new",
+  "steps": 10,
+  "checks": 187,
+  "failed": 44,
+  "picturesDiffer": 20,
+  "maxPx": 11773,
+  "maxIntensity": 255,
+  "failures": [
+   "route /start picture 0 | {\"dims\":true,\"count\":1622,\"max\":242,\"box\":[370,19,919,33],\"width\":1280,\"height\":800}",
+   "route /start picture 1 | {\"dims\":true,\"count\":2474,\"max\":204,\"box\":[64,699,361,749],\"width\":1280,\"height\":800}",
+   "route /albums #app dom | @354: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "route /albums #app inner | @1: A«\"Start › Albums\\nAll Albums Series\\nBLEND YOUR ALBUMS\\nAll Series\\nAll Artists\\nAll Years\\nAll Years\\n1960s\\n1970s\\n1980s\\n1990s\\n2000",
+   "route /albums #app boxes | @122: A«:DIV:40,141,1200,944;1:HEADER:64,141,1152,244;2:DIV:64,141,1152,74;3:DIV:64,141,1152,74;4:NAV:64,141,1152,24;5:A:64,144,38.23,18;6:S",
+   "route /albums #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: › Albums   - heading \"All Albums Series\" ",
+   "route /albums picture 0 | {\"dims\":true,\"count\":2624,\"max\":255,\"box\":[64,19,919,158],\"width\":1280,\"height\":800}",
+   "route /albums picture 1 | {\"dims\":true,\"count\":11773,\"max\":255,\"box\":[64,442,740,731],\"width\":1280,\"height\":800}",
+   "route /inventory picture 0 | {\"dims\":true,\"count\":1622,\"max\":218,\"box\":[370,19,919,33],\"width\":1280,\"height\":800}",
+   "route /inventory picture 1 | {\"dims\":true,\"count\":2117,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":1620,\"max\":184,\"box\":[370,19,919,33],\"width\":1280,\"height\":800}",
+   "route /saved-playlists picture 1 | {\"dims\":true,\"count\":2117,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "route /artists picture 0 | {\"dims\":true,\"count\":1621,\"max\":183,\"box\":[370,19,919,33],\"width\":1280,\"height\":800}",
+   "route /artists picture 1 | {\"dims\":true,\"count\":2117,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "playlists with a set #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "playlists with a set #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\nActions & Export\\nUn",
+   "playlists with a set #app boxes | @79: A«\"0:DIV:40,141,1200,848;1:HEADER:64,141,1152,88;2:NAV:64,141,1152,24;3:A:64,144,38.23,18;4:SPAN:102.23,144,5.33,18;5:A:112.02,144,45.3",
+   "playlists with a set #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":3315,\"max\":255,\"box\":[64,14,1250,161],\"width\":1280,\"height\":800}",
+   "playlists with a set picture 1 | {\"dims\":true,\"count\":2117,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "regenerate panel open #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "regenerate panel open #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\n★ RECOMMENDED\\n[MJRP",
+   "regenerate panel open #app boxes | @83: A«\"0:DIV:40,141,1200,1764.25;1:HEADER:64,141,1152,88;2:NAV:64,141,1152,24;3:A:64,144,38.23,18;4:SPAN:102.23,144,5.33,18;5:A:112.02,144,",
+   "regenerate panel open #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "regenerate panel open picture 0 | {\"dims\":true,\"count\":3280,\"max\":255,\"box\":[64,19,919,161],\"width\":1280,\"height\":800}",
+   "regenerate panel open picture 2 | {\"dims\":true,\"count\":2117,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "regenerate: popular, top 7 #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "regenerate: popular, top 7 #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\n★ RECOMMENDED\\n[MJRP",
+   "regenerate: popular, top 7 #app boxes | @83: A«\"0:DIV:40,121,1200,1764.25;1:HEADER:64,121,1152,88;2:NAV:64,121,1152,24;3:A:64,124,38.23,18;4:SPAN:102.23,124,5.33,18;5:A:112.02,124,",
+   "regenerate: popular, top 7 #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "regenerate: popular, top 7 picture 0 | {\"dims\":true,\"count\":3280,\"max\":255,\"box\":[64,19,919,161],\"width\":1280,\"height\":800}",
+   "regenerate: popular, top 7 picture 2 | {\"dims\":true,\"count\":2117,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "regenerate: slider -10 #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "regenerate: slider -10 #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\n★ RECOMMENDED\\n[MJRP",
+   "regenerate: slider -10 #app boxes | @87: A«\"0:DIV:40,-706,1200,1764.25;1:HEADER:64,-706,1152,88;2:NAV:64,-706,1152,24;3:A:64,-703,38.23,18;4:SPAN:102.23,-703,5.33,18;5:A:112.02",
+   "regenerate: slider -10 #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "regenerate: slider -10 picture 0 | {\"dims\":true,\"count\":3280,\"max\":255,\"box\":[64,19,919,161],\"width\":1280,\"height\":800}",
+   "regenerate: slider -10 picture 2 | {\"dims\":true,\"count\":2117,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "regenerate: done (judge albums) #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "regenerate: done (judge albums) #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\n★ RECOMMENDED\\n[MJRP",
+   "regenerate: done (judge albums) #app boxes | @87: A«\"0:DIV:40,-706,1200,2278.25;1:HEADER:64,-706,1152,88;2:NAV:64,-706,1152,24;3:A:64,-703,38.23,18;4:SPAN:102.23,-703,5.33,18;5:A:112.02",
+   "regenerate: done (judge albums) #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "regenerate: done (judge albums) picture 0 | {\"dims\":true,\"count\":3280,\"max\":255,\"box\":[64,19,919,161],\"width\":1280,\"height\":800}",
+   "regenerate: done (judge albums) picture 3 | {\"dims\":true,\"count\":2117,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}"
+  ]
+ },
+ {
+  "run": "sweep-chromium-1280-parent-vs-parent2",
+  "steps": 10,
+  "checks": 187,
+  "failed": 2,
+  "picturesDiffer": 2,
+  "maxPx": 35,
+  "maxIntensity": 2,
+  "failures": [
+   "route /albums picture 0 | {\"dims\":true,\"count\":35,\"max\":2,\"box\":[1130,14,1250,16],\"width\":1280,\"height\":800}",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":35,\"max\":2,\"box\":[1130,14,1250,16],\"width\":1280,\"height\":800}"
+  ]
+ },
+ {
+  "run": "sweep-chromium-1280-parentwords-vs-new",
+  "steps": 10,
+  "checks": 187,
+  "failed": 2,
+  "picturesDiffer": 2,
+  "maxPx": 35,
+  "maxIntensity": 2,
+  "failures": [
+   "route /albums picture 0 | {\"dims\":true,\"count\":35,\"max\":2,\"box\":[1130,14,1250,16],\"width\":1280,\"height\":800}",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":35,\"max\":2,\"box\":[1130,14,1250,16],\"width\":1280,\"height\":800}"
+  ]
+ },
+ {
+  "run": "sweep-webkit-1280-parent-vs-new",
+  "steps": 10,
+  "checks": 187,
+  "failed": 44,
+  "picturesDiffer": 20,
+  "maxPx": 11844,
+  "maxIntensity": 255,
+  "failures": [
+   "route /start picture 0 | {\"dims\":true,\"count\":1749,\"max\":242,\"box\":[370,18,919,33],\"width\":1280,\"height\":800}",
+   "route /start picture 1 | {\"dims\":true,\"count\":2030,\"max\":209,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "route /albums #app dom | @354: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "route /albums #app inner | @1: A«\"Start › Albums\\nAll Albums Series\\nBLEND YOUR ALBUMS\\n\\n\\n\\n\\n\\n\\nRefresh\\n\\n\\nNo albums match your filters\\nTry adjusting your searc",
+   "route /albums #app boxes | @122: A«:DIV:40,141,1200,945;1:HEADER:64,141,1152,245;2:DIV:64,141,1152,74;3:DIV:64,141,1152,74;4:NAV:64,141,1152,24;5:A:64,144,38.23,18;6:S",
+   "route /albums #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: › Albums   - heading \"All Albums Series\" ",
+   "route /albums picture 0 | {\"dims\":true,\"count\":2821,\"max\":255,\"box\":[64,18,919,158],\"width\":1280,\"height\":800}",
+   "route /albums picture 1 | {\"dims\":true,\"count\":11844,\"max\":255,\"box\":[64,444,738,731],\"width\":1280,\"height\":800}",
+   "route /inventory picture 0 | {\"dims\":true,\"count\":1749,\"max\":186,\"box\":[370,18,919,33],\"width\":1280,\"height\":800}",
+   "route /inventory picture 1 | {\"dims\":true,\"count\":2225,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":1749,\"max\":183,\"box\":[370,18,919,33],\"width\":1280,\"height\":800}",
+   "route /saved-playlists picture 1 | {\"dims\":true,\"count\":2225,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "route /artists picture 0 | {\"dims\":true,\"count\":1749,\"max\":183,\"box\":[370,18,919,33],\"width\":1280,\"height\":800}",
+   "route /artists picture 1 | {\"dims\":true,\"count\":2225,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "playlists with a set #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "playlists with a set #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\n\\n\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\nActions & Export",
+   "playlists with a set #app boxes | @79: A«\"0:DIV:40,141,1200,848;1:HEADER:64,141,1152,88;2:NAV:64,141,1152,24;3:A:64,144,38.23,18;4:SPAN:102.23,144,5.33,18;5:A:112.01,144,45.3",
+   "playlists with a set #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":3497,\"max\":255,\"box\":[64,18,919,161],\"width\":1280,\"height\":800}",
+   "playlists with a set picture 1 | {\"dims\":true,\"count\":2225,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "regenerate panel open #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "regenerate panel open #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\n\\n\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\n★ RECOMMENDED\\n[",
+   "regenerate panel open #app boxes | @80: A«\"0:DIV:40,141,1200,1763;1:HEADER:64,141,1152,88;2:NAV:64,141,1152,24;3:A:64,144,38.23,18;4:SPAN:102.23,144,5.33,18;5:A:112.01,144,45.",
+   "regenerate panel open #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "regenerate panel open picture 0 | {\"dims\":true,\"count\":3497,\"max\":255,\"box\":[64,18,919,161],\"width\":1280,\"height\":800}",
+   "regenerate panel open picture 2 | {\"dims\":true,\"count\":2225,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "regenerate: popular, top 7 #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "regenerate: popular, top 7 #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\n\\n\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\n★ RECOMMENDED\\n[",
+   "regenerate: popular, top 7 #app boxes | @80: A«\"0:DIV:40,121,1200,1763;1:HEADER:64,121,1152,88;2:NAV:64,121,1152,24;3:A:64,124,38.23,18;4:SPAN:102.23,124,5.33,18;5:A:112.01,124,45.",
+   "regenerate: popular, top 7 #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "regenerate: popular, top 7 picture 0 | {\"dims\":true,\"count\":3497,\"max\":255,\"box\":[64,18,919,161],\"width\":1280,\"height\":800}",
+   "regenerate: popular, top 7 picture 2 | {\"dims\":true,\"count\":2225,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "regenerate: slider -10 #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "regenerate: slider -10 #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\n\\n\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\n★ RECOMMENDED\\n[",
+   "regenerate: slider -10 #app boxes | @84: A«\"0:DIV:40,-705,1200,1763;1:HEADER:64,-705,1152,88;2:NAV:64,-705,1152,24;3:A:64,-702,38.23,18;4:SPAN:102.23,-702,5.33,18;5:A:112.01,-7",
+   "regenerate: slider -10 #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "regenerate: slider -10 picture 0 | {\"dims\":true,\"count\":3497,\"max\":255,\"box\":[64,18,919,161],\"width\":1280,\"height\":800}",
+   "regenerate: slider -10 picture 2 | {\"dims\":true,\"count\":2225,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}",
+   "regenerate: done (judge albums) #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "regenerate: done (judge albums) #app inner | @1: A«\"Start › Blend › Playlists\\nPlaylist Management\\nBatch Name\\n\\n\\nReconfigure your Music Playlist Blend\\n(1 playlist)\\n★ RECOMMENDED\\n[",
+   "regenerate: done (judge albums) #app boxes | @84: A«\"0:DIV:40,-705,1200,2277;1:HEADER:64,-705,1152,88;2:NAV:64,-705,1152,24;3:A:64,-702,38.23,18;4:SPAN:102.23,-702,5.33,18;5:A:112.01,-7",
+   "regenerate: done (judge albums) #app aria | @51: A«- banner:   - navigation \"Breadcrumb\":     - link \"Start\":       - /url: /start     - text: ›     - link \"Blend\":       - /url: /blen",
+   "regenerate: done (judge albums) picture 0 | {\"dims\":true,\"count\":3497,\"max\":255,\"box\":[64,18,919,161],\"width\":1280,\"height\":800}",
+   "regenerate: done (judge albums) picture 3 | {\"dims\":true,\"count\":2225,\"max\":255,\"box\":[64,718,353,731],\"width\":1280,\"height\":800}"
+  ]
+ },
+ {
+  "run": "sweep-webkit-1280-parent-vs-parent2",
+  "steps": 10,
+  "checks": 187,
+  "failed": 1,
+  "picturesDiffer": 1,
+  "maxPx": 4886,
+  "maxIntensity": 116,
+  "failures": [
+   "route /start picture 0 | {\"dims\":true,\"count\":4886,\"max\":116,\"box\":[16,21,196,50],\"width\":1280,\"height\":800}"
+  ]
+ },
+ {
+  "run": "sweep-webkit-1280-parentwords-vs-new",
+  "steps": 10,
+  "checks": 187,
+  "failed": 0,
+  "picturesDiffer": 0,
+  "maxPx": 0,
+  "maxIntensity": 0,
+  "failures": []
+ },
+ {
+  "run": "sweep-webkit-iphone14-parent-vs-new",
+  "steps": 6,
+  "checks": 106,
+  "failed": 13,
+  "picturesDiffer": 8,
+  "maxPx": 92429,
+  "maxIntensity": 248,
+  "failures": [
+   "route /start picture 0 | {\"dims\":true,\"count\":16934,\"max\":246,\"box\":[52,62,634,1965],\"width\":1170,\"height\":1992}",
+   "route /albums #app dom | @354: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "route /albums #app inner | @90: A«\"\\nFilters\\nNo albums in library\\nCreate a series from the home page to get started\\n\\nGo to Start\\n\"» B«\"\\nFilters\\nNo albums in lib",
+   "route /albums #app boxes | @2137: A«th:189,171,24,30;112:circle:177,195,12,12;113:circle:201,191,12,12;114:H2:37,229,316,24;115:P:37,261,316,36;116:BUTTON:121.59,317,1",
+   "route /albums #app aria | @221: A« - heading \"No albums in library\" [level=2] - paragraph: Create a series from the home page to get started - button \"Go to Start\":  ",
+   "route /albums picture 0 | {\"dims\":true,\"count\":92429,\"max\":248,\"box\":[65,950,872,1965],\"width\":1170,\"height\":1992}",
+   "route /inventory picture 0 | {\"dims\":true,\"count\":3219,\"max\":182,\"box\":[65,1860,168,1965],\"width\":1170,\"height\":1992}",
+   "route /inventory picture 1 | {\"dims\":true,\"count\":3219,\"max\":182,\"box\":[65,1860,168,1965],\"width\":1170,\"height\":1992}",
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":3219,\"max\":182,\"box\":[65,1860,168,1965],\"width\":1170,\"height\":1992}",
+   "route /artists picture 0 | {\"dims\":true,\"count\":25752,\"max\":182,\"box\":[48,50,446,1965],\"width\":1170,\"height\":1992}",
+   "route /artists picture 1 | {\"dims\":true,\"count\":25752,\"max\":182,\"box\":[48,50,446,1965],\"width\":1170,\"height\":1992}",
+   "playlists with a set #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":25752,\"max\":182,\"box\":[48,50,446,1965],\"width\":1170,\"height\":1992}"
+  ]
+ },
+ {
+  "run": "sweep-webkit-iphone14-parent-vs-parent2",
+  "steps": 6,
+  "checks": 106,
+  "failed": 7,
+  "picturesDiffer": 7,
+  "maxPx": 22533,
+  "maxIntensity": 129,
+  "failures": [
+   "route /albums picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "route /inventory picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "route /inventory picture 1 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "route /artists picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "route /artists picture 1 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}"
+  ]
+ },
+ {
+  "run": "sweep-webkit-iphone14-parentwords-vs-new",
+  "steps": 6,
+  "checks": 106,
+  "failed": 4,
+  "picturesDiffer": 4,
+  "maxPx": 22533,
+  "maxIntensity": 129,
+  "failures": [
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "route /artists picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "route /artists picture 1 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":22533,\"max\":129,\"box\":[48,50,446,115],\"width\":1170,\"height\":1992}"
+  ]
+ },
+ {
+  "run": "sweep-webkit-se-parent-vs-new",
+  "steps": 6,
+  "checks": 106,
+  "failed": 13,
+  "picturesDiffer": 8,
+  "maxPx": 41063,
+  "maxIntensity": 248,
+  "failures": [
+   "route /start picture 0 | {\"dims\":true,\"count\":19217,\"max\":246,\"box\":[21,41,593,1118],\"width\":640,\"height\":1136}",
+   "route /albums #app dom | @354: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "route /albums #app inner | @90: A«\"\\nFilters\\nNo albums in library\\nCreate a series from the home page to get started\\n\\nGo to Start\\n\"» B«\"\\nFilters\\nNo albums in lib",
+   "route /albums #app boxes | @2136: A«ath:154,171,24,30;112:circle:142,195,12,12;113:circle:166,191,12,12;114:H2:37,229,246,24;115:P:37,261,246,36;116:BUTTON:86.59,317,1",
+   "route /albums #app aria | @221: A« - heading \"No albums in library\" [level=2] - paragraph: Create a series from the home page to get started - button \"Go to Start\":  ",
+   "route /albums picture 0 | {\"dims\":true,\"count\":41063,\"max\":248,\"box\":[29,634,512,1118],\"width\":640,\"height\":1136}",
+   "route /inventory picture 0 | {\"dims\":true,\"count\":11348,\"max\":182,\"box\":[29,33,297,1118],\"width\":640,\"height\":1136}",
+   "route /inventory picture 1 | {\"dims\":true,\"count\":11348,\"max\":182,\"box\":[29,33,297,1118],\"width\":640,\"height\":1136}",
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":1568,\"max\":182,\"box\":[29,1048,98,1118],\"width\":640,\"height\":1136}",
+   "route /artists picture 0 | {\"dims\":true,\"count\":11348,\"max\":182,\"box\":[29,33,297,1118],\"width\":640,\"height\":1136}",
+   "route /artists picture 1 | {\"dims\":true,\"count\":11348,\"max\":182,\"box\":[29,33,297,1118],\"width\":640,\"height\":1136}",
+   "playlists with a set #app dom | @242: A«><nav aria-label=\\\"Breadcrumb\\\" class=\\\"breadcrumb\\\"><a class=\\\"breadcrumb-link\\\" data-path=\\\"/start\\\" href=\\\"/start\\\"> Start </a><s",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":11348,\"max\":182,\"box\":[29,33,297,1118],\"width\":640,\"height\":1136}"
+  ]
+ },
+ {
+  "run": "sweep-webkit-se-parent-vs-parent2",
+  "steps": 6,
+  "checks": 106,
+  "failed": 4,
+  "picturesDiffer": 4,
+  "maxPx": 9780,
+  "maxIntensity": 85,
+  "failures": [
+   "route /saved-playlists picture 0 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76],\"width\":640,\"height\":1136}",
+   "route /artists picture 0 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76],\"width\":640,\"height\":1136}",
+   "route /artists picture 1 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76],\"width\":640,\"height\":1136}",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76],\"width\":640,\"height\":1136}"
+  ]
+ },
+ {
+  "run": "sweep-webkit-se-parentwords-vs-new",
+  "steps": 6,
+  "checks": 106,
+  "failed": 3,
+  "picturesDiffer": 3,
+  "maxPx": 9780,
+  "maxIntensity": 85,
+  "failures": [
+   "route /artists picture 0 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76],\"width\":640,\"height\":1136}",
+   "route /artists picture 1 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76],\"width\":640,\"height\":1136}",
+   "playlists with a set picture 0 | {\"dims\":true,\"count\":9780,\"max\":85,\"box\":[32,33,297,76],\"width\":640,\"height\":1136}"
+  ]
+ }
+]

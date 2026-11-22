@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 14:58] step — F83 sync 4: a prova no navegador (menu, caminho, rodapé, estado vazio, página de entrada; todas as telas, a Blend e as perguntas)
+
+**Branch:** claude/f83-sync-4-create-and-the-three-lines
+
+- `reports/evidence/F83/sync-4/` (`proof.md`, `run-all.sh`, `main-vs-react.mjs`, `judge.mjs`, `notices-and-questions.mjs`, `phone-icon-check.mjs`, `summarize.py`, `summary.json`, `observed.json`, `raw/*.json.gz`, 2 figuras do ruído; 356 KB): sites construídos da `main` (336385a), deste ramo, do pai (3877aaf) e do pai só com as palavras, Chromium e WebKit a 1280, iPhone 14 e SE, Firebase e todo hospedeiro de fora bloqueados, 44 corridas com o controle de ruído de cada uma.
+- `main` contra o ramo: o menu, o caminho, o rodapé e o nome do celular a 1280 (Chromium e WebKit) 67 conferências, 0 diferenças, 0 px; «Create», o «+» e o estado ativo em `/start`, a Syne pedida (`Syne, sans-serif | 700 | 14px`) e a caixa de cada elemento iguais; no celular só o ruído da marca animada (22.533 px no iPhone 14, 9.780 px no SE, também de pai contra pai) e o texto do cabeçalho escondido; «Go and create!» e a página de entrada (`index.html` idêntico), nas duas línguas, com e sem conta (a classe `in`).
+- O ramo contra o pai: a varredura das telas (WebKit 1280 com 0 diferenças; as demais só o ruído do controle), a Blend (o salto da página, Chromium 1280: um botão de agrupamento no fim da página 1439 → 1439, o pai 1209; os números da tabela do conserto da 7b), um aviso e uma pergunta da 8b (WebKit iPhone 14: 264 conferências, 0 diferenças; Chromium 1280: as mesmas 7 de ruído do controle e uma de 152 px que não repetiu em 3 corridas).
+- Não provado: o português do app num site construído (nada chama `setLocale`), a fonte Syne desenhada (Google Fonts bloqueado), o MusicKit e o Firebase de verdade, o Safari de um aparelho.
+
 ## [2026-11-22 13:33] step — F83 sync 4: a junta da `main` (336385a: «Create» no lugar de «Start», F91) e o porte para o React
 
 **Branch:** claude/f83-sync-4-create-and-the-three-lines
