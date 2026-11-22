@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 14:58] step — F83 sync 4: a seção 23 das lições, a TASK-36 e os totais do fim
+
+**Branch:** claude/f83-sync-4-create-and-the-three-lines
+
+- `wave-lessons.md` (seção 23: as três linhas numa junta só, a palavra como chave por idioma, a recaptura do dourado e as pegadinhas dela, o peso com os cinco valores de mentira, a construção do pai só com as palavras, o ruído da marca animada, o texto escondido, o português que o site construído não prova) e a linha TASK-36 do `tasks.md`.
+- No fim, pela fila da máquina, na ponta do ramo: a suíte inteira 385 arquivos e 5.096 testes verdes (1 pulado, o mesmo de antes; o pai: 381 e 5.076); `test/architecture` 43 arquivos e 340 testes; `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai); `npm run budget:publication` dentro do orçamento com a folga (principal 195.804 B contra o teto de 195.964 B; depois da primeira tela 235.196 B; soma 431.000 B contra 431.157 B; react-vendor 68.691 B); `exportMusicKitRecording.json` byte a byte igual ao do pai.
+
 ## [2026-11-22 14:58] step — F83 sync 4: a prova no navegador (menu, caminho, rodapé, estado vazio, página de entrada; todas as telas, a Blend e as perguntas)
 
 **Branch:** claude/f83-sync-4-create-and-the-three-lines
