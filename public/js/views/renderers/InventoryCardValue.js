@@ -30,7 +30,7 @@ const isNumber = (value) => typeof value === 'number' && Number.isFinite(value)
 const isOwned = (item) => statusOf(item) === InventoryStatus.OWNED
 
 /** The format the value is of: the one the item says, or CD (the value read is always of the CD). */
-function formatOf(item) {
+export function formatOf(item) {
     const format = String(item.format || '').toLowerCase()
     if (format.includes('vinyl') || format.includes('lp')) return 'Vinyl'
     return format && !format.includes('cd') ? String(item.format) : 'CD'

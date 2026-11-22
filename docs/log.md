@@ -3,9 +3,37 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:33] step — F89: a reconferência visual do juiz independente, guardada
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+Relatório do juiz (agente separado, Opus) sobre o commit 869ec36: passa, sem P0 e sem P1, com 6 P2 (`reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-gallery-phone-visual-parity-recheck.md`, copiado sem mudar; capturas em `reports/evidence/F76/inventory-gallery-phone/recheck/`). Os seis achados foram corrigidos nos commits anteriores deste ramo.
+
+## [2026-11-21 23:33] step — F89: as seis correções do juiz, vistas no site construído (WebKit, iPhone 14 e SE)
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+Com a `main` já dentro do ramo (nada novo a unir), suíte completa 318 arquivos / 4033 testes verdes, `eslint .` com 0 erros (69 avisos antigos) e `test/architecture` 33 arquivos / 292 testes verdes, todos pela fila. Recortes dos seis pontos em `reports/evidence/F76/inventory-gallery-phone/fixes/` (252 KB, com `shoot-fixes.mjs` e `measures.json`): capa de 10 px; o motivo do «—» em duas linhas no SE; o fim da galeria e da lista com o botão de topo fora da frase; a seta «⌄» na pílula ("Not Owned" cabe a 320 px, ajustando o respiro da pílula); o cartão com foco acima do menu.
+
+## [2026-11-21 23:27] step — F89: os seis achados do juiz na galeria do inventário do celular, corrigidos
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+O juiz independente passou o ramo (sem P0, sem P1) com seis P2, todos corrigidos: canto da capa de 10 px como o de Albums (variável `--phone-cover-radius`); o motivo do «—» quebra em duas linhas em vez de cortar; a frase da Discogs ganha o respiro do botão «voltar ao topo» (galeria e lista); a pílula da galeria ganha a seta «⌄» da lista; cartão e linha ganham `scroll-margin-bottom` acima do menu; a linha UAT-274 e o comentário de `shoot.mjs` dizem 2 colunas (3 de 640 px). Testes: `test/architecture/inventoryGalleryFinishing.test.js` e um caso novo na galeria.
+
+## [2026-11-21 22:59] step — F89: a galeria do inventário segue a grade de Albums (2 colunas, 3 de 640 px) e mostra as médias
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+Pedido da coordenação (a promessa ao MJRP: «igual à da tela de Albums»; a tela de Albums tem 2 colunas a 393 px). As colunas e os vãos agora são variáveis escritas uma vez (`--phone-cover-columns`, `--phone-cover-gap-x/y` em `mobile.css` § 1), lidas pela galeria e pelo CSS de Albums (mesmos 12 e 20 px: a tela de Albums não muda); um teste de arquitetura mantém as classes de Albums e as variáveis em passo. No WebKit, nos 10 larguras 320, 360, 375, 393, 430, 600, 640, 768, 820 e 899 px, as colunas, os vãos e a largura da capa são iguais nas duas grades. Com cartões de 138 a 281 px o cartão passou a mostrar também as duas médias (como a linha da lista), com letras maiores; os links da loja, Sell e Trade ficam no «⋯». Capturas refeitas (2,3 MB).
+
+## [2026-11-21 22:43] step — F89: a main (a home em português, linhas de UAT) entra no ramo
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+Conflito só em uat.md, resolvido por `merge_train.py uat-merge --git` (nada renumerado; a UAT-274 ficou entre a 273 e a 275); o log.md uniu sozinho.
+
 ## [2026-11-21 22:30] session — publicado em produção: a home abre em português para todos (UAT-273)
 **Branch:** main
 Palavras do MJRP (2026-11-21): «Pública pls». Site publicado da `main` (`22663ed`) pelo `deploy-site.sh`, na fila do Album Blender; conferido no ar: `/home` vem com `<html lang="pt-BR">` e «Mergulhe nos álbuns que você ama», as descrições da página já não trazem «misture» nem «discos da sua estante», e `/`, `/home`, `/start` e `/inventory` respondem 200. O script principal do app não mudou de nome (`main-Dy6AgDdK.js`): a mudança é só da página de entrada.
+
+## [2026-11-21 22:17] step — F89: o estado da spec derivado pelo gancho (Draft para In Progress)
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+O gancho de commit derivou o estado da F89 das tarefas marcadas e gravou na spec depois do commit anterior; este commit só o registra. A F89 segue sem a «Priorizada» do MJRP no board: a spec está em esboço de aprovação (`Approved: pendente`).
+
+## [2026-11-21 22:17] step — F89: a prova no WebKit da galeria do inventário no celular, os cartões estreitos e os documentos
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+Prova na página CONSTRUÍDA (vite build do harness, as folhas na ordem do app), no WebKit do Playwright 1.63.0 (o módulo do node_modules de outro worktree, ligado por link simbólico), com Auth e Firestore bloqueados: iPhone 14 (390), iPhone 393 (o do MJRP, em pixels CSS), iPhone SE 3 (375), iPhone SE (320) e 820 px. 3 colunas de 360 a 639 px, 2 abaixo de 360 (a 320 px 3 seriam cartões de 90 px), 5 a 820 px; alvos de 44 px, texto de 12 px ou mais, nenhuma pílula cortada, sem rolagem lateral, sem erro no console, a barra de baixo não cobre a última linha. A primeira passada achou a pílula «Not Owned» cortada a 375 px: padding e «⋯» ajustados. Documentos: behavior.md (^phone-inventory-gallery e a linha da grade ou lista), info-arch.md (três estados), arch.md. Pendente: o juízo do MJRP no iPhone (3 colunas a 393 px é o número que ele pediu; a tela de Albums tem 2; a troca fica na folha de filtros, como em Albums).
 
 ## [2026-11-21 22:14] step — F80: o relatório do juiz sobre a home em português (passou, sem P0 nem P1, 2 P2) e suas capturas entram no ramo; UAT-275 nova
 **Branch:** fix/f80-home-opens-in-portuguese
@@ -14,6 +42,10 @@ O juiz escreveu o relatório sobre e743a1a; copiado como veio para `reports/audi
 ## [2026-11-21 22:03] step — F80: a prova no WebKit (iPhone em inglês) e a UAT-273 registrada como consertada
 **Branch:** fix/f80-home-opens-in-portuguese
 Prova no site construído, WebKit do Playwright (módulo do control-center) com o perfil iPhone 14 e `locale en-US`, Auth e Firestore bloqueados: o primeiro byte já traz `<html lang="pt-BR">`; a primeira visita mostra «Mergulhe nos álbuns que você ama.» / «Seus álbuns do momento, numa playlist balanceada.», sem troca de texto (o observador de mutações só vê o preenchimento da própria página); «EN» troca e fica lembrado após recarregar; «PT» volta. `dist/index.html` traz as novas descrições. Recortes em `reports/evidence/F80/opens-in-portuguese/`. Varredura do `copy.js`: nenhum outro resto do texto antigo; a palavra «estante» sobra só em «Conte as mídias físicas da sua estante.» (título dele). Para o MJRP, sem mexer: o kicker «um app web para quem ama discos» e o «disco» em vários textos (ele pediu «mídias físicas» só no inventário). Totais: suíte inteira 315 arquivos, 4004 testes passando; eslint 0 erros, 69 avisos (já existiam). UAT-273 passa a `fixed (F80: 31d7504)`; o aceite é dele.
+
+## [2026-11-21 22:02] step — F89: o inventário no celular ganha a galeria de capas (a troca na folha «Filters and order», a escolha guardada, o cartão de capa)
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+A visão do celular é uma função pura (`models/inventoryViewMode.js`: a escolhida, ou a lista para quem nunca escolheu); a chave guardada é a do computador (`mjrp_inventory_view_mode`), como a tela de Albums divide a sua. O cartão (`InventoryPhoneTile.js`) tem a capa, o título, o artista, o valor com o formato e a origem, a situação e «⋯» (a mesma folha de ações, com «Where to buy»); a grade tem 3 colunas e, a partir de 640 px, as que couberem a 140 px. Testes primeiro: o modelo, a tela (as duas visões, a troca, a escolha guardada, as mesmas ações) e o teste de arquitetura das grades. Sem prova no navegador ainda.
 
 ## [2026-11-21 22:00] step — F80: a home abre em português para todos; as descrições escondidas ganham as palavras do MJRP (UAT-273)
 **Branch:** fix/f80-home-opens-in-portuguese
@@ -26,6 +58,10 @@ Palavras do MJRP (2026-11-21): «quero os dados persistidos sim e o botão servi
 ## [2026-11-21 21:54] session — publicado em produção: o menu de baixo igual na home e no app, com «Go» (UAT-270), e o «Clear Cache» que guarda os valores do inventário (UAT-267)
 **Branch:** main
 Palavras do MJRP (2026-11-21): «1. Acrescenta 2. Publica 3. Recapitule por favor, mas quero os dados persistidos sim e o botão serviria para atualizar valores» (1: a galeria do inventário no celular; 2: a publicação; 3: os preços do inventário). Antes, sobre o texto da home: «Mas o copy que eu pedi pra mudar na aprovação do protótipo não está lá pq?», «Da tela inicial», «A da home. E no inventory não tem a view de galeria?só de lista? Mas fora isso tá bem top!!!». Site publicado da `main` (`a10d648`, `/assets/main-Dy6AgDdK.js`) pelo `deploy-site.sh`, na fila do Album Blender; conferido: `/`, `/home`, `/start`, `/albums` e `/inventory` respondem 200, o `app.html` aponta o script novo, `/api/musickit-status` responde 200. A decisão dele de guardar os preços do Discogs no banco está registrada e NÃO construída: muda a regra da constituição e espera a resposta dele sobre os termos do Discogs.
+
+## [2026-11-21 21:53] step — F89: a galeria de capas do inventário no celular — registrada (S-71, F89, UAT-274)
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+O MJRP, 2026-11-21: «no inventory não tem a view de galeria? só de lista?» e, a «Galeria no inventário do celular: sim ou não?»: «1. Acrescenta». Registrado antes de construir: a história S-71 (embutida no PRD, épico EP-06, ao lado da S-58), a feature F89 (spec, plan e tasks em esboço; imports a S-71) e a UAT-274 (melhoria, aberta pelo humano). Convenção seguida: como a F88 e a S-70, uma história nova para a necessidade nova. Não coube como REQ-14 na F76, a dona do inventário do celular: ela está em «Pronto para UAT» e a trava do grafo recusa uma tarefa aberta numa feature Done; reabri-la é do MJRP (`Human-reopened:`). Por isso uma feature própria, que a F76 não precisa conhecer.
 
 ## [2026-11-21 20:51] step — F75: o relatório do juiz sobre o «Clear Cache» (passou, sem P0 nem P1, 1 P2) e suas capturas entram no ramo
 **Branch:** fix/f75-clear-cache-keeps-the-inventory-values

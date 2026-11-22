@@ -180,6 +180,8 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-06
 
 ![[S-58-use-the-app-comfortably-on-the-phone]]
 
+![[S-71-see-the-inventory-as-a-gallery-on-the-phone]]
+
 
 
 

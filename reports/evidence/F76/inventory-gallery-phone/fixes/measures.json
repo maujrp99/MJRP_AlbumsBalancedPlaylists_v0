@@ -1,0 +1,94 @@
+{
+ "iphone14": {
+  "reason": {
+   "text": "CD · Waiting for a value",
+   "lines": 1,
+   "cut": false
+  },
+  "radius": "10px",
+  "statuses": [
+   "wishlist",
+   "not-owned",
+   "owned"
+  ],
+  "pills": {
+   "cut": 0,
+   "text": "Not Owned",
+   "y": 26.28125,
+   "h": 328
+  },
+  "end-gallery": {
+   "noticeBottom": 564.28125,
+   "noticeRight": 374,
+   "noticeLeft": 16,
+   "button": {
+    "top": 528,
+    "left": 330
+   },
+   "tabbarTop": 588,
+   "overlap": true
+  },
+  "end-list": {
+   "noticeBottom": 564.28125,
+   "noticeRight": 374,
+   "noticeLeft": 16,
+   "button": {
+    "top": 528,
+    "left": 330
+   },
+   "tabbarTop": 588,
+   "overlap": true
+  },
+  "keyboard": {
+   "tileBottom": 506.28125,
+   "tabbarTop": 588,
+   "visible": true
+  }
+ },
+ "iphoneSE": {
+  "reason": {
+   "text": "CD · Waiting for a value",
+   "lines": 2,
+   "cut": false
+  },
+  "radius": "10px",
+  "statuses": [
+   "wishlist",
+   "not-owned",
+   "owned"
+  ],
+  "pills": {
+   "cut": 0,
+   "text": "Not Owned",
+   "y": 13.28125,
+   "h": 311
+  },
+  "end-gallery": {
+   "noticeBottom": 468.28125,
+   "noticeRight": 304,
+   "noticeLeft": 16,
+   "button": {
+    "top": 432,
+    "left": 260
+   },
+   "tabbarTop": 492,
+   "overlap": true
+  },
+  "end-list": {
+   "noticeBottom": 468.28125,
+   "noticeRight": 304,
+   "noticeLeft": 16,
+   "button": {
+    "top": 432,
+    "left": 260
+   },
+   "tabbarTop": 492,
+   "overlap": true
+  },
+  "keyboard": {
+   "tileBottom": 440.28125,
+   "tabbarTop": 492,
+   "visible": true
+  }
+ }
+}

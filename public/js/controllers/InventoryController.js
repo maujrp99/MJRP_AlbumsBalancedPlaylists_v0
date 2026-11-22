@@ -27,6 +27,7 @@ import { track } from '../services/usage/track.js'
 import { confirmationText, nothingToAddText, outcomeText, progressText } from '../models/inventoryFromSeries.js'
 import { sortInventory, sortingFor } from '../models/inventorySort.js'
 import { CONFIRM_FROM, ratingsOutcome, ratingsProgressText, ratingsQuestion } from '../models/inventoryRatings.js'
+import { VIEW_STORAGE_KEY, isViewMode } from '../models/inventoryViewMode.js'
 
 /** A status as the measurement of use writes it (F77): 'not-owned' -> 'not_owned'. */
 const usageStatus = (status) => String(status).replace('-', '_')
@@ -75,6 +76,8 @@ export class InventoryController {
             ratings: RATINGS_IDLE,
             sorting: sortingFor('artist'),
             viewMode: 'grid', // grid, list
+            // The person chose a view (kept in the browser): the phone draws the list until then (models/inventoryViewMode.js)
+            viewChosen: false,
             // What the screen draws of the values (F75): the value of each item, the totals, the
             // currency, the switch, the run of "Update values". Made by `this.values.view(...)`.
             value: null,
@@ -129,8 +132,11 @@ export class InventoryController {
      * Load persistent view settings from localStorage
      */
     loadSettings() {
-        const savedView = localStorage.getItem('mjrp_inventory_view_mode')
-        if (savedView) this.state.viewMode = savedView
+        const savedView = localStorage.getItem(VIEW_STORAGE_KEY)
+        if (isViewMode(savedView)) {
+            this.state.viewMode = savedView
+            this.state.viewChosen = true
+        }
 
         // The currency of the values is kept where the inventory always kept it ('inventoryCurrency')
         this.values.loadSettings(localStorage)
@@ -276,7 +282,8 @@ export class InventoryController {
 
     handleViewModeChange(mode) {
         this.state.viewMode = mode
-        localStorage.setItem('mjrp_inventory_view_mode', mode)
+        this.state.viewChosen = true
+        localStorage.setItem(VIEW_STORAGE_KEY, mode)
         this.refresh()
     }
 

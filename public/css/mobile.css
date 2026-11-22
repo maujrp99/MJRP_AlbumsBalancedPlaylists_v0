@@ -23,6 +23,12 @@
     --phone-action-bar-h: 64px;
     --phone-gutter: 16px;
     --phone-target: 44px;
+    /* A grid of covers (Albums, the inventory's gallery): 2 columns, 3 from 640 px, as Albums' `grid-cols-2 sm:grid-cols-3`;
+       test/architecture/tabletGridsHaveThreeColumns.test.js keeps the two in step */
+    --phone-cover-columns: 2;
+    --phone-cover-gap-x: 12px;
+    --phone-cover-gap-y: 20px;
+    --phone-cover-radius: 10px; /* the corner of a cover and of a card of covers, as Albums' grid draws it */
     --phone-safe-top: env(safe-area-inset-top, 0px);
     --phone-safe-bottom: env(safe-area-inset-bottom, 0px);
     --phone-gutter-left: max(var(--phone-gutter), env(safe-area-inset-left, 0px));
@@ -43,6 +49,12 @@
     --phone-seg-on: #2a2a30;
     --phone-seg-on-line: rgba(255, 255, 255, 0.14);
     --phone-seg-text: #a0a0a8;
+  }
+
+  @media (min-width: 640px) {
+    :root {
+      --phone-cover-columns: 3;
+    }
   }
 
   /* ── 2. The page ─────────────────────────────────────────────────────────────────────────── */
