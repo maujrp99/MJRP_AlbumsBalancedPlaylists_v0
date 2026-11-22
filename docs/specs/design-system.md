@@ -119,7 +119,7 @@ Cada padrão que se repete, com o arquivo que o desenha. A página do design sys
 | Base da série | base do computador | presa embaixo, cantos de 20 px, vidro; até 7 capas numeradas, o nome, «Edit order» e «Create series»; borda laranja quando tem álbum | `.home-dock`, `.is-full`, `.is-done` | `public/js/components/home/HomeDock.js` | aprovado com o protótipo da F79 |
 | Base da série | base do celular | é a barra de ação, acima das abas: uma capa, a nota e um botão de 48 px | `.home-dock.phone-action-bar` | `public/css/mobile/home.css` | aprovado com o protótipo da F79 |
 | Barras do celular | barra do topo | 48 px, vidro, logotipo de 28 px, nome da tela 17/22, menu de 44 px | `.phone-topbar` | `public/css/mobile.css` § 4 | em uso |
-| Barras do celular | barra de abas | cinco destinos, ícone de 24 px e rótulo de 12 px; a atual em laranja com brilho | `.phone-tabbar` | `public/js/components/navigation/phoneTabs.js` | em uso |
+| Barras do celular | barra de abas | cinco destinos, ícone de 24 px e rótulo de 12 px; a atual em laranja com brilho | `.phone-tabbar` | `public/js/shell/phoneTabs.ts` | em uso |
 | Barras do celular | barra de ação e voltar ao topo | 64 px acima das abas, botões de 48 px; botão redondo de 44 px | `.phone-action-bar`, `.phone-to-top` | `public/css/mobile.css` § 6 | em uso |
 | Folhas | folha | `#101014`; de baixo com alça e cantos de 16 px, ou a tela inteira; fechar de 44 px | `.sheet--bottom`, `.sheet--full` | `public/js/components/ui/Sheet.js` | em uso (só no celular; no computador, janela) |
 | Avisos | aviso rápido | no alto à direita, cantos de 8 px; verde, vermelho, âmbar ou escuro | `#toast-container` | `public/js/components/Toast.js` | em uso — defeito D3 |
@@ -443,10 +443,10 @@ Nenhuma peça é redesenhada: o mesmo HTML, as mesmas classes e as mesmas folhas
 | `components/ui/TrackRow.js` | `ui/TrackRow.tsx` | 2 | porte único: as telas das playlists guardadas e das playlists o usam; mesmo HTML e mesmas classes (a prova é a página das duas telas), os rótulos dos selos vêm do dicionário (`ui.trackRow.*`); o invólucro `TrackRows` saiu |
 | `components/Breadcrumb.js` | `ui/Breadcrumb.tsx` | 2 | a trilha da tela das playlists; a antiga fica para as telas de séries e de inventário até elas migrarem (ondas 5 e 6) |
 | `components/playlists/RegeneratePanel.js` | **ainda a antiga**, por `react-bridge/legacy/RegeneratePanel.tsx` | 7 | o controlador da Blend também a usa; reescrita junto com a Blend |
-| `components/TopNav.js`, `navigation/SeriesDropdown.js`, `navigation/AuthNav.js` | `shell/TopNav.tsx`, `SeriesDropdown.tsx`, `Account.tsx` | 3 | a barra do topo do computador e a gaveta da tela média: mesmo HTML e mesmas classes (a prova é a página de cada estado contra a antiga, `test/shell/Shell.sameAsBefore.test.tsx`); a barra segue o endereço e o chevron da gaveta gira (a antiga girava a nota): únicas diferenças |
+| `shell/TopNav.tsx`, `navigation/SeriesDropdown.js`, `shell/Account.tsx` | `shell/TopNav.tsx`, `SeriesDropdown.tsx`, `Account.tsx` | 3 | a barra do topo do computador e a gaveta da tela média: mesmo HTML e mesmas classes (a prova é a página de cada estado contra a antiga, `test/shell/Shell.sameAsBefore.test.tsx`); a barra segue o endereço e o chevron da gaveta gira (a antiga girava a nota): únicas diferenças |
 | `components/Footer.js` | `shell/Footer.tsx` | 3 | o rodapé; a frase do Discogs liga e desliga por `stores/discogsNotice.js` |
 | `components/SpotifyConnectButton.js` | `shell/SpotifyConnect.tsx` | 3 | os três botões (barra, gaveta, menu do celular), cada um com o seu estado |
-| `components/navigation/PhoneShell.js`, `PhoneMenu.js`, `phoneTabs.js` | `shell/PhoneShell.tsx`, `PhoneMenu.tsx`, `phoneTabs.ts` | 3 | a moldura do celular escreve no `body` por um portal; o menu e a pergunta de limpar o cache são `ui/SheetWindow` (que ganhou `id` e rodapé) |
+| `shell/PhoneShell.tsx`, `PhoneMenu.js`, `phoneTabs.js` | `shell/PhoneShell.tsx`, `PhoneMenu.tsx`, `phoneTabs.ts` | 3 | a moldura do celular escreve no `body` por um portal; o menu e a pergunta de limpar o cache são `ui/SheetWindow` (que ganhou `id` e rodapé) |
 | `components/LoginModal.js` | `shell/LoginWindow.tsx` | 3 | a janela de entrar, aberta por `stores/loginWindow.js` (qualquer tela chama `openLoginWindow()`) |
 
 ## Arquivo

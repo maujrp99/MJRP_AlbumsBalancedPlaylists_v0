@@ -8,6 +8,7 @@
  * down on the button opens it on the first control. Its listeners on the page live as long as the account does. Opening it asks Apple Music.
  */
 import { useEffect, useRef, useState, type RefObject } from 'react'
+import { flushSync } from 'react-dom'
 import { Icon } from '../ui/Icon'
 import { isSignedIn } from '../utils/isSignedIn.js'
 import { openLoginWindow } from '../stores/loginWindow.js'
@@ -31,7 +32,6 @@ function summaryLabel({ spotify, apple }: Summary, signedIn: boolean): string {
 /** Opens and closes the panel, and listens to the page while the account is there. */
 function usePanel(model: ConnectionsModel) {
     const [open, setOpen] = useState(false)
-    const [focusFirst, setFocusFirst] = useState(false)
     const trigger = useRef<HTMLButtonElement>(null)
     const panel = useRef<HTMLDivElement>(null)
     const isOpen = useRef(false)
@@ -50,8 +50,11 @@ function usePanel(model: ConnectionsModel) {
                 trigger.current?.focus()
             } else if (event.key === 'ArrowDown' && document.activeElement === trigger.current) {
                 event.preventDefault()
-                setOpen(true)
-                setFocusFirst(true)
+                // The panel is shown, Apple Music is asked and its row drawn («Checking…» has no button), and then the first control that is left takes the focus
+                flushSync(() => setOpen(true))
+                model.check()
+                flushSync(() => {})
+                panel.current?.querySelector<HTMLElement>('button, a')?.focus()
             }
         }
         document.addEventListener('click', click)
@@ -60,16 +63,10 @@ function usePanel(model: ConnectionsModel) {
             document.removeEventListener('click', click)
             document.removeEventListener('keydown', key)
         }
-    }, [])
+    }, [model])
 
-    // Opening asks Apple Music; the first control can take the focus only once the panel is shown
+    // Opening asks Apple Music
     useEffect(() => { if (open) model.check() }, [open, model])
-    useEffect(() => {
-        if (!focusFirst) return
-        panel.current?.querySelector<HTMLElement>('button, a')?.focus()
-        setFocusFirst(false)
-    }, [focusFirst])
-
     return { open, setOpen, toggle: () => setOpen(was => !was), trigger, panel }
 }
 
