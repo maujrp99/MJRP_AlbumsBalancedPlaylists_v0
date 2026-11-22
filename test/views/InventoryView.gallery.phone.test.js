@@ -19,6 +19,7 @@ vi.mock('../../public/js/components/InventoryEditModal.js', () => ({ InventoryEd
 
 import { InventoryView } from '../../public/js/views/InventoryView.js'
 import { inventoryStore } from '../../public/js/stores/inventory.js'
+import { phoneRow } from '../../public/js/views/renderers/InventoryPhoneRow.js'
 import { phoneGallery, phoneTile } from '../../public/js/views/renderers/InventoryPhoneTile.js'
 import { PHONE_CHUNK } from '../../public/js/models/inventoryJump.js'
 
@@ -81,6 +82,16 @@ describe('the card of the gallery (views/renderers/InventoryPhoneTile.js)', () =
         expect(tile.querySelector('.inv-tile__more').getAttribute('aria-label')).toBe('Actions for Album 0 <b>')
         expect(tile.querySelector('.inv-tile__open').dataset.action).toBe('view-modal')
         expect(text(tile.querySelector('[data-role="averages"]'))).toBe('Avg Rating80.5Avg Pop41.2%')
+    })
+
+    it('the status pill has the arrow of the row, so it reads as something to tap', () => {
+        const [item] = many(1)
+        const tile = draw(phoneTile(item, DISCOGS_VALUE, USD)).querySelector('.inv-tile')
+        const row = draw(phoneRow(item, DISCOGS_VALUE, USD)).querySelector('.inv-row')
+
+        expect(tile.querySelector('.inv-tile__pill svg.inv-tile__chevron')).not.toBe(null)
+        expect(row.querySelector('.inv-row__pill svg')).not.toBe(null)
+        expect(text(tile.querySelector('.inv-tile__status'))).toBe('✓ Owned')
     })
 
     it('an album that was never read has no averages line', () => {

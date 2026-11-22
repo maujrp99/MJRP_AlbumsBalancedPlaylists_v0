@@ -28,6 +28,7 @@
     --phone-cover-columns: 2;
     --phone-cover-gap-x: 12px;
     --phone-cover-gap-y: 20px;
+    --phone-cover-radius: 10px; /* the corner of a cover and of a card of covers, as Albums' grid draws it */
     --phone-safe-top: env(safe-area-inset-top, 0px);
     --phone-safe-bottom: env(safe-area-inset-bottom, 0px);
     --phone-gutter-left: max(var(--phone-gutter), env(safe-area-inset-left, 0px));

@@ -24,7 +24,8 @@ import { PHONE_CHUNK } from '../../models/inventoryJump.js'
 
 /** Three dots: the «⋯» of a row and of the screen. */
 export const MORE_ICON = '<svg class="inv-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'
-const CHEVRON = '<svg class="inv-row__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>'
+/** The arrow that says a status pill can be tapped; the row and the card of the gallery draw the same one. */
+export const chevron = (className) => `<svg class="${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>`
 
 const NOT_KNOWN = Object.freeze({ origin: null, reason: NoValue.NEVER_READ })
 const MARK = Object.freeze({ [InventoryStatus.OWNED]: '✓ ', [InventoryStatus.WISHLIST]: '♡ ' })
@@ -86,7 +87,7 @@ export function phoneRow(item, value, money) {
       <div class="inv-row__text"><span class="inv-row__title">${escapeHtml(title)}</span><span class="inv-row__artist">${escapeHtml(artist)}</span></div>
       ${phoneValue(value || NOT_KNOWN, money)}
       <div class="inv-row__bar">
-        <button type="button" class="inv-row__status" data-phone-action="status" data-album-id="${id}" data-status="${status}" aria-haspopup="dialog" aria-label="Status: ${statusLabel(status)}. Change it"><span class="inv-row__pill">${statusText(status)}${CHEVRON}</span></button>
+        <button type="button" class="inv-row__status" data-phone-action="status" data-album-id="${id}" data-status="${status}" aria-haspopup="dialog" aria-label="Status: ${statusLabel(status)}. Change it"><span class="inv-row__pill">${statusText(status)}${chevron('inv-row__chevron')}</span></button>
         <span class="inv-row__scores" data-role="averages">${phoneScores(item.averages)}</span>
         <button type="button" class="inv-row__more" data-phone-action="more" data-album-id="${id}" aria-haspopup="dialog" aria-label="Actions for ${escapeHtml(title)}">${MORE_ICON}</button>
       </div>

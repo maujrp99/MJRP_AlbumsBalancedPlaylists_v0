@@ -417,6 +417,8 @@
     padding: 12px 0 4px;
     /* the bar under the top bar and the search bar */
     scroll-margin-top: calc(var(--inv-bar-top) + 68px);
+    /* and above the bottom menu, for a card or a row reached with a keyboard */
+    scroll-margin-bottom: calc(var(--phone-tabbar-h) + var(--phone-safe-bottom) + 8px);
   }
 
   .inv-row + .inv-row::before {
@@ -643,6 +645,8 @@
     min-width: 0;
     /* the bar under the top bar and the search bar */
     scroll-margin-top: calc(var(--inv-bar-top) + 68px);
+    /* and above the bottom menu, for a card or a row reached with a keyboard */
+    scroll-margin-bottom: calc(var(--phone-tabbar-h) + var(--phone-safe-bottom) + 8px);
   }
 
   /* The whole card opens the album window; the status and «⋯» sit above it */
@@ -650,7 +654,7 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    border-radius: 8px;
+    border-radius: var(--phone-cover-radius);
     background: transparent;
   }
 
@@ -667,7 +671,7 @@
     display: block;
     width: 100%;
     aspect-ratio: 1;
-    border-radius: 8px;
+    border-radius: var(--phone-cover-radius);
     object-fit: cover;
     background: var(--inv-raised);
     box-shadow: inset 0 0 0 1px var(--inv-line);
@@ -699,11 +703,19 @@
     overflow-wrap: anywhere;
   }
 
-  .inv-tile__artist,
-  .inv-tile__origin {
+  .inv-tile__artist {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--inv-grey);
+  }
+
+  /* The reason of «—» is what explains the dash: it wraps to a second line, it is never cut */
+  .inv-tile__origin {
+    white-space: normal;
+    overflow-wrap: anywhere;
     font-size: 13px;
     line-height: 18px;
     color: var(--inv-grey);
@@ -767,20 +779,34 @@
   }
 
   .inv-tile__pill {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
     max-width: 100%;
     height: 28px;
-    padding: 0 10px;
+    padding: 0 6px 0 9px;
     overflow: hidden;
     border-radius: 14px;
     font-size: 13px;
     line-height: 26px;
     font-weight: 600;
     white-space: nowrap;
-    text-overflow: ellipsis;
     color: #fff;
     background: var(--inv-raised-2);
     border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .inv-tile__pill-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .inv-tile__chevron {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    opacity: 0.8;
   }
 
   .inv-tile__status[data-status="owned"] .inv-tile__pill {
@@ -845,6 +871,8 @@
 
   .inv-discogs-notice {
     margin: 24px 0 0;
+    /* the room of the «back to top» button (44 px, 16 px above the menu), so it never covers the end of the notice */
+    padding-bottom: calc(var(--phone-target) + 16px);
     font-size: 12px;
     line-height: 16px;
     color: var(--inv-grey);

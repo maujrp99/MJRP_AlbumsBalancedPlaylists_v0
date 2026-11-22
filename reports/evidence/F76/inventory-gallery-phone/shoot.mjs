@@ -31,7 +31,7 @@ const page_ = (query) => `http://127.0.0.1:${server.address().port}/reports/evid
 const PROFILES = [
     ['iphone14', devices['iPhone 14']],
     ['iphone393', { ...devices['iPhone 14'], viewport: { width: 393, height: 852 }, screen: { width: 393, height: 852 } }], // the owner's iPhone 15 Pro, in CSS pixels
-    ['iphoneSE3', devices['iPhone SE (3rd gen)']], // 375 px: the narrowest width with 3 columns
+    ['iphoneSE3', devices['iPhone SE (3rd gen)']], // 375 px: 2 columns (3 from 640 px, as Albums)
     ['iphoneSE', devices['iPhone SE']], // the first SE, 320 px: 2 columns
     ['tablet820', { ...devices['iPad (gen 7)'], viewport: { width: 820, height: 1180 }, screen: { width: 820, height: 1180 } }]
 ]

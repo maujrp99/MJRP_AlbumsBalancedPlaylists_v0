@@ -21,7 +21,7 @@ import { escapeHtml } from '../../utils/stringUtils.js'
 import { coverImage } from '../../components/ui/coverImage.js'
 import { statusLabel, statusOf } from '../../models/inventoryStatus.js'
 import { NoValue, moneyOf } from '../../models/inventoryValue.js'
-import { MORE_ICON, moreOf, originText, phoneScores, statusText } from './InventoryPhoneRow.js'
+import { MORE_ICON, chevron, moreOf, originText, phoneScores, statusText } from './InventoryPhoneRow.js'
 import { formatOf } from './InventoryCardValue.js'
 
 const NOT_KNOWN = Object.freeze({ origin: null, reason: NoValue.NEVER_READ })
@@ -67,7 +67,7 @@ export function phoneTile(item, value, money) {
       <div class="inv-tile__text"><span class="inv-tile__title">${escapeHtml(title)}</span><span class="inv-tile__artist">${escapeHtml(artist)}</span></div>
       ${tileValue(item, value || NOT_KNOWN, money)}${scoresOf(item)}
       <div class="inv-tile__bar">
-        <button type="button" class="inv-tile__status" data-phone-action="status" data-album-id="${id}" data-status="${status}" aria-haspopup="dialog" aria-label="Status: ${statusLabel(status)}. Change it"><span class="inv-tile__pill">${statusText(status)}</span></button>
+        <button type="button" class="inv-tile__status" data-phone-action="status" data-album-id="${id}" data-status="${status}" aria-haspopup="dialog" aria-label="Status: ${statusLabel(status)}. Change it"><span class="inv-tile__pill"><span class="inv-tile__pill-text">${statusText(status)}</span>${chevron('inv-tile__chevron')}</span></button>
         <button type="button" class="inv-tile__more" data-phone-action="more" data-album-id="${id}" aria-haspopup="dialog" aria-label="Actions for ${escapeHtml(title)}">${MORE_ICON}</button>
       </div>
     </li>`
