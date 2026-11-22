@@ -112,12 +112,40 @@ describe('the lean Create screen on the computer (F79)', () => {
         expect(sentence.hidden).toBe(true)
     })
 
-    it('Escape closes the sentence', async () => {
+    const escape = (target) => {
+        const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+        target.dispatchEvent(event)
+        return event
+    }
+
+    it('Escape closes the sentence when the focus is on its link', async () => {
         await open()
         $('.home-what').click()
-        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+        $('.home-what').focus()
+        escape(document.activeElement)
         expect($('.home-what').getAttribute('aria-expanded')).toBe('false')
         expect($('#homeHero p').hidden).toBe(true)
+    })
+
+    it('Escape does not close the sentence when the focus is somewhere else (one Escape, one thing)', async () => {
+        await open()
+        $('.home-what').click()
+        $('#artistScanInput').focus()
+        escape(document.activeElement)
+        expect($('.home-what').getAttribute('aria-expanded')).toBe('true')
+        expect($('#homeHero p').hidden).toBe(false)
+    })
+
+    it('Escape does not close the sentence when another layer (a menu, a window, a sheet) handled the key', async () => {
+        await open()
+        $('.home-what').click()
+        $('.home-what').focus()
+        const handled = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+        document.addEventListener('keydown', function layer(event) { event.preventDefault(); document.removeEventListener('keydown', layer) }, { once: true, capture: true })
+        $('.home-what').dispatchEvent(handled)
+        expect(handled.defaultPrevented).toBe(true)
+        expect($('.home-what').getAttribute('aria-expanded')).toBe('true')
+        expect($('#homeHero p').hidden).toBe(false)
     })
 
     it('the three steps are not on the screen, in any state', async () => {

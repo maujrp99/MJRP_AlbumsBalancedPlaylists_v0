@@ -126,8 +126,9 @@ export class HomeView extends BaseView {
         this.controller.initialize();
 
         this.subscriptions.push(onPhoneChange(() => { this.closeWhatText(); this.controller?.screenChanged(); }));
-        // Escape closes the sentence opened in place
-        const onKey = (event) => { if (event.key === 'Escape') this.closeWhatText(); };
+        // Escape closes the sentence opened in place: one Escape, one thing, so only when the focus is on the link or
+        // inside the sentence, and never when another layer (a menu, a window, a sheet) already took the key
+        const onKey = (event) => { if (this.escapeIsForTheSentence(event)) this.closeWhatText(); };
         document.addEventListener('keydown', onKey);
         this.subscriptions.push(() => document.removeEventListener('keydown', onKey));
     }
@@ -162,6 +163,12 @@ export class HomeView extends BaseView {
         if (!text) return;
         text.hidden = !open;
         this.$('.home-what')?.setAttribute('aria-expanded', String(open));
+    }
+
+    escapeIsForTheSentence(event) {
+        if (event.key !== 'Escape' || event.defaultPrevented) return false;
+        const focus = document.activeElement;
+        return Boolean(focus && (focus.closest('.home-what') || focus.closest('#homeWhatText')));
     }
 
     closeWhatText() {

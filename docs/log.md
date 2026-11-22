@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 14:53] step — um Escape, uma coisa só: a frase «What is a series?» não fecha junto com o menu (F79, achado P2-1 do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- No computador, com o menu da conta («Connections») e a frase «What is a series?» abertos, um Escape fechava os dois (na `main` só o menu). Agora o Escape fecha a frase só quando o foco está no link dela ou dentro da frase, e nunca quando outra camada (menu, janela, folha) já tratou a tecla: o menu da conta marca a tecla como tomada (`preventDefault`) ao fechar, e a tela Create confere `defaultPrevented`.
+- Arquivos: `views/HomeView.js`, `components/navigation/AuthNav.js`; testes `HomeLean.computer`, `AuthNav.menu`.
+
 ## [2026-11-22 14:44] step — a tela Álbuns diz que está carregando as séries (F79, achado P1-1 do juiz)
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line
