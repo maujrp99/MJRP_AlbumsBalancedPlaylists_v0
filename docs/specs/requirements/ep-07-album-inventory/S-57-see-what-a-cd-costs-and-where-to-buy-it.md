@@ -16,6 +16,8 @@ Viabilidade: `reports/audits/2026-11-20-mjrpalbumblender-v0-cd-prices-feasibilit
 
 Propósito, dito pelo MJRP em 2026-11-20 00:14: «a ideia do preço médio é para colecionadores como eu, ter uma estimativa de valor do seu inventory, podendo alterar os valores na mao, como hj já é, a questao agora é automatiza a obtencao do preço e se quiser vc edita».
 
+Atualização, decidida pelo MJRP em 2026-11-21: «quero os dados persistidos sim e o botão serviria para atualizar valores» (a leitura do Discogs fica guardada no banco, com a data; o botão atualiza). F75, REQ-14 a REQ-16.
+
 ## en
 
 **As an album collector, I want to see what the CD of each album in my inventory costs and have the link to buy it, so that I decide what to buy and where.**

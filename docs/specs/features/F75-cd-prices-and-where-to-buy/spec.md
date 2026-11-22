@@ -1,5 +1,5 @@
 ---
-status: Done
+status: In Progress
 lane: standard
 solution_type: feature
 needs_human: "decidir: as doze decisões «decidido pelo agente — revisável» do plan.md e se `DISCOGS_VALUES_FOR` fica definida com o id dele"
@@ -38,7 +38,7 @@ Termos de uso da API do Discogs lidos em 2026-11-20 01:24 (relatório de viabili
 
 **Decisões do MJRP em 2026-11-20 01:32:** opção B («pra fazer um full teste, depois eu abro outra feature pra desligar o discogs, poderiamos usar feature toggle aqui»): o valor do Discogs entra já, em uso pessoal, atrás de um interruptor. O cartão é o da v5.1 (`design/inception/inventory-value-v5.1.html`). O token novo do Discogs está no Secret Manager (`discogs-token`).
 
-**Decidido pelo agente — revisável:** os três estados são «Mint», «Near Mint» e «Very Good Plus»; o valor do Discogs não é gravado no Firestore (os termos pedem que não seja guardado além do necessário nem mostrado com mais de seis horas): fica só no navegador, por até seis horas; o que se grava no item é o valor que a pessoa escreve e qual edição do Discogs foi usada; as perguntas ao virar «Owned» (quanto pagou, estado do disco) ficam fora desta feature.
+**Decidido pelo agente — revisável (a parte sobre guardar o valor foi REVERTIDA pelo MJRP em 2026-11-21, REQ-14):** os três estados são «Mint», «Near Mint» e «Very Good Plus»; o valor do Discogs não é gravado no Firestore (os termos pedem que não seja guardado além do necessário nem mostrado com mais de seis horas): fica só no navegador, por até seis horas; o que se grava no item é o valor que a pessoa escreve e qual edição do Discogs foi usada; as perguntas ao virar «Owned» (quanto pagou, estado do disco) ficam fora desta feature.
 
 ## Requirements
 - [REQ-01] O cartão do inventário segue o padrão da v5.1: uma superfície com a capa até as bordas e cinco linhas iguais em todo cartão: o rótulo do valor conforme o status («In my collection · worth» ou «Not mine yet · costs»), a origem e o valor, as duas médias, o rótulo das ações, as ações. · fixes S-57
@@ -49,7 +49,7 @@ Termos de uso da API do Discogs lidos em 2026-11-20 01:24 (relatório de viabili
   verified_by:: `test/models/inventoryValue.test.js`, `test/repositories/InventoryRepository.value.test.js`
 - [REQ-04] O app lê do Discogs, pelo servidor, a sugestão de preço da edição em CD mais comum do álbum, nos estados «Mint», «Near Mint» e «Very Good Plus»; o valor do álbum é a média dos três; a janela mostra os três, a média, a edição usada e quando foi lido. · fixes S-57
   verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/server/discogsSource.test.js`, `test/server/valueRoutes.test.js`, `test/services/inventory/InventoryValueService.test.js`
-- [REQ-05] Um valor do Discogs só é mostrado se foi lido há menos de seis horas, e não é guardado além disso; passado esse tempo ele é lido de novo ou deixa de aparecer. · fixes S-57
+- [REQ-05] ~~Um valor do Discogs só é mostrado se foi lido há menos de seis horas, e não é guardado além disso.~~ **Substituído em 2026-11-21 pelo REQ-14 a REQ-16, por decisão do MJRP** («quero os dados persistidos sim e o botão serviria para atualizar valores»). Das seis horas fica só uma guarda: o navegador não pergunta duas vezes ao Discogs, em seguida, pelo mesmo álbum (REQ-15). · fixes S-57
   verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/services/inventory/InventoryValueService.test.js`
 - [REQ-06] Ao lado de todo valor vindo do Discogs aparece «Data provided by Discogs.», com link para a página do Discogs daquela edição; o app diz, à vista, que usa a API do Discogs e não é afiliado a ele. · fixes S-57
   verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/services/inventory/InventoryValueService.test.js`
@@ -67,6 +67,12 @@ Termos de uso da API do Discogs lidos em 2026-11-20 01:24 (relatório de viabili
   verified_by:: `test/models/inventorySort.test.js`
 - [REQ-13] Cada falha diz o que houve e nada é inventado: o Discogs não tem edição em CD, o Discogs não respondeu, o limite de pedidos foi atingido, o token foi recusado, o câmbio não chegou. · fixes S-57
   verified_by:: `reports/evidence/F75/2026-11-20-production-proof.md`, `test/controllers/InventoryController.values.test.js`, `test/server/discogsSource.test.js`, `test/server/valueRoutes.test.js`, `test/services/inventory/InventoryValueService.test.js`
+- [REQ-14] **Decidido pelo MJRP em 2026-11-21** («quero os dados persistidos sim e o botão serviria para atualizar valores»; à pergunta «guardar no banco já (a), ou ler sozinho ao abrir e pedir autorização ao Discogs antes de guardar (b)?»: «1.a»). A leitura do Discogs de um álbum é guardada no banco, no documento do item da pessoa, só dela: o que o cache do navegador guarda hoje (os três estados, ou o menor preço e quantos à venda; a moeda; a edição e o link; de que tipo foi a leitura) e o momento em que foi lida. Nunca se mistura com o valor que a pessoa escreveu, que continua vencendo. Abrir o inventário, em qualquer aparelho da pessoa, mostra o valor guardado na hora, e o aviso «N albums are waiting for a value» conta só os álbuns que nunca tiveram leitura. O servidor continua sem guardar nada. · fixes S-57
+  verified_by:: `test/repositories/InventoryRepository.value.test.js`, `test/models/inventoryValue.test.js`, `test/controllers/InventoryController.values.test.js`
+- [REQ-15] **Decidido pelo MJRP em 2026-11-21.** «Update values» e «Read them now» ATUALIZAM: leem de novo do Discogs, pelo servidor, um álbum por vez, e trocam a leitura guardada pela nova (a mais nova vence entre o banco e o navegador). «Update values» lê todo álbum sem valor escrito pela pessoa, salvo o que foi lido há menos de seis horas (a guarda contra perguntar duas vezes seguidas); «Read them now» lê só os que nunca tiveram leitura. · fixes S-57
+  verified_by:: `test/services/inventory/InventoryValueService.test.js`, `test/controllers/InventoryController.values.test.js`
+- [REQ-16] **Decidido pelo MJRP em 2026-11-21.** Onde o valor do Discogs aparece, a tela diz quando ele foi lido, em palavras curtas («Read on 21 Nov 2026»), e a atribuição «Data provided by Discogs.» com o link da edição fica ao lado. · fixes S-57
+  verified_by:: `test/views/InventoryView.values.test.js`
 
 ## Observable States
 Os estados estão no `docs/specs/info-arch.md`, seção «Estados», cada um com o seu ID de bloco; o comportamento, no `docs/specs/behavior.md`, seção «Inventário».
@@ -91,7 +97,7 @@ Os estados estão no `docs/specs/info-arch.md`, seção «Estados», cada um com
 - **O cartão.** Todo cartão da grade tem as mesmas cinco linhas, com a mesma altura, qualquer que seja o status e haja ou não valor (medido num navegador: seis cartões, 501 px cada). Falta ver com os 211 itens dele.
 - **O valor à mão.** Escrever um valor na janela o grava no item, ele aparece como «written by you», entra no total, e uma rodada de «Update values» não o toca.
 - **O valor do Discogs.** Com o token mapeado, «Read the value now» num álbum mostra os três estados, a média, a edição com link e «Data provided by Discogs.». **Não provado:** a chamada de preço nunca foi feita.
-- **Seis horas.** Nenhum preço do Discogs no Firestore (o repositório não tem porta para ele); a leitura some da tela seis horas depois de lida.
+- **Seis horas.** ~~Nenhum preço do Discogs no Firestore~~ (REQ-05, substituído em 2026-11-21 por decisão do MJRP). **Agora:** a leitura fica no item, com a data (REQ-14); as seis horas são só a guarda do navegador contra perguntar duas vezes ao Discogs (REQ-15).
 - **A rodada.** «Update values» nos 211 álbuns termina, pode ser parado, não trava a tela e diz no fim quantos foram lidos, quantos não têm edição em CD e quantos falharam, com o motivo.
 - **O interruptor.** `DISCOGS_VALUES=off` no serviço, sem publicar código: ao reabrir o inventário não há botão, valor nem aviso do Discogs; o valor à mão, os totais, a moeda, a ordem e os links seguem.
 - **As moedas.** Trocar para BRL converte cartões e totais e diz a taxa; sem câmbio, a tela fica em dólar e diz por quê.
@@ -106,11 +112,12 @@ Os estados estão no `docs/specs/info-arch.md`, seção «Estados», cada um com
 - Vender e trocar entre colecionadores: «Sell» e «Trade» aparecem desligados.
 - Histórico de valor e quanto a coleção valorizou.
 - Ler os valores sozinho, com o app aberto: nesta versão a leitura só começa quando a pessoa pede.
+- **Aberto, não resolvido aqui:** um produto com outros usuários precisa da autorização escrita do Discogs antes de guardar e mostrar o preço (os termos, lidos só de segunda mão: `reports/research/2026-11-21-discogs-terms-on-storing-prices.md`).
 - Abrir o valor do Discogs a outros usuários de forma comercial, ou junto de links de afiliado: depende de autorização escrita do Discogs.
 
 ## Open Questions
 - Respondida pelo agente — revisável: os três estados são Mint, Near Mint e Very Good Plus.
-- Respondida pela leitura dos termos: a sugestão de preço pode ser mostrada em uso pessoal, por até seis horas, com o aviso; não pode ser guardada além disso.
+- Respondida pela leitura dos termos (2026-11-20): a sugestão de preço pode ser mostrada em uso pessoal, por até seis horas, com o aviso; não pode ser guardada além disso. **Revertida pelo MJRP em 2026-11-21** (REQ-14), sabendo que os termos só puderam ser lidos de segunda mão.
 - O formato real da resposta de preço do Discogs é o documentado? Só a primeira chamada com o token diz.
 - `DISCOGS_VALUES_FOR` fica definida com o id do MJRP? Sem ela, toda pessoa com conta no app vê preços lidos com o token dele.
 - O valor do Discogs ao lado dos links da Amazon e da iMusic cabe nos termos («levar tráfego a outras lojas»)? O MJRP escolheu testar em uso pessoal, com o interruptor como saída.
