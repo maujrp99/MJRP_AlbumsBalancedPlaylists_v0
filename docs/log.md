@@ -1,13 +1,20 @@
 # log — o que aconteceu, em ordem
 
-> **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [2026-11-22 06:50] step — F83 onda 7b: a linha de integração (6a-fix, 6b, 6c) junta ao ramo da 7a
+> **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
+
+## [2026-11-22 06:53] step — F83 onda 7b: o dourado da tela Blend à mão, capturado antes de tocá-la
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- 40 cenários (`test/support/blendScenarios.js`, o hospedeiro `blendHost.tsx`, o mundo de fora `blendStandIns.js`) jogados na `BlendingMenuView` à mão e gravados em `test/fixtures/blendBeforeF83.json`: séries (carregando, nenhuma, leitura que falha, visitante, uma, muitas), capas (esperando e chegadas, as formas de consulta, fora do conjunto), escolher por clique, Enter e Espaço, `?seriesId=`, cada receita e cada ingrediente, o deslizador, gerar (ocupado, progresso, avisos, nenhum álbum, erro, sair durante a carga), sair e voltar, e o celular (linha, folha, busca, barra, virar o aparelho). O fixture guarda o `#app`, a folha, o foco e tudo o que a tela pediu ao mundo (a configuração inteira de `generateFromSeries`, os avisos, a ida às playlists).
+- A junta com a linha de integração: suíte inteira verde (375 arquivos, 4.990 testes) antes de qualquer trabalho novo.
+- Achado do dourado: na antiga, quando as capas chegam o foco num cartão se perde (`body`); é a diferença de propósito da onda (a nova o mantém).
+
+## [2026-11-22 06:50] step — F83 onda 7b: a linha de integração (6a-fix, 6b, 6c) junta ao ramo da 7a
 
 **Branch:** claude/f83-wave-7b-blend-screen
 
 - `integrate/staging-2026-11-21` (59e215d) entrou no ramo da 7a (fecfc69). Conflitos: `wave-lessons.md` (duas seções «17»: a da 6c ficou 17 e a da 7a virou 18) e `scripts/bundle-budget.json` (ficou o texto da 7a; o teto do principal e o de `background` serão medidos de novo no build depois da junta).
-
-## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
-
 
 ## [2026-11-22 06:46] review — F83: ondas 6b (as janelas do álbum, de editar e de adicionar) e 6c (os textos do inventário) na linha de integração
 
