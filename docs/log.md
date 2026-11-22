@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 15:09] step — F83 onda 8c: o retrato da Folha refeito com um rótulo por passo
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O retrato do commit anterior tinha um defeito de captura: a anotação do estado da página de trás (`state`) e a foto da página usavam o mesmo rótulo em 5 passos, e uma apagava a outra. Cada passo tem agora o seu rótulo (`state · …` para o estado), e as 2 capturas seguidas, ainda do motor à mão (`Sheet.js` intacto), saíram idênticas (32 cenários).
+
+
 ## [2026-11-22 15:08] step — F83 onda 8c: o retrato do motor à mão da Folha do celular, antes de tocar o motor
 
 **Branch:** claude/f83-wave-8c-phone-sheet

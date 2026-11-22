@@ -22,7 +22,7 @@ const request = (w, extra = {}) => ({
 })
 
 /** Writes the state of the page behind (the pinned body, the scroll put back) in the notebook. */
-const state = (w, label) => w.note(label, w.stateNow())
+const state = (w, label) => w.note(`state · ${label}`, w.stateNow())
 
 const field = (w, id) => w.h('button', { id, type: 'button' }, id)
 
@@ -269,10 +269,10 @@ const SCENARIOS = [
             w.a.show(request(w, { variant: 'full' }))
             w.setPhone(true)
             await w.snap('still a phone')
-            w.note('open', w.a.isOpen())
+            w.note('open while still a phone', w.a.isOpen())
             w.setPhone(false)
             await w.snap('not a phone')
-            w.note('open', w.a.isOpen())
+            w.note('open when it is not a phone', w.a.isOpen())
             state(w, 'after the change')
             w.note('listeners left', w.phoneListeners())
             await w.advance(240)
