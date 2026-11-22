@@ -1,0 +1,272 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create enxuta no computador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap">
+<style>
+/* Layout: one question on top, the two live screens side by side (one under the other when narrow), the rest folded
+   below. The site's own world: black, the fire, the equalizer, Syne. One dark look on purpose, like the app. */
+:root {
+  --bg: #000000;
+  --panel: #101014;
+  --surface: #1c1c22;
+  --line: rgba(255, 255, 255, 0.12);
+  --fg: #ffffff;
+  --muted: rgba(255, 255, 255, 0.72);
+  --orange: #f97316;
+  --red: #dc2626;
+  --ok: #4ade80;
+  --over: #fca5a5;
+  --focus: #fbbf24;
+  --flame: linear-gradient(135deg, var(--orange) 0%, var(--red) 100%);
+  --display: 'Syne', 'Arial Black', system-ui, sans-serif;
+  --text: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #000000; --fg: #ffffff; } }
+:root[data-theme="dark"] { --bg: #000000; --fg: #ffffff; }
+* { box-sizing: border-box; }
+html, body { overflow-x: hidden; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.45 var(--text); margin: 0; padding: 20px 16px 48px; }
+.wrap { max-width: 1440px; margin: 0 auto; display: grid; gap: 16px; }
+.wrap > * { min-width: 0; }
+h1 { font: 800 clamp(22px, 4.4vw, 36px)/1.1 var(--display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+.sub { margin: 6px 0 0; color: var(--muted); max-width: 70ch; }
+.eq { display: flex; gap: 3px; align-items: flex-end; height: 14px; margin-top: 12px; }
+.eq i { width: 4px; border-radius: 1px; background: linear-gradient(0deg, var(--red), var(--orange)); opacity: 0.8; }
+
+.step { display: flex; align-items: center; gap: 6px; width: 100%; max-width: 520px; margin: 0 auto; }
+.step select { flex: 1; min-width: 0; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); font: 600 16px var(--text); padding: 0 12px; }
+.icon-btn { width: 44px; height: 44px; flex: none; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: 700 20px var(--text); cursor: pointer; }
+.ctl { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.seg { display: inline-flex; padding: 3px; border-radius: 12px; background: #0a0a0c; border: 1px solid var(--line); flex: 0 1 auto; max-width: 100%; }
+.seg button { min-height: 38px; padding: 0 12px; border: 0; border-radius: 9px; background: none; color: #a0a0a8; font: 600 14px var(--text); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: #2a2a30; color: var(--fg); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14); }
+button:focus-visible, select:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.frames { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.frames.stack { grid-template-columns: minmax(0, 1fr); }
+.col { margin: 0; min-width: 0; display: grid; gap: 8px; justify-items: center; }
+.cap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; font: 800 20px var(--display); }
+.tag { font: 700 12px/1 var(--text); padding: 5px 8px; border-radius: 999px; letter-spacing: 0.02em; }
+.tag.new { background: var(--flame); color: #000; }
+.tag.rec { border: 1px solid rgba(74, 222, 128, 0.5); color: var(--ok); }
+.tag.ref { border: 1px solid var(--line); color: var(--muted); }
+.screen { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid var(--line); background: #000; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6); }
+.screen iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; background: #000; }
+.note { margin: 0; max-width: 60ch; text-align: center; color: var(--muted); font-size: 14px; min-height: 2.9em; }
+.tap { margin: 0; text-align: center; color: var(--muted); font-size: 14px; }
+
+.more { display: grid; gap: 8px; max-width: 860px; width: 100%; margin: 6px auto 0; }
+details { border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+summary { min-height: 48px; display: flex; align-items: center; padding: 0 16px; cursor: pointer; font-weight: 700; list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: '+'; margin-left: auto; padding-left: 12px; color: var(--orange); font-size: 20px; }
+details[open] summary::after { content: '−'; }
+.in { padding: 0 16px 16px; display: grid; gap: 10px; }
+.in p, .in ul { margin: 0; }
+.in ul { padding-left: 18px; display: grid; gap: 6px; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 14px; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+td.n { text-align: right; font-weight: 700; }
+.ok { color: var(--ok); }
+.over { color: var(--over); }
+.btn { min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: 700 15px var(--text); cursor: pointer; justify-self: start; }
+.btn[aria-pressed="true"] { background: var(--flame); color: #000; border-color: transparent; }
+q { quotes: '«' '»'; }
+
+@media (max-width: 820px) {
+  .frames { grid-template-columns: minmax(0, 1fr); }
+  #stackBtn { display: none; }
+  .cap { font-size: 17px; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>A tela Create no computador, enxuta como no celular?</h1>
+    <p class="sub">Saem da primeira tela a frase da série, os três passos e a barra vazia da série. O celular não muda.</p>
+    <div class="eq" aria-hidden="true" id="eq"></div>
+  </header>
+
+  <div class="step" role="group" aria-label="Estado da tela">
+    <button class="icon-btn" id="prev" type="button" aria-label="Estado anterior">‹</button>
+    <select id="state" aria-label="Estado da tela"></select>
+    <button class="icon-btn" id="next" type="button" aria-label="Próximo estado">›</button>
+  </div>
+
+  <main class="frames" id="frames">
+    <figure class="col" id="colToday">
+      <figcaption class="cap">Hoje <span class="tag ref">referência</span></figcaption>
+      <div class="screen" id="scrToday"><iframe id="fToday" title="Hoje: a tela Create como está"></iframe></div>
+      <p class="note" id="noteToday"></p>
+    </figure>
+    <figure class="col" id="colLean">
+      <figcaption class="cap"><span id="leanName">Enxuta</span> <span class="tag new">Nova</span> <span class="tag rec">Recomendada</span></figcaption>
+      <div class="screen" id="scrLean"><iframe id="fLean" title="Enxuta: a tela Create proposta"></iframe></div>
+      <p class="note" id="noteLean" aria-live="polite"></p>
+    </figure>
+  </main>
+  <p class="tap">Clique nas telas: buscar, escolher capas, colar uma lista, «What is a series?».</p>
+
+  <div class="ctl" role="group" aria-label="Tamanho, conta e arrumação">
+    <div class="seg" role="group" aria-label="Tamanho da tela">
+      <button type="button" id="s1280" aria-pressed="true">1280 × 800</button>
+      <button type="button" id="s1440" aria-pressed="false">1440 × 900</button>
+    </div>
+    <div class="seg" role="group" aria-label="Conta">
+      <button type="button" id="whoIn" aria-pressed="false">Com conta</button>
+      <button type="button" id="whoOut" aria-pressed="true">Sem conta</button>
+    </div>
+    <button type="button" class="btn" id="stackBtn" aria-pressed="false">Uma embaixo da outra, maiores</button>
+  </div>
+
+  <section class="more" aria-label="Detalhes">
+    <details id="dWords">
+      <summary>Quantas palavras na primeira tela</summary>
+      <div class="in" id="words"></div>
+    </details>
+    <details id="dVariant">
+      <summary>Uma variante: os três passos numa linha discreta</summary>
+      <div class="in">
+        <p>Igual à Enxuta, só que os três passos ficam, com as palavras de hoje, numa linha baixa sob o equalizador, sem caixas. Ensina o caminho a quem chega pela primeira vez, e custa cerca de 25 palavras.</p>
+        <button class="btn" id="variantBtn" type="button" aria-pressed="false">Ver a variante no lugar da Enxuta</button>
+      </div>
+    </details>
+    <details>
+      <summary>O que muda, e o que fica</summary>
+      <div class="in">
+        <ul>
+          <li><b>Fica:</b> o título, o campo com <q>Search</q> em fogo, o equalizador, a luz do fogo atrás do título, o menu do topo.</li>
+          <li><b>A frase da série:</b> sai da primeira tela. O link <q>What is a series?</q> a abre no mesmo lugar, sob o título; um segundo clique (ou Esc) fecha.</li>
+          <li><b>Sob o campo:</b> só o link <q>or paste a list</q> (na lista: <q>Search an artist instead</q>). O texto de dentro do campo vira <q>Type an artist</q>, como no celular.</li>
+          <li><b>Três passos:</b> saem. As capas com <q>+</q> e a barra da série mostram o caminho.</li>
+          <li><b>Barra da série:</b> só com a primeira capa escolhida (ou depois de criar).</li>
+          <li><b>Sem conta:</b> o aviso <q>You're not signed in…</q> vem com a barra, só quando há álbuns.</li>
+          <li><b>A tela grande vazia:</b> antes da busca, o conjunto desce um pouco para o meio da tela; a luz do fogo e o equalizador seguem com ele. Nada novo entra.</li>
+          <li><b>Palavras novas:</b> nenhuma. As do celular, já aprovadas, passam para o computador.</li>
+        </ul>
+      </div>
+    </details>
+    <details>
+      <summary>O que eu não consegui conferir</summary>
+      <div class="in">
+        <ul>
+          <li>As telas são do Chrome com o código de hoje (<q>main</q>); as capas são de exemplo e a conta é de teste.</li>
+          <li>Num monitor maior que 1440 × 900 a tela não foi vista.</li>
+          <li>Aqui a busca responde sozinha em 1,6 s.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const STATES = [
+  ['empty', 'Primeira visita', 'Ficam o título, «What is a series?», o campo, «or paste a list» e o equalizador. Sem passos, sem barra vazia.'],
+  ['typing', 'Digitando', 'Sob o campo continua só o link; a frase «Press Enter…» sai.'],
+  ['searching', 'Buscando', 'Como hoje: o equalizador anda. Sem a barra vazia embaixo.'],
+  ['results', 'A discografia', 'A barra da série ainda não aparece: as capas já têm o «+».'],
+  ['chosen', 'Álbuns escolhidos', 'Com a primeira capa, a barra da série aparece, como hoje.'],
+  ['paste', 'Colando uma lista', 'A lista no lugar do campo; a volta é «Search an artist instead».'],
+  ['failed', 'O catálogo não respondeu', 'A mensagem de hoje, sem a barra vazia embaixo.'],
+  ['notfound', 'Artista não encontrado', 'A mensagem já oferece «Paste a list»; o link sob o campo sai.'],
+  ['what', '«What is a series?» aberto', 'A frase de hoje, no lugar de hoje, só quando pedida. Fecha no mesmo link ou com Esc.']
+];
+const TODAY_NOTES = { what: 'Hoje a frase fica sempre na tela, sob o título.', empty: 'A frase da série, os três passos e a barra vazia da série na primeira tela.' };
+const SIZES = { '1280': [1280, 800], '1440': [1440, 900] };
+const ui = { state: 'empty', who: 'out', size: '1280', steps: false, stack: false, timer: null };
+const $ = (id) => document.getElementById(id);
+
+[5, 9, 6, 12, 8, 14, 7, 10, 5, 11, 6, 9, 13, 7].forEach((h) => { const i = document.createElement('i'); i.style.height = h + 'px'; $('eq').appendChild(i); });
+
+const sel = $('state');
+STATES.forEach(([key, label], i) => { const o = document.createElement('option'); o.value = key; o.textContent = (i + 1) + ' de ' + STATES.length + ' · ' + label; sel.appendChild(o); });
+
+function frameDoc(option) {
+  let st = ui.state;
+  const base = st === 'what' ? 'empty' : st;
+  if (option === 'today' && st === 'what') st = 'empty';
+  const b = DATA.bodies[ui.who + '-' + base];
+  const css = DATA.css + (option === 'today' ? '' : DATA.lean);
+  const pre = 'window.__ST=' + JSON.stringify(st) + ';window.__STEPS=' + JSON.stringify(option === 'steps') + ';';
+  const lean = option === 'today' ? '' : '<scr' + 'ipt>' + DATA.leanJs + '</scr' + 'ipt>';
+  const body = b.body.replace('</body>', '<scr' + 'ipt>' + pre + '</scr' + 'ipt>' + lean + '<scr' + 'ipt>' + DATA.frameJs + '</scr' + 'ipt></body>');
+  let doc = '<!doctype html><html class="' + b.html + '"><head>' + DATA.head + '<style>' + css + '</style></head>' + body + '</html>';
+  Object.entries(DATA.assets).forEach(([token, uri]) => { doc = doc.split(token).join(uri); });
+  return doc;
+}
+
+function fit() {
+  const [w, h] = SIZES[ui.size];
+  const one = ui.stack || window.innerWidth <= 820;
+  const wrapW = document.querySelector('.wrap').clientWidth;
+  const colW = one ? wrapW : (wrapW - 20) / 2;
+  const s = Math.min(1, colW / w);
+  [['scrLean', 'fLean'], ['scrToday', 'fToday']].forEach(([d, f]) => {
+    $(d).style.width = Math.floor(w * s) + 'px'; $(d).style.height = Math.floor(h * s) + 'px';
+    $(f).style.width = w + 'px'; $(f).style.height = h + 'px'; $(f).style.transform = 'scale(' + s + ')';
+  });
+}
+
+function draw() {
+  $('fLean').srcdoc = frameDoc(ui.steps ? 'steps' : 'lean');
+  $('fToday').srcdoc = frameDoc('today');
+  const row = STATES.find((s) => s[0] === ui.state);
+  sel.value = ui.state;
+  $('noteLean').textContent = ui.steps && ui.state === 'empty' ? 'Como a Enxuta, com os três passos de hoje numa linha discreta sob o equalizador.' : row[2];
+  $('noteToday').textContent = TODAY_NOTES[ui.state] || '';
+  $('leanName').textContent = ui.steps ? 'Variante · passos numa linha' : 'Enxuta';
+  fit();
+}
+
+function go(state) {
+  clearTimeout(ui.timer);
+  ui.state = state;
+  draw();
+  if (state === 'searching') ui.timer = setTimeout(() => { if (ui.state === 'searching') go('results'); }, 1600);
+}
+
+const press = (on, off, key, value) => { $(on).setAttribute('aria-pressed', 'true'); $(off).setAttribute('aria-pressed', 'false'); ui[key] = value; draw(); };
+sel.addEventListener('change', () => go(sel.value));
+$('prev').addEventListener('click', () => { const i = STATES.findIndex((s) => s[0] === ui.state); go(STATES[(i - 1 + STATES.length) % STATES.length][0]); });
+$('next').addEventListener('click', () => { const i = STATES.findIndex((s) => s[0] === ui.state); go(STATES[(i + 1) % STATES.length][0]); });
+$('s1280').addEventListener('click', () => press('s1280', 's1440', 'size', '1280'));
+$('s1440').addEventListener('click', () => press('s1440', 's1280', 'size', '1440'));
+$('whoIn').addEventListener('click', () => press('whoIn', 'whoOut', 'who', 'in'));
+$('whoOut').addEventListener('click', () => press('whoOut', 'whoIn', 'who', 'out'));
+$('stackBtn').addEventListener('click', () => {
+  ui.stack = !ui.stack;
+  $('frames').classList.toggle('stack', ui.stack);
+  $('stackBtn').setAttribute('aria-pressed', String(ui.stack));
+  $('stackBtn').textContent = ui.stack ? 'Lado a lado' : 'Uma embaixo da outra, maiores';
+  fit();
+});
+$('variantBtn').addEventListener('click', () => {
+  ui.steps = !ui.steps;
+  $('variantBtn').setAttribute('aria-pressed', String(ui.steps));
+  $('variantBtn').textContent = ui.steps ? 'Voltar à Enxuta' : 'Ver a variante no lugar da Enxuta';
+  go('empty');
+  $('frames').scrollIntoView({ block: 'start' });
+});
+window.addEventListener('message', (e) => { if (e.data && e.data.f79c) go(e.data.f79c); });
+window.addEventListener('resize', fit);
+
+(function words() {
+  const c = DATA.counts;
+  if (!c) { $('words').textContent = 'A contagem ainda não foi feita.'; return; }
+  const name = { today: 'Hoje', lean: 'Enxuta', steps: 'Variante (passos numa linha)' };
+  let html = '<p>Palavras do produto visíveis ao abrir a tela, sem o menu do topo. A régua do projeto, para uma tela de trabalho no computador: alvo 60, teto 100.</p><div class="tbl"><table><thead><tr><th></th><th>1280, com conta</th><th>sem conta</th><th>1440, com conta</th><th>sem conta</th></tr></thead><tbody>';
+  ['today', 'lean', 'steps'].forEach((o) => {
+    html += '<tr><th>' + name[o] + '</th>' + ['in-1280', 'out-1280', 'in-1440', 'out-1440'].map((k) => { const n = c[o][k].words; return '<td class="n ' + (n <= 60 ? 'ok' : n > 100 ? 'over' : '') + '">' + n + '</td>'; }).join('') + '</tr>';
+  });
+  html += '</tbody></table></div><p>O menu do topo soma mais ' + c.today['out-1280'].menus + ' (sem conta) ou ' + c.today['in-1280'].menus + ' (com conta) palavras; o texto de dentro do campo, ' + c.today['in-1280'].placeholder + ' hoje e ' + c.lean['in-1280'].placeholder + ' na Enxuta.</p>';
+  $('words').innerHTML = html;
+})();
+
+draw();
+</script>

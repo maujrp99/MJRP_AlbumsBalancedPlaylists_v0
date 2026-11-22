@@ -4,7 +4,8 @@
 //
 // Why: scripts/lib/site-build.sh checks the budget on the build made with the .env copied in, and that build carries values a plain
 // `vite build` does not: the Spotify client id, the PostHog project key and host. They are inlined in the main script (SpotifyAuthService reads
-// import.meta.env.VITE_SPOTIFY_CLIENT_ID; usageWiring takes the whole of import.meta.env, so every VITE_ value of the build goes in). A ceiling set on a
+// import.meta.env.VITE_SPOTIFY_CLIENT_ID; usageWiring takes the whole of import.meta.env, so every VITE_ value of the build goes in: the two keys
+// above and the two switches, VITE_SPLASH_COVERS and VITE_USAGE_MEASUREMENT). A ceiling set on a
 // build without them is too tight for the published one and publication is refused. The Firebase web configuration is NOT among them: it is copied as
 // a file (public/js/firebase-config.js), not bundled.
 //
@@ -34,7 +35,8 @@ function* seeded(label) {
 /**
  * The stand-in value of each key the published build carries, by its length class (`publication.standIns` of the budget: name -> length).
  * Shapes: the Spotify client id is hex; the PostHog key is `phc_` + base62; the PostHog host is the EU ingestion host (the US one has the same length).
- * Anything else named is base62 of the length asked. These are not keys of anything.
+ * The two switches are words, not keys: VITE_SPLASH_COVERS is `real` (the value that puts the real covers on the entry page) and VITE_USAGE_MEASUREMENT is `off`
+ * (the longest word the switch takes; an empty value would weigh 3 B less). Anything else named is base62 of the length asked. These are not keys of anything.
  */
 export function standIns(lengths) {
     const values = {}
@@ -43,6 +45,8 @@ export function standIns(lengths) {
         const draw = (alphabet, count) => Array.from({ length: count }, () => alphabet[bytes.next().value % alphabet.length]).join('')
         if (name === 'VITE_POSTHOG_HOST') values[name] = 'https://eu.i.posthog.com'.padEnd(length, 'x').slice(0, length)
         else if (name === 'VITE_POSTHOG_KEY') values[name] = `phc_${draw(BASE62, length - 4)}`
+        else if (name === 'VITE_SPLASH_COVERS') values[name] = 'real'.padEnd(length, 'x').slice(0, length)
+        else if (name === 'VITE_USAGE_MEASUREMENT') values[name] = 'off'.padEnd(length, 'x').slice(0, length)
         else if (name === 'VITE_SPOTIFY_CLIENT_ID') values[name] = draw('0123456789abcdef', length)
         else values[name] = draw(BASE62, length)
     }
@@ -67,7 +71,6 @@ function main(argv) {
     const out = path.resolve(args.includes('--out') ? args[args.indexOf('--out') + 1] : fs.mkdtempSync(path.join(os.tmpdir(), 'mjrp-publication-budget-')))
     const budget = JSON.parse(fs.readFileSync(BUDGET_FILE, 'utf8'))
     const env = { ...process.env, ...standIns(budget.publication.standIns) }
-    delete env.VITE_USAGE_MEASUREMENT // the measurement stays ON in the published build: the switch is not set
     const built = spawnSync('npx', ['vite', 'build', '--outDir', out, '--emptyOutDir'], { cwd: ROOT, env, encoding: 'utf8' })
     if (built.status !== 0) { console.error(built.stdout, built.stderr); console.error('publication-budget: the build failed'); return 2 }
 

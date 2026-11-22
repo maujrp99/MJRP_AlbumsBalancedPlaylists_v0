@@ -119,6 +119,10 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
 ![[S-70-move-from-the-home-to-the-app-without-a-jolt]]
 
+![[S-73-name-the-start-screen-create-with-a-plus]]
+
+![[S-76-move-between-screens-smoothly]]
+
 
 
 
@@ -140,6 +144,8 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 ### EP-02 · Misturar uma série escolhendo a receita
 folder:: ep-02-blend-recipes
 serves:: [[ROADMAP#^OUT-02]] ^EP-02
+
+![[S-74-grow-and-manage-the-blend-algorithms-from-the-cms]]
 
 
 
@@ -235,6 +241,8 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-10
 
 ![[S-69-see-the-site-in-a-separate-environment]]
 
+![[S-75-turn-features-on-and-off-from-the-cms]]
+
 ### Transversais
 
 Os requisitos não funcionais valem para todas as features e não são importados por nenhuma: cada um é um arquivo `docs/specs/requirements/nfr/NFR-xx-<slug>.md`.
@@ -242,3 +250,5 @@ Os requisitos não funcionais valem para todas as features e não são importado
 ![[NFR-01-the-products-main-flows-have-end-to-end-tests]]
 
 ![[NFR-02-the-apps-performance-is-measured-with-lighthouse]]
+
+![[NFR-03-a-feature-turned-off-leaves-no-trace]]

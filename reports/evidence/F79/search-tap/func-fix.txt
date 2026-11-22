@@ -1,0 +1,28 @@
+webkit iPhone 14 | type then click Search | 9
+webkit iPhone 14 | Enter | 9
+webkit iPhone 14 | «paste a list» link opens the list | true
+webkit iPhone 14 | paste list: «Add albums» enabled | true
+webkit iPhone 14 | «Search an artist instead» returns to the field | true
+webkit iPhone 14 | «What is a series?» opens the sheet | true
+webkit iPhone 14 tap | type then tap Search | 9
+webkit iPhone 14 tap | Enter | 9
+webkit iPhone 14 tap | «paste a list» link opens the list | true
+webkit iPhone 14 tap | paste list: «Add albums» enabled | true
+webkit iPhone 14 tap | «Search an artist instead» returns to the field | true
+webkit iPhone 14 tap | «What is a series?» opens the sheet | true
+webkit 1280 | type then click Search | 9
+webkit 1280 | Enter | 9
+webkit 1280 | «paste a list» link opens the list | true
+webkit 1280 | paste list: «Add albums» enabled | true
+webkit 1280 | «Search an artist instead» returns to the field | true
+chromium 1280 | type then click Search | 9
+chromium 1280 | Enter | 9
+chromium 1280 | «paste a list» link opens the list | true
+chromium 1280 | paste list: «Add albums» enabled | true
+chromium 1280 | «Search an artist instead» returns to the field | true
+chromium Pixel 7 tap | type then tap Search | 9
+chromium Pixel 7 tap | Enter | 9
+chromium Pixel 7 tap | «paste a list» link opens the list | true
+chromium Pixel 7 tap | paste list: «Add albums» enabled | true
+chromium Pixel 7 tap | «Search an artist instead» returns to the field | true
+chromium Pixel 7 tap | «What is a series?» opens the sheet | true

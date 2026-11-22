@@ -380,7 +380,7 @@ describe('the tabs of the phone', () => {
         const current = $$('#phone-tabbar [aria-current="page"]')
 
         expect($$('#phone-tabbar a[data-link]').length).toBe(5)
-        expect($$('#phone-tabbar a[data-tab]').map(tab => tab.textContent!.trim())).toEqual(['Start', 'Albums', 'Blend', 'Playlists', 'Inventory'])
+        expect($$('#phone-tabbar a[data-tab]').map(tab => tab.textContent!.trim())).toEqual(['Create', 'Albums', 'Blend', 'Playlists', 'Inventory'])
         expect(current.map(tab => tab.textContent!.trim())).toEqual(['Albums'])
         expect(current[0].classList.contains('cur')).toBe(true)
         expect($$('#phone-tabbar a.cur').length).toBe(1)
@@ -397,7 +397,7 @@ describe('the tabs of the phone', () => {
     })
 
     it('names each screen for the top bar', () => {
-        expect(screenName('/start')).toBe('Start')
+        expect(screenName('/start')).toBe('Create')
         expect(screenName('/albums/abc123')).toBe('Albums')
         expect(screenName('/playlists')).toBe('New Playlists')
         expect(screenName('/playlists/edit')).toBe('Edit Playlists')
@@ -637,12 +637,12 @@ describe('the menu of the phone', () => {
 // ---------------------------------------------------------------------------------------------------------------------------------
 // components/navigation/startRoute.test.js (what is about the menu, the footer and the top bar of the phone)
 describe('the menu of the computer (F85)', () => {
-    it('says «Start» and goes to /start; nothing says Home', async () => {
+    it('says «Create» and goes to /start; nothing says Home', async () => {
         await on('/albums')
         const body = document.getElementById('header-container')!
         const links = [...body.querySelectorAll('a[href="/start"]')].map(a => a.textContent!.trim())
         expect(links.length).toBeGreaterThanOrEqual(1) // the bar (the drawer is gone, F88)
-        links.forEach(label => expect(label).toBe('Start'))
+        links.forEach(label => expect(label).toBe('Create'))
         expect(body.querySelectorAll('a[href="/home"]:not(.top-menu__home)').length).toBe(0) // only the logo leads to /home
         expect(body.textContent).not.toMatch(/\bHome\b/)
         expect(START_PATH).toBe('/start')
@@ -656,10 +656,10 @@ describe('the menu of the computer (F85)', () => {
         expect(logo.hasAttribute('data-full-page')).toBe(true)
     })
 
-    it('the footer and the breadcrumb say Start', async () => {
+    it('the footer and the breadcrumb say Create', async () => {
         await on('/albums')
-        expect(document.querySelector('#footer-container a[href="/start"]')).not.toBeNull()
-        expect(albumsTrail()[0]).toEqual({ label: 'Start', path: '/start' })
+        expect(document.querySelector('#footer-container a[href="/start"]')!.textContent!.trim()).toBe('Create')
+        expect(albumsTrail()[0]).toEqual({ label: 'Create', path: '/start' })
     })
 })
 
@@ -672,6 +672,6 @@ describe('the top bar of the phone (F85)', () => {
         expect(link.hasAttribute('data-full-page')).toBe(true)
         expect(link.getAttribute('aria-label')).toMatch(/entry page/)
         expect(link.querySelector('img.phone-topbar__logo')).not.toBeNull()
-        expect($('a[data-tab="home"]').textContent!.trim()).toBe('Start')
+        expect($('a[data-tab="home"]').textContent!.trim()).toBe('Create')
     })
 })

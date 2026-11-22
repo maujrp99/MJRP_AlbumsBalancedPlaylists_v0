@@ -34,10 +34,16 @@ describe('the dictionary', () => {
         expect(t('no.such.key', 'en')).toBe('no.such.key')
     })
 
-    it('the menu is Inicie · Álbuns · Blend · Playlists · Inventário (Start · Albums · Blend · Playlists · Inventory)', () => {
+    it('the menu is Criar · Álbuns · Blend · Playlists · Inventário (Create · Albums · Blend · Playlists · Inventory)', () => {
         const keys = ['m.start', 'm.albums', 'm.blend', 'm.playlists', 'm.inventory']
-        expect(keys.map(k => t(k, 'pt'))).toEqual(['Inicie', 'Álbuns', 'Blend', 'Playlists', 'Inventário'])
-        expect(keys.map(k => t(k, 'en'))).toEqual(['Start', 'Albums', 'Blend', 'Playlists', 'Inventory'])
+        expect(keys.map(k => t(k, 'pt'))).toEqual(['Criar', 'Álbuns', 'Blend', 'Playlists', 'Inventário'])
+        expect(keys.map(k => t(k, 'en'))).toEqual(['Create', 'Albums', 'Blend', 'Playlists', 'Inventory'])
+    })
+
+    it('the kicker of the first story names the item too: Criar / Create; the verb phrases stay', () => {
+        expect(t('k.start', 'pt')).toBe('Lado A · 1 — Criar')
+        expect(t('k.start', 'en')).toBe('Side A · 1 — Create')
+        expect(t('d.start', 'en')).toBe('Start a series')
     })
 
     it('carries the owner\'s corrections: «coloque» never «ponha», the ranking title, the export line, the inventory title', () => {

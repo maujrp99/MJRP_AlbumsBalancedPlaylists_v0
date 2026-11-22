@@ -102,7 +102,7 @@ describe('the shell in React', () => {
             await adapter.act(async () => { await setLocale('pt'); await flush() })
             expect(document.getElementById('loginBtn')!.textContent!.trim()).toBe('Entrar')
             expect(document.getElementById('footerClearCache')!.textContent).toBe('Limpar o cache')
-            expect(document.querySelector('#top-menu-bar a[href="/start"]')!.textContent!.trim()).toBe('Início')
+            expect(document.querySelector('#top-menu-bar a[href="/start"]')!.textContent!.trim()).toBe('Criar')
         } finally {
             window.localStorage.removeItem(PREVIEW_KEY)
             await act(async () => { await setLocale('en') })

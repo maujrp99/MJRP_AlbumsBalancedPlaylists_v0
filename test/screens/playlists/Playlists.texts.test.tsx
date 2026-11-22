@@ -67,7 +67,7 @@ describe('in Portuguese the screen speaks Portuguese', () => {
         const screen = await open(false)
         const text = screen.text()
         expect(text).toContain('Gerenciar playlists')
-        expect(text).toContain('Início')
+        expect(text).toContain('Criar')
         expect(text).toContain('Ações e exportação')
         expect(text).toContain('Salvar no histórico da série')
         expect(text).toContain('Nome do lote')

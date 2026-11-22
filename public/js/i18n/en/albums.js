@@ -19,7 +19,7 @@ export const albums = {
 
     'albums.empty.title': 'No albums in library',
     'albums.empty.about': 'Create a series from the home page to get started',
-    'albums.empty.cta': 'Go to Start',
+    'albums.empty.cta': 'Go and create!',
     'albums.noMatch.title': 'No albums match your filters',
     'albums.noMatch.about': 'Try adjusting your search or filters',
 

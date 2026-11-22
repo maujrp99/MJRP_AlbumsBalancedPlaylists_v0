@@ -7,7 +7,7 @@ export const ui = {
     'ui.trackRow.spotifyRank': 'Posição no Spotify',
     'ui.trackRow.spotifyPopularity': 'Popularidade no Spotify',
     'ui.breadcrumb.label': 'Trilha de navegação',
-    'ui.breadcrumb.start': 'Início',
+    'ui.breadcrumb.start': 'Criar',
     'ui.breadcrumb.blend': 'Mistura',
     'ui.breadcrumb.playlists': 'Playlists',
     'ui.breadcrumb.savedPlaylists': 'Playlists guardadas',

@@ -13,7 +13,7 @@ export const albums = {
 
     'albums.empty.title': 'Nenhum álbum na biblioteca',
     'albums.empty.about': 'Crie uma série na página inicial para começar',
-    'albums.empty.cta': 'Ir para o Início',
+    'albums.empty.cta': 'Vá e crie!',
     'albums.noMatch.title': 'Nenhum álbum combina com os filtros',
     'albums.noMatch.about': 'Tente mudar a busca ou os filtros',
 

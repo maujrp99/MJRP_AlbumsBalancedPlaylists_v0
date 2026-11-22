@@ -16,7 +16,7 @@ const budget = JSON.parse(fs.readFileSync('scripts/bundle-budget.json', 'utf8'))
 describe('the ceilings and the publication-shaped build', () => {
     it('declares the margin, the stand-in lengths and what was measured', () => {
         expect(budget.publication.margin).toBeGreaterThanOrEqual(100)
-        expect(Object.keys(budget.publication.standIns)).toEqual(['VITE_SPOTIFY_CLIENT_ID', 'VITE_POSTHOG_KEY', 'VITE_POSTHOG_HOST'])
+        expect(Object.keys(budget.publication.standIns)).toEqual(['VITE_SPOTIFY_CLIENT_ID', 'VITE_POSTHOG_KEY', 'VITE_POSTHOG_HOST', 'VITE_SPLASH_COVERS', 'VITE_USAGE_MEASUREMENT'])
         expect(budget.publication.measured.main).toBeGreaterThan(0)
         expect(budget.publication.measured.afterFirstScreen).toBeGreaterThan(0)
     })
@@ -46,6 +46,8 @@ describe('the ceilings and the publication-shaped build', () => {
         expect(values.VITE_SPOTIFY_CLIENT_ID).toMatch(/^[0-9a-f]{32}$/)
         expect(values.VITE_POSTHOG_KEY).toMatch(/^phc_[A-Za-z0-9]{43}$/)
         expect(values.VITE_POSTHOG_HOST).toHaveLength(24)
+        expect(values.VITE_SPLASH_COVERS).toBe('real')
+        expect(values.VITE_USAGE_MEASUREMENT).toBe('off')
         expect(standIns(budget.publication.standIns)).toEqual(values)
     })
 

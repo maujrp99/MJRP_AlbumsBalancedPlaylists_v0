@@ -1,0 +1,8 @@
+npm run budget:publication  (publication-shaped build, stand-ins by length: VITE_SPOTIFY_CLIENT_ID 32, VITE_POSTHOG_KEY 47, VITE_POSTHOG_HOST 24, VITE_SPLASH_COVERS 4, VITE_USAGE_MEASUREMENT 3)
+measured on claude/f83-sync-4-create-and-the-three-lines, after the port, before the ceilings were set:
+main script            195804 B
+after the first screen 235196 B
+main + after           431000 B
+react-vendor           68691 B
+ceilings set: main 195964 B (margin 160 B); background 57720 B -> cap 301437 + 72000 + 57720 = 431157 B (margin 157 B); react-vendor 72000 B (ceiling)
+from the fix of wave 7b (160c702 + fixes, 5 stand-ins not yet): main 195050 B, after 236336 B, sum 431386 B
