@@ -200,5 +200,5 @@ O menu do topo foi refeito à parte (F88, na `main`) enquanto as ondas avançava
 - **A janela à mão refazia o HTML a cada palavra da exportação**: uma `key` nova a cada desenho (`flushSync`), senão a animação do painel e do spinner não recomeça e o foco não cai, como antes.
 - **A tela de playlists guardadas no site construído**: uma linha no fim do arquivo da tela, posta pelo servidor da prova (a classe da loja achada pela forma do construtor, a instância por `=new X`), dá `window.__saved`; é a mesma linha dos dois lados e nada é publicado.
 - **`rm` e comandos com `$VAR` num caminho são recusados pelo ambiente**: caminhos já resolvidos; scripts com a ferramenta de escrita.
-- **Peso:** o inglês de 38 chaves novas subiu o principal 571 B (194.889 B para 195.460 B); o `background` foi a 59.000 B (185 B de folga acima da necessidade, para as chaves do build publicado: ~144 B).
+- **Peso:** o inglês de 38 chaves novas subiu o principal 571 B (194.889 B para 195.460 B); o teto do principal foi a 195.860 B e o `background` a 59.300 B (400 B ou mais de folga em cada: o build publicado tem as chaves, que somam ~144 B, e o pai já estava 114 a 157 B acima nele; a regra é consertada em outro ramo).
 

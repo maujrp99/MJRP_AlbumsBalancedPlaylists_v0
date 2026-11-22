@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 10:00] step — F83 onda 8a: a prova no navegador das exportações e a folga de 400 B nos tetos
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `reports/evidence/F83/wave-8a/` (`proof.md`, `browser-proof.mjs`, `recording-built.mjs`, `run-all.sh`, `summarize.py`, `raw/`, 4 figuras; menos de 1 MB): sites construídos, o pai (160c702) contra este ramo, Chromium 1280/900/899/iPhone 14/SE e WebKit 1280/iPhone 14/SE, as telas de edição e de guardadas, Apple Music (pastas: algumas, nenhuma, erro, 250), Spotify, arquivo (bytes iguais) e o fechar de todo jeito; 4.342 conferências passadas, 0 diferenças sem explicação (ruído: 3 px na barra do topo, que também existe de pai contra pai, e a chama animada do logo no WebKit 1280 das guardadas: provável, não provado em controle).
+- A gravação do MusicKit (264 chamadas) também é idêntica ao dourado no site construído, em Chromium e em WebKit (106 conferências cada).
+- Por pedido do coordenador (a regra do orçamento é consertada em outro ramo): `scripts/bundle-budget.json` com 400 B ou mais de folga em cada teto que a onda move: `main` 195.860 B (medido 195.460 B) e `background` 59.300 B (necessidade 58.815 B). Nem `Blend.tsx` nem o bloco de lojas do `app.js` foram tocados.
+
 ## [2026-11-22 09:28] step — F83 onda 8a: o orçamento de peso, a linha da TASK-28 e a seção 20 das lições
 
 **Branch:** claude/f83-wave-8a-exports
