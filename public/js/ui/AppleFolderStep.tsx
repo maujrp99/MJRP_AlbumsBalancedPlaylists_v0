@@ -94,10 +94,13 @@ export function AppleFolderStep({ seriesName, loadFolders, onExport, onBack, sto
     const list = useRef<HTMLDivElement>(null)
     const focused = useRef<FocusMark | null>(null)
 
-    // The folders are read once, when the step opens (a second read in the strict mode of development is the same read).
+    // The folders are read once, when the step opens: the read is kept, so the strict mode of development (which runs the effect twice)
+    // asks Apple Music once, as the production build does.
+    const reading = useRef<Promise<Folder[]> | null>(null)
     useEffect(() => {
         let stale = false
-        Promise.resolve().then(loadFolders).then(
+        reading.current ??= Promise.resolve().then(loadFolders)
+        reading.current.then(
             (read) => { if (!stale) { setFolders(read); setStatus(read.length === 0 ? 'empty' : 'ready') } },
             () => { if (!stale) setStatus('failed') }
         )

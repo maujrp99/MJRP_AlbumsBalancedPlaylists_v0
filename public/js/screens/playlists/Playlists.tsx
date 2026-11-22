@@ -18,11 +18,12 @@ import { Breadcrumb, playlistsTrail } from '../../ui/Breadcrumb'
 import { LegacyRegeneratePanel, resetRegeneratePanel, showRegeneratePanel } from '../../react-bridge/legacy/RegeneratePanel'
 import { exportJson, openSpotifyExport } from '../../react-bridge/legacy/OutputWindows'
 import { usePlaylistExport } from '../../ui/PlaylistExportWindow'
+import { activeSeriesName } from './activeSeries'
 import { useSortableTracks } from '../../react-bridge/sortableTracks'
 import { countListener } from '../../react-bridge/listeners'
 import { useLocale } from '../../react-bridge/useLocale'
 import { usePhone } from '../../react-bridge/usePhone'
-import { useStore } from '../../react-bridge/useStore'
+import { useNotices, useStore } from '../../react-bridge/useStore'
 import { navigate } from '../../react-bridge/navigation'
 import { t } from '../../i18n/t.js'
 import { router } from '../../router.js'
@@ -256,7 +257,7 @@ interface ControlsProps {
 
 /** The batch name, the panel to generate again (or the batch that was not found) and, on the computer, the actions. */
 function Controls({ state, playlists, editing, phone, nameValue, onType, activeSeriesId, todo }: ControlsProps) {
-    const exporting = usePlaylistExport() // F90: Apple Music asks for the folder first, in the window the saved playlists screen opens too
+    const exporting = usePlaylistExport({ seriesName: activeSeriesName }) // F90: Apple Music asks for the folder first, in the window the saved playlists screen opens too
     return (
         <>
             {phone
@@ -355,13 +356,15 @@ function Layout({ box, state, playlists, editing, phone, isGenerating, activeSer
 }
 
 export function Playlists({ controller, generating }: Props) {
-    useFocusLikeAfterAnewDraw()
     useLocale()
     const phone = usePhone()
     const state = useStore(playlistsStore, store => store.getState())
     const activeSeries = useStore(albumSeriesStore, store => store.getActiveSeries())
     useStore(albumsStore, () => 0) // the foot says when the screen was drawn: the hand-made screen drew again when the albums store told
     const isGenerating = useSyncExternalStore(generating.subscribe, () => generating.isGenerating)
+    // The hand-made screen drew again only when a store or the flag said so; a sheet or the export window that closes and hands the focus back to its
+    // opener is not one of those draws, and must not take the focus away (the proof in WebKit found it: the «Export» of the bar lost it on Escape).
+    useFocusLikeAfterAnewDraw({ after: [useNotices(playlistsStore), useNotices(albumSeriesStore), useNotices(albumsStore), isGenerating, phone].join('.') })
     const playlists = state.playlists as Playlist[]
     const name = useTypedName(state.batchName, shownNameOf(state))
     const todo = useScreenActions(controller, name.value)

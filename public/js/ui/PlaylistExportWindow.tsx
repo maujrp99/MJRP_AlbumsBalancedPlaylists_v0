@@ -20,7 +20,6 @@ import { useSheetWindow } from './SheetWindow'
 import { Icon } from './Icon'
 import { AppleFolderStep, type FolderChoice } from './AppleFolderStep'
 import { exportJson, exportToAppleMusic, listAppleFolders, openSpotifyExport } from '../react-bridge/legacy/OutputWindows'
-import { albumSeriesStore } from '../stores/albumSeries.js'
 import { isPhone } from '../utils/isPhone.js'
 import { t } from '../i18n/t.js'
 
@@ -54,8 +53,13 @@ export const DESTINATIONS = Object.freeze([
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])'
 
-/** The series the playlists belong to: the one given (the saved playlists screen), else the open one. */
-const seriesNameOf = (given?: string): string => given || (albumSeriesStore.getActiveSeries() as { name?: string } | null)?.name || 'MJRP Playlists'
+/** What a screen says about itself to the window: the series the playlists belong to when the job does not name one (the edit screen: the open series). */
+export interface ExportDefaults {
+    seriesName?: () => string | undefined
+}
+
+/** The series the playlists belong to: the one given (the saved playlists screen), else the screen's own, else the name the export always used. */
+const seriesNameOf = (given: string | undefined, defaults: ExportDefaults): string => given || defaults.seriesName?.() || 'MJRP Playlists'
 
 /** Tab and Shift+Tab go round inside the window, never out to the page behind it. */
 function keepFocusInside(event: KeyboardEvent, panel: HTMLElement): void {
@@ -80,8 +84,9 @@ function giveFocusBack(opener: Element | null): void {
 }
 
 /** The rows, or the step of the Apple Music folder; the title follows what is shown. `close` gives the window back. */
-function ExportBody({ what, title, start, phone, close, setTitle }: {
+function ExportBody({ what, defaults, title, start, phone, close, setTitle }: {
     what: What
+    defaults: ExportDefaults
     title: string
     start?: 'apple'
     phone: boolean
@@ -112,7 +117,7 @@ function ExportBody({ what, title, start, phone, close, setTitle }: {
     if (view === 'step') {
         return (
             <div ref={box} className="flex flex-col gap-3">
-                <AppleFolderStep seriesName={seriesNameOf(what.seriesName)} loadFolders={listAppleFolders} onBack={() => setView('rows')} onExport={onExport} />
+                <AppleFolderStep seriesName={seriesNameOf(what.seriesName, defaults)} loadFolders={listAppleFolders} onBack={() => setView('rows')} onExport={onExport} />
             </div>
         )
     }
@@ -139,7 +144,7 @@ interface Opened {
 }
 
 /** The window of the computer: Escape and the backdrop close it, Tab stays inside. */
-function ExportDialog({ opened, onClose }: { opened: Opened; onClose: () => void }) {
+function ExportDialog({ opened, defaults, onClose }: { opened: Opened; defaults: ExportDefaults; onClose: () => void }) {
     const { title: given, start, ...what } = opened.job
     delete (what as ExportJob).opener // what is exported never carries the button that opened the window
     const initial = given ?? t('exportWindow.title')
@@ -160,7 +165,7 @@ function ExportDialog({ opened, onClose }: { opened: Opened; onClose: () => void
 
     return (
         <ModalShell id={WINDOW_ID} title={title} size="sm" onClose={onClose} closeOnBackdrop>
-            <ExportBody what={what} title={initial} start={start} phone={false} close={onClose} setTitle={setTitle} />
+            <ExportBody what={what} defaults={defaults} title={initial} start={start} phone={false} close={onClose} setTitle={setTitle} />
         </ModalShell>
     )
 }
@@ -169,7 +174,7 @@ function ExportDialog({ opened, onClose }: { opened: Opened; onClose: () => void
  * Opens the export window. `layer` goes anywhere in the screen (it draws into the window, not in place). Opened from a tap, never from
  * an effect; leaving the screen takes it off the page.
  */
-export function usePlaylistExport(): { open: (job?: ExportJob) => void; layer: ReactNode } {
+export function usePlaylistExport(defaults: ExportDefaults = {}): { open: (job?: ExportJob) => void; layer: ReactNode } {
     const [opened, setOpened] = useState<Opened | null>(null)
     const sheet = useSheetWindow()
 
@@ -192,7 +197,7 @@ export function usePlaylistExport(): { open: (job?: ExportJob) => void; layer: R
                 closeLabel: t('exportWindow.close'),
                 focusFirst: false,
                 onClose: () => giveFocusBack(from),
-                render: (close) => <ExportBody what={what} title={title} start={start} phone close={close} setTitle={sheet.setTitle} />
+                render: (close) => <ExportBody what={what} defaults={defaults} title={title} start={start} phone close={close} setTitle={sheet.setTitle} />
             })
             return
         }
@@ -201,7 +206,7 @@ export function usePlaylistExport(): { open: (job?: ExportJob) => void; layer: R
 
     const layer = (
         <>
-            {opened ? <ExportDialog key={WINDOW_ID} opened={opened} onClose={() => closeDialog(opened.from)} /> : null}
+            {opened ? <ExportDialog key={WINDOW_ID} opened={opened} defaults={defaults} onClose={() => closeDialog(opened.from)} /> : null}
             {sheet.layer}
         </>
     )

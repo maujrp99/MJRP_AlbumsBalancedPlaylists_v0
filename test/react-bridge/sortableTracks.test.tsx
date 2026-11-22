@@ -5,7 +5,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { act, useRef } from 'react'
 import { createRoot } from 'react-dom/client'
-import { holdHover, putBack, useSortableTracks, type TrackMove } from '../../public/js/react-bridge/sortableTracks'
+import { holdHover, isNativeDrag, putBack, useSortableTracks, type TrackMove } from '../../public/js/react-bridge/sortableTracks'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
@@ -64,6 +64,17 @@ describe('useSortableTracks', () => {
         expect([...host.querySelectorAll('.playlist-tracks')].map(list => Object.keys(list).filter(key => key.startsWith('Sortable')))).toEqual(first)
         await act(async () => { root.unmount() })
         expect(document.body.classList.contains('grabbing')).toBe(false)
+    })
+})
+
+describe('isNativeDrag', () => {
+    const event = (type?: string) => ({ originalEvent: type ? { type } : undefined }) as never
+    it('is a drag by mouse that the browser carries, not a touch, a keyboard drop or one with no event', () => {
+        expect(isNativeDrag(event('dragend'))).toBe(true)
+        expect(isNativeDrag(event('drop'))).toBe(true)
+        expect(isNativeDrag(event('touchend'))).toBe(false)
+        expect(isNativeDrag(event('mouseup'))).toBe(false)
+        expect(isNativeDrag(event())).toBe(false)
     })
 })
 

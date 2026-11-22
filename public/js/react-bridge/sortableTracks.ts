@@ -82,6 +82,9 @@ export function holdHover(list: HTMLElement): void {
     document.addEventListener('mousemove', give, true)
 }
 
+/** A drag by mouse, which the browser carries (`dragend`, `drop`): the one in which Safari hears no mouse; a touch or a keyboard drop is not one. */
+export const isNativeDrag = (event: SortableEvent): boolean => /^(drag|drop)/.test(String((event as SortableEvent & { originalEvent?: Event }).originalEvent?.type ?? ''))
+
 export function useSortableTracks(box: RefObject<HTMLElement | null>, options: Options): void {
     const sortables = useRef(new Map<HTMLElement, Sortable>())
     const handles = useRef(new WeakMap<HTMLElement, string>())
@@ -93,8 +96,10 @@ export function useSortableTracks(box: RefObject<HTMLElement | null>, options: O
     const end = (event: SortableEvent) => {
         dragging.current = false
         if (profile.grabbingClass) document.body.classList.remove(profile.grabbingClass)
-        holdHover(event.from)
-        if (event.to !== event.from) holdHover(event.to)
+        if (isNativeDrag(event)) {
+            holdHover(event.from)
+            if (event.to !== event.from) holdHover(event.to)
+        }
         putBack(event)
         const move = { fromPlaylist: profile.numberOf(event.from), toPlaylist: profile.numberOf(event.to), oldIndex: event.oldIndex ?? NaN, newIndex: event.newIndex ?? NaN }
         if (Number.isNaN(move.fromPlaylist) || Number.isNaN(move.toPlaylist)) return

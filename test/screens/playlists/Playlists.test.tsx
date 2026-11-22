@@ -363,6 +363,14 @@ describe('what a tap does on the phone', () => {
         expect(q('.sheet:not(.sheet--closing)')).toBeNull()
     })
 
+    it('the export window gives the focus back to the «Export» of the bar when it closes (F90), and the draw that follows does not take it away', async () => {
+        const screen = await open(generated(), { phone: true })
+        q('[data-phone-action="export"]').focus()
+        await screen.tap('[data-phone-action="export"]')
+        await screen.act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await flush() })
+        expect(document.activeElement).toBe(q('[data-phone-action="export"]'))
+    })
+
     it('the sheet is shut when the screen is left', async () => {
         const screen = await open(generated(), { phone: true })
         await screen.tap('[data-phone-action="export"]')
