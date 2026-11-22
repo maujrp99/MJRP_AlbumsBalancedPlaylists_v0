@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 01:36] review — F79: o juiz independente passou a tela Start enxuta no celular (UAT-281)
+
+**Branch:** fix/f79-start-lean-on-the-phone
+
+- Veredito: passa (0 P0, 0 P1, 1 P2), julgado na `0736e18`, no site construído, em WebKit com perfil de iPhone; relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-start-lean-phone-visual-parity-recheck.md`.
+- P2: ao fechar «What is a series?» aberto por toque, o foco não volta ao link (o Safari não foca botão no toque).
+- Visto fora desta mudança, nos dois lados: em WebKit, tocar em «Search» depois de digitar não inicia a busca (Enter funciona); a conferir num iPhone real.
+- Não visto: iPhone real, catálogo e conta reais, o estado «série salva».
+
 ## [2026-11-22 01:08] step — F79: a tela Start enxuta no celular construída (UAT-281)
 **Branch:** fix/f79-start-lean-on-the-phone
 O MJRP aprovou a versão enxuta («Aprovo a versão enxuta»). Até 899 px: título de 26 px, «What is a series?» abre a frase na folha de baixo, sob o campo só «or paste a list», sem os três passos, a barra da série só com a primeira capa, o aviso de visitante só com álbuns, «An artist» no campo. Regras puras `barShows`, `guestNoticeShows`, `phoneHintLink` em `models/homeSeries.js` (testes novos); `HomeView`, `HomeDock`, `HomeController` (passa `chosen`), `css/mobile/home.css` (só dentro da consulta do celular), `.home-what` escondido no computador em `css/views/home.css`. Dois testes da base do celular atualizados ao novo comportamento. Suíte inteira: 324 arquivos, 4134 testes verdes; prova no site construído em `reports/evidence/F79/start-lean/`. O computador não muda. Não há i18n em `main`, então nenhuma tradução a acrescentar.
