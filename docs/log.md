@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 16:15] step — F83 onda 8c: o roteiro de prova no navegador e a camada da Folha do inventário num lugar só
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O roteiro de prova no navegador da Folha (`reports/evidence/F83/wave-8c/browser-proof.mjs`, `run-all.sh`, `summarize.py`): cada Folha de cada tela aberta por toque, nos dois sites construídos em passo (pai 1693d71 e este ramo), fechada por cada caminho (botão, Escape, toque fora, arrastar para baixo em Chromium), com o DOM e as caixas, o foco, a página presa e a posição da rolagem, uma figura, a linha do tempo (a Folha vem, é marcada como fechando, sai; a página presa e devolvida) medida a partir da causa, e o controle de pai contra pai.
+- Achado da prova: a tela do inventário punha `sheets.layer` em dois lugares da árvore (um por layout); com a janela crescendo para além de 899 px com a Folha aberta, o React refazia a Folha (um elemento novo: a descida de entrada rodava de novo antes da de saída). O motor à mão não via isso porque sua Folha vivia no `body`. A camada agora fica num lugar só (`Inventory.tsx`: um fragmento com a caixa e a camada). As outras telas que a prova percorreu (álbuns, playlists, Start) fecham com uma descida só; a das playlists guardadas e a do menu do celular saem junto com a parte que as abriu (a diferença de propósito 1, já dita).
+
+
 ## [2026-11-22 15:58] step — F83 onda 8c: a Folha do celular em React (ui/SheetWindow.tsx), Sheet.js e SafeDOM.js saem
 
 **Branch:** claude/f83-wave-8c-phone-sheet
