@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 00:11] session — publicado em produção: exportar pela tela das séries de playlists com a pasta da Apple Music (F90) e os valores do Discogs guardados no banco (F75)
+**Branch:** main
+Palavras do MJRP (2026-11-22): «Perfeito, pode publicar e sim faça a prévia pls» (depois de testar as duas coisas na prévia `home-menu`; a prévia pedida é a da tela Start enxuta no celular). Site publicado da `main` (`3f296f7`, `/assets/main-DEf7FqBm.js`) pelo `deploy-site.sh`, na fila do Album Blender; conferido no ar: `/`, `/home`, `/inventory`, `/saved-playlists` e `/playlists` respondem 200, o `app.html` aponta o script novo e ele traz o campo da leitura guardada e a escolha da pasta. Nenhuma regra do Firestore nem o servidor mudaram.
+
 ## [2026-11-21 23:55] step — F75: a terceira reconferência do juiz (passa: sem P0 e sem P1, 4 P2) entra no ramo, com quatro itens de melhoria no uat
 **Branch:** feat/f75-inventory-values-kept-in-the-database
 `main` (F90) juntada sem conflito. O relatório do juiz sobre a 765dd4a e suas capturas copiados como vieram, escritos pelo juiz, em `reports/audits/` e `reports/evidence/F75/values-kept/recheck-3/`. Os quatro P2 abriram UAT-277 a UAT-280 (melhorias, abertas pelo agente-juiz): as palavras «suggested»/«lowest» do cartão, o tipo da leitura no celular, o «CD · written by you» cortado em reais no extremo, e o desalinhamento dos vizinhos na galeria do celular (da F89).
