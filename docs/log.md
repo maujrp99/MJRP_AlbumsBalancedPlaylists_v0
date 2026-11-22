@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 04:21] step — F83, onda 6a: a prova no navegador, os totais e as lições (a tela do inventário em React)
+
+**Branch:** claude/f83-wave-6a-inventory-screen
+
+- Prova no site construído (`reports/evidence/F83/wave-6a/proof.md`, roteiro `browser-proof.mjs`): a tela em React contra a à mão do pai (12f0234), Firebase bloqueado, os itens postos por uma linha no fim do script principal (a costura, igual nos dois sites). No celular (WebKit iPhone 14 e SE, Chromium 393 e 899): 55 de 55 comparações iguais, 0 pixels, com toques de verdade nas seis folhas; antiga contra antiga também 55 de 55. No computador (Chromium 1280 e 900, WebKit 1280): iguais em texto, caixas e foco; sobras de pixels: a busca digitada (o cursor piscando, também de antiga contra antiga), 8 pixels de 1 nível no Vinyl e na ordem, e **62 e 29 pixels na lista, só no Chromium, sem causa achada** (dito no `proof.md`). Os valores do Discogs não entram na prova do navegador (só no dourado).
+- `wave-lessons.md` (seção 15) e `tasks.md` (TASK-25, 6a) em dia.
+- Totais na ponta, pela fila: suíte inteira 363 arquivos, 4.767 testes, todos verdes (inclui `test/architecture` com 43 arquivos e `noSecretsInRepo`); `typecheck` sem erro; `lint` 0 erros e 68 avisos (os de antes); build dentro do teto (script principal 211.698 B, arquivo da tela 21.503 B, React 68.691 B). O worktree do pai para comparar ficou em `scratchpad/f83-6a/parent` (a trava recusou removê-lo).
+
 ## [2026-11-22 04:04] step — F83, onda 6a: a tela do inventário em React (TASK-25)
 
 **Branch:** claude/f83-wave-6a-inventory-screen
