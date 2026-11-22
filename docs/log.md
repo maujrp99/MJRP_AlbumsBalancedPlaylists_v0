@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 09:39] review — F91: o juiz independente passou «Create»/«Criar» com o «+» no menu
+
+**Branch:** wip/create-in-place-of-start
+
+- Veredito: passa (0 P0, 0 P1, 1 P2), julgado na `fbacd12` contra a `main` na `44137fb`, nos sites construídos, em 7 telas × 6 tamanhos, em inglês e português: nenhum vizinho se moveu. Relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-create-menu-item-visual-parity-recheck.md`.
+- P2: o «+» parece um pouco mais leve que os outros ícones (ocupa 14 das 24 unidades; os outros, 18 a 20). Nota de texto: «Go to Create» é aceitável mas estranho; «Create a series» diria melhor.
+
 ## [2026-11-22 08:48] step — prova no navegador do «Create» / «Criar» com o «+» (F88)
 
 **Branch:** wip/create-in-place-of-start
