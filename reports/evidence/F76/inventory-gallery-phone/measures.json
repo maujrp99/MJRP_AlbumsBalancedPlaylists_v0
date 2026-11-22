@@ -1,0 +1,1900 @@
+{
+  "webkit": "Playwright WebKit",
+  "profiles": {
+    "iphone14": {
+      "width": 390,
+      "height": 664
+    },
+    "iphone393": {
+      "width": 393,
+      "height": 852
+    },
+    "iphoneSE3": {
+      "width": 375,
+      "height": 667
+    },
+    "iphoneSE": {
+      "width": 320,
+      "height": 568
+    },
+    "tablet820": {
+      "width": 820,
+      "height": 1180
+    }
+  },
+  "measures": {
+    "iphone14": {
+      "list-default": {
+        "viewport": "390x664",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 588
+      },
+      "gallery-top": {
+        "viewport": "390x664",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 50
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9181.28,
+        "tabbarTop": 588
+      },
+      "gallery-scrolled": {
+        "viewport": "390x664",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 50
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8281.28,
+        "tabbarTop": 588
+      },
+      "after-switch": {
+        "viewport": "390x664",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 50
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9181.28,
+        "tabbarTop": 588
+      },
+      "reloaded-with-choice": {
+        "viewport": "390x664",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 50
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9181.28,
+        "tabbarTop": 588
+      },
+      "back-to-list": {
+        "viewport": "390x664",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 588
+      },
+      "reloaded-with-list": {
+        "viewport": "390x664",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 588
+      },
+      "open-album-dialogs": 1,
+      "gallery-search": {
+        "viewport": "390x664",
+        "tiles": 3,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 3
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 3
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 3
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1085.28,
+        "tabbarTop": 588
+      },
+      "gallery-wishlist": {
+        "viewport": "390x664",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 7
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1781.28,
+        "tabbarTop": 588
+      },
+      "gallery-end": {
+        "viewport": "390x664",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 7
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 492.28,
+        "tabbarTop": 588
+      },
+      "list-end": {
+        "viewport": "390x664",
+        "tiles": 0,
+        "rows": 7,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 492.28,
+        "tabbarTop": 588
+      },
+      "gallery-first-chunk": {
+        "viewport": "390x664",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 50
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9181.28,
+        "tabbarTop": 588
+      },
+      "gallery-second-chunk": {
+        "viewport": "390x664",
+        "tiles": 100,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 173,
+        "coverWidth": 173,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "sideways": false,
+        "open": {
+          "w": 173,
+          "h": 328,
+          "n": 100
+        },
+        "status": {
+          "w": 139,
+          "h": 44,
+          "n": 100
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 100
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9196.28,
+        "tabbarTop": 588
+      },
+      "consoleErrors": []
+    },
+    "iphone393": {
+      "list-default": {
+        "viewport": "393x852",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 776
+      },
+      "gallery-top": {
+        "viewport": "393x852",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 50
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9218.78,
+        "tabbarTop": 776
+      },
+      "gallery-scrolled": {
+        "viewport": "393x852",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 50
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8318.78,
+        "tabbarTop": 776
+      },
+      "after-switch": {
+        "viewport": "393x852",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 50
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9218.78,
+        "tabbarTop": 776
+      },
+      "reloaded-with-choice": {
+        "viewport": "393x852",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 50
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9218.78,
+        "tabbarTop": 776
+      },
+      "back-to-list": {
+        "viewport": "393x852",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 776
+      },
+      "reloaded-with-list": {
+        "viewport": "393x852",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 776
+      },
+      "open-album-dialogs": 1,
+      "gallery-search": {
+        "viewport": "393x852",
+        "tiles": 3,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 3
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 3
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 3
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1088.28,
+        "tabbarTop": 776
+      },
+      "gallery-wishlist": {
+        "viewport": "393x852",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 7
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1787.28,
+        "tabbarTop": 776
+      },
+      "gallery-end": {
+        "viewport": "393x852",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 7
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 680.28,
+        "tabbarTop": 776
+      },
+      "list-end": {
+        "viewport": "393x852",
+        "tiles": 0,
+        "rows": 7,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 680.28,
+        "tabbarTop": 776
+      },
+      "gallery-first-chunk": {
+        "viewport": "393x852",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 50
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9218.78,
+        "tabbarTop": 776
+      },
+      "gallery-second-chunk": {
+        "viewport": "393x852",
+        "tiles": 100,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 174.5,
+        "coverWidth": 174.5,
+        "scrollWidth": 393,
+        "clientWidth": 393,
+        "sideways": false,
+        "open": {
+          "w": 174.5,
+          "h": 329.5,
+          "n": 100
+        },
+        "status": {
+          "w": 140.5,
+          "h": 44,
+          "n": 100
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 100
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9421.28,
+        "tabbarTop": 776
+      },
+      "consoleErrors": []
+    },
+    "iphoneSE3": {
+      "list-default": {
+        "viewport": "375x667",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5755.28,
+        "tabbarTop": 591
+      },
+      "gallery-top": {
+        "viewport": "375x667",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 50
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8993.78,
+        "tabbarTop": 591
+      },
+      "gallery-scrolled": {
+        "viewport": "375x667",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 50
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8093.78,
+        "tabbarTop": 591
+      },
+      "after-switch": {
+        "viewport": "375x667",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 50
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8993.78,
+        "tabbarTop": 591
+      },
+      "reloaded-with-choice": {
+        "viewport": "375x667",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 50
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8993.78,
+        "tabbarTop": 591
+      },
+      "back-to-list": {
+        "viewport": "375x667",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5755.28,
+        "tabbarTop": 591
+      },
+      "reloaded-with-list": {
+        "viewport": "375x667",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5755.28,
+        "tabbarTop": 591
+      },
+      "open-album-dialogs": 1,
+      "gallery-search": {
+        "viewport": "375x667",
+        "tiles": 3,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 3
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 3
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 3
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1070.28,
+        "tabbarTop": 591
+      },
+      "gallery-wishlist": {
+        "viewport": "375x667",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 7
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1751.28,
+        "tabbarTop": 591
+      },
+      "gallery-end": {
+        "viewport": "375x667",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 7
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 495.28,
+        "tabbarTop": 591
+      },
+      "list-end": {
+        "viewport": "375x667",
+        "tiles": 0,
+        "rows": 7,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 495.28,
+        "tabbarTop": 591
+      },
+      "gallery-first-chunk": {
+        "viewport": "375x667",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 50
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8993.78,
+        "tabbarTop": 591
+      },
+      "gallery-second-chunk": {
+        "viewport": "375x667",
+        "tiles": 100,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 165.5,
+        "coverWidth": 165.5,
+        "scrollWidth": 375,
+        "clientWidth": 375,
+        "sideways": false,
+        "open": {
+          "w": 165.5,
+          "h": 320.5,
+          "n": 100
+        },
+        "status": {
+          "w": 131.5,
+          "h": 44,
+          "n": 100
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 100
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 9011.28,
+        "tabbarTop": 591
+      },
+      "consoleErrors": []
+    },
+    "iphoneSE": {
+      "list-default": {
+        "viewport": "320x568",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5875.28,
+        "tabbarTop": 492
+      },
+      "gallery-top": {
+        "viewport": "320x568",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 50
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8396.28,
+        "tabbarTop": 492
+      },
+      "gallery-scrolled": {
+        "viewport": "320x568",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 50
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 7496.28,
+        "tabbarTop": 492
+      },
+      "after-switch": {
+        "viewport": "320x568",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 50
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8396.28,
+        "tabbarTop": 492
+      },
+      "reloaded-with-choice": {
+        "viewport": "320x568",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 50
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8396.28,
+        "tabbarTop": 492
+      },
+      "back-to-list": {
+        "viewport": "320x568",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5875.28,
+        "tabbarTop": 492
+      },
+      "reloaded-with-list": {
+        "viewport": "320x568",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5875.28,
+        "tabbarTop": 492
+      },
+      "open-album-dialogs": 1,
+      "gallery-search": {
+        "viewport": "320x568",
+        "tiles": 3,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 3
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 3
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 3
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1025.28,
+        "tabbarTop": 492
+      },
+      "gallery-wishlist": {
+        "viewport": "320x568",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 7
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1671.28,
+        "tabbarTop": 492
+      },
+      "gallery-end": {
+        "viewport": "320x568",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 7
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 396.28,
+        "tabbarTop": 492
+      },
+      "list-end": {
+        "viewport": "320x568",
+        "tiles": 0,
+        "rows": 7,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 396.28,
+        "tabbarTop": 492
+      },
+      "gallery-first-chunk": {
+        "viewport": "320x568",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 50
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8394.28,
+        "tabbarTop": 492
+      },
+      "gallery-second-chunk": {
+        "viewport": "320x568",
+        "tiles": 100,
+        "rows": 0,
+        "columns": 2,
+        "tileWidth": 138,
+        "coverWidth": 138,
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "sideways": false,
+        "open": {
+          "w": 138,
+          "h": 293,
+          "n": 100
+        },
+        "status": {
+          "w": 104,
+          "h": 44,
+          "n": 100
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 100
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8303.28,
+        "tabbarTop": 492
+      },
+      "consoleErrors": []
+    },
+    "tablet820": {
+      "list-default": {
+        "viewport": "820x1180",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 1104
+      },
+      "gallery-top": {
+        "viewport": "820x1180",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.66,
+          "n": 50
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 7781.67,
+        "tabbarTop": 1104
+      },
+      "gallery-scrolled": {
+        "viewport": "820x1180",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.66,
+          "n": 50
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 6881.67,
+        "tabbarTop": 1104
+      },
+      "after-switch": {
+        "viewport": "820x1180",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.66,
+          "n": 50
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 7781.67,
+        "tabbarTop": 1104
+      },
+      "reloaded-with-choice": {
+        "viewport": "820x1180",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.66,
+          "n": 50
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 7781.67,
+        "tabbarTop": 1104
+      },
+      "back-to-list": {
+        "viewport": "820x1180",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 1104
+      },
+      "reloaded-with-list": {
+        "viewport": "820x1180",
+        "tiles": 0,
+        "rows": 50,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 5715.28,
+        "tabbarTop": 1104
+      },
+      "open-album-dialogs": 1,
+      "gallery-search": {
+        "viewport": "820x1180",
+        "tiles": 3,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.67,
+          "n": 3
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 3
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 3
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 818.95,
+        "tabbarTop": 1104
+      },
+      "gallery-wishlist": {
+        "viewport": "820x1180",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.66,
+          "n": 7
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1678.28,
+        "tabbarTop": 1104
+      },
+      "gallery-end": {
+        "viewport": "820x1180",
+        "tiles": 7,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.66,
+          "n": 7
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 7
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 7
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 1024.27,
+        "tabbarTop": 1104
+      },
+      "list-end": {
+        "viewport": "820x1180",
+        "tiles": 0,
+        "rows": 7,
+        "columns": 0,
+        "tileWidth": null,
+        "coverWidth": null,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": null,
+        "status": null,
+        "more": null,
+        "minFont": null,
+        "pillsCut": 0,
+        "lastBottom": 1024.28,
+        "tabbarTop": 1104
+      },
+      "gallery-first-chunk": {
+        "viewport": "820x1180",
+        "tiles": 50,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.66,
+          "n": 50
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 50
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 50
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 7781.64,
+        "tabbarTop": 1104
+      },
+      "gallery-second-chunk": {
+        "viewport": "820x1180",
+        "tiles": 100,
+        "rows": 0,
+        "columns": 3,
+        "tileWidth": 254.66,
+        "coverWidth": 254.66,
+        "scrollWidth": 820,
+        "clientWidth": 820,
+        "sideways": false,
+        "open": {
+          "w": 254.66,
+          "h": 409.66,
+          "n": 100
+        },
+        "status": {
+          "w": 220.66,
+          "h": 44,
+          "n": 100
+        },
+        "more": {
+          "w": 44,
+          "h": 44,
+          "n": 100
+        },
+        "minFont": 13,
+        "pillsCut": 0,
+        "lastBottom": 8328,
+        "tabbarTop": 1104
+      },
+      "consoleErrors": []
+    },
+    "sameAsAlbums": {
+      "320": {
+        "albums": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 138
+        },
+        "inventory": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 138
+        }
+      },
+      "360": {
+        "albums": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 158
+        },
+        "inventory": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 158
+        }
+      },
+      "375": {
+        "albums": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 165.5
+        },
+        "inventory": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 165.5
+        }
+      },
+      "393": {
+        "albums": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 174.5
+        },
+        "inventory": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 174.5
+        }
+      },
+      "430": {
+        "albums": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 193
+        },
+        "inventory": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 193
+        }
+      },
+      "600": {
+        "albums": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 278
+        },
+        "inventory": {
+          "columns": 2,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 278
+        }
+      },
+      "640": {
+        "albums": {
+          "columns": 3,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 194.66
+        },
+        "inventory": {
+          "columns": 3,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 194.66
+        }
+      },
+      "768": {
+        "albums": {
+          "columns": 3,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 237.33
+        },
+        "inventory": {
+          "columns": 3,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 237.33
+        }
+      },
+      "820": {
+        "albums": {
+          "columns": 3,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 254.66
+        },
+        "inventory": {
+          "columns": 3,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 254.66
+        }
+      },
+      "899": {
+        "albums": {
+          "columns": 3,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 281
+        },
+        "inventory": {
+          "columns": 3,
+          "columnGap": "12px",
+          "rowGap": "20px",
+          "cellWidth": 281
+        }
+      }
+    }
+  },
+  "failures": []
+}
