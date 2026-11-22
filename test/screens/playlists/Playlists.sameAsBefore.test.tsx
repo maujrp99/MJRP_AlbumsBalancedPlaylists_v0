@@ -1,6 +1,9 @@
 /**
  * F83 wave 2 (REQ-02, REQ-05; TASK-16, TASK-30): the playlists screen in React draws what the hand-made one drew.
  *
+ * F83 sync 2: the pages are the ones of `main` after F90 (Apple Music opens the export window, on its folder step; the phone's «Export»
+ * opens the same window), kept in test/fixtures/playlistsFromMain.json (reports/evidence/F83/sync-2/capture-playlists-from-main.test.js).
+ *
  * The proof: for every scenario of test/support/playlistsScenarios.js (nothing here, a saved batch not found, the set from the blend,
  * its name typed, the panel to generate again, a track moved, removed, a playlist deleted, undo and redo, a title typed over, generating,
  * saving, a saved batch being edited, the exports; on the phone the chips, the sheets, the notice, turning into a computer) the page
@@ -17,15 +20,17 @@ vi.mock('../../../public/js/services/DialogService.js', async () => ({ dialogSer
 vi.mock('../../../public/js/components/SpotifyExportModal.js', async () => ({ showSpotifyExportModal: () => import('../../support/playlistsScenarios.js').then(m => m.outside.push(['spotifyWindow'])) }))
 vi.mock('../../../public/js/views/playlists/PlaylistsExport.js', async () => {
     const m = await import('../../support/playlistsScenarios.js')
-    return { handleExportJson: () => m.outside.push(['exportJson']), handleExportToAppleMusic: () => m.outside.push(['exportApple']) }
+    const asked = (options?: object) => JSON.stringify(Object.fromEntries(Object.entries(options ?? {}).filter(([key]) => key !== 'btn' && key !== 'onStatus' && key !== 'ok')))
+    return { seriesNameOf: (given?: string) => given || 'MJRP Playlists', handleExportJson: () => m.outside.push(['exportJson']), handleExportToAppleMusic: (options?: object) => m.outside.push(['exportApple', asked(options)]) }
 })
+vi.mock('../../../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('../../support/exportStandIns.js')).musicKitService }))
 
 import { Playlists, GeneratingFlag } from '../../../public/js/screens/playlists/Playlists'
 import { PlaylistsController } from '../../../public/js/controllers/PlaylistsController.js'
 import { renderScreen } from '../../support/renderScreen'
 import { registerTexts } from '../../../public/js/i18n/t.js'
 import { SCENARIOS, generated, keyOf, normalize, asPhone, quiet, fakeService, outside } from '../../support/playlistsScenarios.js'
-import before from '../../fixtures/playlistsBeforeF83.json'
+import before from '../../fixtures/playlistsFromMain.json'
 
 const captured = before as Record<string, Record<string, string | null>>
 const flush = () => new Promise(resolve => setTimeout(resolve, 30))
@@ -66,6 +71,7 @@ export async function play(scenario: (typeof SCENARIOS)[number]): Promise<Record
         typeTitle: async (selector: string, value: string) => { field(selector).textContent = value },
         focusIn: async (selector: string) => { await rendered.act(async () => { field(selector).dispatchEvent(new FocusEvent('focusin', { bubbles: true })) }) },
         focusOut: async (selector: string) => { await rendered.act(async () => { field(selector).dispatchEvent(new FocusEvent('focusout', { bubbles: true })); await flush() }) },
+        key: async (key: string) => { await rendered.act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true })); await flush() }) },
         generating: async (on: boolean) => { await rendered.act(async () => { generating.isGenerating = on; generating.update(); await flush() }) },
         clock: (value: string) => { (globalThis as { __clock?: string }).__clock = value },
         turn: async (to: boolean) => { await rendered.act(async () => { phone.turn(to); await flush() }) }

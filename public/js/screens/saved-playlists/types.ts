@@ -58,6 +58,9 @@ export interface Handlers {
     onOpenSeries: (seriesId: string) => void
     onDeleteAll: (seriesId: string, seriesName: string) => void
     onEditBatch: (seriesId: string, batchName: string, savedAt: unknown) => void
+    /** F90: export every playlist of a batch, or one; the window is the one the edit screen opens. `opener` is what gets the focus back (the phone's buttons). */
+    onExportBatch: (seriesName: string, batch: Batch, opener?: HTMLElement | null) => void
+    onExportPlaylist: (seriesName: string, batch: Batch, playlist: SavedPlaylist, index: number, opener?: HTMLElement | null) => void
     onDeleteBatch: (seriesId: string, batchName: string, count: number) => void
     onOpenPlaylist: (seriesId: string, playlistId: string) => void
     onRetry: (seriesId: string) => void

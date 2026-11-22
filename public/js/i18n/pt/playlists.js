@@ -55,7 +55,6 @@ export const playlists = {
     'playlists.sheet.rename': 'Renomear',
     'playlists.sheet.regenerate': 'Reconfigurar e gerar de novo',
     'playlists.sheet.delete': 'Apagar esta playlist',
-    'playlists.sheet.exportTitle': 'Exportar playlists',
     'playlists.notice.removed': '"{title}" removida',
     'playlists.notice.movedTo': '"{title}" movida para o número {n}',
     'playlists.notice.movedPlaylist': '"{title}" movida para a playlist {n}',

@@ -33,9 +33,9 @@ function Dots() {
     )
 }
 
-function MoreButton({ label, onTap }: { label: string; onTap: () => void }) {
+function MoreButton({ label, onTap }: { label: string; onTap: (button: HTMLButtonElement) => void }) {
     return (
-        <button type="button" className="phone-more" aria-label={label} aria-haspopup="dialog" onClick={(event) => { event.stopPropagation(); onTap() }}>
+        <button type="button" className="phone-more" aria-label={label} aria-haspopup="dialog" onClick={(event) => { event.stopPropagation(); onTap(event.currentTarget) }}>
             <Dots />
         </button>
     )
@@ -94,9 +94,9 @@ function useActionSheet() {
 
 /* ── Rows ─────────────────────────────────────────────────────────────────────────────────── */
 
-/** One playlist of an opened batch: its name and size; a tap opens its tracks. */
-function PlaylistLine({ playlist, seriesId, handlers }: { playlist: SavedPlaylist; seriesId: string; handlers: Handlers }) {
-    return (
+/** One playlist of an opened batch: its name and size, a tap opens its tracks; beside it, «Export» as a 44 px target (F90). */
+function PlaylistLine({ playlist, seriesId, seriesName, batch, index, handlers }: { playlist: SavedPlaylist; seriesId: string; seriesName: string; batch: Batch; index: number; handlers: Handlers }) {
+    const row = (
         <button
             type="button"
             className="saved-phone-playlist"
@@ -111,24 +111,41 @@ function PlaylistLine({ playlist, seriesId, handlers }: { playlist: SavedPlaylis
             <Icon name="ChevronRight" className="saved-phone__chevron" />
         </button>
     )
+    return (
+        <div className="saved-phone__head saved-phone-playlist-head">
+            {row}
+            <button
+                type="button"
+                className="phone-more"
+                aria-label={t('savedPlaylists.phone.exportLabel', { name: playlist.name ?? '' })}
+                aria-haspopup="dialog"
+                onClick={(event) => handlers.onExportPlaylist(seriesName, batch, playlist, index, event.currentTarget)}
+            >
+                <Icon name="Share" className="saved-phone-export__icon" />
+            </button>
+        </div>
+    )
 }
 
 /** What a batch holds, drawn the first time the row is opened and kept after that. */
-function BatchPlaylists({ batch, seriesId, handlers }: { batch: Batch; seriesId: string; handlers: Handlers }) {
+function BatchPlaylists({ batch, seriesId, seriesName, handlers }: { batch: Batch; seriesId: string; seriesName: string; handlers: Handlers }) {
     if (batch.playlists.length === 0) return <p className="saved-phone__empty">{t('savedPlaylists.phone.noPlaylists')}</p>
-    return <>{batch.playlists.map(playlist => <PlaylistLine key={playlist.id} playlist={playlist} seriesId={seriesId} handlers={handlers} />)}</>
+    return <>{batch.playlists.map((playlist, index) => <PlaylistLine key={playlist.id} playlist={playlist} seriesId={seriesId} seriesName={seriesName} batch={batch} index={index} handlers={handlers} />)}</>
 }
 
 /** One batch: a row that opens its playlists, and its «⋯». */
-export function BatchRow({ batch, seriesId, handlers }: { batch: Batch; seriesId: string; handlers: Handlers }) {
+export function BatchRow({ batch, seriesId, seriesName, handlers }: { batch: Batch; seriesId: string; seriesName: string; handlers: Handlers }) {
     const [state, setState] = useState({ open: false, filled: false })
     const sheet = useActionSheet()
     const shown = readableBatchName(batch.name)
     const boxId = `savedBatch_${seriesId}_${encodeURIComponent(batch.name)}`
-    const openSheet = () => sheet.open(
+    const openSheet = (opener: HTMLElement) => sheet.open(
         shown.text,
         shown.machine ? t('savedPlaylists.phone.savedAs', { name: batch.name }) : batchFacts(batch),
-        [{ icon: 'Edit', label: t('savedPlaylists.phone.editBatch'), onPick: () => handlers.onEditBatch(seriesId, batch.name, batch.savedAt) }],
+        [
+            { icon: 'Edit', label: t('savedPlaylists.phone.editBatch'), onPick: () => handlers.onEditBatch(seriesId, batch.name, batch.savedAt) },
+            { icon: 'Share', label: t('savedPlaylists.phone.exportBatch'), onPick: () => handlers.onExportBatch(seriesName, batch, opener) }
+        ],
         { icon: 'Trash', label: t('savedPlaylists.phone.deleteBatch'), onPick: () => handlers.onDeleteBatch(seriesId, batch.name, batchTotals(batch).playlists) }
     )
     return (
@@ -145,7 +162,7 @@ export function BatchRow({ batch, seriesId, handlers }: { batch: Batch; seriesId
                 <MoreButton label={t('savedPlaylists.phone.batchActions', { name: batch.name })} onTap={openSheet} />
             </div>
             <div className="saved-phone-batch__playlists" id={boxId} hidden={!state.open}>
-                {state.filled ? <BatchPlaylists batch={batch} seriesId={seriesId} handlers={handlers} /> : null}
+                {state.filled ? <BatchPlaylists batch={batch} seriesId={seriesId} seriesName={seriesName} handlers={handlers} /> : null}
             </div>
             {sheet.layer}
         </div>

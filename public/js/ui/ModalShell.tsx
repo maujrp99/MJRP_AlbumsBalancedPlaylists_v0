@@ -5,7 +5,8 @@
  * right for a window whose body and footer do not share state. A window whose footer reads what the body edits (the window to edit a
  * series: «Save Changes» reads the name and the list) draws its whole self, and this is the shell: the same panel, header, close button and
  * classes as BaseModal.render, put on the page at the end of `body` the same way. test/ui/ModalShell.test.tsx keeps it equal to BaseModal.
- * The window gives nothing else the hand-made shell did not give: no Escape, no click on the backdrop, no focus trap (issue candidates).
+ * The window gives nothing else the hand-made shell did not give: no Escape, no focus trap (issue candidates), and a click on the backdrop closes it
+ * only when the window asks (`closeOnBackdrop`: the export window of F90 does, as the hand-made one did; the shell of wave 5b never did).
  */
 import { createPortal } from 'react-dom'
 import type { ReactNode } from 'react'
@@ -20,13 +21,15 @@ interface Props {
     title: string
     size?: keyof typeof WIDTHS
     onClose: () => void
+    /** A click on the backdrop (not on the panel) closes the window. */
+    closeOnBackdrop?: boolean
     footer?: ReactNode
     children: ReactNode
 }
 
-export function ModalShell({ id, title, size = 'md', onClose, footer, children }: Props) {
+export function ModalShell({ id, title, size = 'md', onClose, closeOnBackdrop = false, footer, children }: Props) {
     return createPortal(
-        <div id={id} className="app-modal app-modal--full fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div id={id} className="app-modal app-modal--full fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200" onClick={closeOnBackdrop ? (event) => { if (event.target === event.currentTarget) onClose() } : undefined}>
             <div role="dialog" aria-modal="true" className={`app-modal__panel glass-panel w-full ${WIDTHS[size]} rounded-2xl shadow-2xl scale-100 animate-in zoom-in-95 duration-200 border border-white/10 dark-glow relative overflow-hidden flex flex-col max-h-[90vh]`}>
                 <div className="app-modal__header px-6 py-4 border-b border-white/5 flex items-center justify-between shrink-0 bg-white/5">
                     <h3 className="app-modal__title text-xl font-bold flex items-center gap-2 text-white">{title}</h3>

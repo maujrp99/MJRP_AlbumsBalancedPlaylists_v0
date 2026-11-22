@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest'
 import {
     itemsToRead, askOfItem, readOutcomeOf, editionToKeep, editionOf, emptyCount, countAfter, valuesProgressText, readingNotice,
-    waitingNotice, valuesOutcome, readFailedText, LONGEST_WAIT_MS, DEFAULT_WAIT_MS
+    waitingNotice, valuesOutcome, readFailedText, LONGEST_WAIT_MS, DEFAULT_WAIT_MS, UNKEPT_VALUE_TEXT
 } from '../../public/js/models/inventoryValueRun.js'
 import { buyLinksOf, BUY_LINKS_NOTE, SELL_TRADE_SOON } from '../../public/js/models/buyLinks.js'
 
@@ -108,7 +108,12 @@ describe('what the person is told', () => {
     })
 
     it('a run that stopped says why', () => {
-        const refused = valuesOutcome({ ...emptyCount(211), done: 1, failed: { token_refused: 1 }, stopped: 'token_refused' })
+        const unkept = valuesOutcome({ ...emptyCount(10), done: 10, read: 10, unkept: 3 })
+    expect(unkept.ok).toBe(false)
+    expect(unkept.text).toContain('3 values could not be saved to your inventory. This browser keeps them for six hours; Update values tries to save them again.')
+    expect(valuesOutcome({ ...emptyCount(10), done: 10, read: 10, unkept: 1 }).text).toContain('1 value could not be saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.')
+    expect(UNKEPT_VALUE_TEXT).toBe('The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.')
+    const refused = valuesOutcome({ ...emptyCount(211), done: 1, failed: { token_refused: 1 }, stopped: 'token_refused' })
         expect(refused.ok).toBe(false)
         expect(refused.text).toContain('Discogs refused the token of the app, so the reading stopped.')
         expect(valuesOutcome({ ...emptyCount(10), done: 3, read: 3, stopped: 'off' }).text).toContain('Discogs values were turned off on the server')

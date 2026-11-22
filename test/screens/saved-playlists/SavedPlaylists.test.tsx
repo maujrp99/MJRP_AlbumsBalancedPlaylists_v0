@@ -246,7 +246,7 @@ describe('SavedPlaylists', () => {
             await loadTwoSeries()
             await tap('.batch-header')
 
-            await tap('.playlist-row .playlist-row-buttons button')
+            await tap('.playlist-row .playlist-row-buttons button:last-child')
             const modal = document.getElementById('playlist-modal')!
             expect(modal.querySelector('.app-modal__title')!.textContent).toBe('Playlist p1')
             expect(modal.querySelectorAll('.track-row')).toHaveLength(1)

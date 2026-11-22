@@ -73,7 +73,7 @@ function ComputerSeries({ group, handlers }: { group: SeriesGroupData; handlers:
             {failed ? <Failure showingOlder={group.batches.length > 0} onRetry={() => handlers.onRetry(seriesId)} /> : null}
             <div className="saved-series-batches" id={`savedSeriesBatches_${seriesId}`}>
                 {group.batches.map(batch => (
-                    <BatchCard key={batch.name} batch={batch} seriesId={seriesId} thumbnails={group.thumbnails} handlers={handlers} />
+                    <BatchCard key={batch.name} batch={batch} seriesId={seriesId} seriesName={group.series.name} thumbnails={group.thumbnails} handlers={handlers} />
                 ))}
             </div>
         </div>
@@ -95,7 +95,7 @@ function PhoneSeries({ group, startsOpen, onToggle, handlers }: {
             <SeriesHead group={group} open={open} boxId={boxId} handlers={handlers} onToggle={() => { setOpen(!open); onToggle(seriesId, !open) }} />
             {failed ? <Failure showingOlder={group.batches.length > 0} onRetry={() => handlers.onRetry(seriesId)} /> : null}
             <div className="saved-series-batches" id={boxId} hidden={!open}>
-                {group.batches.map(batch => <BatchRow key={batch.name} batch={batch} seriesId={seriesId} handlers={handlers} />)}
+                {group.batches.map(batch => <BatchRow key={batch.name} batch={batch} seriesId={seriesId} seriesName={group.series.name} handlers={handlers} />)}
             </div>
         </div>
     )

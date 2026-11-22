@@ -1,0 +1,27 @@
+{
+ "tag": "webkit-iPhone14-list-control",
+ "passed": 4,
+ "failed": 0,
+ "results": [
+  {
+   "what": "webkit-iPhone14-list-control · the inventory in #app: main = main (control)",
+   "ok": true,
+   "detail": "13432 chars"
+  },
+  {
+   "what": "webkit-iPhone14-list-control · the inventory is drawn (cards, tiles or rows are on the page)",
+   "ok": true,
+   "detail": "18 items · My Collection 6 albums ✓ 4 Owned 1 Not Owned ♡ 1 Wishlist Owned $25.00 To buy — USD EUR GBP BRL Exchange rates are not available: values are shown in USD. About"
+  },
+  {
+   "what": "webkit-iPhone14-list-control · the pixels of the page",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "webkit-iPhone14-list-control · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

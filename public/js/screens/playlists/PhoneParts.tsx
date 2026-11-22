@@ -16,7 +16,8 @@ import { t } from '../../i18n/t.js'
 import { dialogService } from '../../services/DialogService.js'
 import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js'
 import { playlistsStore } from '../../stores/playlists.js'
-import { exportJson, exportToAppleMusic, openSpotifyExport } from '../../react-bridge/legacy/OutputWindows'
+import { usePlaylistExport } from '../../ui/PlaylistExportWindow'
+import { activeSeriesName } from './activeSeries'
 import type { Playlist, PlaylistActions } from './types'
 
 /** How long the notice stays, in ms. */
@@ -121,11 +122,11 @@ export function PhonePlaylists(props: PhoneListProps) {
     )
 }
 
-/** The action bar at the foot: Export (it opens a sheet with Spotify, Apple Music and JSON) and Save, the main action of the screen. */
-export function PhoneActionBar({ isSaving, onExport, onSave }: { isSaving: boolean; onExport: () => void; onSave: () => void }) {
+/** The action bar at the foot: Export (it opens the export window: Apple Music, Spotify, JSON; F90) and Save, the main action of the screen. */
+export function PhoneActionBar({ isSaving, onExport, onSave }: { isSaving: boolean; onExport: (button: HTMLButtonElement) => void; onSave: () => void }) {
     return (
         <div className="phone-action-bar phone-pl-bar md:hidden">
-            <button type="button" className="btn btn-secondary" data-phone-action="export" onClick={onExport}><Icon name="Share" className="w-5 h-5" />{` ${t('playlists.phone.export')}`}</button>
+            <button type="button" className="btn btn-secondary" data-phone-action="export" onClick={(event) => onExport(event.currentTarget)}><Icon name="Share" className="w-5 h-5" />{` ${t('playlists.phone.export')}`}</button>
             {isSaving
                 ? <button type="button" className="btn btn-primary" data-phone-action="save" disabled aria-busy="true"><Icon name="Loader" className="w-5 h-5 animate-spin" />{` ${t('playlists.phone.saving')}`}</button>
                 : <button type="button" className="btn btn-primary" data-phone-action="save" onClick={onSave}><Icon name="Cloud" className="w-5 h-5" />{` ${t('playlists.phone.save')}`}</button>}
@@ -270,31 +271,10 @@ function PlaylistSheet({ deps, playlistIndex, close }: { deps: SheetDeps; playli
     )
 }
 
-/** The Apple Music export writes its progress on the row pressed: the sheet stays open to show it. */
-function AppleRow() {
-    const [status, setStatus] = useState<string | null>(null)
-    return (
-        <button type="button" className="phone-sheet-action" disabled={status !== null} onClick={() => { void exportToAppleMusic(setStatus) }}>
-            {status === null
-                ? <><Icon name="Apple" className="phone-sheet-action__icon" /><span>{t('playlists.actions.apple')}</span></>
-                : <><Icon name="Apple" className="w-5 h-5" />{` ${status}`}</>}
-        </button>
-    )
-}
-
-function ExportSheet({ close }: { close: () => void }) {
-    return (
-        <ActionList>
-            <SheetAction icon="Spotify" text={t('playlists.actions.spotify')} onTap={() => { close(); void openSpotifyExport() }} />
-            <AppleRow />
-            <SheetAction icon="Download" text={t('playlists.actions.json')} onTap={() => { close(); void exportJson() }} />
-        </ActionList>
-    )
-}
-
 /** The three sheets of the phone, over the one sheet window. */
-export function usePhoneSheets(deps: SheetDeps): { openTrack: (p: number, t: number) => void; openPlaylist: (p: number) => void; openExport: () => void; layer: ReactNode } {
+export function usePhoneSheets(deps: SheetDeps): { openTrack: (p: number, t: number) => void; openPlaylist: (p: number) => void; openExport: (button?: HTMLElement) => void; layer: ReactNode } {
     const sheet = useSheetWindow()
+    const exporting = usePlaylistExport({ seriesName: activeSeriesName })
     const closeLabel = t('playlists.phone.close')
     const openTrack = (playlistIndex: number, trackIndex: number) => {
         const track = (playlistsStore.getPlaylists() as Playlist[])[playlistIndex]?.tracks?.[trackIndex]
@@ -306,8 +286,8 @@ export function usePhoneSheets(deps: SheetDeps): { openTrack: (p: number, t: num
         if (!playlist) return
         sheet.show({ title: playlistNameOf(playlist, playlistIndex), closeLabel, render: (close) => <PlaylistSheet deps={deps} playlistIndex={playlistIndex} close={close} /> })
     }
-    const openExport = () => sheet.show({ title: t('playlists.sheet.exportTitle'), closeLabel, render: (close) => <ExportSheet close={close} /> })
-    return { openTrack, openPlaylist, openExport, layer: sheet.layer }
+    const openExport = (opener?: HTMLElement) => exporting.open({ opener })
+    return { openTrack, openPlaylist, openExport, layer: <>{sheet.layer}{exporting.layer}</> }
 }
 
 /** The phone's chip strip follows the open chip after every draw. */

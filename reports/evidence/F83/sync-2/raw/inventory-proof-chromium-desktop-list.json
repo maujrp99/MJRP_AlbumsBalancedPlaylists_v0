@@ -1,0 +1,27 @@
+{
+ "tag": "chromium-desktop-list",
+ "passed": 4,
+ "failed": 0,
+ "results": [
+  {
+   "what": "chromium-desktop-list · the inventory in #app: this branch (the shell in React) = main",
+   "ok": true,
+   "detail": "20042 chars"
+  },
+  {
+   "what": "chromium-desktop-list · the inventory is drawn (cards, tiles or rows are on the page)",
+   "ok": true,
+   "detail": "6 items · My Collection 6 albums ✓ 4 OWNED 1 NOT OWNED ♡ 1 WISHLIST Estimated value of what I own: $25.00 1 of 4 owned albums have a value To buy the rest: — 0 of 2 album"
+  },
+  {
+   "what": "chromium-desktop-list · the pixels of the page",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "chromium-desktop-list · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

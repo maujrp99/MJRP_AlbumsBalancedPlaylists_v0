@@ -7,7 +7,7 @@
  * no browser draws is dropped, as in wave 0).
  *
  * Used by: reports/evidence/F83/wave-1/capture-before.test.js (run once, on the hand-made screen, before it was deleted; it wrote
- * test/fixtures/savedPlaylistsBeforeF83.json) and test/screens/saved-playlists/SavedPlaylists.sameAsBefore.test.tsx (the
+ * test/fixtures/savedPlaylistsFromMain.json, wave 1 as savedPlaylistsBeforeF83.json) and test/screens/saved-playlists/SavedPlaylists.sameAsBefore.test.tsx (the
  * React screen, against that file).
  */
 import { vi } from 'vitest'
@@ -191,7 +191,7 @@ export const SCENARIOS = [
         name: 'the window of a playlist', run: async (h) => {
             await h.publish(() => twoSeries(h.store))
             await h.click('.batch-header')
-            await h.click('.playlist-row .playlist-row-buttons button')
+            await h.click('.playlist-row [aria-label^="View the tracks"]')
             h.snap('the window', '#playlist-modal')
             await h.click('#playlist-modal .btn-secondary')
             h.snap('the window closed', '#playlist-modal')
@@ -204,6 +204,41 @@ export const SCENARIOS = [
             await h.click('.series-group .btn-secondary')
             await h.click('.batch-card-buttons .btn-secondary')
             h.snap('after the clicks')
+        }
+    },
+    {
+        name: 'exporting from the list (F90)', run: async (h) => {
+            await h.publish(() => twoSeries(h.store))
+            await h.click('[aria-label="Export batch Sunday mix"]')
+            h.snap('the window of the batch', '#playlist-export-window')
+            h.note('the batch stays shut', document.querySelector('.batch-group-card').dataset.collapsed)
+            await h.key('Escape')
+            h.snap('after Escape', '#playlist-export-window')
+            await h.click('.batch-header')
+            h.snap('an open batch with its export buttons')
+            await h.click('.playlist-row [aria-label="Export Playlist p3"]')
+            h.snap('the window of a playlist', '#playlist-export-window')
+            h.note('the playlist stays shut', document.querySelectorAll('.playlist-tracks-list:not(.hidden)').length)
+        }
+    },
+    {
+        name: 'exporting from the list (F90)', phone: true, run: async (h) => {
+            await h.publish(() => twoSeries(h.store))
+            await h.click('.saved-series-toggle')
+            await h.click('.saved-phone-batch__main')
+            h.snap('an open batch with the export beside each playlist', '.saved-phone-batch')
+            await h.click('.saved-phone-playlist-head .phone-more')
+            h.snap('the sheet of a playlist', '#playlist-export-window')
+        }
+    },
+    {
+        name: 'the sheet of a batch has Export (F90)', phone: true, run: async (h) => {
+            await h.publish(() => twoSeries(h.store))
+            await h.click('.saved-series-toggle')
+            await h.click('.saved-phone-batch .phone-more')
+            h.snap('the sheet of a batch', '.saved-phone-sheet')
+            await h.click('.saved-phone-sheet .albums-sheet__row:nth-child(2)')
+            h.snap('the sheet of the export', '#playlist-export-window')
         }
     },
     {

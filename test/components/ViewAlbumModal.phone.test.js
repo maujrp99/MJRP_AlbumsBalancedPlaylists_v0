@@ -88,7 +88,7 @@ describe('the album window of an inventory item (F76, recheck N7)', () => {
         const overlay = await showViewAlbumModal(item, { value: value() })
         const fold = overlay.querySelector('[data-role="value-fold"]')
         const toggle = fold.querySelector('.value-fold__toggle')
-        expect(toggle.textContent).toBe('Estimated value≈ $30.75Discogs')
+        expect(toggle.textContent).toMatch(/^Estimated value≈ \$30\.75Discogs · \d{1,2}\u00a0[A-Z][a-z]{2}$/) // REQ-16: and when it was read
         expect(toggle.getAttribute('aria-expanded')).toBe('false')
         const credit = fold.querySelector('.value-fold__line [data-role="discogs-credit"]')
         expect(credit.textContent).toBe('Data provided by Discogs.')

@@ -32,6 +32,9 @@ const MODE_NOTES = Object.freeze({
     separate: 'Each playlist becomes its own Spotify playlist, named after this name and its title'
 })
 
+/** The note under the button when the export is one playlist (F90): there is nothing to merge or separate. */
+const ONE_PLAYLIST_NOTE = 'This playlist becomes one Spotify playlist'
+
 /** The report of an export that broke where the service did not foresee. */
 const brokenReport = (error) => ({
     mode: 'merge', totalTracks: 0, matchCount: 0, created: [], incomplete: [], empty: [], notCreated: [],
@@ -39,7 +42,13 @@ const brokenReport = (error) => ({
 })
 
 export class SpotifyExportModal {
-    constructor() {
+    /**
+     * @param {Object} [given] - what to export (F90: the saved playlists screen); none given: the playlists on the edit screen
+     * @param {Array} [given.playlists]
+     * @param {string} [given.seriesName]
+     */
+    constructor(given = {}) {
+        this.given = given.playlists ? given : null
         this.state = STATES.IDLE
         this.progress = { current: 0, total: 0, message: '' }
         this.playlistName = ''
@@ -58,10 +67,26 @@ export class SpotifyExportModal {
     /**
      * Show the modal
      */
+    /** What this window exports: the playlists it was given, or the ones on the edit screen. */
+    playlistsToExport() {
+        return this.given ? this.given.playlists : playlistsStore.getPlaylists()
+    }
+
+    /** One playlist given by the saved playlists screen: no mode to choose. */
+    isOnePlaylist() {
+        return Boolean(this.given) && this.given.playlists.length === 1
+    }
+
+    /** The name the Spotify playlist gets unless the person types another. */
+    defaultName() {
+        const series = this.given?.seriesName || albumSeriesStore.getActiveSeries()?.name || 'MJRP Playlist'
+        if (!this.isOnePlaylist()) return series
+        const playlist = this.given.playlists[0]
+        return `${series} - ${playlist.title || playlist.name}`
+    }
+
     show() {
-        // Set default playlist name from active series
-        const activeSeries = albumSeriesStore.getActiveSeries()
-        this.playlistName = activeSeries?.name || 'MJRP Playlist'
+        this.playlistName = this.defaultName()
 
         // Create modal container
         this.container = document.createElement('div')
@@ -71,9 +96,11 @@ export class SpotifyExportModal {
 
         this.updateUI()
 
-        // Close on backdrop click
-        this.container.addEventListener('click', (e) => {
-            if (e.target === this.container.querySelector('.modal-backdrop') && this.canClose()) this.close()
+        // Close on backdrop click (the container is kept in a name of its own: a click on «Close» closes the window,
+        // and the same click still reaches this listener after `this.container` is gone)
+        const container = this.container
+        container.addEventListener('click', (e) => {
+            if (e.target === container.querySelector('.modal-backdrop') && this.canClose()) this.close()
         })
     }
 
@@ -134,7 +161,7 @@ export class SpotifyExportModal {
     async handleExport() {
         if (this.exporting) return
 
-        const playlists = playlistsStore.getPlaylists()
+        const playlists = this.playlistsToExport()
         if (playlists.length === 0) {
             toast.warning('No playlists to export')
             return
@@ -145,7 +172,7 @@ export class SpotifyExportModal {
         try {
             this.report = await SpotifyExportService.exportPlaylists(
                 playlists,
-                { mode: this.mode, name: this.playlistName },
+                { mode: this.isOnePlaylist() ? 'merge' : this.mode, name: this.playlistName },
                 {
                     onProgress: (stage, current, total, message) => {
                         this.state = stage // MATCHING, CREATING, ADDING
@@ -216,7 +243,8 @@ export class SpotifyExportModal {
     }
 
     renderIdleState() {
-        const playlists = playlistsStore.getPlaylists()
+        const playlists = this.playlistsToExport()
+        const onePlaylist = this.isOnePlaylist()
         const totalTracks = playlists.reduce((sum, p) => sum + (p.tracks?.length || 0), 0)
 
         return `
@@ -233,7 +261,7 @@ export class SpotifyExportModal {
                 </div>
 
                 <div class="bg-white/5 rounded-xl p-4 space-y-3">
-                    <label class="block text-sm text-white/60">Export Mode</label>
+                    ${onePlaylist ? '' : `<label class="block text-sm text-white/60">Export Mode</label>
                     <div class="flex gap-4">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="exportMode" value="merge" ${this.mode === 'merge' ? 'checked' : ''} class="accent-[#1DB954]">
@@ -244,8 +272,7 @@ export class SpotifyExportModal {
                             <span class="text-sm text-white">Separate Playlists</span>
                         </label>
                     </div>
-
-                    <div class="h-px bg-white/10 my-2"></div>
+                    <div class="h-px bg-white/10 my-2"></div>`}
 
                     <div class="flex justify-between text-sm">
                         <span class="text-white/60">Playlists</span>
@@ -266,7 +293,7 @@ export class SpotifyExportModal {
                     Export to Spotify
                 </button>
 
-                <p id="exportModeNote" class="text-xs text-white/40 text-center">${MODE_NOTES[this.mode]}</p>
+                <p id="exportModeNote" class="text-xs text-white/40 text-center">${onePlaylist ? ONE_PLAYLIST_NOTE : MODE_NOTES[this.mode]}</p>
             </div>
         `
     }
@@ -427,8 +454,8 @@ export class SpotifyExportModal {
 }
 
 // Singleton factory
-export function showSpotifyExportModal() {
-    const modal = new SpotifyExportModal()
+export function showSpotifyExportModal(given) {
+    const modal = new SpotifyExportModal(given)
     modal.show()
     return modal
 }

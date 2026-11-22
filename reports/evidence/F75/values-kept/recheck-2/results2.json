@@ -1,0 +1,1061 @@
+{
+  "external": 0,
+  "cards": {
+    "1440-USD": {
+      "lines": [
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+          "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs · lowest for sale",
+          "cutShown": 87,
+          "cutNeeds": 157,
+          "cutIsCut": true,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · written by you",
+          "title": "CD · written by you",
+          "cutText": "CD · written by you",
+          "cutShown": 101,
+          "cutNeeds": 101,
+          "cutIsCut": false,
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "No CD edition found",
+          "title": "No CD edition found",
+          "cutText": "No CD edition found",
+          "cutShown": 108,
+          "cutNeeds": 108,
+          "cutIsCut": false,
+          "lineW": 217,
+          "card": "Not Owned"
+        }
+      ],
+      "strip": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now."
+    },
+    "1440-BRL": {
+      "lines": [
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 69,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 69,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+          "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs · lowest for sale",
+          "cutShown": 69,
+          "cutNeeds": 157,
+          "cutIsCut": true,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 69,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 61,
+          "cutNeeds": 70,
+          "cutIsCut": true,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · written by you",
+          "title": "CD · written by you",
+          "cutText": "CD · written by you",
+          "cutShown": 101,
+          "cutNeeds": 101,
+          "cutIsCut": false,
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "No CD edition found",
+          "title": "No CD edition found",
+          "cutText": "No CD edition found",
+          "cutShown": 108,
+          "cutNeeds": 108,
+          "cutIsCut": false,
+          "lineW": 217,
+          "card": "Not Owned"
+        }
+      ],
+      "strip": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now."
+    },
+    "1280-USD": {
+      "lines": [
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+          "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs · lowest for sale",
+          "cutShown": 87,
+          "cutNeeds": 157,
+          "cutIsCut": true,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · written by you",
+          "title": "CD · written by you",
+          "cutText": "CD · written by you",
+          "cutShown": 101,
+          "cutNeeds": 101,
+          "cutIsCut": false,
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "No CD edition found",
+          "title": "No CD edition found",
+          "cutText": "No CD edition found",
+          "cutShown": 108,
+          "cutNeeds": 108,
+          "cutIsCut": false,
+          "lineW": 217,
+          "card": "Not Owned"
+        }
+      ],
+      "strip": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now."
+    },
+    "1280-BRL": {
+      "lines": [
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 69,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 69,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+          "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs · lowest for sale",
+          "cutShown": 69,
+          "cutNeeds": 157,
+          "cutIsCut": true,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 69,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 61,
+          "cutNeeds": 70,
+          "cutIsCut": true,
+          "tail": " · 18 Nov",
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · written by you",
+          "title": "CD · written by you",
+          "cutText": "CD · written by you",
+          "cutShown": 101,
+          "cutNeeds": 101,
+          "cutIsCut": false,
+          "lineW": 217,
+          "card": "Not Owned"
+        },
+        {
+          "full": "No CD edition found",
+          "title": "No CD edition found",
+          "cutText": "No CD edition found",
+          "cutShown": 108,
+          "cutNeeds": 108,
+          "cutIsCut": false,
+          "lineW": 217,
+          "card": "Not Owned"
+        }
+      ],
+      "strip": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now."
+    },
+    "1024-USD": {
+      "lines": [
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+          "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs · lowest for sale",
+          "cutShown": 126,
+          "cutNeeds": 157,
+          "cutIsCut": true,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · written by you",
+          "title": "CD · written by you",
+          "cutText": "CD · written by you",
+          "cutShown": 101,
+          "cutNeeds": 101,
+          "cutIsCut": false,
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "No CD edition found",
+          "title": "No CD edition found",
+          "cutText": "No CD edition found",
+          "cutShown": 108,
+          "cutNeeds": 108,
+          "cutIsCut": false,
+          "lineW": 256,
+          "card": "Not Owned"
+        }
+      ],
+      "strip": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now."
+    },
+    "1024-BRL": {
+      "lines": [
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+          "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs · lowest for sale",
+          "cutShown": 108,
+          "cutNeeds": 157,
+          "cutIsCut": true,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · written by you",
+          "title": "CD · written by you",
+          "cutText": "CD · written by you",
+          "cutShown": 101,
+          "cutNeeds": 101,
+          "cutIsCut": false,
+          "lineW": 256,
+          "card": "Not Owned"
+        },
+        {
+          "full": "No CD edition found",
+          "title": "No CD edition found",
+          "cutText": "No CD edition found",
+          "cutShown": 108,
+          "cutNeeds": 108,
+          "cutIsCut": false,
+          "lineW": 256,
+          "card": "Not Owned"
+        }
+      ],
+      "strip": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now."
+    },
+    "900-USD": {
+      "lines": [
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+          "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs · lowest for sale",
+          "cutShown": 157,
+          "cutNeeds": 157,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · written by you",
+          "title": "CD · written by you",
+          "cutText": "CD · written by you",
+          "cutShown": 101,
+          "cutNeeds": 101,
+          "cutIsCut": false,
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "No CD edition found",
+          "title": "No CD edition found",
+          "cutText": "No CD edition found",
+          "cutShown": 108,
+          "cutNeeds": 108,
+          "cutIsCut": false,
+          "lineW": 361,
+          "card": "Not Owned"
+        }
+      ],
+      "strip": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now."
+    },
+    "900-BRL": {
+      "lines": [
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+          "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs · lowest for sale",
+          "cutShown": 157,
+          "cutNeeds": 157,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · Discogs\n · 18 Nov",
+          "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+          "cutText": "CD · Discogs",
+          "cutShown": 70,
+          "cutNeeds": 70,
+          "cutIsCut": false,
+          "tail": " · 18 Nov",
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "CD · written by you",
+          "title": "CD · written by you",
+          "cutText": "CD · written by you",
+          "cutShown": 101,
+          "cutNeeds": 101,
+          "cutIsCut": false,
+          "lineW": 361,
+          "card": "Not Owned"
+        },
+        {
+          "full": "No CD edition found",
+          "title": "No CD edition found",
+          "cutText": "No CD edition found",
+          "cutShown": 108,
+          "cutNeeds": 108,
+          "cutIsCut": false,
+          "lineW": 361,
+          "card": "Not Owned"
+        }
+      ],
+      "strip": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now."
+    }
+  },
+  "phoneCr393": {
+    "rows": [
+      {
+        "row": "In the Land of Grey and Pink",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "Selling England by the Pound",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "Hejira",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "Harvest",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "Animals",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "OK Computer",
+        "date": null
+      },
+      {
+        "row": "Fragile",
+        "date": null
+      }
+    ],
+    "scrollX": 0,
+    "top": "Data provided by Discogs."
+  },
+  "phoneWk393": {
+    "rows": [
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": null
+      },
+      {
+        "row": "",
+        "date": null
+      }
+    ],
+    "scrollX": 0,
+    "sheet": {
+      "text": "Hejira | Joni Mitchell · Not Owned | Open album | Edit | NOT MINE YET · COSTS | ≈ $12.93 | Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. | Read on 18 Nov 2026, 11:05. | This edition on Discogs ↗ | Data provided by Discogs. | WHERE TO BUY | Discogs ↗ | Amazon ↗ | iMusic ↗ | Each link opens the store on this album, on CD. The app earns nothing from these links today. | SELL OR TRADE | Sell | Trade | Selling and trading between collectors: not in the app yet",
+      "links": [
+        "This edition on Discogs ↗",
+        "Data provided by Discogs.",
+        "Discogs ↗",
+        "Amazon ↗",
+        "iMusic ↗"
+      ]
+    }
+  },
+  "phoneCr320": {
+    "rows": [
+      {
+        "row": "In the Land of Grey and Pink",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "Selling England by the Pound",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "Hejira",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "Harvest",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "Animals",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "OK Computer",
+        "date": null
+      },
+      {
+        "row": "Fragile",
+        "date": null
+      }
+    ],
+    "scrollX": 0,
+    "top": "Data provided by Discogs."
+  },
+  "phoneWk320": {
+    "rows": [
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": {
+          "text": "Discogs · 18 Nov",
+          "nbsp": true,
+          "lines": 1
+        }
+      },
+      {
+        "row": "",
+        "date": null
+      },
+      {
+        "row": "",
+        "date": null
+      }
+    ],
+    "scrollX": 0,
+    "sheet": {
+      "text": "Hejira | Joni Mitchell · Not Owned | Open album | Edit | NOT MINE YET · COSTS | ≈ $12.93 | Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. | Read on 18 Nov 2026, 11:05. | This edition on Discogs ↗ | Data provided by Discogs. | WHERE TO BUY | Discogs ↗ | Amazon ↗ | iMusic ↗ | Each link opens the store on this album, on CD. The app earns nothing from these links today. | SELL OR TRADE | Sell | Trade | Selling and trading between collectors: not in the app yet",
+      "links": [
+        "This edition on Discogs ↗",
+        "Data provided by Discogs.",
+        "Discogs ↗",
+        "Amazon ↗",
+        "iMusic ↗"
+      ]
+    }
+  },
+  "window-a": {
+    "text": "ESTIMATED VALUE | What this CD sells for on Discogs, by the condition of the disc. The value of the album is the mean of the three. | Mint | $15.00 | Near Mint | $12.00 | Very Good Plus | $9.00 | Mean of the three | $12.00 | Edition: Harvest 1984, Europe (CD), the most common CD edition on Discogs. See it on Discogs | Read on 18 Nov 2026, 11:05. Read again | Data provided by Discogs. | Write your own value | Save",
+    "links": [
+      "See it on Discogs",
+      "Data provided by Discogs."
+    ],
+    "rect": [
+      177,
+      414.25,
+      926,
+      279
+    ]
+  },
+  "window-c": {
+    "text": "ESTIMATED VALUE | The lowest price this CD was for sale at on Discogs when it was read. It is an asking price, not what the disc usually sells for. | Lowest price for sale on Discogs: | $12.93 | (37 for sale) | Edition: Harvest 1984, Europe (CD), the most common CD edition on Discogs. See it on Discogs | Read on 18 Nov 2026, 11:05. Read again | Data provided by Discogs. | Discogs gives a suggestion by the condition of the disc (Mint, Near Mint, Very Good Plus) only to accounts with seller settings filled in. | Write your own value | Save",
+    "links": [
+      "See it on Discogs",
+      "Data provided by Discogs."
+    ],
+    "rect": [
+      177,
+      414.25,
+      926,
+      261
+    ]
+  },
+  "singleRefused": {
+    "toasts": [
+      "The value was read but could not be saved to your inventory. It shows in this browser for now."
+    ],
+    "docC": "2026-11-18T14:05:00.000Z",
+    "shown": {
+      "origin": "discogs",
+      "amount": 25.33,
+      "currency": "USD",
+      "conditions": {
+        "mint": 30,
+        "nearMint": 26,
+        "veryGoodPlus": 20
+      },
+      "release": {
+        "id": 7001,
+        "title": "Hejira CD",
+        "url": "https://www.discogs.com/release/7001"
+      },
+      "readAt": "2026-11-21T15:00:03.515Z"
+    }
+  },
+  "runRefused": {
+    "toasts": [
+      "Discogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.",
+      "Values read for 2 of 2 albums. 2 readings could not be saved to your inventory: they show in this browser for now."
+    ],
+    "writes": 0,
+    "grey": {
+      "origin": "discogs",
+      "amount": 25.33,
+      "currency": "USD",
+      "conditions": {
+        "mint": 30,
+        "nearMint": 26,
+        "veryGoodPlus": 20
+      },
+      "release": {
+        "id": 7001,
+        "title": "In the Land of Grey and Pink CD",
+        "url": "https://www.discogs.com/release/7001"
+      },
+      "readAt": "2026-11-21T15:00:01.178Z"
+    }
+  },
+  "invalid": {
+    "toasts": [
+      "Discogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.",
+      "Values read for 2 of 2 albums. 1 reading could not be saved to your inventory: it shows in this browser for now."
+    ],
+    "writes": [
+      [
+        "g",
+        [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      ]
+    ],
+    "fDoc": false,
+    "gDoc": true,
+    "fShown": {
+      "origin": "discogs",
+      "amount": 25.33,
+      "currency": "USD",
+      "conditions": {
+        "mint": 30,
+        "nearMint": 26,
+        "veryGoodPlus": 20
+      },
+      "release": {
+        "id": "bad-id",
+        "title": "In the Land of Grey and Pink",
+        "url": "https://www.discogs.com/release/1"
+      },
+      "readAt": "2026-11-21T15:00:01.175Z"
+    }
+  },
+  "lowestFresh900": [
+    {
+      "full": "CD · Discogs · lowest for sale\n · 21 Nov",
+      "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 21 Nov 2026, 12:00.",
+      "cutText": "CD · Discogs · lowest for sale",
+      "cutShown": 157,
+      "cutNeeds": 157,
+      "cutIsCut": false,
+      "tail": " · 21 Nov",
+      "lineW": 361,
+      "card": "Not Owned"
+    },
+    {
+      "full": "CD · Discogs · lowest for sale\n · 21 Nov",
+      "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 21 Nov 2026, 12:00.",
+      "cutText": "CD · Discogs · lowest for sale",
+      "cutShown": 157,
+      "cutNeeds": 157,
+      "cutIsCut": false,
+      "tail": " · 21 Nov",
+      "lineW": 361,
+      "card": "Not Owned"
+    },
+    {
+      "full": "CD · Discogs · lowest for sale\n · 18 Nov",
+      "title": "Lowest price this CD edition was for sale at on Discogs when it was read. Read on 18 Nov 2026, 11:05.",
+      "cutText": "CD · Discogs · lowest for sale",
+      "cutShown": 157,
+      "cutNeeds": 157,
+      "cutIsCut": false,
+      "tail": " · 18 Nov",
+      "lineW": 361,
+      "card": "Not Owned"
+    },
+    {
+      "full": "CD · Discogs\n · 18 Nov",
+      "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+      "cutText": "CD · Discogs",
+      "cutShown": 70,
+      "cutNeeds": 70,
+      "cutIsCut": false,
+      "tail": " · 18 Nov",
+      "lineW": 361,
+      "card": "Not Owned"
+    },
+    {
+      "full": "CD · Discogs\n · 18 Nov",
+      "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. Read on 18 Nov 2026, 11:05.",
+      "cutText": "CD · Discogs",
+      "cutShown": 70,
+      "cutNeeds": 70,
+      "cutIsCut": false,
+      "tail": " · 18 Nov",
+      "lineW": 361,
+      "card": "Not Owned"
+    },
+    {
+      "full": "CD · written by you",
+      "title": "CD · written by you",
+      "cutText": "CD · written by you",
+      "cutShown": 101,
+      "cutNeeds": 101,
+      "cutIsCut": false,
+      "lineW": 361,
+      "card": "Not Owned"
+    },
+    {
+      "full": "No CD edition found",
+      "title": "No CD edition found",
+      "cutText": "No CD edition found",
+      "cutShown": 108,
+      "cutNeeds": 108,
+      "cutIsCut": false,
+      "lineW": 361,
+      "card": "Not Owned"
+    }
+  ]
+}

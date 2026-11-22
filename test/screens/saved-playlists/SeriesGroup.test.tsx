@@ -23,7 +23,7 @@ const group: SeriesGroupData = {
     batches: [batch('Sunday mix', 4), batch('Night drive', 2)],
     thumbnails: []
 }
-const handlers: Handlers = { onNavigate: vi.fn(), onOpenSeries: vi.fn(), onDeleteAll: vi.fn(), onEditBatch: vi.fn(), onDeleteBatch: vi.fn(), onOpenPlaylist: vi.fn(), onRetry: vi.fn() }
+const handlers: Handlers = { onNavigate: vi.fn(), onOpenSeries: vi.fn(), onDeleteAll: vi.fn(), onEditBatch: vi.fn(), onExportBatch: vi.fn(), onExportPlaylist: vi.fn(), onDeleteBatch: vi.fn(), onOpenPlaylist: vi.fn(), onRetry: vi.fn() }
 
 interface Props { phone: boolean; startsOpen?: boolean; onToggle?: (seriesId: string, open: boolean) => void }
 const Host = ({ phone, startsOpen = false, onToggle = () => {} }: Props & { params: object }) => (

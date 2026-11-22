@@ -95,6 +95,10 @@ class MusicKitService {
         return musicKitLibrary.createPlaylist(name, trackIds);
     }
 
+    async listFolders() {
+        return musicKitLibrary.listFolders();
+    }
+
     async createOrGetFolder(folderName) {
         return musicKitLibrary.createOrGetFolder(folderName);
     }

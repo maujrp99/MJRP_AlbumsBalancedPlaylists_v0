@@ -18,13 +18,14 @@ import { escapeHtml } from '../../utils/stringUtils.js'
 import { getIcon } from '../../components/Icons.js'
 import { coverImage } from '../../components/ui/coverImage.js'
 import { InventoryStatus, statusLabel, statusOf } from '../../models/inventoryStatus.js'
-import { NoValue, ValueOrigin, moneyOf, noValueText } from '../../models/inventoryValue.js'
+import { NoValue, ValueOrigin, moneyOf, noValueText, readOnText } from '../../models/inventoryValue.js'
 import { popularityValue, ratingValue } from '../../models/albumAverages.js'
 import { PHONE_CHUNK } from '../../models/inventoryJump.js'
 
 /** Three dots: the «⋯» of a row and of the screen. */
 export const MORE_ICON = '<svg class="inv-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'
-const CHEVRON = '<svg class="inv-row__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>'
+/** The arrow that says a status pill can be tapped; the row and the card of the gallery draw the same one. */
+export const chevron = (className) => `<svg class="${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>`
 
 const NOT_KNOWN = Object.freeze({ origin: null, reason: NoValue.NEVER_READ })
 const MARK = Object.freeze({ [InventoryStatus.OWNED]: '✓ ', [InventoryStatus.WISHLIST]: '♡ ' })
@@ -34,8 +35,8 @@ const isNumber = (value) => typeof value === 'number' && Number.isFinite(value)
 export const statusText = (status) => `${MARK[status] || ''}${statusLabel(status)}`
 
 /** What the row says of where the value comes from: short, the long words are in the «⋯» sheet. */
-function originText(value) {
-    if (value.origin === ValueOrigin.DISCOGS) return 'Discogs'
+export function originText(value) {
+    if (value.origin === ValueOrigin.DISCOGS) return ['Discogs', readOnText(value)].filter(Boolean).join(' · ')
     if (value.origin === ValueOrigin.YOURS) return 'Yours'
     return noValueText(value)
 }
@@ -86,7 +87,7 @@ export function phoneRow(item, value, money) {
       <div class="inv-row__text"><span class="inv-row__title">${escapeHtml(title)}</span><span class="inv-row__artist">${escapeHtml(artist)}</span></div>
       ${phoneValue(value || NOT_KNOWN, money)}
       <div class="inv-row__bar">
-        <button type="button" class="inv-row__status" data-phone-action="status" data-album-id="${id}" data-status="${status}" aria-haspopup="dialog" aria-label="Status: ${statusLabel(status)}. Change it"><span class="inv-row__pill">${statusText(status)}${CHEVRON}</span></button>
+        <button type="button" class="inv-row__status" data-phone-action="status" data-album-id="${id}" data-status="${status}" aria-haspopup="dialog" aria-label="Status: ${statusLabel(status)}. Change it"><span class="inv-row__pill">${statusText(status)}${chevron('inv-row__chevron')}</span></button>
         <span class="inv-row__scores" data-role="averages">${phoneScores(item.averages)}</span>
         <button type="button" class="inv-row__more" data-phone-action="more" data-album-id="${id}" aria-haspopup="dialog" aria-label="Actions for ${escapeHtml(title)}">${MORE_ICON}</button>
       </div>
@@ -94,7 +95,7 @@ export function phoneRow(item, value, money) {
 }
 
 /** Under the rows: how many are drawn, and the button for the next chunk. */
-function moreOf(total, shown) {
+export function moreOf(total, shown) {
     if (total <= shown) return `<p class="inv-more__count">${total === 1 ? '1 album' : `All ${total} albums`}</p>`
     const next = Math.min(PHONE_CHUNK, total - shown)
     return `<div class="inv-more"><p class="inv-more__count">Showing ${shown} of ${total}</p>`

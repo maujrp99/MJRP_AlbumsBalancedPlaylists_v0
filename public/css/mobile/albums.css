@@ -544,8 +544,8 @@
   }
 
   .albums-view .albums-grid {
-    column-gap: 12px;
-    row-gap: 20px;
+    column-gap: var(--phone-cover-gap-x);
+    row-gap: var(--phone-cover-gap-y);
   }
 
   .albums-view .load-more-btn {

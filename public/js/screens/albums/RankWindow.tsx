@@ -39,7 +39,7 @@ export interface RankRequest {
 export type Notify = (message: string, type?: 'success' | 'error', action?: { label: string; run: () => void }) => void
 
 /** How the drag is set here: one list, the whole row on a computer (the handle on the phone), no group, no wait for a touch. */
-const RANK_PROFILE: DragProfile = {
+export const RANK_PROFILE: DragProfile = {
     lists: '#rank-track-list',
     numberOf: () => 0,
     sortable: {

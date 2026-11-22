@@ -5,11 +5,11 @@
  * on the server. What it is given (`api`, `cache`, `inventory`) is a port; this file imports no
  * Firestore, no cache and no screen. services/inventory/inventoryValueWiring.js puts it together.
  *
- * Where a Discogs reading lives: ONLY in the browser cache, one record per item of a person, for
- * six hours (READING_TTL_MS). It is never written to the cloud: the terms of the Discogs API do
- * not let a price be kept longer than needed nor shown when older than six hours. What IS written
- * to the item is which edition was used (`discogs`: catalogue data), so the next read asks one
- * question to Discogs and not three.
+ * Where a Discogs reading lives (decision of the MJRP, 2026-11-21; constitution VI.1; REQ-14): in
+ * the item of the person, in the database (`discogsReading`, with the moment it was read), so it
+ * shows at once on any device of the person. The browser cache keeps it six hours too
+ * (READING_TTL_MS), and only as a guard: "Update values" does not ask Discogs a second time for an
+ * album read less than six hours ago. The server keeps nothing.
  *
  * "Update values" (`readMany`) asks one album after the other. A failure of one album does not
  * stop the run; "wait" is waited (a few times, a few minutes at most); a failure every album
@@ -29,8 +29,8 @@ export const READING_PREFIX = 'inventoryvalue:v2:'
 export const READING_TTL_MS = SIX_HOURS_MS
 export const RATES_KEY = 'exchangerates:v1'
 const DAY_MS = 24 * 60 * 60 * 1000
-/** The editions found during a run are written to the items in parts of this size. */
-export const EDITION_WRITE_SIZE = 25
+/** The readings found during a run are written to the items in parts of this size. */
+export const READING_WRITE_SIZE = 25
 
 const DROPPED = 'dropped'
 const FOUND = 'found'
@@ -55,12 +55,15 @@ function ratesOf(result) {
 
 const nothing = () => { }
 
+/** The count of a run, with the readings that could not be kept added (only when there are some). */
+const withUnkept = (count, unkept) => (unkept > 0 ? { ...count, unkept: (count.unkept || 0) + unkept } : count)
+
 export class InventoryValueService {
     /**
      * @param {Object} deps
      * @param {Object} deps.api - api/valueApi.js: { albumValue, valueSources, exchangeRates }
      * @param {Object} deps.cache - the browser cache: { get, set, invalidate }
-     * @param {{ userId: string, setEditions: Function }} deps.inventory - the InventoryService
+     * @param {{ userId: string, setReadings: Function }} deps.inventory - the InventoryService
      * @param {Function} [deps.mayAsk] - () => boolean: a guest is never asked for (the route refuses guests)
      * @param {Function} [deps.now] - () => ms
      * @param {Function} [deps.sleep] - (ms, signal) => Promise<boolean>
@@ -129,7 +132,8 @@ export class InventoryValueService {
     }
 
     /**
-     * Read the value of one album now, and keep the reading in the browser for six hours.
+     * Read the value of one album now, and hold the reading in the browser for six hours (the
+     * guard). Keeping it in the item is `keepReadings`, a step after.
      * @param {Object} item - an inventory item
      * @param {{ signal?: AbortSignal }} [options]
      * @returns {Promise<Object>} { reading } | { off: true } | { dropped: true } | { failure, waitMs, stops }
@@ -146,19 +150,24 @@ export class InventoryValueService {
     }
 
     /**
-     * Keep in the items which edition each reading was of. A write that fails loses nothing the
-     * person sees: the next read looks for the edition again.
+     * Keep these readings in the items of the person, in the database, each with the edition it was
+     * of (REQ-14). A write that fails loses nothing the person sees: the reading is still in the
+     * browser, and the next read keeps it. It is never silent: it says how many were not kept.
      * @param {Array<{ item: Object, reading: Object }>} read
+     * @returns {Promise<number>} how many readings were NOT kept (refused as invalid, or the write failed)
      */
-    async keepEditions(read) {
-        const entries = read
-            .map(({ item, reading }) => ({ id: item.id, discogs: editionToKeep(item, reading) }))
-            .filter(entry => entry.discogs)
-        if (entries.length === 0) return
+    async keepReadings(read) {
+        const entries = read.map(({ item, reading }) => {
+            const discogs = editionToKeep(item, reading)
+            return { id: item.id, reading, ...(discogs && { discogs }) }
+        })
+        if (entries.length === 0) return 0
         try {
-            await this.inventory.setEditions(entries)
+            const kept = await this.inventory.setReadings(entries)
+            return entries.length - (Array.isArray(kept) ? kept.length : entries.length)
         } catch (error) {
-            console.error('[InventoryValueService] The editions could not be kept in the items; they will be looked for again:', error)
+            console.error('[InventoryValueService] The readings could not be kept in the items; they are held in the browser for now:', error)
+            return entries.length
         }
     }
 
@@ -195,7 +204,7 @@ export class InventoryValueService {
             await this._readNext(item, run, told)
         }
 
-        await this.keepEditions(run.read)
+        run.count = withUnkept(run.count, await this.keepReadings(run.read))
         return { ...run.count, aborted: run.count.aborted || isAborted(told.signal) }
     }
 
@@ -218,7 +227,7 @@ export class InventoryValueService {
             run.count = { ...run.count, stopped: outcome.failure }
             run.halted = true
         }
-        if (run.read.length >= EDITION_WRITE_SIZE) await this.keepEditions(run.read.splice(0))
+        if (run.read.length >= READING_WRITE_SIZE) run.count = withUnkept(run.count, await this.keepReadings(run.read.splice(0)))
     }
 
     /** An answer that ends the run without counting the album: the run was dropped, or the source was turned off. */
