@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 05:45] step — F83, onda 6a: os dois achados da junta independente (o salto de «Mostrar mais 50» com os valores ligados; «No value yet» em um nó só)
+
+**Branch:** claude/f83-wave-6a-fix-show-more
+
+- Achado 1 (bloqueante): com os valores do Discogs ligados, no Chromium do celular (393, 820, 899 px) «Mostrar mais 50» jogava a página para o fim do pedaço novo (a rolagem ancorada no aviso do Discogs, que ficava montado sob a caixa da lista remontada). Correção: o aviso leva a chave da caixa (`notice.` + `gridKey()`), como a tela antiga, que o refazia a cada desenho; DOM, classes e CSS iguais aos do pai. Escolhida em vez de `overflow-anchor: none` (regra nova que o pai não tem) e de mover o aviso para dentro da caixa (mudaria o DOM).
+- Achado 2 (menor): `RowValue` escrevia o texto e o espaço seguinte como dois nós; agora um só, e a linha do Discogs sem ligação à edição também (o cartão: «Discogs · data»). Pixels da lista a 1280 e 900: 0.
+- Testes novos (`Inventory.showMore.notice.test.js`), vermelhos antes. Prova no navegador, valores ligados, pai contra ponta: rolagem igual em 24 de 24 (Chromium) e 8 de 8 (WebKit); o mesmo roteiro contra a construção sem correção falha (pai 5.299, sem correção 6.321). Evidência em `reports/evidence/F83/wave-6a/fix-show-more/`. Lição na seção 15 do `wave-lessons.md`.
+- Sensores pela fila: suíte inteira 364 arquivos, 4.772 testes verdes (com `test/architecture` e `noSecretsInRepo`); `typecheck` e `lint` sem erro; build dentro do teto.
+
 ## [2026-11-22 04:21] step — F83, onda 6a: a prova no navegador, os totais e as lições (a tela do inventário em React)
 
 **Branch:** claude/f83-wave-6a-inventory-screen

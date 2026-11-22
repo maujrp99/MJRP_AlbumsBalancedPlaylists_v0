@@ -36,13 +36,22 @@ function DiscogsName({ value }: { value: ItemValue }) {
     return <a href={url} target="_blank" rel="noopener" className="underline hover:text-white" title={`${DISCOGS_CREDIT} ${t('inventory.card.edition')}`}>Discogs</a>
 }
 
+/**
+ * "Discogs" and the text after it. Without a link it is one text node, as the old HTML wrote it (React would write two, and Chromium draws a line of
+ * two text nodes 1/64 px wider); with a link, the link and then the text.
+ */
+function DiscogsLead({ value, before = '', rest }: { value: ItemValue; before?: string; rest: string }) {
+    if (!safeUrl(value.release?.url)) return <>{`${before}Discogs${rest}`}</>
+    return <>{before}<DiscogsName value={value} />{rest}</>
+}
+
 /** Line 2, left: the Discogs value on two short lines that never shrink, anything else on one that gives way (its whole text is in the `title`). */
 function Origin({ item, value }: { item: InventoryItem; value: ItemValue }) {
     if (value.origin === ValueOrigin.DISCOGS) {
         const tail = readOnText(value)
         return (
             <span className="min-w-0 flex flex-col text-[11px] leading-[13px] text-gray-400 whitespace-nowrap" title={discogsHint(value)}>
-                <span data-role="origin-source"><DiscogsName value={value} />{tail ? ` · ${tail}` : ''}</span>
+                <span data-role="origin-source"><DiscogsLead value={value} rest={tail ? ` · ${tail}` : ''} /></span>
                 {'\n'}
                 <span data-role="origin-kind">{`CD · ${t(`inventory.card.kind.${kindWordOf(value)}`)}`}</span>
             </span>
@@ -131,12 +140,13 @@ export function RowValue({ item, value, money }: { item: InventoryItem; value: I
     let hint: string
     if (value.origin === ValueOrigin.DISCOGS) {
         const tail = readOnText(value)
-        line = <>{'CD · '}<DiscogsName value={value} />{` · ${t(`inventory.card.kind.${kindWordOf(value)}`)}${tail ? ` · ${tail}` : ''}`}</>
+        line = <DiscogsLead value={value} before="CD · " rest={` · ${t(`inventory.card.kind.${kindWordOf(value)}`)}${tail ? ` · ${tail}` : ''} `} />
         hint = discogsHint(value)
     } else {
         const text = value.origin === ValueOrigin.YOURS ? `${formatOf(item)} · ${t('inventory.card.writtenByYou')}` : noValueText(value)
-        line = text
+        // the old HTML wrote the text and the space after it as one piece (here and in the Discogs line above); two text nodes are drawn 1/64 px wider by Chromium
+        line = `${text} `
         hint = text
     }
-    return <span className="text-xs text-gray-400 whitespace-nowrap" data-role="value" title={hint}>{line}{' '}<strong className="text-white tabular-nums">{amount}</strong></span>
+    return <span className="text-xs text-gray-400 whitespace-nowrap" data-role="value" title={hint}>{line}<strong className="text-white tabular-nums">{amount}</strong></span>
 }
