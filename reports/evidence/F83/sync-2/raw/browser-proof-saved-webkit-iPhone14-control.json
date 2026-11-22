@@ -1,0 +1,452 @@
+{
+ "tag": "saved-webkit-iPhone14-control",
+ "passed": 89,
+ "failed": 0,
+ "results": [
+  {
+   "what": "saved-webkit-iPhone14-control · the series opens · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the series opens · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the series opens · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the series opens · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the batch opens · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the batch opens · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the batch opens · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the batch opens · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the export beside a playlist · the window",
+   "ok": true,
+   "detail": "1110 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the export beside a playlist · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the export beside a playlist · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the export beside a playlist · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the export beside a playlist · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Escape · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Escape · the focus",
+   "ok": true,
+   "detail": "button[Export Playlist p1] | button[Export Playlist p1]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Escape · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Escape · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the «⋯» of the batch · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the «⋯» of the batch · the focus",
+   "ok": true,
+   "detail": "button[] | button[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the «⋯» of the batch · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · the «⋯» of the batch · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export in the sheet of the batch · the window",
+   "ok": true,
+   "detail": "1109 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export in the sheet of the batch · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export in the sheet of the batch · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export in the sheet of the batch · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export in the sheet of the batch · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Apple Music chosen · the window",
+   "ok": true,
+   "detail": "2976 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Apple Music chosen · the focus",
+   "ok": true,
+   "detail": "input[series:Plant] | input[series:Plant]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Apple Music chosen · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Apple Music chosen · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Apple Music chosen · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · a folder picked · the window",
+   "ok": true,
+   "detail": "3030 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · a folder picked · the focus",
+   "ok": true,
+   "detail": "div[] | div[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · a folder picked · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · a folder picked · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · a folder picked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export pressed: what Apple Music is asked · the window",
+   "ok": true,
+   "detail": "3030 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "div[] | div[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "9 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export pressed: what Apple Music is asked · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Sunday mix - Playlist p1\\\", \\\"2. Sunday mix - Playlist p2\\\", \\\"3. Sunday mix - Playlist p3\\\": not created.\",\"4 tracks were not found in Apple Music and were left out: Artist - Kashmir, Artist - Ramble On, Artist - Gone Gone Gone, Artist - Song.\"]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Escape · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Escape · the focus",
+   "ok": true,
+   "detail": "button[Actions for batch Sunday mix] | button[Actions for batch Sunday mix]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Escape · what MusicKit was asked",
+   "ok": true,
+   "detail": "9 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · Escape · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Sunday mix - Playlist p1\\\", \\\"2. Sunday mix - Playlist p2\\\", \\\"3. Sunday mix - Playlist p3\\\": not created.\",\"4 tracks were not found in Apple Music and were left out: Artist - Kashmir, Artist - Ramble On, Artist - Gone Gone Gone, Artist - Song.\"]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · no page error on main",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the export opened · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the export opened · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the export opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the export opened · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the series and the batch open · the window",
+   "ok": true,
+   "detail": "1110 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the series and the batch open · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the series and the batch open · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the series and the batch open · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] the series and the batch open · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Apple Music chosen · the window",
+   "ok": true,
+   "detail": "2478 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Apple Music chosen · the focus",
+   "ok": true,
+   "detail": "input[series:Plant] | input[series:Plant]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Apple Music chosen · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Apple Music chosen · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Apple Music chosen · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Export pressed with the series folder · the window",
+   "ok": true,
+   "detail": "2514 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Export pressed with the series folder · the focus",
+   "ok": true,
+   "detail": "div[] | div[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Export pressed with the series folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Export pressed with the series folder · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Sunday mix - Playlist p1\\\": not created.\",\"2 tracks were not found in Apple Music and were left out: Artist - Kashmir, Artist - Ramble On.\"]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [none] Export pressed with the series folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · no page error on main",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the export opened · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the export opened · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the export opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the export opened · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the series and the batch open · the window",
+   "ok": true,
+   "detail": "1110 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the series and the batch open · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the series and the batch open · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the series and the batch open · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] the series and the batch open · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Apple Music chosen · the window",
+   "ok": true,
+   "detail": "2511 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Apple Music chosen · the focus",
+   "ok": true,
+   "detail": "input[series:Plant] | input[series:Plant]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Apple Music chosen · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Apple Music chosen · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Apple Music chosen · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Export pressed with the series folder · the window",
+   "ok": true,
+   "detail": "2547 chars"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Export pressed with the series folder · the focus",
+   "ok": true,
+   "detail": "div[] | div[]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Export pressed with the series folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "6 calls"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Export pressed with the series folder · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Sunday mix - Playlist p1\\\": not created.\",\"2 tracks were not found in Apple Music and were left out: Artist - Kashmir, Artist - Ramble On.\"]"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · [error] Export pressed with the series folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · no page error on main",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-iPhone14-control · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

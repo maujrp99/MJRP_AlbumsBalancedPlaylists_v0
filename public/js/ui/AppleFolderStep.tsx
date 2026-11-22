@@ -7,7 +7,7 @@
  * there is none and when it could not be read, the step says so and the other choices stay. What was picked is remembered for the series
  * (models/appleFolderChoice.js). The progress of the export is written on the «Export» button, which the step draws (the export tells it).
  */
-import { useEffect, useLayoutEffect, useRef, useState, type FocusEvent, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Icon } from './Icon'
 import { t } from '../i18n/t.js'
 import { readChoice, saveChoice, findFolder, initialPick, folderForExport } from '../models/appleFolderChoice.js'
@@ -40,6 +40,13 @@ const STATUS_KEY: Record<Status, string | null> = {
 }
 
 type FocusMark = { typed: true } | { mode: string; value: string }
+
+/** What has the focus inside the list, to give it back after the list is written again: the typed field, or a choice by its mode and value. */
+function focusMarkOf(list: HTMLElement | null, typed: HTMLInputElement | null): FocusMark | null {
+    const active = document.activeElement as HTMLInputElement | null
+    if (!active || !list?.contains(active)) return null
+    return active === typed ? { typed: true } : { mode: active.dataset.mode ?? '', value: active.value }
+}
 
 /** The focus is on the page or on something outside the list: it was not lost to a change in the list. */
 const isFocusKept = (list: HTMLElement): boolean => list.contains(document.activeElement) || Boolean(document.activeElement && document.activeElement !== document.body)
@@ -101,8 +108,8 @@ export function AppleFolderStep({ seriesName, loadFolders, onExport, onBack, sto
         let stale = false
         reading.current ??= Promise.resolve().then(loadFolders)
         reading.current.then(
-            (read) => { if (!stale) { setFolders(read); setStatus(read.length === 0 ? 'empty' : 'ready') } },
-            () => { if (!stale) setStatus('failed') }
+            (read) => { if (!stale) { focused.current = focusMarkOf(list.current, typedField.current); setFolders(read); setStatus(read.length === 0 ? 'empty' : 'ready') } },
+            () => { if (!stale) { focused.current = focusMarkOf(list.current, typedField.current); setStatus('failed') } }
         )
         return () => { stale = true }
     }, [loadFolders])
@@ -121,10 +128,13 @@ export function AppleFolderStep({ seriesName, loadFolders, onExport, onBack, sto
     // The field is the person's own text, or the remembered new name: never an old folder's name
     const shownTyped = pick.mode === 'new' ? pick.name : (typedByHand ? typed : '')
 
-    // A row that had the focus and is gone (the list changed under it): the focus goes to the choice that is selected, not to the page.
+    // The list changed because the read ended: if a row had the focus and is gone, the focus goes to the choice that is selected, not to the page.
+    // Only then (the hand-made step wrote its list again once, when the read ended): a click that leaves the focus on the page, in Safari, stays there.
     useLayoutEffect(() => {
-        if (focused.current && list.current && !isFocusKept(list.current)) focusAfterChange(focused.current, list.current, typedField.current)
-    })
+        const mark = focused.current
+        focused.current = null
+        if (mark && list.current && !isFocusKept(list.current)) focusAfterChange(mark, list.current, typedField.current)
+    }, [status, folders])
 
     const pickRow = (mode: Mode, name: string) => {
         touched.current = true
@@ -136,12 +146,6 @@ export function AppleFolderStep({ seriesName, loadFolders, onExport, onBack, sto
         setTypedByHand(true)
         pickRow('new', value)
     }
-    const onFocus = (event: FocusEvent<HTMLDivElement>) => {
-        const target = event.target as HTMLInputElement
-        focused.current = target === typedField.current ? { typed: true } : { mode: target.dataset.mode ?? '', value: target.value }
-    }
-    const onBlur = (event: FocusEvent<HTMLDivElement>) => { if (event.relatedTarget) focused.current = null }
-
     const exportNow = () => {
         const folder = folderForExport(pick)
         if (!folder.ok) {
@@ -161,7 +165,7 @@ export function AppleFolderStep({ seriesName, loadFolders, onExport, onBack, sto
         <div className="flex flex-col gap-3" data-apple-folder-step="true">
             <h3 className="text-lg font-bold text-white">{t('exportWindow.step.heading')}</h3>
             <p className="text-sm text-white/60" role="status">{statusKey ? t(statusKey) : ''}</p>
-            <div ref={list} className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: '40vh' }} role="radiogroup" aria-label={t('exportWindow.step.listLabel')} onFocus={onFocus} onBlur={onBlur}>
+            <div ref={list} className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: '40vh' }} role="radiogroup" aria-label={t('exportWindow.step.listLabel')}>
                 <RadioRow mode="series" value={seriesName} label={seriesName} note={t('exportWindow.step.default')} checked={pick.mode === 'series'} onPick={() => pickRow('series', seriesName)} />
                 {others.map(folder => (
                     <RadioRow key={folder.name} mode="existing" value={folder.name} label={folder.name} checked={pick.mode === 'existing' && pick.name === folder.name} onPick={() => pickRow('existing', folder.name)} />

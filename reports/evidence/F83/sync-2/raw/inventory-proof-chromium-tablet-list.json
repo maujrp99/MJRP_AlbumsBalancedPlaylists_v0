@@ -1,0 +1,27 @@
+{
+ "tag": "chromium-tablet-list",
+ "passed": 3,
+ "failed": 1,
+ "results": [
+  {
+   "what": "chromium-tablet-list · the inventory in #app: this branch (the shell in React) = main",
+   "ok": true,
+   "detail": "13432 chars"
+  },
+  {
+   "what": "chromium-tablet-list · the inventory is drawn (cards, tiles or rows are on the page)",
+   "ok": true,
+   "detail": "18 items · My Collection 6 albums ✓ 4 Owned 1 Not Owned ♡ 1 Wishlist Owned $25.00 To buy — USD EUR GBP BRL Exchange rates are not available: values are shown in USD. About"
+  },
+  {
+   "what": "chromium-tablet-list · the pixels of the page",
+   "ok": false,
+   "detail": "47 pixels apart (largest 27 of 255, x 93-179, y 394-505)"
+  },
+  {
+   "what": "chromium-tablet-list · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}
