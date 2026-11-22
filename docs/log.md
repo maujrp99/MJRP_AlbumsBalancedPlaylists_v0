@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:52] review — F90: a reconferência visual pré-merge do juiz independente, guardada
+**Branch:** feat/f90-export-from-the-saved-playlists-screen
+Relatório de `reports/audits/2026-11-21-mjrpalbumblender-v0-export-from-saved-playlists-visual-parity-recheck.md` (passou, 1 P1 e 7 P2, sobre o commit 6ff1581), escrito pelo juiz, com as capturas em `reports/evidence/F90/export-from-saved-playlists/recheck/`. Os achados foram corrigidos nos commits anteriores deste ramo.
+
 ## [2026-11-21 23:50] step — F90: as capturas refeitas no site construído depois das correções do juiz
 **Branch:** feat/f90-export-from-the-saved-playlists-screen
 `reports/evidence/F90/export-from-saved-playlists/` refeito com `shoot.mjs` (WebKit iPhone 14 e Chromium a 1280): o passo da pasta com «Export» e «Back» centrados e o título do lote com o nome dele. Nada foi chamado no Apple Music nem no Spotify.
