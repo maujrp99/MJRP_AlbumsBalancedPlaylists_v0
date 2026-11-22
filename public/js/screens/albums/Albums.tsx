@@ -184,9 +184,9 @@ export function Albums({ controller, bridge, route }: Props) {
                 <div id="series-toolbar-mount"><FilterToolbar {...toolbarOf(controller, state, route)} /></div>
             </header>
             <div id="series-pager-top-mount"><Pager {...pagerProps} place="top" /></div>
-            <div id="series-grid-mount" className={waiting ? 'relative' : undefined}>
+            <div id="series-grid-mount" className={waiting ? 'relative' : undefined} style={waiting ? { visibility: 'hidden' } : undefined}>
                 {waiting ? <LoadingSlot phone={phone} /> : null}
-                <div id="series-grid-inner" className="pb-8" key={notices} style={waiting ? { visibility: 'hidden' } : undefined}>
+                <div id="series-grid-inner" className="pb-8" key={notices}>
                     <SeriesGroups
                         albums={bridge.albums}
                         seriesList={seriesList}

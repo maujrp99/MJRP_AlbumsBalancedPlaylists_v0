@@ -38,7 +38,6 @@ describe('the albums screen while the series are being read', () => {
     const reserve = () => listArea().querySelector<HTMLElement>('[data-testid="series-loading-reserve"]')
     const emptyCard = () => listArea().querySelector('.empty-state')
     const gridMount = () => document.querySelector<HTMLElement>('#series-grid-mount')!
-    const gridInner = () => document.querySelector<HTMLElement>('#series-grid-inner')!
 
     const open = async (scenario: Parameters<typeof prepare>[0], phone = false) => {
         asPhone(phone)
@@ -77,7 +76,7 @@ describe('the albums screen while the series are being read', () => {
         expect(listArea().textContent).not.toContain('No albums in library')
         expect(document.body.textContent).not.toContain('No albums in library')
         // the grid, with its own «No albums match» text, goes invisible, keeping its space for the wait
-        expect(gridInner().style.visibility).toBe('hidden')
+        expect(gridMount().style.visibility).toBe('hidden')
     })
 
     it('the content is in the grid\'s own slot, pinned to its top by layout (no measured number), so it sits right under the filters', async () => {
@@ -86,7 +85,8 @@ describe('the albums screen while the series are being read', () => {
         const slot = loading()!
         expect(slot.parentElement).toBe(gridMount())
         expect(gridMount().classList.contains('relative')).toBe(true)
-        for (const name of ['absolute', 'inset-x-0', 'top-0']) expect(slot.classList.contains(name), name).toBe(true)
+        expect(gridMount().style.visibility).toBe('hidden') // the grid under the content is invisible; the content itself is `visible`
+        for (const name of ['visible', 'absolute', 'inset-x-0', 'top-0']) expect(slot.classList.contains(name), name).toBe(true)
         expect(slot.classList.contains('items-start')).toBe(true) // the spinner sits at the top, under the filters
         expect(slot.classList.contains('items-center')).toBe(false)
         expect(slot.getAttribute('role')).toBe('status')
@@ -124,7 +124,7 @@ describe('the albums screen while the series are being read', () => {
         expect(reserve()).toBeNull()
         expect(emptyCard()).toBeNull()
         expect(gridMount().classList.contains('relative')).toBe(false)
-        expect(gridInner().style.visibility).toBe('')
+        expect(gridMount().style.visibility).toBe('')
         expect(gridMount().querySelectorAll('.albums-grid > [data-id]').length).toBe(2)
     })
 
@@ -152,7 +152,7 @@ describe('the albums screen while the series are being read', () => {
 
         expect(loading()).toBeNull()
         expect(emptyCard()).toBeNull()
-        expect(gridInner().style.visibility).toBe('')
+        expect(gridMount().style.visibility).toBe('')
         expect(gridMount().querySelectorAll('.albums-grid > [data-id]').length).toBe(DEFAULT_SERIES().reduce((count, series) => count + series.albumQueries.length, 0))
     })
 

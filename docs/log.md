@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 19:19] step — F83 sync 5: a grade invisível por layout, a prova no navegador, o peso e o registro
+
+**Branch:** claude/f83-sync-5-lean-create-and-albums-loading
+
+- **A grade invisível passa a ser o próprio `#series-grid-mount`** (`visibility: hidden`, e o conteúdo `visible`): a primeira versão deixava o mount visível e o Chromium contava 0,029 de deslocamento na troca mesmo abrindo direto (a `main` dá 0 porque o bloco oculto não conta). Agora 0 na troca em 1280×720, 1366×768 e 1440×900, direto e pelo menu (a `main` dá 0,0305 / 0,0288 / 0,0279 pelo menu). Os testes (`Albums.loading`) acompanham.
+- **A prova no navegador** em `reports/evidence/F83/sync-5/` (`proof.md`, `proof.mjs`, `run-all.sh`, `summarize.py`, `summary.json`, 6 imagens pequenas): sites construídos da `main` (a6bc310), do ramo e do pai (a1ac74f); Chromium e WebKit a 1280×800, 1440×900, 1920×1080, 1366×768, 1280×720 e iPhone 393 e 375; **A** todos os fatos, focos e as imagens iguais à `main` fora do ruído que o controle (`main` contra `main`) também mostra (barra do alto no WebKit 4.886 px, o letreiro animado do celular 22.533 px); **B** a linha laranja: o pai a mostra em 250 a 1.400 ms nas quatro leituras provadas e o ramo nunca; a barra do roteador para arquivo de tela lento (atrasado 2 s) segue acesa no pai e no ramo; **C** o círculo logo sob os filtros em todas as janelas (centro 465 a 1280; topo 124 no celular), sem posição velha e sem texto de vazio; as telas assentadas iguais à `main`; varredura de regressão contra o pai: só o ruído dos controles e a `/start` do computador (a tela enxuta).
+- **Peso** (`npm run budget:publication`, fila da máquina): principal 194.641 B, depois da primeira tela 235.911 B, soma 430.552 B, react-vendor 68.691 B; `scripts/bundle-budget.json`: teto do principal 194.791 B (folga 150 B) e `background` 57.265 B (folga 150 B); medidos em `publication.measured`.
+- **Totais** (suíte inteira SÓ, pela fila, lida até o fim): 390 arquivos, 5.186 testes verdes e 1 pulado, sem a seção «Unhandled Errors»; `test/architecture` dentro dela; `tsc` sem erro; `eslint` 0 erros e 67 avisos (os mesmos 67 do pai, nenhum novo); `test/fixtures/exportMusicKitRecording.json` idêntico ao do pai. Linha da TASK-37 em `tasks.md` e a seção 25 de `wave-lessons.md`.
+
 ## [2026-11-22 18:28] step — F83 sync 5, B e C: sem a linha laranja da leitura das séries; a tela Albums diz que está carregando
 
 **Branch:** claude/f83-sync-5-lean-create-and-albums-loading
