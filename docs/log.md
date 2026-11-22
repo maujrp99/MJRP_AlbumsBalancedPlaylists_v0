@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 20:29] step — proposta de arquitetura do conteúdo publicado do CMS (F82, F92, F93)
+
+**Branch:** wip/cms-architecture-proposal
+
+- Escrita a proposta guiada por risco (`mjrp-designing-architecture`, procedimento da nova capacidade), construída sobre as decisões do MJRP (Painel primeiro; salvar publica; admin só a conta dele; chaves a começar pelo Discogs; receitas por blocos): `reports/proposals/2026-11-22-mjrpalbumblender-v0-cms-published-content-architecture.md`, com um ponteiro em `docs/specs/arch.md` («Propostas em avaliação»).
+- Recomenda: `published/*` no Firestore, só o que difere do código, lido sem esperar e guardado no navegador, validado chave por chave pelo leitor; admin por `cmsAdmins/{uid}` criado por ele no console; o valor anterior na mesma gravação como rede mínima; registro único das features; intérprete de blocos puro no núcleo. 12 riscos (R11, a popularidade gravável por convidados, aberto), 11 funções de aptidão, 4 decisões dele.
+- Próximo: a crítica separada (`mjrp-critiquing-architecture`); depois a aprovação dele; só então o ADR.
+
 ## [2026-11-22 20:26] decision — CMS (F82): Painel na primeira versão, as regras das duas receitas novas, e começar já a parte que não depende do kit
 
 **Branch:** main
