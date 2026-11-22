@@ -143,7 +143,7 @@ export class HomeController {
     drawStage() {
         if (!this.scan) return;
         const typing = Boolean(this.fieldFocused && this.view.$('#artistScanInput')?.value.trim());
-        this.view.drawStage({ scan: this.scan, mode: this.state.mode, report: this.state.report, flame: this.flame(), guest: this.state.guest, typing });
+        this.view.drawStage({ scan: this.scan, mode: this.state.mode, report: this.state.report, flame: this.flame(), guest: this.state.guest, chosen: this.albums().length, typing });
     }
 
     // --- the field: an artist or a pasted list ---

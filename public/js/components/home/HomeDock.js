@@ -3,7 +3,7 @@ import { getIcon } from '../Icons.js'
 import { openSheet } from '../ui/Sheet.js'
 import { coverImage } from '../ui/coverImage.js'
 import { createEqualizer, setEqualizerState } from './HomeEqualizer.js'
-import { seriesCountLine, dockEmptyNote, NameState } from '../../models/homeSeries.js'
+import { seriesCountLine, dockEmptyNote, barShows, NameState } from '../../models/homeSeries.js'
 
 /**
  * The series being built, always in view (F79, HOME-09): the «dock».
@@ -275,7 +275,9 @@ export class HomeDock {
             'aria-label': 'Your series'
         }, [this.phonePile(m), this.phoneMeta(m), this.phoneGo(m)])
         const sheetOpen = this.sheet?.isOpen()
-        return SafeDOM.div({ className: 'home-dockwrap is-phone' }, [sheetOpen ? null : undoStrip(m.undo), bar])
+        // No bar until the first cover is chosen (UAT-281); an «Undo» of the last removal still has its strip
+        const shown = barShows({ chosen: n, created: m.create === 'created' })
+        return SafeDOM.div({ className: `home-dockwrap is-phone${shown ? '' : ' is-barless'}` }, [sheetOpen ? null : undoStrip(m.undo), shown ? bar : null])
     }
 
     phonePile(m) {
