@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 16:27] review — F79: o juiz independente passou a «Create» enxuta no computador, o fim da linha laranja e o aviso de carregamento da tela Albums
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- Quatro conferências, relatórios guardados como vieram em `reports/audits/2026-11-22-mjrpalbumblender-v0-create-lean-computer-visual-parity-recheck{,-2,-3,-4}.md`: 1ª na `10649f8` passa com uma decisão (sem a linha, a tela Albums parecia vazia enquanto lia as séries); 2ª na `0364a13` passa (o aviso próprio, 2 P2 de salto); 3ª na `f4cf2a6` reprova (1 P1: o giro ficou abaixo da borda em telas de notebook); 4ª na `1db178f` passa (0 P0, 0 P1, 1 P2).
+- P2 que fica, a registrar: no motor do Safari, aberta direto, o aviso fica cerca de 130 px mais baixo que o previsto (a altura da grade é lida uma vez, cedo demais); continua inteiro na tela.
+- O aviso próprio da tela Albums foi decidido pelo agente — revisável; a pergunta segue com o MJRP.
+
 ## [2026-11-22 16:14] step — a espera de `/albums` aparece logo sob os filtros, sem trazer os saltos de volta (F79, 3º parecer do juiz)
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line
