@@ -35,8 +35,6 @@ const OUTSIDE_NAMES = new Set([
  */
 const WRITTEN_IN_THE_CODE = {
     // the registry of algorithms and of ranking strategies (public/js/algorithms, public/js/ranking)
-    // the recipes of the blending menu, a list in the same file
-    'components/blend/BlendRecipeCard.js': ['recipe.name']
 }
 
 const listJs = (dir = '') => listSourceFiles(ROOT, dir) // .js, .ts and .tsx (F83)

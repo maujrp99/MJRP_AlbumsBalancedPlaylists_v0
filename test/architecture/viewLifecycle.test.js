@@ -10,25 +10,14 @@ import { listSourceFiles } from './support/parseSource.js'
 
 const VIEWS = join(process.cwd(), 'public/js/views')
 const viewFiles = readdirSync(VIEWS).filter(name => name.endsWith('View.js'))
-const read = (name) => readFileSync(join(VIEWS, name), 'utf8')
 
 describe('a screen that is left hears no store', () => {
-    it('there are screens to check', () => {
-        expect(viewFiles.length).toBeGreaterThan(1)
-    })
-
-    it('no screen waits for onUnmount, which the router never calls', () => {
-        expect(viewFiles.filter(name => /\bonUnmount\s*\(/.test(read(name)))).toEqual([])
-    })
-
-    it('no screen keeps a subscription outside this.subscriptions', () => {
-        const own = viewFiles.filter(name => /this\.unsubscribe\w*\s*=/.test(read(name)))
-        expect(own).toEqual([])
-    })
-
-    it('every screen that subscribes puts it in this.subscriptions', () => {
-        const subscribing = viewFiles.filter(name => /\.subscribe\(/.test(read(name)))
-        expect(subscribing.filter(name => !/this\.subscriptions/.test(read(name)))).toEqual([])
+    // F83 wave 7b: the last hand-made screen (the Blend) went to React, so the four checks of the contract of `this.subscriptions` (no onUnmount, no
+    // own handle, every subscription in the list of BaseView, and that there are views to check) have no view left to read. What replaced them: the
+    // guard below (no hand-made screen is born again in views/: only BaseView.js is left, and it is the title of the tab until wave 8), and the React half
+    // (which reads every file of screens/), with its own test per screen (test/screens/*/ calls the mold: everyScreenHasTheLeaveTest).
+    it('no hand-made screen is left in views/: only BaseView.js (a new one would have to keep the contract of this.subscriptions, and is born in React)', () => {
+        expect(viewFiles).toEqual(['BaseView.js'])
     })
 
     // F83: the screens in React are left by unmounting the root (the router calls destroy(), the bridge unmounts):

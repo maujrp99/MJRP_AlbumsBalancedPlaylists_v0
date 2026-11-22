@@ -1,0 +1,59 @@
+{
+ "tag": "blend-webkit-1280",
+ "total": 203,
+ "failed": 3,
+ "steps": 32,
+ "failures": [
+  {
+   "what": "generate · blending, 0.3 s after the press: the box of every element",
+   "ok": false,
+   "detail": "2 of 303 differ: 295:DIV:560.37,1918.77,22.46,22.46 -> 560.47,1918.88,22.24,22.24 | 301:DIV:617.54,2097.54,44.91,44.92 -> 617.76,2097.76,44.48,44.48"
+  },
+  {
+   "what": "leave · back: the Blend again, nothing chosen: the picture of the panel",
+   "ok": false,
+   "detail": "1196 px differ, at most 2/255, in 186,550,233,597 of 1280x3104"
+  },
+  {
+   "what": "leave · back: the Blend again, nothing chosen: the picture of the viewport",
+   "ok": false,
+   "detail": "1196 px differ, at most 2/255, in 186,646,233,693 of 1280x3200"
+  }
+ ],
+ "pictures": [
+  {
+   "flow": "leave",
+   "name": "back: the Blend again, nothing chosen",
+   "kind": "panel",
+   "dims": true,
+   "count": 1196,
+   "top": 0,
+   "max": 2,
+   "box": [
+    186,
+    550,
+    233,
+    597
+   ],
+   "width": 1280,
+   "height": 3104
+  },
+  {
+   "flow": "leave",
+   "name": "back: the Blend again, nothing chosen",
+   "kind": "view",
+   "dims": true,
+   "count": 1196,
+   "top": 0,
+   "max": 2,
+   "box": [
+    186,
+    646,
+    233,
+    693
+   ],
+   "width": 1280,
+   "height": 3200
+  }
+ ]
+}

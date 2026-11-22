@@ -1,0 +1,81 @@
+{
+ "tag": "blend-webkit-se-old-vs-old",
+ "total": 222,
+ "failed": 4,
+ "steps": 35,
+ "failures": [
+  {
+   "what": "generate · blending, 0.3 s after the press: the box of every element",
+   "ok": false,
+   "detail": "1 of 284 differ: 279:DIV:137.76,2890.76,44.48,44.48 -> 137.22,2890.22,45.56,45.56"
+  },
+  {
+   "what": "address · opened from a series: chosen, scrolled to it: the picture of the panel",
+   "ok": false,
+   "detail": "103080 px differ, at most 1/255, in 66,1034,573,1493 of 640x6138"
+  },
+  {
+   "what": "address · opened from a series: chosen, scrolled to it: the picture of the viewport",
+   "ok": false,
+   "detail": "103080 px differ, at most 1/255, in 66,1146,573,1605 of 640x6400"
+  },
+  {
+   "what": "address · opened from a series that does not exist: the picture of the viewport",
+   "ok": false,
+   "detail": "9780 px differ, at most 85/255, in 32,33,297,76 of 640x6400"
+  }
+ ],
+ "pictures": [
+  {
+   "flow": "address",
+   "name": "opened from a series: chosen, scrolled to it",
+   "kind": "panel",
+   "dims": true,
+   "count": 103080,
+   "top": 0,
+   "max": 1,
+   "box": [
+    66,
+    1034,
+    573,
+    1493
+   ],
+   "width": 640,
+   "height": 6138
+  },
+  {
+   "flow": "address",
+   "name": "opened from a series: chosen, scrolled to it",
+   "kind": "view",
+   "dims": true,
+   "count": 103080,
+   "top": 0,
+   "max": 1,
+   "box": [
+    66,
+    1146,
+    573,
+    1605
+   ],
+   "width": 640,
+   "height": 6400
+  },
+  {
+   "flow": "address",
+   "name": "opened from a series that does not exist",
+   "kind": "view",
+   "dims": true,
+   "count": 9780,
+   "top": 0,
+   "max": 85,
+   "box": [
+    32,
+    33,
+    297,
+    76
+   ],
+   "width": 640,
+   "height": 6400
+  }
+ ]
+}

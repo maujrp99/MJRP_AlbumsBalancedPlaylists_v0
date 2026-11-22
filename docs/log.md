@@ -2,6 +2,90 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 11:46] review — F83: onda 7 (a tela Blend em React) na linha de integração; a 7b passou no juiz na segunda conferência
+
+**Branch:** integrate/staging-2026-11-21
+
+- 7a (cartões de receita e painel «gerar de novo»): passa (0 P0, 0 P1, 1 P2), julgada na `fecfc69`.
+- 7b (a tela Blend): primeira conferência na `160c702` reprovada com 2 P1 — no Chromium, apertar um botão de ingrediente com a página rolada até o fim fazia a página pular; e o peso com as chaves da publicação passava do teto. Consertado em `claude/f83-wave-7b-fix-scroll-and-weight` (`ac12998`): a seção do passo 4 fica montada; teto medido com chaves de mentira e margem de 150 B (`npm run budget:publication`). Segunda conferência: passa (0 P0, 0 P1, 1 P2).
+- Diferenças de propósito da onda: as capas que chegam depois não tiram o foco nem levam a lista ao topo; escolher uma série mantém a lista onde estava.
+- Os três relatórios guardados como vieram em `reports/audits/` (`…react-regenerate-panel…`, `…react-blend-screen…-recheck.md` e `…-recheck-2.md`). O P2 da segunda (um comentário errado em `app.js`) corrigido aqui.
+- Faltam dois valores `VITE_*` na medida do peso (`VITE_SPLASH_COVERS`, `VITE_USAGE_MEASUREMENT`, 24 B juntos, dentro da margem): a acertar no fechamento.
+
+## [2026-11-22 11:18] step — F83 onda 7b, correções do juiz: a prova no navegador, a regra do orçamento e a segunda diferença de propósito
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- `reports/evidence/F83/wave-7b/fix-scroll-and-weight/` (`proof.md`, o roteiro do juiz adaptado, as rodadas e as listas de pedidos; 124 kB): o rolamento da nova é igual ao da à mão em Chromium 1280, 900, 899 e perfil do iPhone 14, e o controle (a construção sem o conserto) é reprovado nos quatro; as figuras da faixa do passo a passo vão a 0, e o que sobra (cantos dos painéis de vidro, ≤ 6/255, ≤ 35 px) é igual ao do controle e some com um repaint forçado.
+- `wave-lessons.md` §20 (o salto da página, as marcas refeitas, a loja exposta pelo controlador, a regra do orçamento) e a segunda diferença de propósito (a lista de séries guarda o rolamento) em `wave-7b/proof.md`.
+
+## [2026-11-22 11:06] step — F83 onda 7b, correções do juiz: a exposição da loja no controlador partilhado, a complexidade da marca e as medidas do orçamento
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- `window.playlistsStore` passou do `stores/playlists.js` (que não pode crescer: o teto de linhas das lojas) para `controllers/BlendingController.js`, o arquivo que as duas telas preguiçosas carregam; o `markState` tira a complexidade da marca do passo a passo (limite 10). As medidas do orçamento em forma de publicação foram refeitas: principal 195.050 B, depois da primeira tela 236.336 B (margens de 160 B e 201 B sobre os tetos).
+
+## [2026-11-22 10:00] step — F83 onda 7b, correções do juiz: o salto da página, as marcas refeitas, o primeiro arquivo a menos e o orçamento da construção publicada
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- P1-1: a seção do passo 4 fica montada e a `key` do desenho vai para o conteúdo dela (como a tela à mão, que refazia o conteúdo e não a seção); antes, o Chromium recalculava a página sem a seção e o rolamento saltava 112 a 254 px. P2-1: as marcas do passo a passo e os cartões de série são refeitos quando o estado deles muda (`key` com o estado), sem o esmaecer de 150 a 200 ms. P2-3: `window.playlistsStore` passou a ser exposta pelo próprio `stores/playlists.js` (o `app.js` não importa mais a loja), e a primeira tela volta a não baixar `playlists-*.js`.
+- P1-2: `scripts/publication-budget.mjs` (e `npm run budget:publication`) faz a construção em forma de publicação com valores de mentira do mesmo tamanho (id do Spotify 32, chave do PostHog 47, host 24; sementes fixas, só no ambiente) e confere o orçamento mais a margem declarada de 150 B; `bundle-budget.json` ganhou `publication` (margem, tamanhos, medidas) e a regra; tetos pela regra: principal 195.210 B, `background` 58.150 B. Testes: `Blend.remount`, `firstScreenFiles`, `publicationBudget`.
+
+## [2026-11-22 08:55] step — F83 onda 7b: a prova no navegador da tela Blend, contra a tela à mão da junta
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `reports/evidence/F83/wave-7b/` (`proof.md`, `browser-proof.mjs`, `raw/`, `bundle-budget-*.txt`, os registros de captura e 6 figuras de diferença; 180 kB): sites construídos, a nova contra a à mão (`ace99a9`), Chromium a 1280, 900, 899 e iPhone 14, WebKit a 1280, iPhone 14 e iPhone SE, cada um com a versão à mão contra à mão (ruído). Elementos, atributos, classes, texto, campos, caixas, foco, rolagem, avisos, ordem do Tab, falha da geração, sair no meio da carga e Voltar/Avançar: iguais em todos os passos. As figuras do Chromium diferem em 12 a 31 pixels com até 6 de 255 (não explicado; o ruído à mão contra à mão é zero); no WebKit o mesmo ruído que a versão à mão contra à mão.
+- A prova achou um defeito da nova e a onda o consertou: o botão da barra do celular ficava com o `:hover` preso depois do toque (a barra à mão era trocada a cada passo); a barra (a nota e o botão) e a seção do botão têm `key` que muda a cada desenho (commit anterior). Também achou um artefato do roteiro (a figura de página inteira do Chromium dispara a mudança de «é celular?», e a tela à mão se redesenha inteira; a nova só se o resultado muda): janela alta, sem figura de página inteira.
+- A diferença de propósito (capas em segundo plano) está provada nos dois sentidos no teste do dourado; no navegador o fluxo não pegou a chegada das capas (não conclusivo).
+- Portão final: suíte inteira 376 arquivos, 4.979 testes, verde (inclui `noSecretsInRepo`); `test/architecture` verde; `tsc` limpo; `eslint` 0 erros e 67 avisos, todos em arquivos que a onda não tocou; construção dentro de `bundle-budget.json`.
+
+## [2026-11-22 08:09] step — F83 onda 7b: a barra do celular e a seção do botão feitas de novo a cada passo, como a tela à mão
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- A prova no navegador achou que o botão da barra do celular, depois de tocado, ficava com o `:hover` preso (subia 1 px e ganhava o degradê): a tela à mão trocava a barra inteira (`replaceWith`) a cada `updateGenerateButton`, a nova mantinha o elemento. A nota e o botão da barra (`PhoneBar`) e a seção do botão (`GenerateSection`) agora levam uma `key` que muda a cada desenho que a antiga refazia (a lição 15 do mapa); a `key` na barra inteira quebrava 3 cenários do dourado, então a chave vai na nota e no botão. O dourado passa de novo (66 testes da tela), o orçamento fecha (principal 194.889 B; depois da primeira tela 236.603 B; `background` precisa de 58.055 B, o teto é 58.100 B).
+- O teste «igual ao de antes» passa a dizer, quando falha, onde a página começou a diferir (o trecho de agora e o de antes).
+
+## [2026-11-22 07:10] step — F83 onda 7b: o orçamento de peso, os totais e as notas da onda
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `scripts/bundle-budget.json`: o principal encolheu de 215.106 B (a ponta da junta) para 194.889 B (menos 20.217 B); o teto desce para 195.033 B (o medido mais 144 B). O que vem depois da primeira tela subiu de 216.670 B para 236.571 B (a tela e o arquivo comum do controlador e dos algoritmos), e `background` vai de 56.400 B para 58.100 B (a necessidade medida: 58.023 B). Medidas em `reports/evidence/F83/wave-7b/bundle-budget-*.txt`; na ponta da junta, com os tetos da 7a, o orçamento já não fechava (a 6c somou 1.183 B ao principal): o texto do arquivo diz os dois números.
+- `test/scripts/migrationStatus.test.js`: os pisos da lista à mão baixam (17 arquivos; 73 textos à mão).
+- `wave-lessons.md` ganha a seção 19. TASK-27 NÃO foi marcada: o gancho do grafo recusa o commit com a nota `waiting:: human — ... ADR-0023` ainda na linha (a nota ficou, de propósito); o feito está pronto e o MJRP ou o orquestrador marca.
+
+## [2026-11-22 07:06] step — F83 onda 7b: a rota /blend em React, as peças à mão saem, os sensores e os testes levados
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `app.js`: `/blend` por `loadScreen(() => import('./screens/blend/index.ts'))` e na lista do segundo plano. Saem com `git rm`: `views/BlendingMenuView.js`, `components/blend/` (4 arquivos), `components/common/AlbumCascade.js`, `test/components/blend/BlendIngredientsPanel.test.js` e `test/ui/recipe/RecipePieces.sameAsHandMade.test.tsx`.
+- Sensores: `handMadeScreensBaseline` perde 6 entradas (ficam 17 arquivos, 2.347 linhas), `complexityAllowlist` 4 linhas, `outsideTextEscaped` 1, `tailwindBuiltWithSite` 1 entrada e o último caso (agora lê as cores `/10` de `models/recipeLooks.js`), o `safelist` e a constante `RECIPE_GRADIENT_AT_10` saem de `tailwind.config.js`; `screensLoadThroughTheService` passa a ler `screens/blend`. `viewLifecycle`: saem os 4 casos da metade à mão (não há mais `*View.js` além de `BaseView.js`) e entra a guarda «só sobra `BaseView.js` em `views/`»; a metade de React (lê `screens/`) fica, e cada tela tem o teste-molde de sair.
+- Testes levados: os 7 da Blend no celular e os 4 de `?seriesId=` (mesmas asserções, o andaime trocado; `Blend.phone.test.tsx`, `Blend.fromSeries.test.tsx`); os 2 da cascata à mão em `coverImage.test.js` leem `ui/AlbumCascade`; os 5 da cascata em `AlbumCascade.test.tsx` comparam com um retrato capturado antes de apagar a cascata (`albumCascadeBeforeF83.json`); `recipeIngredients`/`recipeLooks` ficam com os valores que a peça à mão tinha; o caso da Blend em `outsideTextIsText` desenha o `SeriesStep`. Novos: o teste-molde de sair, os textos em inglês e em português, o «igual ao de antes».
+- Complexidade: `Blend` foi dividida (`generate.ts`, seções); o molde `as unknown` só em `react-bridge/`.
+
+## [2026-11-22 06:59] step — F83 onda 7b: a tela Blend em React (screens/blend/), igual ao dourado
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `screens/blend/` (Blend, SeriesStep, phone/PhoneStep, blendVisit, index, types), `models/seriesCovers.js` (a leitura das consultas de capa, pura) e os textos `blend.*` em inglês (`i18n/en/blend.js`) e as propostas em português (`i18n/pt/blend.js`, esperam o MJRP). A tela usa as peças de 7a (`recipesOf(getAllAlgorithms())`), não assina loja nenhuma, e a leitura das séries começa no `prepare` sem ser esperada (o «carregando» aparece).
+- Os 40 cenários do dourado passam contra a tela nova (teste `test/screens/blend/Blend.sameAsBefore.test.tsx`), com UMA diferença de propósito, provada nos dois sentidos: as capas que chegam em segundo plano não soltam o foco (a antiga o soltava). A palavra trocada de propósito derruba o cenário. O dourado foi capturado de novo depois de o hospedeiro passar a tirar o `#app` ao sair (a primeira captura de «sair e voltar» lia um `#app` velho).
+- Ainda não ligada à rota: a antiga segue em `app.js` até o passo seguinte.
+
+## [2026-11-22 06:53] step — F83 onda 7b: o dourado da tela Blend à mão, capturado antes de tocá-la
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- 40 cenários (`test/support/blendScenarios.js`, o hospedeiro `blendHost.tsx`, o mundo de fora `blendStandIns.js`) jogados na `BlendingMenuView` à mão e gravados em `test/fixtures/blendBeforeF83.json`: séries (carregando, nenhuma, leitura que falha, visitante, uma, muitas), capas (esperando e chegadas, as formas de consulta, fora do conjunto), escolher por clique, Enter e Espaço, `?seriesId=`, cada receita e cada ingrediente, o deslizador, gerar (ocupado, progresso, avisos, nenhum álbum, erro, sair durante a carga), sair e voltar, e o celular (linha, folha, busca, barra, virar o aparelho). O fixture guarda o `#app`, a folha, o foco e tudo o que a tela pediu ao mundo (a configuração inteira de `generateFromSeries`, os avisos, a ida às playlists).
+- A junta com a linha de integração: suíte inteira verde (375 arquivos, 4.990 testes) antes de qualquer trabalho novo.
+- Achado do dourado: na antiga, quando as capas chegam o foco num cartão se perde (`body`); é a diferença de propósito da onda (a nova o mantém).
+
+## [2026-11-22 06:50] step — F83 onda 7b: a linha de integração (6a-fix, 6b, 6c) junta ao ramo da 7a
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `integrate/staging-2026-11-21` (59e215d) entrou no ramo da 7a (fecfc69). Conflitos: `wave-lessons.md` (duas seções «17»: a da 6c ficou 17 e a da 7a virou 18) e `scripts/bundle-budget.json` (ficou o texto da 7a; o teto do principal e o de `background` serão medidos de novo no build depois da junta).
 
 ## [2026-11-22 06:46] review — F83: ondas 6b (as janelas do álbum, de editar e de adicionar) e 6c (os textos do inventário) na linha de integração
 
@@ -11,6 +95,21 @@
 - P2 a anotar na prova: sair da tela fecha também as janelas de editar e de adicionar (de propósito, como a do álbum); no Chromium a 899 px com mouse o código antigo às vezes abria a janela com o título já na barra (defeito antigo não levado).
 - 6c (`80d3e1d`): sem juiz próprio — só muda de onde vêm as frases em inglês, iguais palavra por palavra (as fotos de referência de 6a e 6b passam sem recaptura); decidido pelo agente — revisável; a varredura do juiz da onda 7 cobre o inventário de novo. O português proposto segue pendente do MJRP.
 
+## [2026-11-22 06:43] step — F83, onda 7a: a prova no navegador, as notas e os totais
+
+**Branch:** claude/f83-wave-7a-recipe-pieces
+
+- A prova no navegador sobre os sites CONSTRUÍDOS (`reports/evidence/F83/wave-7a/proof.md`, `browser-proof.mjs`, `summary.txt`, `raw/`): o painel em React contra o à mão do pai (`b29b552`) no Chromium 1280, 900 e 899 e no WebKit 1280, iPhone 14 e iPhone SE, em cada estado (fechado, aberto, cada receita, cada ingrediente, o deslizador com o teclado, a ordem do Tab, a falha sem série, «gerando» e a falha da geração, e no celular o «⋯ → Reconfigure and regenerate»), mais a tela Blend à mão (regressão) no Chromium e no WebKit: **1.047 comparações iguais de 1.047** (a página, a caixa de cada elemento, o foco, a rolagem, o aviso, a figura do painel e a da janela), com o controle de antiga contra antiga. A prova achou e a ponta consertou: o texto das peças precisava da quebra de linha do molde à mão (o WebKit kerna «Y» e «A» antes de um espaço e não antes de uma quebra: dois selos 0,19 e 0,38 px mais largos; `ui/recipe/broken.ts`), e o atributo `value` do deslizador não pode seguir o estado. Duas figuras discordaram uma vez e não se repetiram (a barra de baixo do iPhone SE com fundo desfocado, 34/255; um arco de 30 × 10 px no Blend, Chromium 899): ditas como não explicadas além de ruído.
+- `wave-lessons.md` (seção 17), `tasks.md` (a linha 7a), `design-system.md` (a tabela de portes) e o fim do mapa da 7 («Depois da 7a»: o que a 7b encontra e o que tira) em dia.
+- Totais na ponta, pela fila: suíte inteira 372 arquivos, 4.950 testes, todos verdes (antes: 365 e 4.814; inclui `test/architecture` com 42 arquivos e `test/security/noSecretsInRepo.test.js`: arquivos de arquitetura e de segurança juntos, 47 arquivos e 379 testes); `typecheck` sem erro; `lint` 0 erros e os mesmos 68 avisos; build dentro do teto (`bundle-budget-wave-7a.txt`: script principal 213.923 B contra 213.079 B no pai, teto 214.066 B; `background` de 53.600 B para 56.400 B, a necessidade medida é 56.331 B; o que vem depois da primeira tela 215.845 B contra 213.896 B).
+
+## [2026-11-22 06:43] step — F83, onda 7a: o texto das peças como o molde à mão o quebrava (achado do WebKit)
+
+**Branch:** claude/f83-wave-7a-recipe-pieces
+
+- O que a prova no navegador achou, consertado: (1) o texto das peças (`ui/recipe/broken.ts`) leva a quebra de linha e a indentação do molde à mão, como UM nó: o WebKit mede o texto que recebe (o selo «SPOTIFY» e o «BEA» saíam 0,19 e 0,38 px mais largos com espaços no lugar da quebra); `RecipePieces.sameAsHandMade.test.tsx` ganhou os casos que comparam cada nó de texto até o último espaço (`rawTexts`); (2) o atributo `value` do deslizador fica o do desenho (`useState`), como o à mão o escrevia uma vez.
+- O teto de peso medido de novo com o texto das peças: script principal 213.923 B (teto 214.066 B), o que vem depois da primeira tela 215.845 B, `background` de 56.300 B para 56.400 B (a necessidade medida é 56.331 B).
+
 ## [2026-11-22 06:13] review — F83: onda 6a (a tela do inventário em React) passou no juiz independente, na segunda conferência
 
 **Branch:** integrate/staging-2026-11-21
@@ -18,6 +117,25 @@
 - Primeira conferência (na `315ae5f`): reprovada, 1 P0 — no Chromium em tela de celular, com os valores do Discogs ligados, «Show 50 more» fazia a página pular para o fim do bloco novo (ancoragem de rolagem no aviso do Discogs, que ficava montado). Consertado em `claude/f83-wave-6a-fix-show-more` (`553fbd6`): o aviso é remontado junto com a lista.
 - Segunda conferência (na `553fbd6`): passa (0 P0, 0 P1, 1 P2); 504 comparações iguais ao pai. Os dois relatórios guardados como vieram em `reports/audits/2026-11-22-mjrpalbumblender-v0-react-inventory-screen-visual-parity-recheck.md` e `…-recheck-2.md`.
 - Cuidado deixado pelo juiz: um elemento novo que fique parado abaixo da lista traz o pulo de volta; `overflow-anchor: none` nessa área seria a guarda mais firme.
+
+## [2026-11-22 05:52] step — F83, onda 7a: o painel de gerar de novo em React, o invólucro e o arquivo à mão saem
+
+**Branch:** claude/f83-wave-7a-recipe-pieces
+
+- O painel «Reconfigure your Music Playlist Blend» em React: `screens/playlists/RegeneratePanel.tsx` (o cabeçalho que dobra, os cartões e os ingredientes de `ui/recipe/`, «Regenerate Playlists») e `screens/playlists/regenerateMemory.ts` (o `pending`, que vive entre os desenhos da tela e entre visitas até `forgetWhatWasChanged`: ao abrir a tela e depois de gerar). O painel é feito de novo (uma `key`) quando muda aquilo de que é feito (as playlists, a série, o nome do lote), e não por uma letra digitada no campo do nome; se está aberto fica de fora dessa feitura. No celular o «⋯ → Reconfigure and regenerate» conta um pedido (`asked`): o painel abre no mesmo desenho e a página rola até ele (antes: `showRegeneratePanel` clicava no botão e rolava).
+- Saem, com `git rm`: `components/playlists/RegeneratePanel.js` (183 linhas), `react-bridge/legacy/RegeneratePanel.tsx` (o invólucro, 66) e `test/components/playlists/RegeneratePanel.recipe.test.js` (os 6 casos foram levados para `test/screens/playlists/RegeneratePanel.recipe.test.tsx`, a mesma asserção, o andaime trocado). `handMadeScreensBaseline` perde `components/playlists/RegeneratePanel.js` (182); `BRIDGE_USES` perde `screens/playlists/index.ts` e o motivo de `Playlists.tsx` encolhe (fica só pela janela do Spotify e as exportações).
+- Prova: `test/screens/playlists/RegeneratePanel.sameAsBefore.test.tsx` (os 22 cenários do dourado do painel à mão passam: a página do painel, a configuração entregue ao controlador, o foco e a rolagem; mais 4 casos que mostram que o teste acusa uma palavra trocada, um selo, uma descrição, uma dica, uma classe e um texto partido em dois nós) e `Playlists.sameAsBefore` (os 14 cenários da tela inteira contra `playlistsFromMain.json`, sem mudar, verdes: exigiu que as peças escrevessem o branco das pontas do HTML à mão, como UM nó de texto; o ícone `BarChart2` de «Ranking Source» não existe na tabela e não desenha nada, como antes). `RegeneratePanel.texts.test.tsx` (10 casos: nenhum texto solto nos arquivos, toda receita do registro tem nome, descrição e selo nos dois idiomas e o inglês é o dos metadados do algoritmo, o painel em português, a volta ao inglês com as escolhas mantidas).
+- O peso, medido no build sem as chaves, pela fila (`reports/evidence/F83/wave-7a/bundle-budget-wave-7a.txt`): script principal 213.922 B contra 213.079 B (+843 B, os textos em inglês), o que vem depois da primeira tela 215.799 B contra 213.896 B (+1.903 B, o arquivo da tela de playlists foi de 10.340 B a 12.216 B). O teto `main` subiu de 213.223 B para 214.066 B (o medido mais 144 B das chaves) e `background` de 53.600 B para 56.300 B (a necessidade medida é 56.284 B). O alarme de tela (30.000 B) não mexeu.
+
+## [2026-11-22 05:51] step — F83, onda 7a: as peças de receita em ui/recipe, os modelos, os textos
+
+**Branch:** claude/f83-wave-7a-recipe-pieces
+
+- As peças de receita em React, sem loja e sem serviço, em `ui/recipe/`: `RecipeCards.tsx` (os cartões; a fileira é feita de novo, com uma `key`, a cada toque, como a à mão) e `Ingredients.tsx` (as cinco seções; um botão refaz as seções e o deslizador não, o deslizador é ouvido pelo evento `input` no próprio elemento, e o número ao lado leva o branco das pontas que o HTML à mão tinha). As regras foram para dois modelos puros: `models/recipeLooks.js` (ícone e cores por receita, a classe do selo e a do cartão, TODAS escritas inteiras: o Tailwind as acha no código e nada é montado na hora, então `tailwindBuiltWithSite` não ganhou entrada nova) e `models/recipeIngredients.js` (o que cada receita mostra, a duração só onde muda o resultado, a configuração normalizada `configOf`, a leitura de volta `choicesOf`). As peças mortas do à mão (três receitas fora do registro em `ALGORITHM_RECIPES`, `DURATIONS`, a expressão `top-(\d+)`, `getSelection`) não foram levadas.
+- Textos: `i18n/en|pt/blend.js` (nome, descrição e selo das quatro receitas, pela chave `blend.recipes.<id em camelCase>.<parte>`: uma chave não tem hífen), `ui.recipe.*` (as seções, as opções, as dicas) e `playlists.regenerate.*` (o painel). Os textos em português são propostas do agente e esperam o MJRP.
+- Testes: `test/models/recipeLooks.test.js` e `recipeIngredients.test.js` (21 casos, cada um compara com a peça à mão); `test/ui/recipe/Ingredients.test.tsx` (os 9 casos de `BlendIngredientsPanel.test.js` levados, a mesma asserção; a original fica com a peça à mão até a 7b); `test/ui/recipe/RecipePieces.sameAsHandMade.test.tsx` (as duas escritas das peças iguais, elemento por elemento: os 5 cartões e 40 combinações de receita, estrutura, agrupamento, fonte, Top # e duração, e o deslizador depois de movido; acusa uma palavra trocada e um texto partido em dois nós; sai na 7b com as peças à mão); `test/algorithms/recipes.hiddenIngredients.test.js` (15 casos de caracterização, ver abaixo).
+- A opção escondida que vai para a geração, medida: nenhuma das quatro receitas LÊ uma opção que o painel esconde dela (as playlists saem iguais faixa a faixa), mas as playlists LEMBRAM todas (`_meta` guarda as quatro): o painel que abre sobre elas mostra uma opção que a receita nunca usou. Mantido como está; candidato a issue (regra «uma opção só aparece onde muda o resultado», F62).
+- O dourado do painel foi recapturado do painel à mão (do worktree do pai) sem o corte do branco nas pontas: o painel em React escreve o mesmo branco das pontas (um nó de texto só), porque o dourado `playlistsFromMain.json` da tela inteira o compara.
 
 ## [2026-11-22 05:45] step — F83, onda 6a: os dois achados da junta independente (o salto de «Mostrar mais 50» com os valores ligados; «No value yet» em um nó só)
 
@@ -36,6 +154,14 @@
 - Prova no navegador (`reports/evidence/F83/wave-6c/proof.md`): o site construído desta ponta contra o pai `6622654`, em inglês, Chromium a 1280 e a 393: tela do inventário (com o Discogs de mentira) e as janelas, 0 diferença de texto, caixas, foco e rolagem; a única figura diferente (a busca digitada) também difere de pai contra pai (o cursor). Português no servidor de desenvolvimento: 14 estados, nenhum inglês sobrando, 13 limpos (o 14º tem só um brilho decorativo da janela do álbum que passa da página, igual em inglês); a passada achou «Lista de desejos» estourando o selo a 393 px e virou «Desejos».
 - `wave-lessons.md` § 17 e a linha 6c do `tasks.md` (TASK-25 marcada feita: 6a, 6b e 6c completas).
 
+## [2026-11-22 05:36] step — F83, onda 7a: o dourado do painel de gerar de novo, capturado do painel à mão
+
+**Branch:** claude/f83-wave-7a-recipe-pieces
+
+- O dourado do painel de gerar de novo, capturado do painel à mão (`components/playlists/RegeneratePanel.js` com `BlendRecipeCard` e `BlendIngredientsPanel`, atrás do invólucro) ANTES de tocá-lo: 22 cenários em `test/support/regenerateScenarios.js`, tocados por `test/support/regenerateHost.tsx` (a rota `playlistsView()`, o controlador de gerar trocado por um que anota a configuração recebida), guardados em `test/fixtures/regenerateBeforeF83.json`. Cobrem: fechado e aberto; aberto na receita de cada uma das quatro e nas playlists sem receita (antes da F62) e com receita que não existe; cada receita escolhida; cada ingrediente (Top 1/5/10, as cinco de agrupamento, as três de estrutura, as três de fonte); o deslizador; a duração que só aparece onde muda o resultado; o que se mudou guardado num redesenho do painel; a opção escondida que ainda vai para a geração; «Regenerate Playlists» (a configuração entregue, chave a chave); depois de gerar o painel segue as playlists novas; geração que falha mantém as escolhas; a tela aberta de novo esquece; o celular (o «⋯ → Reconfigure» abre e rola até o painel). Guardam o HTML do painel, a configuração entregue, o foco e a rolagem.
+- O `normalize` do dourado do painel não compara o branco nas pontas de um elemento (o navegador não o desenha) e marca dois nós de texto lado a lado (`¦`): o HTML antigo tinha um nó só, e o Chromium compõe cada nó à parte.
+- O registro da captura: `reports/evidence/F83/wave-7a/capture-before.test.tsx` (rodou como `test/screens/playlists/RegeneratePanel.capture.test.tsx`, com `TZ=America/Sao_Paulo`, pela fila). Nenhuma linha de produto tocada.
+
 ## [2026-11-22 05:32] step — F83, onda 6c: as frases dos modelos do inventário no dicionário
 
 **Branch:** claude/f83-wave-6c-inventory-texts
@@ -45,6 +171,14 @@
 - Testes: `test/models/inventoryModelsGiveCodes.test.js` (25; 21 falham contra o pai 6622654), `test/i18n/inventoryTexts.test.js` (inglês palavra por palavra e português), um caso novo em `Inventory.texts.test.tsx`; os testes dos modelos passam a perguntar a camada de texto pelas frases (as mesmas asserções em inglês). Os dourados da 6a e da 6b passam SEM recaptura.
 - Português (proposta, espera o dono): «Desejos» no lugar de «Lista de desejos» como rótulo de status, porque o selo do cabeçalho estourava a 393 px.
 - Peso: o script principal foi de 213.079 B para 214.274 B (+1.195 B, o inglês das 191 chaves); o que vem depois da primeira tela, de 213.896 B para 214.626 B. Tetos: `main` 214.418 B, `background` 55.500 B, com o motivo escrito em `scripts/bundle-budget.json`.
+
+## [2026-11-22 05:25] step — F83, os mapas das ondas 7 (Blend) e 8 (o fecho)
+
+**Branch:** claude/f83-wave-7-blend-map
+
+- `map-wave-7-blend.md` (TASK-26): a Blend à mão em 7 arquivos e 1.815 linhas, com o painel de gerar de novo da tela de playlists. Achado: o painel não é do controlador da Blend (o mapa da onda 2 e `BRIDGE_USES` dizem que é); ele partilha com a Blend os cartões de receita e os ingredientes. Divisão proposta: 7a as peças de receita em `ui/recipe/` e o painel (≈ 250 linhas saem, 15 casos levados), 7b a tela (≈ 1.630 linhas, ≈ 21 casos); os dourados a capturar antes; 15 defeitos que ficam; oito perguntas com recomendação.
+- `map-wave-8-closure.md` (TASK-28, TASK-29, TASK-17): depois da onda 7 sobram 17 arquivos à mão (2.192 linhas), 2 invólucros e 3 usos de ponte; a decisão arquivo por arquivo; o controlador da sessão sem reescrever (o invólucro sai pela importação direta); o Spotify reescrito e o Apple Music mudado de lugar com a prova de chamadas ao MusicKit e a exportação de verdade pelo dono; manter o roteador da casa (nota no plano); a TASK-17 dentro do relatório do fecho; a lista do «feito» e o que a publicação em produção verifica; a ordem 8a a 8d.
+- TASK-26 marcada. Nenhuma linha de produto.
 
 ## [2026-11-22 05:10] step — F83, onda 6b: a prova no navegador e os totais
 

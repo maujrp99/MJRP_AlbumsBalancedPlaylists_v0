@@ -44,8 +44,6 @@ const COMPONENT_CLASSES = [
  * it makes are in the safelist. This list can only shrink; a new entry needs the reason.
  */
 const PUT_TOGETHER_AT_RUN_TIME = {
-    // Tailwind classes: gradient colors of a recipe with /10 - all in the safelist (checked below)
-    'components/blend/BlendRecipeCard.js': ['${recipe.color.from}/10', '${recipe.color.to}/10'],
     // ids and keys of elements, not classes
     'ui/FilterToolbar.tsx': ['id={`filter-${group.id}`}'],
     'screens/albums/Pager.tsx': ['key={`gap-${index}`}'],
@@ -148,10 +146,10 @@ describe('Tailwind is built with the site', () => {
         expect(stale).toEqual([])
     })
 
-    it('the recipe colors with /10, put together at run time, are in the built CSS', () => {
-        const source = read(path.join(JS_ROOT, 'components/blend/BlendRecipeCard.js'))
-        const colors = [...new Set([...source.matchAll(/\b(?:from|to): '([a-z0-9-]+)'/g)].map(match => match[1]))]
-        expect(colors.length).toBeGreaterThan(8)
-        expect(colors.map(color => `${color}/10`).filter(name => !built.has(name))).toEqual([])
+    it('the recipe tints with /10, written whole in models/recipeLooks.js, are in the built CSS', () => {
+        const source = read(path.join(JS_ROOT, 'models/recipeLooks.js'))
+        const tints = [...new Set([...source.matchAll(/'((?:from|to)-[a-z0-9-]+\/10)'/g)].map(match => match[1]))]
+        expect(tints.length).toBeGreaterThan(8)
+        expect(tints.filter(name => !built.has(name))).toEqual([])
     })
 })

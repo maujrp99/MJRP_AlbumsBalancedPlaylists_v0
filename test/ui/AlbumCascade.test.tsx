@@ -1,15 +1,15 @@
 /**
- * F83 wave 1 (REQ-05): the cascade of covers and the cover image of ui/ are the ones of the hand-made pieces (components/common/
- * AlbumCascade.js, components/ui/coverImage.js). The hand-made cascade stays for the Blend screen until wave 7, so there are two
- * writings of the same few lines for a while; this test keeps them the same: for none, one, two, three and four covers, with and
- * without an address, the React one draws the same elements, classes, attributes and styles.
+ * F83 wave 1 (REQ-05), kept by wave 7b: the cascade of covers and the cover image of ui/ draw what the hand-made pieces drew (components/common/AlbumCascade.js,
+ * components/ui/coverImage.js). The hand-made cascade left with the Blend screen (wave 7b); the picture it drew for none, one, two, three and four covers,
+ * with and without an address, was kept in test/fixtures/albumCascadeBeforeF83.json (reports/evidence/F83/wave-7b/capture-cascade-before.test.tsx) and the
+ * React one draws the same elements, classes, attributes and styles.
  */
 import { describe, it, expect, afterEach } from 'vitest'
 import { act, type ReactElement } from 'react'
 import { createRoot } from 'react-dom/client'
 import { AlbumCascade } from '../../public/js/ui/AlbumCascade'
 import { CoverImage } from '../../public/js/ui/CoverImage'
-import { AlbumCascade as HandMade } from '../../public/js/components/common/AlbumCascade.js'
+import before from '../fixtures/albumCascadeBeforeF83.json'
 import { coverImage, COVER_STAND_IN } from '../../public/js/components/ui/coverImage.js'
 import { normalize } from '../support/savedPlaylistsScenarios.js'
 
@@ -28,11 +28,9 @@ describe('AlbumCascade', () => {
     afterEach(() => { document.body.innerHTML = '' })
 
     for (const thumbnails of SETS) {
-        it(`${thumbnails.length} cover(s): the same as the hand-made cascade`, async () => {
+        it(`${thumbnails.length} cover(s): the same as the hand-made cascade was`, async () => {
             const host = await draw(<AlbumCascade thumbnails={thumbnails} />)
-            const wrapper = document.createElement('div')
-            wrapper.appendChild(HandMade.renderNode(thumbnails))
-            expect(normalize(host)).toBe(normalize(wrapper))
+            expect(normalize(host)).toBe((before as Record<string, string>)[JSON.stringify(thumbnails)])
         })
     }
 

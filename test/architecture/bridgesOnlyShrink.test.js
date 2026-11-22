@@ -21,10 +21,10 @@ export const BRIDGE_USES = {
     // The inventory (wave 6) has no entry: its two windows are React (wave 6b).
     'screens/albums/index.ts': 'the controller of the session is hand-written JavaScript (rewritten in wave 8)',
     // wave 2 (the playlists screen) took the two entries of the row of a track out (it is ported once, to ui/TrackRow.tsx) and put in these:
-    'screens/playlists/Playlists.tsx': 'the panel to generate again (also the Blend controller\'s, so it goes with the Blend screen, wave 7) and the Spotify window and the exports (hand-made, ported on their own)',
+    // wave 7a: the panel to generate again is React (screens/playlists/RegeneratePanel.tsx), its wrapper went, and `screens/playlists/index.ts` left the list.
+    'screens/playlists/Playlists.tsx': 'the Spotify window and the exports (hand-made, ported on their own)',
     // F83 sync 2: the export window (F90) is React and shared by the playlists and the saved playlists screens; what it hands the exports to stays hand-made:
-    'ui/PlaylistExportWindow.tsx': 'the Spotify window, the file and Apple Music exports and the read of the Apple Music folders (hand-made, ported on their own; no hand-made screen uses the window any more)',
-    'screens/playlists/index.ts': 'the panel to generate again opens on the recipe of the playlists of the screen that opens (wave 7)'
+    'ui/PlaylistExportWindow.tsx': 'the Spotify window, the file and Apple Music exports and the read of the Apple Music folders (hand-made, ported on their own; no hand-made screen uses the window any more)'
 }
 
 const LEGACY = 'react-bridge/legacy/'

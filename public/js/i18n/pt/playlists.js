@@ -1,4 +1,4 @@
-/** Os textos da tela de playlists (/playlists e /playlists/edit), em português do Brasil. Um nome que a pessoa escreveu (lote, playlist, faixa) é um {espaço reservado}, nunca está aqui. O painel de gerar de novo e a janela do Spotify seguem à mão e com o inglês deles até a tela Blend migrar (onda 7). */
+/** Os textos da tela de playlists (/playlists e /playlists/edit), em português do Brasil. Um nome que a pessoa escreveu (lote, playlist, faixa) é um {espaço reservado}, nunca está aqui. O painel de gerar de novo é React desde a onda 7a (`playlists.regenerate.*`; as receitas e os ingredientes dele são `blend.recipes.*` e `ui.recipe.*`); a janela do Spotify segue à mão e com o inglês dela. */
 export const playlists = {
     'playlists.title.edit': 'Editar lote de playlists',
     'playlists.title.manage': 'Gerenciar playlists',
@@ -62,5 +62,9 @@ export const playlists = {
     'playlists.confirm.title': 'Apagar a playlist?',
     'playlists.confirm.message': '"{name}" e as faixas dela saem deste conjunto. Você pode desfazer até salvar.',
     'playlists.confirm.ok': 'Apagar playlist',
-    'playlists.leave': 'Você tem alterações nestas playlists que não foram salvas. Sair sem salvar?'
+    'playlists.leave': 'Você tem alterações nestas playlists que não foram salvas. Sair sem salvar?',
+    'playlists.regenerate.title': 'Reconfigure a sua mistura de playlists',
+    'playlists.regenerate.count.one': '({count} playlist)',
+    'playlists.regenerate.count.other': '({count} playlists)',
+    'playlists.regenerate.button': 'Gerar as playlists de novo'
 }

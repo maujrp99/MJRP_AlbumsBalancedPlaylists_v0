@@ -1,0 +1,19 @@
+{
+ "tag": "blend-chromium-900-old-vs-old",
+ "total": 202,
+ "failed": 2,
+ "steps": 32,
+ "failures": [
+  {
+   "what": "generate · blending, 0.3 s after the press: the box of every element",
+   "ok": false,
+   "detail": "1 of 303 differ: 301:DIV:426.27,2382.15,47.45,47.45 -> 426.27,2382.15,47.46,47.46"
+  },
+  {
+   "what": "covers · ON PURPOSE the focus on a card after the covers came: old loses the focus (body), new keeps it on the card",
+   "ok": false,
+   "detail": "focus div#. / div#."
+  }
+ ],
+ "pictures": []
+}
