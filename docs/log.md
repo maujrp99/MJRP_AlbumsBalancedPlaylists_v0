@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:34] step — F75: a segunda reconferência do juiz (a tela ainda reprova: 1 P1 e 3 P2) e suas capturas entram no ramo
+**Branch:** feat/f75-inventory-values-kept-in-the-database
+O juiz independente reconferiu a 2885efb: os dados passam; o cartão do computador em reais a 1280 e 1440 corta a origem (1 P1) e há 3 P2 (textos do menor preço, avisos de valor não gravado, folha «⋯» do celular chamando o menor preço de média). Relatório e capturas copiados como vieram, escritos pelo juiz, em `reports/audits/` e `reports/evidence/F75/values-kept/recheck-2/`.
+
 ## [2026-11-21 23:26] step — F75: ponta final depois do juiz: main juntada, suíte, eslint, scripts de navegador e capturas novas
 **Branch:** feat/f75-inventory-values-kept-in-the-database
 `main` juntada no ramo sem conflito (o `log.md` e o `uat.md` não pediram o `merge_train`). Na ponta final, pela fila: suíte completa 4039 testes em 315 arquivos, todos verdes (a `test/architecture` dentro dela); eslint 0 erros (40 avisos); os dois scripts de navegador `inventoryValuesKeptInDatabase.mjs` (12 OK) e `inventoryValuesStayInBrowser.mjs` sem FAIL. Capturas novas em `reports/evidence/F75/values-kept/`: cartão de leitura comum e de menor preço à venda (a data fica, o «lowest for sale» é o que se corta quando a coluna é estreita, e fica no `title` e na faixa dos totais), a linha do celular («Discogs · 12 Oct» numa linha só) e a janela para os dois tipos. O cartão em galeria do celular não existe neste ramo.
