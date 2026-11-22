@@ -2,6 +2,16 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 13:17] step — F83 onda 8b: a prova no navegador dos avisos, da barra e das perguntas, e o caso do campo da pergunta
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- `reports/evidence/F83/wave-8b/` (`proof.md`, `browser-proof.mjs`, `run-all.sh`, `summarize.py`, `compact.py`, `merge.py`, `raw/` em `.json.gz`, 2 figuras; 304 KB): sites construídos e servidores de desenvolvimento do pai (f4eae56) e deste ramo, Chromium 1280/900/899 e WebKit 1280/iPhone 14/SE, com a linha do tempo de cada aviso, barra, janela, trava da página e foco (a hora medida da causa) e o controle pai contra pai. 4.177 conferências passadas e 43 não, 19 delas do próprio controle; das 24 do ramo, 0 sem explicação; 2.096 de 2.101 tempos dentro de um quadro (o pior 24 ms; o controle, 18,4 ms).
+- Achado e consertado em e57fa50: o texto inicial do campo da pergunta (o WebKit o seleciona ao focar quando é o atributo `value`). `test/ui/dialogs.test.tsx` (3 casos) o prende.
+- `wave-lessons.md` (seção 21: o WebKit trata a segunda página como página de fundo, a identidade de um aviso é do elemento, a ordem do foco e da remoção, a evidência pequena) e a linha 8b do `tasks.md` com os números da prova.
+- No fim da onda, pela fila da máquina: a suíte inteira 381 arquivos e 5.076 testes verdes (o pai: 378 e 5.031); `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai); o build dentro de `scripts/bundle-budget.json` (principal 195.608 B, teto 196.010 B; depois da primeira tela 235.445 B; `background` 58.100 B); `exportMusicKitRecording.json` byte a byte igual.
+
+
 ## [2026-11-22 11:33] step — F83 onda 8b: a janela de pergunta com campo começa com o texto em atributo, como a à mão (achado da prova no WebKit)
 
 **Branch:** claude/f83-wave-8b-window-engines

@@ -32,7 +32,7 @@ const ENGINE = ENGINE_NAME === 'webkit' ? webkit : chromium
 const PROFILE = process.env.PROFILE || '1280'
 const CONTROL = process.env.CONTROL === '1'
 const ONLY = (process.env.ONLY || '').split(',').filter(Boolean)
-const TAG = `${ENGINE_NAME}-${PROFILE}${/^https?:/.test(process.argv[2] || '') ? '-dev' : ''}${CONTROL ? '-control' : ''}`
+const TAG = `${ENGINE_NAME}-${PROFILE}${/^https?:/.test(process.argv[2] || '') ? '-dev' : ''}${CONTROL ? '-control' : ''}${process.env.RUN ? '-r' + process.env.RUN : ''}`
 const BLOCKED = /identitytoolkit|securetoken|firestore\.googleapis|firebaseinstallations/
 const RAW = path.join(HERE, 'raw')
 const SHOTS = path.join(HERE, 'figures')
@@ -113,7 +113,10 @@ const RECORDER = () => {
     window.__inputs = []
     window.__closes = []
     const log = (kind, detail) => window.__tl.push({ t: performance.now(), kind, detail })
-    const textOf = (el) => (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 60)
+    const ids = new WeakMap()
+    let serial = 0
+    const idOf = (el) => { if (!ids.has(el)) ids.set(el, ++serial); return ids.get(el) }
+    const textOf = (el) => (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 60) + ' #' + idOf(el)
     const isWindow = (el) => el.nodeType === 1 && el.matches?.('.app-modal, .rank-window, #spotify-export-modal, .modal-overlay, .sheet')
     const isToast = (el) => el.nodeType === 1 && el.matches?.('#toast-container > *')
     const toastState = (el) => (el.classList.contains('translate-x-0') ? 'in' : 'out')
@@ -201,7 +204,7 @@ async function open(base, surface, options = {}) {
     page.on('pageerror', (e) => { if (!/^Worker Error/.test(e.message)) errors.push(e.message.slice(0, 200)) })
     await page.goto(base + (options.url || '/start'), { waitUntil: 'load' })
     await page.waitForFunction(() => window.router && document.getElementById('app'), null, { timeout: 40000 })
-    if (!options.keepLoginNotice) await page.waitForTimeout(options.settle ?? 5600) // the notice of the blocked login comes seconds after the load and leaves after 4 s, on either side
+    if (!options.keepLoginNotice) await page.waitForTimeout(options.settle ?? (Number(process.env.SETTLE) || 5600)) // the notice of the blocked login comes seconds after the load and leaves after 4 s, on either side
     if (options.keepLoginNotice) return { context, page, errors }
     await surfaces[surface]?.(page)
     await page.waitForTimeout(800)
@@ -366,7 +369,8 @@ async function step(label, sides, run, { wait = 1000, time = true, shoot = true,
     for (const side of sides) { const e = side.errors.splice(0); note(`${TAG} · ${label} · errors of the page (${side.name})`, e.length === 0, e.join(' | ')) }
 }
 
-const tap = (page, selector, index = 0) => (P.touch ? page.locator(selector).nth(index).tap() : page.locator(selector).nth(index).click())
+const press = (locator) => (P.touch ? locator.tap() : locator.click())
+const tap = (page, selector, index = 0) => press(page.locator(selector).nth(index))
 const SCENARIOS = {}
 
 SCENARIOS.load = async (mk) => {
@@ -404,7 +408,7 @@ SCENARIOS.callback = async (mk) => {
     return sides
 }
 const albumRemove = async (page) => {
-    if (PHONE) { await tap(page, '.album-more'); await page.waitForTimeout(800); await page.locator('.sheet [data-action="remove-album"], .sheet button:has-text("Remove")').first().tap() } else await tap(page, '[data-action="remove-album"]')
+    if (PHONE) { await tap(page, '.album-more'); await page.waitForTimeout(800); await press(page.locator('.sheet [data-action="remove-album"], .sheet button:has-text("Remove")').first()) } else await tap(page, '[data-action="remove-album"]')
 }
 SCENARIOS.album = async (mk) => {
     const sides = await mk('albums')
@@ -454,7 +458,7 @@ SCENARIOS.album = async (mk) => {
 SCENARIOS.inventory = async (mk) => {
     const sides = await mk('inventory')
     const openQuestion = async (page) => {
-        if (PHONE) { await tap(page, '.inv-row__more, .inv-tile__more, [data-action="item-more"]'); await page.waitForTimeout(800); await page.locator('.sheet [data-action="delete-modal"], .sheet button:has-text("Remove"), .sheet button:has-text("Delete")').first().tap() } else await tap(page, '.delete-album-btn')
+        if (PHONE) { await tap(page, '.inv-row__more, .inv-tile__more, [data-action="item-more"]'); await page.waitForTimeout(800); await press(page.locator('.sheet [data-action="delete-modal"], .sheet button:has-text("Remove"), .sheet button:has-text("Delete")').first()) } else await tap(page, '.delete-album-btn')
     }
     await step('Inventory: «Delete» opens the question; Escape is Cancel', sides, async (page, side, snap) => {
         await openQuestion(page)
@@ -484,7 +488,7 @@ SCENARIOS.saved = async (mk) => {
     const del = '[data-action="delete-batch"], [data-action="delete-all"], .batch-delete, button[title*="elete"]'
     // the computer: the button of the batch; the phone: the batch's «⋯» and the «Delete batch» of its sheet
     const openQuestion = async (page) => {
-        if (PHONE) { await page.locator('[aria-label^="Actions for batch"]').first().tap(); await page.waitForTimeout(900); await page.locator('.sheet button:has-text("Delete batch")').first().tap() } else await tap(page, del)
+        if (PHONE) { await press(page.locator('[aria-label^="Actions for batch"]').first()); await page.waitForTimeout(900); await press(page.locator('.sheet button:has-text("Delete batch")').first()) } else await tap(page, del)
     }
     await step('Saved playlists: «Delete» opens the question; Escape is Cancel; again, «Delete»: the notice of the refused write', sides, async (page, side, snap) => {
         if (!PHONE) await page.locator('.batch-header').first().click().catch(() => { })
@@ -495,7 +499,7 @@ SCENARIOS.saved = async (mk) => {
         await page.keyboard.press('Escape')
         await page.waitForTimeout(400)
         await snap('after Escape')
-        if (PHONE && (await page.locator('.sheet').count())) await page.locator('.sheet button:has-text("Delete batch")').first().tap(); else await openQuestion(page)
+        if (PHONE && (await page.locator('.sheet').count())) await press(page.locator('.sheet button:has-text("Delete batch")').first()); else await openQuestion(page)
         await page.waitForTimeout(700)
         await tap(page, '#confirm-modal [data-action="confirm"]')
         await page.waitForTimeout(1500)
@@ -508,18 +512,25 @@ SCENARIOS.shell = async (mk) => {
     const sides = await mk('start', { spotify: true })
     const menu = PHONE ? '#phoneMenuBtn' : '#userMenuBtn'
     const disconnect = '[data-connection="spotify"] [data-action="disconnect"]:visible'
-    await step('Shell: the account panel, «Disconnect» Spotify opens the question; Escape is Cancel; again, confirm: the notice «Disconnected»', sides, async (page, side, snap) => {
+    await step('Shell: the account panel, «Disconnect» Spotify opens the question; Escape; again, confirm: the notice «Disconnected»', sides, async (page, side, snap) => {
         await tap(page, menu)
         await page.waitForTimeout(600)
         await tap(page, disconnect)
         await page.waitForTimeout(600)
         await snap('the question', { shot: true })
         await page.keyboard.press('Escape')
-        await page.waitForTimeout(300)
-        await snap('after Escape')
+        await page.waitForTimeout(400)
+        // on the phone the question is under the menu's sheet (z-index 1000 against 50), and Escape is heard by the sheet first: the sheet goes and the question stays (both sides alike)
+        await snap('after Escape', { shot: true })
+        if (await page.locator('#confirm-modal').count()) {
+            await page.keyboard.press('Escape')
+            await page.waitForTimeout(400)
+            await snap('after a second Escape: the question answers «Cancel»')
+        }
         if (await page.locator(disconnect).count() === 0) { await tap(page, menu); await page.waitForTimeout(500) }
         await tap(page, disconnect)
         await page.waitForTimeout(600)
+        if (PHONE) { await page.keyboard.press('Escape'); await page.waitForTimeout(400) }
         await tap(page, '#confirm-modal [data-action="confirm"]')
         await page.waitForTimeout(1000)
         await snap('after Disconnect', { shot: true })
@@ -556,14 +567,14 @@ SCENARIOS.playlistDelete = async (mk) => {
     if (!PHONE) { note(`${TAG} · playlistDelete · on the computer a playlist is deleted on one click: no question to prove`, true); return [] }
     const sides = await mk('edit')
     await step('Playlists on the phone: «Delete this playlist» asks; Escape is Cancel; again, «Delete playlist»', sides, async (page, side, snap) => {
-        const open = async () => { await tap(page, '.phone-more'); await page.waitForTimeout(900); await page.locator('.sheet .phone-sheet-action--danger').last().tap() }
+        const open = async () => { await tap(page, '.phone-more'); await page.waitForTimeout(900); await press(page.locator('.sheet .phone-sheet-action--danger').last()) }
         await open()
         await page.waitForTimeout(700)
         await snap('the question over the sheet', { shot: true })
         await page.keyboard.press('Escape')
         await page.waitForTimeout(400)
         await snap('after Escape', { shot: true })
-        if (!(await page.locator('.sheet').count())) await open(); else await page.locator('.sheet .phone-sheet-action--danger').last().tap()
+        if (!(await page.locator('.sheet').count())) await open(); else await press(page.locator('.sheet .phone-sheet-action--danger').last())
         await page.waitForTimeout(700)
         await tap(page, '#confirm-modal [data-action="confirm"]')
         await page.waitForTimeout(1500)
@@ -573,21 +584,17 @@ SCENARIOS.playlistDelete = async (mk) => {
     return sides
 }
 SCENARIOS.progress = async (mk, servers) => {
-    // a slow change of screen: the bar shows after its delay and hides when the screen is in. The files of the screens come 1.6 s late (and the screens of the menu come
-    // down in the background one after the other, so a second change of screen right after the first finds its file still on the way). Each side is opened inside its own step,
-    // so that both go through the same minutes of the same load.
+    // a slow change of screen: the bar shows after its delay and hides when the screen is in. The files of the screens come 1.6 s late (and the screens of the menu come down
+    // in the background one after the other: a second change right after the first finds its file on the way or already in, a race that parent against parent loses in
+    // WebKit too, so there is one). Each side is opened inside its own step, so that both go through the same minutes of the same load.
     for (const server of servers) server.delays.push([/\/assets\/index-[^/]*\.js$/, 1600])
     const sides = await mk('start', { settle: 0, deferred: true })
-    await step('the bar: a slow change of screen to the albums, and right after it to the playlists', sides, async (page, side, snap) => {
+    await step('the bar: a slow change of screen to the albums', sides, async (page, side, snap) => {
         await page.evaluate(() => window.router.navigate('/albums'))
         await side.at(900)
-        await snap('during the first', { only: '#globalProgress' })
-        await side.at(2300)
-        await snap('between', { only: '#globalProgress' })
-        await page.evaluate(() => window.router.navigate('/playlists'))
-        await page.waitForTimeout(900)
-        await snap('during the second', { only: '#globalProgress' })
-        await page.waitForTimeout(2600)
+        await snap('during', { only: '#globalProgress' })
+        await side.at(3200)
+        await snap('after', { only: '#globalProgress' })
     }, { wait: 300, shoot: false, ignoreKinds: /^toast/ })
     return sides
 }
@@ -738,13 +745,13 @@ for (const name of names) {
         opened.push(...sides)
         return sides
     }
-    try { await SCENARIOS[name](mk, [oldSite.server, newSite.server]) } catch (error) { note(`${TAG} · ${name} · the scenario ran to its end`, false, error.message.split('\n')[0]) }
+    try { await SCENARIOS[name](mk, [oldSite.server, newSite.server]) } catch (error) { note(`${TAG} · ${name} · the scenario ran to its end`, false, error.message.split('\n').slice(0, 5).join(' | ')) }
     for (const side of opened) await side.context?.close()
     oldSite.server.delays = []; newSite.server.delays = []
 }
 await browser.close()
 oldSite.server.close(); newSite.server.close()
 const failed = results.filter(r => !r.ok)
-fs.writeFileSync(path.join(RAW, `browser-proof-${TAG}.json`), JSON.stringify({ tag: TAG, passed: results.length - failed.length, failed: failed.length, results }, null, 1))
+fs.writeFileSync(path.join(RAW, `browser-proof-${TAG}${ONLY.length ? '-only-' + ONLY.join('+') : ''}.json`), JSON.stringify({ tag: TAG, passed: results.length - failed.length, failed: failed.length, results }, null, 1))
 console.log(`\n${TAG}: ${results.length - failed.length} passed, ${failed.length} failed`)
 process.exit(0)

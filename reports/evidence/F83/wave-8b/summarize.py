@@ -1,9 +1,9 @@
-import json, glob, os, re
+import gzip, json, glob, os, re
 here = os.path.dirname(os.path.abspath(__file__))
 rows, fails = [], []
-for f in sorted(glob.glob(os.path.join(here, 'raw', 'browser-proof-*.json'))):
-    d = json.load(open(f))
-    name = os.path.basename(f)[len('browser-proof-'):-5]
+for f in sorted(glob.glob(os.path.join(here, 'raw', 'browser-proof-*.json.gz'))):
+    d = json.load(gzip.open(f, 'rt'))
+    name = os.path.basename(f)[len('browser-proof-'):-len('.json.gz')]
     worst, events, within = 0.0, 0, 0
     for r in d['results']:
         m = re.search(r'(\d+) of (\d+) events within a frame, the worst ([\d.]+) ms', r['detail']) if 'the timeline: when' in r['what'] else None
