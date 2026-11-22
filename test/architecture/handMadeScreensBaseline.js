@@ -1,4 +1,11 @@
 /**
+ * (2026-11-22, the second sync with `main`: what `main` did in hand-made code that stays hand-made on this line comes in as it is. F89 (the inventory as a gallery on
+ * the phone) brings views/renderers/InventoryPhoneTile.js (92 lines, the one new file; the inventory is wave 6), and F90 (exporting from the saved playlists) grew
+ * components/SpotifyExportModal.js from 434 to 461 lines and views/playlists/PlaylistsExport.js from 116 to 142 (a job given: the playlists, the series, the batch,
+ * the positions, the Apple Music folder). The export window and the folder step of F90 are NOT here: they were written in React (ui/PlaylistExportWindow.tsx,
+ * ui/AppleFolderStep.tsx), and views/playlists/{PlaylistExportWindow,AppleFolderStep,appleFolderChoice}.js did not come in; the model of the choice moved to
+ * models/appleFolderChoice.js.)
+ *
  * (2026-11-21, wave 5b: the windows of the albums screen went to React, and these left the list in the commit that deleted them:
  * components/series/{SeriesEditModal,SeriesModals}.js, components/album-picker/{AlbumPickerController,AlbumPickerPanel,pickerParts}.js,
  * components/ranking/{UserRankModal,rankWindowPhone}.js and views/renderers/DiscographyRenderer.js (1.073 lines in 8 files). The window to edit
@@ -54,7 +61,7 @@ export const HAND_MADE = {
     'components/InventoryAddModal.js': 180,
     'components/InventoryEditModal.js': 157,
     'components/InventoryValueSection.js': 316,
-    'components/SpotifyExportModal.js': 434,
+    'components/SpotifyExportModal.js': 461,
     'components/Toast.js': 154,
     'components/ViewAlbumModal.js': 382,
     'components/albumWindowSources.js': 40,
@@ -83,9 +90,10 @@ export const HAND_MADE = {
     'views/BlendingMenuView.js': 477,
     'views/InventoryPhoneSheets.js': 226,
     'views/InventoryView.js': 693,
-    'views/playlists/PlaylistsExport.js': 116,
+    'views/playlists/PlaylistsExport.js': 142,
     'views/renderers/InventoryCardValue.js': 122,
     'views/renderers/InventoryGridRenderer.js': 212,
     'views/renderers/InventoryPhoneRow.js': 154,
+    'views/renderers/InventoryPhoneTile.js': 92,
     'views/renderers/InventoryValueHeader.js': 175
 }

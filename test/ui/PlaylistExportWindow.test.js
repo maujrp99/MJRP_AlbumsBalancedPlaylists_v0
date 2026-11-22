@@ -18,7 +18,8 @@ vi.mock('../../public/js/components/Toast.js', () => {
 })
 vi.mock('../../public/js/utils/isPhone.js', () => ({ isPhone: () => kit.phone, onPhoneChange: () => () => { } }))
 
-import { openPlaylistExport, DESTINATIONS } from '../../public/js/views/playlists/PlaylistExportWindow.js'
+import { DESTINATIONS } from '../../public/js/ui/PlaylistExportWindow'
+import { openPlaylistExport, settle, unmountAll } from '../support/exportWindowHost'
 import { AppleMusicExportService } from '../../public/js/services/AppleMusicExportService.js'
 import { SpotifyExportService } from '../../public/js/services/SpotifyExportService.js'
 import { SpotifyAuthService } from '../../public/js/services/SpotifyAuthService.js'
@@ -64,8 +65,6 @@ const window_ = (job) => openPlaylistExport({ seriesName: SERIES, batchName: BAT
 /** Apple Music from the window: open the folder step, wait for the folders, press its «Export». */
 const stepOf = async () => { row('apple').click(); await vi.waitFor(() => expect(document.querySelector('[data-apple-folder-step]')).not.toBeNull()); await settle() }
 const exportApple = async () => { await stepOf(); document.querySelector('[data-apple-export]').click() }
-const pickFolder = (mode, value) => { const radio = [...document.querySelectorAll('input[name="apple-folder"]')].find(r => r.dataset.mode === mode && (value === undefined || r.value === value)); radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })) }
-const settle = () => new Promise(resolve => setTimeout(resolve, 0))
 const textOf = (blob) => new Promise((resolve) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.readAsText(blob) })
 
 describe('the export window (F90)', () => {
@@ -73,6 +72,7 @@ describe('the export window (F90)', () => {
 
     beforeEach(() => {
         vi.clearAllMocks()
+        unmountAll()
         document.body.innerHTML = ''
         kit.phone = false
         exportLedger.clear()
@@ -83,7 +83,7 @@ describe('the export window (F90)', () => {
         vi.spyOn(console, 'error').mockImplementation(() => { })
         vi.spyOn(console, 'warn').mockImplementation(() => { })
     })
-    afterEach(() => vi.restoreAllMocks())
+    afterEach(() => { unmountAll(); vi.restoreAllMocks() })
 
     describe('the destinations', () => {
         it('are Apple Music, Spotify, the JSON file, in that order, on the computer and on the phone', () => {
@@ -91,7 +91,8 @@ describe('the export window (F90)', () => {
 
             window_({ playlists: BATCH })
             expect(rows().map(button => button.textContent.trim())).toEqual(['Export to Apple Music', 'Export to Spotify', 'Download JSON'])
-            document.body.innerHTML = ''
+            unmountAll()
+        document.body.innerHTML = ''
 
             kit.phone = true
             window_({ playlists: BATCH })
@@ -164,7 +165,8 @@ describe('the export window (F90)', () => {
             await exportApple()
             await vi.waitFor(() => expect(toast.success).toHaveBeenCalledTimes(1))
 
-            document.body.innerHTML = ''
+            unmountAll()
+        document.body.innerHTML = ''
             window_({ playlists: BATCH, positions: [1, 2, 3] })
             await exportApple()
             await vi.waitFor(() => expect(toast.info).toHaveBeenCalled())
@@ -330,6 +332,7 @@ describe('the export window (F90)', () => {
             row('json').click()
 
             expect(document.getElementById('playlist-export-window')).toBeNull()
+            await vi.waitFor(() => expect(blobs.length).toBe(1)) // the file is made once the hand-made export module is loaded
             expect(downloads[0]).toMatch(/^playlists_Mix_\d{4}-\d{2}-\d{2}\.json$/)
             const written = JSON.parse(await textOf(blobs[0]))
             expect(written.map(item => item.name)).toEqual(['Deep Cuts'])
@@ -339,6 +342,7 @@ describe('the export window (F90)', () => {
         it('the whole batch: every playlist is in the file', async () => {
             window_({ playlists: BATCH, positions: [1, 2, 3] })
             row('json').click()
+            await vi.waitFor(() => expect(blobs.length).toBe(1))
 
             const written = JSON.parse(await textOf(blobs[0]))
             expect(written.map(item => item.name)).toEqual(['Greatest Hits', 'Deep Cuts', 'B-Sides'])

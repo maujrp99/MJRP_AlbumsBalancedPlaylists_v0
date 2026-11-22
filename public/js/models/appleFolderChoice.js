@@ -50,11 +50,11 @@ export function initialPick({ seriesName, folders, remembered }) {
 
 /**
  * What the export is told for a pick.
- * @returns {{ ok: true, folderName?: string, noFolder?: boolean } | { ok: false, message: string }}
+ * @returns {{ ok: true, folderName?: string, noFolder?: boolean } | { ok: false, reason: 'name', message: string }}
  */
 export function folderForExport({ mode, name }) {
     if (mode === 'none') return { ok: true, noFolder: true }
     const trimmed = String(name || '').trim()
-    if (!trimmed) return { ok: false, message: 'Type a name for the new folder.' }
+    if (!trimmed) return { ok: false, reason: 'name', message: 'Type a name for the new folder.' }
     return { ok: true, folderName: trimmed }
 }

@@ -16,7 +16,8 @@ import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, typ
 import { Icon } from '../../ui/Icon'
 import { Breadcrumb, playlistsTrail } from '../../ui/Breadcrumb'
 import { LegacyRegeneratePanel, resetRegeneratePanel, showRegeneratePanel } from '../../react-bridge/legacy/RegeneratePanel'
-import { exportJson, exportToAppleMusic, openSpotifyExport } from '../../react-bridge/legacy/OutputWindows'
+import { exportJson, openSpotifyExport } from '../../react-bridge/legacy/OutputWindows'
+import { usePlaylistExport } from '../../ui/PlaylistExportWindow'
 import { useSortableTracks } from '../../react-bridge/sortableTracks'
 import { countListener } from '../../react-bridge/listeners'
 import { useLocale } from '../../react-bridge/useLocale'
@@ -72,15 +73,14 @@ interface ExportProps {
     isSaving: boolean
     canUndo: boolean
     canRedo: boolean
-    appleStatus: string | null
     onUndo: () => void
     onRedo: () => void
     onSave: () => void
-    onApple: () => void
+    onApple: (button: HTMLButtonElement) => void
 }
 
 /** The actions of the screen on the computer: undo, redo, save, and the three exports. */
-function ExportSection({ isSaving, canUndo, canRedo, appleStatus, onUndo, onRedo, onSave, onApple }: ExportProps) {
+function ExportSection({ isSaving, canUndo, canRedo, onUndo, onRedo, onSave, onApple }: ExportProps) {
     return (
         <div className="export-section glass-panel p-6">
             <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Icon name="Save" className="w-5 h-5" />{` ${t('playlists.actions.heading')} `}</h3>
@@ -95,10 +95,8 @@ function ExportSection({ isSaving, canUndo, canRedo, appleStatus, onUndo, onRedo
                 <button className="btn flex items-center gap-2 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all duration-300" style={{ background: 'linear-gradient(135deg, #1DB954 0%, #1ed760 100%)' }} id="exportSpotifyBtn" onClick={() => { void openSpotifyExport() }}>
                     {' '}<Icon name="Spotify" className="w-5 h-5" />{` ${t('playlists.actions.spotify')} `}
                 </button>
-                <button className="btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300" id="exportAppleMusicBtn" disabled={appleStatus !== null} onClick={onApple}>
-                    {appleStatus === null
-                        ? <>{' '}<Icon name="Apple" className="w-5 h-5" />{` ${t('playlists.actions.apple')} `}</>
-                        : <><Icon name="Apple" className="w-5 h-5" />{` ${appleStatus}`}</>}
+                <button className="btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300" id="exportAppleMusicBtn" onClick={(event) => onApple(event.currentTarget)}>
+                    {' '}<Icon name="Apple" className="w-5 h-5" />{` ${t('playlists.actions.apple')} `}
                 </button>
                 <button className="btn btn-secondary flex items-center gap-2" id="exportJsonBtn" onClick={() => { void exportJson() }}>{' '}<Icon name="Download" className="w-5 h-5" />{` ${t('playlists.actions.json')} `}</button>
             </div>
@@ -258,7 +256,7 @@ interface ControlsProps {
 
 /** The batch name, the panel to generate again (or the batch that was not found) and, on the computer, the actions. */
 function Controls({ state, playlists, editing, phone, nameValue, onType, activeSeriesId, todo }: ControlsProps) {
-    const [appleStatus, setAppleStatus] = useState<string | null>(null)
+    const exporting = usePlaylistExport() // F90: Apple Music asks for the folder first, in the window the saved playlists screen opens too
     return (
         <>
             {phone
@@ -269,9 +267,10 @@ function Controls({ state, playlists, editing, phone, nameValue, onType, activeS
             </div>
             {phone ? null : (
                 <div id="exportSection" className="mb-6 fade-in" style={{ animationDelay: '0.08s' }}>
-                    {playlists.length > 0 ? <ExportSection isSaving={state.isSaving} canUndo={state.canUndo} canRedo={state.canRedo} appleStatus={appleStatus} onUndo={todo.undo} onRedo={todo.redo} onSave={todo.save} onApple={() => { void exportToAppleMusic(setAppleStatus) }} /> : null}
+                    {playlists.length > 0 ? <ExportSection isSaving={state.isSaving} canUndo={state.canUndo} canRedo={state.canRedo} onUndo={todo.undo} onRedo={todo.redo} onSave={todo.save} onApple={(button) => exporting.open({ start: 'apple', title: t('exportWindow.apple'), opener: button })} /> : null}
                 </div>
             )}
+            {exporting.layer}
         </>
     )
 }

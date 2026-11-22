@@ -23,11 +23,13 @@ function useDisclosure() {
 
 const arrowStyle = (touched: boolean, open: boolean) => (touched ? { transform: open ? 'rotate(90deg)' : 'rotate(0deg)' } : undefined)
 
-function PlaylistRow({ playlist, seriesId, index, onOpen }: {
+function PlaylistRow({ playlist, seriesId, seriesName, batch, index, handlers }: {
     playlist: SavedPlaylist
     seriesId: string
+    seriesName: string
+    batch: Batch
     index: number
-    onOpen: Handlers['onOpenPlaylist']
+    handlers: Handlers
 }) {
     const { open, touched, toggle } = useDisclosure()
     const totals = batchTotals({ playlists: [playlist] })
@@ -57,9 +59,18 @@ function PlaylistRow({ playlist, seriesId, index, onOpen }: {
                     <button
                         type="button"
                         className="btn btn-ghost btn-sm text-muted hover:text-white"
+                        title={t('savedPlaylists.playlist.exportTitle')}
+                        aria-label={t('savedPlaylists.playlist.exportLabel', { name: playlist.name ?? '' })}
+                        onClick={(event) => { event.stopPropagation(); handlers.onExportPlaylist(seriesName, batch, playlist, index) }}
+                    >
+                        <Icon name="Share" className="w-4 h-4" />
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-ghost btn-sm text-muted hover:text-white"
                         title={t('savedPlaylists.playlist.viewTitle')}
                         aria-label={t('savedPlaylists.playlist.viewLabel', { name: playlist.name ?? '' })}
-                        onClick={(event) => { event.stopPropagation(); onOpen(seriesId, playlist.id) }}
+                        onClick={(event) => { event.stopPropagation(); handlers.onOpenPlaylist(seriesId, playlist.id) }}
                     >
                         <Icon name="Eye" className="w-4 h-4" />
                     </button>
@@ -94,8 +105,8 @@ function BatchInfo({ batch }: { batch: Batch }) {
     )
 }
 
-/** Edit and delete a batch: neither opens or closes the card. */
-function BatchButtons({ batch, seriesId, handlers }: { batch: Batch; seriesId: string; handlers: Handlers }) {
+/** Edit, export and delete a batch: none opens or closes the card. */
+function BatchButtons({ batch, seriesId, seriesName, handlers }: { batch: Batch; seriesId: string; seriesName: string; handlers: Handlers }) {
     const count = batchTotals(batch).playlists
     return (
         <div className="batch-card-buttons flex items-center gap-2">
@@ -107,6 +118,15 @@ function BatchButtons({ batch, seriesId, handlers }: { batch: Batch; seriesId: s
                 onClick={(event) => { event.stopPropagation(); handlers.onEditBatch(seriesId, batch.name, batch.savedAt) }}
             >
                 <Icon name="Edit" className="w-4 h-4" />{` ${t('savedPlaylists.batch.edit')}`}
+            </button>
+            <button
+                type="button"
+                className="btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md"
+                title={t('savedPlaylists.batch.exportTitle')}
+                aria-label={t('savedPlaylists.batch.exportLabel', { name: batch.name })}
+                onClick={(event) => { event.stopPropagation(); handlers.onExportBatch(seriesName, batch) }}
+            >
+                <Icon name="Share" className="w-4 h-4" />{` ${t('savedPlaylists.batch.export')}`}
             </button>
             <button
                 type="button"
@@ -124,9 +144,10 @@ function BatchButtons({ batch, seriesId, handlers }: { batch: Batch; seriesId: s
 }
 
 /** The playlists of the batch: nothing in the box until the card is opened once. */
-function BatchPlaylists({ batch, seriesId, open, filled, handlers }: {
+function BatchPlaylists({ batch, seriesId, seriesName, open, filled, handlers }: {
     batch: Batch
     seriesId: string
+    seriesName: string
     open: boolean
     filled: boolean
     handlers: Handlers
@@ -134,7 +155,7 @@ function BatchPlaylists({ batch, seriesId, open, filled, handlers }: {
     const rows = batch.playlists.length === 0
         ? <div className="p-6 text-center text-muted italic">{t('savedPlaylists.batch.empty')}</div>
         : batch.playlists.map((playlist, index) => (
-            <PlaylistRow key={playlist.id} playlist={playlist} seriesId={seriesId} index={index} onOpen={handlers.onOpenPlaylist} />
+            <PlaylistRow key={playlist.id} playlist={playlist} seriesId={seriesId} seriesName={seriesName} batch={batch} index={index} handlers={handlers} />
         ))
     return (
         <div className={`batch-playlists divide-y divide-white/5 bg-black/20${open ? '' : ' hidden'}`} data-filled={filled ? 'true' : undefined}>
@@ -143,9 +164,10 @@ function BatchPlaylists({ batch, seriesId, open, filled, handlers }: {
     )
 }
 
-export function BatchCard({ batch, seriesId, thumbnails, handlers }: {
+export function BatchCard({ batch, seriesId, seriesName, thumbnails, handlers }: {
     batch: Batch
     seriesId: string
+    seriesName: string
     thumbnails: (string | null)[]
     handlers: Handlers
 }) {
@@ -166,10 +188,10 @@ export function BatchCard({ batch, seriesId, thumbnails, handlers }: {
                         <AlbumCascade thumbnails={thumbnails} />
                         <BatchInfo batch={batch} />
                     </div>
-                    <BatchButtons batch={batch} seriesId={seriesId} handlers={handlers} />
+                    <BatchButtons batch={batch} seriesId={seriesId} seriesName={seriesName} handlers={handlers} />
                 </div>
             </div>
-            <BatchPlaylists batch={batch} seriesId={seriesId} open={open} filled={touched} handlers={handlers} />
+            <BatchPlaylists batch={batch} seriesId={seriesId} seriesName={seriesName} open={open} filled={touched} handlers={handlers} />
         </div>
     )
 }

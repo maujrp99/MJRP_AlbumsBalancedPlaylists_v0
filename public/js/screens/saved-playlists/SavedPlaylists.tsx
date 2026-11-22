@@ -23,8 +23,10 @@ import { filterUseOf } from '../../models/filterUse.js'
 import { t } from '../../i18n/t.js'
 import { SeriesGroup } from './SeriesGroup'
 import { usePlaylistDetails } from './PlaylistDetails'
+import { usePlaylistExport } from '../../ui/PlaylistExportWindow'
+import { readableBatchName } from './listText'
 import type { SavedPlaylistsController } from '../../controllers/SavedPlaylistsController.js'
-import type { Handlers, ListView, SeriesGroupData } from './types'
+import type { Batch, Handlers, ListView, SeriesGroupData } from './types'
 
 interface FilterState {
     search: string
@@ -133,13 +135,19 @@ function toolbarOf(groups: SeriesGroupData[], filters: FilterState, change: (key
 }
 
 /** What happens when the person acts on a series, a batch or a playlist; deleting asks first, and the list answers by the store. */
-function handlersOf(controller: SavedPlaylistsController, openPlaylist: (seriesId: string, playlistId: string) => void): Handlers {
+function handlersOf(
+    controller: SavedPlaylistsController,
+    openPlaylist: (seriesId: string, playlistId: string) => void,
+    exportPlaylists: (seriesName: string, batch: Batch, options: { only?: number; title: string; opener?: HTMLElement | null }) => void
+): Handlers {
     return {
         onNavigate: () => controller.navigateBlend(),
         onOpenSeries: (seriesId) => controller.openSeriesManager(seriesId),
         onEditBatch: (seriesId, batchName, savedAt) => { void controller.editBatch(seriesId, batchName, savedAt) },
         onRetry: (seriesId) => { void controller.retrySeries(seriesId) },
         onOpenPlaylist: openPlaylist,
+        onExportBatch: (seriesName, batch, opener) => exportPlaylists(seriesName, batch, { title: t('savedPlaylists.export.title', { name: readableBatchName(batch.name).text }), opener }),
+        onExportPlaylist: (seriesName, batch, playlist, index, opener) => exportPlaylists(seriesName, batch, { only: index, title: t('savedPlaylists.export.title', { name: playlist.name ?? '' }), opener }),
         onDeleteBatch: async (seriesId, batchName, count) => {
             const confirmed = await dialogService.confirm({
                 title: t('savedPlaylists.deleteBatch.title'),
@@ -169,6 +177,7 @@ export function SavedPlaylists({ controller }: { controller: SavedPlaylistsContr
     const openSeries = useRef(new Set<string>()) // the phone: the series opened (closed by default, F76)
     const asked = useRef(false)
     const details = usePlaylistDetails()
+    const exporting = usePlaylistExport()
     const versionOf = useGroupVersions(list.groups)
 
     // Ask for the list once: a load already on its way is joined, what was read before stays on screen
@@ -184,7 +193,13 @@ export function SavedPlaylists({ controller }: { controller: SavedPlaylistsContr
         if (use) track('filter_used', use)
         setFilters(previous => ({ ...previous, [key]: value }))
     }
-    const handlers = handlersOf(controller, (seriesId, playlistId) => details.open(controller.findPlaylist(seriesId, playlistId)))
+    // F90: nothing is read or written here: the window is handed what the list already holds
+    const exportPlaylists = (seriesName: string, batch: Batch, { only, title, opener }: { only?: number; title: string; opener?: HTMLElement | null }) => {
+        const all = batch.playlists
+        const indexes = only === undefined ? all.map((_, index) => index) : [only]
+        exporting.open({ playlists: indexes.map(index => all[index]), positions: indexes.map(index => index + 1), seriesName, batchName: batch.name, title, opener })
+    }
+    const handlers = handlersOf(controller, (seriesId, playlistId) => details.open(controller.findPlaylist(seriesId, playlistId)), exportPlaylists)
     const toggleSeries = (seriesId: string, open: boolean) => { if (open) openSeries.current.add(seriesId); else openSeries.current.delete(seriesId) }
     const visible = visibleGroups(list.groups, filters)
 
@@ -216,6 +231,7 @@ export function SavedPlaylists({ controller }: { controller: SavedPlaylistsContr
             </div>
             <div id="modalsContainer" />
             {details.layer}
+            {exporting.layer}
         </div>
     )
 }

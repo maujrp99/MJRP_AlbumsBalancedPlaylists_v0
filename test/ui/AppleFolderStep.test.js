@@ -16,8 +16,8 @@ vi.mock('../../public/js/components/Toast.js', () => {
 })
 vi.mock('../../public/js/utils/isPhone.js', () => ({ isPhone: () => false, onPhoneChange: () => () => { } }))
 
-import { openPlaylistExport } from '../../public/js/views/playlists/PlaylistExportWindow.js'
-import { readChoice, saveChoice, initialPick, folderForExport } from '../../public/js/views/playlists/appleFolderChoice.js'
+import { openPlaylistExport, press, settle, typeInto, unmountAll } from '../support/exportWindowHost'
+import { readChoice, saveChoice, initialPick, folderForExport } from '../../public/js/models/appleFolderChoice.js'
 import { AppleMusicExportService } from '../../public/js/services/AppleMusicExportService.js'
 import { exportLedger } from '../../public/js/services/export/exportLedger.js'
 import toast from '../../public/js/components/Toast.js'
@@ -47,17 +47,15 @@ function fakeMusicKit() {
     return fake
 }
 
-const settle = () => new Promise(resolve => setTimeout(resolve, 0))
 const open = (job = {}) => openPlaylistExport({ seriesName: 'Road trip', batchName: 'Mix', playlists: [BATCH[0]], positions: [1], ...job })
 const stepText = () => document.querySelector('[data-apple-folder-step]').textContent.replace(/\s+/g, ' ')
 const labels = () => [...document.querySelectorAll('input[name="apple-folder"]')].map(r => r.closest('label').textContent.trim().replace(/\s+/g, ' '))
 const checked = () => document.querySelector('input[name="apple-folder"]:checked')
 const typedField = () => document.querySelector('[data-folder-name]')
-const type = (value) => { typedField().value = value; typedField().dispatchEvent(new Event('input', { bubbles: true })) }
+const type = (value) => typeInto(typedField(), value)
 const pick = (mode, value) => {
     const radio = [...document.querySelectorAll('input[name="apple-folder"]')].find(r => r.dataset.mode === mode && (value === undefined || r.value === value))
-    radio.checked = true
-    radio.dispatchEvent(new Event('change', { bubbles: true }))
+    radio.click() // a pick is a press: React hears a radio by its click
 }
 
 describe('the folder step of the Apple Music export (F90)', () => {
@@ -75,6 +73,7 @@ describe('the folder step of the Apple Music export (F90)', () => {
 
     beforeEach(() => {
         vi.clearAllMocks()
+        unmountAll()
         document.body.innerHTML = ''
         localStorage.clear()
         exportLedger.clear()
@@ -83,7 +82,7 @@ describe('the folder step of the Apple Music export (F90)', () => {
         vi.spyOn(AppleMusicExportService, 'pause').mockResolvedValue()
         vi.spyOn(console, 'error').mockImplementation(() => { })
     })
-    afterEach(() => vi.restoreAllMocks())
+    afterEach(() => { unmountAll(); vi.restoreAllMocks() })
 
     it('the series name is selected and marked as the default: accepting it is one press, in the series folder', async () => {
         open()
@@ -201,11 +200,13 @@ describe('the folder step of the Apple Music export (F90)', () => {
         await pressExport()
 
         expect(JSON.parse(localStorage.getItem('mjrp_apple_music_folder:Road trip'))).toEqual({ name: 'Favorites' })
+        unmountAll()
         document.body.innerHTML = ''
         open({ playlists: [BATCH[1]], positions: [2] })
         await toTheStep()
         expect(checked().value).toBe('Favorites')
 
+        unmountAll()
         document.body.innerHTML = ''
         open({ playlists: [BATCH[1]], positions: [2], seriesName: 'Another series' })
         await toTheStep()
@@ -218,6 +219,7 @@ describe('the folder step of the Apple Music export (F90)', () => {
         await toTheStep()
         expect(checked().dataset.mode).toBe('none')
 
+        unmountAll()
         document.body.innerHTML = ''
         localStorage.setItem('mjrp_apple_music_folder:Road trip', 'not json')
         open()
@@ -228,9 +230,10 @@ describe('the folder step of the Apple Music export (F90)', () => {
     it('Back returns to the three destinations; the edit screen opens straight on the step', async () => {
         open()
         await toTheStep()
-        document.querySelector('[data-folder-back]').click()
+        press(document.querySelector('[data-folder-back]'))
         expect(document.querySelectorAll('[data-export]').length).toBe(3)
 
+        unmountAll()
         document.body.innerHTML = ''
         openPlaylistExport({ start: 'apple', title: 'Export to Apple Music' })
         await vi.waitFor(() => expect(document.querySelector('[data-apple-folder-step]')).not.toBeNull())
@@ -256,6 +259,7 @@ describe('the folder step: focus, the typed name, the title, the look (F90 reche
     }
     beforeEach(() => {
         vi.clearAllMocks()
+        unmountAll()
         document.body.innerHTML = ''
         localStorage.clear()
         exportLedger.clear()
@@ -263,7 +267,7 @@ describe('the folder step: focus, the typed name, the title, the look (F90 reche
         kit.service = musicKit
         vi.spyOn(console, 'error').mockImplementation(() => { })
     })
-    afterEach(() => vi.restoreAllMocks())
+    afterEach(() => { unmountAll(); vi.restoreAllMocks() })
 
     it('the focus stays on the choice it was on when the list of folders arrives', async () => {
         let release
@@ -331,11 +335,11 @@ describe('the folder step: focus, the typed name, the title, the look (F90 reche
         const title = () => document.querySelector('.app-modal__title').textContent
         expect(title()).toBe('Export to Apple Music')
 
-        document.querySelector('[data-folder-back]').click()
+        press(document.querySelector('[data-folder-back]'))
         expect(document.querySelectorAll('[data-export]').length).toBe(3)
         expect(title()).toBe('Export playlists')
 
-        document.querySelector('[data-export="apple"]').click()
+        press(document.querySelector('[data-export="apple"]'))
         expect(title()).toBe('Export to Apple Music')
     })
 

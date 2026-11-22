@@ -28,7 +28,14 @@ export const normalize = (element) => {
     if (!element) return null
     const copy = element.cloneNode(true)
     const typed = element.querySelectorAll('input')
-    copy.querySelectorAll('input').forEach((input, i) => input.setAttribute('value', typed[i].value))
+    copy.querySelectorAll('input').forEach((input, i) => {
+        input.setAttribute('value', typed[i].value)
+        // a radio (the export window's folder step) is compared by whether it is selected, not by how each side wrote the attribute (F83 sync 2)
+        if (input.type === 'radio') {
+            input.removeAttribute('checked')
+            if (typed[i].checked) input.setAttribute('data-is-checked', 'true')
+        }
+    })
     // the row a track landed on is lit by a timer for a moment: whether a snapshot falls inside that moment is not what the page says
     return pageOf(copy).replace(/\bis-moved ?/g, '')
 }
@@ -177,6 +184,13 @@ const sunday = () => generated().map(p => ({ ...p, batchName: 'Sunday mix' }))
  * `h.snap(label)` writes down `#app` (or, with a selector, the first element of the page that matches it); `h.note(label)` writes
  * down what was asked of the world outside.
  */
+/** What has the focus, in words (no import from the app: the doubles of the world outside load this file). */
+const focusMark = () => {
+    const active = document.activeElement
+    if (!active || active === document.body) return 'body'
+    return `${active.tagName.toLowerCase()} ${active.dataset?.mode ? `${active.dataset.mode}:${active.value}` : (active.dataset?.export || active.dataset?.appleExport || active.getAttribute('aria-label') || active.className)}`
+}
+
 export const SCENARIOS = [
     {
         name: 'nothing here yet', url: '/playlists', playlists: [], run: async (h) => { h.snap('empty state') }
@@ -266,8 +280,15 @@ export const SCENARIOS = [
         name: 'the exports', url: '/playlists', playlists: generated(), run: async (h) => {
             await h.click('#exportSpotifyBtn')
             await h.click('#exportJsonBtn')
+            h.note('what the Spotify and file buttons asked for')
+            // F90: Apple Music asks for the folder first, in the window the saved playlists screen opens too
             await h.click('#exportAppleMusicBtn')
-            h.note('what the three buttons asked for')
+            h.snap('the window, on the folder step', '#playlist-export-window')
+            h.note('focus in the window', focusMark())
+            await h.click('[data-apple-export]')
+            h.note('what the folder step asked for')
+            await h.key('Escape')
+            h.snap('the window closed', '#playlist-export-window')
         }
     },
     {
@@ -308,12 +329,16 @@ export const SCENARIOS = [
             await tapRow(h, 'Delete this playlist')
             h.note('the question before deleting')
             await h.click('[data-phone-action="export"]')
-            h.snap('the sheet of the exports', '.sheet')
-            await tapRow(h, 'Download JSON')
+            h.snap('the window of the exports', '#playlist-export-window')
+            h.note('focus in the window', focusMark())
+            await h.click('[data-export="json"]')
             h.note('what the export asked for')
             await h.click('[data-phone-action="export"]')
-            await tapRow(h, 'Export to Spotify')
+            await h.click('[data-export="spotify"]')
             h.note('after Spotify')
+            await h.click('[data-phone-action="export"]')
+            await h.click('[data-export="apple"]')
+            h.snap('the folder step on the phone', '#playlist-export-window')
             await h.click('[data-phone-action="save"]')
             h.note('after the save')
         }

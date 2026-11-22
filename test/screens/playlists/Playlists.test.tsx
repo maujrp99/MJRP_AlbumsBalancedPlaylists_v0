@@ -11,8 +11,10 @@ vi.mock('../../../public/js/services/DialogService.js', async () => ({ dialogSer
 vi.mock('../../../public/js/components/SpotifyExportModal.js', async () => ({ showSpotifyExportModal: () => import('../../support/playlistsScenarios.js').then(m => m.outside.push(['spotifyWindow'])) }))
 vi.mock('../../../public/js/views/playlists/PlaylistsExport.js', async () => {
     const m = await import('../../support/playlistsScenarios.js')
-    return { handleExportJson: () => m.outside.push(['exportJson']), handleExportToAppleMusic: () => m.outside.push(['exportApple']) }
+    const asked = (options?: object) => JSON.stringify(Object.fromEntries(Object.entries(options ?? {}).filter(([key]) => key !== 'btn' && key !== 'onStatus' && key !== 'ok')))
+    return { seriesNameOf: (given?: string) => given || 'MJRP Playlists', handleExportJson: () => m.outside.push(['exportJson']), handleExportToAppleMusic: (options?: object) => m.outside.push(['exportApple', asked(options)]) }
 })
+vi.mock('../../../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('../../support/exportStandIns.js')).musicKitService }))
 
 import { Playlists, GeneratingFlag } from '../../../public/js/screens/playlists/Playlists'
 import { PlaylistsController } from '../../../public/js/controllers/PlaylistsController.js'
@@ -352,11 +354,11 @@ describe('what a tap does on the phone', () => {
         expect(outside).toContainEqual(['removePlaylist', 0])
     })
 
-    it('Export opens a sheet with the three exports', async () => {
+    it('Export opens the export window (F90): Apple Music, Spotify, the file, in that order', async () => {
         const screen = await open(generated(), { phone: true })
         await screen.tap('[data-phone-action="export"]')
-        expect(all('.sheet .phone-sheet-action').map(r => r.textContent)).toEqual(['Export to Spotify', 'Export to Apple Music', 'Download JSON'])
-        await screen.tapText('.sheet .phone-sheet-action', 'Download JSON')
+        expect(all('.sheet [data-export]').map(r => r.textContent!.trim())).toEqual(['Export to Apple Music', 'Export to Spotify', 'Download JSON'])
+        await screen.tap('.sheet [data-export="json"]')
         expect(outside).toEqual([['exportJson']])
         expect(q('.sheet:not(.sheet--closing)')).toBeNull()
     })
@@ -386,8 +388,22 @@ describe('the exports of the computer', () => {
         const screen = await open(generated())
         await screen.tap('#exportSpotifyBtn')
         await screen.tap('#exportJsonBtn')
+        expect(outside).toEqual([['spotifyWindow'], ['exportJson']])
+        // F90: Apple Music asks for the folder first, in the export window; what the person picks there is what the export is told
         await screen.tap('#exportAppleMusicBtn')
-        expect(outside).toEqual([['spotifyWindow'], ['exportJson'], ['exportApple']])
+        expect(q('#playlist-export-window [data-apple-folder-step]')).not.toBeNull()
+        expect(q('#playlist-export-window .app-modal__title').textContent).toBe('Export to Apple Music')
+        await screen.tap('[data-apple-export]')
+        expect(outside).toEqual([['spotifyWindow'], ['exportJson'], ['exportApple', '{"folderName":"MJRP Playlists"}']])
+    })
+
+    it('the window gives the focus back to the Apple Music button when it closes', async () => {
+        const screen = await open(generated())
+        q('#exportAppleMusicBtn').focus()
+        await screen.tap('#exportAppleMusicBtn')
+        await screen.act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })) })
+        expect(q('#playlist-export-window')).toBeNull()
+        expect(document.activeElement).toBe(q('#exportAppleMusicBtn'))
     })
 })
 

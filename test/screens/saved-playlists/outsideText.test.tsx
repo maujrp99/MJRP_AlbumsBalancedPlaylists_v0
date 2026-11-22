@@ -13,10 +13,10 @@ const TEXT = '<img src=x onerror="window.__xss=1">'
 /** Text that would leave a quoted attribute value and then run. */
 const QUOTED = '"><img src=x onerror="window.__xss=1"> \'x'
 
-const handlers: Handlers = { onNavigate: () => {}, onOpenSeries: () => {}, onDeleteAll: () => {}, onEditBatch: () => {}, onDeleteBatch: () => {}, onOpenPlaylist: () => {}, onRetry: () => {} }
+const handlers: Handlers = { onNavigate: () => {}, onOpenSeries: () => {}, onDeleteAll: () => {}, onEditBatch: () => {}, onExportBatch: () => {}, onExportPlaylist: () => {}, onDeleteBatch: () => {}, onOpenPlaylist: () => {}, onRetry: () => {} }
 const batch = { name: TEXT, savedAt: '2026-11-19T12:00:00Z', playlists: [{ id: QUOTED, name: TEXT, tracks: [{ title: TEXT, artist: TEXT }] }] }
 
-const Host = () => <BatchCard batch={batch} seriesId={QUOTED} thumbnails={[QUOTED]} handlers={handlers} />
+const Host = () => <BatchCard batch={batch} seriesId={QUOTED} seriesName={TEXT} thumbnails={[QUOTED]} handlers={handlers} />
 
 afterEach(() => { document.body.innerHTML = '' })
 
