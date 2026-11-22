@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 19:15] step — a publicação parava calada com muitos worktrees (F64)
+
+**Branch:** main
+
+- `./scripts/deploy-site.sh` saía com 141 e sem mensagem: em `scripts/lib/deploy-common.sh`, o `awk` que acha a pasta da `main` saía no primeiro achado e o `git worktree list` (75 worktrees hoje) morria no cano quebrado, com `pipefail` ligado. O `awk` agora lê a lista inteira. Achado ao publicar com a palavra do MJRP («Publica»); os worktrees velhos dos agentes seguem por limpar.
+
 ## [2026-11-22 16:27] review — F79: o juiz independente passou a «Create» enxuta no computador, o fim da linha laranja e o aviso de carregamento da tela Albums
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line

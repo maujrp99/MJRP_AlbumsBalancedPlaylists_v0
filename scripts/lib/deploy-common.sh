@@ -58,7 +58,7 @@ locate_repo() {
   # The folder where `main` is checked out, if any (worktrees included).
   MAIN_CHECKOUT="$(git -C "$REPO_ROOT" worktree list --porcelain | awk -v want="refs/heads/$DEPLOY_BRANCH" '
     /^worktree / { path = substr($0, 10) }
-    /^branch /   { if (substr($0, 8) == want) { print path; exit } }')"
+    /^branch /   { if (!found && substr($0, 8) == want) { print path; found = 1 } }')"
 }
 
 # Production is built from committed `main`. Uncommitted changes to tracked files
