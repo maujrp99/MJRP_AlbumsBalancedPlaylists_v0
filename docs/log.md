@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 10:08] step — F83 onda 8b: o dourado dos motores à mão (avisos, barra, perguntas) capturado antes de tocá-los
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- `test/support/engineScenarios.js` e `engineWorld.js`: 33 cenários (13 de avisos, 4 de barra, 16 de perguntas e janelas) com tempo falso, toques, teclas e foco, e a forma do casco da janela em 30 tamanhos.
+- `test/fixtures/enginesBeforeF83.json` e `windowShellBeforeF83.json`: o que a página diz depois de cada passo, capturado de `Toast.js`, `GlobalProgress.js`, `DialogService.js` e do casco `BaseModal` na ponta f4eae56; duas capturas seguidas deram arquivos idênticos. O teste de captura fica em `reports/evidence/F83/wave-8b/capture-before.test.js` (não roda: o corredor só lê `test/`).
+
+
 ## [2026-11-22 10:00] step — F83 onda 8a: a prova no navegador das exportações e a folga de 400 B nos tetos
 
 **Branch:** claude/f83-wave-8a-exports
