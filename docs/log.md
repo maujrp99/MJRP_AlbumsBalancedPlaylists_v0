@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 08:48] step — prova no navegador do «Create» / «Criar» com o «+» (F88)
+
+**Branch:** wip/create-in-place-of-start
+
+- Com a palavra dele: «confirmo, ajuste e já pode publicar». Site construído, branch contra `main`, Chromium e WebKit 1280, WebKit iPhone 393 e 375: o item diz «Create» / «Criar» com o «+», leva a `/start`, acende na `/start`; caixa do item e dos vizinhos sem deslocamento; fora da caixa só mudam os nomes da tela (migalhas, topo do celular, botão do vazio). Detalhes e números em `reports/evidence/F88/create-in-place-of-start/proof.md`.
+
 ## [2026-11-22 08:35] step — «Start» vira «Create» («Criar» em português) no menu, com um «+» no lugar do «Go»
 
 **Branch:** wip/create-in-place-of-start
