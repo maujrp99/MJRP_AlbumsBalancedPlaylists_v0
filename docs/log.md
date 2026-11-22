@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 15:45] step — F83: três testes do inventário entregam os avisos à janela de editar
+
+**Branch:** integrate/staging-2026-11-21
+
+- A publicação da prévia parou num erro não tratado: `Inventory.statusAndSeries.test.js` abria a janela de editar sem os avisos (`notify`), que desde a onda 8b vêm de quem abre a janela; o app entrega o `toast`, o teste não entregava. Só o teste muda. Um segundo motivo de parada, à parte: o teste instável do horário em `InventoryController.values` (diferença de 1 ms), a consertar na 8d.
+
 ## [2026-11-22 15:15] review — F83: ondas 8a (exportações) e 8b (avisos, barra, janelas e perguntas) e a junta 4 com a `main` na linha de integração
 
 **Branch:** integrate/staging-2026-11-21
