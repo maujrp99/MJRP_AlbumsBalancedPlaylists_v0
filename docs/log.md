@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 10:41] step — F83 onda 8b: os tetos de peso medidos e os caminhos novos nos documentos
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- `scripts/bundle-budget.json` (só os dois números que a onda move, o texto da regra intocado): o script principal foi de 195.460 B (pai f4eae56, sem as chaves) a 195.575 B (+115 B: os três motores em React na moldura mais as 4 chaves do dicionário de perguntas, menos o que os motores à mão pesavam); o teto `main` foi de 195.860 B a 195.975 B (400 B de folga sobre o medido). O que vem depois da primeira tela caiu de 236.792 B para 235.463 B (−1.329 B: o casco da janela já era React e os motores à mão saíram de arquivos sob demanda), e `background` foi de 59.300 B para 58.100 B (necessidade 57.601 B; 499 B de folga). `reactVendor` e o alarme de tela não mudaram.
+- `design-system.md`, `behavior.md` e `arch.md`: os caminhos dos avisos, da barra, das perguntas, da casca da janela, da capa substituta e da página presa.
+
+
 ## [2026-11-22 10:18] step — F83 onda 8b: os avisos, a barra de carga e as perguntas em React; a janela, a capa e o segurar a página saem das mãos
 
 **Branch:** claude/f83-wave-8b-window-engines
