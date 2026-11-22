@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 01:36] step — UAT-282: no WebKit, tocar em «Search» na tela Start pode não iniciar a busca
+
+**Branch:** main
+
+- Achado do juiz independente, fora da mudança julgada; vale no ramo e na `main`. Não confirmado num iPhone real.
+
 ## [2026-11-22 01:36] review — F79: o juiz independente passou a tela Start enxuta no celular (UAT-281)
 
 **Branch:** fix/f79-start-lean-on-the-phone
