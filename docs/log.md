@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:02] review — F83 onda 5a: o juiz independente aprova a tela de álbuns em React (sem P0, sem P1, 3 P2)
+**Branch:** integrate/staging-2026-11-21
+Relatório `reports/audits/2026-11-21-mjrpalbumblender-v0-react-albums-visual-parity-recheck.md` e capturas em `reports/evidence/F83/wave-5a/recheck/`, escritos pelo juiz (não por quem construiu) sobre o commit 499399c, guardados como vieram. Cerca de 950 conferências antigo contra novo a 1280 e 393, grade e lista, todos os estados e filtros, mais as janelas atrás das pontes: página, endereço, rolagem e chamadas iguais; os pixels diferentes são ruído; no site montado a tela nova é igual ou mais rápida. Os três P2 são defeitos da tela de hoje, mantidos de propósito: «All Years» e «All Sources» aparecem duas vezes; Refresh recarrega o escopo de abertura, não a série escolhida; «Go to Start» recarrega a página inteira. Não visto: Apple Music e Spotify de verdade, gravar um ranking, a lista no WebKit.
+
 ## [2026-11-21 21:22] step — F83 onda 5a: os totais na ponta do ramo, pela fila
 **Branch:** claude/f83-wave-5a-albums-screen
 Suíte inteira: 339 arquivos, 4.234 testes, todos passam. test/architecture: 37 arquivos, 304 testes. typecheck (tsc -p tsconfig.json): sem erro. lint: 0 erros, 48 avisos (os de antes, fora de public/js). Nenhum servidor ficou de pé. O worktree de comparação da tela antiga ficou em /private/tmp/claude-501/old5a (a trava recusou removê-lo).
