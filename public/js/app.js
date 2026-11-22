@@ -27,9 +27,6 @@ import './services/auth/userSession.js' // the user store starts hearing who is 
 import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
-// V3 Architecture: SeriesView replaces AlbumsView
-import SeriesView from './views/SeriesView.js'
-import SeriesController from './controllers/SeriesController.js'
 import { InventoryView } from './views/InventoryView.js'
 import { BlendingMenuView } from './views/BlendingMenuView.js'
 
@@ -104,9 +101,6 @@ document.addEventListener('DOMContentLoaded', bootstrap)
 startUsageMeasurement({ router })
 
 // Register Routes
-// V3: SeriesController is instantiated once and passed to view
-const seriesController = new SeriesController();
-
 // The Start screen (F83 wave 4, in React) is the first screen the person sees, so its file starts to come down now, while the login
 // is asked, and not when the route asks for it; the route waits for it. It is also one of the screens that come down in the background.
 const loadStart = loadScreen(() => import('./screens/start/index.ts'))
@@ -123,8 +117,15 @@ router.register('/home', () => {
     if (!leaveToHome(window)) router.redirect(START_PATH + window.location.search)
     return null
 })
-router.register('/albums', () => new SeriesView(seriesController))
-router.register('/albums/:seriesId', () => new SeriesView(seriesController))
+// The albums screen (F83 wave 5a, in React): its file comes when the route asks for it and in the background. The controller of the
+// session (one for the whole visit, with the load going on in the service) lives in the screen's file.
+const loadAlbums = loadScreen(() => import('./screens/albums/index.ts'))
+const albumsRoute = async () => {
+    const { albumsView } = await loadAlbums()
+    return albumsView()
+}
+router.register('/albums', albumsRoute)
+router.register('/albums/:seriesId', albumsRoute)
 router.register('/inventory', () => new InventoryView())
 
 // TopNav v2: New entity type routes (Coming Soon). The first screen in React (F83): its file, and React with it, come when
@@ -185,7 +186,7 @@ router.register('/series', () => {
 
 // The screens in React come down in the background once the first screen is on the page (F83, REQ-10): changing screens still works
 // with no network after the first load, as it did when everything was in the main script. React itself is already there: the shell is React.
-prefetchScreensAfterTheFirstScreen(router, [loadStart, loadSavedPlaylists, loadPlaylists, loadComingSoon])
+prefetchScreensAfterTheFirstScreen(router, [loadStart, loadAlbums, loadSavedPlaylists, loadPlaylists, loadComingSoon])
 
 // Global Error Handler
 window.addEventListener('error', (e) => {

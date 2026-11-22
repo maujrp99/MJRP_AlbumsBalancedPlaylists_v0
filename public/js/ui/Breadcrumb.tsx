@@ -20,6 +20,14 @@ export function playlistsTrail(editing: boolean): Crumb[] {
     ]
 }
 
+/** The trail of the albums screen: Start, then Albums (the title of the page names the series on screen). */
+export function albumsTrail(): Crumb[] {
+    return [
+        { label: t('ui.breadcrumb.start'), path: '/start' },
+        { label: t('ui.breadcrumb.albums'), path: '/albums' }
+    ]
+}
+
 export function Breadcrumb({ crumbs, onNavigate }: { crumbs: Crumb[]; onNavigate: (path: string) => void }) {
     if (crumbs.length <= 1) return null
     return (

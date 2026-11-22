@@ -97,7 +97,7 @@ export async function play(scenario: Scenario): Promise<Record<string, string | 
             })
         },
         turn: async (to: boolean) => { await act(async () => { phone.turn(to); for (let i = 0; i < 5; i++) await tick() }) },
-        arrive: async (id: string, state = 'found') => { await act(async () => { world.state[id] = state; answer(); for (let i = 0; i < 5; i++) await tick() }) },
+        arrive: async (id: string, state = 'found') => { await act(async () => { (world.state as Record<string, string>)[id] = state; answer(); for (let i = 0; i < 5; i++) await tick() }) },
         change: async (work: () => void) => { await act(async () => { work(); for (let i = 0; i < 5; i++) await tick() }) }
     }
     await scenario.run(h as never)

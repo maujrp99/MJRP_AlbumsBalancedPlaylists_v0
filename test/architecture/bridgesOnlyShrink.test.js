@@ -15,7 +15,12 @@ import { siteFiles, importsOfFiles, folderOf } from './support/siteImports.js'
  * wrapper, because porting it to React now would make the main script call React (see react-bridge/legacy/FilterToolbar.tsx).
  */
 export const BRIDGE_USES = {
-    'screens/saved-playlists/SavedPlaylists.tsx': 'the filter bar (and its sheet) is also on the albums screen: it goes when that screen is in React (wave 5)',
+    // wave 5a (the albums screen): the windows of the album, of the inventory and of the ranking, the edit and delete of a series, the track table, and the
+    // controller of the session stay hand-made behind wrappers (ported in wave 5b and with the inventory, wave 6)
+    'screens/albums/AlbumCard.tsx': 'the table of the tracks of the expanded card is the hand-made one, also in the album window of the inventory (wave 6)',
+    'screens/albums/Albums.tsx': 'the windows to edit and delete a series (they hold the one album picker, which the Start screen also uses: wave 5b)',
+    'screens/albums/albumActions.ts': 'the album window, the window Add to inventory and the window to rank the tracks (wave 5b and wave 6)',
+    'screens/albums/index.ts': 'the controller of the session is hand-written JavaScript (rewritten in wave 8)',
     // wave 2 (the playlists screen) took the two entries of the row of a track out (it is ported once, to ui/TrackRow.tsx) and put in these:
     'screens/playlists/Playlists.tsx': 'the panel to generate again (also the Blend controller\'s, so it goes with the Blend screen, wave 7) and the Spotify window and the exports (hand-made, ported on their own)',
     'screens/playlists/PhoneParts.tsx': 'the exports of the sheet of the phone: the Spotify window and the file and Apple Music exports stay hand-made',

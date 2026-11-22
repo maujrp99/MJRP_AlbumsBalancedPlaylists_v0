@@ -77,7 +77,7 @@ describe('album load boundaries', () => {
     })
 
     it('the screen does not decide the load: components and views of the series never import the load service or the API client', () => {
-        const screen = [...listJs('components/series'), ...listJs('components/ui'), 'views/SeriesView.js', ...listJs('views/helpers')]
+        const screen = [...listJs('components/series'), ...listJs('components/ui'), ...listJs('screens/albums'), 'ui/FilterToolbar.tsx']
         const forbidden = /(services\/albums\/|api\/client)/
 
         expect(offenders(screen, specifier => forbidden.test(specifier))).toEqual([])

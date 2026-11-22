@@ -14,7 +14,7 @@ const read = (name) => readFileSync(join(VIEWS, name), 'utf8')
 
 describe('a screen that is left hears no store', () => {
     it('there are screens to check', () => {
-        expect(viewFiles.length).toBeGreaterThan(3)
+        expect(viewFiles.length).toBeGreaterThan(1)
     })
 
     it('no screen waits for onUnmount, which the router never calls', () => {

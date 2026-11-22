@@ -46,8 +46,9 @@ const COMPONENT_CLASSES = [
 const PUT_TOGETHER_AT_RUN_TIME = {
     // Tailwind classes: gradient colors of a recipe with /10 - all in the safelist (checked below)
     'components/blend/BlendRecipeCard.js': ['${recipe.color.from}/10', '${recipe.color.to}/10'],
-    // ids of elements, not classes
-    'components/ui/FilterToolbar.js': ['filter-${group.id}', 'this.container.querySelector(`#filter-${group.id}`);'],
+    // ids and keys of elements, not classes
+    'ui/FilterToolbar.tsx': ['id={`filter-${group.id}`}'],
+    'screens/albums/Pager.tsx': ['key={`gap-${index}`}'],
     // a class of the app's own, with its rules written in a <style> beside it
     'screens/playlists/PlaylistCards.tsx': ['.custom-scrollbar-${index}::-webkit-scrollbar', '.custom-scrollbar-${index}::-webkit-scrollbar-track', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb:hover', 'custom-scrollbar-${index}']
 }

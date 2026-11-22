@@ -230,19 +230,7 @@ describe('SeriesController', () => {
         })
     })
 
-    describe('a series was edited and saved (UAT-191)', () => {
-        it('the load is asked again as it is, never from scratch: only what changed is loaded', async () => {
-            mocks.load.load.mockClear()
-            const { SeriesModalsManager } = await import('../../public/js/views/helpers/SeriesModalsManager.js')
-            const manager = new SeriesModalsManager({ controller, currentScope: 'ALL', targetSeriesId: null })
-
-            manager.handleSeriesUpdated('s1')
-
-            expect(mocks.load.load).toHaveBeenCalledTimes(1)
-            expect(mocks.load.load.mock.calls[0][0].fresh).toBe(false)
-            expect(mocks.load.load.mock.calls[0][0].scopeKey).toBe('ALL')
-        })
-    })
+    // a series edited and saved (UAT-191): the screen asks the load again as it is - test/screens/albums/Albums.seriesEdited.test.tsx (F83 wave 5a)
 
     it('"Try again" of a series goes to the load service', () => {
         controller.retrySeries('s2')
