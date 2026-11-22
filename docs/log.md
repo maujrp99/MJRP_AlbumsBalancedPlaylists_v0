@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:33] step — F89: a reconferência visual do juiz independente, guardada
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+Relatório do juiz (agente separado, Opus) sobre o commit 869ec36: passa, sem P0 e sem P1, com 6 P2 (`reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-gallery-phone-visual-parity-recheck.md`, copiado sem mudar; capturas em `reports/evidence/F76/inventory-gallery-phone/recheck/`). Os seis achados foram corrigidos nos commits anteriores deste ramo.
+
 ## [2026-11-21 23:33] step — F89: as seis correções do juiz, vistas no site construído (WebKit, iPhone 14 e SE)
 **Branch:** feat/f76-inventory-gallery-on-the-phone
 Com a `main` já dentro do ramo (nada novo a unir), suíte completa 318 arquivos / 4033 testes verdes, `eslint .` com 0 erros (69 avisos antigos) e `test/architecture` 33 arquivos / 292 testes verdes, todos pela fila. Recortes dos seis pontos em `reports/evidence/F76/inventory-gallery-phone/fixes/` (252 KB, com `shoot-fixes.mjs` e `measures.json`): capa de 10 px; o motivo do «—» em duas linhas no SE; o fim da galeria e da lista com o botão de topo fora da frase; a seta «⌄» na pílula ("Not Owned" cabe a 320 px, ajustando o respiro da pílula); o cartão com foco acima do menu.
