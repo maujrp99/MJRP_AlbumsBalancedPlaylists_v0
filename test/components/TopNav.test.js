@@ -45,7 +45,7 @@ describe('TopNav (F88)', () => {
     })
 
     it.each([
-        ['/start', 'Start'], ['/albums', 'Albums'], ['/albums/abc', 'Albums'], ['/blend', 'Blend'],
+        ['/start', 'Create'], ['/albums', 'Albums'], ['/albums/abc', 'Albums'], ['/blend', 'Blend'],
         ['/saved-playlists', 'Playlists'], ['/playlist-series', 'Playlists'], ['/playlists', 'Playlists'], ['/inventory', 'Inventory']
     ])('on %s the current stop is %s', (path, label) => {
         mount(path)

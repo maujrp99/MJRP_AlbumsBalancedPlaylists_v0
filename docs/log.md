@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 08:35] step — «Start» vira «Create» («Criar» em português) no menu, com um «+» no lugar do «Go»
+
+**Branch:** wip/create-in-place-of-start
+
+- Com a palavra dele: «O que acha de mudar o start para Crie/Create ? E ao invés de um ícone de go seja algo relacionado a adição?»; «confirmo, ajuste e já pode publicar».
+- Teste primeiro (vermelho), depois o código: o item do menu do computador e da barra de baixo do celular (`phoneTabs.js`, também o nome da tela na barra do topo), o caminho de migalhas, o rodapé, os botões «Go to Create» da biblioteca vazia, e a home (`splash/copy.js`: `m.start` «Criar»/«Create», `k.start`). O ícone da parada passa a ser o «+» (as duas linhas do `Plus` do app, `splash/phoneBar.js`). Ficam como estão: o endereço `/start` (sem redirecionamento), nomes de arquivo, classe e id, «Start a series» / «Start another series» / «Start from an artist» (verbos).
+- Docs: `behavior.md` e o manual nos pontos que nomeiam o item. Suíte 4140/4140, lint sem erros.
+
 ## [2026-11-22 08:15] step — publicado em produção: o toque em «Search» inicia a busca no navegador da Apple (F79, UAT-282), da `f22c43b`
 
 **Branch:** main

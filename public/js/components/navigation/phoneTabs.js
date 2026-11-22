@@ -10,7 +10,7 @@
  * today's «Music Series» item of the computer's menu lit on them, and it is the item the Albums stop replaces (F88).
  */
 export const PHONE_TABS = Object.freeze([
-    { id: 'home', label: 'Start', route: 'start', under: ['/start'] },
+    { id: 'home', label: 'Create', route: 'start', under: ['/start'] },
     { id: 'albums', label: 'Albums', route: 'albums', under: ['/albums', '/album-series', '/series', '/artists', '/genres', '/tracks'] },
     { id: 'blend', label: 'Blend', route: 'blend', under: ['/blend'] },
     { id: 'playlists', label: 'Playlists', route: 'saved-playlists', under: ['/saved-playlists', '/playlist-series', '/playlists'] },
@@ -19,7 +19,7 @@ export const PHONE_TABS = Object.freeze([
 
 /** What the top bar says on each address; the longest beginning that matches wins. */
 const SCREEN_NAMES = Object.freeze([
-    ['/start', 'Start'],
+    ['/start', 'Create'],
     ['/albums', 'Albums'],
     ['/blend', 'Blend'],
     ['/playlists/edit', 'Edit Playlists'],

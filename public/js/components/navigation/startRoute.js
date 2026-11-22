@@ -1,5 +1,5 @@
 /**
- * The addresses F85 names: «Start» is where a series is built (it was «Home»); /home is the entry
+ * The addresses F85 names: «Create» (the address stays /start) is where a series is built (it was «Home», then «Start»); /home is the entry
  * page, the site's home, for everyone (MJRP, 2026-11-21). Written in the code, nothing here comes
  * from outside.
  */
