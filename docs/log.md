@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 22:17] step — F89: o estado da spec derivado pelo gancho (Draft para In Progress)
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+O gancho de commit derivou o estado da F89 das tarefas marcadas e gravou na spec depois do commit anterior; este commit só o registra. A F89 segue sem a «Priorizada» do MJRP no board: a spec está em esboço de aprovação (`Approved: pendente`).
+
 ## [2026-11-21 22:17] step — F89: a prova no WebKit da galeria do inventário no celular, os cartões estreitos e os documentos
 **Branch:** feat/f76-inventory-gallery-on-the-phone
 Prova na página CONSTRUÍDA (vite build do harness, as folhas na ordem do app), no WebKit do Playwright 1.63.0 (o módulo do node_modules de outro worktree, ligado por link simbólico), com Auth e Firestore bloqueados: iPhone 14 (390), iPhone 393 (o do MJRP, em pixels CSS), iPhone SE 3 (375), iPhone SE (320) e 820 px. 3 colunas de 360 a 639 px, 2 abaixo de 360 (a 320 px 3 seriam cartões de 90 px), 5 a 820 px; alvos de 44 px, texto de 12 px ou mais, nenhuma pílula cortada, sem rolagem lateral, sem erro no console, a barra de baixo não cobre a última linha. A primeira passada achou a pílula «Not Owned» cortada a 375 px: padding e «⋯» ajustados. Documentos: behavior.md (^phone-inventory-gallery e a linha da grade ou lista), info-arch.md (três estados), arch.md. Pendente: o juízo do MJRP no iPhone (3 colunas a 393 px é o número que ele pediu; a tela de Albums tem 2; a troca fica na folha de filtros, como em Albums).
