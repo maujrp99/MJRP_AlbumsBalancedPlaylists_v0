@@ -1,4 +1,4 @@
-/** The texts of the playlists screen (/playlists and /playlists/edit), in English: the words the hand-made screen had (F83 wave 2). A name a person wrote (batch, playlist, track) is a {placeholder}, never here. The panel to generate again and the Spotify window are still the hand-made ones and keep their own English until the Blend screen moves (wave 7). */
+/** The texts of the playlists screen (/playlists and /playlists/edit), in English: the words the hand-made screen had (F83 wave 2). A name a person wrote (batch, playlist, track) is a {placeholder}, never here. The panel to generate again is React since wave 7a (`playlists.regenerate.*`; its recipes and ingredients are `blend.recipes.*` and `ui.recipe.*`); the Spotify window is still the hand-made one and keeps its own English. */
 export const playlists = {
     'playlists.title.edit': 'Edit Playlist Batch',
     'playlists.title.manage': 'Playlist Management',
@@ -62,5 +62,9 @@ export const playlists = {
     'playlists.confirm.title': 'Delete playlist?',
     'playlists.confirm.message': '"{name}" and its tracks leave this set. You can undo it until you save.',
     'playlists.confirm.ok': 'Delete playlist',
-    'playlists.leave': 'You have changes to these playlists that are not saved. Leave without saving?'
+    'playlists.leave': 'You have changes to these playlists that are not saved. Leave without saving?',
+    'playlists.regenerate.title': 'Reconfigure your Music Playlist Blend',
+    'playlists.regenerate.count.one': '({count} playlist)',
+    'playlists.regenerate.count.other': '({count} playlists)',
+    'playlists.regenerate.button': 'Regenerate Playlists'
 }

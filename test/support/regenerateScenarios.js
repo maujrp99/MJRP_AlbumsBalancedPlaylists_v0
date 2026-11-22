@@ -6,10 +6,9 @@
  * configuration the panel handed to the controller when «Regenerate Playlists» was pressed, the focus, and where the phone scrolled.
  *
  * `normalize` is the proof's, as in wave 1 (the elements, the attributes in alphabetical order, the classes as a set, the style as the
- * browser writes it, the white space collapsed), with two things more: the white space at the two ends of an element is not compared (a
- * browser does not draw it inside a block, a flex item or an inline block, and the hand-made HTML had it where a template was broken
- * in lines), and two text nodes side by side are marked (`¦`), because the old HTML had ONE text node where the React piece must have
- * one: the Chromium shapes each node apart (wave 4, lesson 1).
+ * browser writes it, the white space collapsed, none between two tags), with one thing more: two text nodes side by side are marked (`¦`),
+ * because the old HTML had ONE text node where the React piece must have one: the Chromium shapes each node apart (wave 4, lesson 1).
+ * The white space at the two ends of a text is compared (the hand-made template had some, and the React piece writes it too).
  *
  * Used by: reports/evidence/F83/wave-7a/capture-before.test.js (run once, on the hand-made panel, before it was touched; it wrote
  * test/fixtures/regenerateBeforeF83.json) and test/screens/playlists/RegeneratePanel.sameAsBefore.test.tsx (the React panel, against that file).
@@ -37,7 +36,7 @@ const fingerprint = (text) => {
     return (hash >>> 0).toString(36)
 }
 
-/** One node as text: elements with sorted attributes, text with white space collapsed and cut at the two ends of its element. */
+/** One node as text: elements with sorted attributes, text with the runs of white space collapsed. */
 function describe(node) {
     if (node.nodeType === 3) return node.textContent.replace(/\s+/g, ' ')
     if (node.nodeType !== 1) return ''
@@ -45,8 +44,6 @@ function describe(node) {
     // a comment is not drawn, and a text of white space only between two tags is not compared (wave 0: `>\s+<`)
     const kids = [...node.childNodes].filter(child => child.nodeType === 1 || (child.nodeType === 3 && /\S/.test(child.textContent)))
     const parts = kids.map(describe)
-    if (kids.length && kids[0].nodeType === 3) parts[0] = parts[0].replace(/^\s+/, '')
-    if (kids.length && kids[kids.length - 1].nodeType === 3) parts[kids.length - 1] = parts[kids.length - 1].replace(/\s+$/, '')
     // two text nodes side by side: the old HTML never had them
     const inner = parts.map((part, i) => (i > 0 && kids[i].nodeType === 3 && kids[i - 1].nodeType === 3 ? `¦${part}` : part)).join('')
     const whole = `<${tag}${attributesOf(node)}>${inner}</${tag}>`
@@ -141,7 +138,7 @@ export const SCENARIOS = [
         }
     },
     {
-        name: 'playlists saved before F62 do not say their recipe: the recommended one', playlists: generated().map(({ _meta, ...rest }) => rest), run: async (h) => {
+        name: 'playlists saved before F62 do not say their recipe: the recommended one', playlists: generated().map(playlist => ({ ...playlist, _meta: undefined })), run: async (h) => {
             await h.click(TOGGLE)
             h.snap('open')
             await h.config('what a press of Regenerate hands over')
