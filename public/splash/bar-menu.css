@@ -8,7 +8,7 @@
  */
 /* ONE width for the bar in the home and in the app (F88): a function of the screen, never of the account side.
    620 px (the approved v4 and Transformar), centred on the page; it gives way, never overlapping, only below 1122 px,
-   where 251 px a side (the mark, or the home's widest right side: language and Start) no longer leave it the room. */
+   where 251 px a side (the mark, or the home's widest right side: language and Create) no longer leave it the room. */
 :root{--bar-w:min(620px,calc(100vw - 502px))}
 @keyframes eqb{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
 nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;min-width:0}

@@ -36,7 +36,7 @@
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
 *   **Moldura.** `components/navigation/PhoneShell.js` põe na página, só no celular, a barra do topo (nome da tela e botão do menu), a barra de baixo com os cinco destinos (`phoneTabs.js`) e o «voltar ao topo». O `TopNav` e o `Footer` continuam na página e o CSS os esconde. O `app.js` liga a moldura com `startPhoneShell`.
-*   **Para ir a outra tela:** a barra de baixo (Start, Albums, Blend, Playlists, Inventory). Tocar no destino atual leva ao topo. Para o resto: o botão do topo abre o menu (`PhoneMenu.js`), uma folha com a conta, as playlists novas, a ligação com o Spotify, «Clear album cache» e «Sign Out».
+*   **Para ir a outra tela:** a barra de baixo (Create, Albums, Blend, Playlists, Inventory). Tocar no destino atual leva ao topo. Para o resto: o botão do topo abre o menu (`PhoneMenu.js`), uma folha com a conta, as playlists novas, a ligação com o Spotify, «Clear album cache» e «Sign Out».
 *   **Folha.** Toda janela do celular usa `components/ui/Sheet.js` (de tela cheia ou de baixo); as janelas antigas viram folha pela casca, e a página de trás é presa por `windowsHoldThePage.js`.
 
 ---

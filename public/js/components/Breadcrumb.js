@@ -33,7 +33,7 @@ export class Breadcrumb {
     }
 
     static getCrumbs(currentPath, params) {
-        const crumbs = [{ label: 'Start', path: '/start' }]
+        const crumbs = [{ label: 'Create', path: '/start' }]
 
         if (currentPath.startsWith('/albums')) {
             crumbs.push({ label: 'Albums', path: '/albums' })

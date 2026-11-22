@@ -71,11 +71,11 @@ describe('the app asked for /home (F85, MJRP 2026-11-21)', () => {
 describe('the menu of the computer', () => {
     const html = () => { document.body.innerHTML = new TopNav().render(); return document.body }
 
-    it('says «Start» and goes to /start; nothing says Home', () => {
+    it('says «Create» and goes to /start; nothing says Home', () => {
         const body = html()
         const links = [...body.querySelectorAll('a[href="/start"]')].map(a => a.textContent.trim())
         expect(links.length).toBeGreaterThanOrEqual(1) // the bar (the drawer is gone, F88)
-        links.forEach(text => expect(text).toBe('Start'))
+        links.forEach(text => expect(text).toBe('Create'))
         expect(body.querySelectorAll('a[href="/home"]:not(.top-menu__home)').length).toBe(0) // only the logo leads to /home
         expect(body.textContent).not.toMatch(/\bHome\b/)
     })
@@ -88,7 +88,7 @@ describe('the menu of the computer', () => {
 
     it('the footer and the breadcrumb say Start', () => {
         expect(new Footer({}).render()).toContain('href="/start"')
-        expect(Breadcrumb.getCrumbs('/albums', {})[0]).toEqual({ label: 'Start', path: '/start' })
+        expect(Breadcrumb.getCrumbs('/albums', {})[0]).toEqual({ label: 'Create', path: '/start' })
     })
 })
 
@@ -110,7 +110,7 @@ describe('the top bar of the phone', () => {
         expect(link.hasAttribute('data-full-page')).toBe(true)
         expect(link.getAttribute('aria-label')).toMatch(/entry page/)
         expect(link.querySelector('img.phone-topbar__logo')).not.toBeNull()
-        expect(document.querySelector('a[data-tab="home"]').textContent.trim()).toBe('Start')
+        expect(document.querySelector('a[data-tab="home"]').textContent.trim()).toBe('Create')
     })
 })
 

@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 09:39] review — F91: o juiz independente passou «Create»/«Criar» com o «+» no menu
+
+**Branch:** wip/create-in-place-of-start
+
+- Veredito: passa (0 P0, 0 P1, 1 P2), julgado na `fbacd12` contra a `main` na `44137fb`, nos sites construídos, em 7 telas × 6 tamanhos, em inglês e português: nenhum vizinho se moveu. Relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-create-menu-item-visual-parity-recheck.md`.
+- P2: o «+» parece um pouco mais leve que os outros ícones (ocupa 14 das 24 unidades; os outros, 18 a 20). Nota de texto: «Go to Create» é aceitável mas estranho; «Create a series» diria melhor.
+
+## [2026-11-22 08:48] step — prova no navegador do «Create» / «Criar» com o «+» (F88)
+
+**Branch:** wip/create-in-place-of-start
+
+- Com a palavra dele: «confirmo, ajuste e já pode publicar». Site construído, branch contra `main`, Chromium e WebKit 1280, WebKit iPhone 393 e 375: o item diz «Create» / «Criar» com o «+», leva a `/start`, acende na `/start`; caixa do item e dos vizinhos sem deslocamento; fora da caixa só mudam os nomes da tela (migalhas, topo do celular, botão do vazio). Detalhes e números em `reports/evidence/F88/create-in-place-of-start/proof.md`.
+
 ## [2026-11-22 08:36] decision — F91: «Create»/«Criar» com o ícone de «+» confirmado; sai depois da tela Blend
 
 **Branch:** main
@@ -13,6 +26,14 @@
 ## [2026-11-22 08:36] decision — F91, F92 e F93 registradas: «Criar» no menu, algoritmos de mistura no CMS, chaves de feature no CMS (S-73, S-74, S-75, NFR-03)
 **Branch:** wip/register-create-algorithms-toggles
 Palavras do MJRP (2026-11-22), antes de começar o CMS. (1) «O que acha de mudar o start para Crie/Create ? E ao invés de um ícone de go seja algo relacionado a adição?» (pergunta, não decisão; o orquestrador concordou; a F91, via rápida, melhoria, pergunta aberta: o MJRP confirma o nome e o ícone). (2) «Importante: uma das ideias dessa plataforma seria a de ir eu ir criando e acrescentando algoritmos para o blend. Por exemplo um algoritmo de deep cuts, um algoritmo das menos ouvidas o oposto do top. Eu eu precisa no CMS ter uma seção especial para criar e gerar algoritmos e gerenciar o aparecimento e configuração deles na tela de blend. Isso implica que a tela de blend tem que ser altamente configurável tb.» (a F92, via padrão). (3) «no CMS importante termos feature toggle para ligarmos e desligarmos features em prod. A começar pela integração com a discogs. A ideia é facilmente tirar features de prod por isso creio que a componentizacao e modularização sejam essências na arquitetura da plataforma, to certo?» (a F93, via padrão; mais o NFR-03, proposta do agente pendente do MJRP, constituição intacta). O CMS já estava registrado (F82, S-64): a F92 e a F93 são features próprias que dependem dela, porque cada uma pede uma proposta de arquitetura; a F82 guarda só os pedidos pequenos (REQ-02 e REQ-03). Só documentação: nenhum código, nenhum protótipo; nada priorizado nem em andamento. Os planos da F92 e da F93 trazem fatos conferidos no código (o registro `public/js/algorithms/index.js` e o interruptor `valueSwitch.js` do Discogs). Ids reservados por `merge_train.py next-item-id --reserve`.
+
+## [2026-11-22 08:35] step — «Start» vira «Create» («Criar» em português) no menu, com um «+» no lugar do «Go»
+
+**Branch:** wip/create-in-place-of-start
+
+- Com a palavra dele: «O que acha de mudar o start para Crie/Create ? E ao invés de um ícone de go seja algo relacionado a adição?»; «confirmo, ajuste e já pode publicar».
+- Teste primeiro (vermelho), depois o código: o item do menu do computador e da barra de baixo do celular (`phoneTabs.js`, também o nome da tela na barra do topo), o caminho de migalhas, o rodapé, os botões «Go to Create» da biblioteca vazia, e a home (`splash/copy.js`: `m.start` «Criar»/«Create», `k.start`). O ícone da parada passa a ser o «+» (as duas linhas do `Plus` do app, `splash/phoneBar.js`). Ficam como estão: o endereço `/start` (sem redirecionamento), nomes de arquivo, classe e id, «Start a series» / «Start another series» / «Start from an artist» (verbos).
+- Docs: `behavior.md` e o manual nos pontos que nomeiam o item. Suíte 4140/4140, lint sem erros.
 
 ## [2026-11-22 08:15] step — publicado em produção: o toque em «Search» inicia a busca no navegador da Apple (F79, UAT-282), da `f22c43b`
 

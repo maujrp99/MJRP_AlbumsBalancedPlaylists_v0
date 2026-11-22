@@ -90,14 +90,14 @@ describe('the top of the screen (UAT-190)', () => {
         const editing = draw(PlaylistsGridRenderer.renderHeader({ isEditMode: true, editedBatchName: 'Road trip' }))
         const path = (host) => host.querySelector('.breadcrumb').textContent.replace(/\s+/g, ' ').trim()
 
-        expect(path(creating)).toBe('Start › Blend › Playlists')
-        expect(path(editing)).toBe('Start › Saved Playlists › Edit Batch')
+        expect(path(creating)).toBe('Create › Blend › Playlists')
+        expect(path(editing)).toBe('Create › Saved Playlists › Edit Batch')
         expect(creating.querySelector('.breadcrumb-link[data-path="/blend"]')).not.toBeNull()
         expect(editing.querySelector('.breadcrumb-link[data-path="/saved-playlists"]')).not.toBeNull()
     })
 
     it('keeps the path of the saved playlists screen itself as it was', () => {
-        expect(Breadcrumb.getCrumbs('/saved-playlists', {}).map(c => c.label)).toEqual(['Start'])
+        expect(Breadcrumb.getCrumbs('/saved-playlists', {}).map(c => c.label)).toEqual(['Create'])
     })
 
     it('labels the batch name once, tied to its field', () => {

@@ -22,8 +22,20 @@ describe('the bar of the top menu', () => {
         stops().forEach(a => expect(a.hasAttribute('data-link')).toBe(true))
     })
 
+    it('the first stop is «Create» (the owner, 2026-11-22: «mudar o start para Crie/Create»), still going to /start, with the plus above it on the phone and the active state on /start', () => {
+        document.body.innerHTML = renderPhoneBar('/start')
+        const first = document.querySelector('nav.ms a.stop')
+        expect(first.querySelector('.lb').textContent).toBe('Create')
+        expect(first.getAttribute('href')).toBe('/start')
+        expect(first.classList.contains('cur')).toBe(true)
+        expect(first.getAttribute('aria-current')).toBe('page')
+        expect(first.querySelector('svg.ic line[x1="12"][y2="19"]')).not.toBeNull()
+        expect(first.querySelector('svg.ic line[x1="5"][x2="19"]')).not.toBeNull()
+        expect(document.body.textContent).not.toMatch(/\bStart\b/)
+    })
+
     it.each([
-        ['/start', 'Start'],
+        ['/start', 'Create'],
         ['/albums', 'Albums'],
         ['/albums/abc123', 'Albums'],
         ['/blend', 'Blend'],

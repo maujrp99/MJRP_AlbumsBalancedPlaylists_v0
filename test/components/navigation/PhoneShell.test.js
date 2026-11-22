@@ -16,7 +16,7 @@ import { PhoneShell } from '../../../public/js/components/navigation/PhoneShell.
 
 describe('the tabs of the phone', () => {
     it('are the five destinations, in the order of the work', () => {
-        expect(PHONE_TABS.map(tab => tab.label)).toEqual(['Start', 'Albums', 'Blend', 'Playlists', 'Inventory'])
+        expect(PHONE_TABS.map(tab => tab.label)).toEqual(['Create', 'Albums', 'Blend', 'Playlists', 'Inventory'])
     })
 
     it.each([
@@ -73,7 +73,7 @@ describe('the tabs of the phone', () => {
     })
 
     it('names each screen for the top bar', () => {
-        expect(screenName('/start')).toBe('Start')
+        expect(screenName('/start')).toBe('Create')
         expect(screenName('/albums/abc123')).toBe('Albums')
         expect(screenName('/playlists')).toBe('New Playlists')
         expect(screenName('/playlists/edit')).toBe('Edit Playlists')
