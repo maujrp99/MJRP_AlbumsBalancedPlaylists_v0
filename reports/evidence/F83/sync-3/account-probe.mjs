@@ -1,6 +1,6 @@
 // is the seeded person really signed in? (asked of the branch's build and of main's)
 import { webkit, devices } from '@playwright/test'
-const API_KEY = 'AIzaSyA8x-II628CK3qQmmfr-WJE13LXdu7nAxs'
+const API_KEY = process.env.FIREBASE_WEB_API_KEY
 for (const base of process.argv.slice(2)) {
     const b = await webkit.launch()
     const c = await b.newContext({ ...devices['iPhone 14'], viewport: { width: 393, height: 852 }, reducedMotion: 'reduce' })

@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 04:04] step — F83: as provas da terceira junta leem a chave web do ambiente
+
+**Branch:** claude/f83-wave-6a-inventory-screen
+
+- Os dois roteiros de prova da terceira junta (`reports/evidence/F83/sync-3/account-probe.mjs` e `browser-proof.mjs`) traziam a chave web do Firebase escrita; passam a ler `process.env.FIREBASE_WEB_API_KEY` (a mesma troca da linha de integração). `test/security/noSecretsInRepo.test.js` volta a ficar verde.
+
 ## [2026-11-22 03:35] step — F83, onda 6a: o dourado da tela do inventário, capturado da tela à mão antes de tocá-la
 
 **Branch:** claude/f83-wave-6a-inventory-screen
