@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 21:53] step — F89: a galeria de capas do inventário no celular — registrada (S-71, F89, UAT-274)
+**Branch:** feat/f76-inventory-gallery-on-the-phone
+O MJRP, 2026-11-21: «no inventory não tem a view de galeria? só de lista?» e, a «Galeria no inventário do celular: sim ou não?»: «1. Acrescenta». Registrado antes de construir: a história S-71 (embutida no PRD, épico EP-06, ao lado da S-58), a feature F89 (spec, plan e tasks em esboço; imports a S-71) e a UAT-274 (melhoria, aberta pelo humano). Convenção seguida: como a F88 e a S-70, uma história nova para a necessidade nova. Não coube como REQ-14 na F76, a dona do inventário do celular: ela está em «Pronto para UAT» e a trava do grafo recusa uma tarefa aberta numa feature Done; reabri-la é do MJRP (`Human-reopened:`). Por isso uma feature própria, que a F76 não precisa conhecer.
+
 ## [2026-11-21 20:51] step — F75: o relatório do juiz sobre o «Clear Cache» (passou, sem P0 nem P1, 1 P2) e suas capturas entram no ramo
 **Branch:** fix/f75-clear-cache-keeps-the-inventory-values
 O juiz escreveu o relatório sobre 01d26d9; copiado como veio para `reports/audits/` e as capturas para `reports/evidence/F75/clear-cache-recheck/`. UAT-272 (melhoria, aberta pelo juiz): o rodapé ainda diz «Clear Cache» / «Cache Cleared!» embora agora guarde os valores do inventário e o câmbio; o texto visível não foi mudado, é do MJRP aprovar.
