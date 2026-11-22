@@ -1,10 +1,14 @@
 /**
+ * (2026-11-22, wave 8c: the sheet of the phone went to React, and components/ui/Sheet.js (173) left the list in the commit that deleted it: now ui/SheetWindow.tsx (`useSheetWindow` for a
+ * screen, `openSheet` for a controller), with the same markup, timing, focus, keys and drag kept by test/ui/SheetWindow.sameAsBefore.test.tsx. utils/SafeDOM.js (237) went in the same commit: the sheet was its last user (the sensor of dead modules found it). Three files are left, with their reasons:
+ * components/Icons.js and views/BaseView.js (they go with their last users: wave 8d) and utils/pageScrollLock.js, which stays for good.)
+ *
  * (2026-11-22, wave 8b: the window, question, notice and loading-bar engines went, and these left the list in the commit that deleted or moved them: components/Toast.js (154) and
  * components/GlobalProgress.js (80), now stores/toasts.js and stores/progress.js (what the controllers and services call, no React) drawn by shell/Toasts.tsx and
  * shell/GlobalProgress.tsx; components/ui/BaseModal.js (178), modals/ConfirmModal.js (67), modals/InputModal.js (113) and services/DialogService.js (147), now ui/ModalShell.tsx,
  * ui/dialogs/ConfirmWindow.tsx, InputWindow.tsx and dialogs.ts; components/ui/windowsHoldThePage.js (58), now shell/windowsHoldThePage.ts; components/ui/coverImage.js (67), now
  * ui/coverStandIn.ts (the stand-in and the listener; ui/CoverImage.tsx draws the image); and components/navigation/{signInFromLink,startRoute}.js (30 + 62), moved to utils/ (plain
- * functions, no drawing). Left in the list, with their reasons: components/ui/Sheet.js (the phone's sheet engine: wave 8c), utils/SafeDOM.js, components/Icons.js and
+ * functions, no drawing). Left in the list, with their reasons: components/Icons.js and
  * views/BaseView.js (they go with their last users: wave 8d) and utils/pageScrollLock.js, which stays for good: it holds the page by writing the style of the body, a page utility
  * with no React equivalent that the sheet and the shell both use; the final rule will list it among the exceptions, with that reason.)
  *
@@ -88,8 +92,6 @@
  */
 export const HAND_MADE = {
     'components/Icons.js': 178,
-    'components/ui/Sheet.js': 173,
-    'utils/SafeDOM.js': 237,
     'utils/pageScrollLock.js': 56,
     'views/BaseView.js': 144
 }

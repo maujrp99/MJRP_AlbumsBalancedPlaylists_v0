@@ -3,7 +3,7 @@
  * F76 REQ-10): the series are reached without a box that scrolls inside the page. The page shows one row (the series chosen, or «Choose a series») and a tap
  * opens a full sheet with a search field and every series; a tap on one closes the sheet FIRST and then chooses it (the next thing that opens is never under
  * the sheet). The Blend takes ONE series, so the sheet is a single choice. «Blend it!» stays in an action bar, off while a step is missing, with the note
- * saying which. The motor of the sheet is the hand-made one (ui/SheetWindow.tsx); what is inside is React. Styles: public/css/mobile/blend.css.
+ * saying which. The sheet is ui/SheetWindow.tsx; what is inside is React. Styles: public/css/mobile/blend.css.
  *
  * The search is read from the `input` event of the field itself (the field is not controlled: React's `onChange` does not hear a value written by a script).
  */

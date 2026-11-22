@@ -6,7 +6,7 @@
  * (↑ ↓ ✕ of 44 px, no dragging); the «Undo» strip sits right above it for 8 seconds after a removal or «Add all».
  *
  * On the phone the dock IS the action bar of F76 (`.phone-action-bar`): one cover with the count, the name, «Tap to edit or reorder» and
- * «Create series»; a tap opens the series in a full sheet (components/ui/Sheet.js, through ui/SheetWindow) with the name on top and
+ * «Create series»; a tap opens the series in a full sheet (ui/SheetWindow) with the name on top and
  * «Create series» at its foot.
  *
  * It decides nothing: it draws the picture the controller took (`controller.model`) and hands every gesture to the controller. The old

@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 15:58] step — F83 onda 8c: a Folha do celular em React (ui/SheetWindow.tsx), Sheet.js e SafeDOM.js saem
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O motor da Folha do celular em React, em `public/js/ui/SheetWindow.tsx`: o gancho `useSheetWindow` (a mesma API para as 12 aberturas, de 10 telas e da moldura) e a porta imperativa `openSheet` (uma raiz de React própria, para código que não é componente; hoje só os testes a usam: nenhum controlador abria uma Folha). O casco desenha as mesmas classes, atributos e ordem do motor à mão; a página presa (`pageScrollLock`, mantido), o foco que volta, Escape e Tab em captura no `document`, o toque fora, o arrastar para baixo (80 px) e o fechar quando a tela deixa de ser celular são os do motor à mão, na mesma ordem dentro da chamada de fechar.
+- Saem por `git rm`: `components/ui/Sheet.js` (173 linhas) e `utils/SafeDOM.js` (237; a Folha era o último a importá-lo e o sensor `noDeadModules` o acusou) com `test/utils/SafeDOM.test.js` e `test/components/ui/Sheet.test.js`. Os 13 casos do `Sheet.test.js` foram levados, asserção por asserção, para `test/ui/SheetWindow.test.tsx` (pela porta `openSheet`), mais o caso novo de uma tela que diz o título a cada desenho.
+- A prova «igual ao de antes»: `test/ui/SheetWindow.sameAsBefore.test.tsx`, 32 cenários contra o retrato do motor à mão (commits anteriores), com 3 verificações de que o teste enxerga (uma palavra, uma classe, a descida de 200 ms ao milissegundo). Duas diferenças de propósito, ditas em `KNOWN_DIFFERENCES` com a foto antiga transformada e no cabeçalho do arquivo: uma Folha aberta sai junto com a tela (ou a parte da tela) que a abriu, sem descer; uma Folha que está fechando guarda o conteúdo enquanto desce. O mesmo vale para o caso «uma virada do celular com a Folha aberta» do `Blend.sameAsBefore`.
+- Achados no caminho: (1) `setTitle` chamado a cada desenho (a Folha de filtros o faz em um efeito) refazia a tela sem fim quando virou estado: o teste de FilterToolbar travou a suíte (CPU a 200%, sem mensagem); agora `setTitle` com o mesmo texto não muda nada. (2) A classe `sheet--closing` entra na própria chamada de fechar (o React escreve as mesmas classes depois): sem isso o observador da página presa e um teste da janela de exportar viam a Folha como aberta por um microtask.
+- Sensores: `handMadeScreensBaseline` perde `components/ui/Sheet.js` e `utils/SafeDOM.js` (sobram 3 arquivos, 378 linhas: `Icons.js`, `BaseView.js`, `pageScrollLock.js`), os limites de `handMadeScreensOnlyShrink` e de `migrationStatus` descem, `complexityAllowlist` perde a entrada do `SafeDOM`. `windowsHoldThePage.test.js` usa a porta nova; o caso «uma Folha tirada da página sem o fechar» usa um elemento em forma de Folha (a de React não pode ser tirada sem o fechar).
+- Suíte inteira (385 arquivos, 5.131 testes) alvo desta entrada: ver a entrada de totais no fim da onda.
+
+
 ## [2026-11-22 15:46] step — F83 onda 8c: o caso das leituras guardadas do inventário deixa de ser intermitente
 
 **Branch:** claude/f83-wave-8c-phone-sheet

@@ -6,7 +6,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { giveBackAStrayHold, holdPageBehindWindows } from '../../public/js/shell/windowsHoldThePage'
 import { lockPageScroll, pageScrollLocks } from '../../public/js/utils/pageScrollLock.js'
-import { openSheet } from '../../public/js/components/ui/Sheet.js'
+import { openSheet } from '../../public/js/ui/SheetWindow'
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 0))
 const windowOf = (className, id) => {
@@ -98,19 +98,21 @@ describe('windowsHoldThePage', () => {
 
         it('a sheet taken off the page without its close does not leave the page pinned', async () => {
             stop = holdPageBehindWindows()
-            const sheet = openSheet({ variant: 'bottom', title: 'Jump to an artist' })
+            // the React sheet cannot be taken off the page without its close (React owns its markup): what the watcher guards against is the hold, so the
+            // case is a hold with a sheet-shaped element that leaves the page by other hands (the hand-made sheet's `element.remove()` of before wave 8c)
+            const sheet = windowOf('sheet sheet--bottom')
+            document.body.appendChild(sheet)
+            lockPageScroll()
             expect(document.body.style.position).toBe('fixed')
             expect(pageScrollLocks()).toBe(1)
 
-            sheet.element.remove() // no close(): the count would stay at 1 for ever
+            sheet.remove() // no close(): the count would stay at 1 for ever
             await settle()
 
             expect(document.body.style.position).toBe('')
             expect(document.body.style.top).toBe('')
             expect(pageScrollLocks()).toBe(0)
             expect(scrolledTo.at(-1)).toEqual([0, 1200]) // back where the page was
-            sheet.close() // a late close changes nothing
-            expect(pageScrollLocks()).toBe(0)
         })
 
         it('a sheet open, or a window open, keeps the page held while other things come and go', async () => {
@@ -145,13 +147,14 @@ describe('windowsHoldThePage', () => {
             expect(scrolledTo.at(-1)).toEqual([0, 4371])
         })
 
-        it('a lock with its sheet still open is left alone', () => {
+        it('a lock with its sheet still open is left alone', async () => {
             const sheet = openSheet({ variant: 'bottom', title: 'Filters' })
             lockPageScroll()
             giveBackAStrayHold()
             expect(document.body.style.position).toBe('fixed')
             expect(pageScrollLocks()).toBe(2)
             sheet.close()
+            await settle() // the closing sheet is marked in the update that follows the close
             giveBackAStrayHold() // the extra lock has nothing open behind it
             expect(pageScrollLocks()).toBe(0)
             expect(document.body.style.position).toBe('')

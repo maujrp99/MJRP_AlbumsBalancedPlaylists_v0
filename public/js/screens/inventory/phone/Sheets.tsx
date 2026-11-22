@@ -1,6 +1,6 @@
 /**
- * The sheets of the inventory on the phone (F83 wave 6a; the port of views/InventoryPhoneSheets.js, F76 TASK-07). The motor of the sheet stays the
- * hand-made one (ui/SheetWindow.tsx); what is inside is React. Styles: public/css/mobile/inventory.css.
+ * The sheets of the inventory on the phone (F83 wave 6a; the port of views/InventoryPhoneSheets.js, F76 TASK-07). The sheet is
+ * ui/SheetWindow.tsx; what is inside is React. Styles: public/css/mobile/inventory.css.
  *
  *   status      the three statuses, the current one checked: two taps change it
  *   item        the named actions of one album: open, edit, its value (with «Data provided by Discogs.» beside a Discogs value), where to buy, Sell and Trade (not yet), remove
