@@ -1,7 +1,7 @@
 /**
  * Results - what the search of the catalog shows on the Start screen (F67 states, F79 words; the old views/HomeView.js `renderResults`,
  * `drawResults`, `drawFilters`, `drawArtistLine`, `markCards`, `drawAfter` and the «stage» card of views/renderers/DiscographyRenderer.js,
- * the same elements and classes): the three steps (first visit), the wait, the artist with the type chips and «Add all», the grid of covers
+ * the same elements and classes): the wait, the artist with the type chips and «Add all», the grid of covers
  * (numbered when chosen), «not found», «no answer». One place, drawn from the state of the scan.
  *
  * The old grid was made again at each step of the scan and at each filter, and the chosen covers were only marked: here the grid is keyed on
@@ -49,15 +49,6 @@ function ResultCard({ album, place, phone, onPick }: CardProps) {
             <span className="home-card__title">{album.title}</span>
             <span className="home-card__year">{badges.length ? `${year} · ${badges.join(', ')}` : year}</span>
         </button>
-    )
-}
-
-function Step({ n, step }: { n: number; step: 'find' | 'add' | 'create' }) {
-    return (
-        <li>
-            <strong className="home-how__n">{String(n)}</strong>
-            <span><strong>{t(`start.how.${step}.verb`)}</strong>{` ${t(`start.how.${step}.rest`)}`}</span>
-        </li>
     )
 }
 
@@ -160,9 +151,6 @@ export function Results({ controller, phone }: { controller: StartController; ph
             <p id="homeAfter" className="home-after" role="status" hidden={!created}>
                 {afterText(controller, phone)}
             </p>
-            <ol id="homeHow" className="home-how" hidden={status !== ScanStatus.IDLE}>
-                <Step n={1} step="find" /><Step n={2} step="add" /><Step n={3} step="create" />
-            </ol>
             <p id="homeWait" className="home-wait" role="status" hidden={status !== ScanStatus.SCANNING}>
                 {status === ScanStatus.SCANNING ? t('start.wait', { query: scan.query }) : ''}
             </p>

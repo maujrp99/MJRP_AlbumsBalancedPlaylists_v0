@@ -75,16 +75,17 @@ describe('in Portuguese the screen speaks Portuguese', () => {
         window.localStorage.removeItem(PREVIEW_KEY)
     })
 
-    it('the first visit: the title, the field, the hint, the three steps, the empty dock', async () => {
+    it('the first visit, lean: the title, «What is a series?», the field, the one link, no steps and no bar', async () => {
         const screen = await open(false)
         const text = screen.text()
         expect(text).toContain('Escolha os álbuns.')
         expect(text).toContain('Nós misturamos as playlists.')
         expect(text).toContain('cole uma lista')
-        expect(text).toContain('Ache')
-        expect(text).toContain('Sua série está vazia')
-        expect(text).toContain('Adicione um álbum para criar a série')
-        expect(document.querySelector('#artistScanInput')!.getAttribute('placeholder')).toBe('Um artista, ou cole uma lista de álbuns')
+        expect(text).toContain('O que é uma série?')
+        expect(text).not.toContain('Ache')
+        expect(document.querySelector('#homeHow')).toBeNull()
+        expect(document.querySelector('.home-dock')).toBeNull()
+        expect(document.querySelector('#artistScanInput')!.getAttribute('placeholder')).toBe('Digite um artista')
         expect(document.querySelector('#btnScanArtist')!.textContent).toBe('Buscar')
         expect(text).not.toContain('Pick the albums.')
         await screen.leave()

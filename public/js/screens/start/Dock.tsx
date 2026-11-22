@@ -213,18 +213,11 @@ function ComputerMeta({ controller, model }: { controller: StartController; mode
             </div>
         )
     }
-    if (!model.albums.length) {
-        const empty = dockEmptyNote({ phone: false, covers: model.coversOnScreen })
-        return <div className="home-dock__meta"><strong>{empty.title}</strong><span>{empty.note}</span></div>
-    }
     return <div className="home-dock__meta"><NameBox controller={controller} model={model} id="seriesNameInput" /><Status model={model} /></div>
 }
 
 function ComputerGo({ controller, model }: { controller: StartController; model: DockModel }) {
     if (model.create === 'created') return <AfterButtons controller={controller} phone={false} />
-    if (!model.albums.length) {
-        return <div className="home-go"><small>{t('start.dock.addOne')}</small><CreateButton controller={controller} model={model} id="btnCreateSeries" phone={false} /></div>
-    }
     return (
         <div className="home-go">
             <DockButton text={t(model.open ? 'start.dock.done' : 'start.dock.editOrder')} className="home-btn is-ghost" action="toggle" id="btnEditOrder" expanded={model.open} onClick={() => controller.toggleOpen()} />
@@ -235,6 +228,10 @@ function ComputerGo({ controller, model }: { controller: StartController; model:
 
 function ComputerDock({ controller, model }: { controller: StartController; model: DockModel }) {
     const n = model.albums.length
+    // No bar until the first cover is chosen (as on the phone); an «Undo» of the last removal still has its strip
+    if (!barShows({ chosen: n, created: model.create === 'created' })) {
+        return <div className="home-dockwrap is-barless"><UndoStrip controller={controller} undo={model.undo} /></div>
+    }
     return (
         <div className="home-dockwrap">
             {model.open ? <Panel controller={controller} model={model} /> : null}
