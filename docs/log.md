@@ -15,6 +15,13 @@
 **Branch:** wip/register-smooth-transitions
 Palavras do MJRP (2026-11-22): «agora que vi no menu aquela barra laranja que aparece no topo, nao deveria aparecer mesmo e as transicoes precisam ser mais suaves, creio que é pq nao finalizou a migracao ainda, certo?» Ao «Transições mais suaves entre telas: registro para logo depois da migração (recomendo)?»: «3. Sim». A F94 (via padrão, melhoria, depende da F83) e a S-76 (EP-01, ao lado da S-73). Não decidido: como (cruzamento, View Transitions, elemento compartilhado, esqueleto), quanto dura, se a home entra; começa por uma rodada de desenho. A barra laranja é pergunta aberta à parte, à espera da foto dele (o spec traz uma pista do código, não confirmada). Fatos conferidos na linha `integrate/staging-2026-11-21` (só leitura): o roteador troca `#app` sem transição; as telas carregam sob demanda, com a anterior à vista e uma barra de progresso laranja após 150 ms; a home é `public/splash.html`, página à parte. Só documentação: nenhum código nem protótipo; nada priorizado nem em andamento. Ids por `merge_train.py next-item-id --reserve`.
 
+## [2026-11-22 12:52] step — prévia: a tela Create enxuta também no computador (F79)
+
+**Branch:** wip/f79-create-lean-on-the-computer
+
+- Pedido dele: «podemos aplicar na sessão create o mesmo conceito de lean da versao mobile?». Comparador em `design/proposals/f79-create-lean-computer/comparator.html`, proposta em `proposal.md` da mesma pasta; desenho, sem código do produto.
+- Enxuta (recomendada): saem a frase da série (o link «What is a series?» a abre no lugar), a frase sob o campo, os três passos e a barra vazia da série; o aviso sem conta vem com a barra. Primeira tela: 104/124 palavras hoje, 16 na Enxuta. Variante: os passos numa linha discreta (42). Nenhuma palavra nova. Três perguntas com ele na proposta.
+
 ## [2026-11-22 12:51] decision — o menu do computador usa a Syne, a letra da marca (F88)
 
 **Branch:** main
