@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 05:37] step — F83, onda 6c: a prova no navegador e os totais
+
+**Branch:** claude/f83-wave-6c-inventory-texts
+
+- Totais na ponta, pela fila: suíte inteira 367 arquivos, 4.849 testes, todos verdes (inclui `test/architecture` e `noSecretsInRepo`); `typecheck` sem erro; `lint` 0 erros e os mesmos 68 avisos do pai; build dentro do teto (script principal 214.274 B contra 213.079 B no pai).
+- Prova no navegador (`reports/evidence/F83/wave-6c/proof.md`): o site construído desta ponta contra o pai `6622654`, em inglês, Chromium a 1280 e a 393: tela do inventário (com o Discogs de mentira) e as janelas, 0 diferença de texto, caixas, foco e rolagem; a única figura diferente (a busca digitada) também difere de pai contra pai (o cursor). Português no servidor de desenvolvimento: 14 estados, nenhum inglês sobrando, 13 limpos (o 14º tem só um brilho decorativo da janela do álbum que passa da página, igual em inglês); a passada achou «Lista de desejos» estourando o selo a 393 px e virou «Desejos».
+- `wave-lessons.md` § 17 e a linha 6c do `tasks.md` (TASK-25 marcada feita: 6a, 6b e 6c completas).
+
 ## [2026-11-22 05:32] step — F83, onda 6c: as frases dos modelos do inventário no dicionário
 
 **Branch:** claude/f83-wave-6c-inventory-texts
