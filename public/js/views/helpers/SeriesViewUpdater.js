@@ -81,7 +81,7 @@ export class SeriesViewUpdater {
      * @param {number} albumCount
      * @param {boolean} isLoading - the albums are loading
      * @param {'loading'|'empty'|'list'} [listState] - F79: while the series are being read the
-     *        list area says it is loading, instead of the empty state; the grid steps aside
+     *        list area says it is loading, instead of the empty state; the grid goes invisible (keeping its space)
      */
     updateEmptyState(containerId, albumCount, isLoading, listState = ListState.LIST) {
         const container = document.getElementById(containerId);
@@ -90,7 +90,8 @@ export class SeriesViewUpdater {
         SafeDOM.clear(container);
 
         const grid = document.getElementById('series-grid-mount');
-        if (grid) grid.hidden = listState === ListState.LOADING;
+        // invisible, not removed: it keeps its space, so the empty card or the list replaces the loading state without a jump
+        if (grid) grid.style.visibility = listState === ListState.LOADING ? 'hidden' : '';
 
         if (listState === ListState.LOADING) {
             new SeriesLoadingState().mount(container);

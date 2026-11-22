@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 15:58] step — a espera de `/albums` ocupa a altura do cartão vazio: o rodapé não pula (F79, achados P2-A e P2-B do 2º parecer do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- O bloco de espera era baixo: o rodapé «Last updated» ficava no meio da tela e saltava quando o cartão vazio ou a lista chegava (deslocamento 0,663 abrindo Álbuns pelo menu, `main` 0,112; 0,141 com o cartão vazio). Agora o bloco tem `min-height` igual ao cartão vazio medido na tela construída (391 px a 1280, 282 px a 393; `LOADING_MIN_HEIGHT` em `SeriesLoadingState.js`), com o círculo ou a frase centrados; e a grade fica invisível (`visibility: hidden`) em vez de escondida, guardando o espaço da sua mensagem, para o cartão vazio chegar sem pular.
+- Medido no site construído (Chromium 1280, leitura segurada 1,5 s, duas séries): lista pelo menu 0,663 → 0,031 (`main` 0,112); lista direto 0,041 → 0 na troca; cartão vazio 0,141 → 0,0025 (o mesmo ruído de `main`). Telas assentadas 0 pixel contra `main`; Blend 0. A linha das abas «By Album / By Artist» (tardia, já na `main`) não foi tocada.
+
 ## [2026-11-22 15:01] step — prova no site construído da tela Álbuns em espera, do Escape e do celular (F79, seção C)
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line

@@ -37,6 +37,7 @@ vi.mock('../../public/js/components/InventoryAddModal.js', () => ({ InventoryAdd
 vi.mock('../../public/js/components/ranking/UserRankModal.js', () => ({ UserRankModal: class { show() { } } }))
 vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn(), prompt: vi.fn() } }))
 
+import { LOADING_MIN_HEIGHT } from '../../public/js/components/series/SeriesLoadingState.js'
 import SeriesView from '../../public/js/views/SeriesView.js'
 import SeriesController from '../../public/js/controllers/SeriesController.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
@@ -114,8 +115,26 @@ describe('the albums screen while the series are being read', () => {
         expect(loading().querySelector('.animate-spin')).not.toBeNull()
         expect(emptyCard()).toBeNull()
         expect(listArea().textContent).not.toContain('No albums in library')
-        // the grid, with its own «No albums match» text, steps aside (hidden) for the wait
-        expect(gridMount().hidden).toBe(true)
+        // the grid, with its own «No albums match» text, goes invisible, keeping its space for the wait
+        expect(gridMount().style.visibility).toBe('hidden')
+    })
+
+    it('the loading block is as tall as the empty card, so the footer does not move when the card or the list arrives', async () => {
+        holdTheRead()
+        await open()
+
+        expect(loading().style.minHeight).toBe(`${LOADING_MIN_HEIGHT.computer}px`)
+        expect(loading().classList.contains('flex')).toBe(true)
+        expect(loading().classList.contains('items-center')).toBe(true)
+        expect(loading().classList.contains('justify-center')).toBe(true)
+    })
+
+    it('on the phone the block takes the phone empty card height', async () => {
+        setWidth(true)
+        holdTheRead()
+        await open()
+
+        expect(loading().style.minHeight).toBe(`${LOADING_MIN_HEIGHT.phone}px`)
     })
 
     it('on the phone it says «Loading your series…» in words', async () => {
@@ -136,7 +155,7 @@ describe('the albums screen while the series are being read', () => {
 
         expect(loading()).toBeNull()
         expect(emptyCard()).toBeNull()
-        expect(gridMount().hidden).toBe(false)
+        expect(gridMount().style.visibility).toBe('')
         expect(gridMount().querySelectorAll('.albums-grid > [data-id]').length).toBe(2)
     })
 
@@ -171,7 +190,7 @@ describe('the albums screen while the series are being read', () => {
 
         expect(loading()).toBeNull()
         expect(emptyCard()).toBeNull()
-        expect(gridMount().hidden).toBe(false)
+        expect(gridMount().style.visibility).toBe('')
         expect(gridMount().querySelectorAll('.albums-grid > [data-id]').length).toBe(2)
     })
 

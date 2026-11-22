@@ -67,3 +67,16 @@ Site construído (`vite build`) e servido estático; Chromium e WebKit; Firebase
 **Arquivos:** `albums-loading-1280-main-vs-branch.jpg` (da esquerda: `main` a 300 ms, ramo a 300 ms, ramo a 1300 ms, ramo assentado) e `albums-loading-iphone-main-vs-branch.jpg` (o mesmo, no iPhone).
 
 **Não provado:** uma conta com séries de verdade (a passagem do estado de espera para os álbuns está provada em jsdom, `SeriesView.loading.test.js`, não no navegador); o WebKit de 1280 ficou sem sessão (o login de teste não pega ali), então a espera no WebKit está provada só no iPhone; o tempo real do Firestore; Safari de verdade.
+
+### C.2 — o bloco de espera com a altura do cartão vazio (2º parecer do juiz, P2-A e P2-B)
+
+Medido no site construído, Chromium 1280 e iPhone 393 (WebKit), com a leitura das séries devolvendo duas séries (ou nenhuma, ou falha) depois de 1,5 s, na mesma ponte de teste do juiz. O cartão vazio mede 391 px a 1280 e 282 px a 393: esse é o `min-height` do bloco (círculo ou frase centrados). A grade fica invisível, não escondida, para guardar o espaço da sua mensagem.
+
+| Deslocamento de layout na troca (Chromium 1280) | `main` | ramo antes | ramo depois |
+|---|---|---|---|
+| Álbuns aberto pelo menu: a lista chega | 0,112 | 0,663 | **0,031** |
+| Álbuns direto: a lista chega | 0,040 | 0,041 | **0** (só o ruído de 0,0025 do botão de playlists) |
+| Leitura sem séries ou com falha: o cartão vazio chega | 0 (sem troca) | 0,141 | **0** (0,0025, o mesmo ruído) |
+| Leitura rápida | 0,034 | 0,034 | 0,034 |
+
+O rodapé fica no mesmo lugar (y = 1040 a 1280 px) durante a espera e com o cartão vazio. Telas assentadas contra `main`: **0 pixel** nas 10 (cinco cenários × dois perfis); `/blend` 0 pixel. No iPhone o deslocamento não é medido (o WebKit não tem a API); o bloco de 282 px é o cartão vazio.
