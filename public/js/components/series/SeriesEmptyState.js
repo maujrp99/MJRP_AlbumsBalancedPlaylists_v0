@@ -11,7 +11,7 @@ export class SeriesEmptyState {
     constructor(options = {}) {
         this.message = options.message || 'No albums in library';
         this.subMessage = options.subMessage || 'Create a series from the home page to get started';
-        this.ctaText = options.ctaText || 'Go to Create';
+        this.ctaText = options.ctaText || 'Go and create!';
         this.ctaHref = options.ctaHref || '/start';
         this.container = null;
     }

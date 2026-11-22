@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 11:25] decision — F91: o «+» um pouco maior e o botão «Go and create!»
+
+**Branch:** main
+
+- MJRP, sobre as duas notas do juiz: «1. Aumente 2. Go and create!». O «+» do menu de baixo passa de 14 para 16 das 24 unidades (traços de 4 a 20), ainda centrado; o botão da tela de álbuns vazia diz «Go and create!» no lugar de «Go to Create».
+- Mudança feita depois do juiz independente; os testes do ícone acompanham.
+
 ## [2026-11-22 09:39] review — F91: o juiz independente passou «Create»/«Criar» com o «+» no menu
 
 **Branch:** wip/create-in-place-of-start
