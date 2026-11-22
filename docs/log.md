@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 04:28] step — F83, onda 6b: o dourado das janelas, capturado das janelas à mão
+
+**Branch:** claude/f83-wave-6b-inventory-windows
+
+- O dourado das janelas, capturado das janelas à mão ANTES de tocá-las: `test/support/albumWindowScenarios.js` (40 cenários: a janela do álbum aberta pela tela de álbuns e pelo inventário, as fontes, o fechar por ✕, «Close», fundo e Escape, a tabela de faixas por coluna nos dois sentidos, as abas do celular, a barra e o título do celular, cada corpo da seção de valor, escrever, Enter, voltar ao valor do Discogs, ler agora, «Where to buy», editar, adicionar), `albumWindowStandIns.js` (o mundo de fora, com as chamadas anotadas) e `test/fixtures/albumWindowBeforeF83.json` (1,3 MB; as páginas, o foco e todas as chamadas).
+- O registro da captura: `reports/evidence/F83/wave-6b/capture-before.test.js` (rodou de `test/components/`, com `TZ=America/Sao_Paulo`, sobre o ramo da 6a; o arquivo temporário foi para `_backups/`).
+- Os defeitos de hoje ficam gravados no dourado de propósito (dois avisos de sucesso ao editar, BRL inventada, «Add to Inventory» apertável duas vezes, «Paid» com «$» para EUR e GBP).
+
+
 ## [2026-11-22 04:21] step — F83, onda 6a: a prova no navegador, os totais e as lições (a tela do inventário em React)
 
 **Branch:** claude/f83-wave-6a-inventory-screen
