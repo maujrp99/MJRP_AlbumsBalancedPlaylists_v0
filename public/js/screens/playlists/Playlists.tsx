@@ -8,17 +8,18 @@
  * it changed. Nothing derived from the lists is kept (`useMemo`, `React.memo`): `applyBatchName` still writes inside the playlists.
  * The batch name is the one thing the store is silent about (`setBatchName` does not notify, so the cursor stays): the screen keeps what
  * was typed, as the field's own state, and writes it to the store as well.
- * Kept hand-made behind a bridge: the panel to generate again (also the Blend controller's) and the Spotify window; the drag is
+ * Kept hand-made behind a bridge: the Spotify window and the exports (the panel to generate again is React since wave 7a, ./RegeneratePanel.tsx on ui/recipe/); the drag is
  * `sortablejs` behind a bridge that puts the row back where React had it (react-bridge/sortableTracks.ts).
  */
 import { useFocusLikeAfterAnewDraw } from '../../react-bridge/useFocusLikeAfterAnewDraw'
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode, type RefObject } from 'react'
 import { Icon } from '../../ui/Icon'
 import { Breadcrumb, playlistsTrail } from '../../ui/Breadcrumb'
-import { LegacyRegeneratePanel, resetRegeneratePanel, showRegeneratePanel } from '../../react-bridge/legacy/RegeneratePanel'
 import { exportJson, openSpotifyExport } from '../../react-bridge/legacy/OutputWindows'
 import { usePlaylistExport } from '../../ui/PlaylistExportWindow'
 import { activeSeriesName } from './activeSeries'
+import { RegeneratePanel } from './RegeneratePanel'
+import { forgetWhatWasChanged } from './regenerateMemory'
 import { useSortableTracks } from '../../react-bridge/sortableTracks'
 import { countListener } from '../../react-bridge/listeners'
 import { useLocale } from '../../react-bridge/useLocale'
@@ -239,7 +240,7 @@ function useScreenActions(controller: PlaylistsController, nameValue: string) {
         regenerate: async (config: object) => {
             const generated = await controller.handleGenerate(config)
             // the new playlists carry their recipe: the panel follows them again
-            if (generated) resetRegeneratePanel()
+            if (generated) forgetWhatWasChanged()
         }
     }
 }
@@ -252,11 +253,12 @@ interface ControlsProps {
     nameValue: string
     onType: (value: string) => void
     activeSeriesId: string | undefined
+    asked: number
     todo: ReturnType<typeof useScreenActions>
 }
 
 /** The batch name, the panel to generate again (or the batch that was not found) and, on the computer, the actions. */
-function Controls({ state, playlists, editing, phone, nameValue, onType, activeSeriesId, todo }: ControlsProps) {
+function Controls({ state, playlists, editing, phone, nameValue, onType, activeSeriesId, asked, todo }: ControlsProps) {
     const exporting = usePlaylistExport({ seriesName: activeSeriesName }) // F90: Apple Music asks for the folder first, in the window the saved playlists screen opens too
     return (
         <>
@@ -264,7 +266,7 @@ function Controls({ state, playlists, editing, phone, nameValue, onType, activeS
                 ? <PhoneNameRow value={nameValue} canUndo={state.canUndo} canRedo={state.canRedo} onType={onType} onUndo={todo.undo} onRedo={todo.redo} />
                 : <BatchNameField value={nameValue} onType={onType} />}
             <div id="generationControlContainer">
-                <Generation playlists={playlists} editing={editing} originalName={state.editContext?.originalBatchName} seriesId={activeSeriesId} onRegenerate={todo.regenerate} />
+                <Generation playlists={playlists} editing={editing} originalName={state.editContext?.originalBatchName} seriesId={activeSeriesId} asked={asked} onRegenerate={todo.regenerate} />
             </div>
             {phone ? null : (
                 <div id="exportSection" className="mb-6 fade-in" style={{ animationDelay: '0.08s' }}>
@@ -281,13 +283,14 @@ interface GenerationProps {
     editing: boolean
     originalName: string | undefined
     seriesId: string | undefined
+    asked: number
     onRegenerate: (config: object) => Promise<void>
 }
 
-function Generation({ playlists, editing, originalName, seriesId, onRegenerate }: GenerationProps) {
+function Generation({ playlists, editing, originalName, seriesId, asked, onRegenerate }: GenerationProps) {
     if (playlists.length > 0) {
         const ids = playlists.map(playlist => playlist.id).filter((id): id is string => Boolean(id))
-        return <LegacyRegeneratePanel seriesId={seriesId} batchName={playlists[0].batchName || 'New Batch'} ids={ids} count={playlists.length} generatedWith={generatedWithOf(playlists) ?? null} onRegenerate={(config) => { void onRegenerate(config) }} />
+        return <RegeneratePanel seriesId={seriesId} batchName={playlists[0].batchName || 'New Batch'} ids={ids} count={playlists.length} generatedWith={generatedWithOf(playlists) ?? null} asked={asked} onRegenerate={(config) => { void onRegenerate(config) }} />
     }
     return editing ? <NotFound name={originalName || t('playlists.notFound.unknown')} /> : null
 }
@@ -306,6 +309,7 @@ interface LayoutProps {
     phone: boolean
     isGenerating: boolean
     activeSeriesId: string | undefined
+    asked: number
     name: { value: string; onType: (value: string) => void }
     todo: ReturnType<typeof useScreenActions>
     opening: ReturnType<typeof usePhoneOpening>
@@ -332,12 +336,12 @@ function TheLists({ phone, playlists, batchName, actions, opening, sheets }: Lis
 }
 
 /** The page of the screen: the header, the controls, the playlists (all side by side, or one at a time on the phone), the foot. */
-function Layout({ box, state, playlists, editing, phone, isGenerating, activeSeriesId, name, todo, opening, sheets, noticeLayer }: LayoutProps) {
+function Layout({ box, state, playlists, editing, phone, isGenerating, activeSeriesId, asked, name, todo, opening, sheets, noticeLayer }: LayoutProps) {
     const nothingHere = playlists.length === 0 && !editing
     return (
         <div className="playlists-view container" ref={box}>
             <Header editing={editing} editedName={editedNameOf(state)} onNavigate={navigate} />
-            {nothingHere ? null : <Controls state={state} playlists={playlists} editing={editing} phone={phone} nameValue={name.value} onType={name.onType} activeSeriesId={activeSeriesId} todo={todo} />}
+            {nothingHere ? null : <Controls state={state} playlists={playlists} editing={editing} phone={phone} nameValue={name.value} onType={name.onType} activeSeriesId={activeSeriesId} asked={asked} todo={todo} />}
             <div id="mainContent" className="fade-in" style={{ animationDelay: '0.1s' }}>
                 {nothingHere ? <EmptyState /> : null}
                 <div id="playlistsGrid">
@@ -371,7 +375,9 @@ export function Playlists({ controller, generating }: Props) {
     const box = useRef<HTMLDivElement>(null)
     const opening = usePhoneOpening(box, playlists.length)
     const notice = useUndoNotice()
-    const sheets = usePhoneSheets({ controller, notify: notice.show, lightUp: opening.lightUp, rename: (index) => focusTitle(box.current, index), regenerate: () => showRegeneratePanel(box.current) })
+    // the «⋯» of a playlist on the phone asks for the panel to generate again: the panel opens and the page scrolls to it
+    const [asked, ask] = useState(0)
+    const sheets = usePhoneSheets({ controller, notify: notice.show, lightUp: opening.lightUp, rename: (index) => focusTitle(box.current, index), regenerate: () => ask(count => count + 1) })
 
     // Leaving with work that is not saved asks first (F60)
     useEffect(() => installUnsavedChangesGuard({ router, hasUnsavedChanges: () => getPlaylistsService().hasUnsavedChanges() === true }), [])
@@ -380,5 +386,5 @@ export function Playlists({ controller, generating }: Props) {
         onMove: ({ fromPlaylist, toPlaylist, oldIndex, newIndex }) => getPlaylistsService().moveTrack(fromPlaylist, toPlaylist, oldIndex, newIndex)
     })
 
-    return <Layout box={box} state={state} playlists={playlists} editing={playlistsStore.isEditingExistingBatch()} phone={phone} isGenerating={isGenerating} activeSeriesId={activeSeries?.id} name={name} todo={todo} opening={opening} sheets={sheets} noticeLayer={notice.layer} />
+    return <Layout box={box} state={state} playlists={playlists} editing={playlistsStore.isEditingExistingBatch()} phone={phone} isGenerating={isGenerating} activeSeriesId={activeSeries?.id} asked={asked} name={name} todo={todo} opening={opening} sheets={sheets} noticeLayer={notice.layer} />
 }

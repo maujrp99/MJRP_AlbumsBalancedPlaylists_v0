@@ -1,4 +1,9 @@
 /**
+ * (2026-11-22, wave 7a: the panel to generate again went to React, and this left the list in the commit that deleted it: components/playlists/RegeneratePanel.js (182 in the
+ * list; 183 on the disk), now screens/playlists/RegeneratePanel.tsx on ui/recipe/{RecipeCards,Ingredients}.tsx, with the rules in models/recipeLooks.js and
+ * models/recipeIngredients.js, and the wrapper react-bridge/legacy/RegeneratePanel.tsx went with it. Left in the list, with their reasons: components/blend/BlendRecipeCard.js
+ * and BlendIngredientsPanel.js (the hand-made Blend screen still draws them, wave 7b; ui/recipe/ is the second writing, kept the same by a test).)
+ *
  * (2026-11-22, wave 6b: the windows went to React, and these left the list in the commit that deleted them: components/ViewAlbumModal.js (382, the album window, now
  * ui/albumWindow/AlbumWindow.tsx), components/InventoryValueSection.js (316, now screens/inventory/ValueSection.tsx and BuyLinks.tsx), components/albumWindowSources.js (40,
  * now ui/albumWindow/sources.ts), components/ranking/{TracksRankingComparison,TracksTable,TracksTabs}.js (207 + 314 + 102, now ui/tracks/), components/InventoryEditModal.js
@@ -80,7 +85,6 @@ export const HAND_MADE = {
     'components/common/AlbumCascade.js': 71,
     'components/navigation/signInFromLink.js': 30,
     'components/navigation/startRoute.js': 62,
-    'components/playlists/RegeneratePanel.js': 182,
     'components/ui/BaseModal.js': 178,
     'components/ui/Sheet.js': 173,
     'components/ui/coverImage.js': 67,

@@ -7,7 +7,7 @@
  */
 import { ReactView } from '../../react-bridge/ReactView'
 import { PlaylistsController } from '../../controllers/PlaylistsController.js'
-import { resetRegeneratePanel } from '../../react-bridge/legacy/RegeneratePanel'
+import { forgetWhatWasChanged } from './regenerateMemory'
 import { GeneratingFlag, Playlists } from './Playlists'
 
 export function playlistsView() {
@@ -16,7 +16,7 @@ export function playlistsView() {
     return new ReactView(Playlists, { controller, generating }, {
         screen: 'playlists',
         prepare: (params) => {
-            resetRegeneratePanel() // the panel opens on the recipe of the playlists of this screen
+            forgetWhatWasChanged() // the panel opens on the recipe of the playlists of this screen
             return controller.initialize(params)
         },
         dispose: () => controller.destroy()
