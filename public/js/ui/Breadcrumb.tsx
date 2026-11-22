@@ -28,6 +28,11 @@ export function albumsTrail(): Crumb[] {
     ]
 }
 
+/** The trail of the inventory screen: Start alone, which is a trail of one step and draws nothing (the hand-made screen drew no trail there either). */
+export function inventoryTrail(): Crumb[] {
+    return [{ label: t('ui.breadcrumb.start'), path: '/start' }]
+}
+
 export function Breadcrumb({ crumbs, onNavigate }: { crumbs: Crumb[]; onNavigate: (path: string) => void }) {
     if (crumbs.length <= 1) return null
     return (

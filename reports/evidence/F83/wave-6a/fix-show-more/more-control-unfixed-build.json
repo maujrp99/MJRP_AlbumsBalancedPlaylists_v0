@@ -1,0 +1,98 @@
+[
+ {
+  "engine": "chromium",
+  "width": 393,
+  "n": 60,
+  "view": "list",
+  "mode": "bottom",
+  "parent": {
+   "before": 5299,
+   "scrollY": 5299,
+   "focusedTop": 524,
+   "inView": true,
+   "rows": 60,
+   "notice": true
+  },
+  "branch": {
+   "before": 5299,
+   "scrollY": 6321,
+   "focusedTop": -498,
+   "inView": false,
+   "rows": 60,
+   "notice": true
+  },
+  "equal": false
+ },
+ {
+  "engine": "chromium",
+  "width": 393,
+  "n": 60,
+  "view": "list",
+  "mode": "button",
+  "parent": {
+   "before": 5299,
+   "scrollY": 5299,
+   "focusedTop": 524,
+   "inView": true,
+   "rows": 60,
+   "notice": true
+  },
+  "branch": {
+   "before": 5299,
+   "scrollY": 6321,
+   "focusedTop": -498,
+   "inView": false,
+   "rows": 60,
+   "notice": true
+  },
+  "equal": false
+ },
+ {
+  "engine": "chromium",
+  "width": 393,
+  "n": 60,
+  "view": "gallery",
+  "mode": "bottom",
+  "parent": {
+   "before": 8341,
+   "scrollY": 8341,
+   "focusedTop": 544,
+   "inView": true,
+   "rows": 60,
+   "notice": true
+  },
+  "branch": {
+   "before": 8341,
+   "scrollY": 9984,
+   "focusedTop": -1099,
+   "inView": false,
+   "rows": 60,
+   "notice": true
+  },
+  "equal": false
+ },
+ {
+  "engine": "chromium",
+  "width": 393,
+  "n": 60,
+  "view": "gallery",
+  "mode": "button",
+  "parent": {
+   "before": 8341,
+   "scrollY": 8341,
+   "focusedTop": 544,
+   "inView": true,
+   "rows": 60,
+   "notice": true
+  },
+  "branch": {
+   "before": 8341,
+   "scrollY": 9984,
+   "focusedTop": -1099,
+   "inView": false,
+   "rows": 60,
+   "notice": true
+  },
+  "equal": false
+ }
+]

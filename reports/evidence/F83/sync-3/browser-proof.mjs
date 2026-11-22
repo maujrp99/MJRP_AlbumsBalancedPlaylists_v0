@@ -34,7 +34,7 @@ const ENGINE = process.env.ENGINE === 'chromium' ? chromium : webkit
 const PROFILE = process.env.PROFILE || '393x852'
 const COMPUTER = PROFILE === '1280'
 const ACCOUNT = process.env.ACCOUNT === '1'
-const API_KEY = process.env.API_KEY || process.env.FIREBASE_WEB_API_KEY // the public key of the web app (public/js/firebase-config.js)
+const API_KEY = process.env.FIREBASE_WEB_API_KEY // the public key of the web app (public/js/firebase-config.js)
 
 const results = []
 const note = (what, ok, detail = '') => { results.push({ what, ok, detail: String(detail).slice(0, 600) }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${what}${detail ? '  ' + String(detail).slice(0, 300) : ''}`) }

@@ -31,9 +31,27 @@ vi.mock('../../../public/js/stores/albums.js', () => ({
 import { recordUsage, stopRecording } from '../../helpers/usageRecorder.js'
 import { filterUseOf } from '../../../public/js/models/filterUse.js'
 import { buyLinksOf } from '../../../public/js/models/buyLinks.js'
-import { cardValueBlock } from '../../../public/js/views/renderers/InventoryCardValue.js'
+import { createElement } from 'react'
+import { CardValue } from '../../../public/js/screens/inventory/CardValue'
+import { InventoryBridge } from '../../../public/js/screens/inventory/InventoryBridge'
+import { usePhoneSheets } from '../../../public/js/screens/inventory/phone/Sheets'
 import { createBuyLinksSection, createPhoneBuyLinks } from '../../../public/js/components/InventoryValueSection.js'
-import { openItemSheet } from '../../../public/js/views/InventoryPhoneSheets.js'
+import { act } from 'react'
+import { createRoot } from 'react-dom/client'
+
+globalThis.IS_REACT_ACT_ENVIRONMENT = true
+const roots = []
+/** A piece of the inventory screen drawn on its own in the page (the whole screen is not loaded here: the album load is a stand-in in this file). */
+const draw = async (element) => {
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const root = createRoot(host)
+    roots.push(root)
+    await act(async () => { root.render(element) })
+    return host
+}
+const undraw = async () => { await act(async () => { roots.splice(0).forEach(root => root.unmount()) }) }
+const press = async (button) => { await act(async () => { button.click() }) }
 import SeriesController from '../../../public/js/controllers/SeriesController.js'
 import { signOut } from '../../../public/js/shell/signOut'
 import { startOn } from '../../support/renderShell'
@@ -48,10 +66,11 @@ const openSignIn = async () => {
 
 const notOwned = { id: 'i1', artist: 'Joni Mitchell', title: 'Hejira', owned: null }
 const linksIn = (root) => [...root.querySelectorAll('a[data-buy-store]')].map(link => [link.dataset.buyStore, link.dataset.buyPlace])
-const html = (text) => {
-    const host = document.createElement('div')
-    host.innerHTML = text
-    return host
+
+/** A piece that opens the sheet of an album of the phone when its button is pressed (the sheet is React since F83 wave 6a). */
+function SheetHost({ controller }) {
+    const sheets = usePhoneSheets(controller, new InventoryBridge())
+    return createElement('div', null, createElement('button', { id: 'open', type: 'button', onClick: () => sheets.openItem('i1') }, 'open'), sheets.layer)
 }
 
 let sent
@@ -73,9 +92,10 @@ describe('each buy link says its store and where it is', () => {
         expect(buyLinksOf(notOwned).map(link => link.id)).toEqual(ALL)
     })
 
-    it('on the card of the inventory', () => {
-        const block = html(cardValueBlock(notOwned, { origin: null, reason: 'waiting' }, { currency: 'USD', rates: null }))
+    it('on the card of the inventory', async () => {
+        const block = await draw(createElement(CardValue, { item: notOwned, value: { origin: null, reason: 'waiting' }, money: { currency: 'USD', rates: null } }))
         expect(linksIn(block)).toEqual(ALL.map(store => [store, 'card']))
+        await undraw()
     })
 
     it('in the album window, on the computer and on the phone', () => {
@@ -83,9 +103,15 @@ describe('each buy link says its store and where it is', () => {
         expect(linksIn(createPhoneBuyLinks(notOwned))).toEqual(ALL.map(store => [store, 'album_window']))
     })
 
-    it('in the sheet of the album on the phone', () => {
-        openItemSheet(notOwned, { value: { origin: null, reason: 'waiting' }, money: { currency: 'USD', rates: null } }, {})
-        expect(linksIn(document.body)).toEqual(ALL.map(store => [store, 'phone_sheet']))
+    it('in the sheet of the album on the phone', async () => {
+        window.matchMedia = () => ({ matches: true, addEventListener() { }, removeEventListener() { } })
+        window.scrollTo = () => { }
+        const controller = { state: { albums: [notOwned] }, valueViewOf: () => ({ value: { origin: null, reason: 'waiting' }, money: { currency: 'USD', rates: null } }) }
+        await draw(createElement(SheetHost, { controller }))
+        await press(document.getElementById('open'))
+        expect(linksIn(document.querySelector('#inventoryItemSheet'))).toEqual(ALL.map(store => [store, 'phone_sheet']))
+        await undraw()
+        document.querySelectorAll('.sheet').forEach(node => node.remove())
     })
 })
 

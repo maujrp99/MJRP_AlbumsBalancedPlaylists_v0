@@ -26,10 +26,10 @@ if (localUrl) window.location.replace(localUrl)
 installStaleBuildGuard(window)
 import './firebase-init.js' // Firebase starts before anything that uses it
 import './services/auth/userSession.js' // the user store starts hearing who is signed in (F58)
+import './services/inventory/inventoryWiring.js' // the inventory is read when the person signs in, whatever screen is open (F83 wave 6a: the screen loads on demand)
 import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
-import { InventoryView } from './views/InventoryView.js'
 import { BlendingMenuView } from './views/BlendingMenuView.js'
 
 import toast from './components/Toast.js'
@@ -133,7 +133,13 @@ const albumsRoute = async () => {
 }
 router.register('/albums', albumsRoute)
 router.register('/albums/:seriesId', albumsRoute)
-router.register('/inventory', () => new InventoryView())
+// The inventory screen (F83 wave 6a, in React): its file comes when the route asks for it and in the background. The controller (one for each visit,
+// hand-written) lives in the screen's file; the inventory itself is read when the person signs in (services/inventory/inventoryWiring.js, above).
+const loadInventory = loadScreen(() => import('./screens/inventory/index.ts'))
+router.register('/inventory', async () => {
+    const { inventoryView } = await loadInventory()
+    return inventoryView()
+})
 
 // TopNav v2: New entity type routes (Coming Soon). The first screen in React (F83): its file, and React with it, come when
 // the person opens one of the three; the main script carries neither.
@@ -193,7 +199,7 @@ router.register('/series', () => {
 
 // The screens in React come down in the background once the first screen is on the page (F83, REQ-10): changing screens still works
 // with no network after the first load, as it did when everything was in the main script. React itself is already there: the shell is React.
-prefetchScreensAfterTheFirstScreen(router, [loadStart, loadAlbums, loadSavedPlaylists, loadPlaylists, loadComingSoon])
+prefetchScreensAfterTheFirstScreen(router, [loadStart, loadAlbums, loadInventory, loadSavedPlaylists, loadPlaylists, loadComingSoon])
 
 // Global Error Handler
 window.addEventListener('error', (e) => {

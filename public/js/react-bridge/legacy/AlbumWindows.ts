@@ -20,3 +20,24 @@ export async function openInventoryAdd(album: Album): Promise<void> {
     const { InventoryAddModal } = await import('../../components/InventoryAddModal.js')
     InventoryAddModal.open(album, () => {})
 }
+
+/** What the window of the album asks of the inventory (components/ViewAlbumModal.js `options.value`). */
+interface ValueHost {
+    view: () => unknown
+    onWrite: (text: string) => Promise<boolean>
+    onForget: () => Promise<boolean>
+    onRead: () => Promise<void>
+}
+
+/** The window of the album opened by the inventory: it also shows the value of the item and where to buy it; the handle redraws that section. */
+export async function openInventoryView(item: Album, options: { loadAlbum: (signal: AbortSignal) => Promise<unknown>; value: ValueHost }): Promise<{ redrawValue: () => void }> {
+    const { showViewAlbumModal } = await import('../../components/ViewAlbumModal.js')
+    const handle = await showViewAlbumModal(item, options)
+    return handle as HTMLElement & { redrawValue: () => void }
+}
+
+/** The window to edit an item of the inventory (hand-made until wave 6b); `onSave(id, updates)` is called when the person saves. */
+export async function openInventoryEdit(item: Album, onSave: (id: string, updates: object) => Promise<void>): Promise<void> {
+    const { InventoryEditModal } = await import('../../components/InventoryEditModal.js')
+    InventoryEditModal.open(item, onSave)
+}

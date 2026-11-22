@@ -3,6 +3,50 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 06:13] review — F83: onda 6a (a tela do inventário em React) passou no juiz independente, na segunda conferência
+
+**Branch:** integrate/staging-2026-11-21
+
+- Primeira conferência (na `315ae5f`): reprovada, 1 P0 — no Chromium em tela de celular, com os valores do Discogs ligados, «Show 50 more» fazia a página pular para o fim do bloco novo (ancoragem de rolagem no aviso do Discogs, que ficava montado). Consertado em `claude/f83-wave-6a-fix-show-more` (`553fbd6`): o aviso é remontado junto com a lista.
+- Segunda conferência (na `553fbd6`): passa (0 P0, 0 P1, 1 P2); 504 comparações iguais ao pai. Os dois relatórios guardados como vieram em `reports/audits/2026-11-22-mjrpalbumblender-v0-react-inventory-screen-visual-parity-recheck.md` e `…-recheck-2.md`.
+- Cuidado deixado pelo juiz: um elemento novo que fique parado abaixo da lista traz o pulo de volta; `overflow-anchor: none` nessa área seria a guarda mais firme.
+
+## [2026-11-22 05:45] step — F83, onda 6a: os dois achados da junta independente (o salto de «Mostrar mais 50» com os valores ligados; «No value yet» em um nó só)
+
+**Branch:** claude/f83-wave-6a-fix-show-more
+
+- Achado 1 (bloqueante): com os valores do Discogs ligados, no Chromium do celular (393, 820, 899 px) «Mostrar mais 50» jogava a página para o fim do pedaço novo (a rolagem ancorada no aviso do Discogs, que ficava montado sob a caixa da lista remontada). Correção: o aviso leva a chave da caixa (`notice.` + `gridKey()`), como a tela antiga, que o refazia a cada desenho; DOM, classes e CSS iguais aos do pai. Escolhida em vez de `overflow-anchor: none` (regra nova que o pai não tem) e de mover o aviso para dentro da caixa (mudaria o DOM).
+- Achado 2 (menor): `RowValue` escrevia o texto e o espaço seguinte como dois nós; agora um só, e a linha do Discogs sem ligação à edição também (o cartão: «Discogs · data»). Pixels da lista a 1280 e 900: 0.
+- Testes novos (`Inventory.showMore.notice.test.js`), vermelhos antes. Prova no navegador, valores ligados, pai contra ponta: rolagem igual em 24 de 24 (Chromium) e 8 de 8 (WebKit); o mesmo roteiro contra a construção sem correção falha (pai 5.299, sem correção 6.321). Evidência em `reports/evidence/F83/wave-6a/fix-show-more/`. Lição na seção 15 do `wave-lessons.md`.
+- Sensores pela fila: suíte inteira 364 arquivos, 4.772 testes verdes (com `test/architecture` e `noSecretsInRepo`); `typecheck` e `lint` sem erro; build dentro do teto.
+
+## [2026-11-22 04:21] step — F83, onda 6a: a prova no navegador, os totais e as lições (a tela do inventário em React)
+
+**Branch:** claude/f83-wave-6a-inventory-screen
+
+- Prova no site construído (`reports/evidence/F83/wave-6a/proof.md`, roteiro `browser-proof.mjs`): a tela em React contra a à mão do pai (12f0234), Firebase bloqueado, os itens postos por uma linha no fim do script principal (a costura, igual nos dois sites). No celular (WebKit iPhone 14 e SE, Chromium 393 e 899): 55 de 55 comparações iguais, 0 pixels, com toques de verdade nas seis folhas; antiga contra antiga também 55 de 55. No computador (Chromium 1280 e 900, WebKit 1280): iguais em texto, caixas e foco; sobras de pixels: a busca digitada (o cursor piscando, também de antiga contra antiga), 8 pixels de 1 nível no Vinyl e na ordem, e **62 e 29 pixels na lista, só no Chromium, sem causa achada** (dito no `proof.md`). Os valores do Discogs não entram na prova do navegador (só no dourado).
+- `wave-lessons.md` (seção 15) e `tasks.md` (TASK-25, 6a) em dia.
+- Totais na ponta, pela fila: suíte inteira 363 arquivos, 4.767 testes, todos verdes (inclui `test/architecture` com 43 arquivos e `noSecretsInRepo`); `typecheck` sem erro; `lint` 0 erros e 68 avisos (os de antes); build dentro do teto (script principal 211.698 B, arquivo da tela 21.503 B, React 68.691 B). O worktree do pai para comparar ficou em `scratchpad/f83-6a/parent` (a trava recusou removê-lo).
+
+## [2026-11-22 04:04] step — F83, onda 6a: a tela do inventário em React (TASK-25)
+
+**Branch:** claude/f83-wave-6a-inventory-screen
+
+- A tela do inventário (`/inventory`) passa a ser em React: `screens/inventory/` (a rota, a ponte do controlador, o cabeçalho, os totais e a moeda, os avisos, a linha de filtros, os três botões da coleção, a grade, a lista, o cartão com as cinco linhas, o seletor de status e, no celular, a barra, as linhas, a galeria, os dois vazios, os fantasmas, «Show 50 more» e as seis folhas). O controlador (`InventoryController`) e `InventoryValues` ficam em JavaScript por baixo, com a mesma lógica; a `view` que eles recebem é a ponte (`InventoryBridge`), que só conta os avisos. A rota é sob demanda (`loadScreen`) e entra na lista do segundo plano; o controlador nasce no `prepare` da rota (nunca num efeito) e as duas assinaturas (a loja do inventário e a virada do celular) vão de `prepare` a `dispose`.
+- A armadilha da assinatura: o `app.js` passa a importar `services/inventory/inventoryWiring.js` por conta própria (uma linha, no topo), para que o inventário continue sendo lido quando a pessoa entra, não quando a tela abre. Teste vermelho antes (`Inventory.signedInBeforeOpening.test.tsx`: sem a linha, a pessoa que entrou antes vê o inventário vazio) e a linha no `app.js` verificada por um segundo teste.
+- Saem (git rm; `_safe.py retire` recusa arquivo versionado): `views/InventoryView.js`, `InventoryPhoneSheets.js`, os cinco `views/renderers/Inventory*.js`, `components/ui/Card.js`, `components/Breadcrumb.js` e `utils/keepField.js` (2.078 linhas contadas na lista, 9 arquivos). `handMadeScreensBaseline` de 41 para 32 arquivos (a 6b tira mais 8), `Card.js:renderRankingBadge` sai da `complexityAllowlist`, entra `screens/inventory/inventoryActions.ts` em `BRIDGE_USES` (a janela do álbum e a de editar seguem à mão até a 6b; `react-bridge/legacy/AlbumWindows.ts` ganha `openInventoryView` e `openInventoryEdit`).
+- Regras puras dos desenhistas em `models/inventoryCard.js` (`formatOf`, `phoneProgress`, `moreOf`, `totalText`, ...); `ui/Breadcrumb.tsx` ganha `inventoryTrail()` (um passo, não desenha nada, como a antiga); `ui/CoverImage.tsx` ganha `decoding`; o gancho do foco ganha `letGo` (os selects de formato e de ordem soltam o foco, como a antiga, que os refazia).
+- Textos: 129 chaves em `i18n/en/inventory.js` e `i18n/pt/inventory.js` (as dos desenhistas, das folhas e as frases do controlador e de `InventoryValues`; as frases dos modelos ficam em inglês até a 6c). O português é proposta, espera o dono.
+- Provas: o teste «igual ao de antes» (`Inventory.sameAsBefore.test.tsx`, 45 cenários contra `inventoryBeforeF83.json`, mais 4 provas de que ele acusa uma palavra, uma classe, um foco e uma chamada trocados de propósito), os 7 arquivos de testes da tela à mão levados com a mesma asserção (andaime `inventoryHost.tsx`), `Inventory.leave`, `Inventory.texts`, `Inventory.signedInBeforeOpening`, e os testes de outros arquivos que tocavam a tela antiga (`outsideTextIsText`, `outsideUrlIsChecked`, `Shell.carried`, `coverImage`, `eventsOfLinksFiltersAndAccount`).
+- Peso (`reports/evidence/F83/wave-6a/bundle-budget-wave-6a.txt`): script principal 235.748 B -> 211.698 B (o teto desce para 211.842 B); arquivo da tela 21.503 B (abaixo do alarme de 30.000 B, não precisou separar as folhas); o que vem depois da primeira tela 187.136 B -> 212.976 B, e `background` sobe de 49.500 B para 51.300 B (a necessidade medida é 51.237 B).
+- Defeitos de hoje mantidos (a migração não conserta nada): o vazio enquanto a leitura não volta, o ícone `Eye` que não existe (o botão «View» do cartão sai sem ícone), «Paid» com «$» para EUR e GBP (na janela, que é da 6b), o aviso do Discogs que fica ligado depois de sair do inventário.
+
+## [2026-11-22 04:04] step — F83: as provas da terceira junta leem a chave web do ambiente
+
+**Branch:** claude/f83-wave-6a-inventory-screen
+
+- Os dois roteiros de prova da terceira junta (`reports/evidence/F83/sync-3/account-probe.mjs` e `browser-proof.mjs`) traziam a chave web do Firebase escrita; passam a ler `process.env.FIREBASE_WEB_API_KEY` (a mesma troca da linha de integração). `test/security/noSecretsInRepo.test.js` volta a ficar verde.
+
 ## [2026-11-22 04:03] step — F83: a chave pública do Firebase sai dos dois roteiros de prova da sincronização 3
 
 **Branch:** integrate/staging-2026-11-21
@@ -16,6 +60,14 @@
 - Veredito: passa (0 P0, 0 P1, 1 P2), julgado na `12f0234` contra a `main` na `b8947e0`, nos sites construídos; relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-react-start-lean-visual-parity-recheck.md`.
 - UAT-282 confirmado: em WebKit, o clique em «Search» com o campo em foco não busca na `main` e busca em React.
 - P2: o roteiro de prova do construtor refaz a foto quando a diferença é pequena; pode esconder uma mudança fraca.
+
+## [2026-11-22 03:35] step — F83, onda 6a: o dourado da tela do inventário, capturado da tela à mão antes de tocá-la
+
+**Branch:** claude/f83-wave-6a-inventory-screen
+
+- 45 cenários (30 no computador, 15 no celular: lista, galeria, fantasmas, os dois vazios, a barra, «Show 50 more», as seis folhas, a rodada de valores, virar computador e celular) escritos em `test/support/inventoryScenarios.js` e `test/support/inventoryStandIns.js` (o serviço, os valores do Discogs, o aviso, a pergunta, o carregador e as duas janelas à mão são de mentira e anotam cada chamada), 152 retratos em `test/fixtures/inventoryBeforeF83.json` (o `#app`, a Folha aberta, o foco e as chamadas), com `TZ=America/Sao_Paulo` e o relógio fixo; o mesmo arquivo, rodado duas vezes, dá o mesmo resumo (md5).
+- O registro da captura: `reports/evidence/F83/wave-6a/capture-before.test.js` (rodou de `test/views/` contra a tela à mão e foi tirado de lá).
+- Nada de produto mudou neste passo.
 
 ## [2026-11-22 03:27] step — F83, terceira junta: a prova no navegador, o teto de peso e os totais (a Start enxuta em React)
 

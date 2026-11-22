@@ -33,7 +33,6 @@ const WRITTEN_IN_THE_CODE = {
     // the line under the top bar: the places of Albums and of Playlists, a list in the same file (F88; in React since the sync of main)
     'shell/SubRow.tsx': ['item.href'],
     // paths written in the same file, and the path of the page itself (it starts with '/')
-    'components/Breadcrumb.js': ['escapeHtml(crumb.path)'],
     // the same trail in React: the paths are written in ui/Breadcrumb.tsx (playlistsTrail) and the callers
     'ui/Breadcrumb.tsx': ['crumb.path'],
     // an option given by the view, '/home' in the one caller
