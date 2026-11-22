@@ -215,7 +215,8 @@ window.addEventListener('error', (e) => {
 if (typeof window !== 'undefined') {
     import('./stores/albumSeries.js').then(m => { window.albumSeriesStore = m.albumSeriesStore })
     import('./stores/albums.js').then(m => { window.albumsStore = m.albumsStore })
-    import('./stores/playlists.js').then(m => { window.playlistsStore = m.playlistsStore })
+    // window.playlistsStore is exposed by controllers/BlendingController.js, when a screen that uses it loads (the bundler made the store a file of its own
+    // in wave 7b: importing it here would make every first screen download that file)
     import('./stores/albumLoad.js').then(m => { window.albumLoadStore = m.albumLoadStore })
     import('./services/albums/albumLoading.js').then(m => {
         window.albumLoadService = m.albumLoadService

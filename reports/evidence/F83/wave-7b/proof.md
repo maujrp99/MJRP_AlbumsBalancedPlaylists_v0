@@ -42,3 +42,8 @@ Sete fluxos: **blend** (sem escolha; uma série; cada receita; Top 1 e 10; as ci
 - **O MusicKit de verdade e uma conta Spotify conectada** (sem conta); a ida às playlists depois de gerar com sucesso (precisa de álbuns postos na carga): vale o jsdom.
 - **O «carregando» das séries no site construído:** no site sem login a leitura é imediata; o estado, e a leitura que falha, estão no dourado do jsdom.
 - **Rodadas feitas:** Chromium a 1280, 900, 899 e iPhone 14; WebKit a 1280, iPhone 14 e iPhone SE. **Não feitas:** Chromium com perfil de iPhone SE; WebKit a 899 e a 900 (o WebKit de computador foi só a 1280).
+
+## Duas diferenças de propósito da onda (declaradas após a reconferência do juiz independente)
+
+1. **As capas que chegam em segundo plano não soltam o foco nem levam a lista ao topo** (a tela à mão se desenhava de novo a cada chegada). Provada no navegador pelo juiz (`covers-chromium-1280`: antiga com o foco no `body` e a lista em 0; nova com o foco no cartão e a lista em 100) e nos dois sentidos no teste «igual ao de antes».
+2. **Escolher uma série mantém o rolamento da lista de séries onde estava** (a tela à mão a mandava de volta ao topo, porque refazia a página inteira); vale também para a série que vem do endereço (`?seriesId=`: a lista acaba rolada até o cartão escolhido; a antiga o mostrava e a perdia quando as capas desenhavam a lista de novo, o que decorre da diferença 1). No celular não há caixa, então é igual. É melhor para a pessoa (a lista não pula) e está dita por um teste: `test/screens/blend/Blend.remount.test.tsx` («P2-2 (on purpose): choosing a series keeps the scroll of the list where it was»). A prova de rolamento «igual» de acima vale para a página; a lista de séries é a exceção declarada aqui.

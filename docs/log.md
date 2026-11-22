@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 13:19] step — F83 sync 4: a junta da linha de integração (o conserto da Blend e a regra de peso) na onda 8b
+
+**Branch:** claude/f83-sync-4-create-and-the-three-lines
+
+- Junta de `integrate/staging-2026-11-21` (bfcfd7f) em `claude/f83-wave-8b-window-engines` (3877aaf). Conflitos: `scripts/bundle-budget.json` (ficou o texto da REGRA da linha de integração; os números são remedidos adiante neste sync) e `wave-lessons.md` (todas as seções mantidas; a «20» da linha de integração virou «22», porque a 8a e a 8b já tinham a 20 e a 21; dito na própria seção). `docs/log.md` e `test/screens/blend/*` juntaram sem conflito.
+
 ## [2026-11-22 13:17] step — F83 onda 8b: a prova no navegador dos avisos, da barra e das perguntas, e o caso do campo da pergunta
 
 **Branch:** claude/f83-wave-8b-window-engines
@@ -12,6 +18,22 @@
 - No fim da onda, pela fila da máquina: a suíte inteira 381 arquivos e 5.076 testes verdes (o pai: 378 e 5.031); `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai); o build dentro de `scripts/bundle-budget.json` (principal 195.608 B, teto 196.010 B; depois da primeira tela 235.445 B; `background` 58.100 B); `exportMusicKitRecording.json` byte a byte igual.
 
 
+## [2026-11-22 11:46] step — F83: o comentário de `app.js` diz quem expõe o `window.playlistsStore`
+
+**Branch:** integrate/staging-2026-11-21
+
+- P2 da segunda conferência da onda 7b: o comentário dizia `stores/playlists.js`; quem expõe é `controllers/BlendingController.js`. Só o comentário muda.
+
+## [2026-11-22 11:46] review — F83: onda 7 (a tela Blend em React) na linha de integração; a 7b passou no juiz na segunda conferência
+
+**Branch:** integrate/staging-2026-11-21
+
+- 7a (cartões de receita e painel «gerar de novo»): passa (0 P0, 0 P1, 1 P2), julgada na `fecfc69`.
+- 7b (a tela Blend): primeira conferência na `160c702` reprovada com 2 P1 — no Chromium, apertar um botão de ingrediente com a página rolada até o fim fazia a página pular; e o peso com as chaves da publicação passava do teto. Consertado em `claude/f83-wave-7b-fix-scroll-and-weight` (`ac12998`): a seção do passo 4 fica montada; teto medido com chaves de mentira e margem de 150 B (`npm run budget:publication`). Segunda conferência: passa (0 P0, 0 P1, 1 P2).
+- Diferenças de propósito da onda: as capas que chegam depois não tiram o foco nem levam a lista ao topo; escolher uma série mantém a lista onde estava.
+- Os três relatórios guardados como vieram em `reports/audits/` (`…react-regenerate-panel…`, `…react-blend-screen…-recheck.md` e `…-recheck-2.md`). O P2 da segunda (um comentário errado em `app.js`) corrigido aqui.
+- Faltam dois valores `VITE_*` na medida do peso (`VITE_SPLASH_COVERS`, `VITE_USAGE_MEASUREMENT`, 24 B juntos, dentro da margem): a acertar no fechamento.
+
 ## [2026-11-22 11:33] step — F83 onda 8b: a janela de pergunta com campo começa com o texto em atributo, como a à mão (achado da prova no WebKit)
 
 **Branch:** claude/f83-wave-8b-window-engines
@@ -20,6 +42,19 @@
 - `ui/dialogs/InputWindow.tsx`: o campo escreve `value` e `autofocus` como atributos e ouve o evento nativo `input` (o `onChange` do React compara com o valor que viu no começo e não ouviria um campo esvaziado a partir de um texto que ele nunca escreveu), tudo por uma `ref` estável. Os 44 casos de `engines.sameAsBefore` e de `dialogs.dismiss` seguem verdes.
 - `scripts/bundle-budget.json`: o principal foi a 195.608 B (+33 B) e o teto de 195.975 B para 196.010 B (402 B de folga); o que vem depois da primeira tela, 235.445 B; `background` fica em 58.100 B (484 B de folga sobre a necessidade de 57.616 B).
 
+
+## [2026-11-22 11:18] step — F83 onda 7b, correções do juiz: a prova no navegador, a regra do orçamento e a segunda diferença de propósito
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- `reports/evidence/F83/wave-7b/fix-scroll-and-weight/` (`proof.md`, o roteiro do juiz adaptado, as rodadas e as listas de pedidos; 124 kB): o rolamento da nova é igual ao da à mão em Chromium 1280, 900, 899 e perfil do iPhone 14, e o controle (a construção sem o conserto) é reprovado nos quatro; as figuras da faixa do passo a passo vão a 0, e o que sobra (cantos dos painéis de vidro, ≤ 6/255, ≤ 35 px) é igual ao do controle e some com um repaint forçado.
+- `wave-lessons.md` §20 (o salto da página, as marcas refeitas, a loja exposta pelo controlador, a regra do orçamento) e a segunda diferença de propósito (a lista de séries guarda o rolamento) em `wave-7b/proof.md`.
+
+## [2026-11-22 11:06] step — F83 onda 7b, correções do juiz: a exposição da loja no controlador partilhado, a complexidade da marca e as medidas do orçamento
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- `window.playlistsStore` passou do `stores/playlists.js` (que não pode crescer: o teto de linhas das lojas) para `controllers/BlendingController.js`, o arquivo que as duas telas preguiçosas carregam; o `markState` tira a complexidade da marca do passo a passo (limite 10). As medidas do orçamento em forma de publicação foram refeitas: principal 195.050 B, depois da primeira tela 236.336 B (margens de 160 B e 201 B sobre os tetos).
 
 ## [2026-11-22 11:04] step — F83 onda 8b: os casos das lojas de avisos e de barra, o seletor sem aviso do lint e a seção 21 das lições
 
@@ -68,6 +103,13 @@
 - `reports/evidence/F83/wave-8a/` (`proof.md`, `browser-proof.mjs`, `recording-built.mjs`, `run-all.sh`, `summarize.py`, `raw/`, 4 figuras; menos de 1 MB): sites construídos, o pai (160c702) contra este ramo, Chromium 1280/900/899/iPhone 14/SE e WebKit 1280/iPhone 14/SE, as telas de edição e de guardadas, Apple Music (pastas: algumas, nenhuma, erro, 250), Spotify, arquivo (bytes iguais) e o fechar de todo jeito; 4.342 conferências passadas, 0 diferenças sem explicação (ruído: 3 px na barra do topo, que também existe de pai contra pai, e a chama animada do logo no WebKit 1280 das guardadas: provável, não provado em controle).
 - A gravação do MusicKit (264 chamadas) também é idêntica ao dourado no site construído, em Chromium e em WebKit (106 conferências cada).
 - Por pedido do coordenador (a regra do orçamento é consertada em outro ramo): `scripts/bundle-budget.json` com 400 B ou mais de folga em cada teto que a onda move: `main` 195.860 B (medido 195.460 B) e `background` 59.300 B (necessidade 58.815 B). Nem `Blend.tsx` nem o bloco de lojas do `app.js` foram tocados.
+
+## [2026-11-22 10:00] step — F83 onda 7b, correções do juiz: o salto da página, as marcas refeitas, o primeiro arquivo a menos e o orçamento da construção publicada
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- P1-1: a seção do passo 4 fica montada e a `key` do desenho vai para o conteúdo dela (como a tela à mão, que refazia o conteúdo e não a seção); antes, o Chromium recalculava a página sem a seção e o rolamento saltava 112 a 254 px. P2-1: as marcas do passo a passo e os cartões de série são refeitos quando o estado deles muda (`key` com o estado), sem o esmaecer de 150 a 200 ms. P2-3: `window.playlistsStore` passou a ser exposta pelo próprio `stores/playlists.js` (o `app.js` não importa mais a loja), e a primeira tela volta a não baixar `playlists-*.js`.
+- P1-2: `scripts/publication-budget.mjs` (e `npm run budget:publication`) faz a construção em forma de publicação com valores de mentira do mesmo tamanho (id do Spotify 32, chave do PostHog 47, host 24; sementes fixas, só no ambiente) e confere o orçamento mais a margem declarada de 150 B; `bundle-budget.json` ganhou `publication` (margem, tamanhos, medidas) e a regra; tetos pela regra: principal 195.210 B, `background` 58.150 B. Testes: `Blend.remount`, `firstScreenFiles`, `publicationBudget`.
 
 ## [2026-11-22 09:28] step — F83 onda 8a: o orçamento de peso, a linha da TASK-28 e a seção 20 das lições
 

@@ -1,0 +1,14 @@
+A bottom, before single                     1439	1439
+A after single                              1209	1327
+A after multiple                            1097	1327
+B middle, before single                     1439	1439
+B after single                              1209	1327
+B after auto                                1097	1327
+D bottom, before [data-grouping]:not(.acti  1439	1439
+D after [data-grouping]:not(.active)        1209	1439
+D bottom, before [data-count="5"]           1439	1439
+D after [data-count="5"]                    837	837
+D bottom, before [data-count="10"]          1439	1439
+D after [data-count="10"]                   887	887
+C failure shown, bottom, before single      1547	1547
+C after single                              1293	1435

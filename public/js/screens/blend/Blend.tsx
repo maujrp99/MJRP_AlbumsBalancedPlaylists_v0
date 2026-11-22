@@ -19,7 +19,7 @@
  *   - «Blend it!» asks the controller with the recipe and the five keys of the ingredients; the notices of the load are warnings of ten seconds, then a
  *     success, then the move to /playlists?seriesId=… (by the bridge, after this draw, from the click and never from an effect).
  */
-import { useState, useSyncExternalStore } from 'react'
+import { Fragment, useState, useSyncExternalStore } from 'react'
 import { Icon } from '../../ui/Icon'
 import { RecipeCards, recipeKeyOf, type RecipeOfCard } from '../../ui/recipe/RecipeCards'
 import { Ingredients, type Choices } from '../../ui/recipe/Ingredients'
@@ -46,6 +46,9 @@ const STEPS = [
 
 const BADGE = 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full'
 
+/** The state of a mark: what its `key` carries, so a mark whose state changes is made anew. */
+const markState = (isDone: boolean, isActive: boolean): string => (isDone ? 'done' : isActive ? 'current' : 'waiting')
+
 /** The faixa of the four steps: the current one in orange, the done ones in green with a check. The step 3 is never the current one (a defect kept). */
 function Stepper({ hasSeries, hasRecipe }: { hasSeries: boolean; hasRecipe: boolean }) {
     let current = 1
@@ -62,7 +65,8 @@ function Stepper({ hasSeries, hasRecipe }: { hasSeries: boolean; hasRecipe: bool
                 return (
                     <div key={step.num} className="flex items-center gap-1 md:gap-2 blend-stepper__step" aria-current={isActive ? 'step' : undefined}>
                         <div className="flex flex-col items-center blend-stepper__mark">
-                            <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center text-sm transition-all ${stepClass}`}>
+                            {/* made anew when its state changes (a `key` with the state), as the hand-made faixa was: no fade of the colours and the glow */}
+                            <div key={markState(isDone, isActive)} className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center text-sm transition-all ${stepClass}`}>
                                 {isDone ? broken('✓', 28, 24) : <Icon name={step.icon} className="w-2/3 h-2/3" />}
                             </div>
                             <span className={`text-[10px] md:text-xs mt-1 blend-stepper__label ${labelClass}`}>{t(`blend.stepper.${step.key}`)}</span>
@@ -184,24 +188,31 @@ function Summary({ recipe, chosen, choices }: { recipe: RecipeOfCard; chosen: Se
     )
 }
 
-function GenerateSection({ chosen, recipe, choices, generating, onGenerate }: GenerateProps) {
+/**
+ * The section of step 4. The section itself stays on the page: only its contents are made anew at each draw (a `key` on the contents), as the hand-made
+ * screen did. A section taken out and put back in the same update, with the focused button of the ingredients taken out in between, makes Chromium lay the
+ * page out without it and clamp the scroll (the page jumped up): the outer element never leaves.
+ */
+function GenerateSection({ chosen, recipe, choices, generating, onGenerate, draws }: GenerateProps & { draws: number }) {
     if (!chosen) return null
     if (!recipe) {
         return (
-            <section className="glass-panel rounded-2xl p-6 opacity-40">
+            <section key="locked" className="glass-panel rounded-2xl p-6 opacity-40">
                 <Locked title={t('blend.step4.title')} step={4} about={t('blend.step4.locked')} />
             </section>
         )
     }
     return (
-        <section className="glass-panel rounded-2xl p-6 border-2 border-orange-400/30 animate-fadeIn">
-            <Heading icon="Sparkles" title={t('blend.step4.title')} step={4} />
-            <div id="blend-generate-section" className="text-center py-4">
-                <div className="space-y-4">
-                    <GenerateButton choices={choices} generating={generating} onGenerate={onGenerate} />
-                    <Summary recipe={recipe} chosen={chosen} choices={choices} />
+        <section key="ready" className="glass-panel rounded-2xl p-6 border-2 border-orange-400/30 animate-fadeIn">
+            <Fragment key={draws}>
+                <Heading icon="Sparkles" title={t('blend.step4.title')} step={4} />
+                <div id="blend-generate-section" className="text-center py-4">
+                    <div className="space-y-4">
+                        <GenerateButton choices={choices} generating={generating} onGenerate={onGenerate} />
+                        <Summary recipe={recipe} chosen={chosen} choices={choices} />
+                    </div>
                 </div>
-            </div>
+            </Fragment>
         </section>
     )
 }
@@ -295,7 +306,7 @@ export function Blend({ visit }: Props) {
             </section>
             <RecipeSection chosen={chosen} recipes={recipes} recipeId={recipeId} onSelect={chooseRecipe} />
             <IngredientsSection recipe={recipe} choices={choices} onChange={change} draws={ingredientDraws} />
-            <GenerateSection key={draws} chosen={chosen} recipe={recipe} choices={choices} generating={generating} onGenerate={start} />
+            <GenerateSection draws={draws} chosen={chosen} recipe={recipe} choices={choices} generating={generating} onGenerate={start} />
             <ResultsArea results={results} />
             {phone ? <PhoneBar drawn={draws} note={barNoteOf(chosen, recipe, choices)} ready={Boolean(chosen && recipe)} generating={generating} onGenerate={start} /> : null}
         </div>

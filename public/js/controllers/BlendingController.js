@@ -23,6 +23,10 @@ import { sourcesForRecipe, fallbacksForRecipe } from '../models/recipeSources.js
 import { askNotices, askProgressText, noAlbumsMessage } from '../models/albumAsk.js'
 import { defaultBatchName } from '../models/batchNaming.js'
 
+// For the browser console and browser-driven checks. Exposed here, not by app.js (F83 wave 7b): this file is where the Blend and the playlists screens share the
+// store, so the store is no longer in the main script and a dynamic import of it in app.js made every first screen download a file of its own just for this.
+if (typeof window !== 'undefined') window.playlistsStore = playlistsStore
+
 /**
  * @typedef {Object} GenerationConfig
  * @property {string} algorithmId - Algorithm to use
