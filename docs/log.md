@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 20:48] review — mjrp-critiquing-architecture: proposta do conteúdo publicado do CMS (F82, F92, F93) · can-go
+
+**Branch:** wip/cms-architecture-proposal
+
+- Relatório do agente separado, copiado sem mudança: `reports/audits/2026-11-22-mjrpalbumblender-v0-cms-published-content-architecture-audit.md`. Veredito «pode ir»: 0 P0, 9 P1, 9 P2, 7 notas de higiene, 3 decisões do dono. Os 9 P1 (e os P2) foram respondidos no mesmo ramo, na revisão da proposta (próxima entrada).
+
 ## [2026-11-22 20:29] step — proposta de arquitetura do conteúdo publicado do CMS (F82, F92, F93)
 
 **Branch:** wip/cms-architecture-proposal
