@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 15:01] step — prova no site construído da tela Álbuns em espera, do Escape e do celular (F79, seção C)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- `reports/evidence/F79/create-lean-computer/proof.md`, seção C, com duas capturas pequenas: a espera de `/albums` (computador e iPhone) contra `main`, tela assentada com 0 pixel de diferença, leitura rápida sem salto, Escape em Chromium e WebKit, e o celular `/start` igual a `main` (0 pixel em 8 capturas).
+
 ## [2026-11-22 14:54] step — no celular, «What is a series?» não diz «recolhido»: abre um diálogo (F79, achado P2-2 do juiz)
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line

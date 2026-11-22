@@ -47,3 +47,23 @@
 **Arquivos:** `top-of-page-during-load-1280.jpg` e `top-of-page-during-load-iphone.jpg` (o alto da página a 1 s da leitura: `main` com a linha, o ramo sem), `screens-own-loading-state-branch.jpg` (as telas inteiras do ramo durante a leitura), `b-facts.json` (as sondas e a conta de pontos diferentes).
 
 **Não provado:** a leitura real do Firestore de uma conta com séries (aqui a leitura é recusada depois da espera; o que se prova é a ausência da linha e o estado que a tela mostra durante a espera); WebKit de verdade no iPhone; a linha que a linha da migração (React) ainda desenha ao carregar uma tela sob demanda (`GlobalProgress.tsx`), que é outra peça.
+
+## C — a tela Álbuns diz que carrega; um Escape, uma coisa; os atributos do celular
+
+Site construído (`vite build`) e servido estático; Chromium e WebKit; Firebase bloqueado, a leitura das séries segurada 1,5 s (e, para a leitura rápida, 0 s); catálogo de teste. `main` = `336385a`.
+
+| | `main` | ramo |
+|---|---|---|
+| `/albums` a 300, 800 e 1300 ms (computador 1280, Chromium) | «No albums match your filters» e «No albums in library», sob a linha laranja | o círculo de espera no lugar da lista; cabeçalho e filtros iguais; nenhum texto de vazio |
+| `/albums` a 300, 800 e 1300 ms (iPhone 393, Chromium e WebKit) | o cartão «No albums in library · Go and create!» | «Loading your series…»; nenhum cartão de vazio |
+| Quando a leitura acaba | o estado vazio | o estado vazio (a leitura foi recusada: o que mostrava antes); tela assentada **0 pixel** de diferença contra `main` em `/albums` e `/blend`, Chromium 1280, Chromium e WebKit iPhone |
+| Leitura rápida | sem espera | o estado de espera nem chega a aparecer (a leitura acaba antes da primeira amostra, ~130 ms); deslocamento de layout 0,0025 (Chromium 1280), igual ao de `main`; 0 nos demais |
+| Leitura segurada, troca do círculo pelo estado vazio | | 0,14 de deslocamento no Chromium 1280 (o cartão vazio é mais alto que o círculo e empurra o rodapé); 0 nos outros três perfis. Vem da espera forçada de 1,5 s |
+| `/blend` | | 0 pixel de diferença |
+| Escape, Chromium e WebKit 1280 | | foco no menu: fecha o menu e a frase fica; foco no link: fecha a frase; foco no campo: nada; menu aberto e foco no link: um Escape fecha só o menu |
+| Celular, `What is a series?` | `aria-haspopup="dialog"` | igual: só `aria-haspopup="dialog"`, sem `aria-expanded` nem `aria-controls`, antes e depois do toque (a folha abre) |
+| Celular `/start`, 393 e 375, Chromium e WebKit, primeira tela e folha aberta | | **0 pixel** de diferença contra `main` nas 8 |
+
+**Arquivos:** `albums-loading-1280-main-vs-branch.jpg` (da esquerda: `main` a 300 ms, ramo a 300 ms, ramo a 1300 ms, ramo assentado) e `albums-loading-iphone-main-vs-branch.jpg` (o mesmo, no iPhone).
+
+**Não provado:** uma conta com séries de verdade (a passagem do estado de espera para os álbuns está provada em jsdom, `SeriesView.loading.test.js`, não no navegador); o WebKit de 1280 ficou sem sessão (o login de teste não pega ali), então a espera no WebKit está provada só no iPhone; o tempo real do Firestore; Safari de verdade.
