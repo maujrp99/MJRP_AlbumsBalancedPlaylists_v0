@@ -123,7 +123,9 @@ function diffPixels(a, b, ignoreTop = 0) {
 
 /** A page of the proof: what it can do, and the steps it wrote down. */
 async function open(browser, base, label) {
-    const context = await browser.newContext({ ...PROFILE_OF.options, locale: 'en-US', timezoneId: 'America/Sao_Paulo', serviceWorkers: 'block', reducedMotion: 'no-preference' })
+    // a tall viewport and no full-page picture: Chromium's full-page picture flips the width of the viewport for a moment and the phone query fires `change` (the hand-made Blend then
+    // draws everything anew, the React one only when the answer of isPhone() is not the same): an artifact of the proof, not of the page. The page is shorter than the viewport, so nothing scrolls.
+    const context = await browser.newContext({ ...PROFILE_OF.options, viewport: { ...PROFILE_OF.options.viewport, height: 3200 }, locale: 'en-US', timezoneId: 'America/Sao_Paulo', serviceWorkers: 'block', reducedMotion: 'no-preference' })
     await context.route(url => { const host = new URL(url).hostname; return host !== '127.0.0.1' }, route => route.abort())
     await context.route(BLOCKED, route => route.abort())
     await context.addInitScript(() => { Date.prototype.toLocaleTimeString = () => '12:00:00 PM' })
@@ -163,8 +165,8 @@ async function open(browser, base, label) {
                 // the picture of the panel is taken without what is fixed to the window (the bars of the phone and the top bar, which are not the panel's and have
                 // animated equalizers): they are hidden for the moment of the picture
                 await page.evaluate(() => { document.querySelectorAll('body *').forEach(e => { if (getComputedStyle(e).position === 'fixed' && !e.closest('#regeneratePanelMount')) { e.dataset.proofHidden = e.style.visibility || 'x'; e.style.visibility = 'hidden' } }) })
-                step.panel = await page.screenshot({ fullPage: true, animations: 'disabled', clip: { x: Math.floor(r.x), y: Math.floor(r.y), width: Math.ceil(r.width) + 1, height: Math.ceil(r.height) + 1 } }).catch(() => null)
-                await page.evaluate(() => { document.querySelectorAll('[data-proof-hidden]').forEach(e => { e.style.visibility = e.dataset.proofHidden === 'x' ? '' : e.dataset.proofHidden; delete e.dataset.proofHidden }) })
+                step.panel = await page.screenshot({ animations: 'disabled', clip: { x: Math.floor(r.x), y: Math.floor(r.y), width: Math.ceil(r.width) + 1, height: Math.ceil(r.height) + 1 } }).catch(() => null)
+                await page.evaluate(() => { document.querySelectorAll('[data-proof-hidden]').forEach(e => { e.style.visibility = e.dataset.proofHidden === 'x' ? '' : e.dataset.proofHidden; delete e.dataset.proofHidden; if (e.getAttribute('style') === '') e.removeAttribute('style') }) })
                 step.view = await page.screenshot({ animations: 'disabled' }).catch(() => null)
             }
             steps[name] = step
@@ -285,12 +287,17 @@ async function noneFlow(api) {
 }
 
 async function coversFlow(api) {
-    await openBlend(api, SERIES_MANY)
+    // series whose queries are «Artist - Album» texts: the covers are asked of the local set of albums (which the proof does not serve), so they arrive some time after the screen is drawn
+    // the local set of albums comes four seconds late (and then not at all): the covers arrive after the person has put the focus on a card and scrolled the list
+    await api.page.route('**/assets/data/albums-autocomplete.json', async route => { await new Promise(resolve => setTimeout(resolve, 4000)); await route.fulfill({ status: 404, body: '' }) })
+    await openBlend(api, SERIES_MANY.map(s => ({ ...s, albumQueries: s.albumQueries.map(q => `${q.artist} - ${q.album}`) })))
     if (!PROFILE_OF.computer) return
-    // the one difference of the wave on purpose: a focus on a card while the covers of the other series arrive in the background
+    // the one difference of the wave on purpose: a focus on a card, and the list scrolled, while the covers of the series arrive in the background
+    await api.page.evaluate(() => { document.querySelector('.blend-series-card').parentElement.scrollTop = 120 })
     await api.page.focus('.blend-series-card[data-series-id="many3"]')
-    await api.page.waitForTimeout(2500)
+    await api.page.waitForTimeout(7000)
     api.steps['ON PURPOSE the focus on a card after the covers came'] = { read: await api.page.evaluate(`(${READ})('#app')`), order: null }
+    api.steps['ON PURPOSE the list scroll after the covers came'] = { order: [await api.page.evaluate(() => String(Math.round(document.querySelector('.blend-series-card').parentElement.scrollTop)))] }
 }
 
 async function leaveFlow(api) {
@@ -344,6 +351,7 @@ for (const flow of Object.keys(oldSide)) {
     for (const name of names) {
         const a = O.steps[name], b = N.steps[name]
         if (!a || !b) { note(`${flow} · ${name}: the step exists on both sides`, false, `old ${Boolean(a)} new ${Boolean(b)}`); continue }
+        if (a.order && name.startsWith('ON PURPOSE')) { note(`${flow} · ${name}: old goes back to the top (0) and new keeps the list where it was; or no arrival was caught (the two equal)`, (a.order[0] === '0' && b.order[0] !== '0') || a.order[0] === b.order[0], `scrollTop ${a.order[0]} / ${b.order[0]}${a.order[0] === b.order[0] ? ' (no arrival caught after the step: not conclusive)' : ''}`); continue }
         if (a.order) { note(`${flow} · ${name}`, JSON.stringify(a.order) === JSON.stringify(b.order), JSON.stringify(a.order) === JSON.stringify(b.order) ? a.order.slice(0, 6).join(' ') : `old ${a.order.join(' ')}  new ${b.order.join(' ')}`); continue }
         compared++
         const ra = a.read, rb = b.read
@@ -353,7 +361,7 @@ for (const flow of Object.keys(oldSide)) {
         note(`${flow} · ${name}: the notice and the overlay of generating`, ra.toasts === rb.toasts && ra.overlay === rb.overlay, `overlay ${ra.overlay} / ${rb.overlay}; notice «${ra.toasts.slice(0, 90)}» / «${rb.toasts.slice(0, 90)}»`)
         const boxDiff = () => { const A = ra.boxes.split(';'), B = rb.boxes.split(';'); if (A.length !== B.length) return `${A.length} elements against ${B.length}`; const out = []; A.forEach((x, i) => { if (x !== B[i]) out.push(`${x} -> ${B[i].split(':').slice(2).join(':')}`) }); return `${out.length} of ${A.length} differ: ${out.slice(0, 6).join(' | ')}` }
         note(`${flow} · ${name}: the box of every element`, ra.boxes === rb.boxes, ra.boxes === rb.boxes ? '' : boxDiff())
-        if (name.startsWith('ON PURPOSE')) { note(`${flow} · ${name}: old loses the focus (body), new keeps it on the card`, ra.focus.startsWith('body') && !rb.focus.startsWith('body'), `focus ${ra.focus.slice(0, 40)} / ${rb.focus.slice(0, 40)}`); continue }
+        if (name.startsWith('ON PURPOSE')) { note(`${flow} · ${name}: old loses the focus (body) and new keeps it on the card; or no arrival was caught (the two equal)`, (ra.focus.startsWith('body') && !rb.focus.startsWith('body')) || ra.focus === rb.focus, `focus ${ra.focus.slice(0, 40)} / ${rb.focus.slice(0, 40)}${ra.focus === rb.focus ? ' (no arrival caught after the step: not conclusive)' : ''}`); continue }
         note(`${flow} · ${name}: the focus, the scroll and the page's width`, ra.focus === rb.focus && ra.scrollY === rb.scrollY && ra.overflowX === rb.overflowX && ra.scrollX === rb.scrollX, `focus ${ra.focus} / ${rb.focus}; scrollY ${ra.scrollY} / ${rb.scrollY}; overflow-x ${ra.overflowX} / ${rb.overflowX}`)
         for (const kind of ['panel', 'view']) {
             // the top bar of the computer (the wordmark and the buttons of Apple Music and Spotify, with animated bars) is not the panel's: the viewport picture does not count its 80 px

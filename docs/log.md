@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 08:55] step — F83 onda 7b: a prova no navegador da tela Blend, contra a tela à mão da junta
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `reports/evidence/F83/wave-7b/` (`proof.md`, `browser-proof.mjs`, `raw/`, `bundle-budget-*.txt`, os registros de captura e 6 figuras de diferença; 180 kB): sites construídos, a nova contra a à mão (`ace99a9`), Chromium a 1280, 900, 899 e iPhone 14, WebKit a 1280, iPhone 14 e iPhone SE, cada um com a versão à mão contra à mão (ruído). Elementos, atributos, classes, texto, campos, caixas, foco, rolagem, avisos, ordem do Tab, falha da geração, sair no meio da carga e Voltar/Avançar: iguais em todos os passos. As figuras do Chromium diferem em 12 a 31 pixels com até 6 de 255 (não explicado; o ruído à mão contra à mão é zero); no WebKit o mesmo ruído que a versão à mão contra à mão.
+- A prova achou um defeito da nova e a onda o consertou: o botão da barra do celular ficava com o `:hover` preso depois do toque (a barra à mão era trocada a cada passo); a barra (a nota e o botão) e a seção do botão têm `key` que muda a cada desenho (commit anterior). Também achou um artefato do roteiro (a figura de página inteira do Chromium dispara a mudança de «é celular?», e a tela à mão se redesenha inteira; a nova só se o resultado muda): janela alta, sem figura de página inteira.
+- A diferença de propósito (capas em segundo plano) está provada nos dois sentidos no teste do dourado; no navegador o fluxo não pegou a chegada das capas (não conclusivo).
+- Portão final: suíte inteira 376 arquivos, 4.979 testes, verde (inclui `noSecretsInRepo`); `test/architecture` verde; `tsc` limpo; `eslint` 0 erros e 67 avisos, todos em arquivos que a onda não tocou; construção dentro de `bundle-budget.json`.
+
 ## [2026-11-22 08:09] step — F83 onda 7b: a barra do celular e a seção do botão feitas de novo a cada passo, como a tela à mão
 
 **Branch:** claude/f83-wave-7b-blend-screen
