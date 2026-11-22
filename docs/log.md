@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 08:15] step — publicado em produção: o toque em «Search» inicia a busca no navegador da Apple (F79, UAT-282), da `f22c43b`
+
+**Branch:** main
+
+- Com a palavra dele («Publica pls»). Testes 4138/4138 na publicação. Volta: histórico de versões do Firebase Hosting.
+- Na migração: ondas 6a (com o conserto do «Show 50 more»), 6b e 6c na linha `integrate/staging-2026-11-21` (`59e215d`) e na prévia `staging`; onda 7a julgada (passa), entra com a 7b, em construção em `claude/f83-wave-7b-blend-screen`. Falta a onda 8 (fechamento) e levar este conserto à linha React (lá o defeito não existe).
+
 ## [2026-11-22 04:28] review — F79: o juiz independente passou o conserto do toque em «Search» (UAT-282)
 
 **Branch:** fix/f79-search-tap-starts-the-search
