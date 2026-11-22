@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 14:54] step — no celular, «What is a series?» não diz «recolhido»: abre um diálogo (F79, achado P2-2 do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- No celular o botão abre a folha de baixo (um diálogo), mas levava `aria-expanded="false"` e `aria-controls`: o leitor de tela o anunciaria como «recolhido». Agora, no celular, o botão leva só `aria-haspopup="dialog"` (como na `main`); no computador ficam `aria-expanded` e `aria-controls`. Pixels do celular iguais à `main` (`HomeView.drawWhatLink`).
+- Testes: `HomeLean.phone` e `HomeLean.computer`.
+
 ## [2026-11-22 14:53] step — um Escape, uma coisa só: a frase «What is a series?» não fecha junto com o menu (F79, achado P2-1 do juiz)
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line

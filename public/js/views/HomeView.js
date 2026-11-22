@@ -236,8 +236,13 @@ export class HomeView extends BaseView {
     /** On the phone «What is a series?» opens a sheet (a dialog); on the computer it expands the sentence in place. */
     drawWhatLink(phone) {
         const what = this.$('.home-what');
-        if (phone) what?.setAttribute('aria-haspopup', 'dialog');
-        else what?.removeAttribute('aria-haspopup');
+        if (!what) return;
+        // The phone's button opens a dialog: no expanded state, nothing it controls. The computer's expands the sentence.
+        const attributes = phone
+            ? { set: { 'aria-haspopup': 'dialog' }, off: ['aria-expanded', 'aria-controls'] }
+            : { set: { 'aria-expanded': String(this.$('#homeWhatText')?.hidden === false), 'aria-controls': 'homeWhatText' }, off: ['aria-haspopup'] };
+        Object.entries(attributes.set).forEach(([name, value]) => what.setAttribute(name, value));
+        attributes.off.forEach(name => what.removeAttribute(name));
     }
 
     /** One link, nothing else (UAT-281, and the computer's lean); none when the «not found» message has «Paste a list». */

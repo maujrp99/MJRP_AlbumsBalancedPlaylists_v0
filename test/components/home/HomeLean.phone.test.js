@@ -95,6 +95,16 @@ describe('the lean Start on the phone (UAT-281)', () => {
         expect(sheet.querySelector('.sheet__title').textContent).toBe('What is a series?')
     })
 
+    it('«What is a series?» is a button that opens a dialog, so it has no expanded state and controls nothing on the page', async () => {
+        await open(true)
+        const link = $('.home-what')
+        expect(link.getAttribute('aria-haspopup')).toBe('dialog')
+        expect(link.hasAttribute('aria-expanded')).toBe(false)
+        expect(link.hasAttribute('aria-controls')).toBe(false)
+        link.click()
+        expect(link.hasAttribute('aria-expanded')).toBe(false)
+    })
+
     it('no bar before the first cover; the bar comes with it', async () => {
         await open(true)
         expect($('.home-dock.phone-action-bar')).toBeNull()

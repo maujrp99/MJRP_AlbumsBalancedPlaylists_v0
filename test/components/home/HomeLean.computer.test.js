@@ -118,6 +118,14 @@ describe('the lean Create screen on the computer (F79)', () => {
         return event
     }
 
+    it('on the computer the link says expanded and controls the sentence, and is no dialog', async () => {
+        await open()
+        const link = $('.home-what')
+        expect(link.getAttribute('aria-expanded')).toBe('false')
+        expect(link.getAttribute('aria-controls')).toBe('homeWhatText')
+        expect(link.hasAttribute('aria-haspopup')).toBe(false)
+    })
+
     it('Escape closes the sentence when the focus is on its link', async () => {
         await open()
         $('.home-what').click()
