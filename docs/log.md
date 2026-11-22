@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 22:30] session — publicado em produção: a home abre em português para todos (UAT-273)
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Pública pls». Site publicado da `main` (`22663ed`) pelo `deploy-site.sh`, na fila do Album Blender; conferido no ar: `/home` vem com `<html lang="pt-BR">` e «Mergulhe nos álbuns que você ama», as descrições da página já não trazem «misture» nem «discos da sua estante», e `/`, `/home`, `/start` e `/inventory` respondem 200. O script principal do app não mudou de nome (`main-Dy6AgDdK.js`): a mudança é só da página de entrada.
+
 ## [2026-11-21 22:14] step — F80: o relatório do juiz sobre a home em português (passou, sem P0 nem P1, 2 P2) e suas capturas entram no ramo; UAT-275 nova
 **Branch:** fix/f80-home-opens-in-portuguese
 O juiz escreveu o relatório sobre e743a1a; copiado como veio para `reports/audits/` e as capturas para `reports/evidence/F80/opens-in-portuguese/recheck/`. UAT-275 (melhoria, aberta pelo juiz): quem escolheu inglês vê o português por cerca de 50 a 280 ms antes da troca; não é novo. Sem mudança de código.
