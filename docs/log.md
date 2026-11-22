@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 01:02] decision — Start enxuta no celular aprovada (F79, UAT-281)
+
+**Branch:** main
+
+- MJRP, sobre a prévia (https://claude.ai/artifact/U8gE8yHna1UyPjpxujrMn3): «Aprovo a versão enxuta». Vale a coluna «Enxuta» de `design/proposals/f79-start-lean/proposal.md` (título de 26 px; não a variante de duas linhas).
+- Decidido pelo agente — revisável (ele não respondeu a estas duas): os três passos saem de vez do celular; o texto de dentro do campo fica «An artist».
+- Construção: no código de hoje (ramo `fix/f79-start-lean-on-the-phone`) e depois na tela Start em React. Produção só com o «publica» dele.
+
 ## [2026-11-22 00:37] step — F79: prévia da tela Start enxuta no celular (UAT-281), comparador publicado
 **Branch:** wip/f79-start-lean-on-the-phone
 O MJRP, sobre a captura da tela Start no iPhone dele: «Aqui eu ainda acho que tem muito texto, tá clutter. Como poderíamos melhorar?»; à proposta do orquestrador: «sim faça a prévia pls». Prévia (desenho, não construção) em `design/proposals/f79-start-lean/`: a tela real de `main` capturada com e sem conta, em oito estados, e a «Enxuta» aplicada por cima da mesma marcação e CSS (título 26 px, «What is a series?» numa folha, só «or paste a list» sob o campo, sem os passos no celular, a barra da série só com a primeira capa). Primeira tela: 84 palavras hoje (104 sem conta) contra 16. Uma variante (título em duas linhas). Crítica separada (agente Opus, `mjrp-critiquing-ux-ui`): passa, sem P0; os 2 P1 consertados. Comparador: https://claude.ai/artifact/U8gE8yHna1UyPjpxujrMn3. Pendente da escolha do MJRP (três perguntas em `proposal.md`).
