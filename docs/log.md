@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 19:40] decision — CMS (F82): gravar já publica, como o kit faz hoje
+
+**Branch:** main
+
+- Pergunta 2 de 5 do enquadramento: «mantenho como o kit faz hoje (gravar já publica), ou rascunho e depois "publicar", com desfazer? Recomendo rascunho.» O MJRP perguntou antes «1. Como é no CMS kit hj?» e, sabendo que o kit grava e publica sem rascunho, decidiu: «1. Mantém». A recomendação do agente (rascunho) não foi a escolhida.
+- Consequência: a v1 não pede ao kit o passo «publicar» nem versões; o protótipo do CMS e a spec da F82 acompanham. O desfazer e o histórico ficam como pergunta para depois, se ele sentir falta.
+
 ## [2026-11-22 19:17] step — publicado em produção: «Create» enxuta no computador, sem a linha laranja, e a tela Albums diz que carrega (F79), da `fe9c93b`
 
 **Branch:** main
