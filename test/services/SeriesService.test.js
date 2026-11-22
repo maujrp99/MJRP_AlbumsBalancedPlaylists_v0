@@ -78,6 +78,26 @@ describe('SeriesService (Refactored)', () => {
 
             expect(loaded.map(s => s.id)).toEqual(['s3', 's2', 's1', 'undated'])
         })
+
+        it('says the read ended when it worked, even with no series (F79: the screen stops saying «loading»)', async () => {
+            albumSeriesStore.reset()
+            service.repository.findAll = vi.fn().mockResolvedValue([])
+            expect(albumSeriesStore.hasRead()).toBe(false)
+
+            await service.loadFromFirestore()
+
+            expect(albumSeriesStore.hasRead()).toBe(true)
+        })
+
+        it('says the read ended when it failed too, with the error kept', async () => {
+            albumSeriesStore.reset()
+            service.repository.findAll = vi.fn().mockRejectedValue(new Error('offline'))
+
+            await expect(service.loadFromFirestore()).rejects.toThrow('offline')
+
+            expect(albumSeriesStore.hasRead()).toBe(true)
+            expect(albumSeriesStore.getState().error).toBe('offline')
+        })
     })
 
     describe('handleUserChange', () => {

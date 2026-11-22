@@ -155,6 +155,7 @@ export class SeriesService {
             throw error
         } finally {
             albumSeriesStore.setLoading(false)
+            albumSeriesStore.markRead() // the read ended, well or badly: the screens stop saying «loading»
         }
     }
 

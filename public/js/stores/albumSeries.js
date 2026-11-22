@@ -14,6 +14,7 @@ export class AlbumSeriesStore {
         // Sync state
         this.loading = false
         this.error = null
+        this.read = false // a read of the series has ended, well or badly (F79)
 
         // Context
         this.userId = 'anonymous-user'
@@ -74,6 +75,8 @@ export class AlbumSeriesStore {
         this.notify()
     }
 
+    markRead() { this.read = true; this.notify() } // a read ended: «none» is now known
+
     setError(error) {
         this.error = error
         this.notify()
@@ -101,6 +104,8 @@ export class AlbumSeriesStore {
     getActiveSeries() {
         return this.activeSeries
     }
+
+    hasRead() { return this.read }
 
     getUserId() {
         return this.userId
@@ -135,6 +140,7 @@ export class AlbumSeriesStore {
         this.activeSeries = null
         this.loading = false
         this.error = null
+        this.read = false
         this.notify()
     }
 }

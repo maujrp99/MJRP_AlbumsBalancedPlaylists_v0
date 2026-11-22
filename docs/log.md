@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 14:44] step — a tela Álbuns diz que está carregando as séries (F79, achado P1-1 do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- Sem a linha laranja (dele: «aquela barra laranja que aparece no topo, nao deveria aparecer mesmo»), `/albums` mostrava «No albums in library · Go and create!» durante a leitura das séries (1–2 s), dizendo a quem tem séries que a biblioteca está vazia. **Decidido pelo agente — revisável** (recomendação do orquestrador a ele): a tela ganha o próprio estado de carregamento, o do Blend (círculo no computador, «Loading your series…» no celular), no lugar do vazio; sem atraso artificial.
+- A regra «a lista está carregando?» é uma função pura, `models/albumsListState.js` (leitura em curso e nenhuma série → carregando; leitura acabou sem séries → vazio; com séries → lista, também numa releitura; leitura falhou → vazio, como antes). O store de séries ganhou `hasRead()`/`markRead()`, marcados pelo `SeriesService.loadFromFirestore` ao fim (bem ou mal), e pelo controller quando não há banco a ler (sem conta).
+- Peça reutilizada: `components/ui/LoadingSeries.js` guarda as palavras e o círculo que o Blend já desenhava; o Blend passou a importá-los (mesmo HTML). Novo: `components/series/SeriesLoadingState.js`. Testes: `albumsListState`, `SeriesView.loading`, store e serviço.
+
 ## [2026-11-22 14:15] step — a linha laranja de carregamento no alto sai (GlobalProgress)
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line

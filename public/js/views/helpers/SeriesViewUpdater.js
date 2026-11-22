@@ -8,6 +8,8 @@ import { albumSeriesStore } from '../../stores/albumSeries.js';
 import { albumsStore } from '../../stores/albums.js';
 import { decodeEntities } from '../../models/text.js';
 import { SeriesEmptyState } from '../../components/series/SeriesEmptyState.js';
+import { SeriesLoadingState } from '../../components/series/SeriesLoadingState.js';
+import { ListState } from '../../models/albumsListState.js';
 import { SafeDOM } from '../../utils/SafeDOM.js';
 
 import { listArtists } from '../../models/seriesFilter.js';
@@ -74,11 +76,26 @@ export class SeriesViewUpdater {
 
     // FIX #152B: updateLoading and updateProgress removed - skeletons provide loading feedback
 
-    updateEmptyState(containerId, albumCount, isLoading) {
+    /**
+     * @param {string} containerId
+     * @param {number} albumCount
+     * @param {boolean} isLoading - the albums are loading
+     * @param {'loading'|'empty'|'list'} [listState] - F79: while the series are being read the
+     *        list area says it is loading, instead of the empty state; the grid steps aside
+     */
+    updateEmptyState(containerId, albumCount, isLoading, listState = ListState.LIST) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
         SafeDOM.clear(container);
+
+        const grid = document.getElementById('series-grid-mount');
+        if (grid) grid.hidden = listState === ListState.LOADING;
+
+        if (listState === ListState.LOADING) {
+            new SeriesLoadingState().mount(container);
+            return;
+        }
 
         if (albumCount === 0 && !isLoading) {
             const emptyState = new SeriesEmptyState({

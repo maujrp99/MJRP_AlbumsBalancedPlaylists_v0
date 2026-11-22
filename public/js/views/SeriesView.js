@@ -222,7 +222,12 @@ export default class SeriesView extends BaseView {
         const pageView = this.controller ? this.controller.getPageView() : null;
         this.showPaging(pageView);
         const hasSeriesToShow = (pageView?.paging.totalSeries || 0) > 0;
-        this.updater?.updateEmptyState('emptyStateContainer', hasSeriesToShow ? 1 : albums.length, isLoading);
+        this.updater?.updateEmptyState('emptyStateContainer', hasSeriesToShow ? 1 : albums.length, isLoading, this.listState());
+    }
+
+    /** What the list area shows (loading, empty or list); undefined without a controller (F79). */
+    listState() {
+        return this.controller?.getListState?.();
     }
 
     /** What the page holds, said by the two pagers: the one above the list and the one below (F72). */
