@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 11:18] step — F83 onda 7b, correções do juiz: a prova no navegador, a regra do orçamento e a segunda diferença de propósito
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- `reports/evidence/F83/wave-7b/fix-scroll-and-weight/` (`proof.md`, o roteiro do juiz adaptado, as rodadas e as listas de pedidos; 124 kB): o rolamento da nova é igual ao da à mão em Chromium 1280, 900, 899 e perfil do iPhone 14, e o controle (a construção sem o conserto) é reprovado nos quatro; as figuras da faixa do passo a passo vão a 0, e o que sobra (cantos dos painéis de vidro, ≤ 6/255, ≤ 35 px) é igual ao do controle e some com um repaint forçado.
+- `wave-lessons.md` §20 (o salto da página, as marcas refeitas, a loja exposta pelo controlador, a regra do orçamento) e a segunda diferença de propósito (a lista de séries guarda o rolamento) em `wave-7b/proof.md`.
+
 ## [2026-11-22 11:06] step — F83 onda 7b, correções do juiz: a exposição da loja no controlador partilhado, a complexidade da marca e as medidas do orçamento
 
 **Branch:** claude/f83-wave-7b-fix-scroll-and-weight
