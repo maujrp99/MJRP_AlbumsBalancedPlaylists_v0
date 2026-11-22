@@ -201,7 +201,7 @@ describe('every place that draws an album cover uses it', () => {
     it('the files that draw an album cover import the helper, and no file writes an inline error handler', () => {
         const drawers = [
             'screens/albums/AlbumCard.tsx', 'screens/inventory/ItemCard.tsx', 'screens/inventory/ItemRow.tsx', 'screens/inventory/phone/PhoneRow.tsx', 'components/common/AlbumCascade.js',
-            'components/ViewAlbumModal.js', 'ui/albumPicker/PickerParts.tsx'
+            'ui/albumWindow/AlbumWindow.tsx', 'ui/albumPicker/PickerParts.tsx'
         ]
         const withoutTheHelper = drawers.filter(file => !importsOf(file).some(specifier => /(^|\/)(coverImage\.js|CoverImage)$/.test(specifier)))
         const inlineHandlers = appFiles().filter(file => /onerror\s*[:=]\s*["'`]/i.test(read(file)))

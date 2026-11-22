@@ -66,8 +66,3 @@ export const buyLinkMarks = (storeId, place) => ({ buyStore: storeId, buyPlace: 
 
 /** The same marks, as attributes of an HTML string (the values are ids, never text from outside). */
 export const buyLinkAttributes = (storeId, place) => `data-buy-store="${storeId}" data-buy-place="${place}"`
-
-/** What the album window says above the links. */
-export const BUY_LINKS_NOTE = 'Each link opens the store on this album, on CD. The app earns nothing from these links today.'
-/** Why "Sell" and "Trade" cannot be pressed. */
-export const SELL_TRADE_SOON = 'Selling and trading between collectors: not in the app yet'

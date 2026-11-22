@@ -188,5 +188,12 @@ export const albums = {
     'albums.rankWindow.numberHere': 'Posição {number}, onde ela está',
     'albums.rankWindow.nowNumber': '{title} agora é a posição {number}',
     'albums.rankWindow.referenceBea': 'BEA #{rank}',
-    'albums.rankWindow.referenceSpotify': 'Spotify #{rank}'
+    'albums.rankWindow.referenceSpotify': 'Spotify #{rank}',
+    'albums.add.title': 'Adicionar ao inventário',
+    'albums.add.cancel': 'Cancelar',
+    'albums.add.confirm': 'Adicionar ao inventário',
+    'albums.add.added': 'Álbum adicionado ao inventário!',
+    'albums.add.already': 'O álbum já está no seu inventário',
+    'albums.add.failed': 'Não deu para adicionar: {reason}',
+    'albums.add.unknown': 'Desconhecido'
 }

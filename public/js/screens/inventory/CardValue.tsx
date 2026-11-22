@@ -17,8 +17,9 @@ import { t } from '../../i18n/t.js'
 import { safeUrl } from '../../utils/safeUrl.js'
 import { Icon } from '../../ui/Icon'
 import { popularityValue, ratingValue, tracksMadeOf } from '../../models/albumAverages.js'
-import { DISCOGS_CREDIT, discogsHint, noValueText, readOnText, valueLabel, ValueOrigin } from '../../models/inventoryValue.js'
-import { BuyLinkPlace, SELL_TRADE_SOON, buyLinkMarks, buyLinksOf } from '../../models/buyLinks.js'
+import { DISCOGS_CREDIT, readOnText, ValueOrigin } from '../../models/inventoryValue.js'
+import { discogsHint, noValueText, sellTradeSoon, valueLabel } from '../../i18n/inventoryTexts.js'
+import { BuyLinkPlace, buyLinkMarks, buyLinksOf } from '../../models/buyLinks.js'
 import { formatOf, isOwned, kindWordOf } from '../../models/inventoryCard.js'
 import { amountText } from './money'
 import type { Averages, InventoryItem, ItemValue, Money } from './types'
@@ -82,7 +83,7 @@ function Scores({ averages }: { averages?: Averages }) {
 
 const Dot = () => <span className="text-gray-400 text-xs">·</span>
 
-const NotYet = ({ word }: { word: string }) => <span className="text-xs text-gray-400 opacity-50 cursor-not-allowed" aria-disabled="true" title={SELL_TRADE_SOON}>{word}</span>
+const NotYet = ({ word }: { word: string }) => <span className="text-xs text-gray-400 opacity-50 cursor-not-allowed" aria-disabled="true" title={sellTradeSoon()}>{word}</span>
 
 /** Line 5: what is owned can be sold or traded one day, and its links are in its window; what is not owned shows where to buy it. */
 function Actions({ item }: { item: InventoryItem }) {

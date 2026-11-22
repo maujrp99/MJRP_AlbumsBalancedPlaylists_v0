@@ -13,6 +13,7 @@ import { ReactView } from '../../react-bridge/ReactView'
 import { InventoryController as Controller } from '../../controllers/InventoryController.js'
 import { inventoryStore } from '../../stores/inventory.js'
 import { onPhoneChange } from '../../utils/isPhone.js'
+import { closeAllWindows } from '../../ui/windowLayer'
 import { Inventory } from './Inventory'
 import { InventoryBridge } from './InventoryBridge'
 import type { InventoryController } from './types'
@@ -43,6 +44,8 @@ export function inventoryVisit() {
             // what the ask for the ratings still waits for is dropped, and nothing is drawn any more
             controller.dispose()
             bridge.dispose()
+            // the album window and the window to edit are not kept over the next screen (on purpose: the hand-made album window stayed)
+            closeAllWindows()
         }
     }
 }

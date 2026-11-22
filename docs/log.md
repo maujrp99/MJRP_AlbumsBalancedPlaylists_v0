@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 06:46] review — F83: ondas 6b (as janelas do álbum, de editar e de adicionar) e 6c (os textos do inventário) na linha de integração
+
+**Branch:** integrate/staging-2026-11-21
+
+- 6b: o juiz independente passou (0 P0, 0 P1, 3 P2), julgado na `6622654` contra a `315ae5f`; relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-react-album-and-inventory-windows-visual-parity-recheck.md`. A diferença de imagem da janela de adicionar era o aviso «Authentication issue» saindo da tela no instante da foto (some com o Firebase bloqueado; 0 px com a tela assentada).
+- P2 a anotar na prova: sair da tela fecha também as janelas de editar e de adicionar (de propósito, como a do álbum); no Chromium a 899 px com mouse o código antigo às vezes abria a janela com o título já na barra (defeito antigo não levado).
+- 6c (`80d3e1d`): sem juiz próprio — só muda de onde vêm as frases em inglês, iguais palavra por palavra (as fotos de referência de 6a e 6b passam sem recaptura); decidido pelo agente — revisável; a varredura do juiz da onda 7 cobre o inventário de novo. O português proposto segue pendente do MJRP.
+
 ## [2026-11-22 06:13] review — F83: onda 6a (a tela do inventário em React) passou no juiz independente, na segunda conferência
 
 **Branch:** integrate/staging-2026-11-21
@@ -19,6 +27,64 @@
 - Achado 2 (menor): `RowValue` escrevia o texto e o espaço seguinte como dois nós; agora um só, e a linha do Discogs sem ligação à edição também (o cartão: «Discogs · data»). Pixels da lista a 1280 e 900: 0.
 - Testes novos (`Inventory.showMore.notice.test.js`), vermelhos antes. Prova no navegador, valores ligados, pai contra ponta: rolagem igual em 24 de 24 (Chromium) e 8 de 8 (WebKit); o mesmo roteiro contra a construção sem correção falha (pai 5.299, sem correção 6.321). Evidência em `reports/evidence/F83/wave-6a/fix-show-more/`. Lição na seção 15 do `wave-lessons.md`.
 - Sensores pela fila: suíte inteira 364 arquivos, 4.772 testes verdes (com `test/architecture` e `noSecretsInRepo`); `typecheck` e `lint` sem erro; build dentro do teto.
+
+## [2026-11-22 05:37] step — F83, onda 6c: a prova no navegador e os totais
+
+**Branch:** claude/f83-wave-6c-inventory-texts
+
+- Totais na ponta, pela fila: suíte inteira 367 arquivos, 4.849 testes, todos verdes (inclui `test/architecture` e `noSecretsInRepo`); `typecheck` sem erro; `lint` 0 erros e os mesmos 68 avisos do pai; build dentro do teto (script principal 214.274 B contra 213.079 B no pai).
+- Prova no navegador (`reports/evidence/F83/wave-6c/proof.md`): o site construído desta ponta contra o pai `6622654`, em inglês, Chromium a 1280 e a 393: tela do inventário (com o Discogs de mentira) e as janelas, 0 diferença de texto, caixas, foco e rolagem; a única figura diferente (a busca digitada) também difere de pai contra pai (o cursor). Português no servidor de desenvolvimento: 14 estados, nenhum inglês sobrando, 13 limpos (o 14º tem só um brilho decorativo da janela do álbum que passa da página, igual em inglês); a passada achou «Lista de desejos» estourando o selo a 393 px e virou «Desejos».
+- `wave-lessons.md` § 17 e a linha 6c do `tasks.md` (TASK-25 marcada feita: 6a, 6b e 6c completas).
+
+## [2026-11-22 05:32] step — F83, onda 6c: as frases dos modelos do inventário no dicionário
+
+**Branch:** claude/f83-wave-6c-inventory-texts
+
+- As frases em inglês que os modelos do inventário escreviam (≈ 88 lugares: `inventoryValue`, `inventoryValueRun`, `inventoryFromSeries`, `inventoryRatings`, `inventorySort`, `inventoryStatus`, `buyLinks`, e `inventoryCard.originOf`) viraram código e números nos modelos. `i18n/inventoryTexts.js` (nome e argumentos das funções iguais aos de antes) diz cada um pelo dicionário; 191 chaves novas em `i18n/en/inventory.js` e `i18n/pt/inventory.js`. Os finais com várias frases são listas de partes `{ code, ...números }`; as constantes de frase saíram dos modelos. «Data provided by Discogs.» é o único texto que um modelo guarda e fica em inglês nos dois idiomas.
+- Consumidores trocados (só o `import` e as chamadas das opções): `Filters`, `Totals`, `Notices`, `CardValue`, `ItemCard`, `Header`, `phone/Sheets`, `phone/PhoneRow`, `BuyLinks`, `ValueSection`, `AlbumWindow`, `InventoryController`, `InventoryValues`.
+- Testes: `test/models/inventoryModelsGiveCodes.test.js` (25; 21 falham contra o pai 6622654), `test/i18n/inventoryTexts.test.js` (inglês palavra por palavra e português), um caso novo em `Inventory.texts.test.tsx`; os testes dos modelos passam a perguntar a camada de texto pelas frases (as mesmas asserções em inglês). Os dourados da 6a e da 6b passam SEM recaptura.
+- Português (proposta, espera o dono): «Desejos» no lugar de «Lista de desejos» como rótulo de status, porque o selo do cabeçalho estourava a 393 px.
+- Peso: o script principal foi de 213.079 B para 214.274 B (+1.195 B, o inglês das 191 chaves); o que vem depois da primeira tela, de 213.896 B para 214.626 B. Tetos: `main` 214.418 B, `background` 55.500 B, com o motivo escrito em `scripts/bundle-budget.json`.
+
+## [2026-11-22 05:10] step — F83, onda 6b: a prova no navegador e os totais
+
+**Branch:** claude/f83-wave-6b-inventory-windows
+
+- Totais na ponta, pela fila: suíte inteira 365 arquivos, 4.814 testes, todos verdes (inclui `test/architecture` com 42 arquivos e `noSecretsInRepo`); `typecheck` sem erro; `lint` 0 erros e os mesmos 68 avisos; build dentro do teto.
+- Prova no navegador (`reports/evidence/F83/wave-6b/proof.md`): Chromium 1280, 900, 899, 393 e WebKit 1280, iPhone 14 e SE sobre o site construído; tudo igual menos a figura da folha de adicionar no celular (também de antiga contra antiga, causa não localizada) e o botão «Close» que a folha do celular não desenha (limite do roteiro).
+
+
+## [2026-11-22 04:59] step — F83, onda 6b: o peso, os testes de sair e as notas (TASK-23c feita)
+
+**Branch:** claude/f83-wave-6b-inventory-windows
+
+- O peso (`reports/evidence/F83/wave-6b/bundle-budget-wave-6b.txt`, build sem as chaves, pela fila): script principal 213.079 B contra 211.698 B depois da 6a (+1.381 B: os textos em inglês das janelas, ≈ 120 chaves; o inglês fica sempre no script principal), teto de 211.842 B para 213.223 B (o medido mais 144 B das chaves); o arquivo da janela do álbum 4.859 B (`openAlbumWindow-*.js`), o das janelas do inventário 4.155 B (`inventoryWindows-*.js`), `AddWindow` 775 B, `EditWindow` 697 B; o arquivo da tela de álbuns 25.232 B (a tabela de faixas entrou nele) e o do inventário 22.227 B, os dois abaixo do alarme de 30.000 B, que NÃO subiu; depois da primeira tela 213.896 B contra 212.976 B, `background` de 51.300 B para 53.600 B (a necessidade medida é 53.538 B). `reactVendor` igual (68.691 B).
+- `test/ui/albumWindow/AlbumWindow.leave.test.tsx` (3 casos: a camada fecha todas, a rota do inventário fecha no `dispose`, uma janela fechada pelo próprio botão não fecha de novo); `test/services/usage/eventsOfLinksFiltersAndAccount.test.js` passa a ler os links de «Where to buy» da janela em React.
+- `tasks.md` (TASK-23c feita, linha 6b em TASK-25) e `wave-lessons.md` (seção 16) em dia; `leave-proof.mjs` (a janela do álbum à mão fica sobre a tela seguinte, a em React sai com a tela: provado no site construído, Chromium).
+
+
+## [2026-11-22 04:47] step — F83, onda 6b: as janelas do álbum, de editar e de adicionar em React (TASK-23c)
+
+**Branch:** claude/f83-wave-6b-inventory-windows
+
+- As janelas em React (TASK-23c): `ui/albumWindow/` (`AlbumWindow.tsx`, `openAlbumWindow.tsx`, `sources.ts`), `ui/tracks/` (`TracksTable.tsx`, `TracksTabs.tsx`, `TracksComparison.tsx`), `ui/inventoryItem/` (`ItemForm.tsx` partilhado, `EditWindow.tsx`, `AddWindow.tsx`, `ValueSection.tsx`, `BuyLinks.tsx`, `money.ts`, `inventoryWindows.tsx`) e `ui/windowLayer.tsx` (as janelas pedidas de código que não é componente, fechadas quando a tela sai). As janelas ficam em `ui/` e não em `screens/` porque o `lazyOnlyAtTheRoute` só deixa `import()` de `screens/` no `app.js`; a janela de adicionar recebe `add` (o serviço do inventário) de quem a abre.
+- O cartão aberto de álbuns usa `ui/tracks/TracksTable.tsx` (mesmo estado de ordem); a comparação da janela continua ordenando na mão (duas ordens que continuam duas).
+- Saem por `git rm`: `components/ViewAlbumModal.js`, `InventoryValueSection.js`, `albumWindowSources.js`, `ranking/{TracksRankingComparison,TracksTable,TracksTabs}.js`, `InventoryEditModal.js`, `InventoryAddModal.js` (1.698 linhas, 8 arquivos), `react-bridge/legacy/TracksTable.tsx` e `AlbumWindows.ts`; a lista `BRIDGE_USES` perde `AlbumCard.tsx`, `albumActions.ts` e `inventoryActions.ts`; `handMadeScreensBaseline` de 32 para 24 arquivos; `complexityAllowlist` perde `InventoryEditModal.js:open` e `TracksTable.js:renderRow`.
+- Muda de propósito: a janela do álbum FECHA quando a tela sai (a antiga ficava sobre a próxima); `closeAllWindows()` no `dispose` das duas telas.
+- Defeitos de hoje mantidos (e gravados no dourado): dois avisos de sucesso ao editar; BRL inventada para item sem moeda; «Add to Inventory» apertável duas vezes; «Paid» com «$» para EUR e GBP; sem Escape nem fundo em editar e adicionar; sem foco nas janelas; o foco que cai para a página depois de apertar uma aba ou uma coluna e depois de a linha do valor ser refeita no celular.
+- Testes: `test/ui/albumWindow/AlbumWindow.sameAsBefore.test.tsx` (os 40 cenários do dourado contra a janela em React, mais 4 casos que provam que o teste acusa uma palavra, uma classe e uma chamada trocadas de propósito); os 27 casos das janelas e das tabelas levados com a mesma asserção (`test/ui/albumWindow/*`, `test/ui/tracks/*`); os 21 casos da janela que estavam em `Inventory.{statusAndSeries,values,lowestForSale}` passam sem mudar a asserção; as pedidas de janela dos testes de álbuns e de inventário agora trocam `openAlbumWindow`, `inventoryWindows` e `AddWindow` por falsos.
+- O dourado foi recapturado uma vez, ainda das janelas à mão e antes de apagá-las, com o `normalize` melhorado (o espaço entre o estado de um campo e a tag seguinte não é desenhado).
+- Textos: ≈ 120 chaves em `i18n/en/{ui,inventory,albums}.js` e as propostas em português em `i18n/pt/` (pendentes da aprovação do dono).
+
+
+## [2026-11-22 04:28] step — F83, onda 6b: o dourado das janelas, capturado das janelas à mão
+
+**Branch:** claude/f83-wave-6b-inventory-windows
+
+- O dourado das janelas, capturado das janelas à mão ANTES de tocá-las: `test/support/albumWindowScenarios.js` (40 cenários: a janela do álbum aberta pela tela de álbuns e pelo inventário, as fontes, o fechar por ✕, «Close», fundo e Escape, a tabela de faixas por coluna nos dois sentidos, as abas do celular, a barra e o título do celular, cada corpo da seção de valor, escrever, Enter, voltar ao valor do Discogs, ler agora, «Where to buy», editar, adicionar), `albumWindowStandIns.js` (o mundo de fora, com as chamadas anotadas) e `test/fixtures/albumWindowBeforeF83.json` (1,3 MB; as páginas, o foco e todas as chamadas).
+- O registro da captura: `reports/evidence/F83/wave-6b/capture-before.test.js` (rodou de `test/components/`, com `TZ=America/Sao_Paulo`, sobre o ramo da 6a; o arquivo temporário foi para `_backups/`).
+- Os defeitos de hoje ficam gravados no dourado de propósito (dois avisos de sucesso ao editar, BRL inventada, «Add to Inventory» apertável duas vezes, «Paid» com «$» para EUR e GBP).
+
 
 ## [2026-11-22 04:21] step — F83, onda 6a: a prova no navegador, os totais e as lições (a tela do inventário em React)
 

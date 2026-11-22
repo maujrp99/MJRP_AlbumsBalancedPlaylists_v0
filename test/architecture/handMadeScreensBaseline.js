@@ -1,4 +1,11 @@
 /**
+ * (2026-11-22, wave 6b: the windows went to React, and these left the list in the commit that deleted them: components/ViewAlbumModal.js (382, the album window, now
+ * ui/albumWindow/AlbumWindow.tsx), components/InventoryValueSection.js (316, now screens/inventory/ValueSection.tsx and BuyLinks.tsx), components/albumWindowSources.js (40,
+ * now ui/albumWindow/sources.ts), components/ranking/{TracksRankingComparison,TracksTable,TracksTabs}.js (207 + 314 + 102, now ui/tracks/), components/InventoryEditModal.js
+ * (157, now screens/inventory/EditWindow.tsx) and components/InventoryAddModal.js (180, now screens/albums/InventoryAdd.tsx): 1.698 lines in 8 files. The window to edit and
+ * the one to add share ui/inventoryItem/ItemForm.tsx. The album window is the one change of behaviour of the wave: it is taken off the page when the screen is left, where the
+ * hand-made one stayed over the next screen.)
+ *
  * (2026-11-22, wave 6a: the inventory screen went to React, and these left the list in the commit that deleted them: views/InventoryView.js (693 in the list, 707 on
  * the disk), views/InventoryPhoneSheets.js (226), views/renderers/{InventoryGridRenderer,InventoryCardValue,InventoryValueHeader,InventoryPhoneRow,InventoryPhoneTile}.js
  * (755 in all), components/ui/Card.js (341; only the inventory used it) and components/Breadcrumb.js (63; ui/Breadcrumb.tsx has the trail of the inventory, a trail of one
@@ -64,13 +71,8 @@
 export const HAND_MADE = {
     'components/GlobalProgress.js': 80,
     'components/Icons.js': 178,
-    'components/InventoryAddModal.js': 180,
-    'components/InventoryEditModal.js': 157,
-    'components/InventoryValueSection.js': 316,
     'components/SpotifyExportModal.js': 461,
     'components/Toast.js': 154,
-    'components/ViewAlbumModal.js': 382,
-    'components/albumWindowSources.js': 40,
     'components/blend/BlendIngredientsPanel.js': 428,
     'components/blend/BlendRecipeCard.js': 174,
     'components/blend/BlendSeriesPhonePicker.js': 141,
@@ -79,9 +81,6 @@ export const HAND_MADE = {
     'components/navigation/signInFromLink.js': 30,
     'components/navigation/startRoute.js': 62,
     'components/playlists/RegeneratePanel.js': 182,
-    'components/ranking/TracksRankingComparison.js': 207,
-    'components/ranking/TracksTable.js': 314,
-    'components/ranking/TracksTabs.js': 102,
     'components/ui/BaseModal.js': 178,
     'components/ui/Sheet.js': 173,
     'components/ui/coverImage.js': 67,

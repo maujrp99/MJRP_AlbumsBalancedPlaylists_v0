@@ -2,12 +2,13 @@
  * F75 (REQ-09, REQ-11, REQ-13) - "Update values" as pure rules (which items a run reads, what an
  * answer of the server is worth, what the person is told), and the links of "Where to buy".
  */
+// F83 wave 6c: the English below is what `i18n/inventoryTexts.js` says over the codes the model gives (inventoryModelsGiveCodes.test.js): the very words the model wrote before.
 import { describe, it, expect } from 'vitest'
 import {
-    itemsToRead, askOfItem, readOutcomeOf, editionToKeep, editionOf, emptyCount, countAfter, valuesProgressText, readingNotice,
-    waitingNotice, valuesOutcome, readFailedText, LONGEST_WAIT_MS, DEFAULT_WAIT_MS, UNKEPT_VALUE_TEXT
+    itemsToRead, askOfItem, readOutcomeOf, editionToKeep, editionOf, emptyCount, countAfter, LONGEST_WAIT_MS, DEFAULT_WAIT_MS
 } from '../../public/js/models/inventoryValueRun.js'
-import { buyLinksOf, BUY_LINKS_NOTE, SELL_TRADE_SOON } from '../../public/js/models/buyLinks.js'
+import { valuesProgressText, readingNotice, waitingNotice, valuesOutcome, readFailedText, unkeptValueText, buyLinksNote, sellTradeSoon } from '../../public/js/i18n/inventoryTexts.js'
+import { buyLinksOf } from '../../public/js/models/buyLinks.js'
 
 const NOW = Date.parse('2026-11-20T12:00:00Z')
 const AT = '2026-11-20T12:00:00.000Z'
@@ -112,7 +113,7 @@ describe('what the person is told', () => {
     expect(unkept.ok).toBe(false)
     expect(unkept.text).toContain('3 values could not be saved to your inventory. This browser keeps them for six hours; Update values tries to save them again.')
     expect(valuesOutcome({ ...emptyCount(10), done: 10, read: 10, unkept: 1 }).text).toContain('1 value could not be saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.')
-    expect(UNKEPT_VALUE_TEXT).toBe('The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.')
+    expect(unkeptValueText()).toBe('The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.')
     const refused = valuesOutcome({ ...emptyCount(211), done: 1, failed: { token_refused: 1 }, stopped: 'token_refused' })
         expect(refused.ok).toBe(false)
         expect(refused.text).toContain('Discogs refused the token of the app, so the reading stopped.')
@@ -152,7 +153,7 @@ describe('where to buy (REQ-11)', () => {
     })
 
     it('the fixed sentences', () => {
-        expect(BUY_LINKS_NOTE).toBe('Each link opens the store on this album, on CD. The app earns nothing from these links today.')
-        expect(SELL_TRADE_SOON).toBe('Selling and trading between collectors: not in the app yet')
+        expect(buyLinksNote()).toBe('Each link opens the store on this album, on CD. The app earns nothing from these links today.')
+        expect(sellTradeSoon()).toBe('Selling and trading between collectors: not in the app yet')
     })
 })

@@ -1,7 +1,7 @@
 /**
  * The world the inventory screen is asked in (F83 wave 6a): what stands OUTSIDE the screen, as stand-ins that write down every call
  * they get in `outside` (the service of the inventory, the value service of Discogs, the toast, the question dialog, the album load,
- * the two hand-made windows the screen opens: the album and the edit). The screen is the same code and the same controller under the
+ * the two windows the screen opens: the album and the edit). The screen is the same code and the same controller under the
  * hand-made view and under the React screen, so the stand-ins are the same too.
  *
  * Read by `vi.mock` factories (test/support/inventoryScenarios.js is NOT imported here: a factory that imports the file that imports
@@ -120,24 +120,19 @@ export const dialogModule = {
     }
 }
 
-/** The window of the album (hand-made until wave 6b): it writes down what it was given and what the host answers when asked. */
-export const albumWindowModule = {
-    showViewAlbumModal: vi.fn(async (item, options) => {
+/** The windows the screen opens (screens/inventory/inventoryWindows): they write down what they were given and what the host answers when asked. */
+export const windowsModule = {
+    openInventoryView: vi.fn(async (item, options) => {
         outside.push(['window.view', item.id, Boolean(options.value), typeof options.loadAlbum])
         if (options.value) outside.push(['window.view.value', json(options.value.view())])
         await options.loadAlbum?.(new AbortController().signal)
         world.viewWindow = options
         return { redrawValue: () => { outside.push(['window.redrawValue']) } }
+    }),
+    openInventoryEdit: vi.fn(async (album, onSave) => {
+        outside.push(['window.edit', album.id])
+        world.editWindow = { album, onSave }
     })
-}
-
-export const editWindowModule = {
-    InventoryEditModal: {
-        open: vi.fn((album, onSave) => {
-            outside.push(['window.edit', album.id])
-            world.editWindow = { album, onSave }
-        })
-    }
 }
 
 /** The inventory the scenarios use: every status, a cover and none, a format and none, a value written, averages and none. */

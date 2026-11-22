@@ -10,7 +10,7 @@ import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { dialogService } from '../../services/DialogService.js'
 import { getSeriesService } from '../../services/SeriesService.js'
 import { toast } from '../../components/Toast.js'
-import { openAlbumWindow, openInventoryAdd } from '../../react-bridge/legacy/AlbumWindows'
+import type { AlbumSources } from '../../ui/albumWindow/sources'
 import type { RankRequest } from './RankWindow'
 import type { AlbumAction } from './AlbumCard'
 import type { Album, AlbumsController } from './types'
@@ -89,13 +89,15 @@ export async function runAlbumAction(deps: ActionDeps, action: AlbumAction, albu
     }
     switch (action) {
         case 'view-modal':
-            await openAlbumWindow(album, deps.controller.sourcesOf(albumId))
+            // the window is asked for when the card is pressed: it is not in the first download of the screen
+            await (await import('../../ui/albumWindow/openAlbumWindow')).openAlbumWindow(album, { sources: deps.controller.sourcesOf(albumId) as AlbumSources })
             break
         case 'album-more':
             deps.openAlbumSheet(album, (picked) => { void runAlbumAction(deps, picked, albumId, groupSeriesId) })
             break
         case 'add-to-inventory':
-            await openInventoryAdd(album)
+            // the window to add is asked for when pressed, and is given what writes the album into the inventory
+            ;(await import('../../ui/inventoryItem/AddWindow')).openAddWindow(album, { add: async (added, format, options) => (await import('../../services/inventory/inventoryWiring.js')).inventoryService.addAlbum(added, format, options) })
             break
         case 'remove-album':
             await removeAlbum(deps, album, groupSeriesId)

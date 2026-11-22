@@ -21,7 +21,10 @@ vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService }
 import { openInventory, press, run, draw, undraw } from '../../support/inventoryHost'
 import { Grid } from '../../../public/js/screens/inventory/Grid'
 import { InventoryBridge } from '../../../public/js/screens/inventory/InventoryBridge'
-import { showViewAlbumModal } from '../../../public/js/components/ViewAlbumModal.js'
+import { act } from 'react'
+import { openAlbumWindow } from '../../../public/js/ui/albumWindow/openAlbumWindow'
+import { openInventoryEdit } from '../../../public/js/ui/inventoryItem/inventoryWindows'
+import { closeAllWindows } from '../../../public/js/ui/windowLayer'
 import { inventoryStore } from '../../../public/js/stores/inventory.js'
 import { inventoryAlbumFromQuery } from '../../../public/js/models/inventoryFromSeries.js'
 
@@ -36,6 +39,13 @@ const ten = fromSeries({ artist: 'Pearl Jam', title: 'Ten', appleMusicId: '10531
 const vs = fromSeries('Pearl Jam - Vs. <b>', 'inv-vs')
 
 const text = (node) => node.textContent.replace(/\s+/g, ' ').trim()
+
+/** The album window as the screen opens it, and its element (the hand-made window gave it back; the page holds it now). */
+const showViewAlbumModal = async (item, options) => {
+    await act(async () => { await openAlbumWindow(item, options) })
+    return [...document.querySelectorAll('.modal-overlay')].at(-1)
+}
+const closeWindows = () => act(async () => { closeAllWindows() })
 
 describe('the inventory screen (F71)', () => {
     let view
@@ -207,7 +217,7 @@ describe('the inventory screen (F71)', () => {
     })
 
     describe('the album window of an item', () => {
-        afterEach(async () => document.querySelectorAll('.modal-overlay').forEach(node => node.remove()))
+        afterEach(closeWindows)
 
         it('of an item that came from a series, with nobody to ask: Not Owned, and a line in the place of the tracks', async () => {
             const modal = await showViewAlbumModal(ten)
@@ -228,8 +238,7 @@ describe('the inventory screen (F71)', () => {
                 const modal = await showViewAlbumModal(ten, { loadAlbum })
 
                 expect(modal.querySelector('[data-role="no-tracks"]').textContent).toBe('Loading the tracks of this album…')
-                give(loaded)
-                await settled()
+                await run(async () => { give(loaded); await settled() })
 
                 expect(modal.querySelector('[data-role="no-tracks"]')).toBe(null)
                 expect(text(modal)).toContain('Once')
@@ -242,19 +251,18 @@ describe('the inventory screen (F71)', () => {
                 const modal = await showViewAlbumModal(fromCard, { loadAlbum: () => new Promise(resolve => { give = resolve }) })
 
                 expect(text(modal)).toContain('Dead & Bloated')
-                give({ ...fromCard.albumData, tracks: [{ title: 'Dead & Bloated', position: 1 }, { title: 'Sex Type Thing', position: 2 }] })
-                await settled()
+                await run(async () => { give({ ...fromCard.albumData, tracks: [{ title: 'Dead & Bloated', position: 1 }, { title: 'Sex Type Thing', position: 2 }] }); await settled() })
                 expect(text(modal)).toContain('Sex Type Thing')
             })
 
             it('when the album does not come: the kept tracks stay; with none kept, it says so', async () => {
                 const kept = await showViewAlbumModal(fromCard, { loadAlbum: async () => null })
-                await settled()
+                await run(settled)
                 expect(text(kept)).toContain('Dead & Bloated')
-                kept.remove()
+                await closeWindows()
 
                 const none = await showViewAlbumModal(ten, { loadAlbum: async () => { throw new Error('offline') } })
-                await settled()
+                await run(settled)
                 expect(none.querySelector('[data-role="no-tracks"]').textContent)
                     .toBe('The tracks of this album could not be loaded. Close this window and open it again to try once more.')
             })
@@ -265,15 +273,14 @@ describe('the inventory screen (F71)', () => {
                 const modal = await showViewAlbumModal(ten, { loadAlbum: (signal) => { seen = signal; return new Promise(resolve => { give = resolve }) } })
                 await press(() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })))
                 expect(seen.aborted).toBe(true)
-                give(loaded)
-                await settled()
+                await run(async () => { give(loaded); await settled() })
                 expect(text(modal)).not.toContain('Even Flow')
             })
 
             it('the screen gives the window the album of the item, asked through the service', async () => {
                 service.albumOfItem = vi.fn(async () => loaded)
                 await view.handleViewWithModal('inv-ten')
-                await settled()
+                await run(settled)
                 expect(service.albumOfItem).toHaveBeenCalledWith(ten, { signal: expect.any(AbortSignal) })
                 expect(text(document.querySelector('.modal-overlay'))).toContain('Even Flow')
             })
@@ -298,17 +305,15 @@ describe('the inventory screen (F71)', () => {
         })
 
         it('the edit window opens for an item that came from a series', async () => {
-            const { InventoryEditModal } = await import('../../../public/js/components/InventoryEditModal.js')
+            await act(async () => { await openInventoryEdit(ten, vi.fn()) })
 
-            expect(() => InventoryEditModal.open(ten, vi.fn())).not.toThrow()
             expect(document.body.textContent).toContain('Ten')
         })
 
         it('saving the notes of an item that came from a series invents no format for it', async () => {
-            const { InventoryEditModal } = await import('../../../public/js/components/InventoryEditModal.js')
             const onSave = vi.fn(async () => { })
 
-            InventoryEditModal.open(ten, onSave)
+            await act(async () => { await openInventoryEdit(ten, onSave) })
             const format = document.getElementById('edit-format')
             expect([...format.options].map(option => option.textContent)).toEqual(['Not set', 'CD', 'Vinyl', 'Cassette', 'DVD', 'Blu-ray', 'Digital'])
             expect(format.value).toBe('')
@@ -319,9 +324,7 @@ describe('the inventory screen (F71)', () => {
         })
 
         it('the edit window of an item with a format offers the formats only, with its own chosen', async () => {
-            const { InventoryEditModal } = await import('../../../public/js/components/InventoryEditModal.js')
-
-            InventoryEditModal.open(fromCard, vi.fn())
+            await act(async () => { await openInventoryEdit(fromCard, vi.fn()) })
             const format = document.getElementById('edit-format')
 
             expect([...format.options].map(option => option.value)).toEqual(['cd', 'vinyl', 'cassette', 'dvd', 'bluray', 'digital'])

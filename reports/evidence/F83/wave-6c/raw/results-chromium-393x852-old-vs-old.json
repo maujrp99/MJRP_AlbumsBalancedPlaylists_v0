@@ -1,0 +1,307 @@
+{
+ "tag": "chromium-393x852-old-vs-old",
+ "total": 60,
+ "failed": 0,
+ "results": [
+  {
+   "what": "the list: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the list: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the list: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the list: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the list: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the gallery: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the gallery: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the gallery: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the gallery: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the gallery: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the filters sheet: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the filters sheet: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the filters sheet: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the filters sheet: the focus and the scroll",
+   "ok": true,
+   "detail": "old BUTTON#.btn.btn-primary @0 / new BUTTON#.btn.btn-primary @0"
+  },
+  {
+   "what": "the filters sheet: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the filters sheet: gallery, vinyl, order by artist Z-A: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the filters sheet: gallery, vinyl, order by artist Z-A: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the filters sheet: gallery, vinyl, order by artist Z-A: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the filters sheet: gallery, vinyl, order by artist Z-A: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the filters sheet: gallery, vinyl, order by artist Z-A: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the sheet of an album: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the sheet of an album: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the sheet of an album: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the sheet of an album: the focus and the scroll",
+   "ok": true,
+   "detail": "old DIV#.sheet__panel @0 / new DIV#.sheet__panel @0"
+  },
+  {
+   "what": "the sheet of an album: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the status sheet, then another status: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the status sheet, then another status: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the status sheet, then another status: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the status sheet, then another status: the focus and the scroll",
+   "ok": true,
+   "detail": "old BUTTON#.inv-row__status @0 / new BUTTON#.inv-row__status @0"
+  },
+  {
+   "what": "the status sheet, then another status: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the jump sheet: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the jump sheet: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the jump sheet: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the jump sheet: the focus and the scroll",
+   "ok": true,
+   "detail": "old DIV#.sheet__panel @0 / new DIV#.sheet__panel @0"
+  },
+  {
+   "what": "the jump sheet: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the jump to a letter: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the jump to a letter: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the jump to a letter: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the jump to a letter: the focus and the scroll",
+   "ok": true,
+   "detail": "old BUTTON#.inv-row__open @3349 / new BUTTON#.inv-row__open @3349"
+  },
+  {
+   "what": "the jump to a letter: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the actions sheet: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the actions sheet: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the actions sheet: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the actions sheet: the focus and the scroll",
+   "ok": true,
+   "detail": "old BUTTON#addSeriesAlbumsBtn.btn.btn-secondary.flex.items-center.gap-2.whitespace-nowrap.inv-collection-action @0 / new BUTTON#addSeriesAlbumsBtn.btn.btn-secondary.flex.items-center.gap-2.whitespace-nowrap.inv-collection-action @0"
+  },
+  {
+   "what": "the actions sheet: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "Show 50 more: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "Show 50 more: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "Show 50 more: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "Show 50 more: the focus and the scroll",
+   "ok": true,
+   "detail": "old BUTTON#.inv-row__open @4937 / new BUTTON#.inv-row__open @4937"
+  },
+  {
+   "what": "Show 50 more: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the status sheet shows the three names: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the status sheet shows the three names: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the status sheet shows the three names: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the status sheet shows the three names: the focus and the scroll",
+   "ok": true,
+   "detail": "old DIV#.sheet__panel @0 / new DIV#.sheet__panel @0"
+  },
+  {
+   "what": "the status sheet shows the three names: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the search with nothing found, then cleared: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the search with nothing found, then cleared: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the search with nothing found, then cleared: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the search with nothing found, then cleared: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the search with nothing found, then cleared: no error on the page",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

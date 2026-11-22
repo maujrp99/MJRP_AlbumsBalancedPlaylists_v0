@@ -5,7 +5,8 @@
  * short rows, and one button that opens the rest in a sheet. The money is written by the models; with nothing summed the total is a dash.
  */
 import { t } from '../../i18n/t.js'
-import { BASE_CURRENCY, CURRENCIES, DISCOGS_CREDIT, LOWEST_PRICES_NOTE, RATES_MISSING_TEXT, ownedNote, rateNote, toBuyNote } from '../../models/inventoryValue.js'
+import { BASE_CURRENCY, CURRENCIES, DISCOGS_CREDIT } from '../../models/inventoryValue.js'
+import { lowestPricesNote, ownedNote, rateNote, ratesMissingText, toBuyNote } from '../../i18n/inventoryTexts.js'
 import { totalText } from '../../models/inventoryCard.js'
 import type { InventoryController, Money, Total, ValueView } from './types'
 
@@ -42,7 +43,7 @@ function CurrencyButtons({ money, onChoose }: { money: Money; onChoose: (code: s
                         aria-pressed={chosen}
                         style={chosen ? { borderColor: '#f97316', color: '#fff' } : undefined}
                         disabled={off}
-                        title={off ? RATES_MISSING_TEXT : undefined}
+                        title={off ? ratesMissingText() : undefined}
                         onClick={() => onChoose(code)}
                     >{code}</button>
                 )
@@ -56,11 +57,11 @@ function Notes({ known }: { known: ValueView }) {
     return (
         <>
             {money.currency !== BASE_CURRENCY ? <div className={NOTE} data-role="rate">{rateNote(money.currency, money.rates)}</div> : null}
-            {money.ratesMissing ? <div className={NOTE} data-role="rates-missing" role="status">{RATES_MISSING_TEXT}</div> : null}
+            {money.ratesMissing ? <div className={NOTE} data-role="rates-missing" role="status">{ratesMissingText()}</div> : null}
             {known.discogsShown ? (
                 <div className={NOTE} data-role="discogs-credit">
                     <a className="underline hover:text-white" href="https://www.discogs.com/" target="_blank" rel="noopener">{DISCOGS_CREDIT}</a>
-                    {` ${t('inventory.totals.discogsEach')}${known.lowestShown ? ` ${LOWEST_PRICES_NOTE}` : ''}`}
+                    {` ${t('inventory.totals.discogsEach')}${known.lowestShown ? ` ${lowestPricesNote()}` : ''}`}
                 </div>
             ) : null}
         </>
@@ -96,7 +97,7 @@ export function PhoneTotals({ known, controller, onAbout }: { known: ValueView; 
                     ))}
                 </span>
             </div>
-            {money.ratesMissing ? <div className="inv-values__note" data-role="rates-missing" role="status">{RATES_MISSING_TEXT}</div> : null}
+            {money.ratesMissing ? <div className="inv-values__note" data-role="rates-missing" role="status">{ratesMissingText()}</div> : null}
             <div className="inv-values__foot">
                 {known.discogsShown ? <a className="inv-values__credit" data-role="discogs-credit" href="https://www.discogs.com/" target="_blank" rel="noopener">{DISCOGS_CREDIT}</a> : null}
                 <button type="button" className="inv-values__about" data-values-about="true" aria-haspopup="dialog" onClick={onAbout}>{known.sellerSettingsMissing ? t('inventory.phone.why') : t('inventory.phone.about')}</button>

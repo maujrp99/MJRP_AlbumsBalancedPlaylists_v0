@@ -9,7 +9,8 @@
 import { useEffect, useRef } from 'react'
 import { t } from '../../i18n/t.js'
 import { Icon } from '../../ui/Icon'
-import { SORT_OPTIONS, choiceOf } from '../../models/inventorySort.js'
+import { choiceOf } from '../../models/inventorySort.js'
+import { sortOptions } from '../../i18n/inventoryTexts.js'
 import { CollectionActions } from './CollectionActions'
 import type { InventoryController, InventoryState } from './types'
 
@@ -54,7 +55,7 @@ export function Filters({ state, controller }: { state: InventoryState; controll
                 </div>
                 <div className="filter-dropdown relative">
                     <select id="inventorySort" className="form-control appearance-none cursor-pointer pr-8" aria-label={t('inventory.sort.label')} value={choiceOf(state.sorting)} onChange={(event) => controller.handleSortChoice(event.target.value)}>
-                        {SORT_OPTIONS.map(({ value, label }: { value: string; label: string }) => <option key={value} value={value}>{label}</option>)}
+                        {sortOptions().map(({ value, label }: { value: string; label: string }) => <option key={value} value={value}>{label}</option>)}
                     </select>
                     <Chevron />
                 </div>

@@ -2,7 +2,7 @@
  * The cards of an album on the albums screen (F83 wave 5a): the compact card of the grid and the expanded card of the list on the
  * computer (components/ui/AlbumCardRenderer.js), and the tile and the row of the phone (components/ui/AlbumPhoneCard.js). The same
  * markup, the same classes; each button has its own `onClick` where the hand-made screen had one listener on the page for every
- * `data-action`. The track table of the expanded card is the hand-made one, behind a wrapper (react-bridge/legacy/TracksTable.tsx).
+ * `data-action`. The track table of the expanded card is ui/tracks/TracksTable.tsx (wave 6b), the one the album window holds too.
  */
 import { useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
 import { t } from '../../i18n/t.js'
@@ -10,7 +10,7 @@ import { albumLoader } from '../../services/AlbumLoader.js'
 import { safeUrl } from '../../utils/safeUrl.js'
 import { identityReasonOf } from '../../models/askedAlbum.js'
 import { trackRowsOf } from '../../models/albumTrackRows.js'
-import { LegacyTracksTable, type TrackSort } from '../../react-bridge/legacy/TracksTable'
+import { TracksTable, type TrackRowData } from '../../ui/tracks/TracksTable'
 import { CoverImage } from '../../ui/CoverImage'
 import { Icon } from '../../ui/Icon'
 import type { Album } from './types'
@@ -138,10 +138,17 @@ export function CompactCard({ album, act }: { album: Album; act: Act }) {
     )
 }
 
+/** The order of the table of the open card: a column and a direction (the hand-made table asked the card for the other direction on any column pressed). */
+interface TrackSort {
+    field: string
+    direction: 'asc' | 'desc'
+}
+
 export function ExpandedCard({ album, index, act }: { album: Album; index: number; act: Act }) {
     const [sort, setSort] = useState<TrackSort>({ field: 'rank', direction: 'asc' })
     const style: CSSProperties = { animationDelay: `${index * 50}ms` }
-    const hasTracks = trackRowsOf(album, { sortField: sort.field, sortDirection: sort.direction }).length > 0
+    const rows = trackRowsOf(album, { sortField: sort.field, sortDirection: sort.direction }) as TrackRowData[]
+    const hasTracks = rows.length > 0
     return (
         <div className="expanded-album-card glass-panel p-6 mb-4 rounded-xl border border-white/5 animate-in fade-in slide-in-from-bottom-2" style={style} data-id={album.id}>
             <div className="flex gap-4">
@@ -150,7 +157,7 @@ export function ExpandedCard({ album, index, act }: { album: Album; index: numbe
                     <h3 className="text-xl font-bold text-white leading-tight">{album.title}{album.year ? <span className="text-gray-400 font-normal ml-2 text-base">{`(${album.year})`}</span> : null}</h3>
                     <div className="flex items-center gap-3 mb-2"><p className="text-lg text-accent-primary">{album.artist}</p></div>
                     <div className="flex flex-wrap gap-1 mt-auto"><Badges album={album} /></div>
-                    {hasTracks ? <LegacyTracksTable album={album} sort={sort} onSort={setSort} /> : <p className="text-muted text-sm">{t('albums.card.noTracks')}</p>}
+                    {hasTracks ? <TracksTable tracks={rows} sortField={sort.field} sortDirection={sort.direction} albumId={album.id} onSort={(field) => setSort({ field, direction: sort.direction === 'asc' ? 'desc' : 'asc' })} /> : <p className="text-muted text-sm">{t('albums.card.noTracks')}</p>}
                 </div>
             </div>
         </div>

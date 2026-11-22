@@ -19,8 +19,7 @@ vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async (
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', async () => (await import('../../support/inventoryStandIns.js')).loaderModule)
 vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/inventoryStandIns.js')).toastModule)
 vi.mock('../../../public/js/services/DialogService.js', async () => (await import('../../support/inventoryStandIns.js')).dialogModule)
-vi.mock('../../../public/js/components/ViewAlbumModal.js', async () => (await import('../../support/inventoryStandIns.js')).albumWindowModule)
-vi.mock('../../../public/js/components/InventoryEditModal.js', async () => (await import('../../support/inventoryStandIns.js')).editWindowModule)
+vi.mock('../../../public/js/ui/inventoryItem/inventoryWindows', async () => (await import('../../support/inventoryStandIns.js')).windowsModule)
 
 import { act } from 'react'
 import { inventoryParts } from '../../../public/js/screens/inventory/index'

@@ -1,0 +1,927 @@
+{
+ "tag": "webkit-393x852",
+ "total": 184,
+ "failed": 3,
+ "results": [
+  {
+   "what": "albums: the album window opened: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "albums: the album window opened: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "albums: the album window opened: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window opened: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window opened: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window opened: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "albums: the album window opened: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window opened: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by the cross: the picture of the window",
+   "ok": true,
+   "detail": "a window on one side only"
+  },
+  {
+   "what": "albums: the album window closed by the cross: the number of windows over the page",
+   "ok": true,
+   "detail": "old 0 / new 0"
+  },
+  {
+   "what": "albums: the album window closed by the cross: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by the cross: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by the cross: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by the cross: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "albums: the album window closed by the cross: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by the cross: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by «Close»: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "albums: the album window closed by «Close»: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "albums: the album window closed by «Close»: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by «Close»: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by «Close»: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by «Close»: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "albums: the album window closed by «Close»: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by «Close»: no error on the page",
+   "ok": false,
+   "detail": "STEP: locator.tap: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.modal-footer button').first()\n    - locator resolved to <button type=\"button\" class=\""
+  },
+  {
+   "what": "albums: the album window closed by Escape: the picture of the window",
+   "ok": true,
+   "detail": "a window on one side only"
+  },
+  {
+   "what": "albums: the album window closed by Escape: the number of windows over the page",
+   "ok": true,
+   "detail": "old 0 / new 0"
+  },
+  {
+   "what": "albums: the album window closed by Escape: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by Escape: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by Escape: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by Escape: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "albums: the album window closed by Escape: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the album window closed by Escape: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the tabs of the phone, BEA then Spotify: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "albums: the tabs of the phone, BEA then Spotify: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "albums: the tabs of the phone, BEA then Spotify: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the tabs of the phone, BEA then Spotify: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the tabs of the phone, BEA then Spotify: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the tabs of the phone, BEA then Spotify: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "albums: the tabs of the phone, BEA then Spotify: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the tabs of the phone, BEA then Spotify: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window scrolled, the title in the bar: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "albums: the window scrolled, the title in the bar: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "albums: the window scrolled, the title in the bar: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window scrolled, the title in the bar: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window scrolled, the title in the bar: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window scrolled, the title in the bar: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "albums: the window scrolled, the title in the bar: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window scrolled, the title in the bar: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window opened: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the album window opened: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the album window opened: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window opened: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window opened: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window opened: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the album window opened: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window opened: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by the cross: the picture of the window",
+   "ok": true,
+   "detail": "a window on one side only"
+  },
+  {
+   "what": "inventory: the album window closed by the cross: the number of windows over the page",
+   "ok": true,
+   "detail": "old 0 / new 0"
+  },
+  {
+   "what": "inventory: the album window closed by the cross: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by the cross: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by the cross: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by the cross: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the album window closed by the cross: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by the cross: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by «Close»: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the album window closed by «Close»: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the album window closed by «Close»: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by «Close»: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by «Close»: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by «Close»: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the album window closed by «Close»: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by «Close»: no error on the page",
+   "ok": false,
+   "detail": "STEP: locator.tap: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.modal-footer button').first()\n    - locator resolved to <button type=\"button\" class=\""
+  },
+  {
+   "what": "inventory: the album window closed by Escape: the picture of the window",
+   "ok": true,
+   "detail": "a window on one side only"
+  },
+  {
+   "what": "inventory: the album window closed by Escape: the number of windows over the page",
+   "ok": true,
+   "detail": "old 0 / new 0"
+  },
+  {
+   "what": "inventory: the album window closed by Escape: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by Escape: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by Escape: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by Escape: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the album window closed by Escape: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the album window closed by Escape: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the tabs of the phone, BEA then Spotify: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the tabs of the phone, BEA then Spotify: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the tabs of the phone, BEA then Spotify: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the tabs of the phone, BEA then Spotify: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the tabs of the phone, BEA then Spotify: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the tabs of the phone, BEA then Spotify: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the tabs of the phone, BEA then Spotify: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the tabs of the phone, BEA then Spotify: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window scrolled, the title in the bar: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the window scrolled, the title in the bar: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the window scrolled, the title in the bar: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window scrolled, the title in the bar: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window scrolled, the title in the bar: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window scrolled, the title in the bar: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the window scrolled, the title in the bar: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window scrolled, the title in the bar: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the value section, read now, an invalid value written: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the value section, read now, an invalid value written: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the value section, read now, an invalid value written: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the value section, read now, an invalid value written: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the value section, read now, an invalid value written: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the value section, read now, an invalid value written: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the value section, read now, an invalid value written: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the value section, read now, an invalid value written: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: where to buy (the stores): the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: where to buy (the stores): the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: where to buy (the stores): the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: where to buy (the stores): the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: where to buy (the stores): the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: where to buy (the stores): the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: where to buy (the stores): the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: where to buy (the stores): no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the window to edit: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the window to edit: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the window to edit: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit, filled: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the window to edit, filled: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the window to edit, filled: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit, filled: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit, filled: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit, filled: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old TEXTAREA#.form-control.w-full.resize-none (clip visible) / new TEXTAREA#.form-control.w-full.resize-none (clip visible)"
+  },
+  {
+   "what": "inventory: the window to edit, filled: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit, filled: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the cross: the picture of the window",
+   "ok": true,
+   "detail": "a window on one side only"
+  },
+  {
+   "what": "inventory: the window to edit closed by the cross: the number of windows over the page",
+   "ok": true,
+   "detail": "old 0 / new 0"
+  },
+  {
+   "what": "inventory: the window to edit closed by the cross: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the cross: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the cross: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the cross: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the window to edit closed by the cross: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the cross: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Cancel: the picture of the window",
+   "ok": true,
+   "detail": "a window on one side only"
+  },
+  {
+   "what": "inventory: the window to edit closed by Cancel: the number of windows over the page",
+   "ok": true,
+   "detail": "old 0 / new 0"
+  },
+  {
+   "what": "inventory: the window to edit closed by Cancel: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Cancel: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Cancel: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Cancel: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the window to edit closed by Cancel: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Cancel: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Escape: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the window to edit closed by Escape: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the window to edit closed by Escape: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Escape: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Escape: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Escape: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the window to edit closed by Escape: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by Escape: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the backdrop: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "inventory: the window to edit closed by the backdrop: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "inventory: the window to edit closed by the backdrop: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the backdrop: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the backdrop: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the backdrop: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "inventory: the window to edit closed by the backdrop: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "inventory: the window to edit closed by the backdrop: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add: the picture of the window",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "albums: the window to add: the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "albums: the window to add: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "albums: the window to add: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add, filled (USD, the prefix changes): the picture of the window",
+   "ok": false,
+   "detail": "163684 pixels differ, at most 246 of 255"
+  },
+  {
+   "what": "albums: the window to add, filled (USD, the prefix changes): the number of windows over the page",
+   "ok": true,
+   "detail": "old 1 / new 1"
+  },
+  {
+   "what": "albums: the window to add, filled (USD, the prefix changes): the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add, filled (USD, the prefix changes): the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add, filled (USD, the prefix changes): the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add, filled (USD, the prefix changes): the focus and the lock of the page",
+   "ok": true,
+   "detail": "old TEXTAREA#.form-control.w-full.resize-none (clip visible) / new TEXTAREA#.form-control.w-full.resize-none (clip visible)"
+  },
+  {
+   "what": "albums: the window to add, filled (USD, the prefix changes): the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add, filled (USD, the prefix changes): no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add closed by Cancel: the picture of the window",
+   "ok": true,
+   "detail": "a window on one side only"
+  },
+  {
+   "what": "albums: the window to add closed by Cancel: the number of windows over the page",
+   "ok": true,
+   "detail": "old 0 / new 0"
+  },
+  {
+   "what": "albums: the window to add closed by Cancel: the elements, attributes, classes and fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add closed by Cancel: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add closed by Cancel: the boxes of the parts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add closed by Cancel: the focus and the lock of the page",
+   "ok": true,
+   "detail": "old the page (clip visible) / new the page (clip visible)"
+  },
+  {
+   "what": "albums: the window to add closed by Cancel: the touch targets under 44 px (old 0, new 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "albums: the window to add closed by Cancel: no error on the page",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

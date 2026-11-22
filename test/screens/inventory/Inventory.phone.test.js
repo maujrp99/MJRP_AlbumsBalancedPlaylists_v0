@@ -16,8 +16,7 @@ vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async (
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
 vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
 vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService }))
-vi.mock('../../../public/js/components/InventoryEditModal.js', () => ({ InventoryEditModal: editModal }))
-vi.mock('../../../public/js/components/ViewAlbumModal.js', () => ({ showViewAlbumModal: albumWindow.show }))
+vi.mock('../../../public/js/ui/inventoryItem/inventoryWindows', () => ({ openInventoryView: albumWindow.show, openInventoryEdit: editModal.open }))
 
 import { openInventory, press, run } from '../../support/inventoryHost'
 import { inventoryStore } from '../../../public/js/stores/inventory.js'

@@ -181,57 +181,35 @@ export function planSeriesAlbums(series, items) {
 }
 
 // ---- What the person is told ----------------------------------------------------------------------
-
-const counted = (number, one, many) => `${number} ${number === 1 ? one : many}`
-const albums = (number) => counted(number, 'album', 'albums')
+// A rule gives a code and the numbers; the words are in the dictionary of the screen (i18n/inventoryTexts.js).
 
 /**
- * The question asked before anything is written.
+ * The question asked before anything is written, as the parts the screen says one after the other.
  * @param {Object} plan - of planSeriesAlbums, with something to add
- * @returns {string}
+ * @returns {Array<{ code: string, count: number, series?: number }>}
  */
-export function confirmationText(plan) {
+export function confirmationOf(plan) {
     const { alreadyThere, repeated, incomplete } = plan
-    const sentences = [`${albums(plan.toAdd.length)} from your ${plan.seriesCount} series will be added as Not Owned.`]
-    if (alreadyThere > 0) {
-        sentences.push(`${albums(alreadyThere)} already in your inventory ${alreadyThere === 1 ? 'stays as it is' : 'stay as they are'}.`)
-    }
-    if (repeated > 0) {
-        sentences.push(`${counted(repeated, 'entry that repeats an album of another series is', 'entries that repeat an album of another series are')} added once.`)
-    }
-    if (incomplete > 0) {
-        sentences.push(`${counted(incomplete, 'entry with no artist or no title is', 'entries with no artist or no title are')} left out.`)
-    }
-    return sentences.join(' ')
+    const parts = [{ code: 'willAdd', count: plan.toAdd.length, series: plan.seriesCount }]
+    if (alreadyThere > 0) parts.push({ code: 'alreadyThere', count: alreadyThere })
+    if (repeated > 0) parts.push({ code: 'repeated', count: repeated })
+    if (incomplete > 0) parts.push({ code: 'incomplete', count: incomplete })
+    return parts
 }
 
-/** What is said when the plan has nothing to add. */
-export function nothingToAddText(plan) {
-    return plan.alreadyThere > 0
-        ? 'Every album of your series is already in your inventory. Nothing was added.'
-        : 'Your series have no albums to add. Nothing was added.'
-}
+/** What is said when the plan has nothing to add: every album is already there, or the series have none. */
+export const nothingToAddOf = (plan) => (plan.alreadyThere > 0 ? 'alreadyThere' : 'noAlbums')
 
-/** What the button says while the albums are written. */
-export function progressText({ added, total }) {
-    return added > 0 ? `Adding albums… ${added} of ${total}` : `Adding ${albums(total)}…`
-}
+/** What the button says while the albums are written: `counting` before the first is written, `adding` after. */
+export const progressOf = ({ added, total }) => (added > 0 ? { code: 'adding', added, total } : { code: 'counting', total })
 
 /**
- * The honest end.
+ * The honest end, as the parts the screen says one after the other.
  * @param {{ added: number, total: number, error: string|null, reloaded?: boolean }} result - of InventoryService.addAlbumsAsNotOwned
- * @returns {{ ok: boolean, text: string }}
+ * @returns {{ ok: boolean, parts: Array<Object> }}
  */
-export function outcomeText({ added, total, error, reloaded = true }) {
-    if (!error) {
-        const seeThem = reloaded ? '' : ' Reload the page to see them.'
-        return { ok: true, text: `Added ${albums(added)} as Not Owned.${seeThem}` }
-    }
-    if (added === 0) {
-        return { ok: false, text: 'No album was added: the write failed and your inventory is as it was. Try again.' }
-    }
-    return {
-        ok: false,
-        text: `Added ${added} of ${albums(total)} as Not Owned, then a write failed. ${albums(total - added)} ${total - added === 1 ? 'was' : 'were'} not added: run the action again to add the rest.`
-    }
+export function outcomeOf({ added, total, error, reloaded = true }) {
+    if (!error) return { ok: true, parts: [{ code: 'added', count: added }, ...(reloaded ? [] : [{ code: 'reload' }])] }
+    if (added === 0) return { ok: false, parts: [{ code: 'noneAdded' }] }
+    return { ok: false, parts: [{ code: 'partlyAdded', added, total }, { code: 'notAdded', count: total - added }] }
 }

@@ -7,6 +7,7 @@
  */
 import { ReactView, type RouteParams } from '../../react-bridge/ReactView'
 import { sessionSeriesController } from '../../react-bridge/legacy/SessionSeriesController'
+import { closeAllWindows } from '../../ui/windowLayer'
 import { Albums, type AlbumsRoute } from './Albums'
 import { AlbumsBridge } from './AlbumsBridge'
 import type { AlbumsController } from './types'
@@ -29,6 +30,7 @@ export function albumsView(controller: AlbumsController = sessionSeriesControlle
             controller.init(null, bridge)
             await controller.loadScope(route.scope, route.seriesId, false, { entering: true })
         },
-        dispose: () => bridge.dispose()
+        // the album window and the window to add to the inventory are not kept over the next screen (on purpose: the hand-made album window stayed)
+        dispose: () => { bridge.dispose(); closeAllWindows() }
     })
 }

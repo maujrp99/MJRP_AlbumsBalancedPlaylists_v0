@@ -13,8 +13,8 @@ vi.mock('../../../public/js/services/ranking/ownRanking.js', async () => (await 
 vi.mock('../../../public/js/services/SeriesService.js', async () => (await import('../../support/albumsScenarios.js')).seriesServiceModule)
 vi.mock('../../../public/js/services/DialogService.js', async () => (await import('../../support/albumsScenarios.js')).dialogModule)
 vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/albumsScenarios.js')).toastModule)
-vi.mock('../../../public/js/components/ViewAlbumModal.js', async () => (await import('../../support/albumsScenarios.js')).albumWindowModule)
-vi.mock('../../../public/js/components/InventoryAddModal.js', async () => (await import('../../support/albumsScenarios.js')).inventoryModule)
+vi.mock('../../../public/js/ui/albumWindow/openAlbumWindow', async () => (await import('../../support/albumsScenarios.js')).albumWindowModule)
+vi.mock('../../../public/js/ui/inventoryItem/AddWindow', async () => (await import('../../support/albumsScenarios.js')).inventoryModule)
 vi.mock('../../../public/js/screens/albums/useAlbumWindows', async () => (await import('../../support/albumsScenarios.js')).windowsModule)
 
 import { act } from 'react'

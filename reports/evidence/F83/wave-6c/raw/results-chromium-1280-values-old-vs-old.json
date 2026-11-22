@@ -1,0 +1,57 @@
+{
+ "tag": "chromium-1280-values-old-vs-old",
+ "total": 10,
+ "failed": 0,
+ "results": [
+  {
+   "what": "the notice of the albums that wait, then «Read them now»: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the notice of the albums that wait, then «Read them now»: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the notice of the albums that wait, then «Read them now»: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the notice of the albums that wait, then «Read them now»: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the notice of the albums that wait, then «Read them now»: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the euro chosen, the notes of the totals: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the euro chosen, the notes of the totals: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the euro chosen, the notes of the totals: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the euro chosen, the notes of the totals: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the euro chosen, the notes of the totals: no error on the page",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}
