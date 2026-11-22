@@ -329,7 +329,10 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 ### Inventário
 
 - **Inventário no celular.** Contagem e fichas de status, os totais em duas linhas, a barra presa e as linhas de 102 px, 50 por vez. ^inventory-phone-default
-- **Carregando.** Seis linhas-fantasma do tamanho das de verdade. ^inventory-phone-loading
+- **Galeria de capas.** Quem escolheu a galeria vê as capas em grade (3 por linha a 393 px, 2 abaixo de 360 px; 5 a 820 px) em vez das linhas: capa quadrada, título, artista, o valor com o formato e a origem, a pílula de status e «⋯»; 50 por vez. A barra presa, os totais e os avisos são os mesmos. ^inventory-phone-gallery-default
+- **Folha «Filters and order» com a troca.** Antes do formato, a seção «View» com «Gallery» e «List» (o ícone de cada uma, a escolhida marcada), aplicada na hora. ^inventory-phone-gallery-switch-open
+- **Álbum sem capa na galeria.** O cartão mostra o mesmo substituto da lista no lugar da capa, no mesmo quadrado. ^inventory-phone-gallery-no-cover
+- **Carregando.** Seis linhas-fantasma do tamanho das de verdade (na galeria, seis capas-fantasma). ^inventory-phone-loading
 - **Inventário vazio.** «Your collection is empty», a frase do que o enche e um botão, «Add the albums of my series». ^inventory-phone-empty
 - **Filtrado a nada.** «No albums match» e «Clear search and filters». ^inventory-phone-no-match
 - **Mais linhas.** No fim, «Showing 50 of 211» e «Show 50 more» (no último bloco, o número que falta); a página não se mexe e o foco vai à primeira linha nova. ^inventory-phone-show-more

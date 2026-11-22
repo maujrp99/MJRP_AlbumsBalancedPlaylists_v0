@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: standard
 solution_type: feature
 imports: ["[[S-71-see-the-inventory-as-a-gallery-on-the-phone]]"]
@@ -27,10 +27,10 @@ Dito pelo MJRP em 2026-11-21: «no inventory não tem a view de galeria? só de 
 - [REQ-04] A tela de 900 px para cima não muda (ela já tem a grade e a lista). · fixes S-71
 
 ## Observable States
-A escrever.
+Em `docs/specs/info-arch.md` § Estados no celular: [[info-arch#^inventory-phone-gallery-default]], [[info-arch#^inventory-phone-gallery-switch-open]], [[info-arch#^inventory-phone-gallery-no-cover]]. As regras, em `docs/specs/behavior.md` [[behavior#^phone-inventory-gallery]].
 
 ## Success Criteria
-- **REQ-01** · a 393 px a galeria tem 3 colunas; a 820 px, 5; a troca está na folha «Filters and order», com o ícone e o nome de cada visão, e a escolha volta ao reabrir a tela.
+- **REQ-01** · a 393 px a galeria tem 3 colunas (2 abaixo de 360 px, onde 3 seriam cartões de 90 px); a 820 px, 5; a troca está na folha «Filters and order», com o ícone e o nome de cada visão, e a escolha volta ao reabrir a tela.
 - **REQ-02** · cada cartão tem a capa, o título (até duas linhas, cortado se longo), o artista, a linha do valor, a situação e «⋯», e os dois botões têm 44 px; um álbum sem capa mostra o mesmo substituto da lista.
 - **REQ-03** · os testes da tela provam as duas visões com a mesma busca, o mesmo filtro e a mesma ordem; o aviso dos valores e o botão «Update values» são os mesmos.
 - **REQ-04** · `test/architecture/phoneStylesStayOnThePhone.test.js` passa; nenhuma regra nova fora da consulta de mídia.

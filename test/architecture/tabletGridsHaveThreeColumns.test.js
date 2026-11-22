@@ -26,5 +26,7 @@ describe('the grids of covers on a tablet in the phone layout (768-899 px)', () 
         const css = flat(read('public/css/mobile/inventory.css'))
         expect(css).toMatch(/\.inv-tiles\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/)
         expect(css).toMatch(/@media\(min-width:640px\)\{\.inv-tiles\{grid-template-columns:repeat\(auto-fill,minmax\(140px,1fr\)\)/)
+        // under 360 px (the first iPhone SE, 320 px) three would be cards of 90 px: two
+        expect(css).toMatch(/@media\(max-width:359px\)\{\.inv-tiles\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/)
     })
 })

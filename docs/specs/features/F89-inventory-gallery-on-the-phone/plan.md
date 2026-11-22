@@ -25,9 +25,10 @@ F76 (a tela do celular), F75 (o cartão e o valor do inventário). Nenhuma bibli
 `docs/specs/features/F76-mobile-redesign/{spec,plan,tasks}.md`, `docs/specs/behavior.md`, `docs/specs/design-system.md`, `public/js/views/InventoryView.js`, `public/js/views/renderers/InventoryPhoneRow.js`, `InventoryGridRenderer.js`, `InventoryPhoneSheets.js`, `public/js/components/ui/AlbumPhoneCard.js`, `public/css/mobile/inventory.css`, `public/css/mobile/albums.css`.
 
 Declarações:
-- `docs/specs/constitution.md`, `docs/specs/arch.md`, `docs/specs/data-model.md`, `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nem entidade nova
+- `docs/specs/arch.md` — atualizado: a peça `InventoryPhoneTile.js` na lista das peças de tela só do celular
+- `docs/specs/constitution.md`, `docs/specs/data-model.md`, `docs/specs/tech-stack.md` — sem mudança: nenhuma dependência nem entidade nova
 - `docs/specs/behavior.md`, `docs/specs/info-arch.md` — atualizados no fecho
-- `docs/specs/design-system.md` — atualizado só se o cartão pedir uma medida nova (§ Celular)
+- `docs/specs/design-system.md` — sem mudança: nenhuma cor, ícone ou medida nova (os 44 px e os 12 px são os de § Celular)
 
 ## Risks & Considerations
 - Três cartões em 393 px deixam 109 a 115 px por cartão: o texto é de 12 px (o mínimo da F76) e o título é cortado em duas linhas; se o MJRP preferir 2 colunas, é um número só no CSS.
