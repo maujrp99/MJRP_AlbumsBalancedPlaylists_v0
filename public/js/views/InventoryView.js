@@ -15,6 +15,8 @@ import { isPhone, onPhoneChange } from '../utils/isPhone.js'
 import { DISCOGS_NOTICE } from '../components/Footer.js'
 import { PHONE_CHUNK, jumpTargets, jumpsByLetter, shownFor } from '../models/inventoryJump.js'
 import { MORE_ICON, phoneEmpty, phoneList, phoneLoading, phoneProgress, phoneRow } from './renderers/InventoryPhoneRow.js'
+import { phoneGallery, phoneGalleryLoading, phoneTile } from './renderers/InventoryPhoneTile.js'
+import { ViewMode, viewForPhone } from '../models/inventoryViewMode.js'
 import { openActionsSheet, openFiltersSheet, openItemSheet, openJumpSheet, openStatusSheet, openValuesSheet } from './InventoryPhoneSheets.js'
 
 /** The action that puts every album of the person's series in the inventory (F71). */
@@ -34,6 +36,9 @@ const NOTICES_ID = 'inventoryNotices'
 /** The phone (F76, TASK-07): the line under the search that says what an action of the collection is doing. */
 const PHONE_PROGRESS_ID = 'inventoryPhoneProgress'
 const GRID_ID = 'inventory-grid-container'
+/** One album of the phone: a row of the list or a card of the gallery, and the button that opens its window. */
+const PHONE_ITEM = '.inv-row, .inv-tile'
+const PHONE_OPEN = '.inv-row__open, .inv-tile__open'
 /** The order the screen opens in: another one counts as a filter on, on the phone's «Filters» button. */
 const DEFAULT_SORT = 'artist'
 const SLIDERS_ICON = '<svg class="inv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'
@@ -175,12 +180,18 @@ export class InventoryView extends BaseView {
     if (node) this.fillPhoneProgress(node, this.controller.state)
   }
 
-  /** The rows of the phone, or what stands in their place (loading, nothing in the inventory, nothing that passes). */
+  /** The view the phone draws: the list, or the gallery of covers for someone who chose it (F89). */
+  phoneView(state = this.controller.state) {
+    return viewForPhone(state)
+  }
+
+  /** The rows (or the cards of the gallery) of the phone, or what stands in their place (loading, nothing in the inventory, nothing that passes). */
   renderPhoneGrid(state) {
-    if (state.isLoading) return phoneLoading()
+    const gallery = this.phoneView(state) === ViewMode.GRID
+    if (state.isLoading) return gallery ? phoneGalleryLoading() : phoneLoading()
     if (state.filteredAlbums.length === 0) return phoneEmpty(state.albums.length > 0)
     this.keepPhoneShown(state)
-    return phoneList(state.filteredAlbums, state.value, this.phoneShown)
+    return (gallery ? phoneGallery : phoneList)(state.filteredAlbums, state.value, this.phoneShown)
   }
 
   /**
@@ -204,9 +215,9 @@ export class InventoryView extends BaseView {
     })
   }
 
-  /** The row at `index` of the list, once drawn. */
+  /** The row (or the card) at `index` of the list, once drawn. */
   phoneRowAt(index) {
-    return document.querySelectorAll(`#${GRID_ID} .inv-row`)[index] || null
+    return document.querySelectorAll(`#${GRID_ID} ${PHONE_ITEM}`)[index] || null
   }
 
   /** «Show 50 more»: the next chunk; the focus goes to its first row, the page does not move. */
@@ -214,7 +225,7 @@ export class InventoryView extends BaseView {
     const first = this.phoneShown
     this.phoneShown += PHONE_CHUNK
     this.redrawPhoneGrid()
-    this.phoneRowAt(first)?.querySelector('.inv-row__open')?.focus({ preventScroll: true })
+    this.phoneRowAt(first)?.querySelector(PHONE_OPEN)?.focus({ preventScroll: true })
   }
 
   /** A letter or a stretch of the jump: the chunks up to it are drawn and its first row comes under the bar. */
@@ -227,7 +238,7 @@ export class InventoryView extends BaseView {
     const row = this.phoneRowAt(index)
     if (!row) return
     row.scrollIntoView({ block: 'start' })
-    row.querySelector('.inv-row__open')?.focus({ preventScroll: true })
+    row.querySelector(PHONE_OPEN)?.focus({ preventScroll: true })
   }
 
   /** The actions of the phone, by the `data-phone-action` of the button pressed. */
@@ -281,14 +292,16 @@ export class InventoryView extends BaseView {
   /** The format and the order; when they changed, the list is shown from its top after the sheet. */
   openPhoneFilters() {
     const { filters, sorting } = this.controller.state
-    const before = this.phoneKey
+    const before = [this.phoneKey, this.phoneView()]
     openFiltersSheet({
       format: filters.format,
       sort: choiceOf(sorting),
+      view: this.phoneView(),
       count: () => this.controller.state.filteredAlbums.length,
       onFormat: (code) => this.controller.handleFilterChange('format', code),
       onSort: (value) => this.controller.handleSortChoice(value),
-      onClose: () => { if (this.phoneKey !== before) window.scrollTo(0, 0) }
+      onView: (mode) => this.controller.handleViewModeChange(mode),
+      onClose: () => { if (this.phoneKey !== before[0] || this.phoneView() !== before[1]) window.scrollTo(0, 0) }
     })
   }
 
@@ -464,14 +477,15 @@ export class InventoryView extends BaseView {
   redrawCard(state, itemId) {
     const item = state.albums.find(one => one.id === itemId)
     const wrapper = [...document.querySelectorAll('#inventory-grid-container [data-album-id]')]
-      .find(node => node.dataset.albumId === itemId && node.matches('.inventory-card-wrapper, .inventory-row-wrapper, .inv-row'))
+      .find(node => node.dataset.albumId === itemId && node.matches('.inventory-card-wrapper, .inventory-row-wrapper, .inv-row, .inv-tile'))
     if (!item || !wrapper) return
     wrapper.replaceWith(SafeDOM.fromHTML(this.cardHtml(wrapper, item, state.value)))
   }
 
-  /** The card, the row of the list, or the row of the phone, as the place that is drawn again is. */
+  /** The card, the row of the list, or the row or the card of the phone, as the place that is drawn again is. */
   cardHtml(wrapper, item, known) {
     if (wrapper.matches('.inv-row')) return phoneRow(item, known.values.get(item.id), known.money)
+    if (wrapper.matches('.inv-tile')) return phoneTile(item, known.values.get(item.id), known.money)
     return wrapper.matches('.inventory-row-wrapper')
       ? InventoryGridRenderer.renderRow(item, known)
       : InventoryGridRenderer.renderCard(item, known)
