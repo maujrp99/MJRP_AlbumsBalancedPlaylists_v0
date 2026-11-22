@@ -3,7 +3,7 @@
 // WITH NOTHING IN IT: no reading in the browser cache. The readings come only from the items, as a
 // stubbed database gives them (`discogsReading`, kept three days ago). Only the network is replaced:
 // no Firebase, no Firestore, no server, no Discogs.
-// ?s=cards | window | window-none | notice
+// ?s=cards | window | window-lowest | window-none | notice
 import '/public/css/index.css'
 import '/public/css/tailwind.css'
 import '/public/css/mobile.css'
@@ -68,8 +68,8 @@ async function main() {
     await view.mount()
     await view.controller.valuesOpened
     await wait(300)
-    if (scenario === 'window' || scenario === 'window-none') {
-        const which = scenario === 'window' ? 'a' : 'f'
+    if (scenario.startsWith('window')) {
+        const which = { window: 'a', 'window-none': 'f', 'window-lowest': 'c' }[scenario]
         await view.handleViewWithModal(which)
         await wait(400)
     }

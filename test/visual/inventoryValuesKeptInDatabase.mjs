@@ -91,7 +91,7 @@ const shown = await pageB.evaluate(async ({ path, short }) => {
     return {
         heldInBrowser: held.size, origin: value.origin, amount: value.amount, readAt: value.readAt, moment: momentText(value.readAt),
         waiting: neverRead, notice: neverRead ? waitingNotice(neverRead).strong : null,
-        cardSaysWhen: card.includes(`· ${short}`), cardCredit: card.includes('Data provided by Discogs'),
+        cardSaysWhen: card.replace(/\u00a0|&nbsp;/g, " ").includes(`· ${short.replace(/\u00a0/g, " ")}`), cardCredit: card.includes('Data provided by Discogs'),
         writtenWins: valueOfItem(written, { reading: null, now: Date.now(), source: SourceState.ON }).origin,
         updateWouldRead: itemsToRead([item], held, Date.now()).length
     }

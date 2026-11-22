@@ -51,6 +51,9 @@ for (const s of SIZES) {
     await shoot({ ...s, scenario: 'cards', name: 'card-kept-value', clip: s.size === '1280' ? '.inventory-card-wrapper[data-album-id="a"]' : '.inv-row' })
     await shoot({ ...s, scenario: 'cards', name: 'screen-no-waiting-notice-but-one' })
     await shoot({ ...s, scenario: 'window', name: 'album-window-kept-value' })
+    await shoot({ ...s, scenario: 'window-lowest', name: 'album-window-lowest-for-sale' })
+    if (s.size === '1280') await shoot({ ...s, scenario: 'cards', name: 'card-lowest-for-sale', clip: '.inventory-card-wrapper[data-album-id="c"]' })
+    else await shoot({ ...s, scenario: 'cards', name: 'rows-kept-values', clip: '.inv-row' })
     // five albums with a kept reading and one that never had one: the notice counts that one only
     await shoot({ ...s, scenario: 'notice', name: 'only-the-never-read-is-waiting' })
 }
