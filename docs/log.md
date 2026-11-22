@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:00] step — F90: exportar uma playlist a partir da tela das séries de playlists — registrada (S-72, F90, UAT-276)
+**Branch:** feat/f90-export-from-the-saved-playlists-screen
+O MJRP, 2026-11-21: «Uma coisa que senti falta na playlist agora. Foi poder exportar a playlist a partir da tela da playlist series sem ter que entrar em edit batch.» e, à proposta (um «Export» no lote e um export em cada playlist do lote aberto): «1 os dois , mas principalmente um playlist específica»; «eu pessoalmente, uso Apple Music e não Spotify». Registrado antes de construir: a história S-72 (embutida no PRD, épico EP-04, a pasta `ep-04-export-playlists` nasce com ela), a feature F90 (spec, plan e tasks em esboço; `lane: standard`, `solution_type: feature`; imports a S-72) e a UAT-276 (melhoria, aberta pelo humano). O plano deixa uma tarefa aberta (TASK-08): repetir a feature na tela em React da linha de migração. Ids reservados por `merge_train.py` (`next-item-id --reserve`, `next-uat-id --reserve`).
+
 ## [2026-11-21 22:30] session — publicado em produção: a home abre em português para todos (UAT-273)
 **Branch:** main
 Palavras do MJRP (2026-11-21): «Pública pls». Site publicado da `main` (`22663ed`) pelo `deploy-site.sh`, na fila do Album Blender; conferido no ar: `/home` vem com `<html lang="pt-BR">` e «Mergulhe nos álbuns que você ama», as descrições da página já não trazem «misture» nem «discos da sua estante», e `/`, `/home`, `/start` e `/inventory` respondem 200. O script principal do app não mudou de nome (`main-Dy6AgDdK.js`): a mudança é só da página de entrada.
