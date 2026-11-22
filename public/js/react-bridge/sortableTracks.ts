@@ -64,6 +64,24 @@ export function putBack(event: SortableEvent): void {
     from.insertBefore(item, from.children[oldIndex ?? 0] ?? null)
 }
 
+/**
+ * Safari draws the old place of the row lit after a drop by mouse. It hears no mouse while a native drag goes on, so when the row is put
+ * back (taken out of the list and put in again) it looks for what is under the pointer where the drag BEGAN, lights that row with
+ * `:hover`, and never takes it away when the mouse moves on (measured in WebKit on the box of reports/evidence/F83/sync-2/safari-drop;
+ * Chromium takes it away at the next move). The old windows drew their lists again and never showed it. So the list is out of the
+ * pointer's way while the row is put back and until the mouse moves for the first time: there is nothing to light at the old pointer.
+ */
+export function holdHover(list: HTMLElement): void {
+    list.style.pointerEvents = 'none'
+    const give = () => {
+        document.removeEventListener('mousemove', give, true)
+        window.clearTimeout(timer)
+        list.style.pointerEvents = ''
+    }
+    const timer = window.setTimeout(give, 1500) // a drop by keyboard or touch never moves a mouse
+    document.addEventListener('mousemove', give, true)
+}
+
 export function useSortableTracks(box: RefObject<HTMLElement | null>, options: Options): void {
     const sortables = useRef(new Map<HTMLElement, Sortable>())
     const handles = useRef(new WeakMap<HTMLElement, string>())
@@ -75,6 +93,8 @@ export function useSortableTracks(box: RefObject<HTMLElement | null>, options: O
     const end = (event: SortableEvent) => {
         dragging.current = false
         if (profile.grabbingClass) document.body.classList.remove(profile.grabbingClass)
+        holdHover(event.from)
+        if (event.to !== event.from) holdHover(event.to)
         putBack(event)
         const move = { fromPlaylist: profile.numberOf(event.from), toPlaylist: profile.numberOf(event.to), oldIndex: event.oldIndex ?? NaN, newIndex: event.newIndex ?? NaN }
         if (Number.isNaN(move.fromPlaylist) || Number.isNaN(move.toPlaylist)) return
