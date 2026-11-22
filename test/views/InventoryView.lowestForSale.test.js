@@ -155,7 +155,7 @@ describe('the screen', () => {
     it('the card says the value is the lowest for sale, in the same five lines, with the whole text in the title', async () => {
         await open(new Map([['owned', lowestReading()]]))
 
-        expect(text(line('owned', 2))).toMatch(/^CD · Discogs · lowest for sale · read \d{1,2} [A-Z][a-z]{2} ≈ \$12\.93$/)
+        expect(text(line('owned', 2))).toMatch(/^CD · Discogs · lowest for sale · \d{1,2} [A-Z][a-z]{2} ≈ \$12\.93$/)
         const origin = line('owned', 2).querySelector('span')
         expect(origin.title).toMatch(/^Lowest price this CD edition is for sale at on Discogs now\. Read on /)
         expect(origin.className).toContain('truncate')

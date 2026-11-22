@@ -153,6 +153,17 @@ Padrões que o site já usa, decididos pelo agente, que pedem a palavra do MJRP.
 | P2 | Ponta amarela do fogo | O equalizador termina em amarelo (página de entrada) ou só laranja e vermelho (Home)? | ponta-amarela | Home: duas cores (`#dc2626 → #f97316`, a cor A, decidida pelo agente na F79). Página de entrada: três (`… → #fbbf24`). `#fdba74`, a ponta clara da prévia da F79, não está no código. Uma só para as duas telas. Recomendação do agente (F86, revisável): duas cores nas duas telas, só com as cores já declaradas; custa tirar o amarelo da página de entrada. |
 | P3 | Fonte do texto corrido no computador | No computador, o texto corrido fica em Syne (app) ou na fonte do sistema (página de entrada e celular)? | fonte-do-corpo | App no computador: tudo em Syne. Página de entrada e celular: títulos em Syne, o resto na fonte do sistema. Recomendação do agente: a fonte do sistema, que a 14–16 px lê melhor. |
 
+## Textos do inventário (F75) pendentes de aprovação do MJRP
+
+Propostos pelo agente em 2026-11-21, com a leitura do Discogs guardada no banco (F75, REQ-16); as telas do app estão em inglês. Valem no código até o MJRP decidir.
+
+| Onde | Texto | Dito para |
+|---|---|---|
+| Linha de origem do cartão e da lista | «CD · Discogs · 21 Nov» (o dia, sem o ano; o momento inteiro no `title`: «Read on 21 Nov 2026, 14:05.») | dizer quando o valor foi lido, onde cabe pouco texto |
+| Linha de origem no celular | «Discogs · read 21 Nov» | o mesmo, mais curto |
+| Janela do álbum, seção «Estimated value» | «Read on 21 Nov 2026, 14:05.» (já era assim; agora vale para o valor guardado, de qualquer idade) e, no painel do celular, a mesma frase como nota | quando o valor foi lido |
+| Aviso de espera | «N albums are waiting for a value.» (mesmo texto; passa a contar só os que nunca foram lidos) | não mudou |
+
 ## Conflitos no código
 
 O que o levantamento de 2026-11-21 achou com dois ou mais valores para a mesma coisa. A proposta é do agente; nada foi mudado (a F86 não mexe no código do site). Cada linha vira uma correção quando o MJRP priorizar.

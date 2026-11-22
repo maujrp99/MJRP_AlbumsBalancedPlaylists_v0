@@ -80,9 +80,9 @@ describe('the inventory screen: values (F75)', () => {
         })
 
         it('line 2 says where the value comes from, and the value with «≈»; a dash when there is none', () => {
-            expect(text(line('owned', 2))).toMatch(/^CD · Discogs · read \d{1,2} [A-Z][a-z]{2} ≈ \$11\.20$/) // REQ-16: it says when it was read
+            expect(text(line('owned', 2))).toMatch(/^CD · Discogs · \d{1,2} [A-Z][a-z]{2} ≈ \$11\.20$/) // REQ-16: it says when it was read
             expect(text(line('written', 2))).toBe('CD · written by you ≈ $25.00')
-            expect(text(line('wanted', 2))).toMatch(/^CD · Discogs · read \d{1,2} [A-Z][a-z]{2} ≈ \$6\.00$/)
+            expect(text(line('wanted', 2))).toMatch(/^CD · Discogs · \d{1,2} [A-Z][a-z]{2} ≈ \$6\.00$/)
             expect(text(line('wished', 2))).toBe('Waiting for a value —')
         })
 
@@ -229,7 +229,7 @@ describe('the inventory screen: values (F75)', () => {
             const values = valuesWith()
             await open(values, ITEMS_KEPT)
 
-            expect(text(line('owned', 2))).toBe(`CD · Discogs · read ${KEPT_DAY} ≈ $11.20`)
+            expect(text(line('owned', 2))).toBe(`CD · Discogs · ${KEPT_DAY} ≈ $11.20`)
             expect(line('owned', 2).querySelector('span').title).toContain('Read on ')
             expect(line('owned', 2).querySelector('a').href).toBe('https://www.discogs.com/release/5012948')
             expect(text(document.getElementById('inventoryTotals'))).toContain('Data provided by Discogs.')
@@ -247,7 +247,7 @@ describe('the inventory screen: values (F75)', () => {
             await open(valuesWith(), [old(owned), written, old(wanted), old(wished)])
 
             expect(document.getElementById('valuesWaitingNotice')).toBeNull()
-            expect(text(line('wished', 2))).toMatch(/^CD · Discogs · read 5 Jan ≈ /)
+            expect(text(line('wished', 2))).toMatch(/^CD · Discogs · 5 Jan ≈ /)
         })
 
         it('the window of the album says when it was read, in the «Estimated value» section', async () => {
@@ -314,7 +314,7 @@ describe('the inventory screen: values (F75)', () => {
             finish()
             await run
 
-            expect(text(line('owned', 2))).toMatch(/^CD · Discogs · read \d{1,2} [A-Z][a-z]{2} ≈ \$11\.20$/) // REQ-16: it says when it was read
+            expect(text(line('owned', 2))).toMatch(/^CD · Discogs · \d{1,2} [A-Z][a-z]{2} ≈ \$11\.20$/) // REQ-16: it says when it was read
             expect(text(document.getElementById('updateValuesBtn'))).toBe('Update values')
             expect(document.getElementById('valuesReadingNotice')).toBe(null)
             expect(toast.success).toHaveBeenCalledWith('Values read for 1 of 3 albums. Stopped by you after 1 of 3.')

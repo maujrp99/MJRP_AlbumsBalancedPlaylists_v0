@@ -1,0 +1,98 @@
+[
+  {
+    "name": "card-kept-value",
+    "size": "1280",
+    "errors": [],
+    "facts": {
+      "waitingNotice": null,
+      "cardOrigin": "CD · Discogs · 18 Nov ≈ $12.00",
+      "rowValue": null,
+      "windowText": null,
+      "overflowX": false
+    }
+  },
+  {
+    "name": "screen-no-waiting-notice-but-one",
+    "size": "1280",
+    "errors": [],
+    "facts": {
+      "waitingNotice": null,
+      "cardOrigin": "CD · Discogs · 18 Nov ≈ $12.00",
+      "rowValue": null,
+      "windowText": null,
+      "overflowX": false
+    }
+  },
+  {
+    "name": "album-window-kept-value",
+    "size": "1280",
+    "errors": [],
+    "facts": {
+      "waitingNotice": null,
+      "cardOrigin": "CD · Discogs · 18 Nov ≈ $12.00",
+      "rowValue": null,
+      "windowText": "HarvestNeil YoungcdOWNEDEstimated valueWhat this CD sells for on Discogs, by the condition of the disc. The value of the album is the mean of the three. Mint$15.00Near Mint$12.00Very Good Plus$9.00Mean of the three$12.00 Edition: Harvest 1984, Europe (CD), the most common CD edition on Discogs. See it on Discogs Read on 18 Nov 2026, 22:55. Read again Data provided by Discogs. Write your own value SaveWhere to buyEach link opens the store on this album, on CD. The app earns nothing from these links today.Discogs ↗Amazon ↗iMusic ↗Loading the tracks of this album…Close",
+      "overflowX": false
+    }
+  },
+  {
+    "name": "only-the-never-read-is-waiting",
+    "size": "1280",
+    "errors": [],
+    "facts": {
+      "waitingNotice": "1 album is waiting for a value. Reading it takes about a minute. Read it now",
+      "cardOrigin": "CD · Discogs · 18 Nov ≈ $12.00",
+      "rowValue": null,
+      "windowText": null,
+      "overflowX": false
+    }
+  },
+  {
+    "name": "card-kept-value",
+    "size": "393",
+    "errors": [],
+    "facts": {
+      "waitingNotice": null,
+      "cardOrigin": null,
+      "rowValue": "≈ $12.00Discogs · read 12 Oct",
+      "windowText": null,
+      "overflowX": false
+    }
+  },
+  {
+    "name": "screen-no-waiting-notice-but-one",
+    "size": "393",
+    "errors": [],
+    "facts": {
+      "waitingNotice": null,
+      "cardOrigin": null,
+      "rowValue": "≈ $12.00Discogs · read 12 Oct",
+      "windowText": null,
+      "overflowX": false
+    }
+  },
+  {
+    "name": "album-window-kept-value",
+    "size": "393",
+    "errors": [],
+    "facts": {
+      "waitingNotice": null,
+      "cardOrigin": null,
+      "rowValue": "≈ $12.00Discogs · read 12 Oct",
+      "windowText": "HarvestHarvestNeil YoungcdOWNEDEstimated value≈ $12.00Discogs · read 18 NovData provided by Discogs.Estimated valueWhat this CD sells for on Discogs, by the condition of the disc. The value of the album is the mean of the three. Mint$15.00Near Mint$12.00Very Good Plus$9.00Mean of the three$12.00 Edition: Harvest 1984, Europe (CD), the most common CD edition on Discogs. See it on Discogs Read on 18 Nov 2026, 22:55. Read again Data provided by Discogs. Write your own value SaveWhere to buyDiscogs ↗Amazon ↗iMusic ↗Each link opens the store on this album, on CD. The app earns nothing from these li",
+      "overflowX": false
+    }
+  },
+  {
+    "name": "only-the-never-read-is-waiting",
+    "size": "393",
+    "errors": [],
+    "facts": {
+      "waitingNotice": "1 album is waiting for a value.Read it now",
+      "cardOrigin": null,
+      "rowValue": "—Waiting for a value",
+      "windowText": null,
+      "overflowX": false
+    }
+  }
+]

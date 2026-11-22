@@ -91,7 +91,7 @@ const shown = await pageB.evaluate(async ({ path, short }) => {
     return {
         heldInBrowser: held.size, origin: value.origin, amount: value.amount, readAt: value.readAt, moment: momentText(value.readAt),
         waiting: neverRead, notice: neverRead ? waitingNotice(neverRead).strong : null,
-        cardSaysWhen: card.includes(`read ${short}`), cardCredit: card.includes('Data provided by Discogs'),
+        cardSaysWhen: card.includes(`· ${short}`), cardCredit: card.includes('Data provided by Discogs'),
         writtenWins: valueOfItem(written, { reading: null, now: Date.now(), source: SourceState.ON }).origin,
         updateWouldRead: itemsToRead([item], held, Date.now()).length
     }
@@ -99,7 +99,7 @@ const shown = await pageB.evaluate(async ({ path, short }) => {
 check('B. a new profile holds nothing in its browser', shown.heldInBrowser, 0)
 check('B. the value shows at once, from the item', [shown.origin, shown.amount], ['discogs', 12])
 check('B. it shows when it was read', shown.readAt, READ_AT)
-check('B. the card says «read <day>» and carries the title attribution', shown.cardSaysWhen, true)
+check('B. the card says «<day>» and carries the title attribution', shown.cardSaysWhen, true)
 check('B. no «waiting for a value» notice', shown.notice, null)
 check('B. nothing counts as waiting', shown.waiting, 0)
 check('B. «Update values» would read it again (it is old): it updates', shown.updateWouldRead, 1)
