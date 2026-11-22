@@ -23,7 +23,7 @@ export class SavedSeriesGroup {
     /**
      * @param {Object} options
      * @param {Object} options.group - { series, status, batches, thumbnails, error }
-     * @param {Object} options.handlers - { onNavigate, onOpenSeries, onDeleteAll, onEditBatch, onDeleteBatch, onOpenPlaylist, onRetry }
+     * @param {Object} options.handlers - { onNavigate, onOpenSeries, onDeleteAll, onEditBatch, onExportBatch, onDeleteBatch, onOpenPlaylist, onExportPlaylist, onRetry }
      * @param {boolean} [options.open] - on the phone, whether the batches show (F76: closed by default)
      * @param {Function} [options.onToggle] - (seriesId, open) => void: the phone opened or closed the series
      */
@@ -146,7 +146,9 @@ export class SavedSeriesGroup {
             thumbnails: this.group.thumbnails || [],
             onEdit: this.handlers.onEditBatch,
             onDelete: this.handlers.onDeleteBatch,
-            onOpenPlaylistModal: this.handlers.onOpenPlaylist
+            onOpenPlaylistModal: this.handlers.onOpenPlaylist,
+            onExportBatch: this.handlers.onExportBatch,
+            onExportPlaylist: this.handlers.onExportPlaylist
         });
 
         return card.render();

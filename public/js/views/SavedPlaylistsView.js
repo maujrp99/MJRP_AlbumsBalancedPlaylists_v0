@@ -23,6 +23,8 @@ import { ListStatus } from '../models/savedPlaylists.js'
 import { isPhone, onPhoneChange } from '../utils/isPhone.js'
 import { filterUseOf } from '../models/filterUse.js'
 import { track } from '../services/usage/track.js'
+import { openPlaylistExport } from './playlists/PlaylistExportWindow.js'
+import { readableBatchName } from '../components/playlists/batchNames.js'
 
 /** What a series group shows: when none of it changed, the group on screen is kept as it is. */
 const shownOf = (group) => ({
@@ -197,6 +199,8 @@ export class SavedPlaylistsView extends BaseView {
                 onOpenSeries: (sid) => this.controller.openSeriesManager(sid),
                 onDeleteAll: (sid, name) => this.handleDeleteAll(sid, name),
                 onEditBatch: (sid, name, date) => this.controller.editBatch(sid, name, date),
+                onExportBatch: (batch, opener) => this.exportPlaylists(group, batch, { title: `Export ${readableBatchName(batch.name).text}`, opener }),
+                onExportPlaylist: (batch, playlist, index, opener) => this.exportPlaylists(group, batch, { only: index, title: `Export ${playlist.name}`, opener }),
                 onDeleteBatch: (sid, name, count) => this.handleDeleteBatch(sid, name, count),
                 onOpenPlaylist: (sid, pid) => this.openPlaylistModal(sid, pid),
                 onRetry: (sid) => this.controller.retrySeries(sid)
@@ -345,6 +349,29 @@ export class SavedPlaylistsView extends BaseView {
         })
 
         if (confirmed) await this.controller.deleteAllPlaylists(seriesId, seriesName)
+    }
+
+    /**
+     * Export a batch, or one playlist of it (F90): the same window the edit screen opens. Nothing
+     * is read or written here: it is handed what the list already holds.
+     * @param {Object} group - the series group the batch is in
+     * @param {Object} batch
+     * @param {Object} [options]
+     * @param {number} [options.only] - the index of the one playlist to export; none: all of them
+     * @param {string} [options.title]
+     * @param {HTMLElement} [options.opener] - the button the focus goes back to when the window closes
+     */
+    exportPlaylists(group, batch, { only, title, opener } = {}) {
+        const all = batch.playlists || []
+        const indexes = only === undefined ? all.map((_, index) => index) : [only]
+        openPlaylistExport({
+            playlists: indexes.map(index => all[index]),
+            positions: indexes.map(index => index + 1),
+            seriesName: group.series.name,
+            batchName: batch.name,
+            title,
+            opener
+        })
     }
 
     openPlaylistModal(seriesId, playlistId) {

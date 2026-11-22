@@ -187,8 +187,8 @@ describe('what a tap does on the phone', () => {
 
     it('Export opens a sheet with the three exports', () => {
         tap('[data-phone-action="export"]')
-        expect([...document.querySelectorAll('.sheet .phone-sheet-action')].map(b => b.textContent.trim()))
-            .toEqual(['Export to Spotify', 'Export to Apple Music', 'Download JSON'])
+        expect([...document.querySelectorAll('.sheet [data-export]')].map(b => b.textContent.trim()))
+            .toEqual(['Export to Apple Music', 'Export to Spotify', 'Download JSON'])
     })
 })
 

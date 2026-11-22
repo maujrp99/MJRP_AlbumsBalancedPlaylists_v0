@@ -266,3 +266,16 @@ describe('exporting to Apple Music (F62)', () => {
         })
     })
 })
+
+describe('the folder given by its id (F90)', () => {
+    it('is used as it is: the folder is not looked up again by its name', async () => {
+        exportLedger.clear()
+        vi.spyOn(AppleMusicExportService, 'pause').mockResolvedValue()
+        const musicKit = fakeMusicKit()
+        const report = await AppleMusicExportService.exportPlaylists(PLAYLISTS.slice(0, 1), { seriesName: 'S', batchName: 'Mix', folderName: 'Picked', folderId: 'f-42' }, { musicKit })
+
+        expect(musicKit.createOrGetFolder).not.toHaveBeenCalled()
+        expect(musicKit.library[0].folderId).toBe('f-42')
+        expect(report.folder).toEqual({ name: 'Picked', created: true })
+    })
+})
