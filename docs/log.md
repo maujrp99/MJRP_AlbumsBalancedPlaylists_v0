@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 10:00] step — F83 onda 7b, correções do juiz: o salto da página, as marcas refeitas, o primeiro arquivo a menos e o orçamento da construção publicada
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- P1-1: a seção do passo 4 fica montada e a `key` do desenho vai para o conteúdo dela (como a tela à mão, que refazia o conteúdo e não a seção); antes, o Chromium recalculava a página sem a seção e o rolamento saltava 112 a 254 px. P2-1: as marcas do passo a passo e os cartões de série são refeitos quando o estado deles muda (`key` com o estado), sem o esmaecer de 150 a 200 ms. P2-3: `window.playlistsStore` passou a ser exposta pelo próprio `stores/playlists.js` (o `app.js` não importa mais a loja), e a primeira tela volta a não baixar `playlists-*.js`.
+- P1-2: `scripts/publication-budget.mjs` (e `npm run budget:publication`) faz a construção em forma de publicação com valores de mentira do mesmo tamanho (id do Spotify 32, chave do PostHog 47, host 24; sementes fixas, só no ambiente) e confere o orçamento mais a margem declarada de 150 B; `bundle-budget.json` ganhou `publication` (margem, tamanhos, medidas) e a regra; tetos pela regra: principal 195.210 B, `background` 58.150 B. Testes: `Blend.remount`, `firstScreenFiles`, `publicationBudget`.
+
 ## [2026-11-22 08:55] step — F83 onda 7b: a prova no navegador da tela Blend, contra a tela à mão da junta
 
 **Branch:** claude/f83-wave-7b-blend-screen

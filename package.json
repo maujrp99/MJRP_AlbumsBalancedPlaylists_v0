@@ -18,6 +18,7 @@
         "lint": "npm run typecheck && eslint .",
         "app:check": "npm run check --workspace app",
         "app:scan-bundles": "node scripts/app-bundle-scan.mjs",
+        "budget:publication": "node scripts/publication-budget.mjs",
         "app:ios:demo": "./scripts/app-ios-demo.sh",
         "golden-core": "node scripts/golden-core.mjs",
         "golden-core:write": "node scripts/golden-core.mjs --write",

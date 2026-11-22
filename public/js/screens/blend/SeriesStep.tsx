@@ -3,7 +3,7 @@
  * thing to blend (only albums can be chosen), and the list of series in a box that scrolls, each one a card with a cascade of up to three covers, its
  * name, how many albums it has and a check when it is the one chosen. The same HTML and the same classes as the hand-made selector.
  *
- * A card is a `div` that acts as a button for the keyboard (Enter and Space, as before). The covers that arrive in the background draw the list again
+ * A card is made anew when it is chosen or let go (a `key` with its state: the hand-made list drew them anew, and a fade of the colours would run on a card that is kept); the covers that arrive keep it. A card is a `div` that acts as a button for the keyboard (Enter and Space, as before). The covers that arrive in the background draw the list again
  * WITHOUT letting the focus go and without taking the list back to the top: the one difference of this wave on purpose (the hand-made selector drew
  * everything anew at each arrival and the focus on a card was lost). A series chosen by the address is scrolled to once.
  */
@@ -73,7 +73,7 @@ export function SeriesStep({ visit, chosen, onChoose, onEntity }: Props) {
                     ) : visit.series.length === 0 ? (
                         <p className="text-muted text-center py-4">{t('blend.series.none')}</p>
                     ) : visit.series.map(series => (
-                        <SeriesCard key={series.id} series={series} covers={visit.coversOf(series)} isSelected={chosen?.id === series.id} onChoose={() => onChoose(series)} />
+                        <SeriesCard key={`${series.id}:${chosen?.id === series.id}`} series={series} covers={visit.coversOf(series)} isSelected={chosen?.id === series.id} onChoose={() => onChoose(series)} />
                     ))}
                 </div>
             </div>

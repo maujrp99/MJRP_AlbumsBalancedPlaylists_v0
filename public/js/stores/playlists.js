@@ -167,3 +167,6 @@ export class PlaylistsStore {
 
 // Singleton instance
 export const playlistsStore = new PlaylistsStore()
+
+// For the browser console and browser-driven checks (F83 wave 7b: exposed here, not by app.js, so no first screen downloads this file just for that)
+if (typeof window !== 'undefined') window.playlistsStore = playlistsStore
