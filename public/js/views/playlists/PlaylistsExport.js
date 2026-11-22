@@ -26,16 +26,21 @@ function getEffectiveBatchName() {
         'Unsaved Batch'
 }
 
+/** The series the playlists belong to: the one given (the saved playlists screen), else the open one. */
+export const seriesNameOf = (given) => given || albumSeriesStore.getActiveSeries()?.name || 'MJRP Playlists'
+
 /**
  * Export playlists as JSON file
- * @param {Array} playlists - Array of playlist objects
+ * @param {Array} playlists - Array of playlist objects; none given: the ones on the edit screen
+ * @param {Object} [names]
+ * @param {string} [names.batchName] - the batch they belong to; none given: the one on the edit screen
  */
-export function handleExportJson(playlists) {
+export function handleExportJson(playlists, { batchName: givenBatchName } = {}) {
     if (!playlists || playlists.length === 0) {
         playlists = playlistsStore.getPlaylists()
     }
 
-    const batchName = getEffectiveBatchName()
+    const batchName = givenBatchName || getEffectiveBatchName()
 
     // Ensure playlists have the batch name attached (for unsaved batches)
     const exportData = playlists.map(p => ({
@@ -66,12 +71,20 @@ const REPORT_MS = 12000
 let appleExportRunning = false
 
 /**
- * Export the playlists on screen to Apple Music and tell the person what happened: what was
- * created, what was not and why (F62). The rule of the export (the report, no second copy of a
- * playlist already created in this session) is AppleMusicExportService's.
+ * Export playlists to Apple Music and tell the person what happened: what was created, what was
+ * not and why (F62). The rule of the export (the report, no second copy of a playlist already
+ * created in this session) is AppleMusicExportService's. The edit screen gives no playlists and
+ * exports the ones it holds; the saved playlists screen gives one playlist or the whole batch (F90).
  *
  * @param {Object} options - Options
  * @param {HTMLElement} [options.btn] - the button pressed: it shows the progress and is given back
+ * @param {Array} [options.playlists] - what to export; none given: the playlists on the edit screen
+ * @param {string} [options.seriesName] - the folder; none given: the open series
+ * @param {string} [options.batchName] - the batch; none given: the one on the edit screen
+ * @param {number[]} [options.positions] - the position of each playlist in its batch
+ * @param {string} [options.folderName] - the Apple Music folder; none given: the series name (F90)
+ * @param {string} [options.folderId] - the id of that folder, when it was picked from the library's list (F90)
+ * @param {boolean} [options.noFolder] - no folder: the top of the library (F90)
  */
 export async function handleExportToAppleMusic(options = {}) {
     const { btn } = options
@@ -80,7 +93,7 @@ export async function handleExportToAppleMusic(options = {}) {
         toast.info('The export to Apple Music is already running.')
         return
     }
-    const playlists = playlistsStore.getPlaylists()
+    const playlists = options.playlists || playlistsStore.getPlaylists()
     if (playlists.length === 0) {
         toast.warning('No playlists to export')
         return
@@ -99,7 +112,7 @@ export async function handleExportToAppleMusic(options = {}) {
         const { musicKitService } = await import('../../services/MusicKitService.js')
         const report = await AppleMusicExportService.exportPlaylists(
             playlists,
-            { seriesName: albumSeriesStore.getActiveSeries()?.name || 'MJRP Playlists', batchName: getEffectiveBatchName() },
+            { seriesName: seriesNameOf(options.seriesName), batchName: options.batchName || getEffectiveBatchName(), positions: options.positions, folderName: options.folderName, folderId: options.folderId, noFolder: options.noFolder },
             { musicKit: musicKitService, onProgress: say }
         )
         appleExportMessages(report).forEach(message => toast[message.type](message.text, REPORT_MS))

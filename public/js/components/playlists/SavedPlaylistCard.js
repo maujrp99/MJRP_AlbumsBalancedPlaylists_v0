@@ -21,6 +21,8 @@ export class SavedPlaylistCard {
         this.onEdit = options.onEdit;
         this.onDelete = options.onDelete;
         this.onOpenPlaylistModal = options.onOpenPlaylistModal;
+        this.onExportBatch = options.onExportBatch; // (batch): export all its playlists (F90)
+        this.onExportPlaylist = options.onExportPlaylist; // (batch, playlist, index): export one (F90)
     }
 
     render() {
@@ -33,6 +35,7 @@ export class SavedPlaylistCard {
             createdAt,
             playlistCount: totals.playlists,
             onEdit: this.onEdit,
+            onExport: () => this.onExportBatch?.(this.batch),
             onDelete: this.onDelete
         });
 
@@ -105,7 +108,8 @@ export class SavedPlaylistCard {
                 playlist,
                 seriesId: this.seriesId,
                 index,
-                onOpenModal: this.onOpenPlaylistModal
+                onOpenModal: this.onOpenPlaylistModal,
+                onExport: (item, at) => this.onExportPlaylist?.(this.batch, item, at)
             });
             container.appendChild(row.render());
         });

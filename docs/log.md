@@ -3,9 +3,25 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:52] review — F90: a reconferência visual pré-merge do juiz independente, guardada
+**Branch:** feat/f90-export-from-the-saved-playlists-screen
+Relatório de `reports/audits/2026-11-21-mjrpalbumblender-v0-export-from-saved-playlists-visual-parity-recheck.md` (passou, 1 P1 e 7 P2, sobre o commit 6ff1581), escrito pelo juiz, com as capturas em `reports/evidence/F90/export-from-saved-playlists/recheck/`. Os achados foram corrigidos nos commits anteriores deste ramo.
+
+## [2026-11-21 23:50] step — F90: as capturas refeitas no site construído depois das correções do juiz
+**Branch:** feat/f90-export-from-the-saved-playlists-screen
+`reports/evidence/F90/export-from-saved-playlists/` refeito com `shoot.mjs` (WebKit iPhone 14 e Chromium a 1280): o passo da pasta com «Export» e «Back» centrados e o título do lote com o nome dele. Nada foi chamado no Apple Music nem no Spotify.
+
+## [2026-11-21 23:50] step — F90: os oito achados do juiz corrigidos (uma pasta escolhida da lista segue pelo id; foco; nome do campo; título; palavras; botões; spec)
+**Branch:** feat/f90-export-from-the-saved-playlists-screen
+P1: a pasta escolhida da lista ia ao export só pelo nome, que era procurado de novo na primeira página das pastas (pasta duplicada com muitas pastas); agora o `id` segue até a criação da playlist, e a lista e `createOrGetFolder` leem as pastas página por página até o fim (`next`). P2: o foco fica onde estava quando a lista chega; a janela do computador prende o Tab e, no celular, devolve o foco ao «⋯» (ou ao botão) que a abriu; «New folder» começa vazio salvo se o lembrado desta série era um nome digitado; o título da janela segue o que ela mostra (na tela de edição, «Back» mostra «Export playlists»); palavras novas, pendentes da aprovação do MJRP: «You have no folders in Apple Music yet. Export creates the folder you pick.» e o título do lote «Export <nome do lote>» (era «Export batch»); «Export» e «Back» com o texto centrado; a spec tira «escolher a pasta» do «Out of Scope» (REQ-08). Testes primeiro, vistos falhar.
+
 ## [2026-11-21 23:47] step — F75: main juntada (o conflito da linha do celular), a trava de texto escapado e a ponta final verde
 **Branch:** feat/f75-inventory-values-kept-in-the-database
 `main` (F89, a galeria do celular) juntada: um conflito em `InventoryPhoneRow.js`, resolvido mantendo a data («Discogs · 18 Nov») e a exportação `originText` da galeria; `log.md` e `uat.md` sem conflito. A trava `outsideTextEscaped` pediu o nome do Discogs montado numa função (`discogsName`) e o `title` escapado no lugar. Ponta final, pela fila: suíte completa 4070 testes em 319 arquivos, todos verdes (a `test/architecture` dentro dela: 292 em 33 arquivos); eslint 0 erros (42 avisos, os de sempre); medida da linha de origem 32 de 32 sem corte. Não verificado: conta, Firestore e Discogs de verdade; aparelho de toque de verdade.
+
+## [2026-11-21 23:45] session — publicado em produção: a galeria do inventário no celular (F89, UAT-274)
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Galeria no iPhone 👍🏻» (depois de ver na prévia) e «Publica». Site publicado da `main` (`be86beb`, `/assets/main-jh6S6a9O.js`) pelo `deploy-site.sh`, na fila do Album Blender; conferido no ar: `/`, `/home`, `/inventory` e `/albums` respondem 200, o `app.html` aponta o script novo e a folha de estilo publicada traz a galeria. Outras palavras dele no mesmo período: sobre a Apple Music, a atualização «Deixa assim então, como está» (exportar cria uma playlist nova) e a pasta «Quero escolher ao exportar»; sobre a tela Start no celular, «Aqui eu ainda acho que tem muito texto, tá clutter. Como poderíamos melhorar?» (proposta feita, sem resposta ainda).
 
 ## [2026-11-21 23:43] step — F75: a linha de origem do cartão cabe em toda largura e moeda, os textos do juiz e a folha do celular
 **Branch:** feat/f75-inventory-values-kept-in-the-database
@@ -23,6 +39,10 @@ Relatório do juiz (agente separado, Opus) sobre o commit 869ec36: passa, sem P0
 **Branch:** feat/f76-inventory-gallery-on-the-phone
 Com a `main` já dentro do ramo (nada novo a unir), suíte completa 318 arquivos / 4033 testes verdes, `eslint .` com 0 erros (69 avisos antigos) e `test/architecture` 33 arquivos / 292 testes verdes, todos pela fila. Recortes dos seis pontos em `reports/evidence/F76/inventory-gallery-phone/fixes/` (252 KB, com `shoot-fixes.mjs` e `measures.json`): capa de 10 px; o motivo do «—» em duas linhas no SE; o fim da galeria e da lista com o botão de topo fora da frase; a seta «⌄» na pílula ("Not Owned" cabe a 320 px, ajustando o respiro da pílula); o cartão com foco acima do menu.
 
+## [2026-11-21 23:28] step — F90: o export do Apple Music repartido em três funções (a trava de complexidade 10); suíte, eslint e arquitetura verdes
+**Branch:** feat/f90-export-from-the-saved-playlists-screen
+A pasta escolhida deixou `AppleMusicExportService.exportPlaylists` com complexidade 12; o plano do export (`planOf`), o relatório vazio (`emptyReport`) e o começo (`_start`) saíram dela, sem mudar o que o export faz. Na ponta: suíte inteira 318 arquivos e 4042 testes passando, eslint sem erro (38 avisos que já existiam), `test/architecture` 32 arquivos e 286 testes passando.
+
 ## [2026-11-21 23:27] step — F89: os seis achados do juiz na galeria do inventário do celular, corrigidos
 **Branch:** feat/f76-inventory-gallery-on-the-phone
 O juiz independente passou o ramo (sem P0, sem P1) com seis P2, todos corrigidos: canto da capa de 10 px como o de Albums (variável `--phone-cover-radius`); o motivo do «—» quebra em duas linhas em vez de cortar; a frase da Discogs ganha o respiro do botão «voltar ao topo» (galeria e lista); a pílula da galeria ganha a seta «⌄» da lista; cartão e linha ganham `scroll-margin-bottom` acima do menu; a linha UAT-274 e o comentário de `shoot.mjs` dizem 2 colunas (3 de 640 px). Testes: `test/architecture/inventoryGalleryFinishing.test.js` e um caso novo na galeria.
@@ -35,9 +55,17 @@ O juiz independente passou o ramo (sem P0, sem P1) com seis P2, todos corrigidos
 **Branch:** feat/f75-inventory-values-kept-in-the-database
 Correções do relatório do juiz (84dbddc; 1 P1 e 4 P2), teste vermelho primeiro (11 testes novos falhando antes). (1) P1: o cartão do computador guarda a data num lugar que não encolhe («CD · Discogs · lowest for sale» corta, o dia fica: «… · 18 Nov»), nos dois tipos de leitura; a linha do celular e a do cartão usam a mesma forma. (2) P2: a data é uma peça só (espaço sem quebra entre o dia e o mês) e o celular passa a «Discogs · 18 Nov». (3) P2: «The lowest price this CD was for sale at on Discogs when it was read.» na janela, e o `title` do cartão idem (texto pendente da aprovação do MJRP). (4) P2: `setReadings` pula a leitura inválida e grava as outras; `keepReadings` devolve quantas não foram guardadas, a rodada diz «N readings could not be saved to your inventory: they show in this browser for now.» e uma leitura só diz «The value was read but could not be saved to your inventory. It shows in this browser for now.» (pendentes); o valor continua na tela pela cópia do navegador. (5) P2: a constituição VI.1 e o REQ-16 agora dizem onde a atribuição aparece (no celular: a linha «Data provided by Discogs.» do topo, a folha e a janela; a linha do celular não ganhou o link, para não apertá-la).
 
+## [2026-11-21 23:23] step — F90: exportar a partir da tela das séries de playlists construído; a pasta do Apple Music escolhida ao exportar (REQ-08)
+**Branch:** feat/f90-export-from-the-saved-playlists-screen
+Palavras do MJRP (2026-11-21): «Quero escolher ao exportar», à pergunta «Pasta na Apple Music: basta a de hoje (o nome da série), ou quer escolher ao exportar?»; antes, sobre o export: «1 os dois , mas principalmente um playlist específica». Construído: a janela de export compartilhada (`views/playlists/PlaylistExportWindow.js`: Apple Music, Spotify, JSON), o «Export» de cada playlist e do lote na tela guardada, o passo da pasta do Apple Music (REQ-08, registrado como REQ e TASK-06 da F90; escolha lembrada em `localStorage`, chave `mjrp_apple_music_folder:<série>`), `listFolders()` no MusicKit. Consertado de passagem: fechar a janela do Spotify pelo «Close» lançava um erro no console (o clique chegava ao ouvinte do fundo depois de `this.container` virar nulo). Prova: testes com serviços de mentira e capturas no WebKit (iPhone 14) e no Chromium a 1280 em `reports/evidence/F90/export-from-saved-playlists/`; um export real para o Apple Music não foi feito, e a lista de pastas e a criação numa pasta escolhida só se provam com a conta do MJRP.
+
 ## [2026-11-21 23:15] step — F75: o relatório do juiz sobre a leitura guardada (dados passam; tela com 1 P1 e 4 P2) e suas capturas entram no ramo
 **Branch:** feat/f75-inventory-values-kept-in-the-database
 O juiz independente reconferiu a 84dbddc: o lado dos dados passou; a tela reprovou em 1 P1 e 4 P2. Relatório e capturas copiados como vieram, escritos pelo juiz, em `reports/audits/` e `reports/evidence/F75/values-kept/recheck/`.
+
+## [2026-11-21 23:00] step — F90: exportar uma playlist a partir da tela das séries de playlists — registrada (S-72, F90, UAT-276)
+**Branch:** feat/f90-export-from-the-saved-playlists-screen
+O MJRP, 2026-11-21: «Uma coisa que senti falta na playlist agora. Foi poder exportar a playlist a partir da tela da playlist series sem ter que entrar em edit batch.» e, à proposta (um «Export» no lote e um export em cada playlist do lote aberto): «1 os dois , mas principalmente um playlist específica»; «eu pessoalmente, uso Apple Music e não Spotify». Registrado antes de construir: a história S-72 (embutida no PRD, épico EP-04, a pasta `ep-04-export-playlists` nasce com ela), a feature F90 (spec, plan e tasks em esboço; `lane: standard`, `solution_type: feature`; imports a S-72) e a UAT-276 (melhoria, aberta pelo humano). O plano deixa uma tarefa aberta (TASK-08): repetir a feature na tela em React da linha de migração. Ids reservados por `merge_train.py` (`next-item-id --reserve`, `next-uat-id --reserve`).
 
 ## [2026-11-21 22:59] step — F89: a galeria do inventário segue a grade de Albums (2 colunas, 3 de 640 px) e mostra as médias
 **Branch:** feat/f76-inventory-gallery-on-the-phone

@@ -46,6 +46,24 @@ function failureOf(error) {
     return { kind: 'error', message }
 }
 
+/** What an export will do: the folder (the series' name unless another was chosen) and each playlist with the name it gets. */
+function planOf(playlists, { seriesName, batchName, positions = [], folderName = seriesName, folderId, noFolder = false }) {
+    const targets = playlists.map((playlist, index) => ({
+        name: `${positions[index] || index + 1}. ${batchName} - ${titleOf(playlist)}`,
+        tracks: playlist.tracks || []
+    }))
+    return { folderName, folderId, noFolder, targets }
+}
+
+/** The report of an export that has not begun. */
+function emptyReport({ folderName, noFolder }) {
+    return {
+        folder: noFolder ? { name: null, created: false, none: true } : { name: folderName, created: false },
+        created: [], failed: [], empty: [], notFound: [], notCreated: [],
+        failure: null
+    }
+}
+
 export class AppleMusicExportService {
 
     /** Replaceable in tests. */
@@ -58,33 +76,27 @@ export class AppleMusicExportService {
      * @param {Object} names
      * @param {string} names.seriesName - the folder the playlists go into
      * @param {string} names.batchName - each playlist is named "<position>. <batchName> - <title>"
+     * @param {string} [names.folderName] - the folder to put them in (F90); none given: the series' name
+     * @param {string} [names.folderId] - the id of that folder when it was picked from the library's list: used as it is
+     * @param {boolean} [names.noFolder] - no folder: the playlists go to the top of the library
+     * @param {number[]} [names.positions] - the position each playlist has in its batch (1-based), for
+     *        one playlist or some of a batch: the name is then the one the export of the whole batch gives
      * @param {Object} deps
      * @param {Object} deps.musicKit - MusicKitService
      * @param {Function} [deps.onProgress] - (text) => void
      * @returns {Promise<Object>} AppleExportReport (see the top of this file)
      * @throws only when there is nothing to export
      */
-    static async exportPlaylists(playlists, { seriesName, batchName }, { musicKit, onProgress = () => { } }) {
+    static async exportPlaylists(playlists, names, deps) {
+        const { musicKit, onProgress = () => { } } = deps
         if (!playlists || playlists.length === 0) throw new Error('No playlists to export')
 
-        const targets = playlists.map((playlist, index) => ({
-            name: `${index + 1}. ${batchName} - ${titleOf(playlist)}`,
-            tracks: playlist.tracks || []
-        }))
-        const report = {
-            folder: { name: seriesName, created: false },
-            created: [], failed: [], empty: [], notFound: [], notCreated: [],
-            failure: null
-        }
+        const { folderName, folderId: pickedId, noFolder, targets } = planOf(playlists, names)
+        const report = emptyReport({ folderName, noFolder })
 
         let folderId
         try {
-            onProgress('Connecting...')
-            await musicKit.init()
-            onProgress('Authorizing...')
-            await musicKit.authorize()
-            onProgress('Creating folder...')
-            folderId = await musicKit.createOrGetFolder(seriesName)
+            folderId = await this._start(musicKit, { folderName, folderId: pickedId, noFolder }, onProgress)
         } catch (error) {
             console.error('[AppleMusicExport] could not start:', error)
             report.failure = failureOf(error)
@@ -98,6 +110,18 @@ export class AppleMusicExportService {
             await this._deliver(target, folderId || null, report, musicKit)
         }
         return measured(report, playlists)
+    }
+
+    /** Connect, authorize and have the folder (none when the person chose no folder). @returns {Promise<string|undefined>} the folder id */
+    static async _start(musicKit, { folderName, folderId, noFolder }, onProgress) {
+        onProgress('Connecting...')
+        await musicKit.init()
+        onProgress('Authorizing...')
+        await musicKit.authorize()
+        if (noFolder) return undefined
+        if (folderId) return folderId // picked from the library's own list: no second lookup by name
+        onProgress('Creating folder...')
+        return musicKit.createOrGetFolder(folderName)
     }
 
     /** Have one playlist in the library, unless this session already put it there. */
@@ -169,7 +193,7 @@ function failedMessage(report, total) {
 }
 
 function createdMessage(report, fresh) {
-    const where = report.folder.created ? `, in the folder "${report.folder.name}"` : ''
+    const where = report.folder.created ? `, in the folder "${report.folder.name}"` : (report.folder.none ? ', outside any folder' : '')
     const which = report.failed.length > 0 ? `: ${quoted(fresh.map(item => item.name))}` : ''
     return { type: 'success', text: `${count(fresh.length, 'playlist')} exported to Apple Music${where}${which}.` }
 }
@@ -181,7 +205,7 @@ function alreadyThereMessage(already) {
 
 function leftOutMessages(report, fresh) {
     const messages = []
-    if (fresh.length > 0 && !report.folder.created) {
+    if (fresh.length > 0 && !report.folder.created && !report.folder.none) {
         messages.push({ type: 'warning', text: `The folder "${report.folder.name}" could not be created in Apple Music: the playlists are at the top of your library.` })
     }
     if (report.empty.length > 0) {
