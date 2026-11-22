@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 15:46] step — F83 onda 8c: o teste da janela de editar do inventário passa os avisos
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- `test/screens/inventory/Inventory.statusAndSeries.test.js` chamava `openInventoryEdit(item, onSave)` três vezes sem o terceiro argumento (`notify`: desde a onda 8b a janela recebe os avisos de quem a abre), o que acabava numa rejeição sem tratamento («reading 'error'» em `ui/inventoryItem/EditWindow.tsx`) e fazia o vitest sair com erro mesmo com todos os testes verdes. O teste passa agora `notices` (os quatro `vi.fn()`), a mesma edição da linha de integração, para a junta sair limpa. Pedido do coordenador.
+
+
 ## [2026-11-22 15:09] step — F83 onda 8c: o retrato da Folha refeito com um rótulo por passo
 
 **Branch:** claude/f83-wave-8c-phone-sheet

@@ -24,6 +24,7 @@ import { InventoryBridge } from '../../../public/js/screens/inventory/InventoryB
 import { act } from 'react'
 import { openAlbumWindow } from '../../../public/js/ui/albumWindow/openAlbumWindow'
 import { openInventoryEdit } from '../../../public/js/ui/inventoryItem/inventoryWindows'
+const notices = { success: vi.fn(), error: vi.fn(), warning: vi.fn(), info: vi.fn() }
 import { closeAllWindows } from '../../../public/js/ui/windowLayer'
 import { inventoryStore } from '../../../public/js/stores/inventory.js'
 import { inventoryAlbumFromQuery } from '../../../public/js/models/inventoryFromSeries.js'
@@ -305,7 +306,7 @@ describe('the inventory screen (F71)', () => {
         })
 
         it('the edit window opens for an item that came from a series', async () => {
-            await act(async () => { await openInventoryEdit(ten, vi.fn()) })
+            await act(async () => { await openInventoryEdit(ten, vi.fn(), notices) })
 
             expect(document.body.textContent).toContain('Ten')
         })
@@ -313,7 +314,7 @@ describe('the inventory screen (F71)', () => {
         it('saving the notes of an item that came from a series invents no format for it', async () => {
             const onSave = vi.fn(async () => { })
 
-            await act(async () => { await openInventoryEdit(ten, onSave) })
+            await act(async () => { await openInventoryEdit(ten, onSave, notices) })
             const format = document.getElementById('edit-format')
             expect([...format.options].map(option => option.textContent)).toEqual(['Not set', 'CD', 'Vinyl', 'Cassette', 'DVD', 'Blu-ray', 'Digital'])
             expect(format.value).toBe('')
@@ -324,7 +325,7 @@ describe('the inventory screen (F71)', () => {
         })
 
         it('the edit window of an item with a format offers the formats only, with its own chosen', async () => {
-            await act(async () => { await openInventoryEdit(fromCard, vi.fn()) })
+            await act(async () => { await openInventoryEdit(fromCard, vi.fn(), notices) })
             const format = document.getElementById('edit-format')
 
             expect([...format.options].map(option => option.value)).toEqual(['cd', 'vinyl', 'cassette', 'dvd', 'bluray', 'digital'])
