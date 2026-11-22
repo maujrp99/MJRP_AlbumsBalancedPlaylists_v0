@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 11:06] step — F83 onda 7b, correções do juiz: a exposição da loja no controlador partilhado, a complexidade da marca e as medidas do orçamento
+
+**Branch:** claude/f83-wave-7b-fix-scroll-and-weight
+
+- `window.playlistsStore` passou do `stores/playlists.js` (que não pode crescer: o teto de linhas das lojas) para `controllers/BlendingController.js`, o arquivo que as duas telas preguiçosas carregam; o `markState` tira a complexidade da marca do passo a passo (limite 10). As medidas do orçamento em forma de publicação foram refeitas: principal 195.050 B, depois da primeira tela 236.336 B (margens de 160 B e 201 B sobre os tetos).
+
 ## [2026-11-22 10:00] step — F83 onda 7b, correções do juiz: o salto da página, as marcas refeitas, o primeiro arquivo a menos e o orçamento da construção publicada
 
 **Branch:** claude/f83-wave-7b-fix-scroll-and-weight

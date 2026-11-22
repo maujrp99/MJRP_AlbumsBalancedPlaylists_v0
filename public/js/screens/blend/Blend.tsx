@@ -46,6 +46,9 @@ const STEPS = [
 
 const BADGE = 'text-xs text-muted px-2 py-1 bg-white/5 rounded-full'
 
+/** The state of a mark: what its `key` carries, so a mark whose state changes is made anew. */
+const markState = (isDone: boolean, isActive: boolean): string => (isDone ? 'done' : isActive ? 'current' : 'waiting')
+
 /** The faixa of the four steps: the current one in orange, the done ones in green with a check. The step 3 is never the current one (a defect kept). */
 function Stepper({ hasSeries, hasRecipe }: { hasSeries: boolean; hasRecipe: boolean }) {
     let current = 1
@@ -63,7 +66,7 @@ function Stepper({ hasSeries, hasRecipe }: { hasSeries: boolean; hasRecipe: bool
                     <div key={step.num} className="flex items-center gap-1 md:gap-2 blend-stepper__step" aria-current={isActive ? 'step' : undefined}>
                         <div className="flex flex-col items-center blend-stepper__mark">
                             {/* made anew when its state changes (a `key` with the state), as the hand-made faixa was: no fade of the colours and the glow */}
-                            <div key={isDone ? 'done' : isActive ? 'current' : 'waiting'} className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center text-sm transition-all ${stepClass}`}>
+                            <div key={markState(isDone, isActive)} className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center text-sm transition-all ${stepClass}`}>
                                 {isDone ? broken('✓', 28, 24) : <Icon name={step.icon} className="w-2/3 h-2/3" />}
                             </div>
                             <span className={`text-[10px] md:text-xs mt-1 blend-stepper__label ${labelClass}`}>{t(`blend.stepper.${step.key}`)}</span>
