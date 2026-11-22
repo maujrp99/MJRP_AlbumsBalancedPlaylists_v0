@@ -596,7 +596,7 @@ export class InventoryView extends BaseView {
     document.getElementById(NOTICES_ID)?.addEventListener('click', (e) => {
       const action = e.target.closest('[data-notice-action]')?.dataset.noticeAction
       if (action === 'stop-values') this.controller.handleStopValues()
-      if (action === 'read-values') this.controller.handleUpdateValues()
+      if (action === 'read-values') this.controller.handleUpdateValues({ onlyNeverRead: true })
     })
 
     document.getElementById('inventorySort')?.addEventListener('change', (e) => {

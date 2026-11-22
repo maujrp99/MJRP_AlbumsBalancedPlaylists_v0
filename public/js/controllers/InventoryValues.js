@@ -8,14 +8,16 @@
  * draws. Nothing here touches the page.
  *
  * A run starts ONLY when the person asks ("Update values", "Read them now"): opening the screen
- * reads nothing from Discogs, and a screen drawn again never starts a second run.
+ * reads nothing from Discogs, and a screen drawn again never starts a second run. The reading of
+ * an item is kept in the item (REQ-14), so what the screen shows after opening is what the last
+ * run kept, on any device; the browser holds a reading six hours as the guard.
  */
 
 import {
     BASE_CURRENCY, CURRENCIES, SourceState, itemsWithDiscogsValue, lowestValuesShown, shownCurrency, totalsOf, usdOf, valueOfItem,
     writtenValueFrom
 } from '../models/inventoryValue.js'
-import { itemsToRead, readFailedText, valuesOutcome, valuesProgressText, valuesRunOutcome } from '../models/inventoryValueRun.js'
+import { itemsNeverRead, itemsToRead, readFailedText, readingsToKeep, valuesOutcome, valuesProgressText, valuesRunOutcome } from '../models/inventoryValueRun.js'
 import { track } from '../services/usage/track.js'
 
 export const CURRENCY_KEY = 'inventoryCurrency'
@@ -150,7 +152,7 @@ export class InventoryValues {
             values,
             money,
             totals: totalsOf(counted, valueFor, money.rates),
-            waiting: this.source === SourceState.ON ? itemsToRead(items, this.readings, this.now()).length : 0,
+            waiting: this.source === SourceState.ON ? itemsNeverRead(items, this.readings).length : 0,
             discogsShown: itemsWithDiscogsValue(values) > 0,
             lowestShown: lowestValuesShown(values) > 0,
             // Discogs refuses suggestions to the account: known by the service, or seen in a value on the screen
@@ -170,13 +172,20 @@ export class InventoryValues {
     }
 
     /**
-     * "Update values" and "Read them now": read every item with no value written and no fresh
-     * reading, one after the other. A second press while it runs does nothing.
+     * "Update values" and "Read them now" (REQ-15): read AGAIN from Discogs, one album after the
+     * other, and replace the reading kept in the item. "Update values" reads every item with no
+     * value written, except what was read less than six hours ago (the guard against asking twice
+     * in a row); "Read them now" (`onlyNeverRead`) reads only the items that never had a reading.
+     * A reading only the browser holds is kept in its item first, with no question to Discogs.
+     * A second press while it runs does nothing.
      */
-    async updateAll() {
+    async updateAll({ onlyNeverRead = false } = {}) {
         if (this.run.busy || this.source !== SourceState.ON) return
-        const items = itemsToRead(this.host.items(), this.readings, this.now())
+        const all = this.host.items()
+        const toKeep = readingsToKeep(all, this.readings)
+        const items = onlyNeverRead ? itemsNeverRead(all, this.readings) : itemsToRead(all, this.readings, this.now())
         if (items.length === 0) {
+            if (toKeep.length > 0) await this.service.keepReadings(toKeep)
             this.toast.info('Every album already has a value written by you or read in the last six hours.')
             return
         }
@@ -187,6 +196,7 @@ export class InventoryValues {
         this._showRun({ done: 0, total: items.length })
         let count
         try {
+            if (toKeep.length > 0) await this.service.keepReadings(toKeep)
             count = await this.service.readMany(items, {
                 signal: this._stop.signal,
                 onProgress: (step) => this._showRun(step),
@@ -271,7 +281,7 @@ export class InventoryValues {
         this._showItem(item, { state: 'reading' })
         const outcome = await this.service.readItem(item, { signal: this.leaving })
         track('inventory_values_read', oneReadEvent(outcome))
-        if (outcome.reading) await this.service.keepEditions([{ item, reading: outcome.reading }])
+        if (outcome.reading) await this.service.keepReadings([{ item, reading: outcome.reading }])
         if (outcome.off) this.source = SourceState.OFF
         this._showItem(item, outcome.failure ? { state: 'failed', failure: outcome.failure } : { reading: outcome.reading })
         if (outcome.failure) this.toast.error(readFailedText(outcome.failure))

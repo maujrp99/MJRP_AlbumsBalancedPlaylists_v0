@@ -50,9 +50,9 @@ describe('the model: a reading of another kind', () => {
         expect(value.conditions).toBeUndefined()
     })
 
-    it('the same six hours, the same switch, and what the person wrote still wins', () => {
+    it('the same switch (an old reading still shows, with its date: REQ-14), and what the person wrote still wins', () => {
         const old = lowestReading({ readAt: new Date(NOW - 6 * 60 * 60 * 1000).toISOString() })
-        expect(valueOfItem({ id: 'a' }, on(old, NOW)).origin).toBe(null)
+        expect(valueOfItem({ id: 'a' }, on(old, NOW))).toMatchObject({ origin: 'discogs', readAt: old.readAt })
         expect(valueOfItem({ id: 'a' }, { source: 'off', now: Date.now(), reading: lowestReading() }).origin).toBe(null)
         expect(valueOfItem({ id: 'a', value: { amount: 5, currency: 'USD' } }, on(lowestReading())).origin).toBe('yours')
     })
@@ -83,7 +83,7 @@ describe('the service: the price page is not asked for every album', () => {
         const kept = new Map()
         const cache = { get: vi.fn(async (key) => kept.get(key) ?? null), set: vi.fn(async (key, value) => { kept.set(key, value) }) }
         let clock = NOW
-        const values = new InventoryValueService({ api, cache, inventory: { userId: 'u', setEditions: vi.fn(async () => { }) }, now: () => clock, sleep: vi.fn(async () => true) })
+        const values = new InventoryValueService({ api, cache, inventory: { userId: 'u', setReadings: vi.fn(async () => { }) }, now: () => clock, sleep: vi.fn(async () => true) })
         return { values, api, kept, tick: (ms) => { clock += ms } }
     }
     const items = (count) => Array.from({ length: count }, (_, index) => ({ id: `i${index}`, artist: 'A', title: `T${index}` }))
@@ -155,9 +155,9 @@ describe('the screen', () => {
     it('the card says the value is the lowest for sale, in the same five lines, with the whole text in the title', async () => {
         await open(new Map([['owned', lowestReading()]]))
 
-        expect(text(line('owned', 2))).toBe('CD · Discogs · lowest for sale ≈ $12.93')
+        expect(text(line('owned', 2))).toMatch(/^CD · Discogs · lowest for sale · read \d{1,2} [A-Z][a-z]{2} ≈ \$12\.93$/)
         const origin = line('owned', 2).querySelector('span')
-        expect(origin.title).toBe('Lowest price this CD edition is for sale at on Discogs now')
+        expect(origin.title).toMatch(/^Lowest price this CD edition is for sale at on Discogs now\. Read on /)
         expect(origin.className).toContain('truncate')
         expect(origin.querySelector('a').href).toBe(RELEASE.url)
         expect(document.querySelectorAll('.inventory-card-wrapper[data-album-id="owned"] [data-line]')).toHaveLength(5)

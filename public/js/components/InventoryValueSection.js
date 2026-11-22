@@ -22,7 +22,7 @@ import { getIcon } from './Icons.js'
 import { escapeHtml } from '../utils/stringUtils.js'
 import { safeUrl } from '../utils/safeUrl.js'
 import {
-    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf,
+    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf, readOnText,
     noValueText
 } from '../models/inventoryValue.js'
 import { BUY_LINKS_NOTE, BuyLinkPlace, buyLinkAttributes, buyLinkMarks, buyLinksOf } from '../models/buyLinks.js'
@@ -262,7 +262,7 @@ export function valueSummaryOf({ value, money }) {
     const amount = value.amount ?? (value.conditions ? meanOfConditions(value.conditions) : null)
     if (!value.origin || amount === null || amount === undefined) return { amount: '—', origin: noValueText(value), release: null }
     const discogs = value.origin === ValueOrigin.DISCOGS
-    return { amount: `≈ ${moneyOf({ amount, currency: value.currency }, money)}`, origin: discogs ? 'Discogs' : 'Yours', release: discogs ? value.release || {} : null }
+    return { amount: `≈ ${moneyOf({ amount, currency: value.currency }, money)}`, origin: discogs ? ['Discogs', readOnText(value)].filter(Boolean).join(' · ') : 'Yours', release: discogs ? value.release || {} : null }
 }
 
 /** «Data provided by Discogs.», linked to the edition (or to Discogs when the edition has no address). */

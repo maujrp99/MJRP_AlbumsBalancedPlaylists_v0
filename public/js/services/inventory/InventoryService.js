@@ -295,21 +295,23 @@ export class InventoryService {
     }
 
     /**
-     * Keep in the items which Discogs edition their value is read from (F75): one write for all of
-     * them, then the store. Only `discogs` changes; no price is written.
-     * @param {Array<{ id: string, discogs: Object }>} entries
+     * Keep in the items the reading of Discogs of each one (F75, REQ-14), and the edition it was of
+     * when the entry carries a new one: one write for all of them, then the store. Only
+     * `discogsReading` and `discogs` change; the value the person wrote is never touched.
+     * @param {Array<{ id: string, reading: Object, discogs?: Object }>} entries
      * @throws when the write fails (the store is not changed)
      */
-    async setEditions(entries) {
+    async setReadings(entries) {
         this.init()
         const repository = this.repository
         const present = new Set(this.store.getAlbums().map(item => item.id))
         const kept = entries.filter(entry => present.has(entry.id))
         if (kept.length === 0) return
-        await repository.setEditions(kept)
+        await repository.setReadings(kept)
         if (repository !== this.repository) return
-        const byId = new Map(kept.map(entry => [entry.id, entry.discogs]))
-        this.store.replaceAlbums(this.store.getAlbums().map(item => (byId.has(item.id) ? { ...item, discogs: byId.get(item.id) } : item)))
+        const byId = new Map(kept.map(entry => [entry.id, entry]))
+        const withReading = (item, { reading, discogs }) => ({ ...item, discogsReading: reading, ...(discogs && { discogs }) })
+        this.store.replaceAlbums(this.store.getAlbums().map(item => (byId.has(item.id) ? withReading(item, byId.get(item.id)) : item)))
     }
 
     /** Write the changes of one album; the store changes only after the write worked. */

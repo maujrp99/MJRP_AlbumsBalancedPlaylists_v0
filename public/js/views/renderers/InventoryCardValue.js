@@ -17,7 +17,7 @@ import { safeUrl } from '../../utils/safeUrl.js'
 import { getIcon } from '../../components/Icons.js'
 import { InventoryStatus, statusOf } from '../../models/inventoryStatus.js'
 import { popularityValue, ratingValue, tracksMadeOf } from '../../models/albumAverages.js'
-import { DISCOGS_CREDIT, DISCOGS_LOWEST_TITLE, DISCOGS_MEAN_TITLE, ValueBasis, ValueOrigin, moneyOf, noValueText, valueLabel } from '../../models/inventoryValue.js'
+import { DISCOGS_CREDIT, DISCOGS_LOWEST_TITLE, DISCOGS_MEAN_TITLE, ValueBasis, ValueOrigin, momentText, moneyOf, noValueText, readOnText, valueLabel } from '../../models/inventoryValue.js'
 import { BuyLinkPlace, SELL_TRADE_SOON, buyLinkAttributes, buyLinksOf } from '../../models/buyLinks.js'
 
 const LABEL = 'text-[11px] text-gray-400 uppercase tracking-widest whitespace-nowrap truncate'
@@ -42,9 +42,13 @@ function discogsOrigin(value) {
     const name = url
         ? `<a href="${escapeHtml(safeUrl(value.release?.url))}" target="_blank" rel="noopener" class="underline hover:text-white" title="${DISCOGS_CREDIT} Open this edition on Discogs">Discogs</a>`
         : 'Discogs'
+    // when it was read (REQ-16): short on the line, the whole moment in the title
+    const read = readOnText(value)
+    const when = read ? ` · ${read}` : ''
+    const whole = read ? ` Read on ${momentText(value.readAt)}.` : ''
     // the lowest price for sale is a Discogs value too, and says what it is: never a mean
-    if (value.basis === ValueBasis.LOWEST_FOR_SALE) return { html: `CD · ${name} · lowest for sale`, hint: DISCOGS_LOWEST_TITLE }
-    return { html: `CD · ${name}`, hint: DISCOGS_MEAN_TITLE }
+    if (value.basis === ValueBasis.LOWEST_FOR_SALE) return { html: `CD · ${name} · lowest for sale${when}`, hint: `${DISCOGS_LOWEST_TITLE}.${whole}` }
+    return { html: `CD · ${name}${when}`, hint: `${DISCOGS_MEAN_TITLE}.${whole}` }
 }
 
 /** Line 2, left: where the value comes from, or why there is none. */

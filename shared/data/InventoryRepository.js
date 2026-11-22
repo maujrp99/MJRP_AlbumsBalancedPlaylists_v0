@@ -11,7 +11,7 @@ const VALID_CURRENCIES = ['USD', 'BRL']
 /**
  * The value the person wrote for an album (F75), as it is kept: an amount above zero, in USD, and
  * when it was written. `null` takes the written value away (the album goes back to its reading).
- * A price read from Discogs is NEVER written here: it lives in the browser, for six hours.
+ * A reading of Discogs is not written by this door: it has its own (`setReadings`).
  */
 function writtenValue(value) {
     if (value === null) return null
@@ -25,6 +25,52 @@ function writtenValue(value) {
 function discogsEdition(edition) {
     if (!Number.isInteger(edition?.releaseId) || edition.releaseId <= 0) throw new Error('An edition needs the id of its Discogs release')
     return { releaseId: edition.releaseId, title: edition.title ?? null, url: edition.url ?? null }
+}
+
+const READING_KINDS = ['found', 'not_found', 'no_value']
+const CONDITION_NAMES = ['mint', 'nearMint', 'veryGoodPlus']
+const isAmountAbove0 = (value) => typeof value === 'number' && Number.isFinite(value) && value > 0
+const orNull = (value) => value ?? null
+
+function readingConditions(conditions) {
+    if (!conditions) return null
+    // a condition Discogs did not give stays null (the value rule then says "no price suggested")
+    if (!CONDITION_NAMES.every(name => conditions[name] == null || isAmountAbove0(conditions[name]))) throw new Error('A reading keeps each condition as an amount above zero, or none')
+    return Object.fromEntries(CONDITION_NAMES.map(name => [name, orNull(conditions[name])]))
+}
+
+function readingLowest(lowest) {
+    if (!lowest) return null
+    if (!isAmountAbove0(lowest.value)) throw new Error('The lowest price for sale is an amount above zero')
+    return { value: lowest.value, currency: lowest.currency ?? 'USD' }
+}
+
+function readingRelease(release) {
+    if (!release) return null
+    if (!Number.isInteger(release.id) || release.id <= 0) throw new Error('The edition of a reading needs the id of its Discogs release')
+    return { id: release.id, title: orNull(release.title), url: orNull(release.url) }
+}
+
+/**
+ * The reading of Discogs of an album (F75, REQ-14; decision of the MJRP, 2026-11-21: constitution
+ * VI.1): what the three conditions or the lowest price for sale said, the currency, the edition
+ * and its page, which kind of reading it was, and WHEN it was read. It lives in the item of the
+ * person beside the value the person wrote, never mixed with it. Checked here, the one door.
+ */
+function discogsReading(reading) {
+    if (!reading || !READING_KINDS.includes(reading.kind)) throw new Error('A reading is found, not_found or no_value')
+    if (!Number.isFinite(Date.parse(reading.readAt))) throw new Error('A reading says when it was read')
+    return {
+        source: 'discogs',
+        kind: reading.kind,
+        basis: orNull(reading.basis),
+        conditions: readingConditions(reading.conditions),
+        lowest: readingLowest(reading.lowest),
+        forSale: Number.isInteger(reading.forSale) ? reading.forSale : null,
+        currency: orNull(reading.currency),
+        release: readingRelease(reading.release),
+        readAt: new Date(reading.readAt).toISOString()
+    }
 }
 
 /** An album can be kept only with its names and its id. */
@@ -178,6 +224,23 @@ export class InventoryRepository extends BaseRepository {
         const data = entries.map(({ id, discogs }) => {
             if (!id) throw new Error('Each edition needs the id of an item')
             return { id, data: { discogs: discogsEdition(discogs) } }
+        })
+        return this.updateMany(data)
+    }
+
+    /**
+     * Write the reading of Discogs of each item, in ONE write (F75, REQ-14): the `discogsReading`
+     * field of each item is replaced by the new one (the newest reading wins), and the `discogs`
+     * edition too when the entry carries a new one. Nothing else of the item changes: never the
+     * value the person wrote.
+     * @param {Array<{ id: string, reading: Object, discogs?: Object }>} entries - at most what one batch holds
+     * @returns {Promise<string[]>} the ids of the items, in the order given
+     * @throws when an entry lacks its id or is not a reading (nothing is written), and when the write fails
+     */
+    async setReadings(entries) {
+        const data = entries.map(({ id, reading, discogs }) => {
+            if (!id) throw new Error('Each reading needs the id of an item')
+            return { id, data: { discogsReading: discogsReading(reading), ...(discogs && { discogs: discogsEdition(discogs) }) } }
         })
         return this.updateMany(data)
     }

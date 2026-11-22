@@ -80,9 +80,9 @@ describe('the inventory screen: values (F75)', () => {
         })
 
         it('line 2 says where the value comes from, and the value with «≈»; a dash when there is none', () => {
-            expect(text(line('owned', 2))).toBe('CD · Discogs ≈ $11.20')
+            expect(text(line('owned', 2))).toMatch(/^CD · Discogs · read \d{1,2} [A-Z][a-z]{2} ≈ \$11\.20$/) // REQ-16: it says when it was read
             expect(text(line('written', 2))).toBe('CD · written by you ≈ $25.00')
-            expect(text(line('wanted', 2))).toBe('CD · Discogs ≈ $6.00')
+            expect(text(line('wanted', 2))).toMatch(/^CD · Discogs · read \d{1,2} [A-Z][a-z]{2} ≈ \$6\.00$/)
             expect(text(line('wished', 2))).toBe('Waiting for a value —')
         })
 
@@ -219,6 +219,47 @@ describe('the inventory screen: values (F75)', () => {
         })
     })
 
+    describe('the reading kept in the database (REQ-14, REQ-16)', () => {
+        const KEPT_AT = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+        const withKept = (item, extra = {}) => ({ ...item, discogsReading: { ...reading({ readAt: KEPT_AT }), ...extra } })
+        const ITEMS_KEPT = [withKept(owned), written, withKept(wanted, { mint: 9, nearMint: 6, veryGoodPlus: 3 }), wished]
+        const KEPT_DAY = new Date(KEPT_AT).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+
+        it('a new browser profile (nothing held) shows the kept value on the card, with the date it was read, and asks Discogs nothing', async () => {
+            const values = valuesWith()
+            await open(values, ITEMS_KEPT)
+
+            expect(text(line('owned', 2))).toBe(`CD · Discogs · read ${KEPT_DAY} ≈ $11.20`)
+            expect(line('owned', 2).querySelector('span').title).toContain('Read on ')
+            expect(line('owned', 2).querySelector('a').href).toBe('https://www.discogs.com/release/5012948')
+            expect(text(document.getElementById('inventoryTotals'))).toContain('Data provided by Discogs.')
+            expect(values.readMany).not.toHaveBeenCalled()
+        })
+
+        it('the waiting notice counts only the albums that never had a reading: here one, not three', async () => {
+            await open(valuesWith(), ITEMS_KEPT)
+
+            expect(text(document.getElementById('valuesWaitingNotice'))).toContain('1 album is waiting for a value.')
+        })
+
+        it('with every album read once, no notice at all, however old the readings are', async () => {
+            const old = (item) => withKept(item, { readAt: '2026-01-05T10:00:00.000Z' })
+            await open(valuesWith(), [old(owned), written, old(wanted), old(wished)])
+
+            expect(document.getElementById('valuesWaitingNotice')).toBeNull()
+            expect(text(line('wished', 2))).toMatch(/^CD · Discogs · read 5 Jan ≈ /)
+        })
+
+        it('the window of the album says when it was read, in the «Estimated value» section', async () => {
+            await open(valuesWith(), ITEMS_KEPT)
+
+            await view.handleViewWithModal('owned')
+            const section = document.querySelector('.modal-overlay [data-role="estimated-value"]')
+            expect(text(section)).toContain('Read on ')
+            expect(text(section)).toContain('Data provided by Discogs.')
+        })
+    })
+
     describe('«Update values» and the notices (REQ-09)', () => {
         it('with albums waiting, a notice says how many and offers to read them; nothing was read on its own', async () => {
             const values = valuesWith({ readings: READINGS() })
@@ -229,8 +270,9 @@ describe('the inventory screen: values (F75)', () => {
             expect(values.readMany).not.toHaveBeenCalled()
 
             notice.querySelector('button').click()
-            await Promise.resolve()
-            expect(values.readMany).toHaveBeenCalledTimes(1)
+            // the readings the browser holds are kept in their items first (REQ-14), then the album that never had one is read
+            await vi.waitFor(() => expect(values.readMany).toHaveBeenCalledTimes(1))
+            expect(values.readMany.mock.calls[0][0].map(item => item.id)).toEqual(['wished'])
         })
 
         it('the button is in the filters row, beside «Update ratings»', async () => {
@@ -272,7 +314,7 @@ describe('the inventory screen: values (F75)', () => {
             finish()
             await run
 
-            expect(text(line('owned', 2))).toBe('CD · Discogs ≈ $11.20')
+            expect(text(line('owned', 2))).toMatch(/^CD · Discogs · read \d{1,2} [A-Z][a-z]{2} ≈ \$11\.20$/) // REQ-16: it says when it was read
             expect(text(document.getElementById('updateValuesBtn'))).toBe('Update values')
             expect(document.getElementById('valuesReadingNotice')).toBe(null)
             expect(toast.success).toHaveBeenCalledWith('Values read for 1 of 3 albums. Stopped by you after 1 of 3.')

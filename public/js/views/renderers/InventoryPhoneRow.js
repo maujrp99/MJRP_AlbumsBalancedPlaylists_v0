@@ -18,7 +18,7 @@ import { escapeHtml } from '../../utils/stringUtils.js'
 import { getIcon } from '../../components/Icons.js'
 import { coverImage } from '../../components/ui/coverImage.js'
 import { InventoryStatus, statusLabel, statusOf } from '../../models/inventoryStatus.js'
-import { NoValue, ValueOrigin, moneyOf, noValueText } from '../../models/inventoryValue.js'
+import { NoValue, ValueOrigin, moneyOf, noValueText, readOnText } from '../../models/inventoryValue.js'
 import { popularityValue, ratingValue } from '../../models/albumAverages.js'
 import { PHONE_CHUNK } from '../../models/inventoryJump.js'
 
@@ -35,7 +35,7 @@ export const statusText = (status) => `${MARK[status] || ''}${statusLabel(status
 
 /** What the row says of where the value comes from: short, the long words are in the «⋯» sheet. */
 function originText(value) {
-    if (value.origin === ValueOrigin.DISCOGS) return 'Discogs'
+    if (value.origin === ValueOrigin.DISCOGS) return ['Discogs', readOnText(value)].filter(Boolean).join(' · ')
     if (value.origin === ValueOrigin.YOURS) return 'Yours'
     return noValueText(value)
 }

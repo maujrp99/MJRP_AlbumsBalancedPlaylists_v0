@@ -4,13 +4,14 @@
  * The value shown for an item is, in this order:
  *   1. what the person wrote (`item.value`, kept in the cloud, in USD): origin "yours". A reading
  *      never replaces it;
- *   2. a reading of Discogs made less than six hours ago (kept only in the browser): origin
- *      "discogs"; the value is the mean of the three conditions of the disc;
+ *   2. the newest reading of Discogs, whatever its age: the one kept in the item (`discogsReading`,
+ *      in the database, per person; decision of the MJRP of 2026-11-21, constitution VI.1) or the
+ *      one the browser holds, whichever was read last. Origin "discogs"; it says when it was read;
  *   3. none, with the reason: never read, waiting, being read, no CD edition, no price suggested,
  *      the source is off, or the read failed (and why).
  *
- * Six hours is the rule of Discogs for what its API gives (API Terms of Use): the record in the
- * browser lives six hours, and this file checks the age again, so an older one is never shown.
+ * Six hours is no longer the age a reading may be shown at. It is the guard of "Update values":
+ * an album read less than six hours ago is not asked to Discogs again.
  *
  * Amounts are kept in USD. A reading comes in the currency of the Discogs account and is turned
  * into USD with the rates of the day; with no rate for it, it adds to no total. The screen shows
@@ -87,6 +88,15 @@ export function isFresh(reading, now) {
     return age >= 0 && age < SIX_HOURS_MS
 }
 
+const readTime = (reading) => Date.parse(reading?.readAt ?? '')
+
+/** Of two readings, the one read last (the first when they are equal); the one with a date when only one has; else null. */
+export function newestReading(first, second) {
+    const [a, b] = [readTime(first), readTime(second)]
+    if (!Number.isFinite(a)) return Number.isFinite(b) ? second : null
+    return Number.isFinite(b) && b > a ? second : first
+}
+
 /** The value the person wrote, when there is one. */
 export function writtenValueOf(item) {
     const written = item?.value
@@ -148,20 +158,34 @@ function fromProgress(progress, source) {
 export function valueOfItem(item, known = {}) {
     const written = writtenValueOf(item)
     if (written) return { origin: ValueOrigin.YOURS, ...written }
-    // With the source off (or not known yet) nothing of Discogs is shown, a fresh reading included
-    return known.source === SourceState.ON ? fromDiscogs(known) : fromProgress(null, known.source)
+    // With the source off nothing of Discogs is shown, a kept reading included
+    return known.source === SourceState.OFF ? fromProgress(null, known.source) : fromDiscogs(item, known)
 }
 
-/** With the source on: what is being read now, else the fresh reading, else what the run says. */
-function fromDiscogs({ reading, now, progress }) {
+/** The source is on, or not known yet: what is being read now, else the newest reading, else what the run says. */
+function fromDiscogs(item, { reading, progress, source }) {
     if (progress && progress.state === 'reading') return none(NoValue.READING)
-    if (reading && isFresh(reading, now ?? Date.now())) return fromReading(reading)
-    return fromProgress(progress, SourceState.ON)
+    const newest = newestReading(item?.discogsReading, reading)
+    return newest ? fromReading(newest) : fromProgress(progress, source)
 }
 
-/** Does a read of Discogs have something to do for this item? No value written, and no fresh reading. */
+/** The newest reading of an item, kept in the item or in the browser. */
+const readingOfItem = (item, browserReading) => newestReading(item?.discogsReading, browserReading)
+
+/** Does a run have something to read for this item? No value written, and no reading younger than six hours (the guard). */
 export function needsReading(item, reading, now) {
-    return !writtenValueOf(item) && !(reading && isFresh(reading, now))
+    return !writtenValueOf(item) && !isFresh(readingOfItem(item, reading), now)
+}
+
+/** Is the item waiting for a value? No value written, and never a reading: in the item or in the browser. */
+export function neverRead(item, reading) {
+    return !writtenValueOf(item) && !readingOfItem(item, reading)
+}
+
+/** Does the browser hold a reading the item does not keep yet, or a newer one? The next run saves it, with no new question to Discogs. */
+export function needsKeeping(item, reading) {
+    const newest = readingOfItem(item, reading)
+    return Boolean(newest) && newest === reading && newest !== item?.discogsReading
 }
 
 // ---- Currencies ------------------------------------------------------------------------------------
@@ -324,7 +348,16 @@ export function dayText(iso) {
     return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-/** "20 Nov 2026, 14:05": a reading says the hour too, because it is good for six hours. */
+/** "20 Nov": the short «read on» of a card, where there is no room for the year (the whole moment is in its `title`). */
+export function shortDayText(iso) {
+    const date = new Date(iso)
+    return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+}
+
+/** "read 20 Nov": what the origin line of a card adds to a Discogs value (REQ-16); nothing when the reading has no valid date. */
+export const readOnText = (value) => (shortDayText(value?.readAt) ? `read ${shortDayText(value.readAt)}` : '')
+
+/** "20 Nov 2026, 14:05": a reading says the hour too, so the person can tell a reading of today from an old one. */
 export function momentText(iso) {
     const date = new Date(iso)
     if (Number.isNaN(date.getTime())) return ''

@@ -8,7 +8,7 @@
  * long wait). The end says what happened, in numbers, and invents nothing.
  */
 
-import { ReadFailure, ReadingKind, failureText, needsReading } from './inventoryValue.js'
+import { ReadFailure, ReadingKind, failureText, needsKeeping, needsReading, neverRead } from './inventoryValue.js'
 
 /** About how long one album takes: up to three requests to Discogs, one a second, and their answers. */
 const SECONDS_PER_ALBUM = 3.5
@@ -19,8 +19,23 @@ export const WAITS_PER_ALBUM = 2
 /** The wait when the server says "wait" and not for how long. */
 export const DEFAULT_WAIT_MS = 60 * 1000
 
-/** The items a run reads: no value written by the person, and no fresh reading. */
+/**
+ * The items "Update values" reads: no value written by the person, and no reading younger than six
+ * hours (the guard against asking Discogs twice in a row). The reading kept in the item counts, as
+ * does the one the browser holds.
+ * @param {Array<Object>} items
+ * @param {Map<string, Object>} readings - item id -> the reading the browser holds
+ * @param {number} now - ms
+ */
 export const itemsToRead = (items, readings, now) => items.filter(item => needsReading(item, readings.get(item.id), now))
+
+/** The items that never had a reading, kept or held: what the notice counts and "Read them now" reads. */
+export const itemsNeverRead = (items, readings) => items.filter(item => neverRead(item, readings.get(item.id)))
+
+/** The readings only the browser has (or has newer), which a run keeps in the items with no question to Discogs. */
+export const readingsToKeep = (items, readings) => items
+    .filter(item => needsKeeping(item, readings.get(item.id)))
+    .map(item => ({ item, reading: readings.get(item.id) }))
 
 const isGiven = (value) => value !== undefined && value !== null
 
