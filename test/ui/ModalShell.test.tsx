@@ -1,51 +1,53 @@
 /**
- * ModalShell is the window of the app (components/ui/BaseModal.js) written as React (F83 wave 5b): the same panel, header, close button and
- * classes. Until the hand-made shell goes (wave 8) the two are kept equal here: the shell of BaseModal.render and the shell of ModalShell are
- * compared element by element, attribute by attribute (the classes as a set), for each width and with and without a footer.
+ * ModalShell is the window of the app, written as React (F83 wave 5b; it was the twin of the hand-made components/ui/BaseModal.js until wave 8b). That the
+ * shell draws the same panel, header, close button and classes as the hand-made one did, for each width, with and without a footer, and as the whole
+ * screen or a sheet on the phone, is kept in test/ui/engines.sameAsBefore.test.tsx against the picture of the hand-made shell
+ * (test/fixtures/windowShellBeforeF83.json); what is here is what the shell does.
  */
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BaseModal } from '../../public/js/components/ui/BaseModal.js'
-import { normalize } from '../support/savedPlaylistsScenarios.js'
 import { ModalShell } from '../../public/js/ui/ModalShell'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
-describe('ModalShell is the shell of BaseModal', () => {
+async function open(element: React.ReactElement) {
+    const host = document.body.appendChild(document.createElement('div'))
+    await act(async () => { createRoot(host).render(element) })
+}
+
+describe('ModalShell', () => {
     afterEach(() => { document.body.innerHTML = '' })
-
-    for (const size of ['sm', 'md', 'lg', 'xl'] as const) {
-        for (const withFooter of [true, false]) {
-            it(`size ${size}, ${withFooter ? 'with' : 'without'} a footer`, async () => {
-                const body = document.createElement('p')
-                body.textContent = 'inside'
-                const footer = document.createElement('button')
-                footer.textContent = 'OK'
-                const hand = BaseModal.render({ id: 'w', title: 'A window', content: body, footer: withFooter ? footer : undefined, size, onClose: () => {} })
-
-                const host = document.body.appendChild(document.createElement('div'))
-                await act(async () => {
-                    createRoot(host).render(
-                        <ModalShell id="w" title="A window" size={size} onClose={() => {}} footer={withFooter ? <button>OK</button> : undefined}><p>inside</p></ModalShell>
-                    )
-                })
-                const react = document.getElementById('w')!
-
-                // the hand-made `button` has type="button" from SafeDOM; the footer's one here is only a stand-in for what the window puts in
-                const pageOf = (element: Element) => normalize(element).replace(/ type="button"/g, '')
-                expect(pageOf(react)).toBe(pageOf(hand))
-            })
-        }
-    }
 
     it('the close button asks for what the window gave', async () => {
         const onClose = vi.fn()
-        const host = document.body.appendChild(document.createElement('div'))
-        await act(async () => { createRoot(host).render(<ModalShell id="w" title="T" onClose={onClose}><p>x</p></ModalShell>) })
+        await open(<ModalShell id="w" title="T" onClose={onClose}><p>x</p></ModalShell>)
 
         await act(async () => { document.querySelector<HTMLElement>('.app-modal__close')!.click() })
 
         expect(onClose).toHaveBeenCalledTimes(1)
+    })
+
+    it('a click on the backdrop closes the window only when the window asks for it, and a click on the panel never does', async () => {
+        const quiet = vi.fn()
+        await open(<ModalShell id="quiet" title="T" onClose={quiet}><p>x</p></ModalShell>)
+        await act(async () => { document.getElementById('quiet')!.click() })
+        expect(quiet).not.toHaveBeenCalled()
+
+        const asking = vi.fn()
+        await open(<ModalShell id="asking" title="T" onClose={asking} closeOnBackdrop><p>x</p></ModalShell>)
+        await act(async () => { document.querySelector<HTMLElement>('#asking .app-modal__panel')!.click() })
+        expect(asking).not.toHaveBeenCalled()
+        await act(async () => { document.getElementById('asking')!.click() })
+        expect(asking).toHaveBeenCalledTimes(1)
+    })
+
+    it('the form on the phone is a class: the whole screen by default, a sheet from the bottom when asked', async () => {
+        await open(<ModalShell id="a" title="T" onClose={() => { }}><p>x</p></ModalShell>)
+        await open(<ModalShell id="b" title="T" sheet="bottom" onClose={() => { }}><p>x</p></ModalShell>)
+
+        expect(document.getElementById('a')!.classList.contains('app-modal--full')).toBe(true)
+        expect(document.getElementById('b')!.classList.contains('app-modal--bottom')).toBe(true)
+        expect(document.getElementById('b')!.classList.contains('app-modal--full')).toBe(false)
     })
 })

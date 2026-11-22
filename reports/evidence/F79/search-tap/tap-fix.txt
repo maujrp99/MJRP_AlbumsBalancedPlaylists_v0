@@ -1,0 +1,4 @@
+webkit iPhone 14 click covers: 9
+webkit iPhone 14 tap covers: 9
+webkit 1280 click covers: 9
+chromium 1280 click covers: 9

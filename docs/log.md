@@ -2,6 +2,122 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 15:15] review — F83: ondas 8a (exportações) e 8b (avisos, barra, janelas e perguntas) e a junta 4 com a `main` na linha de integração
+
+**Branch:** integrate/staging-2026-11-21
+
+- 8a: o juiz independente passou (0 P0, 0 P1, 3 P2), julgada na `f4eae56`: 1.854 chamadas à Apple Music conferidas em seis perfis, 0 diferenças; o arquivo baixado idêntico byte a byte.
+- 8b: passa (0 P0, 0 P1, 3 P2), julgada na `3877aaf`. Diferença de propósito que se vê (a anotar): pedir duas vezes a janela de detalhes da playlist pelo teclado abre uma janela só; antes empilhava duas, a segunda vazia.
+- Junta 4 (`claude/f83-sync-4-create-and-the-three-lines`, `1693d71`): a linha React recebe o conserto da tela Blend, a regra nova do peso (medida com chaves de mentira, margem ≥ 150 B) e o que a `main` ganhou até a `336385a` — «Create»/«Criar» com o «+», «Go and create!», a Syne no menu, a home com conta no texto aprovado. Sem juiz próprio: só palavras e arquivos partilhados, provados contra a `main` (67 conferências, 0 diferenças); decidido pelo agente — revisável.
+- Os dois relatórios guardados como vieram em `reports/audits/` (`…react-exports…` e `…react-window-engines…`).
+- Fatos da barra laranja, do juiz da 8b: ela aparece em toda visita a Albums e a Blend, porque cada visita relê as séries; existe desde dezembro de 2025.
+
+## [2026-11-22 14:58] step — F83 sync 4: a seção 23 das lições, a TASK-36 e os totais do fim
+
+**Branch:** claude/f83-sync-4-create-and-the-three-lines
+
+- `wave-lessons.md` (seção 23: as três linhas numa junta só, a palavra como chave por idioma, a recaptura do dourado e as pegadinhas dela, o peso com os cinco valores de mentira, a construção do pai só com as palavras, o ruído da marca animada, o texto escondido, o português que o site construído não prova) e a linha TASK-36 do `tasks.md`.
+- No fim, pela fila da máquina, na ponta do ramo: a suíte inteira 385 arquivos e 5.096 testes verdes (1 pulado, o mesmo de antes; o pai: 381 e 5.076); `test/architecture` 43 arquivos e 340 testes; `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai); `npm run budget:publication` dentro do orçamento com a folga (principal 195.804 B contra o teto de 195.964 B; depois da primeira tela 235.196 B; soma 431.000 B contra 431.157 B; react-vendor 68.691 B); `exportMusicKitRecording.json` byte a byte igual ao do pai.
+
+## [2026-11-22 14:58] step — F83 sync 4: a prova no navegador (menu, caminho, rodapé, estado vazio, página de entrada; todas as telas, a Blend e as perguntas)
+
+**Branch:** claude/f83-sync-4-create-and-the-three-lines
+
+- `reports/evidence/F83/sync-4/` (`proof.md`, `run-all.sh`, `main-vs-react.mjs`, `judge.mjs`, `notices-and-questions.mjs`, `phone-icon-check.mjs`, `summarize.py`, `summary.json`, `observed.json`, `raw/*.json.gz`, 2 figuras do ruído; 356 KB): sites construídos da `main` (336385a), deste ramo, do pai (3877aaf) e do pai só com as palavras, Chromium e WebKit a 1280, iPhone 14 e SE, Firebase e todo hospedeiro de fora bloqueados, 44 corridas com o controle de ruído de cada uma.
+- `main` contra o ramo: o menu, o caminho, o rodapé e o nome do celular a 1280 (Chromium e WebKit) 67 conferências, 0 diferenças, 0 px; «Create», o «+» e o estado ativo em `/start`, a Syne pedida (`Syne, sans-serif | 700 | 14px`) e a caixa de cada elemento iguais; no celular só o ruído da marca animada (22.533 px no iPhone 14, 9.780 px no SE, também de pai contra pai) e o texto do cabeçalho escondido; «Go and create!» e a página de entrada (`index.html` idêntico), nas duas línguas, com e sem conta (a classe `in`).
+- O ramo contra o pai: a varredura das telas (WebKit 1280 com 0 diferenças; as demais só o ruído do controle), a Blend (o salto da página, Chromium 1280: um botão de agrupamento no fim da página 1439 → 1439, o pai 1209; os números da tabela do conserto da 7b), um aviso e uma pergunta da 8b (WebKit iPhone 14: 264 conferências, 0 diferenças; Chromium 1280: as mesmas 7 de ruído do controle e uma de 152 px que não repetiu em 3 corridas).
+- Não provado: o português do app num site construído (nada chama `setLocale`), a fonte Syne desenhada (Google Fonts bloqueado), o MusicKit e o Firebase de verdade, o Safari de um aparelho.
+
+## [2026-11-22 13:33] step — F83 sync 4: a junta da `main` (336385a: «Create» no lugar de «Start», F91) e o porte para o React
+
+**Branch:** claude/f83-sync-4-create-and-the-three-lines
+
+- Junta de `main` (336385a) em `claude/f83-sync-4-create-and-the-three-lines`. Conflitos: `docs/specs/behavior.md` (as duas frases do menu: o texto da `main` com os caminhos dos arquivos da linha do React) e 11 «modificado de um lado, apagado do outro» (Breadcrumb.js, Footer.js, phoneTabs.js, SeriesEmptyState.js, HomeView.js, SeriesViewUpdater.js e os 5 testes à mão deles): apagados de novo com `_safe.py retire`. A página de entrada (`splash.html`, `copy.js`, `bar-menu.css` com a Syne, `phoneBar.js` com o «+») juntou limpa: arquivos partilhados.
+- Porte (teste vermelho antes: 60 testes em 7 arquivos): `i18n/{en,pt}/shell.js` (`shell.nav.start`, `shell.footer.start`, `shell.phone.tabStart`, `shell.phone.screenStart`: «Start»/«Início» → «Create»/«Criar»), `i18n/{en,pt}/ui.js` (`ui.breadcrumb.start`), `i18n/{en,pt}/albums.js` (`albums.empty.cta`: «Go to Start»/«Ir para o Início» → «Go and create!»/«Vá e crie!», o português é proposta à espera do aceite do MJRP). O «+» veio com `public/splash/phoneBar.js` (o `shell/StopIcon.tsx` o lê dali).
+- Dourado recapturado da `main` (336385a) pelo teste de captura (registro em `reports/evidence/F83/sync-4/`): `shellBeforeF88.json` (41 retratos), `playlistsFromMain.json` (34), `albumsBeforeF83.json` (43; o cenário do estado vazio passou a se chamar «the empty state with Go and create!»). A diferença contra o dourado velho foi só «Start» → «Create», o ícone da aba (hash do desenho) e o botão do estado vazio. Nada editado à mão.
+- `test/screens/start/Start.searchTap.test.js` (4 casos, UAT-282 da `main`): a Start em React nunca teve o defeito do toque em «Search»; o teste o prende (o botão e o nó do rótulo são os mesmos depois de o campo perder o foco). `test/components/home/HomeSearchTap.test.js` (da `main`, só da tela à mão) saiu.
+- Peso (`npm run budget:publication`, agora com os dois valores que faltavam, `VITE_SPLASH_COVERS` e `VITE_USAGE_MEASUREMENT`): principal 195.804 B, depois da primeira tela 235.196 B, react-vendor 68.691 B; tetos 195.964 B (folga 160 B) e `background` 57.720 B (teto da soma 431.157 B, folga 157 B). `test/scripts/publicationBudget.test.js` verde.
+
+## [2026-11-22 13:19] step — F83 sync 4: a junta da linha de integração (o conserto da Blend e a regra de peso) na onda 8b
+
+**Branch:** claude/f83-sync-4-create-and-the-three-lines
+
+- Junta de `integrate/staging-2026-11-21` (bfcfd7f) em `claude/f83-wave-8b-window-engines` (3877aaf). Conflitos: `scripts/bundle-budget.json` (ficou o texto da REGRA da linha de integração; os números são remedidos adiante neste sync) e `wave-lessons.md` (todas as seções mantidas; a «20» da linha de integração virou «22», porque a 8a e a 8b já tinham a 20 e a 21; dito na própria seção). `docs/log.md` e `test/screens/blend/*` juntaram sem conflito.
+
+## [2026-11-22 13:17] step — F83 onda 8b: a prova no navegador dos avisos, da barra e das perguntas, e o caso do campo da pergunta
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- `reports/evidence/F83/wave-8b/` (`proof.md`, `browser-proof.mjs`, `run-all.sh`, `summarize.py`, `compact.py`, `merge.py`, `raw/` em `.json.gz`, 2 figuras; 304 KB): sites construídos e servidores de desenvolvimento do pai (f4eae56) e deste ramo, Chromium 1280/900/899 e WebKit 1280/iPhone 14/SE, com a linha do tempo de cada aviso, barra, janela, trava da página e foco (a hora medida da causa) e o controle pai contra pai. 4.177 conferências passadas e 43 não, 19 delas do próprio controle; das 24 do ramo, 0 sem explicação; 2.096 de 2.101 tempos dentro de um quadro (o pior 24 ms; o controle, 18,4 ms).
+- Achado e consertado em e57fa50: o texto inicial do campo da pergunta (o WebKit o seleciona ao focar quando é o atributo `value`). `test/ui/dialogs.test.tsx` (3 casos) o prende.
+- `wave-lessons.md` (seção 21: o WebKit trata a segunda página como página de fundo, a identidade de um aviso é do elemento, a ordem do foco e da remoção, a evidência pequena) e a linha 8b do `tasks.md` com os números da prova.
+- No fim da onda, pela fila da máquina: a suíte inteira 381 arquivos e 5.076 testes verdes (o pai: 378 e 5.031); `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai); o build dentro de `scripts/bundle-budget.json` (principal 195.608 B, teto 196.010 B; depois da primeira tela 235.445 B; `background` 58.100 B); `exportMusicKitRecording.json` byte a byte igual.
+
+
+## [2026-11-22 13:00] step — publicado em produção: o menu do computador na Syne (F88), da `ffd95bf`
+
+**Branch:** main
+
+- Com a palavra dele («2. Pública»). Testes verdes na publicação; conferido no ar: a regra do menu serve `font:700 14px/1 'Syne'`. Volta: histórico de versões do Firebase Hosting.
+- Ele respondeu também: «1. Não» (a barra laranja não é a faixa «By Album…») e «3. Sim» (transições mais suaves: F94, registrada). Candidata para a barra: a linha de carregamento laranja no alto (`components/GlobalProgress.js`, ligada pelo `SeriesService` ao ler as séries, só nas telas Albums e Blend); pergunta com ele.
+- Enquadramento do CMS na `main` (`reports/proposals/2026-11-22-mjrpalbumblender-v0-cms-framing.md`); cinco perguntas dele, apresentadas uma a uma.
+
+## [2026-11-22 12:54] decision — F94 registrada: transições suaves entre as telas, logo depois da migração para React (S-76)
+**Branch:** wip/register-smooth-transitions
+Palavras do MJRP (2026-11-22): «agora que vi no menu aquela barra laranja que aparece no topo, nao deveria aparecer mesmo e as transicoes precisam ser mais suaves, creio que é pq nao finalizou a migracao ainda, certo?» Ao «Transições mais suaves entre telas: registro para logo depois da migração (recomendo)?»: «3. Sim». A F94 (via padrão, melhoria, depende da F83) e a S-76 (EP-01, ao lado da S-73). Não decidido: como (cruzamento, View Transitions, elemento compartilhado, esqueleto), quanto dura, se a home entra; começa por uma rodada de desenho. A barra laranja é pergunta aberta à parte, à espera da foto dele (o spec traz uma pista do código, não confirmada). Fatos conferidos na linha `integrate/staging-2026-11-21` (só leitura): o roteador troca `#app` sem transição; as telas carregam sob demanda, com a anterior à vista e uma barra de progresso laranja após 150 ms; a home é `public/splash.html`, página à parte. Só documentação: nenhum código nem protótipo; nada priorizado nem em andamento. Ids por `merge_train.py next-item-id --reserve`.
+
+## [2026-11-22 12:52] step — prévia: a tela Create enxuta também no computador (F79)
+
+**Branch:** wip/f79-create-lean-on-the-computer
+
+- Pedido dele: «podemos aplicar na sessão create o mesmo conceito de lean da versao mobile?». Comparador em `design/proposals/f79-create-lean-computer/comparator.html`, proposta em `proposal.md` da mesma pasta; desenho, sem código do produto.
+- Enxuta (recomendada): saem a frase da série (o link «What is a series?» a abre no lugar), a frase sob o campo, os três passos e a barra vazia da série; o aviso sem conta vem com a barra. Primeira tela: 104/124 palavras hoje, 16 na Enxuta. Variante: os passos numa linha discreta (42). Nenhuma palavra nova. Três perguntas com ele na proposta.
+
+## [2026-11-22 12:51] decision — o menu do computador usa a Syne, a letra da marca (F88)
+
+**Branch:** main
+
+- MJRP: «uma coisa que noite a fonte usada para o menu é diferente da fonte utilizada anteriormente»; «mostre como era as fontes antes»; vistas as três lado a lado (antes: maiúsculas de 12 px; hoje: letra do sistema a 14 px; opção: Syne), respondeu com a foto da opção Syne: «exato a opcao recomendada».
+- `public/splash/bar-menu.css`: os itens do menu passam de `600 14px` na letra do sistema para `700 14px` na Syne, como já era no menu de baixo do celular. Visto num servidor local a 1280 px: cabe, nada se desloca. Suíte: 325 arquivos, 4141 testes.
+
+## [2026-11-22 12:43] step — o enquadramento do começo do CMS (textos, chaves, receitas)
+
+**Branch:** wip/cms-framing
+
+- MJRP: «como estamos com a migração agora? podemos começar a criar o CMS?» Só documentação e análise: `reports/proposals/2026-11-22-mjrpalbumblender-v0-cms-framing.md`.
+- Proposta: v1 os textos do app em pt e en (com rascunho, prévia, publicar e desfazer); v2 as chaves (a medição primeiro, o Discogs depois) e a página de entrada; v3 as receitas (aparecer e configurar); v4 receitas novas por blocos.
+- Achados: não existe papel de admin; o kit do CMS depende da F332 do harness, ainda vazia; publicar pelo build vindo do CMS contraria a constituição (artigo V, item 1); ainda há textos escritos à mão fora dos dicionários (a janela de exportação do Spotify, avisos de controladores, frases de `models/albumAsk.js`).
+- Cinco perguntas para o MJRP na seção 5; nenhuma spec, a constituição ou a prioridade foram editadas.
+
+## [2026-11-22 12:38] step — publicado em produção: a home com conta mostra o texto aprovado (F80), da `4410c1f`
+
+**Branch:** main
+
+- Com a palavra dele («publica»). Testes 4141/4141 na publicação. Conferido no ar: a página não traz mais nenhuma linha `hi.*`. Não visto num navegador com conta aberta.
+- Ele perguntou «como estamos com a migração agora? podemos começar a criar o CMS?»: em curso o enquadramento do CMS (`wip/cms-framing`, relatório em `reports/proposals/`).
+- Ele notou: «a fonte usada para o menu é diferente da fonte utilizada anteriormente». Fato: o menu antigo usava a fonte do corpo em maiúsculas, 12 px, seminegrito; o novo (F88) usa a fonte do sistema a 14 px, sem maiúsculas, no computador, e a Syne a 12 px no menu de baixo do celular. Pergunta com ele: qual ele quer.
+
+## [2026-11-22 12:05] step — o teste da home acompanha a abertura única, com ou sem conta
+
+**Branch:** main
+
+- O commit `a5e2d65` saiu com um teste ainda esperando a regra de espaço antiga (o mesmo erro de antes: a cadeia de comandos não parou no vermelho). Corrigido e ampliado: o teste agora afirma que a abertura com conta usa as quatro linhas aprovadas. Suíte inteira: 325 arquivos, 4141 testes, verde.
+
+## [2026-11-22 12:04] decision — a home com conta mostra o texto aprovado («Mergulhe nos álbuns que você ama.»)
+
+**Branch:** main
+
+- MJRP: «e o copy da home, continua diferente do que aprovei no prototipo»; à pergunta «com a conta aberta, a home mostra o mesmo texto aprovado?»: «1. sim».
+- A abertura de quem entrou com a conta passa a usar as mesmas linhas da de quem não entrou (`h.kick`, `h.title`, `h.what`, `h.para`); saem as linhas `hi.*` («Sua próxima série começa aqui.»), que o agente tinha proposto. O botão continua «Criar». A regra de espaço que só valia para o título antigo sai junto.
+
+## [2026-11-22 11:55] step — publicado em produção: «Create»/«Criar» com o «+» no menu e «Go and create!» (F91), da `c90bd45`
+
+**Branch:** main
+
+- Com a palavra dele («publique»). Testes 4140/4140 na publicação. Conferido no ar: a home serve «Criar» e o arquivo principal traz «Create» e «Go and create!». Volta: histórico de versões do Firebase Hosting.
+- Ele disse também: «e o copy da home, continua diferente do que aprovei no prototipo». Conferido: sem conta, o texto é o do protótipo v4 aprovado (só «Inicie» virou «Criar»); com conta aparece outro texto («Sua próxima série começa aqui.»), proposto pelo agente e nunca aprovado. Pergunta com ele: com conta, mostrar o mesmo texto aprovado?
+- Na migração: a onda 7 (a tela Blend) está na linha `integrate/staging-2026-11-21` (`bfcfd7f`) e na prévia `staging`; 8a (exportações) julgada (passa), a juntar; 8b em construção. Falta levar F91 e o conserto do «Search» à linha React.
+
 ## [2026-11-22 11:46] step — F83: o comentário de `app.js` diz quem expõe o `window.playlistsStore`
 
 **Branch:** integrate/staging-2026-11-21
@@ -18,6 +134,28 @@
 - Os três relatórios guardados como vieram em `reports/audits/` (`…react-regenerate-panel…`, `…react-blend-screen…-recheck.md` e `…-recheck-2.md`). O P2 da segunda (um comentário errado em `app.js`) corrigido aqui.
 - Faltam dois valores `VITE_*` na medida do peso (`VITE_SPLASH_COVERS`, `VITE_USAGE_MEASUREMENT`, 24 B juntos, dentro da margem): a acertar no fechamento.
 
+## [2026-11-22 11:33] step — F83 onda 8b: a janela de pergunta com campo começa com o texto em atributo, como a à mão (achado da prova no WebKit)
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- **Achado da prova no navegador (WebKit com iPhone 14, servidores de desenvolvimento, `prompt` com texto inicial):** a janela à mão deixava o texto inicial **selecionado** quando o campo ganhava o foco; a nova, com o campo do React (`defaultValue`), deixava o cursor no fim. Causa: o motor à mão escrevia o texto como o atributo `value` (o valor «não sujo»: o WebKit o seleciona ao focar), e o React escreve a propriedade. O dourado do jsdom não o via (o jsdom não seleciona ao focar). Chromium: sem diferença nos dois lados.
+- `ui/dialogs/InputWindow.tsx`: o campo escreve `value` e `autofocus` como atributos e ouve o evento nativo `input` (o `onChange` do React compara com o valor que viu no começo e não ouviria um campo esvaziado a partir de um texto que ele nunca escreveu), tudo por uma `ref` estável. Os 44 casos de `engines.sameAsBefore` e de `dialogs.dismiss` seguem verdes.
+- `scripts/bundle-budget.json`: o principal foi a 195.608 B (+33 B) e o teto de 195.975 B para 196.010 B (402 B de folga); o que vem depois da primeira tela, 235.445 B; `background` fica em 58.100 B (484 B de folga sobre a necessidade de 57.616 B).
+
+
+## [2026-11-22 11:26] step — F91: o teste do menu acompanha o «+» maior
+
+**Branch:** main
+
+- O commit `6b3e53e` saiu com um teste do menu ainda esperando o traço antigo (erro meu: a cadeia de comandos não parou no teste vermelho). Corrigido; a suíte inteira passa (325 arquivos, 4140 testes).
+
+## [2026-11-22 11:25] decision — F91: o «+» um pouco maior e o botão «Go and create!»
+
+**Branch:** main
+
+- MJRP, sobre as duas notas do juiz: «1. Aumente 2. Go and create!». O «+» do menu de baixo passa de 14 para 16 das 24 unidades (traços de 4 a 20), ainda centrado; o botão da tela de álbuns vazia diz «Go and create!» no lugar de «Go to Create».
+- Mudança feita depois do juiz independente; os testes do ícone acompanham.
+
 ## [2026-11-22 11:18] step — F83 onda 7b, correções do juiz: a prova no navegador, a regra do orçamento e a segunda diferença de propósito
 
 **Branch:** claude/f83-wave-7b-fix-scroll-and-weight
@@ -31,12 +169,106 @@
 
 - `window.playlistsStore` passou do `stores/playlists.js` (que não pode crescer: o teto de linhas das lojas) para `controllers/BlendingController.js`, o arquivo que as duas telas preguiçosas carregam; o `markState` tira a complexidade da marca do passo a passo (limite 10). As medidas do orçamento em forma de publicação foram refeitas: principal 195.050 B, depois da primeira tela 236.336 B (margens de 160 B e 201 B sobre os tetos).
 
+## [2026-11-22 11:04] step — F83 onda 8b: os casos das lojas de avisos e de barra, o seletor sem aviso do lint e a seção 21 das lições
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- `test/stores/toasts.test.js` (8 casos): a API que controladores e serviços chamam (`toast`, `showToast`, o id devolvido), os relógios (entra em um quadro, sai aos 4 s ou aos `ms` dados, some 300 ms depois, fechar duas vezes não faz nada) e a barra (um carregador, vários, os 200 ms, `forceHide`).
+- `AlbumPickerPanel` guarda `warn` numa `ref` (o `exhaustive-deps` do lint o pedia: 0 erros, os mesmos 67 avisos do pai); `router.links.test.js` troca o mock do aviso pelo que também deixa a moldura ler `toasts`.
+- `docs/specs/features/F83-site-screens-in-react/wave-lessons.md`: a seção 21.
+- Os comentários de `pageScrollLock.js` e de `mobile.css` apontam para os arquivos novos.
+
+
+## [2026-11-22 10:41] step — F83 onda 8b: os tetos de peso medidos e os caminhos novos nos documentos
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- `scripts/bundle-budget.json` (só os dois números que a onda move, o texto da regra intocado): o script principal foi de 195.460 B (pai f4eae56, sem as chaves) a 195.575 B (+115 B: os três motores em React na moldura mais as 4 chaves do dicionário de perguntas, menos o que os motores à mão pesavam); o teto `main` foi de 195.860 B a 195.975 B (400 B de folga sobre o medido). O que vem depois da primeira tela caiu de 236.792 B para 235.463 B (−1.329 B: o casco da janela já era React e os motores à mão saíram de arquivos sob demanda), e `background` foi de 59.300 B para 58.100 B (necessidade 57.601 B; 499 B de folga). `reactVendor` e o alarme de tela não mudaram.
+- `design-system.md`, `behavior.md` e `arch.md`: os caminhos dos avisos, da barra, das perguntas, da casca da janela, da capa substituta e da página presa.
+
+
+## [2026-11-22 10:18] step — F83 onda 8b: os avisos, a barra de carga e as perguntas em React; a janela, a capa e o segurar a página saem das mãos
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- **Avisos:** `stores/toasts.js` (a mesma API `toast.success/error/warning/info(texto, ms)` e `showToast`, a lista e os relógios, sem React: controladores e serviços a chamam) e `shell/Toasts.tsx` (os desenha na caixa `#toast-container`, a moldura a monta). `components/Toast.js` sai.
+- **Barra de carga:** `stores/progress.js` e `shell/GlobalProgress.tsx` (o mesmo `#globalProgress`, as mesmas classes); `components/GlobalProgress.js` sai; `router.js` e `SeriesService.js` importam a loja.
+- **Perguntas:** `ui/dialogs/` (`dialogs.ts` com `dialogService.confirm/prompt/alert/dismiss`, `ConfirmWindow.tsx`, `InputWindow.tsx`) sobre `ui/ModalShell.tsx` (ganhou `sheet`); a janela de descartar da classificação (`RankWindow`) usa `ConfirmWindow`; `useModalWindow` usa `ModalShell`. `BaseModal.js`, `ConfirmModal.js`, `InputModal.js` e `services/DialogService.js` saem.
+- **Sem desenho, só de lugar:** `windowsHoldThePage.js` virou `shell/windowsHoldThePage.ts` (com o gancho `usePageHold`); `coverImage.js` virou `ui/coverStandIn.ts` (o endereço do substituto e `watchCovers`); `signInFromLink.js` e `startRoute.js` foram para `utils/`.
+- **`ui/` não importa loja:** `AddWindow`, `EditWindow` e o seletor de álbuns (`pickerController`) recebem `notify`/`warn` de quem os abre.
+- **Prova:** `test/ui/engines.sameAsBefore.test.tsx` (40 casos: os 33 cenários contra o dourado da mão, a forma do casco em 30 tamanhos e 3 casos que provam que a conferência vê uma palavra, uma classe e 1 ms postos de propósito). Os mocks de `Toast.js`, `DialogService.js` e `GlobalProgress.js` em ~110 arquivos de teste apontam para os novos caminhos; a gravação do MusicKit (`exportMusicKitRecording.json`) não foi tocada.
+- Sensores: `handMadeScreensBaseline.js` perde 10 entradas (15 para 5 arquivos); `handMadeScreensOnlyShrink` e `migrationStatus` com os limites novos.
+- Em português (à espera do MJRP): `ui.dialog.confirm` «Confirmar», `ui.dialog.cancel` «Cancelar», `ui.dialog.save` «Salvar», `ui.dialog.ok` «OK».
+
+
+## [2026-11-22 10:08] step — F83 onda 8b: o dourado dos motores à mão (avisos, barra, perguntas) capturado antes de tocá-los
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- `test/support/engineScenarios.js` e `engineWorld.js`: 33 cenários (13 de avisos, 4 de barra, 16 de perguntas e janelas) com tempo falso, toques, teclas e foco, e a forma do casco da janela em 30 tamanhos.
+- `test/fixtures/enginesBeforeF83.json` e `windowShellBeforeF83.json`: o que a página diz depois de cada passo, capturado de `Toast.js`, `GlobalProgress.js`, `DialogService.js` e do casco `BaseModal` na ponta f4eae56; duas capturas seguidas deram arquivos idênticos. O teste de captura fica em `reports/evidence/F83/wave-8b/capture-before.test.js` (não roda: o corredor só lê `test/`).
+
+
+## [2026-11-22 10:00] step — F83 onda 8a: a prova no navegador das exportações e a folga de 400 B nos tetos
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `reports/evidence/F83/wave-8a/` (`proof.md`, `browser-proof.mjs`, `recording-built.mjs`, `run-all.sh`, `summarize.py`, `raw/`, 4 figuras; menos de 1 MB): sites construídos, o pai (160c702) contra este ramo, Chromium 1280/900/899/iPhone 14/SE e WebKit 1280/iPhone 14/SE, as telas de edição e de guardadas, Apple Music (pastas: algumas, nenhuma, erro, 250), Spotify, arquivo (bytes iguais) e o fechar de todo jeito; 4.342 conferências passadas, 0 diferenças sem explicação (ruído: 3 px na barra do topo, que também existe de pai contra pai, e a chama animada do logo no WebKit 1280 das guardadas: provável, não provado em controle).
+- A gravação do MusicKit (264 chamadas) também é idêntica ao dourado no site construído, em Chromium e em WebKit (106 conferências cada).
+- Por pedido do coordenador (a regra do orçamento é consertada em outro ramo): `scripts/bundle-budget.json` com 400 B ou mais de folga em cada teto que a onda move: `main` 195.860 B (medido 195.460 B) e `background` 59.300 B (necessidade 58.815 B). Nem `Blend.tsx` nem o bloco de lojas do `app.js` foram tocados.
+
 ## [2026-11-22 10:00] step — F83 onda 7b, correções do juiz: o salto da página, as marcas refeitas, o primeiro arquivo a menos e o orçamento da construção publicada
 
 **Branch:** claude/f83-wave-7b-fix-scroll-and-weight
 
 - P1-1: a seção do passo 4 fica montada e a `key` do desenho vai para o conteúdo dela (como a tela à mão, que refazia o conteúdo e não a seção); antes, o Chromium recalculava a página sem a seção e o rolamento saltava 112 a 254 px. P2-1: as marcas do passo a passo e os cartões de série são refeitos quando o estado deles muda (`key` com o estado), sem o esmaecer de 150 a 200 ms. P2-3: `window.playlistsStore` passou a ser exposta pelo próprio `stores/playlists.js` (o `app.js` não importa mais a loja), e a primeira tela volta a não baixar `playlists-*.js`.
 - P1-2: `scripts/publication-budget.mjs` (e `npm run budget:publication`) faz a construção em forma de publicação com valores de mentira do mesmo tamanho (id do Spotify 32, chave do PostHog 47, host 24; sementes fixas, só no ambiente) e confere o orçamento mais a margem declarada de 150 B; `bundle-budget.json` ganhou `publication` (margem, tamanhos, medidas) e a regra; tetos pela regra: principal 195.210 B, `background` 58.150 B. Testes: `Blend.remount`, `firstScreenFiles`, `publicationBudget`.
+
+## [2026-11-22 09:39] review — F91: o juiz independente passou «Create»/«Criar» com o «+» no menu
+
+**Branch:** wip/create-in-place-of-start
+
+- Veredito: passa (0 P0, 0 P1, 1 P2), julgado na `fbacd12` contra a `main` na `44137fb`, nos sites construídos, em 7 telas × 6 tamanhos, em inglês e português: nenhum vizinho se moveu. Relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-create-menu-item-visual-parity-recheck.md`.
+- P2: o «+» parece um pouco mais leve que os outros ícones (ocupa 14 das 24 unidades; os outros, 18 a 20). Nota de texto: «Go to Create» é aceitável mas estranho; «Create a series» diria melhor.
+
+## [2026-11-22 09:28] step — F83 onda 8a: o orçamento de peso, a linha da TASK-28 e a seção 20 das lições
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `scripts/bundle-budget.json`: o principal passou de 194.889 B para 195.460 B (+571 B: o inglês de 38 chaves da janela do Spotify, que o inglês guarda no script principal); o teto sobe para 195.604 B (o medido mais 144 B das chaves do build publicado). O que vem depois da primeira tela foi de 236.603 B a 236.792 B e o `background` de 58.100 B a 59.000 B (185 B de folga acima da necessidade medida, 58.815 B, para as chaves: o mínimo pedido é 150 B). O `reactVendor` não mudou.
+- `tasks.md` ganha a linha 8a sob a TASK-28 (a TASK-28 NÃO foi marcada: fecha com a 8d). `wave-lessons.md` ganha a seção 20.
+- Portão no ponto desta entrada: suíte inteira 378 arquivos, 5.031 testes, verde (inclui `noSecretsInRepo`); `test/architecture` verde; `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai).
+
+## [2026-11-22 09:13] step — F83 onda 8a: a janela de exportar ao Spotify em React, a última janela à mão sai
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `ui/SpotifyExportWindow.tsx` (aberta por `showSpotifyExportWindow(given, deps)`, uma raiz própria no fim do `body` como a à mão; `ui/` não importa loja nem serviço: a lista da tela, a série aberta, o serviço de exportar, o login e o aviso vêm em `deps` de `controllers/playlistExportEntries.js`, que pede a janela e os dois serviços só quando se aperta o botão). `components/SpotifyExportModal.js` e o teste dele saem.
+- Igual ao de antes: 21 cenários do dourado (a página, o estado dos campos, cada nó de texto como está escrito, o foco, o que a janela pediu ao mundo) passam sem diferença; o teste acusa uma palavra, uma classe, um atributo e um espaço mudados de propósito. Os 9 casos de `SpotifyExportModal.test.js` foram levados para `test/ui/SpotifyExportWindow.test.js` com as mesmas asserções (só o andaime mudou); o caso de texto-não-é-marcação de `outsideTextIsText` passou para a janela nova. A janela é refeita inteira a cada palavra da exportação (uma `key` nova), como a à mão reescrevia o HTML: a animação e o foco se comportam como antes.
+- Defeitos mantidos (a janela à mão nunca teve): não fecha com Escape; não prende o Tab; não toma o foco ao abrir nem o devolve ao fechar; sem `role` de janela; o fundo e os botões a fecham, mas não enquanto exporta; «1 tracks» no singular em inglês (o português diz «1 faixa»); o texto de um aviso do serviço fica em inglês.
+- Textos: 38 chaves novas `spotifyWindow.*` em `i18n/en/exportWindow.js` e `i18n/pt/exportWindow.js` (o inglês byte a byte igual ao da janela à mão; o português é proposta do agente, à espera do MJRP).
+
+## [2026-11-22 09:07] step — F83 onda 8a: a exportação ao Apple Music e ao arquivo muda de lugar, o invólucro OutputWindows.ts sai
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `views/playlists/PlaylistsExport.js` -> `controllers/playlistExports.js` (git mv; só os caminhos das importações mudam: nada de lógica) e as quatro funções de `react-bridge/legacy/OutputWindows.ts` -> `controllers/playlistExportEntries.js` (a promessa única do MusicKit vai junto). `ui/PlaylistExportWindow.tsx` não importa controlador: recebe `exports` de quem a abre (`usePlaylistExport({ exports })`); as três telas (`Playlists.tsx`, `PhoneParts.tsx`, `SavedPlaylists.tsx`) passam o módulo.
+- A gravação das chamadas ao MusicKit (30 casos, 605 eventos) passa IDÊNTICA sem recapturar; os testes de exportar já existentes só mudaram o caminho do módulo (`vi.mock`/`import`), nenhuma asserção. `bridgesOnlyShrink` e as entradas de `handMadeScreensBaseline`, `outsideUrlChecked` e `screensLoadThroughTheService` seguem o arquivo.
+- O ramo `btn` de `handleExportToAppleMusic` NÃO foi apagado: o teste existente «shows the progress on the button it was given and gives the button back» (AppleMusicExport.test.js) o alcança, e esse teste não pode mudar. Fica para a 8d (sai junto com o teste e com `Icons.js`).
+
+## [2026-11-22 09:04] step — F83 onda 8a: o dourado da janela de exportar ao Spotify à mão, capturado antes de reescrevê-la
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `test/support/spotifyExportScenarios.js` (21 cenários: parada, uma playlist, o modo e o nome, buscando/criando/adicionando, o fim com os links, parcial, reconectar, falha e de novo, falha imprevista, nada a exportar, dois cliques, fechar de todo jeito, fechada enquanto espera, texto nunca marcação) e `test/support/spotifyExportStandIns.js`; o registro da captura em `reports/evidence/F83/wave-8a/capture-spotify-before.test.js`.
+- O dourado `test/fixtures/spotifyExportBeforeF83.json` guarda a página (elementos, atributos, o estado dos campos) e cada nó de texto como está escrito (o WebKit mede o espaço: lição 18), o foco e o que a janela pediu ao mundo. Capturado de `components/SpotifyExportModal.js` na ponta 160c702, antes de qualquer mudança. Corrige a frase da entrada anterior (nenhuma parte parte a lista de faixas: nada parte a lista).
+
+## [2026-11-22 09:01] step — F83 onda 8a: a gravação de toda chamada ao MusicKit da exportação ao Apple Music, antes de mover
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `test/services/musickit/AppleMusicExport.recording.test.js` + `test/support/musicKitRecorder.js` (o MusicKit de mentira, a mesma função roda no jsdom e no site construído) + `test/support/exportRecordingScenarios.js` (27 cenários: uma playlist, lote, pasta escolhida, pasta nova, pasta lembrada, sem pasta, faixas não achadas, 300 faixas, 120 buscas, 250 pastas em três páginas, 429, 401, autorização expirada, sem token, de novo, dois cliques, o arquivo).
+- O dourado `test/fixtures/exportMusicKitRecording.json` (605 eventos, 264 chamadas `api.music`) foi gravado UMA vez, da versão atual (RECORD_EXPORT=1), antes de mover qualquer arquivo; depois da mudança o teste só compara. Achado: nada parte a lista de faixas (um pedido leva todas) - registrado como é.
 
 ## [2026-11-22 08:55] step — F83 onda 7b: a prova no navegador da tela Blend, contra a tela à mão da junta
 
@@ -46,6 +278,38 @@
 - A prova achou um defeito da nova e a onda o consertou: o botão da barra do celular ficava com o `:hover` preso depois do toque (a barra à mão era trocada a cada passo); a barra (a nota e o botão) e a seção do botão têm `key` que muda a cada desenho (commit anterior). Também achou um artefato do roteiro (a figura de página inteira do Chromium dispara a mudança de «é celular?», e a tela à mão se redesenha inteira; a nova só se o resultado muda): janela alta, sem figura de página inteira.
 - A diferença de propósito (capas em segundo plano) está provada nos dois sentidos no teste do dourado; no navegador o fluxo não pegou a chegada das capas (não conclusivo).
 - Portão final: suíte inteira 376 arquivos, 4.979 testes, verde (inclui `noSecretsInRepo`); `test/architecture` verde; `tsc` limpo; `eslint` 0 erros e 67 avisos, todos em arquivos que a onda não tocou; construção dentro de `bundle-budget.json`.
+
+## [2026-11-22 08:48] step — prova no navegador do «Create» / «Criar» com o «+» (F88)
+
+**Branch:** wip/create-in-place-of-start
+
+- Com a palavra dele: «confirmo, ajuste e já pode publicar». Site construído, branch contra `main`, Chromium e WebKit 1280, WebKit iPhone 393 e 375: o item diz «Create» / «Criar» com o «+», leva a `/start`, acende na `/start`; caixa do item e dos vizinhos sem deslocamento; fora da caixa só mudam os nomes da tela (migalhas, topo do celular, botão do vazio). Detalhes e números em `reports/evidence/F88/create-in-place-of-start/proof.md`.
+
+## [2026-11-22 08:36] decision — F91: «Create»/«Criar» com o ícone de «+» confirmado; sai depois da tela Blend
+
+**Branch:** main
+
+- MJRP: «1.confirmo, ajuste e já pode publicar»; depois, sobre a ordem: «Quando terminar a tela de blend» e «Isso a frase era pra seguir sua recomendação de ordem». A pergunta em aberto da F91 (nome e ícone) está respondida: «Create» em inglês, «Criar» em português, ícone de «+»; o endereço `/start` não muda.
+- Em construção no código de hoje em `wip/create-in-place-of-start`; a publicação espera a tela Blend em React (onda 7b) e a troca entra também na linha React.
+
+## [2026-11-22 08:36] decision — F91, F92 e F93 registradas: «Criar» no menu, algoritmos de mistura no CMS, chaves de feature no CMS (S-73, S-74, S-75, NFR-03)
+**Branch:** wip/register-create-algorithms-toggles
+Palavras do MJRP (2026-11-22), antes de começar o CMS. (1) «O que acha de mudar o start para Crie/Create ? E ao invés de um ícone de go seja algo relacionado a adição?» (pergunta, não decisão; o orquestrador concordou; a F91, via rápida, melhoria, pergunta aberta: o MJRP confirma o nome e o ícone). (2) «Importante: uma das ideias dessa plataforma seria a de ir eu ir criando e acrescentando algoritmos para o blend. Por exemplo um algoritmo de deep cuts, um algoritmo das menos ouvidas o oposto do top. Eu eu precisa no CMS ter uma seção especial para criar e gerar algoritmos e gerenciar o aparecimento e configuração deles na tela de blend. Isso implica que a tela de blend tem que ser altamente configurável tb.» (a F92, via padrão). (3) «no CMS importante termos feature toggle para ligarmos e desligarmos features em prod. A começar pela integração com a discogs. A ideia é facilmente tirar features de prod por isso creio que a componentizacao e modularização sejam essências na arquitetura da plataforma, to certo?» (a F93, via padrão; mais o NFR-03, proposta do agente pendente do MJRP, constituição intacta). O CMS já estava registrado (F82, S-64): a F92 e a F93 são features próprias que dependem dela, porque cada uma pede uma proposta de arquitetura; a F82 guarda só os pedidos pequenos (REQ-02 e REQ-03). Só documentação: nenhum código, nenhum protótipo; nada priorizado nem em andamento. Os planos da F92 e da F93 trazem fatos conferidos no código (o registro `public/js/algorithms/index.js` e o interruptor `valueSwitch.js` do Discogs). Ids reservados por `merge_train.py next-item-id --reserve`.
+
+## [2026-11-22 08:35] step — «Start» vira «Create» («Criar» em português) no menu, com um «+» no lugar do «Go»
+
+**Branch:** wip/create-in-place-of-start
+
+- Com a palavra dele: «O que acha de mudar o start para Crie/Create ? E ao invés de um ícone de go seja algo relacionado a adição?»; «confirmo, ajuste e já pode publicar».
+- Teste primeiro (vermelho), depois o código: o item do menu do computador e da barra de baixo do celular (`phoneTabs.js`, também o nome da tela na barra do topo), o caminho de migalhas, o rodapé, os botões «Go to Create» da biblioteca vazia, e a home (`splash/copy.js`: `m.start` «Criar»/«Create», `k.start`). O ícone da parada passa a ser o «+» (as duas linhas do `Plus` do app, `splash/phoneBar.js`). Ficam como estão: o endereço `/start` (sem redirecionamento), nomes de arquivo, classe e id, «Start a series» / «Start another series» / «Start from an artist» (verbos).
+- Docs: `behavior.md` e o manual nos pontos que nomeiam o item. Suíte 4140/4140, lint sem erros.
+
+## [2026-11-22 08:15] step — publicado em produção: o toque em «Search» inicia a busca no navegador da Apple (F79, UAT-282), da `f22c43b`
+
+**Branch:** main
+
+- Com a palavra dele («Publica pls»). Testes 4138/4138 na publicação. Volta: histórico de versões do Firebase Hosting.
+- Na migração: ondas 6a (com o conserto do «Show 50 more»), 6b e 6c na linha `integrate/staging-2026-11-21` (`59e215d`) e na prévia `staging`; onda 7a julgada (passa), entra com a 7b, em construção em `claude/f83-wave-7b-blend-screen`. Falta a onda 8 (fechamento) e levar este conserto à linha React (lá o defeito não existe).
 
 ## [2026-11-22 08:09] step — F83 onda 7b: a barra do celular e a seção do botão feitas de novo a cada passo, como a tela à mão
 
@@ -226,6 +490,13 @@
 - Os defeitos de hoje ficam gravados no dourado de propósito (dois avisos de sucesso ao editar, BRL inventada, «Add to Inventory» apertável duas vezes, «Paid» com «$» para EUR e GBP).
 
 
+## [2026-11-22 04:28] review — F79: o juiz independente passou o conserto do toque em «Search» (UAT-282)
+
+**Branch:** fix/f79-search-tap-starts-the-search
+
+- Veredito: passa (0 P0, 0 P1, 0 P2), julgado na `42afedc` contra a `main` na `b8947e0`, nos sites construídos: em WebKit (iPhone 14 por clique e por toque, computador) a `main` dá 0 capas e o ramo 9; 18 comparações de pixel com 0 de diferença. Relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-start-search-tap-visual-parity-recheck.md`.
+- Não visto: um iPhone real.
+
 ## [2026-11-22 04:21] step — F83, onda 6a: a prova no navegador, os totais e as lições (a tela do inventário em React)
 
 **Branch:** claude/f83-wave-6a-inventory-screen
@@ -233,6 +504,15 @@
 - Prova no site construído (`reports/evidence/F83/wave-6a/proof.md`, roteiro `browser-proof.mjs`): a tela em React contra a à mão do pai (12f0234), Firebase bloqueado, os itens postos por uma linha no fim do script principal (a costura, igual nos dois sites). No celular (WebKit iPhone 14 e SE, Chromium 393 e 899): 55 de 55 comparações iguais, 0 pixels, com toques de verdade nas seis folhas; antiga contra antiga também 55 de 55. No computador (Chromium 1280 e 900, WebKit 1280): iguais em texto, caixas e foco; sobras de pixels: a busca digitada (o cursor piscando, também de antiga contra antiga), 8 pixels de 1 nível no Vinyl e na ordem, e **62 e 29 pixels na lista, só no Chromium, sem causa achada** (dito no `proof.md`). Os valores do Discogs não entram na prova do navegador (só no dourado).
 - `wave-lessons.md` (seção 15) e `tasks.md` (TASK-25, 6a) em dia.
 - Totais na ponta, pela fila: suíte inteira 363 arquivos, 4.767 testes, todos verdes (inclui `test/architecture` com 43 arquivos e `noSecretsInRepo`); `typecheck` sem erro; `lint` 0 erros e 68 avisos (os de antes); build dentro do teto (script principal 211.698 B, arquivo da tela 21.503 B, React 68.691 B). O worktree do pai para comparar ficou em `scratchpad/f83-6a/parent` (a trava recusou removê-lo).
+
+## [2026-11-22 04:12] step — Start no celular: tocar em «Search» depois de digitar inicia a busca no WebKit (F79, UAT-282)
+
+**Branch:** fix/f79-search-tap-starts-the-search
+
+- Causa reproduzida no site construído, em WebKit: apertar o botão tira o foco do campo; o redesenho do palco reescrevia o texto do botão (o mesmo texto) e trocava o nó de texto entre o apertar e o soltar; o WebKit descarta o clique. O botão não é trocado; o Enter não passa por isso.
+- Conserto: `HomeView.drawStage` só escreve o texto do botão quando muda. Teste novo `test/components/home/HomeSearchTap.test.js` (falhava antes, passa agora). Suíte: 325 arquivos, 4138 testes, verde; lint sem erros.
+- Prova em WebKit (iPhone 14, `tap()` com `hasTouch`, e 1280) e Chromium: clique/toque em «Search» 0 → 9 capas no WebKit; Enter, «or paste a list», «Search an artist instead» e «What is a series?» seguem; pixels iguais a `main` fora do ruído. Não provado: iPhone de verdade. O status do UAT-282 não foi mudado aqui.
+- Evidência: `reports/evidence/F79/search-tap/proof.md`.
 
 ## [2026-11-22 04:04] step — F83, onda 6a: a tela do inventário em React (TASK-25)
 

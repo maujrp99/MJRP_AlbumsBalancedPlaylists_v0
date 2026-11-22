@@ -20,7 +20,7 @@ vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesServic
 vi.mock('../../../public/js/services/albums/albumLoading.js', () => ({ albumAsks: { albumsOf: vi.fn() } }))
 vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../../helpers/inventoryValuesStub.js')).valuesOff() }))
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../../public/js/components/Toast.js', () => ({ default: { success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() } }))
+vi.mock('../../../public/js/stores/toasts.js', () => ({ default: { success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() } }))
 
 import { act } from 'react'
 import { userStore } from '../../../public/js/stores/UserStore.js'

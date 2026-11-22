@@ -6,13 +6,14 @@
 import { StrictMode, act, type MutableRefObject } from 'react'
 import { createRoot } from 'react-dom/client'
 import { usePlaylistExport, type ExportJob } from '../../public/js/ui/PlaylistExportWindow'
+import * as playlistExports from '../../public/js/controllers/playlistExportEntries.js'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
 type Api = ReturnType<typeof usePlaylistExport>
 
 function Host({ api }: { api: MutableRefObject<Api | null> }) {
-    const exportWindow = usePlaylistExport()
+    const exportWindow = usePlaylistExport({ exports: playlistExports })
     api.current = exportWindow
     return <>{exportWindow.layer}</>
 }

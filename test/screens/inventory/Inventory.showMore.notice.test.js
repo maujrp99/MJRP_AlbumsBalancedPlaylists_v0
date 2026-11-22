@@ -11,8 +11,8 @@ const holder = vi.hoisted(() => ({ values: null }))
 vi.mock('../../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: { updateAlbum: vi.fn(async () => 'id'), albumOfItem: vi.fn(async () => null) }, readSeriesOfThePerson: vi.fn(async () => []) }))
 vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', () => ({ inventoryValues: new Proxy({}, { get: (_, name) => holder.values[name] }) }))
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../../public/js/components/Toast.js', () => ({ default: { success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() }, toast: {} }))
-vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn() } }))
+vi.mock('../../../public/js/stores/toasts.js', () => ({ default: { success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() }, toast: {} }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', () => ({ dialogService: { confirm: vi.fn() } }))
 
 import { openInventory, press } from '../../support/inventoryHost'
 import { inventoryStore } from '../../../public/js/stores/inventory.js'

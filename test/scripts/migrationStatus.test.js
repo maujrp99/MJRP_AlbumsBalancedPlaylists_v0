@@ -69,13 +69,13 @@ describe('formatStatus and the command', () => {
         expect(text).toMatch(/texts outside the dictionary\s+4/)
     })
 
-    it('runs over the real site: a hand-made list that is still long (it shrinks with each wave: 94 files after wave 1, 83 after wave 2, 48 after wave 5a, 40 after wave 5b, 32 after wave 6a, 24 after wave 6b, 17 after wave 7b) and no more files than the list of the day it began', () => {
+    it('runs over the real site: a hand-made list that is still long (it shrinks with each wave: 94 files after wave 1, 83 after wave 2, 48 after wave 5a, 40 after wave 5b, 32 after wave 6a, 24 after wave 6b, 17 after wave 7b, 5 after wave 8b) and no more files than the list of the day it began', () => {
         const run = spawnSync('node', ['scripts/migration-status.mjs', '--json'], { cwd: process.cwd(), encoding: 'utf8' })
         expect(run.status, run.stderr).toBe(0)
         const status = JSON.parse(run.stdout)
-        expect(status.handMade.files).toBeGreaterThan(10)
-        expect(status.handMade.baselineFiles).toBeGreaterThan(10)
+        expect(status.handMade.files).toBeGreaterThan(3)
+        expect(status.handMade.baselineFiles).toBeGreaterThan(3)
         expect(status.handMade.files).toBeLessThanOrEqual(status.handMade.baselineFiles)
-        expect(status.texts.handMade).toBeGreaterThan(30) // 443 after wave 5b, 292 after wave 6a, 73 after wave 7b: the texts of the windows, of the inventory and of the Blend moved to the dictionaries
+        expect(status.texts.handMade).toBeGreaterThan(10) // 443 after wave 5b, 292 after wave 6a, 73 after wave 7b, 26 after wave 8b: the texts of the windows, of the inventory and of the Blend moved to the dictionaries
     })
 })

@@ -1,11 +1,11 @@
 /**
  * The bar is the menu (F80, UAT-240, UAT-241): one continuous row of equalizer bars with the five
- * items of the app's menu as its stops (Inicie · Álbuns · Blend · Playlists · Inventário); the page
+ * items of the app's menu as its stops (Criar · Álbuns · Blend · Playlists · Inventário); the page
  * tells the story of each item while you scroll, and the bar fills as you read. On a computer the
  * bar is the header's menu; on the phone it moves to the bottom bar.
  *
  * Signed out an item scrolls to its story; signed in it goes to its screen of the app (decided by the
- * orchestrator, revisable), and the page shows the menu and only the «Inicie» button.
+ * orchestrator, revisable), and the page shows the menu and only the «Criar» button.
  * The pure parts are exported for the tests; `startMenuBar(window)` wires them to the page.
  */
 

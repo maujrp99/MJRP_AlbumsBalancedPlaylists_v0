@@ -8,11 +8,11 @@
  */
 /* ONE width for the bar in the home and in the app (F88): a function of the screen, never of the account side.
    620 px (the approved v4 and Transformar), centred on the page; it gives way, never overlapping, only below 1122 px,
-   where 251 px a side (the mark, or the home's widest right side: language and Start) no longer leave it the room. */
+   where 251 px a side (the mark, or the home's widest right side: language and Create) no longer leave it the room. */
 :root{--bar-w:min(620px,calc(100vw - 502px))}
 @keyframes eqb{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
 nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;min-width:0}
-.ms .stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font:600 14px/1 var(--body);border-radius:6px;white-space:nowrap}
+.ms .stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font:700 14px/1 'Syne',sans-serif;border-radius:6px;white-space:nowrap}
 .ms .stop:hover{color:#fff}
 .ms .stop.on{color:#fff}
 .ms .stop.cur{color:var(--orange-text)}

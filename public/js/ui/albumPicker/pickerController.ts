@@ -12,7 +12,6 @@
  *   drawFilters(filters, counts) - the filter buttons: which are on, how many albums each has
  *   drawAlbums(albums)           - the album cards, when the scan has results
  */
-import toast from '../../components/Toast.js'
 import { isDeadlineError } from '../../utils/deadline.js'
 import { ScanStatus, ScanFailure, idleScan, canStartScan, startScan, scanFound, scanFailed, scanReclassified } from '../../models/scanState.js'
 import { defaultFilters, toggleFilter, visibleAlbums, countByFilter, newestFirst, findAlbum } from '../../models/albumPicker.js'
@@ -64,6 +63,8 @@ export interface PickerOptions {
     onPick?: (album: PickerAlbum) => void
     /** What it says when asked to search with no text (a screen that speaks another language gives its own). */
     emptyQueryMessage?: () => string
+    /** Where the picker says it (a piece of ui/ holds no store): the site's notices, given by the screen. */
+    warn?: (message: string) => void
 }
 
 export class AlbumPickerController {
@@ -71,15 +72,17 @@ export class AlbumPickerController {
     readonly view: PickerView
     readonly onPick: (album: PickerAlbum) => void
     readonly emptyQueryMessage: () => string
+    readonly warn: (message: string) => void
     scan: Scan = idleScan() as Scan
     filters: Filters = defaultFilters() as Filters
     disposed = false
 
-    constructor({ service, view, onPick, emptyQueryMessage = () => 'Type an artist name first.' }: PickerOptions) {
+    constructor({ service, view, onPick, warn, emptyQueryMessage = () => 'Type an artist name first.' }: PickerOptions) {
         this.service = service
         this.view = view
         this.onPick = onPick ?? (() => {})
         this.emptyQueryMessage = emptyQueryMessage
+        this.warn = warn ?? (() => {})
     }
 
     /** The albums of the scan on screen. */
@@ -104,7 +107,7 @@ export class AlbumPickerController {
     async searchArtist(query: string): Promise<void> {
         if (this.scan.status === ScanStatus.SCANNING) return
         if (!canStartScan(this.scan, query)) {
-            toast.warning(this.emptyQueryMessage())
+            this.warn(this.emptyQueryMessage())
             return
         }
 

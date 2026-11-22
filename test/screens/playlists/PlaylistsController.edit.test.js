@@ -21,7 +21,7 @@ vi.mock('../../../public/js/controllers/BlendingController.js', () => ({ blendin
 vi.mock('../../../public/js/services/albums/albumLoading.js', () => ({
     albumAsks: { albumsOf: vi.fn(async () => ({ albums: [{ id: 'a1' }], bySeries: {}, failed: [], missingSources: [], total: 1, aborted: false })) }
 }))
-vi.mock('../../../public/js/components/Toast.js', () => {
+vi.mock('../../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
@@ -37,7 +37,7 @@ import { generatedWithOf } from '../../../public/js/screens/playlists/text'
 import { playlistGenerationService } from '../../../public/js/services/PlaylistGenerationService.js'
 import { playlistsStore } from '../../../public/js/stores/playlists.js'
 import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
-import toast from '../../../public/js/components/Toast.js'
+import toast from '../../../public/js/stores/toasts.js'
 
 const SERIES_PATH = 'artifacts/mjrp-albums/users/u1/curator/data/series'
 const saved = () => fake.list(`${SERIES_PATH}/sA/playlists`).sort((a, b) => a.order - b.order)

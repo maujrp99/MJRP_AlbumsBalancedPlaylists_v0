@@ -17,7 +17,7 @@ import { Icon } from '../ui/Icon'
 import { usePhone } from '../react-bridge/usePhone'
 import { useLocale } from '../react-bridge/useLocale'
 import { useNotices, useStore } from '../react-bridge/useStore'
-import { giveBackAStrayHold, holdPageBehindWindows } from '../components/ui/windowsHoldThePage.js'
+import { usePageHold } from './windowsHoldThePage'
 import { screenNameStore } from '../stores/screenName.js'
 import { isSignedIn } from '../utils/isSignedIn.js'
 import { t } from '../i18n/t.js'
@@ -65,17 +65,6 @@ function tabTapped(event: ReactMouseEvent<HTMLAnchorElement>, tab: PhoneTab, pat
     event.preventDefault()
     event.stopPropagation()
     toTop()
-}
-
-/** The page behind a window of the app does not scroll while one is on it; a hold left with nothing open never outlives its screen (recheck N22). */
-function usePageHold(ticks: number): void {
-    useEffect(() => holdPageBehindWindows(window) as () => void, [])
-    const seen = useRef(ticks)
-    useEffect(() => {
-        if (seen.current === ticks) return
-        seen.current = ticks
-        giveBackAStrayHold(window)
-    }, [ticks])
 }
 
 /** «Back to top» shows after two screens of scroll. */

@@ -6,7 +6,7 @@
 
 import { errorPanelModel, errorPanelHtml } from './utils/failurePanel.js'
 import { isMissingBuildFile, isLoadTimeout, reloadOnceForNewBuild, publicationState, PUBLICATION } from './utils/staleBuild.js'
-import { globalProgress } from './components/GlobalProgress.js'
+import { globalProgress } from './stores/progress.js'
 
 export class Router {
     /**

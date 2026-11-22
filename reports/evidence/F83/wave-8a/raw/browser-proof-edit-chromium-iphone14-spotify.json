@@ -1,0 +1,432 @@
+{
+ "tag": "edit-chromium-iphone14",
+ "passed": 85,
+ "failed": 0,
+ "results": [
+  {
+   "what": "edit-chromium-iphone14 · Spotify: the window · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3610 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify: the window · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify: the window · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify: the window · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify: the window · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify: the window · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify: the window · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the mode: separate · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3661 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the mode: separate · the focus",
+   "ok": true,
+   "detail": "input[accent-[#1DB954]] | input[accent-[#1DB954]]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the mode: separate · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the mode: separate · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the mode: separate · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the mode: separate · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the mode: separate · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · a name typed · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3656 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · a name typed · the focus",
+   "ok": true,
+   "detail": "input#playlistNameInput[w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-[#1DB954] transition-colors] | input#playlistNameInput[w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-[#1DB954] transition-colors]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · a name typed · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · a name typed · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · a name typed · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · a name typed · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · a name typed · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the backdrop closes the window · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the backdrop closes the window · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the backdrop closes the window · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the backdrop closes the window · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the backdrop closes the window · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · the backdrop closes the window · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · opened again · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3610 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · opened again · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · opened again · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · opened again · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · opened again · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · opened again · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · opened again · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: the playlists are created and the report is shown · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3591 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: the playlists are created and the report is shown · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: the playlists are created and the report is shown · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: the playlists are created and the report is shown · what Spotify was asked",
+   "ok": true,
+   "detail": "9 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: the playlists are created and the report is shown · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: the playlists are created and the report is shown · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: the playlists are created and the report is shown · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Escape does nothing · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3591 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Escape does nothing · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Escape does nothing · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Escape does nothing · what Spotify was asked",
+   "ok": true,
+   "detail": "9 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Escape does nothing · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Escape does nothing · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Escape does nothing · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · what Spotify was asked",
+   "ok": true,
+   "detail": "9 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · spotify · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-chromium-iphone14 · spotify · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify (the creation fails): the window · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3610 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify (the creation fails): the window · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify (the creation fails): the window · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify (the creation fails): the window · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify (the creation fails): the window · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify (the creation fails): the window · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Spotify (the creation fails): the window · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: it fails · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3738 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: it fails · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: it fails · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: it fails · what Spotify was asked",
+   "ok": true,
+   "detail": "8 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: it fails · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: it fails · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Export pressed: it fails · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Try again · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3763 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Try again · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Try again · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Try again · what Spotify was asked",
+   "ok": true,
+   "detail": "15 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Try again · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Try again · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Try again · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · what Spotify was asked",
+   "ok": true,
+   "detail": "15 requests"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-chromium-iphone14 · Close on the report · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-iphone14 · spotify fails · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-chromium-iphone14 · spotify fails · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

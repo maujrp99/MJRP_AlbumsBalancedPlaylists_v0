@@ -21,14 +21,14 @@ vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: 
 vi.mock('../../public/js/stores/albums.js', () => ({
     albumsStore: { subscribe: () => () => { }, setActiveAlbumSeriesId: vi.fn(), getAlbums: () => [] }
 }))
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
 
 import SeriesController from '../../public/js/controllers/SeriesController.js'
 import { getSeriesService } from '../../public/js/services/SeriesService.js'
-import toast from '../../public/js/components/Toast.js'
+import toast from '../../public/js/stores/toasts.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import { albumLoadStore } from '../../public/js/stores/albumLoad.js'
 import { ownRankingsStore } from '../../public/js/stores/ownRankings.js'

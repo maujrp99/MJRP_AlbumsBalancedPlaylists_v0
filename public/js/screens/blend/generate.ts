@@ -6,7 +6,7 @@
  * to the router after the draw in course. It never throws: it answers with the message of a failure, or nothing when it went well or when the person left while the albums
  * loaded (the visit aborts the load: nothing is said then).
  */
-import toast from '../../components/Toast.js'
+import toast from '../../stores/toasts.js'
 import { blendingController } from '../../controllers/BlendingController.js'
 import { t, tPlural } from '../../i18n/t.js'
 import { configOf } from '../../models/recipeIngredients.js'

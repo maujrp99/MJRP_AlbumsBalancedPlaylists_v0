@@ -13,10 +13,11 @@ import { useSheetWindow } from '../../ui/SheetWindow'
 import { EditableTitle } from './PlaylistCards'
 import { playlistNameOf, playlistSummary } from './text'
 import { t } from '../../i18n/t.js'
-import { dialogService } from '../../services/DialogService.js'
+import { dialogService } from '../../ui/dialogs/dialogs'
 import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js'
 import { playlistsStore } from '../../stores/playlists.js'
 import { usePlaylistExport } from '../../ui/PlaylistExportWindow'
+import * as playlistExports from '../../controllers/playlistExportEntries.js'
 import { activeSeriesName } from './activeSeries'
 import type { Playlist, PlaylistActions } from './types'
 
@@ -274,7 +275,7 @@ function PlaylistSheet({ deps, playlistIndex, close }: { deps: SheetDeps; playli
 /** The three sheets of the phone, over the one sheet window. */
 export function usePhoneSheets(deps: SheetDeps): { openTrack: (p: number, t: number) => void; openPlaylist: (p: number) => void; openExport: (button?: HTMLElement) => void; layer: ReactNode } {
     const sheet = useSheetWindow()
-    const exporting = usePlaylistExport({ seriesName: activeSeriesName })
+    const exporting = usePlaylistExport({ exports: playlistExports, seriesName: activeSeriesName })
     const closeLabel = t('playlists.phone.close')
     const openTrack = (playlistIndex: number, trackIndex: number) => {
         const track = (playlistsStore.getPlaylists() as Playlist[])[playlistIndex]?.tracks?.[trackIndex]

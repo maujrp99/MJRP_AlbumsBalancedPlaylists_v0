@@ -16,8 +16,8 @@ import path from 'node:path'
 vi.mock('../../../public/js/services/inventory/inventoryWiring.js', async () => (await import('../../support/inventoryStandIns.js')).wiringModule)
 vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async () => (await import('../../support/inventoryStandIns.js')).valuesModule)
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', async () => (await import('../../support/inventoryStandIns.js')).loaderModule)
-vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/inventoryStandIns.js')).toastModule)
-vi.mock('../../../public/js/services/DialogService.js', async () => (await import('../../support/inventoryStandIns.js')).dialogModule)
+vi.mock('../../../public/js/stores/toasts.js', async () => (await import('../../support/inventoryStandIns.js')).toastModule)
+vi.mock('../../../public/js/ui/dialogs/dialogs', async () => (await import('../../support/inventoryStandIns.js')).dialogModule)
 
 import { act } from 'react'
 import { setLocale, PREVIEW_KEY, localeListenerCount, t } from '../../../public/js/i18n/t.js'

@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/services/auth/signIn.js', () => ({ authService: auth }))
 vi.mock('../../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthService: { logout: vi.fn(), isAuthenticated: () => false, getUserProfile: async () => null, login: vi.fn() } }))
-vi.mock('../../../public/js/components/Toast.js', () => {
+vi.mock('../../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })

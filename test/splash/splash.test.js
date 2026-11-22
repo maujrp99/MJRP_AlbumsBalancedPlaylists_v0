@@ -259,7 +259,7 @@ describe('the language and the account, wired (UAT-240, UAT-241)', () => {
         expect(document.querySelector('.stop[data-for="albums"]').getAttribute('href')).toBe('#albums')
     })
 
-    it('signed in (an account in the browser) the page shows the menu and the «Inicie» button; an item goes to its screen', async () => {
+    it('signed in (an account in the browser) the page shows the menu and the «Criar» button; an item goes to its screen', async () => {
         startSplash(fakeWindow({ store: accountStore() }))
         await vi.advanceTimersByTimeAsync(0)
         expect(document.documentElement.classList.contains('in')).toBe(true)

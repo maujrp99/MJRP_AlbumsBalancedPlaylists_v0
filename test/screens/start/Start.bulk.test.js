@@ -13,7 +13,7 @@ const catalog = vi.hoisted(() => ({ search: vi.fn() }))
 vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', () => ({
     albumSearchService: { search: (...args) => catalog.search(...args), scanArtist: vi.fn() }
 }))
-vi.mock('../../../public/js/components/Toast.js', () => ({
+vi.mock('../../../public/js/stores/toasts.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))

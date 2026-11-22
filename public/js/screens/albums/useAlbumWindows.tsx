@@ -8,7 +8,7 @@
  */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal, flushSync } from 'react-dom'
-import { toast } from '../../components/Toast.js'
+import { toast } from '../../stores/toasts.js'
 import { t } from '../../i18n/t.js'
 import { RankWindow, type Notify, type RankRequest } from './RankWindow'
 import { SeriesEditWindow } from './SeriesEdit'

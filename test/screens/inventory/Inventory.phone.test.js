@@ -14,8 +14,8 @@ const albumWindow = vi.hoisted(() => ({ show: vi.fn(async () => ({ redrawValue()
 vi.mock('../../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn(async () => []) }))
 vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../../helpers/inventoryValuesStub.js')).valuesOff() }))
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
-vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService }))
+vi.mock('../../../public/js/stores/toasts.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', () => ({ dialogService }))
 vi.mock('../../../public/js/ui/inventoryItem/inventoryWindows', () => ({ openInventoryView: albumWindow.show, openInventoryEdit: editModal.open }))
 
 import { openInventory, press, run } from '../../support/inventoryHost'

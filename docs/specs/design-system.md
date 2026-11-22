@@ -122,7 +122,7 @@ Cada padrão que se repete, com o arquivo que o desenha. A página do design sys
 | Barras do celular | barra de abas | cinco destinos, ícone de 24 px e rótulo de 12 px; a atual em laranja com brilho | `.phone-tabbar` | `public/js/shell/phoneTabs.ts` | em uso |
 | Barras do celular | barra de ação e voltar ao topo | 64 px acima das abas, botões de 48 px; botão redondo de 44 px | `.phone-action-bar`, `.phone-to-top` | `public/css/mobile.css` § 6 | em uso |
 | Folhas | folha | `#101014`; de baixo com alça e cantos de 16 px, ou a tela inteira; fechar de 44 px | `.sheet--bottom`, `.sheet--full` | `public/js/components/ui/Sheet.js` | em uso (só no celular; no computador, janela) |
-| Avisos | aviso rápido | no alto à direita, cantos de 8 px; verde, vermelho, âmbar ou escuro | `#toast-container` | `public/js/components/Toast.js` | em uso — defeito D3 |
+| Avisos | aviso rápido | no alto à direita, cantos de 8 px; verde, vermelho, âmbar ou escuro | `#toast-container` | `public/js/shell/Toasts.tsx` (a lista e os relógios em `public/js/stores/toasts.js`) | em uso — defeito D3 |
 | Avisos | faixa de desfazer | clara `#f4f4f5`, texto preto, «Undo» de 44 px sublinhado em vermelho, por 8 s | `.home-undo` | `public/js/components/home/HomeDock.js` | aprovado com o protótipo da F79 |
 | Fogo e equalizador | equalizador da Home | três estados: parado, em movimento, baixo | `.home-eq`, `.is-still`, `.is-live`, `.is-flat` | `public/js/components/home/HomeEqualizer.js` | aprovado com o protótipo da F79 |
 | Página de entrada | barra do topo, fio e primeira tela | o nome do site, «Sign in» e «Open the app»; o fio do equalizador com uma faixa por parte; o título e as chamadas | `header.top`, `.thread`, `.hero` | `public/splash.html` | aprovado com o protótipo da F80 |
@@ -209,7 +209,7 @@ Listados pela F86, não consertados (a feature não muda o código do site).
 |---|---|---|
 | D1 | `public/css/modals.css:25` | `border: 1px rgba(…)` sem o estilo: a borda da janela não aparece |
 | D2 | `public/css/tech-theme.css:44` | `var(--tech-blue)` nunca definida |
-| D3 | `public/js/components/Toast.js:113` | o aviso «info» pede `bg-surface-dark/95`, que não existe: sem fundo no computador |
+| D3 | `public/js/shell/Toasts.tsx` (`INFO_STYLE`; era `components/Toast.js:113`) | o aviso «info» pede `bg-surface-dark/95`, que não existe: sem fundo no computador |
 | D4 | JavaScript | classes sem regra: `.btn-ghost` (11 usos), `.text-muted` (76), `.dark-glow`, `bg-surface-lighter`, `animate-fade-in-up`, `animate-progress-indeterminate`, `.fade-in` e outras |
 | D5 | `neon.css`, `tech-theme.css`, `animations.css` | regras sem uso (`.neon-*`, `.tech-panel`, `.badge-warning`, `.progress-bar`…); `.custom-scrollbar` e `@keyframes fadeIn` definidos duas vezes |
 | D6 | contraste | `text-white/30` (2,5:1), `text-white/40` (3,7:1), aviso âmbar com texto branco (3,0:1) |
@@ -453,9 +453,12 @@ Nenhuma peça é redesenhada: o mesmo HTML, as mesmas classes e as mesmas folhas
 |---|---|---|---|
 | `components/Icons.js` `getIcon()` | `ui/Icon.tsx` (lê os mesmos desenhos, `utils/iconShapes.js`) | 0 | HTML igual provado para todo ícone usado |
 | `components/common/AlbumCascade.js` | `ui/AlbumCascade.tsx` | 1 | duas escritas das mesmas poucas linhas até a Blend migrar (onda 7); `test/ui/AlbumCascade.test.tsx` as mantém iguais |
-| `components/ui/coverImage.js` | `ui/CoverImage.tsx` | 1 | a imagem de capa com a reserva; a escuta do erro e o endereço da reserva são os do módulo antigo |
+| `components/ui/coverImage.js` | `ui/CoverImage.tsx` | 1 | a imagem de capa com a reserva; a escuta do erro e o endereço da reserva moram em `ui/coverStandIn.ts` (8b; o módulo à mão saiu) |
 | `components/ui/Sheet.js` (a Folha) | `ui/SheetWindow.tsx` (`useSheetWindow`) | 1 | o motor fica; o conteúdo da Folha é React, por um portal |
-| `components/ui/BaseModal.js` (a janela) | `ui/ModalWindow.tsx` (`useModalWindow`) | 1 | a casca fica; corpo e rodapé são React, por dois portais |
+| `components/ui/BaseModal.js` (a janela) | `ui/ModalShell.tsx` (`useModalWindow` a usa) | 1, 5b, 8b | a casca é React desde a 5b e a à mão saiu na 8b; o retrato da casca à mão, em 30 tamanhos, é `test/fixtures/windowShellBeforeF83.json` |
+| `components/Toast.js` (os avisos) | `stores/toasts.js` (a API, sem React) + `shell/Toasts.tsx` | 8b | a mesma API `toast.success/error/warning/info(texto, ms)`; o dourado de 13 cenários com tempo falso é `test/fixtures/enginesBeforeF83.json` |
+| `components/GlobalProgress.js` (a barra fina) | `stores/progress.js` + `shell/GlobalProgress.tsx` | 8b | o mesmo `#globalProgress` e as mesmas classes |
+| `services/DialogService.js` + `ConfirmModal.js` + `InputModal.js` (as perguntas) | `ui/dialogs/` (`dialogs.ts`, `ConfirmWindow.tsx`, `InputWindow.tsx`) | 8b | a mesma API `dialogService.confirm/prompt/alert/dismiss`; uma pergunta fica quando a tela sai |
 | `components/ui/FilterToolbar.js` e `FilterSheet.js` | **ainda a antiga**, por `react-bridge/legacy/FilterToolbar.tsx` | 5 | a tela dos álbuns, antiga, também a usa e carrega no script principal; um porte para React lá faria o script principal chamar o React |
 | `components/ui/TrackRow.js` | `ui/TrackRow.tsx` | 2 | porte único: as telas das playlists guardadas e das playlists o usam; mesmo HTML e mesmas classes (a prova é a página das duas telas), os rótulos dos selos vêm do dicionário (`ui.trackRow.*`); o invólucro `TrackRows` saiu |
 | `components/Breadcrumb.js` | `ui/Breadcrumb.tsx` | 2 | a trilha da tela das playlists; a antiga fica para as telas de séries e de inventário até elas migrarem (ondas 5 e 6) |

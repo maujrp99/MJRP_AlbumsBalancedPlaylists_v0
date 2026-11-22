@@ -9,7 +9,7 @@ vi.mock('../../../public/js/controllers/BlendingController.js', async () => (awa
 vi.mock('../../../public/js/stores/albumSeries.js', async () => (await import('../../support/blendStandIns.js')).seriesStore())
 vi.mock('../../../public/js/services/SeriesService.js', async () => (await import('../../support/blendStandIns.js')).seriesService())
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', async () => (await import('../../support/blendStandIns.js')).albumLoader())
-vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/blendStandIns.js')).toastStandIn())
+vi.mock('../../../public/js/stores/toasts.js', async () => (await import('../../support/blendStandIns.js')).toastStandIn())
 
 import { act } from 'react'
 import { Blend } from '../../../public/js/screens/blend/Blend'

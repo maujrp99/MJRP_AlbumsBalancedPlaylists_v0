@@ -13,7 +13,7 @@
 
 import { SeriesRepository } from '@shared/data/SeriesRepository.js'
 import { firestoreStore } from '../repositories/firestoreStore.js'
-import { globalProgress } from '../components/GlobalProgress.js'
+import { globalProgress } from '../stores/progress.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { cacheManager } from '../cache/CacheManager.js'
 import { StorageService } from './infra/StorageService.js'

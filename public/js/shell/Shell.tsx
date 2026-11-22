@@ -3,7 +3,7 @@
  * of the phone, the window to sign in. app.js starts it once, when the app starts (`startShell`); it is the only file that imports this folder.
  *
  * It lives outside `#app`, which the router empties at each screen: a root for `#header-container`, one for `#footer-container`, and one
- * for what is put straight in the body (the shell of the phone and the window to sign in). It hears the router (the end of each navigation),
+ * for what is put straight in the body (the shell of the phone and the window to sign in), and one each for the notices and the loading bar. It hears the router (the end of each navigation),
  * the user store, the language and the width of the screen; stopping it takes everything away and lets go of every listener.
  */
 import { Component, StrictMode, type ErrorInfo, type ReactNode } from 'react'
@@ -13,6 +13,8 @@ import { TopNav } from './TopNav'
 import { Footer } from './Footer'
 import { PhoneShell } from './PhoneShell'
 import { LoginWindow } from './LoginWindow'
+import { Toasts } from './Toasts'
+import { GlobalProgress } from './GlobalProgress'
 import { ShellContext, watchRoute, type RouterLike, type ShellDeps, type UserStoreLike } from './context'
 
 export interface ShellOptions {
@@ -76,6 +78,9 @@ export function startShell({ router, userStore, clearCaches, reload = () => wind
     if (footer) draw(footer, <Footer />)
     // the shell of the phone and the window to sign in write straight in the body: their root has no place of its own on the page
     draw(document.createElement('div'), <Layers />)
+    // the notices and the loading bar (wave 8b), each in a root of its own: a part that breaks takes only itself away
+    draw(document.createElement('div'), <Toasts />)
+    draw(document.createElement('div'), <GlobalProgress />)
 
     return () => {
         roots.forEach(root => root.unmount())

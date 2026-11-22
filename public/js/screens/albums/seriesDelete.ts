@@ -3,10 +3,10 @@
  * app (`dialogService.confirm`, Escape is «Cancel»), not a window of its own. The saved playlists of the series go with it, so the person is
  * told how many before confirming; if they cannot be counted nothing is deleted.
  */
-import { toast } from '../../components/Toast.js'
+import { toast } from '../../stores/toasts.js'
 import { t, tPlural } from '../../i18n/t.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
-import { dialogService } from '../../services/DialogService.js'
+import { dialogService } from '../../ui/dialogs/dialogs'
 import { getSeriesService } from '../../services/SeriesService.js'
 import { SeriesEditSession } from './seriesEditSession'
 

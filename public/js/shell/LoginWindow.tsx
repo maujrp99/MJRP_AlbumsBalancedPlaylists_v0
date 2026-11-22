@@ -12,7 +12,7 @@ import { useLocale } from '../react-bridge/useLocale'
 import { useStore } from '../react-bridge/useStore'
 import { authService } from '../services/auth/signIn.js'
 import { track } from '../services/usage/track.js'
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 import { loginWindowStore } from '../stores/loginWindow.js'
 import { t } from '../i18n/t.js'
 

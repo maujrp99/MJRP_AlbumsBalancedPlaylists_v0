@@ -1,0 +1,7406 @@
+{
+ "one playlist, into the folder of the series (not in the library yet: created)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "one playlist, into the folder of the series (already in the library: found by name, any case)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "f-road",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "a batch of three into a folder chosen from the library (by id: no lookup)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "f-42",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "2. Mix - Deep Cuts",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "103",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "f-42",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 3. Mix - B-Sides..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "3. Mix - B-Sides",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "f-42",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "3 playlists exported to Apple Music, in the folder \"Picked\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "a batch into a NEW folder the person named (looked up by name, missing, created)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Fresh folder"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "2. Mix - Deep Cuts",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "103",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 3. Mix - B-Sides..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "3. Mix - B-Sides",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "3 playlists exported to Apple Music, in the folder \"Fresh folder\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "a remembered folder (the choice the step remembers reaches the export as the folder name; it exists in the library)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "f-keep",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"Remembered\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "one playlist of a batch: it keeps the position it has in the batch": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 3. Mix - B-Sides..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "3. Mix - B-Sides",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "no folder: the top of the library": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "2. Mix - Deep Cuts",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "103",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 3. Mix - B-Sides..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "3. Mix - B-Sides",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "3 playlists exported to Apple Music, outside any folder.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "tracks not found in the catalog, and a playlist with none found": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "S"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Half..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Nowhere 0-0 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Nowhere 0-0 Artist",
+    "types": "songs",
+    "limit": 5
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Nowhere 0-1 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Nowhere 0-1 Artist",
+    "types": "songs",
+    "limit": 5
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Half",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Ghosts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Nowhere 1-0 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Nowhere 1-0 Artist",
+    "types": "songs",
+    "limit": 5
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Nowhere 1-1 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Nowhere 1-1 Artist",
+    "types": "songs",
+    "limit": 5
+   },
+   null
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"S\".",
+   12000
+  ],
+  [
+   "toast",
+   "warning",
+   "No track was found in Apple Music for \"2. Mix - Ghosts\": not created.",
+   12000
+  ],
+  [
+   "toast",
+   "warning",
+   "4 tracks were not found in Apple Music and were left out: Artist - Nowhere 0-0, Artist - Nowhere 0-1, Artist - Nowhere 1-0, Artist - Nowhere 1-1.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "a playlist with 300 tracks that carry their Apple Music id (one request holds them all: no chunking)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "S"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Long..."
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Long",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "900000",
+        "type": "songs"
+       },
+       {
+        "id": "900001",
+        "type": "songs"
+       },
+       {
+        "id": "900002",
+        "type": "songs"
+       },
+       {
+        "id": "900003",
+        "type": "songs"
+       },
+       {
+        "id": "900004",
+        "type": "songs"
+       },
+       {
+        "id": "900005",
+        "type": "songs"
+       },
+       {
+        "id": "900006",
+        "type": "songs"
+       },
+       {
+        "id": "900007",
+        "type": "songs"
+       },
+       {
+        "id": "900008",
+        "type": "songs"
+       },
+       {
+        "id": "900009",
+        "type": "songs"
+       },
+       {
+        "id": "900010",
+        "type": "songs"
+       },
+       {
+        "id": "900011",
+        "type": "songs"
+       },
+       {
+        "id": "900012",
+        "type": "songs"
+       },
+       {
+        "id": "900013",
+        "type": "songs"
+       },
+       {
+        "id": "900014",
+        "type": "songs"
+       },
+       {
+        "id": "900015",
+        "type": "songs"
+       },
+       {
+        "id": "900016",
+        "type": "songs"
+       },
+       {
+        "id": "900017",
+        "type": "songs"
+       },
+       {
+        "id": "900018",
+        "type": "songs"
+       },
+       {
+        "id": "900019",
+        "type": "songs"
+       },
+       {
+        "id": "900020",
+        "type": "songs"
+       },
+       {
+        "id": "900021",
+        "type": "songs"
+       },
+       {
+        "id": "900022",
+        "type": "songs"
+       },
+       {
+        "id": "900023",
+        "type": "songs"
+       },
+       {
+        "id": "900024",
+        "type": "songs"
+       },
+       {
+        "id": "900025",
+        "type": "songs"
+       },
+       {
+        "id": "900026",
+        "type": "songs"
+       },
+       {
+        "id": "900027",
+        "type": "songs"
+       },
+       {
+        "id": "900028",
+        "type": "songs"
+       },
+       {
+        "id": "900029",
+        "type": "songs"
+       },
+       {
+        "id": "900030",
+        "type": "songs"
+       },
+       {
+        "id": "900031",
+        "type": "songs"
+       },
+       {
+        "id": "900032",
+        "type": "songs"
+       },
+       {
+        "id": "900033",
+        "type": "songs"
+       },
+       {
+        "id": "900034",
+        "type": "songs"
+       },
+       {
+        "id": "900035",
+        "type": "songs"
+       },
+       {
+        "id": "900036",
+        "type": "songs"
+       },
+       {
+        "id": "900037",
+        "type": "songs"
+       },
+       {
+        "id": "900038",
+        "type": "songs"
+       },
+       {
+        "id": "900039",
+        "type": "songs"
+       },
+       {
+        "id": "900040",
+        "type": "songs"
+       },
+       {
+        "id": "900041",
+        "type": "songs"
+       },
+       {
+        "id": "900042",
+        "type": "songs"
+       },
+       {
+        "id": "900043",
+        "type": "songs"
+       },
+       {
+        "id": "900044",
+        "type": "songs"
+       },
+       {
+        "id": "900045",
+        "type": "songs"
+       },
+       {
+        "id": "900046",
+        "type": "songs"
+       },
+       {
+        "id": "900047",
+        "type": "songs"
+       },
+       {
+        "id": "900048",
+        "type": "songs"
+       },
+       {
+        "id": "900049",
+        "type": "songs"
+       },
+       {
+        "id": "900050",
+        "type": "songs"
+       },
+       {
+        "id": "900051",
+        "type": "songs"
+       },
+       {
+        "id": "900052",
+        "type": "songs"
+       },
+       {
+        "id": "900053",
+        "type": "songs"
+       },
+       {
+        "id": "900054",
+        "type": "songs"
+       },
+       {
+        "id": "900055",
+        "type": "songs"
+       },
+       {
+        "id": "900056",
+        "type": "songs"
+       },
+       {
+        "id": "900057",
+        "type": "songs"
+       },
+       {
+        "id": "900058",
+        "type": "songs"
+       },
+       {
+        "id": "900059",
+        "type": "songs"
+       },
+       {
+        "id": "900060",
+        "type": "songs"
+       },
+       {
+        "id": "900061",
+        "type": "songs"
+       },
+       {
+        "id": "900062",
+        "type": "songs"
+       },
+       {
+        "id": "900063",
+        "type": "songs"
+       },
+       {
+        "id": "900064",
+        "type": "songs"
+       },
+       {
+        "id": "900065",
+        "type": "songs"
+       },
+       {
+        "id": "900066",
+        "type": "songs"
+       },
+       {
+        "id": "900067",
+        "type": "songs"
+       },
+       {
+        "id": "900068",
+        "type": "songs"
+       },
+       {
+        "id": "900069",
+        "type": "songs"
+       },
+       {
+        "id": "900070",
+        "type": "songs"
+       },
+       {
+        "id": "900071",
+        "type": "songs"
+       },
+       {
+        "id": "900072",
+        "type": "songs"
+       },
+       {
+        "id": "900073",
+        "type": "songs"
+       },
+       {
+        "id": "900074",
+        "type": "songs"
+       },
+       {
+        "id": "900075",
+        "type": "songs"
+       },
+       {
+        "id": "900076",
+        "type": "songs"
+       },
+       {
+        "id": "900077",
+        "type": "songs"
+       },
+       {
+        "id": "900078",
+        "type": "songs"
+       },
+       {
+        "id": "900079",
+        "type": "songs"
+       },
+       {
+        "id": "900080",
+        "type": "songs"
+       },
+       {
+        "id": "900081",
+        "type": "songs"
+       },
+       {
+        "id": "900082",
+        "type": "songs"
+       },
+       {
+        "id": "900083",
+        "type": "songs"
+       },
+       {
+        "id": "900084",
+        "type": "songs"
+       },
+       {
+        "id": "900085",
+        "type": "songs"
+       },
+       {
+        "id": "900086",
+        "type": "songs"
+       },
+       {
+        "id": "900087",
+        "type": "songs"
+       },
+       {
+        "id": "900088",
+        "type": "songs"
+       },
+       {
+        "id": "900089",
+        "type": "songs"
+       },
+       {
+        "id": "900090",
+        "type": "songs"
+       },
+       {
+        "id": "900091",
+        "type": "songs"
+       },
+       {
+        "id": "900092",
+        "type": "songs"
+       },
+       {
+        "id": "900093",
+        "type": "songs"
+       },
+       {
+        "id": "900094",
+        "type": "songs"
+       },
+       {
+        "id": "900095",
+        "type": "songs"
+       },
+       {
+        "id": "900096",
+        "type": "songs"
+       },
+       {
+        "id": "900097",
+        "type": "songs"
+       },
+       {
+        "id": "900098",
+        "type": "songs"
+       },
+       {
+        "id": "900099",
+        "type": "songs"
+       },
+       {
+        "id": "900100",
+        "type": "songs"
+       },
+       {
+        "id": "900101",
+        "type": "songs"
+       },
+       {
+        "id": "900102",
+        "type": "songs"
+       },
+       {
+        "id": "900103",
+        "type": "songs"
+       },
+       {
+        "id": "900104",
+        "type": "songs"
+       },
+       {
+        "id": "900105",
+        "type": "songs"
+       },
+       {
+        "id": "900106",
+        "type": "songs"
+       },
+       {
+        "id": "900107",
+        "type": "songs"
+       },
+       {
+        "id": "900108",
+        "type": "songs"
+       },
+       {
+        "id": "900109",
+        "type": "songs"
+       },
+       {
+        "id": "900110",
+        "type": "songs"
+       },
+       {
+        "id": "900111",
+        "type": "songs"
+       },
+       {
+        "id": "900112",
+        "type": "songs"
+       },
+       {
+        "id": "900113",
+        "type": "songs"
+       },
+       {
+        "id": "900114",
+        "type": "songs"
+       },
+       {
+        "id": "900115",
+        "type": "songs"
+       },
+       {
+        "id": "900116",
+        "type": "songs"
+       },
+       {
+        "id": "900117",
+        "type": "songs"
+       },
+       {
+        "id": "900118",
+        "type": "songs"
+       },
+       {
+        "id": "900119",
+        "type": "songs"
+       },
+       {
+        "id": "900120",
+        "type": "songs"
+       },
+       {
+        "id": "900121",
+        "type": "songs"
+       },
+       {
+        "id": "900122",
+        "type": "songs"
+       },
+       {
+        "id": "900123",
+        "type": "songs"
+       },
+       {
+        "id": "900124",
+        "type": "songs"
+       },
+       {
+        "id": "900125",
+        "type": "songs"
+       },
+       {
+        "id": "900126",
+        "type": "songs"
+       },
+       {
+        "id": "900127",
+        "type": "songs"
+       },
+       {
+        "id": "900128",
+        "type": "songs"
+       },
+       {
+        "id": "900129",
+        "type": "songs"
+       },
+       {
+        "id": "900130",
+        "type": "songs"
+       },
+       {
+        "id": "900131",
+        "type": "songs"
+       },
+       {
+        "id": "900132",
+        "type": "songs"
+       },
+       {
+        "id": "900133",
+        "type": "songs"
+       },
+       {
+        "id": "900134",
+        "type": "songs"
+       },
+       {
+        "id": "900135",
+        "type": "songs"
+       },
+       {
+        "id": "900136",
+        "type": "songs"
+       },
+       {
+        "id": "900137",
+        "type": "songs"
+       },
+       {
+        "id": "900138",
+        "type": "songs"
+       },
+       {
+        "id": "900139",
+        "type": "songs"
+       },
+       {
+        "id": "900140",
+        "type": "songs"
+       },
+       {
+        "id": "900141",
+        "type": "songs"
+       },
+       {
+        "id": "900142",
+        "type": "songs"
+       },
+       {
+        "id": "900143",
+        "type": "songs"
+       },
+       {
+        "id": "900144",
+        "type": "songs"
+       },
+       {
+        "id": "900145",
+        "type": "songs"
+       },
+       {
+        "id": "900146",
+        "type": "songs"
+       },
+       {
+        "id": "900147",
+        "type": "songs"
+       },
+       {
+        "id": "900148",
+        "type": "songs"
+       },
+       {
+        "id": "900149",
+        "type": "songs"
+       },
+       {
+        "id": "900150",
+        "type": "songs"
+       },
+       {
+        "id": "900151",
+        "type": "songs"
+       },
+       {
+        "id": "900152",
+        "type": "songs"
+       },
+       {
+        "id": "900153",
+        "type": "songs"
+       },
+       {
+        "id": "900154",
+        "type": "songs"
+       },
+       {
+        "id": "900155",
+        "type": "songs"
+       },
+       {
+        "id": "900156",
+        "type": "songs"
+       },
+       {
+        "id": "900157",
+        "type": "songs"
+       },
+       {
+        "id": "900158",
+        "type": "songs"
+       },
+       {
+        "id": "900159",
+        "type": "songs"
+       },
+       {
+        "id": "900160",
+        "type": "songs"
+       },
+       {
+        "id": "900161",
+        "type": "songs"
+       },
+       {
+        "id": "900162",
+        "type": "songs"
+       },
+       {
+        "id": "900163",
+        "type": "songs"
+       },
+       {
+        "id": "900164",
+        "type": "songs"
+       },
+       {
+        "id": "900165",
+        "type": "songs"
+       },
+       {
+        "id": "900166",
+        "type": "songs"
+       },
+       {
+        "id": "900167",
+        "type": "songs"
+       },
+       {
+        "id": "900168",
+        "type": "songs"
+       },
+       {
+        "id": "900169",
+        "type": "songs"
+       },
+       {
+        "id": "900170",
+        "type": "songs"
+       },
+       {
+        "id": "900171",
+        "type": "songs"
+       },
+       {
+        "id": "900172",
+        "type": "songs"
+       },
+       {
+        "id": "900173",
+        "type": "songs"
+       },
+       {
+        "id": "900174",
+        "type": "songs"
+       },
+       {
+        "id": "900175",
+        "type": "songs"
+       },
+       {
+        "id": "900176",
+        "type": "songs"
+       },
+       {
+        "id": "900177",
+        "type": "songs"
+       },
+       {
+        "id": "900178",
+        "type": "songs"
+       },
+       {
+        "id": "900179",
+        "type": "songs"
+       },
+       {
+        "id": "900180",
+        "type": "songs"
+       },
+       {
+        "id": "900181",
+        "type": "songs"
+       },
+       {
+        "id": "900182",
+        "type": "songs"
+       },
+       {
+        "id": "900183",
+        "type": "songs"
+       },
+       {
+        "id": "900184",
+        "type": "songs"
+       },
+       {
+        "id": "900185",
+        "type": "songs"
+       },
+       {
+        "id": "900186",
+        "type": "songs"
+       },
+       {
+        "id": "900187",
+        "type": "songs"
+       },
+       {
+        "id": "900188",
+        "type": "songs"
+       },
+       {
+        "id": "900189",
+        "type": "songs"
+       },
+       {
+        "id": "900190",
+        "type": "songs"
+       },
+       {
+        "id": "900191",
+        "type": "songs"
+       },
+       {
+        "id": "900192",
+        "type": "songs"
+       },
+       {
+        "id": "900193",
+        "type": "songs"
+       },
+       {
+        "id": "900194",
+        "type": "songs"
+       },
+       {
+        "id": "900195",
+        "type": "songs"
+       },
+       {
+        "id": "900196",
+        "type": "songs"
+       },
+       {
+        "id": "900197",
+        "type": "songs"
+       },
+       {
+        "id": "900198",
+        "type": "songs"
+       },
+       {
+        "id": "900199",
+        "type": "songs"
+       },
+       {
+        "id": "900200",
+        "type": "songs"
+       },
+       {
+        "id": "900201",
+        "type": "songs"
+       },
+       {
+        "id": "900202",
+        "type": "songs"
+       },
+       {
+        "id": "900203",
+        "type": "songs"
+       },
+       {
+        "id": "900204",
+        "type": "songs"
+       },
+       {
+        "id": "900205",
+        "type": "songs"
+       },
+       {
+        "id": "900206",
+        "type": "songs"
+       },
+       {
+        "id": "900207",
+        "type": "songs"
+       },
+       {
+        "id": "900208",
+        "type": "songs"
+       },
+       {
+        "id": "900209",
+        "type": "songs"
+       },
+       {
+        "id": "900210",
+        "type": "songs"
+       },
+       {
+        "id": "900211",
+        "type": "songs"
+       },
+       {
+        "id": "900212",
+        "type": "songs"
+       },
+       {
+        "id": "900213",
+        "type": "songs"
+       },
+       {
+        "id": "900214",
+        "type": "songs"
+       },
+       {
+        "id": "900215",
+        "type": "songs"
+       },
+       {
+        "id": "900216",
+        "type": "songs"
+       },
+       {
+        "id": "900217",
+        "type": "songs"
+       },
+       {
+        "id": "900218",
+        "type": "songs"
+       },
+       {
+        "id": "900219",
+        "type": "songs"
+       },
+       {
+        "id": "900220",
+        "type": "songs"
+       },
+       {
+        "id": "900221",
+        "type": "songs"
+       },
+       {
+        "id": "900222",
+        "type": "songs"
+       },
+       {
+        "id": "900223",
+        "type": "songs"
+       },
+       {
+        "id": "900224",
+        "type": "songs"
+       },
+       {
+        "id": "900225",
+        "type": "songs"
+       },
+       {
+        "id": "900226",
+        "type": "songs"
+       },
+       {
+        "id": "900227",
+        "type": "songs"
+       },
+       {
+        "id": "900228",
+        "type": "songs"
+       },
+       {
+        "id": "900229",
+        "type": "songs"
+       },
+       {
+        "id": "900230",
+        "type": "songs"
+       },
+       {
+        "id": "900231",
+        "type": "songs"
+       },
+       {
+        "id": "900232",
+        "type": "songs"
+       },
+       {
+        "id": "900233",
+        "type": "songs"
+       },
+       {
+        "id": "900234",
+        "type": "songs"
+       },
+       {
+        "id": "900235",
+        "type": "songs"
+       },
+       {
+        "id": "900236",
+        "type": "songs"
+       },
+       {
+        "id": "900237",
+        "type": "songs"
+       },
+       {
+        "id": "900238",
+        "type": "songs"
+       },
+       {
+        "id": "900239",
+        "type": "songs"
+       },
+       {
+        "id": "900240",
+        "type": "songs"
+       },
+       {
+        "id": "900241",
+        "type": "songs"
+       },
+       {
+        "id": "900242",
+        "type": "songs"
+       },
+       {
+        "id": "900243",
+        "type": "songs"
+       },
+       {
+        "id": "900244",
+        "type": "songs"
+       },
+       {
+        "id": "900245",
+        "type": "songs"
+       },
+       {
+        "id": "900246",
+        "type": "songs"
+       },
+       {
+        "id": "900247",
+        "type": "songs"
+       },
+       {
+        "id": "900248",
+        "type": "songs"
+       },
+       {
+        "id": "900249",
+        "type": "songs"
+       },
+       {
+        "id": "900250",
+        "type": "songs"
+       },
+       {
+        "id": "900251",
+        "type": "songs"
+       },
+       {
+        "id": "900252",
+        "type": "songs"
+       },
+       {
+        "id": "900253",
+        "type": "songs"
+       },
+       {
+        "id": "900254",
+        "type": "songs"
+       },
+       {
+        "id": "900255",
+        "type": "songs"
+       },
+       {
+        "id": "900256",
+        "type": "songs"
+       },
+       {
+        "id": "900257",
+        "type": "songs"
+       },
+       {
+        "id": "900258",
+        "type": "songs"
+       },
+       {
+        "id": "900259",
+        "type": "songs"
+       },
+       {
+        "id": "900260",
+        "type": "songs"
+       },
+       {
+        "id": "900261",
+        "type": "songs"
+       },
+       {
+        "id": "900262",
+        "type": "songs"
+       },
+       {
+        "id": "900263",
+        "type": "songs"
+       },
+       {
+        "id": "900264",
+        "type": "songs"
+       },
+       {
+        "id": "900265",
+        "type": "songs"
+       },
+       {
+        "id": "900266",
+        "type": "songs"
+       },
+       {
+        "id": "900267",
+        "type": "songs"
+       },
+       {
+        "id": "900268",
+        "type": "songs"
+       },
+       {
+        "id": "900269",
+        "type": "songs"
+       },
+       {
+        "id": "900270",
+        "type": "songs"
+       },
+       {
+        "id": "900271",
+        "type": "songs"
+       },
+       {
+        "id": "900272",
+        "type": "songs"
+       },
+       {
+        "id": "900273",
+        "type": "songs"
+       },
+       {
+        "id": "900274",
+        "type": "songs"
+       },
+       {
+        "id": "900275",
+        "type": "songs"
+       },
+       {
+        "id": "900276",
+        "type": "songs"
+       },
+       {
+        "id": "900277",
+        "type": "songs"
+       },
+       {
+        "id": "900278",
+        "type": "songs"
+       },
+       {
+        "id": "900279",
+        "type": "songs"
+       },
+       {
+        "id": "900280",
+        "type": "songs"
+       },
+       {
+        "id": "900281",
+        "type": "songs"
+       },
+       {
+        "id": "900282",
+        "type": "songs"
+       },
+       {
+        "id": "900283",
+        "type": "songs"
+       },
+       {
+        "id": "900284",
+        "type": "songs"
+       },
+       {
+        "id": "900285",
+        "type": "songs"
+       },
+       {
+        "id": "900286",
+        "type": "songs"
+       },
+       {
+        "id": "900287",
+        "type": "songs"
+       },
+       {
+        "id": "900288",
+        "type": "songs"
+       },
+       {
+        "id": "900289",
+        "type": "songs"
+       },
+       {
+        "id": "900290",
+        "type": "songs"
+       },
+       {
+        "id": "900291",
+        "type": "songs"
+       },
+       {
+        "id": "900292",
+        "type": "songs"
+       },
+       {
+        "id": "900293",
+        "type": "songs"
+       },
+       {
+        "id": "900294",
+        "type": "songs"
+       },
+       {
+        "id": "900295",
+        "type": "songs"
+       },
+       {
+        "id": "900296",
+        "type": "songs"
+       },
+       {
+        "id": "900297",
+        "type": "songs"
+       },
+       {
+        "id": "900298",
+        "type": "songs"
+       },
+       {
+        "id": "900299",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"S\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "a playlist with 120 tracks the catalog is asked about one by one": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "S"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Searched..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-0 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-1 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-2 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-3 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-4 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-5 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-6 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-7 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-8 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-9 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-10 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-11 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-12 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-13 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-14 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-15 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-16 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-17 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-18 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-19 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-20 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-21 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-22 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-23 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-24 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-25 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-26 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-27 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-28 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-29 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-30 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-31 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-32 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-33 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-34 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-35 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-36 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-37 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-38 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-39 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-40 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-41 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-42 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-43 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-44 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-45 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-46 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-47 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-48 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-49 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-50 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-51 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-52 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-53 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-54 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-55 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-56 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-57 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-58 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-59 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-60 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-61 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-62 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-63 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-64 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-65 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-66 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-67 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-68 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-69 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-70 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-71 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-72 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-73 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-74 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-75 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-76 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-77 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-78 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-79 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-80 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-81 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-82 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-83 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-84 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-85 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-86 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-87 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-88 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-89 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-90 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-91 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-92 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-93 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-94 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-95 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-96 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-97 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-98 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-99 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-100 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-101 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-102 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-103 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-104 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-105 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-106 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-107 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-108 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-109 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-110 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-111 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-112 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-113 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-114 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-115 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-116 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-117 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-118 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Found 0-119 Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Searched",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "300000",
+        "type": "songs"
+       },
+       {
+        "id": "300001",
+        "type": "songs"
+       },
+       {
+        "id": "300002",
+        "type": "songs"
+       },
+       {
+        "id": "300003",
+        "type": "songs"
+       },
+       {
+        "id": "300004",
+        "type": "songs"
+       },
+       {
+        "id": "300005",
+        "type": "songs"
+       },
+       {
+        "id": "300006",
+        "type": "songs"
+       },
+       {
+        "id": "300007",
+        "type": "songs"
+       },
+       {
+        "id": "300008",
+        "type": "songs"
+       },
+       {
+        "id": "300009",
+        "type": "songs"
+       },
+       {
+        "id": "300010",
+        "type": "songs"
+       },
+       {
+        "id": "300011",
+        "type": "songs"
+       },
+       {
+        "id": "300012",
+        "type": "songs"
+       },
+       {
+        "id": "300013",
+        "type": "songs"
+       },
+       {
+        "id": "300014",
+        "type": "songs"
+       },
+       {
+        "id": "300015",
+        "type": "songs"
+       },
+       {
+        "id": "300016",
+        "type": "songs"
+       },
+       {
+        "id": "300017",
+        "type": "songs"
+       },
+       {
+        "id": "300018",
+        "type": "songs"
+       },
+       {
+        "id": "300019",
+        "type": "songs"
+       },
+       {
+        "id": "300020",
+        "type": "songs"
+       },
+       {
+        "id": "300021",
+        "type": "songs"
+       },
+       {
+        "id": "300022",
+        "type": "songs"
+       },
+       {
+        "id": "300023",
+        "type": "songs"
+       },
+       {
+        "id": "300024",
+        "type": "songs"
+       },
+       {
+        "id": "300025",
+        "type": "songs"
+       },
+       {
+        "id": "300026",
+        "type": "songs"
+       },
+       {
+        "id": "300027",
+        "type": "songs"
+       },
+       {
+        "id": "300028",
+        "type": "songs"
+       },
+       {
+        "id": "300029",
+        "type": "songs"
+       },
+       {
+        "id": "300030",
+        "type": "songs"
+       },
+       {
+        "id": "300031",
+        "type": "songs"
+       },
+       {
+        "id": "300032",
+        "type": "songs"
+       },
+       {
+        "id": "300033",
+        "type": "songs"
+       },
+       {
+        "id": "300034",
+        "type": "songs"
+       },
+       {
+        "id": "300035",
+        "type": "songs"
+       },
+       {
+        "id": "300036",
+        "type": "songs"
+       },
+       {
+        "id": "300037",
+        "type": "songs"
+       },
+       {
+        "id": "300038",
+        "type": "songs"
+       },
+       {
+        "id": "300039",
+        "type": "songs"
+       },
+       {
+        "id": "300040",
+        "type": "songs"
+       },
+       {
+        "id": "300041",
+        "type": "songs"
+       },
+       {
+        "id": "300042",
+        "type": "songs"
+       },
+       {
+        "id": "300043",
+        "type": "songs"
+       },
+       {
+        "id": "300044",
+        "type": "songs"
+       },
+       {
+        "id": "300045",
+        "type": "songs"
+       },
+       {
+        "id": "300046",
+        "type": "songs"
+       },
+       {
+        "id": "300047",
+        "type": "songs"
+       },
+       {
+        "id": "300048",
+        "type": "songs"
+       },
+       {
+        "id": "300049",
+        "type": "songs"
+       },
+       {
+        "id": "300050",
+        "type": "songs"
+       },
+       {
+        "id": "300051",
+        "type": "songs"
+       },
+       {
+        "id": "300052",
+        "type": "songs"
+       },
+       {
+        "id": "300053",
+        "type": "songs"
+       },
+       {
+        "id": "300054",
+        "type": "songs"
+       },
+       {
+        "id": "300055",
+        "type": "songs"
+       },
+       {
+        "id": "300056",
+        "type": "songs"
+       },
+       {
+        "id": "300057",
+        "type": "songs"
+       },
+       {
+        "id": "300058",
+        "type": "songs"
+       },
+       {
+        "id": "300059",
+        "type": "songs"
+       },
+       {
+        "id": "300060",
+        "type": "songs"
+       },
+       {
+        "id": "300061",
+        "type": "songs"
+       },
+       {
+        "id": "300062",
+        "type": "songs"
+       },
+       {
+        "id": "300063",
+        "type": "songs"
+       },
+       {
+        "id": "300064",
+        "type": "songs"
+       },
+       {
+        "id": "300065",
+        "type": "songs"
+       },
+       {
+        "id": "300066",
+        "type": "songs"
+       },
+       {
+        "id": "300067",
+        "type": "songs"
+       },
+       {
+        "id": "300068",
+        "type": "songs"
+       },
+       {
+        "id": "300069",
+        "type": "songs"
+       },
+       {
+        "id": "300070",
+        "type": "songs"
+       },
+       {
+        "id": "300071",
+        "type": "songs"
+       },
+       {
+        "id": "300072",
+        "type": "songs"
+       },
+       {
+        "id": "300073",
+        "type": "songs"
+       },
+       {
+        "id": "300074",
+        "type": "songs"
+       },
+       {
+        "id": "300075",
+        "type": "songs"
+       },
+       {
+        "id": "300076",
+        "type": "songs"
+       },
+       {
+        "id": "300077",
+        "type": "songs"
+       },
+       {
+        "id": "300078",
+        "type": "songs"
+       },
+       {
+        "id": "300079",
+        "type": "songs"
+       },
+       {
+        "id": "300080",
+        "type": "songs"
+       },
+       {
+        "id": "300081",
+        "type": "songs"
+       },
+       {
+        "id": "300082",
+        "type": "songs"
+       },
+       {
+        "id": "300083",
+        "type": "songs"
+       },
+       {
+        "id": "300084",
+        "type": "songs"
+       },
+       {
+        "id": "300085",
+        "type": "songs"
+       },
+       {
+        "id": "300086",
+        "type": "songs"
+       },
+       {
+        "id": "300087",
+        "type": "songs"
+       },
+       {
+        "id": "300088",
+        "type": "songs"
+       },
+       {
+        "id": "300089",
+        "type": "songs"
+       },
+       {
+        "id": "300090",
+        "type": "songs"
+       },
+       {
+        "id": "300091",
+        "type": "songs"
+       },
+       {
+        "id": "300092",
+        "type": "songs"
+       },
+       {
+        "id": "300093",
+        "type": "songs"
+       },
+       {
+        "id": "300094",
+        "type": "songs"
+       },
+       {
+        "id": "300095",
+        "type": "songs"
+       },
+       {
+        "id": "300096",
+        "type": "songs"
+       },
+       {
+        "id": "300097",
+        "type": "songs"
+       },
+       {
+        "id": "300098",
+        "type": "songs"
+       },
+       {
+        "id": "300099",
+        "type": "songs"
+       },
+       {
+        "id": "300100",
+        "type": "songs"
+       },
+       {
+        "id": "300101",
+        "type": "songs"
+       },
+       {
+        "id": "300102",
+        "type": "songs"
+       },
+       {
+        "id": "300103",
+        "type": "songs"
+       },
+       {
+        "id": "300104",
+        "type": "songs"
+       },
+       {
+        "id": "300105",
+        "type": "songs"
+       },
+       {
+        "id": "300106",
+        "type": "songs"
+       },
+       {
+        "id": "300107",
+        "type": "songs"
+       },
+       {
+        "id": "300108",
+        "type": "songs"
+       },
+       {
+        "id": "300109",
+        "type": "songs"
+       },
+       {
+        "id": "300110",
+        "type": "songs"
+       },
+       {
+        "id": "300111",
+        "type": "songs"
+       },
+       {
+        "id": "300112",
+        "type": "songs"
+       },
+       {
+        "id": "300113",
+        "type": "songs"
+       },
+       {
+        "id": "300114",
+        "type": "songs"
+       },
+       {
+        "id": "300115",
+        "type": "songs"
+       },
+       {
+        "id": "300116",
+        "type": "songs"
+       },
+       {
+        "id": "300117",
+        "type": "songs"
+       },
+       {
+        "id": "300118",
+        "type": "songs"
+       },
+       {
+        "id": "300119",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"S\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "a library with 250 folders (three pages): the folder of the series is on the last page": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": "100",
+    "offset": "100"
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": "100",
+    "offset": "200"
+   },
+   null
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "f-last",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "the rate limit (429) answers the second creation: the others are still tried": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "2. Mix - Deep Cuts",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "103",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 3. Mix - B-Sides..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "3. Mix - B-Sides",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "error",
+   "Apple Music did not create 1 of 3 playlists: \"2. Mix - Deep Cuts\" (Too Many Requests). Export again to create what is missing: what was created is not created twice.",
+   12000
+  ],
+  [
+   "toast",
+   "success",
+   "2 playlists exported to Apple Music, in the folder \"Road trip\": \"1. Mix - Greatest Hits\", \"3. Mix - B-Sides\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "every creation fails (401, the token expired in the middle)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "2. Mix - Deep Cuts",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "103",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 3. Mix - B-Sides..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "3. Mix - B-Sides",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "error",
+   "Apple Music did not create 3 of 3 playlists: \"1. Mix - Greatest Hits\" (Unauthorized), \"2. Mix - Deep Cuts\" (Unauthorized), \"3. Mix - B-Sides\" (Unauthorized). Export again to create what is missing: what was created is not created twice.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "the creation fails, then the same press is repeated: only what was missing is created": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "2. Mix - Deep Cuts",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "103",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "error",
+   "Apple Music did not create 1 of 2 playlists: \"1. Mix - Greatest Hits\" (Server error). Export again to create what is missing: what was created is not created twice.",
+   12000
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"Road trip\": \"2. Mix - Deep Cuts\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ],
+  [
+   "step",
+   2
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   12000
+  ],
+  [
+   "toast",
+   "info",
+   "1 playlist was already exported in this session and was not created again.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "the authorization expired: the person says no": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "toast",
+   "warning",
+   "Apple Music was not authorized: nothing was exported.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "the person denies the authorization": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "toast",
+   "warning",
+   "Apple Music was not authorized: nothing was exported.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "the developer token cannot be had (the site is not set up for Apple Music)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "toast",
+   "error",
+   "Apple Music is not set up for this site: nothing was exported.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "the folder cannot be created: the playlists go to the top of the library": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music.",
+   12000
+  ],
+  [
+   "toast",
+   "warning",
+   "The folder \"Road trip\" could not be created in Apple Music: the playlists are at the top of your library.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "the same export pressed again after it ended: nothing is created twice": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "2. Mix - Deep Cuts",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "103",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "2 playlists exported to Apple Music, in the folder \"Road trip\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ],
+  [
+   "step",
+   2
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "toast",
+   "info",
+   "2 playlists were already exported in this session and were not created again.",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "pressed twice at once: the second is told one is running": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "toast",
+   "info",
+   "The export to Apple Music is already running.",
+   null
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "nothing to export": [
+  [
+   "step",
+   1
+  ],
+  [
+   "toast",
+   "warning",
+   "No playlists to export",
+   null
+  ]
+ ],
+ "the edit screen: the playlists, the batch and the series are the screen's own": [
+  [
+   "step",
+   1
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "progress",
+   "Connecting..."
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "progress",
+   "Authorizing..."
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "progress",
+   "Creating folder..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlist-folders",
+   null,
+   {
+    "attributes": {
+     "name": "Road trip"
+    }
+   }
+  ],
+  [
+   "progress",
+   "Exporting 1. Mix - Greatest Hits..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "One Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Two Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "1. Mix - Greatest Hits",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "101",
+        "type": "songs"
+       },
+       {
+        "id": "102",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "progress",
+   "Exporting 2. Mix - Deep Cuts..."
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Three Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/catalog/us/search",
+   {
+    "term": "Four Artist Album",
+    "types": "songs",
+    "limit": 20
+   },
+   null
+  ],
+  [
+   "api.music",
+   "POST",
+   "/v1/me/library/playlists",
+   null,
+   {
+    "attributes": {
+     "name": "2. Mix - Deep Cuts",
+     "description": "Created by MJRP's The Album Blender"
+    },
+    "relationships": {
+     "tracks": {
+      "data": [
+       {
+        "id": "103",
+        "type": "songs"
+       },
+       {
+        "id": "104",
+        "type": "songs"
+       }
+      ]
+     },
+     "parent": {
+      "data": [
+       {
+        "id": "new-folder-1",
+        "type": "library-playlist-folders"
+       }
+      ]
+     }
+    }
+   }
+  ],
+  [
+   "pause",
+   500
+  ],
+  [
+   "toast",
+   "success",
+   "2 playlists exported to Apple Music, in the folder \"Road trip\".",
+   12000
+  ],
+  [
+   "progress",
+   null
+  ]
+ ],
+ "the step reads the folders: some (two pages)": [
+  [
+   "step",
+   1
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": "100",
+    "offset": "100"
+   },
+   null
+  ],
+  [
+   "folders",
+   [
+    {
+     "id": "f1",
+     "name": "Folder 1"
+    },
+    {
+     "id": "f2",
+     "name": "Folder 2"
+    },
+    {
+     "id": "f3",
+     "name": "Folder 3"
+    },
+    {
+     "id": "f4",
+     "name": "Folder 4"
+    },
+    {
+     "id": "f5",
+     "name": "Folder 5"
+    },
+    {
+     "id": "f6",
+     "name": "Folder 6"
+    },
+    {
+     "id": "f7",
+     "name": "Folder 7"
+    },
+    {
+     "id": "f8",
+     "name": "Folder 8"
+    },
+    {
+     "id": "f9",
+     "name": "Folder 9"
+    },
+    {
+     "id": "f10",
+     "name": "Folder 10"
+    },
+    {
+     "id": "f11",
+     "name": "Folder 11"
+    },
+    {
+     "id": "f12",
+     "name": "Folder 12"
+    },
+    {
+     "id": "f13",
+     "name": "Folder 13"
+    },
+    {
+     "id": "f14",
+     "name": "Folder 14"
+    },
+    {
+     "id": "f15",
+     "name": "Folder 15"
+    },
+    {
+     "id": "f16",
+     "name": "Folder 16"
+    },
+    {
+     "id": "f17",
+     "name": "Folder 17"
+    },
+    {
+     "id": "f18",
+     "name": "Folder 18"
+    },
+    {
+     "id": "f19",
+     "name": "Folder 19"
+    },
+    {
+     "id": "f20",
+     "name": "Folder 20"
+    },
+    {
+     "id": "f21",
+     "name": "Folder 21"
+    },
+    {
+     "id": "f22",
+     "name": "Folder 22"
+    },
+    {
+     "id": "f23",
+     "name": "Folder 23"
+    },
+    {
+     "id": "f24",
+     "name": "Folder 24"
+    },
+    {
+     "id": "f25",
+     "name": "Folder 25"
+    },
+    {
+     "id": "f26",
+     "name": "Folder 26"
+    },
+    {
+     "id": "f27",
+     "name": "Folder 27"
+    },
+    {
+     "id": "f28",
+     "name": "Folder 28"
+    },
+    {
+     "id": "f29",
+     "name": "Folder 29"
+    },
+    {
+     "id": "f30",
+     "name": "Folder 30"
+    },
+    {
+     "id": "f31",
+     "name": "Folder 31"
+    },
+    {
+     "id": "f32",
+     "name": "Folder 32"
+    },
+    {
+     "id": "f33",
+     "name": "Folder 33"
+    },
+    {
+     "id": "f34",
+     "name": "Folder 34"
+    },
+    {
+     "id": "f35",
+     "name": "Folder 35"
+    },
+    {
+     "id": "f36",
+     "name": "Folder 36"
+    },
+    {
+     "id": "f37",
+     "name": "Folder 37"
+    },
+    {
+     "id": "f38",
+     "name": "Folder 38"
+    },
+    {
+     "id": "f39",
+     "name": "Folder 39"
+    },
+    {
+     "id": "f40",
+     "name": "Folder 40"
+    },
+    {
+     "id": "f41",
+     "name": "Folder 41"
+    },
+    {
+     "id": "f42",
+     "name": "Folder 42"
+    },
+    {
+     "id": "f43",
+     "name": "Folder 43"
+    },
+    {
+     "id": "f44",
+     "name": "Folder 44"
+    },
+    {
+     "id": "f45",
+     "name": "Folder 45"
+    },
+    {
+     "id": "f46",
+     "name": "Folder 46"
+    },
+    {
+     "id": "f47",
+     "name": "Folder 47"
+    },
+    {
+     "id": "f48",
+     "name": "Folder 48"
+    },
+    {
+     "id": "f49",
+     "name": "Folder 49"
+    },
+    {
+     "id": "f50",
+     "name": "Folder 50"
+    },
+    {
+     "id": "f51",
+     "name": "Folder 51"
+    },
+    {
+     "id": "f52",
+     "name": "Folder 52"
+    },
+    {
+     "id": "f53",
+     "name": "Folder 53"
+    },
+    {
+     "id": "f54",
+     "name": "Folder 54"
+    },
+    {
+     "id": "f55",
+     "name": "Folder 55"
+    },
+    {
+     "id": "f56",
+     "name": "Folder 56"
+    },
+    {
+     "id": "f57",
+     "name": "Folder 57"
+    },
+    {
+     "id": "f58",
+     "name": "Folder 58"
+    },
+    {
+     "id": "f59",
+     "name": "Folder 59"
+    },
+    {
+     "id": "f60",
+     "name": "Folder 60"
+    },
+    {
+     "id": "f61",
+     "name": "Folder 61"
+    },
+    {
+     "id": "f62",
+     "name": "Folder 62"
+    },
+    {
+     "id": "f63",
+     "name": "Folder 63"
+    },
+    {
+     "id": "f64",
+     "name": "Folder 64"
+    },
+    {
+     "id": "f65",
+     "name": "Folder 65"
+    },
+    {
+     "id": "f66",
+     "name": "Folder 66"
+    },
+    {
+     "id": "f67",
+     "name": "Folder 67"
+    },
+    {
+     "id": "f68",
+     "name": "Folder 68"
+    },
+    {
+     "id": "f69",
+     "name": "Folder 69"
+    },
+    {
+     "id": "f70",
+     "name": "Folder 70"
+    },
+    {
+     "id": "f71",
+     "name": "Folder 71"
+    },
+    {
+     "id": "f72",
+     "name": "Folder 72"
+    },
+    {
+     "id": "f73",
+     "name": "Folder 73"
+    },
+    {
+     "id": "f74",
+     "name": "Folder 74"
+    },
+    {
+     "id": "f75",
+     "name": "Folder 75"
+    },
+    {
+     "id": "f76",
+     "name": "Folder 76"
+    },
+    {
+     "id": "f77",
+     "name": "Folder 77"
+    },
+    {
+     "id": "f78",
+     "name": "Folder 78"
+    },
+    {
+     "id": "f79",
+     "name": "Folder 79"
+    },
+    {
+     "id": "f80",
+     "name": "Folder 80"
+    },
+    {
+     "id": "f81",
+     "name": "Folder 81"
+    },
+    {
+     "id": "f82",
+     "name": "Folder 82"
+    },
+    {
+     "id": "f83",
+     "name": "Folder 83"
+    },
+    {
+     "id": "f84",
+     "name": "Folder 84"
+    },
+    {
+     "id": "f85",
+     "name": "Folder 85"
+    },
+    {
+     "id": "f86",
+     "name": "Folder 86"
+    },
+    {
+     "id": "f87",
+     "name": "Folder 87"
+    },
+    {
+     "id": "f88",
+     "name": "Folder 88"
+    },
+    {
+     "id": "f89",
+     "name": "Folder 89"
+    },
+    {
+     "id": "f90",
+     "name": "Folder 90"
+    },
+    {
+     "id": "f91",
+     "name": "Folder 91"
+    },
+    {
+     "id": "f92",
+     "name": "Folder 92"
+    },
+    {
+     "id": "f93",
+     "name": "Folder 93"
+    },
+    {
+     "id": "f94",
+     "name": "Folder 94"
+    },
+    {
+     "id": "f95",
+     "name": "Folder 95"
+    },
+    {
+     "id": "f96",
+     "name": "Folder 96"
+    },
+    {
+     "id": "f97",
+     "name": "Folder 97"
+    },
+    {
+     "id": "f98",
+     "name": "Folder 98"
+    },
+    {
+     "id": "f99",
+     "name": "Folder 99"
+    },
+    {
+     "id": "f100",
+     "name": "Folder 100"
+    },
+    {
+     "id": "f101",
+     "name": "Folder 101"
+    },
+    {
+     "id": "f102",
+     "name": "Folder 102"
+    },
+    {
+     "id": "f103",
+     "name": "Folder 103"
+    },
+    {
+     "id": "f104",
+     "name": "Folder 104"
+    },
+    {
+     "id": "f105",
+     "name": "Folder 105"
+    },
+    {
+     "id": "f106",
+     "name": "Folder 106"
+    },
+    {
+     "id": "f107",
+     "name": "Folder 107"
+    },
+    {
+     "id": "f108",
+     "name": "Folder 108"
+    },
+    {
+     "id": "f109",
+     "name": "Folder 109"
+    },
+    {
+     "id": "f110",
+     "name": "Folder 110"
+    },
+    {
+     "id": "f111",
+     "name": "Folder 111"
+    },
+    {
+     "id": "f112",
+     "name": "Folder 112"
+    },
+    {
+     "id": "f113",
+     "name": "Folder 113"
+    },
+    {
+     "id": "f114",
+     "name": "Folder 114"
+    },
+    {
+     "id": "f115",
+     "name": "Folder 115"
+    },
+    {
+     "id": "f116",
+     "name": "Folder 116"
+    },
+    {
+     "id": "f117",
+     "name": "Folder 117"
+    },
+    {
+     "id": "f118",
+     "name": "Folder 118"
+    },
+    {
+     "id": "f119",
+     "name": "Folder 119"
+    },
+    {
+     "id": "f120",
+     "name": "Folder 120"
+    },
+    {
+     "id": "f121",
+     "name": "Folder 121"
+    },
+    {
+     "id": "f122",
+     "name": "Folder 122"
+    },
+    {
+     "id": "f123",
+     "name": "Folder 123"
+    },
+    {
+     "id": "f124",
+     "name": "Folder 124"
+    },
+    {
+     "id": "f125",
+     "name": "Folder 125"
+    },
+    {
+     "id": "f126",
+     "name": "Folder 126"
+    },
+    {
+     "id": "f127",
+     "name": "Folder 127"
+    },
+    {
+     "id": "f128",
+     "name": "Folder 128"
+    },
+    {
+     "id": "f129",
+     "name": "Folder 129"
+    },
+    {
+     "id": "f130",
+     "name": "Folder 130"
+    },
+    {
+     "id": "f131",
+     "name": "Folder 131"
+    },
+    {
+     "id": "f132",
+     "name": "Folder 132"
+    },
+    {
+     "id": "f133",
+     "name": "Folder 133"
+    },
+    {
+     "id": "f134",
+     "name": "Folder 134"
+    },
+    {
+     "id": "f135",
+     "name": "Folder 135"
+    },
+    {
+     "id": "f136",
+     "name": "Folder 136"
+    },
+    {
+     "id": "f137",
+     "name": "Folder 137"
+    },
+    {
+     "id": "f138",
+     "name": "Folder 138"
+    },
+    {
+     "id": "f139",
+     "name": "Folder 139"
+    },
+    {
+     "id": "f140",
+     "name": "Folder 140"
+    },
+    {
+     "id": "f141",
+     "name": "Folder 141"
+    },
+    {
+     "id": "f142",
+     "name": "Folder 142"
+    },
+    {
+     "id": "f143",
+     "name": "Folder 143"
+    },
+    {
+     "id": "f144",
+     "name": "Folder 144"
+    },
+    {
+     "id": "f145",
+     "name": "Folder 145"
+    },
+    {
+     "id": "f146",
+     "name": "Folder 146"
+    },
+    {
+     "id": "f147",
+     "name": "Folder 147"
+    },
+    {
+     "id": "f148",
+     "name": "Folder 148"
+    },
+    {
+     "id": "f149",
+     "name": "Folder 149"
+    },
+    {
+     "id": "f150",
+     "name": "Folder 150"
+    }
+   ]
+  ]
+ ],
+ "the step reads the folders: none": [
+  [
+   "step",
+   1
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "folders",
+   []
+  ]
+ ],
+ "the step reads the folders: an error": [
+  [
+   "step",
+   1
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "api.music",
+   "GET",
+   "/v1/me/library/playlist-folders",
+   {
+    "limit": 100
+   },
+   null
+  ],
+  [
+   "folders failed",
+   "Folders unavailable"
+  ]
+ ],
+ "the step reads the folders, the person has not authorized": [
+  [
+   "step",
+   1
+  ],
+  [
+   "fetch",
+   "/api/musickit-token"
+  ],
+  [
+   "MusicKit.configure",
+   {
+    "developerToken": "DEVELOPER-TOKEN-STAND-IN",
+    "app": {
+     "name": "The Album Blender",
+     "build": "2.0.0"
+    }
+   }
+  ],
+  [
+   "MusicKit.getInstance"
+  ],
+  [
+   "authorize"
+  ],
+  [
+   "folders failed",
+   "The user denied authorization"
+  ]
+ ],
+ "the file: playlists given, a batch name with characters the file name cannot hold": [
+  [
+   "step",
+   1
+  ],
+  [
+   "download",
+   "playlists_My_ batch_2_2026-11-22.json",
+   "[\n  {\n    \"name\": \"Greatest Hits\",\n    \"title\": \"Greatest Hits\",\n    \"tracks\": [\n      {\n        \"title\": \"One\",\n        \"artist\": \"Artist\",\n        \"album\": \"Album\"\n      },\n      {\n        \"title\": \"Two\",\n        \"artist\": \"Artist\",\n        \"album\": \"Album\"\n      }\n    ],\n    \"batchName\": \"My: batch/2\"\n  },\n  {\n    \"name\": \"Deep Cuts\",\n    \"title\": \"Deep Cuts\",\n    \"tracks\": [\n      {\n        \"title\": \"Three\",\n        \"artist\": \"Artist\",\n        \"album\": \"Album\"\n      },\n      {\n        \"title\": \"Four\",\n        \"artist\": \"Artist\",\n        \"album\": \"Album\"\n      }\n    ],\n    \"batchName\": \"My: batch/2\"\n  }\n]"
+  ]
+ ],
+ "the file: the edit screen's playlists": [
+  [
+   "step",
+   1
+  ],
+  [
+   "download",
+   "playlists_Mix_2026-11-22.json",
+   "[\n  {\n    \"name\": \"Greatest Hits\",\n    \"title\": \"Greatest Hits\",\n    \"tracks\": [\n      {\n        \"title\": \"One\",\n        \"artist\": \"Artist\",\n        \"album\": \"Album\"\n      },\n      {\n        \"title\": \"Two\",\n        \"artist\": \"Artist\",\n        \"album\": \"Album\"\n      }\n    ],\n    \"batchName\": \"Mix\"\n  },\n  {\n    \"name\": \"Deep Cuts\",\n    \"title\": \"Deep Cuts\",\n    \"tracks\": [\n      {\n        \"title\": \"Three\",\n        \"artist\": \"Artist\",\n        \"album\": \"Album\"\n      },\n      {\n        \"title\": \"Four\",\n        \"artist\": \"Artist\",\n        \"album\": \"Album\"\n      }\n    ],\n    \"batchName\": \"Mix\"\n  }\n]"
+  ]
+ ]
+}

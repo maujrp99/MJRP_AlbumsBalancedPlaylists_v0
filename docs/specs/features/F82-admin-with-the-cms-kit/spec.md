@@ -39,4 +39,5 @@ A escrever.
 - O que é o CMS-kit hoje: onde mora, que stack pede, como se instala num projeto que não é dele (este site é JavaScript puro com Vite e Firebase).
 - Quem entra no admin e como (hoje só o MJRP usa o site).
 - Onde o conteúdo fica guardado e como chega ao site publicado.
+- Pedidos do MJRP de 2026-11-22 que dependem deste CMS e são features próprias: a F92 (algoritmos de mistura criados e gerenciados no CMS) e a F93 (chaves de ligar e desligar features, a começar pelo Discogs; generaliza o REQ-02 daqui).
 - A ordem entre F81 e F82: o admin antes, para as traduções já nascerem nele, ou depois.

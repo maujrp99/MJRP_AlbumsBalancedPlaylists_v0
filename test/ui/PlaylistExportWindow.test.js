@@ -12,7 +12,7 @@ const kit = vi.hoisted(() => ({ service: null, phone: false }))
 vi.mock('../../public/js/services/MusicKitService.js', () => ({ get musicKitService() { return kit.service } }))
 vi.mock('../../public/js/services/SpotifyExportService.js', () => ({ SpotifyExportService: { exportPlaylists: vi.fn() } }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthService: { login: vi.fn() } }))
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
@@ -25,7 +25,7 @@ import { SpotifyExportService } from '../../public/js/services/SpotifyExportServ
 import { SpotifyAuthService } from '../../public/js/services/SpotifyAuthService.js'
 import { exportLedger } from '../../public/js/services/export/exportLedger.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
-import toast from '../../public/js/components/Toast.js'
+import toast from '../../public/js/stores/toasts.js'
 
 const track = (title) => ({ title, artist: 'Artist', album: 'Album' })
 const BATCH = [

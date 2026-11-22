@@ -7,7 +7,7 @@
  * left it. One write at a time. The write is the series service's `updateSeries` with `{ name, albumQueries }`, as it always was: the album
  * load reconciles the series afterwards (an album added is found and enriched through the queue, an album removed leaves, the rest stays, F56).
  */
-import { toast } from '../../components/Toast.js'
+import { toast } from '../../stores/toasts.js'
 import { t } from '../../i18n/t.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { getSeriesService } from '../../services/SeriesService.js'

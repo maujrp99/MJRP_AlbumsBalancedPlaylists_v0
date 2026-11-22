@@ -15,7 +15,7 @@ import { useFocusLikeAfterAnewDraw } from '../../react-bridge/useFocusLikeAfterA
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode, type RefObject } from 'react'
 import { Icon } from '../../ui/Icon'
 import { Breadcrumb, playlistsTrail } from '../../ui/Breadcrumb'
-import { exportJson, openSpotifyExport } from '../../react-bridge/legacy/OutputWindows'
+import * as playlistExports from '../../controllers/playlistExportEntries.js'
 import { usePlaylistExport } from '../../ui/PlaylistExportWindow'
 import { activeSeriesName } from './activeSeries'
 import { RegeneratePanel } from './RegeneratePanel'
@@ -94,13 +94,13 @@ function ExportSection({ isSaving, canUndo, canRedo, onUndo, onRedo, onSave, onA
                     ? <button className="btn btn-success flex items-center gap-2" id="saveToHistoryBtn" disabled aria-busy="true">{' '}<Icon name="Loader" className="w-4 h-4 animate-spin" />{` ${t('playlists.actions.saving')} `}</button>
                     : <button className="btn btn-success flex items-center gap-2" id="saveToHistoryBtn" onClick={onSave}>{' '}<Icon name="Cloud" className="w-5 h-5" />{` ${t('playlists.actions.save')} `}</button>}
                 <div className="h-auto w-px bg-white/10 mx-2" />
-                <button className="btn flex items-center gap-2 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all duration-300" style={{ background: 'linear-gradient(135deg, #1DB954 0%, #1ed760 100%)' }} id="exportSpotifyBtn" onClick={() => { void openSpotifyExport() }}>
+                <button className="btn flex items-center gap-2 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all duration-300" style={{ background: 'linear-gradient(135deg, #1DB954 0%, #1ed760 100%)' }} id="exportSpotifyBtn" onClick={() => { void playlistExports.openSpotifyExport() }}>
                     {' '}<Icon name="Spotify" className="w-5 h-5" />{` ${t('playlists.actions.spotify')} `}
                 </button>
                 <button className="btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300" id="exportAppleMusicBtn" onClick={(event) => onApple(event.currentTarget)}>
                     {' '}<Icon name="Apple" className="w-5 h-5" />{` ${t('playlists.actions.apple')} `}
                 </button>
-                <button className="btn btn-secondary flex items-center gap-2" id="exportJsonBtn" onClick={() => { void exportJson() }}>{' '}<Icon name="Download" className="w-5 h-5" />{` ${t('playlists.actions.json')} `}</button>
+                <button className="btn btn-secondary flex items-center gap-2" id="exportJsonBtn" onClick={() => { void playlistExports.exportJson() }}>{' '}<Icon name="Download" className="w-5 h-5" />{` ${t('playlists.actions.json')} `}</button>
             </div>
         </div>
     )
@@ -259,7 +259,7 @@ interface ControlsProps {
 
 /** The batch name, the panel to generate again (or the batch that was not found) and, on the computer, the actions. */
 function Controls({ state, playlists, editing, phone, nameValue, onType, activeSeriesId, asked, todo }: ControlsProps) {
-    const exporting = usePlaylistExport({ seriesName: activeSeriesName }) // F90: Apple Music asks for the folder first, in the window the saved playlists screen opens too
+    const exporting = usePlaylistExport({ exports: playlistExports, seriesName: activeSeriesName }) // F90: Apple Music asks for the folder first, in the window the saved playlists screen opens too
     return (
         <>
             {phone

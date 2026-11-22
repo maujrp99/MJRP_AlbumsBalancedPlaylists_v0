@@ -1,0 +1,426 @@
+{
+ "empty-chromium-1280-main-vs-react": {
+  "albums with nothing": {
+   "cta": "Go and create!",
+   "ctaBox": "550.98,882,178.03,45",
+   "title": "MJRP The Album Blender - Playlist Generator"
+  },
+  "after the button": {
+   "url": "/start"
+  }
+ },
+ "empty-webkit-1280-main-vs-react": {
+  "albums with nothing": {
+   "cta": "Go and create!",
+   "ctaBox": "550.98,883,178.03,45",
+   "title": "MJRP The Album Blender - Playlist Generator"
+  },
+  "after the button": {
+   "url": "/start"
+  }
+ },
+ "empty-webkit-iphone14-main-vs-react": {
+  "albums with nothing": {
+   "cta": "Go and create!",
+   "ctaBox": "108.73,317,172.53,48",
+   "title": "MJRP The Album Blender - Playlist Generator"
+  },
+  "after the button": {
+   "url": "/start"
+  }
+ },
+ "empty-webkit-se-main-vs-react": {
+  "albums with nothing": {
+   "cta": "Go and create!",
+   "ctaBox": "73.73,317,172.53,48",
+   "title": "MJRP The Album Blender - Playlist Generator"
+  },
+  "after the button": {
+   "url": "/start"
+  }
+ },
+ "home-chromium-1280-main-vs-react": {
+  "home pt signed out": {
+   "stops": "Criar|#start · Álbuns|#albums · Blend|#blend · Playlists|#playlists · Inventário|#inventory",
+   "font": "Syne, sans-serif|700|14px",
+   "title": "The Album Blender — para quem ouve álbuns inteiros",
+   "lang": "pt-BR",
+   "htmlClass": "js",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Criar|0,0,0,0|none",
+    "kicker|THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA DISCOS|16,220.95,391.56,26|block",
+    "|Mergulhe nos álbuns que você ama.|16,262.95,500,95.81|block",
+    "h-sub|Seus álbuns do momento, numa playlist balanceada.|16,372.77,358.78,63.41|block"
+   ]
+  },
+  "home pt signed in": {
+   "stops": "Criar|#start · Álbuns|#albums · Blend|#blend · Playlists|#playlists · Inventário|#inventory",
+   "font": "Syne, sans-serif|700|14px",
+   "title": "The Album Blender — para quem ouve álbuns inteiros",
+   "lang": "pt-BR",
+   "htmlClass": "js in",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Criar|1166.64,14,97.36,44|flex",
+    "kicker|The Album Blender · um app web para quem ama discos|0,0,0,0|block",
+    "|Mergulhe nos álbuns que você ama.|0,0,0,0|block",
+    "h-sub|Seus álbuns do momento, numa playlist balanceada.|0,0,0,0|block"
+   ]
+  },
+  "home en signed out": {
+   "stops": "Create|#start · Albums|#albums · Blend|#blend · Playlists|#playlists · Inventory|#inventory",
+   "font": "Syne, sans-serif|700|14px",
+   "title": "The Album Blender — for people who listen to whole albums",
+   "lang": "en",
+   "htmlClass": "js",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Create|0,0,0,0|none",
+    "kicker|THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS|16,220.95,391.56,26|block",
+    "|Dig through the albums you love.|16,262.95,500,95.81|block",
+    "h-sub|Your albums of the moment, in one balanced playlist.|16,372.77,358.78,63.41|block"
+   ]
+  },
+  "home en signed in": {
+   "stops": "Create|#start · Albums|#albums · Blend|#blend · Playlists|#playlists · Inventory|#inventory",
+   "font": "Syne, sans-serif|700|14px",
+   "title": "The Album Blender — for people who listen to whole albums",
+   "lang": "en",
+   "htmlClass": "js in",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Create|1154.19,14,109.81,44|flex",
+    "kicker|The Album Blender · a web app for record lovers|0,0,0,0|block",
+    "|Dig through the albums you love.|0,0,0,0|block",
+    "h-sub|Your albums of the moment, in one balanced playlist.|0,0,0,0|block"
+   ]
+  }
+ },
+ "home-webkit-1280-main-vs-react": {
+  "home pt signed out": {
+   "stops": "Criar|#start · Álbuns|#albums · Blend|#blend · Playlists|#playlists · Inventário|#inventory",
+   "font": "Syne, sans-serif|700|14px",
+   "title": "The Album Blender — para quem ouve álbuns inteiros",
+   "lang": "pt-BR",
+   "htmlClass": "js",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Criar|0,0,0,0|none",
+    "kicker|THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA DISCOS|16,223,388.22,26|block",
+    "|Mergulhe nos álbuns que você ama.|16,265,500,94|block",
+    "h-sub|Seus álbuns do momento, numa playlist balanceada.|16,373,358.78,62|block"
+   ]
+  },
+  "home pt signed in": {
+   "stops": "Criar|#start · Álbuns|#albums · Blend|#blend · Playlists|#playlists · Inventário|#inventory",
+   "font": "Syne, sans-serif|700|14px",
+   "title": "The Album Blender — para quem ouve álbuns inteiros",
+   "lang": "pt-BR",
+   "htmlClass": "js in",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Criar|1166.64,14,97.36,44|flex",
+    "kicker|The Album Blender · um app web para quem ama discos|0,0,0,0|block",
+    "|Mergulhe nos álbuns que você ama.|0,0,0,0|block",
+    "h-sub|Seus álbuns do momento, numa playlist balanceada.|0,0,0,0|block"
+   ]
+  },
+  "home en signed out": {
+   "stops": "Create|#start · Albums|#albums · Blend|#blend · Playlists|#playlists · Inventory|#inventory",
+   "font": "Syne, sans-serif|700|14px",
+   "title": "The Album Blender — for people who listen to whole albums",
+   "lang": "en",
+   "htmlClass": "js",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Create|0,0,0,0|none",
+    "kicker|THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS|16,223,388.22,26|block",
+    "|Dig through the albums you love.|16,265,500,94|block",
+    "h-sub|Your albums of the moment, in one balanced playlist.|16,373,358.78,62|block"
+   ]
+  },
+  "home en signed in": {
+   "stops": "Create|#start · Albums|#albums · Blend|#blend · Playlists|#playlists · Inventory|#inventory",
+   "font": "Syne, sans-serif|700|14px",
+   "title": "The Album Blender — for people who listen to whole albums",
+   "lang": "en",
+   "htmlClass": "js in",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Create|1154.19,14,109.81,44|flex",
+    "kicker|The Album Blender · a web app for record lovers|0,0,0,0|block",
+    "|Dig through the albums you love.|0,0,0,0|block",
+    "h-sub|Your albums of the moment, in one balanced playlist.|0,0,0,0|block"
+   ]
+  }
+ },
+ "home-webkit-iphone14-main-vs-react": {
+  "home pt signed out": {
+   "stops": "Criar|#start · Álbuns|#albums · Blend|#blend · Playlists|#playlists · Inventário|#inventory",
+   "font": "Syne, sans-serif|700|12px",
+   "title": "The Album Blender — para quem ouve álbuns inteiros",
+   "lang": "pt-BR",
+   "htmlClass": "js",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Criar|0,0,0,0|none",
+    "kicker|THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA DISCOS|16,76,358,26|block",
+    "|Mergulhe nos álbuns que você ama.|16,118,358,74|block",
+    "h-sub|Seus álbuns do momento, numa playlist balanceada.|16,202,266.95,46|block"
+   ]
+  },
+  "home pt signed in": {
+   "stops": "Criar|#start · Álbuns|#albums · Blend|#blend · Playlists|#playlists · Inventário|#inventory",
+   "font": "Syne, sans-serif|700|12px",
+   "title": "The Album Blender — para quem ouve álbuns inteiros",
+   "lang": "pt-BR",
+   "htmlClass": "js in",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Criar|276.64,6,97.36,44|flex",
+    "kicker|The Album Blender · um app web para quem ama discos|0,0,0,0|block",
+    "|Mergulhe nos álbuns que você ama.|0,0,0,0|block",
+    "h-sub|Seus álbuns do momento, numa playlist balanceada.|0,0,0,0|block"
+   ]
+  },
+  "home en signed out": {
+   "stops": "Create|#start · Albums|#albums · Blend|#blend · Playlists|#playlists · Inventory|#inventory",
+   "font": "Syne, sans-serif|700|12px",
+   "title": "The Album Blender — for people who listen to whole albums",
+   "lang": "en",
+   "htmlClass": "js",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Create|0,0,0,0|none",
+    "kicker|THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS|16,76,358,26|block",
+    "|Dig through the albums you love.|16,118,358,74|block",
+    "h-sub|Your albums of the moment, in one balanced playlist.|16,202,266.95,46|block"
+   ]
+  },
+  "home en signed in": {
+   "stops": "Create|#start · Albums|#albums · Blend|#blend · Playlists|#playlists · Inventory|#inventory",
+   "font": "Syne, sans-serif|700|12px",
+   "title": "The Album Blender — for people who listen to whole albums",
+   "lang": "en",
+   "htmlClass": "js in",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Create|264.19,6,109.81,44|flex",
+    "kicker|The Album Blender · a web app for record lovers|0,0,0,0|block",
+    "|Dig through the albums you love.|0,0,0,0|block",
+    "h-sub|Your albums of the moment, in one balanced playlist.|0,0,0,0|block"
+   ]
+  }
+ },
+ "home-webkit-se-main-vs-react": {
+  "home pt signed out": {
+   "stops": "Criar|#start · Álbuns|#albums · Blend|#blend · Playlists|#playlists · Inventário|#inventory",
+   "font": "Syne, sans-serif|700|12px",
+   "title": "The Album Blender — para quem ouve álbuns inteiros",
+   "lang": "pt-BR",
+   "htmlClass": "js",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Criar|0,0,0,0|none",
+    "kicker|THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA DISCOS|16,76,288,26|block",
+    "|Mergulhe nos álbuns que você ama.|16,118,288,111|block",
+    "h-sub|Seus álbuns do momento, numa playlist balanceada.|16,239,266.95,46|block"
+   ]
+  },
+  "home pt signed in": {
+   "stops": "Criar|#start · Álbuns|#albums · Blend|#blend · Playlists|#playlists · Inventário|#inventory",
+   "font": "Syne, sans-serif|700|12px",
+   "title": "The Album Blender — para quem ouve álbuns inteiros",
+   "lang": "pt-BR",
+   "htmlClass": "js in",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Criar|256.88,6,97.36,44|flex",
+    "kicker|The Album Blender · um app web para quem ama discos|0,0,0,0|block",
+    "|Mergulhe nos álbuns que você ama.|0,0,0,0|block",
+    "h-sub|Seus álbuns do momento, numa playlist balanceada.|0,0,0,0|block"
+   ]
+  },
+  "home en signed out": {
+   "stops": "Create|#start · Albums|#albums · Blend|#blend · Playlists|#playlists · Inventory|#inventory",
+   "font": "Syne, sans-serif|700|12px",
+   "title": "The Album Blender — for people who listen to whole albums",
+   "lang": "en",
+   "htmlClass": "js",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Create|0,0,0,0|none",
+    "kicker|THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS|16,76,288,26|block",
+    "|Dig through the albums you love.|16,118,288,74|block",
+    "h-sub|Your albums of the moment, in one balanced playlist.|16,202,266.95,46|block"
+   ]
+  },
+  "home en signed in": {
+   "stops": "Create|#start · Albums|#albums · Blend|#blend · Playlists|#playlists · Inventory|#inventory",
+   "font": "Syne, sans-serif|700|12px",
+   "title": "The Album Blender — for people who listen to whole albums",
+   "lang": "en",
+   "htmlClass": "js in",
+   "first": [
+    "btn btn-primary btn-sm btn-start only-in|Create|256.88,6,109.81,44|flex",
+    "kicker|The Album Blender · a web app for record lovers|0,0,0,0|block",
+    "|Dig through the albums you love.|0,0,0,0|block",
+    "h-sub|Your albums of the moment, in one balanced playlist.|0,0,0,0|block"
+   ]
+  }
+ },
+ "menu-chromium-1280-main-vs-react": {
+  "route /start": {
+   "stops": "Create* · Albums · Blend · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(251, 146, 60)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  },
+  "route /albums": {
+   "stops": "Create · Albums* · Blend · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "Create › Albums",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  },
+  "route /blend": {
+   "stops": "Create · Albums · Blend* · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  },
+  "route /saved-playlists": {
+   "stops": "Create · Albums · Blend · Playlists* · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  },
+  "route /inventory": {
+   "stops": "Create · Albums · Blend · Playlists · Inventory*",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  }
+ },
+ "menu-webkit-1280-main-vs-react": {
+  "route /start": {
+   "stops": "Create* · Albums · Blend · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(251, 146, 60)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  },
+  "route /albums": {
+   "stops": "Create · Albums* · Blend · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "Create › Albums",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  },
+  "route /blend": {
+   "stops": "Create · Albums · Blend* · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  },
+  "route /saved-playlists": {
+   "stops": "Create · Albums · Blend · Playlists* · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  },
+  "route /inventory": {
+   "stops": "Create · Albums · Blend · Playlists · Inventory*",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": null
+  }
+ },
+ "menu-webkit-iphone14-main-vs-react": {
+  "route /start": {
+   "stops": "Create* · Albums · Blend · Playlists · Inventory · Create* · Albums · Blend · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(251, 146, 60)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Create"
+  },
+  "route /albums": {
+   "stops": "Create · Albums* · Blend · Playlists · Inventory · Create · Albums* · Blend · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "Create › Albums",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Albums"
+  },
+  "route /blend": {
+   "stops": "Create · Albums · Blend* · Playlists · Inventory · Create · Albums · Blend* · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Blend"
+  },
+  "route /saved-playlists": {
+   "stops": "Create · Albums · Blend · Playlists* · Inventory · Create · Albums · Blend · Playlists* · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Playlists"
+  },
+  "route /inventory": {
+   "stops": "Create · Albums · Blend · Playlists · Inventory* · Create · Albums · Blend · Playlists · Inventory*",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Inventory"
+  }
+ },
+ "menu-webkit-se-main-vs-react": {
+  "route /start": {
+   "stops": "Create* · Albums · Blend · Playlists · Inventory · Create* · Albums · Blend · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(251, 146, 60)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Create"
+  },
+  "route /albums": {
+   "stops": "Create · Albums* · Blend · Playlists · Inventory · Create · Albums* · Blend · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "Create › Albums",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Albums"
+  },
+  "route /blend": {
+   "stops": "Create · Albums · Blend* · Playlists · Inventory · Create · Albums · Blend* · Playlists · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Blend"
+  },
+  "route /saved-playlists": {
+   "stops": "Create · Albums · Blend · Playlists* · Inventory · Create · Albums · Blend · Playlists* · Inventory",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Playlists"
+  },
+  "route /inventory": {
+   "stops": "Create · Albums · Blend · Playlists · Inventory* · Create · Albums · Blend · Playlists · Inventory*",
+   "icon0": null,
+   "font0": "Syne, sans-serif | 700 | 14px | 14px | rgb(185, 185, 194)",
+   "crumb": "",
+   "footerLinks": "Create->/start | Albums->/albums | Playlists->/playlists",
+   "topTitle": "Inventory"
+  }
+ }
+}

@@ -1,7 +1,7 @@
 /**
  * F80 (UAT-240, UAT-241): the bar is the menu. One continuous row of bars with five stops, each
  * with its story; signed out a stop scrolls to its story, signed in it goes to its screen of the app;
- * signed in the page shows the menu and only the «Inicie» button.
+ * signed in the page shows the menu and only the «Criar» button.
  */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { MENU, SLOTS, menuHref, barProgress, stopIndex, applyAccount } from '../../public/splash/menu.js'

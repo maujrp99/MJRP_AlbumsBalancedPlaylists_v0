@@ -5,6 +5,7 @@
  * is loaded only at the route (test/architecture/lazyOnlyAtTheRoute.test.js), and a window is loaded when its button is pressed.
  */
 import { isPhone } from '../../utils/isPhone.js'
+import type { Notify } from '../notify'
 import type { ItemLike } from './types'
 import { createTicker, ValueAndBuy, type ValueHost } from './ValueSection'
 
@@ -29,8 +30,8 @@ export async function openInventoryView(item: Item, options: { loadAlbum: (signa
     return { redrawValue: ticker.bump, close: handle.close }
 }
 
-/** The window to edit an item of the inventory; `onSave(id, updates)` is called when the person saves. */
-export async function openInventoryEdit(item: Item, onSave: (id: string, updates: object) => Promise<void> | void): Promise<void> {
+/** The window to edit an item of the inventory; `onSave(id, updates)` is called when the person saves, and `notify` is the site's notices. */
+export async function openInventoryEdit(item: Item, onSave: (id: string, updates: object) => Promise<void> | void, notify: Notify): Promise<void> {
     const [{ EditWindow }, { showWindow }] = await Promise.all([import('./EditWindow'), import('../windowLayer')])
-    showWindow(close => <EditWindow item={item} onSave={onSave} close={close} />)
+    showWindow(close => <EditWindow item={item} onSave={onSave} notify={notify} close={close} />)
 }

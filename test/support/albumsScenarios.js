@@ -388,7 +388,7 @@ export const SCENARIOS = [
     { name: 'popularity and ratings failed', state: { s1: 'popularity-failed' }, run: async (h) => { h.snap('the cards do not show the failure'); await h.click(`${group('s1')} .albums-grid [data-action="view-modal"]`); h.note('what the album window was given') } },
     {
         name: 'nothing in the library', series: () => [], run: async (h) => {
-            h.snap('the empty state with Go to Start')
+            h.snap('the empty state with Go and create!')
             await h.click('#emptyStateContainer button')
             h.note('what was asked')
         }

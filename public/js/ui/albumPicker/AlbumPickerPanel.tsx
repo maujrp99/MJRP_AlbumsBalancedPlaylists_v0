@@ -17,11 +17,13 @@ interface Props {
     service: PickerOptions['service']
     /** What the window does with a picked album. */
     onPick: (album: PickerAlbum) => void
+    /** Where the picker warns (the site's notices): a piece of ui/ holds no store. */
+    warn: (message: string) => void
 }
 
 const FILTERS = PICKER_FILTERS as ReadonlyArray<{ key: string; icon: string }>
 
-export function AlbumPickerPanel({ service, onPick }: Props) {
+export function AlbumPickerPanel({ service, onPick, warn }: Props) {
     const [scan, setScan] = useState<Scan>(() => idleScan() as Scan)
     const [filters, setFilters] = useState<Filters>(() => defaultFilters() as Filters)
     const [counts, setCounts] = useState<Counts>(() => countByFilter([]) as Counts)
@@ -30,12 +32,15 @@ export function AlbumPickerPanel({ service, onPick }: Props) {
     const field = useRef<HTMLInputElement>(null)
     const latestPick = useRef(onPick)
     latestPick.current = onPick
+    const latestWarn = useRef(warn)
+    latestWarn.current = warn
 
     // one controller for as long as the panel is in the page (the strict mode runs this twice: the first is let go and a fresh one made)
     useEffect(() => {
         const made = new AlbumPickerController({
             service,
             emptyQueryMessage: () => t('ui.picker.typeFirst'),
+            warn: (message) => latestWarn.current(message),
             onPick: (album) => latestPick.current(album),
             view: {
                 drawScan: setScan,

@@ -14,7 +14,7 @@ import { act } from 'react'
 
 vi.mock('../../../public/js/services/playlists/savedPlaylistsReading.js', () => ({ savedPlaylistsReader: {}, savedPlaylistsStore: {} }))
 const dialog = vi.hoisted(() => ({ confirm: vi.fn(() => Promise.resolve(false)) }))
-vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService: dialog }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', () => ({ dialogService: dialog }))
 
 import { SavedPlaylists } from '../../../public/js/screens/saved-playlists/SavedPlaylists'
 import { SavedPlaylistsController } from '../../../public/js/controllers/SavedPlaylistsController.js'

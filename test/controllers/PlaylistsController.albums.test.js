@@ -14,7 +14,7 @@ vi.mock('../../public/js/services/albums/albumLoading.js', () => ({ albumAsks: {
 vi.mock('../../public/js/controllers/BlendingController.js', () => ({ blendingController: { regenerate: mocks.regenerate } }))
 vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: () => ({ loadFromFirestore: mocks.loadFromFirestore }) }))
 vi.mock('../../public/js/services/playlists/playlistsWiring.js', () => ({ getPlaylistsService: vi.fn() }))
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
@@ -22,7 +22,7 @@ vi.mock('../../public/js/components/Toast.js', () => {
 import { PlaylistsController } from '../../public/js/controllers/PlaylistsController.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import { albumsStore } from '../../public/js/stores/albums.js'
-import toast from '../../public/js/components/Toast.js'
+import toast from '../../public/js/stores/toasts.js'
 import { readAsk } from '../../public/js/models/albumAsk.js'
 import { createEntry, AlbumStatus, ENRICHMENT_SOURCES } from '../../public/js/models/albumLoadState.js'
 

@@ -25,7 +25,7 @@ vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: 
 vi.mock('../../public/js/stores/albums.js', () => ({
     albumsStore: { subscribe: () => () => { }, setActiveAlbumSeriesId: vi.fn(), getAlbums: () => [] }
 }))
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })

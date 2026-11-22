@@ -1,0 +1,432 @@
+{
+ "tag": "edit-webkit-se",
+ "passed": 85,
+ "failed": 0,
+ "results": [
+  {
+   "what": "edit-webkit-se · Spotify: the window · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3593 chars"
+  },
+  {
+   "what": "edit-webkit-se · Spotify: the window · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-webkit-se · Spotify: the window · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · Spotify: the window · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-se · Spotify: the window · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · Spotify: the window · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · Spotify: the window · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · the mode: separate · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3644 chars"
+  },
+  {
+   "what": "edit-webkit-se · the mode: separate · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-webkit-se · the mode: separate · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · the mode: separate · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-se · the mode: separate · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · the mode: separate · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · the mode: separate · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · a name typed · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3639 chars"
+  },
+  {
+   "what": "edit-webkit-se · a name typed · the focus",
+   "ok": true,
+   "detail": "input#playlistNameInput[w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-[#1DB954] transition-colors] | input#playlistNameInput[w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-[#1DB954] transition-colors]"
+  },
+  {
+   "what": "edit-webkit-se · a name typed · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · a name typed · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-se · a name typed · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · a name typed · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · a name typed · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · the backdrop closes the window · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-se · the backdrop closes the window · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-webkit-se · the backdrop closes the window · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · the backdrop closes the window · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-se · the backdrop closes the window · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · the backdrop closes the window · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · opened again · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3593 chars"
+  },
+  {
+   "what": "edit-webkit-se · opened again · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-webkit-se · opened again · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · opened again · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-se · opened again · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · opened again · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · opened again · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: the playlists are created and the report is shown · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3582 chars"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: the playlists are created and the report is shown · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: the playlists are created and the report is shown · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: the playlists are created and the report is shown · what Spotify was asked",
+   "ok": true,
+   "detail": "9 requests"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: the playlists are created and the report is shown · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: the playlists are created and the report is shown · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: the playlists are created and the report is shown · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · Escape does nothing · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3582 chars"
+  },
+  {
+   "what": "edit-webkit-se · Escape does nothing · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-webkit-se · Escape does nothing · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · Escape does nothing · what Spotify was asked",
+   "ok": true,
+   "detail": "9 requests"
+  },
+  {
+   "what": "edit-webkit-se · Escape does nothing · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · Escape does nothing · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · Escape does nothing · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · what Spotify was asked",
+   "ok": true,
+   "detail": "9 requests"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · spotify · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-se · spotify · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-se · Spotify (the creation fails): the window · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3593 chars"
+  },
+  {
+   "what": "edit-webkit-se · Spotify (the creation fails): the window · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-webkit-se · Spotify (the creation fails): the window · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · Spotify (the creation fails): the window · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-se · Spotify (the creation fails): the window · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · Spotify (the creation fails): the window · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · Spotify (the creation fails): the window · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: it fails · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3738 chars"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: it fails · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: it fails · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: it fails · what Spotify was asked",
+   "ok": true,
+   "detail": "8 requests"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: it fails · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: it fails · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · Export pressed: it fails · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · Try again · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3763 chars"
+  },
+  {
+   "what": "edit-webkit-se · Try again · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-webkit-se · Try again · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · Try again · what Spotify was asked",
+   "ok": true,
+   "detail": "15 requests"
+  },
+  {
+   "what": "edit-webkit-se · Try again · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · Try again · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · Try again · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · what Spotify was asked",
+   "ok": true,
+   "detail": "15 requests"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-se · Close on the report · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · spotify fails · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-se · spotify fails · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

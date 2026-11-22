@@ -24,7 +24,7 @@ import { rankedQueryKeys } from '../models/ownRanking.js';
 import { decodeEntities } from '../models/text.js';
 import { paginate, takeFirst, normalizePageSize, PagingMode } from '../models/paging.js';
 import { AlbumStatus } from '../models/albumLoadState.js';
-import toast from '../components/Toast.js';
+import toast from '../stores/toasts.js';
 import { t } from '../i18n/t.js';
 import { router } from '../router.js';
 import { filterUseOf } from '../models/filterUse.js';

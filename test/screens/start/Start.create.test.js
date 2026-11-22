@@ -13,7 +13,7 @@ const navigate = vi.hoisted(() => vi.fn())
 vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', () => ({ albumSearchService: service }))
 vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn(() => series) }))
 vi.mock('../../../public/js/router.js', () => ({ router: { navigate } }))
-vi.mock('../../../public/js/components/Toast.js', () => ({
+vi.mock('../../../public/js/stores/toasts.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 

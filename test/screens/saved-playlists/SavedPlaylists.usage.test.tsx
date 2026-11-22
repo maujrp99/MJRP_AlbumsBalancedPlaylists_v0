@@ -7,7 +7,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 vi.mock('../../../public/js/services/playlists/savedPlaylistsReading.js', () => ({ savedPlaylistsReader: {}, savedPlaylistsStore: {} }))
-vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn(() => Promise.resolve(false)) } }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', () => ({ dialogService: { confirm: vi.fn(() => Promise.resolve(false)) } }))
 
 import { SavedPlaylists } from '../../../public/js/screens/saved-playlists/SavedPlaylists'
 import { SavedPlaylistsController } from '../../../public/js/controllers/SavedPlaylistsController.js'

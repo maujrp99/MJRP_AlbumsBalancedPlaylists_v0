@@ -10,17 +10,17 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 const kit = vi.hoisted(() => ({ service: null }))
 vi.mock('../../../public/js/services/MusicKitService.js', () => ({ get musicKitService() { return kit.service } }))
-vi.mock('../../../public/js/components/Toast.js', () => {
+vi.mock('../../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
 
 import { AppleMusicExportService, appleExportMessages } from '../../../public/js/services/AppleMusicExportService.js'
 import { exportLedger } from '../../../public/js/services/export/exportLedger.js'
-import { handleExportToAppleMusic } from '../../../public/js/views/playlists/PlaylistsExport.js'
+import { handleExportToAppleMusic } from '../../../public/js/controllers/playlistExports.js'
 import { playlistsStore } from '../../../public/js/stores/playlists.js'
 import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
-import toast from '../../../public/js/components/Toast.js'
+import toast from '../../../public/js/stores/toasts.js'
 
 /** A double of MusicKit: the library it built, and switches to make it fail. */
 function fakeMusicKit() {

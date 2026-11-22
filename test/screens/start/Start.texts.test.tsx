@@ -17,7 +17,7 @@ const toast = vi.hoisted(() => ({ warning: vi.fn(), error: vi.fn(), success: vi.
 
 vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', () => ({ albumSearchService: service }))
 vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn(() => ({ createSeries: async () => ({ id: 's1' }) })) }))
-vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast }))
+vi.mock('../../../public/js/stores/toasts.js', () => ({ default: toast }))
 
 import { Start } from '../../../public/js/screens/start/Start'
 import { StartController } from '../../../public/js/screens/start/StartController'

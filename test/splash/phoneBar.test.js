@@ -23,14 +23,16 @@ describe('the icon above each label of the phone\'s bottom menu', () => {
         expect(stopIcon('home')).toBe(stopIcon('start'))
     })
 
-    it('Start is no house (the owner, 2026-11-21: «o start tá com ícone de home mas ele não é home»; «o icone pode ser Go mesmo»): it is the word «Go» drawn in strokes (a G and an o), in no font', () => {
+    it('Create is a plus (the owner, 2026-11-22: «E ao invés de um ícone de go seja algo relacionado a adição?»; «confirmo, ajuste e já pode publicar»): two strokes crossing at the centre, the same plus as the app\'s Plus icon, no «Go» letters, no house', () => {
         const icon = stopIcon('start')
         expect(icon).not.toContain('M3 10.5 12 3l9 7.5')
-        expect(icon).toMatch(/<path [^>]*A5\.5 8/)
-        expect(icon).toMatch(/<circle /)
+        expect(icon).not.toMatch(/A5\.5 8/)
+        expect(icon).not.toMatch(/<circle /)
+        expect(icon).toContain('<line x1="12" x2="12" y1="4" y2="20"/>')
+        expect(icon).toContain('<line x1="4" x2="20" y1="12" y2="12"/>')
         expect(icon).not.toMatch(/<text|font/)
         expect(icon).toContain('aria-hidden="true"')
-        expect(Object.values(Icons)).not.toContain(icon)
+        expect(Icons.Plus).toContain('<line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/>')
     })
 
     it('the five icons are five different pictures', () => {

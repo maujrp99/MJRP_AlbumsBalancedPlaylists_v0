@@ -11,8 +11,8 @@
  */
 import { SpotifyAuthService } from '../services/SpotifyAuthService.js'
 import { musicKitService } from '../services/MusicKitService.js'
-import { dialogService } from '../services/DialogService.js'
-import toast from '../components/Toast.js'
+import { dialogService } from '../ui/dialogs/dialogs'
+import toast from '../stores/toasts.js'
 import { appleState, askApple, rememberApple, APPLE_STATE_EVENT } from './appleState'
 import { MENU_TEXT } from './menuText'
 

@@ -15,7 +15,7 @@ import { useLocale } from '../../react-bridge/useLocale'
 import { usePhone } from '../../react-bridge/usePhone'
 import { useStore } from '../../react-bridge/useStore'
 import { navigate } from '../../react-bridge/navigation'
-import { dialogService } from '../../services/DialogService.js'
+import { dialogService } from '../../ui/dialogs/dialogs'
 import { SavedPlaylistsFilterService } from '../../services/SavedPlaylistsFilterService.js'
 import { track } from '../../services/usage/track.js'
 import { ListStatus } from '../../models/savedPlaylists.js'
@@ -24,6 +24,7 @@ import { t } from '../../i18n/t.js'
 import { SeriesGroup } from './SeriesGroup'
 import { usePlaylistDetails } from './PlaylistDetails'
 import { usePlaylistExport } from '../../ui/PlaylistExportWindow'
+import * as playlistExports from '../../controllers/playlistExportEntries.js'
 import { readableBatchName } from './listText'
 import type { SavedPlaylistsController } from '../../controllers/SavedPlaylistsController.js'
 import type { Batch, Handlers, ListView, SeriesGroupData } from './types'
@@ -177,7 +178,7 @@ export function SavedPlaylists({ controller }: { controller: SavedPlaylistsContr
     const openSeries = useRef(new Set<string>()) // the phone: the series opened (closed by default, F76)
     const asked = useRef(false)
     const details = usePlaylistDetails()
-    const exporting = usePlaylistExport()
+    const exporting = usePlaylistExport({ exports: playlistExports })
     const versionOf = useGroupVersions(list.groups)
 
     // Ask for the list once: a load already on its way is joined, what was read before stays on screen

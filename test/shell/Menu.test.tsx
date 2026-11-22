@@ -12,8 +12,8 @@ import { createRoot, type Root } from 'react-dom/client'
 
 vi.mock('../../public/js/services/auth/signIn.js', async () => ({ authService: (await import('../support/shellScenarios.js')).stand.login }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('../support/shellScenarios.js')).stand.spotify }))
-vi.mock('../../public/js/components/Toast.js', async () => ({ default: (await import('../support/shellScenarios.js')).stand.toast }))
-vi.mock('../../public/js/services/DialogService.js', async () => ({ dialogService: (await import('../support/shellScenarios.js')).stand.dialog }))
+vi.mock('../../public/js/stores/toasts.js', async (importOriginal) => ({ ...(await importOriginal<object>()), default: (await import('../support/shellScenarios.js')).stand.toast }))
+vi.mock('../../public/js/ui/dialogs/dialogs', async () => ({ dialogService: (await import('../support/shellScenarios.js')).stand.dialog }))
 vi.mock('../../public/js/services/usage/track.js', async () => ({ track: (await import('../support/shellScenarios.js')).stand.track }))
 vi.mock('../../public/js/utils/reloadApp.js', async () => ({ reloadApp: (await import('../support/shellScenarios.js')).stand.reloadApp }))
 
@@ -44,13 +44,13 @@ const text = (element: Element) => (element.textContent ?? '').trim()
 describe('the bar of the top menu', () => {
     it('has the five destinations of the app, in order, as links of the app', () => {
         bar('/start')
-        expect(stops().map(text)).toEqual(['Start', 'Albums', 'Blend', 'Playlists', 'Inventory'])
+        expect(stops().map(text)).toEqual(['Create', 'Albums', 'Blend', 'Playlists', 'Inventory'])
         expect(stops().map(a => a.getAttribute('href'))).toEqual(['/start', '/albums', '/blend', '/saved-playlists', '/inventory'])
         stops().forEach(a => expect(a.hasAttribute('data-link')).toBe(true))
     })
 
     it.each([
-        ['/start', 'Start'], ['/albums', 'Albums'], ['/albums/abc123', 'Albums'], ['/blend', 'Blend'], ['/saved-playlists', 'Playlists'],
+        ['/start', 'Create'], ['/albums', 'Albums'], ['/albums/abc123', 'Albums'], ['/blend', 'Blend'], ['/saved-playlists', 'Playlists'],
         ['/playlist-series', 'Playlists'], ['/playlists', 'Playlists'], ['/playlists/edit', 'Playlists'], ['/inventory', 'Inventory']
     ])('on %s the current stop is %s, for the eye (cur) and for the reader (aria-current)', (path, label) => {
         bar(path)
@@ -154,6 +154,19 @@ describe('the phone\'s bottom menu is this same bar (F88: «Os menus não eram p
         expect(all.map(a => a.dataset.tab)).toEqual(PHONE_TABS.map(tab => tab.id))
     })
 
+    it('the first stop is «Create» (the owner, 2026-11-22: «mudar o start para Crie/Create»), still going to /start, with the plus above it on the phone and the active state on /start', () => {
+        const nav = phoneBar('/start')
+        const first = nav.querySelector('a.stop')!
+        expect(first.querySelector('.lb')!.textContent).toBe('Create')
+        expect(first.getAttribute('href')).toBe('/start')
+        expect(first.classList.contains('cur')).toBe(true)
+        expect(first.getAttribute('aria-current')).toBe('page')
+        expect(first.querySelector('svg.ic line[x1="12"][x2="12"][y1="4"][y2="20"]')).not.toBeNull()
+        expect(first.querySelector('svg.ic line[x1="4"][x2="20"][y1="12"][y2="12"]')).not.toBeNull()
+        expect(first.querySelector('svg.ic path, svg.ic circle')).toBeNull()
+        expect(document.body.textContent).not.toMatch(/\bStart\b/)
+    })
+
     it('the computer\'s bar has no icons', () => {
         bar('/blend')
         expect(document.querySelectorAll('nav.ms svg').length).toBe(0)
@@ -220,7 +233,7 @@ describe('the top menu of the computer (TopNav)', () => {
     })
 
     it.each([
-        ['/start', 'Start'], ['/albums', 'Albums'], ['/albums/abc', 'Albums'], ['/blend', 'Blend'],
+        ['/start', 'Create'], ['/albums', 'Albums'], ['/albums/abc', 'Albums'], ['/blend', 'Blend'],
         ['/saved-playlists', 'Playlists'], ['/playlist-series', 'Playlists'], ['/playlists', 'Playlists'], ['/inventory', 'Inventory']
     ])('on %s the current stop is %s', async (path, label) => {
         const shell = await startOn(path)

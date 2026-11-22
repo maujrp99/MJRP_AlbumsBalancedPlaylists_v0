@@ -7,9 +7,9 @@
  * no backdrop, no focus, BRL to start.
  */
 import { useState } from 'react'
-import { toast } from '../../components/Toast.js'
 import { t } from '../../i18n/t.js'
 import { ModalShell } from '../ModalShell'
+import type { Notify } from '../notify'
 import { showWindow } from '../windowLayer'
 import { ItemForm, type ItemDraft } from './ItemForm'
 import type { ItemLike } from './types'
@@ -22,27 +22,29 @@ export type AddAlbum = (album: Album, format: string, options: { currency: strin
 export interface AddWindowProps {
     album: Album
     add: AddAlbum
+    /** The site's notices: a piece of ui/ holds no store. */
+    notify: Notify
     onSuccess?: () => void
     close: () => void
 }
 
-export function AddWindow({ album, add, onSuccess, close }: AddWindowProps) {
+export function AddWindow({ album, add, notify, onSuccess, close }: AddWindowProps) {
     const [draft] = useState<ItemDraft>(() => ({ format: 'cd', currency: 'BRL', price: null, notes: '' }))
 
     const addIt = async (): Promise<void> => {
         const options = { currency: draft.currency, purchasePrice: draft.price, notes: draft.notes ? draft.notes.trim() : '' }
         try {
             await add(album, draft.format, options)
-            toast.success(t('albums.add.added'))
+            notify.success(t('albums.add.added'))
             if (onSuccess) onSuccess()
             close()
         } catch (error) {
             const message = (error as Error | null)?.message
             if (message && message.includes('already in inventory')) {
-                toast.warning(t('albums.add.already'))
+                notify.warning(t('albums.add.already'))
             } else {
                 console.error('Add failed', error)
-                toast.error(t('albums.add.failed', { reason: message || t('albums.add.unknown') }))
+                notify.error(t('albums.add.failed', { reason: message || t('albums.add.unknown') }))
             }
         }
     }
@@ -68,8 +70,8 @@ export function AddWindow({ album, add, onSuccess, close }: AddWindowProps) {
 
 /**
  * @param album - the album to add (the albums screen's own shape: the service reads what it needs of it)
- * @param what - `add` writes it; `onSuccess` is called when it was added
+ * @param what - `add` writes it; `notify` is the site's notices; `onSuccess` is called when it was added
  */
-export function openAddWindow(album: Album, { add, onSuccess }: { add: AddAlbum; onSuccess?: () => void }): void {
-    showWindow(close => <AddWindow album={album} add={add} onSuccess={onSuccess} close={close} />)
+export function openAddWindow(album: Album, { add, notify, onSuccess }: { add: AddAlbum; notify: Notify; onSuccess?: () => void }): void {
+    showWindow(close => <AddWindow album={album} add={add} notify={notify} onSuccess={onSuccess} close={close} />)
 }

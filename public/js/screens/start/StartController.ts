@@ -19,6 +19,7 @@
 import { albumSearchService } from '../../services/album-search/AlbumSearchService.js'
 import { AlbumPickerController } from '../../ui/albumPicker/pickerController'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
+import toast from '../../stores/toasts.js'
 import { userStore } from '../../stores/UserStore.js'
 import { getSeriesService } from '../../services/SeriesService.js'
 import { router } from '../../router.js'
@@ -182,7 +183,8 @@ export class StartController {
                 drawAlbums: () => { this.gridDraws += 1; this.touch() } // the covers are made again, as the old grid was
             },
             onPick: (album: unknown) => this.stagingController.addAlbum(album as SeriesAlbum),
-            emptyQueryMessage: () => t('start.field.typeAnArtist')
+            emptyQueryMessage: () => t('start.field.typeAnArtist'),
+            warn: (message: string) => { toast.warning(message) }
         })
     }
 

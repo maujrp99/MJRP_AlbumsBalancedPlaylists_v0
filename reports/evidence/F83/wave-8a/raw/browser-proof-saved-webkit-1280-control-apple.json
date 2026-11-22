@@ -1,0 +1,622 @@
+{
+ "tag": "saved-webkit-1280-control",
+ "passed": 123,
+ "failed": 0,
+ "results": [
+  {
+   "what": "saved-webkit-1280-control · [folders] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4430 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · a folder of the library picked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4484 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · a folder of the library picked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · a folder of the library picked · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · a folder of the library picked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · a folder of the library picked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · a folder of the library picked · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · a folder of the library picked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, no name: asked for it · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4550 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, no name: asked for it · the focus",
+   "ok": true,
+   "detail": "input[New folder name] | input[New folder name]"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, no name: asked for it · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, no name: asked for it · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, no name: asked for it · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, no name: asked for it · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, no name: asked for it · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, a name typed · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4493 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, a name typed · the focus",
+   "ok": true,
+   "detail": "input[New folder name] | input[New folder name]"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, a name typed · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, a name typed · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, a name typed · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, a name typed · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · New folder, a name typed · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · No folder · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4493 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · No folder · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · No folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · No folder · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · No folder · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · No folder · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · No folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4493 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "14 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"3 playlists exported to Apple Music, outside any folder.\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "14 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [folders] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · apple folders · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-1280-control · apple folders · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3836 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3872 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "16 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"3 playlists exported to Apple Music, in the folder \\\"Plant\\\".\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "16 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [none] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · apple none · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-1280-control · apple none · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3902 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3938 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "15 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"3 playlists exported to Apple Music.\",\"The folder \\\"Plant\\\" could not be created in Apple Music: the playlists are at the top of your library.\",\"1 track was not found in Apple Music and was left out"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "15 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [error] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · apple error · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-1280-control · apple error · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "99949 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · the folder of the series, on the last page of 250 · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "102235 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · the folder of the series, on the last page of 250 · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-webkit-1280-control · the folder of the series, on the last page of 250 · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · the folder of the series, on the last page of 250 · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · the folder of the series, on the last page of 250 · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · the folder of the series, on the last page of 250 · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · the folder of the series, on the last page of 250 · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "102235 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "20 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"3 playlists exported to Apple Music, in the folder \\\"Plant\\\".\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "20 calls"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-webkit-1280-control · [many] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-webkit-1280-control · apple many · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-webkit-1280-control · apple many · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}
