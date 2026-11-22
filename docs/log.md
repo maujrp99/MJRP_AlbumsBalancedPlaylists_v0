@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 13:38] decision — o administrador do CMS e os papéis; a barra laranja sai; «Create» enxuta no computador; o menu em Syne (F82 REQ-04 e REQ-05, F94, F79, F88, UAT-283, UAT-284)
+**Branch:** wip/register-cms-admin-and-roles
+Palavras do MJRP (2026-11-22). (1) Administrador do CMS: à pergunta «o administrador é só a sua conta (Google ou Apple), fixa nas regras do banco? Recomendo sim», respondeu «2. Sim? Mas poderíamos evoluir o kit do CMS pra ter rbac em que eu sou o super admins. Atriibuo e crio roles». Registrado na F82: REQ-04 (só a conta dele, nas regras do banco e no servidor) e REQ-05 (o kit evolui para papéis; dentro da F82 e não feature própria, porque a F82 já guarda os pedidos pequenos do CMS); perguntas de papéis abertas, nenhuma respondida. (2) F94: a barra laranja é `components/GlobalProgress.js`; «1. Creio que sim», sai; passou de pergunta aberta a decidido; UAT-283. (3) F79: «podemos aplicar na sessão create o mesmo conceito de lean da versao mobile?» e «3. Sua recomendação» (enxuta no computador); UAT-284. (4) F88: o menu no computador usa Syne, «exato a opcao recomendada». O código da (2) e da (3) está sendo feito no ramo `wip/f79-create-lean-computer-and-no-loading-line`, não aqui. Só documentação; nada priorizado, aceito nem em andamento.
+
+## [2026-11-22 13:38] harness-feedback — o kit do CMS precisa de acesso por papéis (RBAC), com o dono como superadministrador
+
+**Branch:** wip/register-cms-admin-and-roles
+Palavras do MJRP (2026-11-22), ao decidir que na primeira versão o único administrador do CMS do V0 é a conta dele: «Sim? Mas poderíamos evoluir o kit do CMS pra ter rbac em que eu sou o super admins. Atriibuo e crio roles». Pedido ao harness (F332, o kit do CMS, hoje um modelo vazio): o kit traz papéis, em que o dono é o superadministrador, cria papéis e os atribui a pessoas. Perguntas em aberto, a decidir no desenho do kit: quais papéis nascem (editor de textos, gestor de receitas, gestor de chaves), se o papel vale por seção, como se convida alguém, como as regras do banco leem o papel (declarações no token ou documento de papéis) e a auditoria de quem mudou o quê. O V0 começa só com a conta do dono (F82 REQ-04) e adota os papéis quando o kit os trouxer (F82 REQ-05). Vai ao harness; não é corrigido aqui.
+
 ## [2026-11-22 13:00] step — publicado em produção: o menu do computador na Syne (F88), da `ffd95bf`
 
 **Branch:** main
