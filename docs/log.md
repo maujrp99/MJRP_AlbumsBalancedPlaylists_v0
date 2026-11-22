@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 16:14] step — a espera de `/albums` aparece logo sob os filtros, sem trazer os saltos de volta (F79, 3º parecer do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- O bloco de espera ficava sob a grade invisível (184 px) e o círculo, centrado nos 391 px, caía abaixo da janela em 1280×720 e 1366×768. Agora o bloco guarda o lugar e a altura (o rodapé não anda, nem a caixa quando o cartão vazio ou a lista chega) e só o **conteúdo** sobe sobre o espaço da grade, com `transform: translateY(-<altura da grade>px)` (`loadingPlacement` em `SeriesLoadingState.js`); `transform` não move o layout. Uma primeira tentativa com margem negativa trouxe o salto de volta (0,062 na chegada do cartão vazio) e foi trocada.
+- Medido no site construído: o círculo fica inteiro dentro da janela (y 446–484 em 1280×720, 1366×768, 1280×800 e 1440×900; a frase do celular y 256–338 em 393×852 e 375×667); deslocamentos 0,031 / 0 / 0 / 0 / 0 como na `f4cf2a6`; telas assentadas e Blend 0 pixel contra `main`.
+
 ## [2026-11-22 15:58] step — a espera de `/albums` ocupa a altura do cartão vazio: o rodapé não pula (F79, achados P2-A e P2-B do 2º parecer do juiz)
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line

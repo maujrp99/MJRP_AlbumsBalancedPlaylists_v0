@@ -94,7 +94,7 @@ export class SeriesViewUpdater {
         if (grid) grid.style.visibility = listState === ListState.LOADING ? 'hidden' : '';
 
         if (listState === ListState.LOADING) {
-            new SeriesLoadingState().mount(container);
+            new SeriesLoadingState({ gridHeight: grid ? grid.offsetHeight : 0 }).mount(container);
             return;
         }
 

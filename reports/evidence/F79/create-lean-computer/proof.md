@@ -80,3 +80,18 @@ Medido no site construído, Chromium 1280 e iPhone 393 (WebKit), com a leitura d
 | Leitura rápida | 0,034 | 0,034 | 0,034 |
 
 O rodapé fica no mesmo lugar (y = 1040 a 1280 px) durante a espera e com o cartão vazio. Telas assentadas contra `main`: **0 pixel** nas 10 (cinco cenários × dois perfis); `/blend` 0 pixel. No iPhone o deslocamento não é medido (o WebKit não tem a API); o bloco de 282 px é o cartão vazio.
+
+### C.3 — o círculo logo sob os filtros (3º parecer do juiz)
+
+O bloco de espera guarda o lugar e a altura (391 px no computador, 282 px no celular); só o conteúdo sobe sobre o espaço da grade invisível, por `transform` (não move o layout). Site construído, leitura segurada, série devolvida.
+
+| Janela | topo do círculo / da frase | base | altura da janela | rodapé (y) |
+|---|---|---|---|---|
+| 1280×720 | 446 | 484 | 720 | 1040 |
+| 1366×768 | 446 | 484 | 768 | 1040 |
+| 1280×800 | 446 | 484 | 800 | 1040 |
+| 1440×900 | 446 | 484 | 900 | 1040 |
+| iPhone 393×852 | 256 | 338 | 852 | — |
+| iPhone 375×667 | 256 | 338 | 667 | — |
+
+Deslocamento (Chromium 1280): pelo menu 0,031; lista direto 0 na troca; cartão vazio e falha 0 (0,0025 de ruído, igual a `main`); leitura rápida 0,034 (igual a `main`). Rodapé: 1040 direto, 995 pelo menu. Telas assentadas: 0 pixel contra `main` nas 10; `/blend` 0.

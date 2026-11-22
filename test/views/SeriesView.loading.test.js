@@ -37,7 +37,7 @@ vi.mock('../../public/js/components/InventoryAddModal.js', () => ({ InventoryAdd
 vi.mock('../../public/js/components/ranking/UserRankModal.js', () => ({ UserRankModal: class { show() { } } }))
 vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn(), prompt: vi.fn() } }))
 
-import { LOADING_MIN_HEIGHT } from '../../public/js/components/series/SeriesLoadingState.js'
+import { LOADING_MIN_HEIGHT, loadingPlacement } from '../../public/js/components/series/SeriesLoadingState.js'
 import SeriesView from '../../public/js/views/SeriesView.js'
 import SeriesController from '../../public/js/controllers/SeriesController.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
@@ -125,7 +125,8 @@ describe('the albums screen while the series are being read', () => {
 
         expect(loading().style.minHeight).toBe(`${LOADING_MIN_HEIGHT.computer}px`)
         expect(loading().classList.contains('flex')).toBe(true)
-        expect(loading().classList.contains('items-center')).toBe(true)
+        expect(loading().classList.contains('items-start')).toBe(true) // the spinner sits at the top, under the filters
+        expect(loading().classList.contains('items-center')).toBe(false)
         expect(loading().classList.contains('justify-center')).toBe(true)
     })
 
@@ -200,5 +201,30 @@ describe('the albums screen while the series are being read', () => {
 
         expect(loading()).toBeNull()
         expect(emptyCard()).not.toBeNull()
+    })
+})
+
+describe('loadingPlacement (the content rises over the grid slot, the block keeps its place and height)', () => {
+    it('with no grid space above it, it is the card height and nothing is lifted', () => {
+        expect(loadingPlacement({ gridHeight: 0, phone: false })).toEqual({ lift: 0, minHeight: LOADING_MIN_HEIGHT.computer })
+        expect(loadingPlacement({ gridHeight: 0, phone: true })).toEqual({ lift: 0, minHeight: LOADING_MIN_HEIGHT.phone })
+    })
+
+    it('with the invisible grid taking 184 px above it, the content rises by 184 and the height is unchanged', () => {
+        expect(loadingPlacement({ gridHeight: 184, phone: false })).toEqual({ lift: 184, minHeight: LOADING_MIN_HEIGHT.computer })
+    })
+
+    it('ignores a missing or negative grid height', () => {
+        expect(loadingPlacement({ gridHeight: undefined, phone: false }).lift).toBe(0)
+        expect(loadingPlacement({ gridHeight: -5, phone: false }).lift).toBe(0)
+    })
+
+    it('draws the lift as a transform on the content, so no layout moves', async () => {
+        const { SeriesLoadingState } = await import('../../public/js/components/series/SeriesLoadingState.js')
+        window.matchMedia = () => ({ matches: false, addEventListener() { }, removeEventListener() { } })
+        const block = new SeriesLoadingState({ gridHeight: 184 }).render()
+        expect(block.style.minHeight).toBe(`${LOADING_MIN_HEIGHT.computer}px`)
+        expect(block.style.marginTop).toBe('')
+        expect(block.querySelector('[data-testid="series-loading-content"]').style.transform).toBe('translateY(-184px)')
     })
 })
