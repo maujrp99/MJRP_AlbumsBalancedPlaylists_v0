@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 11:46] step — F83: o comentário de `app.js` diz quem expõe o `window.playlistsStore`
+
+**Branch:** integrate/staging-2026-11-21
+
+- P2 da segunda conferência da onda 7b: o comentário dizia `stores/playlists.js`; quem expõe é `controllers/BlendingController.js`. Só o comentário muda.
+
 ## [2026-11-22 11:46] review — F83: onda 7 (a tela Blend em React) na linha de integração; a 7b passou no juiz na segunda conferência
 
 **Branch:** integrate/staging-2026-11-21
