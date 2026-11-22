@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:45] session — publicado em produção: a galeria do inventário no celular (F89, UAT-274)
+**Branch:** main
+Palavras do MJRP (2026-11-21): «Galeria no iPhone 👍🏻» (depois de ver na prévia) e «Publica». Site publicado da `main` (`be86beb`, `/assets/main-jh6S6a9O.js`) pelo `deploy-site.sh`, na fila do Album Blender; conferido no ar: `/`, `/home`, `/inventory` e `/albums` respondem 200, o `app.html` aponta o script novo e a folha de estilo publicada traz a galeria. Outras palavras dele no mesmo período: sobre a Apple Music, a atualização «Deixa assim então, como está» (exportar cria uma playlist nova) e a pasta «Quero escolher ao exportar»; sobre a tela Start no celular, «Aqui eu ainda acho que tem muito texto, tá clutter. Como poderíamos melhorar?» (proposta feita, sem resposta ainda).
+
 ## [2026-11-21 23:33] step — F89: a reconferência visual do juiz independente, guardada
 **Branch:** feat/f76-inventory-gallery-on-the-phone
 Relatório do juiz (agente separado, Opus) sobre o commit 869ec36: passa, sem P0 e sem P1, com 6 P2 (`reports/audits/2026-11-21-mjrpalbumblender-v0-inventory-gallery-phone-visual-parity-recheck.md`, copiado sem mudar; capturas em `reports/evidence/F76/inventory-gallery-phone/recheck/`). Os seis achados foram corrigidos nos commits anteriores deste ramo.
