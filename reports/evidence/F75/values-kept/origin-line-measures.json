@@ -1,0 +1,962 @@
+[
+  {
+    "width": 900,
+    "currency": "USD",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 645
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 645
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 645
+      }
+    ]
+  },
+  {
+    "width": 900,
+    "currency": "EUR",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 645
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 645
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 645
+      }
+    ]
+  },
+  {
+    "width": 900,
+    "currency": "GBP",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 645
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 645
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 645
+      }
+    ]
+  },
+  {
+    "width": 900,
+    "currency": "BRL",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 645
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 645
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 645
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 645
+      }
+    ]
+  },
+  {
+    "width": 1280,
+    "currency": "USD",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1280,
+    "currency": "EUR",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1280,
+    "currency": "GBP",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1280,
+    "currency": "BRL",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ R$ 99,999.99",
+        "cut": true,
+        "room": 86,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "currency": "USD",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "currency": "EUR",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "currency": "GBP",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "currency": "BRL",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ R$ 99,999.99",
+        "cut": true,
+        "room": 86,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1920,
+    "currency": "USD",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ $99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1920,
+    "currency": "EUR",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ €99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1920,
+    "currency": "GBP",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ £99,999.99",
+        "cut": false,
+        "room": 101,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  },
+  {
+    "width": 1920,
+    "currency": "BRL",
+    "cards": [
+      {
+        "id": "f",
+        "origin": "Discogs · 12 Oct CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 81,
+        "need": 81,
+        "height": 501
+      },
+      {
+        "id": "c",
+        "origin": "Discogs · 18 Nov CD · lowest",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "a",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "b",
+        "origin": "Discogs · 18 Nov CD · suggested",
+        "amount": "≈ R$ 99,999.99",
+        "cut": false,
+        "room": 83,
+        "need": 83,
+        "height": 501
+      },
+      {
+        "id": "e",
+        "origin": "CD · written by you",
+        "amount": "≈ R$ 99,999.99",
+        "cut": true,
+        "room": 86,
+        "need": 101,
+        "height": 501
+      },
+      {
+        "id": "d",
+        "origin": "No CD edition found",
+        "amount": "—",
+        "cut": false,
+        "room": 108,
+        "need": 108,
+        "height": 501
+      }
+    ]
+  }
+]

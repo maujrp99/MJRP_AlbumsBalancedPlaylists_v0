@@ -153,6 +153,23 @@ Padrões que o site já usa, decididos pelo agente, que pedem a palavra do MJRP.
 | P2 | Ponta amarela do fogo | O equalizador termina em amarelo (página de entrada) ou só laranja e vermelho (Home)? | ponta-amarela | Home: duas cores (`#dc2626 → #f97316`, a cor A, decidida pelo agente na F79). Página de entrada: três (`… → #fbbf24`). `#fdba74`, a ponta clara da prévia da F79, não está no código. Uma só para as duas telas. Recomendação do agente (F86, revisável): duas cores nas duas telas, só com as cores já declaradas; custa tirar o amarelo da página de entrada. |
 | P3 | Fonte do texto corrido no computador | No computador, o texto corrido fica em Syne (app) ou na fonte do sistema (página de entrada e celular)? | fonte-do-corpo | App no computador: tudo em Syne. Página de entrada e celular: títulos em Syne, o resto na fonte do sistema. Recomendação do agente: a fonte do sistema, que a 14–16 px lê melhor. |
 
+## Textos do inventário (F75) pendentes de aprovação do MJRP
+
+Propostos pelo agente em 2026-11-21, com a leitura do Discogs guardada no banco (F75, REQ-16); as telas do app estão em inglês. Valem no código até o MJRP decidir.
+
+| Onde | Texto | Dito para |
+|---|---|---|
+| Origem do cartão (valor do Discogs), duas linhas de 11px que não encolhem | «Discogs · 21 Nov» sobre «CD · suggested» (sugestão) ou «CD · lowest» (menor preço); o momento inteiro e o que o valor é, uma vez, no `title` (texto pendente da aprovação do MJRP) | dizer de onde vem, de que tipo é e quando foi lido, sem nada cortado a 900, 1280, 1440 e 1920 px em USD, EUR, GBP e BRL, com 99,999.99 de valor; duas linhas de 11px têm a altura do valor ao lado, o cartão não cresce |
+| Origem na lista do computador | «CD · Discogs · suggested · 21 Nov» (ou «lowest») | o mesmo, numa linha, onde há largura |
+| Linha de origem no celular | «Discogs · 21 Nov» (o dia e o mês numa peça só, sem quebra) | o mesmo, mais curto, na mesma forma do cartão |
+| Janela do álbum, menor preço à venda | «The lowest price this CD was listed at on Discogs when it was read. It is an asking price, not what the disc usually sells for.» (antes: «… is for sale at on Discogs now») | a frase não pode afirmar o presente de uma leitura guardada |
+| `title` do cartão, menor preço | «Lowest asking price for this CD edition on Discogs, read on 21 Nov 2026, 14:05.» (a sugestão: «Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 21 Nov 2026, 14:05.») | quando foi lido, dito uma vez |
+| Folha «⋯» do celular, nota do valor | «Lowest asking price for this CD edition on Discogs.» (a sugestão: «Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition.») | o menor preço nunca é chamado de média |
+| Aviso da rodada | «3 values could not be saved to your inventory. This browser keeps them for six hours; Update values tries to save them again.» («1 value … keeps it … save it again.») | dizer quanto tempo o navegador guarda e o que fazer (verdade no código: `READING_TTL_MS` e o começo de «Update values») |
+| Aviso ao ler um álbum | «The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.» | o mesmo, para uma leitura só |
+| Janela do álbum, seção «Estimated value» | «Read on 21 Nov 2026, 14:05.» (já era assim; agora vale para o valor guardado, de qualquer idade) e, no painel do celular, a mesma frase como nota | quando o valor foi lido |
+| Aviso de espera | «N albums are waiting for a value.» (mesmo texto; passa a contar só os que nunca foram lidos) | não mudou |
+
 ## Conflitos no código
 
 O que o levantamento de 2026-11-21 achou com dois ou mais valores para a mesma coisa. A proposta é do agente; nada foi mudado (a F86 não mexe no código do site). Cada linha vira uma correção quando o MJRP priorizar.

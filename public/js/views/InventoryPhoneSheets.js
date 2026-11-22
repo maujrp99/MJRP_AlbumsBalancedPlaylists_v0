@@ -19,7 +19,7 @@ import { SafeDOM } from '../utils/SafeDOM.js'
 import { safeUrl } from '../utils/safeUrl.js'
 import { BUY_LINKS_NOTE, BuyLinkPlace, SELL_TRADE_SOON, buyLinkMarks, buyLinksOf } from '../models/buyLinks.js'
 import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
-import { DISCOGS_CREDIT, DISCOGS_MEAN_TITLE, ValueOrigin, moneyOf, noValueText, valueLabel } from '../models/inventoryValue.js'
+import { DISCOGS_CREDIT, discogsKindNote, ValueOrigin, momentText, moneyOf, noValueText, valueLabel } from '../models/inventoryValue.js'
 import { SORT_OPTIONS } from '../models/inventorySort.js'
 import { ViewMode } from '../models/inventoryViewMode.js'
 import { statusText } from './renderers/InventoryPhoneRow.js'
@@ -80,7 +80,8 @@ function valueGroup(item, value, money) {
     if (value.origin === ValueOrigin.YOURS) children.push(note('Written by you.'))
     if (!value.origin) children.push(note(noValueText(value)))
     if (value.origin === ValueOrigin.DISCOGS) {
-        children.push(note(`${DISCOGS_MEAN_TITLE}.`))
+        children.push(note(`${discogsKindNote(value)}.`))
+        if (momentText(value.readAt)) children.push(note(`Read on ${momentText(value.readAt)}.`))
         const url = safeUrl(value.release?.url)
         if (url) children.push(SafeDOM.a({ className: 'inv-link', href: url, target: '_blank', rel: 'noopener' }, 'This edition on Discogs ↗'))
         children.push(discogsCredit())

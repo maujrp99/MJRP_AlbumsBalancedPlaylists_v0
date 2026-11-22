@@ -303,8 +303,8 @@ export class InventoryController {
     }
 
     /** "Update values" and "Read them now" (F75, REQ-09). */
-    handleUpdateValues() {
-        return this.values.updateAll()
+    handleUpdateValues(options) {
+        return this.values.updateAll(options)
     }
 
     /** "Stop". */

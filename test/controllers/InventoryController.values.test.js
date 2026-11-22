@@ -109,6 +109,83 @@ describe('InventoryController: the values (F75)', () => {
         })
     })
 
+    describe('the reading kept in the database (REQ-14, REQ-15)', () => {
+        const DAY = 24 * 60 * 60 * 1000
+        const kept = (extra = {}) => ({ ...reading({ readAt: new Date(Date.now() - 3 * DAY).toISOString() }), ...extra })
+        const withKept = (id, saved = kept()) => ITEMS.map(item => (item.id === id ? { ...item, discogsReading: saved } : item))
+
+        it('a reading kept in the item shows at once, with its date, with nothing in the browser and nothing asked to Discogs', async () => {
+            const values = valuesWith()
+            const { controller } = await open(values, withKept('wanted'))
+
+            expect(valueOf(controller, 'wanted')).toMatchObject({ origin: 'discogs', amount: 11.2, readAt: kept().readAt })
+            expect(values.readMany).not.toHaveBeenCalled()
+            expect(controller.state.value.discogsShown).toBe(true)
+        })
+
+        it('the notice counts only the albums that never had a reading: a kept one, however old, is not waiting', async () => {
+            const { controller } = await open(valuesWith(), withKept('wanted'))
+
+            expect(controller.state.value.waiting).toBe(2) // «owned» and «wished»; «wanted» has its reading and «written» a value
+        })
+
+        it('"Update values" reads what was kept long ago again, and not what was read minutes ago', async () => {
+            const minutesAgo = kept({ readAt: new Date(Date.now() - 5 * 60 * 1000).toISOString() })
+            const items = withKept('wanted').map(item => (item.id === 'wished' ? { ...item, discogsReading: minutesAgo } : item))
+            const values = valuesWith()
+            const { controller } = await open(values, items)
+
+            await controller.handleUpdateValues()
+
+            expect(values.readMany.mock.calls[0][0].map(item => item.id)).toEqual(['owned', 'wanted'])
+        })
+
+        it('"Read them now" reads only the albums that never had a reading', async () => {
+            const values = valuesWith()
+            const { controller } = await open(values, withKept('wanted'))
+
+            await controller.handleUpdateValues({ onlyNeverRead: true })
+
+            expect(values.readMany.mock.calls[0][0].map(item => item.id)).toEqual(['owned', 'wished'])
+        })
+
+        it('a fresh reading only the browser holds is kept in its item on the next run, with no new question to Discogs', async () => {
+            const held = reading()
+            const values = valuesWith({ readings: new Map([['owned', held]]) })
+            const { controller } = await open(values)
+            expect(values.keepReadings).not.toHaveBeenCalled() // not silently, when the screen opens
+
+            await controller.handleUpdateValues()
+
+            expect(values.keepReadings).toHaveBeenCalledWith([{ item: expect.objectContaining({ id: 'owned' }), reading: held }])
+            expect(values.readMany.mock.calls[0][0].map(item => item.id)).toEqual(['wanted', 'wished'])
+        })
+
+        it('the newest reading wins between the database and the browser, and the written value beats both', async () => {
+            const newer = reading({ mint: 20, nearMint: 20, veryGoodPlus: 20, readAt: new Date().toISOString() })
+            const values = valuesWith({ readings: new Map([['wanted', newer], ['written', newer]]) })
+            const { controller } = await open(values, withKept('wanted').map(item => (item.id === 'written' ? { ...item, discogsReading: kept() } : item)))
+
+            expect(valueOf(controller, 'wanted')).toMatchObject({ origin: 'discogs', amount: 20 })
+            expect(valueOf(controller, 'written')).toMatchObject({ origin: 'yours', amount: 25 })
+        })
+
+        it('another person on the same device sees none of the values kept for the one who left', async () => {
+            const values = valuesWith()
+            const { controller } = await open(values, withKept('wanted'))
+            expect(valueOf(controller, 'wanted').origin).toBe('discogs')
+
+            values.userId = 'user-2'
+            inventoryStore.setAlbums([{ id: 'other', artist: 'Yes', title: 'Close to the Edge', owned: true }])
+            controller.updateStateFromStore()
+            await vi.waitFor(() => expect(values.sourceState).toHaveBeenCalledTimes(2))
+            await vi.waitFor(() => expect(controller.state.value.values.has('wanted')).toBe(false))
+
+            expect(valueOf(controller, 'other')).toEqual({ origin: null, reason: 'waiting' })
+            expect(controller.state.value.discogsShown).toBe(false)
+        })
+    })
+
     describe('the switch off (REQ-10)', () => {
         it('no Discogs value, nothing waiting, no run; the written value and the totals go on', async () => {
             const values = valuesWith({ source: 'off', rates: RATES, readings: new Map([['owned', reading()]]) })
@@ -314,7 +391,7 @@ describe('InventoryController: the values (F75)', () => {
     })
 
     describe('one album, from its window (REQ-04, REQ-13)', () => {
-        it('is read now, its edition is kept in the item, and the window is given the new value', async () => {
+        it('is read now, its reading and edition are kept in the item, and the window is given the new value', async () => {
             const values = valuesWith()
             values.readItem.mockResolvedValue({ reading: reading() })
             const { controller } = await open(values)
@@ -322,7 +399,7 @@ describe('InventoryController: the values (F75)', () => {
             await controller.handleReadValue('wanted')
 
             expect(values.readItem.mock.calls[0][0].id).toBe('wanted')
-            expect(values.keepEditions).toHaveBeenCalledWith([{ item: expect.objectContaining({ id: 'wanted' }), reading: expect.objectContaining({ kind: 'found' }) }])
+            expect(values.keepReadings).toHaveBeenCalledWith([{ item: expect.objectContaining({ id: 'wanted' }), reading: expect.objectContaining({ kind: 'found' }) }])
             expect(controller.valueViewOf('wanted')).toMatchObject({ value: { origin: 'discogs' }, source: 'on', busy: false, money: { currency: 'USD' } })
         })
 
@@ -335,7 +412,7 @@ describe('InventoryController: the values (F75)', () => {
 
             expect(toast.error).toHaveBeenCalledWith('Discogs limit reached. The value was not read.')
             expect(controller.valueViewOf('wanted').value).toEqual({ origin: null, reason: 'failed', failure: 'limit' })
-            expect(values.keepEditions).not.toHaveBeenCalled()
+            expect(values.keepReadings).not.toHaveBeenCalled()
         })
     })
 

@@ -22,7 +22,7 @@ import { getIcon } from './Icons.js'
 import { escapeHtml } from '../utils/stringUtils.js'
 import { safeUrl } from '../utils/safeUrl.js'
 import {
-    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf,
+    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, moneyOf, readOnText,
     noValueText
 } from '../models/inventoryValue.js'
 import { BUY_LINKS_NOTE, BuyLinkPlace, buyLinkAttributes, buyLinkMarks, buyLinksOf } from '../models/buyLinks.js'
@@ -99,7 +99,7 @@ function fromDiscogs({ value, money, ...shown }) {
 function lowestForSale({ value, money, ...shown }) {
     const converted = value.currency === money.currency ? '' : `, converted from ${escapeHtml(value.currency)} at today's rate`
     const count = Number.isInteger(value.forSale) && value.forSale > 0 ? `<span class="text-xs text-gray-400">(${value.forSale} for sale)</span>` : ''
-    return `${lead('The lowest price this CD is for sale at on Discogs now. It is an asking price, not what the disc usually sells for.')}
+    return `${lead('The lowest price this CD was listed at on Discogs when it was read. It is an asking price, not what the disc usually sells for.')}
       <div class="flex flex-wrap items-center gap-2" data-role="lowest"><span class="text-sm text-gray-400">Lowest price for sale on Discogs:</span> <span class="text-2xl font-bold text-white" data-role="amount">${moneyOf(value, money)}</span> ${count}</div>
       <p class="${SMALL}">${editionLine(value.release)}<br>
         Read on ${momentText(value.readAt)}${converted}. ${readButton('Read again', shown)}</p>
@@ -262,7 +262,7 @@ export function valueSummaryOf({ value, money }) {
     const amount = value.amount ?? (value.conditions ? meanOfConditions(value.conditions) : null)
     if (!value.origin || amount === null || amount === undefined) return { amount: '—', origin: noValueText(value), release: null }
     const discogs = value.origin === ValueOrigin.DISCOGS
-    return { amount: `≈ ${moneyOf({ amount, currency: value.currency }, money)}`, origin: discogs ? 'Discogs' : 'Yours', release: discogs ? value.release || {} : null }
+    return { amount: `≈ ${moneyOf({ amount, currency: value.currency }, money)}`, origin: discogs ? ['Discogs', readOnText(value)].filter(Boolean).join(' · ') : 'Yours', release: discogs ? value.release || {} : null }
 }
 
 /** «Data provided by Discogs.», linked to the edition (or to Discogs when the edition has no address). */

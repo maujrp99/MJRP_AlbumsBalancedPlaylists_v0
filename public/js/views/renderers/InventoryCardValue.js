@@ -3,7 +3,7 @@
  * the prototype v5.1): five lines, the SAME five in every card, so that neighbours line up.
  *
  *   1  the label of the value, by status   «In my collection · worth» | «Not mine yet · costs»
- *   2  where the value comes from, and the value with «≈» (a dash when there is none)
+ *   2  where the value comes from (a Discogs value: «Discogs · 18 Nov» over «CD · lowest»), and the value with «≈» (a dash when there is none)
  *   3  the two averages, each with its icon
  *   4  the label of the actions            «Sell, trade or buy» | «Where to buy»
  *   5  the actions, as links
@@ -17,7 +17,7 @@ import { safeUrl } from '../../utils/safeUrl.js'
 import { getIcon } from '../../components/Icons.js'
 import { InventoryStatus, statusOf } from '../../models/inventoryStatus.js'
 import { popularityValue, ratingValue, tracksMadeOf } from '../../models/albumAverages.js'
-import { DISCOGS_CREDIT, DISCOGS_LOWEST_TITLE, DISCOGS_MEAN_TITLE, ValueBasis, ValueOrigin, moneyOf, noValueText, valueLabel } from '../../models/inventoryValue.js'
+import { DISCOGS_CREDIT, ValueBasis, ValueOrigin, discogsHint, moneyOf, noValueText, readOnText, valueLabel } from '../../models/inventoryValue.js'
 import { BuyLinkPlace, SELL_TRADE_SOON, buyLinkAttributes, buyLinksOf } from '../../models/buyLinks.js'
 
 const LABEL = 'text-[11px] text-gray-400 uppercase tracking-widest whitespace-nowrap truncate'
@@ -36,22 +36,36 @@ export function formatOf(item) {
     return format && !format.includes('cd') ? String(item.format) : 'CD'
 }
 
-/** "CD · Discogs", with "Discogs" linked to the page of the edition the value is of. */
+/** The kind of the Discogs value, in one short word: the card has no room to say more (the whole sentence is in its `title`). */
+const KIND_WORD = Object.freeze({ [ValueBasis.LOWEST_FOR_SALE]: 'lowest', [ValueBasis.SUGGESTION]: 'suggested' })
+
+/**
+ * A Discogs value on two short lines that never shrink (the judge's P1, second recheck): the source
+ * with the date it was read («Discogs · 18 Nov», "Discogs" linked to the edition) and the kind
+ * («CD · lowest» or «CD · suggested»). Two lines of 11px are as tall as the amount beside them, so the
+ * card is no taller. `line` is the same in one line, for the list.
+ */
 function discogsOrigin(value) {
+    const tail = readOnText(value)
+    const kind = KIND_WORD[value.basis] || KIND_WORD[ValueBasis.SUGGESTION]
+    return {
+        stacked: `<span data-role="origin-source">${discogsName(value)}${tail ? ` · ${tail}` : ''}</span>\n<span data-role="origin-kind">CD · ${kind}</span>`,
+        line: `CD · ${discogsName(value)} · ${kind}`, tail, hint: discogsHint(value)
+    }
+}
+
+/** "Discogs", linked to the page of the edition the value is of. */
+function discogsName(value) {
     const url = safeUrl(value.release?.url)
-    const name = url
-        ? `<a href="${escapeHtml(safeUrl(value.release?.url))}" target="_blank" rel="noopener" class="underline hover:text-white" title="${DISCOGS_CREDIT} Open this edition on Discogs">Discogs</a>`
-        : 'Discogs'
-    // the lowest price for sale is a Discogs value too, and says what it is: never a mean
-    if (value.basis === ValueBasis.LOWEST_FOR_SALE) return { html: `CD · ${name} · lowest for sale`, hint: DISCOGS_LOWEST_TITLE }
-    return { html: `CD · ${name}`, hint: DISCOGS_MEAN_TITLE }
+    if (!url) return 'Discogs'
+    return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="underline hover:text-white" title="${DISCOGS_CREDIT} Open this edition on Discogs">Discogs</a>`
 }
 
 /** Line 2, left: where the value comes from, or why there is none. */
 function originOf(item, value) {
     if (value.origin === ValueOrigin.DISCOGS) return discogsOrigin(value)
     const text = value.origin === ValueOrigin.YOURS ? `${formatOf(item)} · written by you` : noValueText(value)
-    return { html: escapeHtml(text), hint: text }
+    return { line: escapeHtml(text), hint: text }
 }
 
 /** One average: its icon, the number, and of how many tracks it was made. */
@@ -79,6 +93,12 @@ const storeLink = ({ id, name, url }) =>
 
 const notYet = (word) => `<span class="text-xs text-gray-400 opacity-50 cursor-not-allowed" aria-disabled="true" title="${SELL_TRADE_SOON}">${word}</span>`
 
+/** Line 2, left: the Discogs value on its two lines, anything else on one that gives way (and has its whole text in the `title`). */
+function originSpan(origin) {
+    if (origin.stacked) return `<span class="min-w-0 flex flex-col text-[11px] leading-[13px] text-gray-400 whitespace-nowrap" title="${escapeHtml(origin.hint)}">${origin.stacked}</span>`
+    return `<span class="min-w-0 flex text-xs text-gray-400 whitespace-nowrap" title="${escapeHtml(origin.hint)}"><span class="truncate">${origin.line}</span></span>`
+}
+
 /** Line 5: what is owned can be sold or traded one day, and its links are in its window; what is not owned shows where to buy it. */
 function actionsOf(item) {
     if (!isOwned(item)) return buyLinksOf(item).map(storeLink).join(DOT)
@@ -101,8 +121,8 @@ export function cardValueBlock(item, value, money) {
       <div class="border-t border-white/10 mt-2" data-role="value" data-origin="${value.origin || 'none'}">
         <div class="py-2 px-3 flex flex-col gap-1" style="border-left:3px solid ${owned ? EDGE.owned : EDGE.other}">
           <div class="${LABEL}" data-line="1">${valueLabel(item)}</div>
-          <div class="flex items-center justify-between gap-3" data-line="2">
-            <span class="text-xs text-gray-400 whitespace-nowrap truncate" title="${escapeHtml(origin.hint)}">${origin.html}</span>
+          <div class="flex items-center justify-between gap-2" data-line="2">
+            ${originSpan(origin)}
             <strong class="text-lg text-white tabular-nums whitespace-nowrap" data-role="amount">${amount}</strong>
           </div>
         </div>
@@ -118,5 +138,5 @@ export function cardValueBlock(item, value, money) {
 export function rowValue(item, value, money) {
     const origin = originOf(item, value)
     const amount = value.origin ? `≈ ${moneyOf(value, money)}` : NO_VALUE
-    return `<span class="text-xs text-gray-400 whitespace-nowrap" data-role="value" title="${escapeHtml(origin.hint)}">${origin.html} <strong class="text-white tabular-nums">${amount}</strong></span>`
+    return `<span class="text-xs text-gray-400 whitespace-nowrap" data-role="value" title="${escapeHtml(origin.hint)}">${origin.line}${origin.tail ? ` · ${origin.tail}` : ''} <strong class="text-white tabular-nums">${amount}</strong></span>`
 }

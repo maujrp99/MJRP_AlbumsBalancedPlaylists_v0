@@ -7,7 +7,7 @@ import { describe, it, expect, afterEach } from 'vitest'
 import {
     SIX_HOURS_MS, NoValue, ValueOrigin, valueOfItem, isFresh, needsReading, meanOfConditions, convert, toUsd, shownCurrency,
     formatMoney, roundToCents, moneyOf, parseAmount, writtenValueFrom, totalsOf, usdOf, noValueText, valueLabel, ownedNote, toBuyNote, rateNote,
-    itemsWithDiscogsValue, RATES_MISSING_TEXT, DISCOGS_CREDIT
+    itemsWithDiscogsValue, shortDayText, readOnText, RATES_MISSING_TEXT, DISCOGS_CREDIT, newestReading, neverRead, needsKeeping
 } from '../../public/js/models/inventoryValue.js'
 import { sortInventory, sortingFor } from '../../public/js/models/inventorySort.js'
 
@@ -46,21 +46,42 @@ describe('the value of an item', () => {
         expect(meanOfConditions({ mint: 14.5, nearMint: 11.2, veryGoodPlus: 7.9 })).toBeCloseTo(11.2, 5)
     })
 
-    it('a reading is shown for less than six hours, not a second more (REQ-05)', () => {
-        const justInside = reading({ readAt: ago(SIX_HOURS_MS - 1000) })
-        const atSixHours = reading({ readAt: ago(SIX_HOURS_MS) })
+    it('a reading is shown whatever its age, with the date it was read; six hours is only the guard of the browser (REQ-14)', () => {
+        const old = reading({ readAt: ago(30 * 24 * 60 * 60 * 1000) })
 
-        expect(valueOfItem(item(), on({ reading: justInside })).origin).toBe('discogs')
-        expect(valueOfItem(item(), on({ reading: atSixHours }))).toEqual({ origin: null, reason: NoValue.WAITING })
-        expect(isFresh(atSixHours, NOW)).toBe(false)
+        expect(valueOfItem(item(), on({ reading: old }))).toMatchObject({ origin: ValueOrigin.DISCOGS, amount: 12, readAt: old.readAt })
+        expect(isFresh(reading({ readAt: ago(SIX_HOURS_MS - 1000) }), NOW)).toBe(true)
+        expect(isFresh(reading({ readAt: ago(SIX_HOURS_MS) }), NOW)).toBe(false)
         expect(isFresh({ readAt: 'never' }, NOW)).toBe(false)
         expect(isFresh({ readAt: new Date(NOW + 60000).toISOString() }, NOW)).toBe(false) // a time in the future says nothing of the age
         expect(isFresh(null, NOW)).toBe(false)
     })
 
-    it('with the source off nothing of Discogs is shown, a fresh reading included (REQ-10)', () => {
+    it('the reading kept in the item shows with its date, with no reading in the browser (REQ-14)', () => {
+        const kept = item({ discogsReading: reading({ readAt: ago(3 * 24 * 60 * 60 * 1000), source: 'discogs' }) })
+
+        expect(valueOfItem(kept, on())).toMatchObject({ origin: ValueOrigin.DISCOGS, amount: 12, readAt: kept.discogsReading.readAt })
+        // it shows while the switch is not known yet too (at once); only a switch that is off hides it
+        expect(valueOfItem(kept, { now: NOW, source: null }).origin).toBe('discogs')
+        expect(valueOfItem(kept, { now: NOW, source: 'off' })).toEqual({ origin: null, reason: NoValue.SOURCE_OFF })
+    })
+
+    it('the newest reading wins between the one kept in the item and the one in the browser; the written value beats both', () => {
+        const kept = reading({ readAt: ago(2 * 60 * 60 * 1000), conditions: { mint: 30, nearMint: 30, veryGoodPlus: 30 } })
+        const browser = reading({ readAt: ago(60 * 1000) })
+
+        expect(valueOfItem(item({ discogsReading: kept }), on({ reading: browser })).amount).toBe(12)
+        expect(valueOfItem(item({ discogsReading: browser }), on({ reading: kept })).amount).toBe(12)
+        expect(newestReading(kept, browser)).toBe(browser)
+        expect(newestReading(null, kept)).toBe(kept)
+        expect(newestReading({ readAt: 'bad' }, kept)).toBe(kept)
+        expect(newestReading(null, null)).toBe(null)
+        expect(valueOfItem(item({ discogsReading: kept, value: { amount: 25, currency: 'USD' } }), on({ reading: browser })).origin).toBe('yours')
+    })
+
+    it('with the source off nothing of Discogs is shown, a reading included (REQ-10)', () => {
         expect(valueOfItem(item(), { now: NOW, source: 'off', reading: reading() })).toEqual({ origin: null, reason: NoValue.SOURCE_OFF })
-        expect(valueOfItem(item(), { now: NOW, source: null, reading: reading() })).toEqual({ origin: null, reason: NoValue.NEVER_READ })
+        expect(valueOfItem(item(), { now: NOW, source: null })).toEqual({ origin: null, reason: NoValue.NEVER_READ })
     })
 
     it('no value, with the reason: waiting, being read, no CD edition, no price suggested, failed and why', () => {
@@ -75,12 +96,44 @@ describe('the value of an item', () => {
         expect(valueOfItem(item(), on({ reading: reading({ conditions: { mint: 15, nearMint: 12 } }) })).reason).toBe(NoValue.NO_SUGGESTION)
     })
 
-    it('what a read has to do: an item with no written value and no fresh reading', () => {
+    it('what a run has to read: no written value, and no reading younger than six hours (the guard)', () => {
         expect(needsReading(item(), undefined, NOW)).toBe(true)
         expect(needsReading(item(), reading(), NOW)).toBe(false)
-        expect(needsReading(item(), reading({ readAt: ago(SIX_HOURS_MS + 1) }), NOW)).toBe(true)
+        expect(needsReading(item(), reading({ readAt: ago(SIX_HOURS_MS + 1) }), NOW)).toBe(true) // an update reads it again
         expect(needsReading(item({ value: { amount: 3, currency: 'USD' } }), undefined, NOW)).toBe(false)
-        expect(needsReading(item(), { kind: 'not_found', readAt: ago(1000) }, NOW)).toBe(false) // "no CD edition" is believed for six hours too
+        expect(needsReading(item(), { kind: 'not_found', readAt: ago(1000) }, NOW)).toBe(false)
+        expect(needsReading(item({ discogsReading: reading({ readAt: ago(1000) }) }), undefined, NOW)).toBe(false) // read minutes ago on another device
+    })
+
+    it('what is waiting: only an item that never had a reading, in the item or in the browser (REQ-14)', () => {
+        const old = reading({ readAt: ago(40 * 24 * 60 * 60 * 1000) })
+
+        expect(neverRead(item(), undefined)).toBe(true)
+        expect(neverRead(item({ discogsReading: old }), undefined)).toBe(false)
+        expect(neverRead(item(), old)).toBe(false)
+        expect(neverRead(item({ discogsReading: { kind: 'not_found', readAt: ago(1000) } }), undefined)).toBe(false)
+        expect(neverRead(item({ value: { amount: 3, currency: 'USD' } }), undefined)).toBe(false)
+    })
+
+    it('a reading only the browser has, or has newer, is what the next run saves to the item without asking Discogs', () => {
+        const fresh = reading({ readAt: ago(60 * 1000) })
+        const older = reading({ readAt: ago(60 * 60 * 1000) })
+
+        expect(needsKeeping(item(), fresh)).toBe(true)
+        expect(needsKeeping(item({ discogsReading: older }), fresh)).toBe(true)
+        expect(needsKeeping(item({ discogsReading: fresh }), older)).toBe(false)
+        expect(needsKeeping(item({ discogsReading: fresh }), fresh)).toBe(false)
+        expect(needsKeeping(item(), undefined)).toBe(false)
+        expect(needsKeeping(item({ value: { amount: 3, currency: 'USD' } }), fresh)).toBe(true) // the reading is kept; the value written still wins on the screen
+    })
+})
+
+describe('the date of a reading on a card or a row (REQ-16)', () => {
+    it('is the day and the month in one piece: a no-break space, so it never splits over two lines, the same on the card and the phone', () => {
+        expect(shortDayText('2026-11-18T14:05:00.000Z')).toBe('18\u00a0Nov')
+        expect(readOnText({ readAt: '2026-11-18T14:05:00.000Z' })).toBe('18\u00a0Nov')
+        expect(readOnText({ readAt: 'bad' })).toBe('')
+        expect(readOnText(null)).toBe('')
     })
 })
 

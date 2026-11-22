@@ -1,0 +1,284 @@
+{
+  "version": "26.0",
+  "device": "iPhone 15 Pro",
+  "w393": {
+    "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1",
+    "rows": [
+      {
+        "text": " | In the Land of Grey and Pink | Caravan | — | Waiting for a value | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Selling England by the Pound | Genesis | — | Waiting for a value | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Hejira | Joni Mitchell | ≈ $12.93 | Discogs · read 18 Nov | Not Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Harvest | Neil Young | ≈ $12.00 | Discogs · read 18 Nov | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Animals | Pink Floyd | ≈ $19.00 | Discogs · read 18 Nov | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | OK Computer | Radiohead | ≈ $25.00 | Yours | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Fragile | Yes | — | No CD edition found | ♡ Wishlist | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      }
+    ],
+    "pageScrollX": 0,
+    "notice": "2 albums are waiting for a value.",
+    "sheet": {
+      "text": "Harvest | Neil Young · ✓ Owned | Open album | Edit | IN MY COLLECTION · WORTH | ≈ $12.00 | Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. | Read on 18 Nov 2026, 11:05. | This edition on Discogs ↗ | Data provided by Discogs. | WHERE TO BUY | Discogs ↗ | Amazon ↗ | iMusic ↗ | Each link opens the store on this album, on CD. The app earns nothing from these links today. | SELL OR TRADE | Sell | Trade | Selling and trading between collectors: not in the app yet | Remove from inventory",
+      "links": [
+        "This edition on Discogs ↗",
+        "Data provided by Discogs.",
+        "Discogs ↗",
+        "Amazon ↗",
+        "iMusic ↗"
+      ]
+    }
+  },
+  "w320": {
+    "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1",
+    "rows": [
+      {
+        "text": " | In the Land of Grey and Pink | Caravan | — | Waiting for a value | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Selling England by the Pound | Genesis | — | Waiting for a value | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Hejira | Joni Mitchell | ≈ $12.93 | Discogs · read 18 Nov | Not Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 51
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Harvest | Neil Young | ≈ $12.00 | Discogs · read 18 Nov | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Animals | Pink Floyd | ≈ $19.00 | Discogs · read 18 Nov | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | OK Computer | Radiohead | ≈ $25.00 | Yours | ✓ Owned | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      },
+      {
+        "text": " | Fragile | Yes | — | No CD edition found | ♡ Wishlist | Avg Rating78.4 | Avg Pop42.6% | ",
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 55
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1
+          }
+        ]
+      }
+    ],
+    "pageScrollX": 0,
+    "notice": "2 albums are waiting for a value.",
+    "sheet": {
+      "text": "Harvest | Neil Young · ✓ Owned | Open album | Edit | IN MY COLLECTION · WORTH | ≈ $12.00 | Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. | Read on 18 Nov 2026, 11:05. | This edition on Discogs ↗ | Data provided by Discogs. | WHERE TO BUY | Discogs ↗ | Amazon ↗ | iMusic ↗ | Each link opens the store on this album, on CD. The app earns nothing from these links today. | SELL OR TRADE | Sell | Trade | Selling and trading between collectors: not in the app yet | Remove from inventory",
+      "links": [
+        "This edition on Discogs ↗",
+        "Data provided by Discogs.",
+        "Discogs ↗",
+        "Amazon ↗",
+        "iMusic ↗"
+      ]
+    }
+  },
+  "external": 0
+}
