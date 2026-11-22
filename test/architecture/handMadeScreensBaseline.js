@@ -93,6 +93,5 @@ export const HAND_MADE = {
     'services/DialogService.js': 147,
     'utils/SafeDOM.js': 237,
     'utils/pageScrollLock.js': 56,
-    'views/BaseView.js': 144,
-    'views/playlists/PlaylistsExport.js': 142
+    'views/BaseView.js': 144
 }

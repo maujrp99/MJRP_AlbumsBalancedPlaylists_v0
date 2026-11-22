@@ -2,7 +2,7 @@
  * F83 wave 8a - the recording of EVERY call the Apple Music export makes to MusicKit (and what it tells the person), the golden the
  * move of the export modules has to leave identical.
  *
- * The real chain runs: the exports (react-bridge/legacy/OutputWindows.ts, then controllers/playlistExports.js), AppleMusicExportService,
+ * The real chain runs: the exports (controllers/playlistExportEntries.js, then controllers/playlistExports.js), AppleMusicExportService,
  * MusicKitService, MusicKitAuth/Catalog/Library and the session ledger. Only the SDK is a stand-in (test/support/musicKitRecorder.js:
  * `window.MusicKit` and the token `fetch`), plus the toast and the pause between two creations. Every call becomes one line of ONE
  * ordered log: the token request, `configure`, `getInstance`, `authorize`, each `api.music(method, path, params, body)`, each pause,
@@ -22,7 +22,7 @@ const GOLDEN = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../fi
 const RECORDING = process.env.RECORD_EXPORT === '1'
 
 /** THE seam the move changes: where the export functions are asked for. */
-const loadExports = () => import('../../../public/js/react-bridge/legacy/OutputWindows.ts')
+const loadExports = () => import('../../../public/js/controllers/playlistExportEntries.js')
 
 const log = vi.hoisted(() => ({ events: [] }))
 vi.mock('../../../public/js/components/Toast.js', () => {

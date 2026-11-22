@@ -37,7 +37,7 @@ const WRITTEN_IN_THE_CODE = {
     'ui/Breadcrumb.tsx': ['crumb.path'],
     // an option given by the view, '/home' in the one caller
     // a blob: address made in the line above, for the download of the person's own playlists
-    'views/playlists/PlaylistsExport.js': ['url'],
+    'controllers/playlistExports.js': ['url'],
     // the page's own address with another host name (utils/localAddress.js)
     'app.js': ['localUrl']
 }

@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 09:07] step — F83 onda 8a: a exportação ao Apple Music e ao arquivo muda de lugar, o invólucro OutputWindows.ts sai
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `views/playlists/PlaylistsExport.js` -> `controllers/playlistExports.js` (git mv; só os caminhos das importações mudam: nada de lógica) e as quatro funções de `react-bridge/legacy/OutputWindows.ts` -> `controllers/playlistExportEntries.js` (a promessa única do MusicKit vai junto). `ui/PlaylistExportWindow.tsx` não importa controlador: recebe `exports` de quem a abre (`usePlaylistExport({ exports })`); as três telas (`Playlists.tsx`, `PhoneParts.tsx`, `SavedPlaylists.tsx`) passam o módulo.
+- A gravação das chamadas ao MusicKit (30 casos, 605 eventos) passa IDÊNTICA sem recapturar; os testes de exportar já existentes só mudaram o caminho do módulo (`vi.mock`/`import`), nenhuma asserção. `bridgesOnlyShrink` e as entradas de `handMadeScreensBaseline`, `outsideUrlChecked` e `screensLoadThroughTheService` seguem o arquivo.
+- O ramo `btn` de `handleExportToAppleMusic` NÃO foi apagado: o teste existente «shows the progress on the button it was given and gives the button back» (AppleMusicExport.test.js) o alcança, e esse teste não pode mudar. Fica para a 8d (sai junto com o teste e com `Icons.js`).
+
 ## [2026-11-22 09:04] step — F83 onda 8a: o dourado da janela de exportar ao Spotify à mão, capturado antes de reescrevê-la
 
 **Branch:** claude/f83-wave-8a-exports

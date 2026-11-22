@@ -17,7 +17,7 @@ vi.mock('../../../public/js/components/Toast.js', () => {
 
 import { AppleMusicExportService, appleExportMessages } from '../../../public/js/services/AppleMusicExportService.js'
 import { exportLedger } from '../../../public/js/services/export/exportLedger.js'
-import { handleExportToAppleMusic } from '../../../public/js/views/playlists/PlaylistsExport.js'
+import { handleExportToAppleMusic } from '../../../public/js/controllers/playlistExports.js'
 import { playlistsStore } from '../../../public/js/stores/playlists.js'
 import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
 import toast from '../../../public/js/components/Toast.js'

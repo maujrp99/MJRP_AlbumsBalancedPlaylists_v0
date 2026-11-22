@@ -19,7 +19,7 @@ vi.mock('../../public/js/components/SpotifyExportModal.js', async () => {
     const m = await import('../support/exportStandIns.js')
     return { showSpotifyExportModal: (arg: { playlists: Array<{ name: string }>; seriesName: string } | undefined) => m.stand.calls.push(['spotifyWindow', arg ? arg.playlists.map(item => item.name) : null, arg?.seriesName ?? null]) }
 })
-vi.mock('../../public/js/views/playlists/PlaylistsExport.js', async (importOriginal) => {
+vi.mock('../../public/js/controllers/playlistExports.js', async (importOriginal) => {
     const original = await importOriginal<object>()
     const m = await import('../support/exportStandIns.js')
     return { ...original, handleExportJson: (playlists: Array<{ name: string }>, options?: { batchName?: string }) => m.stand.calls.push(['json', playlists.map(item => item.name), options?.batchName ?? null]) }

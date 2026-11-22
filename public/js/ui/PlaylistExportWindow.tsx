@@ -2,8 +2,8 @@
  * PlaylistExportWindow - the one window of the export (F90; written in React in F83 sync 2, it was views/playlists/PlaylistExportWindow.js).
  *
  * The edit screen and the saved playlists screen open the same window: the three ways out, in the order Apple Music, Spotify, the JSON
- * file. Each one calls the export the edit screen always called (the hand-made modules behind react-bridge/legacy/OutputWindows): this
- * window only chooses and hands over what to export. It writes nothing of the batch.
+ * file. Each one calls the export the edit screen always called (controllers/playlistExportEntries.js, which the screen hands to the window as
+ * `exports`: a piece of ui/ imports no controller): this window only chooses and hands over what to export. It writes nothing of the batch.
  *
  * Apple Music asks first in which folder the playlists go (AppleFolderStep) and writes its progress on the step's «Export» button; the
  * window stays to show it. Spotify has its own window and the file is handed to the browser, so the window gives way to them.
@@ -19,7 +19,6 @@ import { ModalShell } from './ModalShell'
 import { useSheetWindow } from './SheetWindow'
 import { Icon } from './Icon'
 import { AppleFolderStep, type FolderChoice } from './AppleFolderStep'
-import { exportJson, exportToAppleMusic, listAppleFolders, openSpotifyExport } from '../react-bridge/legacy/OutputWindows'
 import { isPhone } from '../utils/isPhone.js'
 import { t } from '../i18n/t.js'
 
@@ -53,8 +52,18 @@ export const DESTINATIONS = Object.freeze([
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])'
 
-/** What a screen says about itself to the window: the series the playlists belong to when the job does not name one (the edit screen: the open series). */
+/** The four ways out the window offers, given by the screen (controllers/playlistExportEntries.js). */
+export interface PlaylistExports {
+    openSpotifyExport: (what?: What) => Promise<void>
+    exportJson: (what?: What) => Promise<void>
+    /** `onStatus` is told the progress (a text while it runs, null at the end). */
+    exportToAppleMusic: (onStatus: (text: string | null) => void, what?: What & { folderName?: string; folderId?: string; noFolder?: boolean }) => Promise<void>
+    listAppleFolders: () => Promise<Array<{ id: string; name: string }>>
+}
+
+/** What a screen says about itself to the window: the ways out, and the series the playlists belong to when the job does not name one (the edit screen: the open series). */
 export interface ExportDefaults {
+    exports: PlaylistExports
     seriesName?: () => string | undefined
 }
 
@@ -106,18 +115,18 @@ function ExportBody({ what, defaults, title, start, phone, close, setTitle }: {
     const pick = (id: (typeof DESTINATIONS)[number]['id']) => {
         if (id === 'apple') { setView('step'); return }
         close()
-        if (id === 'spotify') void openSpotifyExport(what)
-        else void exportJson(what)
+        if (id === 'spotify') void defaults.exports.openSpotifyExport(what)
+        else void defaults.exports.exportJson(what)
     }
 
     const onExport = useCallback((folder: FolderChoice, report: (text: string | null) => void) => {
-        void exportToAppleMusic(report, { ...what, ...folder })
-    }, [what])
+        void defaults.exports.exportToAppleMusic(report, { ...what, ...folder })
+    }, [what, defaults.exports])
 
     if (view === 'step') {
         return (
             <div ref={box} className="flex flex-col gap-3">
-                <AppleFolderStep seriesName={seriesNameOf(what.seriesName, defaults)} loadFolders={listAppleFolders} onBack={() => setView('rows')} onExport={onExport} />
+                <AppleFolderStep seriesName={seriesNameOf(what.seriesName, defaults)} loadFolders={defaults.exports.listAppleFolders} onBack={() => setView('rows')} onExport={onExport} />
             </div>
         )
     }
@@ -174,7 +183,7 @@ function ExportDialog({ opened, defaults, onClose }: { opened: Opened; defaults:
  * Opens the export window. `layer` goes anywhere in the screen (it draws into the window, not in place). Opened from a tap, never from
  * an effect; leaving the screen takes it off the page.
  */
-export function usePlaylistExport(defaults: ExportDefaults = {}): { open: (job?: ExportJob) => void; layer: ReactNode } {
+export function usePlaylistExport(defaults: ExportDefaults): { open: (job?: ExportJob) => void; layer: ReactNode } {
     const [opened, setOpened] = useState<Opened | null>(null)
     const sheet = useSheetWindow()
 

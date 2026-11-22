@@ -5,13 +5,13 @@
  * Part of Sprint 10 refactoring (PlaylistsView modularization)
  */
 
-import toast from '../../components/Toast.js'
-import { albumSeriesStore } from '../../stores/albumSeries.js'
-import { playlistsStore } from '../../stores/playlists.js'
-import { getIcon } from '../../components/Icons.js'
-import { escapeHtml } from '../../utils/stringUtils.js'
-import { AppleMusicExportService, appleExportMessages } from '../../services/AppleMusicExportService.js'
-import { track } from '../../services/usage/track.js'
+import toast from '../components/Toast.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
+import { playlistsStore } from '../stores/playlists.js'
+import { getIcon } from '../components/Icons.js'
+import { escapeHtml } from '../utils/stringUtils.js'
+import { AppleMusicExportService, appleExportMessages } from '../services/AppleMusicExportService.js'
+import { track } from '../services/usage/track.js'
 
 /**
  * Helper: Resolve effective batch name with fallback
@@ -125,7 +125,7 @@ export async function handleExportToAppleMusic(options = {}) {
     say('Connecting...')
 
     try {
-        const { musicKitService } = await import('../../services/MusicKitService.js')
+        const { musicKitService } = await import('../services/MusicKitService.js')
         const report = await AppleMusicExportService.exportPlaylists(
             playlists,
             { seriesName: seriesNameOf(options.seriesName), batchName: options.batchName || getEffectiveBatchName(), positions: options.positions, folderName: options.folderName, folderId: options.folderId, noFolder: options.noFolder },
