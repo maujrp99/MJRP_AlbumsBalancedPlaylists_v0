@@ -22,6 +22,17 @@ describe('AlbumSeriesStore', () => {
         expect(store.getDb()).toBeNull()
     })
 
+    it('knows whether a read of the series has ended (F79): not at first, yes after markRead, not after reset', () => {
+        expect(store.hasRead()).toBe(false)
+        const listener = vi.fn()
+        store.subscribe(listener)
+        store.markRead()
+        expect(store.hasRead()).toBe(true)
+        expect(listener).toHaveBeenCalled()
+        store.reset()
+        expect(store.hasRead()).toBe(false)
+    })
+
     it('exports one shared instance', () => {
         expect(albumSeriesStore).toBeInstanceOf(AlbumSeriesStore)
     })

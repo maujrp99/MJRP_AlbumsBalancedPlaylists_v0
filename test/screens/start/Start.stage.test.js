@@ -49,32 +49,30 @@ describe('the stage of the Home (F79)', () => {
         await flush()
     }
 
-    it('first visit: says what the app does and what a series is, then the field, the steps, the empty dock (^home-empty)', () => {
+    it('first visit, lean: the title, «What is a series?» (the sentence behind it), the field, one link, no steps, no bar (^home-empty)', () => {
         expect(text('#homeHero h1')).toBe('Pick the albums. We blend the playlists.')
         expect(text('#homeHero p')).toBe('A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.')
-        expect($('#artistScanInput').getAttribute('placeholder')).toBe('An artist, or paste a list of albums')
+        expect($('#homeHero p').hidden).toBe(true)
+        expect(text('.home-what')).toBe('What is a series?')
+        expect($('#artistScanInput').getAttribute('placeholder')).toBe('Type an artist')
         expect(text('#btnScanArtist')).toBe('Search')
         expect($('#btnScanArtist').classList.contains('is-flame')).toBe(true)
-        expect(text('#homeHint')).toBe('Type an artist to see their albums, or paste a list of albums from many artists.')
-        expect([...app.querySelectorAll('#homeHow li')].map(li => li.textContent.replace(/\s+/g, ' ').trim()))
-            .toEqual(['1Find an artist, or paste a list', '2Add the albums you want, in the order you want', '3Create the series, then blend it'])
-        expect(text('.home-dock')).toContain('Your series is empty')
-        expect(text('.home-dock')).toContain('Search an artist, then click a cover to add it. You name the series at the end.')
-        expect(text('.home-dock')).toContain('Add one album to create the series')
-        expect($('#btnCreateSeries').disabled).toBe(true)
-        expect($('#btnCreateSeries').classList.contains('is-flame')).toBe(false)
+        expect(text('#homeHint')).toBe('or paste a list')
+        expect($('#homeHow')).toBeNull()
+        expect($('.home-dock')).toBeNull()
+        expect($('#btnCreateSeries')).toBeNull()
         expect(equalizer().children).toHaveLength(48)
         expect(equalizer().dataset.state).toBe('still')
         expect(app.textContent).not.toMatch(/Initialize Load Sequence|Stack Empty|\/\/|Bulk Paste/)
     })
 
-    it('typing an artist: the hint points to Enter or Search (^home-typing)', () => {
+    it('typing an artist: the line under the field stays one link (^home-typing)', () => {
         const field = $('#artistScanInput')
         field.focus()
         field.value = 'Pink Fl'
         field.dispatchEvent(new Event('input', { bubbles: true }))
 
-        expect(text('#homeHint')).toBe('Press Enter or Search to see their albums. A list with one album per line works too.')
+        expect(text('#homeHint')).toBe('or paste a list')
     })
 
     it('searching: the button busy, the stage small, the equalizer moving, skeleton covers (^home-searching)', () => {
@@ -86,7 +84,6 @@ describe('the stage of the Home (F79)', () => {
         expect($('#homeHero').hidden).toBe(true)
         expect(equalizer().dataset.state).toBe('live')
         expect(app.querySelectorAll('#discographyGrid .home-skel')).toHaveLength(12)
-        expect($('#homeHow').hidden).toBe(true)
     })
 
     it('the discography: the artist, the line, the chips, «Add all», the covers with «+»; the fire leaves «Search» (^home-discography)', async () => {
@@ -102,7 +99,7 @@ describe('the stage of the Home (F79)', () => {
         expect($('#discographyGrid .home-card').getAttribute('aria-label')).toBe('Crooked, 1994. Click to add it')
         expect($('#btnScanArtist').classList.contains('is-flame')).toBe(false)
         expect(equalizer().dataset.state).toBe('still')
-        expect(text('.home-dock')).toContain('Click a cover to add it. You name the series at the end.')
+        expect($('.home-dock')).toBeNull()
     })
 
     it('the catalog did not answer: the equalizer falls flat, the words say what still holds (^home-catalog-error)', async () => {
@@ -120,8 +117,7 @@ describe('the stage of the Home (F79)', () => {
 
         expect($('#homeField').hidden).toBe(true)
         expect($('#homePaste').hidden).toBe(false)
-        expect(text('#homeHint')).toBe('Paste or type one album per line. Search an artist instead')
-        expect($('#homeHow').hidden).toBe(true)
+        expect(text('#homeHint')).toBe('Search an artist instead')
 
         $('#homeHint [data-home-mode="artist"]').click()
         expect($('#homeField').hidden).toBe(false)

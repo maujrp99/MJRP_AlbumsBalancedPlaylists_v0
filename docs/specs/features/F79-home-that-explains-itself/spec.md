@@ -18,6 +18,9 @@ planned_for: "[[ROADMAP#^REL-41]]"
 ## Problem Statement
 Dito pelo MJRP em 2026-11-20, com uma captura da Home: «vamos utilizar as skills de UI e UX e de writing copy para melhorar essa seção inicial do site … Gostaria de ver uma proposta consolidar, elevar, transformar, considerando copy, elementos de UI e UX e usabilidade.» Ele escolheu o nível Transformar (19:19) e aprovou a rodada 2 (por volta das 22:15): «aprovado a home v2 … bora implementar».
 
+## Decision
+Decidido pelo MJRP em 2026-11-22: a tela «Create» no computador também fica enxuta, com o mesmo conceito da versão do celular (UAT-281). Pergunta dele: «podemos aplicar na sessão create o mesmo conceito de lean da versao mobile?»; à pergunta «"Create" no computador: enxuta (recomendo) ou a variante com os três passos numa linha?», respondeu: «3. Sua recomendação». Prévia: `design/proposals/f79-create-lean-computer/`. Em construção no ramo `wip/f79-create-lean-computer-and-no-loading-line` (UAT-284). Não muda o status da feature.
+
 ## Requirements
 - [REQ-01] Antes de qualquer controle, a Home diz o que o app faz e o que é uma série («Pick the albums. We blend the playlists.» e a frase da série) e mostra os três passos; a base vazia diz por que «Create series» está apagado. · from [[S-61-build-a-series-on-a-home-that-explains-itself|S-61]]
   verified_by:: `test/components/home/HomeStage.test.js`

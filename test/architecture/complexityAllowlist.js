@@ -44,7 +44,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'services/musickit/MusicKitCatalog.js:getArtistAlbums': 18, // no feature yet: the Apple Music catalog client
     'transformers/TrackTransformer.js:toCanonical': 40, // F62 holds this code (blend, playlists, export, Spotify)
     'utils/FilterUtils.js:sortBy': 12, // no feature yet: three filters of albums that should be one rule
-    'utils/SafeDOM.js:arrow function': 15, // no feature yet
     'utils/retry.js:retryWithBackoff': 14, // no feature yet
     'workers/search.worker.js:function': 11 // F57 holds this code (album search, classification, series edit)
 })

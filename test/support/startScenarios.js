@@ -128,13 +128,13 @@ const search = async (h, text = 'Pink Floyd') => {
  */
 export const SCENARIOS = [
     {
-        name: 'first visit', run: async (h) => { h.snap('the stage, the steps, the empty dock'); h.focus('at the start') }
+        name: 'first visit', run: async (h) => { h.snap('the stage, the field, no bar'); h.focus('at the start') }
     },
     {
         name: 'typing an artist', run: async (h) => {
             await h.focusIn('#artistScanInput')
             await h.type('#artistScanInput', 'Pink Fl')
-            h.snap('the hint points to Enter or Search')
+            h.snap('the line under the field stays one link')
             h.focus('in the field')
             await h.focusOut('#artistScanInput')
             h.snap('the field left')
@@ -250,6 +250,47 @@ export const SCENARIOS = [
         }
     },
     {
+        name: 'the last cover taken out', run: async (h) => {
+            await search(h)
+            await pick(h, 'a1')
+            h.snap('the first cover: the bar comes')
+            await pick(h, 'a1')
+            h.snap('the last cover taken out: no bar, with Undo')
+            h.focus('after the last cover taken out')
+            await h.click('[data-dock="undo"]')
+            h.snap('Undo gave it back: the bar returns')
+        }
+    },
+    {
+        name: 'the sentence in place', run: async (h) => {
+            h.snap('closed')
+            await h.click('.home-what')
+            h.snap('opened by the mouse')
+            h.focus('the sentence opened')
+            await h.click('.home-what')
+            h.snap('closed by a second click')
+            await h.click('.home-what')
+            await h.key('.home-what', 'Escape')
+            h.snap('closed with Escape on the link')
+            await h.click('.home-what')
+            await h.focusIn('#artistScanInput')
+            await h.key('#artistScanInput', 'Escape')
+            h.snap('Escape from the field leaves it open')
+            await h.click('#btnScanArtist')
+            h.snap('after a search the title and the sentence are gone')
+        }
+    },
+    {
+        name: 'the sentence closes when another layer took Escape', run: async (h) => {
+            await h.click('.home-what')
+            const layer = (event) => event.preventDefault() // a menu, a window or a sheet that took the key
+            document.addEventListener('keydown', layer, { capture: true })
+            await h.key('.home-what', 'Escape')
+            document.removeEventListener('keydown', layer, { capture: true })
+            h.snap('still open: the key was taken')
+        }
+    },
+    {
         name: 'the undo goes away by itself', timers: true, run: async (h) => {
             await search(h)
             await pick(h, 'a1', 'a3')
@@ -316,7 +357,7 @@ export const SCENARIOS = [
             await pick(h, ...FOUR)
             await h.click('#btnCreateSeries')
             await h.click('.home-restart')
-            h.snap('another series: empty dock')
+            h.snap('another series: no bar')
         }
     },
     {
@@ -428,8 +469,10 @@ export const SCENARIOS = [
     },
     {
         name: 'a visitor', guest: true, run: async (h) => {
+            await search(h)
+            h.snap('no notice and no bar before the first cover')
+            await pick(h, 'a1')
             h.snap('the visitor line in the dock')
-            await pick(h)
             await h.click('[data-dock="sign-in"]')
             h.note('the sign-in window')
             h.signIn()
@@ -570,6 +613,13 @@ export const SCENARIOS = [
             h.snap('the computer: the sheet is gone')
             await h.turn(true)
             h.snap('the phone again')
+        }
+    },
+    {
+        name: 'the sentence open turns into a phone', run: async (h) => {
+            await h.click('.home-what')
+            await h.turn(true)
+            h.snap('the phone: the sentence in place is closed')
         }
     },
     {

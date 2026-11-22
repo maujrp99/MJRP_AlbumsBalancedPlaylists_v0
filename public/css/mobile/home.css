@@ -161,11 +161,6 @@
   }
 
   /* ── 3. The results ───────────────────────────────────────────────────────────────────────── */
-  /* the three steps leave the phone, in every state (UAT-281): the numbered covers and the bar show the way */
-  .home-how {
-    display: none;
-  }
-
   .home-wait,
   .home-msg span,
   .home-after {

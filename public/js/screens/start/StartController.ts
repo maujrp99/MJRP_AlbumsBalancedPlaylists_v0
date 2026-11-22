@@ -153,8 +153,6 @@ export class StartController {
     dockFocus: { selector: string; start: number | null; end: number | null } | null = null
     paste: PasteState
     focusRequest: { id: number; request: FocusRequest } | null = null
-    fieldText = ''
-    fieldFocused = false
     disposed = false
     readonly stagingController: StagingAreaController
     readonly picker: InstanceType<typeof AlbumPickerController>
@@ -240,22 +238,14 @@ export class StartController {
         this.redraw()
     }
 
-    // --- the field of the artist: what the stage says while it is typed in ---
+    // --- the field of the artist ---
 
-    typed(text: string, focused: boolean): void {
-        this.fieldText = text
-        this.fieldFocused = focused
+    /**
+     * The field was typed in, or took or lost the focus. The line under it no longer changes with what is typed (the computer's lean, F79),
+     * but the stage is still drawn again at these moments, as it always was: the page it draws stays what it was, to the pixel.
+     */
+    fieldChanged(): void {
         this.touch()
-    }
-
-    focusChanged(focused: boolean): void {
-        this.fieldFocused = focused
-        this.touch()
-    }
-
-    /** True while the person is typing in the field of the artist: the hint points to Enter or Search. */
-    isTyping(): boolean {
-        return Boolean(this.fieldFocused && this.fieldText.trim())
     }
 
     // --- the field: an artist or a pasted list ---

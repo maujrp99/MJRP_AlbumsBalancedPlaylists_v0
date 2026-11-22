@@ -41,7 +41,7 @@
 28. `public/js/components/Breadcrumb.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
 29. `public/js/components/EditAlbumModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(removed in F65: `EditAlbumModal.js`)*
 30. `public/js/components/Footer.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
-31. `public/js/components/GlobalProgress.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
+31. `public/js/components/GlobalProgress.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(removed 2026-11-22: the orange loading line at the top; `GlobalProgress.js`)*
 32. `public/js/components/Icons.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
 33. `public/js/components/InlineProgress.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(removed in F65: `InlineProgress.js`)*
 34. `public/js/components/InventoryAddModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`)

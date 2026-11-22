@@ -1,0 +1,4982 @@
+{
+ "control-create-chromium-1280x800": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 40,
+  "failed": [
+   {
+    "what": "1280x800 visitor \u00b7 two chosen: pixels",
+    "detail": "19 apart, 19 without the equalizer box (max 1/255, rows 284-286)"
+   }
+  ],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "19 apart, 19 without the equalizer box (max 1/255, rows 284-286)",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "control-create-webkit-1280x800": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 40,
+  "failed": [
+   {
+    "what": "1280x800 visitor \u00b7 first visit: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 sentence open by mouse: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 sentence closed by a second click: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 sentence open by Enter: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 sentence closed by Enter: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 Escape on the link closes the sentence: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 Escape in the field leaves the sentence open: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   }
+  ],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "control-create-webkit-iphone393": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 28,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "control-read-chromium-1280x720": {
+  "part": "read",
+  "engine": "chromium",
+  "profile": "1280x720",
+  "account": false,
+  "checks": 8,
+  "failed": [],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 449,
+     "contentBottom": 481,
+     "toolbarBottom": 385,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1102,
+      "beforeTheSwap": 0.1102,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 446,
+     "contentBottom": 484,
+     "toolbarBottom": 385,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1102,
+      "beforeTheSwap": 0.1102,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 404,
+     "contentBottom": 436,
+     "toolbarBottom": 340,
+     "viewportHeight": 720,
+     "footerYDuringRead": 995,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1055,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0305
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 404,
+     "contentBottom": 436,
+     "toolbarBottom": 340,
+     "viewportHeight": 720,
+     "footerYDuringRead": 995,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1055,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0305
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 582,
+     "contentBottom": 620,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 585,
+     "contentBottom": 617,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 585,
+     "contentBottom": 617,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "control-read-chromium-1440x900": {
+  "part": "read",
+  "engine": "chromium",
+  "profile": "1440x900",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums menu 1440x900 chromium: settled screens equal",
+    "detail": "15 px apart rows 382-384, max 4/255"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 446,
+     "contentBottom": 484,
+     "toolbarBottom": 385,
+     "viewportHeight": 900,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0979,
+      "beforeTheSwap": 0.0979,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 446,
+     "contentBottom": 484,
+     "toolbarBottom": 385,
+     "viewportHeight": 900,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0979,
+      "beforeTheSwap": 0.0979,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 404,
+     "contentBottom": 436,
+     "toolbarBottom": 340,
+     "viewportHeight": 900,
+     "footerYDuringRead": 995,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0946,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0279
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 404,
+     "contentBottom": 436,
+     "toolbarBottom": 340,
+     "viewportHeight": 900,
+     "footerYDuringRead": 995,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0946,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0279
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 15
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 585,
+     "contentBottom": 617,
+     "toolbarBottom": 649,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0679,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0013
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 582,
+     "contentBottom": 620,
+     "toolbarBottom": 649,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0679,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0013
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0679,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0013
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0679,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0013
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "control-read-webkit-1280x720": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "1280x720",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums direct 1280x720 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   },
+   {
+    "what": "/albums menu 1280x720 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 446.3,
+     "contentBottom": 485.7,
+     "toolbarBottom": 386,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 447.7,
+     "contentBottom": 484.3,
+     "toolbarBottom": 386,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 404.5,
+     "contentBottom": 437.5,
+     "toolbarBottom": 341,
+     "viewportHeight": 720,
+     "footerYDuringRead": 996,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 404.3,
+     "contentBottom": 437.7,
+     "toolbarBottom": 341,
+     "viewportHeight": 720,
+     "footerYDuringRead": 996,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 560.7,
+     "contentBottom": 597.3,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 560.9,
+     "contentBottom": 597.1,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 562.8,
+     "contentBottom": 595.2,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 562.7,
+     "contentBottom": 595.3,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "control-read-webkit-iphone393": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums menu iphone393 webkit: settled screens equal",
+    "detail": "22533 px apart 17-38"
+   },
+   {
+    "what": "/blend menu iphone393 webkit: settled screens equal",
+    "detail": "22533 px apart 17-38"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 22533
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 22533
+   }
+  }
+ },
+ "control-sweep-chromium-1280x800": {
+  "part": "sweep",
+  "engine": "chromium",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 9,
+  "failed": [
+   {
+    "what": "/artists 1280x800 chromium: text, height, picture",
+    "detail": "text same; height 1049/1049; 7318 px apart (max 19/255, rows 160-255)"
+   },
+   {
+    "what": "/genres 1280x800 chromium: text, height, picture",
+    "detail": "text same; height 1049/1049; 7291 px apart (max 3/255, rows 160-255)"
+   },
+   {
+    "what": "/tracks 1280x800 chromium: text, height, picture",
+    "detail": "text same; height 1049/1049; 7299 px apart (max 12/255, rows 160-255)"
+   }
+  ],
+  "routes": {
+   "/start": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/albums": {
+    "textSame": true,
+    "heights": [
+     1839,
+     1839
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/blend": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/playlists": {
+    "textSame": true,
+    "heights": [
+     1094,
+     1094
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/saved-playlists": {
+    "textSame": true,
+    "heights": [
+     1094,
+     1094
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/inventory": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/artists": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7318,
+    "delta": 19,
+    "rows": "160-255"
+   },
+   "/genres": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7291,
+    "delta": 3,
+    "rows": "160-255"
+   },
+   "/tracks": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7299,
+    "delta": 12,
+    "rows": "160-255"
+   }
+  }
+ },
+ "control-sweep-webkit-1280x800": {
+  "part": "sweep",
+  "engine": "webkit",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 9,
+  "failed": [
+   {
+    "what": "/albums 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1840/1840; 4886 px apart (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "/blend 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1049/1049; 4886 px apart (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "/playlists 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1094/1094; 4886 px apart (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "/artists 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1049/1049; 12242 px apart (max 116/255, rows 21-255)"
+   },
+   {
+    "what": "/genres 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1049/1049; 12242 px apart (max 116/255, rows 21-255)"
+   },
+   {
+    "what": "/tracks 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1049/1049; 12242 px apart (max 116/255, rows 21-255)"
+   }
+  ],
+  "routes": {
+   "/start": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/albums": {
+    "textSame": true,
+    "heights": [
+     1840,
+     1840
+    ],
+    "apart": 4886,
+    "delta": 116,
+    "rows": "21-50"
+   },
+   "/blend": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 4886,
+    "delta": 116,
+    "rows": "21-50"
+   },
+   "/playlists": {
+    "textSame": true,
+    "heights": [
+     1094,
+     1094
+    ],
+    "apart": 4886,
+    "delta": 116,
+    "rows": "21-50"
+   },
+   "/saved-playlists": {
+    "textSame": true,
+    "heights": [
+     1094,
+     1094
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/inventory": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/artists": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 12242,
+    "delta": 116,
+    "rows": "21-255"
+   },
+   "/genres": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 12242,
+    "delta": 116,
+    "rows": "21-255"
+   },
+   "/tracks": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 12242,
+    "delta": 116,
+    "rows": "21-255"
+   }
+  }
+ },
+ "control-sweep-webkit-iphone375": {
+  "part": "sweep",
+  "engine": "webkit",
+  "profile": "iphone375",
+  "account": false,
+  "checks": 9,
+  "failed": [
+   {
+    "what": "/start iphone375 webkit: text, height, picture",
+    "detail": "text same; height 667/667; 22533 px apart (max 129/255, rows 17-38)"
+   },
+   {
+    "what": "/albums iphone375 webkit: text, height, picture",
+    "detail": "text same; height 1318/1318; 22533 px apart (max 129/255, rows 17-38)"
+   },
+   {
+    "what": "/inventory iphone375 webkit: text, height, picture",
+    "detail": "text same; height 713/713; 22533 px apart (max 129/255, rows 17-38)"
+   },
+   {
+    "what": "/artists iphone375 webkit: text, height, picture",
+    "detail": "text same; height 711/711; 65516 px apart (max 28/255, rows 132-228)"
+   },
+   {
+    "what": "/genres iphone375 webkit: text, height, picture",
+    "detail": "text same; height 711/711; 88049 px apart (max 129/255, rows 17-228)"
+   },
+   {
+    "what": "/tracks iphone375 webkit: text, height, picture",
+    "detail": "text same; height 711/711; 65516 px apart (max 29/255, rows 132-228)"
+   }
+  ],
+  "routes": {
+   "/start": {
+    "textSame": true,
+    "heights": [
+     667,
+     667
+    ],
+    "apart": 22533,
+    "delta": 129,
+    "rows": "17-38"
+   },
+   "/albums": {
+    "textSame": true,
+    "heights": [
+     1318,
+     1318
+    ],
+    "apart": 22533,
+    "delta": 129,
+    "rows": "17-38"
+   },
+   "/blend": {
+    "textSame": true,
+    "heights": [
+     754,
+     754
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/playlists": {
+    "textSame": true,
+    "heights": [
+     691,
+     691
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/saved-playlists": {
+    "textSame": true,
+    "heights": [
+     667,
+     667
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/inventory": {
+    "textSame": true,
+    "heights": [
+     713,
+     713
+    ],
+    "apart": 22533,
+    "delta": 129,
+    "rows": "17-38"
+   },
+   "/artists": {
+    "textSame": true,
+    "heights": [
+     711,
+     711
+    ],
+    "apart": 65516,
+    "delta": 28,
+    "rows": "132-228"
+   },
+   "/genres": {
+    "textSame": true,
+    "heights": [
+     711,
+     711
+    ],
+    "apart": 88049,
+    "delta": 129,
+    "rows": "17-228"
+   },
+   "/tracks": {
+    "textSame": true,
+    "heights": [
+     711,
+     711
+    ],
+    "apart": 65516,
+    "delta": 29,
+    "rows": "132-228"
+   }
+  }
+ },
+ "control-sweep-webkit-iphone393": {
+  "part": "sweep",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 9,
+  "failed": [
+   {
+    "what": "/artists iphone393 webkit: text, height, picture",
+    "detail": "text same; height 852/852; 65516 px apart (max 30/255, rows 132-228)"
+   },
+   {
+    "what": "/genres iphone393 webkit: text, height, picture",
+    "detail": "text same; height 852/852; 88049 px apart (max 129/255, rows 17-228)"
+   },
+   {
+    "what": "/tracks iphone393 webkit: text, height, picture",
+    "detail": "text same; height 852/852; 65516 px apart (max 29/255, rows 132-228)"
+   }
+  ],
+  "routes": {
+   "/start": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/albums": {
+    "textSame": true,
+    "heights": [
+     1345,
+     1345
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/blend": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/playlists": {
+    "textSame": true,
+    "heights": [
+     876,
+     876
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/saved-playlists": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/inventory": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/artists": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 65516,
+    "delta": 30,
+    "rows": "132-228"
+   },
+   "/genres": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 88049,
+    "delta": 129,
+    "rows": "17-228"
+   },
+   "/tracks": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 65516,
+    "delta": 29,
+    "rows": "132-228"
+   }
+  }
+ },
+ "create-chromium-1280x800-account": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "1280x800",
+  "account": true,
+  "checks": 43,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-chromium-1280x800": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 40,
+  "failed": [
+   {
+    "what": "1280x800 visitor \u00b7 two chosen: pixels",
+    "detail": "22 apart, 22 without the equalizer box (max 1/255, rows 284-327)"
+   }
+  ],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "22 apart, 22 without the equalizer box (max 1/255, rows 284-327)",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-chromium-1440x900-account": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "1440x900",
+  "account": true,
+  "checks": 43,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "35 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-chromium-1440x900": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "1440x900",
+  "account": false,
+  "checks": 40,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-chromium-1920x1080": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "1920x1080",
+  "account": false,
+  "checks": 40,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-chromium-iphone375": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "iphone375",
+  "account": false,
+  "checks": 28,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-chromium-iphone393-account": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "iphone393",
+  "account": true,
+  "checks": 28,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-chromium-iphone393": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 28,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-webkit-1280x800-account": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "1280x800",
+  "account": true,
+  "checks": 43,
+  "failed": [
+   {
+    "what": "1280x800 signed in \u00b7 first visit: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 signed in \u00b7 sentence open by mouse: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 signed in \u00b7 sentence closed by a second click: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 signed in \u00b7 sentence open by Enter: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 signed in \u00b7 sentence closed by Enter: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 signed in \u00b7 Escape on the link closes the sentence: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 signed in \u00b7 Escape in the field leaves the sentence open: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 signed in \u00b7 menu open and focus on the link: one Escape closes only the menu: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   }
+  ],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-webkit-1280x800": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 40,
+  "failed": [
+   {
+    "what": "1280x800 visitor \u00b7 first visit: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 sentence open by mouse: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 sentence closed by a second click: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 sentence open by Enter: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 sentence closed by Enter: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 Escape on the link closes the sentence: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 Escape in the field leaves the sentence open: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   }
+  ],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-webkit-1440x900-account": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "1440x900",
+  "account": true,
+  "checks": 43,
+  "failed": [
+   {
+    "what": "1440x900 signed in \u00b7 first visit: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1440x900 signed in \u00b7 sentence open by mouse: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1440x900 signed in \u00b7 sentence closed by a second click: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1440x900 signed in \u00b7 sentence open by Enter: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1440x900 signed in \u00b7 sentence closed by Enter: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1440x900 signed in \u00b7 Escape on the link closes the sentence: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1440x900 signed in \u00b7 Escape in the field leaves the sentence open: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "1440x900 signed in \u00b7 menu open and focus on the link: one Escape closes only the menu: pixels",
+    "detail": "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)"
+   }
+  ],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "4886 apart, 4886 without the equalizer box (max 116/255, rows 21-50)",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-webkit-1440x900": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "1440x900",
+  "account": false,
+  "checks": 40,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-webkit-1920x1080": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "1920x1080",
+  "account": false,
+  "checks": 40,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-webkit-iphone375": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "iphone375",
+  "account": false,
+  "checks": 28,
+  "failed": [
+   {
+    "what": "iphone375 visitor \u00b7 first visit: pixels",
+    "detail": "22533 apart, 22533 without the equalizer box (max 129/255, rows 17-38)"
+   },
+   {
+    "what": "iphone375 visitor \u00b7 sentence sheet open by touch: pixels",
+    "detail": "19745 apart, 19745 without the equalizer box (max 49/255, rows 17-38)"
+   },
+   {
+    "what": "iphone375 visitor \u00b7 sentence sheet closed with Escape: pixels",
+    "detail": "22533 apart, 22533 without the equalizer box (max 129/255, rows 17-38)"
+   }
+  ],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "22533 apart, 22533 without the equalizer box (max 129/255, rows 17-38)",
+   "19745 apart, 19745 without the equalizer box (max 49/255, rows 17-38)",
+   "22533 apart, 22533 without the equalizer box (max 129/255, rows 17-38)",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-webkit-iphone393-account": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": true,
+  "checks": 28,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "create-webkit-iphone393": {
+  "part": "create",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 28,
+  "failed": [],
+  "stateDifferences": {},
+  "pixelChecks": [
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box",
+   "0 apart, 0 without the equalizer box"
+  ]
+ },
+ "line-chromium-1280x720": {
+  "part": "read",
+  "engine": "chromium",
+  "profile": "1280x720",
+  "account": false,
+  "checks": 8,
+  "failed": [],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1102,
+      "beforeTheSwap": 0.1102,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 444.8,
+     "contentBottom": 485.2,
+     "toolbarBottom": 385,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1102,
+      "beforeTheSwap": 0.1102,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.075,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 449,
+     "contentBottom": 481,
+     "toolbarBottom": 385,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1055,
+      "beforeTheSwap": 0.1055,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": 582,
+     "contentBottom": 620,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 582,
+     "contentBottom": 620,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": 585,
+     "contentBottom": 617,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "line-webkit-1280x720": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "1280x720",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums direct 1280x720 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   },
+   {
+    "what": "/blend direct 1280x720 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 445.3,
+     "contentBottom": 486.7,
+     "toolbarBottom": 386,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 449.1,
+     "contentBottom": 482.9,
+     "toolbarBottom": 386,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": 557.4,
+     "contentBottom": 600.6,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 557.4,
+     "contentBottom": 600.6,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": 562.9,
+     "contentBottom": 595.1,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 562.7,
+     "contentBottom": 595.3,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "line-webkit-iphone375": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "iphone375",
+  "account": false,
+  "checks": 8,
+  "failed": [],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "line-webkit-iphone393": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/blend direct iphone393 webkit: settled screens equal",
+    "detail": "22533 px apart 17-38"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 22533
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [
+      250,
+      600,
+      1000,
+      1400
+     ],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "read-chromium-1280x720": {
+  "part": "read",
+  "engine": "chromium",
+  "profile": "1280x720",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums menu 1280x720 chromium: settled screens equal",
+    "detail": "10 px apart rows 175-203, max 1/255"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 447.4,
+     "contentBottom": 482.6,
+     "toolbarBottom": 385,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1102,
+      "beforeTheSwap": 0.1102,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 447.4,
+     "contentBottom": 482.6,
+     "toolbarBottom": 385,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1102,
+      "beforeTheSwap": 0.1102,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 404,
+     "contentBottom": 436,
+     "toolbarBottom": 340,
+     "viewportHeight": 720,
+     "footerYDuringRead": 995,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1055,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0305
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 449,
+     "contentBottom": 481,
+     "toolbarBottom": 385,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1055,
+      "beforeTheSwap": 0.1055,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 10
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 585,
+     "contentBottom": 617,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 580.8,
+     "contentBottom": 621.2,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0757,
+      "beforeTheSwap": 0.075,
+      "atTheSwap": 0.0007
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "read-chromium-1366x768": {
+  "part": "read",
+  "engine": "chromium",
+  "profile": "1366x768",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums menu 1366x768 chromium: settled screens equal",
+    "detail": "10 px apart 175-203"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 447.4,
+     "contentBottom": 482.6,
+     "toolbarBottom": 385,
+     "viewportHeight": 768,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1032,
+      "beforeTheSwap": 0.1032,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 444.8,
+     "contentBottom": 485.2,
+     "toolbarBottom": 385,
+     "viewportHeight": 768,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.1032,
+      "beforeTheSwap": 0.1032,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 404,
+     "contentBottom": 436,
+     "toolbarBottom": 340,
+     "viewportHeight": 768,
+     "footerYDuringRead": 995,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0991,
+      "beforeTheSwap": 0.0703,
+      "atTheSwap": 0.0288
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 449,
+     "contentBottom": 481,
+     "toolbarBottom": 385,
+     "viewportHeight": 768,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0991,
+      "beforeTheSwap": 0.0991,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 10
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 768,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0712,
+      "beforeTheSwap": 0.0703,
+      "atTheSwap": 0.0009
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 580.8,
+     "contentBottom": 621.2,
+     "toolbarBottom": 649,
+     "viewportHeight": 768,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0712,
+      "beforeTheSwap": 0.0703,
+      "atTheSwap": 0.0009
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 768,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0712,
+      "beforeTheSwap": 0.0703,
+      "atTheSwap": 0.0009
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 585,
+     "contentBottom": 617,
+     "toolbarBottom": 649,
+     "viewportHeight": 768,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0712,
+      "beforeTheSwap": 0.0703,
+      "atTheSwap": 0.0009
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "read-chromium-1440x900": {
+  "part": "read",
+  "engine": "chromium",
+  "profile": "1440x900",
+  "account": false,
+  "checks": 8,
+  "failed": [],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 447.4,
+     "contentBottom": 482.6,
+     "toolbarBottom": 385,
+     "viewportHeight": 900,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0979,
+      "beforeTheSwap": 0.0979,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 444.8,
+     "contentBottom": 485.2,
+     "toolbarBottom": 385,
+     "viewportHeight": 900,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0979,
+      "beforeTheSwap": 0.0979,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 404,
+     "contentBottom": 436,
+     "toolbarBottom": 340,
+     "viewportHeight": 900,
+     "footerYDuringRead": 995,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0946,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0279
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 449,
+     "contentBottom": 481,
+     "toolbarBottom": 385,
+     "viewportHeight": 900,
+     "footerYDuringRead": 1040,
+     "footerYSettled": 1641,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0.0946,
+      "beforeTheSwap": 0.0946,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 585,
+     "contentBottom": 617,
+     "toolbarBottom": 649,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0679,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0013
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 582,
+     "contentBottom": 620,
+     "toolbarBottom": 649,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0679,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0013
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 583.4,
+     "contentBottom": 618.6,
+     "toolbarBottom": 649,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0679,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0013
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 585,
+     "contentBottom": 617,
+     "toolbarBottom": 649,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0.0679,
+      "beforeTheSwap": 0.0667,
+      "atTheSwap": 0.0013
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "read-chromium-iphone375": {
+  "part": "read",
+  "engine": "chromium",
+  "profile": "iphone375",
+  "account": false,
+  "checks": 8,
+  "failed": [],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "read-chromium-iphone393": {
+  "part": "read",
+  "engine": "chromium",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 8,
+  "failed": [],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "read-webkit-1280x720": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "1280x720",
+  "account": false,
+  "checks": 8,
+  "failed": [],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 447,
+     "contentBottom": 485,
+     "toolbarBottom": 386,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 444.9,
+     "contentBottom": 487.1,
+     "toolbarBottom": 386,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 403.9,
+     "contentBottom": 438.1,
+     "toolbarBottom": 341,
+     "viewportHeight": 720,
+     "footerYDuringRead": 996,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 449.7,
+     "contentBottom": 482.3,
+     "toolbarBottom": 386,
+     "viewportHeight": 720,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 560.5,
+     "contentBottom": 597.5,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 558.8,
+     "contentBottom": 599.2,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 562.9,
+     "contentBottom": 595.1,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 562.5,
+     "contentBottom": 595.5,
+     "toolbarBottom": 627,
+     "viewportHeight": 720,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "read-webkit-1366x768": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "1366x768",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums direct 1366x768 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   },
+   {
+    "what": "/albums menu 1366x768 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   },
+   {
+    "what": "/blend menu 1366x768 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 447,
+     "contentBottom": 485,
+     "toolbarBottom": 386,
+     "viewportHeight": 768,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 444.7,
+     "contentBottom": 487.3,
+     "toolbarBottom": 386,
+     "viewportHeight": 768,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 403.7,
+     "contentBottom": 438.3,
+     "toolbarBottom": 341,
+     "viewportHeight": 768,
+     "footerYDuringRead": 996,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 448.9,
+     "contentBottom": 483.1,
+     "toolbarBottom": 386,
+     "viewportHeight": 768,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 560.6,
+     "contentBottom": 597.4,
+     "toolbarBottom": 627,
+     "viewportHeight": 768,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 558.2,
+     "contentBottom": 599.8,
+     "toolbarBottom": 627,
+     "viewportHeight": 768,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 562.8,
+     "contentBottom": 595.2,
+     "toolbarBottom": 627,
+     "viewportHeight": 768,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 562.7,
+     "contentBottom": 595.3,
+     "toolbarBottom": 627,
+     "viewportHeight": 768,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   }
+  }
+ },
+ "read-webkit-1440x900": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "1440x900",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums menu 1440x900 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   },
+   {
+    "what": "/blend menu 1440x900 webkit: settled screens equal",
+    "detail": "4886 px apart 21-50"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 447.5,
+     "contentBottom": 484.5,
+     "toolbarBottom": 386,
+     "viewportHeight": 900,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 445.5,
+     "contentBottom": 486.5,
+     "toolbarBottom": 386,
+     "viewportHeight": 900,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 404.5,
+     "contentBottom": 437.5,
+     "toolbarBottom": 341,
+     "viewportHeight": 900,
+     "footerYDuringRead": 996,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 449.3,
+     "contentBottom": 482.7,
+     "toolbarBottom": 386,
+     "viewportHeight": 900,
+     "footerYDuringRead": 1041,
+     "footerYSettled": 1642,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 560.5,
+     "contentBottom": 597.5,
+     "toolbarBottom": 627,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 558.6,
+     "contentBottom": 599.4,
+     "toolbarBottom": 627,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 562.7,
+     "contentBottom": 595.3,
+     "toolbarBottom": 627,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 562.5,
+     "contentBottom": 595.5,
+     "toolbarBottom": 627,
+     "viewportHeight": 900,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 2,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 4886
+   }
+  }
+ },
+ "read-webkit-iphone375": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "iphone375",
+  "account": false,
+  "checks": 8,
+  "failed": [],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 667,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 667,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   }
+  }
+ },
+ "read-webkit-iphone393": {
+  "part": "read",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 8,
+  "failed": [
+   {
+    "what": "/albums menu iphone393 webkit: settled screens equal",
+    "detail": "22533 px apart 17-38"
+   },
+   {
+    "what": "/blend menu iphone393 webkit: settled screens equal",
+    "detail": "22533 px apart 17-38"
+   }
+  ],
+  "reads": {
+   "/albums direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/albums menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 206,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": 124,
+     "contentBottom": 212,
+     "toolbarBottom": 112,
+     "viewportHeight": 852,
+     "footerYDuringRead": 0,
+     "footerYSettled": 0,
+     "emptyTextDuringRead": false,
+     "settledCards": 5,
+     "settledGroups": 2,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 22533
+   },
+   "/blend direct": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 0
+   },
+   "/blend menu": {
+    "A": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "B": {
+     "orangeLineAt": [],
+     "contentTop": null,
+     "contentBottom": null,
+     "toolbarBottom": null,
+     "viewportHeight": 852,
+     "footerYDuringRead": null,
+     "footerYSettled": null,
+     "emptyTextDuringRead": false,
+     "settledCards": 0,
+     "settledGroups": 0,
+     "blendCardsSettled": 0,
+     "shift": {
+      "total": 0,
+      "beforeTheSwap": 0,
+      "atTheSwap": 0
+     },
+     "noShiftApi": false
+    },
+    "settledPixelsApart": 22533
+   }
+  }
+ },
+ "routerbar-chromium-1280x800": {
+  "part": "routerbar",
+  "engine": "chromium",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 2,
+  "failed": [],
+  "bars": {
+   "A parent": {
+    "shown": [
+     {
+      "at": 300,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 800,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 1200,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 1700,
+      "bar": true,
+      "thin": 1
+     }
+    ],
+    "afterBar": false,
+    "scriptsHeld": 25
+   },
+   "B new": {
+    "shown": [
+     {
+      "at": 300,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 800,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 1200,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 1700,
+      "bar": true,
+      "thin": 1
+     }
+    ],
+    "afterBar": false,
+    "scriptsHeld": 26
+   }
+  }
+ },
+ "routerbar-webkit-iphone393": {
+  "part": "routerbar",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 2,
+  "failed": [],
+  "bars": {
+   "A parent": {
+    "shown": [
+     {
+      "at": 300,
+      "bar": true,
+      "thin": 0
+     },
+     {
+      "at": 800,
+      "bar": true,
+      "thin": 0
+     },
+     {
+      "at": 1200,
+      "bar": true,
+      "thin": 0
+     },
+     {
+      "at": 1700,
+      "bar": true,
+      "thin": 0
+     }
+    ],
+    "afterBar": false,
+    "scriptsHeld": 21
+   },
+   "B new": {
+    "shown": [
+     {
+      "at": 300,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 800,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 1200,
+      "bar": true,
+      "thin": 1
+     },
+     {
+      "at": 1700,
+      "bar": true,
+      "thin": 1
+     }
+    ],
+    "afterBar": false,
+    "scriptsHeld": 24
+   }
+  }
+ },
+ "run": {
+  "part": "create",
+  "engine": "chromium",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 3,
+  "failed": [
+   {
+    "what": "1280x800 visitor \u00b7 first visit: facts",
+    "detail": "title: A \"Pick the albums. We blend the playlists.\" \u00b7 B null || what: A \"What is a series?\" \u00b7 B null || whatAttrs: A \"aria-expanded=false aria-controls=homeWhatText aria-haspopup=null\" \u00b7 B null || sen"
+   },
+   {
+    "what": "1280x800 visitor \u00b7 first visit: pixels",
+    "detail": "1016945 apart, 983109 without the equalizer box (max 255/255, rows 0-799)"
+   }
+  ],
+  "stateDifferences": {
+   "1. 1280x800 visitor \u00b7 first visit": [
+    "title",
+    "what",
+    "whatAttrs",
+    "sentenceHidden",
+    "placeholder",
+    "hint",
+    "dockwrap",
+    "calm",
+    "pageBarless",
+    "boxes",
+    "height"
+   ]
+  },
+  "pixelChecks": [
+   "1016945 apart, 983109 without the equalizer box (max 255/255, rows 0-799)"
+  ]
+ },
+ "sweep-chromium-1280x800": {
+  "part": "sweep",
+  "engine": "chromium",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 9,
+  "failed": [
+   {
+    "what": "/start 1280x800 chromium: text, height, picture",
+    "detail": "text differs; height 1049/1049; 369171 px apart (max 255/255, rows 146-781)"
+   },
+   {
+    "what": "/artists 1280x800 chromium: text, height, picture",
+    "detail": "text same; height 1049/1049; 7318 px apart (max 19/255, rows 160-255)"
+   },
+   {
+    "what": "/genres 1280x800 chromium: text, height, picture",
+    "detail": "text same; height 1049/1049; 7318 px apart (max 4/255, rows 160-255)"
+   },
+   {
+    "what": "/tracks 1280x800 chromium: text, height, picture",
+    "detail": "text same; height 1049/1049; 7308 px apart (max 16/255, rows 160-255)"
+   }
+  ],
+  "routes": {
+   "/start": {
+    "textSame": false,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 369171,
+    "delta": 255,
+    "rows": "146-781"
+   },
+   "/albums": {
+    "textSame": true,
+    "heights": [
+     1839,
+     1839
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/blend": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/playlists": {
+    "textSame": true,
+    "heights": [
+     1094,
+     1094
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/saved-playlists": {
+    "textSame": true,
+    "heights": [
+     1094,
+     1094
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/inventory": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/artists": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7318,
+    "delta": 19,
+    "rows": "160-255"
+   },
+   "/genres": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7318,
+    "delta": 4,
+    "rows": "160-255"
+   },
+   "/tracks": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7308,
+    "delta": 16,
+    "rows": "160-255"
+   }
+  }
+ },
+ "sweep-webkit-1280x800": {
+  "part": "sweep",
+  "engine": "webkit",
+  "profile": "1280x800",
+  "account": false,
+  "checks": 9,
+  "failed": [
+   {
+    "what": "/start 1280x800 webkit: text, height, picture",
+    "detail": "text differs; height 1049/1049; 344934 px apart (max 255/255, rows 146-781)"
+   },
+   {
+    "what": "/playlists 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1094/1094; 4886 px apart (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "/saved-playlists 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1094/1094; 4886 px apart (max 116/255, rows 21-50)"
+   },
+   {
+    "what": "/artists 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1049/1049; 7356 px apart (max 30/255, rows 160-255)"
+   },
+   {
+    "what": "/genres 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1049/1049; 7356 px apart (max 6/255, rows 160-255)"
+   },
+   {
+    "what": "/tracks 1280x800 webkit: text, height, picture",
+    "detail": "text same; height 1049/1049; 7356 px apart (max 35/255, rows 160-255)"
+   }
+  ],
+  "routes": {
+   "/start": {
+    "textSame": false,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 344934,
+    "delta": 255,
+    "rows": "146-781"
+   },
+   "/albums": {
+    "textSame": true,
+    "heights": [
+     1840,
+     1840
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/blend": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/playlists": {
+    "textSame": true,
+    "heights": [
+     1094,
+     1094
+    ],
+    "apart": 4886,
+    "delta": 116,
+    "rows": "21-50"
+   },
+   "/saved-playlists": {
+    "textSame": true,
+    "heights": [
+     1094,
+     1094
+    ],
+    "apart": 4886,
+    "delta": 116,
+    "rows": "21-50"
+   },
+   "/inventory": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/artists": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7356,
+    "delta": 30,
+    "rows": "160-255"
+   },
+   "/genres": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7356,
+    "delta": 6,
+    "rows": "160-255"
+   },
+   "/tracks": {
+    "textSame": true,
+    "heights": [
+     1049,
+     1049
+    ],
+    "apart": 7356,
+    "delta": 35,
+    "rows": "160-255"
+   }
+  }
+ },
+ "sweep-webkit-iphone375": {
+  "part": "sweep",
+  "engine": "webkit",
+  "profile": "iphone375",
+  "account": false,
+  "checks": 9,
+  "failed": [
+   {
+    "what": "/blend iphone375 webkit: text, height, picture",
+    "detail": "text same; height 754/754; 22533 px apart (max 129/255, rows 17-38)"
+   },
+   {
+    "what": "/artists iphone375 webkit: text, height, picture",
+    "detail": "text same; height 711/711; 65516 px apart (max 29/255, rows 132-228)"
+   },
+   {
+    "what": "/genres iphone375 webkit: text, height, picture",
+    "detail": "text same; height 711/711; 65516 px apart (max 5/255, rows 132-228)"
+   },
+   {
+    "what": "/tracks iphone375 webkit: text, height, picture",
+    "detail": "text same; height 711/711; 65516 px apart (max 31/255, rows 132-228)"
+   }
+  ],
+  "routes": {
+   "/start": {
+    "textSame": true,
+    "heights": [
+     667,
+     667
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/albums": {
+    "textSame": true,
+    "heights": [
+     1318,
+     1318
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/blend": {
+    "textSame": true,
+    "heights": [
+     754,
+     754
+    ],
+    "apart": 22533,
+    "delta": 129,
+    "rows": "17-38"
+   },
+   "/playlists": {
+    "textSame": true,
+    "heights": [
+     691,
+     691
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/saved-playlists": {
+    "textSame": true,
+    "heights": [
+     667,
+     667
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/inventory": {
+    "textSame": true,
+    "heights": [
+     713,
+     713
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/artists": {
+    "textSame": true,
+    "heights": [
+     711,
+     711
+    ],
+    "apart": 65516,
+    "delta": 29,
+    "rows": "132-228"
+   },
+   "/genres": {
+    "textSame": true,
+    "heights": [
+     711,
+     711
+    ],
+    "apart": 65516,
+    "delta": 5,
+    "rows": "132-228"
+   },
+   "/tracks": {
+    "textSame": true,
+    "heights": [
+     711,
+     711
+    ],
+    "apart": 65516,
+    "delta": 31,
+    "rows": "132-228"
+   }
+  }
+ },
+ "sweep-webkit-iphone393": {
+  "part": "sweep",
+  "engine": "webkit",
+  "profile": "iphone393",
+  "account": false,
+  "checks": 9,
+  "failed": [
+   {
+    "what": "/playlists iphone393 webkit: text, height, picture",
+    "detail": "text same; height 876/876; 22533 px apart (max 129/255, rows 17-38)"
+   },
+   {
+    "what": "/artists iphone393 webkit: text, height, picture",
+    "detail": "text same; height 852/852; 65516 px apart (max 29/255, rows 132-228)"
+   },
+   {
+    "what": "/genres iphone393 webkit: text, height, picture",
+    "detail": "text same; height 852/852; 65516 px apart (max 6/255, rows 132-228)"
+   },
+   {
+    "what": "/tracks iphone393 webkit: text, height, picture",
+    "detail": "text same; height 852/852; 65516 px apart (max 29/255, rows 132-228)"
+   }
+  ],
+  "routes": {
+   "/start": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/albums": {
+    "textSame": true,
+    "heights": [
+     1345,
+     1345
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/blend": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/playlists": {
+    "textSame": true,
+    "heights": [
+     876,
+     876
+    ],
+    "apart": 22533,
+    "delta": 129,
+    "rows": "17-38"
+   },
+   "/saved-playlists": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/inventory": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 0,
+    "delta": 0,
+    "rows": ""
+   },
+   "/artists": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 65516,
+    "delta": 29,
+    "rows": "132-228"
+   },
+   "/genres": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 65516,
+    "delta": 6,
+    "rows": "132-228"
+   },
+   "/tracks": {
+    "textSame": true,
+    "heights": [
+     852,
+     852
+    ],
+    "apart": 65516,
+    "delta": 29,
+    "rows": "132-228"
+   }
+  }
+ }
+}

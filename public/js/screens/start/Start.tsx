@@ -3,11 +3,11 @@
  *
  * The Start screen that explains itself (design/inception/home-transformar-v2.html): one stage.
  *
- *   the stage     the title and what a series is (before anything is found), the one field (an artist or a pasted list), the hint
+ *   the stage     the title and «What is a series?» (before anything is found), the one field (an artist or a pasted list), the hint
  *                 that points to the next gesture, the equalizer (Stage.tsx);
- *   the results   the three steps (first visit), the wait, the artist with the type chips and «Add all», the grid of covers (numbered
+ *   the results   the wait, the artist with the type chips and «Add all», the grid of covers (numbered
  *                 when chosen), «not found», «no answer» (Results.tsx);
- *   the dock      the series being built, always in view; on the phone, the action bar (Dock.tsx).
+ *   the dock      the series being built, in view once the first cover is chosen; on the phone, the action bar (Dock.tsx).
  *
  * The screen draws; the controller (StartController.ts) decides. It tells the screen to draw again by moving a version, and the screen
  * reads what it needs from the controller while it draws (nothing is kept from a draw to the next: the lists the controller hands out are
@@ -46,9 +46,9 @@ export function Start({ controller }: Props) {
         }
     }, [controller])
 
-    // The phone's bar comes with the first cover (UAT-281): without it the page needs less room below
+    // The bar comes with the first cover (UAT-281; the computer too, F79): without it the page needs less room below
     const model = controller.model
-    const barless = phone && !barShows({ chosen: model?.albums.length ?? 0, created: Boolean(model?.created) })
+    const barless = !barShows({ chosen: model?.albums.length ?? 0, created: Boolean(model?.created) })
     return (
         <div id="home-page" className={`home-page${barless ? ' is-barless' : ''}`}>
             <Stage controller={controller} phone={phone} />

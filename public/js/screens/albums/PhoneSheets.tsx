@@ -1,6 +1,6 @@
 /**
  * The sheets of the phone of the albums screen (F83 wave 5a; the port of components/series/SeriesPhoneSheets.js): the actions of an album
- * and of a series behind the «⋯» button. The motor of the sheet stays the hand-made one (ui/SheetWindow.tsx); what is inside is React.
+ * and of a series behind the «⋯» button. The sheet is ui/SheetWindow.tsx; what is inside is React.
  * Choosing an action closes the sheet, then does it.
  */
 import type { ReactNode } from 'react'

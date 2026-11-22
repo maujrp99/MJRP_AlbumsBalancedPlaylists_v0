@@ -58,8 +58,12 @@ export function Inventory({ controller, bridge }: Props) {
     }
     const rows: PhoneActions = { onView: items.onView, onStatus: sheets.openStatus, onMore: sheets.openItem }
 
+    // the sheets of the phone are drawn from here whatever the layout: the layer stays in one place of the tree, so a sheet open when the screen stops being a phone
+    // is closed by the motor, not remounted (a layer that moved from one box to the other would be drawn again: its slide in would run once more before the slide out)
+    const layer = sheets.layer
     if (phone) {
         return (
+            <>
             <div className="inventory-view inventory-view--phone">
                 <header className="view-header inv-phone-header">
                     <Header state={state} controller={controller} />
@@ -70,11 +74,13 @@ export function Inventory({ controller, bridge }: Props) {
                 <div id="inventory-grid-container" key={bridge.gridKey()}><PhoneList state={state} bridge={bridge} controller={controller} actions={rows} /></div>
                 {/* keyed with the box of the list (its own prefix: siblings never share a key): the hand-made screen rebuilt the notice on every draw; a notice that stays mounted under a box that is remounted is the anchor of Chromium's scroll anchoring, and «Show 50 more» throws the page to the end of the new chunk */}
                 {sourceOn ? <p className="inv-discogs-notice" key={`notice.${bridge.gridKey()}`}>{t('shell.footer.discogsNotice')}</p> : null}
-                {sheets.layer}
             </div>
+            {layer}
+            </>
         )
     }
     return (
+        <>
         <div className="inventory-view container pb-20">
             <header className="view-header mb-8 fade-in">
                 <Breadcrumb crumbs={inventoryTrail()} onNavigate={navigate} />
@@ -84,7 +90,8 @@ export function Inventory({ controller, bridge }: Props) {
                 <Filters state={state} controller={controller} />
             </header>
             <div id="inventory-grid-container" key={bridge.gridKey()}><Grid state={state} bridge={bridge} actions={items} /></div>
-            {sheets.layer}
         </div>
+        {layer}
+        </>
     )
 }

@@ -1,0 +1,53 @@
+snaps changed 99
+49 '><ol class="home-how" hidden="" id="homeHow"></ol' => ''
+32 'A' => 'Type a'
+32 ', or paste a list of albums' => ''
+32 'Type an artist to see their albums, or ' => ''
+32 '' => 'or '
+32 ' of albums from many artists.' => ''
+7 'ol class="home-how" hidden="" id="homeHow"></ol><' => ''
+6 'Paste or type one album per line. ' => ''
+1 '' => '["scanArtist","Pink Floyd"],'
+1 '>A' => ''
+BIG/other ('computer · first visit', 'the stage, the field, no bar', 4, 3422)
+BIG/other ('computer · first visit', 'the stage, the steps, the empty dock', 4596, 4)
+BIG/other ('computer · typing an artist', 'the field left', 4603, 3429)
+BIG/other ('computer · typing an artist', 'the line under the field stays one link', 4, 3429)
+BIG/other ('computer · typing an artist', 'the hint points to Enter or Search', 4535, 4)
+BIG/other ('computer · searching', 'searching', 4641, 3858)
+BIG/other ('computer · searching', 'the discography', 10648, 9888)
+BIG/other ('computer · the enter key searches', 'the discography after Enter', 10648, 9888)
+BIG/other ('computer · the discography and its filters', 'every type on', 13597, 12837)
+BIG/other ('computer · the discography and its filters', 'studio albums off', 8613, 7853)
+BIG/other ('computer · the discography and its filters', 'back to studio albums', 10648, 9888)
+BIG/other ('computer · the discography and its filters', 'EPs on', 11120, 10360)
+BIG/other ('computer · the discography and its filters', 'the discography', 10648, 9888)
+BIG/other ('computer · the types are confirmed after the first answer', 'the types confirmed', 10648, 9888)
+BIG/other ('computer · the types are confirmed after the first answer', 'confirming album types', 8619, 7859)
+BIG/other ('computer · the name', 'nothing chosen again: no name', 10807, 10047)
+BIG/other ('computer · create, then start another', 'another series: no bar', 4, 9888)
+BIG/other ('computer · create, then start another', 'another series: empty dock', 10648, 4)
+BIG/other ('computer · nothing found, and the catalog that did not answer', 'the list opened from the message', 4676, 3877)
+BIG/other ('computer · nothing found, and the catalog that did not answer', 'the catalog did not answer', 4139, 3356)
+BIG/other ('computer · nothing found, and the catalog that did not answer', 'not found', 4506, 3577)
+BIG/other ('computer · nothing found, and the catalog that did not answer', 'Try again worked', 10670, 9910)
+BIG/other ('computer · a field with no artist', 'nothing typed: nothing changes', 4596, 3422)
+BIG/other ('computer · the list', 'an empty line closed with Backspace', 4730, 3931)
+BIG/other ('computer · the list', 'a line to fix', 5129, 4330)
+BIG/other ('computer · the list', 'back to the artist', 4596, 3422)
+BIG/other ('computer · the list', 'the list opens', 4662, 3863)
+BIG/other ('computer · the list', 'two lines, both ready', 5113, 4314)
+BIG/other ('computer · a list pasted in the field', 'the list from a paste', 5113, 4314)
+BIG/other ('computer · a list pasted in the field', 'lines pasted inside the list', 5885, 5086)
+BIG/other ('computer · adding the list', 'adding: busy', 5932, 5133)
+BIG/other ('computer · adding the list', 'the list before adding', 5908, 5109)
+BIG/other ('computer · a visitor', 'no notice and no bar before the first cover', 4, 9888)
+BIG/other ('computer · a visitor', 'signed in: no line', 4596, 10974)
+BIG/other ('computer · a visitor', 'the visitor line in the dock', 4790, 11168)
+BIG/other ('phone · the phone: the stage and the bar', 'first visit on the phone', 3255, 2787)
+BIG/other ('phone · the phone: a visitor', 'no albums chosen: no notice (UAT-281)', 3255, 2787)
+BIG/other ('phone · the phone: typing, and the one link', 'back to the artist', 3262, 2794)
+BIG/other ('phone · the phone: typing, and the one link', 'typing: the hint is still the one link', 3262, 2794)
+BIG/other ('phone · the phone: What is a series?', 'closed with Escape', 3255, 2787)
+BIG/other ('phone · the phone: What is a series?', 'the sheet closed', 3255, 2787)
+BIG/other ('phone · the phone: What is a series?', 'the page behind the sheet', 3255, 2787)

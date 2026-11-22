@@ -10,6 +10,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import { Icon } from '../../ui/Icon'
 import { AlbumCascade } from '../../ui/AlbumCascade'
+import { LoadingSeriesSpinner } from '../../ui/LoadingSeries'
 import { broken } from '../../ui/recipe/broken'
 import { t, tPlural } from '../../i18n/t.js'
 import { albumCountOf } from '../../models/seriesCovers.js'
@@ -67,9 +68,7 @@ export function SeriesStep({ visit, chosen, onChoose, onEntity }: Props) {
                 <label className="block text-sm font-medium mb-3 text-muted">{t('blend.series.label')}</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                     {visit.loading ? (
-                        <div className="flex items-center justify-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-2 border-orange-400 border-t-transparent"></div>
-                        </div>
+                        <LoadingSeriesSpinner />
                     ) : visit.series.length === 0 ? (
                         <p className="text-muted text-center py-4">{t('blend.series.none')}</p>
                     ) : visit.series.map(series => (

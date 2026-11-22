@@ -118,8 +118,8 @@ describe('the proof catches a difference', () => {
         registerTexts('en', { 'start.stage.title.first': 'Choose the albums.' })
         try {
             const snaps = await play(scenario)
-            expect(snaps['the stage, the steps, the empty dock']).not.toBe(captured[keyOf(scenario)]['the stage, the steps, the empty dock'])
-            expect(snaps['the stage, the steps, the empty dock']).toContain('Choose the albums.')
+            expect(snaps['the stage, the field, no bar']).not.toBe(captured[keyOf(scenario)]['the stage, the field, no bar'])
+            expect(snaps['the stage, the field, no bar']).toContain('Choose the albums.')
         } finally {
             registerTexts('en', { 'start.stage.title.first': 'Pick the albums.' })
         }
@@ -128,7 +128,7 @@ describe('the proof catches a difference', () => {
     it('a changed class in the page is a failed scenario too', async () => {
         const scenario = SCENARIOS.find(s => s.name === 'first visit')!
         const snaps = await play(scenario)
-        expect(snaps['the stage, the steps, the empty dock']!.replace('home-stage', 'home-stage-changed')).not.toBe(captured[keyOf(scenario)]['the stage, the steps, the empty dock'])
+        expect(snaps['the stage, the field, no bar']!.replace('home-stage', 'home-stage-changed')).not.toBe(captured[keyOf(scenario)]['the stage, the field, no bar'])
     })
 
     it('a focus left on the wrong control is a failed scenario too', async () => {

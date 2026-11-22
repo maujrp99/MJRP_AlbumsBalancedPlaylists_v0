@@ -31,6 +31,7 @@ export const ui = {
     'ui.filter.list': 'List',
     'ui.filter.sortBy': 'Sort series by',
     'ui.filter.close': 'Close',
+    'ui.loadingSeries.text': 'Loading your series…',
     'ui.window.close': 'Close',
     'ui.dialog.confirm': 'Confirm',
     'ui.dialog.cancel': 'Cancel',

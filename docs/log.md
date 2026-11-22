@@ -2,6 +2,121 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 20:01] review — F83: onda 8c (a folha do celular em React) e a junta 5 com a `main` na linha de integração
+
+**Branch:** integrate/staging-2026-11-21
+
+- 8c: o juiz independente passou (0 P0, 0 P1, 4 P2), julgada na `a1ac74f`, cobertura completa em iPhone 14 e SE (WebKit), Pixel 7 e 899 px (Chromium com toque), 1280 e os controles de ruído; relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-react-phone-sheet-visual-parity-recheck.md`. O arrasto fecha acima de 80 px, igual ao de antes. Diferença de propósito que se vê: uma folha cuja tela é deixada por uma ação dela some na hora, em vez de deslizar vazia sobre a tela seguinte.
+- Junta 5 (`claude/f83-sync-5-lean-create-and-albums-loading`, `66cb1ee`): a «Create» enxuta no computador, o fim da linha laranja ao ler as séries (a barra do roteador para tela lenta fica: é da F94) e o aviso de carregamento da tela Albums, em React, com a posição por leiaute (sem medida). Sem juiz próprio aqui: entra na conferência final, depois da 8d; decidido pelo agente — revisável.
+- Não visto por ninguém: um iPhone de verdade (teclado, elástico, arrasto com o dedo no Safari).
+
+## [2026-11-22 19:19] step — F83 sync 5: a grade invisível por layout, a prova no navegador, o peso e o registro
+
+**Branch:** claude/f83-sync-5-lean-create-and-albums-loading
+
+- **A grade invisível passa a ser o próprio `#series-grid-mount`** (`visibility: hidden`, e o conteúdo `visible`): a primeira versão deixava o mount visível e o Chromium contava 0,029 de deslocamento na troca mesmo abrindo direto (a `main` dá 0 porque o bloco oculto não conta). Agora 0 na troca em 1280×720, 1366×768 e 1440×900, direto e pelo menu (a `main` dá 0,0305 / 0,0288 / 0,0279 pelo menu). Os testes (`Albums.loading`) acompanham.
+- **A prova no navegador** em `reports/evidence/F83/sync-5/` (`proof.md`, `proof.mjs`, `run-all.sh`, `summarize.py`, `summary.json`, 6 imagens pequenas): sites construídos da `main` (a6bc310), do ramo e do pai (a1ac74f); Chromium e WebKit a 1280×800, 1440×900, 1920×1080, 1366×768, 1280×720 e iPhone 393 e 375; **A** todos os fatos, focos e as imagens iguais à `main` fora do ruído que o controle (`main` contra `main`) também mostra (barra do alto no WebKit 4.886 px, o letreiro animado do celular 22.533 px); **B** a linha laranja: o pai a mostra em 250 a 1.400 ms nas quatro leituras provadas e o ramo nunca; a barra do roteador para arquivo de tela lento (atrasado 2 s) segue acesa no pai e no ramo; **C** o círculo logo sob os filtros em todas as janelas (centro 465 a 1280; topo 124 no celular), sem posição velha e sem texto de vazio; as telas assentadas iguais à `main`; varredura de regressão contra o pai: só o ruído dos controles e a `/start` do computador (a tela enxuta).
+- **Peso** (`npm run budget:publication`, fila da máquina): principal 194.641 B, depois da primeira tela 235.911 B, soma 430.552 B, react-vendor 68.691 B; `scripts/bundle-budget.json`: teto do principal 194.791 B (folga 150 B) e `background` 57.265 B (folga 150 B); medidos em `publication.measured`.
+- **Totais** (suíte inteira SÓ, pela fila, lida até o fim): 390 arquivos, 5.186 testes verdes e 1 pulado, sem a seção «Unhandled Errors»; `test/architecture` dentro dela; `tsc` sem erro; `eslint` 0 erros e 67 avisos (os mesmos 67 do pai, nenhum novo); `test/fixtures/exportMusicKitRecording.json` idêntico ao do pai. Linha da TASK-37 em `tasks.md` e a seção 25 de `wave-lessons.md`.
+
+## [2026-11-22 18:28] step — F83 sync 5, B e C: sem a linha laranja da leitura das séries; a tela Albums diz que está carregando
+
+**Branch:** claude/f83-sync-5-lean-create-and-albums-loading
+
+- **B. A linha laranja não aparece mais enquanto as séries são lidas.** As 4 chamadas de `globalProgress` em `services/SeriesService.js` saíram na junta (ler, criar, editar e apagar série); `SeriesService.noLoadingBar.test.js` (da `main`) agora confere também a loja `stores/progress.js` na linha do React (nenhum `start()` pelas quatro, e o serviço não a importa). **O que fica de propósito:** a barra do roteador (`router.js`, `shell/GlobalProgress.tsx`, `stores/progress.js`) segue acesa quando o arquivo de uma tela passa de 150 ms; isso é da F94 (transições suaves) e não é decidido aqui. Os dois comentários de cabeçalho que diziam «o roteador e o serviço de séries» foram acertados.
+- **C. A tela Albums diz que está carregando** (`screens/albums/`): a regra pura `models/albumsListState.js`, o `markRead()/hasRead()` de `stores/albumSeries.js` e o `getListState()` do `SeriesController` vieram da `main` e foram aceitos como estão (já em JavaScript, sem DOM). O lugar de desenhar é novo: `Albums.tsx` lê `controller.getListState()`; `SeriesLoading.tsx` (`LoadingSlot`, `LoadingReserve`, `LOADING_MIN_HEIGHT` 391 px no computador e 282 px no celular); a peça partilhada `ui/LoadingSeries.tsx` (a palavra «Loading your series…» no celular, o círculo girando no computador) é lida pelo Blend (`SeriesStep.tsx`, `phone/PhoneStep.tsx`) e pela Albums; a chave `blend.phone.loading` virou `ui.loadingSeries.text` (en e pt, o português que o Blend já tinha).
+- **A posição é por LAYOUT, sem número medido:** o conteúdo é desenhado dentro do espaço da própria grade (`#series-grid-mount` ganha `relative` só enquanto espera; o bloco é `absolute inset-x-0 top-0`), a grade sob ele fica invisível (`visibility: hidden`) e guarda o espaço que vai guardar quando o cartão vazio ou a lista chegar; abaixo, onde o cartão vazio vai ficar, um bloco vazio com a altura dele. O achado do juiz da `main` (a altura da grade lida uma vez, cedo demais, no WebKit) não tem como acontecer: nada é lido.
+- **Uma mudança de comportamento que o loading pedia:** `albums/index.ts` não espera mais a leitura das séries antes de desenhar (`prepare` dava `await controller.loadScope(...)`, e o roteador esperava o `render`, então a tela só aparecia depois da leitura e nunca poderia dizer «carregando»). A parte síncrona do `loadScope` (o escopo, o endereço, os álbuns já conhecidos) roda antes de desenhar; a leitura segue. Teste: `Albums.loading.test.tsx` («`render` volta antes de a leitura acabar»).
+- **O dourado das Albums recapturado da `main` (a6bc310), não editado:** `test/fixtures/albumsBeforeF83.json` (41 cenários: os 35 de antes SEM nenhuma diferença, e 6 novos: carregando e depois com séries / sem séries / a leitura falha / a leitura de novo com a lista na tela / duas no celular); `test/support/albumsScenarios.js` ganhou `read: 'held'` e `readOfSeries` (`release`, `fail`), e o `prepare` zera a loja (a leitura não acabou). A comparação dos 6 novos é por forma canônica (`canonLoading` em `Albums.sameAsBefore.test.tsx`: as palavras ou o círculo, a altura reservada, a grade invisível, e o resto da página letra por letra); tem prova de que acusa uma palavra trocada. Registro: `reports/evidence/F83/sync-5/capture-albums-from-main.test.js`.
+- Testes levados da `main` com as mesmas asserções: `Albums.loading.test.tsx` (de `SeriesView.loading.test.js`, 9 casos; os de `loadingPlacement`/`translateY` viram os do layout), `LoadingSeries.test.tsx`. Vermelho antes verificado: o dourado dos 6 novos travava (a tela esperava a leitura) e, com o estado de espera desligado, 5 dos casos de `Albums.loading` falham.
+
+## [2026-11-22 18:15] step — F83 sync 5, A: a «Create» enxuta no computador (F79) na tela Start em React
+
+**Branch:** claude/f83-sync-5-lean-create-and-albums-loading
+
+- **A. A «Create» enxuta no computador (F79) portada para `screens/start/`**, com os testes da `main` levados antes (vermelhos: 20 casos na Start, 1 no menu da conta) e verdes depois: a frase da série atrás de «What is a series?» abre NO LUGAR sob o título no computador (`aria-expanded`/`aria-controls`; segundo clique ou Escape fecha; Escape só com o foco no link ou na frase e nunca com `defaultPrevented`; fecha sozinha quando a tela vira celular) e no celular continua a Folha de baixo (só `aria-haspopup="dialog"`); o campo diz «Type an artist» nos dois tamanhos; sob ele só o link «or paste a list» / «Search an artist instead», nenhum em «não achado»; sem os três passos; a barra da série só depois da primeira capa ou de uma série guardada, nos dois tamanhos (o aviso de «not signed in» só com álbum: dentro da barra no computador); `is-calm` antes da primeira busca no computador. Uma regra só (`hintLink`, `barShows`, `guestNoticeShows`). `Stage.tsx` ganhou `Hero` e `ArtistField` (complexidade ≤ 10); `StartController.typed/focusChanged/isTyping` viraram `fieldChanged()` (o palco ainda se redesenha ao digitar e ao focar, como a `main` mantém). `shell/Account.tsx`: o Escape que fecha o menu chama `preventDefault()` (2 testes novos em `Shell.carried.test.tsx`).
+- Dicionário: `start.field.placeholder` = «Type an artist» (pt «Digite um artista», que já era o do celular); `start.hint.link.paste|artist` no lugar de `start.hint.phone.*`; saem `start.field.placeholderPhone`, `start.hint.artist.*`, `start.hint.typing`, `start.hint.paste.*`, `start.how.*` e `start.dock.addOne` (nada mais os lê). Ficam `start.dock.empty.computer.*` (o `dockEmptyNote` e o teste dele, iguais na `main`). Nenhum texto novo em inglês e nenhum português novo a aprovar nesta parte.
+- **O dourado da Start recapturado da `main` (a6bc310)**, não editado à mão: `test/fixtures/startFromMainLean.json` (37 cenários: os 33 de antes com os rótulos que mudaram, mais `the last cover taken out`, `the sentence in place`, `the sentence closes when another layer took Escape`, `the sentence open turns into a phone`); `test/support/startScenarios.js` reescrito para o desenho novo (o do visitante busca e escolhe uma capa antes de ver o aviso). A recaptura: `reports/evidence/F83/sync-5/capture-start-from-main.test.js`. As 37 batem com a tela em React.
+
+## [2026-11-22 18:09] step — F83 sync 5: a main (a6bc310) juntada à onda 8c
+
+**Branch:** claude/f83-sync-5-lean-create-and-albums-loading
+
+- A `main` (a6bc310) juntada ao ramo da onda 8c (quinta junta: F79 enxuta no computador, fim da linha laranja de carga da leitura das séries, aviso de «carregando» da tela Albums). 14 conflitos, todos de «modificado de um lado, apagado do outro» nas telas à mão (`HomeView`, `HomeController`, `HomeDock`, `homeSeries`, `SeriesView`, `SeriesViewUpdater`, `AuthNav`, as duas peças da Blend, `SeriesLoadingState` e `LoadingSeries` que a `main` criou) e 5 de texto (`SeriesController`, `SeriesService`, dois testes de serviço, três testes da Start): as telas à mão ficam apagadas (`_safe.py retire`) e o que a `main` mudou nelas entra nas peças em React nos commits seguintes, com teste vermelho antes.
+- O git levou as mudanças dos testes à mão da `main` (`HomeDock.test`, `HomeStage.test`, `HomeController.create.test`, `HomeLean.phone.test`, `HomePhone.dock.test`, `homeSeries.test`) para os testes da Start em React por semelhança de nome: as asserções novas já estão neles e ficam vermelhas até a porte. `HomeLean.computer.test.js` foi movido para `test/screens/start/Start.lean.computer.test.js` com o andaime da Start em React (só o andaime muda).
+- Neste commit os testes novos da Start e da Albums estão vermelhos de propósito (esperam as portes).
+
+## [2026-11-22 18:06] step — F83 onda 8c: a prova no navegador, a seção 24 das lições, a linha da TASK-28 e os totais do fim
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- Os totais no fim (pela fila da máquina, a suíte inteira SÓ, lida até o fim, sem a seção «Unhandled Errors»): **385 arquivos, 5.130 testes verdes e 1 pulado** (o mesmo de antes; o pai: 381 e 5.076 na junta, 385 e 5.096 no começo desta onda); `test/architecture` 43 arquivos e 340 testes verdes; `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai); `test/security/noSecretsInRepo.test.js` verde; `test/fixtures/exportMusicKitRecording.json` idêntico byte a byte ao do pai (nenhum diff).
+- `reports/evidence/F83/wave-8c/proof.md`: a prova no navegador (WebKit iPhone 14 e SE, Chromium 899 e Pixel 7, o computador a 1280 e a 900), com o controle de pai contra pai em cada perfil, os números de tempo, o que a prova achou, as diferenças de propósito, os defeitos mantidos reproduzidos e o que NÃO foi provado (um iPhone de verdade; o arrastar com o dedo no WebKit). `wave-lessons.md` ganha a seção 24; `tasks.md` ganha a linha da 8c (a TASK-28 não é marcada).
+
+
+## [2026-11-22 18:06] step — F83 onda 8c: o peso medido e os tetos descem
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O peso, medido por `npm run budget:publication` (a construção em forma de publicação, com os cinco valores de mentira): o script principal **194.827 B** (era 195.804 B: −977 B, o motor da Folha em React é menor que o à mão com o `SafeDOM` e o `Icons` que ele puxava), o que vem depois da primeira tela 235.263 B (era 235.196 B: +67 B), a soma 430.090 B, `react-vendor` 68.691 B (igual). Os tetos só se mexem com o valor medido e a folga declarada de 150 B: principal 195.964 B → **194.987 B** (folga 160 B), `background` 57.720 B → **56.820 B** (a soma `mainToday` + React + `background` = 430.257 B, folga 167 B); `publication.measured` atualizado. Nenhum texto novo: o peso não vem de dicionário.
+
+
+## [2026-11-22 16:27] review — F79: o juiz independente passou a «Create» enxuta no computador, o fim da linha laranja e o aviso de carregamento da tela Albums
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- Quatro conferências, relatórios guardados como vieram em `reports/audits/2026-11-22-mjrpalbumblender-v0-create-lean-computer-visual-parity-recheck{,-2,-3,-4}.md`: 1ª na `10649f8` passa com uma decisão (sem a linha, a tela Albums parecia vazia enquanto lia as séries); 2ª na `0364a13` passa (o aviso próprio, 2 P2 de salto); 3ª na `f4cf2a6` reprova (1 P1: o giro ficou abaixo da borda em telas de notebook); 4ª na `1db178f` passa (0 P0, 0 P1, 1 P2).
+- P2 que fica, a registrar: no motor do Safari, aberta direto, o aviso fica cerca de 130 px mais baixo que o previsto (a altura da grade é lida uma vez, cedo demais); continua inteiro na tela.
+- O aviso próprio da tela Albums foi decidido pelo agente — revisável; a pergunta segue com o MJRP.
+
+## [2026-11-22 16:15] step — F83 onda 8c: o roteiro de prova no navegador e a camada da Folha do inventário num lugar só
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O roteiro de prova no navegador da Folha (`reports/evidence/F83/wave-8c/browser-proof.mjs`, `run-all.sh`, `summarize.py`): cada Folha de cada tela aberta por toque, nos dois sites construídos em passo (pai 1693d71 e este ramo), fechada por cada caminho (botão, Escape, toque fora, arrastar para baixo em Chromium), com o DOM e as caixas, o foco, a página presa e a posição da rolagem, uma figura, a linha do tempo (a Folha vem, é marcada como fechando, sai; a página presa e devolvida) medida a partir da causa, e o controle de pai contra pai.
+- Achado da prova: a tela do inventário punha `sheets.layer` em dois lugares da árvore (um por layout); com a janela crescendo para além de 899 px com a Folha aberta, o React refazia a Folha (um elemento novo: a descida de entrada rodava de novo antes da de saída). O motor à mão não via isso porque sua Folha vivia no `body`. A camada agora fica num lugar só (`Inventory.tsx`: um fragmento com a caixa e a camada). As outras telas que a prova percorreu (álbuns, playlists, Start) fecham com uma descida só; a das playlists guardadas e a do menu do celular saem junto com a parte que as abriu (a diferença de propósito 1, já dita).
+
+
+## [2026-11-22 16:14] step — a espera de `/albums` aparece logo sob os filtros, sem trazer os saltos de volta (F79, 3º parecer do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- O bloco de espera ficava sob a grade invisível (184 px) e o círculo, centrado nos 391 px, caía abaixo da janela em 1280×720 e 1366×768. Agora o bloco guarda o lugar e a altura (o rodapé não anda, nem a caixa quando o cartão vazio ou a lista chega) e só o **conteúdo** sobe sobre o espaço da grade, com `transform: translateY(-<altura da grade>px)` (`loadingPlacement` em `SeriesLoadingState.js`); `transform` não move o layout. Uma primeira tentativa com margem negativa trouxe o salto de volta (0,062 na chegada do cartão vazio) e foi trocada.
+- Medido no site construído: o círculo fica inteiro dentro da janela (y 446–484 em 1280×720, 1366×768, 1280×800 e 1440×900; a frase do celular y 256–338 em 393×852 e 375×667); deslocamentos 0,031 / 0 / 0 / 0 / 0 como na `f4cf2a6`; telas assentadas e Blend 0 pixel contra `main`.
+
+## [2026-11-22 15:58] step — F83 onda 8c: a Folha do celular em React (ui/SheetWindow.tsx), Sheet.js e SafeDOM.js saem
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O motor da Folha do celular em React, em `public/js/ui/SheetWindow.tsx`: o gancho `useSheetWindow` (a mesma API para as 12 aberturas, de 10 telas e da moldura) e a porta imperativa `openSheet` (uma raiz de React própria, para código que não é componente; hoje só os testes a usam: nenhum controlador abria uma Folha). O casco desenha as mesmas classes, atributos e ordem do motor à mão; a página presa (`pageScrollLock`, mantido), o foco que volta, Escape e Tab em captura no `document`, o toque fora, o arrastar para baixo (80 px) e o fechar quando a tela deixa de ser celular são os do motor à mão, na mesma ordem dentro da chamada de fechar.
+- Saem por `git rm`: `components/ui/Sheet.js` (173 linhas) e `utils/SafeDOM.js` (237; a Folha era o último a importá-lo e o sensor `noDeadModules` o acusou) com `test/utils/SafeDOM.test.js` e `test/components/ui/Sheet.test.js`. Os 13 casos do `Sheet.test.js` foram levados, asserção por asserção, para `test/ui/SheetWindow.test.tsx` (pela porta `openSheet`), mais o caso novo de uma tela que diz o título a cada desenho.
+- A prova «igual ao de antes»: `test/ui/SheetWindow.sameAsBefore.test.tsx`, 32 cenários contra o retrato do motor à mão (commits anteriores), com 3 verificações de que o teste enxerga (uma palavra, uma classe, a descida de 200 ms ao milissegundo). Duas diferenças de propósito, ditas em `KNOWN_DIFFERENCES` com a foto antiga transformada e no cabeçalho do arquivo: uma Folha aberta sai junto com a tela (ou a parte da tela) que a abriu, sem descer; uma Folha que está fechando guarda o conteúdo enquanto desce. O mesmo vale para o caso «uma virada do celular com a Folha aberta» do `Blend.sameAsBefore`.
+- Achados no caminho: (1) `setTitle` chamado a cada desenho (a Folha de filtros o faz em um efeito) refazia a tela sem fim quando virou estado: o teste de FilterToolbar travou a suíte (CPU a 200%, sem mensagem); agora `setTitle` com o mesmo texto não muda nada. (2) A classe `sheet--closing` entra na própria chamada de fechar (o React escreve as mesmas classes depois): sem isso o observador da página presa e um teste da janela de exportar viam a Folha como aberta por um microtask.
+- Sensores: `handMadeScreensBaseline` perde `components/ui/Sheet.js` e `utils/SafeDOM.js` (sobram 3 arquivos, 378 linhas: `Icons.js`, `BaseView.js`, `pageScrollLock.js`), os limites de `handMadeScreensOnlyShrink` e de `migrationStatus` descem, `complexityAllowlist` perde a entrada do `SafeDOM`. `windowsHoldThePage.test.js` usa a porta nova; o caso «uma Folha tirada da página sem o fechar» usa um elemento em forma de Folha (a de React não pode ser tirada sem o fechar).
+- Suíte inteira (385 arquivos, 5.131 testes) alvo desta entrada: ver a entrada de totais no fim da onda.
+
+
+## [2026-11-22 15:58] step — a espera de `/albums` ocupa a altura do cartão vazio: o rodapé não pula (F79, achados P2-A e P2-B do 2º parecer do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- O bloco de espera era baixo: o rodapé «Last updated» ficava no meio da tela e saltava quando o cartão vazio ou a lista chegava (deslocamento 0,663 abrindo Álbuns pelo menu, `main` 0,112; 0,141 com o cartão vazio). Agora o bloco tem `min-height` igual ao cartão vazio medido na tela construída (391 px a 1280, 282 px a 393; `LOADING_MIN_HEIGHT` em `SeriesLoadingState.js`), com o círculo ou a frase centrados; e a grade fica invisível (`visibility: hidden`) em vez de escondida, guardando o espaço da sua mensagem, para o cartão vazio chegar sem pular.
+- Medido no site construído (Chromium 1280, leitura segurada 1,5 s, duas séries): lista pelo menu 0,663 → 0,031 (`main` 0,112); lista direto 0,041 → 0 na troca; cartão vazio 0,141 → 0,0025 (o mesmo ruído de `main`). Telas assentadas 0 pixel contra `main`; Blend 0. A linha das abas «By Album / By Artist» (tardia, já na `main`) não foi tocada.
+
+## [2026-11-22 15:46] step — F83 onda 8c: o caso das leituras guardadas do inventário deixa de ser intermitente
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- `test/controllers/InventoryController.values.test.js`, o caso «a reading kept in the item shows at once…»: comparava o `readAt` de duas chamadas de `kept()`, que podem cair em milissegundos diferentes (intermitente). O caso agora cria a leitura uma vez e compara com ela. Só o teste; o código do produto não mudou. Pedido do coordenador.
+
+
+## [2026-11-22 15:46] step — F83 onda 8c: o teste da janela de editar do inventário passa os avisos
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- `test/screens/inventory/Inventory.statusAndSeries.test.js` chamava `openInventoryEdit(item, onSave)` três vezes sem o terceiro argumento (`notify`: desde a onda 8b a janela recebe os avisos de quem a abre), o que acabava numa rejeição sem tratamento («reading 'error'» em `ui/inventoryItem/EditWindow.tsx`) e fazia o vitest sair com erro mesmo com todos os testes verdes. O teste passa agora `notices` (os quatro `vi.fn()`), a mesma edição da linha de integração, para a junta sair limpa. Pedido do coordenador.
+
+
 ## [2026-11-22 15:45] step — F83: três testes do inventário entregam os avisos à janela de editar
 
 **Branch:** integrate/staging-2026-11-21
@@ -18,6 +133,27 @@
 - Os dois relatórios guardados como vieram em `reports/audits/` (`…react-exports…` e `…react-window-engines…`).
 - Fatos da barra laranja, do juiz da 8b: ela aparece em toda visita a Albums e a Blend, porque cada visita relê as séries; existe desde dezembro de 2025.
 
+## [2026-11-22 15:09] step — F83 onda 8c: o retrato da Folha refeito com um rótulo por passo
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O retrato do commit anterior tinha um defeito de captura: a anotação do estado da página de trás (`state`) e a foto da página usavam o mesmo rótulo em 5 passos, e uma apagava a outra. Cada passo tem agora o seu rótulo (`state · …` para o estado), e as 2 capturas seguidas, ainda do motor à mão (`Sheet.js` intacto), saíram idênticas (32 cenários).
+
+
+## [2026-11-22 15:08] step — F83 onda 8c: o retrato do motor à mão da Folha do celular, antes de tocar o motor
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O retrato do motor à mão da Folha do celular (`components/ui/Sheet.js`, ligado às telas por `useSheetWindow`), capturado ANTES de tocar o motor: 32 cenários de tempo falso (as duas formas, a descida de 200 ms ao milissegundo, o foco ao abrir e ao fechar, Tab, Escape, o toque fora, o arrastar para baixo com o limite de 80 px, a tela que deixa de ser celular, menos movimento, a página presa e devolvida, folha sobre folha, a tela deixada com a folha aberta, a ordem em que quem abriu é avisado). `test/support/sheetScenarios.js`, `test/support/sheetWorld.js`, o retrato `test/fixtures/sheetEngineBeforeF83.json` (74 KB; duas capturas seguidas saíram idênticas) e o registro `reports/evidence/F83/wave-8c/capture-before.test.js` (o teste de captura roda uma vez e sai: foi `test/ui/sheetCapture.test.js`).
+- Nenhuma linha de produto mudou neste commit: o motor ainda é o `Sheet.js`.
+
+
+## [2026-11-22 15:01] step — prova no site construído da tela Álbuns em espera, do Escape e do celular (F79, seção C)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- `reports/evidence/F79/create-lean-computer/proof.md`, seção C, com duas capturas pequenas: a espera de `/albums` (computador e iPhone) contra `main`, tela assentada com 0 pixel de diferença, leitura rápida sem salto, Escape em Chromium e WebKit, e o celular `/start` igual a `main` (0 pixel em 8 capturas).
+
 ## [2026-11-22 14:58] step — F83 sync 4: a seção 23 das lições, a TASK-36 e os totais do fim
 
 **Branch:** claude/f83-sync-4-create-and-the-three-lines
@@ -33,6 +169,53 @@
 - `main` contra o ramo: o menu, o caminho, o rodapé e o nome do celular a 1280 (Chromium e WebKit) 67 conferências, 0 diferenças, 0 px; «Create», o «+» e o estado ativo em `/start`, a Syne pedida (`Syne, sans-serif | 700 | 14px`) e a caixa de cada elemento iguais; no celular só o ruído da marca animada (22.533 px no iPhone 14, 9.780 px no SE, também de pai contra pai) e o texto do cabeçalho escondido; «Go and create!» e a página de entrada (`index.html` idêntico), nas duas línguas, com e sem conta (a classe `in`).
 - O ramo contra o pai: a varredura das telas (WebKit 1280 com 0 diferenças; as demais só o ruído do controle), a Blend (o salto da página, Chromium 1280: um botão de agrupamento no fim da página 1439 → 1439, o pai 1209; os números da tabela do conserto da 7b), um aviso e uma pergunta da 8b (WebKit iPhone 14: 264 conferências, 0 diferenças; Chromium 1280: as mesmas 7 de ruído do controle e uma de 152 px que não repetiu em 3 corridas).
 - Não provado: o português do app num site construído (nada chama `setLocale`), a fonte Syne desenhada (Google Fonts bloqueado), o MusicKit e o Firebase de verdade, o Safari de um aparelho.
+
+## [2026-11-22 14:54] step — no celular, «What is a series?» não diz «recolhido»: abre um diálogo (F79, achado P2-2 do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- No celular o botão abre a folha de baixo (um diálogo), mas levava `aria-expanded="false"` e `aria-controls`: o leitor de tela o anunciaria como «recolhido». Agora, no celular, o botão leva só `aria-haspopup="dialog"` (como na `main`); no computador ficam `aria-expanded` e `aria-controls`. Pixels do celular iguais à `main` (`HomeView.drawWhatLink`).
+- Testes: `HomeLean.phone` e `HomeLean.computer`.
+
+## [2026-11-22 14:53] step — um Escape, uma coisa só: a frase «What is a series?» não fecha junto com o menu (F79, achado P2-1 do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- No computador, com o menu da conta («Connections») e a frase «What is a series?» abertos, um Escape fechava os dois (na `main` só o menu). Agora o Escape fecha a frase só quando o foco está no link dela ou dentro da frase, e nunca quando outra camada (menu, janela, folha) já tratou a tecla: o menu da conta marca a tecla como tomada (`preventDefault`) ao fechar, e a tela Create confere `defaultPrevented`.
+- Arquivos: `views/HomeView.js`, `components/navigation/AuthNav.js`; testes `HomeLean.computer`, `AuthNav.menu`.
+
+## [2026-11-22 14:44] step — a tela Álbuns diz que está carregando as séries (F79, achado P1-1 do juiz)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- Sem a linha laranja (dele: «aquela barra laranja que aparece no topo, nao deveria aparecer mesmo»), `/albums` mostrava «No albums in library · Go and create!» durante a leitura das séries (1–2 s), dizendo a quem tem séries que a biblioteca está vazia. **Decidido pelo agente — revisável** (recomendação do orquestrador a ele): a tela ganha o próprio estado de carregamento, o do Blend (círculo no computador, «Loading your series…» no celular), no lugar do vazio; sem atraso artificial.
+- A regra «a lista está carregando?» é uma função pura, `models/albumsListState.js` (leitura em curso e nenhuma série → carregando; leitura acabou sem séries → vazio; com séries → lista, também numa releitura; leitura falhou → vazio, como antes). O store de séries ganhou `hasRead()`/`markRead()`, marcados pelo `SeriesService.loadFromFirestore` ao fim (bem ou mal), e pelo controller quando não há banco a ler (sem conta).
+- Peça reutilizada: `components/ui/LoadingSeries.js` guarda as palavras e o círculo que o Blend já desenhava; o Blend passou a importá-los (mesmo HTML). Novo: `components/series/SeriesLoadingState.js`. Testes: `albumsListState`, `SeriesView.loading`, store e serviço.
+
+## [2026-11-22 14:15] step — a linha laranja de carregamento no alto sai (GlobalProgress)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- Dele (2026-11-22): «agora que vi no menu aquela barra laranja que aparece no topo, nao deveria aparecer mesmo»; «a barra laranja aparece apenas qdo clico em album e blend»; perguntado se era «a linha fina de carregamento no alto, que some sozinha», respondeu «1. Creio que sim». Era o `components/GlobalProgress.js`, ligado pelo `SeriesService` (4 chamadas: ler, criar, editar e apagar séries). Saíram: o componente (nada mais o usava), as chamadas, a regra `#globalProgress` do celular em `css/mobile.css` e as simulações dos testes de série. O `@keyframes progress-indeterminate` fica (a `.progress-bar` do `AlbumsGridRenderer` o usa).
+- Prova no site construído (`reports/evidence/F79/create-lean-computer/proof.md`, seção B): com a leitura das séries demorada, `main` mostra a linha (6 px, 1,4 s) e o ramo nada; telas assentadas, 0 pixel de diferença. Achado, sem indicador novo: o Blend mostra o seu («Loading your series…» / giro), mas a tela Albums mostra o estado vazio durante a leitura — a linha era o único sinal de espera ali; fica para ele decidir.
+- Não toca a linha da migração (React): a F94 (`GlobalProgress.tsx`, `loadScreen`) é outra peça e a pergunta dela continua aberta lá.
+
+## [2026-11-22 14:05] step — F79: a tela Create enxuta também no computador
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- Pedido dele (2026-11-22): «podemos aplicar na sessão create o mesmo conceito de lean da versao mobile?»; diante da prévia (hoje, enxuta, variante com os três passos numa linha) escolheu «3. Sua recomendação», a enxuta. Construído em `public/`: no computador (≥ 900 px) a Start segue as mesmas regras do celular — a frase da série atrás de «What is a series?» (abre no mesmo lugar, sob o título; Esc ou segundo clique fecha; `aria-expanded`), sob o campo só «or paste a list» (sem a linha «Press Enter…»), «Type an artist» dentro do campo, sem os três passos, a base e o aviso de visitante só com a primeira capa, o conjunto um pouco mais baixo antes da busca. Uma regra só para as duas larguras (`phoneHintLink` virou `hintLink`).
+- Arquivos: `views/HomeView.js`, `components/home/HomeDock.js`, `models/homeSeries.js`, `controllers/HomeController.js`, `css/views/home.css`, `css/mobile/home.css` (sai o `.home-how`); testes `HomeLean.computer.test.js` (novo), `HomeLean.phone.test.js`, `HomeStage`, `HomeDock`, `HomePhone.dock`, `HomeController.create`, `homeSeries`; `behavior.md`, `info-arch.md`, o manual e a `tasks.md` da F79 (TASK-13).
+- Prova no site construído (Chromium e WebKit, com e sem conta): `reports/evidence/F79/create-lean-computer/proof.md`. Celular (iPhone 393 e 375, e 899) idêntico a `main`: 0 pixel em 50 de 50 capturas.
+
+## [2026-11-22 13:38] decision — o administrador do CMS e os papéis; a barra laranja sai; «Create» enxuta no computador; o menu em Syne (F82 REQ-04 e REQ-05, F94, F79, F88, UAT-283, UAT-284)
+**Branch:** wip/register-cms-admin-and-roles
+Palavras do MJRP (2026-11-22). (1) Administrador do CMS: à pergunta «o administrador é só a sua conta (Google ou Apple), fixa nas regras do banco? Recomendo sim», respondeu «2. Sim? Mas poderíamos evoluir o kit do CMS pra ter rbac em que eu sou o super admins. Atriibuo e crio roles». Registrado na F82: REQ-04 (só a conta dele, nas regras do banco e no servidor) e REQ-05 (o kit evolui para papéis; dentro da F82 e não feature própria, porque a F82 já guarda os pedidos pequenos do CMS); perguntas de papéis abertas, nenhuma respondida. (2) F94: a barra laranja é `components/GlobalProgress.js`; «1. Creio que sim», sai; passou de pergunta aberta a decidido; UAT-283. (3) F79: «podemos aplicar na sessão create o mesmo conceito de lean da versao mobile?» e «3. Sua recomendação» (enxuta no computador); UAT-284. (4) F88: o menu no computador usa Syne, «exato a opcao recomendada». O código da (2) e da (3) está sendo feito no ramo `wip/f79-create-lean-computer-and-no-loading-line`, não aqui. Só documentação; nada priorizado, aceito nem em andamento.
+
+## [2026-11-22 13:38] harness-feedback — o kit do CMS precisa de acesso por papéis (RBAC), com o dono como superadministrador
+
+**Branch:** wip/register-cms-admin-and-roles
+Palavras do MJRP (2026-11-22), ao decidir que na primeira versão o único administrador do CMS do V0 é a conta dele: «Sim? Mas poderíamos evoluir o kit do CMS pra ter rbac em que eu sou o super admins. Atriibuo e crio roles». Pedido ao harness (F332, o kit do CMS, hoje um modelo vazio): o kit traz papéis, em que o dono é o superadministrador, cria papéis e os atribui a pessoas. Perguntas em aberto, a decidir no desenho do kit: quais papéis nascem (editor de textos, gestor de receitas, gestor de chaves), se o papel vale por seção, como se convida alguém, como as regras do banco leem o papel (declarações no token ou documento de papéis) e a auditoria de quem mudou o quê. O V0 começa só com a conta do dono (F82 REQ-04) e adota os papéis quando o kit os trouxer (F82 REQ-05). Vai ao harness; não é corrigido aqui.
 
 ## [2026-11-22 13:33] step — F83 sync 4: a junta da `main` (336385a: «Create» no lugar de «Start», F91) e o porte para o React
 

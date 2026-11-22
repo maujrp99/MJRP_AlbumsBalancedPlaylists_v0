@@ -46,6 +46,7 @@ function usePanel(model: ConnectionsModel) {
         }
         const key = (event: KeyboardEvent) => {
             if (event.key === 'Escape' && isOpen.current) {
+                event.preventDefault() // the key is taken: no other layer closes with it (one Escape, one thing)
                 setOpen(false)
                 trigger.current?.focus()
             } else if (event.key === 'ArrowDown' && document.activeElement === trigger.current) {

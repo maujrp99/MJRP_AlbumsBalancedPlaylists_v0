@@ -23,6 +23,9 @@ Fatos conferidos no código da linha React (`integrate/staging-2026-11-21`, 2026
 - As telas carregam sob demanda: cada rota importa o arquivo da tela só quando é visitada (`loadScreen(() => import('./screens/…/index.ts'))` em `public/js/app.js`). Enquanto o arquivo vem, quem usa continua vendo a tela anterior (o contêiner só é trocado quando a nova está desenhada) e, passados 150 ms, aparece uma barra de progresso fixa no topo (`GlobalProgress`, cor laranja da marca); a troca, quando chega, é seca.
 - A home é uma página HTML à parte (`public/splash.html`), fora do roteador: ir da home para o app (e voltar pelo logotipo) é uma carga de página inteira do navegador, não uma troca de tela do app; por isso entrar no app de lá não usa o mesmo mecanismo de dentro do app sem decisão própria (ver S-70 e a F85).
 
+## Decision
+Decidido pelo MJRP em 2026-11-22: a barra laranja do topo sai. À pergunta «A barra laranja é a linha fina de carregamento no alto, que some sozinha? Se for: tiro agora (recomendo)?», respondeu: «1. Creio que sim». É a linha de carregamento `components/GlobalProgress.js`, iniciada por `services/SeriesService.js` enquanto as séries são lidas (telas Albums e Blend). Está sendo removida agora, no código de hoje, no ramo `wip/f79-create-lean-computer-and-no-loading-line` (UAT-283), fora desta feature.
+
 ## Requirements
 - [REQ-01] A passagem entre as telas do app (itens do menu, abrir e voltar) é suave, por um mecanismo único no roteador, sem cada tela refazer o seu · fixes S-76
 - [REQ-02] A abertura e o fechamento de janelas e de folhas do celular seguem o mesmo jeito de se mover das telas · fixes S-76
@@ -39,7 +42,6 @@ A escrever depois da rodada de desenho.
 Redesenhar as telas; a migração para React em si (F83); o desenho do menu (F88). Se a home entra no mesmo mecanismo é pergunta aberta abaixo.
 
 ## Open Questions
-- **A barra laranja que aparece no topo ao clicar em Albums e Blend: qual é, e sai.** O MJRP já disse que não é a faixa «By Album · By Artist…» sob o menu nas telas de Albums e Blend; falta a foto dele para dizer qual é. Pergunta aberta à parte da transição; não se registra o que ela é até a foto. (Pista do agente, não confirmada: o código tem uma barra de progresso laranja fixa no topo, mostrada enquanto o arquivo de uma tela chega; a foto confirma ou descarta.)
 - **Como suavizar?** Cruzamento entre as telas (cross-fade), as transições de vista do navegador (View Transitions), movimento de um elemento compartilhado de uma tela para a outra, ou um esqueleto da tela enquanto carrega: não decidido. Começa por uma rodada de desenho (um protótipo que compara duas ou três maneiras, dentro do design system).
 - Quanto dura a transição? Não decidido.
 - A home (página à parte) entra? Não decidido; mexe na F85 e na S-70.

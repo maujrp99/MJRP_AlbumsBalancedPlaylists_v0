@@ -24,8 +24,6 @@ import { InventoryBridge } from '../../../public/js/screens/inventory/InventoryB
 import { act } from 'react'
 import { openAlbumWindow } from '../../../public/js/ui/albumWindow/openAlbumWindow'
 import { openInventoryEdit } from '../../../public/js/ui/inventoryItem/inventoryWindows'
-
-// The edit window takes the site's notices from whoever opens it (wave 8b); the app hands it the toast store.
 const notices = { success: vi.fn(), error: vi.fn(), warning: vi.fn(), info: vi.fn() }
 import { closeAllWindows } from '../../../public/js/ui/windowLayer'
 import { inventoryStore } from '../../../public/js/stores/inventory.js'

@@ -40,6 +40,12 @@ const where = (now: string | null, was: string | null): string => {
 /** The one label that differs on purpose: where the focus is after the covers came in the background. */
 const ON_PURPOSE = { scenario: 'computer · many series, the covers waiting and then arrived', label: 'focus after the covers came', was: 'body' }
 
+/**
+ * Wave 8c: the second difference on purpose. The sheet is drawn from the tree of the part of the screen that opened it, so it leaves with that part: when the screen turns
+ * to the computer's layout the phone's step is gone and the sheet with it at once (the hand-made sheet was still on the page, sliding away, 200 ms after).
+ */
+const SHEET_GOES_WITH_ITS_PART = { scenario: 'phone · a turn of the phone with the sheet open closes it', label: 'sheet' }
+
 describe('the Blend screen in React does what the hand-made one did', () => {
     afterEach(() => { document.body.innerHTML = '' })
 
@@ -54,6 +60,10 @@ describe('the Blend screen in React does what the hand-made one did', () => {
             expect(Object.keys(snaps)).toEqual(Object.keys(captured[key]))
             for (const [label, page] of Object.entries(snaps)) {
                 if (key === ON_PURPOSE.scenario && label === ON_PURPOSE.label) continue
+                if (key === SHEET_GOES_WITH_ITS_PART.scenario && label === SHEET_GOES_WITH_ITS_PART.label) {
+                    expect(page, 'the sheet is gone at once').toBe(String(captured[key][label]).replace('true', 'false'))
+                    continue
+                }
                 expect(page === captured[key][label], `${key} · ${label}${where(page, captured[key][label])}`).toBe(true)
             }
         })

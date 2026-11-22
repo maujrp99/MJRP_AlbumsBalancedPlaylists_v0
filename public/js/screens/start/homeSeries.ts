@@ -126,23 +126,23 @@ export function stageIsBig({ scan, paste, report, phone }: { scan: string; paste
 }
 
 /**
- * The series bar at the foot of the phone (UAT-281): only once the first cover is chosen, or when the series is saved (the bar then says
+ * The series bar (UAT-281; the computer too, F79 2026-11-22): only once the first cover is chosen, or when the series is saved (the bar then says
  * so and carries the way on). Before that the screen has the menu.
  */
 export function barShows({ chosen = 0, created = false }: { chosen?: number; created?: boolean } = {}): boolean {
     return chosen > 0 || Boolean(created)
 }
 
-/** The «You're not signed in» notice on the phone (UAT-281): only when there is a series to lose. */
+/** The «You're not signed in» notice (UAT-281): only when there is a series to lose. */
 export function guestNoticeShows({ guest = false, chosen = 0 }: { guest?: boolean; chosen?: number } = {}): boolean {
     return Boolean(guest) && chosen > 0
 }
 
 /**
- * The one link under the field on the phone (UAT-281): `'paste'` («or paste a list»), `'artist'` («Search an artist instead», in the paste
+ * The one link under the field (UAT-281; the computer too): `'paste'` («or paste a list»), `'artist'` («Search an artist instead», in the paste
  * state) or `null` (the «not found» message already has «Paste a list»).
  */
-export function phoneHintLink({ paste = false, notFound = false }: { paste?: boolean; notFound?: boolean } = {}): 'paste' | 'artist' | null {
+export function hintLink({ paste = false, notFound = false }: { paste?: boolean; notFound?: boolean } = {}): 'paste' | 'artist' | null {
     if (paste) return 'artist'
     return notFound ? null : 'paste'
 }

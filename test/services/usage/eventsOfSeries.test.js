@@ -11,7 +11,6 @@ vi.mock('../../../public/js/cache/CacheManager.js', () => {
     const cacheManager = { get: async () => null, set: async () => { }, invalidate: async () => { } }
     return { cacheManager, CacheManager: class { } }
 })
-vi.mock('../../../public/js/stores/progress.js', () => ({ globalProgress: { start: vi.fn(), finish: vi.fn() } }))
 
 import { fake } from '../../helpers/fakeFirestore.js'
 import { recordUsage, stopRecording } from '../../helpers/usageRecorder.js'
