@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 05:25] step — F83, os mapas das ondas 7 (Blend) e 8 (o fecho)
+
+**Branch:** claude/f83-wave-7-blend-map
+
+- `map-wave-7-blend.md` (TASK-26): a Blend à mão em 7 arquivos e 1.815 linhas, com o painel de gerar de novo da tela de playlists. Achado: o painel não é do controlador da Blend (o mapa da onda 2 e `BRIDGE_USES` dizem que é); ele partilha com a Blend os cartões de receita e os ingredientes. Divisão proposta: 7a as peças de receita em `ui/recipe/` e o painel (≈ 250 linhas saem, 15 casos levados), 7b a tela (≈ 1.630 linhas, ≈ 21 casos); os dourados a capturar antes; 15 defeitos que ficam; oito perguntas com recomendação.
+- `map-wave-8-closure.md` (TASK-28, TASK-29, TASK-17): depois da onda 7 sobram 17 arquivos à mão (2.192 linhas), 2 invólucros e 3 usos de ponte; a decisão arquivo por arquivo; o controlador da sessão sem reescrever (o invólucro sai pela importação direta); o Spotify reescrito e o Apple Music mudado de lugar com a prova de chamadas ao MusicKit e a exportação de verdade pelo dono; manter o roteador da casa (nota no plano); a TASK-17 dentro do relatório do fecho; a lista do «feito» e o que a publicação em produção verifica; a ordem 8a a 8d.
+- TASK-26 marcada. Nenhuma linha de produto.
+
 ## [2026-11-22 05:10] step — F83, onda 6b: a prova no navegador e os totais
 
 **Branch:** claude/f83-wave-6b-inventory-windows
