@@ -10,6 +10,15 @@
 - Pergunta 2 de 5 do enquadramento: «mantenho como o kit faz hoje (gravar já publica), ou rascunho e depois "publicar", com desfazer? Recomendo rascunho.» O MJRP perguntou antes «1. Como é no CMS kit hj?» e, sabendo que o kit grava e publica sem rascunho, decidiu: «1. Mantém». A recomendação do agente (rascunho) não foi a escolhida.
 - Consequência: a v1 não pede ao kit o passo «publicar» nem versões; o protótipo do CMS e a spec da F82 acompanham. O desfazer e o histórico ficam como pergunta para depois, se ele sentir falta.
 
+## [2026-11-22 19:33] step — o protótipo do admin (CMS): dois níveis, Painel e Na própria tela (F82, F92, F93)
+
+**Branch:** wip/cms-prototype
+
+- Pedido do MJRP (2026-11-22): «Quero ver um protótipo num artefato separado do CMS»; antes, «podemos começar a criar o CMS?», as receitas («uma seção especial para criar e gerar algoritmos e gerenciar o aparecimento e configuração deles na tela de blend»), as chaves («feature toggle para ligarmos e desligarmos features em prod. A começar pela integração com a discogs») e os papéis («rbac em que eu sou o super admins. Atriibuo e crio roles»).
+- `design/proposals/f82-cms/prototype.html` (um arquivo, ~105 KB, para publicar como artefato): abre na decisão «Painel» ou «Na própria tela»; os dois cobrem textos (64 textos reais em inglês e português, aprovar em lote, aviso de texto longo; «Salvar» põe no ar depois de confirmar o que vai, pela decisão dele «1. Mantém»: salvar publica, como o kit, sem desfazer), funções (Discogs, medição de uso, português para todos), receitas (as quatro reais; nova receita de blocos com «Deep cuts» e «As menos ouvidas» e a prévia num álbum real), pessoas e papéis (agora só ele; papéis marcados «depois») e o histórico só como ideia «depois»; estados de mudanças não salvas, salvando, salvo, falha, conflito, sem permissão e vazio.
+- `design/proposals/f82-cms/proposal.md`: o custo de cada nível, a decisão dele com as palavras dele, a recomendação (Painel agora; na própria tela depois, só para os textos), real e inventado, três perguntas. Conferido sem tela a 1440×900 e 393×852: sem erro, sem rolagem lateral, contraste e alvos de 44 px; quatro capturas em `caps/`.
+- Textos do admin, «Deep cuts», «As menos ouvidas», a popularidade da prévia e o histórico são texto proposto, decididos pelo agente — revisáveis.
+
 ## [2026-11-22 19:17] step — publicado em produção: «Create» enxuta no computador, sem a linha laranja, e a tela Albums diz que carrega (F79), da `fe9c93b`
 
 **Branch:** main
