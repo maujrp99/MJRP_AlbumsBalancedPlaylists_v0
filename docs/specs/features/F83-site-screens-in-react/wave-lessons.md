@@ -57,3 +57,14 @@ O menu do topo foi refeito à parte (F88, já na `main`); a moldura em React da 
 - A Start baixa o arquivo na abertura (é a primeira tela). As demais telas baixam na hora da rota e ficam na lista do segundo plano (`prefetchScreensAfterTheFirstScreen`).
 - Para o roteiro de navegador de uma onda: modelo em `reports/evidence/F83/wave-4/browser-proof.mjs`; o ruído conhecido (3 capturas de 24 mil pixels na moldura do topo) existe também de antiga contra antiga.
 - O que a Start não prova sem conta: o MusicKit real; o Spotify nem é tocado por ela.
+
+## 10. Notas que a onda 5a deixou (da construção e da prova)
+
+- **Um peça que lê as propriedades de uma ref para desenhar uma camada (a folha) tem de atribuir a ref ANTES de chamar o gancho que faz a camada.** Em `ui/FilterToolbar.tsx` a folha mostrou a escolha do desenho anterior no site publicado; o modo estrito (segundo desenho) escondia isso nos testes e no servidor de desenvolvimento. Só o WebKit sobre o build achou. A passada no build com um clique/seleção de verdade nas folhas não é opcional.
+- **`select` controlado não deixa o atributo `selected`** e `defaultValue` deixa: para a asserção de uma tela antiga que lê o atributo, use `defaultValue` com a chave da lista (ela é feita de novo quando a figura muda, como a antiga). Um `input` com `defaultValue` ganha o atributo `value`; escreva a propriedade num efeito. Um campo que a tela antiga ouvia pelo evento `input` fica com o ouvinte `input` na mão (o `onChange` do React não ouve um valor escrito por script).
+- **A folha da antiga desliza para fora com o que tinha dentro**; `useSheetWindow` agora solta o que o React desenha nela só quando a folha sai da página.
+- **O gancho do foco ganhou `keep` (o que a antiga escrevia no lugar: barra e paginadores) e `after` (só depois de um aviso do controlador, não quando uma folha fecha e devolve o foco).**
+- **A tela antiga redesenha só quando o controlador avisa; o gancho, por padrão, solta o foco em todo desenho.** Diga a qual desenho a antiga reagia.
+- **Peça à mão desenhada por React:** a caixa em volta (`display: contents`, `data-legacy-host`) é desembrulhada na comparação (`normalize`) e fica no DOM.
+- **Medir o redesenho no build, não no servidor de desenvolvimento**: o React de desenvolvimento mais o modo estrito dão 1,6 a 1,9 vez, e o build dá igual ou menos. O roteiro `redraw-300-covers.mjs` aceita o endereço de qualquer servidor (`vite preview` de duas pastas de build).
+- **`git worktree remove` do worktree de comparação pode ser recusado pela trava; deixe e diga o caminho.**
