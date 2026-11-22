@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 18:06] step — F83 onda 8c: o peso medido e os tetos descem
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O peso, medido por `npm run budget:publication` (a construção em forma de publicação, com os cinco valores de mentira): o script principal **194.827 B** (era 195.804 B: −977 B, o motor da Folha em React é menor que o à mão com o `SafeDOM` e o `Icons` que ele puxava), o que vem depois da primeira tela 235.263 B (era 235.196 B: +67 B), a soma 430.090 B, `react-vendor` 68.691 B (igual). Os tetos só se mexem com o valor medido e a folga declarada de 150 B: principal 195.964 B → **194.987 B** (folga 160 B), `background` 57.720 B → **56.820 B** (a soma `mainToday` + React + `background` = 430.257 B, folga 167 B); `publication.measured` atualizado. Nenhum texto novo: o peso não vem de dicionário.
+
+
 ## [2026-11-22 16:15] step — F83 onda 8c: o roteiro de prova no navegador e a camada da Folha do inventário num lugar só
 
 **Branch:** claude/f83-wave-8c-phone-sheet
