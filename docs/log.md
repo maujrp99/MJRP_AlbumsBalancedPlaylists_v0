@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 09:01] step — F83 onda 8a: a gravação de toda chamada ao MusicKit da exportação ao Apple Music, antes de mover
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `test/services/musickit/AppleMusicExport.recording.test.js` + `test/support/musicKitRecorder.js` (o MusicKit de mentira, a mesma função roda no jsdom e no site construído) + `test/support/exportRecordingScenarios.js` (27 cenários: uma playlist, lote, pasta escolhida, pasta nova, pasta lembrada, sem pasta, faixas não achadas, 300 faixas, 120 buscas, 250 pastas em três páginas, 429, 401, autorização expirada, sem token, de novo, dois cliques, o arquivo).
+- O dourado `test/fixtures/exportMusicKitRecording.json` (605 eventos, 264 chamadas `api.music`) foi gravado UMA vez, da versão atual (RECORD_EXPORT=1), antes de mover qualquer arquivo; depois da mudança o teste só compara. Achado: nenhuma parte parte a lista de faixas (um pedido leva todas) - registrado como é.
+
 ## [2026-11-22 08:55] step — F83 onda 7b: a prova no navegador da tela Blend, contra a tela à mão da junta
 
 **Branch:** claude/f83-wave-7b-blend-screen
