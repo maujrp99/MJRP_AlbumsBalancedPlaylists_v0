@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 12:38] step — publicado em produção: a home com conta mostra o texto aprovado (F80), da `4410c1f`
+
+**Branch:** main
+
+- Com a palavra dele («publica»). Testes 4141/4141 na publicação. Conferido no ar: a página não traz mais nenhuma linha `hi.*`. Não visto num navegador com conta aberta.
+- Ele perguntou «como estamos com a migração agora? podemos começar a criar o CMS?»: em curso o enquadramento do CMS (`wip/cms-framing`, relatório em `reports/proposals/`).
+- Ele notou: «a fonte usada para o menu é diferente da fonte utilizada anteriormente». Fato: o menu antigo usava a fonte do corpo em maiúsculas, 12 px, seminegrito; o novo (F88) usa a fonte do sistema a 14 px, sem maiúsculas, no computador, e a Syne a 12 px no menu de baixo do celular. Pergunta com ele: qual ele quer.
+
 ## [2026-11-22 12:05] step — o teste da home acompanha a abertura única, com ou sem conta
 
 **Branch:** main
