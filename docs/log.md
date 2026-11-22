@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 09:28] step — F83 onda 8a: o orçamento de peso, a linha da TASK-28 e a seção 20 das lições
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `scripts/bundle-budget.json`: o principal passou de 194.889 B para 195.460 B (+571 B: o inglês de 38 chaves da janela do Spotify, que o inglês guarda no script principal); o teto sobe para 195.604 B (o medido mais 144 B das chaves do build publicado). O que vem depois da primeira tela foi de 236.603 B a 236.792 B e o `background` de 58.100 B a 59.000 B (185 B de folga acima da necessidade medida, 58.815 B, para as chaves: o mínimo pedido é 150 B). O `reactVendor` não mudou.
+- `tasks.md` ganha a linha 8a sob a TASK-28 (a TASK-28 NÃO foi marcada: fecha com a 8d). `wave-lessons.md` ganha a seção 20.
+- Portão no ponto desta entrada: suíte inteira 378 arquivos, 5.031 testes, verde (inclui `noSecretsInRepo`); `test/architecture` verde; `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai).
+
 ## [2026-11-22 09:13] step — F83 onda 8a: a janela de exportar ao Spotify em React, a última janela à mão sai
 
 **Branch:** claude/f83-wave-8a-exports

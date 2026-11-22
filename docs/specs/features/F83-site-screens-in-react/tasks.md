@@ -69,6 +69,7 @@ Na ordem das ondas da proposta (§ 15). Nenhum código de produto antes da ADR-0
 
 ### Onda 8 — fecho
 - [ ] TASK-28 apagar `react-bridge/legacy/`, `utils/SafeDOM.js`, `views/BaseView.js` e os sensores só das telas antigas; os motores antigos de janela, Folha e aviso reescritos em `ui/` ou mantidos com o motivo; `views/` e `components/` vazias; o placar em zero · implements:: REQ-03, REQ-09 · model:: sonnet · waiting:: human — nenhum código antes da ADR-0023 aceita pelo MJRP · action:: aceitar a ADR-0023 (commit dele com o carimbo)
+  - [x] 8a as exportações: a janela de exportar ao Spotify em React (`ui/SpotifyExportWindow.tsx`, dourado da janela à mão de 21 cenários); a exportação ao Apple Music e ao arquivo mudaram de lugar sem mudar a lógica (`controllers/playlistExports.js`, `controllers/playlistExportEntries.js`), com a gravação de toda chamada ao MusicKit (27 cenários, 264 chamadas) idêntica antes e depois, no jsdom e no site construído (Chromium e WebKit); `react-bridge/legacy/OutputWindows.ts` e `components/SpotifyExportModal.js` saem · prova: `reports/evidence/F83/wave-8a/proof.md` (TASK-28 NÃO marcada: fecha com a 8d)
 - [ ] TASK-29 o roteador depois da última tela antiga: manter o da casa ou adotar um de biblioteca; nota no plano ou ADR própria, conforme o tamanho da mudança · implements:: REQ-01 · model:: opus · waiting:: human — nenhum código antes da ADR-0023 aceita pelo MJRP · action:: aceitar a ADR-0023 (commit dele com o carimbo)
 
 ## Verification
