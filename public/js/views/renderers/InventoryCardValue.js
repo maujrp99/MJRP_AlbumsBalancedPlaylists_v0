@@ -46,16 +46,19 @@ const KIND_WORD = Object.freeze({ [ValueBasis.LOWEST_FOR_SALE]: 'lowest', [Value
  * card is no taller. `line` is the same in one line, for the list.
  */
 function discogsOrigin(value) {
-    const url = safeUrl(value.release?.url)
-    const name = url
-        ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="underline hover:text-white" title="${DISCOGS_CREDIT} Open this edition on Discogs">Discogs</a>`
-        : 'Discogs'
     const tail = readOnText(value)
     const kind = KIND_WORD[value.basis] || KIND_WORD[ValueBasis.SUGGESTION]
     return {
-        stacked: `<span data-role="origin-source">${name}${tail ? ` · ${tail}` : ''}</span>\n<span data-role="origin-kind">CD · ${kind}</span>`,
-        line: `CD · ${name} · ${kind}`, tail, hint: discogsHint(value)
+        stacked: `<span data-role="origin-source">${discogsName(value)}${tail ? ` · ${tail}` : ''}</span>\n<span data-role="origin-kind">CD · ${kind}</span>`,
+        line: `CD · ${discogsName(value)} · ${kind}`, tail, hint: discogsHint(value)
     }
+}
+
+/** "Discogs", linked to the page of the edition the value is of. */
+function discogsName(value) {
+    const url = safeUrl(value.release?.url)
+    if (!url) return 'Discogs'
+    return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="underline hover:text-white" title="${DISCOGS_CREDIT} Open this edition on Discogs">Discogs</a>`
 }
 
 /** Line 2, left: where the value comes from, or why there is none. */
@@ -92,9 +95,8 @@ const notYet = (word) => `<span class="text-xs text-gray-400 opacity-50 cursor-n
 
 /** Line 2, left: the Discogs value on its two lines, anything else on one that gives way (and has its whole text in the `title`). */
 function originSpan(origin) {
-    const title = escapeHtml(origin.hint)
-    if (origin.stacked) return `<span class="min-w-0 flex flex-col text-[11px] leading-[13px] text-gray-400 whitespace-nowrap" title="${title}">${origin.stacked}</span>`
-    return `<span class="min-w-0 flex text-xs text-gray-400 whitespace-nowrap" title="${title}"><span class="truncate">${origin.line}</span></span>`
+    if (origin.stacked) return `<span class="min-w-0 flex flex-col text-[11px] leading-[13px] text-gray-400 whitespace-nowrap" title="${escapeHtml(origin.hint)}">${origin.stacked}</span>`
+    return `<span class="min-w-0 flex text-xs text-gray-400 whitespace-nowrap" title="${escapeHtml(origin.hint)}"><span class="truncate">${origin.line}</span></span>`
 }
 
 /** Line 5: what is owned can be sold or traded one day, and its links are in its window; what is not owned shows where to buy it. */

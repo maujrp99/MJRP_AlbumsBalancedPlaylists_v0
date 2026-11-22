@@ -162,7 +162,7 @@ describe('the screen', () => {
         expect(origin.querySelector('.truncate')).toBe(null)
         expect(origin.className).toContain('flex-col')
         expect(origin.className).not.toContain('truncate')
-        expect(origin.querySelector('[data-role="origin-source"]').textContent).toMatch(/^Discogs\s·\s\d{1,2} [A-Z][a-z]{2}$/)
+        expect(origin.querySelector('[data-role="origin-source"]').textContent).toMatch(/^Discogs\s·\s\d{1,2}\u00a0[A-Z][a-z]{2}$/)
         expect(origin.querySelector('[data-role="origin-kind"]').textContent).toBe('CD · lowest')
         expect(origin.querySelector('a').href).toBe(RELEASE.url)
         expect(document.querySelectorAll('.inventory-card-wrapper[data-album-id="owned"] [data-line]')).toHaveLength(5)
