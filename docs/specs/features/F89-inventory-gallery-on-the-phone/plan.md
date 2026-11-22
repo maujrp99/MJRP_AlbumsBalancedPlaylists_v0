@@ -16,7 +16,7 @@ O cartão (`InventoryPhoneTile`) tem a capa quadrada, o título e o artista, a l
 - `public/js/views/renderers/InventoryPhoneTile.js` — `phoneTile(item, value, money)`, `phoneGallery(items, known, shown)`; as mesmas peças da lista (`phoneValue`, `statusText`, `MORE_ICON`, a paginação). (REQ-02)
 - `public/js/views/InventoryPhoneSheets.js` — `openFiltersSheet` ganha a seção «View». (REQ-01)
 - `public/js/views/InventoryView.js` — escolhe lista ou galeria; `redrawCard`, `phoneRowAt` e o resto passam a achar os dois. (REQ-03)
-- `public/css/mobile/inventory.css` — a grade e o cartão, dentro da consulta do celular. (REQ-01, REQ-02, REQ-04)
+- `public/css/mobile/inventory.css`, `public/css/mobile.css` § 1, `public/css/mobile/albums.css` — a grade e o cartão, dentro da consulta do celular; as variáveis da grade de capas. (REQ-01, REQ-02, REQ-04)
 
 ## Dependencies
 F76 (a tela do celular), F75 (o cartão e o valor do inventário). Nenhuma biblioteca nova, nenhuma cor nem ícone novo.
@@ -31,5 +31,5 @@ Declarações:
 - `docs/specs/design-system.md` — sem mudança: nenhuma cor, ícone ou medida nova (os 44 px e os 12 px são os de § Celular)
 
 ## Risks & Considerations
-- Três cartões em 393 px deixam 109 a 115 px por cartão: o texto é de 12 px (o mínimo da F76) e o título é cortado em duas linhas; se o MJRP preferir 2 colunas, é um número só no CSS.
+- A grade é a de Albums (2 colunas, 3 de 640 px), com as colunas e os vãos em `--phone-cover-columns`, `--phone-cover-gap-x` e `--phone-cover-gap-y` (`mobile.css` § 1), lidos por Albums (vãos) e pela galeria; o teste `tabletGridsHaveThreeColumns` mantém as classes de Albums e as variáveis em passo. Com cartões de 138 a 281 px o cartão também mostra as duas médias; os links da loja ficam no «⋯».
 - Nada disto foi visto num iPhone de verdade (Safari, a barra que encolhe, o toque).

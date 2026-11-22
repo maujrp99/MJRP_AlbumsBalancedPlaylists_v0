@@ -80,6 +80,14 @@ describe('the card of the gallery (views/renderers/InventoryPhoneTile.js)', () =
         expect(tile.querySelector('.inv-tile__status').getAttribute('aria-label')).toBe('Status: Owned. Change it')
         expect(tile.querySelector('.inv-tile__more').getAttribute('aria-label')).toBe('Actions for Album 0 <b>')
         expect(tile.querySelector('.inv-tile__open').dataset.action).toBe('view-modal')
+        expect(text(tile.querySelector('[data-role="averages"]'))).toBe('Avg Rating80.5Avg Pop41.2%')
+    })
+
+    it('an album that was never read has no averages line', () => {
+        const [item] = many(1)
+        const tile = draw(phoneTile({ ...item, averages: null }, undefined, USD)).querySelector('.inv-tile')
+
+        expect(tile.querySelector('[data-role="averages"]')).toBe(null)
     })
 
     it('an album with no value says why, with its format; a wishlist album has its mark', () => {

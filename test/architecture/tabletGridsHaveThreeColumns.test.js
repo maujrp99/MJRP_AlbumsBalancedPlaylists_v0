@@ -22,11 +22,14 @@ describe('the grids of covers on a tablet in the phone layout (768-899 px)', () 
         expect(css).toMatch(/@media\(min-width:640px\)\{[^@]*\[data-picker-grid\]\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/)
     })
 
-    it('the gallery of the inventory (F89) has 3 columns on a phone and as many as fit at 140 px or more from 640 px, inside the phone query', () => {
-        const css = flat(read('public/css/mobile/inventory.css'))
-        expect(css).toMatch(/\.inv-tiles\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/)
-        expect(css).toMatch(/@media\(min-width:640px\)\{\.inv-tiles\{grid-template-columns:repeat\(auto-fill,minmax\(140px,1fr\)\)/)
-        // under 360 px (the first iPhone SE, 320 px) three would be cards of 90 px: two
-        expect(css).toMatch(/@media\(max-width:359px\)\{\.inv-tiles\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/)
+    it('the gallery of the inventory (F89) follows the albums grid at every width of the phone: the columns and the gaps are written once, in mobile.css', () => {
+        const base = flat(read('public/css/mobile.css'))
+        // Albums: 2 columns, 3 from 640 px (the two renderers above); the variables say the same
+        expect(base).toMatch(/--phone-cover-columns:2;--phone-cover-gap-x:12px;--phone-cover-gap-y:20px;/)
+        expect(base).toMatch(/@media\(min-width:640px\)\{:root\{--phone-cover-columns:3;\}\}/)
+        const gallery = flat(read('public/css/mobile/inventory.css'))
+        expect(gallery).toMatch(/\.inv-tiles\{display:grid;grid-template-columns:repeat\(var\(--phone-cover-columns\),minmax\(0,1fr\)\);column-gap:var\(--phone-cover-gap-x\);row-gap:var\(--phone-cover-gap-y\);/)
+        const albums = flat(read('public/css/mobile/albums.css'))
+        expect(albums).toMatch(/\.albums-view\.albums-grid\{column-gap:var\(--phone-cover-gap-x\);row-gap:var\(--phone-cover-gap-y\);\}/)
     })
 })

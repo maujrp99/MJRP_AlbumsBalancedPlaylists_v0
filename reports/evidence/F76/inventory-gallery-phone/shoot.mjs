@@ -84,11 +84,11 @@ for (const [name, device] of PROFILES) {
         await page.waitForTimeout(250)
     }
     // the profiles that only add a width keep three crops each (the others take them all)
-    const FEW = new Set(['gallery-top', 'gallery-scrolled', 'gallery-end'])
+    const FEW = new Set(['gallery-top', 'gallery-end'])
     const shoot = async (key, options = {}) => {
         if (EXTRA.has(name) && !FEW.has(key)) return
         const file = `${name}-${key}.jpg`
-        await page.screenshot({ path: path.join(out, file), type: 'jpeg', quality: 78, scale: 'css', ...options })
+        await page.screenshot({ path: path.join(out, file), type: 'jpeg', quality: 66, scale: 'css', ...options })
         shots.push(file)
     }
     const measure = async (key) => { const m = await page.evaluate(MEASURE); note(key, m); return m }
@@ -103,7 +103,7 @@ for (const [name, device] of PROFILES) {
     await open('n=60&view=grid')
     m = await measure('gallery-top')
     const width = await page.evaluate('innerWidth')
-    const expectedColumns = width >= 640 ? 5 : (width < 360 ? 2 : 3)
+    const expectedColumns = width >= 640 ? 3 : 2 // the albums grid's: 2, and 3 from 640 px
     if (m.columns !== expectedColumns) failures.push(`${name} gallery-top: ${m.columns} columns, expected ${expectedColumns}`)
     if (m.sideways) failures.push(`${name} gallery-top: scrolls sideways (${m.scrollWidth} > ${m.clientWidth})`)
     if (m.open.h < 44 || m.status.h < 44 || m.status.w < 44 || m.more.w < 44 || m.more.h < 44) failures.push(`${name} gallery-top: a target under 44 px ${JSON.stringify({ open: m.open, status: m.status, more: m.more })}`)
@@ -195,6 +195,32 @@ for (const [name, device] of PROFILES) {
     if (consoleErrors.length) failures.push(`${name}: console errors ${JSON.stringify(consoleErrors.slice(0, 3))}`)
     await ctx.close()
 }
+
+// 8. The same columns, gaps and cover sizes as the albums screen's grid, at every width of the phone layout
+const COMPARE = `(() => {
+  const r = (n) => Math.round(n * 100) / 100
+  const read = (grid, cell) => {
+    const s = getComputedStyle(grid)
+    const cells = [...grid.querySelectorAll(cell)].map((c) => c.getBoundingClientRect())
+    const top = cells[0].top
+    return { columns: cells.filter((c) => Math.abs(c.top - top) < 2).length, columnGap: s.columnGap, rowGap: s.rowGap, cellWidth: r(cells[0].width) }
+  }
+  return { albums: read(document.getElementById('albumsGridSandbox'), '.album-tile'), inventory: read(document.querySelector('.inv-tiles'), '.inv-tile') }
+})()`
+const widths = {}
+for (const width of [320, 360, 375, 393, 430, 600, 640, 768, 820, 899]) {
+    const ctx = await browser.newContext({ ...devices['iPhone 14'], viewport: { width, height: 900 }, screen: { width, height: 900 } })
+    await ctx.route(BLOCKED, (route) => route.abort())
+    const page = await ctx.newPage()
+    await page.goto(page_('n=40&view=grid&s=compare'), { waitUntil: 'load' })
+    await page.waitForSelector('body[data-ready="true"]', { timeout: 15000 })
+    await page.waitForTimeout(250)
+    const m = await page.evaluate(COMPARE)
+    widths[width] = m
+    if (JSON.stringify(m.albums) !== JSON.stringify(m.inventory)) failures.push(`${width} px: the albums grid is ${JSON.stringify(m.albums)} and the gallery is ${JSON.stringify(m.inventory)}`)
+    await ctx.close()
+}
+measures.sameAsAlbums = widths
 
 await browser.close()
 server.close()

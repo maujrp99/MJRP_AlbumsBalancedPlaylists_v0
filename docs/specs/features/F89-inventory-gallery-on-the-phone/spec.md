@@ -21,8 +21,8 @@ Dito pelo MJRP em 2026-11-21: «no inventory não tem a view de galeria? só de 
 ## Requirements
 «Celular» aqui é a tela de até 899 px de largura (a linha que a F88 moveu de 767 px).
 
-- [REQ-01] No celular, o inventário tem também a galeria de capas, além da lista: as capas numa grade (3 por linha a 393 px; mais numa tela larga, até 899 px), com o mesmo ícone de troca entre galeria e lista que o computador e a tela de Albums têm no celular, e a escolha guardada. · fixes S-71
-- [REQ-02] Cada cartão da galeria mostra o que a linha da lista mostra e cabe num cartão: a capa, o título e o artista, o formato e a marca Owned ou Wishlist, a linha do valor com a origem; e dá as mesmas ações da lista: abrir a janela do álbum, mudar a situação, «Where to buy», com alvos de pelo menos 44 px. · fixes S-71
+- [REQ-01] No celular, o inventário tem também a galeria de capas, além da lista: as capas numa grade com as mesmas colunas, vãos e tamanho de capa da grade de Albums em toda largura do celular (2 por linha, 3 de 640 px até 899 px), com o mesmo ícone de troca entre galeria e lista que o computador e a tela de Albums têm no celular, e a escolha guardada. · fixes S-71
+- [REQ-02] Cada cartão da galeria mostra o que a linha da lista mostra e cabe num cartão: a capa, o título e o artista, o formato e a marca Owned ou Wishlist, a linha do valor com a origem e as médias; e dá as mesmas ações da lista: abrir a janela do álbum, mudar a situação, «Where to buy», com alvos de pelo menos 44 px. · fixes S-71
 - [REQ-03] Filtros, busca, ordem, contagens, o aviso dos valores («N albums are waiting for a value» / «Read them now») e «Update values» valem igual nas duas visões; quem nunca escolheu vê a lista. · fixes S-71
 - [REQ-04] A tela de 900 px para cima não muda (ela já tem a grade e a lista). · fixes S-71
 
@@ -30,8 +30,8 @@ Dito pelo MJRP em 2026-11-21: «no inventory não tem a view de galeria? só de 
 Em `docs/specs/info-arch.md` § Estados no celular: [[info-arch#^inventory-phone-gallery-default]], [[info-arch#^inventory-phone-gallery-switch-open]], [[info-arch#^inventory-phone-gallery-no-cover]]. As regras, em `docs/specs/behavior.md` [[behavior#^phone-inventory-gallery]].
 
 ## Success Criteria
-- **REQ-01** · a 393 px a galeria tem 3 colunas (2 abaixo de 360 px, onde 3 seriam cartões de 90 px); a 820 px, 5; a troca está na folha «Filters and order», com o ícone e o nome de cada visão, e a escolha volta ao reabrir a tela.
-- **REQ-02** · cada cartão tem a capa, o título (até duas linhas, cortado se longo), o artista, a linha do valor, a situação e «⋯», e os dois botões têm 44 px; um álbum sem capa mostra o mesmo substituto da lista.
+- **REQ-01** · a galeria tem as colunas e os vãos de Albums (medido a 320, 360, 375, 393, 430, 600, 640, 768, 820 e 899 px: 2 colunas até 639 px, 3 dali; vão de 12 e 20 px); a troca está na folha «Filters and order», com o ícone e o nome de cada visão, e a escolha volta ao reabrir a tela.
+- **REQ-02** · cada cartão tem a capa, o título (até duas linhas, cortado se longo), o artista, a linha do valor, as duas médias, a situação e «⋯», e os dois botões têm 44 px; um álbum sem capa mostra o mesmo substituto da lista.
 - **REQ-03** · os testes da tela provam as duas visões com a mesma busca, o mesmo filtro e a mesma ordem; o aviso dos valores e o botão «Update values» são os mesmos.
 - **REQ-04** · `test/architecture/phoneStylesStayOnThePhone.test.js` passa; nenhuma regra nova fora da consulta de mídia.
 - A prova no navegador está em `reports/evidence/F76/inventory-gallery-phone/` (WebKit, iPhone 14, iPhone SE e 820 px). Um iPhone de verdade não foi usado.
@@ -41,4 +41,4 @@ Mudar o inventário do computador; uma capa maior com o nome da série; arrastar
 
 ## Open Questions
 - A troca fica na folha «Filters and order», como na tela de Albums; se o MJRP a quiser num botão sempre à vista na barra, a barra perde largura da busca.
-- 3 colunas a 393 px é o número que o MJRP pediu; a tela de Albums tem 2 nessa largura (3 a partir de 640 px).
+- Decidido: a galeria segue a grade de Albums (2 colunas a 393 px, 3 de 640 px), como foi prometido («igual à da tela de Albums»); as colunas, os vãos e o tamanho de capa vêm das mesmas variáveis (`--phone-cover-*`).

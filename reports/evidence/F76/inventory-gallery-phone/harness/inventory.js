@@ -5,7 +5,7 @@
 //   ?n=<items>          how many items (default 60)
 //   ?view=none|grid|list  the choice kept in the browser before the screen opens (none: nothing kept)
 //   ?keep=1             open with what the browser kept (to prove a choice survives a reload)
-//   ?s=<scenario>       what is done after the screen opens: switch | status | more | search | wishlist
+//   ?s=<scenario>       what is done after the screen opens: switch | status | more | search | wishlist | compare
 import '/public/css/index.css'
 import '/public/css/tailwind.css'
 import '/public/splash/bar-menu.css'
@@ -86,6 +86,14 @@ const SCENARIOS = {
     status: async () => { click('.inv-tile__status, .inv-row__status'); await wait(450) },
     more: async () => { click('.inv-tile__more, .inv-row__more'); await wait(450) },
     search: async (screen) => { screen.controller.handleFilterChange('search', 'pink'); await wait(200) },
+    // the grid of covers of the albums screen (the classes wrapInGrid writes), beside the gallery, to compare them
+    compare: async () => {
+        const app = document.getElementById('app')
+        const sandbox = document.createElement('div')
+        sandbox.className = 'albums-view'
+        sandbox.innerHTML = '<div id="albumsGridSandbox" class="albums-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">' + '<div class="album-tile">x</div>'.repeat(12) + '</div>'
+        app.appendChild(sandbox)
+    },
     wishlist: async (screen) => { screen.controller.handleStatusCount('wishlist'); await wait(200) }
 }
 
