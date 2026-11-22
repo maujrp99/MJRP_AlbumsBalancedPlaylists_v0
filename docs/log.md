@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 12:52] step — prévia: a tela Create enxuta também no computador (F79)
+
+**Branch:** wip/f79-create-lean-on-the-computer
+
+- Pedido dele: «podemos aplicar na sessão create o mesmo conceito de lean da versao mobile?». Comparador em `design/proposals/f79-create-lean-computer/comparator.html`, proposta em `proposal.md` da mesma pasta; desenho, sem código do produto.
+- Enxuta (recomendada): saem a frase da série (o link «What is a series?» a abre no lugar), a frase sob o campo, os três passos e a barra vazia da série; o aviso sem conta vem com a barra. Primeira tela: 104/124 palavras hoje, 16 na Enxuta. Variante: os passos numa linha discreta (42). Nenhuma palavra nova. Três perguntas com ele na proposta.
+
 ## [2026-11-22 12:38] step — publicado em produção: a home com conta mostra o texto aprovado (F80), da `4410c1f`
 
 **Branch:** main
