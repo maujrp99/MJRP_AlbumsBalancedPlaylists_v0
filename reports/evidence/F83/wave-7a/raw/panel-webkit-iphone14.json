@@ -1,0 +1,37 @@
+{
+ "tag": "panel-webkit-iphone14",
+ "total": 80,
+ "failed": 0,
+ "steps": 13,
+ "failures": [],
+ "pictures": [
+  {
+   "flow": "panel",
+   "name": "closed",
+   "kind": "panel",
+   "dims": false,
+   "count": -1
+  },
+  {
+   "flow": "panel",
+   "name": "closed",
+   "kind": "view",
+   "dims": false,
+   "count": -1
+  },
+  {
+   "flow": "panel",
+   "name": "shut by the header (the whole panel goes off the phone)",
+   "kind": "panel",
+   "dims": false,
+   "count": -1
+  },
+  {
+   "flow": "panel",
+   "name": "shut by the header (the whole panel goes off the phone)",
+   "kind": "view",
+   "dims": false,
+   "count": -1
+  }
+ ]
+}

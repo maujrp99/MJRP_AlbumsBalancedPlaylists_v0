@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 06:43] step — F83, onda 7a: a prova no navegador, as notas e os totais
+
+**Branch:** claude/f83-wave-7a-recipe-pieces
+
+- A prova no navegador sobre os sites CONSTRUÍDOS (`reports/evidence/F83/wave-7a/proof.md`, `browser-proof.mjs`, `summary.txt`, `raw/`): o painel em React contra o à mão do pai (`b29b552`) no Chromium 1280, 900 e 899 e no WebKit 1280, iPhone 14 e iPhone SE, em cada estado (fechado, aberto, cada receita, cada ingrediente, o deslizador com o teclado, a ordem do Tab, a falha sem série, «gerando» e a falha da geração, e no celular o «⋯ → Reconfigure and regenerate»), mais a tela Blend à mão (regressão) no Chromium e no WebKit: **1.047 comparações iguais de 1.047** (a página, a caixa de cada elemento, o foco, a rolagem, o aviso, a figura do painel e a da janela), com o controle de antiga contra antiga. A prova achou e a ponta consertou: o texto das peças precisava da quebra de linha do molde à mão (o WebKit kerna «Y» e «A» antes de um espaço e não antes de uma quebra: dois selos 0,19 e 0,38 px mais largos; `ui/recipe/broken.ts`), e o atributo `value` do deslizador não pode seguir o estado. Duas figuras discordaram uma vez e não se repetiram (a barra de baixo do iPhone SE com fundo desfocado, 34/255; um arco de 30 × 10 px no Blend, Chromium 899): ditas como não explicadas além de ruído.
+- `wave-lessons.md` (seção 17), `tasks.md` (a linha 7a), `design-system.md` (a tabela de portes) e o fim do mapa da 7 («Depois da 7a»: o que a 7b encontra e o que tira) em dia.
+- Totais na ponta, pela fila: suíte inteira 372 arquivos, 4.950 testes, todos verdes (antes: 365 e 4.814; inclui `test/architecture` com 42 arquivos e `test/security/noSecretsInRepo.test.js`: arquivos de arquitetura e de segurança juntos, 47 arquivos e 379 testes); `typecheck` sem erro; `lint` 0 erros e os mesmos 68 avisos; build dentro do teto (`bundle-budget-wave-7a.txt`: script principal 213.923 B contra 213.079 B no pai, teto 214.066 B; `background` de 53.600 B para 56.400 B, a necessidade medida é 56.331 B; o que vem depois da primeira tela 215.845 B contra 213.896 B).
+
 ## [2026-11-22 06:43] step — F83, onda 7a: o texto das peças como o molde à mão o quebrava (achado do WebKit)
 
 **Branch:** claude/f83-wave-7a-recipe-pieces
