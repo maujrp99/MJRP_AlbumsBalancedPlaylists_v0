@@ -30,7 +30,8 @@
     font-family: var(--phone-font-text);
   }
 
-  .inventory-view--phone .inv-row__title {
+  .inventory-view--phone .inv-row__title,
+  .inventory-view--phone .inv-tile__title {
     font-family: var(--phone-font-title);
   }
 
@@ -623,6 +624,190 @@
     color: #fff;
   }
 
+  /* ── The gallery (F89): the covers in a grid, one card per album ───────────────────────── */
+  /* 3 columns up to 639 px (109 to 115 px a card at 375 and 393 px); from 640 px as many as fit at 140 px or more */
+  .inv-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 8px;
+    row-gap: 16px;
+    margin: 0;
+    padding: 8px 0 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    .inv-tiles {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      column-gap: 12px;
+    }
+  }
+
+  .inv-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* the bar under the top bar and the search bar */
+    scroll-margin-top: calc(var(--inv-bar-top) + 68px);
+  }
+
+  /* The whole card opens the album window; the status and «⋯» sit above it */
+  .inv-tile__open {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: 8px;
+    background: transparent;
+  }
+
+  .inv-tile__open:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .inv-tile__open:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  .inv-tile__cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--inv-raised);
+    box-shadow: inset 0 0 0 1px var(--inv-line);
+    pointer-events: none;
+  }
+
+  .inv-tile__text,
+  .inv-tile__value {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    pointer-events: none;
+  }
+
+  .inv-tile__text {
+    gap: 1px;
+    margin-top: 8px;
+  }
+
+  .inv-tile__title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 16px;
+    font-weight: 700;
+    color: #fff;
+    overflow-wrap: anywhere;
+  }
+
+  .inv-tile__artist,
+  .inv-tile__origin {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--inv-grey);
+  }
+
+  .inv-tile__value {
+    margin-top: 6px;
+  }
+
+  .inv-tile__amount {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .inv-tile__value[data-origin="none"] .inv-tile__amount {
+    color: var(--inv-grey);
+  }
+
+  .inv-tile__bar {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    margin-top: 2px;
+    pointer-events: none;
+  }
+
+  .inv-tile__bar > button {
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* The status: a pill drawn 28 px high, answering in 44; it takes what «⋯» leaves */
+  .inv-tile__status {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: var(--phone-target);
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: transparent;
+  }
+
+  .inv-tile__pill {
+    display: block;
+    max-width: 100%;
+    height: 28px;
+    padding: 0 8px;
+    overflow: hidden;
+    border-radius: 14px;
+    font-size: 12px;
+    line-height: 26px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #fff;
+    background: var(--inv-raised-2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .inv-tile__status[data-status="owned"] .inv-tile__pill {
+    color: #86efac;
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.35);
+  }
+
+  .inv-tile__status[data-status="wishlist"] .inv-tile__pill {
+    color: #f9a8d4;
+    background: rgba(236, 72, 153, 0.12);
+    border-color: rgba(236, 72, 153, 0.35);
+  }
+
+  .inv-tile__status:active .inv-tile__pill {
+    filter: brightness(1.3);
+  }
+
+  .inv-tile__more {
+    flex: none;
+    width: var(--phone-target);
+    height: var(--phone-target);
+    margin-right: -10px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--inv-grey);
+    background: transparent;
+  }
+
+  .inv-tile__more:active {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+
   /* Under the rows: how many are drawn and the next chunk */
   .inv-more {
     display: flex;
@@ -690,7 +875,16 @@
     align-self: start;
   }
 
+  .inv-tile--ghost .inv-tile__cover {
+    box-shadow: none;
+  }
+
+  .inv-tile--ghost .inv-ghost {
+    margin-top: 8px;
+  }
+
   .inv-loading .inv-row__cover,
+  .inv-loading .inv-tile__cover,
   .inv-loading .inv-ghost {
     animation: inv-pulse 1.2s ease-in-out infinite;
   }
@@ -897,6 +1091,24 @@
     color: #a1a1aa;
     font-size: 14px;
     font-weight: 600;
+  }
+
+  /* Gallery and List: two choices, each with the icon of the computer's switch */
+  .inv-segments--views {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .inv-segment--view {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .inv-segment__icon {
+    width: 18px;
+    height: 18px;
+    flex: none;
   }
 
   .inv-segment[aria-pressed="true"] {

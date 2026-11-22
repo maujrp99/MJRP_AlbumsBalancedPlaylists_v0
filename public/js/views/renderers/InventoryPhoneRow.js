@@ -34,7 +34,7 @@ const isNumber = (value) => typeof value === 'number' && Number.isFinite(value)
 export const statusText = (status) => `${MARK[status] || ''}${statusLabel(status)}`
 
 /** What the row says of where the value comes from: short, the long words are in the «⋯» sheet. */
-function originText(value) {
+export function originText(value) {
     if (value.origin === ValueOrigin.DISCOGS) return 'Discogs'
     if (value.origin === ValueOrigin.YOURS) return 'Yours'
     return noValueText(value)
@@ -94,7 +94,7 @@ export function phoneRow(item, value, money) {
 }
 
 /** Under the rows: how many are drawn, and the button for the next chunk. */
-function moreOf(total, shown) {
+export function moreOf(total, shown) {
     if (total <= shown) return `<p class="inv-more__count">${total === 1 ? '1 album' : `All ${total} albums`}</p>`
     const next = Math.min(PHONE_CHUNK, total - shown)
     return `<div class="inv-more"><p class="inv-more__count">Showing ${shown} of ${total}</p>`
