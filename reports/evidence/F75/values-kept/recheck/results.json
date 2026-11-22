@@ -1,0 +1,833 @@
+{
+  "external": 0,
+  "desk": {
+    "notice": "My Collection\n7 albums\n✓ 5 OWNED\n1 NOT OWNED\n♡ 1 WISHLIST\nEstimated value of what I own:\n$56.00\n3 of 5 owned albums have a value\nTo buy the rest:\n$12.93\n1 of 2 albums have a value\nUSD\nEUR\nGBP\nBRL\nData provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now.\n2 albums are waiting for a value. Reading them takes about a minute.\nRead them now\nDiscogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.\nAll Formats\nCD\nVinyl\nDigital\nArtist (A-Z)\nArtist (Z-A)\nAvg Rating (↓)\nAvg Rating (↑)\nAvg Pop (↓)\nAvg Pop (↑)\nValue (↓)\nValue (↑)\nNewest\nOldest\nAdd the albums of my series\nUpdate ratings\nUpdate values\nNot Owned\n✓ Owned\n♡ Wishlist\nIn the Land of Grey and Pink\n\nCaravan\n\nIN MY COLLECTION · WORTH\nWaiting for a value\n—\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nSelling England by the Pound\n\nGenesis\n\nIN MY COLLECTION · WORTH\nWaiting for a value\n—\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nHejira\n\nJoni Mitchell\n\nNOT MINE YET · COSTS\nCD · Discogs · lowest for sale · 18 Nov\n≈ $12.93\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nWHERE TO BUY\nDiscogs ↗\n·\nAmazon ↗\n·\niMusic ↗\nNot Owned\n✓ Owned\n♡ Wishlist\nHarvest\n\nNeil Young\n\nIN MY COLLECTION · WORTH\nCD · Discogs · 18 Nov\n≈ $12.00\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nAnimals\n\nPink Floyd\n\nIN MY COLLECTION · WORTH\nCD · Discogs · 18 Nov\n≈ $19.00\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nOK Computer\n\nRadiohead\n\nIN MY COLLECTION · WORTH\nCD · written by you\n≈ $25.00\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nFragile\n\nYes\n\nNOT MINE YET · COSTS\nNo CD edition found\n—\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nWHERE TO BUY\nDiscogs ↗\n·\nAmazon ↗\n·\niMusic ↗",
+    "harvest": {
+      "cardText": "Harvest | Neil Young | IN MY COLLECTION · WORTH | CD · Discogs · 18 Nov | ≈ $12.00 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+      "origin": "Discogs",
+      "originTitle": "Data provided by Discogs. Open this edition on Discogs",
+      "clipped": [
+        {
+          "text": "Avg Rating",
+          "sw": 59,
+          "cw": 1
+        },
+        {
+          "text": "Avg Pop",
+          "sw": 45,
+          "cw": 1
+        }
+      ],
+      "links": [
+        {
+          "text": "Discogs",
+          "href": "https://www.discogs.com/release/5012948",
+          "title": "Data provided by Discogs. Open this edition on Discogs"
+        }
+      ],
+      "rect": [
+        947,
+        566,
+        268,
+        499
+      ]
+    },
+    "hejira": {
+      "cardText": "Hejira | Joni Mitchell | NOT MINE YET · COSTS | CD · Discogs · lowest for sale · 18 Nov | ≈ $12.93 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | WHERE TO BUY | Discogs ↗ | · | Amazon ↗ | · | iMusic ↗",
+      "origin": "Discogs",
+      "originTitle": "Data provided by Discogs. Open this edition on Discogs",
+      "clipped": [
+        {
+          "text": "CD · Discogs · lowest for sale · 18 Nov",
+          "sw": 207,
+          "cw": 135
+        },
+        {
+          "text": "Avg Rating",
+          "sw": 58,
+          "cw": 1
+        },
+        {
+          "text": "Avg Pop",
+          "sw": 45,
+          "cw": 1
+        }
+      ],
+      "links": [
+        {
+          "text": "Discogs",
+          "href": "https://www.discogs.com/release/5012948",
+          "title": "Data provided by Discogs. Open this edition on Discogs"
+        },
+        {
+          "text": "Discogs ↗",
+          "href": "https://www.discogs.com/search/?q=Joni+Mitchell+Hejira&format_exact=CD&type=release",
+          "title": ""
+        },
+        {
+          "text": "Amazon ↗",
+          "href": "https://www.amazon.com/s?k=Joni+Mitchell+Hejira+CD",
+          "title": ""
+        },
+        {
+          "text": "iMusic ↗",
+          "href": "https://imusic.br.com/search?query=Joni+Mitchell+Hejira+CD",
+          "title": ""
+        }
+      ],
+      "rect": [
+        653,
+        566,
+        268,
+        499
+      ]
+    },
+    "fragile": {
+      "cardText": "Fragile | Yes | NOT MINE YET · COSTS | No CD edition found | — | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | WHERE TO BUY | Discogs ↗ | · | Amazon ↗ | · | iMusic ↗",
+      "origin": "Discogs ↗",
+      "originTitle": null,
+      "clipped": [
+        {
+          "text": "Avg Rating",
+          "sw": 58,
+          "cw": 1
+        },
+        {
+          "text": "Avg Pop",
+          "sw": 45,
+          "cw": 1
+        }
+      ],
+      "links": [
+        {
+          "text": "Discogs ↗",
+          "href": "https://www.discogs.com/search/?q=Yes+Fragile&format_exact=CD&type=release",
+          "title": ""
+        },
+        {
+          "text": "Amazon ↗",
+          "href": "https://www.amazon.com/s?k=Yes+Fragile+CD",
+          "title": ""
+        },
+        {
+          "text": "iMusic ↗",
+          "href": "https://imusic.br.com/search?query=Yes+Fragile+CD",
+          "title": ""
+        }
+      ],
+      "rect": [
+        653,
+        1091,
+        268,
+        499
+      ]
+    },
+    "okc": {
+      "cardText": "OK Computer | Radiohead | IN MY COLLECTION · WORTH | CD · written by you | ≈ $25.00 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+      "originTitle": null,
+      "clipped": [
+        {
+          "text": "Avg Rating",
+          "sw": 58,
+          "cw": 1
+        },
+        {
+          "text": "Avg Pop",
+          "sw": 45,
+          "cw": 1
+        }
+      ],
+      "links": [],
+      "rect": [
+        359,
+        1091,
+        268,
+        499
+      ]
+    },
+    "grey": {
+      "cardText": "In the Land of Grey and Pink | Caravan | IN MY COLLECTION · WORTH | Waiting for a value | — | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+      "origin": "Waiting for a value",
+      "originTitle": "Waiting for a value",
+      "clipped": [
+        {
+          "text": "In the Land of Grey and Pink",
+          "sw": 217,
+          "cw": 160
+        },
+        {
+          "text": "Avg Rating",
+          "sw": 58,
+          "cw": 1
+        },
+        {
+          "text": "Avg Pop",
+          "sw": 45,
+          "cw": 1
+        }
+      ],
+      "links": [],
+      "rect": [
+        65,
+        566,
+        268,
+        499
+      ]
+    },
+    "header": "Data provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now.",
+    "window": {
+      "links": [],
+      "rect": null
+    }
+  },
+  "readNow": {
+    "asks": 2,
+    "writes": [
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/f",
+        "keys": [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/g",
+        "keys": [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      }
+    ],
+    "f": {
+      "id": "f",
+      "artist": "Caravan",
+      "title": "In the Land of Grey and Pink",
+      "format": "cd",
+      "owned": true,
+      "purchasePrice": null,
+      "currency": "BRL",
+      "notes": "keep me",
+      "addedAt": "2026-01-01T00:00:00Z",
+      "_schemaVersion": 1,
+      "albumData": {
+        "id": "album-f",
+        "title": "In the Land of Grey and Pink",
+        "artist": "Caravan",
+        "coverUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22hsl(250%2C50%25%2C35%25)%22%2F%3E%3C%2Fsvg%3E"
+      },
+      "averages": {
+        "rating": 78.4,
+        "popularity": 42.6,
+        "ratedTracks": 9,
+        "popTracks": 10,
+        "tracks": 10
+      },
+      "discogsReading": {
+        "source": "discogs",
+        "kind": "found",
+        "basis": null,
+        "conditions": {
+          "mint": 30,
+          "nearMint": 26,
+          "veryGoodPlus": 20
+        },
+        "lowest": null,
+        "forSale": null,
+        "currency": "USD",
+        "release": {
+          "id": 7001,
+          "title": "In the Land of Grey and Pink CD",
+          "url": "https://www.discogs.com/release/7001"
+        },
+        "readAt": "2026-11-21T15:00:01.213Z"
+      },
+      "discogs": {
+        "releaseId": 7001,
+        "title": "In the Land of Grey and Pink CD",
+        "url": "https://www.discogs.com/release/7001"
+      },
+      "updatedAt": "SERVER_TS"
+    },
+    "aSame": true,
+    "eSame": true,
+    "noticeAfter": false,
+    "grey": {
+      "cardText": "In the Land of Grey and Pink | Caravan | IN MY COLLECTION · WORTH | CD · Discogs · 21 Nov | ≈ $25.33 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+      "origin": "Discogs",
+      "originTitle": "Data provided by Discogs. Open this edition on Discogs",
+      "clipped": [
+        {
+          "text": "In the Land of Grey and Pink",
+          "sw": 217,
+          "cw": 160
+        },
+        {
+          "text": "Avg Rating",
+          "sw": 59,
+          "cw": 1
+        },
+        {
+          "text": "Avg Pop",
+          "sw": 45,
+          "cw": 1
+        }
+      ],
+      "links": [
+        {
+          "text": "Discogs",
+          "href": "https://www.discogs.com/release/7001",
+          "title": "Data provided by Discogs. Open this edition on Discogs"
+        }
+      ],
+      "rect": [
+        65,
+        461,
+        268,
+        499
+      ]
+    }
+  },
+  "guard": {
+    "asksAfterUpdate": 6,
+    "newAsks": 4,
+    "expect": "a,b,c,d (older than 6 h) = 4; f,g fresh; e written",
+    "writesTail": [
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/a",
+        "keys": [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/b",
+        "keys": [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/c",
+        "keys": [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/d",
+        "keys": [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      }
+    ],
+    "secondPressAsks": 0,
+    "toast": [
+      "Values read for 4 of 4 albums.",
+      "Every album already has a value written by you or read in the last six hours."
+    ]
+  },
+  "stop": {
+    "runningText": "My Collection\n7 albums\n✓ 5 OWNED\n1 NOT OWNED\n♡ 1 WISHLIST\nEstimated value of what I own:\n$44.00\n2 of 5 owned albums have a value\nTo buy the rest:\n$12.93\n1 of 2 albums have a value\nUSD\nEUR\nGBP\nBRL\nData provided by Discogs. Each value links to its edition on Discogs. Discogs values are lowest asking prices for now.\nReading values… 0 of 6. You can keep using the inventory. This takes about a minute for 6 albums.\nStop\nDiscogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.\nAll Formats\nCD\nVinyl\nDigital\nArtist (A-Z)\nArtist (Z-A)\nAvg Rating (↓)\nAvg Rating (↑)\nAvg Pop (↓)\nAvg Pop (↑)\nValue (↓)\nValue (↑)\nNewest\nOldest\nAdd the albums of my series\nUpdate ratings\nReading values… 0 of 6\nNot Owned\n✓ Owned\n♡ Wishlist\nIn the Land of Grey and Pink\n\nCaravan\n\nIN MY COLLECTION · WORTH\nWaiting for a value\n—\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nSelling England by the Pound\n\nGenesis\n\nIN MY COLLECTION · WORTH\nWaiting for a value\n—\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nHejira\n\nJoni Mitchell\n\nNOT MINE YET · COSTS\nCD · Discogs · lowest for sale · 18 Nov\n≈ $12.93\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nWHERE TO BUY\nDiscogs ↗\n·\nAmazon ↗\n·\niMusic ↗\nNot Owned\n✓ Owned\n♡ Wishlist\nHarvest\n\nNeil Young\n\nIN MY COLLECTION · WORTH\nReading…\n—\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nAnimals\n\nPink Floyd\n\nIN MY COLLECTION · WORTH\nCD · Discogs · 18 Nov\n≈ $19.00\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nOK Computer\n\nRadiohead\n\nIN MY COLLECTION · WORTH\nCD · written by you\n≈ $25.00\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nSELL, TRADE OR BUY\nSell\n·\nTrade\n·\nWhere to buy\nNot Owned\n✓ Owned\n♡ Wishlist\nFragile\n\nYes\n\nNOT MINE YET · COSTS\nNo CD edition found\n—\nAvg Rating\n78.4\n(9 of 10)\nAvg Pop\n42.6%\n(10 of 10)\nWHERE TO BUY\nDiscogs ↗\n·\nAmazon ↗\n·\niMusic ↗",
+    "asks": 2,
+    "writes": [
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/a",
+        "keys": [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      }
+    ],
+    "a": "2026-11-21T15:00:02.458Z",
+    "b": "2026-11-18T14:05:00.000Z",
+    "c": "2026-11-18T14:05:00.000Z"
+  },
+  "failure_fail": {
+    "asks": 6,
+    "writes": [],
+    "aReadAt": "2026-11-18T14:05:00.000Z",
+    "harvest": "Harvest | Neil Young | IN MY COLLECTION · WORTH | CD · Discogs · 18 Nov | ≈ $12.00 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+    "animals": "Animals | Pink Floyd | IN MY COLLECTION · WORTH | CD · Discogs · 18 Nov | ≈ $19.00 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+    "body": [
+      "Discogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.",
+      "Values read for 0 of 6 albums. 6 albums could not be read: Discogs did not answer (6)."
+    ]
+  },
+  "failure_tokenAfter1": {
+    "asks": 2,
+    "writes": [
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/a",
+        "keys": [
+          "discogsReading",
+          "discogs",
+          "updatedAt"
+        ]
+      }
+    ],
+    "aReadAt": "2026-11-21T15:00:01.212Z",
+    "harvest": "Harvest | Neil Young | IN MY COLLECTION · WORTH | CD · Discogs · 21 Nov | ≈ $25.33 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+    "animals": "Animals | Pink Floyd | IN MY COLLECTION · WORTH | CD · Discogs · 18 Nov | ≈ $19.00 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+    "body": [
+      "2 albums are waiting for a value. Reading them takes about a minute.\nRead them now",
+      "Discogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read."
+    ]
+  },
+  "commitRefused": {
+    "failedBatches": [
+      2
+    ],
+    "writesWhileRefused": 0,
+    "shownAfterRefusal": "In the Land of Grey and Pink | Caravan | IN MY COLLECTION · WORTH | CD · Discogs · 21 Nov | ≈ $25.33 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+    "fHadReading": false,
+    "fAfterNextRun": "2026-11-21T15:00:01.211Z",
+    "newAsks": 4
+  },
+  "concurrent": {
+    "a": {
+      "value": {
+        "amount": 40,
+        "currency": "USD",
+        "at": "2026-11-21T15:00:01.257Z"
+      },
+      "notes": "edited during the run",
+      "reading": "2026-11-21T15:00:02.452Z",
+      "owned": true,
+      "averages": true
+    },
+    "asks": 6,
+    "harvest": "Harvest | Neil Young | IN MY COLLECTION · WORTH | CD · written by you | ≈ $40.00 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+    "storeA": {
+      "value": {
+        "amount": 40,
+        "currency": "USD"
+      },
+      "notes": "edited during the run",
+      "reading": "2026-11-21T15:00:02.452Z"
+    }
+  },
+  "switch": {
+    "writes": [],
+    "asks": 2,
+    "docsOfPerson2": [],
+    "screenHasDiscogs": false,
+    "appText": "My Collection | 0 albums | ✓ 0 OWNED | 0 NOT OWNED | ♡ 0 WISHLIST | Estimated value of what I own: | — | 0 of 0 owned albums have a value | To buy the rest: | — | 0 of 0 albums have a value | USD | EUR | GBP | BRL | All Formats | CD | Vinyl | Digital | Artist (A-Z) | Artist (Z-A) | Avg Rating (↓) | Avg Rating (↑) | Avg Pop (↓) | Avg Pop (↑) | Value",
+    "readingsInMemory": 0,
+    "storeItems": 0,
+    "afterSignOut": {
+      "storeItems": 0,
+      "readingsInMemory": 0,
+      "screenHasDiscogs": false
+    }
+  },
+  "allKept": {
+    "notice": false,
+    "asks": 0,
+    "writes": 0,
+    "grey": "In the Land of Grey and Pink | Caravan | IN MY COLLECTION · WORTH | CD · Discogs · 18 Nov | ≈ $12.00 | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy"
+  },
+  "oldTab": {
+    "notice": "6 albums are waiting for a value.",
+    "harvest": "Harvest | Neil Young | IN MY COLLECTION · WORTH | Waiting for a value | — | Avg Rating | 78.4 | (9 of 10) | Avg Pop | 42.6% | (10 of 10) | SELL, TRADE OR BUY | Sell | · | Trade | · | Where to buy",
+    "asks": 6,
+    "writes": [
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/a",
+        "keys": [
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/b",
+        "keys": [
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/c",
+        "keys": [
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/d",
+        "keys": [
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/f",
+        "keys": [
+          "discogs",
+          "updatedAt"
+        ]
+      },
+      {
+        "op": "batch-update",
+        "path": "artifacts/mjrp-albums/users/anonymous-user/inventory/g",
+        "keys": [
+          "discogs",
+          "updatedAt"
+        ]
+      }
+    ],
+    "readingKept": true,
+    "discogsAfter": {
+      "releaseId": 7001,
+      "title": "Harvest CD",
+      "url": "https://www.discogs.com/release/7001"
+    },
+    "notes": "keep me"
+  },
+  "phone393": {
+    "rows": [
+      {
+        "text": "In the Land of Grey and Pink | Caravan | — | Waiting for a value | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Selling England by the Pound | Genesis | — | Waiting for a value | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Hejira | Joni Mitchell | ≈ $12.93 | Discogs · read 18 Nov | Not Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Harvest | Neil Young | ≈ $12.00 | Discogs · read 18 Nov | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Animals | Pink Floyd | ≈ $19.00 | Discogs · read 18 Nov | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "OK Computer | Radiohead | ≈ $25.00 | Yours | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Fragile | Yes | — | No CD edition found | ♡ Wishlist | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      }
+    ],
+    "pageScrollX": 0,
+    "notice": "2 albums are waiting for a value.",
+    "sheet": {
+      "text": "Harvest | Neil Young · ✓ Owned | Open album | Edit | IN MY COLLECTION · WORTH | ≈ $12.00 | Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. | Read on 18 Nov 2026, 11:05. | This edition on Discogs ↗ | Data provided by Discogs. | WHERE TO BUY | Discogs ↗ | Amazon ↗ | iMusic ↗ | Each link opens the store on this album, on CD. The app earns nothing from these links today. | SELL OR TRADE | Sell | Trade | Selling and trading between collectors: not in the app yet | Remove from inventory",
+      "links": [
+        "This edition on Discogs ↗",
+        "Data provided by Discogs.",
+        "Discogs ↗",
+        "Amazon ↗",
+        "iMusic ↗"
+      ]
+    }
+  },
+  "phone320": {
+    "rows": [
+      {
+        "text": "In the Land of Grey and Pink | Caravan | — | Waiting for a value | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating\n78.4\nAvg Pop\n42.6%",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Selling England by the Pound | Genesis | — | Waiting for a value | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating\n78.4\nAvg Pop\n42.6%",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Hejira | Joni Mitchell | ≈ $12.93 | Discogs · read 18 Nov | Not Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating\n78.4\nAvg Pop\n42.6%",
+            "sw": 108,
+            "cw": 51,
+            "cls": "inv-row__scores"
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Harvest | Neil Young | ≈ $12.00 | Discogs · read 18 Nov | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating\n78.4\nAvg Pop\n42.6%",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Animals | Pink Floyd | ≈ $19.00 | Discogs · read 18 Nov | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating\n78.4\nAvg Pop\n42.6%",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "OK Computer | Radiohead | ≈ $25.00 | Yours | ✓ Owned | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating\n78.4\nAvg Pop\n42.6%",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      },
+      {
+        "text": "Fragile | Yes | — | No CD edition found | ♡ Wishlist | Avg Rating | 78.4 | Avg Pop | 42.6%",
+        "clipped": [
+          {
+            "t": "Avg Rating\n78.4\nAvg Pop\n42.6%",
+            "sw": 108,
+            "cw": 55,
+            "cls": "inv-row__scores"
+          },
+          {
+            "t": "Avg Rating",
+            "sw": 60,
+            "cw": 1,
+            "cls": "sr-only"
+          },
+          {
+            "t": "Avg Pop",
+            "sw": 46,
+            "cw": 1,
+            "cls": "sr-only"
+          }
+        ],
+        "links": []
+      }
+    ],
+    "pageScrollX": 0,
+    "notice": "2 albums are waiting for a value.",
+    "sheet": {
+      "text": "Harvest | Neil Young · ✓ Owned | Open album | Edit | IN MY COLLECTION · WORTH | ≈ $12.00 | Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition. | Read on 18 Nov 2026, 11:05. | This edition on Discogs ↗ | Data provided by Discogs. | WHERE TO BUY | Discogs ↗ | Amazon ↗ | iMusic ↗ | Each link opens the store on this album, on CD. The app earns nothing from these links today. | SELL OR TRADE | Sell | Trade | Selling and trading between collectors: not in the app yet | Remove from inventory",
+      "links": [
+        "This edition on Discogs ↗",
+        "Data provided by Discogs.",
+        "Discogs ↗",
+        "Amazon ↗",
+        "iMusic ↗"
+      ]
+    }
+  }
+}
