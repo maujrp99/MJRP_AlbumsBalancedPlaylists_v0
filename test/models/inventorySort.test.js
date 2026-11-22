@@ -1,4 +1,5 @@
 import { sortInventory, sortingFor, choiceOf, SORT_OPTIONS } from '../../public/js/models/inventorySort.js'
+import { sortOptions } from '../../public/js/i18n/inventoryTexts.js'
 
 const titles = (items) => items.map(item => item.title)
 
@@ -46,7 +47,7 @@ describe('the order of the inventory by the averages and by the date (F71, S-56)
     const order = (items, field) => titles(sortInventory(items, sortingFor(field)))
 
     it('the choices, in order, with the direction each one starts with', () => {
-        expect(SORT_OPTIONS.map(({ value, label }) => [value, label])).toEqual([
+        expect(sortOptions().map(({ value, label }) => [value, label])).toEqual([
             ['artist', 'Artist (A-Z)'], ['artist_desc', 'Artist (Z-A)'], ['averageRating', 'Avg Rating (↓)'], ['averageRating_asc', 'Avg Rating (↑)'],
             ['averagePopularity', 'Avg Pop (↓)'], ['averagePopularity_asc', 'Avg Pop (↑)'], ['value', 'Value (↓)'], ['value_asc', 'Value (↑)'],
             ['addedToInventory', 'Newest'], ['addedToInventory_asc', 'Oldest']

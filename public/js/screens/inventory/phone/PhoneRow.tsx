@@ -14,7 +14,8 @@ import { t } from '../../../i18n/t.js'
 import { CoverImage } from '../../../ui/CoverImage'
 import { Icon } from '../../../ui/Icon'
 import { popularityValue, ratingValue } from '../../../models/albumAverages.js'
-import { statusLabel, statusOf } from '../../../models/inventoryStatus.js'
+import { statusOf } from '../../../models/inventoryStatus.js'
+import { noValueText, statusLabel } from '../../../i18n/inventoryTexts.js'
 import { NOT_KNOWN, STATUS_MARK, formatOf, originOf } from '../../../models/inventoryCard.js'
 import { amountText } from '../money'
 import type { Averages, InventoryItem, ItemValue, Money } from '../types'
@@ -36,10 +37,10 @@ export const statusText = (status: string): string => `${(STATUS_MARK as Record<
 
 /** What the row says of where the value comes from: short, the long words are in the «⋯» sheet. */
 export function originText(value: ItemValue): string {
-    const origin = originOf(value) as { kind: string; date?: string; text?: string }
+    const origin = originOf(value) as { kind: string; date?: string }
     if (origin.kind === 'discogs') return ['Discogs', origin.date].filter(Boolean).join(' · ')
     if (origin.kind === 'yours') return t('inventory.phone.yours')
-    return origin.text as string
+    return noValueText(value)
 }
 
 /** The two averages, in one short line; an album never read shows nothing. */

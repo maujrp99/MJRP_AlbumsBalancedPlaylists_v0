@@ -6,7 +6,8 @@
  * the questions and the notices of the controller speak Portuguese, that a name a person wrote (title, artist) is never translated, and that the screen
  * draws again when the language changes. What it does not prove: that every text the screen shows is in the dictionary (the counter does not see a
  * text that arrives by a variable): the reading of the screen in both languages, at the visual recheck, is the proof of that. The sentences the MODELS
- * write (the labels of the values, the notices of a run, the notes of the totals, the names of the orders) are English until wave 6c.
+ * used to write (the labels of the values, the notices of a run, the notes of the totals, the names of the orders) are in the dictionary since wave 6c, and
+ * `i18n/inventoryTexts.js` says them (its own test: test/i18n/inventoryTexts.test.js).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import fs from 'node:fs'
@@ -46,7 +47,7 @@ describe('no text is written in the files of the screen', () => {
 
 describe('every key the screen asks for is in the dictionary, in both languages', () => {
     const asked = new Set<string>()
-    const files = [...sources(ROOT), 'public/js/controllers/InventoryController.js', 'public/js/controllers/InventoryValues.js']
+    const files = [...sources(ROOT), 'public/js/controllers/InventoryController.js', 'public/js/controllers/InventoryValues.js', 'public/js/i18n/inventoryTexts.js']
     for (const file of files) {
         for (const match of fs.readFileSync(file, 'utf8').matchAll(/\bt(?:Plural)?\(\s*'(inventory\.[A-Za-z.]+)'/g)) asked.add(match[1])
     }
@@ -114,6 +115,24 @@ describe('the screen speaks the language of the site', () => {
         expect(sheet.querySelector('.sheet__close')!.getAttribute('aria-label')).toBe('Fechar')
         expect(sheet.textContent).toContain('Galeria')
         expect(sheet.querySelector('[data-role="filters-done"]')!.textContent).toBe('Mostrar 5 álbuns')
+        await screen.destroy()
+    })
+
+    it('F83 wave 6c: the statuses, the orders and the line of a value that was never read come from the models as codes and speak Portuguese on the screen, English before', async () => {
+        world.values = valuesWith({ source: 'on', rates: null as never })
+        const screen = await openInventory(ITEMS(), { phone: false })
+        const options = () => [...document.querySelectorAll('#inventorySort option')].map(option => option.textContent)
+        expect(options().slice(0, 2)).toEqual(['Artist (A-Z)', 'Artist (Z-A)'])
+        expect(document.getElementById('app')!.textContent).toContain('Owned')
+
+        expect(await setLocale('pt')).toBe(true)
+        await act(async () => { await Promise.resolve() })
+        expect(options()).toEqual(['Artista (A-Z)', 'Artista (Z-A)', 'Nota média (↓)', 'Nota média (↑)', 'Pop. média (↓)', 'Pop. média (↑)', 'Valor (↓)', 'Valor (↑)', 'Mais novos', 'Mais antigos'])
+        const app = document.getElementById('app')!.textContent ?? ''
+        expect(app).toContain('Tenho')
+        expect(app).toContain('Não tenho')
+        expect(app).toContain('Desejos')
+        expect(app).not.toMatch(/Not Owned|Wishlist|Avg Rating/)
         await screen.destroy()
     })
 

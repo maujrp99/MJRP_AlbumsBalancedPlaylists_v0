@@ -17,7 +17,8 @@ import {
     BASE_CURRENCY, CURRENCIES, SourceState, itemsWithDiscogsValue, lowestValuesShown, shownCurrency, totalsOf, usdOf, valueOfItem,
     writtenValueFrom
 } from '../models/inventoryValue.js'
-import { itemsNeverRead, itemsToRead, readFailedText, readingsToKeep, UNKEPT_VALUE_TEXT, valuesOutcome, valuesProgressText, valuesRunOutcome } from '../models/inventoryValueRun.js'
+import { itemsNeverRead, itemsToRead, readingsToKeep, valuesRunOutcome } from '../models/inventoryValueRun.js'
+import { readFailedText, unkeptValueText, valuesOutcome, valuesProgressText } from '../i18n/inventoryTexts.js'
 import { t } from '../i18n/t.js'
 import { track } from '../services/usage/track.js'
 
@@ -286,7 +287,7 @@ export class InventoryValues {
         if (outcome.off) this.source = SourceState.OFF
         this._showItem(item, outcome.failure ? { state: 'failed', failure: outcome.failure } : { reading: outcome.reading })
         if (outcome.failure) this.toast.error(readFailedText(outcome.failure))
-        if (unkept > 0) this.toast.error(UNKEPT_VALUE_TEXT)
+        if (unkept > 0) this.toast.error(unkeptValueText())
         if (outcome.off) this.toast.info(t('inventory.toast.valuesOff'))
         if (!this.leaving.aborted) this.host.changed()
     }

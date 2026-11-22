@@ -5,7 +5,7 @@
  */
 import { t } from '../../i18n/t.js'
 import { SourceState } from '../../models/inventoryValue.js'
-import { readingNotice, waitingNotice } from '../../models/inventoryValueRun.js'
+import { readingNotice, waitingNotice } from '../../i18n/inventoryTexts.js'
 import type { InventoryController, ValueView } from './types'
 
 interface NoticeText {

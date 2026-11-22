@@ -3,11 +3,13 @@
  * becomes (the `averages` of each item), what is kept when a source gave nothing, and what the
  * person is told.
  */
+// F83 wave 6c: the English below is what `i18n/inventoryTexts.js` says over the codes the model gives (inventoryModelsGiveCodes.test.js): the very words the model wrote before.
 import { describe, it, expect } from 'vitest'
 import {
     RATING_SOURCES, RATINGS_SERIES_ID, CONFIRM_FROM, ratingsAskOf, queryOfItem, mergeAverages, planAverages,
-    ratingsQuestion, ratingsProgressText, ratingsOutcome, missingCoverOf
+    missingCoverOf
 } from '../../public/js/models/inventoryRatings.js'
+import { ratingsQuestion, ratingsProgressText, ratingsOutcome } from '../../public/js/i18n/inventoryTexts.js'
 import { SourceGap } from '../../public/js/models/albumAsk.js'
 
 const AT = '2026-11-20T12:00:00.000Z'
@@ -216,7 +218,7 @@ describe('missingCoverOf: the cover the album has and the item lacks (UAT-222)',
 
 describe('ratingsOutcome says the covers that were added', () => {
     it('adds one sentence when some album got its cover', async () => {
-        const { ratingsOutcome } = await import('../../public/js/models/inventoryRatings.js')
+        const { ratingsOutcome } = await import('../../public/js/i18n/inventoryTexts.js')
         const base = { total: 211, planned: 209, saved: 209, error: null, notFound: 0, withoutRatings: 0, popularityNotConnected: 0, unanswered: 0 }
         expect(ratingsOutcome({ ...base, covers: 15 }).text).toBe('Ratings updated for 209 of 211 albums. 15 albums got their cover.')
         expect(ratingsOutcome({ ...base, covers: 1 }).text).toBe('Ratings updated for 209 of 211 albums. 1 album got its cover.')

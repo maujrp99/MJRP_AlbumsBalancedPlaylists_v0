@@ -3,11 +3,12 @@
  * not, decided by a pure function. One album once: the one identity rule (shared/albumIdentity.js,
  * first tier), the Apple Music id and the inventory's own album id say what "the same album" is.
  */
+// F83 wave 6c: the English below is what `i18n/inventoryTexts.js` says over the codes the model gives (inventoryModelsGiveCodes.test.js): the very words the model wrote before.
 import { describe, it, expect } from 'vitest'
 import {
-    SkipReason, ADDED_FROM_SERIES, inventoryAlbumFromQuery, findInInventory, planSeriesAlbums,
-    confirmationText, nothingToAddText, progressText, outcomeText
+    SkipReason, ADDED_FROM_SERIES, inventoryAlbumFromQuery, findInInventory, planSeriesAlbums
 } from '../../public/js/models/inventoryFromSeries.js'
+import { confirmationText, nothingToAddText, progressText, outcomeText } from '../../public/js/i18n/inventoryTexts.js'
 
 // Queries as the series store them: an object written by toAlbumQuery, or the text "Artist - Album"
 const core = { artist: 'Stone Temple Pilots', title: 'Core', appleMusicId: '1440863531', year: 1992, coverUrl: 'https://is1-ssl.mzstatic.com/image/thumb/core/600x600bb.jpg' }

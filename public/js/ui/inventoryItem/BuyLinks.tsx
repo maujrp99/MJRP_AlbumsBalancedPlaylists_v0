@@ -5,7 +5,8 @@
  * measurement of use listens for (services/usage/usageWiring.js: the store and the place, never the album).
  */
 import { t } from '../../i18n/t.js'
-import { BUY_LINKS_NOTE, BuyLinkPlace, buyLinksOf } from '../../models/buyLinks.js'
+import { BuyLinkPlace, buyLinksOf } from '../../models/buyLinks.js'
+import { buyLinksNote } from '../../i18n/inventoryTexts.js'
 import { safeUrl } from '../../utils/safeUrl.js'
 import type { ItemLike } from './types'
 
@@ -19,7 +20,7 @@ export function BuyLinks({ album }: { album: ItemLike }) {
     return (
         <div className={`${BOX} mb-6`} data-role="where-to-buy" style={{ padding: '1rem' }}>
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{t('inventory.value.whereToBuy')}</h3>
-            <p className="text-sm text-gray-400 mb-3">{BUY_LINKS_NOTE}</p>
+            <p className="text-sm text-gray-400 mb-3">{buyLinksNote()}</p>
             <div className="flex flex-wrap gap-3">
                 {linksOf(album).map(({ id, name, url }) => (
                     <a key={id} className="btn btn-secondary" href={safeUrl(url) as string} target="_blank" rel="noopener" data-store={name} data-buy-store={id} data-buy-place={BuyLinkPlace.ALBUM_WINDOW}>{`${name} ↗`}</a>
@@ -39,7 +40,7 @@ export function PhoneBuyLinks({ album }: { album: ItemLike }) {
                     <a key={id} className="value-fold__store" href={safeUrl(url) as string} target="_blank" rel="noopener" data-store={name} data-buy-store={id} data-buy-place={BuyLinkPlace.ALBUM_WINDOW}>{`${name} ↗`}</a>
                 ))}
             </div>
-            <p className="value-fold__note">{BUY_LINKS_NOTE}</p>
+            <p className="value-fold__note">{buyLinksNote()}</p>
         </div>
     )
 }

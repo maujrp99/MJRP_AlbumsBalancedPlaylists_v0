@@ -4,7 +4,7 @@
  * gives a code or a datum and the screen says it (models/ does not import i18n/).
  */
 import { InventoryStatus, statusOf } from './inventoryStatus.js'
-import { BASE_CURRENCY, NoValue, ValueBasis, ValueOrigin, convert, formatMoney, noValueText, readOnText } from './inventoryValue.js'
+import { BASE_CURRENCY, NoValue, ValueBasis, ValueOrigin, convert, formatMoney, readOnText } from './inventoryValue.js'
 import { PHONE_CHUNK } from './inventoryJump.js'
 
 /** The value of an item nothing was said about: the screen draws before the values are known. */
@@ -34,11 +34,11 @@ export function formatBadgeOf(format) {
 /** The kind of the Discogs value, in one short word: the card has no room to say more. */
 export const kindWordOf = (value) => (value.basis === ValueBasis.LOWEST_FOR_SALE ? 'lowest' : 'suggested')
 
-/** What the row of the phone says of where the value comes from, as parts: the words of the screen fill the rest. */
+/** What the row of the phone says of where the value comes from, as parts: the words of the screen fill the rest (for `none`, the reason is the value's own). */
 export function originOf(value) {
     if (value.origin === ValueOrigin.DISCOGS) return { kind: 'discogs', date: readOnText(value) }
     if (value.origin === ValueOrigin.YOURS) return { kind: 'yours' }
-    return { kind: 'none', text: noValueText(value) }
+    return { kind: 'none' }
 }
 
 /** The status as a pill says it: with its mark («✓ Owned», «Not Owned», «♡ Wishlist»), the label coming from the screen. */

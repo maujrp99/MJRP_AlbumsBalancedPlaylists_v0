@@ -3,6 +3,16 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 05:32] step — F83, onda 6c: as frases dos modelos do inventário no dicionário
+
+**Branch:** claude/f83-wave-6c-inventory-texts
+
+- As frases em inglês que os modelos do inventário escreviam (≈ 88 lugares: `inventoryValue`, `inventoryValueRun`, `inventoryFromSeries`, `inventoryRatings`, `inventorySort`, `inventoryStatus`, `buyLinks`, e `inventoryCard.originOf`) viraram código e números nos modelos. `i18n/inventoryTexts.js` (nome e argumentos das funções iguais aos de antes) diz cada um pelo dicionário; 191 chaves novas em `i18n/en/inventory.js` e `i18n/pt/inventory.js`. Os finais com várias frases são listas de partes `{ code, ...números }`; as constantes de frase saíram dos modelos. «Data provided by Discogs.» é o único texto que um modelo guarda e fica em inglês nos dois idiomas.
+- Consumidores trocados (só o `import` e as chamadas das opções): `Filters`, `Totals`, `Notices`, `CardValue`, `ItemCard`, `Header`, `phone/Sheets`, `phone/PhoneRow`, `BuyLinks`, `ValueSection`, `AlbumWindow`, `InventoryController`, `InventoryValues`.
+- Testes: `test/models/inventoryModelsGiveCodes.test.js` (25; 21 falham contra o pai 6622654), `test/i18n/inventoryTexts.test.js` (inglês palavra por palavra e português), um caso novo em `Inventory.texts.test.tsx`; os testes dos modelos passam a perguntar a camada de texto pelas frases (as mesmas asserções em inglês). Os dourados da 6a e da 6b passam SEM recaptura.
+- Português (proposta, espera o dono): «Desejos» no lugar de «Lista de desejos» como rótulo de status, porque o selo do cabeçalho estourava a 393 px.
+- Peso: o script principal foi de 213.079 B para 214.274 B (+1.195 B, o inglês das 191 chaves); o que vem depois da primeira tela, de 213.896 B para 214.626 B. Tetos: `main` 214.418 B, `background` 55.500 B, com o motivo escrito em `scripts/bundle-budget.json`.
+
 ## [2026-11-22 05:10] step — F83, onda 6b: a prova no navegador e os totais
 
 **Branch:** claude/f83-wave-6b-inventory-windows

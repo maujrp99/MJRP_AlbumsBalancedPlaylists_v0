@@ -18,10 +18,13 @@ import { t, tPlural } from '../../../i18n/t.js'
 import { safeUrl } from '../../../utils/safeUrl.js'
 import { Icon } from '../../../ui/Icon'
 import { useSheetWindow } from '../../../ui/SheetWindow'
-import { BUY_LINKS_NOTE, BuyLinkPlace, SELL_TRADE_SOON, buyLinkMarks, buyLinksOf } from '../../../models/buyLinks.js'
-import { InventoryStatus, statusLabel, statusOf } from '../../../models/inventoryStatus.js'
-import { BASE_CURRENCY, DISCOGS_CREDIT, ValueOrigin, discogsKindNote, momentText, noValueText, ownedNote, rateNote, toBuyNote, valueLabel, LOWEST_PRICES_NOTE } from '../../../models/inventoryValue.js'
-import { SORT_OPTIONS, choiceOf } from '../../../models/inventorySort.js'
+import { BuyLinkPlace, buyLinkMarks, buyLinksOf } from '../../../models/buyLinks.js'
+import { InventoryStatus, statusOf } from '../../../models/inventoryStatus.js'
+import { BASE_CURRENCY, DISCOGS_CREDIT, ValueOrigin, momentText } from '../../../models/inventoryValue.js'
+import { choiceOf } from '../../../models/inventorySort.js'
+import {
+    buyLinksNote, discogsKindNote, lowestPricesNote, noValueText, ownedNote, rateNote, sellTradeSoon, sortOptions, statusLabel, toBuyNote, valueLabel
+} from '../../../i18n/inventoryTexts.js'
 import { ViewMode, viewForPhone } from '../../../models/inventoryViewMode.js'
 import { jumpTargets, jumpsByLetter } from '../../../models/inventoryJump.js'
 import { totalText } from '../../../models/inventoryCard.js'
@@ -109,7 +112,7 @@ function ItemSheet({ item, known, close, controller, bridge }: { item: Inventory
                     const marks = buyLinkMarks(id, BuyLinkPlace.PHONE_SHEET)
                     return <a key={id} className="inv-link" href={safeUrl(url) as string} target="_blank" rel="noopener" data-store={name} data-buy-store={marks.buyStore} data-buy-place={marks.buyPlace}>{`${name} ↗`}</a>
                 })}
-                <Note>{BUY_LINKS_NOTE}</Note>
+                <Note>{buyLinksNote()}</Note>
             </Group>
             <Group>
                 <Heading>{t('inventory.sheet.item.sellOrTrade')}</Heading>
@@ -117,7 +120,7 @@ function ItemSheet({ item, known, close, controller, bridge }: { item: Inventory
                     <button type="button" className="inv-action" disabled aria-disabled="true">{t('inventory.card.sell')}</button>
                     <button type="button" className="inv-action" disabled aria-disabled="true">{t('inventory.card.trade')}</button>
                 </div>
-                <Note>{SELL_TRADE_SOON}</Note>
+                <Note>{sellTradeSoon()}</Note>
             </Group>
             <Group><ActionRow icon="Trash2" label={t('inventory.sheet.item.remove')} danger onPick={pick(() => { void removeItem(controller, item.id) })} /></Group>
         </div>
@@ -156,7 +159,7 @@ function FiltersBody({ controller }: { controller: InventoryController }) {
             <Group>
                 <Heading>{t('inventory.sheet.filters.sort')}</Heading>
                 <div className="inv-choices" role="group" aria-label={t('inventory.sheet.filters.sort')}>
-                    {SORT_OPTIONS.map(({ value, label }: { value: string; label: string }) => <ChoiceRow key={value} label={label} chosen={sort === value} sort={value} onPick={choose(() => controller.handleSortChoice(value))} />)}
+                    {sortOptions().map(({ value, label }: { value: string; label: string }) => <ChoiceRow key={value} label={label} chosen={sort === value} sort={value} onPick={choose(() => controller.handleSortChoice(value))} />)}
                 </div>
             </Group>
         </div>
@@ -220,7 +223,7 @@ function detailsOf(known: ValueView) {
             { label: t('inventory.sheet.values.toBuy'), sum: totalText(totals.toBuy, money), note: toBuyNote(totals.toBuy) }
         ],
         rate: money.currency !== BASE_CURRENCY && money.rates?.[money.currency] ? rateNote(money.currency, money.rates) : null,
-        discogs: known.discogsShown ? [t('inventory.totals.discogsEach'), known.lowestShown ? LOWEST_PRICES_NOTE : null].filter(Boolean).join(' ') : null,
+        discogs: known.discogsShown ? [t('inventory.totals.discogsEach'), known.lowestShown ? lowestPricesNote() : null].filter(Boolean).join(' ') : null,
         sellerSettingsMissing: Boolean(known.sellerSettingsMissing),
         discogsShown: Boolean(known.discogsShown)
     }
