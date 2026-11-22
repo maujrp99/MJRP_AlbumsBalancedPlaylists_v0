@@ -3,6 +3,19 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 20:26] decision — CMS (F82): Painel na primeira versão, as regras das duas receitas novas, e começar já a parte que não depende do kit
+
+**Branch:** main
+
+- Com o protótipo aberto (https://claude.ai/artifact/BnhaJv6KQpaEUzdn7qHsBe; arquivo `design/proposals/f82-cms/prototype.html`), três perguntas estavam com o MJRP, cada uma com a recomendação do agente: (1) «Painel (recomendo) ou Na própria tela, para a primeira versão?»; (2) «As regras de "Deep cuts" e "As menos ouvidas" no protótipo estão certas?» (pular as 3 faixas mais populares de cada álbum e pegar as 3 seguintes; pegar as 3 menos populares; faixa sem dado nunca conta); (3) «esperar o kit pelo harness, ou começar já a parte que não depende dele? Recomendo começar já». Ele respondeu: «Sigamos sua recomendação».
+- Leitura do agente (uma resposta para as três; ele pode corrigir): Painel na v1, com a edição na própria tela para depois; as regras como estão no protótipo, com os números ajustáveis nos blocos; começar já a proposta de arquitetura do conteúdo publicado e pedir ao harness o kit do CMS (F332).
+
+## [2026-11-22 20:26] harness-feedback — pedido ao harness: priorizar o kit do CMS (F332) para o Album Blender
+
+**Branch:** main
+
+- O MJRP decidiu começar o CMS do Album Blender («podemos começar a criar o CMS?»; «Sigamos sua recomendação»). As telas do admin dependem do kit do CMS chegar pelo harness (a feature F332, hoje só no molde). Pedidos do projeto ao kit, já registrados na F82: um adaptador para dicionários de um arquivo por idioma, e papéis com super administrador (REQ-05). O passo «publicar» com rascunho NÃO é pedido: ele decidiu manter «gravar já publica».
+
 ## [2026-11-22 19:40] decision — CMS (F82): gravar já publica, como o kit faz hoje
 
 **Branch:** main
