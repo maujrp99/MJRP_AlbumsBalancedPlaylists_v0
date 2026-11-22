@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 18:06] step — F83 onda 8c: a prova no navegador, a seção 24 das lições, a linha da TASK-28 e os totais do fim
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- Os totais no fim (pela fila da máquina, a suíte inteira SÓ, lida até o fim, sem a seção «Unhandled Errors»): **385 arquivos, 5.130 testes verdes e 1 pulado** (o mesmo de antes; o pai: 381 e 5.076 na junta, 385 e 5.096 no começo desta onda); `test/architecture` 43 arquivos e 340 testes verdes; `tsc` limpo; `eslint` 0 erros e 67 avisos (os mesmos do pai); `test/security/noSecretsInRepo.test.js` verde; `test/fixtures/exportMusicKitRecording.json` idêntico byte a byte ao do pai (nenhum diff).
+- `reports/evidence/F83/wave-8c/proof.md`: a prova no navegador (WebKit iPhone 14 e SE, Chromium 899 e Pixel 7, o computador a 1280 e a 900), com o controle de pai contra pai em cada perfil, os números de tempo, o que a prova achou, as diferenças de propósito, os defeitos mantidos reproduzidos e o que NÃO foi provado (um iPhone de verdade; o arrastar com o dedo no WebKit). `wave-lessons.md` ganha a seção 24; `tasks.md` ganha a linha da 8c (a TASK-28 não é marcada).
+
+
 ## [2026-11-22 18:06] step — F83 onda 8c: o peso medido e os tetos descem
 
 **Branch:** claude/f83-wave-8c-phone-sheet

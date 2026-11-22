@@ -6,6 +6,7 @@
   summarize.py [raw folder] --times    the slide and the worst timeline delta of every step, for the report
 """
 import glob
+import gzip
 import json
 import os
 import re
@@ -13,8 +14,8 @@ import sys
 
 raw = next((a for a in sys.argv[1:] if not a.startswith('--')), os.path.join(os.path.dirname(os.path.abspath(__file__)), 'raw'))
 rows = []
-for path in sorted(glob.glob(os.path.join(raw, 'browser-proof-*.json'))):
-    data = json.load(open(path))
+for path in sorted(glob.glob(os.path.join(raw, 'browser-proof-*.json*'))):
+    data = json.load(gzip.open(path, 'rt') if path.endswith('.gz') else open(path))
     rows.append((os.path.basename(path), data))
 total_passed = total_failed = 0
 for name, data in rows:

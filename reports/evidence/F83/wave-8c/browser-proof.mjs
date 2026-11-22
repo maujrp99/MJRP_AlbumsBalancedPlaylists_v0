@@ -47,7 +47,7 @@ const PHONE = P.phone
 const FRAME = 20 // one frame (16.7 ms at 60 Hz) and what a page can tell of it
 
 const results = []
-const note = (what, ok, detail = '') => { results.push({ what, ok, detail: String(detail).slice(0, 900) }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${what}${detail ? '  ' + String(detail).slice(0, 300) : ''}`) }
+const note = (what, ok, detail = '') => { results.push({ what, ok, detail: String(detail).slice(0, 3000) }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${what}${detail ? '  ' + String(detail).slice(0, 300) : ''}`) }
 
 const TYPES = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.svg': 'image/svg+xml', '.json': 'application/json', '.png': 'image/png', '.woff2': 'font/woff2' }
 const SEAMS = (text) => {
@@ -288,14 +288,15 @@ async function step(label, sides, run, { wait = 600, shoot = true, frame = FRAME
         // on purpose (the sheet goes with the part of the screen that opened it, with no slide): only the coming and the going of the sheet are compared
         if (goes && (kind === 'sheet-class' || kind === 'body')) return false
         if (kind === 'sheet-class' && !/sheet--closing/.test(detail)) return false
+        if (kind === 'sheet-class' && all.slice(0, i).some(([, k, d]) => k === kind && d === detail)) return false // the same class written a second time (the call and then the draw)
         const before = all.slice(0, i).filter(([, k]) => k !== 'focus').pop()
-        return !(before && before[1] === kind && before[2] === detail && (kind === 'sheet-class' || kind === 'body'))
+        return !(before && before[1] === kind && before[2] === detail && kind === 'body')
     })
     const kinds = (events) => keep(events).map(([, kind, detail]) => `${kind} ${detail}`)
     const [ka, kb] = [kinds(timelines[0]), kinds(timelines[1])]
     const same = JSON.stringify(ka) === JSON.stringify(kb)
     note(`${TAG} · ${label} · the timeline: what happened, in order`, same, same ? `${ka.length} events: ${ka.join(' → ').slice(0, 240)}` : `\n parent: ${ka.join(' → ')}\n mine:   ${kb.join(' → ')}`)
-    if (same && ka.length) {
+    if (same && ka.length && !goes) {
         const [ta, tb] = [keep(timelines[0]), keep(timelines[1])]
         const deltas = ta.map(([t], i) => Math.abs(t - tb[i][0]))
         const worst = Math.max(...deltas)
