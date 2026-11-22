@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 12:51] decision — o menu do computador usa a Syne, a letra da marca (F88)
+
+**Branch:** main
+
+- MJRP: «uma coisa que noite a fonte usada para o menu é diferente da fonte utilizada anteriormente»; «mostre como era as fontes antes»; vistas as três lado a lado (antes: maiúsculas de 12 px; hoje: letra do sistema a 14 px; opção: Syne), respondeu com a foto da opção Syne: «exato a opcao recomendada».
+- `public/splash/bar-menu.css`: os itens do menu passam de `600 14px` na letra do sistema para `700 14px` na Syne, como já era no menu de baixo do celular. Visto num servidor local a 1280 px: cabe, nada se desloca. Suíte: 325 arquivos, 4141 testes.
+
 ## [2026-11-22 12:38] step — publicado em produção: a home com conta mostra o texto aprovado (F80), da `4410c1f`
 
 **Branch:** main
