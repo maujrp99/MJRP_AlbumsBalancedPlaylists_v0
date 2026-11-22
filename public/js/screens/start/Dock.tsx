@@ -19,7 +19,7 @@ import { CoverImage } from '../../ui/CoverImage'
 import { useSheetWindow } from '../../ui/SheetWindow'
 import { t, tPlural } from '../../i18n/t.js'
 import { Equalizer } from './Equalizer'
-import { NameState, dockEmptyNote, seriesCountLine } from './homeSeries'
+import { NameState, barShows, dockEmptyNote, seriesCountLine } from './homeSeries'
 import { coverOf } from './text'
 import type { DockModel, StartController, Undo } from './StartController'
 
@@ -275,14 +275,18 @@ function PhoneMeta({ model, onOpen }: { model: DockModel; onOpen: () => void }) 
 
 function PhoneDock({ controller, model, sheetOpen, onOpen }: { controller: StartController; model: DockModel; sheetOpen: boolean; onOpen: () => void }) {
     const n = model.albums.length
+    // No bar until the first cover is chosen (UAT-281); an «Undo» of the last removal still has its strip
+    const shown = barShows({ chosen: n, created: model.create === 'created' })
     return (
-        <div className="home-dockwrap is-phone">
+        <div className={`home-dockwrap is-phone${shown ? '' : ' is-barless'}`}>
             {sheetOpen ? null : <UndoStrip controller={controller} undo={model.undo} />}
-            <div className={`home-dock phone-action-bar md:hidden${n ? ' is-full' : ''}${model.create === 'created' ? ' is-done' : ''}`} role="region" aria-label={t('start.dock.region')}>
-                {model.create === 'created' ? null : <Pile model={model} max={1} onOpen={onOpen} />}
-                <PhoneMeta model={model} onOpen={onOpen} />
-                {model.create === 'created' ? <AfterButtons controller={controller} phone /> : <div className="home-go"><CreateButton controller={controller} model={model} id="btnCreateSeriesPhone" phone /></div>}
-            </div>
+            {shown ? (
+                <div className={`home-dock phone-action-bar md:hidden${n ? ' is-full' : ''}${model.create === 'created' ? ' is-done' : ''}`} role="region" aria-label={t('start.dock.region')}>
+                    {model.create === 'created' ? null : <Pile model={model} max={1} onOpen={onOpen} />}
+                    <PhoneMeta model={model} onOpen={onOpen} />
+                    {model.create === 'created' ? <AfterButtons controller={controller} phone /> : <div className="home-go"><CreateButton controller={controller} model={model} id="btnCreateSeriesPhone" phone /></div>}
+                </div>
+            ) : null}
         </div>
     )
 }

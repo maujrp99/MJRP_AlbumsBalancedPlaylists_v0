@@ -15,7 +15,8 @@ import { isPhone } from '../../utils/isPhone.js'
 import { Equalizer } from './Equalizer'
 import { PasteList } from './PasteList'
 import { GuestLine } from './Dock'
-import { equalizerState, stageIsBig } from './homeSeries'
+import { useSheetWindow } from '../../ui/SheetWindow'
+import { equalizerState, guestNoticeShows, phoneHintLink, stageIsBig } from './homeSeries'
 import type { StartController } from './StartController'
 
 /** The bars under the field: 48 on the computer, 32 on the phone, counted once when the screen is made (the old screen made them once). */
@@ -25,11 +26,33 @@ function ModeLink({ controller, mode, children }: { controller: StartController;
     return <button type="button" className="home-link" data-home-mode={mode} onClick={() => controller.setMode(mode)}>{children}</button>
 }
 
-function Hint({ controller, paste, typing }: { controller: StartController; paste: boolean; typing: boolean }) {
+function Hint({ controller, paste, typing, phone, notFound }: { controller: StartController; paste: boolean; typing: boolean; phone: boolean; notFound: boolean }) {
+    if (phone) {
+        // One link, nothing else (UAT-281); none when the «not found» message has its own «Paste a list»
+        const link = phoneHintLink({ paste, notFound: notFound && !paste })
+        if (link === 'artist') return <ModeLink controller={controller} mode="artist">{t('start.hint.phone.artist')}</ModeLink>
+        return link === 'paste' ? <ModeLink controller={controller} mode="paste">{t('start.hint.phone.paste')}</ModeLink> : null
+    }
     if (paste) return <>{`${t('start.hint.paste.before')} `}<ModeLink controller={controller} mode="artist">{t('start.hint.paste.link')}</ModeLink></>
     if (typing) return <>{t('start.hint.typing')}</>
     return <>{`${t('start.hint.artist.before')} `}<ModeLink controller={controller} mode="paste">{t('start.hint.artist.link')}</ModeLink>{` ${t('start.hint.artist.after')}`}</>
 }
+
+/** «What is a series?» (phone): the link opens the same sentence in the app's bottom sheet; on the computer the sentence stays on the screen. */
+function WhatIsASeries() {
+    const sheet = useSheetWindow()
+    const open = () => {
+        if (sheet.isOpen()) return
+        sheet.show({
+            variant: 'bottom', id: 'whatIsASeries', title: t('start.what.link'), closeLabel: t('ui.window.close'),
+            render: () => <p className="home-what__text">{t('start.stage.about')}</p>
+        })
+    }
+    return <><button type="button" className="home-what" aria-haspopup="dialog" onClick={open}>{t('start.what.link')}</button>{sheet.layer}</>
+}
+
+/** The line under the field: always on the computer; on the phone only when it has its one link. */
+const hintShows = (phone: boolean, paste: boolean, scan: string): boolean => !phone || phoneHintLink({ paste, notFound: scan === ScanStatus.EMPTY && !paste }) !== null
 
 export function Stage({ controller, phone }: { controller: StartController; phone: boolean }) {
     const field = useRef<HTMLInputElement>(null)
@@ -46,19 +69,20 @@ export function Stage({ controller, phone }: { controller: StartController; phon
     const paste = state.mode === 'paste'
     const big = stageIsBig({ scan: scan.status, paste, report: state.report, phone })
     const busy = scan.status === ScanStatus.SCANNING
-    const showGuest = state.guest && phone
+    const showGuest = phone && guestNoticeShows({ guest: state.guest, chosen: controller.albums().length })
 
     return (
         <section id="homeStage" className={`home-stage ${big ? 'is-big' : 'is-small'}`}>
             <div id="homeHero" className="home-hero" hidden={!big}>
                 <h1><span className="home-hero__l1">{t('start.stage.title.first')}</span>{' '}<span className="home-hero__l2">{t('start.stage.title.second')}</span></h1>
+                <WhatIsASeries />
                 <p>{t('start.stage.about')}</p>
             </div>
             <div id="homeField" className="home-field" hidden={paste}>
                 <Icon name="Search" className="home-field__ico" />
                 <input
                     ref={field} type="text" id="artistScanInput" autoComplete="off" spellCheck={false}
-                    placeholder={t('start.field.placeholder')} aria-label={t('start.field.label')}
+                    placeholder={t(phone ? 'start.field.placeholderPhone' : 'start.field.placeholder')} aria-label={t('start.field.label')}
                     onKeyDown={(event) => { if (event.key === 'Enter') void controller.search(event.currentTarget.value) }}
                     onInput={(event) => controller.typed(event.currentTarget.value, document.activeElement === event.currentTarget)}
                     onFocus={() => controller.focusChanged(true)}
@@ -74,7 +98,7 @@ export function Stage({ controller, phone }: { controller: StartController; phon
                 </button>
             </div>
             <PasteList controller={controller} hidden={!paste} />
-            <p id="homeHint" className="home-hint"><Hint controller={controller} paste={paste} typing={controller.isTyping()} /></p>
+            <p id="homeHint" className="home-hint" hidden={!hintShows(phone, paste, scan.status)}><Hint controller={controller} paste={paste} typing={controller.isTyping()} phone={phone} notFound={scan.status === ScanStatus.EMPTY} /></p>
             <div id="homeGuestStage" className="home-guest-stage" hidden={!showGuest}>
                 {showGuest ? <GuestLine controller={controller} action="stage-sign-in" /> : null}
             </div>

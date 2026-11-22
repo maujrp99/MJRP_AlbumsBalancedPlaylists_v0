@@ -7,8 +7,9 @@
  * scenario lets it go (`h.answer`, `h.fail`), which is how «searching» and «creating» are looked at. What the screen asked of the
  * world outside (the search, the writing of the series, the move to another screen, the sign-in window) is written down in `outside`.
  *
- * Used by: reports/evidence/F83/wave-4/capture-before.test.js (run once, on the hand-made screen, before it was deleted; it wrote
- * test/fixtures/startBeforeF83.json) and test/screens/start/Start.sameAsBefore.test.tsx (the React screen, against that file).
+ * Used by: reports/evidence/F83/sync-3/capture-start-from-main.test.js (run on the hand-made screen of `main`, the lean Start of UAT-281;
+ * it wrote test/fixtures/startFromMainLean.json; wave 4 ran reports/evidence/F83/wave-4/capture-before.test.js the same way on the Home
+ * before it was deleted) and test/screens/start/Start.sameAsBefore.test.tsx (the React screen, against that file).
  */
 import { vi } from 'vitest'
 import { normalize as pageOf } from './savedPlaylistsScenarios.js'
@@ -450,9 +451,53 @@ export const SCENARIOS = [
     },
     {
         name: 'the phone: a visitor', phone: true, guest: true, run: async (h) => {
-            h.snap('the visitor line in the stage')
+            h.snap('no albums chosen: no notice (UAT-281)')
+            await search(h)
+            await pick(h, 'a1')
+            h.snap('the visitor line in the stage, with an album chosen')
             await h.click('[data-dock="stage-sign-in"]')
             h.note('the sign-in window')
+            await pick(h, 'a1')
+            h.snap('the last album taken out: the notice leaves')
+        }
+    },
+    {
+        name: 'the phone: typing, and the one link', phone: true, run: async (h) => {
+            await h.focusIn('#artistScanInput')
+            await h.type('#artistScanInput', 'Pink Fl')
+            h.snap('typing: the hint is still the one link')
+            await h.focusOut('#artistScanInput')
+            await h.click('#homeHint [data-home-mode="paste"]')
+            h.snap('the list: the link back to the artist')
+            h.focus('the list opens on the phone')
+            await h.click('#homeHint [data-home-mode="artist"]')
+            h.snap('back to the artist')
+            h.focus('back to the artist on the phone')
+        }
+    },
+    {
+        name: 'the phone: nothing found', phone: true, run: async (h) => {
+            h.scanAnswer({ albums: [], reclassified: null })
+            await search(h, 'Floydd Qxz')
+            h.snap('not found: no link under the field')
+            await h.click('#homeMessage [data-home-mode="paste"]')
+            h.snap('the list opened from the message')
+        }
+    },
+    {
+        name: 'the phone: What is a series?', phone: true, run: async (h) => {
+            await h.click('.home-what')
+            h.snap('the sentence in the sheet', '.sheet')
+            h.snap('the page behind the sheet')
+            h.focus('the sheet opened')
+            await h.click('#whatIsASeries .sheet__close')
+            await h.settle(260)
+            h.snap('the sheet closed')
+            h.focus('the sheet closed')
+            await h.click('.home-what')
+            await h.key('#whatIsASeries', 'Escape')
+            await h.settle(260)
+            h.snap('closed with Escape')
         }
     },
     {

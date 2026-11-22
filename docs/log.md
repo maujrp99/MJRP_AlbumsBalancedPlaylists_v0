@@ -3,6 +3,26 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 03:27] step — F83, terceira junta: a prova no navegador, o teto de peso e os totais (a Start enxuta em React)
+
+**Branch:** claude/f83-sync-3-start-lean
+
+- Prova no site construído, WebKit com perfil de iPhone, `main` (à mão) contra a linha do React: 393x852 e 375x667, visitante e conta, 45 comparações por rodada (pixels, texto visível, caixas, folga de baixo, foco): 0 pixels de diferença em todos os estados, menos duas sobras de no máximo 2 de 255 numa primeira rodada a 375 (a mesma sobra que `main` contra `main` mostra; a rodada seguinte, 0). O computador a 1280, contra o pai (b143b4f) e contra a `main`, WebKit e Chromium: 31 de 31. Detalhes em `reports/evidence/F83/sync-3/proof.md`.
+- Diferença de propósito, no sentido de melhor: um clique em «Search» com o campo em foco inicia a busca no React e NÃO na `main` no WebKit (é o UAT-282: a mão reescreve o texto do botão entre o apertar e o soltar). Não corrigido na `main` por este passo.
+- O teto de peso subiu: script principal 235.839 B → 235.892 B (medido 235.748 B + 144 B das chaves); `background` 49.000 B → 49.500 B (a soma do script principal e do que vem depois estourava o teto por 447 B). Números em `reports/evidence/F83/sync-3/bundle-budget-sync-3.txt` e a razão em `scripts/bundle-budget.json`.
+- `docs/specs/features/F83-site-screens-in-react/wave-lessons.md` (seção 14) e `tasks.md` (TASK-35) em dia.
+- Totais na ponta, pela fila: suíte inteira 361 arquivos, 4.695 testes, todos verdes; `test/architecture` 42 arquivos, 341 testes; `typecheck` sem erro; `lint` 0 erros e 68 avisos (os de antes); build dentro do teto (script principal 235.748 B, React 68.691 B, o que vem depois 187.136 B). `doctor` vermelho desde a base (521 erros: links de `docs/archive`, MEMORY.md, constitution, quadro da F89), nenhum de arquivo desta junta.
+
+## [2026-11-22 02:55] step — F83, terceira junta: a Start enxuta no celular portada para a tela Start em React (UAT-281)
+
+**Branch:** claude/f83-sync-3-start-lean
+
+- A tela Start em React passa a ser a Start enxuta no celular (F79, UAT-281), igual à da `main` (b8947e0) até 899 px; no computador nada muda (a única diferença no HTML é o botão «What is a series?», que a `main` também tem e que o CSS esconde no computador).
+- Teste vermelho antes: `Start.lean.phone.test.js` (os 7 casos de `HomeLean.phone.test.js` da `main`, com o andaime `startHarness`, mais o da última capa tirada e o dos três passos) e os três testes de `homeSeries.test.js` falhavam; `Start.phone.test.js` (da `main`) também.
+- Código: `barShows`, `guestNoticeShows`, `phoneHintLink` em `screens/start/homeSeries.ts`; `Stage.tsx` (o link «What is a series?» que abre a frase na Folha de baixo, o campo «Type an artist», o único link sob o campo, o aviso do visitante só com álbum); `Dock.tsx` (sem barra antes da primeira capa; a faixa de Desfazer fica, com `is-barless`); `Start.tsx` (`is-barless` na página). Os três passos e o título de 26 px são do CSS da `main`, que entrou na junta.
+- Textos novos (4, no dicionário): `start.field.placeholderPhone`, `start.hint.phone.paste`, `start.hint.phone.artist`, `start.what.link`; o português é PROPOSTO PELO AGENTE e espera a aprovação do MJRP («Digite um artista», «ou cole uma lista», «Buscar um artista», «O que é uma série?»). O botão de fechar da Folha usa `ui.window.close`.
+- Dourado: `test/fixtures/startFromMainLean.json` (33 cenários, capturados da `main` à mão em b8947e0; 30 do mapa antigo recapturados, 3 novos do celular: digitar e o link único, não achado, «What is a series?») no lugar de `startBeforeF83.json`; o registro da captura está em `reports/evidence/F83/sync-3/capture-start-from-main.test.js`. Os retratos do computador diferem do dourado antigo só pelo botão escondido. O teste «igual ao de antes» acusa uma letra trocada de propósito («or paste a lst»).
+
 ## [2026-11-22 02:51] step — F83, terceira junta: a main (b8947e0, a Start enxuta no celular) juntada à linha do React
 
 **Branch:** claude/f83-sync-3-start-lean

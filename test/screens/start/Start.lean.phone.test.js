@@ -1,6 +1,6 @@
 /**
- * UAT-281 (F79): the Start screen on the phone, lean. The real HomeView and HomeController; only the catalog is
- * replaced. The title and the field first; «What is a series?» opens the sentence in the bottom sheet; under the
+ * UAT-281 (F79): the Start screen on the phone, lean. The Start screen in React (carried from the hand-made test of the main, same assertions; the scaffold is test/support/startHarness.js);
+ * only the catalog is replaced. The title and the field first; «What is a series?» opens the sentence in the bottom sheet; under the
  * field one link; the bar and the visitor's notice only with the first cover; the computer is as it was.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
@@ -13,12 +13,11 @@ vi.mock('../../../public/js/components/Toast.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 
-import { HomeView } from '../../../public/js/views/HomeView.js'
+import { HomeView, flush } from '../../support/startHarness.js'
 import { userStore } from '../../../public/js/stores/UserStore.js'
 import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
 
 const album = (title) => ({ id: `id-${title}`, title, artist: 'Pavement', type: 'Album', year: '1994', releaseDate: '1994-01-01', coverUrl: 'https://img/{w}x{h}.jpg' })
-const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 function screenIs(phone) {
     window.matchMedia = (query) => ({
@@ -104,6 +103,25 @@ describe('the lean Start on the phone (UAT-281)', () => {
         app.querySelector('[data-action="pick-album"]').click()
         expect($('.home-dock.phone-action-bar')).not.toBeNull()
         expect($('#home-page').classList.contains('is-barless')).toBe(false)
+    })
+
+    it('the last cover taken out: the bar goes, an «Undo» strip stays, and the page has the room of the menu only', async () => {
+        await open(true)
+        await search('Pavement', [album('Slanted')])
+        app.querySelector('[data-action="pick-album"]').click()
+        expect($('.home-dock.phone-action-bar')).not.toBeNull()
+        app.querySelector('[data-action="pick-album"]').click()
+        expect($('.home-dock.phone-action-bar')).toBeNull()
+        expect($('.home-dockwrap.is-barless')).not.toBeNull()
+        expect($('.home-undo')).not.toBeNull()
+        expect($('#home-page').classList.contains('is-barless')).toBe(true)
+    })
+
+    it('the three steps are in the page but the phone hides them (the style), and the title has its own link to the sentence', async () => {
+        await open(true)
+        expect($('.home-hero .home-what')).not.toBeNull()
+        expect($('.home-hero .home-what').getAttribute('aria-haspopup')).toBe('dialog')
+        expect($('#artistScanInput').getAttribute('aria-label')).toBe('Search an artist, or paste a list of albums')
     })
 
     it('the visitor notice only when the series has albums', async () => {

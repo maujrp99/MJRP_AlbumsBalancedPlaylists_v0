@@ -5,8 +5,9 @@
  * filters, covers chosen and taken out with Undo, the order panel, the name, creating, a series not saved, nothing found, the list
  * and its report, a visitor; on the phone the bar, the sheet, creating from the sheet, turning into a computer) the page after each
  * step equals what the old screen drew at the same step, and the focus is where the old screen left it. The old screen's pages are
- * kept in test/fixtures/startBeforeF83.json: written once by the hand-made screen before it was deleted
- * (reports/evidence/F83/wave-4/capture-before.test.js), compared element by element, attribute by attribute (as in waves 1 to 3).
+ * kept in test/fixtures/startFromMainLean.json: written by the hand-made screen of `main` at b8947e0, the lean Start on the phone
+ * (F79, UAT-281; reports/evidence/F83/sync-3/capture-start-from-main.test.js; before the sync it was startBeforeF83.json, written by
+ * the hand-made screen before it was deleted, wave 4), compared element by element, attribute by attribute (as in waves 1 to 3).
  * What the screen asked of the world outside (the catalog, the writing of the series, the move to another screen, the window to sign
  * in) is compared too.
  */
@@ -24,7 +25,7 @@ import { userStore } from '../../../public/js/stores/UserStore.js'
 import { albumSeriesStore } from '../../../public/js/stores/albumSeries.js'
 import { registerTexts } from '../../../public/js/i18n/t.js'
 import { SCENARIOS, keyOf, normalize, focusOf, asPhone, quiet, control, outside } from '../../support/startScenarios.js'
-import before from '../../fixtures/startBeforeF83.json'
+import before from '../../fixtures/startFromMainLean.json'
 
 const captured = before as Record<string, Record<string, string | null>>
 const tick = () => new Promise(resolve => setImmediate(resolve))
