@@ -6,6 +6,11 @@ export interface FocusAfterDrawOptions {
      * say which. Anything else that holds the focus lets it go.
      */
     keep?: (held: HTMLElement) => boolean
+    /**
+     * By default every draw lets the focus go. A screen that the hand-made version drew anew only when its controller gave a notice says
+     * which: the focus is let go only when this value changes (a sheet that closes and hands the focus back to its opener is not a notice).
+     */
+    after?: unknown
 }
 
 /**
@@ -16,7 +21,7 @@ export interface FocusAfterDrawOptions {
  * not what is in a sheet or a window, not what the screen says it kept) that holds the focus lets it go, and the next Tab starts at the
  * top of the screen again.
  */
-export function useFocusLikeAfterAnewDraw({ keep }: FocusAfterDrawOptions = {}): void {
+export function useFocusLikeAfterAnewDraw({ keep, after }: FocusAfterDrawOptions = {}): void {
     useEffect(() => {
         const held = document.activeElement
         const app = document.getElementById('app')
@@ -29,5 +34,6 @@ export function useFocusLikeAfterAnewDraw({ keep }: FocusAfterDrawOptions = {}):
         app.blur()
         app.removeAttribute('tabindex')
         document.getSelection()?.collapse(app, 0)
-    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the draw is the dependency, unless the screen names what counts as one
+    }, after === undefined ? undefined : [after])
 }

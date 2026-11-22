@@ -107,10 +107,11 @@ function EmptyState() {
 
 export function Albums({ controller, bridge, route }: Props) {
     const purposeFocus = useRef<HTMLElement | null>(null)
-    useFocusLikeAfterAnewDraw({ keep: (held) => held === purposeFocus.current || held.closest(KEPT) !== null })
+    const notices = useSyncExternalStore(bridge.subscribe, bridge.getVersion)
+    // the hand-made screen let the focus go when the controller gave a notice (it drew anew), not when a sheet closed and gave it back
+    useFocusLikeAfterAnewDraw({ keep: (held) => held === purposeFocus.current || held.closest(KEPT) !== null, after: notices })
     useLocale()
     const phone = usePhone()
-    const notices = useSyncExternalStore(bridge.subscribe, bridge.getVersion)
     const sheets = usePhoneSheets()
     const modals = useRef<SeriesModalsHandle | null>(null)
     const openedAt = useState(() => new Date().toLocaleTimeString())[0]

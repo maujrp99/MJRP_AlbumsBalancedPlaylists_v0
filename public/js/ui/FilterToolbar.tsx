@@ -204,10 +204,12 @@ function Chips({ chosen, groups }: { chosen: Chosen[]; groups: FilterGroupProps[
 
 export function FilterToolbar(props: FilterToolbarProps) {
     const phone = usePhone()
-    const sheet = useSheetWindow()
-    const search = useRef<HTMLInputElement>(null)
+    // what the sheet draws is read from here when the sheet's layer is made, below: it must hold THIS draw's props before the layer is made
+    // (in the strict mode a second draw hid it; in the published build the sheet showed the previous draw)
     const latest = useRef(props)
     latest.current = props
+    const sheet = useSheetWindow()
+    const search = useRef<HTMLInputElement>(null)
     const chosen = activeFilters(props.filterGroups)
     const inSheet = Boolean(props.filtersInSheet) && phone
 
