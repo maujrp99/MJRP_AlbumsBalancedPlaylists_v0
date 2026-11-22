@@ -4,7 +4,7 @@
  * controlled (the hand-made one was not): it starts with `initialValue`, and what it holds is read by the button and by Enter. Whoever opens it
  * (ui/dialogs/dialogs.ts) owns Escape and takes the focus to the field on the next frame (`field`).
  */
-import { useState, type MutableRefObject } from 'react'
+import { useCallback, useState, type MutableRefObject } from 'react'
 import { t } from '../../i18n/t.js'
 import { ModalShell } from '../ModalShell'
 
@@ -38,11 +38,19 @@ export function InputWindow({ title, message, label, initialValue = '', placehol
             <button type="button" className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed" disabled={!valid} onClick={() => onConfirm(value)}>{confirmText}</button>
         </div>
     )
-    // the hand-made field carried the `autofocus` attribute, which React does not write; the focus itself comes a frame later, from whoever opened the window
-    const made = (element: HTMLInputElement | null): void => {
+    // The field is made the way the hand-made one was: the starting text is the `value` ATTRIBUTE (the value is not «dirty»: WebKit selects it when the field is
+    // focused, as it did), the `autofocus` attribute is there (React does not write it), and what is typed is heard by the native `input` event (React's
+    // `onChange` compares with the value it saw at the start, and would not hear a field emptied from a starting text it never set itself).
+    // The focus itself comes a frame later, from whoever opened the window.
+    const made = useCallback((element: HTMLInputElement | null): (() => void) | void => {
         if (field) field.current = element
-        element?.setAttribute('autofocus', '')
-    }
+        if (!element) return
+        element.setAttribute('autofocus', '')
+        element.setAttribute('value', initialValue)
+        const heard = (): void => setValue(element.value)
+        element.addEventListener('input', heard)
+        return () => element.removeEventListener('input', heard)
+    }, [field, initialValue])
     return (
         <ModalShell id="input-modal" title={title} size="sm" onClose={onCancel} footer={footer}>
             <div>
@@ -53,9 +61,7 @@ export function InputWindow({ title, message, label, initialValue = '', placehol
                         ref={made}
                         type="text"
                         className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-green-500 focus:outline-none transition-colors"
-                        defaultValue={initialValue}
                         placeholder={placeholder}
-                        onChange={(event) => setValue(event.target.value)}
                         onKeyDown={(event) => { if (event.key === 'Enter' && valid) onConfirm(value) }}
                     />
                 </div>

@@ -111,6 +111,7 @@ const LAYERS = '#toast-container, #globalProgress, .app-modal, .rank-window, #sp
 const RECORDER = () => {
     window.__tl = []
     window.__inputs = []
+    window.__closes = []
     const log = (kind, detail) => window.__tl.push({ t: performance.now(), kind, detail })
     const textOf = (el) => (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 60)
     const isWindow = (el) => el.nodeType === 1 && el.matches?.('.app-modal, .rank-window, #spotify-export-modal, .modal-overlay, .sheet')
@@ -150,6 +151,7 @@ const RECORDER = () => {
     if (document.documentElement) watch(); else document.addEventListener('DOMContentLoaded', watch)
     document.addEventListener('focusin', (event) => { const e = event.target; const on = document.querySelector('.app-modal, .rank-window, #spotify-export-modal, .modal-overlay, .sheet') ? 'window on' : 'window off'; log('focus', `${e && e.tagName ? e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') : '?'} [${on}]`) }, true)
     for (const type of ['pointerdown', 'click', 'keydown']) document.addEventListener(type, () => window.__inputs.push(performance.now()), true)
+    document.addEventListener('click', (event) => { if (event.target.closest && event.target.closest('.toast-close')) window.__closes.push(performance.now()) }, true)
     Date.prototype.toLocaleTimeString = () => '12:00:00 PM'
 }
 
@@ -267,21 +269,21 @@ function pixelsApart(a, b) {
     return { apart, top, delta, box: apart ? `x ${x0}-${x1}, y ${y0}-${y1}` : '' }
 }
 
-const layersNow = (page) => page.evaluate(`(() => { const read = ${READ}; return [...document.querySelectorAll('${LAYERS}')].map(el => read(el)).join('\\n#####\\n') })()`)
+const layersNow = (page, only = LAYERS) => page.evaluate(`(() => { const read = ${READ}; return [...document.querySelectorAll('${only}')].map(el => read(el)).join('\\n#####\\n') })()`)
 const focusNow = (page) => page.evaluate(() => { const e = document.activeElement; return !e || e === document.body ? 'body' : `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}.${String(e.className).split(' ')[0]}` })
 const lockNow = (page) => page.evaluate(() => `${document.body.getAttribute('style') || ''} | ${document.body.dataset.scrollLocked || 'free'} | scrollY ${Math.round(window.scrollY)}`)
 const noticesNow = (page) => page.evaluate(() => JSON.stringify([...document.querySelectorAll('#toast-container .toast')].map(e => e.textContent.trim().replace(/\s+/g, ' '))))
 /** The events since the last read, as they came (performance.now), with the inputs of the step. */
 const timelineNow = (page) => page.evaluate(() => {
-    const raw = { events: window.__tl, inputs: window.__inputs }
-    window.__tl = []; window.__inputs = []
+    const raw = { events: window.__tl, inputs: window.__inputs, closes: window.__closes }
+    window.__tl = []; window.__inputs = []; window.__closes = []
     return raw
 })
 /**
  * What an event is measured from: a notice's coming, from the input that made it; its going in, going out and away, from its own coming; everything else,
  * from the latest input before it (or from the start of the step). That is the engine's own time, whatever the pace of the script between two inputs.
  */
-function relative({ events, inputs }, begun) {
+function relative({ events, inputs, closes = [] }, begun) {
     const made = {}
     const out = []
     for (const e of events) {
@@ -289,7 +291,13 @@ function relative({ events, inputs }, begun) {
         let base = latest ?? begun
         const text = String(e.detail).replace(/ (in|out)$/, '')
         if (e.kind === 'toast+') (made[text] ||= []).push(e.t)
-        else if (/^toast-(in|out)?$/.test(e.kind) && made[text]?.length) { base = made[text][0]; if (e.kind === 'toast-') made[text].shift() }
+        else if (/^toast-(in|out)?$/.test(e.kind) && made[text]?.length) {
+            base = made[text][0]
+            // a notice closed by its button goes out from that press, not from its own coming
+            const pressed = closes.filter(t => t <= e.t && t >= made[text][0] && e.t - t < 400).pop()
+            if (pressed !== undefined && e.kind !== 'toast-in') base = pressed
+            if (e.kind === 'toast-') made[text].shift()
+        }
         out.push([Math.round((e.t - base) * 10) / 10, e.kind, e.detail])
     }
     return out
@@ -300,15 +308,15 @@ function relative({ events, inputs }, begun) {
  * notices, the focus, the lock, and, with `shot`, the pixels of the page), each compared with the same one of the other side. `time`: the timeline is read from
  * the first input of the step (or from the load, with `fromLoad`). What is compared at the end of the step is the page as it stands.
  */
-async function step(label, sides, run, { wait = 1000, time = true, shoot = true, fromLoad = false } = {}) {
+async function step(label, sides, run, { wait = 1000, time = true, shoot = true, fromLoad = false, ignoreKinds = null } = {}) {
     const timelines = []
     for (const side of sides) {
         if (side.opening) Object.assign(side, await side.opening())
         side.snaps = {}
         const begun = fromLoad ? 0 : await side.page.evaluate(() => performance.now())
         side.at = (ms) => side.page.waitForFunction(([ms, begun]) => performance.now() >= (window.__inputs.length ? window.__inputs[0] : begun) + ms, [ms, begun], { polling: 'raf', timeout: 30000 })
-        const snap = async (name, { shot = false } = {}) => {
-            side.snaps[name] = { layers: await layersNow(side.page), notices: await noticesNow(side.page), focus: await focusNow(side.page), lock: await lockNow(side.page), shot: shot ? await side.page.screenshot({ animations: 'disabled', caret: 'hide' }) : null }
+        const snap = async (name, { shot = false, only = LAYERS } = {}) => {
+            side.snaps[name] = { layers: await layersNow(side.page, only), notices: only === LAYERS ? await noticesNow(side.page) : '', focus: await focusNow(side.page), lock: await lockNow(side.page), shot: shot ? await side.page.screenshot({ animations: 'disabled', caret: 'hide' }) : null }
         }
         await run(side.page, side, snap)
         await side.page.waitForTimeout(wait)
@@ -322,7 +330,7 @@ async function step(label, sides, run, { wait = 1000, time = true, shoot = true,
     }
     const [a, b] = sides
     if (fromLoad) note(`${TAG} · ${label} · when the first notice came, from the start of the load (told, not compared: it is the time the blocked login took to fail)`, true, `${a.name} ${a.firstEvent} ms, ${b.name} ${b.firstEvent} ms`)
-    const keep = (events) => events.filter(([, kind]) => kind !== 'bar+' && (time || kind !== 'focus'))
+    const keep = (events) => events.filter(([, kind]) => kind !== 'bar+' && !(ignoreKinds && ignoreKinds.test(kind)) && (time || kind !== 'focus'))
     // The page tells a removal one microtask after it happened (the observer's notice), and a focus at once: when a focus says «window off», the window had left before it,
     // whichever of the two lines comes first. They are put in the order they happened in, the same way on both sides.
     const inOrder = (events) => {
@@ -503,14 +511,14 @@ SCENARIOS.shell = async (mk) => {
     await step('Shell: the account panel, «Disconnect» Spotify opens the question; Escape is Cancel; again, confirm: the notice «Disconnected»', sides, async (page, side, snap) => {
         await tap(page, menu)
         await page.waitForTimeout(600)
-        await page.locator(disconnect).first().click()
+        await tap(page, disconnect)
         await page.waitForTimeout(600)
         await snap('the question', { shot: true })
         await page.keyboard.press('Escape')
         await page.waitForTimeout(300)
         await snap('after Escape')
         if (await page.locator(disconnect).count() === 0) { await tap(page, menu); await page.waitForTimeout(500) }
-        await page.locator(disconnect).first().click()
+        await tap(page, disconnect)
         await page.waitForTimeout(600)
         await tap(page, '#confirm-modal [data-action="confirm"]')
         await page.waitForTimeout(1000)
@@ -573,14 +581,14 @@ SCENARIOS.progress = async (mk, servers) => {
     await step('the bar: a slow change of screen to the albums, and right after it to the playlists', sides, async (page, side, snap) => {
         await page.evaluate(() => window.router.navigate('/albums'))
         await side.at(900)
-        await snap('during the first', { shot: false })
+        await snap('during the first', { only: '#globalProgress' })
         await side.at(2300)
-        await snap('between')
+        await snap('between', { only: '#globalProgress' })
         await page.evaluate(() => window.router.navigate('/playlists'))
         await page.waitForTimeout(900)
-        await snap('during the second', { shot: false })
+        await snap('during the second', { only: '#globalProgress' })
         await page.waitForTimeout(2600)
-    }, { wait: 300, shoot: false })
+    }, { wait: 300, shoot: false, ignoreKinds: /^toast/ })
     return sides
 }
 

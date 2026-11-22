@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 11:33] step — F83 onda 8b: a janela de pergunta com campo começa com o texto em atributo, como a à mão (achado da prova no WebKit)
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- **Achado da prova no navegador (WebKit com iPhone 14, servidores de desenvolvimento, `prompt` com texto inicial):** a janela à mão deixava o texto inicial **selecionado** quando o campo ganhava o foco; a nova, com o campo do React (`defaultValue`), deixava o cursor no fim. Causa: o motor à mão escrevia o texto como o atributo `value` (o valor «não sujo»: o WebKit o seleciona ao focar), e o React escreve a propriedade. O dourado do jsdom não o via (o jsdom não seleciona ao focar). Chromium: sem diferença nos dois lados.
+- `ui/dialogs/InputWindow.tsx`: o campo escreve `value` e `autofocus` como atributos e ouve o evento nativo `input` (o `onChange` do React compara com o valor que viu no começo e não ouviria um campo esvaziado a partir de um texto que ele nunca escreveu), tudo por uma `ref` estável. Os 44 casos de `engines.sameAsBefore` e de `dialogs.dismiss` seguem verdes.
+- `scripts/bundle-budget.json`: o principal foi a 195.608 B (+33 B) e o teto de 195.975 B para 196.010 B (402 B de folga); o que vem depois da primeira tela, 235.445 B; `background` fica em 58.100 B (484 B de folga sobre a necessidade de 57.616 B).
+
+
 ## [2026-11-22 11:04] step — F83 onda 8b: os casos das lojas de avisos e de barra, o seletor sem aviso do lint e a seção 21 das lições
 
 **Branch:** claude/f83-wave-8b-window-engines
