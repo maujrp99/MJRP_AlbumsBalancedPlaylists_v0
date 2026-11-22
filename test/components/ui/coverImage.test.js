@@ -13,7 +13,9 @@ vi.mock('../../../public/js/services/AlbumLoader.js', () => ({
 }))
 
 import { coverImage, watchCovers, COVER_STAND_IN } from '../../../public/js/components/ui/coverImage.js'
-import { AlbumCardRenderer } from '../../../public/js/components/ui/AlbumCardRenderer.js'
+import { act, createElement } from 'react'
+import { createRoot } from 'react-dom/client'
+import { CompactCard } from '../../../public/js/screens/albums/AlbumCard'
 import { Card } from '../../../public/js/components/ui/Card.js'
 import { AlbumCascade } from '../../../public/js/components/common/AlbumCascade.js'
 import { DiscographyRenderer } from '../../../public/js/views/renderers/DiscographyRenderer.js'
@@ -22,6 +24,14 @@ import { appFiles, importsOf, read } from '../../architecture/support/sourceImpo
 const GOOD = 'https://covers.example/album/300x300.jpg'
 const fail = (img) => img.dispatchEvent(new Event('error'))
 const isStandIn = (img) => img.getAttribute('src') === COVER_STAND_IN && img.dataset.coverStandIn === 'true'
+globalThis.IS_REACT_ACT_ENVIRONMENT = true
+
+/** The album card of the albums screen (React, F83 wave 5a: it was AlbumCardRenderer), drawn in the page. */
+const drawCard = async (album) => {
+    const host = document.body.appendChild(document.createElement('div'))
+    await act(async () => { createRoot(host).render(createElement(CompactCard, { album, act: () => { } })) })
+    return host
+}
 const coversIn = (root) => [...root.querySelectorAll('img[data-cover]')]
 
 describe('coverImage: the one way an album cover is drawn', () => {
@@ -120,13 +130,13 @@ describe('every place that draws an album cover uses it', () => {
 
     const album = (extra = {}) => ({ id: 'a1', title: 'Animals', artist: 'Pink Floyd', year: 1977, tracks: [], ...extra })
 
-    it('the album card: no address, then an address that fails', () => {
-        const without = AlbumCardRenderer.renderVisualHeader(album())
+    it('the album card: no address, then an address that fails', async () => {
+        const without = await drawCard(album())
         expect(coversIn(without)).toHaveLength(1)
         expect(isStandIn(coversIn(without)[0])).toBe(true)
 
-        document.body.appendChild(AlbumCardRenderer.renderVisualHeader(album({ coverUrl: GOOD })))
-        const img = coversIn(document.body)[0]
+        const withAddress = await drawCard(album({ coverUrl: GOOD }))
+        const img = coversIn(withAddress)[0]
         expect(img.getAttribute('src')).toBe(GOOD)
         fail(img)
         expect(isStandIn(img)).toBe(true)
@@ -177,10 +187,10 @@ describe('every place that draws an album cover uses it', () => {
 
     it('the files that draw an album cover import the helper, and no file writes an inline error handler', () => {
         const drawers = [
-            'components/ui/AlbumCardRenderer.js', 'components/ui/Card.js', 'components/common/AlbumCascade.js',
+            'screens/albums/AlbumCard.tsx', 'components/ui/Card.js', 'components/common/AlbumCascade.js',
             'components/ViewAlbumModal.js', 'views/renderers/DiscographyRenderer.js'
         ]
-        const withoutTheHelper = drawers.filter(file => !importsOf(file).some(specifier => /(^|\/)coverImage\.js$/.test(specifier)))
+        const withoutTheHelper = drawers.filter(file => !importsOf(file).some(specifier => /(^|\/)(coverImage\.js|CoverImage)$/.test(specifier)))
         const inlineHandlers = appFiles().filter(file => /onerror\s*[:=]\s*["'`]/i.test(read(file)))
 
         expect(withoutTheHelper).toEqual([])

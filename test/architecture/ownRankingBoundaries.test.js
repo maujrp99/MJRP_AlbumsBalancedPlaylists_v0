@@ -49,7 +49,7 @@ describe('own ranking boundaries', () => {
     })
 
     it('the screen of the series does not reach the ranking repository or the ranking service', () => {
-        const screen = [...listJs('components/series'), ...listJs('components/ui'), 'views/SeriesView.js', ...listJs('views/helpers')]
+        const screen = [...listJs('components/series'), ...listJs('components/ui'), ...listJs('screens/albums'), 'ui/FilterToolbar.tsx']
         const forbidden = /(UserRankingRepository|repositories\/userRankings|services\/ranking\/)/
         expect(offenders(screen, specifier => forbidden.test(specifier))).toEqual([])
     })
@@ -68,8 +68,7 @@ describe('own ranking boundaries', () => {
         // escapeHtml belongs to an HTML template. These files draw with text nodes or hand data on,
         // so escaping there shows "&amp;" on screen or stores it (UAT-180).
         const plain = ['components/ranking/UserRankModal.js', 'components/series/SeriesEditModal.js',
-            'screens/start/StartController.ts', 'controllers/SeriesController.js',
-            'views/helpers/SeriesComponentFactory.js', 'views/helpers/SeriesViewUpdater.js']
+            'screens/start/StartController.ts', 'controllers/SeriesController.js', 'screens/albums/Albums.tsx', 'screens/albums/SeriesGroups.tsx']
         expect(plain.filter(file => /escapeHtml\s*\(/.test(read(file)))).toEqual([])
     })
 })

@@ -10,7 +10,7 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../../ui/Icon'
-import { LegacyFilterToolbar, type FilterToolbarProps } from '../../react-bridge/legacy/FilterToolbar'
+import { FilterToolbar, type FilterToolbarProps } from '../../ui/FilterToolbar'
 import { useLocale } from '../../react-bridge/useLocale'
 import { usePhone } from '../../react-bridge/usePhone'
 import { useStore } from '../../react-bridge/useStore'
@@ -197,7 +197,7 @@ export function SavedPlaylists({ controller }: { controller: SavedPlaylistsContr
                     </h1>
                 </div>
             </header>
-            <LegacyFilterToolbar toolbar={toolbarOf(list.groups, filters, change, () => { void controller.reload() })} />
+            <div><FilterToolbar {...toolbarOf(list.groups, filters, change, () => { void controller.reload() })} /></div>
             <div id="mainContent" className="fade-in" style={{ animationDelay: '0.1s' }}>
                 <div className="saved-playlists-status"><Status list={list} firstLoad={firstLoad} onRetry={() => { void controller.reload() }} /></div>
                 <div className="series-groups space-y-8">

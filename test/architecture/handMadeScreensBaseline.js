@@ -1,4 +1,10 @@
 /**
+ * (2026-11-21, wave 5a: the albums screen went to React, and these left the list in the commit that deleted them: views/SeriesView.js, views/helpers/*,
+ * views/albums/*, components/series/{SeriesHeader,SeriesEmptyState,SeriesEventHandler,SeriesGridRenderer,SeriesPhoneSheets}.js, components/ui/{AlbumCardRenderer,
+ * AlbumPhoneCard,Pager,FilterToolbar,FilterSheet,LoadMoreButton}.js, the two skeletons, components/base/Component.js and utils/VirtualScrollObserver.js (3.4xx
+ * lines). Left in the list, with their reasons: components/series/SeriesModals.js and SeriesEditModal.js (they hold the one album picker), components/ranking/*
+ * (the track table and the ranking window, shared with the album window of the inventory) and components/ViewAlbumModal.js: wave 5b and wave 6.)
+ *
  * (2026-11-21, wave 4: the Start screen (the old Home) went to React, and these left the list in the commit that deleted them: views/HomeView.js
  * and components/home/{HomeDock,HomeEqualizer,HomePasteList,StagingAreaController}.js (1.054 lines); the controller moved to
  * screens/start/StartController.ts. views/renderers/DiscographyRenderer.js lost the Start card (its `stage` form) and went from 111 to 81 lines.
@@ -48,7 +54,6 @@ export const HAND_MADE = {
     'components/album-picker/AlbumPickerPanel.js': 109,
     'components/album-picker/pickerParts.js': 89,
     'components/albumWindowSources.js': 40,
-    'components/base/Component.js': 64,
     'components/blend/BlendIngredientsPanel.js': 428,
     'components/blend/BlendRecipeCard.js': 174,
     'components/blend/BlendSeriesPhonePicker.js': 141,
@@ -63,26 +68,13 @@ export const HAND_MADE = {
     'components/ranking/UserRankModal.js': 508,
     'components/ranking/rankWindowPhone.js': 221,
     'components/series/SeriesEditModal.js': 227,
-    'components/series/SeriesEmptyState.js': 47,
-    'components/series/SeriesEventHandler.js': 353,
-    'components/series/SeriesGridRenderer.js': 321,
-    'components/series/SeriesHeader.js': 80,
     'components/series/SeriesModals.js': 115,
-    'components/series/SeriesPhoneSheets.js': 100,
-    'components/ui/AlbumCardRenderer.js': 263,
-    'components/ui/AlbumPhoneCard.js': 104,
     'components/ui/BaseModal.js': 178,
     'components/ui/Card.js': 341,
-    'components/ui/FilterSheet.js': 129,
-    'components/ui/FilterToolbar.js': 291,
-    'components/ui/LoadMoreButton.js': 26,
-    'components/ui/Pager.js': 250,
     'components/ui/Sheet.js': 173,
     'components/ui/coverImage.js': 67,
     'components/ui/modals/ConfirmModal.js': 67,
     'components/ui/modals/InputModal.js': 113,
-    'components/ui/skeletons/AlbumSkeleton.js': 30,
-    'components/ui/skeletons/SeriesSkeleton.js': 41,
     'components/ui/windowsHoldThePage.js': 58,
     'services/DialogService.js': 147,
     'utils/SafeDOM.js': 237,
@@ -91,12 +83,6 @@ export const HAND_MADE = {
     'views/BlendingMenuView.js': 477,
     'views/InventoryPhoneSheets.js': 226,
     'views/InventoryView.js': 693,
-    'views/SeriesView.js': 254,
-    'views/albums/AlbumsGridRenderer.js': 129,
-    'views/albums/AlbumsScopedRenderer.js': 233,
-    'views/helpers/SeriesComponentFactory.js': 177,
-    'views/helpers/SeriesModalsManager.js': 70,
-    'views/helpers/SeriesViewUpdater.js': 180,
     'views/playlists/PlaylistsExport.js': 116,
     'views/renderers/DiscographyRenderer.js': 81,
     'views/renderers/InventoryCardValue.js': 122,

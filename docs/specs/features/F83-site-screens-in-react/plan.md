@@ -35,6 +35,8 @@ Fluxo: o roteador casa a rota → a fábrica da rota carrega a tela (`import()`)
 
 **As ondas** (proposta § 15): 0 a base e o canário («Coming soon»); 1 playlists guardadas; 2 edição das playlists (a segunda medição e o ponto de revisão com o MJRP, antes de a moldura migrar); 3 a moldura; 4 Start; 5 séries e álbuns; 6 inventário; 7 Blend; 8 fecho. Cada onda é um ramo próprio, entra pelo trem e vai sozinha para produção.
 
+**A onda 5 foi dividida (decisão do orquestrador em 2026-11-21, revisável; mapa em `map-wave-5-albums.md`):** a **5a** é a tela de álbuns em si (séries, grade e lista, filtros, busca, páginas, contagens, os estados da carga e os avisos de falha, os estados vazios, o layout do celular; `ui/FilterToolbar.tsx`, `screens/albums/`), com a janela de editar série, a de classificar e a tabela de faixas / janela do álbum **à mão atrás de `react-bridge/legacy/`** (listadas em `BRIDGE_USES`); a **5b** é a dessas janelas (editar série com o painel do seletor, classificar com o arrastar, a tabela de faixas junto com a janela do álbum do inventário) e **não** foi começada.
+
 **Em cada onda, na ordem:** o mapa da tela (pedaços, estados a conferir, os `set` das stores que ela lê, o que o controlador faz no DOM) → as peças de `ui/` que faltam → a tela → os testes levados (muda o andaime, não a asserção) → os textos pelo dicionário da F81 → a prova de HTML igual → a tela antiga e os testes dela apagados → a reconferência visual → o MJRP usa a tela com a conta dele. Um defeito achado ondas depois é consertado à frente (proposta § 9.4).
 
 ## UI/UX Design (if the feature touches a screen)

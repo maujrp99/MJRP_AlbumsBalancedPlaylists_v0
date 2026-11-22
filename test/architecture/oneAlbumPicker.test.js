@@ -58,7 +58,8 @@ describe('one classifier says the type of an album', () => {
     it('no other module names an album type: the screens use the picker rules', () => {
         const namesAType = /['"]Uncategorized['"]|\.type\s*[!=]==?\s*['"](?:Album|EP|Single|Live|Compilation)['"]/
 
-        expect(filesWith(namesAType, [CLASSIFIER])).toEqual([])
+        // the dictionaries say the heading «Uncategorized» of the albums that belong to no series: a heading, not a classification
+        expect(filesWith(namesAType, [CLASSIFIER]).filter(file => !file.startsWith('i18n/'))).toEqual([])
     })
 
     it('the old classifiers are gone', () => {

@@ -10,9 +10,11 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 // the login of the app is Firebase's: the shell is drawn without it here (what is under test is how the shell writes a person's name and picture)
 vi.mock('../../public/js/services/auth/signIn.js', async () => ({ authService: (await import('../support/shellScenarios.js')).stand.login }))
 
-import { AlbumCardRenderer } from '../../public/js/components/ui/AlbumCardRenderer.js'
+import { act, createElement } from 'react'
+import { createRoot } from 'react-dom/client'
+import { CompactCard, ExpandedCard } from '../../public/js/screens/albums/AlbumCard'
+import { SeriesGroups } from '../../public/js/screens/albums/SeriesGroups'
 import { Album } from '../../public/js/models/Album.js'
-import { renderSeriesHeader } from '../../public/js/views/albums/AlbumsScopedRenderer.js'
 import { InventoryGridRenderer } from '../../public/js/views/renderers/InventoryGridRenderer.js'
 import { Router } from '../../public/js/router.js'
 import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
@@ -20,7 +22,7 @@ import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSerie
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
 import { startOn } from '../support/renderShell'
 import { DiscographyRenderer } from '../../public/js/views/renderers/DiscographyRenderer.js'
-import FilterToolbar from '../../public/js/components/ui/FilterToolbar.js'
+import { FilterToolbar } from '../../public/js/ui/FilterToolbar'
 
 /** Text that would run as HTML if written into the page as it is. */
 const TEXT = '<img src=x onerror="window.__xss=1">'
@@ -29,6 +31,15 @@ const QUOTED = '"><img src=x onerror="window.__xss=1"> \'x'
 const AMPERSAND = 'Jimmy Page & Robert Plant'
 
 let host
+globalThis.IS_REACT_ACT_ENVIRONMENT = true
+
+/** Draw a React element in the page, as the albums screen does (the cards and the series header are React since F83 wave 5a). */
+const drawReact = async (element) => {
+    await act(async () => { createRoot(host).render(element) })
+    return host
+}
+const noop = () => { }
+const groupActions = { retry: noop, loadMore: noop, edit: noop, remove: noop, more: noop }
 
 /** Draw an HTML string or a node in the page, as the screens do. */
 const draw = (rendered) => {
@@ -64,33 +75,39 @@ describe('text from outside is shown as text', () => {
         ...overrides
     })
 
-    it('album card, compact and expanded', () => {
-        draw(AlbumCardRenderer.renderCompact(album()))
+    it('album card, compact and expanded', async () => {
+        await drawReact(createElement(CompactCard, { album: album(), act: noop }))
         expectOnlyText(host, TEXT)
         expect(host.querySelector('h3').textContent).toBe(TEXT)
 
-        draw(AlbumCardRenderer.renderExpanded(album(), 0))
+        await drawReact(createElement(ExpandedCard, { album: album(), index: 0, act: noop }))
         expectOnlyText(host, TEXT)
     })
 
-    it('album card keeps a name with & as it is', () => {
-        draw(AlbumCardRenderer.renderCompact(album({ title: AMPERSAND, artist: AMPERSAND })))
+    it('album card keeps a name with & as it is', async () => {
+        await drawReact(createElement(CompactCard, { album: album({ title: AMPERSAND, artist: AMPERSAND }), act: noop }))
         expect(host.querySelector('h3').textContent).toBe(AMPERSAND)
         expect(host.textContent).not.toContain('&amp;')
     })
 
     // the track row and the card of a playlist are React (F83 wave 2): test/screens/playlists/outsideText.test.tsx
 
-    it('series header: the name and the id on the buttons', () => {
-        draw(renderSeriesHeader({ id: QUOTED, name: TEXT }, 3))
+    // the header of a series is the one of its group on the albums screen (it takes the albums of the series to be drawn at all)
+    const groupOf = (series) => createElement(SeriesGroups, {
+        albums: [{ id: 'a1', title: 'Quiet', artist: 'Quiet', seriesIds: [series.id], tracks: [], getTracks: () => [] }], seriesList: [series], scope: 'ALL', layout: 'grid',
+        context: { searchQuery: '', filters: {} }, isLoading: false, seriesStates: null, expandedSeriesIds: [], phone: false, act: noop, actions: groupActions
+    })
+
+    it('series header: the name and the id on the buttons', async () => {
+        await drawReact(groupOf({ id: QUOTED, name: TEXT }))
         expectOnlyText(host, TEXT)
         expect(host.querySelector('h2').textContent).toBe(TEXT)
         expect(host.querySelector('[data-action="edit-series"]').dataset.seriesId).toBe(QUOTED)
         expect(host.querySelector('[data-action="delete-series"]').dataset.seriesId).toBe(QUOTED)
     })
 
-    it('series header keeps a name with & as it is', () => {
-        draw(renderSeriesHeader({ id: 's1', name: AMPERSAND }, 1))
+    it('series header keeps a name with & as it is', async () => {
+        await drawReact(groupOf({ id: 's1', name: AMPERSAND }))
         expect(host.querySelector('h2').textContent).toBe(AMPERSAND)
     })
 
@@ -189,10 +206,12 @@ describe('text from outside is shown as text', () => {
         expect(host.querySelector('img').getAttribute('src')).toBe(QUOTED)
     })
 
-    it('filter list: an artist name with quotes is the value of its option', () => {
-        const toolbar = new FilterToolbar({ container: host, props: {} })
+    it('filter list: an artist name with quotes is the value of its option', async () => {
         const name = 'The "Quoted" <b> & Sons'
-        draw(toolbar.renderFilterGroup({ id: 'artist', label: 'All artists', value: 'all', options: [{ value: name, label: name }] }))
+        await drawReact(createElement(FilterToolbar, {
+            searchQuery: '', onSearch: noop, sortOptions: [], currentSort: '', onSort: noop,
+            filterGroups: [{ id: 'artist', label: 'All artists', value: 'all', onChange: noop, options: [{ value: name, label: name }] }]
+        }))
 
         const option = host.querySelectorAll('option')[1]
         expect(option.value).toBe(name)

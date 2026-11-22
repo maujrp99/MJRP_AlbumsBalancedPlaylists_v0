@@ -39,7 +39,6 @@ const WRITTEN_IN_THE_CODE = {
     // the same trail in React: the paths are written in ui/Breadcrumb.tsx (playlistsTrail) and the callers
     'ui/Breadcrumb.tsx': ['crumb.path'],
     // an option given by the view, '/home' in the one caller
-    'components/series/SeriesEmptyState.js': ['this.ctaHref'],
     // a blob: address made in the line above, for the download of the person's own playlists
     'views/playlists/PlaylistsExport.js': ['url'],
     // the page's own address with another host name (utils/localAddress.js)

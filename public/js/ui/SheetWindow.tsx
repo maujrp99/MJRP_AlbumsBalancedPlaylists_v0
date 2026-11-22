@@ -16,6 +16,7 @@ interface SheetHandle {
     footer: HTMLElement | null
     close: () => void
     isOpen: () => boolean
+    setTitle: (text: string) => void
 }
 
 export interface SheetRequest {
@@ -50,7 +51,7 @@ interface Shown {
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
-export function useSheetWindow(): { show: (request: SheetRequest) => void; close: () => void; isOpen: () => boolean; layer: ReactNode } {
+export function useSheetWindow(): { show: (request: SheetRequest) => void; close: () => void; isOpen: () => boolean; setTitle: (text: string) => void; layer: ReactNode } {
     const [shown, setShown] = useState<Shown | null>(null)
     const current = useRef<SheetHandle | null>(null)
 
@@ -63,8 +64,14 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
             closeLabel: request.closeLabel,
             onClose: () => {
                 if (current.current === sheet) current.current = null
-                setShown(previous => (previous?.sheet === sheet ? null : previous))
                 request.onClose?.()
+                // the hand-made sheet slides away with what it held still in it: what React draws in it goes when the sheet leaves the page
+                // the screen draws again at once (it may show something because the sheet is closed); what is inside stays until the slide ends
+                setShown(previous => (previous?.sheet === sheet ? { ...previous } : previous))
+                const letGo = () => setShown(previous => (previous?.sheet === sheet ? null : previous))
+                let looks = 0
+                const waitForTheSlide = () => { if (sheet.element.isConnected && looks++ < 40) window.setTimeout(waitForTheSlide, 40); else letGo() }
+                waitForTheSlide()
             }
         })
         if (request.className) sheet.element.classList.add(...request.className.split(' '))
@@ -74,10 +81,12 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
 
     const close = useCallback(() => current.current?.close(), [])
     const isOpen = useCallback(() => Boolean(current.current?.isOpen()), [])
+    /** The title of the open sheet as a text (a count that changes while it is open). */
+    const setTitle = useCallback((text: string) => { current.current?.setTitle(text) }, [])
 
     // What is drawn inside is in the body now: the first thing to act on gets the focus, as the motor does when it has content.
     useLayoutEffect(() => {
-        if (!shown?.focusFirst) return
+        if (!shown?.focusFirst || !shown.sheet.isOpen()) return
         const first = shown?.sheet.body.querySelector<HTMLElement>(FOCUSABLE) ?? shown?.sheet.footer?.querySelector<HTMLElement>(FOCUSABLE)
         first?.focus({ preventScroll: true })
     }, [shown])
@@ -91,5 +100,5 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
             {shown.titleExtra && shown.title ? createPortal(shown.titleExtra(), shown.title) : null}
         </>
     ) : null
-    return { show, close, isOpen, layer }
+    return { show, close, isOpen, setTitle, layer }
 }
