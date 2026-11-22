@@ -46,7 +46,8 @@ function describe(node) {
     if (node.nodeType === 3) return node.textContent.replace(/ /g, '⍽').replace(/\s+/g, ' ')
     if (node.nodeType !== 1) return ''
     const tag = node.tagName.toLowerCase()
-    const inner = [...node.childNodes].map(describe).join('')
+    // what a text area holds is its value (read below), not the text a browser or React may put inside it
+    const inner = tag === 'textarea' ? '' : [...node.childNodes].map(describe).join('')
     const state = tag === 'input' && node.type === 'radio' ? ` [checked=${node.checked}]` : tag === 'input' ? ` [held=${node.value}]` : tag === 'textarea' ? ` [held=${node.value}]` : tag === 'select' ? ` [chosen=${node.value}]` : ''
     const whole = `<${tag}${attributesOf(node)}>${inner}</${tag}>${state}`
     return tag === 'svg' ? `<svg class="${node.getAttribute('class')}" shape="${fingerprint(whole.replace(/>\s+</g, '><'))}"/>` : whole
@@ -65,7 +66,8 @@ export function normalize(element) {
     })
     copy.querySelectorAll('[data-legacy-host]').forEach(host => host.replaceWith(...host.childNodes))
     copy.normalize()
-    return describe(copy).replace(/>\s+</g, '><').trim()
+    // the state of a field is written after its tag: the white space between that and the next tag is not drawn
+    return describe(copy).replace(/>\s+</g, '><').replace(/(\[(?:held|checked|chosen)=[^\]]*\]) +</g, '$1<').trim()
 }
 
 /** What stands in `body` over the page (windows, sheets, notices), in the order it was put there. */

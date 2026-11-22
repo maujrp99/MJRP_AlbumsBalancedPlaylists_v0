@@ -2,10 +2,13 @@
  * UAT-244 (F52) and UAT-245 (F69): the album window says when the ratings or the Spotify
  * popularity of the album failed, and asks again through the album load when the person presses
  * «Try again». The window talks to the load only through `sources` (read, ask, watch).
+ *
+ * Taken over from test/components/ViewAlbumModal.failedSources.test.js (F83 wave 6b): the window is React now, so the scaffold changes (every
+ * change goes through `act`), never the assertion.
  */
 import { describe, it, expect, afterEach, vi } from 'vitest'
-import { showViewAlbumModal } from '../../public/js/components/ViewAlbumModal.js'
-import { describeRatings } from '../../public/js/models/ratingsState.js'
+import { show, press, run, closeWindows } from '../../support/windowHost'
+import { describeRatings } from '../../../public/js/models/ratingsState.js'
 
 const album = {
     id: 'dire-straits_brothers-in-arms', title: 'Brothers In Arms', artist: 'Dire Straits', year: 1985,
@@ -27,7 +30,7 @@ const loadWith = (first) => {
 
 const open = async (status) => {
     const sources = loadWith(status)
-    const overlay = await showViewAlbumModal(album, { sources })
+    const { overlay } = await show(album, { sources })
     return { overlay, sources }
 }
 
@@ -42,7 +45,7 @@ describe('describeRatings: one line per state of the ratings of an album', () =>
 })
 
 describe('the album window and the sources that failed', () => {
-    afterEach(() => document.querySelectorAll('.modal-overlay').forEach(node => node.remove()))
+    afterEach(closeWindows)
 
     it('UAT-244: the ratings that failed show «did not answer» and «Try again» asks for the acclaim again', async () => {
         const { overlay, sources } = await open({ ratings: 'failed', popularity: 'done' })
@@ -51,7 +54,7 @@ describe('the album window and the sources that failed', () => {
         expect(notice.textContent).toContain('BestEverAlbums did not answer.')
         const button = notice.querySelector('button')
         expect(button.textContent).toBe('Try again')
-        button.click()
+        await press(button)
         expect(sources.ask).toHaveBeenCalledWith(album.id, 'acclaim')
         expect(overlay.querySelector('.popularity-notice')).toBeNull()
     })
@@ -61,7 +64,7 @@ describe('the album window and the sources that failed', () => {
         const notice = overlay.querySelector('.popularity-notice')
 
         expect(notice.textContent).toContain('Spotify did not answer.')
-        notice.querySelector('button').click()
+        await press(notice.querySelector('button'))
         expect(sources.ask).toHaveBeenCalledWith(album.id, 'popularity')
         expect(overlay.querySelector('.ratings-notice')).toBeNull()
     })
@@ -79,7 +82,7 @@ describe('the album window and the sources that failed', () => {
 
     it('while the ratings are asked again the window says so, instead of dropping the line', async () => {
         const { overlay, sources } = await open({ ratings: 'failed', popularity: 'done' })
-        sources.change({ ratings: 'loading', popularity: 'done' })
+        await run(() => sources.change({ ratings: 'loading', popularity: 'done' }))
         const notice = overlay.querySelector('.ratings-notice')
 
         expect(notice.textContent).toContain('Asking BestEverAlbums for ratings…')
@@ -88,18 +91,18 @@ describe('the album window and the sources that failed', () => {
 
     it('when the load changes the state the window draws it again, and stops watching when it closes', async () => {
         const { overlay, sources } = await open({ ratings: 'failed', popularity: 'done' })
-        sources.change({ ratings: 'done', popularity: 'done' })
+        await run(() => sources.change({ ratings: 'done', popularity: 'done' }))
         expect(overlay.querySelector('.ratings-notice')).toBeNull()
 
-        sources.change({ ratings: 'done', popularity: 'failed' })
+        await run(() => sources.change({ ratings: 'done', popularity: 'failed' }))
         expect(overlay.querySelector('.popularity-notice')).not.toBeNull()
 
-        overlay.querySelector('.modal-footer button').click()
+        await press(overlay.querySelector('.modal-footer button'))
         expect(sources.listeners.size).toBe(0)
     })
 
     it('a window with no load behind it (no sources) shows no line', async () => {
-        const overlay = await showViewAlbumModal(album)
+        const { overlay } = await show(album)
         expect(overlay.querySelector('.ratings-notice, .popularity-notice')).toBeNull()
     })
 })

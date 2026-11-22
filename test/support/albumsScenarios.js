@@ -191,12 +191,12 @@ const toasts = {
 export const toastModule = { default: toasts, toast: toasts }
 
 export const albumWindowModule = {
-    showViewAlbumModal: (album, options) => {
+    openAlbumWindow: (album, options) => {
         const read = options?.sources?.read?.()
         outside.push(['albumWindow', album.id, read ? JSON.stringify({ album: read.album?.id, ratings: read.ratings, popularity: read.popularity }) : 'no sources'])
     }
 }
-export const inventoryModule = { InventoryAddModal: { open: (album) => { outside.push(['inventoryAdd', album.id]) } } }
+export const inventoryModule = { openAddWindow: (album) => { outside.push(['inventoryAdd', album.id]) } }
 /** The windows to edit and delete a series and to rank the tracks (F83 wave 5b: React, screens/albums/useAlbumWindows) are a stand-in that writes down what the screen asked of them. */
 export const windowsStandIn = {
     openEdit: (id) => { outside.push(['editSeries', id]) },

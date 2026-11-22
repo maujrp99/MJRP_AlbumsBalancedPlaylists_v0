@@ -3,6 +3,20 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 04:47] step — F83, onda 6b: as janelas do álbum, de editar e de adicionar em React (TASK-23c)
+
+**Branch:** claude/f83-wave-6b-inventory-windows
+
+- As janelas em React (TASK-23c): `ui/albumWindow/` (`AlbumWindow.tsx`, `openAlbumWindow.tsx`, `sources.ts`), `ui/tracks/` (`TracksTable.tsx`, `TracksTabs.tsx`, `TracksComparison.tsx`), `ui/inventoryItem/` (`ItemForm.tsx` partilhado, `EditWindow.tsx`, `AddWindow.tsx`, `ValueSection.tsx`, `BuyLinks.tsx`, `money.ts`, `inventoryWindows.tsx`) e `ui/windowLayer.tsx` (as janelas pedidas de código que não é componente, fechadas quando a tela sai). As janelas ficam em `ui/` e não em `screens/` porque o `lazyOnlyAtTheRoute` só deixa `import()` de `screens/` no `app.js`; a janela de adicionar recebe `add` (o serviço do inventário) de quem a abre.
+- O cartão aberto de álbuns usa `ui/tracks/TracksTable.tsx` (mesmo estado de ordem); a comparação da janela continua ordenando na mão (duas ordens que continuam duas).
+- Saem por `git rm`: `components/ViewAlbumModal.js`, `InventoryValueSection.js`, `albumWindowSources.js`, `ranking/{TracksRankingComparison,TracksTable,TracksTabs}.js`, `InventoryEditModal.js`, `InventoryAddModal.js` (1.698 linhas, 8 arquivos), `react-bridge/legacy/TracksTable.tsx` e `AlbumWindows.ts`; a lista `BRIDGE_USES` perde `AlbumCard.tsx`, `albumActions.ts` e `inventoryActions.ts`; `handMadeScreensBaseline` de 32 para 24 arquivos; `complexityAllowlist` perde `InventoryEditModal.js:open` e `TracksTable.js:renderRow`.
+- Muda de propósito: a janela do álbum FECHA quando a tela sai (a antiga ficava sobre a próxima); `closeAllWindows()` no `dispose` das duas telas.
+- Defeitos de hoje mantidos (e gravados no dourado): dois avisos de sucesso ao editar; BRL inventada para item sem moeda; «Add to Inventory» apertável duas vezes; «Paid» com «$» para EUR e GBP; sem Escape nem fundo em editar e adicionar; sem foco nas janelas; o foco que cai para a página depois de apertar uma aba ou uma coluna e depois de a linha do valor ser refeita no celular.
+- Testes: `test/ui/albumWindow/AlbumWindow.sameAsBefore.test.tsx` (os 40 cenários do dourado contra a janela em React, mais 4 casos que provam que o teste acusa uma palavra, uma classe e uma chamada trocadas de propósito); os 27 casos das janelas e das tabelas levados com a mesma asserção (`test/ui/albumWindow/*`, `test/ui/tracks/*`); os 21 casos da janela que estavam em `Inventory.{statusAndSeries,values,lowestForSale}` passam sem mudar a asserção; as pedidas de janela dos testes de álbuns e de inventário agora trocam `openAlbumWindow`, `inventoryWindows` e `AddWindow` por falsos.
+- O dourado foi recapturado uma vez, ainda das janelas à mão e antes de apagá-las, com o `normalize` melhorado (o espaço entre o estado de um campo e a tag seguinte não é desenhado).
+- Textos: ≈ 120 chaves em `i18n/en/{ui,inventory,albums}.js` e as propostas em português em `i18n/pt/` (pendentes da aprovação do dono).
+
+
 ## [2026-11-22 04:28] step — F83, onda 6b: o dourado das janelas, capturado das janelas à mão
 
 **Branch:** claude/f83-wave-6b-inventory-windows
