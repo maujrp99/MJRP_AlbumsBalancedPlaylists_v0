@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 19:26] step — F83 onda 8d, 1: o ramo morto «btn» da exportação ao Apple Music sai
+
+**Branch:** claude/f83-wave-8d-closure
+
+- `handleExportToAppleMusic` (`controllers/playlistExports.js`) não escreve mais num botão que recebia (`btn`): nenhum chamador o passa desde a F90 (as três telas passam `onStatus`); saem o `progressWriter` com botão, o `giveBackButton`, o uso de `getIcon` e o de `escapeHtml`, e o caso «shows the progress on the button it was given…» de `AppleMusicExport.test`, o único que o alcançava.
+- **A rede de segurança do dono, intacta:** `test/fixtures/exportMusicKitRecording.json` byte a byte igual (sha256 914c71f2…1976) e `AppleMusicExport.recording.test` (30 casos, 264 chamadas ao MusicKit) verde sem mudar. O sensor de módulos mortos passou a acusar `components/Icons.js` (o último usuário saiu): o commit seguinte o apaga.
+
 ## [2026-11-22 19:19] step — F83 sync 5: a grade invisível por layout, a prova no navegador, o peso e o registro
 
 **Branch:** claude/f83-sync-5-lean-create-and-albums-loading

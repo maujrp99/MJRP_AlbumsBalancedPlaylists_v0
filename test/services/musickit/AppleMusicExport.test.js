@@ -252,18 +252,6 @@ describe('exporting to Apple Music (F62)', () => {
             expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Apple Music did not create 2 of 2 playlists'), expect.any(Number))
             expect(toast.success).not.toHaveBeenCalled()
         })
-
-        it('shows the progress on the button it was given and gives the button back', async () => {
-            const btn = document.createElement('button')
-            btn.innerHTML = 'Export to Apple Music'
-
-            const running = handleExportToAppleMusic({ btn })
-            expect(btn.disabled).toBe(true)
-            await running
-
-            expect(btn.disabled).toBe(false)
-            expect(btn.innerHTML).toBe('Export to Apple Music')
-        })
     })
 })
 
