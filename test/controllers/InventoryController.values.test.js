@@ -116,9 +116,10 @@ describe('InventoryController: the values (F75)', () => {
 
         it('a reading kept in the item shows at once, with its date, with nothing in the browser and nothing asked to Discogs', async () => {
             const values = valuesWith()
-            const { controller } = await open(values, withKept('wanted'))
+            const saved = kept() // one reading, one clock read: two calls of kept() could be a millisecond apart
+            const { controller } = await open(values, withKept('wanted', saved))
 
-            expect(valueOf(controller, 'wanted')).toMatchObject({ origin: 'discogs', amount: 11.2, readAt: kept().readAt })
+            expect(valueOf(controller, 'wanted')).toMatchObject({ origin: 'discogs', amount: 11.2, readAt: saved.readAt })
             expect(values.readMany).not.toHaveBeenCalled()
             expect(controller.state.value.discogsShown).toBe(true)
         })

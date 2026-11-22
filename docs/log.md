@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 15:46] step — F83 onda 8c: o caso das leituras guardadas do inventário deixa de ser intermitente
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- `test/controllers/InventoryController.values.test.js`, o caso «a reading kept in the item shows at once…»: comparava o `readAt` de duas chamadas de `kept()`, que podem cair em milissegundos diferentes (intermitente). O caso agora cria a leitura uma vez e compara com ela. Só o teste; o código do produto não mudou. Pedido do coordenador.
+
+
 ## [2026-11-22 15:46] step — F83 onda 8c: o teste da janela de editar do inventário passa os avisos
 
 **Branch:** claude/f83-wave-8c-phone-sheet
