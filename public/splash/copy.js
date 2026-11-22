@@ -35,10 +35,6 @@ const pt = {
     'h.title': 'Mergulhe nos álbuns que você ama.',
     'h.what': 'Seus álbuns do momento, numa playlist balanceada.',
     'h.para': 'Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas.',
-    // the first screen, with an account: the home of whoever comes back
-    'hi.kick': 'De volta aos discos',
-    'hi.title': 'Sua próxima série <em>começa aqui.</em>',
-    'hi.what': 'Comece por um artista ou por uma lista de álbuns, ou retome o que você guardou: suas playlists e seu inventário.',
     // the stories, one per item of the menu
     'k.start': 'Lado A · 1 — Criar', 'k.albums': 'Lado A · 2 — Álbuns', 'k.blend': 'Lado A · 3 — Blend',
     'k.playlists': 'Lado B · 1 — Playlists', 'k.inventory': 'Lado B · 2 — Inventário',
@@ -91,9 +87,6 @@ const en = {
     'h.title': 'Dig through the albums you love.',
     'h.what': 'Your albums of the moment, in one balanced playlist.',
     'h.para': 'Build series from your albums of the moment, rank your tracks and make balanced playlists.',
-    'hi.kick': 'Back to the records',
-    'hi.title': 'Your next series <em>starts here.</em>',
-    'hi.what': 'Start from an artist or a list of albums, or pick up what you kept: your playlists and your inventory.',
     'k.start': 'Side A · 1 — Create', 'k.albums': 'Side A · 2 — Albums', 'k.blend': 'Side A · 3 — Blend',
     'k.playlists': 'Side B · 1 — Playlists', 'k.inventory': 'Side B · 2 — Inventory',
     't.start': 'Begin with one artist, or a list.',

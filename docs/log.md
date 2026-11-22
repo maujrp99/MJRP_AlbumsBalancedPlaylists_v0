@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 12:04] decision — a home com conta mostra o texto aprovado («Mergulhe nos álbuns que você ama.»)
+
+**Branch:** main
+
+- MJRP: «e o copy da home, continua diferente do que aprovei no prototipo»; à pergunta «com a conta aberta, a home mostra o mesmo texto aprovado?»: «1. sim».
+- A abertura de quem entrou com a conta passa a usar as mesmas linhas da de quem não entrou (`h.kick`, `h.title`, `h.what`, `h.para`); saem as linhas `hi.*` («Sua próxima série começa aqui.»), que o agente tinha proposto. O botão continua «Criar». A regra de espaço que só valia para o título antigo sai junto.
+
 ## [2026-11-22 11:55] step — publicado em produção: «Create»/«Criar» com o «+» no menu e «Go and create!» (F91), da `c90bd45`
 
 **Branch:** main
