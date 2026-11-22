@@ -15,9 +15,9 @@ const state = vi.hoisted(() => ({ phone: false }))
 vi.mock('../../public/js/utils/isPhone.js', () => ({ isPhone: () => state.phone, onPhoneChange: () => () => { } }))
 vi.mock('../../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('../support/exportStandIns.js')).musicKitService }))
 vi.mock('../../public/js/services/AppleMusicExportService.js', async () => ({ AppleMusicExportService: (await import('../support/exportStandIns.js')).appleExportService, appleExportMessages: () => [] }))
-vi.mock('../../public/js/components/SpotifyExportModal.js', async () => {
+vi.mock('../../public/js/ui/SpotifyExportWindow.tsx', async () => {
     const m = await import('../support/exportStandIns.js')
-    return { showSpotifyExportModal: (arg: { playlists: Array<{ name: string }>; seriesName: string } | undefined) => m.stand.calls.push(['spotifyWindow', arg ? arg.playlists.map(item => item.name) : null, arg?.seriesName ?? null]) }
+    return { showSpotifyExportWindow: (arg: { playlists: Array<{ name: string }>; seriesName: string } | undefined) => m.stand.calls.push(['spotifyWindow', arg ? arg.playlists.map(item => item.name) : null, arg?.seriesName ?? null]) }
 })
 vi.mock('../../public/js/controllers/playlistExports.js', async (importOriginal) => {
     const original = await importOriginal<object>()

@@ -1,9 +1,11 @@
 /**
- * F62 (UAT-200, UAT-09) - the window of the export to Spotify says what the export did: what was
- * created (each with its link), what was not, why it stopped and what the person can do next.
- * The export service is a double here; its own rules are in test/services/spotify/SpotifyExport.test.js.
+ * F62 (UAT-200, UAT-09) - the window of the export to Spotify says what the export did: what was created (each with its link), what was not, why it stopped
+ * and what the person can do next. The export service is a double here; its own rules are in test/services/spotify/SpotifyExport.test.js.
+ *
+ * F83 wave 8a: the nine cases of the hand-made window (test/components/SpotifyExportModal.test.js), carried with the same assertions; what changed is the
+ * scaffold (the window is React now: it is opened the way a screen opens it, and a press is told to React: test/support/spotifyWindowHost.js).
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 vi.mock('../../public/js/services/SpotifyExportService.js', () => ({ SpotifyExportService: { exportPlaylists: vi.fn() } }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', () => ({ SpotifyAuthService: { login: vi.fn() } }))
@@ -12,34 +14,28 @@ vi.mock('../../public/js/components/Toast.js', () => {
     return { default: toast, toast }
 })
 
-import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
 import { SpotifyExportService } from '../../public/js/services/SpotifyExportService.js'
 import { SpotifyAuthService } from '../../public/js/services/SpotifyAuthService.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
+import { openSpotifyWindow, closeWindows, windowBox, press, choose, settle } from '../support/spotifyWindowHost.js'
 
 const report = (over = {}) => ({
     mode: 'merge', totalTracks: 4, matchCount: 4, created: [], incomplete: [], empty: [], notCreated: [], failure: null, createdUrl: null, ...over
 })
 const made = (name, id, over = {}) => ({ name, url: `https://open.spotify.com/playlist/${id}`, tracks: 2, total: 2, alreadyThere: false, ...over })
 
-describe('SpotifyExportModal (F62)', () => {
-    let modal
-
-    const text = () => modal.container.textContent.replace(/\s+/g, ' ')
-    const choose = (mode) => {
-        const radio = modal.container.querySelector(`input[name="exportMode"][value="${mode}"]`)
-        radio.checked = true
-        radio.dispatchEvent(new Event('change', { bubbles: true }))
-    }
+describe('SpotifyExportWindow (F62)', () => {
+    const text = () => windowBox().textContent.replace(/\s+/g, ' ')
     const startExport = async () => {
-        modal.container.querySelector('#startExportBtn').click()
-        await vi.waitFor(() => expect(modal.container.querySelector('#startExportBtn')).toBeNull())
-        await new Promise(resolve => setTimeout(resolve, 0))
+        press(windowBox().querySelector('#startExportBtn'))
+        await vi.waitFor(() => expect(windowBox().querySelector('#startExportBtn')).toBeNull())
+        await settle(0)
     }
 
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks()
+        await closeWindows()
         document.body.innerHTML = ''
         playlistsStore.reset()
         playlistsStore.setPlaylists([
@@ -48,9 +44,10 @@ describe('SpotifyExportModal (F62)', () => {
         ], 'sA')
         albumSeriesStore.setSeries([{ id: 'sA', name: 'Road trip' }])
         albumSeriesStore.setActiveSeries('sA')
-        modal = new SpotifyExportModal()
-        modal.show()
+        await openSpotifyWindow()
     })
+
+    afterEach(async () => { await closeWindows(); document.body.innerHTML = '' })
 
     describe('before the export (UAT-09)', () => {
         it('says what each mode will create, and the text follows the mode chosen', () => {
@@ -68,12 +65,12 @@ describe('SpotifyExportModal (F62)', () => {
         it('starts one export, however many times the button is pressed', async () => {
             let finish
             SpotifyExportService.exportPlaylists.mockReturnValue(new Promise(resolve => { finish = resolve }))
-            const button = modal.container.querySelector('#startExportBtn')
+            const button = windowBox().querySelector('#startExportBtn')
 
-            button.click()
-            button.click()
+            press(button)
+            press(button)
             finish(report({ created: [made('Road trip', 'pl-1')] }))
-            await new Promise(resolve => setTimeout(resolve, 0))
+            await settle(0)
 
             expect(SpotifyExportService.exportPlaylists).toHaveBeenCalledTimes(1)
         })
@@ -90,7 +87,7 @@ describe('SpotifyExportModal (F62)', () => {
             await startExport()
 
             expect(SpotifyExportService.exportPlaylists.mock.calls[0][1]).toEqual({ mode: 'separate', name: 'Road trip' })
-            const links = [...modal.container.querySelectorAll('a.created-playlist-link')]
+            const links = [...windowBox().querySelectorAll('a.created-playlist-link')]
             expect(links.map(a => a.getAttribute('href'))).toEqual([
                 'https://open.spotify.com/playlist/pl-1', 'https://open.spotify.com/playlist/pl-2'
             ])
@@ -105,7 +102,7 @@ describe('SpotifyExportModal (F62)', () => {
 
             await startExport()
 
-            expect(modal.container.querySelector('a.created-playlist-link')).toBeNull()
+            expect(windowBox().querySelector('a.created-playlist-link')).toBeNull()
             expect(text()).toContain('Road trip')
         })
 
@@ -133,7 +130,7 @@ describe('SpotifyExportModal (F62)', () => {
             expect(text()).toContain('Road trip - Deep Cuts')
             expect(text()).not.toContain('Export Complete')
 
-            modal.container.querySelector('#reconnectSpotifyBtn').click()
+            press(windowBox().querySelector('#reconnectSpotifyBtn'))
             expect(SpotifyAuthService.login).toHaveBeenCalledTimes(1)
         })
 
@@ -148,9 +145,9 @@ describe('SpotifyExportModal (F62)', () => {
             await startExport()
             expect(text()).toContain('Spotify asked to wait 600 seconds')
             expect(text()).toContain('Export Failed')
-            expect(modal.container.querySelector('#reconnectSpotifyBtn')).toBeNull()
+            expect(windowBox().querySelector('#reconnectSpotifyBtn')).toBeNull()
 
-            modal.container.querySelector('#retryExportBtn').click()
+            press(windowBox().querySelector('#retryExportBtn'))
             await vi.waitFor(() => expect(text()).toContain('Export Complete'))
 
             expect(SpotifyExportService.exportPlaylists).toHaveBeenCalledTimes(2)

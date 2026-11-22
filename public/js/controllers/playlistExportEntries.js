@@ -9,6 +9,10 @@
  * The exports themselves (the Apple Music and the file) are playlistExports.js, moved as they were from views/playlists/PlaylistsExport.js.
  */
 
+import toast from '../components/Toast.js'
+import { albumSeriesStore } from '../stores/albumSeries.js'
+import { playlistsStore } from '../stores/playlists.js'
+
 /**
  * @typedef {Object} What what an export is given; the keys the export modules know
  * @property {unknown[]} [playlists]
@@ -20,10 +24,24 @@
  * @property {boolean} [noFolder] - Apple Music only
  */
 
-/** @param {What} [what] */
+/**
+ * The Spotify window (ui/SpotifyExportWindow.tsx) and the services behind it are asked for now, not when the screen loads. The window draws what it is
+ * given: the playlists on the edit screen, the open series, the export, the sign-in and the notice come from here.
+ * @param {What} [what]
+ */
 export async function openSpotifyExport(what = {}) {
-    const { showSpotifyExportModal } = await import('../components/SpotifyExportModal.js')
-    showSpotifyExportModal(what.playlists ? { playlists: what.playlists, seriesName: what.seriesName } : undefined)
+    const [{ showSpotifyExportWindow }, { SpotifyExportService }, { SpotifyAuthService }] = await Promise.all([
+        import('../ui/SpotifyExportWindow.tsx'),
+        import('../services/SpotifyExportService.js'),
+        import('../services/SpotifyAuthService.js')
+    ])
+    showSpotifyExportWindow(what.playlists ? { playlists: what.playlists, seriesName: what.seriesName } : undefined, {
+        playlists: () => playlistsStore.getPlaylists(),
+        seriesName: () => albumSeriesStore.getActiveSeries()?.name,
+        exportPlaylists: (playlists, options, handlers) => SpotifyExportService.exportPlaylists(playlists, options, handlers),
+        login: () => SpotifyAuthService.login(),
+        warn: (text) => toast.warning(text)
+    })
 }
 
 /** @param {What} [what] */

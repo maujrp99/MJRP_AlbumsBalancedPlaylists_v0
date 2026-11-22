@@ -80,7 +80,6 @@
 export const HAND_MADE = {
     'components/GlobalProgress.js': 80,
     'components/Icons.js': 178,
-    'components/SpotifyExportModal.js': 461,
     'components/Toast.js': 154,
     'components/navigation/signInFromLink.js': 30,
     'components/navigation/startRoute.js': 62,

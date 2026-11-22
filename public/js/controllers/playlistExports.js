@@ -1,7 +1,7 @@
 /**
  * PlaylistsExport
  * Export functionality for playlists (JSON, Apple Music); the Spotify export has its own window
- * (components/SpotifyExportModal.js)
+ * (ui/SpotifyExportWindow.tsx)
  * Part of Sprint 10 refactoring (PlaylistsView modularization)
  */
 

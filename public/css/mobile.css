@@ -757,7 +757,7 @@
     padding: 16px var(--phone-gutter-right) 20px var(--phone-gutter-left);
   }
 
-  /* 8.6 The Spotify export (components/SpotifyExportModal.js): from the bottom */
+  /* 8.6 The Spotify export (ui/SpotifyExportWindow.tsx): from the bottom */
   #spotify-export-modal {
     align-items: flex-end;
     padding: 0;

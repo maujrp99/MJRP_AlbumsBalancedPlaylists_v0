@@ -21,7 +21,8 @@ import { InventoryBridge } from '../../public/js/screens/inventory/InventoryBrid
 import { Router } from '../../public/js/router.js'
 import { Breadcrumb, playlistsTrail } from '../../public/js/ui/Breadcrumb'
 import { SeriesStep } from '../../public/js/screens/blend/SeriesStep'
-import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
+import { showSpotifyExportWindow } from '../../public/js/ui/SpotifyExportWindow'
+import { closeAllWindows } from '../../public/js/ui/windowLayer'
 import { startOn } from '../support/renderShell'
 import { PickerCard } from '../../public/js/ui/albumPicker/PickerParts'
 import { FilterToolbar } from '../../public/js/ui/FilterToolbar'
@@ -43,13 +44,6 @@ const drawReact = async (element) => {
 const noop = () => { }
 const groupActions = { retry: noop, loadMore: noop, edit: noop, remove: noop, more: noop }
 
-/** Draw an HTML string or a node in the page, as the screens do. */
-const draw = (rendered) => {
-    if (typeof rendered === 'string') host.innerHTML = rendered
-    else host.appendChild(rendered)
-    return host
-}
-
 /** Nothing was created from the text, nothing ran, and each text is on screen as it was given. */
 const expectOnlyText = (container, ...texts) => {
     // the img of the text itself; a cover drawn by the code (which may carry its own fallback) is not one
@@ -65,7 +59,8 @@ beforeEach(() => {
     delete window.__xss
 })
 
-afterEach(() => {
+afterEach(async () => {
+    await act(async () => { closeAllWindows(); await new Promise(resolve => setTimeout(resolve, 0)) })
     host.remove()
     document.body.querySelectorAll('.modal-overlay').forEach(node => node.remove())
 })
@@ -163,33 +158,35 @@ describe('text from outside is shown as text', () => {
         expect(host.querySelector('.breadcrumb-current').textContent).toBe('Playlists')
     })
 
-    it('Spotify export dialog: the playlist name, the message and the tracks not found', () => {
-        const modal = new SpotifyExportModal()
-        modal.playlistName = QUOTED
-        modal.notFoundTracks = [{ artist: TEXT, title: TEXT }]
+    it('Spotify export dialog: the playlist name, the message and the tracks not found', async () => {
+        // the window is React since F83 wave 8a (ui/SpotifyExportWindow.tsx); it draws into the end of the body, not into `host`
+        let handlers
+        let finish
+        const deps = { playlists: () => [], seriesName: () => undefined, login: noop, warn: noop, exportPlaylists: (_playlists, _options, given) => { handlers = given; return new Promise(resolve => { finish = resolve }) } }
+        const box = () => document.getElementById('spotify-export-modal')
 
-        modal.state = 'IDLE'
-        draw(modal.render())
-        expectOnlyText(host)
-        expect(host.querySelector('#playlistNameInput').value).toBe(QUOTED)
+        await act(async () => { showSpotifyExportWindow({ playlists: [{ name: 'A', tracks: [] }, { name: 'B', tracks: [] }], seriesName: QUOTED }, deps) })
+        expectOnlyText(box())
+        expect(box().querySelector('#playlistNameInput').value).toBe(QUOTED)
+
+        await act(async () => { box().querySelector('#startExportBtn').click() })
+        act(() => { handlers.onNotFound({ artist: TEXT, title: TEXT }) })
+        act(() => { handlers.onProgress('MATCHING', 0, 0, TEXT) })
+        expectOnlyText(box(), TEXT)
 
         // the end of an export: the names it created or not, the reason it stopped, the tracks not found
-        modal.state = 'DONE'
-        modal.report = {
-            mode: 'separate', totalTracks: 2, matchCount: 1,
-            created: [{ name: TEXT, url: QUOTED, tracks: 1, total: 1, alreadyThere: true }],
-            incomplete: [{ name: TEXT, url: QUOTED, tracks: 1, total: 2 }],
-            empty: [TEXT], notCreated: [TEXT],
-            failure: { kind: 'reconnect', message: TEXT }
-        }
-        draw(modal.render())
-        expectOnlyText(host, TEXT)
-        expect(host.querySelector('a.created-playlist-link')).toBeNull() // an address that is not a web address is no link
-
-        modal.progress = { current: 0, total: 0, message: TEXT }
-        modal.state = 'MATCHING'
-        draw(modal.render())
-        expectOnlyText(host, TEXT)
+        await act(async () => {
+            finish({
+                mode: 'separate', totalTracks: 2, matchCount: 1,
+                created: [{ name: TEXT, url: QUOTED, tracks: 1, total: 1, alreadyThere: true }],
+                incomplete: [{ name: TEXT, url: QUOTED, tracks: 1, total: 2 }],
+                empty: [TEXT], notCreated: [TEXT],
+                failure: { kind: 'reconnect', message: TEXT }
+            })
+            await new Promise(resolve => setTimeout(resolve, 0))
+        })
+        expectOnlyText(box(), TEXT)
+        expect(box().querySelector('a.created-playlist-link')).toBeNull() // an address that is not a web address is no link
     })
 
     it('account panel (the top menu of the computer; the phone menu is drawn in React too): the name, the e-mail and the picture address of the person (the picture is not drawn: the initial is)', async () => {

@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 09:13] step — F83 onda 8a: a janela de exportar ao Spotify em React, a última janela à mão sai
+
+**Branch:** claude/f83-wave-8a-exports
+
+- `ui/SpotifyExportWindow.tsx` (aberta por `showSpotifyExportWindow(given, deps)`, uma raiz própria no fim do `body` como a à mão; `ui/` não importa loja nem serviço: a lista da tela, a série aberta, o serviço de exportar, o login e o aviso vêm em `deps` de `controllers/playlistExportEntries.js`, que pede a janela e os dois serviços só quando se aperta o botão). `components/SpotifyExportModal.js` e o teste dele saem.
+- Igual ao de antes: 21 cenários do dourado (a página, o estado dos campos, cada nó de texto como está escrito, o foco, o que a janela pediu ao mundo) passam sem diferença; o teste acusa uma palavra, uma classe, um atributo e um espaço mudados de propósito. Os 9 casos de `SpotifyExportModal.test.js` foram levados para `test/ui/SpotifyExportWindow.test.js` com as mesmas asserções (só o andaime mudou); o caso de texto-não-é-marcação de `outsideTextIsText` passou para a janela nova. A janela é refeita inteira a cada palavra da exportação (uma `key` nova), como a à mão reescrevia o HTML: a animação e o foco se comportam como antes.
+- Defeitos mantidos (a janela à mão nunca teve): não fecha com Escape; não prende o Tab; não toma o foco ao abrir nem o devolve ao fechar; sem `role` de janela; o fundo e os botões a fecham, mas não enquanto exporta; «1 tracks» no singular em inglês (o português diz «1 faixa»); o texto de um aviso do serviço fica em inglês.
+- Textos: 38 chaves novas `spotifyWindow.*` em `i18n/en/exportWindow.js` e `i18n/pt/exportWindow.js` (o inglês byte a byte igual ao da janela à mão; o português é proposta do agente, à espera do MJRP).
+
 ## [2026-11-22 09:07] step — F83 onda 8a: a exportação ao Apple Music e ao arquivo muda de lugar, o invólucro OutputWindows.ts sai
 
 **Branch:** claude/f83-wave-8a-exports
