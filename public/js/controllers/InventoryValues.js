@@ -281,10 +281,11 @@ export class InventoryValues {
         this._showItem(item, { state: 'reading' })
         const outcome = await this.service.readItem(item, { signal: this.leaving })
         track('inventory_values_read', oneReadEvent(outcome))
-        if (outcome.reading) await this.service.keepReadings([{ item, reading: outcome.reading }])
+        const unkept = outcome.reading ? await this.service.keepReadings([{ item, reading: outcome.reading }]) : 0
         if (outcome.off) this.source = SourceState.OFF
         this._showItem(item, outcome.failure ? { state: 'failed', failure: outcome.failure } : { reading: outcome.reading })
         if (outcome.failure) this.toast.error(readFailedText(outcome.failure))
+        if (unkept > 0) this.toast.error('The value was read but could not be saved to your inventory. It shows in this browser for now.')
         if (outcome.off) this.toast.info('Discogs values are turned off on the server.')
         if (!this.leaving.aborted) this.host.changed()
     }

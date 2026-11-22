@@ -112,7 +112,7 @@ describe('the inventory screen: values (F75)', () => {
 
         it('nothing wraps: the lines that carry text are cut, with the whole text in the title', () => {
             const origin = line('written', 2).querySelector('span')
-            expect(origin.className).toContain('truncate')
+            expect(origin.querySelector('.truncate')).not.toBeNull()
             expect(origin.className).toContain('whitespace-nowrap')
             expect(origin.title).toBe('CD · written by you')
             expect(line('owned', 1).className).toContain('truncate')

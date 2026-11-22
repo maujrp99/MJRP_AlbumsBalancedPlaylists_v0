@@ -299,6 +299,7 @@ export class InventoryService {
      * when the entry carries a new one: one write for all of them, then the store. Only
      * `discogsReading` and `discogs` change; the value the person wrote is never touched.
      * @param {Array<{ id: string, reading: Object, discogs?: Object }>} entries
+     * @returns {Promise<string[]>} the ids of the items kept (an item that left, or an invalid reading, is not among them)
      * @throws when the write fails (the store is not changed)
      */
     async setReadings(entries) {
@@ -306,12 +307,14 @@ export class InventoryService {
         const repository = this.repository
         const present = new Set(this.store.getAlbums().map(item => item.id))
         const kept = entries.filter(entry => present.has(entry.id))
-        if (kept.length === 0) return
-        await repository.setReadings(kept)
-        if (repository !== this.repository) return
-        const byId = new Map(kept.map(entry => [entry.id, entry]))
+        if (kept.length === 0) return []
+        const ids = await repository.setReadings(kept)
+        if (repository !== this.repository) return []
+        const written = new Set(ids)
+        const byId = new Map(kept.filter(entry => written.has(entry.id)).map(entry => [entry.id, entry]))
         const withReading = (item, { reading, discogs }) => ({ ...item, discogsReading: reading, ...(discogs && { discogs }) })
         this.store.replaceAlbums(this.store.getAlbums().map(item => (byId.has(item.id) ? withReading(item, byId.get(item.id)) : item)))
+        return ids
     }
 
     /** Write the changes of one album; the store changes only after the write worked. */

@@ -155,10 +155,12 @@ describe('the screen', () => {
     it('the card says the value is the lowest for sale, in the same five lines, with the whole text in the title', async () => {
         await open(new Map([['owned', lowestReading()]]))
 
-        expect(text(line('owned', 2))).toMatch(/^CD · Discogs · lowest for sale · \d{1,2} [A-Z][a-z]{2} ≈ \$12\.93$/)
+        expect(text(line('owned', 2))).toMatch(/^CD · Discogs · lowest for sale · \d{1,2}\s[A-Z][a-z]{2} ≈ \$12\.93$/)
         const origin = line('owned', 2).querySelector('span')
-        expect(origin.title).toMatch(/^Lowest price this CD edition is for sale at on Discogs now\. Read on /)
-        expect(origin.className).toContain('truncate')
+        expect(origin.title).toMatch(/^Lowest price this CD edition was for sale at on Discogs when it was read\. Read on /)
+        // the qualification is what gets cut when the column is narrow; the date has its own place that never shrinks (REQ-16)
+        expect(origin.querySelector('.truncate').textContent).not.toMatch(/\d{1,2}\sNov/)
+        expect(origin.querySelector('.shrink-0').textContent).toMatch(/\d{1,2}\s[A-Z][a-z]{2}/)
         expect(origin.querySelector('a').href).toBe(RELEASE.url)
         expect(document.querySelectorAll('.inventory-card-wrapper[data-album-id="owned"] [data-line]')).toHaveLength(5)
     })
@@ -191,6 +193,8 @@ describe('the screen', () => {
         const section = document.querySelector('.modal-overlay [data-role="estimated-value"]')
 
         expect(text(section)).toContain('Lowest price for sale on Discogs: $12.93 (37 for sale)')
+        expect(text(section)).toContain('was for sale at on Discogs when it was read')
+        expect(text(section)).not.toMatch(/for sale at on Discogs now/)
         expect(text(section)).toContain('Edition: RCA 1987, UK (CD), the most common CD edition on Discogs.')
         expect(text(section)).toContain('Discogs gives a suggestion by the condition of the disc (Mint, Near Mint, Very Good Plus) only to accounts with seller settings filled in.')
         expect(section.querySelector('[data-role="discogs-credit"] a').href).toBe(RELEASE.url)

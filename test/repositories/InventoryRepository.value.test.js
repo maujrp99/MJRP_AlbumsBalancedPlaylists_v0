@@ -135,7 +135,21 @@ describe('the reading of Discogs (REQ-14, constitution VI.1)', () => {
         expect(Object.keys(updatesOf()[1].data).sort()).toEqual(['discogsReading', 'updatedAt'])
     })
 
-    it('what is not a reading is refused, and nothing is written', async () => {
+    it('one invalid reading is skipped and the others of the batch are written: it never costs the batch', async () => {
+        vi.spyOn(console, 'warn').mockImplementation(() => { })
+        const ids = await build().setReadings([
+            { id: 'a', reading: FOUND },
+            { id: 'bad', reading: { ...FOUND, conditions: { mint: 'x', nearMint: 1, veryGoodPlus: 1 } } },
+            { id: 'c', reading: { kind: 'not_found', readAt: FOUND.readAt } },
+            { reading: FOUND }
+        ])
+
+        expect(ids).toEqual(['a', 'c'])
+        expect(updatesOf().map(update => update.ref.id)).toEqual(['a', 'c'])
+    })
+
+    it('what is not a reading is refused: nothing is written', async () => {
+        vi.spyOn(console, 'warn').mockImplementation(() => { })
         const repository = build()
         const bad = [
             { id: 'a', reading: { ...FOUND, kind: 'cheap' } },
@@ -144,7 +158,7 @@ describe('the reading of Discogs (REQ-14, constitution VI.1)', () => {
             { id: 'a', reading: null },
             { reading: FOUND }
         ]
-        for (const entry of bad) await expect(repository.setReadings([entry])).rejects.toThrow()
-        expect(firestore.state.batches).toHaveLength(0)
+        for (const entry of bad) expect(await repository.setReadings([entry])).toEqual([])
+        expect(firestore.state.batches.flatMap(batch => batch.updates)).toHaveLength(0)
     })
 })

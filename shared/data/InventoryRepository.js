@@ -234,13 +234,21 @@ export class InventoryRepository extends BaseRepository {
      * edition too when the entry carries a new one. Nothing else of the item changes: never the
      * value the person wrote.
      * @param {Array<{ id: string, reading: Object, discogs?: Object }>} entries - at most what one batch holds
-     * @returns {Promise<string[]>} the ids of the items, in the order given
-     * @throws when an entry lacks its id or is not a reading (nothing is written), and when the write fails
+     * An entry that is not a valid reading (no id, an amount that is not above zero, no date) is
+     * SKIPPED and the others are written: one bad reading never costs the batch. The caller compares
+     * what it gave with the ids it gets back to know how many were refused.
+     * @returns {Promise<string[]>} the ids of the items written, in the order given
+     * @throws when the write fails
      */
     async setReadings(entries) {
-        const data = entries.map(({ id, reading, discogs }) => {
-            if (!id) throw new Error('Each reading needs the id of an item')
-            return { id, data: { discogsReading: discogsReading(reading), ...(discogs && { discogs: discogsEdition(discogs) }) } }
+        const data = entries.flatMap(({ id, reading, discogs }) => {
+            try {
+                if (!id) throw new Error('Each reading needs the id of an item')
+                return [{ id, data: { discogsReading: discogsReading(reading), ...(discogs && { discogs: discogsEdition(discogs) }) } }]
+            } catch (error) {
+                console.warn(`[InventoryRepository] A reading of ${id ?? 'an item with no id'} was not kept: ${error.message}`)
+                return []
+            }
         })
         return this.updateMany(data)
     }

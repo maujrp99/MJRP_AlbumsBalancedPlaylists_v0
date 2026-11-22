@@ -108,7 +108,10 @@ describe('what the person is told', () => {
     })
 
     it('a run that stopped says why', () => {
-        const refused = valuesOutcome({ ...emptyCount(211), done: 1, failed: { token_refused: 1 }, stopped: 'token_refused' })
+        const unkept = valuesOutcome({ ...emptyCount(10), done: 10, read: 10, unkept: 3 })
+    expect(unkept.ok).toBe(false)
+    expect(unkept.text).toContain('3 readings could not be saved to your inventory: they show in this browser for now.')
+    const refused = valuesOutcome({ ...emptyCount(211), done: 1, failed: { token_refused: 1 }, stopped: 'token_refused' })
         expect(refused.ok).toBe(false)
         expect(refused.text).toContain('Discogs refused the token of the app, so the reading stopped.')
         expect(valuesOutcome({ ...emptyCount(10), done: 3, read: 3, stopped: 'off' }).text).toContain('Discogs values were turned off on the server')

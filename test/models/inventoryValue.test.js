@@ -7,7 +7,7 @@ import { describe, it, expect, afterEach } from 'vitest'
 import {
     SIX_HOURS_MS, NoValue, ValueOrigin, valueOfItem, isFresh, needsReading, meanOfConditions, convert, toUsd, shownCurrency,
     formatMoney, roundToCents, moneyOf, parseAmount, writtenValueFrom, totalsOf, usdOf, noValueText, valueLabel, ownedNote, toBuyNote, rateNote,
-    itemsWithDiscogsValue, RATES_MISSING_TEXT, DISCOGS_CREDIT, newestReading, neverRead, needsKeeping
+    itemsWithDiscogsValue, shortDayText, readOnText, RATES_MISSING_TEXT, DISCOGS_CREDIT, newestReading, neverRead, needsKeeping
 } from '../../public/js/models/inventoryValue.js'
 import { sortInventory, sortingFor } from '../../public/js/models/inventorySort.js'
 
@@ -125,6 +125,15 @@ describe('the value of an item', () => {
         expect(needsKeeping(item({ discogsReading: fresh }), fresh)).toBe(false)
         expect(needsKeeping(item(), undefined)).toBe(false)
         expect(needsKeeping(item({ value: { amount: 3, currency: 'USD' } }), fresh)).toBe(true) // the reading is kept; the value written still wins on the screen
+    })
+})
+
+describe('the date of a reading on a card or a row (REQ-16)', () => {
+    it('is the day and the month in one piece: a no-break space, so it never splits over two lines, the same on the card and the phone', () => {
+        expect(shortDayText('2026-11-18T14:05:00.000Z')).toBe('18\u00a0Nov')
+        expect(readOnText({ readAt: '2026-11-18T14:05:00.000Z' })).toBe('18\u00a0Nov')
+        expect(readOnText({ readAt: 'bad' })).toBe('')
+        expect(readOnText(null)).toBe('')
     })
 })
 

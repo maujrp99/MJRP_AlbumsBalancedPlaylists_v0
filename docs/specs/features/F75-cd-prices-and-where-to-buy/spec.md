@@ -71,7 +71,7 @@ Termos de uso da API do Discogs lidos em 2026-11-20 01:24 (relatório de viabili
   verified_by:: `test/repositories/InventoryRepository.value.test.js`, `test/models/inventoryValue.test.js`, `test/controllers/InventoryController.values.test.js`
 - [REQ-15] **Decidido pelo MJRP em 2026-11-21.** «Update values» e «Read them now» ATUALIZAM: leem de novo do Discogs, pelo servidor, um álbum por vez, e trocam a leitura guardada pela nova (a mais nova vence entre o banco e o navegador). «Update values» lê todo álbum sem valor escrito pela pessoa, salvo o que foi lido há menos de seis horas (a guarda contra perguntar duas vezes seguidas); «Read them now» lê só os que nunca tiveram leitura. · fixes S-57
   verified_by:: `test/services/inventory/InventoryValueService.test.js`, `test/controllers/InventoryController.values.test.js`
-- [REQ-16] **Decidido pelo MJRP em 2026-11-21.** Onde o valor do Discogs aparece, a tela diz quando ele foi lido, em palavras curtas («Read on 21 Nov 2026»), e a atribuição «Data provided by Discogs.» com o link da edição fica ao lado. · fixes S-57
+- [REQ-16] **Decidido pelo MJRP em 2026-11-21.** Onde o valor do Discogs aparece, a tela diz quando ele foi lido, e a data nunca fica escondida: no cartão do computador e na linha do celular, curta e do mesmo jeito («CD · Discogs · 21 Nov», «Discogs · 21 Nov», a data inteira no `title`), qualquer que seja o tipo de leitura, inclusive o menor preço à venda; na janela, «Read on 21 Nov 2026, 14:05». A atribuição «Data provided by Discogs.», com o link da edição, fica na janela e na folha do celular, no aviso da faixa dos totais e, no cartão, no link «Discogs»; a linha do celular não traz o link. · fixes S-57
   verified_by:: `test/views/InventoryView.values.test.js`
 
 ## Observable States

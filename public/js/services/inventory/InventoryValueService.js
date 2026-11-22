@@ -55,6 +55,9 @@ function ratesOf(result) {
 
 const nothing = () => { }
 
+/** The count of a run, with the readings that could not be kept added (only when there are some). */
+const withUnkept = (count, unkept) => (unkept > 0 ? { ...count, unkept: (count.unkept || 0) + unkept } : count)
+
 export class InventoryValueService {
     /**
      * @param {Object} deps
@@ -149,19 +152,22 @@ export class InventoryValueService {
     /**
      * Keep these readings in the items of the person, in the database, each with the edition it was
      * of (REQ-14). A write that fails loses nothing the person sees: the reading is still in the
-     * browser, and the next read keeps it.
+     * browser, and the next read keeps it. It is never silent: it says how many were not kept.
      * @param {Array<{ item: Object, reading: Object }>} read
+     * @returns {Promise<number>} how many readings were NOT kept (refused as invalid, or the write failed)
      */
     async keepReadings(read) {
         const entries = read.map(({ item, reading }) => {
             const discogs = editionToKeep(item, reading)
             return { id: item.id, reading, ...(discogs && { discogs }) }
         })
-        if (entries.length === 0) return
+        if (entries.length === 0) return 0
         try {
-            await this.inventory.setReadings(entries)
+            const kept = await this.inventory.setReadings(entries)
+            return entries.length - (Array.isArray(kept) ? kept.length : entries.length)
         } catch (error) {
             console.error('[InventoryValueService] The readings could not be kept in the items; they are held in the browser for now:', error)
+            return entries.length
         }
     }
 
@@ -198,7 +204,7 @@ export class InventoryValueService {
             await this._readNext(item, run, told)
         }
 
-        await this.keepReadings(run.read)
+        run.count = withUnkept(run.count, await this.keepReadings(run.read))
         return { ...run.count, aborted: run.count.aborted || isAborted(told.signal) }
     }
 
@@ -221,7 +227,7 @@ export class InventoryValueService {
             run.count = { ...run.count, stopped: outcome.failure }
             run.halted = true
         }
-        if (run.read.length >= READING_WRITE_SIZE) await this.keepReadings(run.read.splice(0))
+        if (run.read.length >= READING_WRITE_SIZE) run.count = withUnkept(run.count, await this.keepReadings(run.read.splice(0)))
     }
 
     /** An answer that ends the run without counting the album: the run was dropped, or the source was turned off. */

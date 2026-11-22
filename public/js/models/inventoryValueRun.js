@@ -195,15 +195,31 @@ const failedSentence = (failed) => {
  * @returns {{ ok: boolean, text: string }}
  */
 export function valuesOutcome(count) {
-    const { total, done, read, noEdition, noSuggestion, failed, stopped, aborted } = count
-    const sentences = [`Values read for ${read} of ${albums(total)}.`]
+    const { total, read, failed, stopped, unkept = 0 } = count
+    const sentences = [`Values read for ${read} of ${albums(total)}.`, ...answerSentences(count), ...failedSentence(failed), ...unkeptSentence(unkept), ...endSentence(count)]
+    const clean = !stopped && unkept === 0 && Object.keys(failed).length === 0
+    return { ok: clean, text: sentences.join(' ') }
+}
+
+/** The albums Discogs answered with no value: no CD edition, no suggested price. */
+function answerSentences({ noEdition, noSuggestion }) {
+    const sentences = []
     if (noEdition > 0) sentences.push(`${albums(noEdition)} ${noEdition === 1 ? 'has' : 'have'} no CD edition on Discogs.`)
     if (noSuggestion > 0) sentences.push(`Discogs suggests no price for ${albums(noSuggestion)}.`)
-    sentences.push(...failedSentence(failed))
-    if (stopped) sentences.push(STOP_TEXT[stopped] || STOP_TEXT[ReadFailure.LIMIT])
-    else if (aborted && done < total) sentences.push(`Stopped by you after ${done} of ${total}.`)
-    const clean = !stopped && Object.keys(failed).length === 0
-    return { ok: clean, text: sentences.join(' ') }
+    return sentences
+}
+
+/** A reading read but not saved to the inventory: said, and it still shows in this browser (REQ-14). */
+function unkeptSentence(unkept) {
+    if (unkept <= 0) return []
+    const [noun, verb] = unkept === 1 ? ['reading', 'it shows'] : ['readings', 'they show']
+    return [`${unkept} ${noun} could not be saved to your inventory: ${verb} in this browser for now.`]
+}
+
+/** Why the run ended before the end, when it did. */
+function endSentence({ total, done, stopped, aborted }) {
+    if (stopped) return [STOP_TEXT[stopped] || STOP_TEXT[ReadFailure.LIMIT]]
+    return aborted && done < total ? [`Stopped by you after ${done} of ${total}.`] : []
 }
 
 /**

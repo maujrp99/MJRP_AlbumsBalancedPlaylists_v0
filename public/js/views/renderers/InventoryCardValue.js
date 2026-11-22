@@ -17,7 +17,7 @@ import { safeUrl } from '../../utils/safeUrl.js'
 import { getIcon } from '../../components/Icons.js'
 import { InventoryStatus, statusOf } from '../../models/inventoryStatus.js'
 import { popularityValue, ratingValue, tracksMadeOf } from '../../models/albumAverages.js'
-import { DISCOGS_CREDIT, DISCOGS_LOWEST_TITLE, DISCOGS_MEAN_TITLE, ValueBasis, ValueOrigin, momentText, moneyOf, noValueText, shortDayText, valueLabel } from '../../models/inventoryValue.js'
+import { DISCOGS_CREDIT, DISCOGS_LOWEST_TITLE, DISCOGS_MEAN_TITLE, ValueBasis, ValueOrigin, momentText, moneyOf, noValueText, readOnText, valueLabel } from '../../models/inventoryValue.js'
 import { BuyLinkPlace, SELL_TRADE_SOON, buyLinkAttributes, buyLinksOf } from '../../models/buyLinks.js'
 
 const LABEL = 'text-[11px] text-gray-400 uppercase tracking-widest whitespace-nowrap truncate'
@@ -43,12 +43,11 @@ function discogsOrigin(value) {
         ? `<a href="${escapeHtml(safeUrl(value.release?.url))}" target="_blank" rel="noopener" class="underline hover:text-white" title="${DISCOGS_CREDIT} Open this edition on Discogs">Discogs</a>`
         : 'Discogs'
     // when it was read (REQ-16): short on the line, the whole moment in the title
-    const read = shortDayText(value.readAt)
-    const when = read ? ` · ${read}` : ''
-    const whole = read ? ` Read on ${momentText(value.readAt)}.` : ''
+    const tail = readOnText(value)
+    const whole = tail ? ` Read on ${momentText(value.readAt)}.` : ''
     // the lowest price for sale is a Discogs value too, and says what it is: never a mean
-    if (value.basis === ValueBasis.LOWEST_FOR_SALE) return { html: `CD · ${name} · lowest for sale${when}`, hint: `${DISCOGS_LOWEST_TITLE}.${whole}` }
-    return { html: `CD · ${name}${when}`, hint: `${DISCOGS_MEAN_TITLE}.${whole}` }
+    if (value.basis === ValueBasis.LOWEST_FOR_SALE) return { html: `CD · ${name} · lowest for sale`, tail, hint: `${DISCOGS_LOWEST_TITLE}.${whole}` }
+    return { html: `CD · ${name}`, tail, hint: `${DISCOGS_MEAN_TITLE}.${whole}` }
 }
 
 /** Line 2, left: where the value comes from, or why there is none. */
@@ -106,7 +105,7 @@ export function cardValueBlock(item, value, money) {
         <div class="py-2 px-3 flex flex-col gap-1" style="border-left:3px solid ${owned ? EDGE.owned : EDGE.other}">
           <div class="${LABEL}" data-line="1">${valueLabel(item)}</div>
           <div class="flex items-center justify-between gap-3" data-line="2">
-            <span class="text-xs text-gray-400 whitespace-nowrap truncate" title="${escapeHtml(origin.hint)}">${origin.html}</span>
+            <span class="min-w-0 flex text-xs text-gray-400 whitespace-nowrap" title="${escapeHtml(origin.hint)}"><span class="truncate">${origin.html}</span>${origin.tail ? `<span class="shrink-0">&nbsp;· ${origin.tail}</span>` : ''}</span>
             <strong class="text-lg text-white tabular-nums whitespace-nowrap" data-role="amount">${amount}</strong>
           </div>
         </div>
@@ -122,5 +121,5 @@ export function cardValueBlock(item, value, money) {
 export function rowValue(item, value, money) {
     const origin = originOf(item, value)
     const amount = value.origin ? `≈ ${moneyOf(value, money)}` : NO_VALUE
-    return `<span class="text-xs text-gray-400 whitespace-nowrap" data-role="value" title="${escapeHtml(origin.hint)}">${origin.html} <strong class="text-white tabular-nums">${amount}</strong></span>`
+    return `<span class="text-xs text-gray-400 whitespace-nowrap" data-role="value" title="${escapeHtml(origin.hint)}">${origin.html}${origin.tail ? ` · ${origin.tail}` : ''} <strong class="text-white tabular-nums">${amount}</strong></span>`
 }

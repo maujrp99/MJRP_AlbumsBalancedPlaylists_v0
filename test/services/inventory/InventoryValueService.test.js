@@ -37,7 +37,7 @@ function build({ answers = [], source = { kind: 'found', data: { discogs: 'on' }
         exchangeRates: vi.fn(async () => rates ?? failed('upstream_failed'))
     }
     const cache = memoryCache()
-    const inventory = { userId: 'user-1', setReadings: vi.fn(async () => { }) }
+    const inventory = { userId: 'user-1', setReadings: vi.fn(async (entries) => entries.map(entry => entry.id)) }
     const sleep = vi.fn(async () => true)
     let clock = NOW
     const service = new InventoryValueService({ api, cache, inventory, mayAsk, now: () => clock, sleep })
@@ -160,7 +160,20 @@ describe('one album', () => {
         inventory.setReadings.mockRejectedValue(new Error('offline'))
         const { reading } = await service.readItem(item('a'))
 
-        await expect(service.keepReadings([{ item: item('a'), reading }])).resolves.toBeUndefined()
+        await expect(service.keepReadings([{ item: item('a'), reading }])).resolves.toBe(1) // not silent: it says one was not kept
+    })
+
+    it('says how many readings could not be kept: the ones refused, and all of them when the write fails (never silent)', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => { })
+        const { service, inventory } = build()
+        const { reading } = await service.readItem(item('a'))
+        const read = [{ item: item('a'), reading }, { item: item('b'), reading }]
+
+        expect(await service.keepReadings(read)).toBe(0)
+        inventory.setReadings.mockResolvedValueOnce(['a'])
+        expect(await service.keepReadings(read)).toBe(1)
+        inventory.setReadings.mockRejectedValueOnce(new Error('offline'))
+        expect(await service.keepReadings(read)).toBe(2)
     })
 
     it('nothing to keep writes nothing', async () => {
@@ -276,6 +289,17 @@ describe('"Update values": the queue (REQ-09)', () => {
 
         expect(inventory.setReadings.mock.calls.map(([entries]) => entries.length)).toEqual([READING_WRITE_SIZE, 3])
         expect(inventory.setReadings.mock.calls[0][0][0].reading.readAt).toBe('2026-11-20T12:00:00.000Z')
+    })
+
+    it('a run counts the readings it could not keep, so the notice can say so; the value is still read', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => { })
+        const { service, inventory } = build()
+        inventory.setReadings.mockRejectedValue(new Error('offline'))
+
+        const count = await service.readMany(items(2))
+
+        expect(count.read).toBe(2)
+        expect(count.unkept).toBe(2)
     })
 
     it('a failed album keeps nothing: the reading it had stays as it was', async () => {

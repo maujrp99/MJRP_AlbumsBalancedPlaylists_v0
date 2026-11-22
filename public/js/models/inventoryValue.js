@@ -330,7 +330,7 @@ export const valueLabel = (item) => (statusOf(item) === InventoryStatus.OWNED ? 
 
 export const DISCOGS_MEAN_TITLE = 'Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition'
 export const DISCOGS_CREDIT = 'Data provided by Discogs.'
-export const DISCOGS_LOWEST_TITLE = 'Lowest price this CD edition is for sale at on Discogs now'
+export const DISCOGS_LOWEST_TITLE = 'Lowest price this CD edition was for sale at on Discogs when it was read'
 export const LOWEST_PRICES_NOTE = 'Discogs values are lowest asking prices for now.'
 export const RATES_MISSING_TEXT = 'Exchange rates are not available: values are shown in USD.'
 
@@ -351,11 +351,12 @@ export function dayText(iso) {
 /** "20 Nov": the short «read on» of a card, where there is no room for the year (the whole moment is in its `title`). */
 export function shortDayText(iso) {
     const date = new Date(iso)
-    return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+    // a no-break space between the day and the month: the date never splits over two lines
+    return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }).replace(' ', '\u00a0')
 }
 
-/** "read 20 Nov": what the origin line of a card adds to a Discogs value (REQ-16); nothing when the reading has no valid date. */
-export const readOnText = (value) => (shortDayText(value?.readAt) ? `read ${shortDayText(value.readAt)}` : '')
+/** "20 Nov": what the origin line of a card or of a phone row adds to a Discogs value (REQ-16), the same form in both; nothing when the reading has no valid date. */
+export const readOnText = (value) => shortDayText(value?.readAt)
 
 /** "20 Nov 2026, 14:05": a reading says the hour too, so the person can tell a reading of today from an old one. */
 export function momentText(iso) {

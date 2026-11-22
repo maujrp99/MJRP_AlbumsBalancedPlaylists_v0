@@ -160,7 +160,11 @@ Propostos pelo agente em 2026-11-21, com a leitura do Discogs guardada no banco 
 | Onde | Texto | Dito para |
 |---|---|---|
 | Linha de origem do cartão e da lista | «CD · Discogs · 21 Nov» (o dia, sem o ano; o momento inteiro no `title`: «Read on 21 Nov 2026, 14:05.») | dizer quando o valor foi lido, onde cabe pouco texto |
-| Linha de origem no celular | «Discogs · read 21 Nov» | o mesmo, mais curto |
+| Linha de origem no celular | «Discogs · 21 Nov» (o dia e o mês numa peça só, sem quebra) | o mesmo, mais curto, na mesma forma do cartão |
+| Janela do álbum, menor preço à venda | «The lowest price this CD was for sale at on Discogs when it was read. It is an asking price, not what the disc usually sells for.» (antes: «… is for sale at on Discogs now») | a frase não pode afirmar o presente de uma leitura guardada |
+| `title` do cartão, menor preço | «Lowest price this CD edition was for sale at on Discogs when it was read.» + «Read on 21 Nov 2026, 14:05.» | o mesmo |
+| Aviso da rodada | «3 readings could not be saved to your inventory: they show in this browser for now.» | dizer quando uma leitura lida não pôde ser guardada |
+| Aviso ao ler um álbum | «The value was read but could not be saved to your inventory. It shows in this browser for now.» | o mesmo, para uma leitura só |
 | Janela do álbum, seção «Estimated value» | «Read on 21 Nov 2026, 14:05.» (já era assim; agora vale para o valor guardado, de qualquer idade) e, no painel do celular, a mesma frase como nota | quando o valor foi lido |
 | Aviso de espera | «N albums are waiting for a value.» (mesmo texto; passa a contar só os que nunca foram lidos) | não mudou |
 
