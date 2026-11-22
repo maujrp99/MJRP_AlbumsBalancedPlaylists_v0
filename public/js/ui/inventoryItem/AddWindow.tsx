@@ -12,8 +12,9 @@ import { t } from '../../i18n/t.js'
 import { ModalShell } from '../ModalShell'
 import { showWindow } from '../windowLayer'
 import { ItemForm, type ItemDraft } from './ItemForm'
+import type { ItemLike } from './types'
 
-type Album = Record<string, any>
+type Album = ItemLike
 
 /** What writes the album into the inventory: it refuses (throws) an album that is already there. */
 export type AddAlbum = (album: Album, format: string, options: { currency: string; purchasePrice: number | null; notes: string }) => Promise<unknown>

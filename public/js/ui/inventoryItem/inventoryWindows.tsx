@@ -5,9 +5,10 @@
  * is loaded only at the route (test/architecture/lazyOnlyAtTheRoute.test.js), and a window is loaded when its button is pressed.
  */
 import { isPhone } from '../../utils/isPhone.js'
+import type { ItemLike } from './types'
 import { createTicker, ValueAndBuy, type ValueHost } from './ValueSection'
 
-type Item = Record<string, any>
+type Item = ItemLike
 
 /** What the screen holds of the window of the album it opened: it says «the value changed» and the window draws the section again. */
 export interface InventoryViewHandle {

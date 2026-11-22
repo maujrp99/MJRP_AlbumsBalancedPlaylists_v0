@@ -7,15 +7,15 @@
 import { t } from '../../i18n/t.js'
 import { BUY_LINKS_NOTE, BuyLinkPlace, buyLinksOf } from '../../models/buyLinks.js'
 import { safeUrl } from '../../utils/safeUrl.js'
+import type { ItemLike } from './types'
 
-type Item = Record<string, unknown>
 
 const BOX = 'bg-black/20 rounded-xl border border-white/10 p-3'
 
 /** The links of an item: the item holds the artist and the title, or its album does. */
-const linksOf = (album: Item) => buyLinksOf(album) as Array<{ id: string; name: string; url: string }>
+const linksOf = (album: ItemLike) => buyLinksOf(album) as Array<{ id: string; name: string; url: string }>
 
-export function BuyLinks({ album }: { album: Item }) {
+export function BuyLinks({ album }: { album: ItemLike }) {
     return (
         <div className={`${BOX} mb-6`} data-role="where-to-buy" style={{ padding: '1rem' }}>
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{t('inventory.value.whereToBuy')}</h3>
@@ -30,7 +30,7 @@ export function BuyLinks({ album }: { album: Item }) {
 }
 
 /** «Where to buy» on the phone: the three stores in one row, and what the links are. */
-export function PhoneBuyLinks({ album }: { album: Item }) {
+export function PhoneBuyLinks({ album }: { album: ItemLike }) {
     return (
         <div className="value-fold value-fold--buy" data-role="where-to-buy">
             <p className="value-fold__label">{t('inventory.value.whereToBuy')}</p>

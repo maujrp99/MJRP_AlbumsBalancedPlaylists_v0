@@ -35,7 +35,7 @@ import { createElement } from 'react'
 import { CardValue } from '../../../public/js/screens/inventory/CardValue'
 import { InventoryBridge } from '../../../public/js/screens/inventory/InventoryBridge'
 import { usePhoneSheets } from '../../../public/js/screens/inventory/phone/Sheets'
-import { createBuyLinksSection, createPhoneBuyLinks } from '../../../public/js/components/InventoryValueSection.js'
+import { BuyLinks, PhoneBuyLinks } from '../../../public/js/ui/inventoryItem/BuyLinks'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 
@@ -98,9 +98,10 @@ describe('each buy link says its store and where it is', () => {
         await undraw()
     })
 
-    it('in the album window, on the computer and on the phone', () => {
-        expect(linksIn(createBuyLinksSection(notOwned))).toEqual(ALL.map(store => [store, 'album_window']))
-        expect(linksIn(createPhoneBuyLinks(notOwned))).toEqual(ALL.map(store => [store, 'album_window']))
+    it('in the album window, on the computer and on the phone', async () => {
+        expect(linksIn(await draw(createElement(BuyLinks, { album: notOwned })))).toEqual(ALL.map(store => [store, 'album_window']))
+        expect(linksIn(await draw(createElement(PhoneBuyLinks, { album: notOwned })))).toEqual(ALL.map(store => [store, 'album_window']))
+        await undraw()
     })
 
     it('in the sheet of the album on the phone', async () => {

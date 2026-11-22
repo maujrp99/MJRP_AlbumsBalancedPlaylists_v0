@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 04:59] step — F83, onda 6b: o peso, os testes de sair e as notas (TASK-23c feita)
+
+**Branch:** claude/f83-wave-6b-inventory-windows
+
+- O peso (`reports/evidence/F83/wave-6b/bundle-budget-wave-6b.txt`, build sem as chaves, pela fila): script principal 213.079 B contra 211.698 B depois da 6a (+1.381 B: os textos em inglês das janelas, ≈ 120 chaves; o inglês fica sempre no script principal), teto de 211.842 B para 213.223 B (o medido mais 144 B das chaves); o arquivo da janela do álbum 4.859 B (`openAlbumWindow-*.js`), o das janelas do inventário 4.155 B (`inventoryWindows-*.js`), `AddWindow` 775 B, `EditWindow` 697 B; o arquivo da tela de álbuns 25.232 B (a tabela de faixas entrou nele) e o do inventário 22.227 B, os dois abaixo do alarme de 30.000 B, que NÃO subiu; depois da primeira tela 213.896 B contra 212.976 B, `background` de 51.300 B para 53.600 B (a necessidade medida é 53.538 B). `reactVendor` igual (68.691 B).
+- `test/ui/albumWindow/AlbumWindow.leave.test.tsx` (3 casos: a camada fecha todas, a rota do inventário fecha no `dispose`, uma janela fechada pelo próprio botão não fecha de novo); `test/services/usage/eventsOfLinksFiltersAndAccount.test.js` passa a ler os links de «Where to buy» da janela em React.
+- `tasks.md` (TASK-23c feita, linha 6b em TASK-25) e `wave-lessons.md` (seção 16) em dia; `leave-proof.mjs` (a janela do álbum à mão fica sobre a tela seguinte, a em React sai com a tela: provado no site construído, Chromium).
+
+
 ## [2026-11-22 04:47] step — F83, onda 6b: as janelas do álbum, de editar e de adicionar em React (TASK-23c)
 
 **Branch:** claude/f83-wave-6b-inventory-windows

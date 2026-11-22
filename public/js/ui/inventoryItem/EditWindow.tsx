@@ -10,8 +10,9 @@ import { toast } from '../../components/Toast.js'
 import { t } from '../../i18n/t.js'
 import { ModalShell } from '../ModalShell'
 import { ItemForm, type ItemDraft } from './ItemForm'
+import type { ItemLike } from './types'
 
-type Item = Record<string, any>
+type Item = ItemLike
 
 export interface EditWindowProps {
     item: Item
@@ -23,7 +24,7 @@ export interface EditWindowProps {
 export function EditWindow({ item, onSave, close }: EditWindowProps) {
     // an item as an album («album» inside), or an item with its album's fields in it
     const album: Item = item.album || item
-    const inventoryId: string = item.id || album.id
+    const inventoryId = (item.id || album.id) as string
     const [draft] = useState<ItemDraft>(() => ({
         format: item.format || album.format || '',
         currency: item.currency || album.currency || 'BRL',

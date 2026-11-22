@@ -122,6 +122,7 @@ function useEscape(onEscape: () => void): void {
         const heard = (event: KeyboardEvent): void => { if (event.key === 'Escape') onEscape() }
         document.addEventListener('keydown', heard)
         return () => document.removeEventListener('keydown', heard)
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- heard for as long as the window is open: the handler reads what it needs from refs
     }, [])
 }
 
@@ -133,6 +134,7 @@ function useTitleInTheBar(options: { phone: boolean; title: RefObject<HTMLElemen
         const observer = new IntersectionObserver(([entry]) => setScrolled(!entry.isIntersecting), { root: scroller.current, rootMargin: '-56px 0px 0px 0px' })
         observer.observe(title.current)
         signal.addEventListener('abort', () => observer.disconnect(), { once: true })
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- once, when the window opens (the hand-made one asked once)
     }, [])
 }
 
@@ -174,6 +176,7 @@ function useTracks(options: { album: Album; sources?: AlbumSources; loadAlbum: A
                 console.error('[AlbumWindow] The album could not be loaded:', error)
                 if (!signal.aborted && !hasTracks(album)) showTracks(album, TRACKS_TEXT.notLoaded)
             })
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- once, when the window opens: the load is asked once and what it watches is let go on closing
     }, [])
     return shown
 }

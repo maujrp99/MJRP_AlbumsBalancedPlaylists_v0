@@ -18,10 +18,30 @@ import { safeUrl } from '../../utils/safeUrl.js'
 import { Icon } from '../Icon'
 import { moneyText, type Money } from './money'
 import { BuyLinks, PhoneBuyLinks } from './BuyLinks'
+import type { ItemLike } from './types'
 
-type Item = Record<string, unknown>
-// the value of an item and the money of the screen, as models/inventoryValue.js gives them (JavaScript: said loosely here)
-type Value = Record<string, any>
+type Item = ItemLike
+
+/** The edition of Discogs a value was read from. */
+interface Release {
+    title?: string
+    url?: string
+}
+
+/** The value of an item as models/inventoryValue.js gives it (valueOfItem): what it is made of depends on where it comes from, or why it has none. */
+interface Value {
+    origin?: string | null
+    reason?: string
+    basis?: string
+    failure?: string
+    amount?: number | null
+    currency?: string
+    at?: string | null
+    readAt?: string
+    forSale?: number | null
+    release?: Release | null
+    conditions?: { mint: number; nearMint: number; veryGoodPlus: number }
+}
 
 /** What the section draws: the value of the item, the money of the screen, whether the switch is on and whether «Update values» runs. */
 export interface Shown {
@@ -57,7 +77,7 @@ function discogsLink(url: string | undefined, label: string): ReactNode {
 }
 
 /** «Data provided by Discogs.», linked to the page of the edition the data is of. */
-const Credit = ({ release }: { release?: Value | null }) => <p className="text-xs text-gray-400 mt-1" data-role="discogs-credit">{discogsLink(release?.url, DISCOGS_CREDIT)}</p>
+const Credit = ({ release }: { release?: Release | null }) => <p className="text-xs text-gray-400 mt-1" data-role="discogs-credit">{discogsLink(release?.url, DISCOGS_CREDIT)}</p>
 
 /** The field where the person writes a value, in the currency the screen shows. */
 function Field({ label, money }: { label: string; money: Money }) {
@@ -110,7 +130,7 @@ function Cell({ label, amount, value, money, strong = false }: { label: string; 
 }
 
 /** "Edition: Harvest 1984, Europe (CD), the most common CD edition on Discogs." */
-function EditionLine({ release, link = true }: { release?: Value | null; link?: boolean }) {
+function EditionLine({ release, link = true }: { release?: Release | null; link?: boolean }) {
     const line = release?.title ? t('inventory.value.editionNamed', { title: release.title }) : t('inventory.value.editionUnnamed')
     return <>{link ? `${line} ` : line}{link ? discogsLink(release?.url, t('inventory.value.seeIt')) : null}</>
 }
@@ -118,11 +138,11 @@ function EditionLine({ release, link = true }: { release?: Value | null; link?: 
 /** «Read on …» with the currency the reading was in, when it is not the one shown. */
 const readOnLine = (value: Value, money: Money): string => (value.currency === money.currency
     ? t('inventory.value.readOn', { moment: momentText(value.readAt) })
-    : t('inventory.value.readOnConverted', { moment: momentText(value.readAt), currency: value.currency }))
+    : t('inventory.value.readOnConverted', { moment: momentText(value.readAt), currency: value.currency ?? '' }))
 
 function FromDiscogs({ shown }: BodyProps) {
     const { value, money } = shown
-    const { mint, nearMint, veryGoodPlus } = value.conditions
+    const { mint, nearMint, veryGoodPlus } = value.conditions as NonNullable<Value['conditions']>
     return (
         <>
             <Lead>{t('inventory.value.discogsLead')}</Lead>
@@ -148,7 +168,7 @@ function LowestForSale({ shown }: BodyProps) {
             <div className="flex flex-wrap items-center gap-2" data-role="lowest">
                 <span className="text-sm text-gray-400">{t('inventory.value.lowestLabel')}</span>{' '}
                 <span className="text-2xl font-bold text-white" data-role="amount">{moneyText(value, money)}</span>{' '}
-                {Number.isInteger(value.forSale) && value.forSale > 0 ? <span className="text-xs text-gray-400">{`(${t('inventory.value.forSale', { count: value.forSale })})`}</span> : null}
+                {Number.isInteger(value.forSale) && (value.forSale ?? 0) > 0 ? <span className="text-xs text-gray-400">{`(${t('inventory.value.forSale', { count: value.forSale ?? 0 })})`}</span> : null}
             </div>
             <p className={SMALL}><EditionLine release={value.release} /><br />{` ${readOnLine(value, money)} `}<ReadButton label={t('inventory.value.readAgain')} busy={shown.busy} /></p>
             <Credit release={value.release} />
@@ -285,6 +305,7 @@ export function ValueSection({ host, draws, draw, typed, sectionRef }: ValueSect
         if (!kept || !field) return
         field.value = kept.text
         if (kept.inUse) field.focus()
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- after each draw of the section, and only then
     }, [draws])
 
     const actions: Record<string, () => Promise<unknown> | unknown> = {
@@ -309,7 +330,7 @@ export function ValueSection({ host, draws, draw, typed, sectionRef }: ValueSect
     }
 
     const shown = host.view()
-    const Body = BODIES[shown.value.basis || shown.value.origin || shown.value.reason] || NothingWritten
+    const Body = BODIES[shown.value.basis || shown.value.origin || shown.value.reason || ''] || NothingWritten
     return (
         <div
             ref={sectionRef}
@@ -335,7 +356,7 @@ export function ValueSection({ host, draws, draw, typed, sectionRef }: ValueSect
 /* ── The phone (F76, recheck N7) ─────────────────────────────────────────────────────────────── */
 
 /** The value in one line: the amount (or what stands for none) and where it comes from, and the edition of Discogs it was read from, for the credit. */
-function summaryOf({ value, money }: Shown): { amount: string; origin: string; release: Value | null } {
+function summaryOf({ value, money }: Shown): { amount: string; origin: string; release: Release | null } {
     const amount = value.amount ?? (value.conditions ? meanOfConditions(value.conditions) : null)
     if (!value.origin || amount === null || amount === undefined) return { amount: '—', origin: noValueText(value), release: null }
     const discogs = value.origin === ValueOrigin.DISCOGS

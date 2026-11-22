@@ -43,7 +43,7 @@ const fingerprint = (text) => {
     return (hash >>> 0).toString(36)
 }
 function describe(node) {
-    if (node.nodeType === 3) return node.textContent.replace(/ /g, '⍽').replace(/\s+/g, ' ')
+    if (node.nodeType === 3) return node.textContent.replace(/\u00a0/g, '⍽').replace(/\s+/g, ' ')
     if (node.nodeType !== 1) return ''
     const tag = node.tagName.toLowerCase()
     // what a text area holds is its value (read below), not the text a browser or React may put inside it
