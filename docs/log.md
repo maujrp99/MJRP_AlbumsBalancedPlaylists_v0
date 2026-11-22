@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 05:36] step — F83, onda 7a: o dourado do painel de gerar de novo, capturado do painel à mão
+
+**Branch:** claude/f83-wave-7a-recipe-pieces
+
+- O dourado do painel de gerar de novo, capturado do painel à mão (`components/playlists/RegeneratePanel.js` com `BlendRecipeCard` e `BlendIngredientsPanel`, atrás do invólucro) ANTES de tocá-lo: 22 cenários em `test/support/regenerateScenarios.js`, tocados por `test/support/regenerateHost.tsx` (a rota `playlistsView()`, o controlador de gerar trocado por um que anota a configuração recebida), guardados em `test/fixtures/regenerateBeforeF83.json`. Cobrem: fechado e aberto; aberto na receita de cada uma das quatro e nas playlists sem receita (antes da F62) e com receita que não existe; cada receita escolhida; cada ingrediente (Top 1/5/10, as cinco de agrupamento, as três de estrutura, as três de fonte); o deslizador; a duração que só aparece onde muda o resultado; o que se mudou guardado num redesenho do painel; a opção escondida que ainda vai para a geração; «Regenerate Playlists» (a configuração entregue, chave a chave); depois de gerar o painel segue as playlists novas; geração que falha mantém as escolhas; a tela aberta de novo esquece; o celular (o «⋯ → Reconfigure» abre e rola até o painel). Guardam o HTML do painel, a configuração entregue, o foco e a rolagem.
+- O `normalize` do dourado do painel não compara o branco nas pontas de um elemento (o navegador não o desenha) e marca dois nós de texto lado a lado (`¦`): o HTML antigo tinha um nó só, e o Chromium compõe cada nó à parte.
+- O registro da captura: `reports/evidence/F83/wave-7a/capture-before.test.tsx` (rodou como `test/screens/playlists/RegeneratePanel.capture.test.tsx`, com `TZ=America/Sao_Paulo`, pela fila). Nenhuma linha de produto tocada.
+
 ## [2026-11-22 05:25] step — F83, os mapas das ondas 7 (Blend) e 8 (o fecho)
 
 **Branch:** claude/f83-wave-7-blend-map
