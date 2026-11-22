@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 19:17] step — publicado em produção: «Create» enxuta no computador, sem a linha laranja, e a tela Albums diz que carrega (F79), da `fe9c93b`
+
+**Branch:** main
+
+- Com a palavra dele («Publica»). Testes 4182/4182 na publicação. Conferido no ar: o arquivo principal não traz mais a linha de carregamento e traz «What is a series?» e a regra do bloco mais baixo. Volta: histórico de versões do Firebase Hosting.
+- Ele pediu: «Quero ver um protótipo num artefato separado do CMS» — em construção em `wip/cms-prototype`, dois níveis (painel; na própria tela).
+- Na migração: a prévia `staging` está na `01f56fd` (8a, 8b, junta 4); 8c (folha do celular) construída e com o juiz terminando; junta 5 (este pacote em React) em `claude/f83-sync-5-lean-create-and-albums-loading`; falta a 8d (limpeza).
+
 ## [2026-11-22 19:15] step — a publicação parava calada com muitos worktrees (F64)
 
 **Branch:** main
