@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 11:26] step — F91: o teste do menu acompanha o «+» maior
+
+**Branch:** main
+
+- O commit `6b3e53e` saiu com um teste do menu ainda esperando o traço antigo (erro meu: a cadeia de comandos não parou no teste vermelho). Corrigido; a suíte inteira passa (325 arquivos, 4140 testes).
+
 ## [2026-11-22 11:25] decision — F91: o «+» um pouco maior e o botão «Go and create!»
 
 **Branch:** main

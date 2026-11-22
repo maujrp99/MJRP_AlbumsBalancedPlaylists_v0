@@ -29,7 +29,7 @@ describe('the bar of the top menu', () => {
         expect(first.getAttribute('href')).toBe('/start')
         expect(first.classList.contains('cur')).toBe(true)
         expect(first.getAttribute('aria-current')).toBe('page')
-        expect(first.querySelector('svg.ic line[x1="12"][y2="19"]')).not.toBeNull()
+        expect(first.querySelector('svg.ic line[x1="12"][y2="20"]')).not.toBeNull()
         expect(first.querySelector('svg.ic line[x1="4"][x2="20"]')).not.toBeNull()
         expect(document.body.textContent).not.toMatch(/\bStart\b/)
     })
