@@ -193,7 +193,10 @@ export class HomeView extends BaseView {
 
         const search = this.$('#btnScanArtist');
         const busy = scan.status === ScanStatus.SCANNING;
-        search.textContent = busy ? 'Searching…' : 'Search';
+        // Written only when it changes: rewriting the same label replaces the text node under the pointer between the
+        // press (which blurs the field and draws the stage) and the release, and WebKit then drops the click (UAT-282)
+        const label = busy ? 'Searching…' : 'Search';
+        if (search.textContent !== label) search.textContent = label;
         search.disabled = busy;
         if (busy) search.setAttribute('aria-busy', 'true');
         else search.removeAttribute('aria-busy');

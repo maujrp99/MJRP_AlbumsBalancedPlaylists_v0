@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 04:12] step — Start no celular: tocar em «Search» depois de digitar inicia a busca no WebKit (F79, UAT-282)
+
+**Branch:** fix/f79-search-tap-starts-the-search
+
+- Causa reproduzida no site construído, em WebKit: apertar o botão tira o foco do campo; o redesenho do palco reescrevia o texto do botão (o mesmo texto) e trocava o nó de texto entre o apertar e o soltar; o WebKit descarta o clique. O botão não é trocado; o Enter não passa por isso.
+- Conserto: `HomeView.drawStage` só escreve o texto do botão quando muda. Teste novo `test/components/home/HomeSearchTap.test.js` (falhava antes, passa agora). Suíte: 325 arquivos, 4138 testes, verde; lint sem erros.
+- Prova em WebKit (iPhone 14, `tap()` com `hasTouch`, e 1280) e Chromium: clique/toque em «Search» 0 → 9 capas no WebKit; Enter, «or paste a list», «Search an artist instead» e «What is a series?» seguem; pixels iguais a `main` fora do ruído. Não provado: iPhone de verdade. O status do UAT-282 não foi mudado aqui.
+- Evidência: `reports/evidence/F79/search-tap/proof.md`.
+
 ## [2026-11-22 02:45] step — publicado em produção: a tela Start enxuta no celular (F79, UAT-281), da `d03008a`
 
 **Branch:** main
