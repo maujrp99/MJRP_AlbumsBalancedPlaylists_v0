@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 15:08] step — F83 onda 8c: o retrato do motor à mão da Folha do celular, antes de tocar o motor
+
+**Branch:** claude/f83-wave-8c-phone-sheet
+
+- O retrato do motor à mão da Folha do celular (`components/ui/Sheet.js`, ligado às telas por `useSheetWindow`), capturado ANTES de tocar o motor: 32 cenários de tempo falso (as duas formas, a descida de 200 ms ao milissegundo, o foco ao abrir e ao fechar, Tab, Escape, o toque fora, o arrastar para baixo com o limite de 80 px, a tela que deixa de ser celular, menos movimento, a página presa e devolvida, folha sobre folha, a tela deixada com a folha aberta, a ordem em que quem abriu é avisado). `test/support/sheetScenarios.js`, `test/support/sheetWorld.js`, o retrato `test/fixtures/sheetEngineBeforeF83.json` (74 KB; duas capturas seguidas saíram idênticas) e o registro `reports/evidence/F83/wave-8c/capture-before.test.js` (o teste de captura roda uma vez e sai: foi `test/ui/sheetCapture.test.js`).
+- Nenhuma linha de produto mudou neste commit: o motor ainda é o `Sheet.js`.
+
+
 ## [2026-11-22 14:58] step — F83 sync 4: a seção 23 das lições, a TASK-36 e os totais do fim
 
 **Branch:** claude/f83-sync-4-create-and-the-three-lines
