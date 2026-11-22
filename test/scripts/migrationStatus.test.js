@@ -34,17 +34,15 @@ beforeEach(() => {
 afterEach(() => fs.rmSync(root, { recursive: true, force: true }))
 
 describe('statusOf', () => {
-    it('counts the hand-made files and their lines, in views/ and components/ and the listed drawing outside them', () => {
-        const status = statusOf(root, { baseline: { 'views/A.js': 4, 'components/B.js': 1, 'components/sub/C.js': 1, 'utils/SafeDOM.js': 1, 'views/Gone.js': 50 } })
-        expect(status.handMade.files).toBe(4)
-        expect(status.handMade.lines).toBe(3 + 1 + 1 + 1)
-        expect(status.handMade.baselineFiles).toBe(5)
-        expect(status.handMade.baselineLines).toBe(57)
-        expect(status.handMade.migratedFiles).toBe(1) // views/Gone.js is no longer there
+    it('counts the hand-made files and their lines in views/ and components/ (the end state is zero), and the exceptions that still exist', () => {
+        const status = statusOf(root, { exceptions: { 'utils/SafeDOM.js': 'a reason', 'utils/Gone.js': 'gone' } })
+        expect(status.handMade.files).toBe(3)
+        expect(status.handMade.lines).toBe(3 + 1 + 1)
+        expect(status.handMade.onPurpose).toBe(1) // utils/Gone.js is no longer there
     })
 
     it('counts the React files by folder, and the bridges to old pieces', () => {
-        const status = statusOf(root, { baseline: {} })
+        const status = statusOf(root, { exceptions: {} })
         expect(status.react.files).toBe(6)
         expect(status.react.byFolder).toEqual({ screens: 3, ui: 1, shell: 0, 'react-bridge': 2 })
         expect(status.bridges.files).toBe(1)
@@ -52,7 +50,7 @@ describe('statusOf', () => {
     })
 
     it('counts the texts written outside the dictionary: hand-made screens, components and controllers, and loose text in TSX', () => {
-        const status = statusOf(root, { baseline: {} })
+        const status = statusOf(root, { exceptions: {} })
         expect(status.texts.handMade).toBe(3) // the h1, the error notice, the success notice
         expect(status.texts.react).toBe(1) // the loose paragraph; the one that calls t() is clean
         expect(status.texts.total).toBe(4)
@@ -61,7 +59,7 @@ describe('statusOf', () => {
 
 describe('formatStatus and the command', () => {
     it('prints one line for each thing that is left', () => {
-        const text = formatStatus(statusOf(root, { baseline: { 'views/A.js': 4 } }), '2026-11-21')
+        const text = formatStatus(statusOf(root, { exceptions: {} }), '2026-11-21')
         expect(text).toMatch(/Migration status \(F83\), 2026-11-21/)
         expect(text).toMatch(/hand-made screens\s+\d+ files, \d+ lines/)
         expect(text).toMatch(/React screens and pieces\s+6 files/)
@@ -69,13 +67,13 @@ describe('formatStatus and the command', () => {
         expect(text).toMatch(/texts outside the dictionary\s+4/)
     })
 
-    it('runs over the real site: a hand-made list that is still long (it shrinks with each wave: 94 files after wave 1, 83 after wave 2, 48 after wave 5a, 40 after wave 5b, 32 after wave 6a, 24 after wave 6b, 17 after wave 7b, 5 after wave 8b, 3 after wave 8c, 1 after wave 8d: only the page scroll lock) and no more files than the list of the day it began', () => {
+    it('runs over the real site and says the end state: no hand-made file, no bridge, no text outside the dictionary', () => {
         const run = spawnSync('node', ['scripts/migration-status.mjs', '--json'], { cwd: process.cwd(), encoding: 'utf8' })
         expect(run.status, run.stderr).toBe(0)
         const status = JSON.parse(run.stdout)
-        expect(status.handMade.files).toBeGreaterThan(0)
-        expect(status.handMade.baselineFiles).toBeGreaterThan(0)
-        expect(status.handMade.files).toBeLessThanOrEqual(status.handMade.baselineFiles)
-        expect(status.texts.handMade).toBeGreaterThan(10) // 443 after wave 5b, 292 after wave 6a, 73 after wave 7b, 26 after wave 8b: the texts of the windows, of the inventory and of the Blend moved to the dictionaries
+        expect(status.handMade.files).toBe(0)
+        expect(status.bridges).toEqual({ files: 0, uses: 0 })
+        expect(status.texts.total).toBeLessThanOrEqual(22) // 0 when the texts of wave 8d are in the dictionary
+        expect(status.handMade.onPurpose).toBeGreaterThan(0)
     })
 })

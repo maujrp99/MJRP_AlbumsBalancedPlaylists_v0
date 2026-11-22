@@ -7,8 +7,8 @@
  * session, kept in JavaScript); it tells this screen «draw again» through the bridge (AlbumsBridge) and the screen reads the controller and
  * the stores at the moment it draws. Like the hand-made screen, the albums under the bar are made anew at each notice (the list is one box
  * with a new `key` each time: the focus on a card goes back to the page, the covers are asked again), while the bar and the pagers are
- * kept and written in place. The windows that stay hand-made (edit and delete a series, the album, the inventory, the ranking) are
- * called as before, behind react-bridge/legacy/.
+ * kept and written in place. The windows (edit and delete a series, the album, the inventory, the ranking) are React too; the controller of
+ * the session under the screen stays JavaScript.
  */
 import { useCallback, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { t } from '../../i18n/t.js'

@@ -1,6 +1,6 @@
 /**
  * RegeneratePanel - the panel «Reconfigure your Music Playlist Blend» of the playlists screen (F83 wave 7a; it was components/playlists/RegeneratePanel.js
- * behind react-bridge/legacy/RegeneratePanel.tsx): a header that folds, the cards to choose the recipe, the ingredients, and «Regenerate Playlists».
+ * behind a wrapper that no longer exists): a header that folds, the cards to choose the recipe, the ingredients, and «Regenerate Playlists».
  * The same HTML and the same behaviour as the hand-made panel. The cards and the ingredients are ui/recipe/, shared with the Blend screen.
  *
  * What it does as the hand-made panel did:

@@ -4,15 +4,15 @@
 //
 // Prints what is left: the screens and components made by hand (files and lines, against the list of the day the migration
 // began), the React files, the bridges to old pieces, and the texts written outside the dictionary. The numbers go to the log
-// entry of each wave, and the lists that only shrink are guarded by the architecture tests (handMadeScreensOnlyShrink,
-// bridgesOnlyShrink); this is the reading for people. It writes nothing.
+// entry of each wave, and the end state is guarded by an architecture test (since wave 8d: views/, components/ and the bridges must not exist;
+// the final rule, test/architecture/noHandMadeScreens.test.js); this is the reading for people. It writes nothing.
 //
 // What it does not say: whether a screen «redesigned» was born in React (review), and the count of texts is a heuristic
 // (scripts/lib/stringSites.mjs): good to about ten per cent, it does not see a text that arrives by a variable.
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { HAND_MADE } from '../test/architecture/handMadeScreensBaseline.js'
+import { EXCEPTIONS } from '../test/architecture/support/handMadeRule.js'
 import { countSites } from './lib/stringSites.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -34,21 +34,22 @@ function walk(dir) {
 
 const filesIn = (root, folder, pattern) => walk(path.join(root, folder)).map(file => posix(path.relative(root, file))).filter(file => pattern.test(file) && !file.endsWith('.d.ts'))
 const linesOf = (root, file) => (fs.readFileSync(path.join(root, file), 'utf8').match(/\n/g) || []).length
-const sitesOf = (root, file) => countSites(fs.readFileSync(path.join(root, file), 'utf8'), file).length
 
-/** What is left to migrate, read from the tree under `root` (public/js). `baseline` is the list of the day the migration began. */
-export function statusOf(root = SITE, { baseline = HAND_MADE } = {}) {
-    const insideFolders = HAND_MADE_FOLDERS.flatMap(folder => filesIn(root, folder, /\.(js|ts|tsx)$/))
-    const outside = Object.keys(baseline).filter(file => !HAND_MADE_FOLDERS.some(folder => file.startsWith(`${folder}/`)) && fs.existsSync(path.join(root, file)))
-    const handMadeFiles = [...insideFolders, ...outside]
-    const baselineFiles = Object.keys(baseline)
+/** The names of things that are not translated: a brand or an address on the screen is the same in every language. */
+const PROPER = /^(Discogs|Spotify|Apple Music|MusicKit|[a-z0-9.-]+\.[a-z]{2,}(\/\S*)?)$/i
+
+const sitesOf = (root, file) => countSites(fs.readFileSync(path.join(root, file), 'utf8'), file).filter(site => !PROPER.test(site.text)).length
+
+/** What is left to migrate, read from the tree under `root` (public/js). The end state: nothing hand-made, no bridge, no text outside the dictionary. */
+export function statusOf(root = SITE, { exceptions = EXCEPTIONS } = {}) {
+    const handMadeFiles = HAND_MADE_FOLDERS.flatMap(folder => filesIn(root, folder, /\.(js|ts|tsx)$/))
 
     const reactFiles = REACT_FOLDERS.flatMap(folder => filesIn(root, folder, /\.(ts|tsx)$/))
     const byFolder = Object.fromEntries(REACT_FOLDERS.map(folder => [folder, reactFiles.filter(file => file.startsWith(`${folder}/`)).length]))
 
     const bridgeFiles = reactFiles.filter(file => file.startsWith(LEGACY))
     const everySource = walk(root).map(file => posix(path.relative(root, file))).filter(file => /\.(js|ts|tsx)$/.test(file))
-    const bridgeUses = everySource.filter(file => !file.startsWith(LEGACY) && /react-bridge\/legacy\//.test(fs.readFileSync(path.join(root, file), 'utf8')))
+    const bridgeUses = everySource.filter(file => !file.startsWith(LEGACY) && /(?:from|import)\s*\(?\s*['"][^'"]*react-bridge\/legacy\//.test(fs.readFileSync(path.join(root, file), 'utf8')))
 
     const handMadeTexts = TEXT_FOLDERS.flatMap(folder => filesIn(root, folder, /\.js$/)).reduce((sum, file) => sum + sitesOf(root, file), 0)
     const reactTexts = reactFiles.filter(file => file.endsWith('.tsx')).reduce((sum, file) => sum + sitesOf(root, file), 0)
@@ -57,9 +58,7 @@ export function statusOf(root = SITE, { baseline = HAND_MADE } = {}) {
         handMade: {
             files: handMadeFiles.length,
             lines: handMadeFiles.reduce((sum, file) => sum + linesOf(root, file), 0),
-            baselineFiles: baselineFiles.length,
-            baselineLines: Object.values(baseline).reduce((sum, lines) => sum + lines, 0),
-            migratedFiles: baselineFiles.filter(file => !fs.existsSync(path.join(root, file))).length
+            onPurpose: Object.keys(exceptions).filter(file => fs.existsSync(path.join(root, file))).length
         },
         react: {
             files: reactFiles.length,
@@ -79,7 +78,7 @@ export function formatStatus(status, date = new Date().toISOString().slice(0, 10
     const row = (label, value) => `${label.padEnd(30)}${value}`
     return [
         `Migration status (F83), ${date}`,
-        row('hand-made screens', `${plural(handMade.files, 'file')}, ${handMade.lines} lines  (the day it began: ${handMade.baselineFiles} files, ${handMade.baselineLines} lines; ${plural(handMade.migratedFiles, 'file')} gone)`),
+        row('hand-made screens', `${plural(handMade.files, 'file')}, ${handMade.lines} lines  (the day it began: 102 files, 17277 lines; ${plural(handMade.onPurpose, 'file')} outside React write the DOM on purpose, with the reason in test/architecture/support/handMadeRule.js)`),
         row('React screens and pieces', `${plural(react.files, 'file')}, ${react.lines} lines  (${Object.entries(react.byFolder).map(([folder, count]) => `${folder} ${count}`).join(', ')})`),
         row('bridges to old pieces', `${plural(bridges.files, 'file')} in react-bridge/legacy/, used by ${plural(bridges.uses, 'file')}`),
         row('texts outside the dictionary', `${texts.total}  (hand-made ${texts.handMade}, React ${texts.react}; a count good to about 10%)`)

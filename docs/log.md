@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 19:34] step — F83 onda 8d, 4: o último invólucro sai e a regra final vira sensor
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **O último invólucro sai:** `react-bridge/legacy/SessionSeriesController.ts` apagado; `screens/albums/index.ts` importa `controllers/SeriesController.js` direto e guarda o controlador da sessão (o `let made`), como o inventário faz com o dele. A pasta `react-bridge/legacy/` não existe mais. **O controlador continua JavaScript**: reescrevê-lo (e os outros quatro) em TypeScript está fora do escopo da F83 (a spec o diz) e fica como candidata própria, para os cinco de uma vez.
+- **A regra final** (`test/architecture/noHandMadeScreens.test.js`, com `support/handMadeRule.js`) substitui `handMadeScreensOnlyShrink` (+ a lista `handMadeScreensBaseline.js`) e `bridgesOnlyShrink` (+ `BRIDGE_USES`): `views/`, `components/` e `react-bridge/legacy/` não existem; fora de `screens/`, `ui/`, `shell/`, `react-bridge/` nenhum arquivo escreve o DOM (innerHTML, createElement, estilo ou classe do `body`, appendChild) sem estar na lista de exceções com o motivo: o roteador, `utils/pageScrollLock.js` (utilitário de página, sem equivalente em React; **mantido por decisão do orquestrador**), `MusicKitAuth` (a etiqueta de script do SDK), `AuthService` (uma classe no `body`) e `playlistExports` (o link do arquivo JSON). Exceção que não escreve mais o DOM, ou cujo arquivo sumiu, é acusada; há exemplos errados que a regra acusa.
+- **O placar** (`scripts/migration-status.mjs`) não lê mais a lista do dia em que começou: arquivos à mão em `views/` e `components/` (0), pontes (0, contadas só por `import`), textos fora do dicionário (nomes de marca e endereços não contam: Discogs, Spotify, `discogs.com/...`), e as exceções de propósito (5). Agora: 0 arquivos, 0 pontes, 22 textos (os da próxima entrada).
+
 ## [2026-11-22 19:27] step — F83 onda 8d, 3: BaseView.js sai (o título da aba mora no gancho da tela)
 
 **Branch:** claude/f83-wave-8d-closure
