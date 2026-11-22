@@ -65,14 +65,14 @@ describe('the Home on the phone (F79 over F76)', () => {
         vi.restoreAllMocks()
     })
 
-    it('the dock is the action bar from the start: «No albums yet», the next gesture, «Create series» off', async () => {
+    it('no bar until the first cover is chosen (UAT-281); then the dock is the action bar', async () => {
         await open(true)
 
+        expect(bar()).toBeNull()
+        card('Slanted').click()
         expect(bar()).not.toBeNull()
         expect(bar().classList.contains('md:hidden')).toBe(true)
-        expect(bar().textContent).toContain('No albums yet')
-        expect(bar().textContent).toContain('Tap a cover to add it')
-        expect($('#btnCreateSeriesPhone').disabled).toBe(true)
+        expect($('#btnCreateSeriesPhone')).not.toBeNull()
         expect($('#homeStage .home-eq').children).toHaveLength(32)
     })
 
@@ -154,6 +154,8 @@ describe('the Home on the phone (F79 over F76)', () => {
     it('the visitor reads where the series is kept under the field, not in the bar', async () => {
         await open(true, { guest: true })
 
+        expect($('#homeGuestStage').hidden).toBe(true) // UAT-281: only once the series has albums
+        card('Slanted').click()
         expect($('#homeGuestStage').hidden).toBe(false)
         expect($('#homeGuestStage').textContent).toContain("You're not signed in: the series is saved to this browser only.")
         expect(bar().textContent).not.toContain('not signed in')

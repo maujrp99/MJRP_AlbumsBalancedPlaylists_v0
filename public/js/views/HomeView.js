@@ -4,11 +4,12 @@ import { HomeController } from '../controllers/HomeController.js';
 import { SafeDOM } from '../utils/SafeDOM.js';
 import { describeScan, ScanStatus } from '../models/scanState.js';
 import { PICKER_FILTERS, defaultFilters } from '../models/albumPicker.js';
-import { stageIsBig, equalizerState } from '../models/homeSeries.js';
+import { stageIsBig, equalizerState, barShows, guestNoticeShows, phoneHintLink } from '../models/homeSeries.js';
 import { createEqualizer, setEqualizerState } from '../components/home/HomeEqualizer.js';
 import { HomePasteList } from '../components/home/HomePasteList.js';
 import { HomeDock, guestLine } from '../components/home/HomeDock.js';
 import { isPhone, onPhoneChange } from '../utils/isPhone.js';
+import { openSheet } from '../components/ui/Sheet.js';
 
 /** The ids of the Home's type chips, by the key of the filter (models/albumPicker.js). */
 const FILTER_BUTTON_IDS = Object.freeze({
@@ -18,6 +19,9 @@ const FILTER_BUTTON_IDS = Object.freeze({
 const RETRY_BUTTON_ID = 'btnScanRetry';
 const SKELETONS = { phone: 4, computer: 12 };
 const EQ_BARS = { phone: 32, computer: 48 };
+
+const SERIES_SENTENCE = 'A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.';
+const FIELD_HINT = { phone: 'An artist', computer: 'An artist, or paste a list of albums' };
 
 const gesture = () => (isPhone() ? 'Tap' : 'Click');
 
@@ -39,6 +43,7 @@ export class HomeView extends BaseView {
         this.controller = null;
         this.dock = null;
         this.pasteList = null;
+        this.helpSheet = null;
     }
 
     async render() {
@@ -60,7 +65,7 @@ export class HomeView extends BaseView {
             SafeDOM.fromHTML(getIcon('Search', 'home-field__ico')),
             SafeDOM.input({
                 type: 'text', id: 'artistScanInput', autocomplete: 'off', spellcheck: 'false',
-                placeholder: 'An artist, or paste a list of albums',
+                placeholder: isPhone() ? FIELD_HINT.phone : FIELD_HINT.computer,
                 'aria-label': 'Search an artist, or paste a list of albums'
             }),
             search
@@ -71,7 +76,9 @@ export class HomeView extends BaseView {
         return SafeDOM.section({ id: 'homeStage', className: 'home-stage is-big' }, [
             SafeDOM.div({ id: 'homeHero', className: 'home-hero' }, [
                 SafeDOM.h1({}, [SafeDOM.span({ className: 'home-hero__l1' }, 'Pick the albums.'), ' ', SafeDOM.span({ className: 'home-hero__l2' }, 'We blend the playlists.')]),
-                SafeDOM.p({}, 'A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.')
+                // On the phone the sentence opens from this link (UAT-281); on the computer it stays on the screen
+                SafeDOM.button({ type: 'button', className: 'home-what', 'aria-haspopup': 'dialog', onClick: () => this.openWhatIsASeries() }, 'What is a series?'),
+                SafeDOM.p({}, SERIES_SENTENCE)
             ]),
             field,
             paste,
@@ -146,7 +153,20 @@ export class HomeView extends BaseView {
         };
     }
 
+    /** «What is a series?» (phone): the same sentence, in the app's bottom sheet. */
+    openWhatIsASeries() {
+        if (this.helpSheet?.isOpen()) return;
+        this.helpSheet = openSheet({
+            variant: 'bottom',
+            title: 'What is a series?',
+            content: SafeDOM.p({ className: 'home-what__text' }, SERIES_SENTENCE),
+            id: 'whatIsASeries',
+            onClose: () => { this.helpSheet = null; }
+        });
+    }
+
     destroy() {
+        this.helpSheet?.close();
         // What is still on its way (a scan, the AI list, a save) must not draw on the next screen
         this.controller?.dispose?.();
         this.dock?.unmount();
@@ -156,7 +176,7 @@ export class HomeView extends BaseView {
     // --- drawn by the controller ---
 
     /** The stage: big or small, the field or the list, the hint, the equalizer, the fire on «Search». */
-    drawStage({ scan, mode, report, flame, guest, typing = false }) {
+    drawStage({ scan, mode, report, flame, guest, chosen = 0, typing = false }) {
         const phone = isPhone();
         const paste = mode === 'paste';
         const stage = this.$('#homeStage');
@@ -167,7 +187,8 @@ export class HomeView extends BaseView {
         this.$('#homeHero').hidden = !big;
         this.$('#homeField').hidden = paste;
         this.$('#homePaste').hidden = !paste;
-        this.drawHint(paste, typing);
+        this.drawHint(paste, typing, scan.status === ScanStatus.EMPTY, phone);
+        this.$('#artistScanInput').placeholder = phone ? FIELD_HINT.phone : FIELD_HINT.computer;
         setEqualizerState(stage.querySelector('.home-eq'), equalizerState(scan.status));
 
         const search = this.$('#btnScanArtist');
@@ -180,13 +201,23 @@ export class HomeView extends BaseView {
 
         const guestHost = this.$('#homeGuestStage');
         SafeDOM.clear(guestHost);
-        guestHost.hidden = !(guest && phone);
-        if (guest && phone) guestHost.appendChild(guestLine('stage-sign-in'));
+        const guestShows = phone && guestNoticeShows({ guest, chosen });
+        guestHost.hidden = !guestShows;
+        if (guestShows) guestHost.appendChild(guestLine('stage-sign-in'));
     }
 
-    drawHint(paste, typing) {
+    drawHint(paste, typing, notFound = false, phone = false) {
         const hint = this.$('#homeHint');
         SafeDOM.clear(hint);
+        if (phone) {
+            // One link, nothing else (UAT-281); none when the «not found» message has «Paste a list»
+            const link = phoneHintLink({ paste, notFound: notFound && !paste });
+            hint.hidden = !link;
+            if (link === 'artist') hint.append(this.modeLink('artist', 'Search an artist instead'));
+            if (link === 'paste') hint.append(this.modeLink('paste', 'or paste a list'));
+            return;
+        }
+        hint.hidden = false;
         if (paste) {
             hint.append('Paste or type one album per line. ', this.modeLink('artist', 'Search an artist instead'));
         } else if (typing) {
@@ -310,6 +341,9 @@ export class HomeView extends BaseView {
     }
 
     drawSeries(model) {
+        // The phone's bar comes with the first cover (UAT-281): without it the page needs less room below
+        const barless = isPhone() && !barShows({ chosen: model.albums.length, created: Boolean(model.created) });
+        this.$('#home-page')?.classList.toggle('is-barless', barless);
         this.dock?.draw(model);
     }
 
