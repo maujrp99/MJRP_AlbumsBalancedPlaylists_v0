@@ -4,8 +4,8 @@
  * (components/blend/BlendIngredientsPanel.js), which stays for the hand-made Blend screen until it moves;
  * test/ui/recipe/RecipePieces.sameAsHandMade.test.tsx keeps the two the same.
  *
- * The labels of the sections and the number of the slider have the space at their ends that the hand-made HTML had, as ONE text node: the browser draws none of it,
- * and the test of the playlists screen compares it. (The icon of «Ranking Source», `BarChart2`, is not in the icon table: nothing is drawn, as before, and its
+ * The labels of the sections and the number of the slider are written as the hand-made template broke them in lines (`broken`, as ONE text node): the browser draws none of that
+ * white space, but WebKit shapes the characters it is given, and the test of the playlists screen compares it. (The icon of «Ranking Source», `BarChart2`, is not in the icon table: nothing is drawn, as before, and its
  * label has the space before it too.)
  *
  * It has no store and no service: it is given the recipe and the choices, and gives back the new choices (`onChange`) each time one is made.
@@ -20,6 +20,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Icon } from '../Icon'
 import { t } from '../../i18n/t.js'
+import { broken } from './broken'
 import { GROUPING_STRATEGIES, OUTPUT_MODES, RANKING_TYPES, TRACK_COUNTS, ingredientsOf, showsDuration } from '../../models/recipeIngredients.js'
 import type { Choices } from '../../models/recipeIngredients.js'
 
@@ -61,7 +62,7 @@ function TopNumber({ chosen, onChoose }: { chosen: number; onChoose: (count: num
     return (
         <div>
             <label className={LABEL}>
-                <Icon name="Music" className="w-4 h-4 inline mr-2" />{`${t('ui.recipe.topNumber.label')} `}
+                <Icon name="Music" className="w-4 h-4 inline mr-2" />{broken(t('ui.recipe.topNumber.label'), 0, 16)}
             </label>
             <div className="grid grid-cols-5 gap-2">
                 {TRACK_COUNTS.map(n => (
@@ -86,6 +87,8 @@ function Duration({ choices, onChange }: { choices: Choices; onChange: (next: Ch
     // the number beside the slider is written with the space at its ends the hand-made HTML had, until the slider moves: then the hand-made panel wrote «90m» in its place
     const [moved, setMoved] = useState(false)
     const duration = choices.duration || 60
+    // the attribute `value` of the slider is the one it was drawn with and stays (the hand-made panel wrote it once; a draw anew writes it again, here a new key)
+    const [drawnWith] = useState(duration)
     // the slider is heard on the element, by the event `input`; it reads the owner's latest choices and callback
     const latest = useRef({ choices, onChange })
     latest.current = { choices, onChange }
@@ -93,7 +96,7 @@ function Duration({ choices, onChange }: { choices: Choices; onChange: (next: Ch
         const input = slider.current
         if (!input) return undefined
         // the value is written once the min and the max are on the element: a value written before them is held to the 0-100 of a range with no max
-        input.value = String(duration)
+        input.value = String(drawnWith)
         const heard = () => {
             const next = { ...latest.current.choices, duration: parseInt(input.value) }
             latest.current = { ...latest.current, choices: next }
@@ -107,7 +110,7 @@ function Duration({ choices, onChange }: { choices: Choices; onChange: (next: Ch
     return (
         <div>
             <label className={LABEL}>
-                <Icon name="Clock" className="w-4 h-4 inline mr-2" />{`${t('ui.recipe.duration.label')} `}
+                <Icon name="Clock" className="w-4 h-4 inline mr-2" />{broken(t('ui.recipe.duration.label'), 0, 16)}
             </label>
             <div className="flex items-center gap-4">
                 <input
@@ -117,10 +120,10 @@ function Duration({ choices, onChange }: { choices: Choices; onChange: (next: Ch
                     max="180"
                     step="5"
                     id="blend-duration-slider"
-                    defaultValue={duration}
+                    defaultValue={drawnWith}
                     className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-orange-400"
                 />
-                <span id="blend-duration-display" className="text-2xl font-bold text-orange-400 w-12 text-center">{moved ? t('ui.recipe.duration.value', { minutes: duration }) : ` ${t('ui.recipe.duration.value', { minutes: duration })} `}</span>
+                <span id="blend-duration-display" className="text-2xl font-bold text-orange-400 w-12 text-center">{moved ? t('ui.recipe.duration.value', { minutes: duration }) : broken(t('ui.recipe.duration.value', { minutes: duration }), 24, 20)}</span>
             </div>
             <p className="text-xs text-muted mt-2">{t('ui.recipe.duration.hint')}</p>
         </div>
@@ -131,7 +134,7 @@ function Structure({ chosen, onChoose }: { chosen: string; onChoose: (value: str
     return (
         <div>
             <label className={LABEL}>
-                <Icon name="LayoutGrid" className="w-4 h-4 inline mr-2" />{`${t('ui.recipe.structure.label')} `}
+                <Icon name="LayoutGrid" className="w-4 h-4 inline mr-2" />{broken(t('ui.recipe.structure.label'), 0, 16)}
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {OUTPUT_MODES.map(({ value, icon }) => (
@@ -146,7 +149,7 @@ function Source({ chosen, onChoose }: { chosen: string; onChoose: (value: string
     return (
         <div>
             <label className={LABEL}>
-                <Icon name="BarChart2" className="w-4 h-4 inline mr-2" />{` ${t('ui.recipe.source.label')} `}
+                <Icon name="BarChart2" className="w-4 h-4 inline mr-2" />{broken(t('ui.recipe.source.label'), 20, 16)}
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {RANKING_TYPES.map(({ value, icon }) => (
@@ -188,7 +191,7 @@ function Grouping({ chosen, onChoose }: { chosen: string; onChoose: (value: stri
     return (
         <div>
             <label className={LABEL}>
-                <Icon name="Layers" className="w-4 h-4 inline mr-2" />{`${t('ui.recipe.grouping.label')} `}
+                <Icon name="Layers" className="w-4 h-4 inline mr-2" />{broken(t('ui.recipe.grouping.label'), 0, 16)}
             </label>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 {GROUPING_STRATEGIES.map(({ value, icon }) => (

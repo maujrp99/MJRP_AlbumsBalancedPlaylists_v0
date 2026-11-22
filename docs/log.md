@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 06:43] step — F83, onda 7a: o texto das peças como o molde à mão o quebrava (achado do WebKit)
+
+**Branch:** claude/f83-wave-7a-recipe-pieces
+
+- O que a prova no navegador achou, consertado: (1) o texto das peças (`ui/recipe/broken.ts`) leva a quebra de linha e a indentação do molde à mão, como UM nó: o WebKit mede o texto que recebe (o selo «SPOTIFY» e o «BEA» saíam 0,19 e 0,38 px mais largos com espaços no lugar da quebra); `RecipePieces.sameAsHandMade.test.tsx` ganhou os casos que comparam cada nó de texto até o último espaço (`rawTexts`); (2) o atributo `value` do deslizador fica o do desenho (`useState`), como o à mão o escrevia uma vez.
+- O teto de peso medido de novo com o texto das peças: script principal 213.923 B (teto 214.066 B), o que vem depois da primeira tela 215.845 B, `background` de 56.300 B para 56.400 B (a necessidade medida é 56.331 B).
+
 ## [2026-11-22 05:52] step — F83, onda 7a: o painel de gerar de novo em React, o invólucro e o arquivo à mão saem
 
 **Branch:** claude/f83-wave-7a-recipe-pieces

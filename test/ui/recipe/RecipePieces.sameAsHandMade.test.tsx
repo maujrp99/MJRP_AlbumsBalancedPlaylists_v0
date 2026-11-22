@@ -115,6 +115,37 @@ describe('the ingredients in React are the hand-made ones', () => {
     })
 })
 
+/** Every text of a box exactly as it is in the page, the white space inside it included (a text of white space alone, between two tags, is not one). */
+const rawTexts = (box: HTMLElement): string[] => {
+    const found: string[] = []
+    const walk = (node: Node): void => {
+        if (node.nodeType === 3 && /\S/.test(node.nodeValue ?? '')) found.push(node.nodeValue ?? '')
+        node.childNodes.forEach(walk)
+    }
+    walk(box)
+    return found
+}
+
+describe('the texts are the hand-made ones to the character (WebKit shapes the white space inside a text: «Y» before a space is kerned, before a line break it is not)', () => {
+    afterEach(() => { document.body.innerHTML = '' })
+
+    it('the cards: the label «RECOMMENDED» and every badge, with their line breaks and their indentation', async () => {
+        const old = handMade((containerId) => { const cards = new BlendRecipeCard({ containerId }); cards.selectedRecipe = null; cards.render() })
+        const now = await inReact(<RecipeCards recipes={recipesOf(getAllAlgorithms())} selectedId={null} onSelect={() => {}} />)
+        expect(rawTexts(now)).toEqual(rawTexts(old))
+        expect(rawTexts(now).some(text => text === `\n${' '.repeat(20)}SPOTIFY\n${' '.repeat(16)}`)).toBe(true)
+    })
+
+    it('the ingredients: every label of a section, the number beside the slider and the options', async () => {
+        for (const id of ['mjrp-balanced-cascade', 'top-n-user', 'gone-recipe']) {
+            const old = handMade((containerId) => { const panel = new BlendIngredientsPanel({ containerId }); panel.setRecipe({ id }); panel.render() })
+            const now = await inReact(<Ingredients recipeId={id} choices={DEFAULT_CHOICES} onChange={() => {}} />)
+            expect(rawTexts(now), id).toEqual(rawTexts(old))
+            document.body.innerHTML = ''
+        }
+    })
+})
+
 describe('the comparison catches a difference (it is not a rubber stamp)', () => {
     afterEach(() => { document.body.innerHTML = '' })
 
