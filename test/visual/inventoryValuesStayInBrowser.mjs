@@ -2,6 +2,8 @@
  * Where a read Discogs value lives in the browser, and for how long (F75, investigation 2026-11-21).
  * Real Chromium, the real CacheManager (memory + IndexedDB) and the real InventoryValueService; only
  * the server call is a stub, and every host but localhost is refused (no Firebase, no Firestore, no Discogs).
+ * Since 2026-11-21 (F75, REQ-14) this cache is only the six-hour GUARD against asking Discogs twice in a row;
+ * the reading itself is kept in the item, in the database (test/visual/inventoryValuesKeptInDatabase.mjs).
  * Also (UAT-267): "Clear Cache" clears the album caches by name and keeps the readings and the rates.
  * Run: PLAYWRIGHT_MODULE=<path to playwright/index.mjs> node test/visual/inventoryValuesStayInBrowser.mjs
  */

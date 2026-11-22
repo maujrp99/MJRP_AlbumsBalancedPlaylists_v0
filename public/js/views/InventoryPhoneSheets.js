@@ -19,13 +19,16 @@ import { SafeDOM } from '../utils/SafeDOM.js'
 import { safeUrl } from '../utils/safeUrl.js'
 import { BUY_LINKS_NOTE, BuyLinkPlace, SELL_TRADE_SOON, buyLinkMarks, buyLinksOf } from '../models/buyLinks.js'
 import { InventoryStatus, statusLabel, statusOf } from '../models/inventoryStatus.js'
-import { DISCOGS_CREDIT, DISCOGS_MEAN_TITLE, ValueOrigin, moneyOf, noValueText, valueLabel } from '../models/inventoryValue.js'
+import { DISCOGS_CREDIT, discogsKindNote, ValueOrigin, momentText, moneyOf, noValueText, valueLabel } from '../models/inventoryValue.js'
 import { SORT_OPTIONS } from '../models/inventorySort.js'
+import { ViewMode } from '../models/inventoryViewMode.js'
 import { statusText } from './renderers/InventoryPhoneRow.js'
 import { SELLER_SETTINGS_TEXT } from './renderers/InventoryValueHeader.js'
 
 const STATUS_ORDER = Object.freeze([InventoryStatus.OWNED, InventoryStatus.NOT_OWNED, InventoryStatus.WISHLIST])
 const FORMATS = Object.freeze([['all', 'All'], ['cd', 'CD'], ['vinyl', 'Vinyl'], ['digital', 'Digital']])
+/** The two views of the list, each with the icon the computer's switch uses (F89). */
+const VIEWS = Object.freeze([[ViewMode.GRID, 'Gallery', 'Grid'], [ViewMode.LIST, 'List', 'List']])
 
 /** A choice of a list: a row of 48 px, the chosen one with a check and `aria-pressed`. */
 function choiceRow(label, chosen, onPick) {
@@ -77,7 +80,8 @@ function valueGroup(item, value, money) {
     if (value.origin === ValueOrigin.YOURS) children.push(note('Written by you.'))
     if (!value.origin) children.push(note(noValueText(value)))
     if (value.origin === ValueOrigin.DISCOGS) {
-        children.push(note(`${DISCOGS_MEAN_TITLE}.`))
+        children.push(note(`${discogsKindNote(value)}.`))
+        if (momentText(value.readAt)) children.push(note(`Read on ${momentText(value.readAt)}.`))
         const url = safeUrl(value.release?.url)
         if (url) children.push(SafeDOM.a({ className: 'inv-link', href: url, target: '_blank', rel: 'noopener' }, 'This edition on Discogs ↗'))
         children.push(discogsCredit())
@@ -129,6 +133,18 @@ function formatChoices(format, onFormat) {
     return row
 }
 
+/** Gallery or list: the same two icons as the computer's switch and the albums screen's, each with its name. */
+function viewChoices(view, onView) {
+    const row = SafeDOM.div({ className: 'inv-segments inv-segments--views', role: 'group', 'aria-label': 'View' })
+    VIEWS.forEach(([mode, label, icon]) => {
+        const button = SafeDOM.button({ className: 'inv-segment inv-segment--view', 'aria-pressed': String(view === mode), dataset: { view: mode }, onClick: () => onView(mode) })
+        button.appendChild(SafeDOM.fromHTML(getIcon(icon, 'inv-segment__icon')))
+        button.appendChild(SafeDOM.span({}, label))
+        row.appendChild(button)
+    })
+    return row
+}
+
 function sortChoices(sort, onSort) {
     const list = SafeDOM.div({ className: 'inv-choices', role: 'group', 'aria-label': 'Sort by' })
     SORT_OPTIONS.forEach(({ value, label }) => {
@@ -140,11 +156,11 @@ function sortChoices(sort, onSort) {
 }
 
 /**
- * The format and the order. Each choice applies at once; the sheet shows it and the footer says
- * how many albums the list has now.
- * @param {{ format: string, sort: string, count: () => number, onFormat: Function, onSort: Function, onClose?: Function }} options
+ * The view, the format and the order. Each choice applies at once; the sheet shows it and the footer
+ * says how many albums the list has now.
+ * @param {{ format: string, sort: string, view: string, count: () => number, onFormat: Function, onSort: Function, onView: Function, onClose?: Function }} options
  */
-export function openFiltersSheet({ format, sort, count, onFormat, onSort, onClose }) {
+export function openFiltersSheet({ format, sort, view, count, onFormat, onSort, onView, onClose }) {
     const shown = () => `Show ${count()} ${count() === 1 ? 'album' : 'albums'}`
     const done = SafeDOM.button({ className: 'btn btn-primary', dataset: { role: 'filters-done' } }, shown())
     const content = SafeDOM.div({ className: 'inv-sheet' })
@@ -152,12 +168,13 @@ export function openFiltersSheet({ format, sort, count, onFormat, onSort, onClos
     const draw = (now) => {
         SafeDOM.clear(content)
         content.append(
+            group([heading('View'), viewChoices(now.view, (mode) => { onView(mode); draw({ ...now, view: mode }) })]),
             group([heading('Format'), formatChoices(now.format, (code) => { onFormat(code); draw({ ...now, format: code }) })]),
             group([heading('Sort by'), sortChoices(now.sort, (value) => { onSort(value); draw({ ...now, sort: value }) })])
         )
         done.textContent = shown()
     }
-    draw({ format, sort })
+    draw({ format, sort, view })
     done.addEventListener('click', () => sheet.close())
     return sheet
 }

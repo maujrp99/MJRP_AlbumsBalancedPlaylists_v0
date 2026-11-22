@@ -1,12 +1,13 @@
 /**
  * F75 (S-57) - the service that reads what the albums of the inventory are worth: the switch, the
- * rates of the day, the readings the browser keeps for six hours (and nowhere else), one album,
- * and the queue of "Update values". No network: the API, the cache and the inventory are doubles.
+ * rates of the day, the readings (kept in the item, in the database, since the decision of the MJRP
+ * of 2026-11-21, REQ-14; the browser holds them six hours as the guard against asking twice), one
+ * album, and the queue of "Update values". No network: the API, the cache and the inventory are doubles.
  * The calls of the API itself (the login, the deadline, a dropped call) are tested at the end.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
-    InventoryValueService, READING_PREFIX, READING_TTL_MS, RATES_KEY, EDITION_WRITE_SIZE
+    InventoryValueService, READING_PREFIX, READING_TTL_MS, RATES_KEY, READING_WRITE_SIZE
 } from '../../../public/js/services/inventory/InventoryValueService.js'
 import { createValueApi, VALUE_TIMEOUT_MS } from '../../../public/js/api/valueApi.js'
 import { InventoryService } from '../../../public/js/services/inventory/InventoryService.js'
@@ -36,7 +37,7 @@ function build({ answers = [], source = { kind: 'found', data: { discogs: 'on' }
         exchangeRates: vi.fn(async () => rates ?? failed('upstream_failed'))
     }
     const cache = memoryCache()
-    const inventory = { userId: 'user-1', setEditions: vi.fn(async () => { }) }
+    const inventory = { userId: 'user-1', setReadings: vi.fn(async (entries) => entries.map(entry => entry.id)) }
     const sleep = vi.fn(async () => true)
     let clock = NOW
     const service = new InventoryValueService({ api, cache, inventory, mayAsk, now: () => clock, sleep })
@@ -92,7 +93,7 @@ describe('the rates of the day (REQ-08)', () => {
 })
 
 describe('one album', () => {
-    it('the reading is kept in the browser only, under the person and the item, for six hours (REQ-05)', async () => {
+    it('the reading is held in the browser under the person and the item, for six hours: the guard against asking twice (REQ-15)', async () => {
         const { service, cache, inventory } = build()
 
         const outcome = await service.readItem(item('a'))
@@ -102,7 +103,7 @@ describe('one album', () => {
         expect([...cache.kept.keys()]).toEqual([key])
         expect(cache.kept.get(key).ttl).toBe(READING_TTL_MS)
         expect(READING_TTL_MS).toBe(6 * 60 * 60 * 1000)
-        expect(inventory.setEditions).not.toHaveBeenCalled() // reading writes nothing to the cloud
+        expect(inventory.setReadings).not.toHaveBeenCalled() // reading one album writes nothing: keeping it is the next step
     })
 
     it('the server is asked with the edition the item already has', async () => {
@@ -135,26 +136,50 @@ describe('one album', () => {
         expect((await service.readingsOf([item('a')])).size).toBe(0)
     })
 
-    it('the edition used is kept in the item (catalogue data), once; no price goes with it', async () => {
+    it('the reading is kept in the item of the person, with the edition it was of (REQ-14)', async () => {
         const { service, inventory } = build()
         const { reading } = await service.readItem(item('a'))
 
-        await service.keepEditions([{ item: item('a'), reading }])
-        expect(inventory.setEditions).toHaveBeenCalledWith([{ id: 'a', discogs: { releaseId: 5012948, title: 'Harvest 1984, Europe', url: RELEASE.url } }])
-        expect(JSON.stringify(inventory.setEditions.mock.calls)).not.toMatch(/mint|conditions|currency/i)
-
-        inventory.setEditions.mockClear()
-        await service.keepEditions([{ item: item('a', { discogs: { releaseId: 5012948 } }), reading }])
-        expect(inventory.setEditions).not.toHaveBeenCalled()
+        await service.keepReadings([{ item: item('a'), reading }])
+        expect(inventory.setReadings).toHaveBeenCalledWith([{ id: 'a', reading, discogs: { releaseId: 5012948, title: 'Harvest 1984, Europe', url: RELEASE.url } }])
+        expect(reading.readAt).toBe('2026-11-20T12:00:00.000Z')
     })
 
-    it('an edition that could not be kept loses nothing the person sees', async () => {
-        vi.spyOn(console, 'error').mockImplementation(() => { })
+    it('an edition the item already has is not written again; the reading is', async () => {
         const { service, inventory } = build()
-        inventory.setEditions.mockRejectedValue(new Error('offline'))
         const { reading } = await service.readItem(item('a'))
 
-        await expect(service.keepEditions([{ item: item('a'), reading }])).resolves.toBeUndefined()
+        await service.keepReadings([{ item: item('a', { discogs: { releaseId: 5012948 } }), reading }])
+
+        expect(inventory.setReadings).toHaveBeenCalledWith([{ id: 'a', reading }])
+    })
+
+    it('a reading that could not be kept loses nothing the person sees', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => { })
+        const { service, inventory } = build()
+        inventory.setReadings.mockRejectedValue(new Error('offline'))
+        const { reading } = await service.readItem(item('a'))
+
+        await expect(service.keepReadings([{ item: item('a'), reading }])).resolves.toBe(1) // not silent: it says one was not kept
+    })
+
+    it('says how many readings could not be kept: the ones refused, and all of them when the write fails (never silent)', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => { })
+        const { service, inventory } = build()
+        const { reading } = await service.readItem(item('a'))
+        const read = [{ item: item('a'), reading }, { item: item('b'), reading }]
+
+        expect(await service.keepReadings(read)).toBe(0)
+        inventory.setReadings.mockResolvedValueOnce(['a'])
+        expect(await service.keepReadings(read)).toBe(1)
+        inventory.setReadings.mockRejectedValueOnce(new Error('offline'))
+        expect(await service.keepReadings(read)).toBe(2)
+    })
+
+    it('nothing to keep writes nothing', async () => {
+        const { service, inventory } = build()
+        await service.keepReadings([])
+        expect(inventory.setReadings).not.toHaveBeenCalled()
     })
 })
 
@@ -257,12 +282,33 @@ describe('"Update values": the queue (REQ-09)', () => {
         expect(await service.readMany(items(3))).toMatchObject({ done: 0, aborted: true })
     })
 
-    it('the editions found are written to the items in parts, and what is left at the end', async () => {
+    it('the readings found are kept in the items in parts, and what is left at the end; a newer one replaces the older (REQ-14, REQ-15)', async () => {
         const { service, inventory } = build()
 
-        await service.readMany(items(EDITION_WRITE_SIZE + 3))
+        await service.readMany(items(READING_WRITE_SIZE + 3))
 
-        expect(inventory.setEditions.mock.calls.map(([entries]) => entries.length)).toEqual([EDITION_WRITE_SIZE, 3])
+        expect(inventory.setReadings.mock.calls.map(([entries]) => entries.length)).toEqual([READING_WRITE_SIZE, 3])
+        expect(inventory.setReadings.mock.calls[0][0][0].reading.readAt).toBe('2026-11-20T12:00:00.000Z')
+    })
+
+    it('a run counts the readings it could not keep, so the notice can say so; the value is still read', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => { })
+        const { service, inventory } = build()
+        inventory.setReadings.mockRejectedValue(new Error('offline'))
+
+        const count = await service.readMany(items(2))
+
+        expect(count.read).toBe(2)
+        expect(count.unkept).toBe(2)
+    })
+
+    it('a failed album keeps nothing: the reading it had stays as it was', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => { })
+        const { service, inventory } = build({ answers: [failed('upstream_failed')] })
+
+        await service.readMany(items(1))
+
+        expect(inventory.setReadings).not.toHaveBeenCalled()
     })
 
     it('with nothing to read it asks nothing', async () => {
@@ -272,18 +318,27 @@ describe('"Update values": the queue (REQ-09)', () => {
     })
 })
 
-describe('the inventory keeps the edition, and only the edition', () => {
+describe('the inventory keeps the reading, and only the reading', () => {
     it('one write for all the items, then the store; an item that left the inventory is left out', async () => {
-        const albums = [{ id: 'a', title: 'A' }, { id: 'b', title: 'B' }]
+        const albums = [{ id: 'a', title: 'A', value: { amount: 25, currency: 'USD' } }, { id: 'b', title: 'B' }]
         const store = { getAlbums: () => albums.slice(), replaceAlbums: vi.fn() }
-        const repository = { setEditions: vi.fn(async () => ['a']) }
+        const repository = { setReadings: vi.fn(async () => ['a']) }
         const service = new InventoryService({ store, createRepository: () => repository })
         const discogs = { releaseId: 5012948, title: 'Harvest 1984, Europe', url: RELEASE.url }
+        const reading = { kind: 'found', readAt: '2026-11-20T12:00:00.000Z' }
 
-        await service.setEditions([{ id: 'a', discogs }, { id: 'gone', discogs }])
+        await service.setReadings([{ id: 'a', reading, discogs }, { id: 'gone', reading }])
 
-        expect(repository.setEditions).toHaveBeenCalledWith([{ id: 'a', discogs }])
-        expect(store.replaceAlbums).toHaveBeenCalledWith([{ id: 'a', title: 'A', discogs }, { id: 'b', title: 'B' }])
+        expect(repository.setReadings).toHaveBeenCalledWith([{ id: 'a', reading, discogs }])
+        expect(store.replaceAlbums).toHaveBeenCalledWith([{ id: 'a', title: 'A', value: { amount: 25, currency: 'USD' }, discogsReading: reading, discogs }, { id: 'b', title: 'B' }])
+    })
+
+    it('a write that fails leaves the store as it was', async () => {
+        const store = { getAlbums: () => [{ id: 'a' }], replaceAlbums: vi.fn() }
+        const service = new InventoryService({ store, createRepository: () => ({ setReadings: vi.fn(async () => { throw new Error('offline') }) }) })
+
+        await expect(service.setReadings([{ id: 'a', reading: { kind: 'found' } }])).rejects.toThrow('offline')
+        expect(store.replaceAlbums).not.toHaveBeenCalled()
     })
 })
 

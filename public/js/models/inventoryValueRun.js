@@ -8,7 +8,7 @@
  * long wait). The end says what happened, in numbers, and invents nothing.
  */
 
-import { ReadFailure, ReadingKind, failureText, needsReading } from './inventoryValue.js'
+import { ReadFailure, ReadingKind, failureText, needsKeeping, needsReading, neverRead } from './inventoryValue.js'
 
 /** About how long one album takes: up to three requests to Discogs, one a second, and their answers. */
 const SECONDS_PER_ALBUM = 3.5
@@ -19,8 +19,23 @@ export const WAITS_PER_ALBUM = 2
 /** The wait when the server says "wait" and not for how long. */
 export const DEFAULT_WAIT_MS = 60 * 1000
 
-/** The items a run reads: no value written by the person, and no fresh reading. */
+/**
+ * The items "Update values" reads: no value written by the person, and no reading younger than six
+ * hours (the guard against asking Discogs twice in a row). The reading kept in the item counts, as
+ * does the one the browser holds.
+ * @param {Array<Object>} items
+ * @param {Map<string, Object>} readings - item id -> the reading the browser holds
+ * @param {number} now - ms
+ */
 export const itemsToRead = (items, readings, now) => items.filter(item => needsReading(item, readings.get(item.id), now))
+
+/** The items that never had a reading, kept or held: what the notice counts and "Read them now" reads. */
+export const itemsNeverRead = (items, readings) => items.filter(item => neverRead(item, readings.get(item.id)))
+
+/** The readings only the browser has (or has newer), which a run keeps in the items with no question to Discogs. */
+export const readingsToKeep = (items, readings) => items
+    .filter(item => needsKeeping(item, readings.get(item.id)))
+    .map(item => ({ item, reading: readings.get(item.id) }))
 
 const isGiven = (value) => value !== undefined && value !== null
 
@@ -180,15 +195,34 @@ const failedSentence = (failed) => {
  * @returns {{ ok: boolean, text: string }}
  */
 export function valuesOutcome(count) {
-    const { total, done, read, noEdition, noSuggestion, failed, stopped, aborted } = count
-    const sentences = [`Values read for ${read} of ${albums(total)}.`]
+    const { total, read, failed, stopped, unkept = 0 } = count
+    const sentences = [`Values read for ${read} of ${albums(total)}.`, ...answerSentences(count), ...failedSentence(failed), ...unkeptSentence(unkept), ...endSentence(count)]
+    const clean = !stopped && unkept === 0 && Object.keys(failed).length === 0
+    return { ok: clean, text: sentences.join(' ') }
+}
+
+/** The albums Discogs answered with no value: no CD edition, no suggested price. */
+function answerSentences({ noEdition, noSuggestion }) {
+    const sentences = []
     if (noEdition > 0) sentences.push(`${albums(noEdition)} ${noEdition === 1 ? 'has' : 'have'} no CD edition on Discogs.`)
     if (noSuggestion > 0) sentences.push(`Discogs suggests no price for ${albums(noSuggestion)}.`)
-    sentences.push(...failedSentence(failed))
-    if (stopped) sentences.push(STOP_TEXT[stopped] || STOP_TEXT[ReadFailure.LIMIT])
-    else if (aborted && done < total) sentences.push(`Stopped by you after ${done} of ${total}.`)
-    const clean = !stopped && Object.keys(failed).length === 0
-    return { ok: clean, text: sentences.join(' ') }
+    return sentences
+}
+
+/** What the person is told of ONE value read but not saved to the inventory (REQ-14): the browser keeps it six hours (READING_TTL_MS), and «Update values» saves it. */
+export const UNKEPT_VALUE_TEXT = 'The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.'
+
+/** Values read but not saved to the inventory: said, and they still show in this browser (REQ-14). */
+function unkeptSentence(unkept) {
+    if (unkept <= 0) return []
+    const [noun, them] = unkept === 1 ? ['value', 'it'] : ['values', 'them']
+    return [`${unkept} ${noun} could not be saved to your inventory. This browser keeps ${them} for six hours; Update values tries to save ${them} again.`]
+}
+
+/** Why the run ended before the end, when it did. */
+function endSentence({ total, done, stopped, aborted }) {
+    if (stopped) return [STOP_TEXT[stopped] || STOP_TEXT[ReadFailure.LIMIT]]
+    return aborted && done < total ? [`Stopped by you after ${done} of ${total}.`] : []
 }
 
 /**

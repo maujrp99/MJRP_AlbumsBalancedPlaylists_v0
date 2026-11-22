@@ -1,0 +1,111 @@
+{
+  "phone.stage": "ok",
+  "phone.rowExportTarget": {
+    "x": 330,
+    "y": 271,
+    "w": 44,
+    "h": 44
+  },
+  "phone.rowExportLabels": [
+    "Export Side One",
+    "Export Side Two",
+    "Export Deep Cuts"
+  ],
+  "phone.pageScrollsSideways": false,
+  "phone.window.single": "Export Side Two\n\n\nExport to Apple Music\n\nExport to Spotify\n\nDownload JSON",
+  "phone.window.single.targets": [
+    {
+      "text": "Export to Apple Music",
+      "h": 52
+    },
+    {
+      "text": "Export to Spotify",
+      "h": 52
+    },
+    {
+      "text": "Download JSON",
+      "h": 52
+    }
+  ],
+  "phone.folderStep.reading": "Folder in Apple Music Your Apple Music folders could not be read. You can still export to the folder below, or type a folder name. Pink Floyd Essentials (default) New folder No folder (top of the library) Export Back",
+  "phone.folderStep.failed": "Folder in Apple Music Your Apple Music folders could not be read. You can still export to the folder below, or type a folder name. Pink Floyd Essentials (default) New folder No folder (top of the library) Export Back",
+  "phone.folderStep.selected": "Pink Floyd Essentials",
+  "phone.folderStep.targets": [
+    {
+      "t": "Pink Floyd Essentials (d",
+      "h": 44
+    },
+    {
+      "t": "New folder",
+      "h": 44
+    },
+    {
+      "t": "No folder (top of the li",
+      "h": 44
+    },
+    {
+      "t": "Export",
+      "h": 46
+    },
+    {
+      "t": "Back",
+      "h": 46
+    }
+  ],
+  "phone.spotify.single": "Export to Spotify Playlist Name Playlists 1 Total tracks 8 Export to Spotify This playlist becomes one Spotify playlist",
+  "phone.batchSheet": [
+    "Edit batch",
+    "Export",
+    "Delete batch"
+  ],
+  "phone.window.batch": "Export Road trip mix\n\n\nExport to Apple Music\n\nExport to Spotify\n\nDownload JSON",
+  "desktop.stage": "ok",
+  "desktop.batchButtons": [
+    "Edit batch Road trip mix",
+    "Export batch Road trip mix",
+    "Delete batch Road trip mix"
+  ],
+  "desktop.rowButtons": [
+    "Export Side Two",
+    "View the tracks of Side Two"
+  ],
+  "desktop.window.single": "Export Side Two Export to Apple Music Export to Spotify Download JSON",
+  "desktop.focusOnOpen": "apple",
+  "desktop.folderStep.reading": "Folder in Apple Music Reading your Apple Music folders... Pink Floyd Essentials (default) New folder No folder (top of the library) Export Back",
+  "desktop.folderStep.failed": "Folder in Apple Music Your Apple Music folders could not be read. You can still export to the folder below, or type a folder name. Pink Floyd Essentials (default) New folder No folder (top of the library) Export Back",
+  "desktop.folderStep.selected": "Pink Floyd Essentials",
+  "desktop.folderStep.targets": [
+    {
+      "t": "Pink Floyd Essentials (d",
+      "h": 44
+    },
+    {
+      "t": "New folder",
+      "h": 44
+    },
+    {
+      "t": "No folder (top of the li",
+      "h": 44
+    },
+    {
+      "t": "Export",
+      "h": 45
+    },
+    {
+      "t": "Back",
+      "h": 45
+    }
+  ],
+  "desktop.focusReturnsToRowButton": "Export Side Two",
+  "desktop.window.batch": "Export Road trip mix Export to Apple Music Export to Spotify Download JSON",
+  "errors": [
+    "phone console Worker Error: Error: Network error",
+    "phone console [AuthService] Anonymous sign-in failed: FirebaseError: Firebase: Error (auth/network-request-failed).",
+    "phone console [2026-11-22T02:50:39.756Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The oper",
+    "phone console [MusicKit] Initialization failed: Error: Token fetch failed: 500",
+    "desktop console Worker Error: Error: Network error\n    at Fe (http://127.0.0.1:56901/assets/search.worker-saFDN5Ff.js:1:8285)",
+    "desktop console [AuthService] Anonymous sign-in failed: FirebaseError: Firebase: Error (auth/network-request-failed).\n    at Yh (http://127.0.0.1:56901/assets/main-CsLURPj1.js:392:758)\n    at yn (http://127.0.0.1:569",
+    "desktop console [2026-11-22T02:50:46.096Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The oper",
+    "desktop console [MusicKit] Initialization failed: Error: Token fetch failed: 500\n    at vP._doInit (http://127.0.0.1:56901/assets/main-CsLURPj1.js:3059:13669)\n    at async vP.authorize (http://127.0.0.1:56901/assets/"
+  ]
+}

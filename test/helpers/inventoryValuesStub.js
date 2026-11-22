@@ -19,7 +19,7 @@ export function valuesWith({ source = 'on', rates = RATES, readings = new Map() 
         readingsOf: vi.fn(async (items) => new Map(items.filter(item => readings.has(item.id)).map(item => [item.id, readings.get(item.id)]))),
         readItem: vi.fn(async () => ({ failure: 'other', waitMs: null, stops: false })),
         readMany: vi.fn(async (items) => ({ total: items.length, done: 0, read: 0, noEdition: 0, noSuggestion: 0, failed: {}, stopped: null, aborted: false })),
-        keepEditions: vi.fn(async () => { })
+        keepReadings: vi.fn(async () => { })
     }
 }
 

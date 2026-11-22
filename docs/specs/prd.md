@@ -161,6 +161,8 @@ serves:: [[ROADMAP#^OUT-01]] ^EP-03
 folder:: ep-04-export-playlists
 serves:: [[ROADMAP#^OUT-01]] ^EP-04
 
+![[S-72-export-a-playlist-from-the-saved-playlists-screen]]
+
 
 
 
@@ -179,6 +181,8 @@ folder:: ep-06-mobile-use
 serves:: [[ROADMAP#^OUT-04]] ^EP-06
 
 ![[S-58-use-the-app-comfortably-on-the-phone]]
+
+![[S-71-see-the-inventory-as-a-gallery-on-the-phone]]
 
 
 

@@ -1,6 +1,15 @@
 # Plan — Feature F75: Preço de CDs e onde comprar, no inventário · Spec: [[spec]]
 **Approved**: pendente (o MJRP priorizou em 2026-11-20 01:32 e saiu; as decisões abaixo marcadas «decidido pelo agente — revisável» esperam o julgamento dele)
 
+## Emenda de 2026-11-21 — decidida pelo MJRP: a leitura do Discogs é guardada no banco (REQ-14 a REQ-16)
+Palavras do MJRP: «quero os dados persistidos sim e o botão serviria para atualizar valores»; «1.a» (guardar já, no lugar de ler sozinho e pedir autorização ao Discogs antes). Ele decidiu sabendo que os termos só puderam ser lidos de segunda mão (`reports/research/2026-11-21-discogs-terms-on-storing-prices.md`). **O que a decisão troca:** as seções abaixo que dizem «nenhum preço vai ao Firestore» e «seis horas no navegador» valem como história; o que vale é isto.
+- **Onde mora.** No documento do item do inventário da pessoa (`artifacts/{app}/users/{uid}/inventory/{item}`), no campo `discogsReading`, ao lado de `value` e `discogs`. As regras do Firestore já fecham essa coleção ao dono e deixam o campo passar: **sem mudança de regras nem de índices.** O servidor continua sem guardar nada.
+- **O que guarda:** os três estados (ou o menor preço e quantos à venda), a moeda, a edição (id, título, link), o tipo da leitura, a hora em que foi lida e `source: 'discogs'`. Nunca o valor que a pessoa escreveu.
+- **Uma regra só, agora:** o que a pessoa escreveu vence; senão, a leitura guardada mais nova (banco ou navegador), com a data; senão, nenhum, com o motivo. A idade não esconde mais nada.
+- **O navegador.** O cache de seis horas fica só como guarda: «Update values» não pergunta de novo ao Discogs o álbum lido há menos de seis horas. Uma leitura fresca que só o navegador tem (de antes desta mudança) é gravada no banco na próxima rodada, sem nova pergunta ao Discogs; nada é gravado em silêncio ao abrir a tela. Entre banco e navegador a leitura mais nova vence, e o «Clear Cache» continua guardando o cache dos valores.
+- **Quem vê.** O valor guardado é lido com o inventário, na tela da pessoa dona e só nela; ao trocar de pessoa, o que estava na tela é esquecido.
+- **Aberto, não resolvido aqui:** um produto com outros usuários pede autorização escrita do Discogs (os termos, de segunda mão, dizem licença pessoal, sem uso comercial, sem repasse).
+
 ## Architecture Approach
 O valor de um álbum tem **uma regra só**, pura, no navegador (`models/inventoryValue.js`): o que a pessoa escreveu vence; senão, uma leitura do Discogs com menos de seis horas; senão, nenhum valor, com o motivo. Tudo o que a tela mostra de valor (cartão, janela, totais, ordem) pergunta a essa regra.
 

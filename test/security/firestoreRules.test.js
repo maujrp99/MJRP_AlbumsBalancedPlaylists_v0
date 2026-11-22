@@ -60,6 +60,15 @@ describe('firestore.rules (F59)', () => {
         })
     })
 
+    it('the Discogs reading kept in an inventory item (`discogsReading`, F75 REQ-14) is read and written by its owner only, with no change of the rules', () => {
+        const inventory = blocks.find(block => block.path === '/artifacts/{appId}/users/{userId}/inventory/{document=**}')
+        expect(inventory).toBeDefined()
+        // the item is the owner's whole document: no field list that would have to know the new field, and nobody else reads it
+        expect(inventory.body).not.toMatch(/hasOnly|hasAll|affectedKeys|diff\(/)
+        allowsOf(inventory.body).forEach(({ condition }) => expect(condition).toMatch(OWNER))
+        expect([...operationsOf(inventory.body)].sort()).toEqual(['create', 'delete', 'read', 'update'])
+    })
+
     it('the rankings of a person are among them', () => {
         const rankings = blocks.find(block => block.path.includes('albumRankings'))
         expect(rankings).toBeDefined()
