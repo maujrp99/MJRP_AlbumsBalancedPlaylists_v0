@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 11:55] step — publicado em produção: «Create»/«Criar» com o «+» no menu e «Go and create!» (F91), da `c90bd45`
+
+**Branch:** main
+
+- Com a palavra dele («publique»). Testes 4140/4140 na publicação. Conferido no ar: a home serve «Criar» e o arquivo principal traz «Create» e «Go and create!». Volta: histórico de versões do Firebase Hosting.
+- Ele disse também: «e o copy da home, continua diferente do que aprovei no prototipo». Conferido: sem conta, o texto é o do protótipo v4 aprovado (só «Inicie» virou «Criar»); com conta aparece outro texto («Sua próxima série começa aqui.»), proposto pelo agente e nunca aprovado. Pergunta com ele: com conta, mostrar o mesmo texto aprovado?
+- Na migração: a onda 7 (a tela Blend) está na linha `integrate/staging-2026-11-21` (`bfcfd7f`) e na prévia `staging`; 8a (exportações) julgada (passa), a juntar; 8b em construção. Falta levar F91 e o conserto do «Search» à linha React.
+
 ## [2026-11-22 11:26] step — F91: o teste do menu acompanha o «+» maior
 
 **Branch:** main
