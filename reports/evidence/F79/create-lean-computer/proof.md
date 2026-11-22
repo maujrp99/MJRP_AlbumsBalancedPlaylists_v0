@@ -26,3 +26,24 @@
 **Arquivos:** `desktop-1280-main-vs-lean.jpg` (main à esquerda, ramo à direita: primeira visita, resultados, escolhidos), `desktop-1440-webkit-lean-states.jpg` (oito estados no WebKit 1440, com conta), `phone-393-main-vs-branch.jpg` (iPhone: primeira visita, folha «What is a series?», escolhidos), `a-facts.json` (as medidas por estado e a contagem de pontos diferentes por perfil, com o controle de ruído).
 
 **Não provado:** monitor maior que 1440 × 900 (o vazio embaixo cresce); Safari de verdade em Mac e iPhone de verdade (só o WebKit do Playwright); Firefox; o catálogo real (capas e discografia de exemplo); leitor de tela falando o `aria-expanded`.
+
+## B — a linha laranja de carregamento no alto sai
+
+**O que se pediu:** «agora que vi no menu aquela barra laranja que aparece no topo, nao deveria aparecer mesmo»; «a barra laranja aparece apenas qdo clico em album e blend»; perguntado se era a linha fina de carregamento, respondeu «1. Creio que sim».
+
+**Como:** `/albums` e `/blend` com a leitura das séries demorada: a rota do Firestore (bloqueada) é segurada 1,5 s antes de ser recusada; conta de teste; Chromium 1280 × 800 e WebKit iPhone 393 × 852; sondas a 250, 600, 1000 e 1400 ms e a tela já assentada (14 s depois); `main` duas vezes (controle de ruído) e o ramo.
+
+| | `main` | ramo |
+|---|---|---|
+| `#globalProgress` durante a leitura (250 a 1400 ms) | presente, `display: block`, 6 px no alto (no celular, logo abaixo do topo) | **não existe no DOM**; nenhum elemento fixo de 8 px ou menos no alto da página |
+| Depois de assentar | escondida | não existe |
+| Tela assentada, ramo contra `main` | | **0 pixel de diferença** nas quatro (1280 e iPhone, `/albums` e `/blend`); `main` contra `main` também 0 |
+| Tela durante a leitura, ramo contra `main` | | só a faixa do alto (a linha e seu brilho). Fora dela: 0 pixel no `/albums` 1280 e no `/blend` do iPhone; 295 pixels no giro do ícone de espera do `/blend` 1280 (a fase do giro); 45 510 no `/albums` do iPhone, a mesma região que oscila entre dois `main` (19 527 pixels de ruído nela) |
+
+**O que cada tela mostra sozinha enquanto as séries carregam:**
+- **Blend:** mostra o seu. «Loading your series…» no celular; no computador, o giro de espera no lugar dos cartões de série (`screens-own-loading-state-branch.jpg`).
+- **Albums: não mostra nada de espera.** Durante a leitura ela desenha o estado vazio («No albums match your filters» / «No albums in library, Create a series from the home page to get started») e só depois, se houver séries, os álbuns. A linha laranja era o único sinal de que algo carregava ali; **sem ela a tela Albums parece vazia por 1 a 2 s** (a leitura real, sem a espera forçada, é mais curta). Não inventei indicador novo, como mandado: fica como achado para o MJRP decidir.
+
+**Arquivos:** `top-of-page-during-load-1280.jpg` e `top-of-page-during-load-iphone.jpg` (o alto da página a 1 s da leitura: `main` com a linha, o ramo sem), `screens-own-loading-state-branch.jpg` (as telas inteiras do ramo durante a leitura), `b-facts.json` (as sondas e a conta de pontos diferentes).
+
+**Não provado:** a leitura real do Firestore de uma conta com séries (aqui a leitura é recusada depois da espera; o que se prova é a ausência da linha e o estado que a tela mostra durante a espera); WebKit de verdade no iPhone; a linha que a linha da migração (React) ainda desenha ao carregar uma tela sob demanda (`GlobalProgress.tsx`), que é outra peça.

@@ -85,10 +85,8 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 *   **Auto-Dismiss**: Uses `setTimeout(4000)` with cleanup handles.
 
 ### 3.2 `GlobalProgress.js`
-**Role**: "YouTube-style" Top Loading Bar.
-**Logic**:
-*   **Reference Counting**: Tracks `activeLoaders` count. Only hides when count reaches 0. Used by `SeriesService`; the album load does not use it.
-*   **Z-Index**: `z-[9999]` ensures visibility over all modals and overlays.
+
+> **2026-11-22:** `GlobalProgress.js` (the thin orange loading line at the top of the page) was removed from the repository, with its calls in `SeriesService` and the phone's `#globalProgress` rule. The MJRP: «agora que vi no menu aquela barra laranja que aparece no topo, nao deveria aparecer mesmo»; «a barra laranja aparece apenas qdo clico em album e blend». The Blend screen shows «Loading your series…» while the series are read; the code is in the git history.
 
 ### 3.3 `InlineProgress.js`
 

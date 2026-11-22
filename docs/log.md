@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 14:15] step — a linha laranja de carregamento no alto sai (GlobalProgress)
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- Dele (2026-11-22): «agora que vi no menu aquela barra laranja que aparece no topo, nao deveria aparecer mesmo»; «a barra laranja aparece apenas qdo clico em album e blend»; perguntado se era «a linha fina de carregamento no alto, que some sozinha», respondeu «1. Creio que sim». Era o `components/GlobalProgress.js`, ligado pelo `SeriesService` (4 chamadas: ler, criar, editar e apagar séries). Saíram: o componente (nada mais o usava), as chamadas, a regra `#globalProgress` do celular em `css/mobile.css` e as simulações dos testes de série. O `@keyframes progress-indeterminate` fica (a `.progress-bar` do `AlbumsGridRenderer` o usa).
+- Prova no site construído (`reports/evidence/F79/create-lean-computer/proof.md`, seção B): com a leitura das séries demorada, `main` mostra a linha (6 px, 1,4 s) e o ramo nada; telas assentadas, 0 pixel de diferença. Achado, sem indicador novo: o Blend mostra o seu («Loading your series…» / giro), mas a tela Albums mostra o estado vazio durante a leitura — a linha era o único sinal de espera ali; fica para ele decidir.
+- Não toca a linha da migração (React): a F94 (`GlobalProgress.tsx`, `loadScreen`) é outra peça e a pergunta dela continua aberta lá.
+
 ## [2026-11-22 14:05] step — F79: a tela Create enxuta também no computador
 
 **Branch:** wip/f79-create-lean-computer-and-no-loading-line
