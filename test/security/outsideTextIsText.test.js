@@ -16,9 +16,10 @@ import { createRoot } from 'react-dom/client'
 import { CompactCard, ExpandedCard } from '../../public/js/screens/albums/AlbumCard'
 import { SeriesGroups } from '../../public/js/screens/albums/SeriesGroups'
 import { Album } from '../../public/js/models/Album.js'
-import { InventoryGridRenderer } from '../../public/js/views/renderers/InventoryGridRenderer.js'
+import { Grid } from '../../public/js/screens/inventory/Grid'
+import { InventoryBridge } from '../../public/js/screens/inventory/InventoryBridge'
 import { Router } from '../../public/js/router.js'
-import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
+import { Breadcrumb, playlistsTrail } from '../../public/js/ui/Breadcrumb'
 import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSeriesSelector.js'
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
 import { startOn } from '../support/renderShell'
@@ -123,15 +124,23 @@ describe('text from outside is shown as text', () => {
     // The saved playlists card (batch name and playlist names) moved with its screen to React (F83 wave 1): its test is
     // test/screens/saved-playlists/outsideText.test.tsx, with the same assertions.
 
-    it('inventory card and inventory row: title, artist, format and id', () => {
-        const owned = { id: QUOTED, title: TEXT, artist: TEXT, format: TEXT, owned: true, purchasePrice: 10, currency: 'USD', notes: TEXT }
+    /** The albums of the inventory in React (F83 wave 6a: screens/inventory/Grid.tsx), the card of the grid or the row of the list. */
+    const inventoryGrid = (item, viewMode) => createElement(Grid, {
+        state: { filteredAlbums: [item], viewMode, isLoading: false },
+        bridge: new InventoryBridge(),
+        actions: { onView: noop, onEdit: noop, onDelete: noop, onStatus: noop }
+    })
+    const owned = () => ({ id: QUOTED, title: TEXT, artist: TEXT, format: TEXT, owned: true, purchasePrice: 10, currency: 'USD', notes: TEXT })
 
-        draw(InventoryGridRenderer.render({ filteredAlbums: [owned], viewMode: 'grid', isLoading: false }))
+    it('inventory card: title, artist, format and id', async () => {
+        await drawReact(inventoryGrid(owned(), 'grid'))
         expectOnlyText(host, TEXT)
         expect(host.querySelector('.inventory-card-wrapper').dataset.albumId).toBe(QUOTED)
         expect(host.querySelector('.status-select').dataset.albumId).toBe(QUOTED)
+    })
 
-        draw(InventoryGridRenderer.render({ filteredAlbums: [owned], viewMode: 'list', isLoading: false }))
+    it('inventory row: title, artist, format and id', async () => {
+        await drawReact(inventoryGrid(owned(), 'list'))
         expectOnlyText(host, TEXT)
         expect(host.querySelector('.inventory-row-wrapper').dataset.albumId).toBe(QUOTED)
     })
@@ -147,9 +156,8 @@ describe('text from outside is shown as text', () => {
         expectOnlyText(host, TEXT)
     })
 
-    it('breadcrumb: an address read from the URL', () => {
-        const path = `/playlists/${QUOTED}`
-        draw(Breadcrumb.render(path, {}))
+    it('breadcrumb: the trail of the playlists screen is text, whatever the address says', async () => {
+        await drawReact(createElement(Breadcrumb, { crumbs: playlistsTrail(false), onNavigate: noop }))
         expect(host.querySelector('img')).toBeNull()
         expect(window.__xss).toBeUndefined()
         expect(host.querySelector('.breadcrumb-current').textContent).toBe('Playlists')

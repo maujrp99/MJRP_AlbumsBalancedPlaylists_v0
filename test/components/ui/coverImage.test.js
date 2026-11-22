@@ -16,7 +16,8 @@ import { coverImage, watchCovers, COVER_STAND_IN } from '../../../public/js/comp
 import { act, createElement } from 'react'
 import { createRoot } from 'react-dom/client'
 import { CompactCard } from '../../../public/js/screens/albums/AlbumCard'
-import { Card } from '../../../public/js/components/ui/Card.js'
+import { ItemCard } from '../../../public/js/screens/inventory/ItemCard'
+import { ItemRow } from '../../../public/js/screens/inventory/ItemRow'
 import { AlbumCascade } from '../../../public/js/components/common/AlbumCascade.js'
 import { PickerCard } from '../../../public/js/ui/albumPicker/PickerParts'
 import { appFiles, importsOf, read } from '../../architecture/support/sourceImports.js'
@@ -164,9 +165,17 @@ describe('every place that draws an album cover uses it', () => {
         expect(isStandIn(img)).toBe(true)
     })
 
-    it.each(['grid', 'list'])('the inventory card (%s), written into the page as text', (variant) => {
-        document.body.innerHTML = Card.renderHTML({ variant, entity: album(), title: 'Animals', subtitle: 'Pink Floyd', image: GOOD })
-            + Card.renderHTML({ variant, entity: album({ id: 'a2' }), title: 'Wish', subtitle: 'Pink Floyd', image: undefined })
+    it.each([['grid', ItemCard], ['list', ItemRow]])('the inventory card (%s), drawn by React', async (_variant, Piece) => {
+        const host = document.createElement('div')
+        document.body.appendChild(host)
+        const none = () => { }
+        const actions = { onView: none, onEdit: none, onDelete: none, onStatus: none }
+        const money = { currency: 'USD', rates: null }
+        await act(async () => {
+            createRoot(host).render(createElement('div', null,
+                createElement(Piece, { item: { ...album(), title: 'Animals', artist: 'Pink Floyd', albumData: { coverUrl: GOOD } }, value: undefined, money, actions }),
+                createElement(Piece, { item: { ...album({ id: 'a2' }), title: 'Wish', artist: 'Pink Floyd', albumData: {} }, value: undefined, money, actions })))
+        })
         const [withAddress, without] = coversIn(document.body)
 
         expect(isStandIn(without)).toBe(true)
@@ -191,7 +200,7 @@ describe('every place that draws an album cover uses it', () => {
 
     it('the files that draw an album cover import the helper, and no file writes an inline error handler', () => {
         const drawers = [
-            'screens/albums/AlbumCard.tsx', 'components/ui/Card.js', 'components/common/AlbumCascade.js',
+            'screens/albums/AlbumCard.tsx', 'screens/inventory/ItemCard.tsx', 'screens/inventory/ItemRow.tsx', 'screens/inventory/phone/PhoneRow.tsx', 'components/common/AlbumCascade.js',
             'components/ViewAlbumModal.js', 'ui/albumPicker/PickerParts.tsx'
         ]
         const withoutTheHelper = drawers.filter(file => !importsOf(file).some(specifier => /(^|\/)(coverImage\.js|CoverImage)$/.test(specifier)))

@@ -24,7 +24,7 @@ import { PHONE_TABS, currentTab, screenName } from '../../public/js/shell/phoneT
 import { accountInitial } from '../../public/js/shell/accountNames'
 import { NAME_IN_THE_BAR } from '../../public/js/shell/barName'
 import { START_PATH, HOME_PATH } from '../../public/js/components/navigation/startRoute.js'
-import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
+import { albumsTrail } from '../../public/js/ui/Breadcrumb'
 import { startOn } from '../support/renderShell'
 import { world, scopedIdLookup, user } from '../support/shellScenarios.js'
 
@@ -659,7 +659,7 @@ describe('the menu of the computer (F85)', () => {
     it('the footer and the breadcrumb say Start', async () => {
         await on('/albums')
         expect(document.querySelector('#footer-container a[href="/start"]')).not.toBeNull()
-        expect(Breadcrumb.getCrumbs('/albums', {})[0]).toEqual({ label: 'Start', path: '/start' })
+        expect(albumsTrail()[0]).toEqual({ label: 'Start', path: '/start' })
     })
 })
 

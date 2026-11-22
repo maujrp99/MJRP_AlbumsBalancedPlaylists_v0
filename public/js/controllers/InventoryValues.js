@@ -18,6 +18,7 @@ import {
     writtenValueFrom
 } from '../models/inventoryValue.js'
 import { itemsNeverRead, itemsToRead, readFailedText, readingsToKeep, UNKEPT_VALUE_TEXT, valuesOutcome, valuesProgressText, valuesRunOutcome } from '../models/inventoryValueRun.js'
+import { t } from '../i18n/t.js'
 import { track } from '../services/usage/track.js'
 
 export const CURRENCY_KEY = 'inventoryCurrency'
@@ -186,7 +187,7 @@ export class InventoryValues {
         const items = onlyNeverRead ? itemsNeverRead(all, this.readings) : itemsToRead(all, this.readings, this.now())
         if (items.length === 0) {
             if (toKeep.length > 0) await this.service.keepReadings(toKeep)
-            this.toast.info('Every album already has a value written by you or read in the last six hours.')
+            this.toast.info(t('inventory.toast.valuesFresh'))
             return
         }
         this._stop = new AbortController()
@@ -245,17 +246,17 @@ export class InventoryValues {
     async write(item, text) {
         const value = writtenValueFrom(text, this.money(), new Date(this.now()).toISOString())
         if (!value) {
-            this.toast.error('Write the value as a number above zero, for example 12.50.')
+            this.toast.error(t('inventory.toast.valueNotNumber'))
             return false
         }
-        const saved = await this._save(item, value, 'Value saved')
+        const saved = await this._save(item, value, t('inventory.toast.valueSaved'))
         if (saved) track('inventory_value_written')
         return saved
     }
 
     /** "Use the Discogs value instead": what the person wrote is taken away; the reading shows again. */
     async forget(item) {
-        const saved = await this._save(item, null, 'Your value was removed')
+        const saved = await this._save(item, null, t('inventory.toast.valueRemoved'))
         if (saved) track('inventory_value_removed')
         return saved
     }
@@ -265,7 +266,7 @@ export class InventoryValues {
             await this.inventory.updateAlbum(item.id, { value })
         } catch (error) {
             console.error('[InventoryValues] The value could not be saved:', error)
-            this.toast.error('The value could not be saved. Your inventory is as it was.')
+            this.toast.error(t('inventory.toast.valueNotSaved'))
             return false
         }
         this.toast.success(done)
@@ -286,7 +287,7 @@ export class InventoryValues {
         this._showItem(item, outcome.failure ? { state: 'failed', failure: outcome.failure } : { reading: outcome.reading })
         if (outcome.failure) this.toast.error(readFailedText(outcome.failure))
         if (unkept > 0) this.toast.error(UNKEPT_VALUE_TEXT)
-        if (outcome.off) this.toast.info('Discogs values are turned off on the server.')
+        if (outcome.off) this.toast.info(t('inventory.toast.valuesOff'))
         if (!this.leaving.aborted) this.host.changed()
     }
 }

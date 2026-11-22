@@ -8,15 +8,15 @@ const service = vi.hoisted(() => ({ updateAlbum: vi.fn(), planSeriesAlbums: vi.f
 const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() }))
 const dialogService = vi.hoisted(() => ({ confirm: vi.fn() }))
 
-vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn() }))
+vi.mock('../../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn() }))
 // The values of the inventory (F75) are off in these tests: no Discogs, no rates
-vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../helpers/inventoryValuesStub.js')).valuesOff() }))
-vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
-vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService }))
+vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../../helpers/inventoryValuesStub.js')).valuesOff() }))
+vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
+vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService }))
 
-import { InventoryView } from '../../public/js/views/InventoryView.js'
-import { inventoryStore } from '../../public/js/stores/inventory.js'
+import { openInventory, press, run } from '../../support/inventoryHost'
+import { inventoryStore } from '../../../public/js/stores/inventory.js'
 
 const averages = (rating, popularity, extra = {}) => ({ rating, popularity, ratedTracks: 10, popTracks: 9, tracks: 12, at: '2026-11-20T10:00:00.000Z', ...extra })
 const item = (id, artist, title, extra = {}) => ({ id, artist, title, owned: null, format: null, albumData: { id }, ...extra })
@@ -34,19 +34,16 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
 
     beforeEach(async () => {
         vi.clearAllMocks()
-        document.body.innerHTML = '<div id="app"></div>'
-        inventoryStore.setAlbums([wall, fragile, onlyRating, never])
-        view = new InventoryView()
-        await view.mount()
+        view = await openInventory([wall, fragile, onlyRating, never], { phone: false })
     })
-    afterEach(() => {
-        view.destroy()
+    afterEach(async () => {
+        await view.destroy()
         inventoryStore.reset()
         document.body.innerHTML = ''
     })
 
     describe('the order', () => {
-        it('a select in the filters row offers each criterion in its two directions, with the arrow, by artist at first', () => {
+        it('a select in the filters row offers each criterion in its two directions, with the arrow, by artist at first', async () => {
             const select = document.getElementById('inventorySort')
 
             expect(select.tagName).toBe('SELECT')
@@ -68,25 +65,23 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
             ['averageRating_asc', ['inv-fragile', 'inv-wall', 'inv-ten', 'inv-never']],
             ['addedToInventory_asc', ['inv-wall', 'inv-ten', 'inv-fragile', 'inv-never']],
             ['artist_desc', ['inv-fragile', 'inv-wall', 'inv-ten', 'inv-never']]
-        ])('choosing %s orders the cards, keeps the choice, and puts an item with no value last', (value, expected) => {
+        ])('choosing %s orders the cards, keeps the choice, and puts an item with no value last', async (value, expected) => {
             const select = document.getElementById('inventorySort')
             select.value = value
-            select.dispatchEvent(new Event('change', { bubbles: true }))
-
+            await press(() => select.dispatchEvent(new Event('change', { bubbles: true })))
             expect(cards()).toEqual(expected)
             expect(document.getElementById('inventorySort').value).toBe(value)
         })
 
-        it('works with the filters: the order goes on inside what the filter lets through', () => {
-            view.controller.handleSortChoice('averageRating')
-            view.controller.handleFilterChange('search', 'p')
-
+        it('works with the filters: the order goes on inside what the filter lets through', async () => {
+            await run(() => view.controller.handleSortChoice('averageRating'))
+            await run(() => view.controller.handleFilterChange('search', 'p'))
             expect(cards()).toEqual(['inv-ten', 'inv-wall'])
         })
     })
 
     describe('the card', () => {
-        it('shows the two averages in one line, each with its icon and the tracks it was made of (REQ-20; F75: the third line of the card)', () => {
+        it('shows the two averages in one line, each with its icon and the tracks it was made of (REQ-20; F75: the third line of the card)', async () => {
             const line = document.querySelector('[data-album-id="inv-wall"] [data-role="averages"]')
 
             expect(text(line)).toBe('Avg Rating88.2(10 of 12)Avg Pop71.4%(9 of 12)')
@@ -97,13 +92,13 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
             ])
         })
 
-        it('shows only the average the item has', () => {
+        it('shows only the average the item has', async () => {
             const line = document.querySelector('[data-album-id="inv-ten"] [data-role="averages"]')
 
             expect(text(line)).toBe('Avg Rating90.1(10 of 12)')
         })
 
-        it('an item with no average keeps the line, empty: every card has the same lines (F75, REQ-01)', () => {
+        it('an item with no average keeps the line, empty: every card has the same lines (F75, REQ-01)', async () => {
             const line = document.querySelector('[data-album-id="inv-never"] [data-role="averages"]')
 
             expect(line).not.toBe(null)
@@ -111,16 +106,15 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
             expect(document.querySelectorAll('[data-role="averages"]')).toHaveLength(4)
         })
 
-        it('the list view shows it too', () => {
-            view.controller.handleViewModeChange('list')
-
+        it('the list view shows it too', async () => {
+            await run(() => view.controller.handleViewModeChange('list'))
             const rows = [...document.querySelectorAll('.inventory-row-wrapper')]
             expect(rows).toHaveLength(4)
             expect(text(rows.find(row => row.dataset.albumId === 'inv-fragile').querySelector('[data-role="averages"]'))).toBe('Avg Rating: 76 (10) · Avg Pop: 40.5% (9)') // read before the size of the album was kept
             expect(rows.find(row => row.dataset.albumId === 'inv-never').querySelector('[data-role="averages"]')).toBe(null)
         })
 
-        it('an album name is text, never markup', () => {
+        it('an album name is text, never markup', async () => {
             expect(document.querySelector('[data-album-id="inv-never"] b')).toBe(null)
             expect(text(document.querySelector('[data-album-id="inv-never"]'))).toContain('Arrival <b>x</b>')
         })
@@ -129,7 +123,7 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
     describe('the button "Update ratings"', () => {
         const button = () => document.getElementById('updateRatingsBtn')
 
-        it('is a real button in the filters row, next to the one that adds the albums of the series, reached by the keyboard', () => {
+        it('is a real button in the filters row, next to the one that adds the albums of the series, reached by the keyboard', async () => {
             expect(button().tagName).toBe('BUTTON')
             expect(button().type).toBe('button')
             expect(button().closest('.filters-row')).not.toBe(null)
@@ -145,7 +139,7 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
             dialogService.confirm.mockResolvedValue(true)
             service.updateAverages.mockResolvedValue({ aborted: false, total: 211, planned: 200, saved: 200, notFound: 11, withoutRatings: 0, popularityNotConnected: 0, unanswered: 0, error: null })
 
-            button().click()
+            await press(button())
             await vi.waitFor(() => expect(toast.success).toHaveBeenCalledWith('Ratings updated for 200 of 211 albums. 11 albums were not found.'))
 
             expect(dialogService.confirm).toHaveBeenCalledWith({
@@ -164,7 +158,7 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
                 return new Promise(resolve => { finish = resolve })
             })
 
-            button().click()
+            await press(button())
             await vi.waitFor(() => expect(text(button())).toBe('Reading ratings… 40 of 4'))
 
             expect(button().disabled).toBe(true)
@@ -181,10 +175,9 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
         it('stays busy when the screen is drawn again in the middle of the run (the store changed)', async () => {
             service.updateAverages.mockImplementation(() => new Promise(() => { }))
 
-            button().click()
+            await press(button())
             await vi.waitFor(() => expect(button().disabled).toBe(true))
-            view.controller.refresh()
-
+            await run(() => view.controller.refresh())
             expect(button().disabled).toBe(true)
             expect(button().getAttribute('aria-busy')).toBe('true')
             expect(text(button())).toBe('Reading ratings…')
@@ -197,10 +190,9 @@ describe('the inventory screen: ratings and order (F71, S-56)', () => {
                 return new Promise(() => { })
             })
 
-            button().click()
+            await press(button())
             await vi.waitFor(() => expect(signal).toBeDefined())
-            view.destroy()
-
+            await view.destroy()
             expect(signal.aborted).toBe(true)
         })
     })

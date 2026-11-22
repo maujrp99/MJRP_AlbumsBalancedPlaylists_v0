@@ -1,4 +1,11 @@
 /**
+ * (2026-11-22, wave 6a: the inventory screen went to React, and these left the list in the commit that deleted them: views/InventoryView.js (693 in the list, 707 on
+ * the disk), views/InventoryPhoneSheets.js (226), views/renderers/{InventoryGridRenderer,InventoryCardValue,InventoryValueHeader,InventoryPhoneRow,InventoryPhoneTile}.js
+ * (755 in all), components/ui/Card.js (341; only the inventory used it) and components/Breadcrumb.js (63; ui/Breadcrumb.tsx has the trail of the inventory, a trail of one
+ * step that draws nothing, as the old one drew nothing there): 2.078 lines in 9 files of the list. utils/keepField.js (not in the list) went too: the search field of the
+ * new screen is never made anew. Left in the list, with their reasons: the window of the album, the window to edit an item, the one to add one, the value section and
+ * the track tables (wave 6b); the controller and InventoryValues stay JavaScript under the screen.)
+ *
  * (2026-11-22, the second sync with `main`: what `main` did in hand-made code that stays hand-made on this line comes in as it is. F89 (the inventory as a gallery on
  * the phone) brings views/renderers/InventoryPhoneTile.js (92 lines, the one new file; the inventory is wave 6), and F90 (exporting from the saved playlists) grew
  * components/SpotifyExportModal.js from 434 to 461 lines and views/playlists/PlaylistsExport.js from 116 to 142 (a job given: the playlists, the series, the batch,
@@ -55,7 +62,6 @@
  * and AuthService (a class on the body).
  */
 export const HAND_MADE = {
-    'components/Breadcrumb.js': 63,
     'components/GlobalProgress.js': 80,
     'components/Icons.js': 178,
     'components/InventoryAddModal.js': 180,
@@ -77,7 +83,6 @@ export const HAND_MADE = {
     'components/ranking/TracksTable.js': 314,
     'components/ranking/TracksTabs.js': 102,
     'components/ui/BaseModal.js': 178,
-    'components/ui/Card.js': 341,
     'components/ui/Sheet.js': 173,
     'components/ui/coverImage.js': 67,
     'components/ui/modals/ConfirmModal.js': 67,
@@ -88,12 +93,5 @@ export const HAND_MADE = {
     'utils/pageScrollLock.js': 56,
     'views/BaseView.js': 144,
     'views/BlendingMenuView.js': 477,
-    'views/InventoryPhoneSheets.js': 226,
-    'views/InventoryView.js': 693,
-    'views/playlists/PlaylistsExport.js': 142,
-    'views/renderers/InventoryCardValue.js': 122,
-    'views/renderers/InventoryGridRenderer.js': 212,
-    'views/renderers/InventoryPhoneRow.js': 154,
-    'views/renderers/InventoryPhoneTile.js': 92,
-    'views/renderers/InventoryValueHeader.js': 175
+    'views/playlists/PlaylistsExport.js': 142
 }

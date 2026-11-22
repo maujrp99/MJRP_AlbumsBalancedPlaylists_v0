@@ -3,6 +3,7 @@
  * the three counts in the header, the button "Add the albums of my series", and the card and the
  * album window of an item that came from a series (no tracks, no format, no price).
  */
+import { createElement } from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 const service = vi.hoisted(() => ({ updateAlbum: vi.fn(), planSeriesAlbums: vi.fn(), addAlbumsAsNotOwned: vi.fn() }))
@@ -10,18 +11,19 @@ const readSeriesOfThePerson = vi.hoisted(() => vi.fn())
 const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() }))
 const dialogService = vi.hoisted(() => ({ confirm: vi.fn() }))
 
-vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson }))
+vi.mock('../../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson }))
 // The values of the inventory (F75) are off in these tests: no Discogs, no rates
-vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../helpers/inventoryValuesStub.js')).valuesOff() }))
-vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
-vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService }))
+vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../../helpers/inventoryValuesStub.js')).valuesOff() }))
+vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
+vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService }))
 
-import { InventoryView } from '../../public/js/views/InventoryView.js'
-import { InventoryGridRenderer } from '../../public/js/views/renderers/InventoryGridRenderer.js'
-import { showViewAlbumModal } from '../../public/js/components/ViewAlbumModal.js'
-import { inventoryStore } from '../../public/js/stores/inventory.js'
-import { inventoryAlbumFromQuery } from '../../public/js/models/inventoryFromSeries.js'
+import { openInventory, press, run, draw, undraw } from '../../support/inventoryHost'
+import { Grid } from '../../../public/js/screens/inventory/Grid'
+import { InventoryBridge } from '../../../public/js/screens/inventory/InventoryBridge'
+import { showViewAlbumModal } from '../../../public/js/components/ViewAlbumModal.js'
+import { inventoryStore } from '../../../public/js/stores/inventory.js'
+import { inventoryAlbumFromQuery } from '../../../public/js/models/inventoryFromSeries.js'
 
 const fromCard = { id: 'inv-core', title: 'Core', artist: 'Stone Temple Pilots', format: 'cd', owned: true, purchasePrice: 50, currency: 'BRL', notes: 'mint', albumData: { id: 'stone-temple-pilots_core', title: 'Core', artist: 'Stone Temple Pilots', coverUrl: 'https://example.com/core.jpg', tracks: [{ title: 'Dead & Bloated', position: 1 }] } }
 const wished = { id: 'inv-purple', title: 'Purple', artist: 'Stone Temple Pilots', format: 'vinyl', owned: false, purchasePrice: null, currency: 'USD', albumData: { id: 'stone-temple-pilots_purple', title: 'Purple', artist: 'Stone Temple Pilots' } }
@@ -40,25 +42,22 @@ describe('the inventory screen (F71)', () => {
 
     beforeEach(async () => {
         vi.clearAllMocks()
-        document.body.innerHTML = '<div id="app"></div>'
-        inventoryStore.setAlbums([fromCard, wished, ten, vs])
-        view = new InventoryView()
-        await view.mount()
+        view = await openInventory([fromCard, wished, ten, vs], { phone: false })
     })
-    afterEach(() => {
-        view.destroy()
+    afterEach(async () => {
+        await view.destroy()
         inventoryStore.reset()
         document.body.innerHTML = ''
     })
 
-    it('the header shows "N albums" and the three counts, each with its name', () => {
+    it('the header shows "N albums" and the three counts, each with its name', async () => {
         const stats = document.querySelector('.stats-row')
 
         expect(text(stats)).toContain('4 albums')
         expect([...stats.querySelectorAll('[data-status-count]')].map(text)).toEqual(['✓ 1 Owned', '2 Not Owned', '♡ 1 Wishlist'])
     })
 
-    it('the counts are the status filter: real buttons, none pressed at first, and no status selector in the filters row (F75, REQ-02)', () => {
+    it('the counts are the status filter: real buttons, none pressed at first, and no status selector in the filters row (F75, REQ-02)', async () => {
         const counts = [...document.querySelectorAll('[data-status-count]')]
 
         expect(counts.map(count => count.tagName)).toEqual(['BUTTON', 'BUTTON', 'BUTTON'])
@@ -67,38 +66,37 @@ describe('the inventory screen (F71)', () => {
         expect(document.getElementById('ownershipFilter')).toBe(null)
     })
 
-    it('pressing "Not Owned" shows those items, says it is pressed, and keeps the three counts; pressing it again shows all', () => {
-        const press = () => document.querySelector('[data-status-count="not-owned"]').click()
+    it('pressing "Not Owned" shows those items, says it is pressed, and keeps the three counts; pressing it again shows all', async () => {
+        const pressNotOwned = () => press(document.querySelector('[data-status-count="not-owned"]'))
         const shown = () => [...document.querySelectorAll('.inventory-card-wrapper')].map(card => card.dataset.albumId).sort()
-        press()
+        await pressNotOwned()
 
         expect(shown()).toEqual(['inv-ten', 'inv-vs'])
         expect([...document.querySelectorAll('[data-status-count]')].map(count => count.getAttribute('aria-pressed'))).toEqual(['false', 'true', 'false'])
         expect(text(document.querySelector('.stats-row'))).toContain('2 albums')
         expect([...document.querySelectorAll('[data-status-count]')].map(text)).toEqual(['✓ 1 Owned', '2 Not Owned', '♡ 1 Wishlist'])
 
-        press()
+        await pressNotOwned()
         expect(shown()).toEqual(['inv-core', 'inv-purple', 'inv-ten', 'inv-vs'])
         expect(document.querySelector('[data-status-count="not-owned"]').getAttribute('aria-pressed')).toBe('false')
     })
 
-    it('the filter works with the search: "stone" and Wishlist is one album', () => {
-        view.controller.handleFilterChange('search', 'stone')
-        view.controller.handleFilterChange('ownership', 'wishlist')
-
+    it('the filter works with the search: "stone" and Wishlist is one album', async () => {
+        await run(() => view.controller.handleFilterChange('search', 'stone'))
+        await run(() => view.controller.handleFilterChange('ownership', 'wishlist'))
         expect([...document.querySelectorAll('.inventory-card-wrapper')].map(card => card.dataset.albumId)).toEqual(['inv-purple'])
         expect([...document.querySelectorAll('[data-status-count]')].map(text)).toEqual(['✓ 1 Owned', '0 Not Owned', '♡ 1 Wishlist'])
     })
 
     describe('the screen that was left (F73, UAT-215)', () => {
-        it('draws nothing more when the inventory changes after it was left', () => {
-            view.destroy()
+        it('draws nothing more when the inventory changes after it was left', async () => {
+            await view.destroy()
             document.getElementById('app').innerHTML = '<p id="other">Your Playlists Series</p>'
             inventoryStore.setAlbums([fromCard])
             expect(text(document.getElementById('app'))).toBe('Your Playlists Series')
         })
 
-        it('the search keeps the focus, the text and the cursor when the screen is drawn again (UAT-212)', () => {
+        it('the search keeps the focus, the text and the cursor when the screen is drawn again (UAT-212)', async () => {
             const search = document.getElementById('inventorySearch')
             search.focus()
             search.value = 'pearl'
@@ -114,7 +112,7 @@ describe('the inventory screen (F71)', () => {
     describe('the button "Add the albums of my series"', () => {
         const button = () => document.getElementById('addSeriesAlbumsBtn')
 
-        it('is a real button in the toolbar, reached by the keyboard, with its name', () => {
+        it('is a real button in the toolbar, reached by the keyboard, with its name', async () => {
             expect(button().tagName).toBe('BUTTON')
             expect(button().type).toBe('button')
             expect(button().closest('.filters-row')).not.toBe(null)
@@ -129,7 +127,7 @@ describe('the inventory screen (F71)', () => {
             service.addAlbumsAsNotOwned.mockResolvedValue({ added: 1, total: 1, error: null, reloaded: true })
             dialogService.confirm.mockResolvedValue(true)
 
-            button().click()
+            await press(button())
             await vi.waitFor(() => expect(toast.success).toHaveBeenCalledWith('Added 1 album as Not Owned.'))
 
             expect(dialogService.confirm).toHaveBeenCalledWith({
@@ -140,25 +138,24 @@ describe('the inventory screen (F71)', () => {
             expect(button().disabled).toBe(false)
         })
 
-        it('while it runs it is disabled and says what is being done, without drawing the screen again', () => {
+        it('while it runs it is disabled and says what is being done, without drawing the screen again', async () => {
             const grid = document.querySelector('.albums-grid')
 
-            view.showSeriesAdd({ busy: true, text: 'Adding albums… 100 of 176' })
+            await view.showSeriesAdd({ busy: true, text: 'Adding albums… 100 of 176' })
 
             expect(button().disabled).toBe(true)
             expect(button().getAttribute('aria-busy')).toBe('true')
             expect(text(button())).toBe('Adding albums… 100 of 176')
             expect(document.querySelector('.albums-grid')).toBe(grid)
 
-            view.showSeriesAdd({ busy: false, text: null })
+            await view.showSeriesAdd({ busy: false, text: null })
             expect(button().disabled).toBe(false)
             expect(text(button())).toBe('Add the albums of my series')
         })
 
-        it('a full draw during the run keeps the button busy', () => {
+        it('a full draw during the run keeps the button busy', async () => {
             view.controller.state.seriesAdd = { busy: true, text: 'Reading your series…' }
-            view.controller.refresh()
-
+            await run(() => view.controller.refresh())
             expect(button().disabled).toBe(true)
             expect(text(button())).toBe('Reading your series…')
         })
@@ -168,12 +165,12 @@ describe('the inventory screen (F71)', () => {
         const card = (id) => document.querySelector(`.inventory-card-wrapper[data-album-id="${id}"]`)
         const chosen = (id) => card(id).querySelector('.status-select').value
 
-        it('the selector shows the status of each item, with the three choices', () => {
+        it('the selector shows the status of each item, with the three choices', async () => {
             expect([chosen('inv-core'), chosen('inv-purple'), chosen('inv-ten')]).toEqual(['owned', 'wishlist', 'not-owned'])
             expect([...card('inv-ten').querySelectorAll('.status-select option')].map(option => option.textContent)).toEqual(['Not Owned', '✓ Owned', '♡ Wishlist'])
         })
 
-        it('an item that came from a series shows its cover, title and artist, and no format or price it does not have', () => {
+        it('an item that came from a series shows its cover, title and artist, and no format or price it does not have', async () => {
             const made = card('inv-ten')
 
             expect(made.querySelector('img').getAttribute('src')).toBe('https://example.com/ten.jpg')
@@ -186,7 +183,7 @@ describe('the inventory screen (F71)', () => {
             expect(text(card('inv-core'))).toContain('In my collection · worth')
         })
 
-        it('an item with no cover shows the stand-in, and its text is text', () => {
+        it('an item with no cover shows the stand-in, and its text is text', async () => {
             const made = card('inv-vs')
 
             expect(made.querySelector('img').getAttribute('src')).toMatch(/^data:image\/svg\+xml/)
@@ -194,19 +191,23 @@ describe('the inventory screen (F71)', () => {
             expect(text(made)).toContain('Vs. <b>')
         })
 
-        it('draws 200 cards in one pass, and the list too', () => {
+        it('draws 200 cards in one pass, and the list too', async () => {
             const many = Array.from({ length: 200 }, (_, index) => fromSeries({ artist: `Artist ${index}`, title: `Album ${index}` }, `inv-${index}`))
 
-            const grid = InventoryGridRenderer.render({ filteredAlbums: many, viewMode: 'grid', isLoading: false })
-            const list = InventoryGridRenderer.render({ filteredAlbums: many, viewMode: 'list', isLoading: false })
+            const state = (viewMode) => ({ filteredAlbums: many, viewMode, isLoading: false, value: { values: new Map(), money: { currency: 'USD', rates: null } } })
+            const none = () => { }
+            const actions = { onView: none, onEdit: none, onDelete: none, onStatus: none }
+            const grid = await draw(createElement(Grid, { state: state('grid'), bridge: new InventoryBridge(), actions }))
+            const list = await draw(createElement(Grid, { state: state('list'), bridge: new InventoryBridge(), actions }))
 
-            expect(grid.match(/inventory-card-wrapper/g)).toHaveLength(200)
-            expect(list.match(/inventory-row-wrapper/g)).toHaveLength(200)
+            expect(grid.querySelectorAll('.inventory-card-wrapper')).toHaveLength(200)
+            expect(list.querySelectorAll('.inventory-row-wrapper')).toHaveLength(200)
+            await undraw()
         })
     })
 
     describe('the album window of an item', () => {
-        afterEach(() => document.querySelectorAll('.modal-overlay').forEach(node => node.remove()))
+        afterEach(async () => document.querySelectorAll('.modal-overlay').forEach(node => node.remove()))
 
         it('of an item that came from a series, with nobody to ask: Not Owned, and a line in the place of the tracks', async () => {
             const modal = await showViewAlbumModal(ten)
@@ -262,7 +263,7 @@ describe('the inventory screen (F71)', () => {
                 let give
                 let seen
                 const modal = await showViewAlbumModal(ten, { loadAlbum: (signal) => { seen = signal; return new Promise(resolve => { give = resolve }) } })
-                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+                await press(() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })))
                 expect(seen.aborted).toBe(true)
                 give(loaded)
                 await settled()
@@ -297,28 +298,28 @@ describe('the inventory screen (F71)', () => {
         })
 
         it('the edit window opens for an item that came from a series', async () => {
-            const { InventoryEditModal } = await import('../../public/js/components/InventoryEditModal.js')
+            const { InventoryEditModal } = await import('../../../public/js/components/InventoryEditModal.js')
 
             expect(() => InventoryEditModal.open(ten, vi.fn())).not.toThrow()
             expect(document.body.textContent).toContain('Ten')
         })
 
         it('saving the notes of an item that came from a series invents no format for it', async () => {
-            const { InventoryEditModal } = await import('../../public/js/components/InventoryEditModal.js')
+            const { InventoryEditModal } = await import('../../../public/js/components/InventoryEditModal.js')
             const onSave = vi.fn(async () => { })
 
             InventoryEditModal.open(ten, onSave)
             const format = document.getElementById('edit-format')
             expect([...format.options].map(option => option.textContent)).toEqual(['Not set', 'CD', 'Vinyl', 'Cassette', 'DVD', 'Blu-ray', 'Digital'])
             expect(format.value).toBe('')
-            ;[...document.querySelectorAll('button')].find(button => button.textContent === 'Save Changes').click()
+            ;await press([...document.querySelectorAll('button')].find(button => button.textContent === 'Save Changes'))
             await vi.waitFor(() => expect(onSave).toHaveBeenCalled())
 
             expect(onSave.mock.calls[0]).toEqual(['inv-ten', { format: null, currency: 'BRL', purchasePrice: null, notes: '' }])
         })
 
         it('the edit window of an item with a format offers the formats only, with its own chosen', async () => {
-            const { InventoryEditModal } = await import('../../public/js/components/InventoryEditModal.js')
+            const { InventoryEditModal } = await import('../../../public/js/components/InventoryEditModal.js')
 
             InventoryEditModal.open(fromCard, vi.fn())
             const format = document.getElementById('edit-format')

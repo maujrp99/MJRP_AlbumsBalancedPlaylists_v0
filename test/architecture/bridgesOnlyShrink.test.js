@@ -21,6 +21,8 @@ export const BRIDGE_USES = {
     'screens/albums/AlbumCard.tsx': 'the table of the tracks of the expanded card is the hand-made one, also in the album window of the inventory (wave 6)',
     'screens/albums/albumActions.ts': 'the album window and the window Add to inventory (the album window is the inventory\'s too: wave 6)',
     'screens/albums/index.ts': 'the controller of the session is hand-written JavaScript (rewritten in wave 8)',
+    // wave 6a (the inventory screen): its two windows, the album window with the value section and the window to edit an item, stay hand-made behind wrappers until wave 6b
+    'screens/inventory/inventoryActions.ts': 'the album window (with its value section) and the window to edit an item are hand-made until wave 6b',
     // wave 2 (the playlists screen) took the two entries of the row of a track out (it is ported once, to ui/TrackRow.tsx) and put in these:
     'screens/playlists/Playlists.tsx': 'the panel to generate again (also the Blend controller\'s, so it goes with the Blend screen, wave 7) and the Spotify window and the exports (hand-made, ported on their own)',
     // F83 sync 2: the export window (F90) is React and shared by the playlists and the saved playlists screens; what it hands the exports to stays hand-made:

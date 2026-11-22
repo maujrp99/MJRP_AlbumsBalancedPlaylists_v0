@@ -3,25 +3,29 @@
  * the switch in «Filters and order», the choice kept (the computer's key), the same actions in a
  * card as in a row, the same search, filters, order, counts and notices in both; the computer as before.
  */
+import { createElement } from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 const service = vi.hoisted(() => ({ updateAlbum: vi.fn(async () => true), planSeriesAlbums: vi.fn(), addAlbumsAsNotOwned: vi.fn(), removeAlbum: vi.fn() }))
 const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() }))
 const dialogService = vi.hoisted(() => ({ confirm: vi.fn(async () => false) }))
 const editModal = vi.hoisted(() => ({ open: vi.fn() }))
+const albumWindow = vi.hoisted(() => ({ show: vi.fn(async () => ({ redrawValue() { } })) }))
 
-vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn(async () => []) }))
-vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../helpers/inventoryValuesStub.js')).valuesOff() }))
-vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
-vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService }))
-vi.mock('../../public/js/components/InventoryEditModal.js', () => ({ InventoryEditModal: editModal }))
+vi.mock('../../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn(async () => []) }))
+vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../../helpers/inventoryValuesStub.js')).valuesOff() }))
+vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
+vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService }))
+vi.mock('../../../public/js/components/InventoryEditModal.js', () => ({ InventoryEditModal: editModal }))
+vi.mock('../../../public/js/components/ViewAlbumModal.js', () => ({ showViewAlbumModal: albumWindow.show }))
 
-import { InventoryView } from '../../public/js/views/InventoryView.js'
-import { inventoryStore } from '../../public/js/stores/inventory.js'
-import { phoneRow } from '../../public/js/views/renderers/InventoryPhoneRow.js'
-import { phoneGallery, phoneTile } from '../../public/js/views/renderers/InventoryPhoneTile.js'
-import { PHONE_CHUNK } from '../../public/js/models/inventoryJump.js'
+import { openInventory, press, run, draw, undraw } from '../../support/inventoryHost'
+import { inventoryStore } from '../../../public/js/stores/inventory.js'
+import { PhoneRow, PhoneTile } from '../../../public/js/screens/inventory/phone/PhoneRow'
+import { PhoneList } from '../../../public/js/screens/inventory/phone/PhoneList'
+import { InventoryBridge } from '../../../public/js/screens/inventory/InventoryBridge'
+import { PHONE_CHUNK } from '../../../public/js/models/inventoryJump.js'
 
 const ARTISTS = ['ABBA', 'Blur', 'Cream', 'Genesis', 'Pearl Jam', 'Queen', 'Rush', 'Yes']
 const many = (count) => Array.from({ length: count }, (_, i) => ({
@@ -41,34 +45,16 @@ const sheet = () => document.querySelector('.sheet:not(.sheet--closing)')
 const USD = Object.freeze({ currency: 'USD', rates: null })
 const DISCOGS_VALUE = Object.freeze({ origin: 'discogs', amount: 12.4, currency: 'USD', release: { url: 'https://www.discogs.com/release/1' } })
 
-function stubScreen(phone) {
-    window.matchMedia = (query) => ({
-        matches: query === '(max-width: 899px)' ? phone : query.includes('prefers-reduced-motion'),
-        addEventListener() { },
-        removeEventListener() { }
-    })
-}
-
-async function open(items, { phone = true, choice = null } = {}) {
-    stubScreen(phone)
-    if (choice) localStorage.setItem('mjrp_inventory_view_mode', choice)
-    document.body.innerHTML = '<div id="app"></div>'
-    inventoryStore.setAlbums(items)
-    const view = new InventoryView()
-    await view.mount()
-    return view
-}
+const open = (items, options = {}) => openInventory(items, options)
 
 describe('the card of the gallery (views/renderers/InventoryPhoneTile.js)', () => {
-    const draw = (html) => {
-        const host = document.createElement('div')
-        host.innerHTML = html
-        return host
-    }
+    afterEach(async () => { await undraw() })
+    const noop = () => { }
+    const actions = { onView: noop, onStatus: noop, onMore: noop }
 
-    it('shows the cover, the title and the artist as text, the format with the origin, the value, the status and «⋯»', () => {
+    it('shows the cover, the title and the artist as text, the format with the origin, the value, the status and «⋯»', async () => {
         const [item] = many(1)
-        const tile = draw(phoneTile(item, DISCOGS_VALUE, USD)).querySelector('.inv-tile')
+        const tile = (await draw(createElement(PhoneTile, { item, value: DISCOGS_VALUE, money: USD, actions }))).querySelector('.inv-tile')
 
         expect(tile.dataset.albumId).toBe('inv-000')
         expect(tile.querySelector('img.inv-tile__cover').getAttribute('src')).toBe('https://example.com/0.jpg')
@@ -84,42 +70,43 @@ describe('the card of the gallery (views/renderers/InventoryPhoneTile.js)', () =
         expect(text(tile.querySelector('[data-role="averages"]'))).toBe('Avg Rating80.5Avg Pop41.2%')
     })
 
-    it('the status pill has the arrow of the row, so it reads as something to tap', () => {
+    it('the status pill has the arrow of the row, so it reads as something to tap', async () => {
         const [item] = many(1)
-        const tile = draw(phoneTile(item, DISCOGS_VALUE, USD)).querySelector('.inv-tile')
-        const row = draw(phoneRow(item, DISCOGS_VALUE, USD)).querySelector('.inv-row')
+        const tile = (await draw(createElement(PhoneTile, { item, value: DISCOGS_VALUE, money: USD, actions }))).querySelector('.inv-tile')
+        const row = (await draw(createElement(PhoneRow, { item, value: DISCOGS_VALUE, money: USD, actions }))).querySelector('.inv-row')
 
         expect(tile.querySelector('.inv-tile__pill svg.inv-tile__chevron')).not.toBe(null)
         expect(row.querySelector('.inv-row__pill svg')).not.toBe(null)
         expect(text(tile.querySelector('.inv-tile__status'))).toBe('✓ Owned')
     })
 
-    it('an album that was never read has no averages line', () => {
+    it('an album that was never read has no averages line', async () => {
         const [item] = many(1)
-        const tile = draw(phoneTile({ ...item, averages: null }, undefined, USD)).querySelector('.inv-tile')
+        const tile = (await draw(createElement(PhoneTile, { item: { ...item, averages: null }, value: undefined, money: USD, actions }))).querySelector('.inv-tile')
 
         expect(tile.querySelector('[data-role="averages"]')).toBe(null)
     })
 
-    it('an album with no value says why, with its format; a wishlist album has its mark', () => {
+    it('an album with no value says why, with its format; a wishlist album has its mark', async () => {
         const [item] = many(1)
-        const tile = draw(phoneTile({ ...item, owned: false }, undefined, USD)).querySelector('.inv-tile')
+        const tile = (await draw(createElement(PhoneTile, { item: { ...item, owned: false }, value: undefined, money: USD, actions }))).querySelector('.inv-tile')
 
         expect(text(tile.querySelector('[data-role="amount"]'))).toBe('—')
         expect(text(tile.querySelector('.inv-tile__origin'))).toBe('CD · No value yet')
         expect(text(tile.querySelector('.inv-tile__status'))).toBe('♡ Wishlist')
     })
 
-    it('an album with no cover address shows the stand-in of the app, and the pair of the card keeps its place', () => {
+    it('an album with no cover address shows the stand-in of the app, and the pair of the card keeps its place', async () => {
         const [item] = many(1)
-        const tile = draw(phoneTile({ ...item, albumData: {}, coverUrl: null }, undefined, USD)).querySelector('.inv-tile')
+        const tile = (await draw(createElement(PhoneTile, { item: { ...item, albumData: {}, coverUrl: null }, value: undefined, money: USD, actions }))).querySelector('.inv-tile')
 
         expect(tile.querySelector('img.inv-tile__cover').dataset.coverStandIn).toBe('true')
     })
 
-    it('the gallery draws the first chunk and says how many there are, as the list does', () => {
-        const html = phoneGallery(many(120), { values: new Map(), money: USD }, PHONE_CHUNK)
-        const host = draw(html)
+    it('the gallery draws the first chunk and says how many there are, as the list does', async () => {
+        const items = many(120)
+        const state = { albums: items, filteredAlbums: items, filters: { search: '', format: 'all', ownership: 'all' }, sorting: { field: 'artist', direction: 'asc' }, viewMode: 'grid', viewChosen: true, isLoading: false, value: { values: new Map(), money: USD } }
+        const host = await draw(createElement(PhoneList, { state, bridge: new InventoryBridge(), controller: {}, actions }))
 
         expect(host.querySelectorAll('.inv-tile')).toHaveLength(PHONE_CHUNK)
         expect(host.querySelector('ul.inv-tiles').getAttribute('aria-label')).toBe('Albums')
@@ -131,13 +118,13 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
     let view
     const matchMedia = window.matchMedia
 
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks()
         window.scrollTo = vi.fn()
         localStorage.clear()
     })
-    afterEach(() => {
-        view?.destroy()
+    afterEach(async () => {
+        await view?.destroy()
         document.querySelectorAll('.sheet').forEach(node => node.remove())
         inventoryStore.reset()
         document.body.innerHTML = ''
@@ -156,8 +143,7 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
         view = await open(many(3), { choice: 'grid' })
         expect(tiles()).toHaveLength(3)
         expect(rows()).toHaveLength(0)
-        view.destroy()
-
+        await view.destroy()
         view = await open(many(3), { choice: 'list' })
         expect(rows()).toHaveLength(3)
         expect(tiles()).toHaveLength(0)
@@ -165,65 +151,60 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
 
     it('the switch is in «Filters and order», names each view, and changes the view and keeps the choice', async () => {
         view = await open(many(3))
-        document.querySelector('[data-phone-action="filters"]').click()
-
+        await press(document.querySelector('[data-phone-action="filters"]'))
         const choices = [...sheet().querySelectorAll('[data-view]')]
         expect(choices.map(text)).toEqual(['Gallery', 'List'])
         expect(choices.map(choice => choice.getAttribute('aria-pressed'))).toEqual(['false', 'true'])
 
-        sheet().querySelector('[data-view="grid"]').click()
+        await press(sheet().querySelector('[data-view="grid"]'))
         expect(tiles()).toHaveLength(3)
         expect(rows()).toHaveLength(0)
         expect(localStorage.getItem('mjrp_inventory_view_mode')).toBe('grid')
         expect([...sheet().querySelectorAll('[data-view]')].map(choice => choice.getAttribute('aria-pressed'))).toEqual(['true', 'false'])
 
-        sheet().querySelector('[data-view="list"]').click()
+        await press(sheet().querySelector('[data-view="list"]'))
         expect(rows()).toHaveLength(3)
         expect(localStorage.getItem('mjrp_inventory_view_mode')).toBe('list')
     })
 
     it('the view chosen is the one the screen opens on next time, and the switch does not count as a filter', async () => {
         view = await open(many(3))
-        document.querySelector('[data-phone-action="filters"]').click()
-        sheet().querySelector('[data-view="grid"]').click()
-        sheet().querySelector('[data-role="filters-done"]').click()
+        await press(document.querySelector('[data-phone-action="filters"]'))
+        await press(sheet().querySelector('[data-view="grid"]'))
+        await press(sheet().querySelector('[data-role="filters-done"]'))
         expect(document.querySelector('[data-phone-action="filters"]').getAttribute('aria-label')).toBe('Filters and order')
-        view.destroy()
-
+        await view.destroy()
         view = await open(many(3))
         expect(tiles()).toHaveLength(3)
     })
 
     it('a tap on the cover opens the album window, as a tap on the row does', async () => {
         view = await open(many(2), { choice: 'grid' })
-        view.handleViewWithModal = vi.fn()
 
-        tiles()[1].querySelector('.inv-tile__open').click()
-
-        expect(view.handleViewWithModal).toHaveBeenCalledWith('inv-001')
+        await press(tiles()[1].querySelector('.inv-tile__open'))
+        await vi.waitFor(() => expect(albumWindow.show).toHaveBeenCalled())
+        expect(albumWindow.show.mock.calls[0][0].id).toBe('inv-001')
     })
 
     it('the status changes in two taps, from the card', async () => {
         view = await open(many(2), { choice: 'grid' })
 
-        tiles()[1].querySelector('.inv-tile__status').click()
+        await press(tiles()[1].querySelector('.inv-tile__status'))
         const choices = [...sheet().querySelectorAll('.inv-choice')]
         expect(choices.map(text)).toEqual(['Owned', 'Not Owned', 'Wishlist'])
-        choices[0].click()
-
+        await press(choices[0])
         await vi.waitFor(() => expect(service.updateAlbum).toHaveBeenCalledWith('inv-001', { owned: true }))
     })
 
     it('«⋯» of the card has the same actions as the row: open, edit, the three stores, remove', async () => {
         view = await open(many(2), { choice: 'grid' })
-        tiles()[1].querySelector('.inv-tile__more').click()
-
+        await press(tiles()[1].querySelector('.inv-tile__more'))
         const actions = sheet()
         expect(text(actions.querySelector('.sheet__title'))).toBe('Album 1 <b>')
         expect([...actions.querySelectorAll('a[data-store]')].map(link => link.dataset.store)).toEqual(['Discogs', 'Amazon', 'iMusic'])
         const named = [...actions.querySelectorAll('.inv-action')].map(text)
         expect(named).toEqual(expect.arrayContaining(['Open album', 'Edit', 'Remove from inventory']))
-        ;[...actions.querySelectorAll('.inv-action')].find(button => text(button) === 'Edit').click()
+        ;await press([...actions.querySelectorAll('.inv-action')].find(button => text(button) === 'Edit'))
         await vi.waitFor(() => expect(editModal.open).toHaveBeenCalled())
         expect(editModal.open.mock.calls[0][0].id).toBe('inv-001')
     })
@@ -232,16 +213,16 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
         view = await open(many(40), { choice: 'grid' })
         const ids = (nodes) => nodes.map(node => node.dataset.albumId)
 
-        view.controller.handleFilterChange('search', 'Album 1')
+        await run(() => view.controller.handleFilterChange('search', 'Album 1'))
         const gallery = ids(tiles())
-        view.controller.handleViewModeChange('list')
+        await run(() => view.controller.handleViewModeChange('list'))
         expect(ids(rows())).toEqual(gallery)
         expect(gallery.length).toBeGreaterThan(1)
 
-        view.controller.handleViewModeChange('grid')
-        view.controller.handleSortChoice('artist_desc')
+        await run(() => view.controller.handleViewModeChange('grid'))
+        await run(() => view.controller.handleSortChoice('artist_desc'))
         const desc = ids(tiles())
-        view.controller.handleViewModeChange('list')
+        await run(() => view.controller.handleViewModeChange('list'))
         expect(ids(rows())).toEqual(desc)
     })
 
@@ -249,7 +230,7 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
         view = await open(many(120), { choice: 'grid' })
 
         expect(tiles()).toHaveLength(PHONE_CHUNK)
-        document.querySelector('[data-phone-action="more-rows"]').click()
+        await press(document.querySelector('[data-phone-action="more-rows"]'))
         expect(tiles()).toHaveLength(100)
         expect(document.activeElement.closest('.inv-tile').dataset.albumId).toBe('inv-050')
     })
@@ -258,10 +239,9 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
         view = await open(many(160), { choice: 'grid' })
         Element.prototype.scrollIntoView = vi.fn()
 
-        document.querySelector('[data-phone-action="jump"]').click()
+        await press(document.querySelector('[data-phone-action="jump"]'))
         const target = [...sheet().querySelectorAll('.inv-jump__target')].find(one => text(one) === 'Y')
-        target.click()
-
+        await press(target)
         expect(tiles()).toHaveLength(150)
         expect(document.activeElement.closest('.inv-tile').dataset.albumId).toBe('inv-140')
     })
@@ -273,7 +253,7 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
         expect(document.querySelector('#inventoryNotices')).not.toBe(null)
         expect(document.querySelector('#inventoryPhoneBar #inventorySearch')).not.toBe(null)
         expect(document.querySelectorAll('[data-status-count]')).toHaveLength(3)
-        view.controller.handleFilterChange('search', 'nothing like this')
+        await run(() => view.controller.handleFilterChange('search', 'nothing like this'))
         expect(text(document.querySelector('.inv-empty'))).toContain('No albums match')
     })
 
@@ -281,7 +261,7 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
         view = await open(many(3), { choice: 'grid' })
         const before = tiles()[1]
 
-        view.redrawCard(view.controller.state, 'inv-001')
+        await run(() => view.bridge.showValues(view.controller.state, 'inv-001'))
 
         expect(tiles()).toHaveLength(3)
         expect(tiles()[1]).not.toBe(before)
@@ -292,8 +272,7 @@ describe('the inventory on the phone, the gallery and the list (F89)', () => {
         view = await open(many(3), { phone: false })
         expect(document.querySelectorAll('.inventory-card-wrapper')).toHaveLength(3)
         expect(document.querySelector('.inv-tile, .inv-row')).toBe(null)
-        view.destroy()
-
+        await view.destroy()
         view = await open(many(3), { phone: false, choice: 'list' })
         expect(document.querySelectorAll('.inventory-row-wrapper')).toHaveLength(3)
         expect(document.querySelector('.inv-tile, .inv-row')).toBe(null)

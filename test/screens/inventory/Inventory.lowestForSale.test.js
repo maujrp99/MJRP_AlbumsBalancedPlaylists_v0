@@ -5,25 +5,25 @@
  * asking the price page for every album. Model, service and screen.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { valuesWith } from '../helpers/inventoryValuesStub.js'
+import { valuesWith } from '../../helpers/inventoryValuesStub.js'
 
 const holder = vi.hoisted(() => ({ values: null }))
 const service = vi.hoisted(() => ({ updateAlbum: vi.fn(async () => 'id'), albumOfItem: vi.fn(async () => null) }))
 const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() }))
 
-vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn() }))
-vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', () => ({
+vi.mock('../../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn() }))
+vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', () => ({
     inventoryValues: new Proxy({}, { get: (_, name) => holder.values[name] })
 }))
-vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
-vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn() } }))
+vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
+vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn() } }))
 
-import { InventoryView } from '../../public/js/views/InventoryView.js'
-import { inventoryStore } from '../../public/js/stores/inventory.js'
-import { valueOfItem, noValueText, NoValue, ValueBasis, totalsOf } from '../../public/js/models/inventoryValue.js'
-import { readOutcomeOf, askOfItem } from '../../public/js/models/inventoryValueRun.js'
-import { InventoryValueService, READING_PREFIX } from '../../public/js/services/inventory/InventoryValueService.js'
+import { openInventory } from '../../support/inventoryHost'
+import { inventoryStore } from '../../../public/js/stores/inventory.js'
+import { valueOfItem, noValueText, NoValue, ValueBasis, totalsOf } from '../../../public/js/models/inventoryValue.js'
+import { readOutcomeOf, askOfItem } from '../../../public/js/models/inventoryValueRun.js'
+import { InventoryValueService, READING_PREFIX } from '../../../public/js/services/inventory/InventoryValueService.js'
 
 const NOW = Date.parse('2026-11-20T12:00:00Z')
 const RELEASE = { id: 249504, title: 'RCA 1987, UK', url: 'https://www.discogs.com/release/249504' }
@@ -34,7 +34,7 @@ const lowestReading = (extra = {}) => ({ kind: 'found', basis: 'lowest_for_sale'
 const on = (reading, now = Date.now()) => ({ source: 'on', now, reading })
 
 describe('the model: a reading of another kind', () => {
-    it('an answer with the lowest price becomes a reading that says its basis, and that the seller settings are missing', () => {
+    it('an answer with the lowest price becomes a reading that says its basis, and that the seller settings are missing', async () => {
         const outcome = readOutcomeOf(lowestAnswer(), 'at')
 
         expect(outcome.sellerSettingsMissing).toBe(true)
@@ -43,21 +43,21 @@ describe('the model: a reading of another kind', () => {
         expect(readOutcomeOf(suggestionAnswer, 'at').reading.basis).toBeUndefined()
     })
 
-    it('it is a Discogs value, of the lowest price, with how many are for sale: never a mean', () => {
+    it('it is a Discogs value, of the lowest price, with how many are for sale: never a mean', async () => {
         const value = valueOfItem({ id: 'a', owned: true }, on(lowestReading()))
 
         expect(value).toMatchObject({ origin: 'discogs', basis: ValueBasis.LOWEST_FOR_SALE, amount: 12.93, currency: 'USD', forSale: 37 })
         expect(value.conditions).toBeUndefined()
     })
 
-    it('the same switch (an old reading still shows, with its date: REQ-14), and what the person wrote still wins', () => {
+    it('the same switch (an old reading still shows, with its date: REQ-14), and what the person wrote still wins', async () => {
         const old = lowestReading({ readAt: new Date(NOW - 6 * 60 * 60 * 1000).toISOString() })
         expect(valueOfItem({ id: 'a' }, on(old, NOW))).toMatchObject({ origin: 'discogs', readAt: old.readAt })
         expect(valueOfItem({ id: 'a' }, { source: 'off', now: Date.now(), reading: lowestReading() }).origin).toBe(null)
         expect(valueOfItem({ id: 'a', value: { amount: 5, currency: 'USD' } }, on(lowestReading())).origin).toBe('yours')
     })
 
-    it('none for sale is no value, with its own words; it is not "no price suggested"', () => {
+    it('none for sale is no value, with its own words; it is not "no price suggested"', async () => {
         const { reading } = readOutcomeOf(noneForSale, new Date().toISOString())
         const value = valueOfItem({ id: 'a' }, on(reading))
 
@@ -65,12 +65,12 @@ describe('the model: a reading of another kind', () => {
         expect(noValueText(value)).toBe('None for sale on Discogs now')
     })
 
-    it('the totals count it like any other value', () => {
+    it('the totals count it like any other value', async () => {
         const totals = totalsOf([{ id: 'a', owned: true }], () => valueOfItem({ id: 'a', owned: true }, on(lowestReading())), null)
         expect(totals.owned).toEqual({ sum: 12.93, valued: 1, total: 1 })
     })
 
-    it('the app that knows asks for the lowest price only', () => {
+    it('the app that knows asks for the lowest price only', async () => {
         expect(askOfItem({ artist: 'A', title: 'T' }, { lowestOnly: true })).toEqual({ artist: 'A', title: 'T', prices: 'lowest' })
         expect(askOfItem({ artist: 'A', title: 'T' })).toEqual({ artist: 'A', title: 'T' })
     })
@@ -138,15 +138,11 @@ describe('the screen', () => {
 
     async function open(readings, extra = {}) {
         holder.values = { ...valuesWith({ readings }), ...extra }
-        document.body.innerHTML = '<div id="app"></div>'
-        inventoryStore.setAlbums([owned, wanted])
-        view = new InventoryView()
-        await view.mount()
-        await view.controller.valuesOpened
+        view = await openInventory([owned, wanted], { phone: false })
     }
-    beforeEach(() => { vi.clearAllMocks(); localStorage.clear() })
-    afterEach(() => {
-        view?.destroy()
+    beforeEach(async () => { vi.clearAllMocks(); localStorage.clear() })
+    afterEach(async () => {
+        await view?.destroy()
         document.querySelectorAll('.modal-overlay').forEach(node => node.remove())
         inventoryStore.reset()
         document.body.innerHTML = ''
@@ -184,8 +180,7 @@ describe('the screen', () => {
         await open(new Map([['owned', reading]]), { sellerSettingsMissing: () => true })
         expect(document.getElementById('valuesSellerSettingsNotice')).not.toBe(null)
         expect(text(line('owned', 2))).toBe('None for sale on Discogs now —')
-        view.destroy()
-
+        await view.destroy()
         await open(new Map())
         expect(document.getElementById('valuesSellerSettingsNotice')).toBe(null)
     })

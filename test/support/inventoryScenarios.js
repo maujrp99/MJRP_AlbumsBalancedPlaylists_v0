@@ -14,8 +14,9 @@
  */
 import { vi } from 'vitest'
 import { inventoryStore } from '../../public/js/stores/inventory.js'
+import { releasePageScroll } from '../../public/js/utils/pageScrollLock.js'
 import { discogsNoticeStore } from '../../public/js/stores/discogsNotice.js'
-import { valuesWith, valuesOff, reading, RATES } from '../helpers/inventoryValuesStub.js'
+import { valuesWith, valuesOff, reading } from '../helpers/inventoryValuesStub.js'
 import { ITEMS, held, manyItems, outside, world } from './inventoryStandIns.js'
 
 export { outside, held, world }
@@ -27,7 +28,9 @@ const valueOf = (element, name, value) => {
     if (name === 'class') return value.split(/\s+/).filter(Boolean).sort().join(' ')
     return value
 }
+// an empty `style` says nothing (a piece of React writes no attribute where the old HTML wrote style=""): it is not compared
 const attributesOf = (element) => [...element.attributes].map(({ name, value }) => [name, valueOf(element, name, value)])
+    .filter(([name, value]) => !(name === 'style' && value === ''))
     .sort(([a], [b]) => a.localeCompare(b)).map(([name, value]) => ` ${name}="${value}"`).join('')
 const fingerprint = (text) => {
     let hash = 2166136261
@@ -35,12 +38,13 @@ const fingerprint = (text) => {
     return (hash >>> 0).toString(36)
 }
 function describe(node) {
-    if (node.nodeType === 3) return node.textContent.replace(/ /g, '⍽').replace(/\s+/g, ' ')
+    if (node.nodeType === 3) return node.textContent.replace(/\u00a0/g, '⍽').replace(/\s+/g, ' ')
     if (node.nodeType !== 1) return ''
     const tag = node.tagName.toLowerCase()
     const inner = [...node.childNodes].map(describe).join('')
     const whole = `<${tag}${attributesOf(node)}>${inner}</${tag}>`
-    return tag === 'svg' ? `<svg class="${node.getAttribute('class')}" shape="${fingerprint(whole)}"/>` : whole
+    // the white space of an HTML string between the tags of a drawing is not part of the drawing
+    return tag === 'svg' ? `<svg class="${node.getAttribute('class')}" shape="${fingerprint(whole.replace(/>\s+</g, '><'))}"/>` : whole
 }
 
 /** A piece of the page as the proof compares it: a field as it holds its text now, a list as the option it has chosen. */
@@ -108,6 +112,7 @@ const aRun = (gate) => async (items, { onProgress, onItem, signal }) => {
 
 /** Everything a scenario starts from; `scenario.items`, `values`, `storage` and `phone` say what differs. */
 export function prepare(scenario) {
+    releasePageScroll() // a sheet left open by the scenario before holds the page: the count of the holds starts at zero in each one
     world.reset()
     localStorage.clear()
     inventoryStore.reset()

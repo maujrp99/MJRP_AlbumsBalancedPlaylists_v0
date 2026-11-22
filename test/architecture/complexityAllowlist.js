@@ -30,7 +30,6 @@ export const KNOWN_ABOVE_THE_LIMIT = Object.freeze({
     'components/blend/BlendRecipeCard.js:renderRecipeCard': 13, // F62 holds this code (blend, playlists, export, Spotify)
     'components/blend/BlendSeriesSelector.js:preloadSeriesThumbnails': 20, // F62 holds this code (blend, playlists, export, Spotify)
     'components/ranking/TracksTable.js:renderRow': 16, // no feature yet
-    'components/ui/Card.js:renderRankingBadge': 17, // no feature yet
     'controllers/SeriesController.js:arrow function': 16, // no feature yet; 20 until F78 took the «recent» orders to shared/seriesOrder.js
     'models/Album.js:constructor': 16, // no feature yet: the constructor normalizes every shape an album or a track ever had
     'models/Track.js:constructor': 39, // no feature yet: the constructor normalizes every shape an album or a track ever had

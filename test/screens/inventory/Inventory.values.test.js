@@ -4,26 +4,28 @@
  * "Update values", where to buy, the album window, the switch off, and what the Discogs terms ask
  * to be said.
  */
+import { createElement } from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { valuesWith, reading, RATES } from '../helpers/inventoryValuesStub.js'
+import { valuesWith, reading, RATES } from '../../helpers/inventoryValuesStub.js'
 
 const holder = vi.hoisted(() => ({ values: null }))
 const service = vi.hoisted(() => ({ updateAlbum: vi.fn(async () => 'id'), albumOfItem: vi.fn(async () => null) }))
 const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn(), info: vi.fn(), warning: vi.fn() }))
 
-vi.mock('../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn() }))
-vi.mock('../../public/js/services/inventory/inventoryValueWiring.js', () => ({
+vi.mock('../../../public/js/services/inventory/inventoryWiring.js', () => ({ inventoryService: service, readSeriesOfThePerson: vi.fn() }))
+vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', () => ({
     inventoryValues: new Proxy({}, { get: (_, name) => holder.values[name] })
 }))
-vi.mock('../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../public/js/components/Toast.js', () => ({ default: toast, toast }))
-vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn() } }))
+vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
+vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn() } }))
 
-import { InventoryView } from '../../public/js/views/InventoryView.js'
-import { InventoryGridRenderer } from '../../public/js/views/renderers/InventoryGridRenderer.js'
-import { discogsNoticeStore } from '../../public/js/stores/discogsNotice.js'
-import { t } from '../../public/js/i18n/t.js'
-import { inventoryStore } from '../../public/js/stores/inventory.js'
+import { openInventory, press, run, settle, draw, undraw } from '../../support/inventoryHost'
+import { Grid } from '../../../public/js/screens/inventory/Grid'
+import { InventoryBridge } from '../../../public/js/screens/inventory/InventoryBridge'
+import { discogsNoticeStore } from '../../../public/js/stores/discogsNotice.js'
+import { t } from '../../../public/js/i18n/t.js'
+import { inventoryStore } from '../../../public/js/stores/inventory.js'
 
 const averages = { rating: 88.2, popularity: 71.4, ratedTracks: 10, popTracks: 9, tracks: 12 }
 const owned = { id: 'owned', artist: 'Pink Floyd', title: 'The Dark Side of the Moon', owned: true, averages, albumData: { id: 'pf-dsotm', title: 'The Dark Side of the Moon', artist: 'Pink Floyd' } }
@@ -44,55 +46,51 @@ describe('the inventory screen: values (F75)', () => {
     async function open(values, items = ITEMS) {
         holder.values = values
         // the footer is the shell's (React, F83 wave 3): the screen turns the sentence about Discogs on and off in a small store the footer reads
-        document.body.innerHTML = '<div id="app"></div>'
-        inventoryStore.setAlbums(items)
-        view = new InventoryView()
-        await view.mount()
-        await view.controller.valuesOpened
+        view = await openInventory(items, { phone: false })
         return view
     }
     const READINGS = () => new Map([['owned', reading()], ['wanted', reading({ mint: 9, nearMint: 6, veryGoodPlus: 3, id: 18418450 })]])
 
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks()
         localStorage.clear()
     })
-    afterEach(() => {
-        view?.destroy()
+    afterEach(async () => {
+        await view?.destroy()
         document.querySelectorAll('.modal-overlay').forEach(node => node.remove())
         inventoryStore.reset()
         document.body.innerHTML = ''
     })
 
     describe('the card (REQ-01)', () => {
-        beforeEach(() => open(valuesWith({ readings: READINGS() })))
+        beforeEach(async () => open(valuesWith({ readings: READINGS() })))
 
-        it('every card has the same five lines, whatever it knows: owned with a value, not owned with none', () => {
+        it('every card has the same five lines, whatever it knows: owned with a value, not owned with none', async () => {
             const counts = ITEMS.map(item => lines(item.id).map(one => one.dataset.line))
 
             counts.forEach(numbers => expect(numbers).toEqual(['1', '2', '3', '4', '5']))
             expect(lines('owned')).toHaveLength(lines('wished').length)
         })
 
-        it('line 1 is the label of the value, by status', () => {
+        it('line 1 is the label of the value, by status', async () => {
             expect(text(line('owned', 1))).toBe('In my collection · worth')
             expect(text(line('wanted', 1))).toBe('Not mine yet · costs')
             expect(text(line('wished', 1))).toBe('Not mine yet · costs')
         })
 
-        it('line 2 says where the value comes from, and the value with «≈»; a dash when there is none', () => {
+        it('line 2 says where the value comes from, and the value with «≈»; a dash when there is none', async () => {
             expect(text(line('owned', 2))).toMatch(/^Discogs · \d{1,2} [A-Z][a-z]{2} CD · suggested ≈ \$11\.20$/) // REQ-16: it says when it was read, and the kind
             expect(text(line('written', 2))).toBe('CD · written by you ≈ $25.00')
             expect(text(line('wanted', 2))).toMatch(/^Discogs · \d{1,2} [A-Z][a-z]{2} CD · suggested ≈ \$6\.00$/)
             expect(text(line('wished', 2))).toBe('Waiting for a value —')
         })
 
-        it('line 3 is the two averages with their icons; empty, and still there, for an item never read', () => {
+        it('line 3 is the two averages with their icons; empty, and still there, for an item never read', async () => {
             expect(text(line('owned', 3))).toBe('Avg Rating88.2(10 of 12)Avg Pop71.4%(9 of 12)')
             expect(text(line('wished', 3))).toBe('')
         })
 
-        it('lines 4 and 5: what is owned can be sold or traded one day (not yet) and opens its window to buy; the rest shows where to buy', () => {
+        it('lines 4 and 5: what is owned can be sold or traded one day (not yet) and opens its window to buy; the rest shows where to buy', async () => {
             expect(text(line('owned', 4))).toBe('Sell, trade or buy')
             expect(text(line('owned', 5))).toBe('Sell·Trade·Where to buy')
             const soon = [...line('owned', 5).querySelectorAll('[aria-disabled="true"]')]
@@ -111,7 +109,7 @@ describe('the inventory screen: values (F75)', () => {
             expect(stores.every(link => link.target === '_blank' && link.rel === 'noopener')).toBe(true)
         })
 
-        it('nothing wraps: the lines that carry text are cut, with the whole text in the title', () => {
+        it('nothing wraps: the lines that carry text are cut, with the whole text in the title', async () => {
             const origin = line('written', 2).querySelector('span')
             expect(origin.querySelector('.truncate')).not.toBeNull()
             expect(origin.className).toContain('whitespace-nowrap')
@@ -121,7 +119,7 @@ describe('the inventory screen: values (F75)', () => {
             expect(card('wanted').querySelector('h3').title).toBe('Hejira <b>')
         })
 
-        it('the card is a surface: its own background, a faint edge, the cover to the edges', () => {
+        it('the card is a surface: its own background, a faint edge, the cover to the edges', async () => {
             const surface = card('owned')
             expect(surface.style.background).toBe('rgb(21, 21, 26)')
             expect(surface.style.border).toContain('1px solid')
@@ -130,13 +128,13 @@ describe('the inventory screen: values (F75)', () => {
             expect(cover.style.borderRadius).toBe('0')
         })
 
-        it('text from outside stays text, in the card and in the address of a store', () => {
+        it('text from outside stays text, in the card and in the address of a store', async () => {
             expect(card('wanted').querySelector('b')).toBe(null)
             expect(text(card('wanted'))).toContain('Hejira <b>')
             expect(new URL(card('wished').querySelector('a').href).searchParams.get('q')).toBe('Yes Fragile')
         })
 
-        it('a value of Discogs on a card links to the page of its edition (REQ-06)', () => {
+        it('a value of Discogs on a card links to the page of its edition (REQ-06)', async () => {
             const link = line('owned', 2).querySelector('a')
             expect(text(link)).toBe('Discogs')
             expect(link.href).toBe('https://www.discogs.com/release/5012948')
@@ -144,41 +142,42 @@ describe('the inventory screen: values (F75)', () => {
             expect(link.title).toContain('Data provided by Discogs.')
         })
 
-        it('following a link of a card opens no window', () => {
+        it('following a link of a card opens no window', async () => {
             line('wished', 5).querySelector('a').addEventListener('click', event => event.preventDefault())
-            line('wished', 5).querySelector('a').click()
+            await press(line('wished', 5).querySelector('a'))
             expect(document.querySelector('.modal-overlay')).toBe(null)
         })
 
-        it('draws 211 cards in one pass, each with its five lines', () => {
+        it('draws 211 cards in one pass, each with its five lines', async () => {
             const many = Array.from({ length: 211 }, (_, index) => ({ id: `i${index}`, artist: `Artist ${index}`, title: `Album ${index}`, owned: index % 3 === 0 ? true : null }))
             const started = performance.now()
-            const html = InventoryGridRenderer.render({ filteredAlbums: many, viewMode: 'grid', isLoading: false, value: view.controller.values.view(many, many) })
+            const none = () => { }
+            const host = await draw(createElement(Grid, { state: { filteredAlbums: many, viewMode: 'grid', isLoading: false, value: view.controller.values.view(many, many) }, bridge: new InventoryBridge(), actions: { onView: none, onEdit: none, onDelete: none, onStatus: none } }))
             const took = performance.now() - started
 
-            expect(html.match(/inventory-card-wrapper/g)).toHaveLength(211)
-            expect(html.match(/data-line="5"/g)).toHaveLength(211)
+            expect(host.querySelectorAll('.inventory-card-wrapper')).toHaveLength(211)
+            expect(host.querySelectorAll('[data-line="5"]')).toHaveLength(211)
+            await undraw()
             expect(took).toBeLessThan(2000)
         })
     })
 
     describe('the header (REQ-02, REQ-07, REQ-08)', () => {
-        beforeEach(() => open(valuesWith({ readings: READINGS() })))
+        beforeEach(async () => open(valuesWith({ readings: READINGS() })))
 
-        it('the strip under the title has the two totals, each with how many albums have a value; «Total Owned» is gone', () => {
+        it('the strip under the title has the two totals, each with how many albums have a value; «Total Owned» is gone', async () => {
             expect(text(total('owned'))).toBe('Estimated value of what I own: $36.20 2 of 2 owned albums have a value')
             expect(text(total('to-buy'))).toBe('To buy the rest: $6.00 1 of 2 albums have a value')
             expect(text(document.getElementById('app'))).not.toContain('Total Owned')
             expect(document.getElementById('inventoryTotals').previousElementSibling.className).toContain('header-title-row')
         })
 
-        it('four currencies, the chosen one pressed; choosing one converts the cards and the totals and says the rate', () => {
+        it('four currencies, the chosen one pressed; choosing one converts the cards and the totals and says the rate', async () => {
             const buttons = () => [...document.querySelectorAll('#currencySelector [data-currency]')]
             expect(buttons().map(button => [button.textContent, button.getAttribute('aria-pressed')])).toEqual([['USD', 'true'], ['EUR', 'false'], ['GBP', 'false'], ['BRL', 'false']])
             expect(document.querySelector('[data-role="rate"]')).toBe(null)
 
-            buttons()[3].click()
-
+            await press(buttons()[3])
             expect(text(line('written', 2))).toBe('CD · written by you ≈ R$ 147.25')
             expect(text(total('owned'))).toContain('R$ 213.22')
             expect(text(document.querySelector('[data-role="rate"]'))).toBe("Converted from USD at today's rate (1 USD = 5.89 BRL).")
@@ -186,25 +185,25 @@ describe('the inventory screen: values (F75)', () => {
             expect(localStorage.getItem('inventoryCurrency')).toBe('BRL')
         })
 
-        it('while Discogs values are on cards the screen says, once, where the data comes from', () => {
+        it('while Discogs values are on cards the screen says, once, where the data comes from', async () => {
             const credits = document.querySelectorAll('#inventoryTotals [data-role="discogs-credit"]')
             expect(credits).toHaveLength(1)
             expect(text(credits[0])).toContain('Data provided by Discogs.')
             expect(credits[0].querySelector('a').href).toBe('https://www.discogs.com/')
         })
 
-        it('«Sort by» orders by value in the two directions, the item with no value last', () => {
+        it('«Sort by» orders by value in the two directions, the item with no value last', async () => {
             const select = document.getElementById('inventorySort')
             const shown = () => [...document.querySelectorAll('.inventory-card-wrapper')].map(one => one.dataset.albumId)
             expect([...select.options].map(option => option.textContent)).toEqual(expect.arrayContaining(['Value (↓)', 'Value (↑)']))
 
             select.value = 'value'
-            select.dispatchEvent(new Event('change', { bubbles: true }))
+            await press(() => select.dispatchEvent(new Event('change', { bubbles: true })))
             expect(shown()).toEqual(['written', 'owned', 'wanted', 'wished'])
 
             const again = document.getElementById('inventorySort')
             again.value = 'value_asc'
-            again.dispatchEvent(new Event('change', { bubbles: true }))
+            await press(() => again.dispatchEvent(new Event('change', { bubbles: true })))
             expect(shown()).toEqual(['wanted', 'owned', 'written', 'wished'])
         })
     })
@@ -270,7 +269,7 @@ describe('the inventory screen: values (F75)', () => {
             expect(text(notice)).toBe('1 album is waiting for a value. Reading it takes about a minute. Read it now')
             expect(values.readMany).not.toHaveBeenCalled()
 
-            notice.querySelector('button').click()
+            await press(notice.querySelector('button'))
             // the readings the browser holds are kept in their items first (REQ-14), then the album that never had one is read
             await vi.waitFor(() => expect(values.readMany).toHaveBeenCalledTimes(1))
             expect(values.readMany.mock.calls[0][0].map(item => item.id)).toEqual(['wished'])
@@ -301,7 +300,8 @@ describe('the inventory screen: values (F75)', () => {
             const search = document.getElementById('inventorySearch')
             search.value = 'typed'
 
-            const run = view.controller.handleUpdateValues()
+            const running = view.controller.handleUpdateValues()
+            await settle()
 
             const button = document.getElementById('updateValuesBtn')
             expect(text(button)).toBe('Reading values… 0 of 3')
@@ -311,9 +311,8 @@ describe('the inventory screen: values (F75)', () => {
             expect(text(line('owned', 2))).toBe('Reading… —')
             expect(document.getElementById('inventorySearch')).toBe(search) // the screen was not drawn whole
 
-            document.querySelector('#valuesReadingNotice button').click()
-            finish()
-            await run
+            await press(document.querySelector('#valuesReadingNotice button'))
+            await run(async () => { finish(); await running })
 
             expect(text(line('owned', 2))).toMatch(/^Discogs · \d{1,2} [A-Z][a-z]{2} CD · suggested ≈ \$11\.20$/) // REQ-16: it says when it was read, and the kind
             expect(text(document.getElementById('updateValuesBtn'))).toBe('Update values')
@@ -323,9 +322,9 @@ describe('the inventory screen: values (F75)', () => {
     })
 
     describe('the switch off (REQ-10)', () => {
-        beforeEach(() => open(valuesWith({ source: 'off', rates: RATES, readings: READINGS() })))
+        beforeEach(async () => open(valuesWith({ source: 'off', rates: RATES, readings: READINGS() })))
 
-        it('no «Update values», no notice, no value and no word of Discogs but the store link', () => {
+        it('no «Update values», no notice, no value and no word of Discogs but the store link', async () => {
             expect(document.getElementById('updateValuesBtn')).toBe(null)
             expect(document.getElementById('inventoryNotices').children).toHaveLength(0)
             expect(document.querySelector('[data-role="discogs-credit"]')).toBe(null)
@@ -335,14 +334,14 @@ describe('the inventory screen: values (F75)', () => {
             expect(discogsNoticeStore.isOn()).toBe(false)
         })
 
-        it('the value written by hand, the totals, the currency, the order and the buy links go on working', () => {
+        it('the value written by hand, the totals, the currency, the order and the buy links go on working', async () => {
             expect(text(line('written', 2))).toBe('CD · written by you ≈ $25.00')
             expect(text(total('owned'))).toBe('Estimated value of what I own: $25.00 1 of 2 owned albums have a value')
             expect(text(total('to-buy'))).toBe('To buy the rest: — 0 of 2 albums have a value')
-            document.querySelector('#currencySelector [data-currency="EUR"]').click()
+            await press(document.querySelector('#currencySelector [data-currency="EUR"]'))
             expect(text(line('written', 2))).toBe('CD · written by you ≈ €22.75')
             expect([...line('wished', 5).querySelectorAll('a')]).toHaveLength(3)
-            view.controller.handleSortChoice('value')
+            await run(() => view.controller.handleSortChoice('value'))
             expect(document.querySelector('.inventory-card-wrapper').dataset.albumId).toBe('written')
         })
     })
@@ -393,7 +392,7 @@ describe('the inventory screen: values (F75)', () => {
 
         it('«Where to buy» on the card of what is owned opens the window', async () => {
             await open(valuesWith())
-            line('owned', 5).querySelector('button[data-action="view-modal"]').click()
+            await press(line('owned', 5).querySelector('button[data-action="view-modal"]'))
             await vi.waitFor(() => expect(section('where-to-buy')).not.toBe(null))
         })
 
@@ -405,7 +404,7 @@ describe('the inventory screen: values (F75)', () => {
             await openWindow('owned')
             const input = section('estimated-value').querySelector('#inventoryValueInput')
             input.value = '30'
-            section('estimated-value').querySelector('[data-action="save-value"]').click()
+            await press(section('estimated-value').querySelector('[data-action="save-value"]'))
             await vi.waitFor(() => expect(text(section('estimated-value'))).toContain('You wrote this value.'))
 
             expect(service.updateAlbum).toHaveBeenCalledWith('owned', { value: { amount: 30, currency: 'USD', at: expect.any(String) } })
@@ -413,7 +412,7 @@ describe('the inventory screen: values (F75)', () => {
             expect(text(section('estimated-value').querySelector('[data-role="amount"]'))).toBe('$30.00')
             expect(text(line('owned', 2))).toBe('CD · written by you ≈ $30.00')
 
-            section('estimated-value').querySelector('[data-action="forget-value"]').click()
+            await press(section('estimated-value').querySelector('[data-action="forget-value"]'))
             await vi.waitFor(() => expect(service.updateAlbum).toHaveBeenLastCalledWith('owned', { value: null }))
             await vi.waitFor(() => expect(text(section('estimated-value'))).toContain('Mean of the three'))
         })
@@ -437,7 +436,7 @@ describe('the inventory screen: values (F75)', () => {
             await openWindow('wished')
 
             expect(text(section('estimated-value'))).toContain('No value was read for this album yet.')
-            section('estimated-value').querySelector('[data-action="read-value"]').click()
+            await press(section('estimated-value').querySelector('[data-action="read-value"]'))
             await vi.waitFor(() => expect(text(section('estimated-value'))).toContain('Discogs refused the token. The value was not read.'))
 
             expect(text(section('estimated-value').querySelector('[data-action="read-value"]'))).toBe('Try again')
