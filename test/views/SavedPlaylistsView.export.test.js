@@ -73,6 +73,7 @@ describe('exporting from the saved playlists screen (F90)', () => {
             expect(job.positions).toEqual([1, 2, 3])
             expect(job.seriesName).toBe('Plant')
             expect(job.batchName).toBe('Batch A')
+            expect(job.title).toBe('Export Batch A')
         })
 
         it('clicking «Export» on the batch does not open or close the batch', () => {

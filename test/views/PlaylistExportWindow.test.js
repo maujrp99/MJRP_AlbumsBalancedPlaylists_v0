@@ -114,6 +114,30 @@ describe('the export window (F90)', () => {
         })
     })
 
+    describe('on the phone, the focus goes back to what opened the window', () => {
+        it('the opener given (the «⋯» that a sheet already closed on) gets the focus back on Escape and on Back-less close', () => {
+            kit.phone = true
+            const opener = document.createElement('button')
+            document.body.appendChild(opener)
+
+            window_({ playlists: BATCH, opener })
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+
+            expect(document.querySelector('.sheet')?.classList.contains('sheet--closing') ?? true).toBe(true)
+            expect(document.activeElement).toBe(opener)
+        })
+
+        it('the opener given on the computer gets the focus back too', () => {
+            const opener = document.createElement('button')
+            document.body.appendChild(opener)
+
+            window_({ playlists: BATCH, opener })
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+
+            expect(document.activeElement).toBe(opener)
+        })
+    })
+
     describe('Apple Music', () => {
         it('one playlist: the folder of the series is used and only that playlist is created, named as the batch export names it', async () => {
             window_({ playlists: [BATCH[1]], positions: [2] })

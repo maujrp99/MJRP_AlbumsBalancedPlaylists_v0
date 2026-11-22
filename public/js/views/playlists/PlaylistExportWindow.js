@@ -73,15 +73,39 @@ function rowsOf(job, phone, { close, openAppleStep }) {
     })
 }
 
-/** The window of the computer: Escape and the backdrop close it, and the focus goes back where it came from. */
-function openDialog({ title, body, focusFirst }) {
-    const cameFrom = document.activeElement
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])'
+
+/** Tab and Shift+Tab go round inside the window, never out to the page behind it. */
+function keepFocusInside(event, panel) {
+    const inside = [...panel.querySelectorAll(FOCUSABLE)]
+    if (inside.length === 0) return
+    const first = inside[0]
+    const last = inside[inside.length - 1]
+    const outside = !panel.contains(document.activeElement)
+    if (event.shiftKey && (document.activeElement === first || outside)) {
+        event.preventDefault()
+        last.focus({ preventScroll: true })
+    } else if (!event.shiftKey && (document.activeElement === last || outside)) {
+        event.preventDefault()
+        first.focus({ preventScroll: true })
+    }
+}
+
+/** Give the focus back to what opened the window, if it is still on the page. */
+function giveFocusBack(opener) {
+    if (opener?.focus && document.contains(opener)) opener.focus({ preventScroll: true })
+}
+
+/** The window of the computer: Escape and the backdrop close it, Tab stays inside, and the focus goes back where it came from. */
+function openDialog({ title, body, focusFirst, opener }) {
+    const cameFrom = opener || document.activeElement
     const close = () => {
         document.removeEventListener('keydown', onKey, true)
         BaseModal.unmount(WINDOW_ID)
-        if (cameFrom?.focus && document.contains(cameFrom)) cameFrom.focus({ preventScroll: true })
+        giveFocusBack(cameFrom)
     }
     const onKey = (event) => {
+        if (event.key === 'Tab') return keepFocusInside(event, modal)
         if (event.key !== 'Escape') return
         event.stopPropagation()
         close()
@@ -92,12 +116,12 @@ function openDialog({ title, body, focusFirst }) {
     BaseModal.mount(modal)
     document.addEventListener('keydown', onKey, true)
     focusFirst()
-    return { close }
+    return { close, setTitle: (text) => { const heading = modal.querySelector('.app-modal__title'); if (heading) heading.textContent = text } }
 }
 
-/** The window of the phone: a sheet from the bottom; the sheet gives the focus back itself. */
-function openBottomSheet({ title, body }) {
-    const sheet = openSheet({ variant: 'bottom', title, content: body, id: WINDOW_ID })
+/** The window of the phone: a sheet from the bottom; it gives the focus back to the «⋯» that opened it (the sheet that held the «⋯» is gone by then). */
+function openBottomSheet({ title, body, opener }) {
+    const sheet = openSheet({ variant: 'bottom', title, content: body, id: WINDOW_ID, onClose: () => giveFocusBack(opener) })
     sheet.element.classList.add('albums-sheet', 'saved-phone-sheet')
     return sheet
 }
@@ -111,23 +135,27 @@ function openBottomSheet({ title, body }) {
  * @param {number[]} [job.positions] - the position of each playlist in its batch (1-based)
  * @param {string} [job.title] - what the window is called
  * @param {'apple'} [job.start] - open straight on the Apple Music folder step
+ * @param {HTMLElement} [job.opener] - what gets the focus back on close (none given: what had it when the window opened)
  * @returns {{ close: () => void }}
  */
 export function openPlaylistExport(job = {}) {
-    const { title = 'Export playlists', start, ...what } = job
+    const { title = 'Export playlists', start, opener, ...what } = job
+    const rowsTitle = start === 'apple' ? 'Export playlists' : title // the title says what the window shows
     const phone = isPhone()
     const body = SafeDOM.div({})
-    const control = { close: () => { } }
+    const control = { close: () => { }, setTitle: () => { } }
     const settle = (className) => { SafeDOM.clear(body); body.className = className }
     const firstControl = () => body.querySelector('[data-export="apple"], input[type="radio"]:checked, button')?.focus({ preventScroll: true })
 
     const showRows = () => {
         settle(phone ? 'albums-sheet__list' : 'flex flex-col gap-3')
+        control.setTitle(rowsTitle)
         rowsOf(what, phone, { close: () => control.close(), openAppleStep: showStep }).forEach(row => body.appendChild(row))
         firstControl()
     }
     function showStep() {
         settle('flex flex-col gap-3')
+        control.setTitle(title)
         body.appendChild(renderFolderStep({
             seriesName: seriesNameOf(what.seriesName),
             loadFolders,
@@ -139,7 +167,9 @@ export function openPlaylistExport(job = {}) {
 
     if (start === 'apple') showStep()
     else showRows()
-    const opened = phone ? openBottomSheet({ title, body }) : openDialog({ title, body, focusFirst: firstControl })
+    const from = opener || document.activeElement
+    const opened = phone ? openBottomSheet({ title, body, opener: from }) : openDialog({ title, body, focusFirst: firstControl, opener: from })
     control.close = opened.close
+    control.setTitle = opened.setTitle
     return opened
 }

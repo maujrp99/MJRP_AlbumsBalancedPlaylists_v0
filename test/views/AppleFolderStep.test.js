@@ -108,6 +108,17 @@ describe('the folder step of the Apple Music export (F90)', () => {
         await pressExport()
 
         expect(musicKit.createPlaylistInFolder.mock.calls[0][2]).toBe('f-9')
+        expect(musicKit.createOrGetFolder).not.toHaveBeenCalled() // the id travels: no second lookup by name
+    })
+
+    it('the series folder that the library already has is used by its id, with no lookup by name', async () => {
+        musicKit.folders = [{ id: 'f-7', name: 'Road trip' }]
+        open()
+        await toTheStep()
+        await pressExport()
+
+        expect(musicKit.createOrGetFolder).not.toHaveBeenCalled()
+        expect(musicKit.createPlaylistInFolder.mock.calls[0][2]).toBe('f-7')
     })
 
     it('while the folders are read it says so, and the series folder can already be exported to', async () => {
@@ -127,7 +138,7 @@ describe('the folder step of the Apple Music export (F90)', () => {
         open()
         await toTheStep()
 
-        expect(stepText()).toContain('You have no folders in Apple Music yet. The playlists go to the folder below, created for them.')
+        expect(stepText()).toContain('You have no folders in Apple Music yet. Export creates the folder you pick.')
         expect(checked().dataset.mode).toBe('series')
     })
 
@@ -234,6 +245,118 @@ describe('the folder step of the Apple Music export (F90)', () => {
         document.querySelector('[data-export="json"]').click()
         expect(document.querySelector('[data-apple-folder-step]')).toBeNull()
         expect(musicKit.listFolders).not.toHaveBeenCalled()
+    })
+})
+
+describe('the folder step: focus, the typed name, the title, the look (F90 recheck)', () => {
+    let musicKit
+    const toTheStep = async () => {
+        document.querySelector('[data-export="apple"]').click()
+        await vi.waitFor(() => expect(document.querySelector('[data-apple-folder-step]')).not.toBeNull())
+    }
+    beforeEach(() => {
+        vi.clearAllMocks()
+        document.body.innerHTML = ''
+        localStorage.clear()
+        exportLedger.clear()
+        musicKit = fakeMusicKit()
+        kit.service = musicKit
+        vi.spyOn(console, 'error').mockImplementation(() => { })
+    })
+    afterEach(() => vi.restoreAllMocks())
+
+    it('the focus stays on the choice it was on when the list of folders arrives', async () => {
+        let release
+        musicKit.listFolders = vi.fn(() => new Promise(resolve => { release = () => resolve([{ id: 'f-9', name: 'Favorites' }]) }))
+        open()
+        await toTheStep()
+        const none = [...document.querySelectorAll('input[name="apple-folder"]')].find(r => r.dataset.mode === 'none')
+        none.focus()
+        await vi.waitFor(() => expect(release).toBeTypeOf('function'))
+        release()
+        await settle()
+
+        expect(document.activeElement.dataset.mode).toBe('none')
+    })
+
+    it('focus on the first choice while it loaded stays on a choice (not the page) when the list arrives', async () => {
+        musicKit.folders = [{ id: 'f-9', name: 'Favorites' }]
+        open()
+        await toTheStep()
+        expect(document.activeElement.dataset.mode).toBe('series')
+        await settle()
+
+        expect(document.activeElement.name).toBe('apple-folder')
+        expect(document.activeElement.dataset.mode).toBe('series')
+    })
+
+    it('the focus stays in the typed name while the list arrives', async () => {
+        let release
+        musicKit.listFolders = vi.fn(() => new Promise(resolve => { release = () => resolve([]) }))
+        open()
+        await toTheStep()
+        typedField().focus()
+        await vi.waitFor(() => expect(release).toBeTypeOf('function'))
+        release()
+        await settle()
+
+        expect(document.activeElement).toBe(typedField())
+    })
+
+    it('the «New folder» field starts empty when the remembered choice was an existing folder', async () => {
+        localStorage.setItem('mjrp_apple_music_folder:Road trip', '{"name":"Favorites"}')
+        musicKit.folders = [{ id: 'f-9', name: 'Favorites' }]
+        open()
+        await toTheStep()
+        await settle()
+
+        expect(checked().value).toBe('Favorites')
+        expect(typedField().value).toBe('')
+    })
+
+    it('the «New folder» field keeps a remembered typed name for this series', async () => {
+        localStorage.setItem('mjrp_apple_music_folder:Road trip', '{"name":"Gone"}')
+        musicKit.folders = [{ id: 'f-9', name: 'Favorites' }]
+        open()
+        await toTheStep()
+        await settle()
+
+        expect(checked().dataset.mode).toBe('new')
+        expect(typedField().value).toBe('Gone')
+    })
+
+    it('the title follows what the window shows: opened on the folder step, Back shows the destinations under a title that fits', async () => {
+        openPlaylistExport({ start: 'apple', title: 'Export to Apple Music' })
+        await vi.waitFor(() => expect(document.querySelector('[data-apple-folder-step]')).not.toBeNull())
+        const title = () => document.querySelector('.app-modal__title').textContent
+        expect(title()).toBe('Export to Apple Music')
+
+        document.querySelector('[data-folder-back]').click()
+        expect(document.querySelectorAll('[data-export]').length).toBe(3)
+        expect(title()).toBe('Export playlists')
+
+        document.querySelector('[data-export="apple"]').click()
+        expect(title()).toBe('Export to Apple Music')
+    })
+
+    it('«Export» and «Back» centre their text like the other buttons', async () => {
+        open()
+        await toTheStep()
+
+        expect(document.querySelector('[data-apple-export]').className).toContain('justify-center')
+        expect(document.querySelector('[data-folder-back]').className).toContain('justify-center')
+    })
+
+    it('the window on the computer keeps Tab inside, round in both directions', async () => {
+        open()
+        const modal = document.getElementById('playlist-export-window')
+        const inside = [...modal.querySelectorAll('button:not([disabled])')]
+        inside[inside.length - 1].focus()
+        const tab = (shiftKey) => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey, bubbles: true, cancelable: true }))
+        tab(false)
+        expect(document.activeElement).toBe(inside[0])
+        tab(true)
+        expect(document.activeElement).toBe(inside[inside.length - 1])
     })
 })
 

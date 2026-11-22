@@ -154,8 +154,8 @@ export function openPlaylistSheet({ controller, container, playlistIndex }) {
 }
 
 /** Export: the window the saved playlists screen opens too (F90), for the playlists on this screen. */
-export function openExportSheet() {
-    return openPlaylistExport()
+export function openExportSheet(opener) {
+    return openPlaylistExport({ opener })
 }
 
 /**
@@ -170,7 +170,7 @@ export function attachPhonePlaylistActions(container, { controller, showPlaylist
         'show-playlist': (button) => showPlaylist(indexOf(button, 'playlistIndex')),
         'track-options': (button) => openTrackSheet({ controller, playlistIndex: indexOf(button, 'playlistIndex'), trackIndex: indexOf(button, 'trackIndex') }),
         'playlist-options': (button) => openPlaylistSheet({ controller, container, playlistIndex: indexOf(button, 'playlistIndex') }),
-        'export': () => openExportSheet(),
+        'export': (button) => openExportSheet(button),
         'save': () => controller.handleSave(container.querySelector('#batchNameInput')?.value)
     }
     const onClick = (event) => {

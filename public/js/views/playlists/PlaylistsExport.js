@@ -83,6 +83,7 @@ let appleExportRunning = false
  * @param {string} [options.batchName] - the batch; none given: the one on the edit screen
  * @param {number[]} [options.positions] - the position of each playlist in its batch
  * @param {string} [options.folderName] - the Apple Music folder; none given: the series name (F90)
+ * @param {string} [options.folderId] - the id of that folder, when it was picked from the library's list (F90)
  * @param {boolean} [options.noFolder] - no folder: the top of the library (F90)
  */
 export async function handleExportToAppleMusic(options = {}) {
@@ -111,7 +112,7 @@ export async function handleExportToAppleMusic(options = {}) {
         const { musicKitService } = await import('../../services/MusicKitService.js')
         const report = await AppleMusicExportService.exportPlaylists(
             playlists,
-            { seriesName: seriesNameOf(options.seriesName), batchName: options.batchName || getEffectiveBatchName(), positions: options.positions, folderName: options.folderName, noFolder: options.noFolder },
+            { seriesName: seriesNameOf(options.seriesName), batchName: options.batchName || getEffectiveBatchName(), positions: options.positions, folderName: options.folderName, folderId: options.folderId, noFolder: options.noFolder },
             { musicKit: musicKitService, onProgress: say }
         )
         appleExportMessages(report).forEach(message => toast[message.type](message.text, REPORT_MS))

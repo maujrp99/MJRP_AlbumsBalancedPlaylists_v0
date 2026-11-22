@@ -100,7 +100,7 @@ export function openSeriesSheet({ series, summary, hasPlaylists, handlers }) {
 }
 
 /** The actions of a batch: edit it, delete it (asked). The saved name is said whole here. */
-export function openBatchSheet({ batch, seriesId, handlers }) {
+export function openBatchSheet({ batch, seriesId, handlers, opener }) {
     const shown = readableBatchName(batch.name)
     const count = batchTotals(batch).playlists
     return showSheet({
@@ -108,7 +108,7 @@ export function openBatchSheet({ batch, seriesId, handlers }) {
         about: shown.machine ? `Saved as “${batch.name}”` : batchFacts(batch),
         rows: [
             { icon: 'Edit', label: 'Edit batch', onPick: () => handlers.onEditBatch(seriesId, batch.name, batch.savedAt) },
-            { icon: 'Share', label: 'Export', onPick: () => handlers.onExportBatch(batch) }
+            { icon: 'Share', label: 'Export', onPick: () => handlers.onExportBatch(batch, opener) }
         ],
         danger: { icon: 'Trash', label: 'Delete batch', onPick: () => handlers.onDeleteBatch(seriesId, batch.name, count) }
     })
@@ -132,7 +132,7 @@ function playlistRow(playlist, seriesId, handlers, { batch, index }) {
     row.addEventListener('click', () => handlers.onOpenPlaylist(seriesId, playlist.id))
     const exportButton = SafeDOM.button({ type: 'button', className: 'phone-more', 'aria-label': `Export ${playlist.name}`, 'aria-haspopup': 'dialog' })
     exportButton.appendChild(SafeDOM.fromHTML(getIcon('Share', 'saved-phone-export__icon')))
-    exportButton.addEventListener('click', () => handlers.onExportPlaylist(batch, playlist, index))
+    exportButton.addEventListener('click', () => handlers.onExportPlaylist(batch, playlist, index, exportButton))
     return SafeDOM.div({ className: 'saved-phone__head saved-phone-playlist-head' }, [row, exportButton])
 }
 
@@ -154,7 +154,7 @@ export function renderBatchRow({ batch, seriesId, handlers }) {
         box,
         fill
     })
-    const more = moreButton(`Actions for batch ${batch.name}`, () => openBatchSheet({ batch, seriesId, handlers }))
+    const more = moreButton(`Actions for batch ${batch.name}`, () => openBatchSheet({ batch, seriesId, handlers, opener: more }))
     return SafeDOM.div({ className: 'saved-phone-batch', dataset: { seriesId, batchName: batch.name } }, [
         SafeDOM.div({ className: 'saved-phone__head' }, [main, more]),
         box
