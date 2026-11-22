@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 08:09] step — F83 onda 7b: a barra do celular e a seção do botão feitas de novo a cada passo, como a tela à mão
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- A prova no navegador achou que o botão da barra do celular, depois de tocado, ficava com o `:hover` preso (subia 1 px e ganhava o degradê): a tela à mão trocava a barra inteira (`replaceWith`) a cada `updateGenerateButton`, a nova mantinha o elemento. A nota e o botão da barra (`PhoneBar`) e a seção do botão (`GenerateSection`) agora levam uma `key` que muda a cada desenho que a antiga refazia (a lição 15 do mapa); a `key` na barra inteira quebrava 3 cenários do dourado, então a chave vai na nota e no botão. O dourado passa de novo (66 testes da tela), o orçamento fecha (principal 194.889 B; depois da primeira tela 236.603 B; `background` precisa de 58.055 B, o teto é 58.100 B).
+- O teste «igual ao de antes» passa a dizer, quando falha, onde a página começou a diferir (o trecho de agora e o de antes).
+
 ## [2026-11-22 07:10] step — F83 onda 7b: o orçamento de peso, os totais e as notas da onda
 
 **Branch:** claude/f83-wave-7b-blend-screen

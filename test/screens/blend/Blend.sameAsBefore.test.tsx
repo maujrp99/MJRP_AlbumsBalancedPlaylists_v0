@@ -28,6 +28,15 @@ import before from '../../fixtures/blendBeforeF83.json'
 
 const captured = before as Record<string, Record<string, string | null>>
 
+/** Where two pages first differ, in words (a failed comparison says what changed, not only that something did). */
+const where = (now: string | null, was: string | null): string => {
+    const a = now ?? ''
+    const b = was ?? ''
+    let i = 0
+    while (i < a.length && a[i] === b[i]) i++
+    return a === b ? '' : ` at ${i}: now «${a.slice(Math.max(0, i - 60), i + 90)}» before «${b.slice(Math.max(0, i - 60), i + 90)}»`
+}
+
 /** The one label that differs on purpose: where the focus is after the covers came in the background. */
 const ON_PURPOSE = { scenario: 'computer · many series, the covers waiting and then arrived', label: 'focus after the covers came', was: 'body' }
 
@@ -45,7 +54,7 @@ describe('the Blend screen in React does what the hand-made one did', () => {
             expect(Object.keys(snaps)).toEqual(Object.keys(captured[key]))
             for (const [label, page] of Object.entries(snaps)) {
                 if (key === ON_PURPOSE.scenario && label === ON_PURPOSE.label) continue
-                expect(page, `${key} · ${label}`).toBe(captured[key][label])
+                expect(page === captured[key][label], `${key} · ${label}${where(page, captured[key][label])}`).toBe(true)
             }
         })
     }

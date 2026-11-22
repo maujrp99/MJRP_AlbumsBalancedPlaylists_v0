@@ -13,6 +13,8 @@
  *     of the duration did not (it keeps the focus). The covers that arrive do NOT let the focus go: the one difference on purpose (see SeriesStep.tsx);
  *   - the step 3 is never the current one (from 2 the stepper goes to 4); the summary says «auto mode» even when the recipe does not use it; the ingredients
  *     are not wiped when the recipe changes and a hidden one is still handed to the generation (defects kept: a migration fixes nothing);
+ *   - the bar of the phone and the section of the button were written anew at each `updateGenerateButton` (a choice, a step of the slider, the start and the end of a
+ *     generation): they are made anew here too (a new `key` at each draw by a person), so a button that was tapped is a new one (no hover left on it);
  *   - the result area (the progress, or a failure in red) stays until the page is drawn anew by a choice;
  *   - «Blend it!» asks the controller with the recipe and the five keys of the ingredients; the notices of the load are warnings of ten seconds, then a
  *     success, then the move to /playlists?seriesId=… (by the bridge, after this draw, from the click and never from an effect).
@@ -293,9 +295,9 @@ export function Blend({ visit }: Props) {
             </section>
             <RecipeSection chosen={chosen} recipes={recipes} recipeId={recipeId} onSelect={chooseRecipe} />
             <IngredientsSection recipe={recipe} choices={choices} onChange={change} draws={ingredientDraws} />
-            <GenerateSection chosen={chosen} recipe={recipe} choices={choices} generating={generating} onGenerate={start} />
+            <GenerateSection key={draws} chosen={chosen} recipe={recipe} choices={choices} generating={generating} onGenerate={start} />
             <ResultsArea results={results} />
-            {phone ? <PhoneBar note={barNoteOf(chosen, recipe, choices)} ready={Boolean(chosen && recipe)} generating={generating} onGenerate={start} /> : null}
+            {phone ? <PhoneBar drawn={draws} note={barNoteOf(chosen, recipe, choices)} ready={Boolean(chosen && recipe)} generating={generating} onGenerate={start} /> : null}
         </div>
     )
 }

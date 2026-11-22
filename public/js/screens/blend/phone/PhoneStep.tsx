@@ -93,11 +93,12 @@ function SeriesList({ visit, chosen, onPick }: { visit: BlendVisit; chosen: Seri
 }
 
 /** The action bar of the phone: the note (the step that is missing, or what will be blended) and «Blend it!». */
-export function PhoneBar({ note, ready, generating, onGenerate }: { note: string; ready: boolean; generating: boolean; onGenerate: () => void }) {
+/** `drawn` counts the times the hand-made bar was written anew (each choice, each step of the slider, the start and the end of a generation): the note and the button are new elements each time. */
+export function PhoneBar({ drawn, note, ready, generating, onGenerate }: { drawn: number; note: string; ready: boolean; generating: boolean; onGenerate: () => void }) {
     return (
         <div id="blend-phone-bar" className="phone-action-bar blend-bar md:hidden">
-            <span className="phone-action-bar__note blend-bar__note" role="status" aria-live="polite">{note}</span>
-            <button type="button" id="blend-bar-btn" className="btn btn-primary blend-bar__btn" disabled={!ready || generating} aria-busy={generating ? 'true' : undefined} onClick={onGenerate}>
+            <span key={`note${drawn}`} className="phone-action-bar__note blend-bar__note" role="status" aria-live="polite">{note}</span>
+            <button key={`button${drawn}`} type="button" id="blend-bar-btn" className="btn btn-primary blend-bar__btn" disabled={!ready || generating} aria-busy={generating ? 'true' : undefined} onClick={onGenerate}>
                 {generating ? t('blend.bar.busy') : t('blend.bar.button')}
             </button>
         </div>
