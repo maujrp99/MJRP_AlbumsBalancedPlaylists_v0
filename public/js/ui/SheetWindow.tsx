@@ -66,6 +66,8 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
                 if (current.current === sheet) current.current = null
                 request.onClose?.()
                 // the hand-made sheet slides away with what it held still in it: what React draws in it goes when the sheet leaves the page
+                // the screen draws again at once (it may show something because the sheet is closed); what is inside stays until the slide ends
+                setShown(previous => (previous?.sheet === sheet ? { ...previous } : previous))
                 const letGo = () => setShown(previous => (previous?.sheet === sheet ? null : previous))
                 let looks = 0
                 const waitForTheSlide = () => { if (sheet.element.isConnected && looks++ < 40) window.setTimeout(waitForTheSlide, 40); else letGo() }
@@ -84,7 +86,7 @@ export function useSheetWindow(): { show: (request: SheetRequest) => void; close
 
     // What is drawn inside is in the body now: the first thing to act on gets the focus, as the motor does when it has content.
     useLayoutEffect(() => {
-        if (!shown?.focusFirst) return
+        if (!shown?.focusFirst || !shown.sheet.isOpen()) return
         const first = shown?.sheet.body.querySelector<HTMLElement>(FOCUSABLE) ?? shown?.sheet.footer?.querySelector<HTMLElement>(FOCUSABLE)
         first?.focus({ preventScroll: true })
     }, [shown])

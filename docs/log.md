@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 21:20] step — F83 onda 5a: a folha solta o desenho do React ao fim do deslize, mas a tela desenha de novo na hora (teste da Start)
+**Branch:** claude/f83-wave-5a-albums-screen
+A suíte inteira achou que o teste da Start do celular (o Undo que volta ao fechar a folha) dependia de a tela desenhar de novo no instante em que a folha fecha: useSheetWindow agora desenha de novo na hora e só tira o conteúdo da folha quando ela sai da página; o foco da primeira coisa não é dado a uma folha que fecha.
+
 ## [2026-11-21 21:17] step — F83 onda 5a: a prova no navegador, o peso, os documentos (TASK-23a, TASK-30, TASK-31)
 **Branch:** claude/f83-wave-5a-albums-screen
 Chromium (1280 e 393) e WebKit com perfil de iPhone sobre o build, antiga contra nova e antiga contra antiga: página e foco iguais em todos os passos; o ruído conhecido (barra do topo, relógio do rodapé) existe também de antiga contra antiga; 11 a 20 pixels de 1 nível na barra de filtros não se explicam além de rasterização com caixas e estilos iguais. Redesenho com 300 capas (o roteiro corrigido reconhece a lista a 1280): no build a nova está igual ou abaixo da antiga (42,6 contra 51,8 ms na grade 25x12 a 1280; 24,7 contra 22,9 a 393), no servidor de desenvolvimento 1,6 a 1,9 vez (React de desenvolvimento e modo estrito). O que não dá para provar sem conta: o MusicKit real, o Spotify real, gravar uma classificação, remover um álbum de uma série real. tasks.md (TASK-23a feita, TASK-23b aberta), o mapa, o plano e wave-lessons.md (§ 10).
