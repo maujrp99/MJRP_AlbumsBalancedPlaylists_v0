@@ -159,12 +159,14 @@ Propostos pelo agente em 2026-11-21, com a leitura do Discogs guardada no banco 
 
 | Onde | Texto | Dito para |
 |---|---|---|
-| Linha de origem do cartão e da lista | «CD · Discogs · 21 Nov» (o dia, sem o ano; o momento inteiro no `title`: «Read on 21 Nov 2026, 14:05.») | dizer quando o valor foi lido, onde cabe pouco texto |
+| Origem do cartão (valor do Discogs), duas linhas de 11px que não encolhem | «Discogs · 21 Nov» sobre «CD · suggested» (sugestão) ou «CD · lowest» (menor preço); o momento inteiro e o que o valor é, uma vez, no `title` (texto pendente da aprovação do MJRP) | dizer de onde vem, de que tipo é e quando foi lido, sem nada cortado a 900, 1280, 1440 e 1920 px em USD, EUR, GBP e BRL, com 99,999.99 de valor; duas linhas de 11px têm a altura do valor ao lado, o cartão não cresce |
+| Origem na lista do computador | «CD · Discogs · suggested · 21 Nov» (ou «lowest») | o mesmo, numa linha, onde há largura |
 | Linha de origem no celular | «Discogs · 21 Nov» (o dia e o mês numa peça só, sem quebra) | o mesmo, mais curto, na mesma forma do cartão |
-| Janela do álbum, menor preço à venda | «The lowest price this CD was for sale at on Discogs when it was read. It is an asking price, not what the disc usually sells for.» (antes: «… is for sale at on Discogs now») | a frase não pode afirmar o presente de uma leitura guardada |
-| `title` do cartão, menor preço | «Lowest price this CD edition was for sale at on Discogs when it was read.» + «Read on 21 Nov 2026, 14:05.» | o mesmo |
-| Aviso da rodada | «3 readings could not be saved to your inventory: they show in this browser for now.» | dizer quando uma leitura lida não pôde ser guardada |
-| Aviso ao ler um álbum | «The value was read but could not be saved to your inventory. It shows in this browser for now.» | o mesmo, para uma leitura só |
+| Janela do álbum, menor preço à venda | «The lowest price this CD was listed at on Discogs when it was read. It is an asking price, not what the disc usually sells for.» (antes: «… is for sale at on Discogs now») | a frase não pode afirmar o presente de uma leitura guardada |
+| `title` do cartão, menor preço | «Lowest asking price for this CD edition on Discogs, read on 21 Nov 2026, 14:05.» (a sugestão: «Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 21 Nov 2026, 14:05.») | quando foi lido, dito uma vez |
+| Folha «⋯» do celular, nota do valor | «Lowest asking price for this CD edition on Discogs.» (a sugestão: «Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition.») | o menor preço nunca é chamado de média |
+| Aviso da rodada | «3 values could not be saved to your inventory. This browser keeps them for six hours; Update values tries to save them again.» («1 value … keeps it … save it again.») | dizer quanto tempo o navegador guarda e o que fazer (verdade no código: `READING_TTL_MS` e o começo de «Update values») |
+| Aviso ao ler um álbum | «The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.» | o mesmo, para uma leitura só |
 | Janela do álbum, seção «Estimated value» | «Read on 21 Nov 2026, 14:05.» (já era assim; agora vale para o valor guardado, de qualquer idade) e, no painel do celular, a mesma frase como nota | quando o valor foi lido |
 | Aviso de espera | «N albums are waiting for a value.» (mesmo texto; passa a contar só os que nunca foram lidos) | não mudou |
 

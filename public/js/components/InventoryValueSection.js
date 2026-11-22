@@ -99,7 +99,7 @@ function fromDiscogs({ value, money, ...shown }) {
 function lowestForSale({ value, money, ...shown }) {
     const converted = value.currency === money.currency ? '' : `, converted from ${escapeHtml(value.currency)} at today's rate`
     const count = Number.isInteger(value.forSale) && value.forSale > 0 ? `<span class="text-xs text-gray-400">(${value.forSale} for sale)</span>` : ''
-    return `${lead('The lowest price this CD was for sale at on Discogs when it was read. It is an asking price, not what the disc usually sells for.')}
+    return `${lead('The lowest price this CD was listed at on Discogs when it was read. It is an asking price, not what the disc usually sells for.')}
       <div class="flex flex-wrap items-center gap-2" data-role="lowest"><span class="text-sm text-gray-400">Lowest price for sale on Discogs:</span> <span class="text-2xl font-bold text-white" data-role="amount">${moneyOf(value, money)}</span> ${count}</div>
       <p class="${SMALL}">${editionLine(value.release)}<br>
         Read on ${momentText(value.readAt)}${converted}. ${readButton('Read again', shown)}</p>

@@ -330,7 +330,16 @@ export const valueLabel = (item) => (statusOf(item) === InventoryStatus.OWNED ? 
 
 export const DISCOGS_MEAN_TITLE = 'Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition'
 export const DISCOGS_CREDIT = 'Data provided by Discogs.'
-export const DISCOGS_LOWEST_TITLE = 'Lowest price this CD edition was for sale at on Discogs when it was read'
+export const DISCOGS_LOWEST_TITLE = 'Lowest asking price for this CD edition on Discogs'
+
+/** What kind of Discogs value this is, in words: a lowest asking price is never called a mean (and the other way round). */
+export const discogsKindNote = (value) => (value?.basis === ValueBasis.LOWEST_FOR_SALE ? DISCOGS_LOWEST_TITLE : DISCOGS_MEAN_TITLE)
+
+/** The `title` of an origin line: what the value is, and when it was read, said once. */
+export function discogsHint(value) {
+    const moment = momentText(value?.readAt)
+    return `${discogsKindNote(value)}${moment ? `, read on ${moment}` : ''}.`
+}
 export const LOWEST_PRICES_NOTE = 'Discogs values are lowest asking prices for now.'
 export const RATES_MISSING_TEXT = 'Exchange rates are not available: values are shown in USD.'
 
@@ -348,7 +357,7 @@ export function dayText(iso) {
     return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-/** "20 Nov": the short «read on» of a card, where there is no room for the year (the whole moment is in its `title`). */
+/** "20 Nov": the short date of a card, where there is no room for the year (the whole moment is in its `title`). */
 export function shortDayText(iso) {
     const date = new Date(iso)
     // a no-break space between the day and the month: the date never splits over two lines

@@ -209,11 +209,14 @@ function answerSentences({ noEdition, noSuggestion }) {
     return sentences
 }
 
-/** A reading read but not saved to the inventory: said, and it still shows in this browser (REQ-14). */
+/** What the person is told of ONE value read but not saved to the inventory (REQ-14): the browser keeps it six hours (READING_TTL_MS), and «Update values» saves it. */
+export const UNKEPT_VALUE_TEXT = 'The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.'
+
+/** Values read but not saved to the inventory: said, and they still show in this browser (REQ-14). */
 function unkeptSentence(unkept) {
     if (unkept <= 0) return []
-    const [noun, verb] = unkept === 1 ? ['reading', 'it shows'] : ['readings', 'they show']
-    return [`${unkept} ${noun} could not be saved to your inventory: ${verb} in this browser for now.`]
+    const [noun, them] = unkept === 1 ? ['value', 'it'] : ['values', 'them']
+    return [`${unkept} ${noun} could not be saved to your inventory. This browser keeps ${them} for six hours; Update values tries to save ${them} again.`]
 }
 
 /** Why the run ended before the end, when it did. */
