@@ -9,6 +9,8 @@
  * The pure parts are exported for the tests; `startMenuBar(window)` wires them to the page.
  */
 
+import { stopIcon } from './phoneBar.js'
+
 /** The items, in the order of the app's menu: the story's id, its text in copy.js, its screen of the app. */
 export const MENU = Object.freeze([
     { id: 'start', key: 'm.start', app: '/start' },
@@ -56,6 +58,15 @@ export function applyAccount(doc, signedIn) {
     doc.documentElement.classList.toggle('in', signedIn)
     MENU.forEach((item) => {
         doc.querySelectorAll(`.stop[data-for="${item.id}"]`).forEach((a) => a.setAttribute('href', menuHref(item, signedIn)))
+    })
+}
+
+/** The phone's bottom menu has an icon above each label (the app's bar has the same): put them in, once; the computer's bar hides them. */
+export function addStopIcons(doc) {
+    MENU.forEach((item) => {
+        doc.querySelectorAll(`.stop[data-for="${item.id}"]`).forEach((a) => {
+            if (!a.querySelector('.ic')) a.insertAdjacentHTML('afterbegin', stopIcon(item.id))
+        })
     })
 }
 
@@ -107,6 +118,7 @@ export function startMenuBar(win) {
     const slots = { desk: D.getElementById('slot-header'), phone: D.getElementById('slot-thread') }
     const mq = win.matchMedia('(max-width:899px)')
     const view = painter(D, ms, bar)
+    addStopIcons(D)
     const place = () => { const slot = mq.matches ? slots.phone : slots.desk; if (slot && ms.parentNode !== slot) slot.appendChild(ms) }
     place()
     if (mq.addEventListener) mq.addEventListener('change', () => { place(); view.build(win) })

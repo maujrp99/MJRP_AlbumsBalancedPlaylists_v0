@@ -21,7 +21,7 @@ const realMatchMedia = window.matchMedia
 function screenOf(phone: boolean) {
     window.matchMedia = ((query: string) => ({
         media: query,
-        matches: query.includes('max-width: 767px') ? phone : false,
+        matches: query.includes('max-width: 899px') ? phone : false,
         addEventListener: () => {},
         removeEventListener: () => {}
     })) as never

@@ -32,3 +32,25 @@ describe('CacheManager.clear (F48)', () => {
         await expect(manager.clear()).rejects.toThrow('blocked')
     })
 })
+
+describe('CacheManager.clearPrefixes (F75, UAT-267)', () => {
+    it('clears only the keys that start with a named prefix, in memory and in IndexedDB', async () => {
+        const l2 = { clearPrefixes: vi.fn(async () => {}) }
+        const manager = build(l2)
+        await manager.l1.set('albumload:v1:a', 1)
+        await manager.l1.set('inventoryvalue:v2:u:i', 2)
+
+        await manager.clearPrefixes(['albumload:'])
+
+        expect(await manager.l1.get('albumload:v1:a')).toBeNull()
+        expect(await manager.l1.get('inventoryvalue:v2:u:i')).toBe(2)
+        expect(l2.clearPrefixes).toHaveBeenCalledWith(['albumload:'])
+    })
+
+    it('fails when IndexedDB could not be cleared', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => {})
+        const manager = build({ clearPrefixes: vi.fn(async () => { throw new Error('blocked') }) })
+
+        await expect(manager.clearPrefixes(['albumload:'])).rejects.toThrow('blocked')
+    })
+})

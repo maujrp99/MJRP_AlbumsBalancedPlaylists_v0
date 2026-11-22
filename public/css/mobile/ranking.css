@@ -11,7 +11,7 @@
  * Orange is Save and the track picked; nothing else (decided by the agent, revisable).
  */
 
-@media (max-width: 767px) {
+@media (max-width: 899px) {
   /* ── 1. The window ──────────────────────────────────────────────────────────────────────── */
   .rank-window--phone {
     align-items: stretch;

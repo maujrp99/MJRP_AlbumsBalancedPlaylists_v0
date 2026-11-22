@@ -1,0 +1,55 @@
+/*
+ * bar-menu.css - the home's bar, shared (F88): five stops over ONE row of equalizer bars, ⟲ between the
+ * two sides, the fire on the lit stretch. Loaded by the home (public/splash.html) and by the app
+ * (public/js/app.js; it lives with the home's files because the home names nothing of the app's), so that the two bars cannot drift apart: the passage from the home to the app
+ * does not change the bar. The page that uses it sets the colours it reads (--muted, --faint,
+ * --orange-text, --body) and may place the bar (the home moves it to the bottom on the phone).
+ * Written for the computer: the stop's label on top of the row of bars, 52 px tall.
+ */
+/* ONE width for the bar in the home and in the app (F88): a function of the screen, never of the account side.
+   620 px (the approved v4 and Transformar), centred on the page; it gives way, never overlapping, only below 1122 px,
+   where 251 px a side (the mark, or the home's widest right side: language and Start) no longer leave it the room. */
+:root{--bar-w:min(620px,calc(100vw - 502px))}
+@keyframes eqb{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;min-width:0}
+.ms .stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font:600 14px/1 var(--body);border-radius:6px;white-space:nowrap}
+.ms .stop:hover{color:#fff}
+.ms .stop.on{color:#fff}
+.ms .stop.cur{color:var(--orange-text)}
+.ms .flipmark{position:absolute;z-index:2;left:59%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:12px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
+.ms .flipmark.on{color:var(--orange-text)}
+.eqbar{position:absolute;left:0;right:0;display:flex;align-items:flex-end;gap:2px;pointer-events:none}
+.eqbar i{flex:1 1 0;min-width:1px;border-radius:1px 1px 0 0;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom}
+.eqbar i.on{background:linear-gradient(0deg,#dc2626,#f97316 60%,#fbbf24)}
+html.moving:not(.paused) .eqbar i.cur{animation:eqb var(--d) ease-in-out var(--o) infinite alternate}
+.ms .stop{justify-content:flex-start;padding-top:8px;min-height:52px}
+.ms .flipmark{top:4px}
+.eqbar{bottom:6px;height:16px}
+.ms .lb{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){html.moving:not(.paused) .eqbar i.cur{animation:none}}
+.ms .ic{display:none}
+/*
+ * The phone's bottom menu (F88; the owner, on his iPhone, 2026-11-21: «Os menus não eram pra ser iguais?»): ONE component in the home
+ * and in the app, the same pixels. A row of equalizer bars (17 px, the home's taller and readable one) on top of five stops, each an
+ * icon above its label in Syne, the current stop in orange, its stretch of the row lit in fire. Both pages put `.pbar` on the bottom bar
+ * (the home's `.thread`, the app's `.phone-tabbar`) and the markup of the bar is the same (public/js/shell/BarMenu.tsx and
+ * public/splash/menu.js, the icons from public/splash/phoneBar.js). Every rule is scoped by `.pbar` so it wins over the computer's rules
+ * above whatever the order of the stylesheets in the built page (test/architecture/phoneBarLabelsStayOffTheBars.test.js).
+ * Heights: 1 px line + 28 px (bars: 6 + 17, then 5 px of air) + 24 px icon + 3 px + 14 px label + 6 px = 76 px, then the safe area.
+ * The labels start below the row of bars by the padding of the stop: larger text makes the bar taller, never lets a label climb onto the bars.
+ */
+:root{--pbar-h:76px}
+@media (max-width:899px){
+  .pbar{position:fixed;left:0;right:0;bottom:0;z-index:40;box-sizing:border-box;padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);background:#0a0a0c;border-top:1px solid rgba(255,255,255,.12);--muted:#b9b9c2;--faint:#9a9aa4;--orange-text:#fb923c}
+  .pbar{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  .pbar .ms{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%}
+  .pbar .ms .stop{box-sizing:border-box;justify-content:flex-start;gap:3px;padding:28px 0 6px;min-height:75px;font:700 12px/14px 'Syne',sans-serif;color:var(--muted)}
+  .pbar .ms .stop:active{color:#fff}
+  .pbar .ms .stop.on{color:var(--muted)}
+  .pbar .ms .stop.cur{color:var(--orange-text)}
+  .pbar .ms .ic{display:block;flex:none;width:24px;height:24px}
+  .pbar .ms .stop.cur .ic{filter:drop-shadow(0 0 6px rgba(249,115,22,.55))}
+  .pbar .ms .lb{max-width:calc(100% + 6px);overflow:hidden;text-overflow:ellipsis;letter-spacing:-.03em}
+  .pbar .ms .flipmark{display:none}
+  .pbar .ms .eqbar{top:6px;bottom:auto;height:17px;gap:1px}
+}

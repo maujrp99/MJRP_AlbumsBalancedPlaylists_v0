@@ -292,13 +292,11 @@ function watchTracks(win, page, scene, view) {
     }
 }
 
-/** The language: the remembered choice, else the browser's; the switch (PT · EN) changes and remembers it. */
+/** The language: the remembered choice, else Portuguese; the switch (PT · EN) changes and remembers it. */
 function languageControl(win, onChange) {
     const D = win.document
     const storage = pageStorage(win)
-    const nav = win.navigator || {}
-    const languages = nav.languages && nav.languages.length ? nav.languages : [nav.language]
-    let lang = chooseLanguage({ stored: readStoredLanguage(storage), languages })
+    let lang = chooseLanguage({ stored: readStoredLanguage(storage) })
     const set = (next, remember) => {
         lang = next
         applyLanguage(D, lang)
@@ -348,7 +346,7 @@ export function startSplash(win) {
     let lang = 'pt'
     const view = crateView(win, imgs, albums, () => lang)
     const redrawCredits = phoneSlots(win, imgs, albums)
-    const language = languageControl(win, (next) => { lang = next; redrawCredits(next); if (!phone) view.caption(page.state.track) })
+    const language = languageControl(win, (next) => { lang = next; redrawCredits(next); view.caption(phone ? 'a1' : page.state.track) })
     lang = language.current()
     redrawCredits(lang)
     const onScroll = watchTracks(win, page, scene, view)

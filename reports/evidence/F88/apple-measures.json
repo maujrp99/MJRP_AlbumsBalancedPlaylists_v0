@@ -1,0 +1,42 @@
+{
+ "authorized-earlier-1280": [
+  "apple: Connected | Disconnect Apple Music",
+  "spotify: Not connected | Connect Spotify"
+ ],
+ "authorized-earlier-393": [
+  "apple: Connected | Disconnect Apple Music",
+  "spotify: Not connected | Connect Spotify",
+  "apple: Connected | Disconnect Apple Music",
+  "spotify: Not connected | Connect Spotify"
+ ],
+ "not-authorized-1280": [
+  "apple: Not connected | Connect Apple Music",
+  "spotify: Not connected | Connect Spotify"
+ ],
+ "not-authorized-393": [
+  "apple: Checking… | ",
+  "spotify: Not connected | Connect Spotify",
+  "apple: Not connected | Connect Apple Music",
+  "spotify: Not connected | Connect Spotify"
+ ],
+ "checking-1280": [
+  "apple: Checking… | ",
+  "spotify: Not connected | Connect Spotify"
+ ],
+ "checking-393": [
+  "apple: Checking… | ",
+  "spotify: Not connected | Connect Spotify",
+  "apple: Checking… | ",
+  "spotify: Not connected | Connect Spotify"
+ ],
+ "failed-1280": [
+  "apple: Could not connect | Try again Apple Music",
+  "spotify: Not connected | Connect Spotify"
+ ],
+ "failed-393": [
+  "apple: Checking… | ",
+  "spotify: Not connected | Connect Spotify",
+  "apple: Could not connect | Try again Apple Music",
+  "spotify: Not connected | Connect Spotify"
+ ]
+}

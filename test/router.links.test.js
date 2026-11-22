@@ -1,11 +1,12 @@
 /**
- * F63 (UAT-201) - the "Soon" items of the Music Series menu go nowhere. Before, each was a link
+ * F63 (UAT-201), F88 - the "Soon" items of the line under the top bar (before F88, the Music Series menu) go nowhere. Before, each was a link
  * with an address: its own listener refused the click, and the router, which listens to every link
  * of the app, navigated all the same.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 vi.mock('../public/js/services/auth/signIn.js', async () => ({ authService: (await import('./support/shellScenarios.js')).stand.login }))
+vi.mock('../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('./support/shellScenarios.js')).stand.musicKit }))
 vi.mock('../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('./support/shellScenarios.js')).stand.spotify }))
 vi.mock('../public/js/components/Toast.js', async () => ({ default: (await import('./support/shellScenarios.js')).stand.toast }))
 vi.mock('../public/js/services/DialogService.js', async () => ({ dialogService: (await import('./support/shellScenarios.js')).stand.dialog }))
@@ -55,21 +56,22 @@ describe('Router: links (F63)', () => {
         expect(address()).toBe('/albums')
     })
 
-    it('the "Soon" items of the Music Series menu do not navigate; "By Album" does', async () => {
-        // the menu of series of the top bar, in React (F83 wave 3), on the page next to the router: its links are the router's to follow
-        const shell = await startOn('/home')
-        const menu = document.querySelector('#seriesDropdownMenu')
-        const soon = [...menu.querySelectorAll('[aria-disabled="true"]')]
+    it('the "Soon" items of the line under the bar do not navigate; "By Album" does', async () => {
+        // the line under the top bar, in React (F83 wave 3, F88), on the page next to the router: its links are the router's to follow
+        const shell = await startOn('/albums')
+        window.history.replaceState({}, '', '/home') // the page is drawn; the address is the test's again
+        const row = document.querySelector('#top-menu-sub nav')
+        const soon = [...row.querySelectorAll('[aria-disabled="true"]')]
 
-        expect(soon.map(item => [...item.querySelectorAll('span')].map(span => span.textContent).join(' '))).toEqual(['By Artist Soon', 'By Genre Soon', 'By Track Soon'])
-        expect(menu.querySelector('a[href="/artists"], a[href="/genres"], a[href="/tracks"]')).toBeNull()
+        expect(soon.map(item => item.textContent.replace(/\s+/g, ' ').trim())).toEqual(['By Artist Soon', 'By Genre Soon', 'By Track Soon'])
+        expect(row.querySelector('a[href="/artists"], a[href="/genres"], a[href="/tracks"]')).toBeNull()
         for (const item of soon) {
             item.click()
             await settle()
             expect(address()).toBe('/home')
         }
 
-        menu.querySelector('a[href="/albums"]').click()
+        row.querySelector('a[href="/albums"]').click()
         await settle()
         expect(address()).toBe('/albums')
         shell.stop()

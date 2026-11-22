@@ -260,7 +260,7 @@ export function quietTheRouter() {
     return vi.spyOn(router, 'navigate').mockImplementation(() => {})
 }
 
-/** The window of the phone as the tests set it: `matches` for the line of 767 px. */
+/** The window of the phone as the tests set it: `matches` for the line of 899 px. */
 export function asPhone(phone) {
     window.scrollTo = vi.fn()
     window.matchMedia = vi.fn(() => ({ matches: phone, addEventListener: vi.fn(), removeEventListener: vi.fn() }))

@@ -10,6 +10,7 @@ import { resolve } from 'node:path'
 import { inflateSync } from 'node:zlib'
 
 vi.mock('../../public/js/services/auth/signIn.js', async () => ({ authService: (await import('../support/shellScenarios.js')).stand.login }))
+vi.mock('../../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('../support/shellScenarios.js')).stand.musicKit }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('../support/shellScenarios.js')).stand.spotify }))
 vi.mock('../../public/js/components/Toast.js', async () => ({ default: (await import('../support/shellScenarios.js')).stand.toast }))
 vi.mock('../../public/js/services/DialogService.js', async () => ({ dialogService: (await import('../support/shellScenarios.js')).stand.dialog }))
@@ -20,7 +21,7 @@ import { loginWindowStore } from '../../public/js/stores/loginWindow.js'
 import { screenNameStore, nameThisScreen } from '../../public/js/stores/screenName.js'
 import { pageScrollLocks } from '../../public/js/utils/pageScrollLock.js'
 import { PHONE_TABS, currentTab, screenName } from '../../public/js/shell/phoneTabs'
-import { accountInitial } from '../../public/js/shell/PhoneMenu'
+import { accountInitial } from '../../public/js/shell/accountNames'
 import { NAME_IN_THE_BAR } from '../../public/js/shell/barName'
 import { START_PATH, HOME_PATH } from '../../public/js/components/navigation/startRoute.js'
 import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
@@ -107,19 +108,19 @@ describe('Footer "Clear Cache" (F48, UAT-177)', () => {
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 // components/AuthNav.menu.test.js
-describe('the account menu (F63, UAT-13)', () => {
+describe('the account panel (F63, UAT-13, F88)', () => {
     const trigger = () => $('#userMenuBtn')
     const menu = () => $('#userMenu')
     const isOpen = () => !menu().classList.contains('invisible')
     const signedIn = () => on('/start', { user: ANA })
 
-    it('is drawn closed, and no longer depends on the mouse being over it', async () => {
+    it('is drawn closed, and no longer depends on the mouse being over it: one panel, a dialog (F88)', async () => {
         await signedIn()
         expect(isOpen()).toBe(false)
         expect(trigger().getAttribute('aria-expanded')).toBe('false')
-        expect(trigger().getAttribute('aria-haspopup')).toBe('menu')
+        expect(trigger().getAttribute('aria-haspopup')).toBe('dialog')
         expect(trigger().getAttribute('aria-controls')).toBe('userMenu')
-        expect(menu().getAttribute('role')).toBe('menu')
+        expect(menu().getAttribute('role')).toBe('dialog')
         expect(document.body.innerHTML).not.toContain('group-hover:visible')
     })
 
@@ -145,6 +146,15 @@ describe('the account menu (F63, UAT-13)', () => {
         expect(isOpen()).toBe(false)
     })
 
+    it('a click in a window the panel opened (the «Disconnect from…?» question) does not close the panel (judge P2-5)', async () => {
+        const s = await signedIn()
+        await tap(s, trigger())
+        document.body.insertAdjacentHTML('beforeend', '<div class="app-modal"><div role="dialog"><button id="confirmDisconnect">Disconnect</button></div></div>')
+        await tap(s, $('#confirmDisconnect'))
+        expect(isOpen()).toBe(true)
+        document.querySelector('.app-modal')!.remove()
+    })
+
     it('Escape closes it and gives the focus back to the avatar', async () => {
         const s = await signedIn()
         await tap(s, trigger())
@@ -156,15 +166,34 @@ describe('the account menu (F63, UAT-13)', () => {
         expect(document.activeElement).toBe(trigger())
     })
 
-    it('Arrow Down on the avatar opens it with the focus on the first item', async () => {
+    it('Arrow Down on the avatar opens it with the focus on the first control inside', async () => {
         const s = await signedIn()
         trigger().focus()
 
         await press(s, 'ArrowDown', trigger())
 
         expect(isOpen()).toBe(true)
-        expect(document.activeElement).toBe($('#logoutBtn'))
-        expect($('#logoutBtn').getAttribute('role')).toBe('menuitem')
+        // the first control there is when the panel opens (Apple Music is still being asked: its row has no button yet)
+        expect(menu().contains(document.activeElement)).toBe(true)
+        expect(document.activeElement!.matches('button, a')).toBe(true)
+    })
+
+    it('holds the connections of Apple Music and Spotify, in that order, and says who is signed in, with Sign Out inside', async () => {
+        await signedIn()
+        expect($$('#accountConnections [data-connection]').map(row => row.dataset.connection)).toEqual(['apple', 'spotify'])
+        expect(menu().textContent).toContain('Ana')
+        expect(menu().querySelector('#logoutBtn')).not.toBeNull()
+    })
+
+    it('asks Apple Music for its true state when the panel opens, not before (nothing heavier at load)', async () => {
+        const s = await signedIn()
+        expect(world.calls.filter(call => call[0] === 'apple check').length).toBe(0)
+        await tap(s, trigger())
+        expect(world.calls.filter(call => call[0] === 'apple check').length).toBe(1)
+        await tap(s, trigger())
+        await tap(s, trigger())
+        // the answer is known now: opening again does not ask again
+        expect(world.calls.filter(call => call[0] === 'apple check').length).toBe(1)
     })
 
     it('drawn again (the session changed), it still answers once per tap', async () => {
@@ -179,12 +208,18 @@ describe('the account menu (F63, UAT-13)', () => {
         expect(isOpen()).toBe(false)
     })
 
-    it('with nobody signed in there is no menu, and nothing breaks on a click or a key', async () => {
+    it('with nobody signed in the panel is still there for the connections: no Sign Out, a way to sign in', async () => {
         const s = await on('/start')
 
-        expect(document.getElementById('userMenuBtn')).toBeNull()
+        expect(trigger().getAttribute('aria-label')).toMatch(/^Connections/)
+        expect(document.getElementById('loginBtn')).not.toBeNull()
+        expect(menu().querySelector('#logoutBtn')).toBeNull()
+        expect(document.getElementById('accountConnections')).not.toBeNull()
+        await tap(s, trigger())
+        expect(isOpen()).toBe(true)
         await tap(s, $('#app'))
         await press(s, 'Escape')
+        expect(isOpen()).toBe(false)
     })
 })
 
@@ -260,9 +295,10 @@ describe('top bar: names are not cut at 80 px (UAT-211)', () => {
 
     it('the Spotify name uses the same rule and says the whole name on hover', async () => {
         world.spotify = { connected: true, profile: { display_name: NAME } }
-        await on('/start')
-        const name = $('#spotify-connect-desktop [data-spotify-name]')
-        expect(name.textContent).toBe(NAME)
+        const shell = await on('/start')
+        await tap(shell, $('#userMenuBtn'))
+        const name = $('#accountConnections [data-spotify-name]')
+        expect(name.textContent).toBe(`Connected as ${NAME}`)
         expect(name.getAttribute('title')).toBe(NAME)
         NAME_IN_THE_BAR.split(' ').forEach(cls => expect(name.classList.contains(cls)).toBe(true))
     })
@@ -284,31 +320,29 @@ describe('top bar: the title picture has no box behind it (UAT-211)', () => {
     })
 })
 
-describe('top bar: it never passes the width of the screen (UAT-218)', () => {
-    it('every box between a name and the bar lets the name shrink', async () => {
+describe('top bar: it never passes the width of the screen (UAT-218, F88)', () => {
+    it('every box between a name and the bar lets the name shrink; the initial never does', async () => {
         await on('/start', { user: { ...ANA, displayName: NAME } })
         for (let box: HTMLElement | null = $('[data-account-name]'); box && box.id !== 'header-container'; box = box.parentElement) {
-            if (box.tagName === 'NAV') break
+            if (box.classList.contains('top-menu__acct')) break
             const lets = box.classList.contains('min-w-0') || box.classList.contains('max-w-full')
             expect(lets, box.outerHTML.slice(0, 80)).toBe(true)
         }
-        expect($('#userMenuBtn img').classList.contains('shrink-0')).toBe(true)
+        expect($('#userMenuBtn .top-acct__initial').classList.contains('shrink-0')).toBe(true)
     })
 
-    it('the links never shrink, the two groups of the bar do, and the menu of links starts at 1024 px', async () => {
+    it('the bar is one row that is centred on the page, never wider than it, and the account sits at its edge', async () => {
         await on('/start')
-        $$('#header-container nav > div.hidden > a').forEach(link => expect(link.className).toMatch(/whitespace-nowrap shrink-0/))
-        expect($$('#header-container nav > div').some(box => /^hidden lg:flex items-center .*min-w-0$/.test(box.className))).toBe(true)
-        expect($('#spotify-connect-desktop').className).toBe('min-w-0')
-        expect($('#mobileMenuBtn').className).toMatch(/^lg:hidden/)
-        expect(document.getElementById('header-container')!.innerHTML).not.toMatch(/md:hidden|hidden md:flex/)
+        const row = $('.top-menu__row')
+        expect($('#top-menu-bar').parentElement).toBe(row)
+        expect($('.top-menu__acct').parentElement).toBe(row)
+        expect(document.getElementById('header-container')!.innerHTML).not.toMatch(/mobileMenu|lg:flex/)
     })
 
-    it('below the wide screen the Spotify button is the icon alone, with the name on hover', async () => {
-        world.spotify = { connected: true, profile: { display_name: 'Mau' } }
-        await on('/start')
-        expect($('#spotify-connect-desktop .xl\\:flex').className).toBe('hidden xl:flex flex-col leading-none min-w-0')
-        expect($('#spotify-connect-desktop [title]').getAttribute('title')).toBe('Spotify connected: Mau')
+    it('the name of the account is hidden below the wide screen, with the whole name on hover', async () => {
+        await on('/start', { user: { ...ANA, displayName: 'Mau' } })
+        expect($('[data-account-name]').className).toMatch(/^hidden xl:block /)
+        expect($('[data-account-name]').getAttribute('title')).toBe('Mau')
     })
 })
 
@@ -333,8 +367,12 @@ describe('the tabs of the phone', () => {
     })
 
     it('a screen no tab stands for marks none, and a name that only begins alike is not a match', () => {
-        expect(currentTab('/artists')).toBeNull()
         expect(currentTab('/homework')).toBeNull()
+        expect(currentTab('/albumsmore')).toBeNull()
+    })
+
+    it('the other kinds of series light Albums, the stop of today\'s «Music Series» (F88, judge P2-6)', () => {
+        for (const path of ['/artists', '/genres', '/tracks']) expect(currentTab(path)!.id).toBe('albums')
     })
 
     it('marks the current tab for the eye and for the screen reader, and only that one', async () => {
@@ -344,16 +382,17 @@ describe('the tabs of the phone', () => {
         expect($$('#phone-tabbar a[data-link]').length).toBe(5)
         expect($$('#phone-tabbar a[data-tab]').map(tab => tab.textContent!.trim())).toEqual(['Start', 'Albums', 'Blend', 'Playlists', 'Inventory'])
         expect(current.map(tab => tab.textContent!.trim())).toEqual(['Albums'])
-        expect(current[0].classList.contains('is-current')).toBe(true)
-        expect($$('#phone-tabbar .is-current').length).toBe(1)
+        expect(current[0].classList.contains('cur')).toBe(true)
+        expect($$('#phone-tabbar a.cur').length).toBe(1)
         expect($('#phone-tabbar nav').getAttribute('aria-label')).toBe('Main')
+        expect($('#phone-tabbar').classList.contains('pbar')).toBe(true)
     })
 
     it('every tab has an icon and a label', async () => {
         await on('/start', { phone: true })
         for (const tab of $$('#phone-tabbar a[data-tab]')) {
             expect(tab.querySelector('svg')).not.toBeNull()
-            expect(tab.querySelector('.phone-tabbar__label')!.textContent!.trim()).not.toBe('')
+            expect(tab.querySelector('.lb')!.textContent!.trim()).not.toBe('')
         }
     })
 
@@ -437,7 +476,7 @@ describe('the shell of the phone', () => {
         window.matchMedia = ((query: string) => (query.includes('reduce') ? { matches: false } : media(query))) as typeof window.matchMedia
         const event = new MouseEvent('click', { bubbles: true, cancelable: true })
 
-        await s.act(async () => { $('[data-tab="albums"]').dispatchEvent(event); await flush() })
+        await s.act(async () => { $('#phone-tabbar [data-tab="albums"]').dispatchEvent(event); await flush() })
 
         expect(event.defaultPrevented).toBe(true)
         expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
@@ -602,9 +641,9 @@ describe('the menu of the computer (F85)', () => {
         await on('/albums')
         const body = document.getElementById('header-container')!
         const links = [...body.querySelectorAll('a[href="/start"]')].map(a => a.textContent!.trim())
-        expect(links.length).toBeGreaterThanOrEqual(2) // the bar and the drawer
+        expect(links.length).toBeGreaterThanOrEqual(1) // the bar (the drawer is gone, F88)
         links.forEach(label => expect(label).toBe('Start'))
-        expect(body.querySelectorAll('a[href="/home"]:not(.nav-logo)').length).toBe(0) // only the logo leads to /home
+        expect(body.querySelectorAll('a[href="/home"]:not(.top-menu__home)').length).toBe(0) // only the logo leads to /home
         expect(body.textContent).not.toMatch(/\bHome\b/)
         expect(START_PATH).toBe('/start')
         expect(HOME_PATH).toBe('/home')
@@ -612,7 +651,7 @@ describe('the menu of the computer (F85)', () => {
 
     it('the logo leads to /home (the entry page), by a full page load (no data-link)', async () => {
         await on('/albums')
-        const logo = $('a.nav-logo')
+        const logo = $('a.top-menu__home')
         expect(logo.getAttribute('href')).toBe('/home')
         expect(logo.hasAttribute('data-full-page')).toBe(true)
     })

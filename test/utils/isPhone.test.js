@@ -1,5 +1,5 @@
 /**
- * F76 (REQ-12) - one place answers "is this the phone?": a screen up to 767 px wide, asked of the
+ * F76 (REQ-12) - one place answers "is this the phone?": a screen up to 899 px wide, asked of the
  * screen itself (matchMedia), and heard again when the phone turns or the window is resized.
  */
 import { describe, it, expect, vi } from 'vitest'
@@ -9,7 +9,7 @@ import { isPhone, onPhoneChange, PHONE_QUERY } from '../../public/js/utils/isPho
 function windowOf(width) {
     const listeners = new Set()
     const media = {
-        get matches() { return win.width <= 767 },
+        get matches() { return win.width <= 899 },
         addEventListener: (type, listener) => listeners.add(listener),
         removeEventListener: (type, listener) => listeners.delete(listener)
     }
@@ -28,10 +28,11 @@ function windowOf(width) {
 }
 
 describe('isPhone', () => {
-    it('is the phone up to 767 px, and not from 768 px', () => {
+    it('is the phone up to 899 px (the line of the entry page, F88), and not from 900 px', () => {
         expect(isPhone(windowOf(393))).toBe(true)
-        expect(isPhone(windowOf(767))).toBe(true)
-        expect(isPhone(windowOf(768))).toBe(false)
+        expect(isPhone(windowOf(800))).toBe(true)
+        expect(isPhone(windowOf(899))).toBe(true)
+        expect(isPhone(windowOf(900))).toBe(false)
         expect(isPhone(windowOf(1280))).toBe(false)
     })
 
@@ -39,7 +40,7 @@ describe('isPhone', () => {
         const win = windowOf(393)
         isPhone(win)
         expect(win.asked).toEqual([PHONE_QUERY])
-        expect(PHONE_QUERY).toBe('(max-width: 767px)')
+        expect(PHONE_QUERY).toBe('(max-width: 899px)')
     })
 
     it('is not the phone where the width cannot be asked', () => {
@@ -55,7 +56,7 @@ describe('onPhoneChange', () => {
 
         win.resizeTo(393)
         win.resizeTo(500) // still a phone: nothing to tell
-        win.resizeTo(852) // the phone lying down is not "the phone"
+        win.resizeTo(1024) // a screen of 900 px or more is not "the phone" (a phone lying down, 852 px, still is)
 
         expect(heard.mock.calls).toEqual([[true], [false]])
     })

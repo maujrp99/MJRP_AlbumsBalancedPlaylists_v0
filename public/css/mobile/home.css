@@ -12,7 +12,7 @@
  * targets of 44 px, the 16 px gutter of #app.
  */
 
-@media (max-width: 767px) {
+@media (max-width: 899px) {
   /* ── 1. The page: the gutter of #app, room for the action bar ──────────────────────────────── */
   :root {
     --home-dock-h: 76px;
@@ -533,4 +533,15 @@
     min-height: 48px;
   }
 
+
+  /* A tablet in the phone's layout (F88: up to 899 px): three covers a row from 640 px, not two of 380 px */
+  @media (min-width: 640px) {
+    .home-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #edit-series-modal [data-picker-grid] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
 }

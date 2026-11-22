@@ -41,6 +41,7 @@ try {
 
 const express = require('express')
 const cors = require('cors')
+const { isOriginAllowed } = require('./lib/corsOrigin')
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 
@@ -62,9 +63,9 @@ if (process.env.NODE_ENV === 'production') {
   if (!allowed.length) console.warn('Warning: ALLOWED_ORIGIN is empty in production; CORS will be restrictive')
   corsOptions = {
     origin: (origin, callback) => {
-      // Allow non-browser requests (curl, server-to-server) which have no origin header
-      if (!origin) return callback(null, true)
-      if (allowed.includes(origin)) return callback(null, true)
+      // The list, no Origin header (curl, server-to-server), or a preview channel of this same
+      // Hosting site (F87). A refused origin ends in the closing responder: 500, no detail.
+      if (isOriginAllowed(origin, allowed)) return callback(null, true)
       return callback(new Error('CORS origin not allowed'))
     }
   }

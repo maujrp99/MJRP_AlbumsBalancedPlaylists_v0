@@ -1,13 +1,14 @@
 /**
  * F83 wave 3 (TASK-19): what the shell in React does that the page of a step does not say. The page after each step is proved against the
  * hand-made shell in Shell.sameAsBefore.test.tsx; here: it lets go of everything when it stops, a link moves the router once, the bar follows
- * the address (the hand-made one did not), the name a screen gave itself goes at the end of a navigation, the chevron of the drawer turns, and
+ * the address, the name a screen gave itself goes at the end of a navigation, and
  * the window to sign in is one however many times it is asked for.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { act } from 'react'
 
 vi.mock('../../public/js/services/auth/signIn.js', async () => ({ authService: (await import('../support/shellScenarios.js')).stand.login }))
+vi.mock('../../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('../support/shellScenarios.js')).stand.musicKit }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('../support/shellScenarios.js')).stand.spotify }))
 vi.mock('../../public/js/components/Toast.js', async () => ({ default: (await import('../support/shellScenarios.js')).stand.toast }))
 vi.mock('../../public/js/services/DialogService.js', async () => ({ dialogService: (await import('../support/shellScenarios.js')).stand.dialog }))
@@ -31,43 +32,34 @@ describe('the shell in React', () => {
 
     itLeavesNoListeners('the shell', user())
 
-    it('a link of the bar moves the router once: the click is the router\'s, the bar does not move it too', async () => {
+    it('a link of the bar and of the line under it moves the router once: the click is the router\'s, the bar does not move it too', async () => {
         const navigate = vi.spyOn(router, 'navigate').mockImplementation(() => {})
-        const adapter = await startOnPage('/start')
-        await adapter.act(async () => { document.querySelector<HTMLElement>('a[href="/blend"]')!.click(); await flush() })
+        const adapter = await startOnPage('/saved-playlists')
+        await adapter.act(async () => { document.querySelector<HTMLElement>('#top-menu-bar a[href="/blend"]')!.click(); await flush() })
         expect(navigate.mock.calls).toEqual([['/blend']])
         navigate.mockClear()
-        await adapter.act(async () => { document.querySelector<HTMLElement>('#seriesDropdownBtn')!.click(); await flush() })
-        await adapter.act(async () => { document.querySelector<HTMLElement>('#seriesDropdownMenu a[href="/albums"]')!.click(); await flush() })
-        expect(navigate.mock.calls).toEqual([['/albums']])
+        await adapter.act(async () => { document.querySelector<HTMLElement>('#top-menu-sub a[href="/playlists"]')!.click(); await flush() })
+        expect(navigate.mock.calls).toEqual([['/playlists']])
         adapter.stop()
     })
 
-    it('a link of the drawer and a tab of the phone move the router once, and the drawer closes', async () => {
+    it('a tab of the phone moves the router once', async () => {
         const navigate = vi.spyOn(router, 'navigate').mockImplementation(() => {})
-        const adapter = await startOnPage('/start')
-        await adapter.act(async () => { document.getElementById('mobileMenuBtn')!.click(); await flush() })
-        await adapter.act(async () => { document.querySelector<HTMLElement>('#mobileMenu a[href="/inventory"]')!.click(); await flush() })
-        expect(navigate.mock.calls).toEqual([['/inventory']])
-        expect(document.getElementById('mobileMenu')!.classList.contains('-translate-x-full')).toBe(true)
-        adapter.stop()
-
-        navigate.mockClear()
         const phone = await startOnPage('/start', { phone: true })
-        await phone.act(async () => { document.querySelector<HTMLElement>('[data-tab="blend"]')!.click(); await flush() })
+        await phone.act(async () => { document.querySelector<HTMLElement>('#phone-tabbar [data-tab="blend"]')!.click(); await flush() })
         expect(navigate.mock.calls).toEqual([['/blend']])
         phone.stop()
     })
 
-    it('the bar follows the address: the current link and the label of the menu of series move at the end of a navigation (the hand-made bar stayed where it first was drawn)', async () => {
+    it('the bar follows the address: the current stop and the line under it move at the end of a navigation', async () => {
         const adapter = await startOnPage('/start')
-        const current = () => [...document.querySelectorAll('#header-container nav > div.hidden > a')].filter(a => a.classList.contains('text-accent-primary')).map(a => a.getAttribute('href'))
+        const current = () => [...document.querySelectorAll('#top-menu-bar a[aria-current="page"]')].map(a => a.getAttribute('href'))
         expect(current()).toEqual(['/start'])
         await adapter.act(async () => { window.history.pushState({}, '', '/inventory'); adapter.navigated('/inventory'); await flush() })
         expect(current()).toEqual(['/inventory'])
         await adapter.act(async () => { window.history.pushState({}, '', '/albums/abc'); adapter.navigated('/albums/abc'); await flush() })
-        expect(current()).toEqual([])
-        expect(document.getElementById('seriesDropdownBtn')!.textContent!.trim()).toBe('By Album')
+        expect(current()).toEqual(['/albums'])
+        expect(document.querySelector('#top-menu-sub a[aria-current="page"]')!.textContent).toBe('By Album')
         adapter.stop()
     })
 
@@ -77,17 +69,6 @@ describe('the shell in React', () => {
         expect(screenNameStore.getName()).toBe('Prog Rock')
         await adapter.act(async () => { adapter.navigated('/blend'); await flush() })
         expect(screenNameStore.getName()).toBeNull()
-        adapter.stop()
-    })
-
-    it('the drawer turns the chevron of «Music Series», not the music note', async () => {
-        const adapter = await startOnPage('/start')
-        const icons = () => [...document.querySelectorAll('#mobileSeriesToggle svg')].map(svg => svg.getAttribute('class') ?? '')
-        expect(icons().some(classes => classes.includes('rotate-180'))).toBe(false)
-        await adapter.act(async () => { document.getElementById('mobileSeriesToggle')!.click(); await flush() })
-        const [note, chevron] = icons()
-        expect(note).not.toContain('rotate-180')
-        expect(chevron).toContain('rotate-180')
         adapter.stop()
     })
 
@@ -121,7 +102,7 @@ describe('the shell in React', () => {
             await adapter.act(async () => { await setLocale('pt'); await flush() })
             expect(document.getElementById('loginBtn')!.textContent!.trim()).toBe('Entrar')
             expect(document.getElementById('footerClearCache')!.textContent).toBe('Limpar o cache')
-            expect(document.querySelector('#header-container nav > div.hidden > a')!.textContent!.trim()).toBe('Início')
+            expect(document.querySelector('#top-menu-bar a[href="/start"]')!.textContent!.trim()).toBe('Início')
         } finally {
             window.localStorage.removeItem(PREVIEW_KEY)
             await act(async () => { await setLocale('en') })

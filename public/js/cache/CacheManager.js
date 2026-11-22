@@ -153,6 +153,28 @@ export class CacheManager {
     }
 
     /**
+     * Clear the entries whose key starts with one of the named prefixes (both L1 and L2), and nothing else:
+     * a store that nobody named here (the Discogs value readings, F75) stays.
+     * @param {string[]} prefixes
+     * @returns {Promise<void>}
+     * @throws when IndexedDB could not be cleared: a caller that says "cleared" must know it was not
+     */
+    async clearPrefixes(prefixes) {
+        await this.init()
+
+        await this.l1.clearPrefixes(prefixes)
+
+        if (this.l2Available) {
+            try {
+                await this.l2.clearPrefixes(prefixes)
+            } catch (error) {
+                console.error('❌ CacheManager: Failed to clear L2 (IndexedDB) by prefix', error)
+                throw error
+            }
+        }
+    }
+
+    /**
      * Check if key exists in cache
      * @param {string} key - Cache key
      * @returns {Promise<boolean>}

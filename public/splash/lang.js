@@ -1,7 +1,7 @@
 /**
  * The language of the entry page (F80, UAT-240, UAT-241): Portuguese or English. The page is written
- * in Portuguese; a visitor whose browser speaks English (or anything else the page does not speak)
- * sees English, a visitor who used the switch sees what they chose, remembered in localStorage.
+ * in Portuguese and opens in Portuguese for everyone, whatever the browser speaks; a visitor who
+ * tapped the switch sees what they chose, remembered in localStorage.
  * The texts come from copy.js. Pure apart from the document and the storage handed in.
  */
 import { LANGS, t } from './copy.js'
@@ -14,14 +14,9 @@ const HTML_LANG = Object.freeze({ pt: 'pt-BR', en: 'en' })
 /** What each marker attribute fills: the attribute of the same element. */
 const ATTRS = Object.freeze({ 'data-i18n-aria': 'aria-label', 'data-i18n-title': 'title', 'data-i18n-content': 'content' })
 
-/** The page's language for a visitor: the remembered choice, else the first browser language the page speaks, else English. */
-export function chooseLanguage({ stored, languages } = {}) {
-    if (LANGS.includes(stored)) return stored
-    for (const tag of languages || []) {
-        const code = String(tag).slice(0, 2).toLowerCase()
-        if (LANGS.includes(code)) return code
-    }
-    return 'en'
+/** The page's language for a visitor: the remembered choice, else Portuguese (the owner's decision, 2026-11-21: English only by the visitor's own tap on «EN»). */
+export function chooseLanguage({ stored } = {}) {
+    return LANGS.includes(stored) ? stored : 'pt'
 }
 
 /** The remembered choice, or null; a storage that is missing or throws answers null. */

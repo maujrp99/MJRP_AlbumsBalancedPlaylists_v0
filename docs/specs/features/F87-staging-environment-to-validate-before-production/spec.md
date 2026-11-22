@@ -32,6 +32,9 @@ O MJRP escolheu a fatia A em 2026-11-21, respondendo «A)» à pergunta entre «
 - [REQ-04] Nada no ambiente separado consegue gravar um preço do Discogs no Firestore · fixes S-69
 - [REQ-05] O comando da prévia nunca toca a produção · fixes S-69
 
+## Nota — a prévia e o servidor
+A prévia usa o servidor de produção (Cloud Run `mjrp-proxy`, pela reescrita `/api/**` do Hosting). O servidor passou a reconhecer os canais de prévia do próprio site (`https://<site>--<canal>-<hash>.web.app`, `server/lib/corsOrigin.js`); sem isso ele recusava o `Origin` da prévia (UAT-261). A correção só vale depois que o servidor é publicado.
+
 ## Observable States
 A escrever.
 

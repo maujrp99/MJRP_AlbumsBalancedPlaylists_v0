@@ -10,7 +10,7 @@
  *           9 The sheets of actions · 10 Loading and empty · 11 Less motion
  */
 
-@media (max-width: 767px) {
+@media (max-width: 899px) {
 
   /* ── 1. Tokens (benchmark § 9: base, elevated, text that reaches 4.5:1) ─────────────────────── */
   .albums-view,

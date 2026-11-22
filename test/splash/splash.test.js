@@ -14,6 +14,7 @@ import {
     threadBarStyle, captionLine, startSplash
 } from '../../public/splash/splash.js'
 import { coverImagesHtml, captionHtml } from '../../public/splash/covers.js'
+import { fillCopy } from '../../scripts/entryPage.mjs'
 
 describe('the record playing', () => {
     it('eight parts: the opening, three stories on side A, the flip band, two stories on side B, the close', () => {
@@ -114,8 +115,10 @@ function loadPage(set = 'fictional') {
     const html = readFileSync(resolve(process.cwd(), 'public/splash.html'), 'utf8')
         .replace('<!--splash:covers-->', coverImagesHtml(set))
         .replace('<!--splash:caption-->', captionHtml(set))
-    document.body.innerHTML = html.slice(html.indexOf('<body>') + 6, html.indexOf('</body>'))
+    const served = fillCopy(html, 'pt') // the build writes the Portuguese into the page, as served
+    document.body.innerHTML = served.slice(served.indexOf('<body>') + 6, served.indexOf('</body>'))
     document.documentElement.className = ''
+    document.documentElement.lang = html.match(/<html lang="([^"]+)"/)[1] // as the page is served, from the first byte
 }
 
 function fakeWindow({ reduce = false, phone = false, languages = ['pt-BR'], store = undefined } = {}) {
@@ -211,23 +214,42 @@ describe('the language and the account, wired (UAT-240, UAT-241)', () => {
     beforeEach(() => { vi.useFakeTimers(); loadPage() })
     afterEach(() => { vi.useRealTimers() })
 
-    it('a browser in English opens the page in English; the switch changes it and remembers the choice', () => {
+    const englishStore = () => ({ getItem: () => 'en', setItem() {} })
+
+    it('a browser in English still opens the page in Portuguese; the switch changes it and remembers the choice', () => {
         const saved = {}
         const store = { getItem: (k) => saved[k] ?? null, setItem: (k, v) => { saved[k] = v } }
         startSplash(fakeWindow({ languages: ['en-US'], store }))
-        expect(document.documentElement.lang).toBe('en')
-        expect(document.getElementById('h1').innerHTML).toBe(COPY.en['h.title'])
-        document.querySelector('[data-lang="pt"]').click()
         expect(document.documentElement.lang).toBe('pt-BR')
         expect(document.getElementById('h1').innerHTML).toBe(COPY.pt['h.title'])
+        expect(saved['albumblender:lang']).toBeUndefined()
+        document.querySelector('[data-lang="en"]').click()
+        expect(document.documentElement.lang).toBe('en')
+        expect(document.getElementById('h1').innerHTML).toBe(COPY.en['h.title'])
+        expect(saved['albumblender:lang']).toBe('en')
+        expect(document.querySelector('[data-lang="en"]').getAttribute('aria-pressed')).toBe('true')
+        document.querySelector('[data-lang="pt"]').click()
+        expect(document.documentElement.lang).toBe('pt-BR')
         expect(saved['albumblender:lang']).toBe('pt')
-        expect(document.querySelector('[data-lang="pt"]').getAttribute('aria-pressed')).toBe('true')
+    })
+
+    it('a remembered English choice opens the page in English', () => {
+        startSplash(fakeWindow({ languages: ['pt-BR'], store: englishStore() }))
+        expect(document.documentElement.lang).toBe('en')
+        expect(document.getElementById('h1').innerHTML).toBe(COPY.en['h.title'])
     })
 
     it('the caption and the pause label follow the language', () => {
-        startSplash(fakeWindow({ languages: ['en'] }))
+        startSplash(fakeWindow({ store: englishStore() }))
         expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · fictional album')
         expect(document.getElementById('motion').getAttribute('aria-label')).toBe(COPY.en.pause)
+    })
+
+    it('the caption of the front record follows the language, on the phone too', () => {
+        startSplash(fakeWindow({ phone: true, store: englishStore() }))
+        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · fictional album')
+        document.querySelector('[data-lang="pt"]').click()
+        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · álbum fictício')
     })
 
     it('signed out (the default) the menu scrolls to the stories', async () => {

@@ -31,6 +31,8 @@ export const world = {
     confirmAnswer: true,
     clearFails: false,
     failLogout: false,
+    /** What Apple Music says: authorized now; `checkFails`: MusicKit cannot be started; `connectFails`: the sign-in is refused. */
+    apple: { authorized: false, checkFails: false, connectFails: false },
     reset() {
         this.calls.length = 0
         this.spotify = { connected: false, profile: null }
@@ -38,6 +40,7 @@ export const world = {
         this.confirmAnswer = true
         this.clearFails = false
         this.failLogout = false
+        this.apple = { authorized: false, checkFails: false, connectFails: false }
     }
 }
 const say = (...what) => world.calls.push(what)
@@ -57,6 +60,18 @@ export const stand = {
     },
     toast: {
         success: (m) => say('toast success', m), error: (m) => say('toast error', m), info: (m) => say('toast info', m), warning: (m) => say('toast warning', m)
+    },
+    musicKit: {
+        isAuthorized: () => world.apple.authorized,
+        checkAuthorization: async () => { say('apple check'); if (world.apple.checkFails) throw new Error('MusicKit did not start') },
+        authorize: async () => {
+            say('apple authorize')
+            if (world.apple.connectFails) throw new Error('refused')
+            world.apple.authorized = true
+            window.dispatchEvent(new Event('applemusic-auth-change'))
+            return 'token'
+        },
+        unauthorize: async () => { say('apple unauthorize'); world.apple.authorized = false; window.dispatchEvent(new Event('applemusic-auth-change')) }
     },
     dialog: { confirm: async (o) => { say('confirm', o.title, o.message, o.confirmText); return world.confirmAnswer } },
     track: (name, props) => say('track', name, JSON.stringify(props ?? null)),
@@ -139,7 +154,7 @@ export const SCENARIOS = [
     {
         name: 'the computer: nobody signed in', url: '/start', user: null, run: async (h) => {
             h.snap('header and footer')
-            h.snap('the account part', '#header-container .flex.items-center.gap-2.min-w-0:last-of-type')
+            h.snap('the account part', '.top-menu__acct')
         }
     },
     {
@@ -155,18 +170,27 @@ export const SCENARIOS = [
         name: 'the computer: a name written as text', url: '/start', user: rude(), run: async (h) => { h.snap('header', '#header-container') }
     },
     {
-        name: 'the computer: the link of each address is the current one', url: '/blend', user: null, run: async (h) => {
-            h.snap('blend', '#header-container nav > div.hidden')
-            await h.restart('/saved-playlists')
-            h.snap('saved playlists', '#header-container nav > div.hidden')
-            await h.restart('/playlist-series')
-            h.snap('the playlists of the series menu', '#header-container nav > div.hidden')
-            await h.restart('/artists')
-            h.snap('soon: artists', '#header-container nav > div.hidden')
+        name: 'the computer: the current stop and the line under the bar, on each address', url: '/blend', user: null, run: async (h) => {
+            for (const path of ['/blend', '/saved-playlists', '/playlist-series', '/playlists', '/playlists/edit', '/artists', '/genres', '/tracks', '/albums', '/albums/abc123', '/inventory', '/start', '/homework']) {
+                await h.restart(path)
+                h.snap(`on ${path}`, '#top-menu-bar, #top-menu-sub')
+            }
         }
     },
     {
-        name: 'the computer: the account menu', url: '/start', user: user(), run: async (h) => {
+        name: 'the computer: the bar follows the router, the panel keeps its state', url: '/start', user: user(), run: async (h) => {
+            await h.click('#userMenuBtn')
+            await h.go('/albums')
+            h.snap('on albums', '#header-container')
+            await h.go('/saved-playlists')
+            h.snap('on saved playlists', '#header-container')
+            await h.go('/blend')
+            h.snap('on blend: no line under the bar', '#header-container')
+            h.note('focus', focusNow())
+        }
+    },
+    {
+        name: 'the computer: the account panel', url: '/start', user: user(), run: async (h) => {
             h.snap('closed', '#userMenuDropdownTrigger')
             await h.click('#userMenuBtn')
             h.snap('opened by a click', '#userMenuDropdownTrigger')
@@ -186,6 +210,15 @@ export const SCENARIOS = [
         }
     },
     {
+        name: 'the computer: the account panel, nobody signed in', url: '/start', user: null, run: async (h) => {
+            h.snap('closed', '.top-menu__acct')
+            await h.click('#userMenuBtn')
+            h.snap('opened', '.top-menu__acct')
+            await h.click('#loginBtn')
+            h.snap('the window to sign in', '.modal-overlay')
+        }
+    },
+    {
         name: 'the computer: sign out', url: '/start', user: user(), run: async (h) => {
             await h.click('#logoutBtn')
             h.note('what sign out asked')
@@ -199,105 +232,114 @@ export const SCENARIOS = [
         }
     },
     {
-        name: 'the computer: the menu of series', url: '/albums', user: null, run: async (h) => {
-            h.snap('closed, on albums', '#seriesDropdownContainer')
-            await h.click('#seriesDropdownBtn')
-            h.snap('open', '#seriesDropdownContainer')
-            await h.click('#seriesDropdownMenu a[href="/albums"]')
-            h.snap('closed by a link', '#seriesDropdownContainer')
-            await h.click('#seriesDropdownBtn')
-            await h.clickOutside()
-            h.snap('closed by a click outside', '#seriesDropdownContainer')
-            await h.click('#seriesDropdownBtn')
-            await h.click('#seriesDropdownMenu [aria-disabled="true"]')
-            h.snap('a «Soon» item is no link and leaves it open', '#seriesDropdownContainer')
+        name: 'the computer: Apple Music is asked when the panel opens: connected', url: '/start', user: null, apple: { authorized: true }, run: async (h) => {
+            h.snap('closed: nothing is said of Apple Music yet', '.top-menu__acct')
+            await h.click('#userMenuBtn')
+            h.snap('opened: the state is known', '.top-menu__acct')
+            h.note('what was asked')
         }
     },
     {
-        name: 'the computer: the drawer of the middle screen', url: '/albums', user: user(), width: 900, run: async (h) => {
-            h.snap('closed', '#mobileMenu, #mobileMenuOverlay')
-            await h.click('#mobileMenuBtn')
-            h.snap('open', '#mobileMenu, #mobileMenuOverlay')
-            h.note('the page is held', document.body.style.overflow)
-            await h.click('#mobileSeriesToggle')
-            h.snap('the series of the drawer open', '#mobileMenu')
-            await h.click('#mobileSeriesToggle')
-            h.snap('the series of the drawer closed again', '#mobileMenu')
-            await h.click('#mobileMenuOverlay')
-            h.snap('closed by the background', '#mobileMenu, #mobileMenuOverlay')
-            h.note('the page is given back', document.body.style.overflow)
-            await h.click('#mobileMenuBtn')
-            await h.click('#mobileMenu a[href="/blend"]')
-            h.snap('closed by a link', '#mobileMenu')
-            await h.click('#mobileMenuBtn')
-            await h.click('#closeMenuBtn')
-            h.snap('closed by its X', '#mobileMenu')
-            await h.click('#mobileMenuBtn')
-            await h.popstate()
-            h.snap('closed by going back', '#mobileMenu')
-            await h.click('#mobileMenuBtn')
-            await h.resize(1280)
-            h.snap('closed by a wide window', '#mobileMenu')
+        name: 'the computer: Apple Music is asked when the panel opens: not connected', url: '/start', user: null, apple: { authorized: false }, run: async (h) => {
+            await h.click('#userMenuBtn')
+            h.snap('opened', '.top-menu__acct')
+            await h.click('[data-connection="apple"] button')
+            h.snap('connected', '.top-menu__acct')
+            h.note('what connecting asked')
         }
     },
     {
-        name: 'the computer: the drawer, nobody signed in', url: '/start', user: null, run: async (h) => {
-            h.snap('the foot of the drawer', '#mobileMenu')
-            await h.click('#mobileLoginBtn')
-            h.snap('the window to sign in', '.modal-overlay')
-        }
-    },
-    {
-        name: 'the computer: the drawer, signed in', url: '/start', user: user(), run: async (h) => {
-            h.snap('the foot of the drawer', '#mobileMenu > div:last-of-type')
-            await h.click('#mobileLogoutBtn')
-            h.note('what sign out asked')
-        }
-    },
-    {
-        name: 'the computer: Spotify not connected', url: '/start', user: null, spotify: { connected: false }, run: async (h) => {
-            h.snap('the button', '#spotify-connect-desktop')
-            h.snap('the button of the drawer', '#spotify-connect-mobile')
-            await h.click('#spotifyLoginBtn')
-            h.note('what the button asked')
-        }
-    },
-    {
-        name: 'the computer: Spotify connected', url: '/start', user: null, spotify: { connected: true, profile: { display_name: 'Spotty <i>Mau</i>' } }, run: async (h) => {
-            h.snap('the connected pill', '#spotify-connect-desktop')
+        name: 'the computer: Apple Music disconnects after the question', url: '/start', user: null, apple: { authorized: true }, run: async (h) => {
+            await h.click('#userMenuBtn')
             world.confirmAnswer = false
-            await h.click('#spotify-connect-desktop #spotifyLogoutBtn')
+            await h.click('[data-connection="apple"] button')
             h.note('the question, answered No')
-            h.snap('still connected', '#spotify-connect-desktop')
+            h.snap('still connected', '[data-connection="apple"]')
             world.confirmAnswer = true
-            await h.click('#spotify-connect-desktop #spotifyLogoutBtn')
+            await h.click('[data-connection="apple"] button')
             h.note('the question, answered Yes')
-            h.snap('disconnected', '#spotify-connect-desktop')
-            h.snap('the drawer follows', '#spotify-connect-mobile')
+            h.snap('disconnected, the panel still open', '.top-menu__acct')
+        }
+    },
+    {
+        name: 'the computer: Apple Music cannot be told', url: '/start', user: null, apple: { checkFails: true }, run: async (h) => {
+            await h.click('#userMenuBtn')
+            h.snap('could not tell', '.top-menu__acct')
+            world.apple = { ...world.apple, checkFails: false, authorized: false }
+            await h.click('[data-connection="apple"] button')
+            h.snap('the next try', '[data-connection="apple"]')
+        }
+    },
+    {
+        name: 'the computer: Apple Music fails to connect', url: '/start', user: null, apple: { authorized: false, connectFails: true }, run: async (h) => {
+            await h.click('#userMenuBtn')
+            await h.click('[data-connection="apple"] button')
+            h.snap('could not connect', '[data-connection="apple"]')
+            h.note('what connecting asked')
+        }
+    },
+    {
+        name: 'the computer: Spotify in the panel, not connected', url: '/start', user: null, spotify: { connected: false }, run: async (h) => {
+            await h.click('#userMenuBtn')
+            h.snap('the rows', '#accountConnections')
+            await h.click('[data-connection="spotify"] button')
+            h.note('what the button asked')
+            h.snap('connecting', '[data-connection="spotify"]')
+        }
+    },
+    {
+        name: 'the computer: Spotify connected, the name as text', url: '/start', user: null, spotify: { connected: true, profile: { display_name: 'Spotty <i>Mau</i>' } }, run: async (h) => {
+            h.snap('the dots on the closed button', '#userMenuBtn')
+            await h.click('#userMenuBtn')
+            h.snap('the rows', '#accountConnections')
+            world.confirmAnswer = false
+            await h.click('[data-connection="spotify"] button')
+            h.note('the question, answered No')
+            h.snap('still connected', '[data-connection="spotify"]')
+            world.confirmAnswer = true
+            await h.click('[data-connection="spotify"] button')
+            h.note('the question, answered Yes')
+            h.snap('disconnected', '.top-menu__acct')
         }
     },
     {
         name: 'the computer: Spotify connected, the name not known yet', url: '/start', user: null, spotify: { connected: true, profile: null }, run: async (h) => {
-            h.snap('the pill says Spotify', '#spotify-connect-desktop')
+            await h.click('#userMenuBtn')
+            h.snap('connected, no name', '[data-connection="spotify"]')
             h.spotify({ connected: true, profile: { display_name: 'Late Mau' } })
-            h.snap('the signal arrives: still no name until it is asked', '#spotify-connect-desktop')
             await h.settle()
-            h.snap('the name comes', '#spotify-connect-desktop')
+            h.snap('the name comes', '[data-connection="spotify"]')
         }
     },
     {
         name: 'the computer: Spotify connects while the shell is on', url: '/start', user: null, run: async (h) => {
+            await h.click('#userMenuBtn')
             h.spotify({ connected: true, profile: { display_name: 'Now Connected' } })
             await h.settle()
-            h.snap('connected', '#spotify-connect-desktop')
+            h.snap('connected', '.top-menu__acct')
+        }
+    },
+    {
+        name: 'the computer: Clear album cache from the panel', url: '/start', user: null, run: async (h) => {
+            await h.click('#userMenuBtn')
+            await h.click('#panelClearCache')
+            h.snap('the panel closed, the question', '.top-menu__acct, .sheet')
+            h.note('focus', focusNow())
+            await h.clickWhere('#phone-clear-cache button', 'Cancel')
+            h.snap('cancelled', '.sheet')
+            await h.click('#userMenuBtn')
+            await h.click('#panelClearCache')
+            await h.click('[data-action="clear-cache"]')
+            h.snap('cleared', '.sheet')
+            h.note('what clearing asked')
         }
     },
     {
         name: 'the computer: the login answers again', url: '/start', user: null, run: async (h) => {
-            await h.click('#seriesDropdownBtn')
-            h.snap('the menu of series open', '#seriesDropdownMenu')
+            await h.click('#userMenuBtn')
+            h.snap('the panel open', '.top-menu__acct')
             await h.publish(() => userStore.setUser(user()))
-            h.snap('after the user store told: the bar is drawn anew (the menu closed)', '#header-container')
+            h.snap('after the user store told: the bar is drawn anew (the panel closed)', '#header-container')
             h.note('focus', focusNow())
         }
     },
@@ -307,6 +349,14 @@ export const SCENARIOS = [
             h.note('focus on the button', focusNow())
             await h.publish(() => userStore.setUser(user()))
             h.note('focus after the draw', focusNow())
+        }
+    },
+    {
+        name: 'the computer: focus goes back to the page when the screen changes', url: '/start', user: null, run: async (h) => {
+            h.focus('[data-tab="blend"]')
+            h.note('on the stop', focusNow())
+            await h.go('/blend')
+            h.note('after the screen changed', focusNow())
         }
     },
     {
@@ -513,11 +563,30 @@ export const SCENARIOS = [
         }
     },
     {
-        name: 'the phone: Spotify in the menu', url: '/albums', phone: true, user: null, spotify: { connected: false }, run: async (h) => {
+        name: 'the phone: the connections in the menu', url: '/albums', phone: true, user: null, spotify: { connected: false }, apple: { authorized: true }, run: async (h) => {
             await h.click('#phoneMenuBtn')
-            h.snap('the button of the menu', '#phone-menu-spotify')
-            await h.click('#phone-menu-spotify #spotifyLoginBtn')
+            h.snap('the connections of the menu', '#phone-menu-connections')
+            h.note('what the menu asked')
+            await h.click('#phone-menu-connections [data-connection="spotify"] button')
             h.note('what the button asked')
+            world.confirmAnswer = true
+            await h.click('#phone-menu-connections [data-connection="apple"] button')
+            h.note('the question, answered Yes')
+            h.snap('Apple Music disconnected', '#phone-menu-connections')
+        }
+    },
+    {
+        name: 'the phone: Apple Music cannot be told, in the menu', url: '/albums', phone: true, user: null, apple: { checkFails: true }, run: async (h) => {
+            await h.click('#phoneMenuBtn')
+            h.snap('could not tell', '#phone-menu-connections')
+        }
+    },
+    {
+        name: 'the phone: the bottom menu is the home\'s bar', url: '/blend', phone: true, user: null, run: async (h) => {
+            for (const path of ['/start', '/albums', '/playlists', '/saved-playlists', '/inventory', '/artists']) {
+                await h.go(path)
+                h.snap(`on ${path}`, '#phone-tabbar')
+            }
         }
     },
     {

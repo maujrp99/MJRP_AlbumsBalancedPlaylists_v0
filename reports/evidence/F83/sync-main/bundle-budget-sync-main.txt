@@ -1,0 +1,31 @@
+main script   main-BUREq805.js                               233446 B   (ceiling 233590 B)
+react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
+file          Breadcrumb-Co5ztjUr.js                          13919 B   (ceiling 30000 B)
+file          CoverImage-zGtHJE_S.js                            271 B   (ceiling 30000 B)
+file          FilterToolbar-Bzvw7jTj.js                        2622 B   (ceiling 30000 B)
+file          InventoryAddModal-tpcd1vLL.js                    1276 B   (ceiling 30000 B)
+file          InventoryEditModal-CLVg1fcN.js                   1206 B   (ceiling 30000 B)
+file          PlaylistsExport-CB4GrFQy.js                      2710 B   (ceiling 30000 B)
+file          ReactView-j_6OepRx.js                             934 B   (ceiling 30000 B)
+file          SpotifyExportModal-Bkynf3on.js                   5069 B   (ceiling 30000 B)
+file          TracksTable-Bt0eRBs_.js                          2305 B   (ceiling 30000 B)
+file          ViewAlbumModal-mhVeY4ga.js                       8112 B   (ceiling 30000 B)
+file          crate3d-CS7YbZ1p.js                              2170 B   (ceiling 30000 B)
+file          exportOutcome-DbgW7yUg.js                         325 B   (ceiling 30000 B)
+file          index-BAged_iB.js                               10644 B   (ceiling 30000 B)
+file          index-BZtCIt0s.js                               12188 B   (ceiling 30000 B)
+file          index-Be0Py2uK.js                                8942 B   (ceiling 30000 B)
+file          index-DAmLyj_z.js                               23568 B   (ceiling 30000 B)
+file          index-Dt_JLf-4.js                                 704 B   (ceiling 30000 B)
+file          listText-BP4WxPQk.js                             2925 B   (ceiling 30000 B)
+file          menu-CyLIsjyJ.js                                 2595 B   (ceiling 30000 B)
+file          navigation-BxyuoJoZ.js                            123 B   (ceiling 30000 B)
+file          pickerController-Dd3kuj55.js                     6333 B   (ceiling 30000 B)
+file (listed) posthogAdapter-zbCZhxi6.js                     129204 B
+file          search.worker-saFDN5Ff.js                        4632 B   (ceiling 30000 B)
+file          splash-pubsGQc-.js                               8868 B   (ceiling 30000 B)
+stylesheet    main-C1TcofY8.css                               29509 B
+stylesheet    menu-CA8LRpS-.css                                1101 B
+after 1st     React + screens, downloaded after the first screen   182264 B
+1st screen    main script + the biggest screen               325705 B   (ceiling 335590 B)
+bundle-budget: inside the budget

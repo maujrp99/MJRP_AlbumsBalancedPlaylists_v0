@@ -8,6 +8,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 // the login of the app is Firebase's: the shell is drawn without it here (what is under test is how the shell writes a person's name and picture)
+vi.mock('../../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('../support/shellScenarios.js')).stand.musicKit }))
 vi.mock('../../public/js/services/auth/signIn.js', async () => ({ authService: (await import('../support/shellScenarios.js')).stand.login }))
 
 import { act, createElement } from 'react'
@@ -183,17 +184,14 @@ describe('text from outside is shown as text', () => {
         expectOnlyText(host, TEXT)
     })
 
-    it('account menu: the name, the e-mail and the picture address of the person', async () => {
-        // the shell in React (F83 wave 3) draws the person in the bar and in the drawer of the middle screen
+    it('account panel (the top menu of the computer; the phone menu is drawn in React too): the name, the e-mail and the picture address of the person (the picture is not drawn: the initial is)', async () => {
+        // the shell in React (F83 wave 3, F88) draws the person in the panel of the bar
         const shell = await startOn('/start', { user: { isAnonymous: false, displayName: TEXT, email: TEXT, photoURL: QUOTED, providerData: [] } })
         const bar = document.getElementById('header-container')
 
         expectOnlyText(bar, TEXT)
-        expect(bar.querySelectorAll('#userMenuDropdownTrigger img').length).toBe(1)
-        expect(bar.querySelector('#userMenuBtn img').getAttribute('src')).toBe(QUOTED)
-
-        expect(bar.querySelectorAll('#mobileMenu .rounded-full[src]').length).toBe(1)
-        expect(bar.querySelector('#mobileMenu .rounded-full[src]').getAttribute('src')).toBe(QUOTED)
+        expect(bar.querySelectorAll('img').length).toBe(1) // the mark of the site, and nothing the person sent
+        expect(bar.querySelector('.top-acct__initial').textContent).toBe(TEXT.trim().charAt(0).toUpperCase())
         shell.stop()
     })
 

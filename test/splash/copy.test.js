@@ -52,6 +52,26 @@ describe('the dictionary', () => {
         expect(t('h.what', 'pt')).toBe('Seus álbuns do momento, numa playlist balanceada.')
     })
 
+    it('the hidden descriptions carry the owner\'s words, not the old text (UAT-240)', () => {
+        for (const lang of LANGS) {
+            for (const key of ['meta.desc', 'meta.ogdesc']) {
+                const text = t(key, lang)
+                expect(text, `${lang}.${key}`).not.toMatch(/mistur|blend balanced|estante|discos da|records on your shelf|keep count|reúna|gather/i)
+                expect(text.length, `${lang}.${key}`).toBeLessThanOrEqual(key === 'meta.desc' ? 160 : 130)
+            }
+        }
+        expect(t('meta.desc', 'pt')).toMatch(/Monte séries com seus álbuns do momento|monte séries com seus álbuns do momento/)
+        expect(t('meta.desc', 'pt')).toMatch(/ranqueie as faixas e gere playlists equilibradas/)
+        expect(t('meta.ogdesc', 'pt')).toMatch(/^Monte séries com seus álbuns do momento, ranqueie.*gere playlists equilibradas.*mídias físicas/)
+        expect(t('meta.desc', 'en')).toMatch(/rank the tracks and make balanced playlists/)
+        expect(t('meta.ogdesc', 'en')).toMatch(/physical media/)
+    })
+
+    it('the English opening is the v4 prototype\'s', () => {
+        expect(t('h.title', 'en')).toBe('Dig through the albums you love.')
+        expect(t('h.what', 'en')).toBe('Your albums of the moment, in one balanced playlist.')
+    })
+
     it('the ranking is optional and partial: never «every track»', () => {
         expect(t('t.albums', 'en')).not.toMatch(/every track/i)
         expect(t('p.albums', 'pt')).toMatch(/Uma só ou várias, para cima ou para baixo/)

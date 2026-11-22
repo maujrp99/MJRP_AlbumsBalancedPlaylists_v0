@@ -2,7 +2,7 @@
  * A phone lying down (F76, REQ-13). With `viewport-fit=cover` the page reaches the edges of the
  * iPhone's screen, and lying down the island and the rounded corners sit over its left and right.
  * An iPhone 15 Pro lying down is 852 px wide: the computer's layout, not the phone's
- * (css/mobile.css stops at 767 px), so this is the one rule of F76 written outside that file.
+ * (css/mobile.css stops at 899 px), so this is the one rule of F76 written outside that file.
  *
  * It acts only on a touch screen up to 500 px high, and only by the size of the safe areas, which
  * is zero on every screen that has none: a computer never matches it and would get zero from it.

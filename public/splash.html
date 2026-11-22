@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"The Album Blender","url":"https://mjrp-playlist-generator.web.app/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","description":"A web app for people who listen to whole albums: gather albums into series, rank the tracks your way, blend balanced playlists, and keep count of the records you own."}</script>
+<link rel="stylesheet" href="/splash/bar-menu.css">
 <style>
 :root{
   --bg:#0a0a0c;--panel:#121216;--line:rgba(255,255,255,.12);
@@ -48,7 +49,7 @@ a{color:inherit}
 
 /* top bar */
 header.top{position:sticky;top:0;z-index:20;background:rgba(10,10,12,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:var(--top)}
+header.top .wrap{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;height:var(--top)}
 .home{display:inline-flex;align-items:center;min-height:44px}
 .logo{display:block;height:30px;width:auto}
 .top nav{display:flex;gap:8px}
@@ -63,11 +64,8 @@ header.top .wrap{display:flex;align-items:center;justify-content:space-between;g
 .eqi i{width:3px;border-radius:1px;background:#0b0b0b;height:var(--h);transform-origin:bottom}
 .eqi i:nth-child(1){--h:55%;--d:.71s}.eqi i:nth-child(2){--h:100%;--d:.93s;--o:-.3s}.eqi i:nth-child(3){--h:70%;--d:.62s;--o:-.5s}.eqi i:nth-child(4){--h:40%;--d:1.08s;--o:-.2s}
 html.moving:not(.paused) .eqi i{animation:eqb var(--d) ease-in-out var(--o,0s) infinite alternate}
-@keyframes eqb{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
 
 /* the thread: the record's progress, one group of bars per track; the only navigation motif */
-.thread{position:sticky;top:var(--top);z-index:19;background:rgba(10,10,12,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.thread .wrap{display:flex;align-items:center;gap:16px;height:var(--thread)}
 
 /* story: text column + the stage */
 .story{display:grid;grid-template-columns:minmax(0,500px) minmax(0,1fr);column-gap:clamp(24px,4vw,64px);align-items:start}
@@ -99,11 +97,12 @@ section p{color:var(--muted);margin:0 0 14px;max-width:44ch}
 .stage.live .gl{opacity:1}
 .stage.live .crate-css{opacity:0;visibility:hidden}
 /* CSS crate: before the script, without WebGL, with reduced motion, and on the phone */
-.crate-css{position:absolute;inset:0;z-index:2;perspective:1100px;perspective-origin:50% -10%;transition:opacity .6s}
+.crate-css{position:absolute;inset:0;z-index:2;perspective:1100px;perspective-origin:50% -10%;transition:opacity .6s;opacity:0}
+html.js .crate-css{opacity:1}
 .crate-css .box{position:absolute;left:50%;bottom:16%;width:min(56%,330px);aspect-ratio:1;transform:translateX(-50%) rotateY(var(--yaw,0deg));transform-style:preserve-3d}
 .crate-css .sl{position:absolute;inset:0;width:100%;height:100%;border-radius:3px;box-shadow:0 18px 40px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08) inset;transform-origin:50% 100%;transition:transform .7s cubic-bezier(.2,.7,.2,1),opacity .4s;opacity:0}
 .crate-css .sl.vis{opacity:1}
-html:not(.js) .crate-css .sl:nth-child(-n+7){opacity:1;z-index:calc(20 - var(--p));transform:translate3d(0,calc(var(--p) * -6.5%),calc(var(--p) * -34px)) rotateX(-6deg)}
+/* without script the crate shows side A as a fan (the noscript style in the head); with script it appears once the script has placed it, so the covers do not move after the first paint */
 .crate-css .front{position:absolute;left:50%;bottom:9%;width:min(64%,378px);height:24%;transform:translateX(-50%) rotateY(var(--yaw,0deg));z-index:40;border-radius:4px;background:linear-gradient(180deg,#3a2616,#24170d 60%,#1a0f08);box-shadow:0 -1px 0 rgba(255,200,150,.18) inset,0 20px 40px rgba(0,0,0,.6)}
 .crate-css .front::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 31%,rgba(0,0,0,.35) 31% 33%);border-radius:4px}
 .caption{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;padding:8px 0 12px;border-top:1px solid var(--line)}
@@ -128,7 +127,7 @@ footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
 /* PHONE: one column; the crate is a short CSS fan under the hero; each track brings its sleeve; the thread and the main action live in the bottom bar */
 @media (max-width:899px){
   :root{--top:56px;--thread:0px}
-  body{font-size:16px;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  body{font-size:16px;padding-bottom:calc(var(--pbar-h) + env(safe-area-inset-bottom))}
   .logo{height:22px}
   .top .btn-primary{display:none}
   .story{display:flex;flex-direction:column}
@@ -143,8 +142,6 @@ footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
   .stage-col{margin:0 calc(-1 * var(--gutter))}
   .caption{padding:8px var(--gutter) 12px}
   .credit-tag{left:var(--gutter)}
-  .thread{position:fixed;top:auto;bottom:0;left:0;right:0;border-bottom:0;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-  .thread .wrap{height:72px;gap:12px}
   .caption .who b{white-space:normal}
   .slot{display:block;width:180px;height:180px;margin:0 0 22px;position:relative;perspective:700px}
   html:not(.js) .slot{display:none}
@@ -171,17 +168,6 @@ html.in .only-out{display:none!important}
 .top .wrap{gap:20px}
 .top .acct{display:flex;gap:8px;align-items:center;flex:0 0 auto}
 /* the slider-menu: five stops on ONE continuous row of bars (Elevar's thread), the fire fills it as you read */
-nav.ms,.top nav.ms{position:relative;display:grid;gap:0;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;min-width:0}
-.ms .stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font:600 14px/1 var(--body);border-radius:6px;white-space:nowrap}
-.ms .stop:hover{color:#fff}
-.ms .stop.on{color:#fff}
-.ms .stop.cur{color:var(--orange-text)}
-.ms .flipmark{position:absolute;z-index:2;left:60%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;width:24px;height:24px;color:var(--faint);text-decoration:none;font-size:14px;border-radius:6px}
-.ms .flipmark.on{color:var(--orange-text)}
-.eqbar{position:absolute;left:0;right:0;display:flex;align-items:flex-end;gap:2px;pointer-events:none}
-.eqbar i{flex:1 1 0;min-width:1px;border-radius:1px 1px 0 0;background:rgba(255,255,255,.2);height:var(--h);transform-origin:center bottom}
-.eqbar i.on{background:linear-gradient(0deg,#dc2626,#f97316 60%,#fbbf24)}
-html.moving:not(.paused) .eqbar i.cur{animation:eqb var(--d) ease-in-out var(--o) infinite alternate}
 .needle{display:none}
 /* the pause: a discreet icon in the stage's corner, where the motion is */
 .motion-icon{position:absolute;z-index:6;top:8px;right:8px;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.28);background:rgba(10,10,12,.6);color:#d6d6dc;cursor:pointer;padding:0}
@@ -194,25 +180,18 @@ html.paused .motion-icon .i-pause{display:none}
   .motion-icon{width:44px;height:44px;border-radius:22px;top:6px;right:var(--gutter)}
   html.in .top .btn-start{display:inline-flex}
   .top .acct .btn-primary.only-out{display:none}
-  .ms .flipmark{display:none}
-  .thread .wrap{padding-top:4px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 :root{--top:72px;--thread:0px}
 .thread{display:none}
-.ms-desk{flex:1 1 auto;min-width:0;max-width:620px;margin:0 auto}
-.ms .stop{justify-content:flex-start;padding-top:8px;min-height:52px}
-.ms .flipmark{top:4px}
-.eqbar{bottom:6px;height:16px}
+.ms-desk{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:var(--bar-w);min-width:0}
+/* the header, signed out, has only «Entrar»: the main button stays in the middle of the page (the owner's choice «A», F88) */
+.top .acct .btn-primary.only-out{display:none}
 @media (max-width:899px){
   :root{--top:56px}
   .ms-desk{display:none}
   .thread{display:block}
-  .thread .wrap{height:64px}
-  .ms .stop{justify-content:flex-end;padding:0 0 8px;font-size:12px;min-height:56px}
-  .eqbar{top:8px;bottom:auto;height:18px}
-  .ms .flipmark{top:4px;font-size:0}
 }
 /* ===== v2: Portuguese first, the real ranking card, the flip as a band ===== */
 .rank-real .tag{flex-direction:column;gap:4px}
@@ -225,12 +204,10 @@ html.paused .motion-icon .i-pause{display:none}
 .flip-band .fb-title{font:800 22px/1.2 var(--display);margin:0 0 6px;color:var(--orange-text);letter-spacing:-.01em}
 .flip-band .fb-line{margin:0;color:var(--muted)}
 /* Portuguese runs longer: the menu's labels stay on one line */
-.ms .lb{white-space:nowrap}
 @media (max-width:899px){
   .story > section.flip-band{padding:8px 0;margin:0;border-bottom:0;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px}
   .flip-band .fb-title{font-size:14px;margin:0}
   .flip-band .fb-line{font-size:13px;line-height:1.35}
-  .ms .stop{font-size:12px}
 }
 /* ===== F80 · the home as built: the hero's lines, the language switch, the menu without script ===== */
 .top .acct{gap:10px}
@@ -239,7 +216,8 @@ html.paused .motion-icon .i-pause{display:none}
 .lang button:hover{color:#fff}
 .lang button[aria-pressed="true"]{color:#fff;background:rgba(255,255,255,.14)}
 @media (max-width:899px){
-  .lang button{min-width:40px;padding:0 6px}
+  .lang button{min-width:44px;padding:0 6px}
+  .hero .only-in h1{margin-bottom:18px}
   .top .acct{gap:6px}
   html:not(.js) .ms-desk{display:block;position:static;width:100%}
   html:not(.js) .thread{display:none}
@@ -411,6 +389,9 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   .i-reel:first-child{left:14px}.i-reel:last-child{right:14px}
   .i-plank{bottom:12px;height:12px}
 }
+/* the CSS crate's diagonal on a computer is in the style, not set by the script after load: the covers do not move when it arrives (splash.js sets the same -15deg, half the camera's 30deg azimuth) */
+@media (min-width:900px){.crate-css{--yaw:-15deg}}
+
 /* ===== the stories' height (v4, hand-over table): computer clamp(540px,70dvh,680px), the invitation clamp(440px,56dvh,560px); phone: the content =====
    Change them here with --story-min (computer) and --story-min-phone; per story with #id{--story-min:...}.
    The vignette of each story is its .v4-motif (decorative, aria-hidden, data-ambient="id"), in .v4-lead; ambient.js fades it with the scroll. */
@@ -422,6 +403,7 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   .story > section.hero{min-height:0}
 }
 </style>
+<noscript><style>.crate-css{opacity:1}.crate-css .sl:nth-child(-n+7){opacity:1;z-index:calc(20 - var(--p));transform:translate3d(0,calc(var(--p) * -6.5%),calc(var(--p) * -34px)) rotateX(-6deg)}</style></noscript>
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="skip"></a>
@@ -444,9 +426,7 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   </div>
 </div></header>
 
-<div class="thread"><div class="wrap">
-  <div class="ms-slot" id="slot-thread" style="flex:1;min-width:0"></div>
-</div></div>
+<div class="thread pbar"><div class="ms-slot" id="slot-thread"></div></div>
 
 <main id="main" class="wrap story">
   <section class="hero" id="a1" data-track="a1" aria-labelledby="h1">

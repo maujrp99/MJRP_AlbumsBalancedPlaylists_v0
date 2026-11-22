@@ -7,6 +7,8 @@
 
 import '../css/index.css'
 import '../css/tailwind.css' // Tailwind, built with the site; after the app's own styles (F59)
+import '../splash/bar-menu.css' // the home's bar, shared with the entry page (F88)
+import '../css/top-menu.css' // the top menu of the computer (F88); before the phone's, which hides it
 import '../css/mobile.css' // the phone (F76): after everything, every rule inside the phone's media query
 import '../css/mobile/screens.css' // one file per screen of the phone, each inside the same media query
 import '../css/safe-area.css' // a phone lying down: the page keeps clear of the island (F76)
@@ -46,6 +48,7 @@ import { START_PATH, leaveToHome } from './components/navigation/startRoute.js'
 import { isSignedIn } from './utils/isSignedIn.js'
 import { openLoginWindow } from './stores/loginWindow.js'
 import { prefetchScreensAfterTheFirstScreen } from './utils/prefetchScreens.js'
+import { checkAppleWhenIdle } from './shell/appleState.ts'
 
 const initUI = () => {
     // The top bar, the footer and the shell of the phone, in React, in their own places outside #app
@@ -99,6 +102,10 @@ document.addEventListener('DOMContentLoaded', bootstrap)
 // The measurement of use (F77): off unless the build has a project key and nobody turned it off.
 // Started before the first route, so the first screen is measured; it never holds the app.
 startUsageMeasurement({ router })
+
+// Apple Music's state (the owner uses it): asked once, in the background, when the page is idle after the
+// first paint; the account button, the panel and the phone's sheet read that one answer (F88).
+checkAppleWhenIdle()
 
 // Register Routes
 // The Start screen (F83 wave 4, in React) is the first screen the person sees, so its file starts to come down now, while the login

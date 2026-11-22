@@ -20,8 +20,8 @@ export const LANGS = Object.freeze(['pt', 'en'])
 const pt = {
     // the document
     'meta.title': 'The Album Blender — para quem ouve álbuns inteiros',
-    'meta.desc': 'O The Album Blender é um app web para quem ouve álbuns inteiros: reúna álbuns em séries, ranqueie as faixas do seu jeito, misture playlists equilibradas e conte os discos da sua estante.',
-    'meta.ogdesc': 'Reúna álbuns em séries, ranqueie as faixas do seu jeito, misture playlists equilibradas e conte os discos da sua estante.',
+    'meta.desc': 'O The Album Blender é um app web para quem ouve álbuns inteiros: monte séries com seus álbuns do momento, ranqueie as faixas e gere playlists equilibradas.',
+    'meta.ogdesc': 'Monte séries com seus álbuns do momento, ranqueie as faixas, gere playlists equilibradas e conte suas mídias físicas.',
     // the menu and the top of the page
     'm.start': 'Inicie', 'm.albums': 'Álbuns', 'm.blend': 'Blend', 'm.playlists': 'Playlists', 'm.inventory': 'Inventário',
     'menu.aria': 'Menu: cada item leva à história dele nesta página',
@@ -78,8 +78,8 @@ const pt = {
 
 const en = {
     'meta.title': 'The Album Blender — for people who listen to whole albums',
-    'meta.desc': 'The Album Blender is a web app for people who listen to whole albums: gather albums into series, rank the tracks your way, blend balanced playlists, and keep count of the records on your shelf.',
-    'meta.ogdesc': 'Gather albums into series, rank the tracks your way, blend balanced playlists, and keep count of the records on your shelf.',
+    'meta.desc': 'The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.',
+    'meta.ogdesc': 'Build series from your albums of the moment, rank the tracks, make balanced playlists and count the physical media on your shelf.',
     'm.start': 'Start', 'm.albums': 'Albums', 'm.blend': 'Blend', 'm.playlists': 'Playlists', 'm.inventory': 'Inventory',
     'menu.aria': 'Menu: each item takes you to its story on this page',
     'flip.aria': 'Flip the record',
@@ -88,7 +88,7 @@ const en = {
     'pause': 'Pause motion', 'play': 'Play motion',
     'lang.aria': 'Language',
     'h.kick': 'The Album Blender · a web app for record lovers',
-    'h.title': 'Dive into the albums you love.',
+    'h.title': 'Dig through the albums you love.',
     'h.what': 'Your albums of the moment, in one balanced playlist.',
     'h.para': 'Build series from your albums of the moment, rank your tracks and make balanced playlists.',
     'hi.kick': 'Back to the records',
