@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 21:54] session — publicado em produção: o menu de baixo igual na home e no app, com «Go» (UAT-270), e o «Clear Cache» que guarda os valores do inventário (UAT-267)
+**Branch:** main
+Palavras do MJRP (2026-11-21): «1. Acrescenta 2. Publica 3. Recapitule por favor, mas quero os dados persistidos sim e o botão serviria para atualizar valores» (1: a galeria do inventário no celular; 2: a publicação; 3: os preços do inventário). Antes, sobre o texto da home: «Mas o copy que eu pedi pra mudar na aprovação do protótipo não está lá pq?», «Da tela inicial», «A da home. E no inventory não tem a view de galeria?só de lista? Mas fora isso tá bem top!!!». Site publicado da `main` (`a10d648`, `/assets/main-Dy6AgDdK.js`) pelo `deploy-site.sh`, na fila do Album Blender; conferido: `/`, `/home`, `/start`, `/albums` e `/inventory` respondem 200, o `app.html` aponta o script novo, `/api/musickit-status` responde 200. A decisão dele de guardar os preços do Discogs no banco está registrada e NÃO construída: muda a regra da constituição e espera a resposta dele sobre os termos do Discogs.
+
 ## [2026-11-21 20:51] step — F75: o relatório do juiz sobre o «Clear Cache» (passou, sem P0 nem P1, 1 P2) e suas capturas entram no ramo
 **Branch:** fix/f75-clear-cache-keeps-the-inventory-values
 O juiz escreveu o relatório sobre 01d26d9; copiado como veio para `reports/audits/` e as capturas para `reports/evidence/F75/clear-cache-recheck/`. UAT-272 (melhoria, aberta pelo juiz): o rodapé ainda diz «Clear Cache» / «Cache Cleared!» embora agora guarde os valores do inventário e o câmbio; o texto visível não foi mudado, é do MJRP aprovar.
