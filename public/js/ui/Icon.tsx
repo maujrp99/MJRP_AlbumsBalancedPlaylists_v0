@@ -1,7 +1,7 @@
 /**
  * Icon - the site's icons for a React screen (F83, TASK-06; proposal § 4.4).
  *
- * The same drawings the hand-made screens use (utils/iconShapes.js, which also feeds components/Icons.js getIcon), made as
+ * The same drawings the hand-made screens use (utils/iconShapes.js), made as
  * elements: a real <svg> with its children, and no raw HTML anywhere (the lint refuses it in React screens). The HTML it
  * gives is the one the string icons gave: test/ui/Icon.test.tsx proves it for every icon.
  */

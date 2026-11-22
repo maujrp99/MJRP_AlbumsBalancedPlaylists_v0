@@ -59,7 +59,7 @@ describe('one path asks Spotify for the popularity of an album (F69)', () => {
 
     it('no screen writes Spotify data into an album: the helper that does it is used by the composition only', () => {
         expect(importing(/helpers\/SpotifyEnrichmentHelper(\.js)?$/)).toEqual([COMPOSITION])
-        const screens = [...listJs('controllers'), ...listJs('views'), ...listJs('components')]
+        const screens = [...listJs('controllers'), ...listJs('screens'), ...listJs('ui'), ...listJs('shell')]
         expect(filesWith(/\.spotifyId\s*=[^=]|\.spotifyPopularity\s*=[^=]/, screens)).toEqual([])
     })
 

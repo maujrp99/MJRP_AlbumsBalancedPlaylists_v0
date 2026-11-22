@@ -3,7 +3,7 @@
  * commit that wired the new one): the template of its render(), copied as it was, with the texts in it. The proof of the move
  * (test/screens/coming-soon/ComingSoon.test.tsx) compares what the new screen draws in #app with what this draws.
  */
-import { getIcon } from '../../public/js/components/Icons.js'
+import { getIcon } from '../support/iconMarkup.js'
 
 const features = {
     '/artists': { name: 'Artist Series', icon: 'User', description: 'Organize your music by artists' },

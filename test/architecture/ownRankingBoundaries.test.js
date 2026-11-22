@@ -49,7 +49,7 @@ describe('own ranking boundaries', () => {
     })
 
     it('the screen of the series does not reach the ranking repository or the ranking service', () => {
-        const screen = [...listJs('components/ui'), ...listJs('screens/albums'), ...listJs('ui'), 'ui/FilterToolbar.tsx']
+        const screen = [...listJs('screens/albums'), ...listJs('ui'), 'ui/FilterToolbar.tsx']
         const forbidden = /(UserRankingRepository|repositories\/userRankings|services\/ranking\/)/
         expect(offenders(screen, specifier => forbidden.test(specifier))).toEqual([])
     })

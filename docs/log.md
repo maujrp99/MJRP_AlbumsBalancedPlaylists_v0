@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 19:27] step — F83 onda 8d, 2: Icons.js sai (a régua de prova vai para os testes)
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **`components/Icons.js` apagado** (a pasta `components/` deixa de existir). Pelo mapa da onda 8, decisão: **não muda de lugar, sai**. Seu último usuário em código de produção (o ramo `btn`) já tinha saído; `splash/phoneBar.js` só o citava num comentário (a página de entrada continua à mão, de propósito). O que ficou foi o texto de cada ícone como **régua de prova**: `iconMarkup`/`getIcon`/`Icons` foram para `test/support/iconMarkup.js` (nenhum arquivo de produção os usa), e os 3 casos de `test/components/Icons.test.js` foram levados para `test/ui/Icon.test.tsx` sem mudar a asserção. `utils/iconShapes.js` perde `iconMarkup` e fica só com os dados; `ui/Icon.tsx` não muda.
+- `scripts/i18n/scan-copy.cjs` lê os nomes dos ícones de `utils/iconShapes.js` (lia `Icons.js`); os apelidos `@components` e `@views` saem de `tsconfig.json`, `vite.config.js` e `vitest.config.js` (nada os usa); sete sensores deixam de varrer `components/` e `views/` (`albumLoadBoundaries`, `ownRankingBoundaries`, `layerBoundaries`, `screensLoadThroughTheService`, `spotifyPopularityOnePath`: onde varriam só essas pastas, passam a varrer `screens/`, `ui/`, `shell/`).
+- A lista que só encolhe perde `components/Icons.js` (2 arquivos, 200 linhas). Sensores, `tsc` verdes.
+
 ## [2026-11-22 19:26] step — F83 onda 8d, 1: o ramo morto «btn» da exportação ao Apple Music sai
 
 **Branch:** claude/f83-wave-8d-closure

@@ -1,4 +1,7 @@
 /**
+ * (2026-11-22, wave 8d: components/Icons.js (the text form of the icons, 23 lines) left the list in the commit that deleted it: its last user, the dead `btn` branch of the
+ * Apple Music export, went first (the sensor of dead modules found it), and the text form moved to test/support/iconMarkup.js as the yardstick of test/ui/Icon.test.tsx.)
+ *
  * (2026-11-22, wave 8c: the sheet of the phone went to React, and components/ui/Sheet.js (173) left the list in the commit that deleted it: now ui/SheetWindow.tsx (`useSheetWindow` for a
  * screen, `openSheet` for a controller), with the same markup, timing, focus, keys and drag kept by test/ui/SheetWindow.sameAsBefore.test.tsx. utils/SafeDOM.js (237) went in the same commit: the sheet was its last user (the sensor of dead modules found it). Three files are left, with their reasons:
  * components/Icons.js and views/BaseView.js (they go with their last users: wave 8d) and utils/pageScrollLock.js, which stays for good.)
@@ -91,7 +94,6 @@
  * and AuthService (a class on the body).
  */
 export const HAND_MADE = {
-    'components/Icons.js': 178,
     'utils/pageScrollLock.js': 56,
     'views/BaseView.js': 144
 }

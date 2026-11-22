@@ -76,8 +76,8 @@ describe('album load boundaries', () => {
         expect(offenders(others, specifier => /MusicKitService|UserRankingRepository|repositories\/userRankings|CacheManager/.test(specifier))).toEqual([])
     })
 
-    it('the screen does not decide the load: components and views of the series never import the load service or the API client', () => {
-        const screen = [...listJs('components/ui'), ...listJs('screens/albums'), ...listJs('ui'), 'ui/FilterToolbar.tsx']
+    it('the screen does not decide the load: the screens and pieces of the series never import the load service or the API client', () => {
+        const screen = [...listJs('screens/albums'), ...listJs('ui'), 'ui/FilterToolbar.tsx']
         const forbidden = /(services\/albums\/|api\/client)/
 
         expect(offenders(screen, specifier => forbidden.test(specifier))).toEqual([])

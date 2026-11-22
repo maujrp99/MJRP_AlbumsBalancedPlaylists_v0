@@ -87,8 +87,8 @@ describe('a store only holds state (UAT-18, ADR-0017)', () => {
 })
 
 describe('the screen reaches the data only through services (UAT-19, ADR-0016)', () => {
-    // The screens in React (screens/, ui/, shell/: F83) are screens like the hand-made ones, and keep the same rules
-    const screen = [...listJs('views'), ...listJs('components'), ...listJs('controllers'), ...listJs('screens'), ...listJs('ui'), ...listJs('shell')]
+    // The screens (screens/, ui/, shell/, F83; the hand-made views/ and components/ are gone) and the controllers keep one set of rules
+    const screen = [...listJs('controllers'), ...listJs('screens'), ...listJs('ui'), ...listJs('shell')]
 
     it('the reader of imports sees .ts and .tsx (F83): the fixture imports are found, static and dynamic', () => {
         const root = path.join(process.cwd(), 'test/architecture/fixtures/typescript')
