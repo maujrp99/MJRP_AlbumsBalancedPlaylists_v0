@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 03:35] step — F83, onda 6a: o dourado da tela do inventário, capturado da tela à mão antes de tocá-la
+
+**Branch:** claude/f83-wave-6a-inventory-screen
+
+- 45 cenários (30 no computador, 15 no celular: lista, galeria, fantasmas, os dois vazios, a barra, «Show 50 more», as seis folhas, a rodada de valores, virar computador e celular) escritos em `test/support/inventoryScenarios.js` e `test/support/inventoryStandIns.js` (o serviço, os valores do Discogs, o aviso, a pergunta, o carregador e as duas janelas à mão são de mentira e anotam cada chamada), 152 retratos em `test/fixtures/inventoryBeforeF83.json` (o `#app`, a Folha aberta, o foco e as chamadas), com `TZ=America/Sao_Paulo` e o relógio fixo; o mesmo arquivo, rodado duas vezes, dá o mesmo resumo (md5).
+- O registro da captura: `reports/evidence/F83/wave-6a/capture-before.test.js` (rodou de `test/views/` contra a tela à mão e foi tirado de lá).
+- Nada de produto mudou neste passo.
+
 ## [2026-11-22 03:27] step — F83, terceira junta: a prova no navegador, o teto de peso e os totais (a Start enxuta em React)
 
 **Branch:** claude/f83-sync-3-start-lean
