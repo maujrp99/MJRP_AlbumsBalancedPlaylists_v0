@@ -121,6 +121,8 @@ serves:: [[ROADMAP#^OUT-03]] ^EP-01
 
 ![[S-73-name-the-start-screen-create-with-a-plus]]
 
+![[S-76-move-between-screens-smoothly]]
+
 
 
 
