@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 14:05] step — F79: a tela Create enxuta também no computador
+
+**Branch:** wip/f79-create-lean-computer-and-no-loading-line
+
+- Pedido dele (2026-11-22): «podemos aplicar na sessão create o mesmo conceito de lean da versao mobile?»; diante da prévia (hoje, enxuta, variante com os três passos numa linha) escolheu «3. Sua recomendação», a enxuta. Construído em `public/`: no computador (≥ 900 px) a Start segue as mesmas regras do celular — a frase da série atrás de «What is a series?» (abre no mesmo lugar, sob o título; Esc ou segundo clique fecha; `aria-expanded`), sob o campo só «or paste a list» (sem a linha «Press Enter…»), «Type an artist» dentro do campo, sem os três passos, a base e o aviso de visitante só com a primeira capa, o conjunto um pouco mais baixo antes da busca. Uma regra só para as duas larguras (`phoneHintLink` virou `hintLink`).
+- Arquivos: `views/HomeView.js`, `components/home/HomeDock.js`, `models/homeSeries.js`, `controllers/HomeController.js`, `css/views/home.css`, `css/mobile/home.css` (sai o `.home-how`); testes `HomeLean.computer.test.js` (novo), `HomeLean.phone.test.js`, `HomeStage`, `HomeDock`, `HomePhone.dock`, `HomeController.create`, `homeSeries`; `behavior.md`, `info-arch.md`, o manual e a `tasks.md` da F79 (TASK-13).
+- Prova no site construído (Chromium e WebKit, com e sem conta): `reports/evidence/F79/create-lean-computer/proof.md`. Celular (iPhone 393 e 375, e 899) idêntico a `main`: 0 pixel em 50 de 50 capturas.
+
 ## [2026-11-22 13:00] step — publicado em produção: o menu do computador na Syne (F88), da `ffd95bf`
 
 **Branch:** main

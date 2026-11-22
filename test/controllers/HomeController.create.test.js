@@ -145,7 +145,7 @@ describe('Home: create the series (F79)', () => {
         $('[data-dock="restart"]').click()
 
         expect(view.controller.stagingController.getSelectedAlbums()).toEqual([])
-        expect(dockText()).toContain('Your series is empty')
+        expect($('.home-dock')).toBeNull() // no albums, no bar (the computer's lean, F79)
     })
 
     it('not saved: the albums stay, the words say so, and the button becomes «Try again» (^home-create-failed)', async () => {

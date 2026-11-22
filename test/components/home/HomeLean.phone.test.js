@@ -1,7 +1,7 @@
 /**
  * UAT-281 (F79): the Start screen on the phone, lean. The real HomeView and HomeController; only the catalog is
  * replaced. The title and the field first; «What is a series?» opens the sentence in the bottom sheet; under the
- * field one link; the bar and the visitor's notice only with the first cover; the computer is as it was.
+ * field one link; the bar and the visitor's notice only with the first cover. (The computer follows the same rules: HomeLean.computer.test.js.)
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
@@ -114,14 +114,5 @@ describe('the lean Start on the phone (UAT-281)', () => {
         app.querySelector('[data-action="pick-album"]').click()
         expect($('#homeGuestStage').hidden).toBe(false)
         expect($('#homeGuestStage').textContent).toContain('not signed in')
-    })
-
-    it('the computer is as it was: the old hint, the old field text, the bar, the notice', async () => {
-        await open(false, { guest: true })
-        expect($('#artistScanInput').placeholder).toBe('An artist, or paste a list of albums')
-        expect(hint().textContent).toBe('Type an artist to see their albums, or paste a list of albums from many artists.')
-        expect($('.home-dock')).not.toBeNull()
-        expect($('#home-page').classList.contains('is-barless')).toBe(false)
-        expect($('.home-hero p').textContent).toContain('A series is the set of albums')
     })
 })

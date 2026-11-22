@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest'
 import {
     suggestName, nameAfterChange, seriesCountLine, flameOf, addAllLabel, typesLine,
     dockEmptyNote, equalizerState, stageIsBig, NameState,
-    barShows, guestNoticeShows, phoneHintLink
+    barShows, guestNoticeShows, hintLink
 } from '../../public/js/models/homeSeries.js'
 import { ScanStatus } from '../../public/js/models/scanState.js'
 import { defaultFilters, toggleFilter } from '../../public/js/models/albumPicker.js'
@@ -105,7 +105,7 @@ describe('the equalizer and the stage (D6)', () => {
     })
 })
 
-describe('the lean Start on the phone (F79, UAT-281)', () => {
+describe('the lean Start, phone and computer (F79, UAT-281; the computer 2026-11-22)', () => {
     it('the series bar appears only once the first cover is chosen (or the series is saved)', () => {
         expect(barShows({ chosen: 0, created: false })).toBe(false)
         expect(barShows({ chosen: 1, created: false })).toBe(true)
@@ -122,10 +122,10 @@ describe('the lean Start on the phone (F79, UAT-281)', () => {
         expect(guestNoticeShows({ guest: false, chosen: 0 })).toBe(false)
     })
 
-    it('under the field the phone has one link: «paste a list», or the way back; none when «not found» has its own', () => {
-        expect(phoneHintLink({ paste: false, notFound: false })).toBe('paste')
-        expect(phoneHintLink({ paste: true, notFound: false })).toBe('artist')
-        expect(phoneHintLink({ paste: false, notFound: true })).toBe(null)
-        expect(phoneHintLink({ paste: true, notFound: true })).toBe('artist')
+    it('under the field there is one link: «paste a list», or the way back; none when «not found» has its own', () => {
+        expect(hintLink({ paste: false, notFound: false })).toBe('paste')
+        expect(hintLink({ paste: true, notFound: false })).toBe('artist')
+        expect(hintLink({ paste: false, notFound: true })).toBe(null)
+        expect(hintLink({ paste: true, notFound: true })).toBe('artist')
     })
 })
