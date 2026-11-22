@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 21:28] step — F83 onda 5b: o mapa das janelas de séries e de classificar (TASK-23b)
+**Branch:** claude/f83-wave-5b-albums-windows
+O mapa da 5b em map-wave-5-albums.md, escrito antes do código: o que cada janela faz hoje e a nova repete (editar série, apagar série, classificar, o seletor), as lojas que leem (só albumSeriesStore, por leitura, sem assinar), o que a antiga não tem e a nova também não terá (sem Escape e sem prender o foco na de editar; sem foco ao abrir ou fechar na de classificar: candidatas a issue), o que muda de propósito e como se prova. O mapa e a nota do construtor da 5a coincidem; onde o mapa diz que a Start passa ao painel novo, o que a Start usa do seletor é só o controlador, então ela passa a importar o controlador portado.
+
 ## [2026-11-21 21:22] step — F83 onda 5a: os totais na ponta do ramo, pela fila
 **Branch:** claude/f83-wave-5a-albums-screen
 Suíte inteira: 339 arquivos, 4.234 testes, todos passam. test/architecture: 37 arquivos, 304 testes. typecheck (tsc -p tsconfig.json): sem erro. lint: 0 erros, 48 avisos (os de antes, fora de public/js). Nenhum servidor ficou de pé. O worktree de comparação da tela antiga ficou em /private/tmp/claude-501/old5a (a trava recusou removê-lo).
