@@ -15,7 +15,7 @@ import { act } from 'react'
 
 vi.mock('../../public/js/services/SpotifyExportService.js', async () => ({ SpotifyExportService: (await import('../support/spotifyExportStandIns.js')).SpotifyExportService }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('../support/spotifyExportStandIns.js')).SpotifyAuthService }))
-vi.mock('../../public/js/components/Toast.js', async () => {
+vi.mock('../../public/js/stores/toasts.js', async () => {
     const { toast } = await import('../support/spotifyExportStandIns.js')
     return { default: toast, toast }
 })

@@ -14,8 +14,8 @@
  */
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
-import { BaseModal } from '../../components/ui/BaseModal.js'
-import { ConfirmModal } from '../../components/ui/modals/ConfirmModal.js'
+import { ConfirmWindow } from '../../ui/dialogs/ConfirmWindow'
+import { showWindow } from '../../ui/windowLayer'
 import { t } from '../../i18n/t.js'
 import { formatDuration } from '../../utils/duration.js'
 import { Icon } from '../../ui/Icon'
@@ -149,22 +149,23 @@ export function RankWindow({ request, close, notify }: Props) {
         }
         // Escape is «Keep editing», as in every confirmation window of the app
         const onKey = (event: KeyboardEvent): void => { if (event.key === 'Escape') answer(false) }
-        const window_ = ConfirmModal.render({
-            title: t('albums.rankWindow.discardTitle'),
-            message: t('albums.rankWindow.discardNote'),
-            confirmText: t('albums.rankWindow.discard'),
-            cancelText: t('albums.rankWindow.keepEditing'),
-            variant: 'danger',
-            onConfirm: () => answer(true),
-            onCancel: () => answer(false)
-        })
+        const handle = showWindow(() => (
+            <ConfirmWindow
+                title={t('albums.rankWindow.discardTitle')}
+                message={t('albums.rankWindow.discardNote')}
+                confirmText={t('albums.rankWindow.discard')}
+                cancelText={t('albums.rankWindow.keepEditing')}
+                variant="danger"
+                onConfirm={() => answer(true)}
+                onCancel={() => answer(false)}
+            />
+        ))
         const stop = (): void => {
-            BaseModal.unmount(window_)
+            handle.close()
             document.removeEventListener('keydown', onKey)
             question.current = null
         }
         question.current = stop
-        BaseModal.mount(window_)
         document.addEventListener('keydown', onKey)
     }
 

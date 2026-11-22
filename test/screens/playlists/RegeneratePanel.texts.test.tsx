@@ -10,7 +10,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import fs from 'node:fs'
 
 vi.mock('../../../public/js/services/playlists/playlistsWiring.js', async () => (await import('../../support/playlistsScenarios.js')).wiring())
-vi.mock('../../../public/js/services/DialogService.js', async () => ({ dialogService: { confirm: vi.fn(async () => true) } }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', async () => ({ dialogService: { confirm: vi.fn(async () => true) } }))
 
 import { Playlists, GeneratingFlag } from '../../../public/js/screens/playlists/Playlists'
 import { PlaylistsController } from '../../../public/js/controllers/PlaylistsController.js'

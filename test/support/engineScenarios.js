@@ -45,19 +45,19 @@ const KINDS = ['success', 'error', 'warning', 'info']
 const TOAST = KINDS.map((kind) => ({
     name: `toast ${kind}: it comes in, stays 4 s, goes out in 300 ms`,
     run: async (w) => {
-        w.snap('before')
+        await w.snap('before')
         w.toast[kind](`A ${kind} notice`)
-        w.snap('just called')
+        await w.snap('just called')
         await w.advance(16)
-        w.snap('one frame')
+        await w.snap('one frame')
         await w.advance(3983)
-        w.snap('3999 ms')
+        await w.snap('3999 ms')
         await w.advance(1)
-        w.snap('4000 ms')
+        await w.snap('4000 ms')
         await w.advance(299)
-        w.snap('4299 ms')
+        await w.snap('4299 ms')
         await w.advance(1)
-        w.snap('4300 ms')
+        await w.snap('4300 ms')
     }
 }))
 
@@ -69,11 +69,11 @@ const TOASTS = [
             w.toast.info('Short', 1000)
             await w.advance(16)
             await w.advance(983)
-            w.snap('999 ms')
+            await w.snap('999 ms')
             await w.advance(1)
-            w.snap('1000 ms')
+            await w.snap('1000 ms')
             await w.advance(300)
-            w.snap('1300 ms')
+            await w.snap('1300 ms')
         }
     },
     {
@@ -82,15 +82,15 @@ const TOASTS = [
             w.showToast('Plain')
             w.showToast('Typed', 'warning', 500)
             await w.advance(16)
-            w.snap('both')
+            await w.snap('both')
             await w.advance(484)
-            w.snap('500 ms')
+            await w.snap('500 ms')
             await w.advance(300)
-            w.snap('800 ms')
+            await w.snap('800 ms')
             await w.advance(3200)
-            w.snap('4000 ms')
+            await w.snap('4000 ms')
             await w.advance(300)
-            w.snap('4300 ms')
+            await w.snap('4300 ms')
         }
     },
     {
@@ -98,13 +98,13 @@ const TOASTS = [
         run: async (w) => {
             w.toast.success('Gone fast', 0)
             await w.advance(1)
-            w.snap('1 ms')
+            await w.snap('1 ms')
             await w.advance(15)
-            w.snap('one frame')
+            await w.snap('one frame')
             await w.advance(284)
-            w.snap('300 ms')
+            await w.snap('300 ms')
             await w.advance(1)
-            w.snap('301 ms')
+            await w.snap('301 ms')
         }
     },
     {
@@ -116,19 +116,19 @@ const TOASTS = [
             await w.advance(1000)
             w.toast.warning('Third')
             await w.advance(16)
-            w.snap('three, 2016 ms')
+            await w.snap('three, 2016 ms')
             await w.advance(1984)
-            w.snap('first leaves, 4000 ms')
+            await w.snap('first leaves, 4000 ms')
             await w.advance(300)
-            w.snap('first gone, 4300 ms')
+            await w.snap('first gone, 4300 ms')
             await w.advance(700)
-            w.snap('second leaves, 5000 ms')
+            await w.snap('second leaves, 5000 ms')
             await w.advance(300)
-            w.snap('second gone')
+            await w.snap('second gone')
             await w.advance(700)
-            w.snap('third leaves, 6000 ms')
+            await w.snap('third leaves, 6000 ms')
             await w.advance(300)
-            w.snap('all gone')
+            await w.snap('all gone')
         }
     },
     {
@@ -138,9 +138,9 @@ const TOASTS = [
             w.toast.info('Same')
             w.toast.info('Same')
             await w.advance(16)
-            w.snap('seven')
+            await w.snap('seven')
             await w.advance(4284)
-            w.snap('all gone')
+            await w.snap('all gone')
         }
     },
     {
@@ -149,13 +149,13 @@ const TOASTS = [
             w.toast.success('Closable')
             await w.advance(16)
             await w.click('.toast-close')
-            w.snap('pressed')
+            await w.snap('pressed')
             await w.advance(299)
-            w.snap('299 ms after')
+            await w.snap('299 ms after')
             await w.advance(1)
-            w.snap('gone')
+            await w.snap('gone')
             await w.advance(5000)
-            w.snap('after the 4 s')
+            await w.snap('after the 4 s')
         }
     },
     {
@@ -169,11 +169,11 @@ const TOASTS = [
             await w.press(buttons[1])
             await w.advance(100)
             await w.press(buttons[1])
-            w.snap('pressed twice')
+            await w.snap('pressed twice')
             await w.advance(200)
-            w.snap('the middle one is gone')
+            await w.snap('the middle one is gone')
             await w.advance(4000)
-            w.snap('all gone')
+            await w.snap('all gone')
         }
     },
     {
@@ -181,7 +181,7 @@ const TOASTS = [
         run: async (w) => {
             w.toast.error('<img src=x onerror="window.__xss=1"> & "quoted" <b>bold</b>')
             await w.advance(16)
-            w.snap('drawn')
+            await w.snap('drawn')
             w.note('xss', window.__xss ?? null)
             await w.advance(4300)
         }
@@ -191,12 +191,12 @@ const TOASTS = [
         run: async (w) => {
             w.toast.info('Early')
             await w.advance(4300)
-            w.snap('empty')
+            await w.snap('empty')
             w.toast.success('Late')
             await w.advance(16)
-            w.snap('late')
+            await w.snap('late')
             await w.advance(4300)
-            w.snap('empty again')
+            await w.snap('empty again')
         }
     }
 ]
@@ -205,17 +205,17 @@ const PROGRESS = [
     {
         name: 'progress: one loader, hidden 200 ms after it finishes',
         run: async (w) => {
-            w.snapBar('idle')
+            await w.snapBar('idle')
             w.progress.start()
-            w.snapBar('started')
+            await w.snapBar('started')
             w.note('active', w.progress.isActive())
             w.progress.finish()
             w.note('active after finish', w.progress.isActive())
-            w.snapBar('finished, 0 ms')
+            await w.snapBar('finished, 0 ms')
             await w.advance(199)
-            w.snapBar('199 ms')
+            await w.snapBar('199 ms')
             await w.advance(1)
-            w.snapBar('200 ms')
+            await w.snapBar('200 ms')
         }
     },
     {
@@ -225,19 +225,19 @@ const PROGRESS = [
             w.progress.start()
             w.progress.finish()
             await w.advance(500)
-            w.snapBar('one of two done')
+            await w.snapBar('one of two done')
             w.note('active', w.progress.isActive())
             w.progress.finish()
             w.progress.finish()
             w.note('active after the extra finish', w.progress.isActive())
             await w.advance(200)
-            w.snapBar('both done')
+            await w.snapBar('both done')
             w.progress.start()
             w.note('active after a new start', w.progress.isActive())
-            w.snapBar('one again')
+            await w.snapBar('one again')
             w.progress.finish()
             await w.advance(200)
-            w.snapBar('hidden')
+            await w.snapBar('hidden')
         }
     },
     {
@@ -248,10 +248,10 @@ const PROGRESS = [
             await w.advance(100)
             w.progress.start()
             await w.advance(300)
-            w.snapBar('kept by the new loader')
+            await w.snapBar('kept by the new loader')
             w.progress.finish()
             await w.advance(200)
-            w.snapBar('hidden')
+            await w.snapBar('hidden')
         }
     },
     {
@@ -260,10 +260,10 @@ const PROGRESS = [
             w.progress.start()
             w.progress.start()
             w.progress.forceHide()
-            w.snapBar('forced')
+            await w.snapBar('forced')
             w.note('active', w.progress.isActive())
             w.progress.start()
-            w.snapBar('a new one shows it')
+            await w.snapBar('a new one shows it')
             w.progress.forceHide()
         }
     }
@@ -283,29 +283,29 @@ const DIALOGS = [
         run: async (w) => {
             opener(w)
             const answer = w.track(w.dialogs.confirm({ title: 'Delete the series?', message: 'It cannot be undone.' }))
-            w.snap('open')
+            await w.snap('open')
             w.note('focus open', focusOf())
             await w.advance(50)
             w.note('focus a frame later', focusOf())
             await w.press(document.getElementById('confirm-modal'))
             await w.press(document.querySelector('.app-modal__panel'))
             await w.press(document.querySelector('.app-modal__body'))
-            w.snap('after the clicks')
+            await w.snap('after the clicks')
             w.note('answered', answer.state)
             await w.press(document.querySelector('[data-action="cancel"]'))
             w.note('answered after cancel', answer.state)
             w.note('focus after', focusOf())
-            w.snap('closed')
+            await w.snap('closed')
         }
     },
     ...['primary', 'danger', 'warning', 'unknown'].map((variant) => ({
         name: `confirm: the variant ${variant}, with its own words`,
         run: async (w) => {
             const answer = w.track(w.dialogs.confirm({ title: 'Title', message: 'Message', confirmText: 'Yes, do it', cancelText: 'No', variant }))
-            w.snap('open')
+            await w.snap('open')
             await w.press(document.querySelector('[data-action="confirm"]'))
             w.note('answered', answer.state)
-            w.snap('closed')
+            await w.snap('closed')
         }
     })),
     {
@@ -314,14 +314,14 @@ const DIALOGS = [
             let answer = w.track(w.dialogs.confirm({ title: 'T', message: 'M' }))
             await w.press(document.querySelector('.app-modal__close'))
             w.note('cross', answer.state)
-            w.snap('after the cross')
+            await w.snap('after the cross')
             answer = w.track(w.dialogs.confirm({ title: 'T', message: 'M' }))
             await w.key('Escape')
             w.note('escape', answer.state)
-            w.snap('after escape')
+            await w.snap('after escape')
             await w.key('Escape')
             await w.key('Enter')
-            w.snap('after escape and enter with nothing open')
+            await w.snap('after escape and enter with nothing open')
         }
     },
     {
@@ -332,18 +332,18 @@ const DIALOGS = [
             await w.advance(5)
             w.note('first', first.state)
             w.note('second', second.state)
-            w.snap('second on the page')
+            await w.snap('second on the page')
             await w.key('Escape')
             w.note('second after escape', second.state)
             const third = w.track(w.dialogs.prompt({ title: 'Third', message: '3' }))
             const fourth = w.track(w.dialogs.confirm({ title: 'Fourth', message: '4' }))
             await w.advance(5)
             w.note('third', third.state)
-            w.snap('fourth on the page')
+            await w.snap('fourth on the page')
             w.dialogs.dismiss()
             await w.advance(5)
             w.note('fourth', fourth.state)
-            w.snap('nothing')
+            await w.snap('nothing')
             w.dialogs.dismiss()
         }
     },
@@ -351,7 +351,7 @@ const DIALOGS = [
         name: 'confirm: the text of the title and the message is text',
         run: async (w) => {
             w.track(w.dialogs.confirm({ title: '<b>Bold</b> & "title"', message: '<img src=x onerror="window.__xss=1"> message' }))
-            w.snap('open')
+            await w.snap('open')
             w.note('xss', window.__xss ?? null)
             w.dialogs.dismiss()
         }
@@ -360,10 +360,10 @@ const DIALOGS = [
         name: 'alert: one window with OK and an empty cancel, answered with nothing',
         run: async (w) => {
             const answer = w.track(w.dialogs.alert('Heads up', 'Something happened.'))
-            w.snap('open')
+            await w.snap('open')
             await w.press(document.querySelector('[data-action="confirm"]'))
             w.note('answered', answer.state)
-            w.snap('closed')
+            await w.snap('closed')
             const second = w.track(w.dialogs.alert('Again', 'Escape this one.'))
             await w.key('Escape')
             w.note('answered by escape', second.state)
@@ -374,20 +374,20 @@ const DIALOGS = [
         run: async (w) => {
             opener(w)
             const answer = w.track(w.dialogs.prompt({ title: 'Name the series' }))
-            w.snap('open')
+            await w.snap('open')
             w.note('focus open', focusOf())
             await w.advance(16)
             w.note('focus a frame later', focusOf())
-            w.snap('a frame later')
+            await w.snap('a frame later')
             await w.type('input', 'Rock classics')
-            w.snap('typed')
+            await w.snap('typed')
             await w.type('input', '   ')
-            w.snap('only spaces')
+            await w.snap('only spaces')
             await w.type('input', 'Jazz')
             await w.press(document.querySelectorAll('.app-modal__footer button')[1])
             w.note('answered', answer.state)
             w.note('focus after', focusOf())
-            w.snap('closed')
+            await w.snap('closed')
         }
     },
     {
@@ -398,14 +398,14 @@ const DIALOGS = [
                 confirmText: 'Rename it', cancelText: 'Leave', validate: (value) => value.length >= 3 && value !== 'Old name'
             }))
             await w.advance(16)
-            w.snap('open, the old name is not valid')
+            await w.snap('open, the old name is not valid')
             await w.type('input', 'ab')
-            w.snap('two letters')
+            await w.snap('two letters')
             await w.type('input', 'abc')
-            w.snap('three letters')
+            await w.snap('three letters')
             await w.key('Enter', document.querySelector('input'))
             w.note('answered by Enter', answer.state)
-            w.snap('closed')
+            await w.snap('closed')
         }
     },
     {
@@ -415,11 +415,11 @@ const DIALOGS = [
             await w.advance(16)
             await w.key('Enter', document.querySelector('input'))
             w.note('answered by Enter on an empty field', answer.state)
-            w.snap('still open')
+            await w.snap('still open')
             await w.type('input', 'x')
             await w.key('Enter', document.querySelector('input'))
             w.note('answered', answer.state)
-            w.snap('closed')
+            await w.snap('closed')
         }
     },
     {
@@ -434,18 +434,18 @@ const DIALOGS = [
             answer = w.track(w.dialogs.prompt({ title: 'T' }))
             await w.press(document.querySelectorAll('.app-modal__footer button')[0])
             w.note('cancel', answer.state)
-            w.snap('closed')
+            await w.snap('closed')
         }
     },
     {
         name: 'prompt: a valid initial value answers with it, and a second prompt starts clean',
         run: async (w) => {
             let answer = w.track(w.dialogs.prompt({ title: 'T', initialValue: 'Kept' }))
-            w.snap('open, valid')
+            await w.snap('open, valid')
             await w.press(document.querySelectorAll('.app-modal__footer button')[1])
             w.note('answered', answer.state)
             answer = w.track(w.dialogs.prompt({ title: 'T2' }))
-            w.snap('the second one, empty and off')
+            await w.snap('the second one, empty and off')
             await w.key('Escape')
         }
     },
@@ -453,7 +453,7 @@ const DIALOGS = [
         name: 'prompt: the text of the title, message, label and placeholder is text',
         run: async (w) => {
             w.track(w.dialogs.prompt({ title: '<i>t</i>', message: '<b>m</b>', label: '<u>l</u>', placeholder: '"<p>"', initialValue: '<s>v</s>' }))
-            w.snap('open')
+            await w.snap('open')
             w.dialogs.dismiss()
         }
     },
@@ -463,7 +463,7 @@ const DIALOGS = [
             const answer = w.track(w.dialogs.confirm({ title: 'T', message: 'M' }))
             w.screenLeft()
             await w.advance(5)
-            w.snap('after the screen was left')
+            await w.snap('after the screen was left')
             w.note('answered', answer.state)
             w.dialogs.dismiss()
         }

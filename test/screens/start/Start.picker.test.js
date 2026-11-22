@@ -11,11 +11,11 @@ const service = vi.hoisted(() => ({ scanArtist: vi.fn(), search: vi.fn() }))
 
 vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', () => ({ albumSearchService: service }))
 vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))
-vi.mock('../../../public/js/components/Toast.js', () => ({
+vi.mock('../../../public/js/stores/toasts.js', () => ({
     default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() }
 }))
 
-import toast from '../../../public/js/components/Toast.js'
+import toast from '../../../public/js/stores/toasts.js'
 import { HomeView, flush } from '../../support/startHarness.js'
 import { ScanStatus } from '../../../public/js/models/scanState.js'
 import { DeadlineError } from '../../../public/js/utils/deadline.js'

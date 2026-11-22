@@ -4,9 +4,9 @@
  * where it was when the last one leaves.
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { giveBackAStrayHold, holdPageBehindWindows } from '../../../public/js/components/ui/windowsHoldThePage.js'
-import { lockPageScroll, pageScrollLocks } from '../../../public/js/utils/pageScrollLock.js'
-import { openSheet } from '../../../public/js/components/ui/Sheet.js'
+import { giveBackAStrayHold, holdPageBehindWindows } from '../../public/js/shell/windowsHoldThePage'
+import { lockPageScroll, pageScrollLocks } from '../../public/js/utils/pageScrollLock.js'
+import { openSheet } from '../../public/js/components/ui/Sheet.js'
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 0))
 const windowOf = (className, id) => {

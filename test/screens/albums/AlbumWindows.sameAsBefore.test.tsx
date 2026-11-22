@@ -16,8 +16,8 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 vi.mock('../../../public/js/services/SeriesService.js', async () => (await import('../../support/albumWindowsScenarios.js')).seriesServiceModule)
 vi.mock('../../../public/js/stores/albumSeries.js', async () => (await import('../../support/albumWindowsScenarios.js')).albumSeriesStoreModule)
 vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', async () => (await import('../../support/albumWindowsScenarios.js')).searchModule)
-vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/albumWindowsScenarios.js')).toastModule)
-vi.mock('../../../public/js/services/DialogService.js', async () => (await import('../../support/albumWindowsScenarios.js')).dialogModule)
+vi.mock('../../../public/js/stores/toasts.js', async () => (await import('../../support/albumWindowsScenarios.js')).toastModule)
+vi.mock('../../../public/js/ui/dialogs/dialogs', async () => (await import('../../support/albumWindowsScenarios.js')).dialogModule)
 vi.mock('../../../public/js/repositories/userRankings.js', async () => (await import('../../support/albumWindowsScenarios.js')).rankingRepositoryModule)
 vi.mock('sortablejs', async () => (await import('../../support/albumWindowsScenarios.js')).sortableModule)
 

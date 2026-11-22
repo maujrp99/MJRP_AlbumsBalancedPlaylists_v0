@@ -15,8 +15,11 @@ export interface WindowHandle {
 
 const open = new Set<WindowHandle>()
 
-/** Puts a window on the page. `render` is given the function that closes it. */
-export function showWindow(render: (close: () => void) => ReactNode): WindowHandle {
+/**
+ * Puts a window on the page. `render` is given the function that closes it. A window of a screen goes when the screen is left; the question
+ * windows (ui/dialogs) stay, as the hand-made ones did: whoever asked is still waiting for the answer (`staysWhenTheScreenIsLeft`).
+ */
+export function showWindow(render: (close: () => void) => ReactNode, { staysWhenTheScreenIsLeft = false }: { staysWhenTheScreenIsLeft?: boolean } = {}): WindowHandle {
     const root = createRoot(document.createElement('div'))
     let closed = false
     const handle: WindowHandle = {
@@ -28,7 +31,7 @@ export function showWindow(render: (close: () => void) => ReactNode): WindowHand
             queueMicrotask(() => root.unmount())
         }
     }
-    open.add(handle)
+    if (!staysWhenTheScreenIsLeft) open.add(handle)
     flushSync(() => root.render(render(handle.close)))
     return handle
 }

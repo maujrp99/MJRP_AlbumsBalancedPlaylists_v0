@@ -2,6 +2,20 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 10:18] step — F83 onda 8b: os avisos, a barra de carga e as perguntas em React; a janela, a capa e o segurar a página saem das mãos
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- **Avisos:** `stores/toasts.js` (a mesma API `toast.success/error/warning/info(texto, ms)` e `showToast`, a lista e os relógios, sem React: controladores e serviços a chamam) e `shell/Toasts.tsx` (os desenha na caixa `#toast-container`, a moldura a monta). `components/Toast.js` sai.
+- **Barra de carga:** `stores/progress.js` e `shell/GlobalProgress.tsx` (o mesmo `#globalProgress`, as mesmas classes); `components/GlobalProgress.js` sai; `router.js` e `SeriesService.js` importam a loja.
+- **Perguntas:** `ui/dialogs/` (`dialogs.ts` com `dialogService.confirm/prompt/alert/dismiss`, `ConfirmWindow.tsx`, `InputWindow.tsx`) sobre `ui/ModalShell.tsx` (ganhou `sheet`); a janela de descartar da classificação (`RankWindow`) usa `ConfirmWindow`; `useModalWindow` usa `ModalShell`. `BaseModal.js`, `ConfirmModal.js`, `InputModal.js` e `services/DialogService.js` saem.
+- **Sem desenho, só de lugar:** `windowsHoldThePage.js` virou `shell/windowsHoldThePage.ts` (com o gancho `usePageHold`); `coverImage.js` virou `ui/coverStandIn.ts` (o endereço do substituto e `watchCovers`); `signInFromLink.js` e `startRoute.js` foram para `utils/`.
+- **`ui/` não importa loja:** `AddWindow`, `EditWindow` e o seletor de álbuns (`pickerController`) recebem `notify`/`warn` de quem os abre.
+- **Prova:** `test/ui/engines.sameAsBefore.test.tsx` (40 casos: os 33 cenários contra o dourado da mão, a forma do casco em 30 tamanhos e 3 casos que provam que a conferência vê uma palavra, uma classe e 1 ms postos de propósito). Os mocks de `Toast.js`, `DialogService.js` e `GlobalProgress.js` em ~110 arquivos de teste apontam para os novos caminhos; a gravação do MusicKit (`exportMusicKitRecording.json`) não foi tocada.
+- Sensores: `handMadeScreensBaseline.js` perde 10 entradas (15 para 5 arquivos); `handMadeScreensOnlyShrink` e `migrationStatus` com os limites novos.
+- Em português (à espera do MJRP): `ui.dialog.confirm` «Confirmar», `ui.dialog.cancel` «Cancelar», `ui.dialog.save` «Salvar», `ui.dialog.ok` «OK».
+
+
 ## [2026-11-22 10:08] step — F83 onda 8b: o dourado dos motores à mão (avisos, barra, perguntas) capturado antes de tocá-los
 
 **Branch:** claude/f83-wave-8b-window-engines

@@ -16,7 +16,7 @@ import { savedPlaylistsReader, savedPlaylistsStore } from '../services/playlists
 import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { ListStatus, SeriesPlaylistsStatus as Status } from '../models/savedPlaylists.js'
 import { router } from '../router.js'
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 import { t } from '../i18n/t.js'
 
 /** A series is on the list when it has playlists to show or a failure to tell. */

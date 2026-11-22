@@ -31,7 +31,7 @@ import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
 
-import toast from './components/Toast.js'
+import toast from './stores/toasts.js'
 
 // app.js exports nothing: no module imports the file that mounts the app (UAT-19). Who needs the
 // database or the login is handed it where it is put together (the *Wiring.js files of services/).
@@ -42,8 +42,8 @@ import { startShell } from './shell/Shell.tsx'
 import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
 import { userStore } from './stores/UserStore.js'
 import { startUsageMeasurement } from './services/usage/usageWiring.js'
-import { openSignInWhenAsked } from './components/navigation/signInFromLink.js'
-import { START_PATH, leaveToHome } from './components/navigation/startRoute.js'
+import { openSignInWhenAsked } from './utils/signInFromLink.js'
+import { START_PATH, leaveToHome } from './utils/startRoute.js'
 import { isSignedIn } from './utils/isSignedIn.js'
 import { openLoginWindow } from './stores/loginWindow.js'
 import { prefetchScreensAfterTheFirstScreen } from './utils/prefetchScreens.js'
@@ -161,7 +161,7 @@ router.register('/blend', async () => {
 // Sprint 11 Phase 1: Spotify Auth Callback
 router.register('/callback', async () => {
     const { SpotifyAuthService } = await import('./services/SpotifyAuthService.js')
-    const toast = (await import('./components/Toast.js')).default
+    const toast = (await import('./stores/toasts.js')).default
 
     await SpotifyAuthService.handleCallback().then(success => {
         if (success) {

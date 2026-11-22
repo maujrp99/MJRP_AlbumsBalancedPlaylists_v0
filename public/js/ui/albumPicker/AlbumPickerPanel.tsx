@@ -17,11 +17,13 @@ interface Props {
     service: PickerOptions['service']
     /** What the window does with a picked album. */
     onPick: (album: PickerAlbum) => void
+    /** Where the picker warns (the site's notices): a piece of ui/ holds no store. */
+    warn: (message: string) => void
 }
 
 const FILTERS = PICKER_FILTERS as ReadonlyArray<{ key: string; icon: string }>
 
-export function AlbumPickerPanel({ service, onPick }: Props) {
+export function AlbumPickerPanel({ service, onPick, warn }: Props) {
     const [scan, setScan] = useState<Scan>(() => idleScan() as Scan)
     const [filters, setFilters] = useState<Filters>(() => defaultFilters() as Filters)
     const [counts, setCounts] = useState<Counts>(() => countByFilter([]) as Counts)
@@ -36,6 +38,7 @@ export function AlbumPickerPanel({ service, onPick }: Props) {
         const made = new AlbumPickerController({
             service,
             emptyQueryMessage: () => t('ui.picker.typeFirst'),
+            warn,
             onPick: (album) => latestPick.current(album),
             view: {
                 drawScan: setScan,

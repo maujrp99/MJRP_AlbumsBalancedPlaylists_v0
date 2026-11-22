@@ -1,28 +1,36 @@
 /**
  * F70, UAT-63 - a cover that has no address, or whose address fails to load, shows a stand-in.
- * One helper draws every album cover (components/ui/coverImage.js): the albums screen, the album
- * picker, the series being built, the inventory, the saved playlists and the album window.
+ * One piece draws every album cover (ui/CoverImage.tsx, with the stand-in and the listener of ui/coverStandIn.ts; wave 8b moved the stand-in out of
+ * components/ui/coverImage.js, whose hand-made `coverImage()` is now this test's `coverImage`, which asks the React piece): the albums screen, the
+ * album picker, the series being built, the inventory, the saved playlists and the album window.
  *
- * Most cards are written into the page as text (`outerHTML`), so a listener on the image itself
- * would be lost: the helper listens once, on the document, for the `error` of any cover.
+ * A cover may be written into the page as text (`outerHTML`), so a listener on the image itself would be lost: the listener is one, on the
+ * document, for the `error` of any cover.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
-vi.mock('../../../public/js/services/AlbumLoader.js', () => ({
+vi.mock('../../public/js/services/AlbumLoader.js', () => ({
     albumLoader: { getArtworkUrl: (album) => album.coverUrl || null }
 }))
 
-import { coverImage, watchCovers, COVER_STAND_IN } from '../../../public/js/components/ui/coverImage.js'
+import { watchCovers, COVER_STAND_IN } from '../../public/js/ui/coverStandIn.ts'
+import { CoverImage } from '../../public/js/ui/CoverImage.tsx'
 import { act, createElement } from 'react'
 import { createRoot } from 'react-dom/client'
-import { CompactCard } from '../../../public/js/screens/albums/AlbumCard'
-import { ItemCard } from '../../../public/js/screens/inventory/ItemCard'
-import { ItemRow } from '../../../public/js/screens/inventory/ItemRow'
-import { AlbumCascade } from '../../../public/js/ui/AlbumCascade.tsx'
-import { PickerCard } from '../../../public/js/ui/albumPicker/PickerParts'
-import { appFiles, importsOf, read } from '../../architecture/support/sourceImports.js'
+import { CompactCard } from '../../public/js/screens/albums/AlbumCard'
+import { ItemCard } from '../../public/js/screens/inventory/ItemCard'
+import { ItemRow } from '../../public/js/screens/inventory/ItemRow'
+import { AlbumCascade } from '../../public/js/ui/AlbumCascade.tsx'
+import { PickerCard } from '../../public/js/ui/albumPicker/PickerParts'
+import { appFiles, importsOf, read } from '../architecture/support/sourceImports.js'
 
 const GOOD = 'https://covers.example/album/300x300.jpg'
+/** A cover as the React piece draws it, in a box that is not in the page (the tests put it where they need it). */
+const coverImage = (props) => {
+    const host = document.createElement('div')
+    act(() => { createRoot(host).render(createElement(CoverImage, props)) })
+    return host.firstElementChild
+}
 const fail = (img) => img.dispatchEvent(new Event('error'))
 const isStandIn = (img) => img.getAttribute('src') === COVER_STAND_IN && img.dataset.coverStandIn === 'true'
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
@@ -41,7 +49,7 @@ const pickerCard = async (album) => {
     return host.firstElementChild
 }
 
-describe('coverImage: the one way an album cover is drawn', () => {
+describe('CoverImage: the one way an album cover is drawn', () => {
     beforeEach(() => { document.body.innerHTML = '' })
 
     it('with an address: the image of that address, marked as a cover, with what the caller asked', () => {
@@ -209,7 +217,7 @@ describe('every place that draws an album cover uses it', () => {
         expect(coversIn(await drawCascade([]))).toHaveLength(0)
     })
 
-    it('the files that draw an album cover import the helper, and no file writes an inline error handler', () => {
+    it('the files that draw an album cover import the piece, and no file writes an inline error handler', () => {
         const drawers = [
             'screens/albums/AlbumCard.tsx', 'screens/inventory/ItemCard.tsx', 'screens/inventory/ItemRow.tsx', 'screens/inventory/phone/PhoneRow.tsx', 'ui/AlbumCascade.tsx',
             'ui/albumWindow/AlbumWindow.tsx', 'ui/albumPicker/PickerParts.tsx'

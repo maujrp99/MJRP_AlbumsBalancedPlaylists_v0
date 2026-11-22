@@ -13,6 +13,7 @@ import { albumSearchService } from '../../services/album-search/AlbumSearchServi
 import { AlbumPickerPanel } from '../../ui/albumPicker/AlbumPickerPanel'
 import { Icon } from '../../ui/Icon'
 import { ModalShell } from '../../ui/ModalShell'
+import toast from '../../stores/toasts.js'
 import { PROBLEM_TEXT, type AlbumQuery, type SeriesEditSession } from './seriesEditSession'
 
 const WINDOW_ID = 'edit-series-modal'
@@ -75,7 +76,7 @@ export function SeriesEditWindow({ session }: { session: SeriesEditSession }) {
                     <span className="badge badge-neutral text-xs" data-series-count="true">{t('albums.edit.count', { count: session.albumQueries.length })}</span>
                 </div>
                 <Albums session={session} />
-                <AlbumPickerPanel service={albumSearchService} onPick={(album) => session.addAlbum(album)} />
+                <AlbumPickerPanel service={albumSearchService} onPick={(album) => session.addAlbum(album)} warn={(text) => toast.warning(text)} />
                 <p className={`text-sm text-red-400 mt-3${message ? '' : ' hidden'}`} role="alert">{message}</p>
             </div>
         </ModalShell>

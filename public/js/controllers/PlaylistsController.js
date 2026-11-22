@@ -7,7 +7,7 @@ import { blendingController } from './BlendingController.js'
 import { albumAsks } from '../services/albums/albumLoading.js'
 import { askNotices, noAlbumsMessage } from '../models/albumAsk.js'
 import { ENRICHMENT_SOURCES } from '../models/albumLoadState.js'
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 
 /**
  * PlaylistsController

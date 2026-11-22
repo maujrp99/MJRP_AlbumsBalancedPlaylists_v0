@@ -5,7 +5,7 @@
  */
 import { useState } from 'react'
 import { useSheetWindow } from '../ui/SheetWindow'
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 import { t } from '../i18n/t.js'
 import { useShell } from './context'
 

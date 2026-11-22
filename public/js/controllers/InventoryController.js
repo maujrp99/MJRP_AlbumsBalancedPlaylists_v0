@@ -20,7 +20,7 @@ import { inventoryService, readSeriesOfThePerson } from '../services/inventory/i
 import { inventoryValues } from '../services/inventory/inventoryValueWiring.js'
 import { InventoryValues } from './InventoryValues.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 import { filterInventory, statusCountsFor } from '../models/inventoryFilter.js'
 import { ALL_STATUSES, InventoryStatus, ownedValueOf, statusOf } from '../models/inventoryStatus.js'
 import { filterUseOf } from '../models/filterUse.js'

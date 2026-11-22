@@ -11,19 +11,19 @@ vi.mock('../../public/js/cache/CacheManager.js', () => {
     const cacheManager = { get: async () => null, set: async () => { }, invalidate: async () => { } }
     return { cacheManager, CacheManager: class { } }
 })
-vi.mock('../../public/js/components/GlobalProgress.js', () => ({ globalProgress: { start: vi.fn(), finish: vi.fn() } }))
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../public/js/stores/progress.js', () => ({ globalProgress: { start: vi.fn(), finish: vi.fn() } }))
+vi.mock('../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
 const dialog = vi.hoisted(() => ({ confirm: vi.fn() }))
-vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService: dialog }))
+vi.mock('../../public/js/ui/dialogs/dialogs', () => ({ dialogService: dialog }))
 
 import { fake } from '../helpers/fakeFirestore.js'
 import { SeriesService } from '../../public/js/services/SeriesService.js'
 import { deleteSeriesAfterAsking } from '../../public/js/screens/albums/seriesDelete'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
-import { toast } from '../../public/js/components/Toast.js'
+import { toast } from '../../public/js/stores/toasts.js'
 
 const SERIES_PATH = 'artifacts/mjrp-albums/users/u1/curator/data/series'
 const playlistsOf = (seriesId) => `${SERIES_PATH}/${seriesId}/playlists`

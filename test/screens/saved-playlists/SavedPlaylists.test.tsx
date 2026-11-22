@@ -12,7 +12,7 @@ import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vite
 
 vi.mock('../../../public/js/services/playlists/savedPlaylistsReading.js', () => ({ savedPlaylistsReader: {}, savedPlaylistsStore: {} }))
 const dialog = vi.hoisted(() => ({ confirm: vi.fn() }))
-vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService: dialog }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', () => ({ dialogService: dialog }))
 const usage = vi.hoisted(() => ({ track: vi.fn() }))
 vi.mock('../../../public/js/services/usage/track.js', () => usage)
 

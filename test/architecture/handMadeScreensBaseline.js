@@ -1,4 +1,13 @@
 /**
+ * (2026-11-22, wave 8b: the window, question, notice and loading-bar engines went, and these left the list in the commit that deleted or moved them: components/Toast.js (154) and
+ * components/GlobalProgress.js (80), now stores/toasts.js and stores/progress.js (what the controllers and services call, no React) drawn by shell/Toasts.tsx and
+ * shell/GlobalProgress.tsx; components/ui/BaseModal.js (178), modals/ConfirmModal.js (67), modals/InputModal.js (113) and services/DialogService.js (147), now ui/ModalShell.tsx,
+ * ui/dialogs/ConfirmWindow.tsx, InputWindow.tsx and dialogs.ts; components/ui/windowsHoldThePage.js (58), now shell/windowsHoldThePage.ts; components/ui/coverImage.js (67), now
+ * ui/coverStandIn.ts (the stand-in and the listener; ui/CoverImage.tsx draws the image); and components/navigation/{signInFromLink,startRoute}.js (30 + 62), moved to utils/ (plain
+ * functions, no drawing). Left in the list, with their reasons: components/ui/Sheet.js (the phone's sheet engine: wave 8c), utils/SafeDOM.js, components/Icons.js and
+ * views/BaseView.js (they go with their last users: wave 8d) and utils/pageScrollLock.js, which stays for good: it holds the page by writing the style of the body, a page utility
+ * with no React equivalent that the sheet and the shell both use; the final rule will list it among the exceptions, with that reason.)
+ *
  * (2026-11-22, wave 7b: the Blend screen went to React, and these left the list in the commit that deleted them: views/BlendingMenuView.js (477), components/blend/BlendSeriesSelector.js (340),
  * BlendSeriesPhonePicker.js (141), BlendRecipeCard.js (174), BlendIngredientsPanel.js (428) and components/common/AlbumCascade.js (71): now screens/blend/ on ui/recipe/ and ui/AlbumCascade.tsx,
  * with the reading of the covers in models/seriesCovers.js. views/BaseView.js stays in the list: it is the title of the tab, until wave 8.)
@@ -78,18 +87,8 @@
  * and AuthService (a class on the body).
  */
 export const HAND_MADE = {
-    'components/GlobalProgress.js': 80,
     'components/Icons.js': 178,
-    'components/Toast.js': 154,
-    'components/navigation/signInFromLink.js': 30,
-    'components/navigation/startRoute.js': 62,
-    'components/ui/BaseModal.js': 178,
     'components/ui/Sheet.js': 173,
-    'components/ui/coverImage.js': 67,
-    'components/ui/modals/ConfirmModal.js': 67,
-    'components/ui/modals/InputModal.js': 113,
-    'components/ui/windowsHoldThePage.js': 58,
-    'services/DialogService.js': 147,
     'utils/SafeDOM.js': 237,
     'utils/pageScrollLock.js': 56,
     'views/BaseView.js': 144

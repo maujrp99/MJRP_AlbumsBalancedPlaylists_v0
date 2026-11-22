@@ -430,13 +430,13 @@ export const SCENARIOS = [
     },
     {
         name: 'the computer: nothing of the shell of the phone', url: '/albums', user: user(), run: async (h) => {
-            h.note('the body', [...document.body.children].map(c => c.id || c.className || c.tagName).join(' | '))
+            h.note('the body', [...document.body.children].filter(c => c.id !== 'globalProgress').map(c => c.id || c.className || c.tagName).join(' | '))
         }
     },
     {
         name: 'the phone: nobody signed in', url: '/albums', phone: true, user: null, run: async (h) => {
             h.snap('the bars')
-            h.note('the body', [...document.body.children].map(c => c.id || c.className || c.tagName).join(' | '))
+            h.note('the body', [...document.body.children].filter(c => c.id !== 'globalProgress').map(c => c.id || c.className || c.tagName).join(' | '))
         }
     },
     {
@@ -511,7 +511,7 @@ export const SCENARIOS = [
     {
         name: 'the phone: turned into a computer and back', url: '/albums', phone: true, user: user(), run: async (h) => {
             await h.turn(false)
-            h.note('on a computer: the body', [...document.body.children].map(c => c.id || c.className || c.tagName).join(' | '))
+            h.note('on a computer: the body', [...document.body.children].filter(c => c.id !== 'globalProgress').map(c => c.id || c.className || c.tagName).join(' | '))
             await h.turn(true)
             h.snap('on a phone again', '#phone-topbar, #phone-tabbar')
         }

@@ -4,7 +4,7 @@
  * a shared link does not open it again).
  */
 import { describe, it, expect, vi } from 'vitest'
-import { signInAsked, addressWithoutSignIn, openSignInWhenAsked } from '../../../public/js/components/navigation/signInFromLink.js'
+import { signInAsked, addressWithoutSignIn, openSignInWhenAsked } from '../../public/js/utils/signInFromLink.js'
 
 const at = (pathname, search = '', hash = '') => ({ pathname, search, hash })
 

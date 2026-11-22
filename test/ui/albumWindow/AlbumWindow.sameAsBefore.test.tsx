@@ -15,12 +15,13 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 
 vi.mock('../../../public/js/services/inventory/inventoryWiring.js', async () => (await import('../../support/albumWindowStandIns.js')).wiringModule)
-vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/albumWindowStandIns.js')).toastModule)
+vi.mock('../../../public/js/stores/toasts.js', async () => (await import('../../support/albumWindowStandIns.js')).toastModule)
 
 import { act } from 'react'
 import { openAlbumWindow } from '../../../public/js/ui/albumWindow/openAlbumWindow'
 import { openInventoryEdit, openInventoryView } from '../../../public/js/ui/inventoryItem/inventoryWindows'
 import { openAddWindow } from '../../../public/js/ui/inventoryItem/AddWindow'
+import toast from '../../../public/js/stores/toasts.js'
 import { inventoryService } from '../../support/albumWindowStandIns.js'
 import { closeAllWindows } from '../../../public/js/ui/windowLayer'
 import { registerTexts } from '../../../public/js/i18n/t.js'
@@ -41,8 +42,8 @@ export async function play(scenario: Scenario): Promise<Record<string, string | 
     const phone = prepare(scenario)
     const open = {
         view: (input: Record<string, unknown>, options: Record<string, any>) => (options.value ? openInventoryView(input, options as never) : openAlbumWindow(input, options)),
-        edit: (item: Record<string, unknown>, onSave: (id: string, updates: object) => Promise<void>) => openInventoryEdit(item, onSave),
-        add: async (album: Record<string, unknown>, onSuccess?: () => void) => openAddWindow(album, { add: (added, format, options) => inventoryService.addAlbum(added, format, options), onSuccess })
+        edit: (item: Record<string, unknown>, onSave: (id: string, updates: object) => Promise<void>) => openInventoryEdit(item, onSave, toast),
+        add: async (album: Record<string, unknown>, onSuccess?: () => void) => openAddWindow(album, { notify: toast, add: (added, format, options) => inventoryService.addAlbum(added, format, options), onSuccess })
     }
     const snaps: Record<string, string | null> = {}
     const h = harness({ open, act: (work: () => Promise<void>) => act(work), phone, snaps })

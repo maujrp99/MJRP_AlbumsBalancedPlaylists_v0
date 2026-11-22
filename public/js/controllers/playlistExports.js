@@ -5,7 +5,7 @@
  * Part of Sprint 10 refactoring (PlaylistsView modularization)
  */
 
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { getIcon } from '../components/Icons.js'

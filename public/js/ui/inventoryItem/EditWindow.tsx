@@ -6,9 +6,9 @@
  * none, no Escape and no backdrop, no focus.
  */
 import { useState } from 'react'
-import { toast } from '../../components/Toast.js'
 import { t } from '../../i18n/t.js'
 import { ModalShell } from '../ModalShell'
+import type { Notify } from '../notify'
 import { ItemForm, type ItemDraft } from './ItemForm'
 import type { ItemLike } from './types'
 
@@ -18,10 +18,12 @@ export interface EditWindowProps {
     item: Item
     /** Called with the id of the item and what changed when the person saves; it may refuse (throw). */
     onSave: (id: string, updates: object) => Promise<void> | void
+    /** The site's notices: a piece of ui/ holds no store. */
+    notify: Notify
     close: () => void
 }
 
-export function EditWindow({ item, onSave, close }: EditWindowProps) {
+export function EditWindow({ item, onSave, notify, close }: EditWindowProps) {
     // an item as an album («album» inside), or an item with its album's fields in it
     const album: Item = item.album || item
     const inventoryId = (item.id || album.id) as string
@@ -43,10 +45,10 @@ export function EditWindow({ item, onSave, close }: EditWindowProps) {
         try {
             await onSave(inventoryId, updates)
             close()
-            toast.success(t('inventory.edit.updated'))
+            notify.success(t('inventory.edit.updated'))
         } catch (err) {
             console.error('Update failed', err)
-            toast.error(t('inventory.edit.failed', { reason: (err as Error).message || t('inventory.edit.unknown') }))
+            notify.error(t('inventory.edit.failed', { reason: (err as Error).message || t('inventory.edit.unknown') }))
         }
     }
 

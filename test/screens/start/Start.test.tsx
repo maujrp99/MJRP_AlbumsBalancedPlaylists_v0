@@ -15,7 +15,7 @@ const series = vi.hoisted(() => ({ createSeries: vi.fn() }))
 
 vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', () => ({ albumSearchService: service }))
 vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn(() => series) }))
-vi.mock('../../../public/js/components/Toast.js', () => ({ default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() } }))
+vi.mock('../../../public/js/stores/toasts.js', () => ({ default: { warning: vi.fn(), error: vi.fn(), success: vi.fn(), info: vi.fn() } }))
 
 import { act } from 'react'
 import { Start } from '../../../public/js/screens/start/Start'

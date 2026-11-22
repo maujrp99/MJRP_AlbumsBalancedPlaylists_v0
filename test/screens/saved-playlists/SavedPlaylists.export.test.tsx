@@ -8,7 +8,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest'
 
 vi.mock('../../../public/js/services/playlists/savedPlaylistsReading.js', () => ({ savedPlaylistsReader: {}, savedPlaylistsStore: {} }))
-vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService: { confirm: vi.fn(() => Promise.resolve(false)) } }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', () => ({ dialogService: { confirm: vi.fn(() => Promise.resolve(false)) } }))
 const exportWindow = vi.hoisted(() => ({ open: vi.fn() }))
 vi.mock('../../../public/js/ui/PlaylistExportWindow', () => ({ usePlaylistExport: () => ({ open: exportWindow.open, layer: null }) }))
 

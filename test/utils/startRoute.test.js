@@ -6,7 +6,7 @@
  */
 import { describe, it, expect, vi } from 'vitest'
 
-import { START_PATH, HOME_PATH, leaveToHome, LEFT_KEY, LEFT_WINDOW_MS } from '../../../public/js/components/navigation/startRoute.js'
+import { START_PATH, HOME_PATH, leaveToHome, LEFT_KEY, LEFT_WINDOW_MS } from '../../public/js/utils/startRoute.js'
 import { readFileSync } from 'node:fs'
 
 describe('the addresses', () => {

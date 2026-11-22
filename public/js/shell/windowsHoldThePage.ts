@@ -7,7 +7,8 @@
  * on it, the page is held; when the last one leaves, the page is given back where it was.
  * The Sheet holds the page by itself and is not watched here.
  */
-import { lockPageScroll, pageScrollLocks, releasePageScroll, unlockPageScroll } from '../../utils/pageScrollLock.js'
+import { useEffect, useRef } from 'react'
+import { lockPageScroll, pageScrollLocks, releasePageScroll, unlockPageScroll } from '../utils/pageScrollLock.js'
 
 /** The windows of the app, as their outer element is written. All are put directly in the body. */
 export const APP_WINDOWS = '.modal-overlay:not(.hidden), .app-modal, .rank-window, #spotify-export-modal'
@@ -16,30 +17,28 @@ export const APP_WINDOWS = '.modal-overlay:not(.hidden), .app-modal, .rank-windo
 const OPEN_SHEET = '.sheet:not(.sheet--closing)'
 
 /** Whether anything on the page holds it: a window of the app, or a sheet that is open. */
-export function somethingHoldsThePage(win = window) {
-    return [...win.document.body.children].some(child => child.matches(APP_WINDOWS) || child.matches(OPEN_SHEET))
+export function somethingHoldsThePage(win: Window = window): boolean {
+    return Array.from(win.document.body.children).some(child => child.matches(APP_WINDOWS) || child.matches(OPEN_SHEET))
 }
 
 /**
  * The page held with nothing open on it is given back (F76, recheck N22: the page once stayed
  * frozen, the body pinned and no sheet in sight). Run when the body's children change and when
  * the screen changes.
- * @param {Window} [win]
  */
-export function giveBackAStrayHold(win = window) {
+export function giveBackAStrayHold(win: Window = window): void {
     const pinned = win.document.body.dataset.scrollLocked === 'true'
     if ((pinned || pageScrollLocks() > 0) && !somethingHoldsThePage(win)) releasePageScroll(win)
 }
 
 /**
- * @param {Window} [win]
- * @returns {Function} stops watching, and gives the page back if it was held
+ * @returns what stops the watching, and gives the page back if it was held
  */
-export function holdPageBehindWindows(win = window) {
+export function holdPageBehindWindows(win: Window = window): () => void {
     const body = win.document.body
     let held = false
     const check = () => {
-        const open = [...body.children].some(child => child.matches(APP_WINDOWS))
+        const open = Array.from(body.children).some(child => child.matches(APP_WINDOWS))
         if (open !== held) {
             held = open
             if (open) lockPageScroll(win)
@@ -47,7 +46,7 @@ export function holdPageBehindWindows(win = window) {
         }
         if (!open) giveBackAStrayHold(win)
     }
-    const observer = new win.MutationObserver(check)
+    const observer = new (win as Window & typeof globalThis).MutationObserver(check)
     observer.observe(body, { childList: true })
     check()
     return () => {
@@ -55,4 +54,19 @@ export function holdPageBehindWindows(win = window) {
         if (held) unlockPageScroll(win)
         held = false
     }
+}
+
+/**
+ * The page behind a window of the app does not scroll while one is on it; a hold left with nothing open never outlives its screen (recheck N22).
+ * The shell of the phone calls it (it was a function of PhoneShell, and the watching a plain module in components/ui before wave 8b).
+ * @param ticks - a number that changes at each navigation: the stray hold is given back then
+ */
+export function usePageHold(ticks: number): void {
+    useEffect(() => holdPageBehindWindows(window), [])
+    const seen = useRef(ticks)
+    useEffect(() => {
+        if (seen.current === ticks) return
+        seen.current = ticks
+        giveBackAStrayHold(window)
+    }, [ticks])
 }

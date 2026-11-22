@@ -3,7 +3,7 @@
  * off the screen and whoever asked kept waiting for ever (the action hung, with its button busy).
  */
 import { describe, it, expect, afterEach } from 'vitest'
-import { dialogService } from '../../public/js/services/DialogService.js'
+import { dialogService } from '../../public/js/ui/dialogs/dialogs'
 
 const escape = () => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
 const settled = (promise) => Promise.race([promise, new Promise(resolve => setTimeout(() => resolve('STILL WAITING'), 20))])

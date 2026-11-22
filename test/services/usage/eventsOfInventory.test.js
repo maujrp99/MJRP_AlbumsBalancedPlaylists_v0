@@ -17,7 +17,7 @@ vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', () => (
     inventoryValues: new Proxy({}, { get: (_, name) => holder.values[name] })
 }))
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/stores/toasts.js', () => ({ default: toast, toast }))
 
 import { recordUsage, stopRecording } from '../../helpers/usageRecorder.js'
 import { InventoryController } from '../../../public/js/controllers/InventoryController.js'

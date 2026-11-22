@@ -10,13 +10,17 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
 const flush = async () => { for (let i = 0; i < 6; i++) await Promise.resolve() }
 
-/** Plays a scenario with a fresh engine and gives what it wrote down. `change` alters each page (to prove the check sees it). */
+/**
+ * Plays a scenario with a fresh engine and gives what it wrote down. `change` alters each page (to prove the check sees it).
+ * @returns {Promise<Record<string, string | null>>}
+ */
 export async function play(scenario, makeEngine, change = (page) => page) {
     document.body.innerHTML = ''
     document.body.removeAttribute('style')
     delete window.__xss
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'requestAnimationFrame', 'cancelAnimationFrame'] })
     const engine = await makeEngine()
+    /** @type {Record<string, string | null>} */
     const snaps = {}
     const quiet = vi.spyOn(console, 'error').mockImplementation(() => { })
     const w = {
@@ -36,8 +40,9 @@ export async function play(scenario, makeEngine, change = (page) => page) {
             promise.then((value) => { tracked.state = `answered ${JSON.stringify(value === undefined ? 'undefined' : value)}` })
             return tracked
         },
-        snap: (label) => { snaps[label] = change(pageOf(document.body)) },
-        snapBar: (label) => { snaps[label] = change(pageOf(document.getElementById('globalProgress'))) },
+        // a React engine draws in the microtask after the call, before any paint: the picture is taken after it
+        snap: async (label) => { act(() => { }); await flush(); snaps[label] = change(pageOf(document.body)) },
+        snapBar: async (label) => { act(() => { }); await flush(); snaps[label] = change(pageOf(document.getElementById('globalProgress'))) },
         note: (label, value) => { snaps[label] = JSON.stringify(value) }
     }
     try {

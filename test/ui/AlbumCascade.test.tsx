@@ -1,6 +1,6 @@
 /**
  * F83 wave 1 (REQ-05), kept by wave 7b: the cascade of covers and the cover image of ui/ draw what the hand-made pieces drew (components/common/AlbumCascade.js,
- * components/ui/coverImage.js). The hand-made cascade left with the Blend screen (wave 7b); the picture it drew for none, one, two, three and four covers,
+ * components/ui/coverImage.js, which left in wave 8b). The hand-made cascade left with the Blend screen (wave 7b); the picture it drew for none, one, two, three and four covers,
  * with and without an address, was kept in test/fixtures/albumCascadeBeforeF83.json (reports/evidence/F83/wave-7b/capture-cascade-before.test.tsx) and the
  * React one draws the same elements, classes, attributes and styles.
  */
@@ -10,7 +10,7 @@ import { createRoot } from 'react-dom/client'
 import { AlbumCascade } from '../../public/js/ui/AlbumCascade'
 import { CoverImage } from '../../public/js/ui/CoverImage'
 import before from '../fixtures/albumCascadeBeforeF83.json'
-import { coverImage, COVER_STAND_IN } from '../../public/js/components/ui/coverImage.js'
+import { COVER_STAND_IN } from '../../public/js/ui/coverStandIn'
 import { normalize } from '../support/savedPlaylistsScenarios.js'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
@@ -45,9 +45,6 @@ describe('AlbumCascade', () => {
         broken.dispatchEvent(new Event('error')) // an error does not bubble; the old module hears it on the way down
         expect(broken.getAttribute('src')).toBe(COVER_STAND_IN)
         expect(broken.dataset.coverStandIn).toBe('true')
-
-        const handMade = coverImage({ src: null, alt: 'x' })
-        expect(handMade.getAttribute('src')).toBe(img.getAttribute('src'))
     })
 
     it('a cover whose address changes is a new image, not one that already shows the stand-in', async () => {

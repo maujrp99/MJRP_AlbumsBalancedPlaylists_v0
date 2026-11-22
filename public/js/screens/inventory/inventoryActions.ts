@@ -4,13 +4,14 @@
  * Each window is asked for by `import()` when pressed, as the hand-made screen did: none is in the first download of the screen.
  */
 import { t } from '../../i18n/t.js'
-import { dialogService } from '../../services/DialogService.js'
+import { dialogService, type ConfirmOptions } from '../../ui/dialogs/dialogs'
+import toast from '../../stores/toasts.js'
 import type { InventoryBridge } from './InventoryBridge'
 import type { InventoryController, InventoryItem } from './types'
 
 const find = (controller: InventoryController, albumId: string): InventoryItem | null => controller.state.albums.find(item => item.id === albumId) ?? null
 
-const confirmWith = { confirm: (options: object) => dialogService.confirm(options) as Promise<boolean> }
+const confirmWith = { confirm: (options: object) => dialogService.confirm(options as ConfirmOptions) }
 
 export async function addSeriesAlbums(controller: InventoryController): Promise<void> {
     await controller.handleAddSeriesAlbums(confirmWith)
@@ -36,7 +37,7 @@ export async function editItem(controller: InventoryController, albumId: string)
     const album = find(controller, albumId)
     if (!album) return
     const { openInventoryEdit } = await import('../../ui/inventoryItem/inventoryWindows')
-    await openInventoryEdit(album, async (id: string, updates: object) => { await controller.handleUpdateAlbum(id, updates) })
+    await openInventoryEdit(album, async (id: string, updates: object) => { await controller.handleUpdateAlbum(id, updates) }, toast)
 }
 
 /** The window of the album: what the item keeps, the album of now from the album load, and the value section the controller answers for. */

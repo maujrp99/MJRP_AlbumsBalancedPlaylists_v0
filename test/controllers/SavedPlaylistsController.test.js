@@ -7,11 +7,11 @@ vi.mock('../../public/js/services/playlists/savedPlaylistsReading.js', () => ({
     savedPlaylistsReader: {},
     savedPlaylistsStore: {}
 }))
-vi.mock('../../public/js/components/Toast.js', () => ({
+vi.mock('../../public/js/stores/toasts.js', () => ({
     default: { success: vi.fn(), error: vi.fn() }
 }))
 
-import toast from '../../public/js/components/Toast.js'
+import toast from '../../public/js/stores/toasts.js'
 import { SavedPlaylistsController } from '../../public/js/controllers/SavedPlaylistsController.js'
 import { SavedPlaylistsStore } from '../../public/js/stores/savedPlaylists.js'
 import { ListStatus, SeriesPlaylistsStatus as Status } from '../../public/js/models/savedPlaylists.js'

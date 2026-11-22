@@ -24,7 +24,7 @@ vi.mock('../../public/js/controllers/playlistExports.js', async (importOriginal)
     const m = await import('../support/exportStandIns.js')
     return { ...original, handleExportJson: (playlists: Array<{ name: string }>, options?: { batchName?: string }) => m.stand.calls.push(['json', playlists.map(item => item.name), options?.batchName ?? null]) }
 })
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })

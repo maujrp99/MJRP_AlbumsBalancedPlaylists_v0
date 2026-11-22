@@ -8,8 +8,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 vi.mock('../public/js/services/auth/signIn.js', async () => ({ authService: (await import('./support/shellScenarios.js')).stand.login }))
 vi.mock('../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('./support/shellScenarios.js')).stand.musicKit }))
 vi.mock('../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('./support/shellScenarios.js')).stand.spotify }))
-vi.mock('../public/js/components/Toast.js', async () => ({ default: (await import('./support/shellScenarios.js')).stand.toast }))
-vi.mock('../public/js/services/DialogService.js', async () => ({ dialogService: (await import('./support/shellScenarios.js')).stand.dialog }))
+vi.mock('../public/js/stores/toasts.js', async () => ({ default: (await import('./support/shellScenarios.js')).stand.toast }))
+vi.mock('../public/js/ui/dialogs/dialogs', async () => ({ dialogService: (await import('./support/shellScenarios.js')).stand.dialog }))
 
 import { Router } from '../public/js/router.js'
 import { startOn } from './support/renderShell'

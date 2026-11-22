@@ -18,7 +18,7 @@ vi.mock('../../public/js/cache/CacheManager.js', () => {
 vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: vi.fn() }))
 vi.mock('../../public/js/controllers/BlendingController.js', () => ({ blendingController: { regenerate: vi.fn() } }))
 vi.mock('../../public/js/services/albums/albumLoading.js', () => ({ albumAsks: { albumsOf: vi.fn() } }))
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
@@ -28,7 +28,7 @@ import { PlaylistsController } from '../../public/js/controllers/PlaylistsContro
 import { getPlaylistsService } from '../../public/js/services/playlists/playlistsWiring.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
-import toast from '../../public/js/components/Toast.js'
+import toast from '../../public/js/stores/toasts.js'
 
 const SERIES_PATH = 'artifacts/mjrp-albums/users/u1/curator/data/series'
 const playlistsOf = (seriesId) => `${SERIES_PATH}/${seriesId}/playlists`

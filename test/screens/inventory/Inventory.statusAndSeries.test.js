@@ -15,8 +15,8 @@ vi.mock('../../../public/js/services/inventory/inventoryWiring.js', () => ({ inv
 // The values of the inventory (F75) are off in these tests: no Discogs, no rates
 vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async () => ({ inventoryValues: (await import('../../helpers/inventoryValuesStub.js')).valuesOff() }))
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', () => ({ optimizedAlbumLoader: { load: vi.fn(async () => { }) } }))
-vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
-vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService }))
+vi.mock('../../../public/js/stores/toasts.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', () => ({ dialogService }))
 
 import { openInventory, press, run, draw, undraw } from '../../support/inventoryHost'
 import { Grid } from '../../../public/js/screens/inventory/Grid'

@@ -9,7 +9,7 @@
  * The exports themselves (the Apple Music and the file) are playlistExports.js, moved as they were from views/playlists/PlaylistsExport.js.
  */
 
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistsStore } from '../stores/playlists.js'
 

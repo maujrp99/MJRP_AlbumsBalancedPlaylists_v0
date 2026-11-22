@@ -25,7 +25,7 @@ const RECORDING = process.env.RECORD_EXPORT === '1'
 const loadExports = () => import('../../../public/js/controllers/playlistExportEntries.js')
 
 const log = vi.hoisted(() => ({ events: [] }))
-vi.mock('../../../public/js/components/Toast.js', () => {
+vi.mock('../../../public/js/stores/toasts.js', () => {
     const say = (type) => (text, ms) => log.events.push(['toast', type, text, ms === undefined ? null : ms])
     const toast = { info: say('info'), success: say('success'), error: say('error'), warning: say('warning') }
     return { default: toast, toast }

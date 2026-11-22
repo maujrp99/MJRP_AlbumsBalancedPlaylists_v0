@@ -14,7 +14,7 @@ vi.mock('../../../public/js/services/SeriesService.js', () => ({ getSeriesServic
 vi.mock('../../../public/js/stores/albumSeries.js', () => ({
     albumSeriesStore: { getSeries: () => store.series, getDb: () => store.db, getUserId: () => 'user-1' }
 }))
-vi.mock('../../../public/js/components/Toast.js', () => ({ default: toast, toast }))
+vi.mock('../../../public/js/stores/toasts.js', () => ({ default: toast, toast }))
 
 import { act } from 'react'
 import { mountWindows, press, settle, type MountedWindows } from '../../support/albumWindowsHost'

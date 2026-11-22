@@ -6,7 +6,7 @@ import { authService } from '../services/auth/signIn.js'
 import { SpotifyAuthService } from '../services/SpotifyAuthService.js'
 import { track } from '../services/usage/track.js'
 import { reloadApp } from '../utils/reloadApp.js'
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 import { t } from '../i18n/t.js'
 
 export async function signOut(): Promise<void> {

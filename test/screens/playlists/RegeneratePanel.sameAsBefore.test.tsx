@@ -12,7 +12,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 
 vi.mock('../../../public/js/services/playlists/playlistsWiring.js', async () => (await import('../../support/playlistsScenarios.js')).wiring())
-vi.mock('../../../public/js/services/DialogService.js', async () => ({ dialogService: { confirm: vi.fn(async () => true) } }))
+vi.mock('../../../public/js/ui/dialogs/dialogs', async () => ({ dialogService: { confirm: vi.fn(async () => true) } }))
 vi.mock('../../../public/js/ui/SpotifyExportWindow.tsx', async () => ({ showSpotifyExportWindow: () => {} }))
 vi.mock('../../../public/js/controllers/playlistExports.js', async () => ({ seriesNameOf: (given?: string) => given || 'MJRP Playlists', handleExportJson: () => {}, handleExportToAppleMusic: () => {} }))
 vi.mock('../../../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('../../support/exportStandIns.js')).musicKitService }))

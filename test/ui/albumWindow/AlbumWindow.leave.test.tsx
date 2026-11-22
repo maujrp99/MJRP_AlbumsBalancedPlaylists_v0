@@ -8,8 +8,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 vi.mock('../../../public/js/services/inventory/inventoryWiring.js', async () => (await import('../../support/inventoryStandIns.js')).wiringModule)
 vi.mock('../../../public/js/services/inventory/inventoryValueWiring.js', async () => (await import('../../support/inventoryStandIns.js')).valuesModule)
 vi.mock('../../../public/js/services/OptimizedAlbumLoader.js', async () => (await import('../../support/inventoryStandIns.js')).loaderModule)
-vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/inventoryStandIns.js')).toastModule)
-vi.mock('../../../public/js/services/DialogService.js', async () => (await import('../../support/inventoryStandIns.js')).dialogModule)
+vi.mock('../../../public/js/stores/toasts.js', async () => (await import('../../support/inventoryStandIns.js')).toastModule)
+vi.mock('../../../public/js/ui/dialogs/dialogs', async () => (await import('../../support/inventoryStandIns.js')).dialogModule)
 
 import { act } from 'react'
 import { openAlbumWindow } from '../../../public/js/ui/albumWindow/openAlbumWindow'
@@ -17,6 +17,7 @@ import { openInventoryEdit } from '../../../public/js/ui/inventoryItem/inventory
 import { closeAllWindows } from '../../../public/js/ui/windowLayer'
 import { inventoryVisit } from '../../../public/js/screens/inventory/index'
 import { ITEMS } from '../../support/inventoryStandIns.js'
+import toast from '../../../public/js/stores/toasts.js'
 
 const windows = () => document.querySelectorAll('.modal-overlay, #inventory-edit-modal')
 
@@ -28,7 +29,7 @@ afterEach(async () => {
 describe('the windows when the screen is left', () => {
     it('closeAllWindows takes every window off the page, and the page is as it was', async () => {
         await act(async () => { await openAlbumWindow({ id: 'a', title: 'A', artist: 'B', tracks: [] }) })
-        await act(async () => { await openInventoryEdit({ id: 'inv', title: 'A', artist: 'B' }, async () => { }) })
+        await act(async () => { await openInventoryEdit({ id: 'inv', title: 'A', artist: 'B' }, async () => { }, toast) })
         expect(windows()).toHaveLength(2)
 
         await act(async () => { closeAllWindows() })
@@ -48,7 +49,7 @@ describe('the windows when the screen is left', () => {
     })
 
     it('a window closed by its own button is not closed again by the leave (nothing throws)', async () => {
-        await act(async () => { await openInventoryEdit({ id: 'inv', title: 'A', artist: 'B' }, async () => { }) })
+        await act(async () => { await openInventoryEdit({ id: 'inv', title: 'A', artist: 'B' }, async () => { }, toast) })
         await act(async () => { (document.querySelector('#inventory-edit-modal .btn-ghost') as HTMLElement).click() })
         expect(windows()).toHaveLength(0)
 

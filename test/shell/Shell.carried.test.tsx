@@ -12,8 +12,8 @@ import { inflateSync } from 'node:zlib'
 vi.mock('../../public/js/services/auth/signIn.js', async () => ({ authService: (await import('../support/shellScenarios.js')).stand.login }))
 vi.mock('../../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('../support/shellScenarios.js')).stand.musicKit }))
 vi.mock('../../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('../support/shellScenarios.js')).stand.spotify }))
-vi.mock('../../public/js/components/Toast.js', async () => ({ default: (await import('../support/shellScenarios.js')).stand.toast }))
-vi.mock('../../public/js/services/DialogService.js', async () => ({ dialogService: (await import('../support/shellScenarios.js')).stand.dialog }))
+vi.mock('../../public/js/stores/toasts.js', async (importOriginal) => ({ ...(await importOriginal<object>()), default: (await import('../support/shellScenarios.js')).stand.toast }))
+vi.mock('../../public/js/ui/dialogs/dialogs', async () => ({ dialogService: (await import('../support/shellScenarios.js')).stand.dialog }))
 vi.mock('../../public/js/services/usage/track.js', async () => ({ track: (await import('../support/shellScenarios.js')).stand.track }))
 vi.mock('../../public/js/utils/reloadApp.js', async () => ({ reloadApp: (await import('../support/shellScenarios.js')).stand.reloadApp }))
 
@@ -23,7 +23,7 @@ import { pageScrollLocks } from '../../public/js/utils/pageScrollLock.js'
 import { PHONE_TABS, currentTab, screenName } from '../../public/js/shell/phoneTabs'
 import { accountInitial } from '../../public/js/shell/accountNames'
 import { NAME_IN_THE_BAR } from '../../public/js/shell/barName'
-import { START_PATH, HOME_PATH } from '../../public/js/components/navigation/startRoute.js'
+import { START_PATH, HOME_PATH } from '../../public/js/utils/startRoute.js'
 import { albumsTrail } from '../../public/js/ui/Breadcrumb'
 import { startOn } from '../support/renderShell'
 import { world, scopedIdLookup, user } from '../support/shellScenarios.js'
@@ -415,7 +415,7 @@ describe('the shell of the phone', () => {
         expect(document.getElementById('phone-topbar')).toBeNull()
         expect(document.getElementById('phone-tabbar')).toBeNull()
         expect(document.querySelector('.phone-to-top')).toBeNull()
-        expect([...document.body.children].map(child => child.id)).toEqual(['header-container', 'app', 'footer-container'])
+        expect([...document.body.children].filter(child => child.id !== 'globalProgress').map(child => child.id)).toEqual(['header-container', 'app', 'footer-container'])
     })
 
     it('on the phone, shows the top bar with the name of the screen and the tab bar with the current tab', async () => {

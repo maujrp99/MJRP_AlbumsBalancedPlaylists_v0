@@ -50,10 +50,10 @@ export function findings(current, listed) {
 describe('the hand-made screens only shrink (F83)', () => {
     it('the list is the size of the site: the files of today, with their lines', () => {
         // 102 files and 17,277 lines when the migration began; the list shrinks with each wave, so this only says it was not emptied
-        // by accident (wave 1 took it to 93 files and 16,544 lines; wave 5a to 48 files and 9,262 lines; wave 5b to 40 files and 7,791 lines; wave 6a to 32 files and 5,858 lines; wave 6b to 24 files and 4,160 lines; wave 7b to 17 files and 2,347 lines; wave 8a to 15 files and 1,744 lines): lower the bounds when a wave brings the list under them.
-        expect(Object.keys(HAND_MADE).length).toBeGreaterThan(12)
-        expect(Object.values(HAND_MADE).reduce((sum, lines) => sum + lines, 0)).toBeGreaterThan(1500)
-        expect(Object.keys(HAND_MADE)).toEqual(expect.arrayContaining(['views/BaseView.js', 'utils/SafeDOM.js', 'services/DialogService.js', 'utils/pageScrollLock.js']))
+        // by accident (wave 1 took it to 93 files and 16,544 lines; wave 5a to 48 files and 9,262 lines; wave 5b to 40 files and 7,791 lines; wave 6a to 32 files and 5,858 lines; wave 6b to 24 files and 4,160 lines; wave 8b to 5 files and 788 lines; wave 7b to 17 files and 2,347 lines; wave 8a to 15 files and 1,744 lines): lower the bounds when a wave brings the list under them.
+        expect(Object.keys(HAND_MADE).length).toBeGreaterThan(3)
+        expect(Object.values(HAND_MADE).reduce((sum, lines) => sum + lines, 0)).toBeGreaterThan(500)
+        expect(Object.keys(HAND_MADE)).toEqual(expect.arrayContaining(['views/BaseView.js', 'utils/SafeDOM.js', 'components/ui/Sheet.js', 'utils/pageScrollLock.js']))
     })
 
     it('the code of today breaks nothing: no new file, none grown by more than 20 lines, none gone', () => {

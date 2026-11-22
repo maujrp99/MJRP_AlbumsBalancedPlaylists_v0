@@ -7,9 +7,9 @@
 import { t } from '../../i18n/t.js'
 import { albumsStore } from '../../stores/albums.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
-import { dialogService } from '../../services/DialogService.js'
+import { dialogService } from '../../ui/dialogs/dialogs'
 import { getSeriesService } from '../../services/SeriesService.js'
-import { toast } from '../../components/Toast.js'
+import { toast } from '../../stores/toasts.js'
 import type { AlbumSources } from '../../ui/albumWindow/sources'
 import type { RankRequest } from './RankWindow'
 import type { AlbumAction } from './AlbumCard'
@@ -97,7 +97,7 @@ export async function runAlbumAction(deps: ActionDeps, action: AlbumAction, albu
             break
         case 'add-to-inventory':
             // the window to add is asked for when pressed, and is given what writes the album into the inventory
-            ;(await import('../../ui/inventoryItem/AddWindow')).openAddWindow(album, { add: async (added, format, options) => (await import('../../services/inventory/inventoryWiring.js')).inventoryService.addAlbum(added, format, options) })
+            ;(await import('../../ui/inventoryItem/AddWindow')).openAddWindow(album, { notify: toast, add: async (added, format, options) => (await import('../../services/inventory/inventoryWiring.js')).inventoryService.addAlbum(added, format, options) })
             break
         case 'remove-album':
             await removeAlbum(deps, album, groupSeriesId)
