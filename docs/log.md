@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:55] step — F75: a terceira reconferência do juiz (passa: sem P0 e sem P1, 4 P2) entra no ramo, com quatro itens de melhoria no uat
+**Branch:** feat/f75-inventory-values-kept-in-the-database
+`main` (F90) juntada sem conflito. O relatório do juiz sobre a 765dd4a e suas capturas copiados como vieram, escritos pelo juiz, em `reports/audits/` e `reports/evidence/F75/values-kept/recheck-3/`. Os quatro P2 abriram UAT-277 a UAT-280 (melhorias, abertas pelo agente-juiz): as palavras «suggested»/«lowest» do cartão, o tipo da leitura no celular, o «CD · written by you» cortado em reais no extremo, e o desalinhamento dos vizinhos na galeria do celular (da F89).
+
 ## [2026-11-21 23:52] review — F90: a reconferência visual pré-merge do juiz independente, guardada
 **Branch:** feat/f90-export-from-the-saved-playlists-screen
 Relatório de `reports/audits/2026-11-21-mjrpalbumblender-v0-export-from-saved-playlists-visual-parity-recheck.md` (passou, 1 P1 e 7 P2, sobre o commit 6ff1581), escrito pelo juiz, com as capturas em `reports/evidence/F90/export-from-saved-playlists/recheck/`. Os achados foram corrigidos nos commits anteriores deste ramo.

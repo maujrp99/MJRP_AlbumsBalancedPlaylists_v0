@@ -1,0 +1,4658 @@
+{
+  "external": 0,
+  "errors": [],
+  "desk": {
+    "900-USD": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 609,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ $99,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 609,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ $8.50",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 1278,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ $99,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 1278,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ $12.00",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 1947,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ $99,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 1947,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      }
+    ],
+    "900-EUR": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 641,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ €90,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 641,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ €7.74",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 1310,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ €90,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 1310,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ €10.92",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 1979,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ €90,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 1979,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      }
+    ],
+    "900-GBP": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 641,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ £75,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 641,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ £6.46",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 1310,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ £75,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 1310,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ £9.12",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 1979,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ £75,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 1979,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      }
+    ],
+    "900-BRL": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 641,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ R$ 588,999.94",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 641,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ R$ 50.07",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 1310,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ R$ 588,999.94",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 1310,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ R$ 70.68",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 645,
+        "cardX": 24,
+        "cardY": 1979,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ R$ 588,999.94",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 645,
+        "cardX": 462,
+        "cardY": 1979,
+        "lineTops": [
+          486,
+          507,
+          543,
+          588,
+          608
+        ]
+      }
+    ],
+    "1280-USD": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 64,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ $99,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 358,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ $8.50",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 652,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ $99,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 946,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ $12.00",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 64,
+        "cardY": 1090,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ $99,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 358,
+        "cardY": 1090,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1280-EUR": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 64,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ €90,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 358,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ €7.74",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 652,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ €90,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 946,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ €10.92",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 64,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ €90,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 358,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1280-GBP": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 64,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ £75,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 358,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ £6.46",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 652,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ £75,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 946,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ £9.12",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 64,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ £75,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 358,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1280-BRL": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 64,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ R$ 588,999.94",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 358,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ R$ 50.07",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 652,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ R$ 588,999.94",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 946,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ R$ 70.68",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 64,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ R$ 588,999.94",
+        "title": "CD · written by you",
+        "clipped": [
+          {
+            "t": "CD · written by you",
+            "sw": 101,
+            "cw": 76,
+            "cls": "truncate"
+          }
+        ],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 358,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1440-USD": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 144,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ $99,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 438,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ $8.50",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 732,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ $99,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 1026,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ $12.00",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 144,
+        "cardY": 1090,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ $99,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 438,
+        "cardY": 1090,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1440-EUR": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 144,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ €90,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 438,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ €7.74",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 732,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ €90,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 1026,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ €10.92",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 144,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ €90,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 438,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1440-GBP": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 144,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ £75,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 438,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ £6.46",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 732,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ £75,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 1026,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ £9.12",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 144,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ £75,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 438,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1440-BRL": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 144,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ R$ 588,999.94",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 438,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ R$ 50.07",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 732,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ R$ 588,999.94",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 1026,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ R$ 70.68",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 144,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ R$ 588,999.94",
+        "title": "CD · written by you",
+        "clipped": [
+          {
+            "t": "CD · written by you",
+            "sw": 101,
+            "cw": 76,
+            "cls": "truncate"
+          }
+        ],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 438,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1920-USD": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 384,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ $99,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 678,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ $8.50",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 972,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ $99,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 1266,
+        "cardY": 565,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ $12.00",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 384,
+        "cardY": 1090,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ $99,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 678,
+        "cardY": 1090,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1920-EUR": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 384,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ €90,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 678,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ €7.74",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 972,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ €90,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 1266,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ €10.92",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 384,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ €90,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 678,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1920-GBP": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 384,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ £75,999.99",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 678,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ £6.46",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 972,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ £75,999.99",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 1266,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ £9.12",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 384,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ £75,999.99",
+        "title": "CD · written by you",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 678,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ],
+    "1920-BRL": [
+      {
+        "name": "In the Land of Grey and Pink",
+        "origin": "Waiting for a value",
+        "amount": "—",
+        "title": "Waiting for a value",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 384,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Hejira",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ R$ 588,999.94",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 678,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Birds of Fire",
+        "origin": "Discogs · 18 Nov / CD · lowest",
+        "amount": "≈ R$ 50.07",
+        "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 972,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Harvest",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ R$ 588,999.94",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 1266,
+        "cardY": 597,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "Animals",
+        "origin": "Discogs · 18 Nov / CD · suggested",
+        "amount": "≈ R$ 70.68",
+        "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+        "clipped": [],
+        "overlap": false,
+        "fontPx": "11px",
+        "contrast": 7.17,
+        "contrastKind": 7.17,
+        "cardH": 501,
+        "cardX": 384,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      },
+      {
+        "name": "OK Computer",
+        "origin": "CD · written by you",
+        "amount": "≈ R$ 588,999.94",
+        "title": "CD · written by you",
+        "clipped": [
+          {
+            "t": "CD · written by you",
+            "sw": 101,
+            "cw": 76,
+            "cls": "truncate"
+          }
+        ],
+        "overlap": false,
+        "fontPx": "12px",
+        "contrast": 7.17,
+        "contrastKind": null,
+        "cardH": 501,
+        "cardX": 678,
+        "cardY": 1122,
+        "lineTops": [
+          342,
+          363,
+          399,
+          444,
+          464
+        ]
+      }
+    ]
+  },
+  "deskNormal": [
+    {
+      "origin": "Discogs · 18 Nov / CD · suggested",
+      "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+      "h": 501
+    },
+    {
+      "origin": "Discogs · 18 Nov / CD · suggested",
+      "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+      "h": 501
+    },
+    {
+      "origin": "Discogs · 18 Nov / CD · lowest",
+      "title": "Lowest asking price for this CD edition on Discogs, read on 18 Nov 2026, 11:05.",
+      "h": 501
+    },
+    {
+      "origin": "Discogs · 18 Nov / CD · suggested",
+      "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+      "h": 501
+    },
+    {
+      "origin": "Discogs · 18 Nov / CD · suggested",
+      "title": "Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition, read on 18 Nov 2026, 11:05.",
+      "h": 501
+    },
+    {
+      "origin": "CD · written by you",
+      "title": "CD · written by you",
+      "h": 501
+    },
+    {
+      "origin": "No CD edition found",
+      "title": "No CD edition found",
+      "h": 501
+    }
+  ],
+  "window-a": "ESTIMATED VALUE | What this CD sells for on Discogs, by the condition of the disc. The value of the album is the mean of the three. | Mint | $15.00 | Near Mint | $12.00 | Very Good Plus | $9.00 | Mean of the three | $12.00 | Edition: Harvest 1984, Europe (CD), the most common CD edition on Discogs. See it on Discogs | Read on 18 Nov 2026, 11:05. Read again | Data provided by Discogs. | Write your own value | Save",
+  "window-c": "ESTIMATED VALUE | The lowest price this CD was listed at on Discogs when it was read. It is an asking price, not what the disc usually sells for. | Lowest price for sale on Discogs: | $12.93 | (37 for sale) | Edition: Harvest 1984, Europe (CD), the most common CD edition on Discogs. See it on Discogs | Read on 18 Nov 2026, 11:05. Read again | Data provided by Discogs. | Discogs gives a suggestion by the condition of the disc (Mint, Near Mint, Very Good Plus) only to accounts with seller settings filled in. | Write your own value | Save",
+  "singleRefused": [
+    "The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again."
+  ],
+  "run-ok-refused": {
+    "toasts": [
+      "Discogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.",
+      "Values read for 2 of 2 albums. 2 values could not be saved to your inventory. This browser keeps them for six hours; Update values tries to save them again."
+    ],
+    "writes": [],
+    "fShown": "discogs"
+  },
+  "run-invalid1": {
+    "toasts": [
+      "Discogs suggests prices only to accounts with seller settings filled in. Until then, the values here are the lowest price each CD is for sale at. Fill the settings in at discogs.com/settings/seller: the suggestions are tried again the next time values are read.",
+      "Values read for 2 of 2 albums. 1 value could not be saved to your inventory. This browser keeps it for six hours; Update values tries to save it again."
+    ],
+    "writes": [
+      "g"
+    ],
+    "fShown": "discogs"
+  },
+  "iphone14-grid-USD-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "CD · Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 381,
+        "w": 173,
+        "h": 348,
+        "barY": 304,
+        "valueY": 246
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 381,
+        "w": 173,
+        "h": 348,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ $8.50",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 749,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 749,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1097,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 1097,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      }
+    ],
+    "scrollX": 0,
+    "cols": 2
+  },
+  "iphone14-grid-USD-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 319,
+        "w": 173,
+        "h": 348,
+        "barY": 304,
+        "valueY": 246
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 319,
+        "w": 173,
+        "h": 348,
+        "barY": 304,
+        "valueY": 246
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $12.93",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 687,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 687,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $19.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1035,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $25.00",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 1035,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "CD · No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1383,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      }
+    ],
+    "scrollX": 0,
+    "cols": 2
+  },
+  "sheetHejira": "Hejira | Joni Mitchell · Not Owned | Open album | Edit | NOT MINE YET · COSTS | ≈ $12.93 | Lowest asking price for this CD edition on Discogs. | Read on 18 Nov 2026, 11:05. | This edition on Discogs ↗ | Data provided by Discogs. | WHERE TO BUY | Discogs ↗ | Amazon ↗ | iMusic ↗ | Each link opens the store on this album, on CD. The app earns nothing from these links today. | SELL OR TRADE | Sell | T",
+  "iphone14-grid-BRL-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "CD · Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 381,
+        "w": 173,
+        "h": 348,
+        "barY": 304,
+        "valueY": 246
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 381,
+        "w": 173,
+        "h": 348,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ R$ 50.07",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 749,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 749,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1097,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 1097,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      }
+    ],
+    "scrollX": 0,
+    "cols": 2
+  },
+  "iphone14-grid-BRL-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 319,
+        "w": 173,
+        "h": 348,
+        "barY": 304,
+        "valueY": 246
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 319,
+        "w": 173,
+        "h": 348,
+        "barY": 304,
+        "valueY": 246
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 76.16",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 687,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 687,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 111.91",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1035,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 147.25",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 201,
+        "y": 1035,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "CD · No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1383,
+        "w": 173,
+        "h": 328,
+        "barY": 284,
+        "valueY": 226
+      }
+    ],
+    "scrollX": 0,
+    "cols": 2
+  },
+  "iphone14-list-USD-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 373,
+        "w": 358,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $99,999.99",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 495,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ $8.50",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 597,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $99,999.99",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 699,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 801,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $99,999.99",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 903,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "iphone14-list-USD-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 311,
+        "w": 358,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 433,
+        "w": 358,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $12.93",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 555,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 657,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $19.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 759,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $25.00",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 861,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 963,
+        "w": 358,
+        "h": 116,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "iphone14-list-BRL-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 373,
+        "w": 358,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 495,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ R$ 50.07",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 597,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 699,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 801,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 903,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "iphone14-list-BRL-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 311,
+        "w": 358,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 433,
+        "w": 358,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 76.16",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 555,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 657,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 111.91",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 759,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 147.25",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 861,
+        "w": 358,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 963,
+        "w": 358,
+        "h": 116,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "iphoneSE-grid-USD-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "CD · Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 381,
+        "w": 138,
+        "h": 331,
+        "barY": 287,
+        "valueY": 211
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 381,
+        "w": 138,
+        "h": 331,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ $8.50",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 732,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 732,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1045,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 1045,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      }
+    ],
+    "scrollX": 0,
+    "cols": 2
+  },
+  "iphoneSE-grid-USD-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 319,
+        "w": 138,
+        "h": 313,
+        "barY": 269,
+        "valueY": 211
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 319,
+        "w": 138,
+        "h": 313,
+        "barY": 269,
+        "valueY": 211
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $12.93",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 652,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 652,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $19.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 965,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $25.00",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 965,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "CD · No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1278,
+        "w": 138,
+        "h": 311,
+        "barY": 267,
+        "valueY": 191
+      }
+    ],
+    "scrollX": 0,
+    "cols": 2
+  },
+  "iphoneSE-grid-BRL-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "CD · Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 381,
+        "w": 138,
+        "h": 331,
+        "barY": 287,
+        "valueY": 211
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 381,
+        "w": 138,
+        "h": 331,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ R$ 50.07",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 732,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 732,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1045,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 1045,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      }
+    ],
+    "scrollX": 0,
+    "cols": 2
+  },
+  "iphoneSE-grid-BRL-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 319,
+        "w": 138,
+        "h": 313,
+        "barY": 269,
+        "valueY": 211
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 319,
+        "w": 138,
+        "h": 313,
+        "barY": 269,
+        "valueY": 211
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 76.16",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 652,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 652,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 111.91",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 965,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 147.25",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 166,
+        "y": 965,
+        "w": 138,
+        "h": 293,
+        "barY": 249,
+        "valueY": 191
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "CD · No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1278,
+        "w": 138,
+        "h": 311,
+        "barY": 267,
+        "valueY": 191
+      }
+    ],
+    "scrollX": 0,
+    "cols": 2
+  },
+  "iphoneSE-list-USD-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "Waiting for a value",
+        "dateLines": null,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 373,
+        "w": 288,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $99,999.99",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 51,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 495,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ $8.50",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Mahavishnu Orchestra",
+            "sw": 145,
+            "cw": 105,
+            "cls": "inv-row__artist"
+          },
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 55,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 597,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $99,999.99",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 699,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 801,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $99,999.99",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 903,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "iphoneSE-list-USD-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 311,
+        "w": 288,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 433,
+        "w": 288,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $12.93",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 51,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 555,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 657,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $19.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 759,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $25.00",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 861,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "No CD edition found",
+        "dateLines": null,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 55,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 963,
+        "w": 288,
+        "h": 116,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "iphoneSE-list-BRL-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "Waiting for a value",
+        "dateLines": null,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 373,
+        "w": 288,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 51,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 495,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ R$ 50.07",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Mahavishnu Orchestra",
+            "sw": 145,
+            "cw": 105,
+            "cls": "inv-row__artist"
+          },
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 55,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 597,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 699,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 801,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 903,
+        "w": 288,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "iphoneSE-list-BRL-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 311,
+        "w": 288,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 433,
+        "w": 288,
+        "h": 122,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 76.16",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 51,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 555,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 657,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 111.91",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 759,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 147.25",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 63,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 861,
+        "w": 288,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "No CD edition found",
+        "dateLines": null,
+        "clipped": [
+          {
+            "t": "Avg Rating78.4\nAvg Pop42.6%\n",
+            "sw": 108,
+            "cw": 55,
+            "cls": "inv-row__scores"
+          }
+        ],
+        "overlaps": [],
+        "x": 16,
+        "y": 963,
+        "w": 288,
+        "h": 116,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "w820-grid-USD-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "CD · Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 381,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 283,
+        "y": 381,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ $8.50",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 549,
+        "y": 381,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 811,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 283,
+        "y": 811,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $99,999.99",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 549,
+        "y": 811,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      }
+    ],
+    "scrollX": 0,
+    "cols": 3
+  },
+  "w820-grid-USD-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 319,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 283,
+        "y": 319,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $12.93",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 549,
+        "y": 319,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $12.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 749,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $19.00",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 283,
+        "y": 749,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $25.00",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 549,
+        "y": 749,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "CD · No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1178,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      }
+    ],
+    "scrollX": 0,
+    "cols": 3
+  },
+  "w820-grid-BRL-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "CD · Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 381,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 283,
+        "y": 381,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ R$ 50.07",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 549,
+        "y": 381,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 811,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 283,
+        "y": 811,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 549,
+        "y": 811,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      }
+    ],
+    "scrollX": 0,
+    "cols": 3
+  },
+  "w820-grid-BRL-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 319,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 283,
+        "y": 319,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 76.16",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 549,
+        "y": 319,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 70.68",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 749,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 111.91",
+        "origin": "CD · Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 283,
+        "y": 749,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 147.25",
+        "origin": "CD · Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 549,
+        "y": 749,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "CD · No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 1178,
+        "w": 255,
+        "h": 410,
+        "barY": 366,
+        "valueY": 308
+      }
+    ],
+    "scrollX": 0,
+    "cols": 3
+  },
+  "w820-list-USD-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 373,
+        "w": 788,
+        "h": 116,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $99,999.99",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 489,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ $8.50",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 591,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $99,999.99",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 693,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 795,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $99,999.99",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 897,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "w820-list-USD-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 311,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 413,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ $12.93",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 515,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ $12.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 617,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ $19.00",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 719,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ $25.00",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 821,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 923,
+        "w": 788,
+        "h": 116,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "w820-list-BRL-long": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "—",
+        "origin": "Waiting for a value",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 373,
+        "w": 788,
+        "h": 116,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 489,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Birds of Fire",
+        "amount": "≈ R$ 50.07",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 591,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 693,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 795,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 588,999.94",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 897,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  },
+  "w820-list-BRL-allKept": {
+    "cells": [
+      {
+        "title": "In the Land of Grey and Pink",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 311,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Selling England by the Pound",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 413,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Hejira",
+        "amount": "≈ R$ 76.16",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 515,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Harvest",
+        "amount": "≈ R$ 70.68",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 617,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Animals",
+        "amount": "≈ R$ 111.91",
+        "origin": "Discogs · 18 Nov",
+        "dateLines": 1,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 719,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "OK Computer",
+        "amount": "≈ R$ 147.25",
+        "origin": "Yours",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 821,
+        "w": 788,
+        "h": 102,
+        "barY": null,
+        "valueY": null
+      },
+      {
+        "title": "Fragile",
+        "amount": "—",
+        "origin": "No CD edition found",
+        "dateLines": null,
+        "clipped": [],
+        "overlaps": [],
+        "x": 16,
+        "y": 923,
+        "w": 788,
+        "h": 116,
+        "barY": null,
+        "valueY": null
+      }
+    ],
+    "scrollX": 0,
+    "cols": 1
+  }
+}
