@@ -51,9 +51,7 @@ describe('the hand-made screens only shrink (F83)', () => {
     it('the list is the size of the site: the files of today, with their lines', () => {
         // 102 files and 17,277 lines when the migration began; the list shrinks with each wave, so this only says it was not emptied
         // by accident (wave 1 took it to 93 files and 16,544 lines; wave 5a to 48 files and 9,262 lines; wave 5b to 40 files and 7,791 lines; wave 6a to 32 files and 5,858 lines; wave 6b to 24 files and 4,160 lines; wave 8b to 5 files and 788 lines; wave 7b to 17 files and 2,347 lines; wave 8a to 15 files and 1,744 lines; wave 8c to 3 files and 378 lines; wave 8d to 2 files and 200 lines): lower the bounds when a wave brings the list under them.
-        expect(Object.keys(HAND_MADE).length).toBeGreaterThan(1)
-        expect(Object.values(HAND_MADE).reduce((sum, lines) => sum + lines, 0)).toBeGreaterThan(100)
-        expect(Object.keys(HAND_MADE)).toEqual(expect.arrayContaining(['views/BaseView.js', 'utils/pageScrollLock.js']))
+        expect(Object.keys(HAND_MADE)).toEqual(['utils/pageScrollLock.js'])
     })
 
     it('the code of today breaks nothing: no new file, none grown by more than 20 lines, none gone', () => {
@@ -67,13 +65,13 @@ describe('the hand-made screens only shrink (F83)', () => {
 
     it('a file that grew by more than 20 lines is accused, one that grew by 20 is not', () => {
         const base = currentFiles()
-        expect(findings({ ...base, 'views/BaseView.js': HAND_MADE['views/BaseView.js'] + 20 }, HAND_MADE)).toEqual([])
-        expect(findings({ ...base, 'views/BaseView.js': HAND_MADE['views/BaseView.js'] + 21 }, HAND_MADE)).toHaveLength(1)
+        expect(findings({ ...base, 'utils/pageScrollLock.js': HAND_MADE['utils/pageScrollLock.js'] + 20 }, HAND_MADE)).toEqual([])
+        expect(findings({ ...base, 'utils/pageScrollLock.js': HAND_MADE['utils/pageScrollLock.js'] + 21 }, HAND_MADE)).toHaveLength(1)
     })
 
     it('an entry whose file is gone is accused until it is taken out of the list', () => {
-        const { 'views/BaseView.js': _gone, ...rest } = currentFiles() // eslint-disable-line no-unused-vars
-        expect(findings(rest, HAND_MADE)).toEqual(['views/BaseView.js: gone (or moved): take it out of handMadeScreensBaseline.js'])
+        const { 'utils/pageScrollLock.js': _gone, ...rest } = currentFiles() // eslint-disable-line no-unused-vars
+        expect(findings(rest, HAND_MADE)).toEqual(['utils/pageScrollLock.js: gone (or moved): take it out of handMadeScreensBaseline.js'])
     })
 
     it('a new TypeScript file in views/ or components/ is accused too: React lives in screens/ and ui/', () => {

@@ -1,4 +1,7 @@
 /**
+ * (2026-11-22, wave 8d: views/BaseView.js (144) left the list in the commit that deleted it: the title of the tab is written by react-bridge/useScreenTitle.ts now, and views/ does not exist.
+ * Only utils/pageScrollLock.js is left, and it stays for good.)
+ *
  * (2026-11-22, wave 8d: components/Icons.js (the text form of the icons, 23 lines) left the list in the commit that deleted it: its last user, the dead `btn` branch of the
  * Apple Music export, went first (the sensor of dead modules found it), and the text form moved to test/support/iconMarkup.js as the yardstick of test/ui/Icon.test.tsx.)
  *
@@ -94,6 +97,5 @@
  * and AuthService (a class on the body).
  */
 export const HAND_MADE = {
-    'utils/pageScrollLock.js': 56,
-    'views/BaseView.js': 144
+    'utils/pageScrollLock.js': 56
 }

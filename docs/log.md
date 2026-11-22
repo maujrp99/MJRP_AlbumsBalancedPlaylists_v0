@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 19:27] step — F83 onda 8d, 3: BaseView.js sai (o título da aba mora no gancho da tela)
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **`views/BaseView.js` apagado** (a pasta `views/` deixa de existir). Só o `setTitle` era usado (por `react-bridge/useScreenTitle.ts`, que fazia `new BaseView().setTitle(tab)`); agora o gancho escreve `document.title` ele mesmo: é o lugar único do título da aba, onde a moldura em React já diz o nome da tela.
+- **O sensor primeiro:** `oneTabTitle` passou a aceitar só `react-bridge/useScreenTitle.ts` (vermelho antes da mudança); `viewLifecycle` troca «só sobrou o `BaseView.js`» por «`views/` não existe». O caso de `test/react/bridge/hooks.test.tsx` («sets the tab title through the one place for it») segue igual e verde.
+- A lista que só encolhe fica com um arquivo, `utils/pageScrollLock.js` (que fica de vez); a regra final (`noHandMadeScreens`) a substitui no commit da ponte.
+
 ## [2026-11-22 19:27] step — F83 onda 8d, 2: Icons.js sai (a régua de prova vai para os testes)
 
 **Branch:** claude/f83-wave-8d-closure
