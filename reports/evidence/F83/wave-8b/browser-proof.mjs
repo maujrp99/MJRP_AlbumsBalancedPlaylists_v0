@@ -122,9 +122,13 @@ const RECORDER = () => {
             for (const record of records) {
                 if (record.type === 'childList') {
                     for (const node of record.addedNodes) {
-                        if (isToast(node)) { log('toast+', textOf(node) + ' ' + toastState(node)); state.set(node, toastState(node)) }
+                        if (isToast(node)) { if (!state.has(node)) { log('toast+', textOf(node) + ' ' + toastState(node)); state.set(node, toastState(node)) } }
                         else if (isWindow(node)) log('window+', node.id || node.className.split(' ')[0])
-                        else if (node.nodeType === 1 && node.id === 'toast-container') log('toast-box+', '')
+                        else if (node.nodeType === 1 && node.id === 'toast-container') {
+                            log('toast-box+', '')
+                            // a box that comes with a notice already in it (the React one) is told as the box, then each notice in it, as the hand-made one told them
+                            node.querySelectorAll(':scope > *').forEach((toast) => { if (!state.has(toast)) { log('toast+', textOf(toast) + ' ' + toastState(toast)); state.set(toast, toastState(toast)) } })
+                        }
                         else if (node.nodeType === 1 && node.id === 'globalProgress') log('bar+', node.style.display || 'none')
                     }
                     for (const node of record.removedNodes) {
@@ -144,7 +148,7 @@ const RECORDER = () => {
         }).observe(document, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'style', 'data-scroll-locked'] })
     }
     if (document.documentElement) watch(); else document.addEventListener('DOMContentLoaded', watch)
-    document.addEventListener('focusin', (event) => { const e = event.target; log('focus', e && e.tagName ? `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''}` : '?') }, true)
+    document.addEventListener('focusin', (event) => { const e = event.target; const on = document.querySelector('.app-modal, .rank-window, #spotify-export-modal, .modal-overlay, .sheet') ? 'window on' : 'window off'; log('focus', `${e && e.tagName ? e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') : '?'} [${on}]`) }, true)
     for (const type of ['pointerdown', 'click', 'keydown']) document.addEventListener(type, () => window.__inputs.push(performance.now()), true)
     Date.prototype.toLocaleTimeString = () => '12:00:00 PM'
 }
@@ -247,15 +251,20 @@ const surfaces = {
     }
 }
 
+/** The pixels two pictures differ by: below the top bar (the page, the notices, the windows) and in it (the equalizer of the bar moves on its own: parent against parent differs in the same place). */
+const TOP_BAR = 80
 function pixelsApart(a, b) {
     const one = PNG.sync.read(a), two = PNG.sync.read(b)
-    if (one.width !== two.width || one.height !== two.height) return { apart: Infinity, delta: Infinity, box: `size ${one.width}x${one.height} against ${two.width}x${two.height}` }
-    let apart = 0, delta = 0, x0 = Infinity, y0 = Infinity, x1 = -1, y1 = -1
+    if (one.width !== two.width || one.height !== two.height) return { apart: Infinity, top: 0, delta: Infinity, box: `size ${one.width}x${one.height} against ${two.width}x${two.height}` }
+    let apart = 0, top = 0, delta = 0, x0 = Infinity, y0 = Infinity, x1 = -1, y1 = -1
     for (let i = 0; i < one.data.length; i += 4) {
         const d = Math.max(Math.abs(one.data[i] - two.data[i]), Math.abs(one.data[i + 1] - two.data[i + 1]), Math.abs(one.data[i + 2] - two.data[i + 2]))
-        if (d) { apart++; delta = Math.max(delta, d); const x = (i / 4) % one.width, y = Math.floor(i / 4 / one.width); x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y) }
+        if (!d) continue
+        const x = (i / 4) % one.width, y = Math.floor(i / 4 / one.width)
+        if (y < TOP_BAR) { top++; continue }
+        apart++; delta = Math.max(delta, d); x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y)
     }
-    return { apart, delta, box: apart ? `x ${x0}-${x1}, y ${y0}-${y1}` : '' }
+    return { apart, top, delta, box: apart ? `x ${x0}-${x1}, y ${y0}-${y1}` : '' }
 }
 
 const layersNow = (page) => page.evaluate(`(() => { const read = ${READ}; return [...document.querySelectorAll('${LAYERS}')].map(el => read(el)).join('\\n#####\\n') })()`)
@@ -294,6 +303,7 @@ function relative({ events, inputs }, begun) {
 async function step(label, sides, run, { wait = 1000, time = true, shoot = true, fromLoad = false } = {}) {
     const timelines = []
     for (const side of sides) {
+        if (side.opening) Object.assign(side, await side.opening())
         side.snaps = {}
         const begun = fromLoad ? 0 : await side.page.evaluate(() => performance.now())
         side.at = (ms) => side.page.waitForFunction(([ms, begun]) => performance.now() >= (window.__inputs.length ? window.__inputs[0] : begun) + ms, [ms, begun], { polling: 'raf', timeout: 30000 })
@@ -303,16 +313,29 @@ async function step(label, sides, run, { wait = 1000, time = true, shoot = true,
         await run(side.page, side, snap)
         await side.page.waitForTimeout(wait)
         await snap('end', { shot: shoot })
-        timelines.push(relative(await timelineNow(side.page), begun))
+        const raw = await timelineNow(side.page)
+        if (fromLoad) {
+            const first = raw.events.find(e => e.kind !== 'bar+')
+            side.firstEvent = first ? Math.round(first.t) : null
+            timelines.push(relative(raw, first ? first.t : 0))
+        } else timelines.push(relative(raw, begun))
     }
     const [a, b] = sides
-    const keep = (events) => events.filter(([, kind]) => time || kind !== 'focus')
-    const kinds = (events) => keep(events).map(([, kind, detail]) => `${kind} ${detail}`)
+    if (fromLoad) note(`${TAG} · ${label} · when the first notice came, from the start of the load (told, not compared: it is the time the blocked login took to fail)`, true, `${a.name} ${a.firstEvent} ms, ${b.name} ${b.firstEvent} ms`)
+    const keep = (events) => events.filter(([, kind]) => kind !== 'bar+' && (time || kind !== 'focus'))
+    // The page tells a removal one microtask after it happened (the observer's notice), and a focus at once: when a focus says «window off», the window had left before it,
+    // whichever of the two lines comes first. They are put in the order they happened in, the same way on both sides.
+    const inOrder = (events) => {
+        const out = [...events]
+        for (let i = 0; i + 1 < out.length; i++) if (out[i][1] === 'focus' && /\[window off\]$/.test(out[i][2]) && out[i + 1][1] === 'window-') { [out[i], out[i + 1]] = [out[i + 1], out[i]]; i = Math.max(-1, i - 2) }
+        return out
+    }
+    const kinds = (events) => inOrder(keep(events)).map(([, kind, detail]) => `${kind} ${detail}`)
     const [ka, kb] = [kinds(timelines[0]), kinds(timelines[1])]
     const same = JSON.stringify(ka) === JSON.stringify(kb)
     note(`${TAG} · ${label} · the timeline: what happened, in order`, same, same ? `${ka.length} events: ${ka.join(' → ').slice(0, 240)}` : `\n parent: ${ka.join(' → ')}\n mine:   ${kb.join(' → ')}`)
     if (same && ka.length) {
-        const [ta, tb] = [keep(timelines[0]), keep(timelines[1])]
+        const [ta, tb] = [inOrder(keep(timelines[0])), inOrder(keep(timelines[1]))]
         const deltas = ta.map(([t], i) => Math.abs(t - tb[i][0]))
         const worst = Math.max(...deltas)
         const at = deltas.indexOf(worst)
@@ -328,7 +351,7 @@ async function step(label, sides, run, { wait = 1000, time = true, shoot = true,
         note(`${TAG} · ${where} · the notices on screen (text)`, x.notices === y.notices, x.notices === y.notices ? x.notices.slice(0, 200) : `\n parent: ${x.notices}\n mine:   ${y.notices}`)
         if (x.shot && y.shot) {
             const diff = pixelsApart(x.shot, y.shot)
-            note(`${TAG} · ${where} · the picture of the page`, diff.apart === 0, diff.apart === 0 ? 'same pixels' : `${diff.apart} pixels apart, the most ${diff.delta}/255, in ${diff.box}`)
+            note(`${TAG} · ${where} · the picture of the page (below the top bar)`, diff.apart === 0, `${diff.apart === 0 ? 'same pixels' : `${diff.apart} pixels apart, the most ${diff.delta}/255, in ${diff.box}`}; in the top bar: ${diff.top}`)
             if (diff.apart) { const stem = `${TAG}-${label}-${name}`.replace(/\W+/g, '-').slice(0, 90); fs.writeFileSync(path.join(SHOTS, `${stem}-parent.png`), x.shot); fs.writeFileSync(path.join(SHOTS, `${stem}-mine.png`), y.shot) }
         }
     }
@@ -340,13 +363,12 @@ const SCENARIOS = {}
 
 SCENARIOS.load = async (mk) => {
     // the notice of the blocked login: it comes on its own some seconds after the load, and leaves after 4 s (the clock is the load's)
-    const sides = await mk('start', { keepLoginNotice: true })
+    const sides = await mk('start', { keepLoginNotice: true, deferred: true })
     await step('the notice of the blocked login on load: it comes and goes', sides, async (page, side, snap) => {
-        await page.waitForFunction(() => document.querySelector('#toast-container .toast'), null, { timeout: 15000 }).catch(() => { })
-        await page.waitForTimeout(700)
+        await side.at(2000)
         await snap('shown', { shot: true })
-        await page.waitForTimeout(5500)
-    }, { wait: 500, shoot: false, fromLoad: true })
+        await side.at(6000)
+    }, { wait: 300, shoot: false, fromLoad: true })
     return sides
 }
 SCENARIOS.search = async (mk) => {
@@ -451,18 +473,22 @@ SCENARIOS.inventory = async (mk) => {
 }
 SCENARIOS.saved = async (mk) => {
     const sides = await mk('saved')
-    const del = '[data-action="delete-batch"], [data-action="delete-all"], .batch-delete, button[title*="elete"], .saved-phone-batch__delete'
+    const del = '[data-action="delete-batch"], [data-action="delete-all"], .batch-delete, button[title*="elete"]'
+    // the computer: the button of the batch; the phone: the batch's «⋯» and the «Delete batch» of its sheet
+    const openQuestion = async (page) => {
+        if (PHONE) { await page.locator('[aria-label^="Actions for batch"]').first().tap(); await page.waitForTimeout(900); await page.locator('.sheet button:has-text("Delete batch")').first().tap() } else await tap(page, del)
+    }
     await step('Saved playlists: «Delete» opens the question; Escape is Cancel; again, «Delete»: the notice of the refused write', sides, async (page, side, snap) => {
-        await page.locator('.batch-header').first().click().catch(() => { })
+        if (!PHONE) await page.locator('.batch-header').first().click().catch(() => { })
         await page.waitForTimeout(400)
-        await tap(page, del)
+        await openQuestion(page)
         await page.waitForTimeout(600)
         await snap('the question', { shot: true })
         await page.keyboard.press('Escape')
-        await page.waitForTimeout(300)
+        await page.waitForTimeout(400)
         await snap('after Escape')
-        await tap(page, del)
-        await page.waitForTimeout(600)
+        if (PHONE && (await page.locator('.sheet').count())) await page.locator('.sheet button:has-text("Delete batch")').first().tap(); else await openQuestion(page)
+        await page.waitForTimeout(700)
         await tap(page, '#confirm-modal [data-action="confirm"]')
         await page.waitForTimeout(1500)
         await snap('after Delete', { shot: true })
@@ -472,8 +498,8 @@ SCENARIOS.saved = async (mk) => {
 }
 SCENARIOS.shell = async (mk) => {
     const sides = await mk('start', { spotify: true })
-    const menu = PHONE ? '#phoneMenuBtn' : '[data-account-button], .bar-account, #accountBtn, .account-button, .top-account'
-    const disconnect = 'button:has-text("Disconnect")'
+    const menu = PHONE ? '#phoneMenuBtn' : '#userMenuBtn'
+    const disconnect = '[data-connection="spotify"] [data-action="disconnect"]:visible'
     await step('Shell: the account panel, «Disconnect» Spotify opens the question; Escape is Cancel; again, confirm: the notice «Disconnected»', sides, async (page, side, snap) => {
         await tap(page, menu)
         await page.waitForTimeout(600)
@@ -494,10 +520,8 @@ SCENARIOS.shell = async (mk) => {
     return sides
 }
 SCENARIOS.signin = async (mk) => {
-    const sides = await mk('start')
+    const sides = await mk('start', { url: '/start?signin' })
     await step('Sign in: the window opens from the entry link; Google with the login blocked gives a notice, and it goes', sides, async (page, side, snap) => {
-        await page.evaluate(() => window.router.navigate('/start?signin'))
-        await page.waitForTimeout(800)
         await snap('the window', { shot: true })
         await page.locator('#googleLoginBtn').click({ timeout: 3000 }).catch(() => { })
         await page.waitForTimeout(2500)
@@ -509,32 +533,52 @@ SCENARIOS.signin = async (mk) => {
 SCENARIOS.playlists = async (mk) => {
     const sides = await mk('edit')
     await step('Playlists: «Regenerate» with no series gives a notice, and it goes', sides, async (page, side, snap) => {
-        const regen = page.locator('button:has-text("Regenerate")').first()
-        if (await regen.count()) await regen.click()
+        if (PHONE) { await page.locator('[data-action="toggle-regenerate-panel"]').first().evaluate(el => el.click()).catch(() => { }) } else await tap(page, '[data-action="toggle-regenerate-panel"]')
         await page.waitForTimeout(800)
         await snap('the panel', { shot: true })
-        const go = page.locator('#regenerateBtn, button:has-text("Regenerate Playlists"), [data-action="regenerate"]').first()
-        if (await go.count()) await go.click({ timeout: 2000 }).catch(() => { })
+        await page.locator('[data-action="regenerate-playlists"]').first().evaluate(el => el.click())
         await page.waitForTimeout(1500)
         await snap('after Regenerate', { shot: true })
         await page.waitForTimeout(4500)
     }, { wait: 300 })
     return sides
 }
+SCENARIOS.playlistDelete = async (mk) => {
+    // the phone: deleting a whole playlist is asked first, from its sheet (the computer deletes on one click, with no question)
+    if (!PHONE) { note(`${TAG} · playlistDelete · on the computer a playlist is deleted on one click: no question to prove`, true); return [] }
+    const sides = await mk('edit')
+    await step('Playlists on the phone: «Delete this playlist» asks; Escape is Cancel; again, «Delete playlist»', sides, async (page, side, snap) => {
+        const open = async () => { await tap(page, '.phone-more'); await page.waitForTimeout(900); await page.locator('.sheet .phone-sheet-action--danger').last().tap() }
+        await open()
+        await page.waitForTimeout(700)
+        await snap('the question over the sheet', { shot: true })
+        await page.keyboard.press('Escape')
+        await page.waitForTimeout(400)
+        await snap('after Escape', { shot: true })
+        if (!(await page.locator('.sheet').count())) await open(); else await page.locator('.sheet .phone-sheet-action--danger').last().tap()
+        await page.waitForTimeout(700)
+        await tap(page, '#confirm-modal [data-action="confirm"]')
+        await page.waitForTimeout(1500)
+        await snap('after Delete playlist', { shot: true })
+        await page.waitForTimeout(4500)
+    }, { wait: 300 })
+    return sides
+}
 SCENARIOS.progress = async (mk, servers) => {
-    // a slow change of screen: the bar shows after its delay and hides when the screen is in; the files of the screen come 1.6 s late
-    for (const server of servers) server.delays.push([/\/assets\/(albums|Albums|inventory|Inventory)[^/]*\.js$/, 1600])
-    const sides = await mk('start')
-    await step('the bar: a slow change of screen to the albums', sides, async (page, side, snap) => {
+    // a slow change of screen: the bar shows after its delay and hides when the screen is in. The files of the screens come 1.6 s late (and the screens of the menu come
+    // down in the background one after the other, so a second change of screen right after the first finds its file still on the way). Each side is opened inside its own step,
+    // so that both go through the same minutes of the same load.
+    for (const server of servers) server.delays.push([/\/assets\/index-[^/]*\.js$/, 1600])
+    const sides = await mk('start', { settle: 0, deferred: true })
+    await step('the bar: a slow change of screen to the albums, and right after it to the playlists', sides, async (page, side, snap) => {
         await page.evaluate(() => window.router.navigate('/albums'))
+        await side.at(900)
+        await snap('during the first', { shot: false })
+        await side.at(2300)
+        await snap('between')
+        await page.evaluate(() => window.router.navigate('/playlists'))
         await page.waitForTimeout(900)
-        await snap('during', { shot: false })
-        await page.waitForTimeout(2600)
-    }, { wait: 300, shoot: false })
-    await step('the bar: a second slow change, to the inventory', sides, async (page, side, snap) => {
-        await page.evaluate(() => window.router.navigate('/inventory'))
-        await page.waitForTimeout(900)
-        await snap('during')
+        await snap('during the second', { shot: false })
         await page.waitForTimeout(2600)
     }, { wait: 300, shoot: false })
     return sides
@@ -616,7 +660,7 @@ SCENARIOS.directQuestions = async (mk) => {
         await snap('after Escape', { shot: true })
     }, { wait: 300 })
     await step('confirm: the cross, Cancel and Delete', sides, async (page, side, snap) => {
-        const open = (label) => page.evaluate((label) => { window.__ask(window.__e.dialogs.confirm({ title: 'Delete?', message: 'Sure?', variant: 'warning' }), label) }, label)
+        const open = (label) => page.evaluate((label) => { window.__ask(window.__e.dialogs.confirm({ title: 'Delete?', message: 'Sure?', variant: 'warning' }).then((v) => { window.__e.answers.push(`${label}: the window was ${document.getElementById('confirm-modal') ? 'STILL ON' : 'off'} the page when the caller went on`); return v }), label) }, label)
         await open('cross'); await page.waitForTimeout(400); await tap(page, '#confirm-modal .app-modal__close'); await page.waitForTimeout(300)
         await open('cancel'); await page.waitForTimeout(400); await tap(page, '#confirm-modal [data-action="cancel"]'); await page.waitForTimeout(300)
         await open('confirm'); await page.waitForTimeout(400); await tap(page, '#confirm-modal [data-action="confirm"]'); await page.waitForTimeout(300)
@@ -677,14 +721,17 @@ const names = Object.keys(SCENARIOS).filter(name => DEV === name.startsWith('dir
 for (const name of names) {
     console.log(`--- ${name}`)
     const opened = []
-    const mk = async (surface, options) => {
-        const sides = [await open(oldSite.base, surface, options), await open(newSite.base, surface, options)]
-        sides[0].name = 'parent'; sides[1].name = CONTROL ? 'parent again' : 'mine'
+    const mk = async (surface, options = {}) => {
+        const names = ['parent', CONTROL ? 'parent again' : 'mine']
+        const bases = [oldSite.base, newSite.base]
+        // `deferred`: a side is opened inside its own step, so that what the load does (the notice of the blocked login) is read by the clock of the load
+        const sides = options.deferred ? bases.map((base, i) => ({ name: names[i], opening: () => open(base, surface, options) })) : [await open(bases[0], surface, options), await open(bases[1], surface, options)]
+        sides.forEach((side, i) => { side.name = names[i] })
         opened.push(...sides)
         return sides
     }
     try { await SCENARIOS[name](mk, [oldSite.server, newSite.server]) } catch (error) { note(`${TAG} · ${name} · the scenario ran to its end`, false, error.message.split('\n')[0]) }
-    for (const side of opened) await side.context.close()
+    for (const side of opened) await side.context?.close()
     oldSite.server.delays = []; newSite.server.delays = []
 }
 await browser.close()

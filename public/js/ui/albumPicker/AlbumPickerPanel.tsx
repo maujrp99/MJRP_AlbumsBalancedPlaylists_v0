@@ -32,13 +32,15 @@ export function AlbumPickerPanel({ service, onPick, warn }: Props) {
     const field = useRef<HTMLInputElement>(null)
     const latestPick = useRef(onPick)
     latestPick.current = onPick
+    const latestWarn = useRef(warn)
+    latestWarn.current = warn
 
     // one controller for as long as the panel is in the page (the strict mode runs this twice: the first is let go and a fresh one made)
     useEffect(() => {
         const made = new AlbumPickerController({
             service,
             emptyQueryMessage: () => t('ui.picker.typeFirst'),
-            warn,
+            warn: (message) => latestWarn.current(message),
             onPick: (album) => latestPick.current(album),
             view: {
                 drawScan: setScan,

@@ -2,6 +2,16 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 11:04] step — F83 onda 8b: os casos das lojas de avisos e de barra, o seletor sem aviso do lint e a seção 21 das lições
+
+**Branch:** claude/f83-wave-8b-window-engines
+
+- `test/stores/toasts.test.js` (8 casos): a API que controladores e serviços chamam (`toast`, `showToast`, o id devolvido), os relógios (entra em um quadro, sai aos 4 s ou aos `ms` dados, some 300 ms depois, fechar duas vezes não faz nada) e a barra (um carregador, vários, os 200 ms, `forceHide`).
+- `AlbumPickerPanel` guarda `warn` numa `ref` (o `exhaustive-deps` do lint o pedia: 0 erros, os mesmos 67 avisos do pai); `router.links.test.js` troca o mock do aviso pelo que também deixa a moldura ler `toasts`.
+- `docs/specs/features/F83-site-screens-in-react/wave-lessons.md`: a seção 21.
+- Os comentários de `pageScrollLock.js` e de `mobile.css` apontam para os arquivos novos.
+
+
 ## [2026-11-22 10:41] step — F83 onda 8b: os tetos de peso medidos e os caminhos novos nos documentos
 
 **Branch:** claude/f83-wave-8b-window-engines
