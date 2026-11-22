@@ -7,6 +7,8 @@
 import { errorPanelModel, errorPanelHtml } from './utils/failurePanel.js'
 import { isMissingBuildFile, isLoadTimeout, reloadOnceForNewBuild, publicationState, PUBLICATION } from './utils/staleBuild.js'
 import { globalProgress } from './stores/progress.js'
+import { t } from './i18n/t.js'
+import { escapeHtml } from './utils/stringUtils.js'
 
 export class Router {
     /**
@@ -284,13 +286,13 @@ export class Router {
         // The file is gone, or the network is: only asking the site tells which (a lost network is not a new version, F83)
         if (await this.checkPublication() === PUBLICATION.UNREACHABLE) return this._noConnectionPanel()
         if (this.reloadForNewBuild()) {
-            return '<div class="p-8 text-center text-white/70" role="status">A new version of the app was published. Loading it…</div>'
+            return `<div class="p-8 text-center text-white/70" role="status">${escapeHtml(t('notices.router.newVersion'))}</div>`
         }
         return `
             <div class="p-8 text-center" role="alert">
-                <div class="text-white text-xl font-bold mb-2">This screen could not be loaded</div>
-                <p class="text-white/60 mb-4">The app was updated and this tab still has the previous version.</p>
-                <button class="btn btn-primary" data-action="reload-app" onclick="window.location.reload()">Load the new version</button>
+                <div class="text-white text-xl font-bold mb-2">${escapeHtml(t('notices.router.staleTitle'))}</div>
+                <p class="text-white/60 mb-4">${escapeHtml(t('notices.router.staleBody'))}</p>
+                <button class="btn btn-primary" data-action="reload-app" onclick="window.location.reload()">${escapeHtml(t('notices.router.staleButton'))}</button>
             </div>
         `
     }
@@ -302,9 +304,9 @@ export class Router {
     _noConnectionPanel() {
         return `
             <div class="p-8 text-center" role="alert">
-                <div class="text-white text-xl font-bold mb-2">No connection</div>
-                <p class="text-white/60 mb-4">This screen could not be downloaded. Check your connection and try again; what you have open here is kept.</p>
-                <button class="btn btn-primary" data-action="retry-screen">Try again</button>
+                <div class="text-white text-xl font-bold mb-2">${escapeHtml(t('notices.router.offlineTitle'))}</div>
+                <p class="text-white/60 mb-4">${escapeHtml(t('notices.router.offlineBody'))}</p>
+                <button class="btn btn-primary" data-action="retry-screen">${escapeHtml(t('notices.router.retry'))}</button>
             </div>
         `
     }

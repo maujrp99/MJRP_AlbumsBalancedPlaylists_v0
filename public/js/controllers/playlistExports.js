@@ -6,6 +6,8 @@
  */
 
 import toast from '../stores/toasts.js'
+import { t } from '../i18n/t.js'
+import { DEFAULT_BATCH_NAME, DEFAULT_SERIES_NAME } from '../models/defaultNames.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistsStore } from '../stores/playlists.js'
 import { AppleMusicExportService, appleExportMessages } from '../services/AppleMusicExportService.js'
@@ -21,11 +23,11 @@ function getEffectiveBatchName() {
         playlistsStore.editContext?.currentBatchName ||
         playlistsStore.editContext?.batchName ||
         storeState.defaultBatchName ||
-        'Unsaved Batch'
+        DEFAULT_BATCH_NAME
 }
 
 /** The series the playlists belong to: the one given (the saved playlists screen), else the open one. */
-export const seriesNameOf = (given) => given || albumSeriesStore.getActiveSeries()?.name || 'MJRP Playlists'
+export const seriesNameOf = (given) => given || albumSeriesStore.getActiveSeries()?.name || DEFAULT_SERIES_NAME
 
 /**
  * Export playlists as JSON file
@@ -92,18 +94,18 @@ export async function handleExportToAppleMusic(options = {}) {
     const { onStatus } = options
 
     if (appleExportRunning) {
-        toast.info('The export to Apple Music is already running.')
+        toast.info(t('notices.export.running'))
         return
     }
     const playlists = options.playlists || playlistsStore.getPlaylists()
     if (playlists.length === 0) {
-        toast.warning('No playlists to export')
+        toast.warning(t('notices.export.nothing'))
         return
     }
 
     appleExportRunning = true
     const say = progressWriter({ onStatus })
-    say('Connecting...')
+    say(t('notices.export.connecting'))
 
     try {
         const { musicKitService } = await import('../services/MusicKitService.js')
@@ -115,7 +117,7 @@ export async function handleExportToAppleMusic(options = {}) {
         appleExportMessages(report).forEach(message => toast[message.type](message.text, REPORT_MS))
     } catch (error) {
         console.error('[AppleMusic] Export failed:', error)
-        toast.error(`The export to Apple Music failed: ${error.message}`, REPORT_MS)
+        toast.error(t('notices.export.failed', { message: error.message }), REPORT_MS)
     } finally {
         appleExportRunning = false
         if (onStatus) onStatus(null)

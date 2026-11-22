@@ -254,7 +254,7 @@ function ComputerDock({ controller, model }: { controller: StartController; mode
 function PhoneMeta({ model, onOpen }: { model: DockModel; onOpen: () => void }) {
     if (model.create === 'created') return <div className="home-dock__meta"><SavedLine model={model} /></div>
     if (!model.albums.length) {
-        const empty = dockEmptyNote({ phone: true, covers: model.coversOnScreen })
+        const empty = dockEmptyNote({ covers: model.coversOnScreen })
         return <div className="home-dock__meta"><strong>{empty.title}</strong><span>{empty.note}</span></div>
     }
     const n = model.albums.length

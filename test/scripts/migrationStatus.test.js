@@ -73,7 +73,7 @@ describe('formatStatus and the command', () => {
         const status = JSON.parse(run.stdout)
         expect(status.handMade.files).toBe(0)
         expect(status.bridges).toEqual({ files: 0, uses: 0 })
-        expect(status.texts.total).toBeLessThanOrEqual(22) // 0 when the texts of wave 8d are in the dictionary
+        expect(status.texts.total).toBe(0)
         expect(status.handMade.onPurpose).toBeGreaterThan(0)
     })
 })

@@ -2,6 +2,17 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 19:38] step — F83 onda 8d, 5: os textos que faltavam vão ao dicionário
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **Os textos que ainda estavam fora do dicionário passam para ele** (inglês igual, letra por letra, na tela; `i18n/en/notices.js` e `i18n/pt/notices.js`, **64 chaves** em cada): os três avisos do `app.js` («Authentication issue…», «Connected to Spotify!», «Failed to connect…»); os painéis do roteador («No connection», «Try again», «This screen could not be loaded», «Load the new version», «A new version of the app was published…») e o painel de erro (`utils/failurePanel.js`: «View Error», «Go Back»), com `escapeHtml` em volta; os avisos de `PlaylistsController` (13), de `playlistExports` (4), o progresso e o cancelamento de `BlendingController` (2) e a linha «N series available» de `SeriesController`.
+- **As frases do pedido de álbuns** (`askNotices`, `noAlbumsMessage`, `askProgressText`): `models/albumAsk.js` não escreve mais frase (regra «a regra não fala»): devolve dados (`askNoticeParts`, `noAlbumsPart`, `askProgressPart`: um código e os números) e `i18n/askTexts.js` as diz pelo dicionário, com plural. Os casos de frase foram levados, com as mesmas asserções, para `test/i18n/askTexts.test.js` (mais um caso em português); o modelo ganha casos de dados.
+- **`dockEmptyNote` e as chaves `start.dock.empty.computer.*`** (só um teste as usava desde a Create enxuta): a função só diz a nota do celular, as 3 chaves (inglês e português) e os 2 casos do computador saem.
+- **Padrões de nome não são texto de tela:** «Unsaved Batch» e «MJRP Playlists» (o nome de um lote e de uma série quando a pessoa não deu nenhum) são DADOS que vão para os lotes salvos e para a exportação: foram para `models/defaultNames.js`, sem mudar com o idioma.
+- **Português: 64 propostas à espera da revisão do MJRP**, todas em `public/js/i18n/pt/notices.js` (aprovar ou trocar). **Ficam fora, de propósito** (não são texto que uma pessoa leia na tela, ou são ordem de ranking dos dados): mensagens internas de `Error` que não chegam à tela, nomes e descrições das receitas (`algorithms/`, `ranking/`: a F81 as trata), `models/recipeSources.js` (a frase «by Spotify popularity where there is one…» que a Blend e as playlists mostram dentro do aviso), os textos de `services/` e `models/` que o contador não vê. Estão no quadro do relatório de fecho.
+- Placar: **0 arquivos à mão, 0 pontes, 0 textos fora do dicionário** (pelo contador, bom a cerca de 10%). Testes de `i18n`, `models`, `controllers`, `screens/start`, `architecture` e `scripts` verdes; `tsc` limpo; lint sem aviso novo.
+
 ## [2026-11-22 19:34] step — F83 onda 8d, 4: o último invólucro sai e a regra final vira sensor
 
 **Branch:** claude/f83-wave-8d-closure
