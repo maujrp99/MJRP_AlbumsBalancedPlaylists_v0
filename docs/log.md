@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 12:05] step — o teste da home acompanha a abertura única, com ou sem conta
+
+**Branch:** main
+
+- O commit `a5e2d65` saiu com um teste ainda esperando a regra de espaço antiga (o mesmo erro de antes: a cadeia de comandos não parou no vermelho). Corrigido e ampliado: o teste agora afirma que a abertura com conta usa as quatro linhas aprovadas. Suíte inteira: 325 arquivos, 4141 testes, verde.
+
 ## [2026-11-22 12:04] decision — a home com conta mostra o texto aprovado («Mergulhe nos álbuns que você ama.»)
 
 **Branch:** main

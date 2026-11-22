@@ -81,9 +81,17 @@ describe('the vignettes on the page', () => {
         expect(page).toMatch(/\.hero \.ctas \.btn-ghost\{display:none\}/)
     })
 
-    it('on the phone: the language buttons are 44 px wide, and the signed-in title keeps a gap above «Inicie»', () => {
+    it('on the phone: the language buttons are 44 px wide, and the line under the title keeps a gap above the button, with or without an account', () => {
         expect(page).toContain('.lang button{min-width:44px;padding:0 6px}')
-        expect(page).toContain('.hero .only-in h1{margin-bottom:18px}')
+        expect(page).toContain('.hero .h-sub{margin-bottom:18px}')
+        expect(page).not.toContain('.hero .only-in h1{margin-bottom:18px}')
+    })
+
+    it('with an account the opening says the same approved lines as without one (the owner, 2026-11-22: «1. sim»)', () => {
+        const signedIn = page.slice(page.indexOf('<div class="only-in">', page.indexOf('id="a1"')))
+        const opening = signedIn.slice(0, signedIn.indexOf('</div>\n  </section>'))
+        for (const key of ['h.kick', 'h.title', 'h.what', 'h.para']) expect(opening).toContain(`data-i18n="${key}"`)
+        expect(page).not.toMatch(/data-i18n="hi\./)
     })
 
     it('the crate\'s diagonal is in the style on a computer, so the covers do not move when the script arrives', () => {
