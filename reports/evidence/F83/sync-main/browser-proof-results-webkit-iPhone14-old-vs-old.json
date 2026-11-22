@@ -1,0 +1,202 @@
+[
+  {
+    "what": "iPhone 14, /start: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /start: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /start: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, /albums: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /albums: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /albums: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, /blend: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /blend: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /blend: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, /saved-playlists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /saved-playlists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /saved-playlists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, /playlist-series: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /playlist-series: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /playlist-series: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, /playlists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /playlists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /playlists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, /inventory: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /inventory: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /inventory: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, /artists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /artists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, /artists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music authorized: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music authorized: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music authorized: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music not authorized: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music not authorized: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music not authorized: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music script unreachable: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music script unreachable: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone 14, the Menu sheet, Apple Music script unreachable: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone 14, larger text: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, larger text: no label sits over the row of bars",
+    "ok": true,
+    "detail": "old 0, new 0"
+  },
+  {
+    "what": "iPhone 14, the home has its bottom menu",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone 14, the home: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, the passage home to app: the address",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone 14, the passage home to app: the bottom menu in the app: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone 14, a tap on a stop: the address and the focus",
+    "ok": true,
+    "detail": ""
+  }
+]

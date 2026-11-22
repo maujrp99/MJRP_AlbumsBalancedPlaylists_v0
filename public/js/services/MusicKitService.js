@@ -37,6 +37,20 @@ class MusicKitService {
         return musicKitAuth.authorizeAndValidate();
     }
 
+    /** Whether the person has authorized Apple Music (the menu shows it, F88). */
+    isAuthorized() {
+        return musicKitAuth.isConnected();
+    }
+
+    /** Whether the person authorized Apple Music on an earlier visit too; starts MusicKit (the menu asks when it opens). */
+    async checkAuthorization() {
+        return musicKitAuth.checkConnection();
+    }
+
+    async unauthorize() {
+        return musicKitAuth.unauthorize();
+    }
+
     isReady() {
         return musicKitAuth.isReady();
     }

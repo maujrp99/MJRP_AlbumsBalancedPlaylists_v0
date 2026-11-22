@@ -1,0 +1,202 @@
+[
+  {
+    "what": "iPhone SE, /start: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /start: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /start: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, /albums: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /albums: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /albums: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, /blend: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /blend: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /blend: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, /saved-playlists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /saved-playlists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /saved-playlists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, /playlist-series: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /playlist-series: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /playlist-series: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, /playlists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /playlists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /playlists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, /inventory: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /inventory: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /inventory: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, /artists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /artists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, /artists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music authorized: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music authorized: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music authorized: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music not authorized: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music not authorized: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music not authorized: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music script unreachable: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music script unreachable: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone SE, the Menu sheet, Apple Music script unreachable: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone SE, larger text: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, larger text: no label sits over the row of bars",
+    "ok": true,
+    "detail": "old 0, new 0"
+  },
+  {
+    "what": "iPhone SE, the home has its bottom menu",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone SE, the home: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, the passage home to app: the address",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "iPhone SE, the passage home to app: the bottom menu in the app: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "iPhone SE, a tap on a stop: the address and the focus",
+    "ok": true,
+    "detail": ""
+  }
+]

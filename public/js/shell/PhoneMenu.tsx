@@ -1,21 +1,22 @@
 /**
- * PhoneMenu - the one menu of the phone (F76, REQ-03; F83 wave 3, was components/navigation/PhoneMenu.js): the account, and what the drawer
- * held that the tab bar does not (the playlists just generated, the other kinds of series, the Spotify connection, sign out), plus «Clear
- * album cache», which lived in the footer and now asks before it clears. A bottom sheet (the motor of the phone's Sheet, ui/SheetWindow),
- * opened from the top bar.
+ * PhoneMenu - the one menu of the phone (F76, REQ-03; F83 wave 3, was components/navigation/PhoneMenu.js): the account, and what the tab bar does
+ * not reach (the playlists just generated, the other kinds of series), the connections (Apple Music first, then Spotify, F88), sign out, plus
+ * «Clear album cache», which asks before it clears. A bottom sheet (the motor of the phone's Sheet, ui/SheetWindow), opened from the top bar.
  *
  * What the menu shows is the person as they were when it was opened: it does not change under the finger.
  */
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { Icon } from '../ui/Icon'
 import { useSheetWindow } from '../ui/SheetWindow'
-import toast from '../components/Toast.js'
 import { isSignedIn } from '../utils/isSignedIn.js'
 import { openLoginWindow } from '../stores/loginWindow.js'
 import { t } from '../i18n/t.js'
-import { SpotifyConnect } from './SpotifyConnect'
+import { ConnectionRows, useConnections } from './ConnectionRows'
+import { useClearCacheQuestion } from './ClearCache'
+import { MENU_TEXT } from './menuText'
+import { accountInitial, accountName } from './accountNames'
 import { signOut } from './signOut'
-import { useShell, type ShellUser } from './context'
+import type { ShellUser } from './context'
 
 interface Place {
     labelKey: string
@@ -32,10 +33,6 @@ const PLACES: readonly Place[] = [
     { labelKey: 'shell.menu.seriesByGenre', route: 'genres', icon: 'Music', soon: true },
     { labelKey: 'shell.menu.seriesByTrack', route: 'tracks', icon: 'List', soon: true }
 ]
-
-const accountName = (user: ShellUser | null): string => user?.displayName || user?.email || t('shell.account.user')
-/** The first letter of the person's name: what the account button of the top bar shows. */
-export const accountInitial = (user: ShellUser | null): string => accountName(user).trim().charAt(0).toUpperCase() || 'U'
 
 function RowText({ label, hint }: { label: string; hint?: string }) {
     return (
@@ -84,6 +81,13 @@ function AccountBlock({ user, close }: { user: ShellUser | null; close: () => vo
     )
 }
 
+/** Spotify and Apple Music in the sheet: they listen to the services while the sheet is open, and Apple Music keeps its authorization across visits, so it is asked now («Checking…» meanwhile). */
+function MenuConnections() {
+    const model = useConnections()
+    useEffect(() => { model.check() }, [model])
+    return <ConnectionRows model={model} id="phone-menu-connections" className="phone-menu__connections" />
+}
+
 /** What is inside the menu sheet: four boxes, side by side in the body of the sheet. */
 export function PhoneMenuBody({ user, close, onClearCache }: { user: ShellUser | null; close: () => void; onClearCache: () => void }) {
     return (
@@ -93,7 +97,8 @@ export function PhoneMenuBody({ user, close, onClearCache }: { user: ShellUser |
             <div className="phone-menu__list" onClick={(event) => { if ((event.target as Element).closest('a[data-link]')) close() }}>
                 {PLACES.map(place => <PlaceRow key={place.route} place={place} />)}
             </div>
-            <div id="phone-menu-spotify" className="phone-menu__spotify"><SpotifyConnect /></div>
+            <div className="phone-menu__section">{MENU_TEXT.connectionsTitle}</div>
+            <MenuConnections />
             <div className="phone-menu__list">
                 <ActionRow label={t('shell.menu.clearCache')} icon="Trash" onClick={() => { close(); onClearCache() }} />
                 {isSignedIn(user) ? <ActionRow label={t('shell.menu.signOut')} icon="SignOut" danger onClick={() => { close(); signOut() }} /> : null}
@@ -102,55 +107,17 @@ export function PhoneMenuBody({ user, close, onClearCache }: { user: ShellUser |
     )
 }
 
-export function ClearCacheMessage() {
-    return <p className="phone-menu__message">{t('shell.menu.clearMessage')}</p>
-}
-
-/** The two buttons of the question: «Cancel», and «Clear cache», which clears, says so and loads the app again. */
-export function ClearCacheActions({ close }: { close: () => void }) {
-    const { clearCaches, reload } = useShell()
-    const [busy, setBusy] = useState(false)
-    const clear = async () => {
-        setBusy(true)
-        try {
-            // Only the album caches: the logins and the choices of the screens stay
-            await clearCaches()
-        } catch (error) {
-            console.error('[PhoneMenu] Clear cache failed:', error)
-            toast.error(t('shell.menu.clearFailed'))
-            setBusy(false)
-            return
-        }
-        close()
-        toast.success(t('shell.menu.cleared'))
-        setTimeout(reload, 1000)
-    }
-    return (
-        <>
-            <button type="button" className="btn btn-secondary" onClick={close}>{t('shell.menu.cancel')}</button>
-            <button type="button" className="btn btn-danger" data-action="clear-cache" disabled={busy} onClick={clear}>{t('shell.menu.clear')}</button>
-        </>
-    )
-}
-
 /** The two sheets of the menu: the menu itself, and the question before the album cache is cleared. */
 export function usePhoneMenus(user: ShellUser | null) {
     const menu = useSheetWindow()
-    const question = useSheetWindow()
-    const askToClear = () => question.show({
-        id: 'phone-clear-cache',
-        title: t('shell.menu.clearTitle'),
-        closeLabel: t('shell.sheet.close'),
-        render: () => <ClearCacheMessage />,
-        footer: (close) => <ClearCacheActions close={close} />
-    })
+    const question = useClearCacheQuestion()
     const open = () => {
         if (menu.isOpen()) return
         menu.show({
             id: 'phone-menu',
             title: t('shell.menu.title'),
             closeLabel: t('shell.sheet.close'),
-            render: (close) => <PhoneMenuBody user={user} close={close} onClearCache={askToClear} />
+            render: (close) => <PhoneMenuBody user={user} close={close} onClearCache={question.ask} />
         })
     }
     return { open, closeMenu: menu.close, layer: <>{menu.layer}{question.layer}</> }

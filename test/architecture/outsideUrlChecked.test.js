@@ -30,10 +30,8 @@ const ROOT = path.resolve(process.cwd(), 'public/js')
  * `file` -> the expressions, as written. This list can only shrink; a new entry needs the reason.
  */
 const WRITTEN_IN_THE_CODE = {
-    // the menu in React (F83 wave 3): every link of the bar and of the drawer is given a path written in the same file (TopNav.tsx)
-    'shell/TopNav.tsx': ['to'],
-    // the entity types of the menu of series, a list in the same file
-    'shell/SeriesDropdown.tsx': ['entity.route'],
+    // the line under the top bar: the places of Albums and of Playlists, a list in the same file (F88; in React since the sync of main)
+    'shell/SubRow.tsx': ['item.href'],
     // paths written in the same file, and the path of the page itself (it starts with '/')
     'components/Breadcrumb.js': ['escapeHtml(crumb.path)'],
     // the same trail in React: the paths are written in ui/Breadcrumb.tsx (playlistsTrail) and the callers

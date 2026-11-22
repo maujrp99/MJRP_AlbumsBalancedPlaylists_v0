@@ -171,6 +171,25 @@ export class IndexedDBCache {
     }
 
     /**
+     * Clear only the records whose key starts with one of the prefixes (a key range per prefix, one transaction)
+     * @param {string[]} prefixes
+     * @returns {Promise<void>}
+     */
+    async clearPrefixes(prefixes) {
+        await this.ensureInit()
+
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([this.storeName], 'readwrite')
+            const objectStore = transaction.objectStore(this.storeName)
+            prefixes.forEach(prefix => objectStore.delete(IDBKeyRange.bound(prefix, prefix + '\uffff')))
+
+            transaction.oncomplete = () => resolve()
+            transaction.onerror = () => reject(transaction.error)
+            transaction.onabort = () => reject(transaction.error)
+        })
+    }
+
+    /**
      * Get all keys in cache
      * @returns {Promise<string[]>} Array of cache keys
      */

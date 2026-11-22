@@ -1,0 +1,118 @@
+{
+ "p1-authorized-pending": {
+  "label": "Account and connections",
+  "apple": "pending",
+  "dots": "",
+  "sw": 1280,
+  "iw": 1280
+ },
+ "p1-authorized-settled": {
+  "label": "Account and connections: Apple Music connected",
+  "apple": "on",
+  "dots": "<b class=\"top-acct__dot top-acct__dot--apple\"></b>",
+  "sw": 1280,
+  "iw": 1280
+ },
+ "p1-authorized-panel": "Connected",
+ "p1-not-authorized-pending": {
+  "label": "Account and connections",
+  "apple": "pending",
+  "dots": "",
+  "sw": 1280,
+  "iw": 1280
+ },
+ "p1-not-authorized-settled": {
+  "label": "Account and connections: Nothing connected",
+  "apple": "off",
+  "dots": "",
+  "sw": 1280,
+  "iw": 1280
+ },
+ "p1-not-authorized-panel": "Not connected",
+ "p1-failed-pending": {
+  "label": "Account and connections",
+  "apple": "pending",
+  "dots": "",
+  "sw": 1280,
+  "iw": 1280
+ },
+ "p1-failed-settled": {
+  "label": "Account and connections",
+  "apple": "pending",
+  "dots": "",
+  "sw": 1280,
+  "iw": 1280
+ },
+ "p1-failed-panel": "Could not connect",
+ "p1-out-pending": {
+  "label": "Connections: Nothing connected",
+  "apple": "off",
+  "dots": "",
+  "sw": 1280,
+  "iw": 1280
+ },
+ "p1-out-settled": {
+  "label": "Connections: Nothing connected",
+  "apple": "off",
+  "dots": "",
+  "sw": 1280,
+  "iw": 1280
+ },
+ "p6": {
+  "open": "true",
+  "apple": "Not connected",
+  "focus": "Connect Apple Music"
+ },
+ "p7-/artists-1280": [
+  "Albums"
+ ],
+ "p7-/genres-1280": [
+  "Albums"
+ ],
+ "p7-/tracks-1280": [
+  "Albums"
+ ],
+ "p7-/artists-393": [
+  "Albums"
+ ],
+ "p7-/genres-393": [
+  "Albums"
+ ],
+ "p7-/tracks-393": [
+  "Albums"
+ ],
+ "p7-/artists-800": [
+  "Albums"
+ ],
+ "p7-/genres-800": [
+  "Albums"
+ ],
+ "p7-/tracks-800": [
+  "Albums"
+ ],
+ "scroll-out-/start-393": true,
+ "scroll-out-/albums-393": true,
+ "scroll-out-/playlists-393": true,
+ "scroll-out-/inventory-393": true,
+ "scroll-in-/start-393": true,
+ "scroll-in-/albums-393": true,
+ "scroll-in-/playlists-393": true,
+ "scroll-in-/inventory-393": true,
+ "scroll-out-/start-800": true,
+ "scroll-out-/albums-800": true,
+ "scroll-out-/playlists-800": true,
+ "scroll-out-/inventory-800": true,
+ "scroll-in-/start-800": true,
+ "scroll-in-/albums-800": true,
+ "scroll-in-/playlists-800": true,
+ "scroll-in-/inventory-800": true,
+ "scroll-out-/start-1280": true,
+ "scroll-out-/albums-1280": true,
+ "scroll-out-/playlists-1280": true,
+ "scroll-out-/inventory-1280": true,
+ "scroll-in-/start-1280": true,
+ "scroll-in-/albums-1280": true,
+ "scroll-in-/playlists-1280": true,
+ "scroll-in-/inventory-1280": true,
+ "errors": []
+}

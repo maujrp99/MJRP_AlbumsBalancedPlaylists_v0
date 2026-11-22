@@ -5,7 +5,8 @@
  * `route` is where a tab goes, written without its first slash (the link is always `/` + route: an address of the app itself). `under`
  * lists the beginnings of the addresses a tab stands for: the tab is the current one on any of them. Playlists stands for the saved
  * playlists (where the tab goes: what the computer's top bar calls «Playlists») and for the playlists just generated (decided by the agent,
- * revisable).
+ * revisable). Albums also stands for the other kinds of series (artist, genre, track): today's «Music Series» item of the computer's menu lit on
+ * them, and it is the item the Albums stop replaces (F88). The icon of each stop is the home's own (StopIcon).
  */
 import { t } from '../i18n/t.js'
 
@@ -13,16 +14,15 @@ export interface PhoneTab {
     id: string
     labelKey: string
     route: string
-    icon: string
     under: readonly string[]
 }
 
 export const PHONE_TABS: readonly PhoneTab[] = Object.freeze([
-    { id: 'home', labelKey: 'shell.phone.tabStart', route: 'start', icon: 'Home', under: ['/start'] },
-    { id: 'albums', labelKey: 'shell.phone.tabAlbums', route: 'albums', icon: 'Disc', under: ['/albums', '/album-series', '/series'] },
-    { id: 'blend', labelKey: 'shell.phone.tabBlend', route: 'blend', icon: 'Blend', under: ['/blend'] },
-    { id: 'playlists', labelKey: 'shell.phone.tabPlaylists', route: 'saved-playlists', icon: 'ListMusic', under: ['/saved-playlists', '/playlist-series', '/playlists'] },
-    { id: 'inventory', labelKey: 'shell.phone.tabInventory', route: 'inventory', icon: 'Archive', under: ['/inventory'] }
+    { id: 'home', labelKey: 'shell.phone.tabStart', route: 'start', under: ['/start'] },
+    { id: 'albums', labelKey: 'shell.phone.tabAlbums', route: 'albums', under: ['/albums', '/album-series', '/series', '/artists', '/genres', '/tracks'] },
+    { id: 'blend', labelKey: 'shell.phone.tabBlend', route: 'blend', under: ['/blend'] },
+    { id: 'playlists', labelKey: 'shell.phone.tabPlaylists', route: 'saved-playlists', under: ['/saved-playlists', '/playlist-series', '/playlists'] },
+    { id: 'inventory', labelKey: 'shell.phone.tabInventory', route: 'inventory', under: ['/inventory'] }
 ])
 
 /** What the top bar says on each address (the key of its name); the longest beginning that matches wins. */

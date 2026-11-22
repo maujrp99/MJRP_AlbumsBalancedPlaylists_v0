@@ -2,7 +2,7 @@ import { SafeDOM } from '../../utils/SafeDOM.js'
 import { formatDuration } from '../../utils/duration.js'
 
 /**
- * The tracks of the album window on the phone (F76, REQ-06): it is drawn only below 768 px
+ * The tracks of the album window on the phone (F76, REQ-06): it is drawn only below 900 px
  * (TracksRankingComparison puts it in a `md:hidden` box; the computer shows TracksTable).
  *
  * One segmented control picks the order (the album's, BestEverAlbums', Spotify's): three short

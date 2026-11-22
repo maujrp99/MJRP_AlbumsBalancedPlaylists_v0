@@ -1,20 +1,20 @@
 /**
  * isPhone - the one place that answers "is this the phone?" (F76, REQ-12).
  *
- * The phone is a screen up to 767 px wide: the same line the stylesheets of the phone draw
- * (`@media (max-width: 767px)` in public/css/mobile.css). The answer comes from the width of the
+ * The phone is a screen up to 899 px wide: the same line the stylesheets of the phone draw
+ * (`@media (max-width: 899px)` in public/css/mobile.css). The answer comes from the width of the
  * screen, never from the name of the browser, and it changes when the person turns the phone or
  * resizes the window: who draws something only for the phone listens with onPhoneChange.
  */
 
 /** The media query of the phone. The stylesheets write the same text. */
-export const PHONE_QUERY = '(max-width: 767px)'
+export const PHONE_QUERY = '(max-width: 899px)'
 
 const query = (win) => (typeof win?.matchMedia === 'function' ? win.matchMedia(PHONE_QUERY) : null)
 
 /**
  * @param {Window} [win]
- * @returns {boolean} true on a screen up to 767 px wide; false where the width cannot be asked
+ * @returns {boolean} true on a screen up to 899 px wide; false where the width cannot be asked
  */
 export function isPhone(win = window) {
     return Boolean(query(win)?.matches)

@@ -23,7 +23,7 @@ function screenOf(phone: boolean) {
     const state = { phone }
     window.matchMedia = ((query: string) => ({
         media: query,
-        get matches() { return query.includes('max-width: 767px') ? state.phone : false },
+        get matches() { return query.includes('max-width: 899px') ? state.phone : false },
         addEventListener: (_type: string, listener: (event: { matches: boolean }) => void) => listeners.add(listener),
         removeEventListener: (_type: string, listener: (event: { matches: boolean }) => void) => listeners.delete(listener)
     })) as never

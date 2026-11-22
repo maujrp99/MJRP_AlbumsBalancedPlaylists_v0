@@ -66,3 +66,7 @@ A onda 3 foi construída inteira (TASK-18 e TASK-19; a reconferência visual, TA
 - **A janela de entrar já não se abre duas vezes** (a antiga empilhava uma por chamada; a nova é uma janela só).
 - O seletor de idioma não foi construído (é da F81); o lugar está dito acima.
 - `react-vendor` na abertura: `reactAtStart` verdadeiro; o script principal cresceu 4.147 B (294.753 B contra 290.606 B) e o primeiro carregamento ganhou os 68.691 B do React: ver `reports/evidence/F83/wave-3/bundle-budget-wave-3.txt` e `first-load` na mesma pasta.
+
+### Depois da F88 (o passo de integração com a `main`, 2026-11-21)
+
+O que este mapa descreve da barra do topo, da gaveta da tela média, do menu de séries e do botão do Spotify foi **trocado** pelo menu da F88 em React (a barra da home continuando no app, a linha de baixo, o painel único com Apple Music e Spotify, o menu de baixo único e a folha do Menu); o rodapé, a janela de entrar, as lojas pequenas e o motor das folhas ficam como aqui. Os arquivos: `shell/TopNav.tsx`, `BarMenu.tsx`, `SubRow.tsx`, `Account.tsx`, `ConnectionRows.tsx`, `connections.ts`, `ClearCache.tsx`, `PhoneMenu.tsx`, `PhoneShell.tsx`, `appleState.ts`, `menuText.ts`; ver `wave-lessons.md`, § 12.

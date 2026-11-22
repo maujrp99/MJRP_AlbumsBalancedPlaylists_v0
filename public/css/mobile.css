@@ -1,8 +1,8 @@
 /*
  * The phone (F76). Guide: docs/specs/features/F76-mobile-redesign/mobile-kit.md
  *
- * THE RULE OF THIS FILE: every rule is inside `@media (max-width: 767px)`. Nothing here acts on a
- * screen of 768 px or wider (REQ-12); test/architecture/phoneStylesStayOnThePhone.test.js fails
+ * THE RULE OF THIS FILE: every rule is inside `@media (max-width: 899px)`. Nothing here acts on a
+ * screen of 900 px or wider (REQ-12); test/architecture/phoneStylesStayOnThePhone.test.js fails
  * when a rule is written outside it. `@supports`, `@keyframes` and `prefers-reduced-motion`
  * go INSIDE the media query. The same line is drawn in JavaScript by utils/isPhone.js.
  *
@@ -14,12 +14,12 @@
  *           9 Notices · 10 The menu
  */
 
-@media (max-width: 767px) {
+@media (max-width: 899px) {
 
   /* ── 1. Measures ─────────────────────────────────────────────────────────────────────────── */
   :root {
-    --phone-topbar-h: 48px;
-    --phone-tabbar-h: 56px;
+    --phone-topbar-h: 56px; /* F88: the home's bar on the phone is 56 px */
+    --phone-tabbar-h: var(--pbar-h); /* F88: the bottom menu is ONE component with the home's; its height is written once, in public/splash/bar-menu.css */
     --phone-action-bar-h: 64px;
     --phone-gutter: 16px;
     --phone-target: 44px;
@@ -27,7 +27,7 @@
     --phone-safe-bottom: env(safe-area-inset-bottom, 0px);
     --phone-gutter-left: max(var(--phone-gutter), env(safe-area-inset-left, 0px));
     --phone-gutter-right: max(var(--phone-gutter), env(safe-area-inset-right, 0px));
-    --phone-bar-bg: rgba(8, 8, 10, 0.78);
+    --phone-bar-bg: rgba(10, 10, 12, 0.92); /* F88: the home's bar background */
     --phone-bar-line: rgba(255, 255, 255, 0.1);
     --phone-sheet-bg: #101014;
     --phone-accent: #f97316;
@@ -209,11 +209,17 @@
     flex: none;
   }
 
+  /* F88: the mark of the site in fire, the picture the home's bar carries, 22 px tall as on the home */
   .phone-topbar__logo {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
+    display: block;
+    width: auto;
+    height: 22px;
     flex: none;
+  }
+
+  .phone-topbar__logo-link {
+    min-height: var(--phone-target);
+    align-items: center;
   }
 
   .phone-topbar__title {
@@ -267,65 +273,8 @@
     top: calc(var(--phone-topbar-h) + var(--phone-safe-top));
   }
 
-  /* ── 5. Tab bar (REQ-03) ─────────────────────────────────────────────────────────────────── */
-  .phone-tabbar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 40;
-    padding: 0 env(safe-area-inset-right, 0px) var(--phone-safe-bottom) env(safe-area-inset-left, 0px);
-    background: var(--phone-bar-bg);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    backdrop-filter: blur(16px) saturate(1.4);
-    border-top: 1px solid var(--phone-bar-line);
-  }
 
-  .phone-tabbar__tabs {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    height: var(--phone-tabbar-h);
-  }
-
-  .phone-tabbar__tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    min-width: 0;
-    min-height: var(--phone-target);
-    color: rgba(255, 255, 255, 0.62);
-    font-size: 12px;
-    line-height: 14px;
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  .phone-tabbar__tab:active {
-    color: #fff;
-  }
-
-  .phone-tabbar__tab.is-current {
-    color: var(--phone-accent);
-  }
-
-  .phone-tabbar__icon {
-    width: 24px;
-    height: 24px;
-    flex: none;
-  }
-
-  .phone-tabbar__tab.is-current .phone-tabbar__icon {
-    filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.55));
-  }
-
-  .phone-tabbar__label {
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  /* ── 5. Tab bar (REQ-03): the bottom menu is the home's, drawn by public/splash/bar-menu.css (F88, `.pbar`) ── */
 
   /* ── 6. Action bar and back to top ───────────────────────────────────────────────────────── */
   /* .phone-action-bar: the main action of a screen, always in view above the tab bar. Give the
@@ -929,13 +878,19 @@
     color: rgba(255, 255, 255, 0.6);
   }
 
-  .phone-menu__spotify {
+  /* F88: the connections (Spotify, Apple Music) in the sheet; the rows are css/top-menu.css's `.conn` */
+  .phone-menu__section {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 12px 0;
+    padding: 14px 0 4px;
+    color: #9a9aa4;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  .phone-menu__spotify:empty {
-    display: none;
+  .phone-menu__connections {
+    padding: 0 0 8px;
   }
 
   .phone-menu__message {

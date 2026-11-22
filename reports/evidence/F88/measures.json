@@ -1,0 +1,1242 @@
+{
+ "panel-out-1280": {
+  "open": false,
+  "rect": [
+   920,
+   66,
+   344,
+   263
+  ],
+  "rows": [
+   "spotify: Not connected",
+   "apple: Not connected"
+  ],
+  "buttons": [
+   "Connect 44",
+   "Connect 44",
+   "Clear album cache 44"
+  ],
+  "sw": 1280,
+  "errors": [
+   "console.error: [AuthService] Anonymous sign-in failed: FirebaseError: Firebase: Error (auth/network-request-failed).\n    at createErrorInternal (http://127.0.0.1:5488/@fs/Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-a",
+   "console.error: [2026-11-21T20:21:09.462Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-start-1280": {
+  "url": "/start",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Start"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:09.642Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-albums-1280": {
+  "url": "/albums",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Albums",
+   "By Album"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:10.446Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-blend-1280": {
+  "url": "/blend",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Blend"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:11.294Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-saved-playlists-1280": {
+  "url": "/saved-playlists",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Playlists",
+   "Saved"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:12.114Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-inventory-1280": {
+  "url": "/inventory",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Inventory"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:12.948Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-playlists-1280": {
+  "url": "/playlists",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Playlists",
+   "New"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:13.741Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-playlist-series-1280": {
+  "url": "/playlist-series",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Playlists",
+   "Series"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:14.596Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "panel-in-1280": {
+  "signedInAtClick": true,
+  "open": true,
+  "signedInNow": true,
+  "rect": [
+   920,
+   66,
+   344,
+   323
+  ],
+  "who": "Signed in as Test Account",
+  "rows": [
+   "spotify: Not connected",
+   "apple: Not connected"
+  ],
+  "buttons": [
+   "Connect 44",
+   "Connect 44",
+   "Clear album cache 44",
+   "Sign Out 44"
+  ]
+ },
+ "in-start-1280": {
+  "url": "/start",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Start"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:17.916Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-albums-1280": {
+  "url": "/albums",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Albums",
+   "By Album"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:33.607Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-blend-1280": {
+  "url": "/blend",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Blend"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:21:49.340Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-saved-playlists-1280": {
+  "url": "/saved-playlists",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Playlists",
+   "Saved"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:22:05.058Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-inventory-1280": {
+  "url": "/inventory",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Inventory"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:22:20.753Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-playlists-1280": {
+  "url": "/playlists",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Playlists",
+   "New"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:22:36.402Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-playlist-series-1280": {
+  "url": "/playlist-series",
+  "iw": 1280,
+  "sw": 1280,
+  "current": [
+   "Playlists",
+   "Series"
+  ],
+  "title": null,
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "tabbar": null,
+  "topbar": null,
+  "targetsBelow44": [],
+  "hasTopMenu": true,
+  "hasPhoneShell": false,
+  "errors": [
+   "console.error: [2026-11-21T20:22:52.097Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "phone-menu-out-393": {
+  "open": true,
+  "rows": [
+   "spotify: Not connected",
+   "apple: Not connected"
+  ],
+  "targetsBelow44": [],
+  "sw": 393,
+  "errors": [
+   "console.error: [AuthService] Anonymous sign-in failed: FirebaseError: Firebase: Error (auth/network-request-failed).\n    at createErrorInternal (http://127.0.0.1:5488/@fs/Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-a",
+   "console.error: [2026-11-21T20:23:10.166Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-start-393": {
+  "url": "/start",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Start"
+  ],
+  "title": "Start",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:10.575Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-albums-393": {
+  "url": "/albums",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Albums"
+  ],
+  "title": "Albums",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:11.443Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-blend-393": {
+  "url": "/blend",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Blend"
+  ],
+  "title": "Blend",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:12.271Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-saved-playlists-393": {
+  "url": "/saved-playlists",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Playlists"
+  ],
+  "title": "Playlists",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:13.106Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-inventory-393": {
+  "url": "/inventory",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Inventory"
+  ],
+  "title": "Inventory",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:13.946Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-playlists-393": {
+  "url": "/playlists",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Playlists"
+  ],
+  "title": "New Playlists",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:14.783Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "out-playlist-series-393": {
+  "url": "/playlist-series",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Playlists"
+  ],
+  "title": "Playlists",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:15.646Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "phone-menu-in-393": {
+  "open": true,
+  "rows": [
+   "spotify: Not connected",
+   "apple: Not connected"
+  ],
+  "targetsBelow44": [],
+  "sw": 393,
+  "errors": [
+   "console.error: [2026-11-21T20:23:18.012Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-start-393": {
+  "url": "/start",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Start"
+  ],
+  "title": "Start",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:19.207Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-albums-393": {
+  "url": "/albums",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Albums"
+  ],
+  "title": "Albums",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:34.996Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-blend-393": {
+  "url": "/blend",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Blend"
+  ],
+  "title": "Blend",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:23:50.757Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-saved-playlists-393": {
+  "url": "/saved-playlists",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Playlists"
+  ],
+  "title": "Playlists",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:24:06.491Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-inventory-393": {
+  "url": "/inventory",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Inventory"
+  ],
+  "title": "Inventory",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:24:22.200Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-playlists-393": {
+  "url": "/playlists",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Playlists"
+  ],
+  "title": "New Playlists",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:24:37.914Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "in-playlist-series-393": {
+  "url": "/playlist-series",
+  "iw": 393,
+  "sw": 393,
+  "current": [
+   "Playlists"
+  ],
+  "title": "Playlists",
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   16.5,
+   132.9,
+   22
+  ],
+  "ms": null,
+  "tabbar": [
+   0,
+   783,
+   393,
+   69
+  ],
+  "topbar": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "targetsBelow44": [],
+  "hasTopMenu": false,
+  "hasPhoneShell": true,
+  "errors": [
+   "console.error: [2026-11-21T20:24:53.604Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The operation could not be completed\nThis typica"
+  ]
+ },
+ "home-out-1280": {
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "thread": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "sw": 1280,
+  "iw": 1280
+ },
+ "home-in-1280": {
+  "header": [
+   0,
+   0,
+   1280,
+   72
+  ],
+  "logo": [
+   16,
+   21,
+   181.2,
+   30
+  ],
+  "ms": [
+   209.2,
+   10,
+   620,
+   52
+  ],
+  "thread": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "sw": 1280,
+  "iw": 1280
+ },
+ "home-out-393": {
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   17,
+   132.9,
+   22
+  ],
+  "ms": [
+   16,
+   794,
+   361,
+   56
+  ],
+  "thread": [
+   0,
+   787,
+   393,
+   65
+  ],
+  "sw": 393,
+  "iw": 393
+ },
+ "home-in-393": {
+  "header": [
+   0,
+   0,
+   393,
+   56
+  ],
+  "logo": [
+   16,
+   17,
+   132.9,
+   22
+  ],
+  "ms": [
+   16,
+   794,
+   361,
+   56
+  ],
+  "thread": [
+   0,
+   787,
+   393,
+   65
+  ],
+  "sw": 393,
+  "iw": 393
+ }
+}

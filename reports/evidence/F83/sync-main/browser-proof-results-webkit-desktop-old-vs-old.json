@@ -1,0 +1,197 @@
+[
+  {
+    "what": "computer, /start: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, /albums: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, /blend: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, /saved-playlists: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, /playlist-series: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, /playlists: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, /inventory: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, /artists: the bar: pixels",
+    "ok": false,
+    "detail": "397 pixels apart, box x 611-666, y 160-169, largest difference 1 of 255"
+  },
+  {
+    "what": "computer, /genres: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, /tracks: the bar: pixels",
+    "ok": false,
+    "detail": "403 pixels apart, box x 611-667, y 160-169, largest difference 1 of 255"
+  },
+  {
+    "what": "computer, Apple Music not asked: the script of Apple cannot be reached: the closed button: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music not asked: the script of Apple cannot be reached: the panel open: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music not asked: the script of Apple cannot be reached: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not asked: the script of Apple cannot be reached: focus after Escape",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not asked: the script of Apple cannot be reached: focus after ArrowDown on the button",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not asked: the script of Apple cannot be reached: the order of Tab inside the panel",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music authorized (it asked in the background): the closed button: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music authorized (it asked in the background): the panel open: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music authorized (it asked in the background): what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music authorized (it asked in the background): focus after Escape",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music authorized (it asked in the background): focus after ArrowDown on the button",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music authorized (it asked in the background): the order of Tab inside the panel",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not authorized, a sign of an earlier visit: the closed button: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music not authorized, a sign of an earlier visit: the panel open: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music not authorized, a sign of an earlier visit: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not authorized, a sign of an earlier visit: focus after Escape",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not authorized, a sign of an earlier visit: focus after ArrowDown on the button",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not authorized, a sign of an earlier visit: the order of Tab inside the panel",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not authorized, no sign: the closed button: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music not authorized, no sign: the panel open: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music not authorized, no sign: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not authorized, no sign: focus after Escape",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not authorized, no sign: focus after ArrowDown on the button",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music not authorized, no sign: the order of Tab inside the panel",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, Apple Music connected by the button: the panel and the dots: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "computer, Apple Music connected by the button: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, a click on a stop: the address",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, a click on a stop: where the focus is",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "computer, after the click on Blend: the bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  }
+]

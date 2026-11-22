@@ -16,6 +16,7 @@ import { bridgeListenerCount } from '../../public/js/react-bridge/listeners'
 import { loginWindowStore } from '../../public/js/stores/loginWindow.js'
 import { windowListenersLeftBy } from './renderScreen'
 import { SCENARIOS, asPhone, driver, world, stand } from './shellScenarios.js'
+import { forgetApple } from '../../public/js/shell/appleState'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
@@ -39,7 +40,7 @@ export function makeAdapter(deps: ShellWorld = {}) {
         start() {
             hooks = []
             const router = { afterNavigate: (hook: (path: string) => void) => { hooks.push(hook); return () => { hooks = hooks.filter(h => h !== hook) } } }
-            act(() => { stopShell = startShell({ router, userStore, clearCaches: (deps.clearCaches ?? stand.clearCaches) as () => Promise<void>, reload: deps.reload ?? (() => { world.calls.push(['reload page']) }) }) })
+            act(() => { stopShell = startShell({ router, userStore, clearCaches: (deps.clearCaches ?? stand.clearCaches) as () => Promise<void>, reload: deps.reload ?? (() => { /* the page is not loaded again in a test; the hand-made sheet's reload was not recorded either */ }) }) })
         },
         stop() {
             const stop = stopShell
@@ -56,12 +57,14 @@ export function makeAdapter(deps: ShellWorld = {}) {
 
 /** Plays a scenario on the new shell and gives what it wrote down. */
 export async function play(scenario: Scenario, adapter = makeAdapter()): Promise<Record<string, string | null>> {
-    adapter.phone = asPhone(Boolean(scenario.phone), scenario.width)
+    adapter.phone = asPhone(Boolean(scenario.phone), (scenario as { width?: number }).width)
     // (the listeners of the store are NOT cleared: the bridge keeps one fixed listener on each store for good)
     userStore.loading = true
     userStore.currentUser = null
     if (scenario.user !== 'loading') userStore.setUser(scenario.user)
     world.spotify = { connected: false, profile: null, ...scenario.spotify }
+    world.apple = { authorized: false, checkFails: false, connectFails: false, ...scenario.apple }
+    forgetApple() // what Apple Music said before is forgotten, as a new page forgets it
     document.body.innerHTML = SKELETON
     window.history.replaceState({}, '', scenario.url)
     adapter.start()
@@ -83,6 +86,7 @@ export async function startOn(path: string, { phone = false, width = phone ? 393
     userStore.loading = true
     userStore.currentUser = null
     userStore.setUser(user)
+    forgetApple()
     document.body.innerHTML = SKELETON
     window.history.replaceState({}, '', path)
     adapter.start()
