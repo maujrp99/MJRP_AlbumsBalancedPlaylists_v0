@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 05:10] step — F83, onda 6b: a prova no navegador e os totais
+
+**Branch:** claude/f83-wave-6b-inventory-windows
+
+- Totais na ponta, pela fila: suíte inteira 365 arquivos, 4.814 testes, todos verdes (inclui `test/architecture` com 42 arquivos e `noSecretsInRepo`); `typecheck` sem erro; `lint` 0 erros e os mesmos 68 avisos; build dentro do teto.
+- Prova no navegador (`reports/evidence/F83/wave-6b/proof.md`): Chromium 1280, 900, 899, 393 e WebKit 1280, iPhone 14 e SE sobre o site construído; tudo igual menos a figura da folha de adicionar no celular (também de antiga contra antiga, causa não localizada) e o botão «Close» que a folha do celular não desenha (limite do roteiro).
+
+
 ## [2026-11-22 04:59] step — F83, onda 6b: o peso, os testes de sair e as notas (TASK-23c feita)
 
 **Branch:** claude/f83-wave-6b-inventory-windows
