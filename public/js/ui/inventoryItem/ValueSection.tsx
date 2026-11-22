@@ -12,8 +12,9 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
 import { t } from '../../i18n/t.js'
 import {
-    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, failureText, formatMoney, meanOfConditions, momentText, noValueText, readOnText
+    DISCOGS_CREDIT, NoValue, SourceState, ValueBasis, ValueOrigin, dayText, formatMoney, meanOfConditions, momentText, readOnText
 } from '../../models/inventoryValue.js'
+import { failureText, noValueText } from '../../i18n/inventoryTexts.js'
 import { safeUrl } from '../../utils/safeUrl.js'
 import { Icon } from '../Icon'
 import { moneyText, type Money } from './money'

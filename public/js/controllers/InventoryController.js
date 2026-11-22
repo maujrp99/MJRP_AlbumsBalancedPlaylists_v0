@@ -22,12 +22,14 @@ import { InventoryValues } from './InventoryValues.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
 import toast from '../components/Toast.js'
 import { filterInventory, statusCountsFor } from '../models/inventoryFilter.js'
-import { ALL_STATUSES, InventoryStatus, ownedValueOf, statusChangeMessage, statusOf } from '../models/inventoryStatus.js'
+import { ALL_STATUSES, InventoryStatus, ownedValueOf, statusOf } from '../models/inventoryStatus.js'
 import { filterUseOf } from '../models/filterUse.js'
 import { track } from '../services/usage/track.js'
-import { confirmationText, nothingToAddText, outcomeText, progressText } from '../models/inventoryFromSeries.js'
 import { sortInventory, sortingFor } from '../models/inventorySort.js'
-import { CONFIRM_FROM, ratingsOutcome, ratingsProgressText, ratingsQuestion } from '../models/inventoryRatings.js'
+import { CONFIRM_FROM } from '../models/inventoryRatings.js'
+import {
+    confirmationText, nothingToAddText, outcomeText, progressText, ratingsOutcome, ratingsProgressText, ratingsQuestion, statusChangeMessage
+} from '../i18n/inventoryTexts.js'
 import { VIEW_STORAGE_KEY, isViewMode } from '../models/inventoryViewMode.js'
 
 /** A status as the measurement of use writes it (F77): 'not-owned' -> 'not_owned'. */

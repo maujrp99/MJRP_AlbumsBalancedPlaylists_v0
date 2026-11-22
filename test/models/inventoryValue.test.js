@@ -3,13 +3,15 @@
  * wins; else a Discogs reading less than six hours old; else none, with the reason. The totals,
  * the currencies and what is said.
  */
+// F83 wave 6c: the English below is what `i18n/inventoryTexts.js` says over the codes the model gives (inventoryModelsGiveCodes.test.js): the very words the model wrote before.
 import { describe, it, expect, afterEach } from 'vitest'
 import {
     SIX_HOURS_MS, NoValue, ValueOrigin, valueOfItem, isFresh, needsReading, meanOfConditions, convert, toUsd, shownCurrency,
-    formatMoney, roundToCents, moneyOf, parseAmount, writtenValueFrom, totalsOf, usdOf, noValueText, valueLabel, ownedNote, toBuyNote, rateNote,
-    itemsWithDiscogsValue, shortDayText, readOnText, RATES_MISSING_TEXT, DISCOGS_CREDIT, newestReading, neverRead, needsKeeping
+    formatMoney, roundToCents, moneyOf, parseAmount, writtenValueFrom, totalsOf, usdOf,
+    itemsWithDiscogsValue, shortDayText, readOnText, DISCOGS_CREDIT, newestReading, neverRead, needsKeeping
 } from '../../public/js/models/inventoryValue.js'
 import { sortInventory, sortingFor } from '../../public/js/models/inventorySort.js'
+import { noValueText, valueLabel, ownedNote, toBuyNote, rateNote, ratesMissingText } from '../../public/js/i18n/inventoryTexts.js'
 
 const NOW = Date.parse('2026-11-20T12:00:00Z')
 const RATES = { USD: 1, EUR: 0.91, GBP: 0.76, BRL: 5.89 }
@@ -161,7 +163,7 @@ describe('what is said on the card', () => {
 
     it('the fixed sentences', () => {
         expect(DISCOGS_CREDIT).toBe('Data provided by Discogs.')
-        expect(RATES_MISSING_TEXT).toBe('Exchange rates are not available: values are shown in USD.')
+        expect(ratesMissingText()).toBe('Exchange rates are not available: values are shown in USD.')
     })
 })
 

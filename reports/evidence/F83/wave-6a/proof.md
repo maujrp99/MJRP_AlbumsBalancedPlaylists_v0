@@ -29,3 +29,8 @@ Cada estado compara: a figura (pixel a pixel), o texto visível, as caixas das p
 - O que o servidor do Discogs devolve (a chave é do servidor): a prova usa a loja do inventário sem valores. Cada origem de valor, o câmbio, a rodada de «Update values» e as notas estão no dourado, com o serviço de valores de mentira.
 - O MusicKit de verdade, a popularidade de uma conta Spotify conectada, e a leitura do Firestore (bloqueado): a janela do álbum e a de editar são as à mão, abertas pela mesma porta; a janela aberta pela capa deu 0 pixels.
 - A largura 820 (celular desde a F88) foi provada pelas passadas de 899 e 393; não há passada própria a 820.
+
+## Acrescentado depois da junta independente: «mostrar mais 50» com os valores ligados
+
+A prova acima usa itens sem valores do Discogs (o servidor não era tocado), e por isso não via o aviso do Discogs sob a lista nem o salto de página que ele causava no Chromium do celular. O estado «valores ligados + Mostrar mais 50» entrou na prova (a rolagem antes e depois, contra o pai, lista e galeria, Chromium 393 / 820 / 899 e WebKit iPhone 14, com um controle que falha sem a correção) em `fix-show-more/proof.md`.
+

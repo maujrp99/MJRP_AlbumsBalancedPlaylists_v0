@@ -21,7 +21,8 @@ vi.mock('../../../public/js/services/DialogService.js', () => ({ dialogService: 
 
 import { openInventory } from '../../support/inventoryHost'
 import { inventoryStore } from '../../../public/js/stores/inventory.js'
-import { valueOfItem, noValueText, NoValue, ValueBasis, totalsOf } from '../../../public/js/models/inventoryValue.js'
+import { valueOfItem, NoValue, ValueBasis, totalsOf } from '../../../public/js/models/inventoryValue.js'
+import { noValueText } from '../../../public/js/i18n/inventoryTexts.js'
 import { readOutcomeOf, askOfItem } from '../../../public/js/models/inventoryValueRun.js'
 import { InventoryValueService, READING_PREFIX } from '../../../public/js/services/inventory/InventoryValueService.js'
 

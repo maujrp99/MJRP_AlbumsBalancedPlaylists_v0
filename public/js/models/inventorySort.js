@@ -44,21 +44,21 @@ const READERS = {
 }
 
 /**
- * The choices of the order, as the person sees them: each criterion in its two directions, the
- * arrow in the name, the way the albums list offers its own (F71, REQ-21). The first of each pair
- * is the direction a criterion starts with.
+ * The choices of the order: each criterion in its two directions, the way the albums list offers its
+ * own (F71, REQ-21). The first of each pair is the direction a criterion starts with. Each `value` is
+ * the code of a choice; the screen names it ("Artist (A-Z)", "Value (↓)"...) from its dictionary.
  */
 export const SORT_OPTIONS = Object.freeze([
-    { value: 'artist', field: 'artist', direction: 'asc', label: 'Artist (A-Z)' },
-    { value: 'artist_desc', field: 'artist', direction: 'desc', label: 'Artist (Z-A)' },
-    { value: 'averageRating', field: 'averageRating', direction: 'desc', label: 'Avg Rating (↓)' },
-    { value: 'averageRating_asc', field: 'averageRating', direction: 'asc', label: 'Avg Rating (↑)' },
-    { value: 'averagePopularity', field: 'averagePopularity', direction: 'desc', label: 'Avg Pop (↓)' },
-    { value: 'averagePopularity_asc', field: 'averagePopularity', direction: 'asc', label: 'Avg Pop (↑)' },
-    { value: 'value', field: 'value', direction: 'desc', label: 'Value (↓)' },
-    { value: 'value_asc', field: 'value', direction: 'asc', label: 'Value (↑)' },
-    { value: 'addedToInventory', field: 'addedToInventory', direction: 'desc', label: 'Newest' },
-    { value: 'addedToInventory_asc', field: 'addedToInventory', direction: 'asc', label: 'Oldest' }
+    { value: 'artist', field: 'artist', direction: 'asc' },
+    { value: 'artist_desc', field: 'artist', direction: 'desc' },
+    { value: 'averageRating', field: 'averageRating', direction: 'desc' },
+    { value: 'averageRating_asc', field: 'averageRating', direction: 'asc' },
+    { value: 'averagePopularity', field: 'averagePopularity', direction: 'desc' },
+    { value: 'averagePopularity_asc', field: 'averagePopularity', direction: 'asc' },
+    { value: 'value', field: 'value', direction: 'desc' },
+    { value: 'value_asc', field: 'value', direction: 'asc' },
+    { value: 'addedToInventory', field: 'addedToInventory', direction: 'desc' },
+    { value: 'addedToInventory_asc', field: 'addedToInventory', direction: 'asc' }
 ])
 
 /** The sorting a choice stands for; anything that is not a choice is the default (by artist). */

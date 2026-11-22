@@ -68,7 +68,8 @@ export function Inventory({ controller, bridge }: Props) {
                 </header>
                 <PhoneBar state={state} controller={controller} actions={{ onJump: sheets.openJump, onFilters: sheets.openFilters, onActions: sheets.openActions }} />
                 <div id="inventory-grid-container" key={bridge.gridKey()}><PhoneList state={state} bridge={bridge} controller={controller} actions={rows} /></div>
-                {sourceOn ? <p className="inv-discogs-notice">{t('shell.footer.discogsNotice')}</p> : null}
+                {/* keyed with the box of the list (its own prefix: siblings never share a key): the hand-made screen rebuilt the notice on every draw; a notice that stays mounted under a box that is remounted is the anchor of Chromium's scroll anchoring, and «Show 50 more» throws the page to the end of the new chunk */}
+                {sourceOn ? <p className="inv-discogs-notice" key={`notice.${bridge.gridKey()}`}>{t('shell.footer.discogsNotice')}</p> : null}
                 {sheets.layer}
             </div>
         )

@@ -5,7 +5,8 @@
  */
 import { t, tPlural } from '../../i18n/t.js'
 import { Icon } from '../../ui/Icon'
-import { InventoryStatus, statusCountLabel } from '../../models/inventoryStatus.js'
+import { InventoryStatus } from '../../models/inventoryStatus.js'
+import { statusCountLabel } from '../../i18n/inventoryTexts.js'
 import type { InventoryController, InventoryState } from './types'
 
 /** The colour of each count. */

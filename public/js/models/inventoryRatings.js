@@ -121,40 +121,27 @@ export function planAverages(items, result, at) {
 }
 
 // ---- What the person is told ----------------------------------------------------------------------
-
-const albums = (number) => `${number} ${number === 1 ? 'album' : 'albums'}`
-
-/** The question asked before a long read. */
-export const ratingsQuestion = (count) => ({
-    title: 'Update ratings?',
-    message: `Read the ratings of ${albums(count)}? This can take a few minutes.`,
-    confirmText: 'Read ratings'
-})
-
-/** What the button says: `{ phase: 'reading', done, total }` or `{ phase: 'saving' }`. */
-export function ratingsProgressText({ phase, done, total }) {
-    return phase === 'saving' ? 'Saving ratings…' : `Reading ratings… ${done} of ${total}`
-}
+// A rule gives a code and the numbers; the words are in the dictionary of the screen (i18n/inventoryTexts.js).
 
 /** The sentences about what was left out or kept, in the order the person cares. */
 function aboutTheRest({ notFound, withoutRatings, popularityNotConnected, unanswered }) {
-    const sentences = []
-    if (notFound > 0) sentences.push(`${albums(notFound)} ${notFound === 1 ? 'was' : 'were'} not found.`)
-    if (withoutRatings > 0) sentences.push(`${albums(withoutRatings)} had no ratings at ${withoutRatings === 1 ? 'its' : 'their'} sources.`)
-    if (popularityNotConnected > 0) sentences.push(`Spotify is not connected: popularity was not read for ${albums(popularityNotConnected)}.`)
-    if (unanswered > 0) sentences.push(`A source did not answer for ${albums(unanswered)}: the numbers ${unanswered === 1 ? 'it' : 'they'} had before were kept.`)
-    return sentences
+    const parts = []
+    if (notFound > 0) parts.push({ code: 'notFound', count: notFound })
+    if (withoutRatings > 0) parts.push({ code: 'withoutRatings', count: withoutRatings })
+    if (popularityNotConnected > 0) parts.push({ code: 'popularityNotConnected', count: popularityNotConnected })
+    if (unanswered > 0) parts.push({ code: 'unanswered', count: unanswered })
+    return parts
 }
 
 /**
- * The honest end.
+ * The honest end, as the parts the screen says one after the other.
  * @param {{ total: number, planned: number, saved: number, error: string|null }} result - of InventoryService.updateAverages, with the counts of planAverages
- * @returns {{ ok: boolean, text: string }}
+ * @returns {{ ok: boolean, parts: Array<Object> }}
  */
 export function ratingsOutcome(result) {
     const { total, planned, saved, error } = result
-    const covers = result.covers > 0 ? [`${albums(result.covers)} got ${result.covers === 1 ? 'its' : 'their'} cover.`] : []
-    if (!error) return { ok: true, text: [`Ratings updated for ${saved} of ${albums(total)}.`, ...aboutTheRest(result), ...covers].join(' ') }
-    if (saved === 0) return { ok: false, text: 'No ratings were saved: the write failed and your inventory is as it was. Try again.' }
-    return { ok: false, text: `Saved ratings for ${saved} of ${albums(planned)}, then a write failed. Run Update ratings again to save the rest.` }
+    const covers = result.covers > 0 ? [{ code: 'covers', count: result.covers }] : []
+    if (!error) return { ok: true, parts: [{ code: 'updated', saved, total }, ...aboutTheRest(result), ...covers] }
+    if (saved === 0) return { ok: false, parts: [{ code: 'noneSaved' }] }
+    return { ok: false, parts: [{ code: 'partlySaved', saved, planned }] }
 }

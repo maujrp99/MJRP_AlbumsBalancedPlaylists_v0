@@ -10,7 +10,8 @@ import type { MouseEvent } from 'react'
 import { t } from '../../i18n/t.js'
 import { CoverImage } from '../../ui/CoverImage'
 import { Icon } from '../../ui/Icon'
-import { InventoryStatus, STATUS_SELECT_OPTIONS, statusOf } from '../../models/inventoryStatus.js'
+import { InventoryStatus, statusOf } from '../../models/inventoryStatus.js'
+import { statusSelectOptions } from '../../i18n/inventoryTexts.js'
 import { NOT_KNOWN } from '../../models/inventoryCard.js'
 import { CardValue } from './CardValue'
 import type { InventoryItem, ItemValue, Money } from './types'
@@ -49,7 +50,7 @@ export function StatusSelect({ id, status, onChoose }: { id: string; status: str
                     defaultValue={status}
                     onChange={(event) => onChoose(event.target.value)}
                 >
-                    {STATUS_SELECT_OPTIONS.map(({ value, label }: { value: string; label: string }) => (
+                    {statusSelectOptions().map(({ value, label }: { value: string; label: string }) => (
                         <option key={value} value={value} className={STATUS_OPTION[value]}>{label}</option>
                     ))}
                 </select>
