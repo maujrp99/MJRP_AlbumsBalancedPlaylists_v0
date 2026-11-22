@@ -2,7 +2,7 @@
  * scanState
  *
  * The rules of the state of an artist scan, as pure functions (F67). A scan has exactly one state
- * at any time, held by one owner (`components/album-picker/AlbumPickerController.js`, the one
+ * at any time, held by one owner (`ui/albumPicker/pickerController.ts`, the one
  * album picker of the Home and of the series edit - F57) and drawn through the picker's view port.
  * Every answer carries the generation of the scan that asked: an answer of an older scan, or one
  * that comes after its scan already ended, changes nothing.
@@ -67,6 +67,7 @@ export function scanEmpty(state, generation) {
 }
 
 /** The catalog did not answer in time, or failed. */
+/** @param {string} [failure] one of ScanFailure */
 export function scanFailed(state, generation, failure = ScanFailure.ERROR) {
     if (!isAwaited(state, generation)) return state
     return { ...state, status: ScanStatus.FAILED, failure }
@@ -80,40 +81,4 @@ export function scanReclassified(state, generation, albums) {
     const awaited = state.generation === generation && state.status === ScanStatus.RESULTS && state.classifying
     if (!awaited) return state
     return { ...state, classifying: false, albums: albums && albums.length > 0 ? albums : state.albums }
-}
-
-const FAILURE_TITLES = Object.freeze({
-    [ScanFailure.TIMEOUT]: `The catalog did not answer in ${CATALOG_DEADLINE_SECONDS} seconds.`,
-    [ScanFailure.ERROR]: 'The search could not be completed.'
-})
-
-/** The message of the panel in each state that has one; results have none (the albums are the panel). */
-const PANELS = Object.freeze({
-    [ScanStatus.IDLE]: () => ({ kind: 'idle', title: 'Search for an artist to begin scanning.', detail: '', retry: false }),
-    [ScanStatus.SCANNING]: (state) => ({ kind: 'scanning', title: `Searching the catalog for «${state.query}»…`, detail: 'The albums appear as soon as the catalog answers.', retry: false }),
-    [ScanStatus.RESULTS]: () => null,
-    [ScanStatus.EMPTY]: (state) => ({ kind: 'empty', title: `No albums found for «${state.query}».`, detail: 'Check the spelling or try another name.', retry: false }),
-    [ScanStatus.FAILED]: (state) => ({ kind: 'failed', title: FAILURE_TITLES[state.failure] || FAILURE_TITLES[ScanFailure.ERROR], detail: 'Nothing was changed. You can ask again.', retry: true })
-})
-
-const STATUS_LINES = Object.freeze({
-    [ScanStatus.IDLE]: () => '',
-    [ScanStatus.SCANNING]: () => 'Scanning…',
-    [ScanStatus.RESULTS]: (state) => `→ ${state.artist}${state.classifying ? ' · confirming album types…' : ''}`,
-    [ScanStatus.EMPTY]: () => '→ Not found',
-    [ScanStatus.FAILED]: () => '→ Search failed'
-})
-
-/**
- * What the screen shows for a state: the one place the texts of the scan live.
- * @returns {{ busy: boolean, buttonLabel: string, statusLine: string, panel: Object|null }}
- */
-export function describeScan(state) {
-    const busy = state.status === ScanStatus.SCANNING
-    return {
-        busy,
-        buttonLabel: busy ? 'Scanning…' : 'Scan',
-        statusLine: STATUS_LINES[state.status](state),
-        panel: PANELS[state.status](state)
-    }
 }

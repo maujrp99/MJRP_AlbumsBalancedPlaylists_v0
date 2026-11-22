@@ -1,4 +1,11 @@
 /**
+ * (2026-11-21, wave 5b: the windows of the albums screen went to React, and these left the list in the commit that deleted them:
+ * components/series/{SeriesEditModal,SeriesModals}.js, components/album-picker/{AlbumPickerController,AlbumPickerPanel,pickerParts}.js,
+ * components/ranking/{UserRankModal,rankWindowPhone}.js and views/renderers/DiscographyRenderer.js (1.073 lines in 8 files). The window to edit
+ * a series is screens/albums/SeriesEdit.tsx, the one album picker is ui/albumPicker/ (the Start screen uses its controller), the window to rank
+ * the tracks is screens/albums/RankWindow.tsx. Left in the list, with their reasons: components/ranking/{TracksTable,TracksTabs,
+ * TracksRankingComparison}.js and components/ViewAlbumModal.js (the window of the album, shared with the inventory: wave 6).)
+ *
  * (2026-11-21, wave 5a: the albums screen went to React, and these left the list in the commit that deleted them: views/SeriesView.js, views/helpers/*,
  * views/albums/*, components/series/{SeriesHeader,SeriesEmptyState,SeriesEventHandler,SeriesGridRenderer,SeriesPhoneSheets}.js, components/ui/{AlbumCardRenderer,
  * AlbumPhoneCard,Pager,FilterToolbar,FilterSheet,LoadMoreButton}.js, the two skeletons, components/base/Component.js and utils/VirtualScrollObserver.js (3.4xx
@@ -50,9 +57,6 @@ export const HAND_MADE = {
     'components/SpotifyExportModal.js': 434,
     'components/Toast.js': 154,
     'components/ViewAlbumModal.js': 382,
-    'components/album-picker/AlbumPickerController.js': 121,
-    'components/album-picker/AlbumPickerPanel.js': 109,
-    'components/album-picker/pickerParts.js': 89,
     'components/albumWindowSources.js': 40,
     'components/blend/BlendIngredientsPanel.js': 428,
     'components/blend/BlendRecipeCard.js': 174,
@@ -65,10 +69,6 @@ export const HAND_MADE = {
     'components/ranking/TracksRankingComparison.js': 207,
     'components/ranking/TracksTable.js': 314,
     'components/ranking/TracksTabs.js': 102,
-    'components/ranking/UserRankModal.js': 508,
-    'components/ranking/rankWindowPhone.js': 221,
-    'components/series/SeriesEditModal.js': 227,
-    'components/series/SeriesModals.js': 115,
     'components/ui/BaseModal.js': 178,
     'components/ui/Card.js': 341,
     'components/ui/Sheet.js': 173,
@@ -84,7 +84,6 @@ export const HAND_MADE = {
     'views/InventoryPhoneSheets.js': 226,
     'views/InventoryView.js': 693,
     'views/playlists/PlaylistsExport.js': 116,
-    'views/renderers/DiscographyRenderer.js': 81,
     'views/renderers/InventoryCardValue.js': 122,
     'views/renderers/InventoryGridRenderer.js': 212,
     'views/renderers/InventoryPhoneRow.js': 154,

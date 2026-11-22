@@ -1,0 +1,641 @@
+{
+ "oldBase": "http://127.0.0.1:5311",
+ "newBase": "http://127.0.0.1:5312",
+ "engine": "webkit",
+ "firebaseBlocked": "identitytoolkit|securetoken|firestore\\.googleapis|firebaseinstallations",
+ "passed": 118,
+ "failed": 8,
+ "results": [
+  {
+   "what": "A 1280 · edit: the window opens · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the window opens · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: the window opens · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the window opens · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the window opens · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the window opens · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · focus",
+   "ok": true,
+   "detail": "input.form-control.w-full.mb-6 / input.form-control.w-full.mb-6"
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Time\",\"1\"],[\"Speak to Me\",\"2\"],[\"Breathe\",\"3\"],[\"Money\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Time\",\"1\"],[\"Speak to Me\",\"2\"],[\"Breathe\",\"3\"],[\"Money\",\"4\"],[\"Eclipse\",\"5\"],[\"Us and Them\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · pixels of the window",
+   "ok": false,
+   "detail": "72889 px apart · box x 41-630, y 232-643, largest difference 77 of 255"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Time\",\"2\"],[\"Breathe\",\"3\"],[\"Money\",\"4\"],[\"Eclipse\",\"5\"],[\"Us and Them\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · pixels of the window",
+   "ok": false,
+   "detail": "36405 px apart · box x 41-630, y 582-643, largest difference 73 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Reset · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Reset · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: Reset · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Reset · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Reset · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Breathe\",\"2\"],[\"Time\",\"3\"],[\"Money\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: Reset · pixels of the window",
+   "ok": false,
+   "detail": "72873 px apart · box x 41-630, y 302-573, largest difference 77 of 255"
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Breathe\",\"2\"],[\"Money\",\"3\"],[\"Time\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · pixels of the window",
+   "ok": false,
+   "detail": "109347 px apart · box x 41-630, y 302-573, largest difference 77 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Breathe\",\"2\"],[\"Money\",\"3\"],[\"Time\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · pixels of the window",
+   "ok": false,
+   "detail": "50084 px apart · box x 0-447, y 51-247, largest difference 3 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Breathe\",\"2\"],[\"Money\",\"3\"],[\"Time\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · pixels of the window",
+   "ok": false,
+   "detail": "109347 px apart · box x 41-630, y 302-573, largest difference 77 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Breathe\",\"2\"],[\"Money\",\"3\"],[\"Time\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · pixels of the window",
+   "ok": false,
+   "detail": "109347 px apart · box x 41-630, y 302-573, largest difference 77 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · no error of the page on either side",
+   "ok": false,
+   "detail": "old: Worker Error: SyntaxError: The string did not match the expected pattern. | [UserRankingRepository] saveRanking error: FirebaseError: [code=unavailable]: Failed to get document because the client is offline. // new: Worker Error: SyntaxError: The string did not match the expected pattern. | [UserRankingRepository] saveRanking error: FirebaseError: [code=unavailable]: Failed to get document because the client is offline."
+  }
+ ],
+ "maxPixelsApart": 109347
+}

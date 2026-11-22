@@ -1,9 +1,9 @@
 /**
  * seriesDraft
  *
- * The rules of a series being edited (the "Edit Series" modal), as pure functions (F57): what is
- * in the list of albums before it is saved, and what the modal shows while the save is on its way
- * and when it failed. Nothing here writes: the modal asks the series service.
+ * The rules of a series being edited (the "Edit Series" window), as pure functions (F57): what is
+ * in the list of albums before it is saved, and where the save is (on its way, failed and why). The
+ * words are the window's (dictionary `albums.edit.*`, F83 wave 5b). Nothing here writes: the window asks the series service.
  */
 
 /** Where the save of the draft is. */
@@ -20,12 +20,6 @@ export const SaveProblem = Object.freeze({
     WRITE_FAILED: 'write-failed'
 })
 
-const PROBLEM_MESSAGES = Object.freeze({
-    [SaveProblem.NO_NAME]: 'Give the series a name before saving.',
-    [SaveProblem.NO_DATABASE]: 'The database is not ready yet. Nothing was saved; your changes are still here.',
-    [SaveProblem.WRITE_FAILED]: 'The series could not be saved. Your changes are still here: you can try again.'
-})
-
 /** @returns {{ status: string, problem: string|null }} the save before any ask */
 export function idleSave() {
     return { status: SaveStatus.IDLE, problem: null }
@@ -40,21 +34,9 @@ export function saveStarted() {
     return { status: SaveStatus.SAVING, problem: null }
 }
 
+/** @param {string} [problem] one of SaveProblem */
 export function saveFailed(problem = SaveProblem.WRITE_FAILED) {
     return { status: SaveStatus.FAILED, problem }
-}
-
-/**
- * What the modal shows for a save: the one place its texts live.
- * @returns {{ busy: boolean, confirmLabel: string, message: string }}
- */
-export function describeSave(save) {
-    const busy = save.status === SaveStatus.SAVING
-    return {
-        busy,
-        confirmLabel: busy ? 'Saving…' : 'Save Changes',
-        message: save.status === SaveStatus.FAILED ? (PROBLEM_MESSAGES[save.problem] || PROBLEM_MESSAGES[SaveProblem.WRITE_FAILED]) : ''
-    }
 }
 
 /**

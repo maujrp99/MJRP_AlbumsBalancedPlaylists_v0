@@ -9,7 +9,7 @@ vi.mock('../../../public/js/services/albums/albumLoading.js', async () => (await
 vi.mock('../../../public/js/services/ranking/ownRanking.js', async () => (await import('../../support/albumsScenarios.js')).rankingModule)
 vi.mock('../../../public/js/services/SeriesService.js', async () => (await import('../../support/albumsScenarios.js')).seriesServiceModule)
 vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/albumsScenarios.js')).toastModule)
-vi.mock('../../../public/js/components/series/SeriesModals.js', async () => (await import('../../support/albumsScenarios.js')).modalsModule)
+vi.mock('../../../public/js/screens/albums/useAlbumWindows', async () => (await import('../../support/albumsScenarios.js')).windowsModule)
 
 import SeriesController from '../../../public/js/controllers/SeriesController.js'
 import { Albums } from '../../../public/js/screens/albums/Albums'

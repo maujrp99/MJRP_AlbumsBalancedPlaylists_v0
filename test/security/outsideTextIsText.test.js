@@ -21,7 +21,7 @@ import { Breadcrumb } from '../../public/js/components/Breadcrumb.js'
 import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSeriesSelector.js'
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
 import { startOn } from '../support/renderShell'
-import { DiscographyRenderer } from '../../public/js/views/renderers/DiscographyRenderer.js'
+import { PickerCard } from '../../public/js/ui/albumPicker/PickerParts'
 import { FilterToolbar } from '../../public/js/ui/FilterToolbar'
 
 /** Text that would run as HTML if written into the page as it is. */
@@ -197,8 +197,8 @@ describe('text from outside is shown as text', () => {
         shell.stop()
     })
 
-    it('album picker card (Home and series edit): title, id, year and cover address', () => {
-        new DiscographyRenderer(host).render([{ id: QUOTED, title: TEXT, artist: TEXT, year: TEXT, type: 'Album', coverUrl: QUOTED }])
+    it('album picker card (series edit): title, id, year and cover address', async () => {
+        await drawReact(createElement(PickerCard, { album: { id: QUOTED, title: TEXT, artist: TEXT, year: TEXT, type: 'Album', coverUrl: QUOTED }, onPick: () => { } }))
 
         expectOnlyText(host, TEXT)
         expect(host.querySelector('[data-action="pick-album"]').dataset.id).toBe(QUOTED)

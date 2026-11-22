@@ -18,7 +18,7 @@ import { createRoot } from 'react-dom/client'
 import { CompactCard } from '../../../public/js/screens/albums/AlbumCard'
 import { Card } from '../../../public/js/components/ui/Card.js'
 import { AlbumCascade } from '../../../public/js/components/common/AlbumCascade.js'
-import { DiscographyRenderer } from '../../../public/js/views/renderers/DiscographyRenderer.js'
+import { PickerCard } from '../../../public/js/ui/albumPicker/PickerParts'
 import { appFiles, importsOf, read } from '../../architecture/support/sourceImports.js'
 
 const GOOD = 'https://covers.example/album/300x300.jpg'
@@ -33,6 +33,12 @@ const drawCard = async (album) => {
     return host
 }
 const coversIn = (root) => [...root.querySelectorAll('img[data-cover]')]
+/** The card of the album picker (React, F83 wave 5b: it was DiscographyRenderer), drawn in a box that is not in the page yet. */
+const pickerCard = async (album) => {
+    const host = document.createElement('div')
+    await act(async () => { createRoot(host).render(createElement(PickerCard, { album, onPick: () => { } })) })
+    return host.firstElementChild
+}
 
 describe('coverImage: the one way an album cover is drawn', () => {
     beforeEach(() => { document.body.innerHTML = '' })
@@ -142,17 +148,15 @@ describe('every place that draws an album cover uses it', () => {
         expect(isStandIn(img)).toBe(true)
     })
 
-    it('the picker card: an album the catalog gave no cover for shows the stand-in, not a file that does not exist', () => {
-        const renderer = new DiscographyRenderer(document.createElement('div'))
-        const card = renderer.createAlbumCard(album())
+    it('the picker card: an album the catalog gave no cover for shows the stand-in, not a file that does not exist', async () => {
+        const card = await pickerCard(album())
 
         expect(isStandIn(coversIn(card)[0])).toBe(true)
         expect(card.outerHTML).not.toContain('cover_placeholder')
     })
 
-    it('the picker card: the size is put in the address, and a failure shows the stand-in', () => {
-        const renderer = new DiscographyRenderer(document.createElement('div'))
-        document.body.appendChild(renderer.createAlbumCard(album({ coverUrl: 'https://covers.example/{w}x{h}.jpg' })))
+    it('the picker card: the size is put in the address, and a failure shows the stand-in', async () => {
+        document.body.appendChild(await pickerCard(album({ coverUrl: 'https://covers.example/{w}x{h}.jpg' })))
         const img = coversIn(document.body)[0]
 
         expect(img.getAttribute('src')).toBe('https://covers.example/300x300.jpg')
@@ -188,7 +192,7 @@ describe('every place that draws an album cover uses it', () => {
     it('the files that draw an album cover import the helper, and no file writes an inline error handler', () => {
         const drawers = [
             'screens/albums/AlbumCard.tsx', 'components/ui/Card.js', 'components/common/AlbumCascade.js',
-            'components/ViewAlbumModal.js', 'views/renderers/DiscographyRenderer.js'
+            'components/ViewAlbumModal.js', 'ui/albumPicker/PickerParts.tsx'
         ]
         const withoutTheHelper = drawers.filter(file => !importsOf(file).some(specifier => /(^|\/)(coverImage\.js|CoverImage)$/.test(specifier)))
         const inlineHandlers = appFiles().filter(file => /onerror\s*[:=]\s*["'`]/i.test(read(file)))
