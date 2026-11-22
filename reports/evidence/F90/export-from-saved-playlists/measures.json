@@ -58,7 +58,7 @@
     "Export",
     "Delete batch"
   ],
-  "phone.window.batch": "Export batch\n\n\nExport to Apple Music\n\nExport to Spotify\n\nDownload JSON",
+  "phone.window.batch": "Export Road trip mix\n\n\nExport to Apple Music\n\nExport to Spotify\n\nDownload JSON",
   "desktop.stage": "ok",
   "desktop.batchButtons": [
     "Edit batch Road trip mix",
@@ -97,15 +97,15 @@
     }
   ],
   "desktop.focusReturnsToRowButton": "Export Side Two",
-  "desktop.window.batch": "Export batch Export to Apple Music Export to Spotify Download JSON",
+  "desktop.window.batch": "Export Road trip mix Export to Apple Music Export to Spotify Download JSON",
   "errors": [
     "phone console Worker Error: Error: Network error",
     "phone console [AuthService] Anonymous sign-in failed: FirebaseError: Firebase: Error (auth/network-request-failed).",
-    "phone console [2026-11-22T02:23:47.199Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The oper",
+    "phone console [2026-11-22T02:50:39.756Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The oper",
     "phone console [MusicKit] Initialization failed: Error: Token fetch failed: 500",
-    "desktop console [AuthService] Anonymous sign-in failed: FirebaseError: Firebase: Error (auth/network-request-failed).\n    at qd (http://127.0.0.1:52800/assets/main-Bi9K8Hz8.js:392:758)\n    at gn (http://127.0.0.1:528",
-    "desktop console Worker Error: Error: Network error\n    at Fe (http://127.0.0.1:52800/assets/search.worker-saFDN5Ff.js:1:8285)",
-    "desktop console [2026-11-22T02:23:52.844Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The oper",
-    "desktop console [MusicKit] Initialization failed: Error: Token fetch failed: 500\n    at lP._doInit (http://127.0.0.1:52800/assets/main-Bi9K8Hz8.js:3059:13669)\n    at async lP.authorize (http://127.0.0.1:52800/assets/"
+    "desktop console Worker Error: Error: Network error\n    at Fe (http://127.0.0.1:56901/assets/search.worker-saFDN5Ff.js:1:8285)",
+    "desktop console [AuthService] Anonymous sign-in failed: FirebaseError: Firebase: Error (auth/network-request-failed).\n    at Yh (http://127.0.0.1:56901/assets/main-CsLURPj1.js:392:758)\n    at yn (http://127.0.0.1:569",
+    "desktop console [2026-11-22T02:50:46.096Z]  @firebase/firestore: Firestore (10.14.1): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unavailable]: The oper",
+    "desktop console [MusicKit] Initialization failed: Error: Token fetch failed: 500\n    at vP._doInit (http://127.0.0.1:56901/assets/main-CsLURPj1.js:3059:13669)\n    at async vP.authorize (http://127.0.0.1:56901/assets/"
   ]
 }
