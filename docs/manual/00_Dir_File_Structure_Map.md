@@ -19,11 +19,11 @@
 ## 3. Frontend Enrichment (Core)
 11. `public/js/app.js` (Analysis: `manual/19_Frontend_JS_Root.md`)
 12. `public/js/router.js` (Analysis: `manual/19_Frontend_JS_Root.md`)
-13. `public/js/views/InventoryView.js` (Analysis: `manual/09_Frontend_Views.md`)
-14. `public/js/views/PlaylistsView.js` (Analysis: `manual/09_Frontend_Views.md`)
-15. `public/js/views/BlendingMenuView.js` (Analysis: `manual/09_Frontend_Views.md`)
-16. `public/js/views/SeriesView.js` (Analysis: `manual/09_Frontend_Views.md`)
-17. `public/js/views/renderers/InventoryGridRenderer.js` (Analysis: `manual/09_Frontend_Views.md`)
+13. `public/js/views/InventoryView.js` (Analysis: `manual/09_Frontend_Views.md`) *(F83: now `screens/inventory/Inventory.tsx`)*
+14. `public/js/views/PlaylistsView.js` (Analysis: `manual/09_Frontend_Views.md`) *(F83: now `screens/playlists/Playlists.tsx`)*
+15. `public/js/views/BlendingMenuView.js` (Analysis: `manual/09_Frontend_Views.md`) *(F83: now `screens/blend/Blend.tsx`)*
+16. `public/js/views/SeriesView.js` (Analysis: `manual/09_Frontend_Views.md`) *(F83: now `screens/albums/Albums.tsx` and `screens/albums/index.ts`)*
+17. `public/js/views/renderers/InventoryGridRenderer.js` (Analysis: `manual/09_Frontend_Views.md`) *(F83: now `screens/inventory/Grid.tsx` and `screens/inventory/ItemCard.tsx`)*
 18. `public/js/views/strategies/ViewModeStrategy.js` (Analysis: `manual/09_Frontend_Views.md`) *(removed in F65: `ViewModeStrategy.js`)*
 19. `public/js/stores/albums.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
 20. `public/js/services/SpotifyService.js` (Analysis: `manual/06_Frontend_Data_Store.md`)
@@ -38,55 +38,55 @@
 
 ### Batch 1: Root Components (Core UI)
 27. `public/js/components/Autocomplete.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(removed in F65: `Autocomplete.js`)*
-28. `public/js/components/Breadcrumb.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
+28. `public/js/components/Breadcrumb.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `ui/Breadcrumb.tsx`)*
 29. `public/js/components/EditAlbumModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(removed in F65: `EditAlbumModal.js`)*
-30. `public/js/components/Footer.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
+30. `public/js/components/Footer.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `shell/Footer.tsx`)*
 31. `public/js/components/GlobalProgress.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(removed 2026-11-22: the orange loading line at the top; `GlobalProgress.js`)*
-32. `public/js/components/Icons.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
+32. `public/js/components/Icons.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(removed in F83: icons are data in `utils/iconShapes.js`, drawn by `ui/Icon.tsx`)*
 33. `public/js/components/InlineProgress.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(removed in F65: `InlineProgress.js`)*
-34. `public/js/components/InventoryAddModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
-35. `public/js/components/InventoryEditModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
-36. `public/js/components/LoginModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
-37. `public/js/components/SpotifyConnectButton.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
-38. `public/js/components/SpotifyExportModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
-39. `public/js/components/Toast.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
-40. `public/js/components/TopNav.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
-41. `public/js/components/ViewAlbumModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
+34. `public/js/components/InventoryAddModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `ui/inventoryItem/AddWindow.tsx`)*
+35. `public/js/components/InventoryEditModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `ui/inventoryItem/EditWindow.tsx`)*
+36. `public/js/components/LoginModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `shell/LoginWindow.tsx`)*
+37. `public/js/components/SpotifyConnectButton.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `shell/ConnectionRows.tsx`)*
+38. `public/js/components/SpotifyExportModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `ui/SpotifyExportWindow.tsx`)*
+39. `public/js/components/Toast.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `stores/toasts.js` and `shell/Toasts.tsx`)*
+40. `public/js/components/TopNav.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `shell/TopNav.tsx`)*
+41. `public/js/components/ViewAlbumModal.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `ui/albumWindow/AlbumWindow.tsx`)*
 
 ### Batch 2: Feature Components (Subdirectories)
-42. `public/js/components/blend/BlendRecipeCard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-43. `public/js/components/blend/BlendIngredientsPanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-44. `public/js/components/blend/BlendSeriesSelector.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+42. `public/js/components/blend/BlendRecipeCard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `ui/recipe/RecipeCards.tsx`)*
+43. `public/js/components/blend/BlendIngredientsPanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `ui/recipe/Ingredients.tsx`)*
+44. `public/js/components/blend/BlendSeriesSelector.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/blend/SeriesStep.tsx`)*
 45. `public/js/components/inventory/InventoryGrid.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(removed in F65: `InventoryGrid.js`)*
 46. `public/js/components/inventory/InventoryItemCard.js` (Missing / Superseded)
 47. `public/js/components/inventory/InventoryStats.js` (Missing / Superseded)
 48. `public/js/components/playlists/PlaylistExportToolbar.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(removed in F65: `PlaylistExportToolbar.js`)*
-49. `public/js/components/playlists/PlaylistGrid.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+49. `public/js/components/playlists/PlaylistGrid.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/playlists/PlaylistCards.tsx`)*
 50. `public/js/components/playlists/PlaylistsDragBoard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(removed in F65: `PlaylistsDragBoard.js`)*
-51. `public/js/components/playlists/PlaylistsDragHandler.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-52. `public/js/components/playlists/PlaylistsGridRenderer.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-53. `public/js/components/playlists/RegeneratePanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-54. `public/js/components/playlists/SavedPlaylistsController.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+51. `public/js/components/playlists/PlaylistsDragHandler.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `react-bridge/sortableTracks.ts`)*
+52. `public/js/components/playlists/PlaylistsGridRenderer.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/playlists/Playlists.tsx`)*
+53. `public/js/components/playlists/RegeneratePanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/playlists/RegeneratePanel.tsx`)*
+54. `public/js/components/playlists/SavedPlaylistsController.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `controllers/SavedPlaylistsController.js`)*
 55. `public/js/components/playlists/TrackItem.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(removed in F65: `TrackItem.js`)*
 56. `public/js/components/series/ArtistScanner.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
 57. `public/js/components/series/SeriesDragDrop.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(removed in F65: `SeriesDragDrop.js`)*
-58. `public/js/components/series/SeriesEditModal.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-59. `public/js/components/series/SeriesEventHandler.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+58. `public/js/components/series/SeriesEditModal.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/albums/SeriesEdit.tsx` and `screens/albums/seriesEditSession.ts`)*
+59. `public/js/components/series/SeriesEventHandler.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(removed in F83: every button in the React screens has its own `onClick`)*
 60. `public/js/components/series/SeriesFilterBar.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(removed in F65: `SeriesFilterBar.js`)*
-61. `public/js/components/series/SeriesGridRenderer.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-62. `public/js/components/series/SeriesHeader.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-63. `public/js/components/series/SeriesModals.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-64. `public/js/components/ui/FilterToolbar.js` (Analysis: `manual/11_Frontend_Components_Root.md`)
+61. `public/js/components/series/SeriesGridRenderer.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/albums/SeriesGroups.tsx`)*
+62. `public/js/components/series/SeriesHeader.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/albums/Header.tsx`)*
+63. `public/js/components/series/SeriesModals.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/albums/seriesDelete.ts` and `screens/albums/SeriesEdit.tsx`)*
+64. `public/js/components/ui/FilterToolbar.js` (Analysis: `manual/11_Frontend_Components_Root.md`) *(F83: now `ui/FilterToolbar.tsx`)*
 
 ### Navigation & UI & Common
-65. `public/js/components/ui/BaseModal.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-66. `public/js/components/ui/Card.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-67. `public/js/components/ui/TrackRow.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-68. `public/js/components/base/Component.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-69. `public/js/components/ui/LoadMoreButton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-70. `public/js/components/ui/skeletons/AlbumSkeleton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-71. `public/js/components/ui/skeletons/SeriesSkeleton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
-72. `public/js/components/common/AlbumCascade.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
+65. `public/js/components/ui/BaseModal.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(F83: now `ui/ModalShell.tsx`)*
+66. `public/js/components/ui/Card.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(F83: now `screens/inventory/ItemCard.tsx` and `screens/inventory/ItemRow.tsx`)*
+67. `public/js/components/ui/TrackRow.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(F83: now `ui/TrackRow.tsx`)*
+68. `public/js/components/base/Component.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(removed in F83: the base class of the hand-made components; React components replaced it)*
+69. `public/js/components/ui/LoadMoreButton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(F83: now `screens/albums/Pager.tsx`)*
+70. `public/js/components/ui/skeletons/AlbumSkeleton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(F83: now `screens/albums/SeriesGroups.tsx`)*
+71. `public/js/components/ui/skeletons/SeriesSkeleton.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(F83: now `screens/albums/SeriesGroups.tsx`)*
+72. `public/js/components/common/AlbumCascade.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(F83: now `ui/AlbumCascade.tsx`)*
 73. `public/js/components/navigation/SeriesDropdown.js` (Missing / Superseded)
 74. `public/js/components/shared/ContextMenu.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(removed in F65: `ContextMenu.js`)*
 75. `public/js/components/shared/SkeletonLoader.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) *(removed in F65: `SkeletonLoader.js`)*
@@ -94,18 +94,18 @@
 77. `public/js/components/search/VariantPickerModal.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
 
 ### Search & Ranking & Home
-78. `public/js/components/ranking/TracksRankingComparison.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
-79. `public/js/components/ranking/TracksTable.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
-80. `public/js/components/ranking/TracksTabs.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
-81. `public/js/components/ranking/UserRankModal.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+78. `public/js/components/ranking/TracksRankingComparison.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`) *(F83: now `ui/tracks/TracksComparison.tsx`)*
+79. `public/js/components/ranking/TracksTable.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`) *(F83: now `ui/tracks/TracksTable.tsx`)*
+80. `public/js/components/ranking/TracksTabs.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`) *(F83: now `ui/tracks/TracksTabs.tsx`)*
+81. `public/js/components/ranking/UserRankModal.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`) *(F83: now `screens/albums/RankWindow.tsx` and `screens/albums/rankSession.ts`)*
 82. `public/js/components/home/SearchController.js` (Removed in F57 - see `manual/22_Album_Search_Engine.md` and `manual/14_Frontend_Components_Feature_Map.md`)
-83. `public/js/components/home/StagingAreaController.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`); with F79, `HomeDock.js`, `HomePasteList.js` and `HomeEqualizer.js` beside it (`manual/14_Frontend_Components_Feature_Map.md`)
+83. `public/js/components/home/StagingAreaController.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`); with F79, `HomeDock.js`, `HomePasteList.js` and `HomeEqualizer.js` beside it (`manual/14_Frontend_Components_Feature_Map.md`) *(F83: `StagingAreaController.js` is now `screens/start/StagingArea.ts`; `HomeDock.js` is now `screens/start/Dock.tsx`; `HomePasteList.js` is now `screens/start/PasteList.tsx`; `HomeEqualizer.js` is now `screens/start/Equalizer.tsx`)*
 
 ## 5. Service & Logic Audit 
 
 ### Batch 3: Client Services & Adapters
 84. `public/js/services/DataSyncService.js` (Analysis: `manual/17_Frontend_Services.md`)
-85. `public/js/services/DialogService.js` (Analysis: `manual/17_Frontend_Services.md`)
+85. `public/js/services/DialogService.js` (Analysis: `manual/17_Frontend_Services.md`) *(F83: now `ui/dialogs/dialogs.ts`)*
 86. `public/js/services/MusicKitSearchAdapter.js` (Analysis: `manual/17_Frontend_Services.md`) *(removed in F65: `MusicKitSearchAdapter.js`)*
 87. `public/js/services/MusicKitService.js` (Analysis: `manual/17_Frontend_Services.md`)
 88. `public/js/services/OptimizedAlbumLoader.js` (Analysis: `manual/17_Frontend_Services.md`)
@@ -166,7 +166,7 @@
 
 ### Batch 8: Infrastructure
 134. `public/js/workers/search.worker.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
-135. `public/js/utils/SafeDOM.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
+135. `public/js/utils/SafeDOM.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`) *(removed in F83: React escapes text by itself; no hand-made DOM is left to guard)*
 136. `public/js/utils/stringUtils.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
 137. `public/js/utils/SvgGenerator.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`) *(removed in F65: `SvgGenerator.js`)*
 138. `public/js/helpers/dom-helpers.js` (does not exist in the code)
@@ -176,14 +176,14 @@
 
 ### Batch 9: Frontend Views & Renderers 
 142. `public/js/views/SaveAllView.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(removed in F65: `SaveAllView.js`)*
-143. `public/js/views/ComingSoonView.js` (Analysis: `manual/10_Frontend_Renderers.md`)
+143. `public/js/views/ComingSoonView.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(F83: now `screens/coming-soon/ComingSoon.tsx`)*
 144. `public/js/views/albums/AlbumsFilters.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(removed in F65: `AlbumsFilters.js`)*
-145. `public/js/views/albums/AlbumsGridRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`)
-146. `public/js/views/albums/AlbumsScopedRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`)
+145. `public/js/views/albums/AlbumsGridRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(F83: now `screens/albums/SeriesGroups.tsx`)*
+146. `public/js/views/albums/AlbumsScopedRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(F83: now `screens/albums/SeriesGroups.tsx`)*
 147. `public/js/views/playlists/PlaylistsDragDrop.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(removed in F65: `PlaylistsDragDrop.js`)*
-148. `public/js/views/playlists/PlaylistsExport.js` (Analysis: `manual/10_Frontend_Renderers.md`)
-149. `public/js/views/renderers/DiscographyRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`)
-150. `public/js/views/renderers/InventoryGridRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`)
+148. `public/js/views/playlists/PlaylistsExport.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(F83: now `controllers/playlistExports.js` and `controllers/playlistExportEntries.js`)*
+149. `public/js/views/renderers/DiscographyRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(F83: now `screens/start/Results.tsx`)*
+150. `public/js/views/renderers/InventoryGridRenderer.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(F83: now `screens/inventory/Grid.tsx` and `screens/inventory/ItemCard.tsx`)*
 151. `public/js/views/renderers/StagingAreaRenderer.js` — removed in F79 (the dock of the Home, `components/home/HomeDock.js`, draws the series)
 152. `public/js/views/strategies/ViewModeStrategy.js` (Analysis: `manual/10_Frontend_Renderers.md`) *(removed in F65: `ViewModeStrategy.js`)*
 
@@ -248,10 +248,10 @@
 ## 7. Sprint 19 Refactoring 
 201. `public/js/services/PlaylistsService.js` and `public/js/services/playlists/playlistsWiring.js`, where it is put together (Analysis: `manual/17_Frontend_Services.md`)
 202. `public/js/services/SeriesService.js` (Analysis: `manual/17_Frontend_Services.md`)
-203. `public/js/components/playlists/SavedPlaylistActions.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-204. `public/js/components/playlists/SavedPlaylistCard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-205. `public/js/components/playlists/SavedPlaylistRow.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-206. `public/js/components/series/SeriesEmptyState.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
+203. `public/js/components/playlists/SavedPlaylistActions.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/saved-playlists/BatchCard.tsx`)*
+204. `public/js/components/playlists/SavedPlaylistCard.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/saved-playlists/BatchCard.tsx`)*
+205. `public/js/components/playlists/SavedPlaylistRow.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/saved-playlists/BatchCard.tsx`)*
+206. `public/js/components/series/SeriesEmptyState.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/albums/Albums.tsx`)*
 207. `public/js/views/helpers/SeriesGridHelper.js` (Analysis: `manual/09_Frontend_Views.md`) *(removed in F65: `SeriesGridHelper.js`)*
 208. `public/js/views/helpers/SeriesViewHandlers.js` (Analysis: `manual/09_Frontend_Views.md`) *(removed in F65: `SeriesViewHandlers.js`)*
 209. `docs/decisions/0017-pure-state-stores.md` (Analysis: `manual/01_System_Architecture.md`)
@@ -259,10 +259,10 @@
 211. `public/js/services/infra/StorageService.js` (Analysis: `manual/17_Frontend_Services.md`)
 212. `public/js/services/playlists/PlaylistHistoryService.js` (Analysis: `manual/17_Frontend_Services.md`)
 213. `public/js/services/auth/UserSyncService.js` (Analysis: `manual/17_Frontend_Services.md`)
-214. `public/js/components/playlists/PlaylistDetailsModal.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-215. `public/js/components/playlists/SavedSeriesGroup.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-216. `public/js/views/helpers/SeriesModalsManager.js` (Analysis: `manual/09_Frontend_Views.md`)
-217. `public/js/views/helpers/SeriesViewMounter.js` (does not exist in the code)
+214. `public/js/components/playlists/PlaylistDetailsModal.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/saved-playlists/PlaylistDetails.tsx`)*
+215. `public/js/components/playlists/SavedSeriesGroup.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `screens/saved-playlists/SeriesGroup.tsx`)*
+216. `public/js/views/helpers/SeriesModalsManager.js` (Analysis: `manual/09_Frontend_Views.md`) *(F83: now `screens/albums/useAlbumWindows.tsx`)*
+217. `public/js/views/helpers/SeriesViewMounter.js` (does not exist in the code) *(removed before F83: `SeriesViewMounter.js`)*
 
 ## 8. v4.0 - Album load, filters and paging (2026-11)
 1. `public/js/utils/TaskQueue.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
@@ -280,7 +280,7 @@
 12. `public/js/services/albums/adapters/enrichers.js` (Analysis: `manual/08_Frontend_Models.md`)
 13. `public/js/services/albums/adapters/AlbumCacheAdapter.js` (Analysis: `manual/08_Frontend_Models.md`)
 14. `public/js/services/series/SeriesFactsService.js` (Analysis: `manual/17_Frontend_Services.md`)
-15. `public/js/components/ui/Pager.js` (Analysis: `manual/12_Frontend_Components_Core.md`)
+15. `public/js/components/ui/Pager.js` (Analysis: `manual/12_Frontend_Components_Core.md`) *(F83: now `screens/albums/Pager.tsx`)*
 16. `public/js/api/client.js` (Analysis: `manual/19_Frontend_JS_Root.md`)
 17. `public/js/utils/retry.js` (Analysis: `manual/07b_Frontend_Utilities_and_Workers.md`)
 18. `public/js/repositories/SharedAlbumRepository.js` (Analysis: `manual/07_Frontend_Data_Infra.md`) *(removed in F65: `SharedAlbumRepository.js`)*
@@ -302,9 +302,9 @@
 1. `public/js/models/albumType.js` (Analysis: `manual/22_Album_Search_Engine.md`)
 2. `public/js/models/albumPicker.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
 3. `public/js/models/seriesDraft.js` (Analysis: `manual/21_Dynamic_UI_Mapping.md`, section 2.2)
-4. `public/js/components/album-picker/AlbumPickerController.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-5. `public/js/components/album-picker/AlbumPickerPanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`)
-6. `public/js/components/album-picker/pickerParts.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`)
+4. `public/js/components/album-picker/AlbumPickerController.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `ui/albumPicker/pickerController.ts`)*
+5. `public/js/components/album-picker/AlbumPickerPanel.js` (Analysis: `manual/14_Frontend_Components_Feature_Map.md`) *(F83: now `ui/albumPicker/AlbumPickerPanel.tsx`)*
+6. `public/js/components/album-picker/pickerParts.js` (Analysis: `manual/16_Frontend_Components_Search_and_Ranking.md`) *(F83: now `ui/albumPicker/PickerParts.tsx`)*
 
 ## 10. Project Documentation & Archives
 ### Root Documentation
@@ -366,8 +366,8 @@
 **Grand Total Code Files: 217 (Matched with Master List)**
 **Grand Total Doc Files: 47**
 
-> Added in v5.0 (F59, F60, F64), not yet placed in the tree above: `public/js/api/serverFetch.js`, `public/js/views/playlists/unsavedChangesGuard.js`, `public/js/utils/duration.js`, `server/lib/auth/` (`verifyIdToken.js`, `requireUser.js`, `guards.js`), `server/lib/rateLimit.js`, `server/lib/asyncRoute.js`, `server/lib/debugGate.js`, `scripts/deploy-site.sh`, `scripts/deploy-server.sh`, `scripts/lib/deploy-common.sh`.
+> Added in v5.0 (F59, F60, F64), not yet placed in the tree above: `public/js/api/serverFetch.js`, `public/js/views/playlists/unsavedChangesGuard.js`, `public/js/utils/duration.js`, `server/lib/auth/` (`verifyIdToken.js`, `requireUser.js`, `guards.js`), `server/lib/rateLimit.js`, `server/lib/asyncRoute.js`, `server/lib/debugGate.js`, `scripts/deploy-site.sh`, `scripts/deploy-server.sh`, `scripts/lib/deploy-common.sh`. Since F83 this is `screens/playlists/unsavedChangesGuard.ts` (React).
 
-> Added in v5.0 (F62), not yet placed in the tree above: `public/js/services/AppleMusicExportService.js`, `public/js/services/export/exportLedger.js`, `public/js/services/spotify/spotifyErrors.js` (Analysis: `manual/17_Frontend_Services.md`), `public/js/views/playlists/playlistEditActions.js` (Analysis: `manual/21_Dynamic_UI_Mapping.md` section 4.1).
+> Added in v5.0 (F62), not yet placed in the tree above: `public/js/services/AppleMusicExportService.js`, `public/js/services/export/exportLedger.js`, `public/js/services/spotify/spotifyErrors.js` (Analysis: `manual/17_Frontend_Services.md`), `public/js/views/playlists/playlistEditActions.js` (Analysis: `manual/21_Dynamic_UI_Mapping.md` section 4.1). Since F83 this is `screens/playlists/Playlists.tsx` (React).
 
-> Added in v5.0 (F70), not yet placed in the tree above: `public/js/api/paidRoutes.js` (Analysis: `manual/07_Frontend_Data_Infra.md`), `public/js/models/ratingsOutcome.js` (Analysis: `manual/08_Frontend_Models.md`), `public/js/components/ui/coverImage.js` (Analysis: `manual/13_Frontend_Components_Shared.md`)
+> Added in v5.0 (F70), not yet placed in the tree above: `public/js/api/paidRoutes.js` (Analysis: `manual/07_Frontend_Data_Infra.md`), `public/js/models/ratingsOutcome.js` (Analysis: `manual/08_Frontend_Models.md`), `public/js/components/ui/coverImage.js` (Analysis: `manual/13_Frontend_Components_Shared.md`) Since F83 this is `ui/coverStandIn.ts` (React).

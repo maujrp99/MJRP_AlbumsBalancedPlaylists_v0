@@ -31,22 +31,22 @@
 
 | View | Purpose | Size | Status |
 |------|---------|------|--------|
-| [SeriesView.js](file:///public/js/views/SeriesView.js) | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 238 lines | ✅ |
-| [HomeView.js](file:///public/js/views/HomeView.js) | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ |
-| [BlendingMenuView.js](file:///public/js/views/BlendingMenuView.js) | Blend wizard (`/blend`) | 449 lines | ✅ |
-| [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ |
+| [SeriesView.js](file:///public/js/views/SeriesView.js) | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 238 lines | ✅ *(F83: now `screens/albums/Albums.tsx` and `screens/albums/index.ts`)* |
+| [HomeView.js](file:///public/js/views/HomeView.js) | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ *(F83: now `screens/start/Start.tsx`)* |
+| [BlendingMenuView.js](file:///public/js/views/BlendingMenuView.js) | Blend wizard (`/blend`) | 449 lines | ✅ *(F83: now `screens/blend/Blend.tsx`)* |
+| [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ *(F83: now `screens/playlists/Playlists.tsx`)* |
 | `screens/saved-playlists/SavedPlaylists.tsx` | View saved batches (in React since F83 wave 1; was `views/SavedPlaylistsView.js`) | — | ✅ |
-| [InventoryView.js](file:///public/js/views/InventoryView.js) | Personal collection | 270 lines | ✅ |
+| [InventoryView.js](file:///public/js/views/InventoryView.js) | Personal collection | 270 lines | ✅ *(F83: now `screens/inventory/Inventory.tsx`)* |
 | [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 319 lines | ✅ *(removed in F65: `ConsolidatedRankingView.js`)* |
 | [RankingView.js](file:///public/js/views/RankingView.js) | Single album ranking | 217 lines | ✅ *(removed in F65: `RankingView.js`)* |
 | [SaveAllView.js](file:///public/js/views/SaveAllView.js) | Data migration | 183 lines | ✅ SafeDOM (Node) *(removed in F65: `SaveAllView.js`)* |
-| [ComingSoonView.js](file:///public/js/views/ComingSoonView.js) | Placeholder for `/artists`, `/genres`, `/tracks` | 66 lines | ✅ |
-| [BaseView.js](file:///public/js/views/BaseView.js) | View base class | 144 lines | ✅ |
+| [ComingSoonView.js](file:///public/js/views/ComingSoonView.js) | Placeholder for `/artists`, `/genres`, `/tracks` | 66 lines | ✅ *(F83: now `screens/coming-soon/ComingSoon.tsx`)* |
+| [BaseView.js](file:///public/js/views/BaseView.js) | View base class | 144 lines | ✅ *(removed in F83: the tab title is written by `react-bridge/useScreenTitle.ts`)* |
 
 `AlbumsView.js` and `EditPlaylistView.js` no longer exist: the albums screen is `SeriesView` and the edit of a saved batch is `PlaylistsView` in edit mode.
 
 #### View Architecture
-- All views extend `BaseView` providing lifecycle: `mount()`, `render()`, `destroy()`
+- All views extend `BaseView` providing lifecycle: `mount()`, `render()`, `destroy()`. Since F83 `BaseView.js` is gone: every screen is React (`react-bridge/ReactView.tsx`), and the tab title is written by `react-bridge/useScreenTitle.ts`.
 - The view logic lives in the controllers (`public/js/controllers/`); the views draw and forward events
 - Event delegation preferred over direct binding
 
@@ -57,7 +57,7 @@
 
 **Key Methods**:
 - `mount()`: Subscribes to `inventoryStore` and initializes `InventoryController`, which loads the albums
-- `render(input)`, `renderFilters(state)`: Drawn with `views/renderers/InventoryGridRenderer.js`
+- `render(input)`, `renderFilters(state)`: Drawn with `views/renderers/InventoryGridRenderer.js` *(F83: now `screens/inventory/Grid.tsx` and `screens/inventory/ItemCard.tsx`)*
 - `attachEventListeners()`: Delegates the actions to the controller (`handleStatusChange`, `handleCurrencyChange`, ...)
 - `handleEditWithModal(albumId)`, `handleViewWithModal(albumId)`: Open the modals
 - `handleDeleteWithModal(albumId)`: Confirms and calls `InventoryController.handleDelete`, which calls `inventoryService.removeAlbum`.
@@ -276,10 +276,10 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 
 | Component | Purpose | Status |
 |-----------|---------|--------|
-| [TracksRankingComparison.js](file:///public/js/components/ranking/TracksRankingComparison.js) | Multi-source comparison | ✅ |
-| [TracksTable.js](file:///public/js/components/ranking/TracksTable.js) | Desktop sortable table | ✅ SafeDOM |
-| [TracksTabs.js](file:///public/js/components/ranking/TracksTabs.js) | Mobile tabbed view | ✅ SafeDOM |
-| [UserRankModal.js](file:///public/js/components/ranking/UserRankModal.js) | Drag-and-drop modal of the person's own ranking; opens in the order of the saved ranking, reports through `onSubmit`, and the saving is done by `SeriesController.saveRanking` via `OwnRankingService` | ✅ |
+| [TracksRankingComparison.js](file:///public/js/components/ranking/TracksRankingComparison.js) | Multi-source comparison | ✅ *(F83: now `ui/tracks/TracksComparison.tsx`)* |
+| [TracksTable.js](file:///public/js/components/ranking/TracksTable.js) | Desktop sortable table | ✅ SafeDOM *(F83: now `ui/tracks/TracksTable.tsx`)* |
+| [TracksTabs.js](file:///public/js/components/ranking/TracksTabs.js) | Mobile tabbed view | ✅ SafeDOM *(F83: now `ui/tracks/TracksTabs.tsx`)* |
+| [UserRankModal.js](file:///public/js/components/ranking/UserRankModal.js) | Drag-and-drop modal of the person's own ranking; opens in the order of the saved ranking, reports through `onSubmit`, and the saving is done by `SeriesController.saveRanking` via `OwnRankingService` | ✅ *(F83: now `screens/albums/RankWindow.tsx` and `screens/albums/rankSession.ts`)* |
 
 ---
 
@@ -290,10 +290,10 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 
 | Component | Purpose | Status |
 |-----------|---------|--------|
-| [SafeDOM.js](file:///public/js/utils/SafeDOM.js) | DOM Construction Utility | ✅ New |
-| [BaseModal.js](file:///public/js/components/ui/BaseModal.js) | Standard Modal Shell | ✅ SafeDOM |
-| [Card.js](file:///public/js/components/ui/Card.js) | Universal Entity Card | ✅ SafeDOM |
-| [TrackRow.js](file:///public/js/components/ui/TrackRow.js) | Universal Track Row | ✅ SafeDOM |
+| [SafeDOM.js](file:///public/js/utils/SafeDOM.js) | DOM Construction Utility | ✅ New *(removed in F83: React escapes text by itself; no hand-made DOM is left to guard)* |
+| [BaseModal.js](file:///public/js/components/ui/BaseModal.js) | Standard Modal Shell | ✅ SafeDOM *(F83: now `ui/ModalShell.tsx`)* |
+| [Card.js](file:///public/js/components/ui/Card.js) | Universal Entity Card | ✅ SafeDOM *(F83: now `screens/inventory/ItemCard.tsx` and `screens/inventory/ItemRow.tsx`)* |
+| [TrackRow.js](file:///public/js/components/ui/TrackRow.js) | Universal Track Row | ✅ SafeDOM *(F83: now `ui/TrackRow.tsx`)* |
 
 #### SafeDOM Utility
 **Purpose**: Securely create DOM elements without `innerHTML` sinks.
@@ -302,12 +302,12 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 - `div(props, children)`, `span(props, children)`, etc.
 - `header()`, `aside()`, `section()`, etc. (Semantic Tags)
 - `fromHTML(html)`, `text(str)`, `fragment(children)`, `clear(el)`, `replaceChildren(el, ...)`
-- `renderHTML()` is not a SafeDOM method: it is a static method of the UI components (`Card`, `TrackRow`, `BaseModal`) for legacy string support
+- `renderHTML()` is not a SafeDOM method: it is a static method of the UI components (`Card`, `TrackRow`, `BaseModal`) for legacy string support. Since F83 `SafeDOM`, `Card.js`, `TrackRow.js` and `BaseModal.js` are gone (`ui/TrackRow.tsx`, `ui/ModalShell.tsx`, `screens/inventory/ItemCard.tsx`).
 
 #### Component Updates (Sprint 15)
 - All UI components now return **DOM Nodes** via `render()`.
 - Added `renderHTML()` static method for backwards compatibility.
-- `BaseModal` includes `mount()` and `unmount()` helpers.
+- `BaseModal` includes `mount()` and `unmount()` helpers. Since F83 this is `ui/ModalShell.tsx` (React).
 
 ---
 

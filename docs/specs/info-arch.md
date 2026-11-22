@@ -511,7 +511,7 @@ Fonte: os três protótipos acima; cada item tem a mesma etiqueta nos wireframes
 
 - Rodada 1: criar, «Creating…», a falha ao gravar e o depois de criar não estavam desenhados. **Rodada 2 (Transformar v2): desenhados** (`^home-creating`, `^home-created`, `^home-create-failed`, `^home-name-missing`).
 - O nome vazio: hoje o computador cria «New Album Series» sem avisar. Na v2 o nome é sugerido pelo artista como texto de verdade, e o nome apagado pede o nome (decidido pelo agente — revisável).
-- Depois de criar: hoje o site abre a série na tela de séries (`controllers/HomeController.js` linha 235). Na v2 a Home fica e oferece «Blend it now» primeiro e «Open the series» (decidido pelo agente — revisável; a rota `/blend?seriesId=` já existe, `views/BlendingMenuView.js` linha 306).
+- Depois de criar: hoje o site abre a série na tela de séries (`controllers/HomeController.js` linha 235). Na v2 a Home fica e oferece «Blend it now» primeiro e «Open the series» (decidido pelo agente — revisável; a rota `/blend?seriesId=` já existe, `screens/blend/Blend.tsx` linha 306).
 - Arrastar para mudar a ordem: fora da v2 (↑ ↓ basta e funciona igual no toque).
 - As capas dos álbuns que vêm de uma lista colada são marcadores no protótipo (só as capas de Pink Floyd foram capturadas).
 

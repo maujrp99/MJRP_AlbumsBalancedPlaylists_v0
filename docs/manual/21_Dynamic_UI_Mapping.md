@@ -12,23 +12,23 @@
 ---
 
 ## 1. Authentication & Entry (Home)
-**File Context**: `views/HomeView.js`, `controllers/HomeController.js`
+**File Context**: `views/HomeView.js`, `controllers/HomeController.js` Since F83 this is `screens/start/Start.tsx` (React).
 
 ### 1.1 Artist Search and the series being built (F79, the Home that explains itself)
 *   **Logic Trace**:
     1.  **[UI]** User types in the one field `#artistScanInput` ("An artist, or paste a list of albums") and presses Enter or clicks «Search» (`#btnScanArtist`). There is no debounce. The hint under the field changes while the field has the focus and text (`HomeController.fieldFocused` -> `HomeView.drawHint`).
-    2.  **[FN]** `HomeController.search(text)` -> `AlbumPickerController.searchArtist(query)` (the one album picker, F57; the Home is one of its two frames) -> the scan state goes to `scanning` (`models/scanState.js`) and the port `drawScan` -> `HomeController.drawScan` -> `HomeView.drawResults` / `drawStage` draw it at once: «Searching…» busy and disabled, «Looking for «text» in the catalog…», skeleton covers, the stage small, the equalizer moving (`components/home/HomeEqualizer.js`, state `live`). While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`.
+    2.  **[FN]** `HomeController.search(text)` -> `AlbumPickerController.searchArtist(query)` (the one album picker, F57; the Home is one of its two frames) -> the scan state goes to `scanning` (`models/scanState.js`) and the port `drawScan` -> `HomeController.drawScan` -> `HomeView.drawResults` / `drawStage` draw it at once: «Searching…» busy and disabled, «Looking for «text» in the catalog…», skeleton covers, the stage small, the equalizer moving (`components/home/HomeEqualizer.js`, state `live`). While a scan runs, another ask does nothing; an empty field gets the notice "Type an artist name first.". Then it calls `AlbumSearchService.scanArtist(query)`. Since F83 this is `screens/start/Equalizer.tsx` (React).
     3.  **[API]** Apple Music catalog through MusicKit (`musicKitService.getArtistAlbums`), in the browser, straight to Apple: the app's server sees nothing of it except `GET /api/musickit-token`, once per page load. The catalog step has a deadline of 15 s (`CATALOG_DEADLINE_MS`) and the start of MusicKit one of 10 s (`MUSICKIT_INIT_DEADLINE_MS`).
     4.  **[UI]** As soon as the catalog answers, `DiscographyRenderer` (`variant: 'stage'`) draws the cards, classified by the one classifier (`models/albumType.js`) without the AI list (or with the list remembered from an earlier scan of the same artist); the artist, the line «N studio albums · newest first» (`models/homeSeries.js` `typesLine`), the chips with their counts and «Add all N …» (`addAllLabel`) are drawn. No album: «No albums found for «text».» with «Paste a list». Deadline or failure: the reason, what still holds, and «Try again» (`#btnScanRetry`), which scans the same text; the equalizer goes flat.
     4b. **[API]** Only when some album is of an electronic genre (`wantsAiList`), `POST /api/ai/studio-albums` is asked after that first render (deadline of 60 s, `AI_LIST_DEADLINE_MS`); the line under the artist adds «· confirming album types…» meanwhile. When the list arrives the albums are classified again (in the list: "Studio"; not in it: "Other") and the grid and the counts are redrawn. A visitor (the guest login) never asks it (F70, `api/paidRoutes.js`).
     5.  **[UI]** User clicks a cover (`[data-action="pick-album"]`, a button).
     6.  **[FN]** `HomeController.clickCard(id)`: a cover already in the series is taken out (`StagingAreaController.removeAlbum`) with «Undo» for 8 s (`UNDO_MS`); otherwise `AlbumPickerController.pick(id)` -> `onPick` -> `StagingAreaController.addAlbum(album)`. After a series was created, a click starts another series first (`startAnother`).
-    7.  **[UI]** `StagingAreaController` tells the change -> `HomeController.seriesChanged` (the suggested name follows the series, `models/homeSeries.js` `nameAfterChange`) -> `redraw`: `HomeView.markCards` (the ring and the place on each chosen cover) and `components/home/HomeDock.js` (the dock: numbered covers, name, «N albums from N artists · the order counts», «Edit order», «Create series»; on the phone the `.phone-action-bar` and the full sheet of the series).
+    7.  **[UI]** `StagingAreaController` tells the change -> `HomeController.seriesChanged` (the suggested name follows the series, `models/homeSeries.js` `nameAfterChange`) -> `redraw`: `HomeView.markCards` (the ring and the place on each chosen cover) and `components/home/HomeDock.js` (the dock: numbered covers, name, «N albums from N artists · the order counts», «Edit order», «Create series»; on the phone the `.phone-action-bar` and the full sheet of the series). Since F83 this is `screens/start/Dock.tsx` (React).
     8.  **[UI]** «Edit order» opens the series panel above the dock (↑ ↓ ✕ per row, `HomeController.move` / `removeWithUndo`); «Add all» (`HomeController.addAll`) adds what the chips show, with «Added N albums. Undo».
 
 ### 1.2 The pasted list (F63, F79)
 *   **Logic Trace**:
-    1.  **[UI]** The same field takes a list: pasting several lines into `#artistScanInput` (`HomeController.pasteIntoField`), or «paste a list» (`[data-home-mode="paste"]`), turns it into `components/home/HomePasteList.js`: one input per album line.
+    1.  **[UI]** The same field takes a list: pasting several lines into `#artistScanInput` (`HomeController.pasteIntoField`), or «paste a list» (`[data-home-mode="paste"]`), turns it into `components/home/HomePasteList.js`: one input per album line. Since F83 this is `screens/start/PasteList.tsx` (React).
     2.  **[FN]** Every input event checks every line (`models/homePaste.js` `checkPastedLines`, which reads each line with `parsePastedAlbumLine` of `models/albumQuery.js`: only the first " - " separates, so a hyphen in a name is kept; a list number or bullet in front, an en or em dash or a tab as the separator and a space missing on one side are accepted; a hyphen with no space on either side never separates). Each line says «ready» or what to fix; the foot says «N lines: N ready, N to fix…» and the button «Add N albums» (`pasteSummary`).
     3.  **[UI]** User clicks «Add N albums» (`#btnProcessBulk`). With no ready line the button is off.
     4.  **[FN]** `HomeController.addPastedList(text)` -> `readPastedList(text)` (`models/bulkPaste.js`) -> `stageBulkEntries` searches each good line (`albumSearchService.search(artist, title, { limit: 1 })`) and adds the first result (`toStagedAlbum` -> `StagingAreaController.addAlbum`). One line never stops the others. The button is busy («Adding…») meanwhile.
@@ -48,7 +48,7 @@
 ---
 
 ## 2. Albums Series Management
-**File Context**: `views/SeriesView.js`, `controllers/SeriesController.js`
+**File Context**: `views/SeriesView.js`, `controllers/SeriesController.js` Since F83 this is `screens/albums/Albums.tsx` and `screens/albums/index.ts` (React).
 
 ### 2.1 View Toggle & Filtering
 *   **Logic Trace**:
@@ -76,7 +76,7 @@
 ---
 
 ## 3. Blending Menu (Playlist Generation)
-**File Context**: `views/BlendingMenuView.js`, `controllers/BlendingController.js`
+**File Context**: `views/BlendingMenuView.js`, `controllers/BlendingController.js` Since F83 this is `screens/blend/Blend.tsx` (React).
 
 ### 3.1 Wizard Flow (The Restaurant)
 *   **Step 1: Blend (Series)**
@@ -103,10 +103,10 @@
 ---
 
 ## 4. Playlist Manager (Single Session)
-**File Context**: `views/PlaylistsView.js`, `controllers/PlaylistsController.js`
+**File Context**: `views/PlaylistsView.js`, `controllers/PlaylistsController.js` Since F83 this is `screens/playlists/Playlists.tsx` (React).
 
 ### 4.1 Playlist CRUD (In-Memory)
-Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set (the one on screen is not changed in place), records it as a step of the history and shows it. The clicks and the title field are heard in one place, `views/playlists/playlistEditActions.js`, attached once to the container of the screen.
+Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set (the one on screen is not changed in place), records it as a step of the history and shows it. The clicks and the title field are heard in one place, `views/playlists/playlistEditActions.js`, attached once to the container of the screen. Since F83 this is `screens/playlists/Playlists.tsx` (React).
 *   **Delete Playlist**:
     1.  **[UI]** Click the trash button in the header of the Playlist Card (`[data-action="delete-playlist"]`).
     2.  **[FN]** `PlaylistsController.deletePlaylist(index)` -> `PlaylistsService.removePlaylist(index)` (a step of the history; counts as an unsaved change, v5.0, F60).
@@ -148,7 +148,7 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
     4.  **[FN]** What this session already created is not created again (`services/export/exportLedger.js`); a playlist created without all its tracks gets the rest.
     5.  **[UI]** The modal ends on the report: "Created (n)" with a link "Open in Spotify" for each playlist, "Created without all their tracks", "Not created", "No track found", the reason it stopped, and "Connect to Spotify again" (the access could not be renewed) or "Try again".
 *   **Apple Music Export** (F62):
-    1.  **[UI]** Click "Export to Apple Music" -> `handleExportToAppleMusic({ btn })` (`views/playlists/PlaylistsExport.js`). A click while an export runs creates nothing and says so; the button shows the step.
+    1.  **[UI]** Click "Export to Apple Music" -> `handleExportToAppleMusic({ btn })` (`views/playlists/PlaylistsExport.js`). A click while an export runs creates nothing and says so; the button shows the step. Since F83 this is `controllers/playlistExports.js` and `controllers/playlistExportEntries.js` (React).
     2.  **[FN]** `AppleMusicExportService.exportPlaylists()` authorizes, makes or finds the folder of the series, and creates one playlist per playlist ("i. Batch - Title"). A playlist Apple Music refuses is reported and the others are still tried.
     3.  **[FN]** A playlist created in this session is not created again: the id Apple Music gave is remembered in `exportLedger` (the library is not searched).
     4.  **[UI]** `appleExportMessages(report)` -> toasts of 12 s: what was created, what was not and why, tracks not found, a folder that could not be made.
@@ -156,7 +156,7 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
 ---
 
 ## 5. Playlist Series Management (History)
-**File Context**: `views/SavedPlaylistsView.js`, `components/playlists/SavedPlaylistsController.js`, `services/playlists/SavedPlaylistsReader.js`, `stores/savedPlaylists.js` (v5.0, F61)
+**File Context**: `views/SavedPlaylistsView.js`, `components/playlists/SavedPlaylistsController.js`, `services/playlists/SavedPlaylistsReader.js`, `stores/savedPlaylists.js` (v5.0, F61) Since F83: `SavedPlaylistsView.js` is now `screens/saved-playlists/SavedPlaylists.tsx`; `SavedPlaylistsController.js` is now `controllers/SavedPlaylistsController.js`.
 
 ### 5.1 Batch CRUD
 *   **Rendering** (v5.0, F61: the screen waits for no read):
@@ -182,7 +182,7 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
 ---
 
 ## 6. Inventory Logic
-**File Context**: `views/InventoryView.js`, `controllers/InventoryController.js`, `models/inventoryStatus.js`, `models/inventoryFilter.js`, `models/inventoryFromSeries.js`, `models/inventorySort.js`, `models/inventoryRatings.js`, `models/albumAverages.js`, `controllers/InventoryValues.js`, `models/inventoryValue.js`, `models/inventoryValueRun.js`, `models/buyLinks.js`, `services/inventory/InventoryValueService.js`, `views/renderers/InventoryCardValue.js`, `views/renderers/InventoryValueHeader.js`, `components/InventoryValueSection.js`
+**File Context**: `views/InventoryView.js`, `controllers/InventoryController.js`, `models/inventoryStatus.js`, `models/inventoryFilter.js`, `models/inventoryFromSeries.js`, `models/inventorySort.js`, `models/inventoryRatings.js`, `models/albumAverages.js`, `controllers/InventoryValues.js`, `models/inventoryValue.js`, `models/inventoryValueRun.js`, `models/buyLinks.js`, `services/inventory/InventoryValueService.js`, `views/renderers/InventoryCardValue.js`, `views/renderers/InventoryValueHeader.js`, `components/InventoryValueSection.js` Since F83: `InventoryView.js` is now `screens/inventory/Inventory.tsx`; `InventoryCardValue.js` is now `screens/inventory/CardValue.tsx`; `InventoryValueHeader.js` is now `screens/inventory/Totals.tsx` and `screens/inventory/Notices.tsx`; `InventoryValueSection.js` is now `ui/inventoryItem/ValueSection.tsx`.
 
 ### 6.1 Logic & Calculations
 *   **Status** (F71): an item is Owned, Not Owned or on the Wishlist. The stored field is `owned` (`true`, `null` or missing, `false`); `models/inventoryStatus.js` is the one place that reads and writes it (`statusOf`, `ownedValueOf`). The card, the filter, the counts, the album window and the toast of a change ask that module.
@@ -192,7 +192,7 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
 *   **Sorting** (F71, S-56):
     1.  **[UI]** Select `#inventorySort`: `Artist (A-Z)` (default), `Artist (Z-A)`, `Avg Rating (↓)`, `Avg Rating (↑)`, `Avg Pop (↓)`, `Avg Pop (↑)`, `Value (↓)`, `Value (↑)` (F75: by the estimated value in USD, read from `state.value.usdOf`), `Newest`, `Oldest`.
     2.  **[FN]** `handleSortChoice(value)` -> `sortingFor(value)` -> `applyFiltersAndSort()` -> `sortInventory(items, sorting)` (`models/inventorySort.js`). The averages and the date start with the highest/newest first; an item with no value comes last whatever the direction; ties fall back to artist and title. `Recently added` reads `addedToInventory` (or `createdAt`), a Firestore timestamp (`{ seconds }`) or a date.
-*   **The card** (F75, REQ-01) is a surface (its own background, a faint edge, the cover reaching the edges) with the same five lines in every card (`views/renderers/InventoryCardValue.js` `cardValueBlock`): the label of the value by status, the origin and the value with `≈`, the two averages with their icons, the label of the actions, the actions. The price paid is no longer on the card. The list view keeps the one small line `Avg Rating: 78.4 · Avg Pop: 42.6%` (`InventoryGridRenderer.renderAverages`) and shows the value beside it (`rowValue`).
+*   **The card** (F75, REQ-01) is a surface (its own background, a faint edge, the cover reaching the edges) with the same five lines in every card (`views/renderers/InventoryCardValue.js` `cardValueBlock`): the label of the value by status, the origin and the value with `≈`, the two averages with their icons, the label of the actions, the actions. The price paid is no longer on the card. The list view keeps the one small line `Avg Rating: 78.4 · Avg Pop: 42.6%` (`InventoryGridRenderer.renderAverages`) and shows the value beside it (`rowValue`). Since F83 this is `screens/inventory/CardValue.tsx` (React).
 *   **Stats Calculation**:
     1.  **[FN]** `calculateStats()` runs on every update.
     2.  **[LOGIC]**
@@ -208,7 +208,7 @@ Every edit goes through `PlaylistsService._applyEdit` (F62): it builds a new set
     2.  **[FN]** `InventoryController.handleUpdateValues()` -> `InventoryValues.updateAll()`: the items with no written value and no reading younger than six hours (`itemsToRead`; the six hours only guard against asking Discogs twice in a row); "Read them now" passes `{ onlyNeverRead: true }`. A reading only the browser holds is first kept in its item. Opening the screen never starts it.
     3.  **[SERVICE]** `inventoryValues.readMany(items, { signal, onProgress, onItem })`: one album at a time through `POST /api/album-value`; each reading goes to the browser cache for six hours and is kept in its item, with the edition, in parts of 25 (`InventoryService.setReadings`). "Wait" is waited; the token refused, no sign-in and the source turned off stop the run.
     4.  **[UI]** `InventoryView.showValues(state, itemId)` draws the button, the notice, the totals and that one card in place; the end is a toast with the counts (`valuesOutcome`).
-*   **The album window** (F75): `components/InventoryValueSection.js` adds "Estimated value" (the three conditions and the mean, the edition with its link, "Read again", the field to write a value, "Use the Discogs value instead") and "Where to buy" (the three stores, `models/buyLinks.js`). The window asks the controller: `valueViewOf`, `handleWriteValue`, `handleForgetValue`, `handleReadValue`.
+*   **The album window** (F75): `components/InventoryValueSection.js` adds "Estimated value" (the three conditions and the mean, the edition with its link, "Read again", the field to write a value, "Use the Discogs value instead") and "Where to buy" (the three stores, `models/buyLinks.js`). The window asks the controller: `valueViewOf`, `handleWriteValue`, `handleForgetValue`, `handleReadValue`. *(F83: now `ui/inventoryItem/ValueSection.tsx`)*
 *   **The switch** (F75, REQ-10): `inventoryValues.sourceState()` asks `GET /api/value-sources` once when the screen opens. Off: no button, no notice, no Discogs value; `showDiscogsNotice(false)` hides the API sentence of the footer.
 *   **The suggestion refused** (F75, 2026-11-20): Discogs gives price suggestions only to an account with seller settings. The server then answers the lowest price for sale (`kind: 'lowest_for_sale'`, `suggestions: 'seller_settings_missing'`); `readOutcomeOf` makes a reading with `basis: 'lowest_for_sale'`; `InventoryValueService` remembers the refusal for six hours (`sellerSettingsMissing()`) and asks with `prices: 'lowest'`; each new run tries the suggestion once. The card says "Discogs · 18 Nov" over "CD · lowest" (a suggestion says "CD · suggested"), the notice `#valuesSellerSettingsNotice` says what to do, the window shows "Lowest price for sale on Discogs".
 

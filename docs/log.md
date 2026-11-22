@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 19:46] step — F83 onda 8d, 6: o roteador fica, a documentação no estado final
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **O roteador (TASK-29): fica o da casa**, decisão escrita como nota no fim de `plan.md` (não ADR), com o custo da alternativa (React Router: ≈ 15 a 20 kB no script principal, 3 a 5 dias e uma onda de prova, sem mudança visível) e a revisão marcada para quando houver rotas aninhadas.
+- **Documentação no estado final:** `docs/specs/arch.md` (o mapa de componentes: `screens/`, `ui/`, `shell/`, `react-bridge/`; sem `views/`, `components/` nem `react-bridge/legacy/`; a regra final), `docs/specs/tech-stack.md` (React 19 e TypeScript, ADR-0023 ainda «Proposed»: não foi aceita e a constituição não foi tocada; os controladores seguem em JavaScript), `docs/specs/design-system.md` (a tabela de portes fechada; as linhas que diziam «ainda a antiga» e «invólucro» corrigidas) e `docs/specs/behavior.md` (217 caminhos de arquivos à mão trocados pelo arquivo em React, ou «removido na F83»). O manual (`docs/manual/`, 17 arquivos) ganhou, em cada entrada de arquivo apagado, a nota «F83: now …» ou «removed in F83» (os dois instantâneos históricos ficam como estão).
+- **Prova do pixel sem segunda foto escondida:** `reports/evidence/F83/sync-3/browser-proof.mjs` aprende `STRICT=1` (sem a segunda foto depois de 1,5 s); sem ele, a segunda foto já vinha escrita na linha do resultado.
+
 ## [2026-11-22 19:38] step — F83 onda 8d, 5: os textos que faltavam vão ao dicionário
 
 **Branch:** claude/f83-wave-8d-closure

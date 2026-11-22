@@ -157,7 +157,8 @@ async function state(label, opened, { skipPixels = false } = {}) {
     // a transition of the bar still running (the bar's buttons fade): the pictures are taken again after a pause, and what the second pair says is noted too.
     // The same goes for a difference of at most 4 of 255 on a pixel: the ring of the focused field fades in (a transition of 0.15 s on `.home-field`), and the
     // control that compares `main` with `main` shows the same sort of sobra (first round: 11,488 pixels, at most 4 of 255, around the field).
-    const inTheBar = apart > 0 && Number.isFinite(y1) && (y1 < 80 * (scale / ps[0].viewportSize().width) || delta <= 4)
+    // STRICT=1 (wave 8d): no second shot, the first one is the verdict. Without it the retake is written in the line of the result ("first shot ... after 1.5 s"), never silent.
+    const inTheBar = process.env.STRICT !== '1' && apart > 0 && Number.isFinite(y1) && (y1 < 80 * (scale / ps[0].viewportSize().width) || delta <= 4)
     let settled = ''
     if (inTheBar) {
         await ps[0].waitForTimeout(1500);
