@@ -1,0 +1,489 @@
+{
+ "firstScreen": {
+  "today-in-393": {
+   "words": 91,
+   "menus": 7,
+   "product": 84,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+    "Search",
+    "Type an artist to see their albums, or",
+    "paste a list",
+    "of albums from many artists.",
+    "1",
+    "Find",
+    "an artist, or paste a list",
+    "2",
+    "Add",
+    "the albums you want, in the order you want",
+    "3",
+    "Create",
+    "the series, then blend it",
+    "No albums yet",
+    "Search, then tap a cover",
+    "Create series"
+   ],
+   "title": {
+    "size": "30px",
+    "lines": 6,
+    "overflow": false
+   },
+   "fieldTop": 306,
+   "small": [],
+   "hscroll": false
+  },
+  "today-in-375": {
+   "words": 86,
+   "menus": 7,
+   "product": 79,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+    "Search",
+    "Type an artist to see their albums, or",
+    "paste a list",
+    "of albums from many artists.",
+    "1",
+    "Find",
+    "an artist, or paste a list",
+    "2",
+    "Add",
+    "the albums you want, in the order you want",
+    "3",
+    "Create",
+    "No albums yet",
+    "Search, then tap a cover",
+    "Create series"
+   ],
+   "title": {
+    "size": "30px",
+    "lines": 6,
+    "overflow": false
+   },
+   "fieldTop": 306,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-393": {
+   "words": 110,
+   "menus": 6,
+   "product": 104,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+    "Search",
+    "Type an artist to see their albums, or",
+    "paste a list",
+    "of albums from many artists.",
+    "You're not signed in: the series is saved to this browser only.",
+    "Sign in",
+    "to keep it on every device.",
+    "1",
+    "Find",
+    "an artist, or paste a list",
+    "2",
+    "Add",
+    "the albums you want, in the order you want",
+    "3",
+    "Create",
+    "the series, then blend it",
+    "No albums yet",
+    "Search, then tap a cover",
+    "Create series"
+   ],
+   "title": {
+    "size": "30px",
+    "lines": 6,
+    "overflow": false
+   },
+   "fieldTop": 306,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-375": {
+   "words": 103,
+   "menus": 6,
+   "product": 97,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.",
+    "Search",
+    "Type an artist to see their albums, or",
+    "paste a list",
+    "of albums from many artists.",
+    "You're not signed in: the series is saved to this browser only.",
+    "Sign in",
+    "to keep it on every device.",
+    "1",
+    "Find",
+    "an artist, or paste a list",
+    "2",
+    "Add",
+    "the albums you want, in the order you want",
+    "No albums yet",
+    "Search, then tap a cover",
+    "Create series"
+   ],
+   "title": {
+    "size": "30px",
+    "lines": 6,
+    "overflow": false
+   },
+   "fieldTop": 306,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-in-393": {
+   "words": 23,
+   "menus": 7,
+   "product": 16,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "What is a series?",
+    "Search",
+    "or paste a list"
+   ],
+   "title": {
+    "size": "26px",
+    "lines": 5,
+    "overflow": false
+   },
+   "fieldTop": 233,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-in-375": {
+   "words": 23,
+   "menus": 7,
+   "product": 16,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "What is a series?",
+    "Search",
+    "or paste a list"
+   ],
+   "title": {
+    "size": "26px",
+    "lines": 5,
+    "overflow": false
+   },
+   "fieldTop": 233,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-393": {
+   "words": 22,
+   "menus": 6,
+   "product": 16,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "What is a series?",
+    "Search",
+    "or paste a list"
+   ],
+   "title": {
+    "size": "26px",
+    "lines": 5,
+    "overflow": false
+   },
+   "fieldTop": 233,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-375": {
+   "words": 22,
+   "menus": 6,
+   "product": 16,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "What is a series?",
+    "Search",
+    "or paste a list"
+   ],
+   "title": {
+    "size": "26px",
+    "lines": 5,
+    "overflow": false
+   },
+   "fieldTop": 233,
+   "small": [],
+   "hscroll": false
+  },
+  "two-in-393": {
+   "words": 23,
+   "menus": 7,
+   "product": 16,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "What is a series?",
+    "Search",
+    "or paste a list"
+   ],
+   "title": {
+    "size": "19.6196px",
+    "lines": 4,
+    "overflow": false
+   },
+   "fieldTop": 195,
+   "small": [],
+   "hscroll": false
+  },
+  "two-in-375": {
+   "words": 23,
+   "menus": 7,
+   "product": 16,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "What is a series?",
+    "Search",
+    "or paste a list"
+   ],
+   "title": {
+    "size": "18.6413px",
+    "lines": 4,
+    "overflow": false
+   },
+   "fieldTop": 193,
+   "small": [],
+   "hscroll": false
+  },
+  "two-out-393": {
+   "words": 22,
+   "menus": 6,
+   "product": 16,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "What is a series?",
+    "Search",
+    "or paste a list"
+   ],
+   "title": {
+    "size": "19.6196px",
+    "lines": 4,
+    "overflow": false
+   },
+   "fieldTop": 195,
+   "small": [],
+   "hscroll": false
+  },
+  "two-out-375": {
+   "words": 22,
+   "menus": 6,
+   "product": 16,
+   "catalog": 0,
+   "placeholder": 8,
+   "texts": [
+    "Pick the albums.",
+    "We blend the playlists.",
+    "What is a series?",
+    "Search",
+    "or paste a list"
+   ],
+   "title": {
+    "size": "18.6413px",
+    "lines": 4,
+    "overflow": false
+   },
+   "fieldTop": 193,
+   "small": [],
+   "hscroll": false
+  }
+ },
+ "states": {
+  "today-out-typing-393": {
+   "words": 105,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-typing-375": {
+   "words": 98,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-searching-393": {
+   "words": 62,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-searching-375": {
+   "words": 62,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-results-393": {
+   "words": 48,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-results-375": {
+   "words": 48,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-chosen-393": {
+   "words": 54,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-chosen-375": {
+   "words": 54,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-paste-393": {
+   "words": 68,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-paste-375": {
+   "words": 68,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-failed-393": {
+   "words": 63,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-failed-375": {
+   "words": 63,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-notfound-393": {
+   "words": 101,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-notfound-375": {
+   "words": 101,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-sheet-393": {
+   "words": 104,
+   "small": [],
+   "hscroll": false
+  },
+  "today-out-sheet-375": {
+   "words": 97,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-typing-393": {
+   "words": 16,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-typing-375": {
+   "words": 16,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-searching-393": {
+   "words": 19,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-searching-375": {
+   "words": 19,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-results-393": {
+   "words": 5,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-results-375": {
+   "words": 5,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-chosen-393": {
+   "words": 42,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-chosen-375": {
+   "words": 42,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-paste-393": {
+   "words": 31,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-paste-375": {
+   "words": 31,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-failed-393": {
+   "words": 21,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-failed-375": {
+   "words": 21,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-notfound-393": {
+   "words": 35,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-notfound-375": {
+   "words": 35,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-sheet-393": {
+   "words": 16,
+   "small": [],
+   "hscroll": false
+  },
+  "lean-out-sheet-375": {
+   "words": 16,
+   "small": [],
+   "hscroll": false
+  }
+ },
+ "errors": []
+}

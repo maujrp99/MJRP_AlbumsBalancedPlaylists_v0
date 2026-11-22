@@ -1,0 +1,69 @@
+{
+ "today": {
+  "in-393": {
+   "words": 84,
+   "menus": 7,
+   "placeholder": 8
+  },
+  "in-375": {
+   "words": 79,
+   "menus": 7,
+   "placeholder": 8
+  },
+  "out-393": {
+   "words": 104,
+   "menus": 6,
+   "placeholder": 8
+  },
+  "out-375": {
+   "words": 97,
+   "menus": 6,
+   "placeholder": 8
+  }
+ },
+ "lean": {
+  "in-393": {
+   "words": 16,
+   "menus": 7,
+   "placeholder": 8
+  },
+  "in-375": {
+   "words": 16,
+   "menus": 7,
+   "placeholder": 8
+  },
+  "out-393": {
+   "words": 16,
+   "menus": 6,
+   "placeholder": 8
+  },
+  "out-375": {
+   "words": 16,
+   "menus": 6,
+   "placeholder": 8
+  }
+ },
+ "two": {
+  "in-393": {
+   "words": 16,
+   "menus": 7,
+   "placeholder": 8
+  },
+  "in-375": {
+   "words": 16,
+   "menus": 7,
+   "placeholder": 8
+  },
+  "out-393": {
+   "words": 16,
+   "menus": 6,
+   "placeholder": 8
+  },
+  "out-375": {
+   "words": 16,
+   "menus": 6,
+   "placeholder": 8
+  }
+ },
+ "notes": "Contadas como na régua: o texto cuja linha aparece ao abrir a tela, no topo; fora o que é só para leitor de tela."
+}
