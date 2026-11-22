@@ -10,7 +10,8 @@ import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { dialogService } from '../../services/DialogService.js'
 import { getSeriesService } from '../../services/SeriesService.js'
 import { toast } from '../../components/Toast.js'
-import { openAlbumWindow, openInventoryAdd, openRankWindow } from '../../react-bridge/legacy/AlbumWindows'
+import { openAlbumWindow, openInventoryAdd } from '../../react-bridge/legacy/AlbumWindows'
+import type { RankRequest } from './RankWindow'
 import type { AlbumAction } from './AlbumCard'
 import type { Album, AlbumsController } from './types'
 
@@ -18,6 +19,8 @@ export interface ActionDeps {
     controller: AlbumsController
     /** The phone's «⋯»: the sheet of an album; the choice comes back as an action. */
     openAlbumSheet: (album: Album, onAction: (action: AlbumAction) => void) => void
+    /** The window to rank the tracks of an album (it draws itself; the ranking is saved through `onSubmit`). */
+    openRank: (request: RankRequest) => void
 }
 
 const CANNOT_FIND = 'Could not find album query in series'
@@ -98,7 +101,11 @@ export async function runAlbumAction(deps: ActionDeps, action: AlbumAction, albu
             await removeAlbum(deps, album, groupSeriesId)
             break
         case 'rank-album':
-            await openRankWindow(album, (rankings) => deps.controller.saveRanking(album, rankings), () => toast.success(t('albums.rank.saved', { title: album.title })))
+            deps.openRank({
+                album,
+                onSubmit: (rankings) => deps.controller.saveRanking(album, rankings),
+                onSave: () => toast.success(t('albums.rank.saved', { title: album.title }))
+            })
             break
         case 'refetch-metadata':
             deps.controller.handleRefetchMetadata(album)

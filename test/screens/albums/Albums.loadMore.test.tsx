@@ -15,8 +15,7 @@ vi.mock('../../../public/js/services/DialogService.js', async () => (await impor
 vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/albumsScenarios.js')).toastModule)
 vi.mock('../../../public/js/components/ViewAlbumModal.js', async () => (await import('../../support/albumsScenarios.js')).albumWindowModule)
 vi.mock('../../../public/js/components/InventoryAddModal.js', async () => (await import('../../support/albumsScenarios.js')).inventoryModule)
-vi.mock('../../../public/js/components/ranking/UserRankModal.js', async () => (await import('../../support/albumsScenarios.js')).rankModule)
-vi.mock('../../../public/js/components/series/SeriesModals.js', async () => (await import('../../support/albumsScenarios.js')).modalsModule)
+vi.mock('../../../public/js/screens/albums/useAlbumWindows', async () => (await import('../../support/albumsScenarios.js')).windowsModule)
 
 import { act } from 'react'
 import SeriesController from '../../../public/js/controllers/SeriesController.js'

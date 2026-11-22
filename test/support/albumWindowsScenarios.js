@@ -23,7 +23,7 @@ const note = (...entry) => outside.push(entry)
 
 /** The part of the page this proof reads: what stands in `body` over the page (windows, sheets, notices), in the order it was put there. */
 export const layerOf = () => [...document.body.children]
-    .filter(element => element.id !== 'app')
+    .filter(element => element.id !== 'app' && element.id !== 'globalProgress') // the bar of the app is made by whichever module asks first: no part of a window
     .map(element => normalize(element))
     .join('\n')
 
@@ -101,8 +101,16 @@ export const world = {
     countFails: false,
     deleteFails: false,
     confirm: true,
-    /** what the ranking `onSubmit` answers: true, false, or 'throws' */
+    /** what the ranking `onSubmit` answers: true, false, 'throws', or 'service' (it goes through the real ranking service to the stubbed repository) */
     submit: true,
+    rankAlbum: null,
+    ownRankingService: null,
+    /** loads the real ranking service (a scenario asks for it before it opens the window: loading takes real time) */
+    async useRankingService(album) {
+        this.ownRankingService = (await import('../../public/js/services/ranking/ownRanking.js')).ownRankingService
+        this.submit = 'service'
+        this.rankAlbum = album
+    },
     reset() {
         this.series = SERIES()
         this.db = {}
@@ -113,6 +121,7 @@ export const world = {
         this.deleteFails = false
         this.confirm = true
         this.submit = true
+        this.rankAlbum = null
     }
 }
 
@@ -171,8 +180,20 @@ function SortableStub(element, options) {
 }
 SortableStub.create = (element, options) => new SortableStub(element, options)
 SortableStub.prototype.destroy = function destroy() { this.dead = true; note('sortable.destroy', this.element.id || this.element.className) }
-SortableStub.prototype.option = function option(name, value) { this.options[name] = value; note('sortable.option', name, String(value)) }
+SortableStub.prototype.option = function option(name, value) {
+    if (value === undefined) return this.options[name]
+    this.options[name] = value
+    note('sortable.option', name, String(value))
+}
 export const sortableModule = { default: SortableStub }
+
+/** The site's ranking repository (Firestore, behind the ranking service): it writes down what it is asked to save. */
+export const rankingRepositoryModule = {
+    userRankingRepository: {
+        getAllRankings: async () => [],
+        saveRanking: async (userId, albumId, data) => { note('repository.saveRanking', userId, albumId, JSON.stringify(data)); return true }
+    }
+}
 
 /** The callbacks the windows are given. */
 export const callbacks = {
@@ -181,6 +202,10 @@ export const callbacks = {
     onSubmit: async (rankings) => {
         note('onSubmit', JSON.stringify(rankings))
         if (world.submit === 'throws') throw new Error('offline')
+        if (world.submit === 'service') {
+            // the way the albums screen saves (controller.saveRanking → the ranking service), down to the repository
+            return world.ownRankingService.save(world.rankAlbum, rankings)
+        }
         return world.submit
     },
     onSave: (rankings) => note('onSave', JSON.stringify(rankings)),
@@ -273,6 +298,7 @@ export function harness({ act = async (work) => { await work() }, open, phone })
             rows.splice(from, 1)
             rows.splice(to, 0, item)
             rows.forEach(row => list.appendChild(row))
+            sortable.options.onUnchoose?.({ item })
             sortable.options.onEnd?.({ item, from: list, to: list, oldIndex: from, newIndex: to })
         })
     }
@@ -726,6 +752,31 @@ export const SCENARIOS = [
             h.snap('as it was')
             await h.click(`${RANK} .bg-sky-500`)
             h.note('the saved order')
+        }
+    },
+    {
+        name: 'rank: saved through the real ranking service, down to the repository', run: async (h) => {
+            const album = PARTIAL_ALBUM()
+            await h.world.useRankingService(album)
+            await h.open('rank', album)
+            await h.drag(LIST_RANK, 3, 1)
+            await h.click(`${RANK} .bg-sky-500`)
+            h.note('what was asked at once')
+            await h.tick(500)
+            h.note('after the pause')
+        }
+    },
+    {
+        name: 'rank: the phone, saved through the real ranking service, down to the repository', phone: true, run: async (h) => {
+            const album = RANK_ALBUM()
+            await h.world.useRankingService(album)
+            await h.open('rank', album)
+            await pick(h, 3)
+            await button(h, 'Move up')
+            await h.click('.rank-phone__save')
+            h.note('what was asked at once')
+            await h.tick(500)
+            h.note('after the pause')
         }
     },
     {

@@ -17,7 +17,7 @@
  * does not take a picture (the field reads the name as it is now), so the words around it stay as they were until the next one.
  */
 import { albumSearchService } from '../../services/album-search/AlbumSearchService.js'
-import { AlbumPickerController } from '../../components/album-picker/AlbumPickerController.js'
+import { AlbumPickerController } from '../../ui/albumPicker/pickerController'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
 import { userStore } from '../../stores/UserStore.js'
 import { getSeriesService } from '../../services/SeriesService.js'

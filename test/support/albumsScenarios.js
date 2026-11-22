@@ -197,21 +197,16 @@ export const albumWindowModule = {
     }
 }
 export const inventoryModule = { InventoryAddModal: { open: (album) => { outside.push(['inventoryAdd', album.id]) } } }
-export const rankModule = {
-    UserRankModal: class {
-        constructor(options) { this.options = options }
-        show() { outside.push(['rankWindow', this.options.album.id]) }
-    }
+/** The windows to edit and delete a series and to rank the tracks (F83 wave 5b: React, screens/albums/useAlbumWindows) are a stand-in that writes down what the screen asked of them. */
+export const windowsStandIn = {
+    openEdit: (id) => { outside.push(['editSeries', id]) },
+    openDelete: async (id) => { outside.push(['deleteSeries', id]) },
+    openRank: (request) => { outside.push(['rankWindow', request.album.id]) },
+    layer: null,
+    /** what a test that needs the callbacks the screen gave can read */
+    given: null
 }
-export const modalsModule = {
-    default: class {
-        render() { return '<div id="seriesModalsStandIn"></div>' }
-        mount() {}
-        unmount() {}
-        openEdit(id) { outside.push(['editSeries', id]) }
-        openDelete(id) { outside.push(['deleteSeries', id]) }
-    }
-}
+export const windowsModule = { useAlbumWindows: (handlers) => { windowsStandIn.given = handlers; return windowsStandIn } }
 
 /** Puts the stores and the world as a scenario wants them, before the screen opens. */
 export function prepare(scenario) {

@@ -18,11 +18,13 @@ vi.mock('../../../public/js/stores/albumSeries.js', async () => (await import('.
 vi.mock('../../../public/js/services/album-search/AlbumSearchService.js', async () => (await import('../../support/albumWindowsScenarios.js')).searchModule)
 vi.mock('../../../public/js/components/Toast.js', async () => (await import('../../support/albumWindowsScenarios.js')).toastModule)
 vi.mock('../../../public/js/services/DialogService.js', async () => (await import('../../support/albumWindowsScenarios.js')).dialogModule)
+vi.mock('../../../public/js/repositories/userRankings.js', async () => (await import('../../support/albumWindowsScenarios.js')).rankingRepositoryModule)
 vi.mock('sortablejs', async () => (await import('../../support/albumWindowsScenarios.js')).sortableModule)
 
 import { StrictMode, act, type MutableRefObject } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { useAlbumWindows, type AlbumWindows } from '../../../public/js/screens/albums/useAlbumWindows'
+import type { RankAlbum } from '../../../public/js/screens/albums/rankSession'
 import { SCENARIOS, keyOf, asPhone, prepare, harness, callbacks } from '../../support/albumWindowsScenarios.js'
 import before from '../../fixtures/albumWindowsBeforeF83.json'
 
@@ -39,8 +41,23 @@ function Host({ api }: { api: MutableRefObject<AlbumWindows | null> }) {
     return <>{windows.layer}</>
 }
 
-/** Plays a scenario on the new windows and gives what it wrote down. */
-export async function play(scenario: Scenario): Promise<Record<string, string | null>> {
+/**
+ * The strict mode of React runs the effect that makes a list's drag library twice (made, let go, made again) while it is developed: a pair
+ * the production build does not make. Played in the strict mode, the notes are compared without it.
+ */
+const isMade = (entry: unknown[] | undefined, list: unknown): boolean => entry?.[0] === 'sortable' && entry[1] === list
+const sameNote = (text: string | null): string | null => {
+    if (!text?.startsWith('[[')) return text
+    const asked = JSON.parse(text) as unknown[][]
+    // made, let go, made again with the same options: the pair the strict mode adds (the first made and the let go are dropped; the made again stays)
+    const strictPair = (i: number): boolean => isMade(asked[i], asked[i][1]) && asked[i + 1]?.[0] === 'sortable.destroy' && isMade(asked[i + 2], asked[i][1]) && asked[i + 2][2] === asked[i][2]
+    const dropped = new Set<number>()
+    asked.forEach((_, i) => { if (strictPair(i)) { dropped.add(i); dropped.add(i + 1) } })
+    return JSON.stringify(asked.filter((_, i) => !dropped.has(i)))
+}
+
+/** Plays a scenario on the new windows and gives what it wrote down. With `strict`, the way the screen is developed (the strict mode). */
+export async function play(scenario: Scenario, strict = false): Promise<Record<string, string | null>> {
     vi.spyOn(console, 'warn').mockImplementation(() => {})
     vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.spyOn(console, 'log').mockImplementation(() => {})
@@ -51,14 +68,14 @@ export async function play(scenario: Scenario): Promise<Record<string, string | 
     document.body.appendChild(app)
     const api: MutableRefObject<AlbumWindows | null> = { current: null }
     const root: Root = createRoot(app)
-    await act(async () => { root.render(<StrictMode><Host api={api} /></StrictMode>) })
+    await act(async () => { root.render(strict ? <StrictMode><Host api={api} /></StrictMode> : <Host api={api} />) })
     const h = harness({
         act: (work: () => Promise<void>) => act(work),
         phone,
         open: {
             edit: (id: string) => { api.current!.openEdit(id) },
             delete: (id: string) => api.current!.openDelete(id),
-            rank: (album: object) => { api.current!.openRank({ album, onSubmit: callbacks.onSubmit, onSave: callbacks.onSave, onClose: callbacks.onClose }) }
+            rank: (album: RankAlbum) => { api.current!.openRank({ album, onSubmit: callbacks.onSubmit, onSave: callbacks.onSave, onClose: callbacks.onClose }) }
         }
     })
     await h.settle()
@@ -82,6 +99,21 @@ describe('the windows of the albums screen in React do what the hand-made ones d
             expect(Object.keys(snaps)).toEqual(Object.keys(captured[key]))
             for (const [label, page] of Object.entries(snaps)) {
                 expect(page, `${key} · ${label}`).toBe(captured[key][label])
+            }
+        })
+    }
+})
+
+describe('the windows in the strict mode of React do the same (the notes without the pair the strict mode adds to the drag library)', () => {
+    afterEach(() => { document.body.innerHTML = ''; vi.useRealTimers(); vi.restoreAllMocks() })
+
+    for (const scenario of SCENARIOS) {
+        const key = keyOf(scenario)
+        it(key, async () => {
+            const snaps = await play(scenario, true)
+            expect(Object.keys(snaps)).toEqual(Object.keys(captured[key]))
+            for (const [label, page] of Object.entries(snaps)) {
+                expect(sameNote(page), `${key} · ${label}`).toBe(sameNote(captured[key][label]))
             }
         })
     }

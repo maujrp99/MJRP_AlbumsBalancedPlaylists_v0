@@ -16,7 +16,7 @@ import { decodeEntities } from '../../models/text.js'
 import { listArtists } from '../../models/seriesFilter.js'
 import { SERIES_ALBUM_LIMIT } from '../../models/seriesExpansion.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
-import { LegacySeriesModals, type SeriesModalsHandle } from '../../react-bridge/legacy/SeriesModals'
+import { useAlbumWindows } from './useAlbumWindows'
 import { navigate } from '../../react-bridge/navigation'
 import { useFocusLikeAfterAnewDraw } from '../../react-bridge/useFocusLikeAfterAnewDraw'
 import { useLocale } from '../../react-bridge/useLocale'
@@ -113,7 +113,10 @@ export function Albums({ controller, bridge, route }: Props) {
     useLocale()
     const phone = usePhone()
     const sheets = usePhoneSheets()
-    const modals = useRef<SeriesModalsHandle | null>(null)
+    const windows = useAlbumWindows({
+        onSeriesUpdated: () => controller.requestLoad(false),
+        onSeriesDeleted: (seriesId) => { if (route.seriesId === seriesId) navigate('/albums') }
+    })
     const openedAt = useState(() => new Date().toLocaleTimeString())[0]
     const wantFocus = useRef<{ seriesId: string; index: number } | null>(null)
 
@@ -137,12 +140,12 @@ export function Albums({ controller, bridge, route }: Props) {
     })
 
     const act = useCallback((action: AlbumAction, album: Album, groupSeriesId: string | null = null) => {
-        void runAlbumAction({ controller, openAlbumSheet: sheets.openAlbum }, action, album.id, groupSeriesId)
-    }, [controller, sheets.openAlbum])
+        void runAlbumAction({ controller, openAlbumSheet: sheets.openAlbum, openRank: windows.openRank }, action, album.id, groupSeriesId)
+    }, [controller, sheets.openAlbum, windows.openRank])
 
     const openSeriesSheet = (seriesId: string, albumCount: number) => {
         const series = albumSeriesStore.getById(seriesId)
-        sheets.openSeries(decodeEntities(series?.name) || undefined, albumCount, { onEdit: () => modals.current?.openEdit(seriesId), onDelete: () => modals.current?.openDelete(seriesId) })
+        sheets.openSeries(decodeEntities(series?.name) || undefined, albumCount, { onEdit: () => windows.openEdit(seriesId), onDelete: () => { void windows.openDelete(seriesId) } })
     }
 
     const onMore = useCallback(() => controller.handleShowMore(), [controller])
@@ -194,8 +197,8 @@ export function Albums({ controller, bridge, route }: Props) {
                                 controller.refresh()
                                 wantFocus.current = { seriesId, index: SERIES_ALBUM_LIMIT }
                             },
-                            edit: (seriesId) => modals.current?.openEdit(seriesId),
-                            remove: (seriesId) => modals.current?.openDelete(seriesId),
+                            edit: (seriesId) => windows.openEdit(seriesId),
+                            remove: (seriesId) => { void windows.openDelete(seriesId) },
                             more: openSeriesSheet
                         }}
                     />
@@ -206,11 +209,7 @@ export function Albums({ controller, bridge, route }: Props) {
             <footer className="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
                 <p className="last-update">{t('albums.footer.lastUpdated', { time: openedAt })}</p>
             </footer>
-            <LegacySeriesModals
-                handle={modals}
-                onUpdated={() => controller.requestLoad(false)}
-                onDeleted={(seriesId) => { if (route.seriesId === seriesId) navigate('/albums') }}
-            />
+            <div id="series-modals-mount">{windows.layer}</div>
             {sheets.layer}
         </div>
     )

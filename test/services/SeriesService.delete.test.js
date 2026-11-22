@@ -18,11 +18,10 @@ vi.mock('../../public/js/components/Toast.js', () => {
 })
 const dialog = vi.hoisted(() => ({ confirm: vi.fn() }))
 vi.mock('../../public/js/services/DialogService.js', () => ({ dialogService: dialog }))
-vi.mock('../../public/js/components/series/SeriesEditModal.js', () => ({ SeriesEditModal: { open: vi.fn() } }))
 
 import { fake } from '../helpers/fakeFirestore.js'
 import { SeriesService } from '../../public/js/services/SeriesService.js'
-import SeriesModals from '../../public/js/components/series/SeriesModals.js'
+import { deleteSeriesAfterAsking } from '../../public/js/screens/albums/seriesDelete'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import { toast } from '../../public/js/components/Toast.js'
 
@@ -78,7 +77,7 @@ describe('deleting a series (F60)', () => {
 
         beforeEach(() => {
             onSeriesDeleted = vi.fn()
-            modals = new SeriesModals({ onSeriesDeleted })
+            modals = { openDelete: (seriesId) => deleteSeriesAfterAsking(seriesId, onSeriesDeleted) } // the question to delete a series (F83 wave 5b: it was SeriesModals.openDelete)
             // the dialog reaches the service through the app's own factory
             albumSeriesStore.setDb({ fake: true })
             albumSeriesStore.setUserId('u1')
