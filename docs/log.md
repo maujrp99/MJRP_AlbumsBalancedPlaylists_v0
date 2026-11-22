@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 13:00] step — publicado em produção: o menu do computador na Syne (F88), da `ffd95bf`
+
+**Branch:** main
+
+- Com a palavra dele («2. Pública»). Testes verdes na publicação; conferido no ar: a regra do menu serve `font:700 14px/1 'Syne'`. Volta: histórico de versões do Firebase Hosting.
+- Ele respondeu também: «1. Não» (a barra laranja não é a faixa «By Album…») e «3. Sim» (transições mais suaves: F94, registrada). Candidata para a barra: a linha de carregamento laranja no alto (`components/GlobalProgress.js`, ligada pelo `SeriesService` ao ler as séries, só nas telas Albums e Blend); pergunta com ele.
+- Enquadramento do CMS na `main` (`reports/proposals/2026-11-22-mjrpalbumblender-v0-cms-framing.md`); cinco perguntas dele, apresentadas uma a uma.
+
 ## [2026-11-22 12:54] decision — F94 registrada: transições suaves entre as telas, logo depois da migração para React (S-76)
 **Branch:** wip/register-smooth-transitions
 Palavras do MJRP (2026-11-22): «agora que vi no menu aquela barra laranja que aparece no topo, nao deveria aparecer mesmo e as transicoes precisam ser mais suaves, creio que é pq nao finalizou a migracao ainda, certo?» Ao «Transições mais suaves entre telas: registro para logo depois da migração (recomendo)?»: «3. Sim». A F94 (via padrão, melhoria, depende da F83) e a S-76 (EP-01, ao lado da S-73). Não decidido: como (cruzamento, View Transitions, elemento compartilhado, esqueleto), quanto dura, se a home entra; começa por uma rodada de desenho. A barra laranja é pergunta aberta à parte, à espera da foto dele (o spec traz uma pista do código, não confirmada). Fatos conferidos na linha `integrate/staging-2026-11-21` (só leitura): o roteador troca `#app` sem transição; as telas carregam sob demanda, com a anterior à vista e uma barra de progresso laranja após 150 ms; a home é `public/splash.html`, página à parte. Só documentação: nenhum código nem protótipo; nada priorizado nem em andamento. Ids por `merge_train.py next-item-id --reserve`.
