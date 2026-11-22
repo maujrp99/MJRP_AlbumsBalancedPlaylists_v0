@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 06:59] step — F83 onda 7b: a tela Blend em React (screens/blend/), igual ao dourado
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `screens/blend/` (Blend, SeriesStep, phone/PhoneStep, blendVisit, index, types), `models/seriesCovers.js` (a leitura das consultas de capa, pura) e os textos `blend.*` em inglês (`i18n/en/blend.js`) e as propostas em português (`i18n/pt/blend.js`, esperam o MJRP). A tela usa as peças de 7a (`recipesOf(getAllAlgorithms())`), não assina loja nenhuma, e a leitura das séries começa no `prepare` sem ser esperada (o «carregando» aparece).
+- Os 40 cenários do dourado passam contra a tela nova (teste `test/screens/blend/Blend.sameAsBefore.test.tsx`), com UMA diferença de propósito, provada nos dois sentidos: as capas que chegam em segundo plano não soltam o foco (a antiga o soltava). A palavra trocada de propósito derruba o cenário. O dourado foi capturado de novo depois de o hospedeiro passar a tirar o `#app` ao sair (a primeira captura de «sair e voltar» lia um `#app` velho).
+- Ainda não ligada à rota: a antiga segue em `app.js` até o passo seguinte.
+
 ## [2026-11-22 06:53] step — F83 onda 7b: o dourado da tela Blend à mão, capturado antes de tocá-la
 
 **Branch:** claude/f83-wave-7b-blend-screen

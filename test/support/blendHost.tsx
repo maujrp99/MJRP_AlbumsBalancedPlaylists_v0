@@ -45,7 +45,7 @@ export async function play(scenario: Scenario, makeView: () => View): Promise<Re
             await flush()
         })
     }
-    const leave = async () => { await act(async () => { view.destroy(); await flush() }) }
+    const leave = async () => { await act(async () => { view.destroy(); await flush() }); app.remove() }
     await open()
 
     const snaps: Record<string, string | null> = {}
