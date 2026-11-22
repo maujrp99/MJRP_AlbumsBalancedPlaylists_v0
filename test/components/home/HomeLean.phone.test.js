@@ -63,9 +63,9 @@ describe('the lean Start on the phone (UAT-281)', () => {
         vi.restoreAllMocks()
     })
 
-    it('the field says «An artist» and under it there is one link, «or paste a list»', async () => {
+    it('the field says «Type an artist» and under it there is one link, «or paste a list»', async () => {
         await open(true)
-        expect($('#artistScanInput').placeholder).toBe('An artist')
+        expect($('#artistScanInput').placeholder).toBe('Type an artist')
         expect(hint().textContent).toBe('or paste a list')
         expect(hint().querySelectorAll('button')).toHaveLength(1)
     })

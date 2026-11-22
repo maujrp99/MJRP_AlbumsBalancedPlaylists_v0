@@ -21,7 +21,7 @@ const SKELETONS = { phone: 4, computer: 12 };
 const EQ_BARS = { phone: 32, computer: 48 };
 
 const SERIES_SENTENCE = 'A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.';
-const FIELD_HINT = { phone: 'An artist', computer: 'An artist, or paste a list of albums' };
+const FIELD_HINT = { phone: 'Type an artist', computer: 'An artist, or paste a list of albums' };
 
 const gesture = () => (isPhone() ? 'Tap' : 'Click');
 
