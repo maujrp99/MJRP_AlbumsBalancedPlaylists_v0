@@ -10,6 +10,15 @@
 - MJRP: «uma coisa que noite a fonte usada para o menu é diferente da fonte utilizada anteriormente»; «mostre como era as fontes antes»; vistas as três lado a lado (antes: maiúsculas de 12 px; hoje: letra do sistema a 14 px; opção: Syne), respondeu com a foto da opção Syne: «exato a opcao recomendada».
 - `public/splash/bar-menu.css`: os itens do menu passam de `600 14px` na letra do sistema para `700 14px` na Syne, como já era no menu de baixo do celular. Visto num servidor local a 1280 px: cabe, nada se desloca. Suíte: 325 arquivos, 4141 testes.
 
+## [2026-11-22 12:43] step — o enquadramento do começo do CMS (textos, chaves, receitas)
+
+**Branch:** wip/cms-framing
+
+- MJRP: «como estamos com a migração agora? podemos começar a criar o CMS?» Só documentação e análise: `reports/proposals/2026-11-22-mjrpalbumblender-v0-cms-framing.md`.
+- Proposta: v1 os textos do app em pt e en (com rascunho, prévia, publicar e desfazer); v2 as chaves (a medição primeiro, o Discogs depois) e a página de entrada; v3 as receitas (aparecer e configurar); v4 receitas novas por blocos.
+- Achados: não existe papel de admin; o kit do CMS depende da F332 do harness, ainda vazia; publicar pelo build vindo do CMS contraria a constituição (artigo V, item 1); ainda há textos escritos à mão fora dos dicionários (a janela de exportação do Spotify, avisos de controladores, frases de `models/albumAsk.js`).
+- Cinco perguntas para o MJRP na seção 5; nenhuma spec, a constituição ou a prioridade foram editadas.
+
 ## [2026-11-22 12:38] step — publicado em produção: a home com conta mostra o texto aprovado (F80), da `4410c1f`
 
 **Branch:** main
