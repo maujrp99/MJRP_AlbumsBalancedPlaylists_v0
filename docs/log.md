@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 04:03] step — F83: a chave pública do Firebase sai dos dois roteiros de prova da sincronização 3
+
+**Branch:** integrate/staging-2026-11-21
+
+- O teste `test/security/noSecretsInRepo.test.js` barrou a publicação da prévia: `account-probe.mjs` e `browser-proof.mjs` (em `reports/evidence/F83/sync-3/`) traziam a chave de web do Firebase escrita. É a chave pública do app (a que vai no site), mas a regra do repositório não aceita nenhuma escrita; agora os roteiros a leem de `FIREBASE_WEB_API_KEY`.
+
 ## [2026-11-22 03:58] review — F83: o juiz independente passou a sincronização 3 (a Start enxuta no celular, em React)
 
 **Branch:** integrate/staging-2026-11-21
