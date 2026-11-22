@@ -86,7 +86,7 @@ describe('in Portuguese the screen speaks Portuguese', () => {
         expect(rendered.app.querySelector('#filter-series option')!.textContent).toBe('Todas as séries de álbuns')
 
         await rendered.act(() => { rendered.app.querySelector<HTMLElement>('.batch-header')!.click() })
-        await rendered.act(() => { rendered.app.querySelector<HTMLElement>('.playlist-row .playlist-row-buttons button')!.click() })
+        await rendered.act(() => { rendered.app.querySelector<HTMLElement>('.playlist-row .playlist-row-buttons button:last-child')!.click() })
         const modal = document.getElementById('playlist-modal')!
         expect(modal.querySelector('.app-modal__title')!.textContent).toBe('Kashmir <b>') // text is text
         expect(modal.querySelector('b')).toBeNull()

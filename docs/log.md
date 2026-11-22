@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 01:43] step — F83, segunda junta: dois testes da tela de playlists guardadas apertavam o primeiro botão da linha, que agora é «Exportar»
+**Branch:** claude/f83-sync-2-export-and-inventory-changes
+A suíte inteira na ponta de 4fbaf8e achou dois testes que abriam a janela da playlist pelo primeiro botão de `.playlist-row-buttons` (o «Ver detalhes»): com a F90 o primeiro é «Exportar» e o «Ver detalhes» é o último, como na `main`. `SavedPlaylists.test.tsx` («the Eye button opens the window of the playlist») e `SavedPlaylists.texts.test.tsx` (a leitura em português) apertam agora o `button:last-child`; as asserções não mudaram. Nada na tela mudou: era o andaime do teste.
+
 ## [2026-11-22 01:39] step — F83, segunda junta: o teto do script principal é o valor medido do build final mais as chaves
 **Branch:** claude/f83-sync-2-export-and-inventory-changes
 O build final (depois do último conserto do passo da pasta) mediu o script principal em 235.695 B sem as chaves (`main-C_XDfcyX.js`), 7 B menos que o medido antes; o teto, que só sobe pelo que se mede, ficou em 235.839 B (o medido mais os 144 B das chaves) em vez de 235.846 B, e os números do texto do teto, das lições e do registro foram acertados (+2.249 B contra os 233.446 B da primeira junta: 1.997 B da `main` e 252 B do porte; depois da primeira tela 186.719 B; a janela de exportar 6.428 B sob demanda). `reports/evidence/F83/sync-2/bundle-budget-sync-2.txt` é o do build final e do commit da junta sozinho.
