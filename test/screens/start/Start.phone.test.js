@@ -172,9 +172,12 @@ describe('the Home on the phone (F79 over F76)', () => {
         expect($('.home-dockwrap .home-undo').textContent).toContain('Removed «Crooked Rain».')
     })
 
-    it('on the computer there is no action bar: the dock is the bar at the bottom', async () => {
+    it('on the computer there is no action bar: the dock is the bar at the bottom, once a cover is chosen', async () => {
         await open(false)
 
+        expect($('.phone-action-bar')).toBeNull()
+        expect($('.home-dock')).toBeNull()
+        card('Slanted').click()
         expect($('.phone-action-bar')).toBeNull()
         expect($('.home-dock')).not.toBeNull()
     })

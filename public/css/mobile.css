@@ -280,12 +280,6 @@
     font-weight: 800;
   }
 
-  /* The line that says the app is loading runs under the top bar, not behind the island */
-  #globalProgress {
-    top: calc(var(--phone-topbar-h) + var(--phone-safe-top));
-  }
-
-
   /* ── 5. Tab bar (REQ-03): the bottom menu is the home's, drawn by public/splash/bar-menu.css (F88, `.pbar`) ── */
 
   /* ── 6. Action bar and back to top ───────────────────────────────────────────────────────── */

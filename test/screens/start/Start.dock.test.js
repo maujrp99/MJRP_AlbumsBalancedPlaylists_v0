@@ -153,7 +153,8 @@ describe('the dock of the series, on the computer (F79)', () => {
         expect(dockText()).not.toContain('suggested · edit it')
     })
 
-    it('the visitor without an account reads where the series is kept, with «Sign in» (^home-guest)', () => {
+    it('the visitor without an account reads where the series is kept, with «Sign in», with the bar (^home-guest)', () => {
+        card(0).click()
         userStore.setUser?.({ uid: 'anon', isAnonymous: true })
         act(() => {
             view.controller.state.guest = true

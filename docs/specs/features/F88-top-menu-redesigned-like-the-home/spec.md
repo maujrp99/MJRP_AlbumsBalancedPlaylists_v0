@@ -21,6 +21,8 @@ Dito pelo MJRP em 2026-11-21: «o que mudaria pra home ir pra prod agora, já fa
 ## Decision
 Decidido pelo MJRP em 2026-11-21 («siga»): o menu é redesenhado na linguagem da home aprovada (proposta da F80, Rodada 3 · v4, onde «a barra é o menu»), construído em React na onda da moldura da F83, e nada chega à produção antes do fim da migração.
 
+Decidido pelo MJRP em 2026-11-22: o menu no computador usa a fonte Syne. Ele notou: «uma coisa que noite a fonte usada para o menu é diferente da fonte utilizada anteriormente» e, mostradas três opções, escolheu: «exato a opcao recomendada» (Syne). Já em produção.
+
 ## Requirements
 - [REQ-01] O menu do topo do app compartilha a aparência e o comportamento do menu da home onde faz sentido: a barra, os nomes Inicie/Start · Álbuns · Blend · Playlists · Inventário (português e inglês), o logotipo que leva à home, o item atual marcado · fixes S-70
 - [REQ-02] O menu mantém tudo o que o menu do app faz hoje: a conta (entrar, sair), a conexão com Spotify e Apple Music e o menu do celular · fixes S-70

@@ -28,6 +28,7 @@ import toast from '../stores/toasts.js';
 import { t } from '../i18n/t.js';
 import { router } from '../router.js';
 import { filterUseOf } from '../models/filterUse.js';
+import { albumsListState } from '../models/albumsListState.js';
 import { track } from '../services/usage/track.js';
 // the order the albums screen opens in, «Newest» (UAT-227): one rule with the phone app (F78)
 import { DEFAULT_SERIES_ORDER, compareByCreation } from '@shared/seriesOrder.js';
@@ -162,6 +163,7 @@ export default class SeriesController {
         } catch (err) {
             console.error('[SeriesController] loadScope failed:', err);
             toast.error(t('albums.controller.loadFailed'));
+            albumSeriesStore.markRead();
             this.renderFromStore();
         }
     }
@@ -169,7 +171,10 @@ export default class SeriesController {
     /** Read the list of series again from the database. */
     async refreshSeriesList() {
         const db = albumSeriesStore.getDb();
-        if (!db) return;
+        if (!db) {
+            albumSeriesStore.markRead(); // nothing to read (signed out): the screen must not wait for it
+            return;
+        }
         const service = getSeriesService(db, null, albumSeriesStore.getUserId());
         await service.loadFromFirestore();
     }
@@ -304,6 +309,19 @@ export default class SeriesController {
     /** Ask Spotify again for the popularity of one album, through the album load (F69). */
     askPopularity(albumId) {
         return albumLoadService.refreshSource(albumId, 'popularity');
+    }
+
+    /**
+     * What the list area shows (F79): loading while the first read of the series is out and none is
+     * known, the real empty state once it ended with none, the list otherwise.
+     * @returns {'loading'|'empty'|'list'}
+     */
+    getListState() {
+        return albumsListState({
+            seriesCount: albumSeriesStore.getSeries().length,
+            read: albumSeriesStore.hasRead(),
+            failed: Boolean(albumSeriesStore.getState().error)
+        });
     }
 
     /** The series on screen, in order (what the grid groups the albums by). */
@@ -553,6 +571,12 @@ export default class SeriesController {
         if (known !== this._knownSeries) {
             this._knownSeries = known;
             if (this.view) this.requestLoad(false);
+        }
+        // The read of the series ended (maybe with none): the list area may change from loading to empty
+        const listState = this.getListState();
+        if (listState !== this._listState) {
+            this._listState = listState;
+            if (this.view) this.renderFromStore();
         }
     }
 
