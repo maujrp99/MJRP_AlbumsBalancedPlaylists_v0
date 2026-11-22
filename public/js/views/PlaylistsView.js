@@ -228,7 +228,8 @@ export class PlaylistsView extends BaseView {
     const appleBtn = this.container.querySelector('#exportAppleMusicBtn')
     if (appleBtn) {
       appleBtn.addEventListener('click', () => {
-        import('./playlists/index.js').then(({ handleExportToAppleMusic }) => handleExportToAppleMusic({ btn: appleBtn }))
+        // F90: Apple Music asks for the folder first, in the window the saved playlists screen opens too
+        import('./playlists/PlaylistExportWindow.js').then(({ openPlaylistExport }) => openPlaylistExport({ start: 'apple', title: 'Export to Apple Music' }))
       })
     }
 

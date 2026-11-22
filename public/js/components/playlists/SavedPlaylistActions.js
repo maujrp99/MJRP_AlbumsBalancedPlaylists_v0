@@ -9,17 +9,18 @@ import { getIcon } from '../Icons.js';
 
 export class SavedPlaylistActions {
     /**
-     * Render batch action buttons (Edit, Delete)
+     * Render batch action buttons (Edit, Export, Delete)
      * @param {Object} options
      * @param {string} options.seriesId
      * @param {string} options.batchName
      * @param {Date} options.createdAt
      * @param {number} options.playlistCount
      * @param {Function} options.onEdit
+     * @param {Function} [options.onExport] - export all the playlists of the batch (F90)
      * @param {Function} options.onDelete
      * @returns {HTMLElement}
      */
-    static renderBatchActions({ seriesId, batchName, createdAt, playlistCount, onEdit, onDelete }) {
+    static renderBatchActions({ seriesId, batchName, createdAt, playlistCount, onEdit, onExport, onDelete }) {
         return SafeDOM.div({ className: 'batch-card-buttons flex items-center gap-2' }, [
             SafeDOM.button({
                 className: 'btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md',
@@ -30,6 +31,15 @@ export class SavedPlaylistActions {
                     if (onEdit) onEdit(seriesId, batchName, createdAt);
                 }
             }, [SafeDOM.fromHTML(getIcon('Edit', 'w-4 h-4')), ' Edit Batch']),
+            SafeDOM.button({
+                className: 'btn btn-secondary btn-sm flex items-center gap-2 hover:bg-white/20 transition-all shadow-md',
+                title: 'Export all the playlists of this batch',
+                'aria-label': `Export batch ${batchName}`,
+                onClick: (e) => {
+                    e.stopPropagation();
+                    if (onExport) onExport();
+                }
+            }, [SafeDOM.fromHTML(getIcon('Share', 'w-4 h-4')), ' Export']),
             SafeDOM.button({
                 className: 'btn btn-ghost btn-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors',
                 title: 'Delete entire batch',

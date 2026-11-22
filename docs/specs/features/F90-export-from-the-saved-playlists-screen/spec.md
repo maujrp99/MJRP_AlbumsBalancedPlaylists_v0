@@ -28,6 +28,7 @@ Dito pelo MJRP em 2026-11-21: «Uma coisa que senti falta na playlist agora. Foi
 - [REQ-05] Os estados do export valem como na tela de edição: sem conexão com o serviço, o mesmo pedido de conexão; exportando; pronto; falha com os mesmos avisos; faixas que o serviço não achou. Exportar não grava nem muda nada no lote. · fixes S-72
 - [REQ-06] Só o que já existe é usado: botões, ícones, classes e tokens do `design-system.md`; os textos são em inglês; o teclado e o retorno do foco como nas outras ações da linha. · fixes S-72
 - [REQ-07] A tela de edição do lote continua exportando como antes, agora pela mesma peça. · fixes S-72
+- [REQ-08] Só no Apple Music, antes de exportar há um passo «Folder in Apple Music», na mesma peça (vale na tela de edição e nas duas entradas da tela guardada): o nome da série vem escolhido e marcado como o padrão (aceitar é um toque em «Export»); lista as pastas de playlists que a biblioteca já tem para escolher; um campo «New folder» para digitar um nome (igual a uma pasta existente, sem contar maiúsculas, reaproveita a pasta, como o export já faz); e «No folder» (a playlist vai para o topo da biblioteca: o `createPlaylistInFolder` sem pasta já faz isso). Estados: lendo as pastas, nenhuma existe, a lista não carregou (diz em palavras comuns que ainda dá para exportar para a pasta da série ou para um nome digitado), nome vazio ou só espaços recusado com aviso. A última escolha fica guardada no navegador por série e vem escolhida da próxima vez. Spotify e o JSON não mudam. Pedido do MJRP em 2026-11-21: à pergunta «Pasta na Apple Music: basta a de hoje (o nome da série), ou quer escolher ao exportar?»: «Quero escolher ao exportar». · fixes S-72
 
 ## Observable States
 A escrever.
@@ -40,11 +41,12 @@ A escrever.
 - **REQ-05** · testes por destino e por estado, com os serviços de mentira; nenhuma chamada real ao Apple Music ou ao Spotify.
 - **REQ-06** · `test/architecture` passa; a prova no navegador está em `reports/evidence/F90/`.
 - **REQ-07** · os testes do export da tela de edição continuam passando.
-- Um export real para o Apple Music não foi feito pelo agente (precisa da conta e da chave do MusicKit do MJRP).
+- **REQ-08** · testes com o MusicKit de mentira: cada estado do passo, a escolha lembrada (chave `mjrp_apple_music_folder:<nome da série>`, valor `{"name":…}` ou `{"none":true}`) e a pasta que chega ao `createPlaylistInFolder`; capturas do passo a 1280 e no celular.
+- Um export real para o Apple Music não foi feito pelo agente (precisa da conta e da chave do MusicKit do MJRP); a lista de pastas (`/v1/me/library/playlist-folders`, com `limit=100`) e a criação numa pasta escolhida também só se provam com a conta do MJRP.
 
 ## Out of Scope
 Mudar o que o export cria; exportar uma faixa; escolher a pasta do Apple Music; a tela de playlists em React (linha de migração: tarefa aberta no plano).
 
 ## Open Questions
 - No Spotify, uma playlist só vira uma playlist do Spotify; o nome padrão é «<série> - <título>». Se o MJRP preferir outro, é uma linha.
-- Os textos novos («Export», «Export <nome>», o título da janela) estão pendentes da aprovação do MJRP.
+- Os textos novos («Export», «Export <nome>», o título da janela, «Folder in Apple Music», «New folder», «No folder», «(default)», os avisos do passo) estão pendentes da aprovação do MJRP.

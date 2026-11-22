@@ -828,6 +828,18 @@
     touch-action: manipulation;
   }
 
+  /* A playlist of an open batch: its row and, beside it, «Export» as a 44 px target (F90) */
+  .saved-phone-playlist-head .saved-phone-playlist {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+  }
+
+  .saved-phone-export__icon {
+    width: 20px;
+    height: 20px;
+  }
+
   .saved-phone__empty {
     padding: 12px 0;
     color: var(--pl-text-2);

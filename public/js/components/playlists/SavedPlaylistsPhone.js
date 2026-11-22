@@ -106,15 +106,18 @@ export function openBatchSheet({ batch, seriesId, handlers }) {
     return showSheet({
         title: shown.text,
         about: shown.machine ? `Saved as “${batch.name}”` : batchFacts(batch),
-        rows: [{ icon: 'Edit', label: 'Edit batch', onPick: () => handlers.onEditBatch(seriesId, batch.name, batch.savedAt) }],
+        rows: [
+            { icon: 'Edit', label: 'Edit batch', onPick: () => handlers.onEditBatch(seriesId, batch.name, batch.savedAt) },
+            { icon: 'Share', label: 'Export', onPick: () => handlers.onExportBatch(batch) }
+        ],
         danger: { icon: 'Trash', label: 'Delete batch', onPick: () => handlers.onDeleteBatch(seriesId, batch.name, count) }
     })
 }
 
 /* ── Rows ────────────────────────────────────────────────────────────────────────────────── */
 
-/** One playlist of an opened batch: its name and size; a tap opens its tracks. */
-function playlistRow(playlist, seriesId, handlers) {
+/** One playlist of an opened batch: its name and size, a tap opens its tracks; beside it, «Export» (F90). */
+function playlistRow(playlist, seriesId, handlers, { batch, index }) {
     const totals = batchTotals({ playlists: [playlist] })
     const row = SafeDOM.button({
         type: 'button', className: 'saved-phone-playlist', dataset: { playlistId: playlist.id },
@@ -127,7 +130,10 @@ function playlistRow(playlist, seriesId, handlers) {
         SafeDOM.fromHTML(getIcon('ChevronRight', 'saved-phone__chevron'))
     ])
     row.addEventListener('click', () => handlers.onOpenPlaylist(seriesId, playlist.id))
-    return row
+    const exportButton = SafeDOM.button({ type: 'button', className: 'phone-more', 'aria-label': `Export ${playlist.name}`, 'aria-haspopup': 'dialog' })
+    exportButton.appendChild(SafeDOM.fromHTML(getIcon('Share', 'saved-phone-export__icon')))
+    exportButton.addEventListener('click', () => handlers.onExportPlaylist(batch, playlist, index))
+    return SafeDOM.div({ className: 'saved-phone__head saved-phone-playlist-head' }, [row, exportButton])
 }
 
 /** One batch: a row that opens its playlists, and its «⋯». */
@@ -139,7 +145,7 @@ export function renderBatchRow({ batch, seriesId, handlers }) {
         if (box.childElementCount > 0) return
         const playlists = batch.playlists || []
         if (playlists.length === 0) box.appendChild(SafeDOM.p({ className: 'saved-phone__empty' }, 'No playlists in this batch'))
-        playlists.forEach(playlist => box.appendChild(playlistRow(playlist, seriesId, handlers)))
+        playlists.forEach((playlist, index) => box.appendChild(playlistRow(playlist, seriesId, handlers, { batch, index })))
     }
     const main = disclosure({
         className: 'saved-phone-batch__main batch-header',

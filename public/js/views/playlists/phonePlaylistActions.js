@@ -2,8 +2,8 @@
  * phonePlaylistActions - what a tap does on the phone's playlists (F76, TASK-04, REQ-08).
  *
  * Heard once on the container of the screen (delegation): the chips switch the open playlist,
- * the «⋯» of a track and of a playlist open a bottom sheet of named actions, Export opens a sheet
- * with the three exports, Save saves. Every action calls what the computer's buttons call - the
+ * the «⋯» of a track and of a playlist open a bottom sheet of named actions, Export opens the export
+ * window (views/playlists/PlaylistExportWindow.js), Save saves. Every action calls what the computer's buttons call - the
  * controller (save, remove, delete, undo), the service (move a track, as the drag does) and the
  * export modules - so nothing about the playlists is decided here.
  */
@@ -15,6 +15,7 @@ import { getPlaylistsService } from '../../services/playlists/playlistsWiring.js
 import { playlistsStore } from '../../stores/playlists.js'
 import { showUndoNotice, dismissUndoNotice } from '../../components/playlists/PhoneUndoNotice.js'
 import { playlistNameOf } from '../../components/playlists/PhonePlaylists.js'
+import { openPlaylistExport } from './PlaylistExportWindow.js'
 
 /** One row of a sheet of actions: an icon, a name, a tap. 56 px tall (playlists.css). */
 function actionRow({ icon, text, onTap, danger = false, disabled = false }) {
@@ -152,28 +153,9 @@ export function openPlaylistSheet({ controller, container, playlistIndex }) {
     return sheet
 }
 
-/** Export: the three ways out, each as the computer's buttons do it. */
+/** Export: the window the saved playlists screen opens too (F90), for the playlists on this screen. */
 export function openExportSheet() {
-    let sheet = null
-    const exportsOf = () => import('./index.js')
-    const spotify = async () => {
-        sheet.close()
-        const { showSpotifyExportModal } = await import('../../components/SpotifyExportModal.js')
-        showSpotifyExportModal()
-    }
-    // The Apple export writes its progress on the button pressed: the sheet stays open to show it
-    const apple = async (row) => (await exportsOf()).handleExportToAppleMusic({ btn: row })
-    const json = async () => { sheet.close(); (await exportsOf()).handleExportJson() }
-    sheet = openSheet({
-        variant: 'bottom',
-        title: 'Export playlists',
-        content: list([
-            actionRow({ icon: 'Spotify', text: 'Export to Spotify', onTap: spotify }),
-            actionRow({ icon: 'Apple', text: 'Export to Apple Music', onTap: apple }),
-            actionRow({ icon: 'Download', text: 'Download JSON', onTap: json })
-        ])
-    })
-    return sheet
+    return openPlaylistExport()
 }
 
 /**

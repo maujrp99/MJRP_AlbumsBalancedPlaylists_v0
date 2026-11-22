@@ -58,21 +58,25 @@ export class AppleMusicExportService {
      * @param {Object} names
      * @param {string} names.seriesName - the folder the playlists go into
      * @param {string} names.batchName - each playlist is named "<position>. <batchName> - <title>"
+     * @param {string} [names.folderName] - the folder to put them in (F90); none given: the series' name
+     * @param {boolean} [names.noFolder] - no folder: the playlists go to the top of the library
+     * @param {number[]} [names.positions] - the position each playlist has in its batch (1-based), for
+     *        one playlist or some of a batch: the name is then the one the export of the whole batch gives
      * @param {Object} deps
      * @param {Object} deps.musicKit - MusicKitService
      * @param {Function} [deps.onProgress] - (text) => void
      * @returns {Promise<Object>} AppleExportReport (see the top of this file)
      * @throws only when there is nothing to export
      */
-    static async exportPlaylists(playlists, { seriesName, batchName }, { musicKit, onProgress = () => { } }) {
+    static async exportPlaylists(playlists, { seriesName, batchName, positions = [], folderName = seriesName, noFolder = false }, { musicKit, onProgress = () => { } }) {
         if (!playlists || playlists.length === 0) throw new Error('No playlists to export')
 
         const targets = playlists.map((playlist, index) => ({
-            name: `${index + 1}. ${batchName} - ${titleOf(playlist)}`,
+            name: `${positions[index] || index + 1}. ${batchName} - ${titleOf(playlist)}`,
             tracks: playlist.tracks || []
         }))
         const report = {
-            folder: { name: seriesName, created: false },
+            folder: noFolder ? { name: null, created: false, none: true } : { name: folderName, created: false },
             created: [], failed: [], empty: [], notFound: [], notCreated: [],
             failure: null
         }
@@ -83,8 +87,10 @@ export class AppleMusicExportService {
             await musicKit.init()
             onProgress('Authorizing...')
             await musicKit.authorize()
-            onProgress('Creating folder...')
-            folderId = await musicKit.createOrGetFolder(seriesName)
+            if (!noFolder) {
+                onProgress('Creating folder...')
+                folderId = await musicKit.createOrGetFolder(folderName)
+            }
         } catch (error) {
             console.error('[AppleMusicExport] could not start:', error)
             report.failure = failureOf(error)
@@ -169,7 +175,7 @@ function failedMessage(report, total) {
 }
 
 function createdMessage(report, fresh) {
-    const where = report.folder.created ? `, in the folder "${report.folder.name}"` : ''
+    const where = report.folder.created ? `, in the folder "${report.folder.name}"` : (report.folder.none ? ', outside any folder' : '')
     const which = report.failed.length > 0 ? `: ${quoted(fresh.map(item => item.name))}` : ''
     return { type: 'success', text: `${count(fresh.length, 'playlist')} exported to Apple Music${where}${which}.` }
 }
@@ -181,7 +187,7 @@ function alreadyThereMessage(already) {
 
 function leftOutMessages(report, fresh) {
     const messages = []
-    if (fresh.length > 0 && !report.folder.created) {
+    if (fresh.length > 0 && !report.folder.created && !report.folder.none) {
         messages.push({ type: 'warning', text: `The folder "${report.folder.name}" could not be created in Apple Music: the playlists are at the top of your library.` })
     }
     if (report.empty.length > 0) {

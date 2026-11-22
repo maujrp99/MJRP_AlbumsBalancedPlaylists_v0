@@ -43,6 +43,20 @@ class MusicKitLibrary {
     }
 
     /**
+     * The playlist folders of the person's library, to choose one (F90). Unlike createOrGetFolder it
+     * does not hide a failure: the caller says the list could not be read.
+     * @returns {Promise<Array<{ id: string, name: string }>>}
+     */
+    async listFolders() {
+        await musicKitAuth.authorize();
+        const music = await musicKitAuth.init();
+        const result = await music.api.music('/v1/me/library/playlist-folders', { limit: 100 });
+        return (result.data?.data || [])
+            .map(folder => ({ id: folder.id, name: folder.attributes?.name || '' }))
+            .filter(folder => folder.name);
+    }
+
+    /**
      * Create or find a playlist folder by name
      */
     async createOrGetFolder(folderName) {

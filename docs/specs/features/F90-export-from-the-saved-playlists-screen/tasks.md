@@ -10,9 +10,10 @@
 - [ ] TASK-02 a janela de export compartilhada (Apple Music, Spotify, JSON) e a tela de edição passando a usá-la · implements:: REQ-03, REQ-07 · model:: sonnet
 - [ ] TASK-03 o «Export» de cada playlist na tela guardada (computador e celular) · implements:: REQ-01, REQ-06 · model:: sonnet
 - [ ] TASK-04 o «Export» do lote ao lado de «Edit» (computador e folha do celular) · implements:: REQ-02, REQ-06 · model:: sonnet
+- [ ] TASK-06 o passo da pasta do Apple Music (lista, nome novo, sem pasta, estados, escolha lembrada) · implements:: REQ-08 · model:: sonnet
 
 ## Verification
-- [ ] TASK-05 a prova no navegador (WebKit iPhone 14 e Chromium a 1280; capturas; sem erro no console) · implements:: REQ-01, REQ-02, REQ-06 · model:: sonnet
+- [ ] TASK-05 a prova no navegador (WebKit iPhone 14 e Chromium a 1280; capturas; sem erro no console) · implements:: REQ-01, REQ-02, REQ-06, REQ-08 · model:: sonnet
 
 ## Documentation
 - [ ] `docs/specs/behavior.md` (a tela guardada e o export), `docs/specs/info-arch.md` se os estados pedirem
