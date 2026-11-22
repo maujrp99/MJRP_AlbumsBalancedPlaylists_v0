@@ -1,0 +1,11 @@
+{
+ "facts": {
+  "dfirst": 1280
+ },
+ "blocked": [
+  "identitytoolkit.googleapis.com",
+  "firestore.googleapis.com",
+  "www.google.com"
+ ],
+ "errors": []
+}

@@ -21,6 +21,7 @@ import { useScreenTitle } from '../../react-bridge/useScreenTitle'
 import { countListener } from '../../react-bridge/listeners'
 import { onPhoneChange } from '../../utils/isPhone.js'
 import { Dock } from './Dock'
+import { barShows } from './homeSeries'
 import { Results } from './Results'
 import { Stage } from './Stage'
 import type { StartController } from './StartController'
@@ -45,8 +46,11 @@ export function Start({ controller }: Props) {
         }
     }, [controller])
 
+    // The phone's bar comes with the first cover (UAT-281): without it the page needs less room below
+    const model = controller.model
+    const barless = phone && !barShows({ chosen: model?.albums.length ?? 0, created: Boolean(model?.created) })
     return (
-        <div id="home-page" className="home-page">
+        <div id="home-page" className={`home-page${barless ? ' is-barless' : ''}`}>
             <Stage controller={controller} phone={phone} />
             <Results controller={controller} phone={phone} />
             <div id="homeDockHost"><Dock controller={controller} phone={phone} /></div>

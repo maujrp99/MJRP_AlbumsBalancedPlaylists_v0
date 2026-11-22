@@ -5,7 +5,8 @@
 import { describe, it, expect } from 'vitest'
 import {
     suggestName, nameAfterChange, seriesCountLine, flameOf, addAllLabel, typesLine,
-    dockEmptyNote, equalizerState, stageIsBig, NameState
+    dockEmptyNote, equalizerState, stageIsBig, NameState,
+    barShows, guestNoticeShows, phoneHintLink
 } from '../../../public/js/screens/start/homeSeries'
 import { ScanStatus } from '../../../public/js/models/scanState.js'
 import { defaultFilters, toggleFilter } from '../../../public/js/models/albumPicker.js'
@@ -101,5 +102,30 @@ describe('the equalizer and the stage (D6)', () => {
         expect(stageIsBig({ scan: ScanStatus.IDLE, paste: true, report: false, phone: false })).toBe(true)
         expect(stageIsBig({ scan: ScanStatus.IDLE, paste: true, report: true, phone: false })).toBe(false)
         expect(stageIsBig({ scan: ScanStatus.IDLE, paste: true, report: false, phone: true })).toBe(false)
+    })
+})
+
+describe('the lean Start on the phone (F79, UAT-281)', () => {
+    it('the series bar appears only once the first cover is chosen (or the series is saved)', () => {
+        expect(barShows({ chosen: 0, created: false })).toBe(false)
+        expect(barShows({ chosen: 1, created: false })).toBe(true)
+        expect(barShows({ chosen: 5, created: false })).toBe(true)
+        // saved: the bar says «is saved» and carries the way on, though the covers were let go
+        expect(barShows({ chosen: 0, created: true })).toBe(true)
+        expect(barShows({})).toBe(false)
+    })
+
+    it('the «You\'re not signed in» notice appears only for a visitor whose series has albums', () => {
+        expect(guestNoticeShows({ guest: true, chosen: 0 })).toBe(false)
+        expect(guestNoticeShows({ guest: true, chosen: 2 })).toBe(true)
+        expect(guestNoticeShows({ guest: false, chosen: 2 })).toBe(false)
+        expect(guestNoticeShows({ guest: false, chosen: 0 })).toBe(false)
+    })
+
+    it('under the field the phone has one link: «paste a list», or the way back; none when «not found» has its own', () => {
+        expect(phoneHintLink({ paste: false, notFound: false })).toBe('paste')
+        expect(phoneHintLink({ paste: true, notFound: false })).toBe('artist')
+        expect(phoneHintLink({ paste: false, notFound: true })).toBe(null)
+        expect(phoneHintLink({ paste: true, notFound: true })).toBe('artist')
     })
 })
