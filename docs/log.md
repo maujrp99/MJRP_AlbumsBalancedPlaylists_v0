@@ -2,12 +2,20 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 07:10] step — F83 onda 7b: o orçamento de peso, os totais e as notas da onda
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `scripts/bundle-budget.json`: o principal encolheu de 215.106 B (a ponta da junta) para 194.889 B (menos 20.217 B); o teto desce para 195.033 B (o medido mais 144 B). O que vem depois da primeira tela subiu de 216.670 B para 236.571 B (a tela e o arquivo comum do controlador e dos algoritmos), e `background` vai de 56.400 B para 58.100 B (a necessidade medida: 58.023 B). Medidas em `reports/evidence/F83/wave-7b/bundle-budget-*.txt`; na ponta da junta, com os tetos da 7a, o orçamento já não fechava (a 6c somou 1.183 B ao principal): o texto do arquivo diz os dois números.
+- `test/scripts/migrationStatus.test.js`: os pisos da lista à mão baixam (17 arquivos; 73 textos à mão).
+- `wave-lessons.md` ganha a seção 19. TASK-27 NÃO foi marcada: o gancho do grafo recusa o commit com a nota `waiting:: human — ... ADR-0023` ainda na linha (a nota ficou, de propósito); o feito está pronto e o MJRP ou o orquestrador marca.
+
 ## [2026-11-22 07:06] step — F83 onda 7b: a rota /blend em React, as peças à mão saem, os sensores e os testes levados
 
 **Branch:** claude/f83-wave-7b-blend-screen
 
 - `app.js`: `/blend` por `loadScreen(() => import('./screens/blend/index.ts'))` e na lista do segundo plano. Saem com `git rm`: `views/BlendingMenuView.js`, `components/blend/` (4 arquivos), `components/common/AlbumCascade.js`, `test/components/blend/BlendIngredientsPanel.test.js` e `test/ui/recipe/RecipePieces.sameAsHandMade.test.tsx`.
-- Sensores: `handMadeScreensBaseline` perde 6 entradas (24 para 18 arquivos), `complexityAllowlist` 4 linhas, `outsideTextEscaped` 1, `tailwindBuiltWithSite` 1 entrada e o último caso (agora lê as cores `/10` de `models/recipeLooks.js`), o `safelist` e a constante `RECIPE_GRADIENT_AT_10` saem de `tailwind.config.js`; `screensLoadThroughTheService` passa a ler `screens/blend`. `viewLifecycle`: saem os 4 casos da metade à mão (não há mais `*View.js` além de `BaseView.js`) e entra a guarda «só sobra `BaseView.js` em `views/`»; a metade de React (lê `screens/`) fica, e cada tela tem o teste-molde de sair.
+- Sensores: `handMadeScreensBaseline` perde 6 entradas (ficam 17 arquivos, 2.347 linhas), `complexityAllowlist` 4 linhas, `outsideTextEscaped` 1, `tailwindBuiltWithSite` 1 entrada e o último caso (agora lê as cores `/10` de `models/recipeLooks.js`), o `safelist` e a constante `RECIPE_GRADIENT_AT_10` saem de `tailwind.config.js`; `screensLoadThroughTheService` passa a ler `screens/blend`. `viewLifecycle`: saem os 4 casos da metade à mão (não há mais `*View.js` além de `BaseView.js`) e entra a guarda «só sobra `BaseView.js` em `views/`»; a metade de React (lê `screens/`) fica, e cada tela tem o teste-molde de sair.
 - Testes levados: os 7 da Blend no celular e os 4 de `?seriesId=` (mesmas asserções, o andaime trocado; `Blend.phone.test.tsx`, `Blend.fromSeries.test.tsx`); os 2 da cascata à mão em `coverImage.test.js` leem `ui/AlbumCascade`; os 5 da cascata em `AlbumCascade.test.tsx` comparam com um retrato capturado antes de apagar a cascata (`albumCascadeBeforeF83.json`); `recipeIngredients`/`recipeLooks` ficam com os valores que a peça à mão tinha; o caso da Blend em `outsideTextIsText` desenha o `SeriesStep`. Novos: o teste-molde de sair, os textos em inglês e em português, o «igual ao de antes».
 - Complexidade: `Blend` foi dividida (`generate.ts`, seções); o molde `as unknown` só em `react-bridge/`.
 
