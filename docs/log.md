@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 23:03] step — F83 onda 5b: os totais na ponta do ramo, pela fila
+**Branch:** claude/f83-wave-5b-albums-windows
+Suíte inteira: 341 arquivos, 4.360 testes, todos passam. test/architecture: 37 arquivos, 304 testes. typecheck (tsc -p tsconfig.json): sem erro. lint (eslint .): 0 erros, 47 avisos (os de antes, fora de public/js). Medidos sobre f4e3262, a ponta do código. Nenhum servidor ficou de pé. O worktree de comparação da tela antiga (a 5b antes de apagar as janelas, fbae3fd) ficou em /private/tmp/claude-501/-Users-maujrp-mjrp-projects-MJRP-AlbumsBalancedPlaylists-v0--claude-worktrees-fix-albums-loading-and-cache-d92daf/51dfc930-aae7-48cd-ba9b-2140b7676e80/scratchpad/w5b/old5b (a trava recusou removê-lo).
+
 ## [2026-11-21 22:58] step — F83 onda 5b: o teste do placar da migração acompanha a lista que encolheu
 **Branch:** claude/f83-wave-5b-albums-windows
 A suíte inteira achou que o teste de scripts/migration-status esperava mais de 40 arquivos à mão e mais de 500 textos fora do dicionário: depois da 5b a lista tem 40 arquivos e 443 textos (os das janelas foram para os dicionários). Os limites passam a 30 arquivos e 300 textos, com o número de hoje no comentário.
