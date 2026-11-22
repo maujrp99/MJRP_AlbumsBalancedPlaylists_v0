@@ -3,6 +3,10 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-21 21:22] step — F83 onda 5a: os totais na ponta do ramo, pela fila
+**Branch:** claude/f83-wave-5a-albums-screen
+Suíte inteira: 339 arquivos, 4.234 testes, todos passam. test/architecture: 37 arquivos, 304 testes. typecheck (tsc -p tsconfig.json): sem erro. lint: 0 erros, 48 avisos (os de antes, fora de public/js). Nenhum servidor ficou de pé. O worktree de comparação da tela antiga ficou em /private/tmp/claude-501/old5a (a trava recusou removê-lo).
+
 ## [2026-11-21 21:20] step — F83 onda 5a: a folha solta o desenho do React ao fim do deslize, mas a tela desenha de novo na hora (teste da Start)
 **Branch:** claude/f83-wave-5a-albums-screen
 A suíte inteira achou que o teste da Start do celular (o Undo que volta ao fechar a folha) dependia de a tela desenhar de novo no instante em que a folha fecha: useSheetWindow agora desenha de novo na hora e só tira o conteúdo da folha quando ela sai da página; o foco da primeira coisa não é dado a uma folha que fecha.
