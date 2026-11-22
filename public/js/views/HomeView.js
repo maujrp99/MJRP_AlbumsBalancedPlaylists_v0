@@ -4,7 +4,7 @@ import { HomeController } from '../controllers/HomeController.js';
 import { SafeDOM } from '../utils/SafeDOM.js';
 import { describeScan, ScanStatus } from '../models/scanState.js';
 import { PICKER_FILTERS, defaultFilters } from '../models/albumPicker.js';
-import { stageIsBig, equalizerState, barShows, guestNoticeShows, phoneHintLink } from '../models/homeSeries.js';
+import { stageIsBig, equalizerState, barShows, guestNoticeShows, hintLink } from '../models/homeSeries.js';
 import { createEqualizer, setEqualizerState } from '../components/home/HomeEqualizer.js';
 import { HomePasteList } from '../components/home/HomePasteList.js';
 import { HomeDock, guestLine } from '../components/home/HomeDock.js';
@@ -21,19 +21,21 @@ const SKELETONS = { phone: 4, computer: 12 };
 const EQ_BARS = { phone: 32, computer: 48 };
 
 const SERIES_SENTENCE = 'A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.';
-const FIELD_HINT = { phone: 'Type an artist', computer: 'An artist, or paste a list of albums' };
+const FIELD_HINT = 'Type an artist';
 
 const gesture = () => (isPhone() ? 'Tap' : 'Click');
 
 /**
  * The Home that explains itself (F79, design/inception/home-transformar-v2.html): one stage.
  *
- *   the stage     the title and what a series is (before anything is found), the one field (an artist
- *                 or a pasted list), the hint that points to the next gesture, the equalizer;
- *   the results   the three steps (first visit), the wait, the artist with the type chips and
- *                 «Add all», the grid of covers (numbered when chosen), «not found», «no answer»;
- *   the dock      the series being built, always in view (components/home/HomeDock.js); on the phone,
- *                 the action bar.
+ *   the stage     the title (before anything is found), the one field (an artist or a pasted list), the one
+ *                 link under it, the equalizer; «What is a series?» opens the sentence (in place on the
+ *                 computer, in the bottom sheet on the phone);
+ *   the results   the wait, the artist with the type chips and «Add all», the grid of covers (numbered
+ *                 when chosen), «not found», «no answer»;
+ *   the dock      the series being built, in view once the first cover is chosen (components/home/HomeDock.js);
+ *                 on the phone, the action bar.
+ * The phone and the computer follow the same rules (UAT-281; the computer's lean, F79, 2026-11-22).
  *
  * The view draws; the controller (controllers/HomeController.js) decides.
  */
@@ -65,7 +67,7 @@ export class HomeView extends BaseView {
             SafeDOM.fromHTML(getIcon('Search', 'home-field__ico')),
             SafeDOM.input({
                 type: 'text', id: 'artistScanInput', autocomplete: 'off', spellcheck: 'false',
-                placeholder: isPhone() ? FIELD_HINT.phone : FIELD_HINT.computer,
+                placeholder: FIELD_HINT,
                 'aria-label': 'Search an artist, or paste a list of albums'
             }),
             search
@@ -76,9 +78,9 @@ export class HomeView extends BaseView {
         return SafeDOM.section({ id: 'homeStage', className: 'home-stage is-big' }, [
             SafeDOM.div({ id: 'homeHero', className: 'home-hero' }, [
                 SafeDOM.h1({}, [SafeDOM.span({ className: 'home-hero__l1' }, 'Pick the albums.'), ' ', SafeDOM.span({ className: 'home-hero__l2' }, 'We blend the playlists.')]),
-                // On the phone the sentence opens from this link (UAT-281); on the computer it stays on the screen
-                SafeDOM.button({ type: 'button', className: 'home-what', 'aria-haspopup': 'dialog', onClick: () => this.openWhatIsASeries() }, 'What is a series?'),
-                SafeDOM.p({}, SERIES_SENTENCE)
+                // The sentence opens from this link: in the bottom sheet on the phone (UAT-281), in place on the computer
+                SafeDOM.button({ type: 'button', className: 'home-what', 'aria-controls': 'homeWhatText', 'aria-expanded': 'false', onClick: () => this.toggleWhatIsASeries() }, 'What is a series?'),
+                SafeDOM.p({ id: 'homeWhatText', hidden: true }, SERIES_SENTENCE)
             ]),
             field,
             paste,
@@ -100,11 +102,6 @@ export class HomeView extends BaseView {
 
         return SafeDOM.section({ id: 'homeResults', className: 'home-results' }, [
             SafeDOM.p({ id: 'homeAfter', className: 'home-after', role: 'status', hidden: true }),
-            SafeDOM.create('ol', { id: 'homeHow', className: 'home-how' }, [
-                this.step(1, 'Find', 'an artist, or paste a list'),
-                this.step(2, 'Add', 'the albums you want, in the order you want'),
-                this.step(3, 'Create', 'the series, then blend it')
-            ]),
             SafeDOM.p({ id: 'homeWait', className: 'home-wait', role: 'status', hidden: true }),
             SafeDOM.div({ id: 'homeMessage', className: 'home-msg', hidden: true }),
             SafeDOM.header({ id: 'homeArtist', className: 'home-artist', hidden: true }, [
@@ -119,10 +116,6 @@ export class HomeView extends BaseView {
         ]);
     }
 
-    step(n, verb, rest) {
-        return SafeDOM.li({}, [SafeDOM.strong({ className: 'home-how__n' }, String(n)), SafeDOM.span({}, [SafeDOM.strong({}, verb), ` ${rest}`])]);
-    }
-
     async mount() {
         this.dock = new HomeDock({ on: this.dockHandlers(), phone: () => isPhone() });
         this.dock.mount(this.$('#homeDockHost'));
@@ -132,7 +125,12 @@ export class HomeView extends BaseView {
         window.controller = this.controller;
         this.controller.initialize();
 
-        this.subscriptions.push(onPhoneChange(() => this.controller?.screenChanged()));
+        this.subscriptions.push(onPhoneChange(() => { this.closeWhatText(); this.controller?.screenChanged(); }));
+        // Escape closes the sentence opened in place: one Escape, one thing, so only when the focus is on the link or
+        // inside the sentence, and never when another layer (a menu, a window, a sheet) already took the key
+        const onKey = (event) => { if (this.escapeIsForTheSentence(event)) this.closeWhatText(); };
+        document.addEventListener('keydown', onKey);
+        this.subscriptions.push(() => document.removeEventListener('keydown', onKey));
     }
 
     dockHandlers() {
@@ -153,7 +151,31 @@ export class HomeView extends BaseView {
         };
     }
 
-    /** «What is a series?» (phone): the same sentence, in the app's bottom sheet. */
+    /** «What is a series?»: on the phone the sentence opens in the bottom sheet; on the computer, in place under the title. */
+    toggleWhatIsASeries() {
+        if (isPhone()) { this.openWhatIsASeries(); return; }
+        const text = this.$('#homeWhatText');
+        if (text) this.showWhatText(text.hidden);
+    }
+
+    showWhatText(open) {
+        const text = this.$('#homeWhatText');
+        if (!text) return;
+        text.hidden = !open;
+        this.$('.home-what')?.setAttribute('aria-expanded', String(open));
+    }
+
+    escapeIsForTheSentence(event) {
+        if (event.key !== 'Escape' || event.defaultPrevented) return false;
+        const focus = document.activeElement;
+        return Boolean(focus && (focus.closest('.home-what') || focus.closest('#homeWhatText')));
+    }
+
+    closeWhatText() {
+        if (this.$('#homeWhatText') && !this.$('#homeWhatText').hidden) this.showWhatText(false);
+    }
+
+    /** The same sentence, in the app's bottom sheet (phone). */
     openWhatIsASeries() {
         if (this.helpSheet?.isOpen()) return;
         this.helpSheet = openSheet({
@@ -176,7 +198,7 @@ export class HomeView extends BaseView {
     // --- drawn by the controller ---
 
     /** The stage: big or small, the field or the list, the hint, the equalizer, the fire on «Search». */
-    drawStage({ scan, mode, report, flame, guest, chosen = 0, typing = false }) {
+    drawStage({ scan, mode, report, flame, guest, chosen = 0 }) {
         const phone = isPhone();
         const paste = mode === 'paste';
         const stage = this.$('#homeStage');
@@ -184,11 +206,13 @@ export class HomeView extends BaseView {
         const big = stageIsBig({ scan: scan.status, paste, report, phone });
         stage.classList.toggle('is-big', big);
         stage.classList.toggle('is-small', !big);
+        // Before a search the block sits a little lower, on the computer (css/views/home.css)
+        stage.classList.toggle('is-calm', big && !paste && scan.status === ScanStatus.IDLE);
         this.$('#homeHero').hidden = !big;
         this.$('#homeField').hidden = paste;
         this.$('#homePaste').hidden = !paste;
-        this.drawHint(paste, typing, scan.status === ScanStatus.EMPTY, phone);
-        this.$('#artistScanInput').placeholder = phone ? FIELD_HINT.phone : FIELD_HINT.computer;
+        this.drawHint(paste, scan.status === ScanStatus.EMPTY);
+        this.drawWhatLink(phone);
         setEqualizerState(stage.querySelector('.home-eq'), equalizerState(scan.status));
 
         const search = this.$('#btnScanArtist');
@@ -209,25 +233,26 @@ export class HomeView extends BaseView {
         if (guestShows) guestHost.appendChild(guestLine('stage-sign-in'));
     }
 
-    drawHint(paste, typing, notFound = false, phone = false) {
+    /** On the phone «What is a series?» opens a sheet (a dialog); on the computer it expands the sentence in place. */
+    drawWhatLink(phone) {
+        const what = this.$('.home-what');
+        if (!what) return;
+        // The phone's button opens a dialog: no expanded state, nothing it controls. The computer's expands the sentence.
+        const attributes = phone
+            ? { set: { 'aria-haspopup': 'dialog' }, off: ['aria-expanded', 'aria-controls'] }
+            : { set: { 'aria-expanded': String(this.$('#homeWhatText')?.hidden === false), 'aria-controls': 'homeWhatText' }, off: ['aria-haspopup'] };
+        Object.entries(attributes.set).forEach(([name, value]) => what.setAttribute(name, value));
+        attributes.off.forEach(name => what.removeAttribute(name));
+    }
+
+    /** One link, nothing else (UAT-281, and the computer's lean); none when the «not found» message has «Paste a list». */
+    drawHint(paste, notFound = false) {
         const hint = this.$('#homeHint');
         SafeDOM.clear(hint);
-        if (phone) {
-            // One link, nothing else (UAT-281); none when the «not found» message has «Paste a list»
-            const link = phoneHintLink({ paste, notFound: notFound && !paste });
-            hint.hidden = !link;
-            if (link === 'artist') hint.append(this.modeLink('artist', 'Search an artist instead'));
-            if (link === 'paste') hint.append(this.modeLink('paste', 'or paste a list'));
-            return;
-        }
-        hint.hidden = false;
-        if (paste) {
-            hint.append('Paste or type one album per line. ', this.modeLink('artist', 'Search an artist instead'));
-        } else if (typing) {
-            hint.append('Press Enter or Search to see their albums. A list with one album per line works too.');
-        } else {
-            hint.append('Type an artist to see their albums, or ', this.modeLink('paste', 'paste a list'), ' of albums from many artists.');
-        }
+        const link = hintLink({ paste, notFound: notFound && !paste });
+        hint.hidden = !link;
+        if (link === 'artist') hint.append(this.modeLink('artist', 'Search an artist instead'));
+        if (link === 'paste') hint.append(this.modeLink('paste', 'or paste a list'));
     }
 
     modeLink(mode, text) {
@@ -242,7 +267,6 @@ export class HomeView extends BaseView {
     drawResults(scan, { chosen, paste }) {
         const show = (id, on) => { const element = this.$(id); if (element) element.hidden = !on; };
         const status = paste ? 'paste' : scan.status;
-        show('#homeHow', status === ScanStatus.IDLE);
         show('#homeWait', status === ScanStatus.SCANNING);
         show('#homeArtist', status === ScanStatus.RESULTS);
         show('#homeMessage', status === ScanStatus.EMPTY || status === ScanStatus.FAILED);
@@ -344,8 +368,8 @@ export class HomeView extends BaseView {
     }
 
     drawSeries(model) {
-        // The phone's bar comes with the first cover (UAT-281): without it the page needs less room below
-        const barless = isPhone() && !barShows({ chosen: model.albums.length, created: Boolean(model.created) });
+        // The bar comes with the first cover (UAT-281): without it the page needs less room below
+        const barless = !barShows({ chosen: model.albums.length, created: Boolean(model.created) });
         this.$('#home-page')?.classList.toggle('is-barless', barless);
         this.dock?.draw(model);
     }

@@ -94,9 +94,9 @@ export class HomeController {
         // Home drawn again still answers (F67)
         const typed = () => view.$('#artistScanInput')?.value || '';
         view.$delegate('#artistScanInput', 'keydown', (e) => { if (e.key === 'Enter') this.search(typed()); });
-        view.$delegate('#artistScanInput', 'input', (e, field) => { this.fieldFocused = document.activeElement === field; this.drawStage(); });
-        view.$delegate('#artistScanInput', 'focusin', () => { this.fieldFocused = true; this.drawStage(); });
-        view.$delegate('#artistScanInput', 'focusout', () => { this.fieldFocused = false; this.drawStage(); });
+        // The stage is drawn again as the field is typed in and focused, as it always was: kept so the phone's paint
+        // stays what it was, to the pixel (browser proof of the computer's lean, 2026-11-22)
+        for (const event of ['input', 'focusin', 'focusout']) view.$delegate('#artistScanInput', event, () => this.drawStage());
         view.$delegate('#artistScanInput', 'paste', (e) => this.pasteIntoField(e));
         view.$delegate('#btnScanArtist', 'click', () => this.search(typed()));
         view.$delegate('#btnScanRetry', 'click', () => this.picker.retry());
@@ -142,8 +142,7 @@ export class HomeController {
 
     drawStage() {
         if (!this.scan) return;
-        const typing = Boolean(this.fieldFocused && this.view.$('#artistScanInput')?.value.trim());
-        this.view.drawStage({ scan: this.scan, mode: this.state.mode, report: this.state.report, flame: this.flame(), guest: this.state.guest, chosen: this.albums().length, typing });
+        this.view.drawStage({ scan: this.scan, mode: this.state.mode, report: this.state.report, flame: this.flame(), guest: this.state.guest, chosen: this.albums().length });
     }
 
     // --- the field: an artist or a pasted list ---

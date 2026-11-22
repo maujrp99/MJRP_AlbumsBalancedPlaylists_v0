@@ -15,6 +15,7 @@ import { AlbumCascade } from '../common/AlbumCascade.js'
 import { optimizedAlbumLoader } from '../../services/OptimizedAlbumLoader.js'
 import { BlendSeriesPhonePicker } from './BlendSeriesPhonePicker.js'
 import { isPhone } from '../../utils/isPhone.js'
+import { LOADING_SERIES_SPINNER_HTML } from '../ui/LoadingSeries.js'
 
 export class BlendSeriesSelector {
     constructor(opts = {}) {
@@ -159,9 +160,7 @@ export class BlendSeriesSelector {
         `).join('')
 
         const seriesCards = this.isLoading
-            ? `<div class="flex items-center justify-center py-8">
-                   <div class="animate-spin rounded-full h-8 w-8 border-2 border-orange-400 border-t-transparent"></div>
-               </div>`
+            ? LOADING_SERIES_SPINNER_HTML
             : this.series.length === 0
                 ? `<p class="text-muted text-center py-4">No series found for this entity type</p>`
                 : this.series.map(s => this.renderSeriesCard(s)).join('')

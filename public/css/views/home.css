@@ -34,8 +34,22 @@
 .home-hero h1 span { display: inline-block; }
 .home-hero__l2 { background: var(--home-flame-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .home-hero p { max-width: 640px; margin: 0 auto 24px; font-size: 16px; line-height: 1.5; color: var(--home-muted); text-wrap: pretty; }
-/* «What is a series?» is a link of the phone (mobile/home.css); the computer keeps the sentence on the screen */
-.home-what { display: none; }
+/* «What is a series?» is a link on both sizes (the phone's layer is mobile/home.css); the sentence is hidden until the link opens it */
+.home-what { display: inline-flex; }
+@media (min-width: 900px) {
+  /* the computer, lean (F79, 2026-11-22): the sentence of the series opens IN PLACE, under the title */
+  .home-hero h1 { margin-bottom: 6px; }
+  .home-hero p { margin-bottom: 18px; }
+  .home-what { align-items: center; min-height: 44px; margin: 0 0 14px; padding: 0 4px; background: none; border: 0; color: #fff; font: 700 15px 'Syne', sans-serif; cursor: pointer; text-decoration: underline; text-decoration-color: var(--home-flame-a); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .home-what[aria-expanded="true"] { margin-bottom: 6px; }
+  .home-what:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  /* before a search the block sits a little lower (the room the steps and the empty bar left); the glow goes with it */
+  .home-stage.is-big.is-calm { padding-top: clamp(44px, calc(19vh - 30px), 150px); }
+  /* the one link under the field: a target of 44 px */
+  .home-hint .home-link { display: inline-flex; align-items: center; min-height: 44px; margin: -8px 0; padding: 0 2px; }
+  /* no bar until the first cover is chosen: the page needs less room below */
+  .home-page.is-barless { padding-bottom: 48px; }
+}
 
 .home-field { position: relative; display: flex; align-items: center; gap: 12px; max-width: 760px; margin: 0 auto; height: 64px; padding: 0 8px 0 20px; border-radius: 18px; background: rgba(16, 16, 20, 0.94); border: 1px solid var(--home-line); color: #a0a0a8; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
 .home-field:focus-within { border-color: var(--home-flame-a); box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15), 0 10px 40px rgba(0, 0, 0, 0.5); }
@@ -95,12 +109,6 @@
 
 /* ── The results ───────────────────────────────────────────────────────────────────────────── */
 .home-results { margin-top: 22px; }
-.home-how { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 900px; margin: 34px auto 0; padding: 0; }
-.home-how li { display: flex; gap: 14px; align-items: flex-start; padding: 18px; border-radius: 16px; background: rgba(16, 16, 20, 0.75); border: 1px solid rgba(255, 255, 255, 0.08); text-align: left; }
-.home-how__n { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #1c1c22; border: 1px solid rgba(249, 115, 22, 0.6); font: 800 15px var(--home-text-font); }
-.home-how span strong { display: block; font-size: 15px; }
-.home-how span { color: var(--home-muted); font-size: 14px; line-height: 1.4; }
-.home-how span strong { color: #fff; }
 
 .home-after { margin: 0 0 14px; padding: 10px 14px; border-radius: 12px; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.35); font-size: 14px; color: #e4e4e7; }
 .home-wait { text-align: center; color: var(--home-muted); margin: 0 0 18px; }

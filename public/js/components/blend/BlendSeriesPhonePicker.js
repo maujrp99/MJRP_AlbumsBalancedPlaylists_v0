@@ -3,6 +3,7 @@ import { getIcon } from '../Icons.js'
 import { openSheet } from '../ui/Sheet.js'
 import { AlbumCascade } from '../common/AlbumCascade.js'
 import { decodeEntities } from '../../models/text.js'
+import { LOADING_SERIES_TEXT } from '../ui/LoadingSeries.js'
 
 /**
  * Step 1 of the Blend on the phone (F76, REQ-10): the series are reached without a box that
@@ -56,7 +57,7 @@ export class BlendSeriesPhonePicker {
     }
 
     rowMeta({ loading, chosen, count }) {
-        if (loading) return 'Loading your series…'
+        if (loading) return LOADING_SERIES_TEXT
         if (count === 0) return 'No series yet: create one on Home'
         return chosen ? plural(albumsOf(chosen), 'album') : `${count} series to choose from`
     }

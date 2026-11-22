@@ -200,6 +200,7 @@ export class AuthNav {
         if (!trigger) return;
 
         if (event.key === 'Escape' && this.isMenuOpen()) {
+            event.preventDefault(); // the key is taken: no other layer closes with it (one Escape, one thing)
             this.setMenuOpen(false);
             trigger.focus();
         } else if (event.key === 'ArrowDown' && document.activeElement === trigger) {

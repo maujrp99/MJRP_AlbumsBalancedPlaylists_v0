@@ -11,7 +11,6 @@ vi.mock('../../public/js/cache/CacheManager.js', () => {
     const cacheManager = { get: async () => null, set: async () => { }, invalidate: async () => { } }
     return { cacheManager, CacheManager: class { } }
 })
-vi.mock('../../public/js/components/GlobalProgress.js', () => ({ globalProgress: { start: vi.fn(), finish: vi.fn() } }))
 vi.mock('../../public/js/components/Toast.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }

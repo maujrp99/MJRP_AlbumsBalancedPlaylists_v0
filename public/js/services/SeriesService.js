@@ -13,7 +13,6 @@
 
 import { SeriesRepository } from '@shared/data/SeriesRepository.js'
 import { firestoreStore } from '../repositories/firestoreStore.js'
-import { globalProgress } from '../components/GlobalProgress.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { cacheManager } from '../cache/CacheManager.js'
 import { StorageService } from './infra/StorageService.js'
@@ -76,44 +75,34 @@ export class SeriesService {
     // ========== CRUD ==========
 
     async createSeries(seriesData) {
-        globalProgress.start()
-        try {
-            const series = {
-                name: seriesData.name || 'Untitled Series',
-                albumQueries: seriesData.albumQueries || [],
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                status: seriesData.status || 'pending',
-                notes: seriesData.notes || ''
-            }
-
-            const id = await this.repository.create(series)
-            series.id = id
-
-            albumSeriesStore.addSeries(series)
-            albumSeriesStore.setActiveSeries(id)
-            this.saveToLocalStorage()
-            track('series_created', { album_count: series.albumQueries.length })
-
-            return series
-        } finally {
-            globalProgress.finish()
+        const series = {
+            name: seriesData.name || 'Untitled Series',
+            albumQueries: seriesData.albumQueries || [],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            status: seriesData.status || 'pending',
+            notes: seriesData.notes || ''
         }
+
+        const id = await this.repository.create(series)
+        series.id = id
+
+        albumSeriesStore.addSeries(series)
+        albumSeriesStore.setActiveSeries(id)
+        this.saveToLocalStorage()
+        track('series_created', { album_count: series.albumQueries.length })
+
+        return series
     }
 
     async updateSeries(id, updates) {
-        globalProgress.start()
-        try {
-            await this.repository.update(id, { ...updates, updatedAt: new Date() })
-            albumSeriesStore.updateSeriesById(id, updates)
-            this.saveToLocalStorage()
-            track('series_edited', { album_count: updates.albumQueries?.length })
+        await this.repository.update(id, { ...updates, updatedAt: new Date() })
+        albumSeriesStore.updateSeriesById(id, updates)
+        this.saveToLocalStorage()
+        track('series_edited', { album_count: updates.albumQueries?.length })
 
-            // The albums on screen are not touched here: whoever shows the series asks the album
-            // load again, and it reconciles (an album added loads, an album removed leaves).
-        } finally {
-            globalProgress.finish()
-        }
+        // The albums on screen are not touched here: whoever shows the series asks the album
+        // load again, and it reconciles (an album added loads, an album removed leaves).
     }
 
     /**
@@ -131,23 +120,17 @@ export class SeriesService {
      * Delete a series and the playlists saved under it (one write: all of it or none of it)
      */
     async deleteSeries(id) {
-        globalProgress.start()
-        try {
-            await this.repository.deleteWithPlaylists(id)
-            albumSeriesStore.removeSeriesById(id)
-            this.saveToLocalStorage()
-            track('series_deleted')
+        await this.repository.deleteWithPlaylists(id)
+        albumSeriesStore.removeSeriesById(id)
+        this.saveToLocalStorage()
+        track('series_deleted')
 
-            // The albums of the series leave the screen when the album load is asked again without it
-        } finally {
-            globalProgress.finish()
-        }
+        // The albums of the series leave the screen when the album load is asked again without it
     }
 
     async loadFromFirestore() {
         albumSeriesStore.setLoading(true)
         albumSeriesStore.setError(null)
-        globalProgress.start()
 
         try {
             // Every series of the account. No limit: a cut at 20 hid the rest with no notice (UAT-24).
@@ -172,7 +155,7 @@ export class SeriesService {
             throw error
         } finally {
             albumSeriesStore.setLoading(false)
-            globalProgress.finish()
+            albumSeriesStore.markRead() // the read ended, well or badly: the screens stop saying «loading»
         }
     }
 

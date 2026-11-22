@@ -88,6 +88,20 @@ describe('AuthNav: the account menu (F63, UAT-13)', () => {
         expect(document.activeElement).toBe(trigger())
     })
 
+    it('Escape that closes it marks the key as taken, so no other layer closes with the same press', () => {
+        trigger().click()
+        const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+        document.dispatchEvent(event)
+        expect(isOpen()).toBe(false)
+        expect(event.defaultPrevented).toBe(true)
+    })
+
+    it('Escape with the menu closed is left alone for whoever else wants it', () => {
+        const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+        document.dispatchEvent(event)
+        expect(event.defaultPrevented).toBe(false)
+    })
+
     it('Arrow Down on the avatar opens it with the focus on the first control inside', () => {
         trigger().focus()
 

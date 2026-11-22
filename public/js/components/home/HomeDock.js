@@ -125,6 +125,9 @@ export class HomeDock {
 
     computerDock(m) {
         const n = m.albums.length
+        // No bar until the first cover is chosen (as on the phone); an «Undo» of the last removal still has its strip
+        const shown = barShows({ chosen: n, created: m.create === 'created' })
+        if (!shown) return SafeDOM.div({ className: 'home-dockwrap is-barless' }, [undoStrip(m.undo)])
         const dock = SafeDOM.div({
             className: `home-dock${n ? ' is-full' : ''}${m.create === 'created' ? ' is-done' : ''}`,
             role: 'region',
@@ -150,10 +153,6 @@ export class HomeDock {
 
     computerMeta(m) {
         if (m.create === 'created') return this.savedMeta(m, 'find it any time in Music Series')
-        if (!m.albums.length) {
-            const empty = dockEmptyNote({ phone: false, covers: m.coversOnScreen })
-            return SafeDOM.div({ className: 'home-dock__meta' }, [SafeDOM.strong({}, empty.title), SafeDOM.span({}, empty.note)])
-        }
         return SafeDOM.div({ className: 'home-dock__meta' }, [this.nameBox(m, 'seriesNameInput'), this.status(m)])
     }
 
@@ -215,9 +214,6 @@ export class HomeDock {
 
     computerGo(m) {
         if (m.create === 'created') return this.afterButtons()
-        if (!m.albums.length) {
-            return SafeDOM.div({ className: 'home-go' }, [SafeDOM.small({}, 'Add one album to create the series'), this.createButton(m, 'btnCreateSeries')])
-        }
         const toggle = button(m.open ? 'Done' : 'Edit order', { className: 'home-btn is-ghost', action: 'toggle', id: 'btnEditOrder' })
         toggle.setAttribute('aria-expanded', String(m.open))
         return SafeDOM.div({ className: 'home-go' }, [toggle, this.createButton(m, 'btnCreateSeries')])
