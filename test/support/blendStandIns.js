@@ -9,6 +9,7 @@
  * playlists). No import from the app: the doubles are loaded by `vi.mock`.
  */
 
+/** @type {{ series: any[], db: object|null, load: string, cover: string, generate: string, progress: string[], notices: string[], count: number, calls: string[], pending: Array<() => void>, waiting: (() => void)|null, release: (() => void)|null, loaded: () => void, arrive: () => void }} */
 export const world = {
     series: [],
     /** `null` is a visitor (no database): the screen reads what the store already has. */
@@ -25,7 +26,9 @@ export const world = {
     calls: [],
     pending: [],
     waiting: null,
-    release: null
+    release: null,
+    loaded: () => {},
+    arrive: () => {}
 }
 
 export function reset(overrides = {}) {

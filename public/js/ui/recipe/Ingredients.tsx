@@ -1,8 +1,8 @@
 /**
  * Ingredients - the choices of a blend besides the recipe (F83 wave 7a): the Top #, how the tracks are grouped, how the playlists are
  * structured, the target duration and the ranking source. The same HTML and the same classes as the hand-made panel
- * (components/blend/BlendIngredientsPanel.js), which stays for the hand-made Blend screen until it moves;
- * test/ui/recipe/RecipePieces.sameAsHandMade.test.tsx keeps the two the same.
+ * (components/blend/BlendIngredientsPanel.js, deleted with the hand-made Blend screen in wave 7b); the Blend screen (screens/blend/) and the panel to
+ * generate again (screens/playlists/RegeneratePanel.tsx) both use it. The pictures of the two screens (test/fixtures/blendBeforeF83.json, regenerateBeforeF83.json) keep it the same.
  *
  * The labels of the sections and the number of the slider are written as the hand-made template broke them in lines (`broken`, as ONE text node): the browser draws none of that
  * white space, but WebKit shapes the characters it is given, and the test of the playlists screen compares it. (The icon of «Ranking Source», `BarChart2`, is not in the icon table: nothing is drawn, as before, and its

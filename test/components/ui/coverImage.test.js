@@ -18,7 +18,7 @@ import { createRoot } from 'react-dom/client'
 import { CompactCard } from '../../../public/js/screens/albums/AlbumCard'
 import { ItemCard } from '../../../public/js/screens/inventory/ItemCard'
 import { ItemRow } from '../../../public/js/screens/inventory/ItemRow'
-import { AlbumCascade } from '../../../public/js/components/common/AlbumCascade.js'
+import { AlbumCascade } from '../../../public/js/ui/AlbumCascade.tsx'
 import { PickerCard } from '../../../public/js/ui/albumPicker/PickerParts'
 import { appFiles, importsOf, read } from '../../architecture/support/sourceImports.js'
 
@@ -184,8 +184,18 @@ describe('every place that draws an album cover uses it', () => {
         expect(isStandIn(withAddress)).toBe(true)
     })
 
-    it('the saved playlists and the blend (the cascade of covers): no inline handler, the same stand-in', () => {
-        document.body.innerHTML = AlbumCascade.render([GOOD, null])
+    /** The cascade of covers (ui/AlbumCascade.tsx), drawn into the page. */
+    const drawCascade = async (thumbnails) => {
+        globalThis.IS_REACT_ACT_ENVIRONMENT = true
+        const host = document.createElement('div')
+        document.body.appendChild(host)
+        await act(async () => { createRoot(host).render(createElement(AlbumCascade, { thumbnails })) })
+        return host
+    }
+
+    it('the saved playlists and the blend (the cascade of covers): no inline handler, the same stand-in', async () => {
+        document.body.innerHTML = ''
+        await drawCascade([GOOD, null])
         const [withAddress, without] = coversIn(document.body)
 
         expect(document.body.innerHTML).not.toContain('onerror')
@@ -194,13 +204,14 @@ describe('every place that draws an album cover uses it', () => {
         expect(isStandIn(withAddress)).toBe(true)
     })
 
-    it('the cascade with no album at all keeps its own empty tile', () => {
-        expect(coversIn(AlbumCascade.renderNode([]))).toHaveLength(0)
+    it('the cascade with no album at all keeps its own empty tile', async () => {
+        document.body.innerHTML = ''
+        expect(coversIn(await drawCascade([]))).toHaveLength(0)
     })
 
     it('the files that draw an album cover import the helper, and no file writes an inline error handler', () => {
         const drawers = [
-            'screens/albums/AlbumCard.tsx', 'screens/inventory/ItemCard.tsx', 'screens/inventory/ItemRow.tsx', 'screens/inventory/phone/PhoneRow.tsx', 'components/common/AlbumCascade.js',
+            'screens/albums/AlbumCard.tsx', 'screens/inventory/ItemCard.tsx', 'screens/inventory/ItemRow.tsx', 'screens/inventory/phone/PhoneRow.tsx', 'ui/AlbumCascade.tsx',
             'ui/albumWindow/AlbumWindow.tsx', 'ui/albumPicker/PickerParts.tsx'
         ]
         const withoutTheHelper = drawers.filter(file => !importsOf(file).some(specifier => /(^|\/)(coverImage\.js|CoverImage)$/.test(specifier)))

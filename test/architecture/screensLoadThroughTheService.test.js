@@ -73,8 +73,8 @@ describe('every screen loads albums through the load service (F56)', () => {
             expect(codeOf(file)).toMatch(/albumAsks\.albumsOf\(/)
         })
 
-        const screen = ['views/BlendingMenuView.js', 'screens/playlists/Playlists.tsx', 'screens/playlists/PhoneParts.tsx', 'views/playlists/PlaylistsExport.js',
-            ...listJs('components/blend'), ...listJs('components/playlists')]
+        const screen = ['screens/playlists/Playlists.tsx', 'screens/playlists/PhoneParts.tsx', 'views/playlists/PlaylistsExport.js',
+            ...listJs('screens/blend'), ...listJs('components/playlists')]
         expect(importers(screen, specifier => /services\/albums\//.test(specifier))).toEqual([])
     })
 

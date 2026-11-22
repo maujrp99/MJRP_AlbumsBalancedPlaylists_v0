@@ -22,23 +22,18 @@ import { Icon } from '../../ui/Icon'
 import { RecipeCards, recipeKeyOf, type RecipeOfCard } from '../../ui/recipe/RecipeCards'
 import { Ingredients, type Choices } from '../../ui/recipe/Ingredients'
 import { broken } from '../../ui/recipe/broken'
-import { t, tPlural } from '../../i18n/t.js'
+import { t } from '../../i18n/t.js'
 import { getAllAlgorithms } from '../../algorithms/index.js'
 import { recipesOf } from '../../models/recipeLooks.js'
-import { DEFAULT_CHOICES, configOf } from '../../models/recipeIngredients.js'
-import { navigate } from '../../react-bridge/navigation'
+import { DEFAULT_CHOICES } from '../../models/recipeIngredients.js'
 import { useFocusLikeAfterAnewDraw } from '../../react-bridge/useFocusLikeAfterAnewDraw'
 import { useLocale } from '../../react-bridge/useLocale'
 import { usePhone } from '../../react-bridge/usePhone'
-import toast from '../../components/Toast.js'
-import { blendingController } from '../../controllers/BlendingController.js'
 import { SeriesStep } from './SeriesStep'
 import { PhoneBar, PhoneStep } from './phone/PhoneStep'
 import type { BlendVisit } from './blendVisit'
-import type { BlendingController, Results, Series } from './types'
-
-/** How long a notice about what the load left out stays: it is read on the next screen. */
-const NOTICE_MS = 10000
+import { generate } from './generate'
+import type { Results, Series } from './types'
 
 const STEPS = [
     { num: 1, key: 'mix', icon: 'Disc' },
@@ -104,6 +99,133 @@ function Locked({ title, step, about }: { title: string; step: number; about: st
 /** The words that name a recipe on this screen: by its id, from the dictionary (what a generation writes into a batch name stays the metadata's). */
 const recipeName = (recipe: RecipeOfCard): string => t(`blend.recipes.${recipeKeyOf(recipe.id)}.name`)
 
+/** What the bar of the phone says: the step that is missing, or what will be blended. */
+function barNoteOf(chosen: Series | null, recipe: RecipeOfCard | null, choices: Choices): string {
+    if (!chosen) return t('blend.bar.step1')
+    if (!recipe) return t('blend.bar.step2')
+    return t('blend.bar.ready', { recipe: recipeName(recipe), duration: choices.duration })
+}
+
+function RecipeSection({ chosen, recipes, recipeId, onSelect }: { chosen: Series | null; recipes: RecipeOfCard[]; recipeId: string | null; onSelect: (recipe: RecipeOfCard) => void }) {
+    if (!chosen) {
+        return (
+            <section className="glass-panel rounded-2xl p-6 mb-6 opacity-40">
+                <Locked title={t('blend.step2.title')} step={2} about={t('blend.step2.locked')} />
+            </section>
+        )
+    }
+    return (
+        <section className="glass-panel rounded-2xl p-6 mb-6 animate-fadeIn">
+            <Heading icon="FileText" title={t('blend.step2.title')} step={2} />
+            <div id="blend-recipe-cards">
+                <RecipeCards recipes={recipes} selectedId={recipeId} onSelect={onSelect} />
+            </div>
+        </section>
+    )
+}
+
+function IngredientsSection({ recipe, choices, onChange, draws }: { recipe: RecipeOfCard | null; choices: Choices; onChange: (next: Choices) => void; draws: number }) {
+    if (!recipe) return null
+    return (
+        <section className="glass-panel rounded-2xl p-6 mb-6 animate-fadeIn">
+            <Heading icon="List" title={t('blend.step3.title')} step={3} />
+            <div id="blend-ingredients-panel">
+                <Ingredients recipeId={recipe.id} choices={choices} onChange={onChange} recipeChosen={draws} />
+            </div>
+        </section>
+    )
+}
+
+interface GenerateProps {
+    chosen: Series | null
+    recipe: RecipeOfCard | null
+    choices: Choices
+    generating: boolean
+    onGenerate: () => void
+}
+
+/** The button of the blend: the icon and the words (in the plural for «multiple»), or the spinner and «Blending...». The text keeps the white space of the hand-made template. */
+function GenerateButton({ choices, generating, onGenerate }: Omit<GenerateProps, 'chosen' | 'recipe'>) {
+    return (
+        <button
+            id="blend-generate-btn"
+            className="tech-btn-primary px-8 py-4 text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            disabled={generating}
+            onClick={onGenerate}
+        >
+            {generating ? (
+                <span className="inline-flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                    {broken(t('blend.generate.busy'), 31, 27)}
+                </span>
+            ) : (
+                <>
+                    <Icon name="Sparkles" className="w-5 h-5 inline mr-2" />
+                    {broken(t(choices.outputMode === 'multiple' ? 'blend.generate.multiple' : 'blend.generate.one'), 0, 16)}
+                </>
+            )}
+        </button>
+    )
+}
+
+/** «Using <recipe> on <series> (60 min, auto mode)»: three texts and two names, each text as the hand-made template broke it in lines. */
+function Summary({ recipe, chosen, choices }: { recipe: RecipeOfCard; chosen: Series; choices: Choices }) {
+    const settings = t('blend.summary.settings', { duration: choices.duration, mode: t(`blend.mode.${choices.outputMode}`) })
+    return (
+        <p className="text-sm text-muted">
+            {`\n${' '.repeat(24)}${t('blend.summary.using')} `}
+            <strong>{recipeName(recipe)}</strong>
+            {` ${t('blend.summary.on')} \n${' '.repeat(24)}`}
+            <strong>{chosen.name}</strong>
+            {`\n${' '.repeat(24)}${settings}\n${' '.repeat(20)}`}
+        </p>
+    )
+}
+
+function GenerateSection({ chosen, recipe, choices, generating, onGenerate }: GenerateProps) {
+    if (!chosen) return null
+    if (!recipe) {
+        return (
+            <section className="glass-panel rounded-2xl p-6 opacity-40">
+                <Locked title={t('blend.step4.title')} step={4} about={t('blend.step4.locked')} />
+            </section>
+        )
+    }
+    return (
+        <section className="glass-panel rounded-2xl p-6 border-2 border-orange-400/30 animate-fadeIn">
+            <Heading icon="Sparkles" title={t('blend.step4.title')} step={4} />
+            <div id="blend-generate-section" className="text-center py-4">
+                <div className="space-y-4">
+                    <GenerateButton choices={choices} generating={generating} onGenerate={onGenerate} />
+                    <Summary recipe={recipe} chosen={chosen} choices={choices} />
+                </div>
+            </div>
+        </section>
+    )
+}
+
+/** The result area: nothing (hidden), the progress of the generation, or the message of a failure in red. It stays until the page is drawn anew by a choice. */
+function ResultsArea({ results }: { results: Results }) {
+    return (
+        <section id="blend-results" className={results ? 'mt-8' : 'mt-8 hidden'}>
+            {results?.kind === 'progress' ? (
+                <div className="glass-panel rounded-2xl p-6 text-center">
+                    <div className="animate-spin rounded-full h-10 w-10 border-3 border-orange-400 border-t-transparent mx-auto mb-4"></div>
+                    <p className="text-muted">{results.message}</p>
+                </div>
+            ) : null}
+            {results?.kind === 'error' ? (
+                <div className="glass-panel rounded-2xl p-6 border-2 border-red-400/30">
+                    <div className="flex items-center gap-3 text-red-400">
+                        <Icon name="AlertCircle" className="w-6 h-6" />
+                        <span className="font-semibold">{results.message}</span>
+                    </div>
+                </div>
+            ) : null}
+        </section>
+    )
+}
+
 interface Props {
     visit: BlendVisit
 }
@@ -127,53 +249,34 @@ export function Blend({ visit }: Props) {
     const [generating, setGenerating] = useState(false)
     const [results, setResults] = useState<Results>(null)
 
-    // turning the phone draws the page anew (the result area is wiped, as the hand-made screen did)
+    /** The page drawn anew by a choice: the result area is wiped, the ingredients are made again and the focus goes back to the page. */
+    const startOver = () => { setResults(null); setIngredientDraws(count => count + 1); drawnAnew() }
+    // turning the phone draws the page anew too
     const [wasPhone, setWasPhone] = useState(phone)
     if (wasPhone !== phone) {
         setWasPhone(phone)
-        setResults(null)
-        setIngredientDraws(count => count + 1)
-        drawnAnew()
+        startOver()
     }
 
     const recipes: RecipeOfCard[] = recipesOf(getAllAlgorithms())
     const recipe = recipes.find(candidate => candidate.id === recipeId) ?? null
-    const ready = Boolean(chosen && recipe)
+    const choose = (series: Series) => { setPicked(series); startOver() }
+    const chooseEntity = (entity: string) => { setPicked(null); startOver(); visit.setEntity(entity) }
+    const chooseRecipe = (next: RecipeOfCard) => { setRecipeId(next.id); startOver() }
+    const change = (next: Choices) => { setChoices(next); drawnAnew() }
 
-    const choose = (series: Series) => { setPicked(series); setResults(null); setIngredientDraws(count => count + 1); drawnAnew() }
-    const chooseEntity = (entity: string) => { setPicked(null); setResults(null); setIngredientDraws(count => count + 1); drawnAnew(); visit.setEntity(entity) }
-    const chooseRecipe = (next: RecipeOfCard) => { setRecipeId(next.id); setResults(null); setIngredientDraws(count => count + 1); drawnAnew() }
-    const change = (next: Choices) => {
-        setChoices(next)
-        drawnAnew()
-    }
-
-    const generate = async () => {
+    const run = async () => {
         if (!chosen || !recipe) return
         setGenerating(true)
         drawnAnew()
-        const signal = visit.beginGeneration()
-        try {
-            const config = { algorithmId: recipe.id, ...configOf(choices) }
-            const result = await (blendingController as unknown as BlendingController).generateFromSeries(chosen.id, config, {
-                onProgress: (message) => setResults({ kind: 'progress', message }),
-                signal
-            })
-            // what the load left out (albums that failed, sources missing) is said before the result
-            result.notices.forEach((notice: string) => toast.warning(notice, NOTICE_MS))
-            toast.success(tPlural('blend.generated', result.playlists.length, { count: result.playlists.length }))
-            navigate(`/playlists?seriesId=${chosen.id}`)
-        } catch (error) {
-            if ((error as Error | undefined)?.name === 'BlendCancelledError') return // the person left: nothing to show
-            console.error('[Blend] Generation error:', error)
-            setResults({ kind: 'error', message: (error as Error | undefined)?.message || t('blend.failed') })
-        } finally {
-            setGenerating(false)
-            drawnAnew()
-        }
+        const failure = await generate({ visit, chosen, recipe, choices, onProgress: (message) => setResults({ kind: 'progress', message }) })
+        if (failure) setResults({ kind: 'error', message: failure })
+        setGenerating(false)
+        drawnAnew()
     }
+    const start = () => { void run() }
 
-    const barNote = !chosen ? t('blend.bar.step1') : !recipe ? t('blend.bar.step2') : t('blend.bar.ready', { recipe: recipeName(recipe), duration: choices.duration })
+    const Step1 = phone ? PhoneStep : SeriesStep
     return (
         <div className="container mx-auto px-4 py-8 max-w-5xl">
             <div className="text-center mb-8 blend-head">
@@ -184,91 +287,15 @@ export function Blend({ visit }: Props) {
                 <p className="text-muted text-lg mb-6 blend-head__motto">{t('blend.motto')}</p>
                 <Stepper hasSeries={Boolean(chosen)} hasRecipe={Boolean(recipe)} />
             </div>
-
             <section className="glass-panel rounded-2xl p-6 mb-6">
                 <Heading icon="Disc" title={t('blend.step1.title')} step={1} />
-                {phone
-                    ? <PhoneStep visit={visit} chosen={chosen} onChoose={choose} onEntity={chooseEntity} />
-                    : <SeriesStep visit={visit} chosen={chosen} onChoose={choose} onEntity={chooseEntity} />}
+                <Step1 visit={visit} chosen={chosen} onChoose={choose} onEntity={chooseEntity} />
             </section>
-
-            {chosen ? (
-                <section className="glass-panel rounded-2xl p-6 mb-6 animate-fadeIn">
-                    <Heading icon="FileText" title={t('blend.step2.title')} step={2} />
-                    <div id="blend-recipe-cards">
-                        <RecipeCards recipes={recipes} selectedId={recipeId} onSelect={chooseRecipe} />
-                    </div>
-                </section>
-            ) : (
-                <section className="glass-panel rounded-2xl p-6 mb-6 opacity-40">
-                    <Locked title={t('blend.step2.title')} step={2} about={t('blend.step2.locked')} />
-                </section>
-            )}
-
-            {recipe ? (
-                <section className="glass-panel rounded-2xl p-6 mb-6 animate-fadeIn">
-                    <Heading icon="List" title={t('blend.step3.title')} step={3} />
-                    <div id="blend-ingredients-panel">
-                        <Ingredients recipeId={recipe.id} choices={choices} onChange={change} recipeChosen={ingredientDraws} />
-                    </div>
-                </section>
-            ) : null}
-
-            {recipe && chosen ? (
-                <section className="glass-panel rounded-2xl p-6 border-2 border-orange-400/30 animate-fadeIn">
-                    <Heading icon="Sparkles" title={t('blend.step4.title')} step={4} />
-                    <div id="blend-generate-section" className="text-center py-4">
-                        <div className="space-y-4">
-                            <button
-                                id="blend-generate-btn"
-                                className="tech-btn-primary px-8 py-4 text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                                disabled={generating}
-                                onClick={() => { void generate() }}
-                            >
-                                {generating ? (
-                                    <span className="inline-flex items-center gap-2">
-                                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                                        {broken(t('blend.generate.busy'), 31, 27)}
-                                    </span>
-                                ) : (
-                                    <>
-                                        <Icon name="Sparkles" className="w-5 h-5 inline mr-2" />
-                                        {broken(t(choices.outputMode === 'multiple' ? 'blend.generate.multiple' : 'blend.generate.one'), 0, 16)}
-                                    </>
-                                )}
-                            </button>
-                            <p className="text-sm text-muted">
-                                {`\n${' '.repeat(24)}${t('blend.summary.using')} `}
-                                <strong>{recipeName(recipe)}</strong>
-                                {` ${t('blend.summary.on')} \n${' '.repeat(24)}`}
-                                <strong>{chosen.name}</strong>
-                                {`\n${' '.repeat(24)}${t('blend.summary.settings', { duration: choices.duration, mode: t(`blend.mode.${choices.outputMode}`) })}\n${' '.repeat(20)}`}
-                            </p>
-                        </div>
-                    </div>
-                </section>
-            ) : chosen ? (
-                <section className="glass-panel rounded-2xl p-6 opacity-40">
-                    <Locked title={t('blend.step4.title')} step={4} about={t('blend.step4.locked')} />
-                </section>
-            ) : null}
-
-            <section id="blend-results" className={results ? 'mt-8' : 'mt-8 hidden'}>
-                {results?.kind === 'progress' ? (
-                    <div className="glass-panel rounded-2xl p-6 text-center">
-                        <div className="animate-spin rounded-full h-10 w-10 border-3 border-orange-400 border-t-transparent mx-auto mb-4"></div>
-                        <p className="text-muted">{results.message}</p>
-                    </div>
-                ) : results?.kind === 'error' ? (
-                    <div className="glass-panel rounded-2xl p-6 border-2 border-red-400/30">
-                        <div className="flex items-center gap-3 text-red-400">
-                            <Icon name="AlertCircle" className="w-6 h-6" />
-                            <span className="font-semibold">{results.message}</span>
-                        </div>
-                    </div>
-                ) : null}
-            </section>
-            {phone ? <PhoneBar note={barNote} ready={ready} generating={generating} onGenerate={() => { void generate() }} /> : null}
+            <RecipeSection chosen={chosen} recipes={recipes} recipeId={recipeId} onSelect={chooseRecipe} />
+            <IngredientsSection recipe={recipe} choices={choices} onChange={change} draws={ingredientDraws} />
+            <GenerateSection chosen={chosen} recipe={recipe} choices={choices} generating={generating} onGenerate={start} />
+            <ResultsArea results={results} />
+            {phone ? <PhoneBar note={barNoteOf(chosen, recipe, choices)} ready={Boolean(chosen && recipe)} generating={generating} onGenerate={start} /> : null}
         </div>
     )
 }

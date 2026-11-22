@@ -1,7 +1,7 @@
 /**
  * RecipeCards - the cards to choose the recipe of a blend (F83 wave 7a), the piece the playlists screen's panel to generate again and,
- * from wave 7b, the Blend screen both use. The same HTML and the same classes as the hand-made cards (components/blend/BlendRecipeCard.js),
- * which stay for the hand-made Blend screen until it moves; test/ui/recipe/RecipePieces.sameAsHandMade.test.tsx keeps the two the same.
+ * from wave 7b, the Blend screen both use. The same HTML and the same classes as the hand-made cards (components/blend/BlendRecipeCard.js,
+ * deleted with the hand-made Blend screen in wave 7b); the pictures of the two screens (test/fixtures/blendBeforeF83.json, regenerateBeforeF83.json) keep them the same.
  *
  * It has no store and no service: it is given the recipes (models/recipeLooks.js `recipesOf`) and the one that is chosen, and tells which
  * card was pressed. What it does as the hand-made cards did: pressing a card draws the whole row of cards anew (a new `key`), so that nothing of the

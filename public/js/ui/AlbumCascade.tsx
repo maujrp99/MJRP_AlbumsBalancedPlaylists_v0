@@ -3,8 +3,8 @@
  * components/common/AlbumCascade.js).
  *
  * The same element with the same classes and the same sizes: up to three covers, each 10 px to the right and 6 px lower than the
- * one before, the first on top; with none, a stand-in with a music note. The hand-made one stays for the Blend screen, which
- * writes it as text (`render()`), until that screen migrates (wave 7); a test keeps the two the same.
+ * one before, the first on top; with none, a stand-in with a music note. The hand-made one (components/common/AlbumCascade.js) went with the Blend screen
+ * (wave 7b); test/ui/AlbumCascade.test.tsx keeps this one the same as the picture the hand-made one drew (test/fixtures/albumCascadeBeforeF83.json).
  */
 import { CoverImage } from './CoverImage'
 import { Icon } from './Icon'

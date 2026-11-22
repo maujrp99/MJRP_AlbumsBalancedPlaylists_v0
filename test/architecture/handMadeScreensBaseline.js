@@ -1,4 +1,8 @@
 /**
+ * (2026-11-22, wave 7b: the Blend screen went to React, and these left the list in the commit that deleted them: views/BlendingMenuView.js (477), components/blend/BlendSeriesSelector.js (340),
+ * BlendSeriesPhonePicker.js (141), BlendRecipeCard.js (174), BlendIngredientsPanel.js (428) and components/common/AlbumCascade.js (71): now screens/blend/ on ui/recipe/ and ui/AlbumCascade.tsx,
+ * with the reading of the covers in models/seriesCovers.js. views/BaseView.js stays in the list: it is the title of the tab, until wave 8.)
+ *
  * (2026-11-22, wave 7a: the panel to generate again went to React, and this left the list in the commit that deleted it: components/playlists/RegeneratePanel.js (182 in the
  * list; 183 on the disk), now screens/playlists/RegeneratePanel.tsx on ui/recipe/{RecipeCards,Ingredients}.tsx, with the rules in models/recipeLooks.js and
  * models/recipeIngredients.js, and the wrapper react-bridge/legacy/RegeneratePanel.tsx went with it. Left in the list, with their reasons: components/blend/BlendRecipeCard.js
@@ -78,11 +82,6 @@ export const HAND_MADE = {
     'components/Icons.js': 178,
     'components/SpotifyExportModal.js': 461,
     'components/Toast.js': 154,
-    'components/blend/BlendIngredientsPanel.js': 428,
-    'components/blend/BlendRecipeCard.js': 174,
-    'components/blend/BlendSeriesPhonePicker.js': 141,
-    'components/blend/BlendSeriesSelector.js': 340,
-    'components/common/AlbumCascade.js': 71,
     'components/navigation/signInFromLink.js': 30,
     'components/navigation/startRoute.js': 62,
     'components/ui/BaseModal.js': 178,
@@ -95,6 +94,5 @@ export const HAND_MADE = {
     'utils/SafeDOM.js': 237,
     'utils/pageScrollLock.js': 56,
     'views/BaseView.js': 144,
-    'views/BlendingMenuView.js': 477,
     'views/playlists/PlaylistsExport.js': 142
 }

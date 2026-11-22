@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 07:06] step — F83 onda 7b: a rota /blend em React, as peças à mão saem, os sensores e os testes levados
+
+**Branch:** claude/f83-wave-7b-blend-screen
+
+- `app.js`: `/blend` por `loadScreen(() => import('./screens/blend/index.ts'))` e na lista do segundo plano. Saem com `git rm`: `views/BlendingMenuView.js`, `components/blend/` (4 arquivos), `components/common/AlbumCascade.js`, `test/components/blend/BlendIngredientsPanel.test.js` e `test/ui/recipe/RecipePieces.sameAsHandMade.test.tsx`.
+- Sensores: `handMadeScreensBaseline` perde 6 entradas (24 para 18 arquivos), `complexityAllowlist` 4 linhas, `outsideTextEscaped` 1, `tailwindBuiltWithSite` 1 entrada e o último caso (agora lê as cores `/10` de `models/recipeLooks.js`), o `safelist` e a constante `RECIPE_GRADIENT_AT_10` saem de `tailwind.config.js`; `screensLoadThroughTheService` passa a ler `screens/blend`. `viewLifecycle`: saem os 4 casos da metade à mão (não há mais `*View.js` além de `BaseView.js`) e entra a guarda «só sobra `BaseView.js` em `views/`»; a metade de React (lê `screens/`) fica, e cada tela tem o teste-molde de sair.
+- Testes levados: os 7 da Blend no celular e os 4 de `?seriesId=` (mesmas asserções, o andaime trocado; `Blend.phone.test.tsx`, `Blend.fromSeries.test.tsx`); os 2 da cascata à mão em `coverImage.test.js` leem `ui/AlbumCascade`; os 5 da cascata em `AlbumCascade.test.tsx` comparam com um retrato capturado antes de apagar a cascata (`albumCascadeBeforeF83.json`); `recipeIngredients`/`recipeLooks` ficam com os valores que a peça à mão tinha; o caso da Blend em `outsideTextIsText` desenha o `SeriesStep`. Novos: o teste-molde de sair, os textos em inglês e em português, o «igual ao de antes».
+- Complexidade: `Blend` foi dividida (`generate.ts`, seções); o molde `as unknown` só em `react-bridge/`.
+
 ## [2026-11-22 06:59] step — F83 onda 7b: a tela Blend em React (screens/blend/), igual ao dourado
 
 **Branch:** claude/f83-wave-7b-blend-screen

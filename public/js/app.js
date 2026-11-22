@@ -30,7 +30,6 @@ import './services/inventory/inventoryWiring.js' // the inventory is read when t
 import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
-import { BlendingMenuView } from './views/BlendingMenuView.js'
 
 import toast from './components/Toast.js'
 
@@ -151,7 +150,13 @@ const comingSoonRoute = (kind) => async () => {
 router.register('/artists', comingSoonRoute('artists'))
 router.register('/genres', comingSoonRoute('genres'))
 router.register('/tracks', comingSoonRoute('tracks'))
-router.register('/blend', () => new BlendingMenuView())
+// The Blend screen (F83 wave 7b, in React): its file comes when the route asks for it and in the background. The controller that generates
+// (controllers/BlendingController.js, hand-written) is shared with the playlists screen: the bundler makes it a file of its own.
+const loadBlend = loadScreen(() => import('./screens/blend/index.ts'))
+router.register('/blend', async () => {
+    const { blendView } = await loadBlend()
+    return blendView()
+})
 
 // Sprint 11 Phase 1: Spotify Auth Callback
 router.register('/callback', async () => {
@@ -199,7 +204,7 @@ router.register('/series', () => {
 
 // The screens in React come down in the background once the first screen is on the page (F83, REQ-10): changing screens still works
 // with no network after the first load, as it did when everything was in the main script. React itself is already there: the shell is React.
-prefetchScreensAfterTheFirstScreen(router, [loadStart, loadAlbums, loadInventory, loadSavedPlaylists, loadPlaylists, loadComingSoon])
+prefetchScreensAfterTheFirstScreen(router, [loadStart, loadAlbums, loadInventory, loadSavedPlaylists, loadPlaylists, loadBlend, loadComingSoon])
 
 // Global Error Handler
 window.addEventListener('error', (e) => {

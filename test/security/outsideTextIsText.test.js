@@ -20,7 +20,7 @@ import { Grid } from '../../public/js/screens/inventory/Grid'
 import { InventoryBridge } from '../../public/js/screens/inventory/InventoryBridge'
 import { Router } from '../../public/js/router.js'
 import { Breadcrumb, playlistsTrail } from '../../public/js/ui/Breadcrumb'
-import { BlendSeriesSelector } from '../../public/js/components/blend/BlendSeriesSelector.js'
+import { SeriesStep } from '../../public/js/screens/blend/SeriesStep'
 import { SpotifyExportModal } from '../../public/js/components/SpotifyExportModal.js'
 import { startOn } from '../support/renderShell'
 import { PickerCard } from '../../public/js/ui/albumPicker/PickerParts'
@@ -113,9 +113,9 @@ describe('text from outside is shown as text', () => {
         expect(host.querySelector('h2').textContent).toBe(AMPERSAND)
     })
 
-    it('series card of the blending menu', () => {
-        const selector = new BlendSeriesSelector()
-        draw(selector.renderSeriesCard({ id: QUOTED, name: TEXT, albumQueries: [] }))
+    it('series card of the blending menu (React since F83 wave 7b: screens/blend/SeriesStep.tsx)', async () => {
+        const visit = { loading: false, reveal: false, series: [{ id: QUOTED, name: TEXT, albumQueries: [] }], coversOf: () => [] }
+        await drawReact(createElement(SeriesStep, { visit, chosen: null, onChoose: noop, onEntity: noop }))
         expectOnlyText(host, TEXT)
         expect(host.querySelector('.blend-series-card').dataset.seriesId).toBe(QUOTED)
         expect(host.querySelector('h4').textContent).toBe(TEXT)

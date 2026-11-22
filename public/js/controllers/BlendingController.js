@@ -2,7 +2,7 @@
  * BlendingController
  * 
  * Centralized controller for playlist generation workflow.
- * Shared by BlendingMenuView and PlaylistsView/RegeneratePanel.
+ * Shared by the Blend screen (screens/blend/) and the playlists screen (generate again).
  * 
  * Responsibilities:
  * - Ask the album load for the albums of a series (it never loads an album itself: F56)

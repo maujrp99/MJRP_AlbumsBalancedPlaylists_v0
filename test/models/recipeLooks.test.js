@@ -1,20 +1,24 @@
 /**
  * F83 wave 7a: the look of a recipe card (models/recipeLooks.js), the table the hand-made card (components/blend/BlendRecipeCard.js)
- * had inside it. The two stay equal until the Blend screen moves (wave 7b); the first test reads the hand-made one.
+ * had inside it (deleted with the Blend screen in wave 7b). Wave 7a proved the table equal to the card's; since the card left, the first test holds the values it had.
  */
 import { describe, it, expect } from 'vitest'
-import { BlendRecipeCard } from '../../public/js/components/blend/BlendRecipeCard.js'
 import { getAllAlgorithms } from '../../public/js/algorithms/index.js'
 import { recipeLooksOf, badgeClassOf, cardClassOf, recipesOf } from '../../public/js/models/recipeLooks.js'
 
 describe('recipeLooks: the icon and the colors of a recipe', () => {
-    it('are the ones of the hand-made card, for every recipe of the menu and for one the card does not know', () => {
-        const handMade = new BlendRecipeCard()
-        const ids = [...getAllAlgorithms().map(recipe => recipe.id), 'gone-recipe']
-        for (const id of ids) {
+    it('are the ones of the hand-made card, for every recipe of the menu and for one the card did not know', () => {
+        const TABLE = {
+            'mjrp-balanced-cascade': ['Sparkles', 'from-amber-400', 'to-orange-500'],
+            'top-n-popular': ['TrendingUp', 'from-green-500', 'to-emerald-600'],
+            'top-n-acclaimed': ['Award', 'from-rose-500', 'to-orange-500'],
+            'top-n-user': ['User', 'from-sky-500', 'to-blue-600'],
+            'gone-recipe': ['Music', 'from-gray-500', 'to-gray-600']
+        }
+        expect(getAllAlgorithms().map(recipe => recipe.id)).toEqual(Object.keys(TABLE).slice(0, 4))
+        for (const [id, [icon, from, to]] of Object.entries(TABLE)) {
             const looks = recipeLooksOf(id)
-            expect(looks.icon, id).toBe(handMade.getRecipeIcon(id))
-            expect({ from: looks.from, to: looks.to }, id).toEqual(handMade.getRecipeColor(id))
+            expect([looks.icon, looks.from, looks.to], id).toEqual([icon, from, to])
         }
     })
 
