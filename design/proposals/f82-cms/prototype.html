@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Album Blender CMS</title>
+<meta name="description" content="Protótipo do admin (CMS) do Album Blender: dois níveis lado a lado, Painel e Na própria tela.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+/*
+ * ONE dark look, on purpose: the Album Blender has a single dark theme (design-system.md § Temas), and the admin is part of the
+ * same product. The page does not follow the viewer's light or dark setting.
+ * Tokens are the design system's (docs/specs/design-system.md § Cores); nothing outside it, except the recipe colors of the real
+ * Blend screen (models/recipeLooks.js), shown only inside the copy of that screen.
+ */
+:root{
+  color-scheme: dark;
+  --bg:#0a0a0c;            /* trilho / fundo do admin */
+  --black:#000000;         /* fundo das telas do app */
+  --panel:#101014;
+  --surface:#1c1c22;
+  --raised:#2a2a30;
+  --line:rgba(255,255,255,.10);
+  --line-2:rgba(255,255,255,.18);
+  --line-3:rgba(255,255,255,.32);
+  --text:#ffffff;
+  --text-2:rgba(255,255,255,.72);
+  --muted:#a0a0a8;
+  --orange:#f97316;
+  --orange-text:#fb923c;
+  --red:#dc2626;
+  --flame:linear-gradient(135deg,#f97316 0%,#dc2626 100%);
+  --flame-text:linear-gradient(90deg,#f97316,#dc2626);
+  --on-flame:#0b0b0b;
+  --ok:#4ade80;
+  --warn:#fca5a5;
+  --warn-bg:rgba(220,38,38,.14);
+  --danger:#f87171;
+  --undo:#f4f4f5;
+  --glow:0 0 24px rgba(249,115,22,.3);
+  --r-btn:12px; --r-card:16px; --r-pill:999px;
+  --gutter:24px;
+  --syne:"Syne",system-ui,-apple-system,sans-serif;
+  --sys:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (max-width:767px){ :root{ --gutter:16px; } }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.5 var(--sys);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3,h4{font-family:var(--syne);margin:0;line-height:1.2}
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.wrap{max-width:1360px;margin:0 auto;padding:0 var(--gutter)}
+.flame-t{background:var(--flame-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--muted)}
+.key{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);word-break:break-all}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;line-height:16px;font-weight:700;padding:2px 8px;border-radius:var(--r-pill);border:1px solid var(--line-2);color:var(--text-2);white-space:nowrap}
+.tag.prop{border-style:dashed;color:var(--muted)}
+.tag.wait{background:var(--raised);color:#fff;border-color:var(--line-3)}
+.tag.draft{border-style:dashed;border-color:var(--orange);color:#fff}
+.tag.live{color:var(--ok);border-color:rgba(74,222,128,.4)}
+.tag.later{color:#fff;background:var(--raised)}
+.tag.off{color:var(--muted)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:var(--r-btn);border:1px solid var(--line-2);background:var(--surface);font:700 14px/1.1 var(--syne);color:#fff;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--line-3)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.flame{background:var(--flame);border:0;color:var(--on-flame);font-weight:800;box-shadow:var(--glow)}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:44px;padding:0 12px;font-size:13px}
+.btn.danger{color:var(--danger)}
+.lnk{background:none;border:0;padding:0 4px;min-height:44px;color:#fff;font-weight:700;text-decoration:underline;text-decoration-color:var(--orange);text-decoration-thickness:2px;text-underline-offset:3px}
+
+/* switch */
+.sw{position:relative;display:inline-flex;align-items:center;gap:10px;min-height:44px;background:none;border:0;padding:0;text-align:left}
+.sw i{position:relative;flex:none;width:48px;height:28px;border-radius:999px;background:var(--raised);border:1px solid var(--line-3);transition:background .2s}
+.sw i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--muted);transition:transform .2s,background .2s}
+.sw[aria-checked="true"] i{background:var(--orange);border-color:var(--orange)}
+.sw[aria-checked="true"] i::after{transform:translateX(20px);background:#fff}
+.sw b{font-size:14px}
+
+/* ===== the decision ===== */
+.decide{padding-top:28px;padding-bottom:18px}
+.brandline{font:700 13px/1.4 var(--syne);color:var(--muted);letter-spacing:.02em;margin-bottom:10px}
+.brandline .flame-t{font-weight:800}
+.decide h1{font-size:34px;font-weight:800;letter-spacing:-.01em;max-width:24ch}
+.decide .sub{color:var(--text-2);margin:8px 0 18px;max-width:70ch}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice{display:flex;flex-direction:column;gap:6px;text-align:left;padding:16px 18px;border-radius:var(--r-card);border:1px solid var(--line-2);background:var(--panel);min-height:44px}
+.choice b{font:800 20px/1.2 var(--syne)}
+.choice span{color:var(--text-2)}
+.choice em{font-style:normal;font-size:13px;color:var(--muted)}
+.choice[aria-checked="true"]{border:2px solid var(--orange);background:linear-gradient(180deg,rgba(249,115,22,.10),rgba(249,115,22,0) 70%),var(--panel)}
+.choice[aria-checked="true"] b::after{content:"  · aberto abaixo";font:700 12px var(--sys);color:var(--orange-text)}
+.recline{margin:14px 0 0;padding:12px 14px;border-left:3px solid var(--orange);background:var(--panel);border-radius:0 10px 10px 0;max-width:90ch}
+.about{margin-top:12px}
+.about summary{cursor:pointer;min-height:44px;display:inline-flex;align-items:center;font-weight:700;text-decoration:underline;text-decoration-color:var(--orange);text-underline-offset:3px}
+.about .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.about .box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.about ul{margin:6px 0 0;padding-left:18px}
+.about li{margin:3px 0}
+
+/* ===== prototype frame ===== */
+.proto{border-top:1px solid var(--line);padding-top:14px;padding-bottom:48px}
+.simbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:12px;font-size:13px;color:var(--muted)}
+.simbar select{min-height:44px;background:var(--panel);border:1px dashed var(--line-3);border-radius:10px;padding:0 10px;color:#fff;font-size:16px}
+.note-admin{font-size:13px;color:var(--muted)}
+
+/* panel level */
+.painel{display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px;align-items:start}
+.rail{position:sticky;top:12px;display:flex;flex-direction:column;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-card);padding:10px}
+.rail .who{display:flex;gap:10px;align-items:center;padding:6px 6px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.avatar{flex:none;width:32px;height:32px;border-radius:50%;background:var(--flame);color:var(--on-flame);font:800 14px/32px var(--syne);text-align:center}
+.rail .who small{display:block;color:var(--muted);font-size:12px}
+.navb{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:0 12px;border-radius:10px;border:0;background:transparent;font:700 14px var(--syne);color:var(--text-2);text-align:left}
+.navb:hover{background:var(--surface);color:#fff}
+.navb[aria-current="page"]{background:var(--raised);color:#fff;box-shadow:inset 3px 0 0 var(--orange)}
+.navb .cnt{font:700 12px var(--sys);color:#fff;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:1px 8px}
+.navb.quiet{font-weight:400;font-family:var(--sys);color:var(--muted)}
+.mainc{min-width:0}
+.sechead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px;margin:4px 0 12px}
+.sechead h2{font-size:24px;font-weight:800}
+.sechead p{margin:4px 0 0;color:var(--text-2);max-width:72ch}
+
+/* publish bar */
+.pubbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:10px 12px 10px 16px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line-2);margin-bottom:16px}
+.pubbar.has{border-color:rgba(249,115,22,.55)}
+.pubinfo{display:flex;flex-direction:column;gap:2px}
+.pubinfo b{font:800 15px var(--syne)}
+.pubinfo span{font-size:13px;color:var(--muted)}
+.pubacts{display:flex;flex-wrap:wrap;gap:8px}
+.pubmsg{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14px}
+.pubmsg.ok{color:#fff;border-left:3px solid var(--ok)}
+.pubmsg.ok .ico{color:var(--ok)}
+.pubmsg.fail{border-left:3px solid var(--danger)}
+.pubmsg.fail .ico{color:var(--danger)}
+.pubmsg.conf{border-left:3px solid var(--orange);flex-direction:column;align-items:stretch}
+.eq{display:inline-flex;align-items:flex-end;gap:3px;height:16px;width:26px}
+.eq i{width:3px;height:100%;border-radius:2px 2px 0 0;background:linear-gradient(0deg,#dc2626,#f97316);animation:eq .7s ease-in-out infinite alternate}
+.eq i:nth-child(2){animation-delay:-.2s}.eq i:nth-child(3){animation-delay:-.45s}.eq i:nth-child(4){animation-delay:-.1s}.eq i:nth-child(5){animation-delay:-.6s}
+@keyframes eq{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
+.eq i{transform-origin:bottom}
+@media (prefers-reduced-motion:reduce){.eq i{animation:none}}
+.conflict-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
+.conflict-grid div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.conflict-grid small{display:block;color:var(--muted);font-size:12px;margin-bottom:2px}
+
+/* texts (panel) */
+.screens{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);background:transparent;font:700 14px var(--syne);color:var(--text-2)}
+.chip[aria-pressed="true"]{background:#fff;color:#000;border-color:#fff}
+.chip .n{font:700 12px var(--sys);padding:0 6px;border-radius:999px;background:var(--raised);color:#fff}
+.chip[aria-pressed="true"] .n{background:#000;color:#fff}
+.tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:10px}
+.search{position:relative;flex:1 1 260px;max-width:420px}
+.search input{width:100%;min-height:44px;padding:0 12px 0 36px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);font-size:16px}
+.search input:focus{border-color:var(--orange);outline:none;box-shadow:0 0 0 3px rgba(249,115,22,.25)}
+.search::before{content:"⌕";position:absolute;left:12px;top:50%;transform:translateY(-52%);color:var(--muted);font-size:18px}
+.chk{display:inline-flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-size:14px}
+.chk input{width:20px;height:20px;accent-color:var(--orange);margin:0}
+.bulk{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 12px;border-radius:12px;background:var(--surface);margin-bottom:10px;font-size:14px}
+.rows{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.rowh,.row{display:grid;grid-template-columns:44px minmax(150px,1fr) minmax(0,1.6fr) minmax(0,1.6fr) 96px;gap:12px;align-items:start;padding:10px 12px}
+.rowh{background:var(--panel);font:700 12px var(--sys);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding-top:8px;padding-bottom:8px}
+.row{border-top:1px solid var(--line);font-size:14px}
+.row:hover{background:rgba(255,255,255,.02)}
+.row.is-edit{background:var(--panel)}
+.row .cell-k b{display:block;font-weight:700;font-size:13px;color:#fff}
+.row .cell-t{min-width:0;overflow-wrap:anywhere}
+.row .cell-t .lbl{display:none}
+.row .st{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.row .chkc{display:flex;align-items:center;justify-content:center;min-height:44px}
+.row .chkc label{display:flex;align-items:center;justify-content:center;width:44px;height:44px;cursor:pointer}
+.row .chkc input{width:20px;height:20px;accent-color:var(--orange)}
+.ch{background:rgba(249,115,22,.14);box-shadow:inset 0 -2px 0 var(--orange);border-radius:3px}
+.empty{padding:28px 20px;text-align:center;color:var(--text-2)}
+.empty b{display:block;font:800 18px var(--syne);color:#fff;margin-bottom:4px}
+
+/* editor */
+.editor{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px;border-radius:12px;background:var(--bg);border:1px solid var(--line-2);margin-top:4px}
+.editor .fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.editor label,.fl{font:700 13px var(--syne);color:#fff}
+.editor .was{font-size:12px;color:var(--muted)}
+textarea,.inp,.sel{width:100%;min-height:44px;padding:10px 12px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);font-size:16px;line-height:1.4;color:#fff}
+textarea{resize:vertical;min-height:72px}
+textarea:focus,.inp:focus,.sel:focus{border-color:var(--orange);outline:none;box-shadow:0 0 0 3px rgba(249,115,22,.25)}
+.sel{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#a0a0a8 50%),linear-gradient(135deg,#a0a0a8 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+.len{font-size:12px;color:var(--muted)}
+.warnbox{grid-column:1/-1;display:none;padding:8px 12px;border-radius:10px;background:var(--warn-bg);border-left:3px solid var(--warn);color:var(--warn);font-size:14px}
+.warnbox.on{display:block}
+.edacts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px}
+
+/* features */
+.feats{display:grid;gap:12px}
+.feat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 20px;padding:16px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line)}
+.feat h3{font-size:18px;font-weight:800;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.feat dl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 12px;margin:10px 0 0;font-size:14px}
+.feat dt{color:var(--muted)}
+.feat dd{margin:0;color:var(--text-2)}
+.feat .side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.feat .prodst{font-size:13px;color:var(--muted);text-align:right}
+.feat .ask{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 12px;border-radius:10px;background:var(--surface);border-left:3px solid var(--orange);font-size:14px}
+.feat .lock{grid-column:1/-1;font-size:13px;color:var(--text-2);padding-top:8px;border-top:1px solid var(--line)}
+.seg{display:inline-flex;padding:3px;border-radius:12px;background:var(--bg);border:1px solid var(--line-2)}
+.seg button{min-height:38px;padding:0 12px;border:0;border-radius:9px;background:transparent;color:var(--muted);font:700 13px var(--syne)}
+.seg button[aria-pressed="true"]{background:var(--raised);color:#fff;box-shadow:0 0 0 1px var(--line-2)}
+.cand{padding:12px 16px;border-radius:var(--r-card);border:1px dashed var(--line-2);color:var(--text-2);font-size:14px}
+
+/* recipes */
+.reclist{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.recrow{display:grid;grid-template-columns:32px 28px 40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;border-top:1px solid var(--line);background:var(--panel)}
+.recrow:first-child{border-top:0}
+.recrow.off{background:var(--bg)}
+.recrow.off .rname{color:var(--muted)}
+.recrow.dragging{opacity:.4}
+.recrow.over{box-shadow:inset 0 3px 0 var(--orange)}
+.handle{cursor:grab;color:var(--muted);font-size:18px;text-align:center;user-select:none}
+.ord{font:800 14px var(--syne);color:var(--muted);text-align:center}
+.ricon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#fff}
+.rname{font:700 15px var(--syne)}
+.rmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+.racts{display:flex;flex-wrap:wrap;align-items:center;gap:4px;justify-content:flex-end}
+.icb{width:44px;height:44px;border-radius:10px;border:1px solid var(--line-2);background:transparent;color:#fff;font-size:16px;display:inline-grid;place-items:center}
+.icb[disabled]{opacity:.3;cursor:not-allowed}
+.icb.star[aria-pressed="true"]{color:#000;background:#fff;border-color:#fff}
+.recedit{padding:14px;border-top:1px solid var(--line);background:var(--bg);display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.recedit h4{grid-column:1/-1;font-size:15px}
+.ingr{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.ingr .ic{padding:8px 10px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
+.ingr .ic.dim{opacity:.6}
+.full{grid-column:1/-1}
+
+/* builder */
+.builder{margin-top:16px;border-radius:var(--r-card);border:1px solid rgba(249,115,22,.5);background:var(--panel);padding:16px}
+.builder h3{font-size:20px;font-weight:800}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.bgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px}
+.blocks{display:grid;gap:10px}
+.block{padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.block .bt{display:flex;justify-content:space-between;gap:8px;font:700 13px var(--syne);margin-bottom:6px}
+.block .bt span{font:400 12px var(--sys);color:var(--muted)}
+.stepper{display:inline-flex;align-items:center;gap:6px}
+.stepper output{min-width:40px;text-align:center;font:800 18px var(--syne)}
+.pv{border-radius:12px;background:var(--bg);border:1px solid var(--line);padding:12px}
+.pv h4{font-size:15px}
+.pvrow{display:grid;grid-template-columns:22px minmax(0,1fr) 92px 64px;gap:8px;align-items:center;padding:6px 4px;border-top:1px solid var(--line);font-size:13px}
+.pvrow:first-of-type{border-top:0}
+.pvrow .pos{color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.pvrow .bar{height:6px;border-radius:3px;background:var(--raised);position:relative;overflow:hidden}
+.pvrow .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--muted);border-radius:3px}
+.pvrow.in{background:rgba(249,115,22,.10)}
+.pvrow.in .bar i{background:var(--flame)}
+.pvrow .why{font-size:12px;font-weight:700;text-align:right}
+.pvrow.in .why{color:#fff}
+.pvrow.skip .why,.pvrow.out .why{color:var(--muted)}
+.pvrow.nodata .why{color:var(--warn)}
+.pvrow .tn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pvsum{margin:8px 0 0;font-size:14px;color:var(--text-2)}
+
+/* people */
+.pcard{padding:16px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.later{margin-top:18px;padding:16px;border-radius:var(--r-card);border:1px dashed var(--line-3)}
+.later h3{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:18px}
+.mtx{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+.mtx th,.mtx td{padding:8px 10px;border-top:1px solid var(--line);text-align:left;vertical-align:middle}
+.mtx th{font:700 12px var(--sys);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.mtx td.c{white-space:nowrap}
+.cap-muda{color:#fff;font-weight:700}
+.cap-ve{color:var(--text-2)}
+.cap-no{color:var(--muted)}
+.mtxwrap{overflow-x:auto;max-width:100%}
+.noperm{padding:22px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line-2);border-left:3px solid var(--danger)}
+.noperm b{display:block;font:800 18px var(--syne);margin-bottom:6px}
+
+/* history */
+.hist{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.hrow{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);font-size:14px}
+.hrow:first-child{border-top:0}
+.hrow .when{color:var(--muted);font-size:13px}
+.hrow.undone .what{color:var(--muted);text-decoration:line-through}
+
+/* ===== in place level ===== */
+.tela .editbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 10px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line-2);margin-bottom:12px}
+.modepill{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border-radius:999px;background:rgba(249,115,22,.16);border:1px solid rgba(249,115,22,.6);font:800 13px var(--syne);color:#fff}
+.modepill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--orange)}
+.tgrid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px;align-items:start}
+.frame{border-radius:var(--r-card);border:1px solid var(--line-2);overflow:hidden;background:var(--black)}
+.frame .fbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px;background:var(--panel);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.insp{position:sticky;top:12px;border-radius:var(--r-card);background:var(--panel);border:1px solid var(--line-2);padding:14px;min-width:0}
+.insp h3{font-size:17px;font-weight:800;margin-bottom:4px}
+.insp .editor{grid-template-columns:1fr;background:transparent;border:0;padding:0}
+.insp .pl{list-style:none;margin:8px 0 0;padding:0;max-height:none}
+.insp .pl li{border-top:1px solid var(--line)}
+.insp .pl button{display:block;width:100%;text-align:left;background:none;border:0;padding:8px 2px;min-height:44px;color:#fff;font-size:14px}
+.insp .pl button small{display:block;color:var(--muted);font-size:12px}
+.insp .feat{grid-template-columns:1fr}
+.insp .feat .side{align-items:flex-start}
+.insp .feat dl{grid-template-columns:1fr}
+.insp .recedit{grid-template-columns:1fr;padding:0;border:0;background:transparent}
+.insp .bgrid{grid-template-columns:1fr}
+.insp .builder{margin-top:0;border:0;padding:0;background:transparent}
+
+/* the copies of the app screens */
+.scr{padding:22px 26px 28px;font-family:var(--syne);color:#fff;background:var(--black);position:relative;min-height:420px}
+.scr p{margin:0}
+.s-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:-6px -8px 22px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.s-brand{font-weight:800;font-size:18px}
+.s-top-r{display:flex;align-items:center;gap:14px;font-weight:700;font-size:14px}
+.s-bf{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:12px;background:var(--flame);color:var(--on-flame);font-weight:800;font-size:15px}
+.s-bn{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line-2);font-weight:700;font-size:14px}
+.s-kick{color:var(--orange-text);font-weight:700;font-size:13px;letter-spacing:.02em;margin-bottom:8px!important}
+.s-h1{font-size:40px;line-height:1.08;font-weight:800;letter-spacing:-.01em;margin-bottom:12px}
+.s-h2{font-size:26px;font-weight:800;margin-bottom:6px}
+.s-lead{font-size:18px;font-weight:700;margin-bottom:8px!important}
+.s-p{font-size:16px;line-height:1.5;color:var(--text-2);max-width:56ch;margin-bottom:12px!important}
+.s-card{border-radius:18px;background:var(--panel);border:1px solid var(--line);padding:16px;margin-top:14px}
+.s-field{display:flex;align-items:center;gap:10px;min-height:56px;padding:6px 6px 6px 16px;border-radius:18px;background:rgba(16,16,20,.94);border:1px solid var(--line-2);margin:14px 0 8px}
+.s-field .ph{flex:1;color:var(--muted);font-family:var(--sys);font-size:16px}
+.s-hint{font-family:var(--sys);font-size:14px;color:var(--text-2)}
+.s-u{text-decoration:underline;text-decoration-color:var(--orange);text-decoration-thickness:2px;text-underline-offset:3px;font-weight:700;color:#fff}
+.s-dock{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;padding:14px 16px;border-radius:20px;background:rgba(12,12,15,.94);border:1px solid var(--line-2)}
+.s-dock .dt b{display:block;font-weight:800}
+.s-dock .dt span{font-family:var(--sys);font-size:14px;color:var(--text-2)}
+.s-dis{opacity:.45}
+.s-guest{margin-top:12px!important;font-family:var(--sys);font-size:13px;color:var(--muted)}
+.s-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.s-alb{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center}
+.s-cover{width:64px;height:64px;border-radius:8px;background:linear-gradient(135deg,#2a2a30,#1c1c22);border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);font-size:20px}
+.s-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.s-mini{display:inline-flex;align-items:center;min-height:32px;padding:0 10px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line-2);font-size:13px;font-weight:700}
+.s-recipes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 16px}
+.s-rc{position:relative;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:12px;display:flex;gap:10px;align-items:flex-start;min-width:0}
+.s-rc.rec{border-color:rgba(251,191,36,.45);background:linear-gradient(135deg,rgba(120,53,15,.14),rgba(124,45,18,.06))}
+.s-rc .ricon{flex:none;width:36px;height:36px}
+.s-rc .rb{min-width:0}
+.s-rc .rn{font-weight:800;font-size:14px;line-height:1.25}
+.s-rc .rd{font-family:var(--sys);font-size:13px;color:var(--text-2);margin-top:4px!important}
+.s-badge{display:inline-block;font-family:var(--sys);font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;margin-top:6px;background:rgba(255,255,255,.08);color:var(--text-2)}
+.s-badge.rec{background:rgba(251,191,36,.18);color:#fcd34d}
+.s-rc.hidden{border-style:dashed;border-color:var(--line-3);background:transparent}
+.s-rc.hidden .ricon{opacity:.45}
+.s-rc .hidlab{position:absolute;right:8px;top:8px;font:700 11px var(--sys);color:#fff;background:var(--raised);border-radius:999px;padding:2px 8px}
+.s-rc.new{border:1px dashed var(--orange);background:transparent;align-items:center;justify-content:center;min-height:84px;color:#fff;font-weight:800;cursor:pointer}
+.s-tools{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.s-tools .icb{width:44px;height:44px;font-size:14px}
+.s-strip{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:12px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);margin-top:12px;font-family:var(--sys);font-size:14px}
+.s-strip b{font-family:var(--syne);font-size:16px}
+.s-ghost{margin-top:12px;padding:14px;border-radius:14px;border:1px dashed var(--line-3);font-family:var(--sys);font-size:14px;color:var(--text-2)}
+.fchip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border-radius:999px;border:1px dashed var(--orange);background:rgba(249,115,22,.08);color:#fff;font:700 13px var(--sys);margin-top:12px}
+/* the editable texts on a screen */
+.t{border-radius:4px}
+.editing .t{outline:1px dashed rgba(255,255,255,.35);outline-offset:2px;cursor:text}
+.editing .t:hover{outline:2px solid #fff;background:rgba(255,255,255,.06)}
+.editing .t.pend{outline:1px dashed var(--orange)}
+.editing .t.pend::after{content:"●";font-size:9px;color:var(--orange);vertical-align:super;margin-left:2px;-webkit-text-fill-color:var(--orange)}
+.editing.nomarks .t{outline:none}
+.editing.nomarks .t.pend::after{content:none}
+.t.is-sel{outline:2px solid var(--orange)!important;outline-offset:2px;background:rgba(249,115,22,.12)}
+.t.hit{background:rgba(255,255,255,.22);box-shadow:0 0 0 2px #fff}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);padding:6px 12px;border-top:1px solid var(--line);background:var(--panel)}
+.legend i{display:inline-block;width:16px;height:10px;border-radius:2px;vertical-align:middle;margin-right:4px}
+
+/* undo strip (design system: the Home's light undo strip) */
+.undo{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 6px 6px 14px;border-radius:12px;background:var(--undo);color:#000;font-size:14px;margin-bottom:12px}
+.undo button{min-height:44px;background:none;border:0;color:#000;font:800 14px var(--syne);text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:3px;padding:0 10px}
+
+/* ===== phone ===== */
+@media (max-width:767px){
+  .decide{padding-top:18px}
+  .decide h1{font-size:26px}
+  .choices{grid-template-columns:1fr}
+  .about .cols{grid-template-columns:1fr}
+  .painel{grid-template-columns:1fr;gap:12px}
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;padding:8px;gap:6px}
+  .rail .who{display:none}
+  .navb{flex:1 1 calc(50% - 6px);justify-content:space-between;background:var(--surface)}
+  .navb[aria-current="page"]{box-shadow:inset 0 -3px 0 var(--orange)}
+  .sechead h2{font-size:21px}
+  .rowh{display:none}
+  .row{grid-template-columns:44px minmax(0,1fr);gap:4px 10px}
+  .row .cell-k{grid-column:2}
+  .row .cell-t{grid-column:2}
+  .row .cell-t .lbl{display:block;font-size:12px;color:var(--muted);font-weight:700}
+  .row .cell-a{grid-column:2}
+  .row .chkc{grid-row:1/span 2}
+  .editor{grid-template-columns:1fr}
+  .feat{grid-template-columns:1fr}
+  .feat .side{align-items:flex-start}
+  .feat dl{grid-template-columns:1fr}
+  .feat dt{margin-top:4px}
+  .recrow{grid-template-columns:24px 40px minmax(0,1fr);grid-template-areas:"o i n" "a a a"}
+  .recrow .handle{display:none}
+  .recrow .ord{grid-area:o}
+  .recrow .ricon{grid-area:i}
+  .recrow .rmain{grid-area:n}
+  .recrow .racts{grid-area:a;justify-content:flex-start}
+  .recedit{grid-template-columns:1fr}
+  .bgrid{grid-template-columns:1fr}
+  .conflict-grid{grid-template-columns:1fr}
+  .hrow{grid-template-columns:1fr;gap:2px}
+  .tgrid{grid-template-columns:1fr}
+  .insp{position:static}
+  .scr{padding:16px 16px 22px;min-height:0}
+  .s-top{margin:-4px 0 16px}
+  .s-top-r .s-link{display:none}
+  .s-h1{font-size:30px}
+  .s-recipes{grid-template-columns:1fr}
+  .pvrow{grid-template-columns:22px minmax(0,1fr) 56px 58px}
+  .pubacts .btn{flex:1 1 auto}
+  .seg button{min-height:44px}
+}
+</style>
+</head>
+<body>
+<header class="decide wrap">
+  <div class="brandline"><span class="flame-t">The Album Blender</span> · o admin (CMS) · protótipo para você reagir</div>
+  <h1>Como você quer editar o site?</h1>
+  <p class="sub">Os dois jeitos fazem as mesmas quatro coisas: textos, funções que ligam e desligam, receitas do Blend e pessoas. Clique e mexa à vontade: nada é salvo.</p>
+  <div class="choices" role="radiogroup" aria-label="Jeito de editar">
+    <button class="choice" role="radio" data-act="level" data-v="painel" aria-checked="true">
+      <b>Painel</b>
+      <span>Uma área à parte, com as seções numa coluna: listas e formulários.</span>
+      <em>Custo: baixo. O kit do CMS dos seus outros sites já é assim.</em>
+    </button>
+    <button class="choice" role="radio" data-act="level" data-v="tela" aria-checked="false">
+      <b>Na própria tela</b>
+      <span>As telas do site como são. Você clica num texto e edita ali mesmo.</span>
+      <em>Custo: alto. Cada texto da tela precisa saber o seu endereço.</em>
+    </button>
+  </div>
+  <p class="recline"><b>Recomendo:</b> o Painel na primeira versão. Editar na própria tela vem depois, só para os textos, quando cada texto do site souber o seu lugar.</p>
+  <details class="about">
+    <summary>O que é real e o que é inventado</summary>
+    <div class="cols">
+      <div class="box"><b>Real</b>
+        <ul>
+          <li>Os textos do site, em inglês e português, com as chaves dos dicionários (a linha do React, 21 nov).</li>
+          <li>Os textos em português marcados «aguardando você» são as propostas dos agentes na migração.</li>
+          <li>As quatro receitas, com nome, descrição, selo, ingredientes e valores de partida.</li>
+          <li>As funções: valores do Discogs, medição de uso, português para todos.</li>
+          <li>Só a sua conta é admin na primeira versão.</li>
+        </ul>
+      </div>
+      <div class="box"><b>Inventado (texto proposto)</b>
+        <ul>
+          <li>Todo texto do admin, em português.</li>
+          <li>«Deep cuts» e «As menos ouvidas»: nomes, descrições e regras.</li>
+          <li>A popularidade das faixas na prévia das receitas (números de exemplo).</li>
+          <li>O histórico, os horários, a pessoa e os papéis de «depois».</li>
+          <li>O valor do inventário na cópia da tela.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+</header>
+
+<main class="proto wrap">
+  <div class="simbar">
+    <label for="sim">Ver um estado (controle só do protótipo):</label>
+    <select id="sim" data-act="sim">
+      <option value="normal">Normal</option>
+      <option value="fail">Falha ao salvar</option>
+      <option value="conflict">Conflito: mudou noutro aparelho</option>
+      <option value="noperm">Sem permissão (ver como editor de textos)</option>
+      <option value="empty">Vazio (nada aguardando você)</option>
+    </select>
+    <span class="note-admin">Os textos do admin são texto proposto; os do site vêm dos dicionários reais.</span>
+  </div>
+  <div id="app"></div>
+</main>
+
+<script>
+(() => {
+'use strict';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const now = () => { const d = new Date(); return 'hoje, ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+const clone = o => JSON.parse(JSON.stringify(o));
+
+/* ---------- the screens and their real texts (dictionaries of integrate/staging-2026-11-21 and public/splash/copy.js) ---------- */
+const SCREENS = [
+  { id: 'home', name: 'Página de entrada', short: 'Entrada' },
+  { id: 'create', name: 'Create', short: 'Create' },
+  { id: 'albums', name: 'Albums', short: 'Albums' },
+  { id: 'blend', name: 'Blend', short: 'Blend' },
+  { id: 'inventory', name: 'Inventory', short: 'Inventory' }
+];
+// [screen, key, plain name (texto proposto), English, Portuguese, Portuguese waits for him, feature]
+const RAW = [
+  ['home', 'h.kick', 'Linha acima do título', 'The Album Blender · a web app for record lovers', 'The Album Blender · um app web para quem ama discos', 0],
+  ['home', 'h.title', 'Título', 'Dig through the albums you love.', 'Mergulhe nos álbuns que você ama.', 0],
+  ['home', 'h.what', 'Frase sob o título', 'Your albums of the moment, in one balanced playlist.', 'Seus álbuns do momento, numa playlist balanceada.', 0],
+  ['home', 'h.para', 'Parágrafo de abertura', 'Build series from your albums of the moment, rank your tracks and make balanced playlists.', 'Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas.', 0],
+  ['home', 'signin', 'Botão de entrar', 'Sign in', 'Entrar', 0],
+  ['home', 'openapp', 'Botão principal', 'Open the app', 'Abrir o app', 0],
+  ['home', 'k.blend', 'História do Blend · etiqueta', 'Side A · 3 — Blend', 'Lado A · 3 — Blend', 0],
+  ['home', 't.blend', 'História do Blend · título', 'Bring the series together in one playlist.', 'Junte a série numa playlist só.', 0],
+  ['home', 'p.blend', 'História do Blend · texto', 'Pick a recipe. The Blender draws from every album, so no record takes over the rest.', 'Escolha uma receita. O Blender pega faixas de cada álbum, sem deixar um disco dominar os outros.', 0],
+  ['home', 'e.title', 'Fecho · título', 'Drop the needle on your first series.', 'Coloque sua primeira série para tocar.', 0],
+  ['home', 'e.what', 'Fecho · texto', 'Open the app and start a series with one album you love. Sign in to keep it.', 'Abra o app e comece uma série com um álbum que você ama. Entre na sua conta para salvá-la.', 0],
+
+  ['create', 'start.stage.title.first', 'Título · 1ª linha', 'Pick the albums.', 'Escolha os álbuns.', 1],
+  ['create', 'start.stage.title.second', 'Título · 2ª linha, no fogo', 'We blend the playlists.', 'Nós misturamos as playlists.', 1],
+  ['create', 'start.stage.about', 'O que é uma série', 'A series is the set of albums you want to hear together, from one artist or many: the Blend turns it into balanced playlists.', 'Uma série é o conjunto de álbuns que você quer ouvir juntos, de um artista ou de vários: a Mistura transforma a série em playlists equilibradas.', 1],
+  ['create', 'start.field.placeholder', 'Dica dentro do campo', 'An artist, or paste a list of albums', 'Um artista, ou cole uma lista de álbuns', 1],
+  ['create', 'start.field.search', 'Botão de buscar', 'Search', 'Buscar', 1],
+  ['create', 'start.hint.artist.before', 'Dica sob o campo · começo', 'Type an artist to see their albums, or', 'Digite um artista para ver os álbuns dele, ou', 1],
+  ['create', 'start.hint.artist.link', 'Dica sob o campo · link', 'paste a list', 'cole uma lista', 1],
+  ['create', 'start.hint.artist.after', 'Dica sob o campo · fim', 'of albums from many artists.', 'de álbuns de vários artistas.', 1],
+  ['create', 'start.what.link', 'Link «o que é uma série»', 'What is a series?', 'O que é uma série?', 1],
+  ['create', 'start.dock.empty.computer.title', 'Base vazia · título', 'Your series is empty', 'Sua série está vazia', 1],
+  ['create', 'start.dock.empty.computer.noCovers', 'Base vazia · texto', 'Search an artist, then click a cover to add it. You name the series at the end.', 'Busque um artista e clique numa capa para adicionar. O nome da série fica para o fim.', 1],
+  ['create', 'start.dock.create', 'Botão de criar a série', 'Create series', 'Criar série', 1],
+  ['create', 'start.dock.blend', 'Botão de misturar agora', 'Blend it now', 'Misturar agora', 1],
+  ['create', 'start.guest.before', 'Aviso a quem não entrou · começo', "You're not signed in: the series is saved to this browser only.", 'Você não entrou: a série fica salva só neste navegador.', 1],
+  ['create', 'start.guest.signIn', 'Aviso · link de entrar', 'Sign in', 'Entrar', 1],
+  ['create', 'start.guest.after', 'Aviso · fim', 'to keep it on every device.', 'para mantê-la em todos os seus aparelhos.', 1],
+  ['create', 'start.dock.undo.button', 'Faixa de desfazer · botão', 'Undo', 'Desfazer', 1],
+
+  ['albums', 'albums.title.all', 'Título', 'All Albums Series', 'Todas as séries de álbuns', 1],
+  ['albums', 'albums.blend', 'Botão de misturar', 'Blend your Albums', 'Misture seus álbuns', 1],
+  ['albums', 'albums.card.rank', 'Cartão · classificar', 'Rank', 'Classificar', 1],
+  ['albums', 'albums.card.add', 'Cartão · incluir', 'Add', 'Incluir', 1],
+  ['albums', 'albums.card.remove', 'Cartão · tirar', 'Del', 'Tirar', 1],
+  ['albums', 'albums.failure.other', 'Álbuns que não carregaram', '{count} albums did not load', '{count} álbuns não carregaram', 1],
+  ['albums', 'albums.failure.retry', 'Botão de tentar de novo', 'Try again', 'Tentar de novo', 1],
+  ['albums', 'albums.empty.title', 'Sem álbuns · título', 'No albums in library', 'Nenhum álbum na biblioteca', 1],
+  ['albums', 'albums.empty.about', 'Sem álbuns · texto', 'Create a series from the home page to get started', 'Crie uma série na página inicial para começar', 1],
+  ['albums', 'albums.empty.cta', 'Sem álbuns · botão', 'Go and create!', 'Vá e crie!', 1],
+
+  ['blend', 'blend.title', 'Título', 'The Blending Menu', 'O Menu de Mistura', 1],
+  ['blend', 'blend.motto', 'Lema', '"Your Music, Your Recipe"', '"Sua Música, Sua Receita"', 1],
+  ['blend', 'blend.step2.title', 'Passo 2 · título', 'Choose Your Recipe', 'Escolha a Sua Receita', 1],
+  ['blend', 'blend.recipes.mjrpBalancedCascade.name', 'Receita equilibrada · nome', "[MJRP] Zé's Balanced Playlists", '[MJRP] Playlists Equilibradas do Zé', 1],
+  ['blend', 'blend.recipes.mjrpBalancedCascade.description', 'Receita equilibrada · descrição', 'Builds balanced playlists by blending the best tracks of each album. Short playlists are merged automatically.', 'Monta playlists equilibradas misturando as melhores faixas de cada álbum. As playlists curtas são juntadas automaticamente.', 1],
+  ['blend', 'blend.recipes.mjrpBalancedCascade.badge', 'Receita equilibrada · selo', 'RECOMMENDED', 'RECOMENDADA', 1],
+  ['blend', 'blend.recipes.topNPopular.name', 'Top Spotify · nome', 'Top Tracks by Spotify Popularity', 'Top Faixas por Popularidade no Spotify', 1],
+  ['blend', 'blend.recipes.topNPopular.description', 'Top Spotify · descrição', 'Pick your favorite tracks, based on Spotify popularity.', 'Escolha as suas faixas favoritas, com base na popularidade no Spotify.', 1],
+  ['blend', 'blend.recipes.topNPopular.badge', 'Top Spotify · selo', 'SPOTIFY', 'SPOTIFY', 1],
+  ['blend', 'blend.recipes.topNAcclaimed.name', 'Top da crítica · nome', 'Top Acclaimed Tracks on BestEverAlbums', 'Top Faixas Aclamadas no BestEverAlbums', 1],
+  ['blend', 'blend.recipes.topNAcclaimed.description', 'Top da crítica · descrição', 'Pick the critically acclaimed tracks, based on BestEverAlbums.', 'Escolha as faixas aclamadas pela crítica, com base no BestEverAlbums.', 1],
+  ['blend', 'blend.recipes.topNAcclaimed.badge', 'Top da crítica · selo', 'BEA', 'BEA', 1],
+  ['blend', 'blend.recipes.topNUser.name', 'Minha classificação · nome', 'Top Tracks by My Own Ranking', 'Top Faixas pela Minha Própria Classificação', 1],
+  ['blend', 'blend.recipes.topNUser.description', 'Minha classificação · descrição', 'Create playlists from your personal track rankings.', 'Crie playlists a partir das suas classificações pessoais das faixas.', 1],
+  ['blend', 'blend.recipes.topNUser.badge', 'Minha classificação · selo', 'USER', 'MINHA', 1],
+  ['blend', 'blend.bar.button', 'Botão de misturar', 'Blend it!', 'Misturar!', 1],
+
+  ['inventory', 'inventory.title', 'Título', 'My Collection', 'Minha coleção', 1],
+  ['inventory', 'inventory.count.other', 'Contagem', '{count} albums', '{count} álbuns', 1],
+  ['inventory', 'inventory.search.placeholder', 'Dica da busca', 'Search collection...', 'Buscar na coleção...', 1],
+  ['inventory', 'inventory.action.values.label', 'Botão de atualizar valores', 'Update values', 'Atualizar valores', 1, 'discogs'],
+  ['inventory', 'inventory.action.values.about', 'Atualizar valores · explicação', 'Reads the estimated value of every album from Discogs. You can stop it, and the inventory stays usable.', 'Lê no Discogs o valor estimado de cada álbum. Dá para parar, e o inventário continua usável.', 1, 'discogs'],
+  ['inventory', 'inventory.totals.owned', 'Total do que tenho', 'Estimated value of what I own:', 'Valor estimado do que tenho:', 1, 'discogs'],
+  ['inventory', 'inventory.totals.discogsEach', 'Nota dos valores', 'Each value links to its edition on Discogs.', 'Cada valor leva à edição dele no Discogs.', 1, 'discogs'],
+  ['inventory', 'inventory.card.whereToBuy', 'Cartão · onde comprar', 'Where to buy', 'Onde comprar', 1, 'discogs'],
+  ['inventory', 'inventory.rank.mine', 'Selo · meu ranking', 'MY RANKING', 'MEU RANKING', 1],
+  ['inventory', 'inventory.toast.valuesOff', 'Aviso: valores desligados', 'Discogs values are turned off on the server.', 'Os valores do Discogs estão desligados no servidor.', 1, 'discogs']
+];
+const ORDER = RAW.map(r => r[1]);
+
+/* ---------- the recipes (algorithms/index.js, recipeLooks.js, recipeIngredients.js) ---------- */
+const INGR = {
+  trackCount: { name: 'Quantas por álbum (Top #)', opts: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => [n, 'Top ' + n]) },
+  duration: { name: 'Duração alvo', opts: [30, 45, 60, 75, 90, 120].map(n => [n, n + ' min']) },
+  outputMode: { name: 'Estrutura da playlist', opts: [['single', 'Single Playlist'], ['multiple', 'Multiple Playlists'], ['auto', 'Auto']] },
+  rankingType: { name: 'Fonte do ranking', opts: [['spotify', 'Spotify Popularity'], ['bea', 'Critics Choice'], ['combined', 'Combined']] },
+  groupingStrategy: { name: 'Agrupamento das faixas', opts: [['by_album', 'By Album'], ['flat_ranked', 'By Ranking'], ['artist_rank', 'By Artist then By Rank'], ['ranked_interleave', 'Balanced Interleave'], ['shuffle', 'Surprise Me']] }
+};
+const DEF = { duration: 60, outputMode: 'auto', groupingStrategy: 'by_album', rankingType: 'combined', trackCount: 3 };
+const mk = (id, key, icon, c1, c2, shown, rec) => ({ id, key, icon, c1, c2, on: true, rec: !!rec, shown, def: clone(DEF), isNew: false });
+const RECIPES0 = [
+  mk('mjrp-balanced-cascade', 'mjrpBalancedCascade', '✦', '#fbbf24', '#f97316', { duration: 1, rankingType: 1 }, true),
+  mk('top-n-popular', 'topNPopular', '↗', '#22c55e', '#059669', { groupingStrategy: 1, outputMode: 1, trackCount: 1 }),
+  mk('top-n-acclaimed', 'topNAcclaimed', '✪', '#f43f5e', '#f97316', { groupingStrategy: 1, outputMode: 1, trackCount: 1 }),
+  mk('top-n-user', 'topNUser', '◉', '#0ea5e9', '#2563eb', { groupingStrategy: 1, outputMode: 1, trackCount: 1 })
+];
+
+/* ---------- example albums for the new-recipe preview (track lists real; popularity INVENTED for the example) ---------- */
+const ALBUMS = {
+  vu: { name: 'The Velvet Underground & Nico (1967)', tracks: [['Sunday Morning', '2:56', 72], ["I'm Waiting for the Man", '4:39', 66], ['Femme Fatale', '2:38', 60], ['Venus in Furs', '5:12', 68], ['Run Run Run', '4:22', 45], ["All Tomorrow's Parties", '6:00', 50], ['Heroin', '7:12', 58], ['There She Goes Again', '2:41', 42], ["I'll Be Your Mirror", '2:14', 48], ["The Black Angel's Death Song", '3:11', 33], ['European Son', '7:46', null]] },
+  okc: { name: 'Radiohead · OK Computer (1997)', tracks: [['Airbag', '4:44', 62], ['Paranoid Android', '6:23', 74], ['Subterranean Homesick Alien', '4:27', 58], ['Exit Music (For a Film)', '4:24', 70], ['Let Down', '4:59', 76], ['Karma Police', '4:21', 82], ['Fitter Happier', '1:57', 45], ['Electioneering', '3:50', 50], ['Climbing Up the Walls', '4:45', 55], ['No Surprises', '3:48', 80], ['Lucky', '4:19', 56], ['The Tourist', '5:24', 54]] }
+};
+const PRESETS = {
+  deep: { en: 'Deep Cuts', pt: 'Deep cuts', den: "Skips each album's best-known tracks and picks the ones right after them.", dpt: 'Pula as faixas mais conhecidas de cada álbum e pega as que vêm logo depois.', badge: 'DEEP CUTS', source: 'spotify', from: 'top', skip: 3, take: 3, short: 0, group: 'by_album' },
+  least: { en: 'Least Played', pt: 'As menos ouvidas', den: 'The opposite of the top: the least played tracks of each album, by Spotify popularity.', dpt: 'O oposto do top: as faixas menos ouvidas de cada álbum, pela popularidade no Spotify.', badge: 'SPOTIFY', source: 'spotify', from: 'bottom', skip: 0, take: 3, short: 0, group: 'by_album' },
+  blank: { en: '', pt: '', den: '', dpt: '', badge: '', source: 'spotify', from: 'top', skip: 0, take: 3, short: 0, group: 'by_album' }
+};
+
+/* ---------- the features with an on/off key ---------- */
+const FEATS0 = [
+  { id: 'discogs', name: 'Valores do Discogs', on: true, who: 'named', lock: true,
+    what: 'Lê no Discogs o valor estimado de cada álbum do inventário e mostra onde comprar.',
+    where: 'Inventory: o total «Estimated value of what I own», o botão «Update values», o valor e o «Where to buy» de cada álbum.',
+    off: 'Nada do Discogs aparece: some o total, o botão e o valor de cada álbum, sem deixar buraco. O resto do inventário segue igual.' },
+  { id: 'usage', name: 'Medição de uso', on: false, note: 'Você pediu: nasce desligada, e você liga depois da migração para o React e do CMS pronto.',
+    what: 'Conta as tarefas que as pessoas fazem (criar série, gerar, exportar, tocar num link de compra), sem nenhum dado pessoal. Os números vão para o PostHog.',
+    where: 'Em nenhum lugar da tela. Só no painel do PostHog.',
+    off: 'Nada muda para a pessoa. Nada é enviado, e o código da medição nem é baixado.' },
+  { id: 'pt', name: 'Português para todos', on: false, note: 'Hoje só você vê o português, como prévia no seu navegador.',
+    what: 'Deixa qualquer pessoa usar o app em português.',
+    where: 'A escolha de idioma, em todas as telas do app.',
+    off: 'A pessoa vê o app só em inglês. Você continua vendo a prévia em português.' }
+];
+
+/* ---------- state ---------- */
+const S = {
+  level: 'painel', sec: 'textos', screen: 'create', q: '', onlyPending: false, editing: null, sel: new Set(),
+  sim: 'normal', pub: { state: 'idle' }, lang: 'pt', marks: true,
+  insp: { type: 'pending' }, texts: {}, recipes: clone(RECIPES0), recPub: null, recEdit: null, builder: null, drag: null,
+  feats: clone(FEATS0), featAsk: null, featMsg: null, confirm: false, hist: [], viewAs: 'super', roles: null, people: null, newRole: null, flash: null
+};
+RAW.forEach(([s, k, area, en, pt, wait, feat]) => { S.texts[k] = { s, k, area, en, pt, wait: !!wait, feat: feat || null, enD: null, ptD: null, apD: false }; });
+S.recPub = JSON.stringify(S.recipes);
+S.hist = [
+  { who: 'Você', what: 'Salvou 2 textos da tela Create', when: 'hoje, 09:40' },
+  { who: 'Você', what: 'Ligou «Valores do Discogs» para as pessoas nomeadas', when: 'ontem, 18:05' },
+  { who: 'Agente', what: 'Propôs os textos em português de Albums, Blend e Inventory', when: '21 nov, 15:10' }
+];
+S.roles = [
+  { id: 'super', name: 'Superadministrador', caps: { textos: 'muda', funcoes: 'muda', receitas: 'muda', pessoas: 'muda' }, fixed: 1 },
+  { id: 'editor', name: 'Editor de textos', caps: { textos: 'muda', funcoes: '—', receitas: 'vê', pessoas: '—' } },
+  { id: 'recipes', name: 'Gestor de receitas', caps: { textos: 'vê', funcoes: '—', receitas: 'muda', pessoas: '—' } }
+];
+S.people = [
+  { name: 'Você', acct: 'sua conta Google ou Apple', role: 'super', me: 1 },
+  { name: 'Ana (exemplo)', acct: 'convidada', role: 'editor' }
+];
+try { const m = JSON.parse(localStorage.getItem('abcms.tab') || '{}'); if (m.level) S.level = m.level; if (m.sec) S.sec = m.sec; } catch (e) { /* storage may be blocked */ }
+const remember = () => { try { localStorage.setItem('abcms.tab', JSON.stringify({ level: S.level, sec: S.sec })); } catch (e) { /* ignore */ } };
+
+/* ---------- helpers on texts ---------- */
+const txt = k => S.texts[k];
+const cur = (k, lang) => { const t = txt(k); const d = lang === 'en' ? t.enD : t.ptD; return d != null ? d : t[lang]; };
+const isDraft = t => t.enD != null || t.ptD != null || t.apD;
+const isWaiting = t => t.wait && !t.apD;
+const waitingOf = sid => Object.values(S.texts).filter(t => (!sid || t.s === sid) && isWaiting(t));
+const draftTexts = () => Object.values(S.texts).filter(isDraft);
+const recDirty = () => {
+  const pub = JSON.parse(S.recPub); const ids = pub.map(r => r.id).join(); const now_ = S.recipes.map(r => r.id).join();
+  let n = 0; S.recipes.forEach(r => { const p = pub.find(x => x.id === r.id); if (!p || JSON.stringify(p) !== JSON.stringify(r)) n++; });
+  if (!n && ids !== now_) n = 1; return n;
+};
+const placeholders = s => (String(s).match(/\{[a-zA-Z]+\}/g) || []).sort().join(',');
+function lengthNote(k, lang, val) {
+  const t = txt(k); const base = t.en; const L = val.length, B = base.length;
+  const out = { len: `${L} letras · o original em inglês tem ${B}`, warn: '' };
+  if (!val.trim()) out.warn = 'O texto ficou vazio. Um texto vazio não é salvo: a tela mostraria um buraco.';
+  else if (placeholders(val) !== placeholders(base)) out.warn = `Faltou ou sobrou um marcador (${placeholders(base) || 'nenhum'}). O número ou o nome que ele traz não vai aparecer.`;
+  else if (L > B * 1.3 && L - B >= 6) out.warn = `Ficou ${Math.round((L / B - 1) * 100)}% mais longo que o original (${L} contra ${B} letras): pode não caber no lugar dele na tela.`;
+  return out;
+}
+const canDo = sec => { const r = S.roles.find(x => x.id === S.viewAs); return !r || r.caps[sec] === 'muda'; };
+const canSee = sec => { const r = S.roles.find(x => x.id === S.viewAs); return !r || r.caps[sec] !== '—'; };
+const roleName = id => (S.roles.find(r => r.id === id) || {}).name || id;
+
+/* ---------- the screen copies (for «Na própria tela») ---------- */
+function T(k, opt) {
+  const lang = opt.lang; const t = txt(k); const v = opt.draft ? cur(k, lang) : t[lang];
+  const cls = ['t'];
+  if (opt.edit && t.wait && !t.apD && lang === 'pt') cls.push('pend');
+  if (opt.edit && t.wait && !t.apD && lang === 'en') cls.push('pend');
+  if (opt.edit && S.insp.type === 'text' && S.insp.id === k) cls.push('is-sel');
+  if (S.flash === k) cls.push('hit');
+  const extra = opt.cls ? ' ' + opt.cls : '';
+  if (opt.edit) return `<span class="${cls.join(' ')}${extra}" data-act="pick" data-k="${k}" tabindex="0" role="button" aria-label="Editar: ${esc(t.area)}">${esc(v)}</span>`;
+  return `<span class="${cls.join(' ')}${extra}">${esc(v)}</span>`;
+}
+function recipeCardsHTML(o) {
+  const list = S.recipes.filter(r => r.on || o.edit);
+  const cards = list.map((r, i) => {
+    const k = 'blend.recipes.' + r.key;
+    const tool = o.edit ? `<div class="s-tools">
+      <button class="icb" data-act="rec-on" data-id="${r.id}" aria-label="${r.on ? 'Esconder' : 'Mostrar'} a receita" title="${r.on ? 'Esconder' : 'Mostrar'}">${r.on ? '◉' : '○'}</button>
+      <button class="icb" data-act="rec-up" data-id="${r.id}" aria-label="Subir" ${S.recipes.indexOf(r) === 0 ? 'disabled' : ''}>↑</button>
+      <button class="icb" data-act="rec-down" data-id="${r.id}" aria-label="Descer" ${S.recipes.indexOf(r) === S.recipes.length - 1 ? 'disabled' : ''}>↓</button>
+      <button class="icb star" data-act="rec-star" data-id="${r.id}" aria-pressed="${r.rec}" aria-label="Recomendada">★</button>
+      <button class="icb" data-act="rec-open" data-id="${r.id}" aria-label="Configurar a receita">⚙</button></div>` : '';
+    const nameT = r.isNew ? `<span class="t">${esc(r.name[o.lang])}</span>` : T(k + '.name', o);
+    const descT = r.isNew ? `<span class="t">${esc(r.desc[o.lang])}</span>` : T(k + '.description', o);
+    const badgeT = r.rec ? T('blend.recipes.mjrpBalancedCascade.badge', o) : (r.isNew ? esc(r.badge) : T(k + '.badge', o));
+    return `<div class="s-rc ${r.rec ? 'rec' : ''} ${r.on ? '' : 'hidden'}">
+      ${r.on ? '' : '<span class="hidlab">escondida</span>'}
+      <div class="ricon" style="background:linear-gradient(135deg,${r.c1},${r.c2})" aria-hidden="true">${r.icon}</div>
+      <div class="rb"><p class="rn">${nameT}</p><p class="rd">${descT}</p><span class="s-badge ${r.rec ? 'rec' : ''}">${badgeT}</span>${tool}</div></div>`;
+  }).join('');
+  const add = o.edit ? `<button class="s-rc new" data-act="builder-open">+ Nova receita</button>` : '';
+  return `<div class="s-recipes">${cards}${add}</div>`;
+}
+function screenHTML(id, o) {
+  const f = k => T(k, o);
+  const discogsOn = S.feats.find(x => x.id === 'discogs').on;
+  if (id === 'home') return `<div class="scr">
+    <div class="s-top"><span class="s-brand flame-t">The Album Blender</span><span class="s-top-r"><span class="s-link">${f('signin')}</span><span class="s-bf">${f('openapp')}</span></span></div>
+    <p class="s-kick">${f('h.kick')}</p>
+    <h3 class="s-h1">${f('h.title')}</h3>
+    <p class="s-lead">${f('h.what')}</p>
+    <p class="s-p">${f('h.para')}</p>
+    <div class="s-card"><p class="s-kick">${f('k.blend')}</p><h4 class="s-h2">${f('t.blend')}</h4><p class="s-p">${f('p.blend')}</p></div>
+    <div class="s-card"><h4 class="s-h2">${f('e.title')}</h4><p class="s-p">${f('e.what')}</p><span class="s-bf">${f('openapp')}</span></div>
+  </div>`;
+  if (id === 'create') return `<div class="scr">
+    <h3 class="s-h1">${f('start.stage.title.first')}<br>${T('start.stage.title.second', Object.assign({}, o, { cls: 'flame-t' }))}</h3>
+    <p class="s-p">${f('start.stage.about')}</p>
+    <div class="s-field"><span class="ph">${f('start.field.placeholder')}</span><span class="s-bf">${f('start.field.search')}</span></div>
+    <p class="s-hint">${f('start.hint.artist.before')} <span class="s-u">${f('start.hint.artist.link')}</span> ${f('start.hint.artist.after')}</p>
+    <p class="s-hint" style="margin-top:10px"><span class="s-u">${f('start.what.link')}</span></p>
+    <div class="s-dock"><div class="dt"><b>${f('start.dock.empty.computer.title')}</b><span>${f('start.dock.empty.computer.noCovers')}</span></div><span class="s-bf s-dis">${f('start.dock.create')}</span></div>
+    <p class="s-guest">${f('start.guest.before')} <span class="s-u">${f('start.guest.signIn')}</span> ${f('start.guest.after')}</p>
+    <div class="s-strip" style="background:var(--undo);color:#000">«Abbey Road» … <span style="margin-left:auto;font-weight:800;text-decoration:underline;text-decoration-color:var(--red)">${f('start.dock.undo.button')}</span></div>
+  </div>`;
+  if (id === 'albums') return `<div class="scr">
+    <div class="s-row"><h3 class="s-h2" style="margin:0">${f('albums.title.all')}</h3><span class="s-bf">${f('albums.blend')}</span></div>
+    <div class="s-card s-alb"><div class="s-cover" aria-hidden="true">♪</div><div><b>OK Computer</b><div class="muted" style="font-family:var(--sys);font-size:13px">Radiohead · 1997</div>
+      <div class="s-btns"><span class="s-mini">${f('albums.card.rank')}</span><span class="s-mini">${f('albums.card.add')}</span><span class="s-mini">${f('albums.card.remove')}</span></div></div></div>
+    <div class="s-strip"><span>${T('albums.failure.other', o).replace('{count}', '2')}</span><span class="s-bn">${f('albums.failure.retry')}</span></div>
+    <div class="s-card" style="text-align:center"><p class="s-lead">${f('albums.empty.title')}</p><p class="s-p" style="margin:0 auto 12px">${f('albums.empty.about')}</p><span class="s-bf">${f('albums.empty.cta')}</span></div>
+  </div>`;
+  if (id === 'blend') return `<div class="scr">
+    <h3 class="s-h1 flame-t" style="font-size:34px">${f('blend.title')}</h3>
+    <p class="s-p">${f('blend.motto')}</p>
+    <h4 class="s-h2" style="font-size:20px">${f('blend.step2.title')}</h4>
+    ${recipeCardsHTML(o)}
+    <span class="s-bf">${f('blend.bar.button')}</span>
+  </div>`;
+  if (id === 'inventory') {
+    const chip = o.edit ? `<button class="fchip" data-act="feat-open" data-id="discogs">⏻ Função: Valores do Discogs · ${discogsOn ? 'ligada' : 'desligada'}</button>` : '';
+    const discogs = discogsOn ? `<div class="s-strip"><span class="s-bn">${f('inventory.action.values.label')}</span><span style="flex:1 1 220px">${f('inventory.action.values.about')}</span></div>
+      <div class="s-strip"><span>${f('inventory.totals.owned')} <b>US$ 1.240</b></span><span class="muted">${f('inventory.totals.discogsEach')}</span></div>`
+      : (o.edit ? `<div class="s-ghost">Aqui ficam os valores do Discogs. Com a função desligada, a pessoa não vê nada neste lugar, nem um espaço vazio.</div>` : '');
+    return `<div class="scr">
+      <div class="s-row"><h3 class="s-h2" style="margin:0">${f('inventory.title')}</h3><span class="muted" style="font-family:var(--sys);font-size:14px">${T('inventory.count.other', o).replace('{count}', '86')}</span></div>
+      <div class="s-field" style="min-height:48px;margin-top:0"><span class="ph">${f('inventory.search.placeholder')}</span></div>
+      ${chip}${discogs}
+      <div class="s-card s-alb"><div class="s-cover" aria-hidden="true">◎</div><div><b>Kind of Blue</b><div class="muted" style="font-family:var(--sys);font-size:13px">Miles Davis · Vinyl</div>
+        <div class="s-btns"><span class="s-badge">${f('inventory.rank.mine')}</span>${discogsOn ? `<span class="s-mini">US$ 32 · ${f('inventory.card.whereToBuy')}</span>` : ''}</div></div></div>
+    </div>`;
+  }
+  return '';
+}
+
+/* ---------- shared blocks ---------- */
+function pubBarHTML() {
+  const dt = draftTexts(); const dr = recDirty(); const n = dt.length + dr;
+  const parts = []; if (dt.length) parts.push(dt.length + (dt.length === 1 ? ' texto' : ' textos')); if (dr) parts.push(dr + (dr === 1 ? ' receita' : ' receitas'));
+  const st = S.pub.state; let msg = '';
+  if (S.confirm && n) {
+    const names = dt.slice(0, 4).map(t => esc(t.area) + (t.apD && t.enD == null && t.ptD == null ? ' (português aprovado)' : '')).join(' · ');
+    msg = `<div class="pubmsg conf" role="alertdialog" aria-label="Confirmar"><b>${parts.join(' e ')} ${n === 1 ? 'vai' : 'vão'} ao ar agora.</b>
+      <span>${names}${dt.length > 4 ? ` e mais ${dt.length - 4}` : ''}${dr ? (dt.length ? ' · ' : '') + 'a ordem e a configuração das receitas' : ''}</span>
+      <span class="muted">Todos veem em até 1 minuto. Para voltar atrás, você edita de novo e salva.</span>
+      <div class="pubacts"><button class="btn flame" data-act="save-confirm">Salvar e pôr no ar</button><button class="btn ghost" data-act="save-back">Voltar</button></div></div>`;
+  }
+  else if (st === 'saving') msg = `<div class="pubmsg" role="status"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span> Salvando… o site continua no ar com a versão de agora.</div>`;
+  else if (st === 'ok') msg = `<div class="pubmsg ok" role="status"><span class="ico">✓</span> ${esc(S.pub.msg)}</div>`;
+  else if (st === 'fail') msg = `<div class="pubmsg fail" role="alert"><span class="ico">✕</span> Não salvou: o servidor não respondeu. Nada mudou no site, e as suas mudanças continuam aqui. <button class="btn sm" data-act="save-confirm">Tentar de novo</button></div>`;
+  else if (st === 'noperm') msg = `<div class="pubmsg fail" role="alert"><span class="ico">✕</span> Sem permissão para salvar isto: o papel «${esc(roleName(S.viewAs))}» só muda textos.</div>`;
+  else if (st === 'conflict') {
+    const k = S.pub.key; const t = txt(k);
+    msg = `<div class="pubmsg conf" role="alert"><b>Este texto mudou noutro aparelho seu às 14:02, depois que você abriu esta página.</b>
+      <span class="muted">${esc(t.area)} · ${esc(SCREENS.find(s => s.id === t.s).name)} · em inglês</span>
+      <div class="conflict-grid"><div><small>Como estava</small>${esc(t.en)}</div><div><small>A outra mudança (já no ar)</small>${esc(S.pub.other)}</div><div><small>A sua</small>${esc(cur(k, 'en'))}</div></div>
+      <div class="pubacts"><button class="btn" data-act="conf-mine">Salvar a minha</button><button class="btn ghost" data-act="conf-theirs">Ficar com a outra</button></div></div>`;
+  }
+  const busy = st === 'saving';
+  return `<div class="pubbar ${n ? 'has' : ''}">
+    <div class="pubinfo"><b>${n ? n + (n === 1 ? ' mudança não salva' : ' mudanças não salvas') : 'Tudo salvo'}</b>
+      <span>${n ? parts.join(' · ') + ' · salvar põe no ar' : 'O site está como você vê aqui. Salvar põe no ar na hora.'}</span></div>
+    <div class="pubacts">
+      <button class="btn flame" data-act="save" ${n && !busy && !S.confirm ? '' : 'disabled'}>Salvar</button>
+      <button class="btn ghost" data-act="discard-all" ${n && !busy ? '' : 'disabled'}>Descartar</button>
+    </div>${msg}</div>`;
+}
+function editorHTML(k) {
+  const t = txt(k); const en = cur(k, 'en'), pt = cur(k, 'pt');
+  const ne = lengthNote(k, 'en', en), np = lengthNote(k, 'pt', pt); const w = ne.warn || np.warn;
+  const ro = !canDo('textos');
+  return `<div class="editor" data-ed="${k}">
+    <div class="fld"><label for="ed-en">Inglês</label><textarea id="ed-en" data-lang="en" ${ro ? 'readonly' : ''}>${esc(en)}</textarea>
+      <span class="len" data-len="en">${ne.len}</span><span class="was">No ar: «${esc(t.en)}»</span></div>
+    <div class="fld"><label for="ed-pt">Português ${t.wait && !t.apD ? '<span class="tag wait">proposto pelo agente, aguardando você</span>' : ''}</label><textarea id="ed-pt" data-lang="pt" ${ro ? 'readonly' : ''}>${esc(pt)}</textarea>
+      <span class="len" data-len="pt">${np.len}</span><span class="was">${t.s === 'home' ? 'No ar' : 'Proposto'}: «${esc(t.pt)}»</span></div>
+    <div class="warnbox ${w ? 'on' : ''}" role="status" aria-live="polite">${esc(w)}</div>
+    <div class="edacts">
+      <button class="btn" data-act="ed-save" data-k="${k}">Salvar</button>
+      ${t.wait && !t.apD ? `<button class="btn ghost" data-act="approve" data-k="${k}">Aprovar o português como está (salva)</button>` : ''}
+      ${isDraft(t) ? `<button class="btn ghost danger" data-act="ed-discard" data-k="${k}">Descartar a mudança não salva</button>` : ''}
+      <button class="btn ghost" data-act="ed-close">Fechar</button>
+    </div>
+    <span class="key" style="grid-column:1/-1">endereço do texto: ${esc(k)}</span>
+  </div>`;
+}
+function noPermHTML(sec, what) {
+  return `<div class="noperm" role="alert"><b>Sem permissão</b>Você está vendo o admin como «${esc(roleName(S.viewAs))}». Este papel não muda ${what}. Só o superadministrador muda. <span class="tag later">depois</span>
+    <div style="margin-top:10px"><button class="btn" data-act="view-as" data-v="super">Voltar a ver como superadministrador</button></div></div>`;
+}
+
+/* ---------- Textos (panel) ---------- */
+function textsPanelHTML() {
+  const q = S.q.trim().toLowerCase();
+  let list = ORDER.map(txt).filter(t => q ? (t.en + ' ' + t.pt + ' ' + t.area + ' ' + t.k).toLowerCase().includes(q) : t.s === S.screen);
+  if (S.onlyPending || S.sim === 'empty') list = list.filter(isWaiting);
+  if (S.sim === 'empty') list = [];
+  const wScreen = S.sim === 'empty' ? 0 : waitingOf(S.screen).length;
+  const chips = SCREENS.map(s => { const n = S.sim === 'empty' ? 0 : waitingOf(s.id).length; return `<button class="chip" data-act="screen" data-v="${s.id}" aria-pressed="${!q && S.screen === s.id}">${esc(s.name)}${n ? `<span class="n" title="aguardando você">${n}</span>` : ''}</button>`; }).join('');
+  const selN = [...S.sel].filter(k => isWaiting(txt(k))).length;
+  const rows = list.map(t => {
+    const w = isWaiting(t); const d = isDraft(t);
+    const sn = q ? `<span class="tag">${esc(SCREENS.find(s => s.id === t.s).name)}</span>` : '';
+    const ptCell = `<span class="lbl">Português</span><span class="${t.ptD != null ? 'ch' : ''}">${esc(cur(t.k, 'pt'))}</span>`;
+    const enCell = `<span class="lbl">Inglês</span><span class="${t.enD != null ? 'ch' : ''}">${esc(cur(t.k, 'en'))}</span>`;
+    const tags = `${w ? '<span class="tag wait">aguardando você</span>' : ''}${t.apD ? '<span class="tag draft">aprovado, não salvo</span>' : ''}${(t.enD != null || t.ptD != null) ? '<span class="tag draft">não salvo</span>' : ''}${!w && !d ? '<span class="tag live">no ar</span>' : ''}${t.feat ? '<span class="tag">só com o Discogs</span>' : ''}`;
+    return `<div class="row ${S.editing === t.k ? 'is-edit' : ''}">
+      <div class="chkc">${w ? `<label><input type="checkbox" data-act="sel" data-k="${t.k}" ${S.sel.has(t.k) ? 'checked' : ''} aria-label="Selecionar ${esc(t.area)}"></label>` : ''}</div>
+      <div class="cell-k"><b>${esc(t.area)}</b>${sn} <span class="key">${esc(t.k)}</span></div>
+      <div class="cell-t">${enCell}</div>
+      <div class="cell-t">${ptCell}<div class="st">${tags}</div></div>
+      <div class="cell-a"><button class="btn sm" data-act="edit" data-k="${t.k}" aria-expanded="${S.editing === t.k}">${S.editing === t.k ? 'Fechar' : 'Editar'}</button></div>
+      ${S.editing === t.k ? editorHTML(t.k) : ''}
+    </div>`;
+  }).join('');
+  let empty = '';
+  if (!list.length) {
+    if (S.sim === 'empty' || (S.onlyPending && !q)) empty = `<div class="empty"><b>Nada aguardando você nesta tela.</b>Todos os textos em português daqui já foram aprovados. ${S.sim === 'empty' ? '' : '<button class="lnk" data-act="only-pending">Mostrar todos os textos</button>'}</div>`;
+    else empty = `<div class="empty"><b>Nenhum texto com «${esc(S.q)}».</b>A busca olha o inglês, o português e o nome do lugar, em todas as telas. <button class="lnk" data-act="clear-q">Limpar a busca</button></div>`;
+  }
+  return `<div class="sechead"><div><h2>Textos</h2><p>Escolha a tela, veja o inglês e o português lado a lado e mude o que quiser. Salvar põe no ar na hora, depois de você confirmar o que vai.</p></div></div>
+    ${pubBarHTML()}
+    <div class="screens" role="group" aria-label="Tela">${chips}</div>
+    <div class="tools">
+      <div class="search"><label class="sr" for="q">Achar pela palavra que aparece na tela</label><input id="q" type="search" data-act="q" placeholder="Achar pela palavra que aparece na tela" value="${esc(S.q)}" autocomplete="off"></div>
+      <label class="chk"><input type="checkbox" data-act="only-pending" ${S.onlyPending ? 'checked' : ''}> Só os que aguardam você (${wScreen})</label>
+    </div>
+    ${wScreen && canDo('textos') ? `<div class="bulk"><span><b>${wScreen}</b> ${wScreen === 1 ? 'texto' : 'textos'} em português desta tela ${wScreen === 1 ? 'aguarda' : 'aguardam'} você.</span>
+      <button class="btn sm" data-act="sel-all">Selecionar todos</button>
+      <button class="btn sm" data-act="approve-sel" ${selN ? '' : 'disabled'}>Aprovar e salvar os selecionados (${selN})</button></div>` : ''}
+    <div class="rows" role="table" aria-label="Textos">
+      <div class="rowh" role="row"><span></span><span>Lugar na tela</span><span>Inglês</span><span>Português</span><span></span></div>
+      ${rows}${empty}
+    </div>`;
+}
+
+/* ---------- Funções ---------- */
+function featCardHTML(f) {
+  const can = canDo('funcoes');
+  const ask = S.featAsk === f.id ? `<div class="ask" role="alert"><span>${f.on ? `Desligar «${esc(f.name)}» em produção? Some para todos em até 1 minuto. Dá para religar aqui.` : `Ligar «${esc(f.name)}» em produção? Aparece para ${f.id === 'discogs' && f.who === 'named' ? 'as pessoas nomeadas' : 'todos'} em até 1 minuto.`}</span>
+    <button class="btn ${f.on ? 'danger' : ''}" data-act="feat-confirm" data-id="${f.id}">${f.on ? 'Desligar agora' : 'Ligar agora'}</button><button class="btn ghost" data-act="feat-cancel">Cancelar</button></div>` : '';
+  const msg = S.featMsg && S.featMsg.id === f.id ? `<div class="ask" role="status" style="border-left-color:${S.featMsg.ok ? 'var(--ok)' : 'var(--danger)'}">${S.featMsg.busy ? '<span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>' : ''}${esc(S.featMsg.text)}</div>` : '';
+  const who = f.id === 'discogs' ? `<dt>Para quem</dt><dd><span class="seg" role="group" aria-label="Para quem"><button data-act="feat-who" data-v="all" aria-pressed="${f.who === 'all'}" ${can ? '' : 'disabled'}>Todos</button><button data-act="feat-who" data-v="named" aria-pressed="${f.who === 'named'}" ${can ? '' : 'disabled'}>Só pessoas nomeadas</button></span> <span class="tag prop">estado de exemplo</span></dd>` : '';
+  return `<article class="feat" id="feat-${f.id}">
+    <div><h3>${esc(f.name)} ${f.on ? '<span class="tag live">ligada em produção</span>' : '<span class="tag off">desligada em produção</span>'}</h3>
+      <dl><dt>O que faz</dt><dd>${esc(f.what)}</dd><dt>Onde aparece</dt><dd>${esc(f.where)}</dd><dt>Desligada, a pessoa vê</dt><dd>${esc(f.off)}</dd>${who}</dl>
+      ${f.note ? `<p class="muted" style="margin:8px 0 0;font-size:13px">${esc(f.note)}</p>` : ''}</div>
+    <div class="side"><button class="sw" role="switch" aria-checked="${f.on}" data-act="feat-toggle" data-id="${f.id}" ${can ? '' : 'disabled'}><i></i><b>${f.on ? 'Ligada' : 'Desligada'}</b></button>
+      <span class="prodst">vale em produção, sem publicar código</span></div>
+    ${f.lock ? `<div class="lock">Segunda trava: o corte de emergência no servidor (a variável do serviço, DISCOGS_VALUES) está <b>ligado</b>. Se ele for desligado, esta chave não liga nada.</div>` : ''}
+    ${ask}${msg}
+  </article>`;
+}
+function featsHTML() {
+  if (!canSee('funcoes')) return `<div class="sechead"><div><h2>Funções</h2></div></div>` + noPermHTML('funcoes', 'as funções');
+  return `<div class="sechead"><div><h2>Funções (liga e desliga)</h2><p>Cada chave liga ou desliga uma função do site em produção, na hora. Desligada, a função some da tela sem deixar buraco e o código dela não é baixado.</p></div></div>
+    ${!canDo('funcoes') ? noPermHTML('funcoes', 'as funções') : ''}
+    <div class="feats">${S.feats.map(featCardHTML).join('')}
+      <div class="cand"><b>Candidatas a ganhar chave depois</b> (texto proposto): exportar para o Spotify; exportar para a Apple Music.</div></div>`;
+}
+
+/* ---------- Receitas ---------- */
+function recEditHTML(r) {
+  const k = 'blend.recipes.' + r.key; const can = canDo('receitas');
+  const field = (lab, part) => {
+    if (r.isNew) return `<div class="fld"><span class="fl">${lab}</span><span class="muted">${esc(part === 'name' ? r.name.en + ' / ' + r.name.pt : part === 'description' ? r.desc.en : r.badge)}</span></div>`;
+    const kk = k + '.' + part; return `<div class="fld"><span class="fl">${lab}</span><span>${esc(cur(kk, 'en'))}</span><span class="muted">${esc(cur(kk, 'pt'))} ${isWaiting(txt(kk)) ? '<span class="tag wait">aguardando você</span>' : ''}</span><button class="lnk" style="align-self:flex-start" data-act="goto-text" data-k="${kk}">Editar este texto</button></div>`;
+  };
+  const ingr = Object.keys(INGR).map(id => {
+    const def = INGR[id]; const shown = !!r.shown[id];
+    return `<div class="ic ${shown ? '' : 'dim'}"><label class="chk"><input type="checkbox" data-act="ingr-shown" data-id="${r.id}" data-v="${id}" ${shown ? 'checked' : ''} ${can ? '' : 'disabled'}> ${esc(def.name)}</label>
+      <label class="sr" for="d-${r.id}-${id}">Valor de partida: ${esc(def.name)}</label>
+      <select class="sel" id="d-${r.id}-${id}" data-act="ingr-def" data-id="${r.id}" data-v="${id}" ${shown && can ? '' : 'disabled'}>${def.opts.map(([v, l]) => `<option value="${v}" ${String(r.def[id]) === String(v) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
+  }).join('');
+  return `<div class="recedit">
+    <h4>Nome, descrição e selo <span class="muted" style="font:400 13px var(--sys)">· são textos: editados como os outros, em inglês e português</span></h4>
+    ${field('Nome', 'name')}${field('Descrição', 'description')}${field('Selo', 'badge')}
+    <h4 style="margin-top:6px">Ingredientes que a pessoa vê, e o valor de partida</h4>
+    <div class="ingr">${ingr}</div>
+    <div class="full"><button class="btn ghost" data-act="rec-close">Fechar</button></div></div>`;
+}
+function recipesHTML() {
+  if (!canSee('receitas')) return `<div class="sechead"><div><h2>Receitas do Blend</h2></div></div>` + noPermHTML('receitas', 'as receitas');
+  const can = canDo('receitas');
+  const rows = S.recipes.map((r, i) => {
+    const k = 'blend.recipes.' + r.key;
+    const name = r.isNew ? r.name.pt : cur(k + '.name', 'pt'); const badge = r.isNew ? r.badge : cur(k + '.badge', 'en');
+    return `<div class="recrow ${r.on ? '' : 'off'}" draggable="${can}" data-rid="${r.id}">
+      <span class="handle" aria-hidden="true" title="Arraste para mudar a ordem">⋮⋮</span>
+      <span class="ord">${i + 1}</span>
+      <div class="ricon" style="background:linear-gradient(135deg,${r.c1},${r.c2})" aria-hidden="true">${r.icon}</div>
+      <div class="rmain"><div class="rname">${esc(name)}</div><div class="rmeta">${r.rec ? '<span class="tag live">★ recomendada</span>' : ''}<span class="tag">${esc(badge)}</span>${r.on ? '' : '<span class="tag off">escondida na tela</span>'}${r.isNew ? '<span class="tag draft">nova · não salva</span><span class="tag prop">texto proposto</span>' : ''}</div></div>
+      <div class="racts">
+        <button class="sw" role="switch" aria-checked="${r.on}" data-act="rec-on" data-id="${r.id}" aria-label="Aparece na tela de Blend" ${can ? '' : 'disabled'}><i></i><b class="sr">${r.on ? 'Aparece' : 'Escondida'}</b></button>
+        <button class="icb star" data-act="rec-star" data-id="${r.id}" aria-pressed="${r.rec}" aria-label="Marcar como recomendada" title="Recomendada" ${can ? '' : 'disabled'}>★</button>
+        <button class="icb" data-act="rec-up" data-id="${r.id}" aria-label="Subir" ${i && can ? '' : 'disabled'}>↑</button>
+        <button class="icb" data-act="rec-down" data-id="${r.id}" aria-label="Descer" ${i < S.recipes.length - 1 && can ? '' : 'disabled'}>↓</button>
+        <button class="btn sm" data-act="rec-open" data-id="${r.id}" aria-expanded="${S.recEdit === r.id}">${S.recEdit === r.id ? 'Fechar' : 'Configurar'}</button>
+      </div></div>${S.recEdit === r.id ? recEditHTML(r) : ''}`;
+  }).join('');
+  return `<div class="sechead"><div><h2>Receitas do Blend</h2><p>Quais receitas a tela de Blend mostra, em que ordem, qual é a recomendada e com que ingredientes começam. Arraste ou use ↑ ↓.</p></div>
+    <button class="btn" data-act="builder-open" ${can ? '' : 'disabled'}>+ Nova receita</button></div>
+    ${!can ? noPermHTML('receitas', 'as receitas') : ''}
+    ${pubBarHTML()}
+    <div class="reclist">${rows}</div>
+    ${S.builder ? builderHTML() : ''}`;
+}
+function pickTracks(b) {
+  const al = ALBUMS[b.album]; const shortSec = b.short ? 150 : 0;
+  const rows = al.tracks.map(([n, d, p], i) => { const [m, s] = d.split(':').map(Number); return { n, d, p, sec: m * 60 + s, no: i + 1 }; });
+  const usable = rows.filter(r => r.p != null && !(shortSec && r.sec < shortSec));
+  const ranked = usable.slice().sort((a, b2) => b.from === 'top' ? b2.p - a.p : a.p - b2.p);
+  ranked.forEach((r, i) => { r.rank = i + 1; r.res = i < b.skip ? 'skip' : (i < b.skip + b.take ? 'in' : 'out'); });
+  rows.forEach(r => { if (r.p == null) r.res = 'nodata'; else if (shortSec && r.sec < shortSec) r.res = 'short'; });
+  const order = ranked.concat(rows.filter(r => r.res === 'nodata' || r.res === 'short'));
+  return { order, picked: ranked.filter(r => r.res === 'in') };
+}
+function builderHTML() {
+  const b = S.builder; const src = { spotify: 'Popularidade no Spotify', bea: 'Escolha da crítica (BestEverAlbums)', combined: 'Combinada', user: 'Minha classificação' };
+  const { order, picked } = pickTracks(b);
+  const why = { in: 'entra', skip: 'pulada', out: 'fica de fora', nodata: 'sem dado', short: 'curta demais' };
+  const pv = order.map(r => `<div class="pvrow ${r.res === 'in' ? 'in' : r.res === 'nodata' ? 'nodata' : r.res === 'skip' ? 'skip' : 'out'}">
+    <span class="pos">${r.rank || '–'}</span><span class="tn" title="${esc(r.n)}">${esc(r.n)}</span>
+    <span class="bar" title="popularidade ${r.p ?? 'sem dado'}"><i style="width:${r.p ?? 0}%"></i></span>
+    <span class="why">${why[r.res]}${r.p != null ? ' · ' + r.p : ''}</span></div>`).join('');
+  const nameErr = b.tried && !b.en.trim() && !b.pt.trim();
+  return `<section class="builder" aria-label="Nova receita">
+    <div class="sechead" style="margin:0"><div><h3>Nova receita, de blocos</h3><p>Você escolhe os blocos; um motor fixo e testado faz o resto. Nada de código. O que os blocos não cobrem, um agente escreve e você liga aqui.</p></div>
+      <button class="btn ghost" data-act="builder-close">Fechar</button></div>
+    <div class="presets" role="group" aria-label="Começar de um exemplo"><span class="muted" style="align-self:center;font-size:14px">Começar de:</span>
+      <button class="chip" data-act="preset" data-v="deep" aria-pressed="${b.preset === 'deep'}">Deep cuts</button>
+      <button class="chip" data-act="preset" data-v="least" aria-pressed="${b.preset === 'least'}">As menos ouvidas</button>
+      <button class="chip" data-act="preset" data-v="blank" aria-pressed="${b.preset === 'blank'}">Em branco</button></div>
+    <div class="bgrid"><div class="blocks">
+      <div class="block"><div class="bt">Nome <span class="tag prop">texto proposto</span></div>
+        <label class="sr" for="b-en">Nome em inglês</label><input class="inp" id="b-en" data-act="b-text" data-v="en" placeholder="Nome em inglês" value="${esc(b.en)}">
+        <label class="sr" for="b-pt">Nome em português</label><input class="inp" id="b-pt" data-act="b-text" data-v="pt" placeholder="Nome em português" value="${esc(b.pt)}" style="margin-top:6px">
+        ${nameErr ? '<div class="warnbox on" style="margin-top:6px">Dê um nome à receita primeiro, em pelo menos um idioma.</div>' : ''}
+        <label class="sr" for="b-dpt">Descrição em português</label><textarea id="b-dpt" data-act="b-text" data-v="dpt" placeholder="Descrição em português" style="margin-top:6px;min-height:56px">${esc(b.dpt)}</textarea></div>
+      <div class="block"><div class="bt"><label for="b-src">1 · Fonte do ranking</label><span>o que ordena as faixas</span></div>
+        <select class="sel" id="b-src" data-act="b-set" data-v="source">${Object.entries(src).map(([v, l]) => `<option value="${v}" ${b.source === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div class="block"><div class="bt">2 · De onde começar <span>do topo ou do fim da lista</span></div>
+        <span class="seg" role="group" aria-label="De onde começar"><button data-act="b-from" data-v="top" aria-pressed="${b.from === 'top'}">Do topo (as mais)</button><button data-act="b-from" data-v="bottom" aria-pressed="${b.from === 'bottom'}">Do fim (as menos)</button></span></div>
+      <div class="block"><div class="bt">3 · Pular as primeiras <span>quantas faixas deixar passar</span></div>
+        <span class="stepper"><button class="icb" data-act="b-step" data-v="skip" data-d="-1" aria-label="Pular menos" ${b.skip ? '' : 'disabled'}>−</button><output aria-live="polite">${b.skip}</output><button class="icb" data-act="b-step" data-v="skip" data-d="1" aria-label="Pular mais" ${b.skip < 6 ? '' : 'disabled'}>+</button></span></div>
+      <div class="block"><div class="bt">4 · Quantas por álbum <span>depois das puladas</span></div>
+        <span class="stepper"><button class="icb" data-act="b-step" data-v="take" data-d="-1" aria-label="Menos faixas" ${b.take > 1 ? '' : 'disabled'}>−</button><output aria-live="polite">${b.take}</output><button class="icb" data-act="b-step" data-v="take" data-d="1" aria-label="Mais faixas" ${b.take < 6 ? '' : 'disabled'}>+</button></span></div>
+      <div class="block"><div class="bt">5 · Exclusões</div>
+        <label class="chk"><input type="checkbox" checked disabled> Faixas sem dado de popularidade (sempre: sem dado nunca é «a menos ouvida»)</label>
+        <label class="chk"><input type="checkbox" data-act="b-short" ${b.short ? 'checked' : ''}> Faixas com menos de 2:30</label></div>
+      <div class="block"><div class="bt"><label for="b-grp">6 · Agrupamento</label></div>
+        <select class="sel" id="b-grp" data-act="b-set" data-v="group">${INGR.groupingStrategy.opts.map(([v, l]) => `<option value="${v}" ${b.group === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    </div>
+    <div class="pv" aria-label="Prévia num álbum de exemplo">
+      <h4>O que este álbum daria</h4>
+      <label class="sr" for="b-alb">Álbum de exemplo</label>
+      <select class="sel" id="b-alb" data-act="b-set" data-v="album" style="margin:6px 0 8px">${Object.entries(ALBUMS).map(([v, a]) => `<option value="${v}" ${b.album === v ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select>
+      <p class="muted" style="margin:0 0 6px;font-size:12px">Faixas reais; a popularidade (0 a 100) é um número de exemplo, inventado. Ordenadas como a receita lê.</p>
+      ${pv}
+      <p class="pvsum"><b>${picked.length} ${picked.length === 1 ? 'faixa entra' : 'faixas entram'}:</b> ${picked.map(r => esc(r.n)).join(', ') || 'nenhuma. Pule menos ou pegue mais.'}</p>
+    </div></div>
+    <div class="edacts" style="margin-top:14px"><button class="btn" data-act="builder-save">Pôr na lista, escondida</button><span class="muted" style="align-self:center;font-size:13px">Ela só aparece na tela de Blend quando você a liga e salva.</span></div>
+  </section>`;
+}
+
+/* ---------- Pessoas e papéis ---------- */
+function peopleHTML() {
+  if (!canSee('pessoas')) return `<div class="sechead"><div><h2>Pessoas e papéis</h2></div></div>` + noPermHTML('pessoas', 'as pessoas');
+  const caps = ['textos', 'funcoes', 'receitas', 'pessoas']; const capN = { textos: 'Textos', funcoes: 'Funções', receitas: 'Receitas', pessoas: 'Pessoas' };
+  const cls = v => v === 'muda' ? 'cap-muda' : v === 'vê' ? 'cap-ve' : 'cap-no';
+  const mtx = `<div class="mtxwrap"><table class="mtx"><thead><tr><th>Papel</th>${caps.map(c => `<th>${capN[c]}</th>`).join('')}</tr></thead><tbody>
+    ${S.roles.map(r => `<tr><td><b>${esc(r.name)}</b></td>${caps.map(c => `<td class="c ${cls(r.caps[c])}">${r.caps[c] === '—' ? '— não vê' : r.caps[c]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const nr = S.newRole;
+  const form = nr ? `<div class="block" style="margin-top:10px"><div class="bt">Novo papel</div>
+      <label class="sr" for="nr-name">Nome do papel</label><input class="inp" id="nr-name" data-act="nr-name" placeholder="Nome do papel, por exemplo «Revisor do português»" value="${esc(nr.name)}">
+      <div class="ingr" style="margin-top:8px">${caps.map(c => `<div class="ic"><label class="fl" for="nr-${c}">${capN[c]}</label><select class="sel" id="nr-${c}" data-act="nr-cap" data-v="${c}">${['muda', 'vê', '—'].map(v => `<option value="${v}" ${nr.caps[c] === v ? 'selected' : ''}>${v === '—' ? 'não vê' : v}</option>`).join('')}</select></div>`).join('')}</div>
+      ${nr.err ? '<div class="warnbox on" style="margin-top:8px">Dê um nome ao papel.</div>' : ''}
+      <div class="edacts" style="margin-top:8px"><button class="btn" data-act="nr-save">Criar o papel</button><button class="btn ghost" data-act="nr-cancel">Cancelar</button></div></div>` : '';
+  return `<div class="sechead"><div><h2>Pessoas e papéis</h2><p>Quem entra no admin e o que cada um pode mudar.</p></div></div>
+    <div class="pcard"><span class="avatar" aria-hidden="true">M</span><div style="flex:1 1 220px"><b>Você</b> · superadministrador<div class="muted" style="font-size:14px">Entra com a sua conta Google ou Apple. Na primeira versão, só a sua conta entra no admin; um visitante nunca grava nada.</div></div><span class="tag live">agora</span></div>
+    <section class="later" aria-label="Depois: papéis">
+      <h3>Papéis que você cria e atribui <span class="tag later">depois: ainda não existe</span></h3>
+      <p class="muted" style="margin:6px 0 0">O seu pedido: «evoluir o kit do CMS pra ter rbac em que eu sou o super admin. Atribuo e crio roles». Este é o desenho, para você reagir; vem com o kit do CMS.</p>
+      ${mtx}
+      <div class="edacts" style="margin-top:10px"><button class="btn" data-act="nr-open">+ Criar papel</button>
+        <label class="fl" for="viewas" style="align-self:center">Ver o admin como</label>
+        <select class="sel" id="viewas" data-act="view-as-sel" style="width:auto;min-width:220px">${S.roles.map(r => `<option value="${r.id}" ${S.viewAs === r.id ? 'selected' : ''}>${esc(r.name)}</option>`).join('')}</select></div>
+      ${form}
+      <h4 style="margin-top:16px;font-size:15px">Pessoas</h4>
+      ${S.people.map((p, i) => `<div class="hrow" style="border:1px solid var(--line);border-radius:12px;margin-top:6px"><span><b>${esc(p.name)}</b></span><span class="muted">${esc(p.acct)}</span>
+        ${p.me ? '<span class="tag">superadministrador</span>' : `<span><label class="sr" for="pr-${i}">Papel de ${esc(p.name)}</label><select class="sel" id="pr-${i}" data-act="person-role" data-i="${i}" style="width:auto">${S.roles.filter(r => !r.fixed).map(r => `<option value="${r.id}" ${p.role === r.id ? 'selected' : ''}>${esc(r.name)}</option>`).join('')}</select></span>`}</div>`).join('')}
+      <div class="edacts" style="margin-top:8px"><button class="btn ghost" data-act="invite">+ Convidar pessoa</button></div>
+      ${S.inviteMsg ? `<p class="muted" role="status" style="margin:6px 0 0">${esc(S.inviteMsg)}</p>` : ''}
+    </section>`;
+}
+
+/* ---------- Histórico ---------- */
+function histHTML() {
+  const rows = S.hist.map(h => `<div class="hrow"><span class="when">${esc(h.when)}</span><span class="what"><b>${esc(h.who)}</b> · ${esc(h.what)} <span class="tag prop">exemplo</span></span><span class="muted" style="font-size:13px">voltar a esta versão</span></div>`).join('');
+  return `<div class="sechead"><div><h2>Histórico <span class="tag later" style="vertical-align:middle">depois: ainda não existe</span></h2><p>Uma ideia para depois: quem salvou o quê, e quando, e voltar a uma versão. Na primeira versão não existe, e não há desfazer: para voltar atrás, você edita de novo e salva.</p></div></div>
+    <section class="later" aria-label="Depois: histórico" style="opacity:.8"><div class="hist">${rows}</div></section>`;
+}
+
+/* ---------- Level «Painel» ---------- */
+function painelHTML() {
+  const w = S.sim === 'empty' ? 0 : waitingOf().length;
+  const nav = [['textos', 'Textos', w], ['funcoes', 'Funções', 0], ['receitas', 'Receitas do Blend', 0], ['pessoas', 'Pessoas e papéis', 0]];
+  const body = { textos: textsPanelHTML, funcoes: featsHTML, receitas: recipesHTML, pessoas: peopleHTML, historico: histHTML }[S.sec]();
+  return `<div class="painel">
+    <nav class="rail" aria-label="Seções do admin">
+      <div class="who"><span class="avatar" aria-hidden="true">M</span><div><b>Você</b><small>${S.viewAs === 'super' ? 'superadministrador' : 'vendo como ' + esc(roleName(S.viewAs))}</small></div></div>
+      ${nav.map(([id, l, n]) => `<button class="navb" data-act="sec" data-v="${id}" ${S.sec === id ? 'aria-current="page"' : ''}>${l}${n ? `<span class="cnt" title="aguardando você">${n}</span>` : ''}</button>`).join('')}
+      <button class="navb quiet" data-act="sec" data-v="historico" ${S.sec === 'historico' ? 'aria-current="page"' : ''}>Histórico · depois</button>
+    </nav>
+    <section class="mainc" aria-live="polite">${body}</section></div>`;
+}
+
+/* ---------- Level «Na própria tela» ---------- */
+function inspectorHTML() {
+  const i = S.insp;
+  if (i.type === 'text') { const t = txt(i.id); return `<h3>${esc(t.area)}</h3><p class="muted" style="margin:0 0 10px;font-size:13px">${esc(SCREENS.find(s => s.id === t.s).name)}${t.feat ? ' · só aparece com o Discogs ligado' : ''}</p>${canDo('textos') ? editorHTML(i.id) : noPermHTML('textos', 'os textos')}`; }
+  if (i.type === 'recipe') { const r = S.recipes.find(x => x.id === i.id); if (!r) return ''; return `<h3>Receita: ${esc(r.isNew ? r.name.pt : cur('blend.recipes.' + r.key + '.name', 'pt'))}</h3>${canDo('receitas') ? recEditHTML(r) : noPermHTML('receitas', 'as receitas')}`; }
+  if (i.type === 'builder') return canDo('receitas') ? builderHTML() : noPermHTML('receitas', 'as receitas');
+  if (i.type === 'feat') { const f = S.feats.find(x => x.id === i.id); return featCardHTML(f); }
+  if (i.type === 'feats') return `<h3>Funções</h3><p class="muted" style="margin:0 0 10px;font-size:14px">Duas delas não têm lugar na tela: ficam aqui.</p>${!canDo('funcoes') ? noPermHTML('funcoes', 'as funções') : ''}<div class="feats">${S.feats.map(featCardHTML).join('')}</div>`;
+  if (i.type === 'people') return peopleHTML();
+  if (i.type === 'history') return histHTML();
+  if (i.type === 'search') {
+    const q = S.q.trim().toLowerCase(); const hits = q ? ORDER.map(txt).filter(t => (t.en + ' ' + t.pt + ' ' + t.area).toLowerCase().includes(q)) : [];
+    return `<h3>Achar «${esc(S.q)}»</h3>${hits.length ? `<ul class="pl">${hits.map(t => `<li><button data-act="goto-text" data-k="${t.k}">${esc(cur(t.k, S.lang))}<small>${esc(SCREENS.find(s => s.id === t.s).name)} · ${esc(t.area)}</small></button></li>`).join('')}</ul>` : `<div class="empty"><b>Nada com «${esc(S.q)}».</b>A busca olha o inglês e o português de todas as telas.</div>`}`;
+  }
+  const ws = S.sim === 'empty' ? [] : waitingOf(S.screen);
+  return `<h3>Aguardando você nesta tela</h3>
+    ${ws.length ? `<p class="muted" style="margin:0 0 8px;font-size:14px">${ws.length} ${ws.length === 1 ? 'texto' : 'textos'} em português proposto${ws.length === 1 ? '' : 's'} pelo agente. Na tela, cada um tem um ponto laranja. Clique num texto da tela para editá-lo.</p>
+      ${canDo('textos') ? `<button class="btn" data-act="approve-screen">Aprovar e salvar os ${ws.length} desta tela</button>` : ''}
+      <ul class="pl">${ws.map(t => `<li><button data-act="pick" data-k="${t.k}">${esc(t.pt)}<small>${esc(t.area)}</small></button></li>`).join('')}</ul>`
+      : `<div class="empty"><b>Nada aguardando você aqui.</b>Clique em qualquer texto da tela para mudá-lo.</div>`}`;
+}
+function telaHTML() {
+  const chips = SCREENS.map(s => { const n = S.sim === 'empty' ? 0 : waitingOf(s.id).length; return `<button class="chip" data-act="screen" data-v="${s.id}" aria-pressed="${S.screen === s.id}">${esc(s.short)}${n ? `<span class="n">${n}</span>` : ''}</button>`; }).join('');
+  return `<div class="tela">
+    <div class="editbar">
+      <span class="modepill">Modo de edição</span>
+      <div class="screens" role="group" aria-label="Tela" style="margin:0">${chips}</div>
+    </div>
+    <div class="editbar">
+      <span class="seg" role="group" aria-label="Idioma na tela"><button data-act="lang" data-v="en" aria-pressed="${S.lang === 'en'}">EN</button><button data-act="lang" data-v="pt" aria-pressed="${S.lang === 'pt'}">PT</button></span>
+      <button class="sw" role="switch" aria-checked="${S.marks}" data-act="marks"><i></i><b>Marcar o que é editável</b></button>
+      <div class="search" style="flex:1 1 200px"><label class="sr" for="q">Achar pela palavra que aparece na tela</label><input id="q" type="search" data-act="q" placeholder="Achar pela palavra" value="${esc(S.q)}" autocomplete="off"></div>
+      <button class="btn sm ghost" data-act="insp" data-v="feats">Funções</button>
+      <button class="btn sm ghost" data-act="insp" data-v="people">Pessoas</button>
+      <button class="btn sm ghost" data-act="insp" data-v="history">Histórico · depois</button>
+    </div>
+    ${pubBarHTML()}
+    <div class="tgrid">
+      <div class="frame"><div class="fbar"><span>${esc(SCREENS.find(s => s.id === S.screen).name)} · como a pessoa vê, em ${S.lang === 'en' ? 'inglês' : 'português'}</span><span>clique num texto</span></div>
+        <div class="editing ${S.marks ? '' : 'nomarks'}">${screenHTML(S.screen, { lang: S.lang, draft: true, edit: true })}</div>
+        <div class="legend"><span><i style="outline:1px dashed rgba(255,255,255,.5)"></i>editável</span><span><i style="outline:1px dashed #f97316"></i><span style="color:var(--orange)">●</span> aguardando você</span><span>as cores dos cartões das receitas são as da tela de Blend de hoje</span></div></div>
+      <aside class="insp" id="insp" aria-live="polite">${inspectorHTML()}</aside>
+    </div></div>`;
+}
+
+/* ---------- render ---------- */
+const app = document.getElementById('app');
+function render() {
+  const a = document.activeElement; const fid = a && a.id; const ss = a && 'selectionStart' in a ? a.selectionStart : null;
+  document.querySelectorAll('.choice').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === S.level)));
+  app.innerHTML = S.level === 'painel' ? painelHTML() : telaHTML();
+  if (fid) { const el = document.getElementById(fid); if (el) { el.focus({ preventScroll: true }); try { if (ss != null && el.setSelectionRange) el.setSelectionRange(ss, ss); } catch (e) { /* not a text field */ } } }
+}
+
+/* ---------- actions ---------- */
+function startPublish() {
+  if (S.viewAs !== 'super' && recDirty()) { S.pub = { state: 'noperm' }; return render(); }
+  S.pub = { state: 'saving' }; render();
+  setTimeout(() => {
+    if (S.sim === 'fail') { S.pub = { state: 'fail' }; return render(); }
+    if (S.sim === 'conflict' && !S.pub.resolved) {
+      const k = (draftTexts().find(t => t.enD != null) || draftTexts()[0] || txt('start.dock.create')).k;
+      S.pub = { state: 'conflict', key: k, other: 'Create the series' }; return render();
+    }
+    doPublish();
+  }, 1100);
+}
+function doPublish() {
+  const dt = draftTexts(); const dr = recDirty();
+  dt.forEach(t => { if (t.enD != null) t.en = t.enD; if (t.ptD != null) t.pt = t.ptD; if (t.apD) t.wait = false; t.enD = t.ptD = null; t.apD = false; });
+  S.recipes.forEach(r => { if (r.isNew) r.isNew = 'saved'; });
+  S.recPub = JSON.stringify(S.recipes);
+  const parts = []; if (dt.length) parts.push(`${dt.length} ${dt.length === 1 ? 'texto' : 'textos'}`); if (dr) parts.push(`${dr} ${dr === 1 ? 'receita' : 'receitas'}`);
+  S.pub = { state: 'ok', msg: `Salvo e no ar ${now().replace('hoje, ', 'às ')}: ${parts.join(' e ') || 'nada mudou'}. Todos veem em até 1 minuto.` }; S.sel.clear(); render();
+}
+function moveRecipe(id, d) { const i = S.recipes.findIndex(r => r.id === id); const j = i + d; if (j < 0 || j >= S.recipes.length) return; const [r] = S.recipes.splice(i, 1); S.recipes.splice(j, 0, r); }
+function featApply(id) {
+  const f = S.feats.find(x => x.id === id); S.featAsk = null; S.featMsg = { id, busy: 1, text: 'Mudando em produção…' }; render();
+  setTimeout(() => {
+    if (S.sim === 'fail') { S.featMsg = { id, ok: 0, text: 'Não mudou: o servidor não respondeu. A função continua como estava.' }; return render(); }
+    f.on = !f.on; const when = now();
+    S.featMsg = { id, ok: 1, text: `${f.on ? 'Ligada' : 'Desligada'} ${when.replace('hoje, ', 'às ')}. Vale para todos em até 1 minuto.` }; render();
+  }, 900);
+}
+function syncEditor(ed) {
+  const k = ed.dataset.ed; let warn = '';
+  ed.querySelectorAll('textarea').forEach(ta => { const n = lengthNote(k, ta.dataset.lang, ta.value); const l = ed.querySelector(`[data-len="${ta.dataset.lang}"]`); if (l) l.textContent = n.len; warn = warn || n.warn; });
+  const wb = ed.querySelector('.warnbox'); wb.textContent = warn; wb.classList.toggle('on', !!warn);
+}
+function flash(k) { S.flash = k; render(); setTimeout(() => { S.flash = null; render(); }, 1400); }
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+  const a = el.dataset.act, v = el.dataset.v, k = el.dataset.k, id = el.dataset.id;
+  if (el.tagName === 'INPUT' || el.tagName === 'SELECT') return; // handled on change/input
+  switch (a) {
+    case 'level': S.level = v; S.insp = { type: 'pending' }; S.editing = null; S.pub = { state: 'idle' }; S.featMsg = null; S.confirm = false; remember(); break;
+    case 'sec': S.sec = v; S.editing = null; S.recEdit = null; remember(); break;
+    case 'screen': S.screen = v; S.q = ''; S.editing = null; S.insp = { type: 'pending' }; break;
+    case 'edit': S.editing = S.editing === k ? null : k; break;
+    case 'ed-close': S.editing = null; S.insp = { type: 'pending' }; break;
+    case 'ed-save': {
+      const ed = el.closest('.editor'); const t = txt(k);
+      ed.querySelectorAll('textarea').forEach(ta => { const L = ta.dataset.lang; const val = ta.value; if (val !== t[L]) t[L + 'D'] = val; else t[L + 'D'] = null; });
+      if (t.ptD != null && t.wait) t.apD = true; // editing the Portuguese is also approving it
+      S.editing = null; if (S.level === 'tela') { S.insp = { type: 'pending' }; } S.pub = { state: 'idle' }; S.confirm = isDraft(t) || draftTexts().length > 0; break;
+    }
+    case 'ed-discard': { const t = txt(k); t.enD = t.ptD = null; t.apD = false; break; }
+    case 'approve': txt(k).apD = true; S.editing = null; if (S.level === 'tela') S.insp = { type: 'pending' }; S.pub = { state: 'idle' }; S.confirm = true; break;
+    case 'sel-all': waitingOf(S.screen).forEach(t => S.sel.add(t.k)); break;
+    case 'approve-sel': [...S.sel].forEach(x => { if (isWaiting(txt(x))) txt(x).apD = true; }); S.sel.clear(); S.pub = { state: 'idle' }; S.confirm = true; break;
+    case 'approve-screen': waitingOf(S.screen).forEach(t => t.apD = true); S.pub = { state: 'idle' }; S.confirm = true; break;
+    case 'clear-q': S.q = ''; break;
+    case 'save': S.confirm = true; S.pub = { state: 'idle' }; break;
+    case 'save-back': S.confirm = false; break;
+    case 'save-confirm': S.confirm = false; startPublish(); return;
+    case 'discard-all': Object.values(S.texts).forEach(t => { t.enD = t.ptD = null; t.apD = false; }); S.recipes = JSON.parse(S.recPub); S.confirm = false; S.pub = { state: 'idle' }; break;
+    case 'conf-mine': S.pub.resolved = true; doPublish(); return;
+    case 'conf-theirs': { const t = txt(S.pub.key); t.en = S.pub.other; t.enD = null; if (draftTexts().length || recDirty()) doPublish(); else { S.pub = { state: 'ok', msg: 'Ficou a outra mudança, que já estava no ar. Nada mais a salvar.' }; render(); } return; }
+    case 'lang': S.lang = v; break;
+    case 'marks': S.marks = !S.marks; break;
+    case 'pick': S.insp = { type: 'text', id: k }; if (S.level === 'tela') { render(); const ins = document.getElementById('insp'); if (ins && window.matchMedia('(max-width:767px)').matches) ins.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; } break;
+    case 'goto-text': {
+      const t = txt(k); S.screen = t.s;
+      if (S.level === 'tela') { S.insp = { type: 'text', id: k }; flash(k); return; }
+      S.sec = 'textos'; S.q = ''; S.onlyPending = false; S.editing = k; remember(); render();
+      const r = document.querySelector('.row.is-edit'); if (r) r.scrollIntoView({ block: 'center' }); return;
+    }
+    case 'insp': S.insp = { type: v }; break;
+    case 'feat-open': S.insp = { type: 'feat', id }; break;
+    case 'feat-toggle': S.featAsk = id; S.featMsg = null; break;
+    case 'feat-cancel': S.featAsk = null; break;
+    case 'feat-confirm': featApply(id); return;
+    case 'feat-who': { const f = S.feats.find(x => x.id === 'discogs'); f.who = v; break; }
+    case 'rec-on': { const r = S.recipes.find(x => x.id === id); r.on = !r.on; S.pub = { state: 'idle' }; break; }
+    case 'rec-star': S.recipes.forEach(r => r.rec = r.id === id); S.pub = { state: 'idle' }; break;
+    case 'rec-up': moveRecipe(id, -1); S.pub = { state: 'idle' }; break;
+    case 'rec-down': moveRecipe(id, 1); S.pub = { state: 'idle' }; break;
+    case 'rec-open': if (S.level === 'tela') S.insp = { type: 'recipe', id }; else S.recEdit = S.recEdit === id ? null : id; break;
+    case 'rec-close': S.recEdit = null; if (S.level === 'tela') S.insp = { type: 'pending' }; break;
+    case 'builder-open': S.builder = Object.assign({ preset: 'deep', album: 'vu', tried: false }, clone(PRESETS.deep)); if (S.level === 'tela') S.insp = { type: 'builder' }; render(); { const b = document.querySelector('.builder'); if (b) b.scrollIntoView({ block: 'start', behavior: 'smooth' }); } return;
+    case 'builder-close': S.builder = null; if (S.level === 'tela') S.insp = { type: 'pending' }; break;
+    case 'preset': Object.assign(S.builder, clone(PRESETS[v]), { preset: v, tried: false }); break;
+    case 'b-from': S.builder.from = v; S.builder.preset = null; break;
+    case 'b-step': S.builder[v] = Math.max(v === 'take' ? 1 : 0, Math.min(6, S.builder[v] + Number(el.dataset.d))); S.builder.preset = null; break;
+    case 'builder-save': {
+      const b = S.builder; if (!b.en.trim() && !b.pt.trim()) { b.tried = true; break; }
+      const nid = 'custom-' + Date.now();
+      S.recipes.push({ id: nid, key: null, icon: b.from === 'bottom' ? '↘' : '◇', c1: '#6b7280', c2: '#4b5563', on: false, rec: false, isNew: true,
+        name: { en: b.en || b.pt, pt: b.pt || b.en }, desc: { en: b.den || b.dpt, pt: b.dpt || b.den }, badge: b.badge || 'NOVA',
+        shown: { groupingStrategy: 1, outputMode: 1 }, def: Object.assign(clone(DEF), { groupingStrategy: b.group }), rule: { source: b.source, from: b.from, skip: b.skip, take: b.take, short: b.short } });
+      S.builder = null; S.pub = { state: 'idle' }; if (S.level === 'tela') { S.screen = 'blend'; S.insp = { type: 'pending' }; } break;
+    }
+    case 'nr-open': S.newRole = { name: '', caps: { textos: 'muda', funcoes: '—', receitas: '—', pessoas: '—' } }; break;
+    case 'nr-cancel': S.newRole = null; break;
+    case 'nr-save': if (!S.newRole.name.trim()) { S.newRole.err = 1; break; } S.roles.push({ id: 'r' + Date.now(), name: S.newRole.name.trim(), caps: S.newRole.caps }); S.newRole = null; break;
+    case 'invite': S.inviteMsg = 'Na primeira versão não existe: só a sua conta entra. Com os papéis, você digita o e-mail, escolhe o papel, e a pessoa recebe um convite.'; break;
+    case 'view-as': S.viewAs = v; document.getElementById('sim').value = 'normal'; S.sim = 'normal'; break;
+    case 'only-pending': S.onlyPending = !S.onlyPending; break;
+    default: return;
+  }
+  render();
+});
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.t[data-act="pick"]')) { e.preventDefault(); e.target.click(); }
+});
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.matches('textarea[data-lang]')) { const ed = el.closest('.editor'); if (ed) syncEditor(ed); return; }
+  if (el.dataset.act === 'q') { S.q = el.value; if (S.level === 'tela') S.insp = S.q.trim() ? { type: 'search' } : { type: 'pending' }; render(); return; }
+  if (el.dataset.act === 'b-text') { S.builder[el.dataset.v] = el.value; S.builder.preset = null; return; }
+  if (el.dataset.act === 'nr-name') { S.newRole.name = el.value; return; }
+});
+document.addEventListener('change', e => {
+  const el = e.target; const a = el.dataset.act; if (!a) return;
+  if (a === 'sim') {
+    S.sim = el.value; S.pub = { state: 'idle' }; S.featMsg = null;
+    S.viewAs = S.sim === 'noperm' ? 'editor' : 'super';
+    if (S.sim === 'noperm' && S.level === 'painel') { S.sec = 'funcoes'; }
+    if ((S.sim === 'fail' || S.sim === 'conflict') && !draftTexts().length) { const t = txt('start.dock.create'); t.enD = 'Create my series'; S.screen = 'create'; if (S.level === 'painel') S.sec = 'textos'; }
+  }
+  else if (a === 'sel') { el.checked ? S.sel.add(el.dataset.k) : S.sel.delete(el.dataset.k); }
+  else if (a === 'only-pending') { S.onlyPending = el.checked; }
+  else if (a === 'ingr-shown') { const r = S.recipes.find(x => x.id === el.dataset.id); if (el.checked) r.shown[el.dataset.v] = 1; else delete r.shown[el.dataset.v]; S.pub = { state: 'idle' }; }
+  else if (a === 'ingr-def') { const r = S.recipes.find(x => x.id === el.dataset.id); const v = el.value; r.def[el.dataset.v] = isNaN(v) ? v : Number(v); S.pub = { state: 'idle' }; }
+  else if (a === 'b-set') { S.builder[el.dataset.v] = el.value; if (el.dataset.v !== 'album') S.builder.preset = null; }
+  else if (a === 'b-short') { S.builder.short = el.checked ? 1 : 0; S.builder.preset = null; }
+  else if (a === 'nr-cap') { S.newRole.caps[el.dataset.v] = el.value; }
+  else if (a === 'view-as-sel') { S.viewAs = el.value; }
+  else if (a === 'person-role') { S.people[Number(el.dataset.i)].role = el.value; }
+  else return;
+  render();
+});
+/* drag to reorder (computer); the arrows do the same everywhere */
+document.addEventListener('dragstart', e => { const r = e.target.closest && e.target.closest('.recrow'); if (!r) return; S.drag = r.dataset.rid; r.classList.add('dragging'); try { e.dataTransfer.setData('text/plain', S.drag); e.dataTransfer.effectAllowed = 'move'; } catch (x) { /* ignore */ } });
+document.addEventListener('dragover', e => { const r = e.target.closest && e.target.closest('.recrow'); if (!r || !S.drag) return; e.preventDefault(); document.querySelectorAll('.recrow.over').forEach(x => x.classList.remove('over')); r.classList.add('over'); });
+document.addEventListener('drop', e => { const r = e.target.closest && e.target.closest('.recrow'); if (!r || !S.drag) return; e.preventDefault(); const from = S.recipes.findIndex(x => x.id === S.drag); const to = S.recipes.findIndex(x => x.id === r.dataset.rid); const [m] = S.recipes.splice(from, 1); S.recipes.splice(to, 0, m); S.drag = null; S.pub = { state: 'idle' }; render(); });
+document.addEventListener('dragend', () => { S.drag = null; document.querySelectorAll('.recrow.over,.recrow.dragging').forEach(x => x.classList.remove('over', 'dragging')); });
+
+window.__cms = S; // for the self-check only
+render();
+})();
+</script>
+</body>
+</html>
