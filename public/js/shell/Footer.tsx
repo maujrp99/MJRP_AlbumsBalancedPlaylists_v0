@@ -11,6 +11,7 @@ import { useLocale } from '../react-bridge/useLocale'
 import { useStore } from '../react-bridge/useStore'
 import { discogsNoticeStore } from '../stores/discogsNotice.js'
 import { t } from '../i18n/t.js'
+import { dateTimeText } from '../i18n/dates.js'
 import { useShell } from './context'
 
 /** How long the «cleared» notice stays before the page loads again. */
@@ -43,7 +44,7 @@ function useClearCache() {
 export function Footer() {
     useLocale()
     const discogsOn = useStore(discogsNoticeStore, store => store.isOn())
-    const [lastUpdate] = useState(() => new Date().toLocaleString())
+    const [lastUpdate] = useState(() => new Date()) // written when drawn, in the language of the app (F81)
     const { busy, message, clear } = useClearCache()
     return (
         <footer className="site-footer container mx-auto px-6 py-12 mt-auto border-t border-white/5">
@@ -67,7 +68,7 @@ export function Footer() {
                         </div>
                         <span className="font-bold text-white">{t('shell.footer.company')}</span>
                     </div>
-                    <div className="last-update text-xs text-white/30">{` ${t('shell.footer.lastUpdated', { time: lastUpdate })} `}</div>
+                    <div className="last-update text-xs text-white/30">{` ${t('shell.footer.lastUpdated', { time: dateTimeText(lastUpdate) })} `}</div>
                 </div>
             </div>
             <p id="discogsApiNotice" className="text-xs text-muted text-center mt-6" hidden={!discogsOn}>{t('shell.footer.discogsNotice')}</p>

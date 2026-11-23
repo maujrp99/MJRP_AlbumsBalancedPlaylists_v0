@@ -2,6 +2,21 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:43] step — F81: correções da reconferência do juiz (o P1 dos textos em português com inglês, e três P2)
+
+**Branch:** feat/f81-language-by-country-and-switch
+
+O juiz independente reprovou `aff752c` por um P1 (relatório `reports/audits/2026-11-23-mjrpalbumblender-v0-f81-language-choice-visual-parity-recheck.md`, commit 9c8eeb8 em `wip/f81-judge`); o mecanismo passou. Corrigido aqui, cada item com o teste falhando antes:
+
+- **P1-1, textos em português com palavras em inglês.** `notices.router.notFoundBack` diz «Ir para Criar» (era «Ir para Create»); `albums.rankWindow.tip` e `albums.rankWindow.note` nomeiam a receita como a lista de receitas nomeia, «Top Faixas pela Minha Própria Classificação» (lido de `blend.recipes.topNUser.name`). Guarda nova, `test/i18n/portugueseNames.test.js`: nenhum texto em português, do app ou do Painel, pode trazer o nome em inglês de uma parada do menu ou de uma receita quando existe o nome em português; os pares saem dos próprios dicionários (`shell.phone.tab*` e `blend.recipes.*.name`), não de uma lista à mão. A guarda achou mais um, no Painel: «Receitas do Blend» virou «Receitas da Mistura» (`admin.nav.recipes`).
+- **P2-1.** `blend.phone.noSeries` diz «crie uma em Criar» (era «no Início», que não existe). O inglês («on Home») ficou como está: a página antiga guardada em `test/fixtures/blendBeforeF83.json` compara esse texto letra a letra; fica anotado.
+- **P2-8, a publicação confere o arquivo do país.** `verify_build` (`scripts/lib/site-build.sh`, da produção e da prévia) recusa a build sem `dist/country.json` ou `dist/geo/ALL_br/country.json`, ou com um deles malformado; `verify_production` (`scripts/deploy-site.sh`) lê `/country.json` no ar e para, com o caminho de volta, se a resposta não for o arquivo; pede de novo como visitante do Brasil (o cookie de teste do Firebase) e só avisa se não vier «br». Teste: `test/scripts/countryHintChecks.test.js`, que roda as funções de shell de verdade numa pasta feita na hora.
+- **P2-4, datas e horas no idioma do app.** `public/js/i18n/dates.js` decide a forma: português → brasileira; inglês → o inglês do navegador quando ele fala inglês, senão dia antes do mês. Os cinco pontos que escreviam com o idioma do navegador passaram a perguntar a ele (rodapé, Álbuns, Playlists, cartão das playlists salvas, o aviso de espera da carga). O rodapé e a tela de álbuns agora reescrevem a hora quando o idioma troca. Ficou de fora: os formatos fixos dos modelos (`models/inventoryValue.js`, em inglês britânico), porque os modelos não podem ler o dicionário; é trabalho da TASK-05.
+
+**A pergunta do coordenador — os textos aprovados no Painel escondem estas correções em produção?** Não, pelo que o código faz (nenhum dado de produção foi lido). `published/texts_pt` guarda só o que o dono digitou diferente do código: aprovar um texto sem mexer nele grava a chave em `cmsWork/approved_pt` e nada em `published/texts_pt` (`usePanel.ts`, `approve` → `forSave`: só entram as chaves cujo texto mudou desde a leitura, e um texto igual ao do código vira `null`, que sai do documento). Então os textos corrigidos aqui aparecem em produção, a não ser que ele tenha reescrito essas mesmas chaves no Painel — aí vale o texto dele. Efeito colateral: essas chaves continuam marcadas como aprovadas no Painel, embora o texto tenha mudado depois da aprovação; ele não verá as cinco como «a revisar».
+
+Os outros P2 do relatório ficam como estão, por decisão do coordenador.
+
 ## [2026-11-23 18:18] step — F81: o app fala português no Brasil e inglês fora, a escolha da pessoa vence, e há seletor de idioma (TASK-02, TASK-03)
 
 **Branch:** feat/f81-language-by-country-and-switch

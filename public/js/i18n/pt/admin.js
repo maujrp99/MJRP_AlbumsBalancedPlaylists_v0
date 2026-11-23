@@ -7,7 +7,7 @@ export const admin = {
     'admin.nav.label': "Seções do admin",
     'admin.nav.texts': "Textos",
     'admin.nav.switches': "Funções · depois",
-    'admin.nav.recipes': "Receitas do Blend · depois",
+    'admin.nav.recipes': "Receitas da Mistura · depois",
     'admin.who.you': "Você",
     'admin.who.role': "superadministrador",
     'admin.texts.title': "Textos",
