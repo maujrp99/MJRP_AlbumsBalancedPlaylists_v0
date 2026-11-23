@@ -29,6 +29,12 @@ O P1: três textos em português ainda mostram inglês — «Ir para Create» (`
 
 Não conferido: a troca por país no Firebase Hosting de verdade (só no emulador); as telas com dados; os textos que o MJRP publicou pelo Painel.
 
+## [2026-11-23 18:28] step — F97 (a exportação para o Spotify diz por que falhou) registrada em esboço, com a S-79; conserta a UAT-302
+
+**Branch:** wip/f97-register
+
+O MJRP, sobre a UAT-302: «conserta pls». Registrados, antes de qualquer implementação: a story S-79 (`docs/specs/requirements/ep-04-export-playlists/`), embutida no `prd.md` no épico EP-04, e a feature F97 (`docs/specs/features/F97-spotify-export-says-why-it-failed/`: spec, plan e tasks em esboço; `status: Draft`, `lane: fast`, `solution_type: fix`, `fixes: ["UAT-302"]`, importa a S-79). Cinco requisitos, cada um com a sua tarefa: a recusa do Spotify (403) para a exportação e aparece com o próximo passo; a busca que falha é «não foi possível conferir», separada de «não encontrada»; «Tentar de novo» quando nada pôde ser conferido; os textos em inglês e português; o evento `playlists_exported` distingue o desfecho. Os três sensores (`requirements_graph_check --changed`, `product_structure_check`, `sdd_shape_check`) saíram com 0. O ramo de construção só nasce depois de este registro entrar na `main`.
+
 ## [2026-11-23 18:18] step — F81: o app fala português no Brasil e inglês fora, a escolha da pessoa vence, e há seletor de idioma (TASK-02, TASK-03)
 
 **Branch:** feat/f81-language-by-country-and-switch
@@ -50,6 +56,24 @@ O app passa a decidir o idioma ao abrir (`public/js/i18n/language.js`, chamado p
 **Provas.** Testes novos: `test/i18n/language.test.js` (18) e `test/shell/Language.test.tsx` (5); a suíte inteira: 413 arquivos, 5583 passaram, 1 pulado. No navegador, no site construído (`reports/evidence/F81/`): 132 conferências em Chromium e WebKit, a 1280 e a 390, visitante e com conta (Brasil → português sem nenhuma palavra em inglês na tela em nenhum quadro; outro país → inglês; a escolha sobrevive a recarregar e vence o país; troca na tela com o trabalho mantido; só pelo teclado; `/admin` acompanha) e mais 12 atrás do emulador do Firebase Hosting, onde a troca por país é feita pelo código do próprio Firebase. Issues de aceite abertas: UAT-303 a UAT-306.
 
 **Ficou de fora, e por quê.** A cópia da escolha na conta (acima). A página de entrada (outro agente a refaz no ramo `feat/f96-entry-page-on-the-phone`): ela continua abrindo em português para todos que não escolheram, de qualquer país — é a decisão de 2026-11-21 para aquela página, e difere da regra de hoje para o app. O título e a descrição de `index.html` no idioma (TASK-07). Os cinco nomes de página da caixa de link do editor do Painel, ainda em inglês.
+
+## [2026-11-23 18:14] decision — Home nova do celular (F96): o MJRP aprovou a prévia
+
+**Branch:** main
+
+MJRP, depois de ver no iPhone a prévia `staging` do ramo `feat/f96-entry-page-on-the-phone` (`bca8ea9`: faixas alternadas com rótulo e linha, rótulos e links dos passos em laranja, título «Como funciona» em laranja): «perfeito home do cle approvada». Antes: «os textos do Lado a! criar e o link começar uma séries, eu usaria um tom de laranja... (em todas as etapas) fora isso tá aprovado». É a aprovação da tela; a publicação em produção espera a palavra dele («publica»), a prova completa do construtor e o relatório independente que a trava de merge pede.
+
+## [2026-11-23 18:12] decision — Chave da tradução ligada ao servidor pelo MJRP (revisão `mjrp-proxy-00218-cpv`)
+
+**Branch:** main
+
+O MJRP criou a chave no console da Anthropic (sem expiração), gravou-a no segredo `anthropic-api-key` pela área de transferência, deu ao servidor a leitura desse segredo e o ligou como `ANTHROPIC_API_KEY` (saídas coladas por ele no chat; o agente não leu nem digitou a chave). O serviço passou à revisão `mjrp-proxy-00218-cpv`, com 100% do tráfego. Volta do servidor agora: `gcloud run services update-traffic mjrp-proxy --to-revisions=mjrp-proxy-00217-2bb=100 --region southamerica-east1 --project mjrp-playlist-generator`. Falta ele provar o «traduzir» no Painel.
+
+## [2026-11-23 18:06] decision — Issue UAT-302: o parceiro do MJRP não conseguiu exportar («não encontrou as faixas»)
+
+**Branch:** main
+
+MJRP: «o meu parceiro falou que tentou exportar e nao conseguiu, frustrante tive que dar um potencial motivo, será que consegue investigar?». Registrada a UAT-302 (bug, P1). Achado no código: na exportação para o Spotify, qualquer falha de busca que não seja login vencido ou limite de chamadas é contada como faixa não encontrada (`SpotifyExportService._uriOf`), e com todas falhando a janela diz «No tracks found on Spotify». Hipótese principal, a confirmar com ele: a conta do Spotify do parceiro não está na lista de usuários do app no painel de desenvolvedor do Spotify (app em modo de desenvolvimento). As publicações do dia não coincidem com as 16:50. A feature do conserto nasce a seguir, com a issue que ela corrige.
 
 ## [2026-11-23 17:52] decision — Idioma do app: português no Brasil, inglês fora, pelo lugar do acesso (F81, REQ-02); construção da escolha de idioma começa já
 
