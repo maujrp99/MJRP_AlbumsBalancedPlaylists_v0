@@ -2,6 +2,16 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 14:31] step — F82: o kit do admin no V0, cópia candidata 0.9.0 (antes do merge, refazer da tag oficial)
+
+**Branch:** claude/f82-cms-texts-panel
+
+O kit do admin chegou ao V0 como **cópia candidata**, pelo comando do harness (`new_project.py --refresh-admin-kit --version 0.9.0`), sem nenhuma edição à mão: o núcleo em `shared/admin-kit/`, as telas em `public/js/ui/admin-kit/`, o conferidor e os testes que viajam em `test/admin-kit/`; 65 arquivos, com o registro `.mjrp-admin-kit.json` e o bloco `admin_kit:` no contrato. A tag oficial `admin-kit-v1.0.x` ainda não existe: a cópia veio de um clone de rascunho do ramo `claude/f332-admin-kit-slice-1` do harness (commit `fa9e5f146`), onde a versão 0.9.0 foi registrada e marcada só nesse clone; o repositório do harness não foi tocado. **Antes do merge na `main`, refazer a cópia a partir da tag oficial.**
+
+Junto: as quatro dependências que o kit importa (`@dnd-kit/core` 6.3.1, `@dnd-kit/sortable` 10.0.0, `@dnd-kit/utilities` 3.2.2, `clsx` 2.1.1, as versões do `package.json` do kit) e o apelido `@mjrp/admin-kit-core` no Vite, no Vitest e no `tsconfig.json`.
+
+Decidido pelo agente — revisável: a versão candidata chama-se 0.9.0 (um número que o registro oficial nunca terá, para ninguém confundir com a 1.0.0); as dependências entram com versão exata.
+
 ## [2026-11-23 13:42] step — CMS: o MJRP publicou as regras do banco e criou `published/site` com a chave do Discogs ligada
 
 **Branch:** main

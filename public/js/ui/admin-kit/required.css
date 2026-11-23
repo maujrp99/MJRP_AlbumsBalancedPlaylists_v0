@@ -1,0 +1,26 @@
+/* cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit` */
+/* O obrigatório (F125), a peça do kit v1 aprovada pelo MJRP em 2026-11-17 (`design/prototypes/assets/cms/required-v1.css`), nos
+   dois CMS: o kit e o editor do Jardim, que veste a pele do kit (`data-admin-skin="garden"`). Só os tokens do contrato da pele.
+   - O * fica preso à última palavra do nome do campo (.rq-last, sem quebra): nunca cai sozinho na linha de baixo (UAT-262).
+   - A legenda no topo da tela diz o que o * quer dizer e o que acontece com o resto.
+   - Ao salvar com um obrigatório vazio: o aviso com os nomes, cada um leva ao campo; o campo fica marcado com a frase. */
+.rq-last { white-space: nowrap; }
+.ak-req, .req { margin-left: 2px; color: var(--ak-err); font-weight: 800; font-size: 1.05em; line-height: 1; }
+.rq-legend { display: grid; gap: 2px; margin: 0; color: var(--ak-soft); font-size: 12.5px; }
+.rq-legend b { color: var(--ak-err); font-weight: 800; }
+/* O aviso de quem tentou salvar. */
+.rq-miss { display: grid; gap: 6px; padding: 12px 14px; border-radius: var(--ak-radius); background: var(--ak-err-soft); color: var(--ak-err); font-size: 13.5px; }
+.rq-miss p { margin: 0; }
+.rq-miss b { font-weight: 800; }
+.rq-miss ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.rq-miss a { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 2px 10px; border: 1px solid currentColor; border-radius: 999px; color: inherit; font-weight: 700; text-decoration: none; }
+.rq-miss a i { font: 700 10px var(--ak-mono); font-style: normal; padding: 0 5px; border-radius: calc(var(--ak-radius) / 3); background: color-mix(in srgb, var(--ak-deep) 55%, transparent); color: var(--ak-plate); }
+.rq-miss a:hover, .rq-miss a:focus-visible { background: color-mix(in srgb, currentColor 12%, transparent); }
+/* O campo que falta. */
+.rq-bad input, .rq-bad textarea, .rq-bad .ak-input, .rq-bad .ak-rt-in { border-color: var(--ak-err) !important; box-shadow: 0 0 0 1px var(--ak-err); }
+.rq-msg { display: flex; align-items: baseline; gap: 6px; color: var(--ak-err); font-size: 12.5px; font-weight: 700; }
+.rq-msg::before { content: '!'; display: inline-grid; place-items: center; width: 16px; height: 16px; flex: none; border-radius: 50%; background: var(--ak-err); color: var(--ak-err-soft); font: 800 11px/1 var(--ak-mono); }
+/* O idioma que tem obrigatório vazio: a conta no botão do idioma. */
+.rq-lang[data-miss]::after { content: attr(data-miss); display: inline-block; margin-left: 6px; vertical-align: 1px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px; background: var(--ak-err); color: var(--ak-err-soft); font: 800 10px/17px var(--ak-mono); text-align: center; }
+/* O estado de salvar depois da recusa. */
+.ak-savest.err, .savest.err { color: var(--ak-err); font-weight: 700; }
