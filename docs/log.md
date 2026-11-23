@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:40] decision — Conserto da mensagem do Spotify (F97) publicado em produção, com a palavra do MJRP («3 pública»); UAT-307 e UAT-308 abertas
+
+**Branch:** main
+
+Site publicado da `main` `1cd27a8`; resultado lido: «Site published from main (1cd27a8)», saída 0. O juiz independente passou duas vezes (0 P0, 0 P1; a segunda com a janela em português). Abertas: UAT-307 (o mesmo engano na exportação para o Apple Music, P1) e UAT-308 (frases em inglês no app em português, P2). Causa da UAT-302 confirmada pelo MJRP no painel do Spotify: app em «Development mode», lista de usuários vazia (0 de 5); ele vai incluir o parceiro quando receber o e-mail.
+
 ## [2026-11-23 19:35] review — F97 (a exportação para o Spotify diz por que falhou): segunda passada independente — pass, 0 P0, 0 P1, 5 P2
 
 **Branch:** wip/f97-judge-2
