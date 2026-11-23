@@ -84,6 +84,30 @@ describe('the dictionary', () => {
     })
 })
 
+describe('the hero opens with the title (UAT-292)', () => {
+    it('no small line above the title, in either opening of the page; the title is the page\'s only h1 of each opening', () => {
+        const hero = page.slice(page.indexOf('<section class="hero'), page.indexOf('</section>', page.indexOf('<section class="hero')))
+        expect(hero).not.toContain('class="kicker"')
+        for (const opening of ['only-out', 'only-in']) {
+            const block = hero.slice(hero.indexOf(`<div class="${opening}">`))
+            expect(block.replace(/^<div class="[^"]+">\s*/, '').startsWith('<h1 ')).toBe(true)
+        }
+        expect(hero.match(/<h1 /g)).toHaveLength(2)
+    })
+
+    it('its text left the dictionary, in both languages', () => {
+        expect(COPY.pt['h.kick']).toBeUndefined()
+        expect(COPY.en['h.kick']).toBeUndefined()
+    })
+
+    it('the product\'s name is still said: the page\'s title, the description and the logo', () => {
+        expect(COPY.pt['meta.title']).toContain('The Album Blender')
+        expect(COPY.pt['meta.desc']).toMatch(/The Album Blender é um app web/)
+        expect(COPY.en['meta.desc']).toMatch(/The Album Blender is a web app/)
+        expect(page).toMatch(/<img class="logo" alt="The Album Blender"/)
+    })
+})
+
 describe('the page and the dictionary', () => {
     const filled = captionHtml('real') + captionHtml('fictional') + creditHtml('real') + creditHtml('fictional') + stageTagHtml('fictional')
     const all = page + filled

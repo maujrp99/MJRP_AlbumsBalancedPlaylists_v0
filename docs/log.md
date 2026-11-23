@@ -2,6 +2,25 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:39] step — Página de entrada (F80): a linha laranja que abria a página saiu (UAT-292)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Pedido do MJRP (2026-11-23, com um recorte da linha «THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA DISCOS»): «eu acho que essa parte aqui tb é desnecessária, eu removeria já». Issue UAT-292. A linha saiu do celular e do computador: **decidido pelo orquestrador, revisável** (ele pediu que a linha saísse e não limitou ao celular).
+
+**O que mudou.** A linha pequena laranja acima do título saiu das duas aberturas da página (sem conta e com conta), em português e em inglês; a chave `h.kick` saiu de `public/splash/copy.js` nas duas línguas e dos testes que a citavam. O título segue sendo o `h1` da página e passou a ser o primeiro elemento da abertura. Nenhuma regra de CSS mudou: não ficou faixa vazia.
+
+**Medido (site montado; antes = o commit da ordem das histórias).** Celular (390 e 375 px, PT e EN, com e sem conta): a abertura encolhe 42 px (a linha quebrava em duas: 26 px, mais 16 px de margem); o título sobe 42 px e tudo abaixo sobe os mesmos 42 px. Computador (1280): a abertura tem altura mínima e o conteúdo é centrado nela, então o título sobe 21 px e NADA abaixo da abertura se move (0 px); a página mantém a altura. 114 conferências passam, 0 falham.
+
+**O nome do produto.** Segue no `<title>` da página («The Album Blender — para quem ouve álbuns inteiros»), na descrição e no texto alternativo do logotipo. **«app web»: a linha removida era o único texto VISÍVEL da página que dizia que o produto é um app web**; a frase segue só na descrição da página (a que os buscadores e as prévias de link leem: «O The Album Blender é um app web para quem ouve álbuns inteiros…»). Não inventei frase nova para o lugar; fica para o MJRP ou o especialista de texto.
+
+**Achado, fora desta mudança.** Com conta, no celular, a página já era mais larga que a tela antes e depois (406 px numa tela de 390 em inglês; 379 em 375 em português): rola de lado. Não consertado aqui; merece uma issue.
+
+**Prova.** Teste primeiro: 2 testes falham no código anterior (`red-before.txt`); `npx vitest run test/splash` pela fila da máquina: 12 arquivos, 155 testes passando. `npm run budget:publication`: saída 0. A abertura com conta foi mostrada com um registro de conta de mentira no armazenamento da própria página. Nada clicado; endereços de música abortados na rede.
+
+**Não conferido.** Num iPhone de verdade; a suíte inteira (roda na publicação); a página publicada.
+
+
 ## [2026-11-23 15:35] step — Página de entrada (F80), celular: em cada história o rótulo, o título e o texto vêm antes das ilustrações (UAT-291)
 
 **Branch:** fix/f80-crate-caption-album-and-year

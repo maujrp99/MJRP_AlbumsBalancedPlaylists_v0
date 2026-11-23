@@ -31,7 +31,6 @@ const pt = {
     'pause': 'Pausar o movimento', 'play': 'Retomar o movimento',
     'lang.aria': 'Idioma',
     // the first screen, without an account
-    'h.kick': 'The Album Blender · um app web para quem ama álbuns',
     'h.title': 'Mergulhe nos álbuns que você ama.',
     'h.what': 'Seus álbuns do momento, numa playlist balanceada.',
     'h.para': 'Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas.',
@@ -83,7 +82,6 @@ const en = {
     'skip': 'Skip to content', 'home.aria': 'The Album Blender, top of the page',
     'pause': 'Pause motion', 'play': 'Play motion',
     'lang.aria': 'Language',
-    'h.kick': 'The Album Blender · a web app for record lovers',
     'h.title': 'Dig through the albums you love.',
     'h.what': 'Your albums of the moment, in one balanced playlist.',
     'h.para': 'Build series from your albums of the moment, rank your tracks and make balanced playlists.',
