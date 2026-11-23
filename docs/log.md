@@ -3,6 +3,14 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 21:46] decision — CMS (F82, F92, F93): as specs em dia com a arquitetura decidida, com as fatias e as tarefas da fatia 0
+
+**Branch:** wip/cms-adr-and-specs
+
+- As specs do CMS postas em dia com a arquitetura decidida (`design/proposals/f82-cms/architecture-proposal.md`, criticada e revista) e com as decisões do MJRP de hoje, citadas com as palavras dele: F82 (REQ-01, REQ-06 a REQ-11 novos; REQ-02 a REQ-05 ligados ao desenho), F92 (REQ-05 a REQ-09 novos; REQ-01 a REQ-04 afinados) e F93 (REQ-05 a REQ-09 novos; REQ-01 a REQ-04 afinados). Cada `plan.md` ganha as fatias (0 alicerce, 1 textos, 2 chaves e página de entrada, 3 receitas, 4 receitas por blocos) com o que cada uma pede antes (a linha do React em produção; o kit do CMS pelo harness, F332), e cada `tasks.md` as tarefas da fatia 0 na feature dona: as regras, o teste no emulador, o validador das chaves e o servidor lendo a chave do Discogs.
+- O que é do MJRP fazer sozinho está marcado `waiting:: human` nos Pre-Implementation: aceitar a ADR-0024, publicar as regras (duas vezes: o conteúdo e a escrita de convidados na popularidade), criar o registro `cmsAdmins/{uid}` no console, ligar a chave do Discogs no console, aprovar o português, responder o NFR-03. Nada priorizado, aceito nem em andamento.
+- A ADR-0024 (em `Proposed`, `docs/decisions/0024-cms-published-content-in-firestore.md`) NÃO está neste commit: a trava `adr_on_main` recusa uma ADR `Proposed` da rota MJRP num ramo; ela espera o orquestrador registrá-la na `main` com o número reservado. As specs a citam como ADR-0024.
+
 ## [2026-11-22 21:35] decision — CMS (F82): as outras três decisões da proposta de arquitetura
 
 **Branch:** main
