@@ -2,6 +2,21 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:08] step — Board: a F73 e a F75 fechadas, tarefas de F87 e F90 marcadas com evidência, e as specs anotadas com o que mudou
+
+**Branch:** wip/board-tidy-2026-11-23
+
+Arrumação do board pedida pelo MJRP («ok, arrume as features do board e sugira a prioridade»): o que as features mescladas e ainda abertas dizem passa a bater com o que foi feito. Só documentos; nenhum carimbo, nenhum aceite.
+
+- **Fechada (`Done`): a F73** (as telas mantêm o campo em uso e largam o que deixaram). A única tarefa aberta era a reconferência visual; as duas reconferências em lote de 2026-11-21, por agente separado, cobrem a feature (sem P0 e sem P1), e o `retro_step_check.py . --staged` respondeu «o passo retroativo confere com o registro». Cada requisito ganhou o seu `verified_by`. O aceite continua do MJRP: as issues são dele.
+- **Tarefas marcadas, com a evidência escrita em cada linha** (arquivo na `main`, relatório do juiz, entrada do log): o ambiente de prévia (F87: o script, a opção de ramo, o servidor que aceita o endereço, o MJRP usando a prévia); exportar pela tela das playlists guardadas (F90: as sete tarefas e o documento; em produção desde 2026-11-22 00:11); e os valores do Discogs guardados no banco (F75: TASK-09 a TASK-11). Com todas as tarefas marcadas, a trava de estado do commit levou a F75 a `Done` sozinha; a marca `needs_human` dela continua (as decisões revisáveis do plano são do MJRP).
+- **Não marcado, por falta de prova:** F87 TASK-02 (a prévia não grava preço do Discogs no banco) e a confirmação dele na linha de proposta do `arch.md`.
+- **Frases que o produto não cumpre mais, anotadas nas specs** (uma nota datada sob o título): as telas feitas à mão viraram React (F51, F57, F71, F73, F75); «Start» virou «Create» (F85, F91); a F87, a F90 e a F91 dizem que já estão construídas e o que falta.
+- **Recusado pela trava do commit, e desfeito:** marcar as tarefas de «Create» no menu (F91, em produção desde 2026-11-22 11:55). Palavras da trava: «a F91 não está na «Priorizada»: o humano a arrasta no board» e «commit bloqueado: REPROVOU - este commit começa uma feature da trilha Humano que o MJRP não priorizou». A F91 saiu da lista na reordenação de hoje (`965c5ea`). Ficou em `Draft`, só com a nota na spec. As caixas das transições suaves (F94) também não foram marcadas: marcá-las poria a feature «em andamento» sem ela ter começado.
+- **Tentado e desfeito:** levar a `Done` as outras da via rápida. A trava do passo retroativo recusa a F51 (a UAT-180 foi consertada pela F46), a F57 (UAT-193 aberta), a F59 (UAT-28 aberta), a F64 (UAT-202 aberta), a F71, a F74, a F84 e a F85 (documentos do passo retroativo). A F69 passa na trava, mas tem uma prova que só vem quando o Spotify falhar em produção. Ficaram como estavam.
+
+Sensores: `requirements_graph_check.py . --changed` sem contradição; `product_structure_check.py .` e `sdd_shape_check.py .` verdes, com avisos de «a escrever» na F87, na F90 e na F91.
+
 ## [2026-11-23 16:04] decision — F96 e F95: a escolha do MJRP nos esboços, um deslize só, e as duas na via rápida
 
 **Branch:** wip/board-tidy-2026-11-23

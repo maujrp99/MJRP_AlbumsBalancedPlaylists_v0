@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: standard
 solution_type: feature
 imports: ["[[S-72-export-a-playlist-from-the-saved-playlists-screen]]"]
@@ -7,6 +7,8 @@ planned_for: "[[ROADMAP#^REL-41]]"
 ---
 # Feature F90: Exportar uma playlist a partir da tela das séries de playlists
 **Approved**: pendente. O MJRP pediu em 2026-11-21 («poder exportar a playlist a partir da tela da playlist series sem ter que entrar em edit batch»); o desenho reaproveita o export da tela de edição e os botões e folhas da tela guardada, sem protótipo julgado antes (decidido pelo agente, revisável: o MJRP julga no iPhone).
+
+> **Nota de 2026-11-23 (arrumação do board).** Construída, julgada por agente separado e em produção desde 2026-11-22 00:11, com a palavra do MJRP («Perfeito, pode publicar»); portada para as telas em React. Falta só documento: as seções «A escrever» desta spec e o estado da feature.
 
 ## Summary
 **A feature:** Cada playlist de um lote aberto, e o lote, ganham «Export» na tela das séries de playlists; abre a mesma janela de export da tela de edição, com Apple Music, Spotify e o arquivo JSON, nessa ordem.

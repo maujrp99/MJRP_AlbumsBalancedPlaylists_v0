@@ -16,6 +16,8 @@ planned_for: "[[ROADMAP#^REL-40]]"
 # Feature F71: O inventário tem todos os álbuns das minhas séries; filtro por Owned, Not Owned e Wishlist
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> **Nota de 2026-11-23 (arrumação do board).** As telas feitas à mão que esta spec cita (arquivos de `public/js/views/` e `public/js/components/`) não existem mais: o site foi reescrito em React (F83, em produção desde 2026-11-23) e as telas moram em `public/js/screens/` e `public/js/ui/`. Os nomes de arquivo abaixo são históricos; o comportamento pedido continua valendo.
+
 ## Summary
 **A feature:** O inventário ganha uma ação que põe nele todos os álbuns das séries da pessoa que ainda não estão lá, marcados como «Not Owned»; o filtro de situação passa a oferecer «Owned», «Not Owned» e «Wishlist», além de «All»; e, na segunda fatia, o inventário guarda, mostra e ordena por duas médias de cada álbum, «Avg Rating» e «Avg Pop», lidas pela ação «Update ratings».
 
