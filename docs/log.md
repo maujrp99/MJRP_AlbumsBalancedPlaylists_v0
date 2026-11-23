@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:06] step — UAT-295: o texto guardado do cabeçalho do celular acompanha o nome «The Album Blender»; o nome inteiro NÃO cabe ali
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+A suíte inteira recusou a prévia do `73f3bf8` (1 teste, que eu não tinha rodado): `test/shell/Shell.sameAsBefore.test.tsx`, «the phone: the tab of each address», no endereço desconhecido `/homework`. O teste compara o cabeçalho do celular com uma captura guardada (`test/fixtures/shellBeforeF88.json`, escrita uma vez pelo cabeçalho antigo; não há roteiro que a refaça), e a captura dizia «Album Blender» no título de uma tela sem nome. O texto guardado mudou de propósito, pela regra de nome do MJRP (2026-11-23): «primeira coisa imporntate pra vc e seus agentes. a app nao chama blender e sim The Album Blender». Editada à mão uma ocorrência só, a do título (`phone-topbar__title`), de «Album Blender» para «The Album Blender»; nada mais no arquivo mudou.
+
+**O nome inteiro não cabe no cabeçalho do celular.** Medido no site montado, WebKit: o título tem 173,1 px a 390 px de tela e 158,1 px a 375 px (letra 700 de 17 px); «The Album Blender» pede 176,8 px. Fica cortado com reticências nos dois («The Album Blen…» a 375 px); «Album Blender» pedia 137,9 px e cabia. O corte não empurra o botão do menu nem alarga a página. **Não mexi no tamanho da letra nem no texto: a decisão é do orquestrador / do MJRP.** Dois fatos para ela: (1) no site montado, um endereço desconhecido (`/homework`) vai para a primeira tela e o cabeçalho mostra «Create», então esse título de reserva não apareceu em nenhuma tela aberta nesta prova; a medida foi um ensaio, escrevendo os dois nomes no próprio elemento do título; (2) ao lado do título o logotipo já diz «The Album Blender». Evidência: `reports/evidence/F80/product-name-in-the-phone-header/` (`phone-header-homework.txt`, fotos do cabeçalho).
+
+**Prova.** Suíte inteira, sozinha, pela fila da máquina: 395 arquivos, 5277 testes passando, 1 pulado, sem «Unhandled Errors»; lida antes do commit.
+
+**Não conferido.** Em que telas reais do app o título de reserva aparece (se aparece); um iPhone de verdade.
+
 ## [2026-11-23 15:59] step — UAT-293: a parte «Como ver» que faltava na linha
 
 **Branch:** fix/f80-crate-caption-album-and-year
