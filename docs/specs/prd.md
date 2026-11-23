@@ -7,6 +7,12 @@
      inventário do V1 = /Users/maujrp/mjrp/projects/MJRPalbumblender-v1/reports/audits/2026-10-27-mjrpalbumblender-v0-feature-inventory.md.
      Os requisitos de cada épico (stories) são do próximo pacote; as seções abaixo deles não as têm ainda. -->
 
+## O que é
+
+O Album Blender é uma aplicação web que mistura álbuns, aclamação da crítica e popularidade em playlists equilibradas, para quem ainda ouve música álbum por álbum. A ordem do produto é montar, misturar, ouvir: montar uma série de álbuns, escolher a receita de mistura, rever as playlists geradas e exportar para o Spotify ou o Apple Music, no celular e no computador.
+
+<!-- Rascunho do agente, aceito pelo MJRP em 2026-11-23 11:20 «para a primeira iteração» (lote 2026-11-21-1335-v0-conform-questions, D-01); escrito da visão, dos épicos e das telas, sem conferir com o código. -->
+
 ## Objetivo
 
 Misturar dados de álbuns, aclamação da crítica e popularidade em playlists coerentes e equilibradas, como uma camada de inteligência acima dos serviços de streaming (README:6; Prod_Vision:13-15). Os resultados e as medidas moram no [ROADMAP.md](../../ROADMAP.md).

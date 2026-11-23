@@ -2,6 +2,7 @@
 
 **Date**: 2026-11-19
 **Status**: Accepted
+**Acceptance**: MJRP
 **Deciders**: MJRP (decided in conversation on 2026-11-19: «Node do servidor: continuar em 18 ou subir para 24? = 24»), Claude agent (drafter)
 **Related work**: release v5.0, feature F64
 

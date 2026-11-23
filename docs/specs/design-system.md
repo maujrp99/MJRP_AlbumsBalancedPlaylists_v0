@@ -1,7 +1,7 @@
 # Design system — Album Blender V0
 
 **Status: Draft** — os padrões da Home (F79) e da página de entrada (F80) aprovados pelo MJRP com os protótipos em 2026-11-20; o resto é o que o código usa, decidido pelo agente — revisável; as perguntas abertas estão em § Pendentes.
-> **Página do design system:** https://claude.ai/artifact/RHR5zAhDUhQowiEn5BeCgj (F86, rascunho) — gerada deste documento por `design/proposals/design-system/build-design-system.mjs`, nunca editada à mão.
+> **Design system no Claude:** https://claude.ai/artifact/RHR5zAhDUhQowiEn5BeCgj (F86, rascunho) — gerada deste documento por `design/proposals/design-system/build-design-system.mjs`, nunca editada à mão.
 
 O que as telas do site compartilham: cores, tipo, medidas e componentes. Este documento nasceu com a F76 (o celular) e foi refeito na F86 (2026-11-21) a partir de um levantamento do código (`public/css/`, `tailwind.config.js`, `public/splash.html`, as views e os componentes): o que está aqui é o que o site **usa**, não o que deveria usar. Onde o código tem dois valores para a mesma coisa, § Conflitos no código diz quais e propõe um; nada foi mudado no código. A migração para React (F83) vai consumir os tokens daqui. O app nativo (`app/`, em pausa) fica fora.
 
@@ -10,6 +10,16 @@ Ordem em que o site carrega o CSS (decide quem ganha num conflito): `public/css/
 ## Conceito e DNA
 
 Uma loja de discos à noite: tela preta, o fogo (o logotipo da chama sobre o vinil, o degradê laranja-vermelho) e os equalizadores como as duas marcas da casa, títulos em Syne. Decisão do MJRP (2026-11-20 17:12): «o elemento do fogo, de equalizadores, fazem parte da identidade do site». O fogo é a ação: um botão de fogo por tela (HI-05). O equalizador quer dizer som e espera: parado é pronto, em movimento é esperando uma resposta, baixo é que a resposta não veio.
+
+### Album Blender Identity Specs
+
+Fonte: as seções acima, sem valor novo (D-08, 2026-11-23: uma identidade só). O conceito e o ritmo são o que o documento já diz; o MJRP os aprovou com os protótipos da Home e da página de entrada (2026-11-20).
+
+- **Concept:** uma loja de discos à noite — tela preta, o fogo (a chama sobre o vinil, o degradê laranja-vermelho) e os equalizadores como as duas marcas da casa; o fogo é a ação, o equalizador é som e espera.
+- **Palette:** primária laranja `#f97316` (ação, aba atual, item escolhido); secundária vermelho `#dc2626` (a outra ponta do fogo, e o perigo); destaque o degradê fogo `#f97316` → `#dc2626` (um botão por tela) e o âmbar `#fbbf24` (a ponta clara do equalizador); fundo preto `#000000`, painel `#101014`, superfície `#1c1c22`; texto branco `#ffffff`, apagado `rgba(255, 255, 255, 0.72)`, cinza `#a0a0a8`; estados: verde `#4ade80` (pronto, salvo), vermelho claro `#f87171` (erro), rosa `#fca5a5` (o que não entrou).
+- **Type:** Syne (400, 700, 800) para títulos e, no computador, para o corpo; no celular o corpo e o secundário vão na fonte de texto do sistema (SF Pro no iPhone); detalhe em § Tipografia.
+- **Rhythm:** alvo de toque de 44 px, botão principal de 48 px, margem lateral de 16 px (24 px na Home do computador), 8 px entre peças, cantos de 10 a 12 px; detalhe em § Espaço, forma e sombra.
+- **Surface:** escura, preta com painéis quase pretos e linhas de branco a 12 %; sem tema claro (§ Themes).
 
 ## Paleta
 
@@ -219,9 +229,9 @@ Listados pela F86, não consertados (a feature não muda o código do site).
 
 Os textos do site são em inglês, curtos, no imperativo nos botões («Create series», «Blend it now»); o que é dado de exemplo diz que é («Illustrative · fictional album»). A revisão dos textos e o português são da F81 (`design/copy/album-blender-copy.md`, a página de revisão de texto).
 
-## Temas
+## Themes
 
-Um tema só, escuro, sem seletor: o preto e as cores de § Cores. As cores de estado não vêm da marca. O contraste foi medido sobre o preto e o painel (§ Paleta).
+Resposta do MJRP (2026-11-23 11:20, lote 2026-11-21-1335-v0-conform-questions, D-08, opção a): o site não troca de paleta, uma identidade só. Um tema só, escuro, sem seletor: o preto e as cores de § Cores. As cores de estado não vêm da marca. O contraste foi medido sobre o preto e o painel (§ Paleta).
 
 ## Referência visual
 
