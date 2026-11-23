@@ -1,0 +1,196 @@
+PASS  webkit-390-pt-main: no console error
+PASS  webkit-390-pt-main: no horizontal scroll
+      scrollWidth 390, window 390
+PASS  webkit-390-pt-main: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-390-pt-branch: no console error
+PASS  webkit-390-pt-branch: no horizontal scroll
+      scrollWidth 390, window 390
+PASS  webkit-390-pt-branch: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-390-pt-branch: five stories, each with its button
+PASS  webkit-390-pt-branch: the button has the box of the visual above it (left edge and width within 1 px)
+      start: visual x 202 w 172, button x 202 w 172; albums: visual x 202 w 172, button x 202 w 172; blend: visual x 202 w 172, button x 202 w 172; playlists: visual x 202 w 172, button x 202 w 172; inventory: visual x 202 w 172, button x 202 w 172
+PASS  webkit-390-pt-branch: the button is 44 px high, its text 12px (at least 12 px), on one line, not clipped
+      start: 172x44, icon from 217.8, label 119.5 wide to 358.3 of 374; albums: 172x44, icon from 217.8, label 119.5 wide to 358.3 of 374; blend: 172x44, icon from 217.8, label 119.5 wide to 358.3 of 374; playlists: 172x44, icon from 217.8, label 119.5 wide to 358.3 of 374; inventory: 172x44, icon from 217.8, label 119.5 wide to 358.3 of 374
+PASS  webkit-390-pt-branch: the text of the credit is the album's name only, under the record, whole
+      The Dark Side of the Moon | The Velvet Underground & Nico | Dummy | In the Aeroplane Over the Sea | Desire, I Want to Turn Into You
+PASS  webkit-390-pt-branch: the button's name says the album and the artist, in pt; it opens a new tab; the address is Apple Music's
+      Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: Dummy, Portishead (abre numa nova aba) | Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba) | Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)
+PASS  webkit-390-pt-branch: each credit ends before the story's text begins
+      start: 1146 <= 1146; albums: 1651 <= 1651; blend: 2473 <= 2473; playlists: 3069 <= 3069; inventory: 3598 <= 3598
+PASS  webkit-390-en-main: no console error
+PASS  webkit-390-en-main: no horizontal scroll
+      scrollWidth 390, window 390
+PASS  webkit-390-en-main: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-390-en-branch: no console error
+PASS  webkit-390-en-branch: no horizontal scroll
+      scrollWidth 390, window 390
+PASS  webkit-390-en-branch: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-390-en-branch: five stories, each with its button
+PASS  webkit-390-en-branch: the button has the box of the visual above it (left edge and width within 1 px)
+      start: visual x 202 w 172, button x 202 w 172; albums: visual x 202 w 172, button x 202 w 172; blend: visual x 202 w 172, button x 202 w 172; playlists: visual x 202 w 172, button x 202 w 172; inventory: visual x 202 w 172, button x 202 w 172
+PASS  webkit-390-en-branch: the button is 44 px high, its text 12px (at least 12 px), on one line, not clipped
+      start: 172x44, icon from 215.3, label 124.4 wide to 360.7 of 374; albums: 172x44, icon from 215.3, label 124.4 wide to 360.7 of 374; blend: 172x44, icon from 215.3, label 124.4 wide to 360.7 of 374; playlists: 172x44, icon from 215.3, label 124.4 wide to 360.7 of 374; inventory: 172x44, icon from 215.3, label 124.4 wide to 360.7 of 374
+PASS  webkit-390-en-branch: the text of the credit is the album's name only, under the record, whole
+      The Dark Side of the Moon | The Velvet Underground & Nico | Dummy | In the Aeroplane Over the Sea | Desire, I Want to Turn Into You
+PASS  webkit-390-en-branch: the button's name says the album and the artist, in en; it opens a new tab; the address is Apple Music's
+      Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: Dummy, Portishead (opens in a new tab) | Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab) | Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)
+PASS  webkit-390-en-branch: each credit ends before the story's text begins
+      start: 1125 <= 1125; albums: 1599 <= 1599; blend: 2421 <= 2421; playlists: 2993 <= 2993; inventory: 3498 <= 3498
+PASS  webkit-393-pt-main: no console error
+PASS  webkit-393-pt-main: no horizontal scroll
+      scrollWidth 393, window 393
+PASS  webkit-393-pt-main: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-393-pt-branch: no console error
+PASS  webkit-393-pt-branch: no horizontal scroll
+      scrollWidth 393, window 393
+PASS  webkit-393-pt-branch: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-393-pt-branch: five stories, each with its button
+PASS  webkit-393-pt-branch: the button has the box of the visual above it (left edge and width within 1 px)
+      start: visual x 202 w 175, button x 202 w 175; albums: visual x 202 w 175, button x 202 w 175; blend: visual x 202 w 175, button x 202 w 175; playlists: visual x 202 w 175, button x 202 w 175; inventory: visual x 202 w 175, button x 202 w 175
+PASS  webkit-393-pt-branch: the button is 44 px high, its text 12px (at least 12 px), on one line, not clipped
+      start: 175x44, icon from 219.3, label 119.5 wide to 359.8 of 377; albums: 175x44, icon from 219.3, label 119.5 wide to 359.8 of 377; blend: 175x44, icon from 219.3, label 119.5 wide to 359.8 of 377; playlists: 175x44, icon from 219.3, label 119.5 wide to 359.8 of 377; inventory: 175x44, icon from 219.3, label 119.5 wide to 359.8 of 377
+PASS  webkit-393-pt-branch: the text of the credit is the album's name only, under the record, whole
+      The Dark Side of the Moon | The Velvet Underground & Nico | Dummy | In the Aeroplane Over the Sea | Desire, I Want to Turn Into You
+PASS  webkit-393-pt-branch: the button's name says the album and the artist, in pt; it opens a new tab; the address is Apple Music's
+      Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: Dummy, Portishead (abre numa nova aba) | Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba) | Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)
+PASS  webkit-393-pt-branch: each credit ends before the story's text begins
+      start: 1146 <= 1146; albums: 1651 <= 1651; blend: 2473 <= 2473; playlists: 3069 <= 3069; inventory: 3598 <= 3598
+PASS  webkit-393-en-main: no console error
+PASS  webkit-393-en-main: no horizontal scroll
+      scrollWidth 393, window 393
+PASS  webkit-393-en-main: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-393-en-branch: no console error
+PASS  webkit-393-en-branch: no horizontal scroll
+      scrollWidth 393, window 393
+PASS  webkit-393-en-branch: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-393-en-branch: five stories, each with its button
+PASS  webkit-393-en-branch: the button has the box of the visual above it (left edge and width within 1 px)
+      start: visual x 202 w 175, button x 202 w 175; albums: visual x 202 w 175, button x 202 w 175; blend: visual x 202 w 175, button x 202 w 175; playlists: visual x 202 w 175, button x 202 w 175; inventory: visual x 202 w 175, button x 202 w 175
+PASS  webkit-393-en-branch: the button is 44 px high, its text 12px (at least 12 px), on one line, not clipped
+      start: 175x44, icon from 216.8, label 124.4 wide to 362.2 of 377; albums: 175x44, icon from 216.8, label 124.4 wide to 362.2 of 377; blend: 175x44, icon from 216.8, label 124.4 wide to 362.2 of 377; playlists: 175x44, icon from 216.8, label 124.4 wide to 362.2 of 377; inventory: 175x44, icon from 216.8, label 124.4 wide to 362.2 of 377
+PASS  webkit-393-en-branch: the text of the credit is the album's name only, under the record, whole
+      The Dark Side of the Moon | The Velvet Underground & Nico | Dummy | In the Aeroplane Over the Sea | Desire, I Want to Turn Into You
+PASS  webkit-393-en-branch: the button's name says the album and the artist, in en; it opens a new tab; the address is Apple Music's
+      Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: Dummy, Portishead (opens in a new tab) | Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab) | Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)
+PASS  webkit-393-en-branch: each credit ends before the story's text begins
+      start: 1125 <= 1125; albums: 1599 <= 1599; blend: 2421 <= 2421; playlists: 2993 <= 2993; inventory: 3498 <= 3498
+PASS  webkit-375-pt-main: no console error
+PASS  webkit-375-pt-main: no horizontal scroll
+      scrollWidth 375, window 375
+PASS  webkit-375-pt-main: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-375-pt-branch: no console error
+PASS  webkit-375-pt-branch: no horizontal scroll
+      scrollWidth 375, window 375
+PASS  webkit-375-pt-branch: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-375-pt-branch: five stories, each with its button
+PASS  webkit-375-pt-branch: the button has the box of the visual above it (left edge and width within 1 px)
+      start: visual x 202 w 157, button x 202 w 157; albums: visual x 202 w 157, button x 202 w 157; blend: visual x 202 w 157, button x 202 w 157; playlists: visual x 202 w 157, button x 202 w 157; inventory: visual x 202 w 157, button x 202 w 157
+PASS  webkit-375-pt-branch: the button is 44 px high, its text 12px (at least 12 px), on one line, not clipped
+      start: 157x44, icon from 210.3, label 119.5 wide to 350.8 of 359; albums: 157x44, icon from 210.3, label 119.5 wide to 350.8 of 359; blend: 157x44, icon from 210.3, label 119.5 wide to 350.8 of 359; playlists: 157x44, icon from 210.3, label 119.5 wide to 350.8 of 359; inventory: 157x44, icon from 210.3, label 119.5 wide to 350.8 of 359
+PASS  webkit-375-pt-branch: the text of the credit is the album's name only, under the record, whole
+      The Dark Side of the Moon | The Velvet Underground & Nico | Dummy | In the Aeroplane Over the Sea | Desire, I Want to Turn Into You
+PASS  webkit-375-pt-branch: the button's name says the album and the artist, in pt; it opens a new tab; the address is Apple Music's
+      Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: Dummy, Portishead (abre numa nova aba) | Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba) | Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)
+PASS  webkit-375-pt-branch: each credit ends before the story's text begins
+      start: 1146 <= 1146; albums: 1651 <= 1651; blend: 2488 <= 2488; playlists: 3084 <= 3084; inventory: 3613 <= 3613
+PASS  webkit-375-en-main: no console error
+PASS  webkit-375-en-main: no horizontal scroll
+      scrollWidth 375, window 375
+PASS  webkit-375-en-main: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-375-en-branch: no console error
+PASS  webkit-375-en-branch: no horizontal scroll
+      scrollWidth 375, window 375
+PASS  webkit-375-en-branch: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-375-en-branch: five stories, each with its button
+PASS  webkit-375-en-branch: the button has the box of the visual above it (left edge and width within 1 px)
+      start: visual x 202 w 157, button x 202 w 157; albums: visual x 202 w 157, button x 202 w 157; blend: visual x 202 w 157, button x 202 w 157; playlists: visual x 202 w 157, button x 202 w 157; inventory: visual x 202 w 157, button x 202 w 157
+PASS  webkit-375-en-branch: the button is 44 px high, its text 12px (at least 12 px), on one line, not clipped
+      start: 157x44, icon from 207.8, label 124.4 wide to 353.2 of 359; albums: 157x44, icon from 207.8, label 124.4 wide to 353.2 of 359; blend: 157x44, icon from 207.8, label 124.4 wide to 353.2 of 359; playlists: 157x44, icon from 207.8, label 124.4 wide to 353.2 of 359; inventory: 157x44, icon from 207.8, label 124.4 wide to 353.2 of 359
+PASS  webkit-375-en-branch: the text of the credit is the album's name only, under the record, whole
+      The Dark Side of the Moon | The Velvet Underground & Nico | Dummy | In the Aeroplane Over the Sea | Desire, I Want to Turn Into You
+PASS  webkit-375-en-branch: the button's name says the album and the artist, in en; it opens a new tab; the address is Apple Music's
+      Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: Dummy, Portishead (opens in a new tab) | Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab) | Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)
+PASS  webkit-375-en-branch: each credit ends before the story's text begins
+      start: 1125 <= 1125; albums: 1599 <= 1599; blend: 2436 <= 2436; playlists: 3039 <= 3039; inventory: 3568 <= 3568
+PASS  chromium-1280-pt-main: no console error
+PASS  chromium-1280-pt-main: no horizontal scroll
+      scrollWidth 1280, window 1280
+PASS  chromium-1280-pt-main: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  chromium-1280-pt-branch: no console error
+PASS  chromium-1280-pt-branch: no horizontal scroll
+      scrollWidth 1280, window 1280
+PASS  chromium-1280-pt-branch: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  chromium-1280-en-main: no console error
+PASS  chromium-1280-en-main: no horizontal scroll
+      scrollWidth 1280, window 1280
+PASS  chromium-1280-en-main: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  chromium-1280-en-branch: no console error
+PASS  chromium-1280-en-branch: no horizontal scroll
+      scrollWidth 1280, window 1280
+PASS  chromium-1280-en-branch: no request left for Apple Music or Spotify
+      hosts aborted: none
+PASS  webkit-390-pt: nothing moved: the same page height, every section and every story's record and visual in the same place
+      height 4635 -> 4635
+PASS  webkit-390-pt: the crate's caption and its button are unchanged
+      button 199.8x44, 14px
+PASS  webkit-390-pt: the same records in the crate
+      15 records
+PASS  webkit-390-en: nothing moved: the same page height, every section and every story's record and visual in the same place
+      height 4504 -> 4504
+PASS  webkit-390-en: the crate's caption and its button are unchanged
+      button 205.9x44, 14px
+PASS  webkit-390-en: the same records in the crate
+      15 records
+PASS  webkit-393-pt: nothing moved: the same page height, every section and every story's record and visual in the same place
+      height 4604 -> 4604
+PASS  webkit-393-pt: the crate's caption and its button are unchanged
+      button 199.8x44, 14px
+PASS  webkit-393-pt: the same records in the crate
+      15 records
+PASS  webkit-393-en: nothing moved: the same page height, every section and every story's record and visual in the same place
+      height 4504 -> 4504
+PASS  webkit-393-en: the crate's caption and its button are unchanged
+      button 205.9x44, 14px
+PASS  webkit-393-en: the same records in the crate
+      15 records
+PASS  webkit-375-pt: nothing moved: the same page height, every section and every story's record and visual in the same place
+      height 4674 -> 4674
+PASS  webkit-375-pt: the crate's caption and its button are unchanged
+      button 199.8x44, 14px
+PASS  webkit-375-pt: the same records in the crate
+      15 records
+PASS  webkit-375-en: nothing moved: the same page height, every section and every story's record and visual in the same place
+      height 4605 -> 4605
+PASS  webkit-375-en: the crate's caption and its button are unchanged
+      button 205.9x44, 14px
+PASS  webkit-375-en: the same records in the crate
+      15 records
+PASS  chromium-1280-pt: nothing moved: the same page height, every section and every story's record and visual in the same place
+      height 4578 -> 4578
+PASS  chromium-1280-pt: the crate's caption and its button are unchanged
+      button 199.8x44, 14px
+PASS  chromium-1280-pt: the same records in the crate
+      15 records
+PASS  chromium-1280-en: nothing moved: the same page height, every section and every story's record and visual in the same place
+      height 4543 -> 4543
+PASS  chromium-1280-en: the crate's caption and its button are unchanged
+      button 205.9x44, 14px
+PASS  chromium-1280-en: the same records in the crate
+      15 records
+
+108 passed, 0 failed; nothing clicked, no album address opened; servers closed

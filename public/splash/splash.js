@@ -212,6 +212,9 @@ function pauseIcon(win, reduce, wake) {
     }
 }
 
+/** The accessible name of an album's button: what it does, the album and the artist, and that it opens a new tab. */
+const listenLabel = (album, lang) => `${t('c.listen', lang)}: ${album.t}, ${album.a}${t('c.newtab', lang)}`
+
 /** The CSS crate and the caption of the front record; `caption` is drawn again when the language changes. */
 function crateView(win, imgs, albums, langOf) {
     const D = win.document
@@ -233,7 +236,7 @@ function crateView(win, imgs, albums, langOf) {
             const am = D.getElementById('am')
             if (am && album.href) {
                 am.href = album.href
-                am.setAttribute('aria-label', `${t('c.listen', lang)}: ${album.t}, ${album.a}${t('c.newtab', lang)}`)
+                am.setAttribute('aria-label', listenLabel(album, lang))
             }
         }
     }
@@ -243,6 +246,7 @@ function crateView(win, imgs, albums, langOf) {
 function phoneSlots(win, imgs, albums) {
     const D = win.document
     const credits = []
+    const button = D.getElementById('am')
     D.querySelectorAll('.slot').forEach((slot) => {
         const i = recordAt(Number(slot.dataset.pull), imgs.length)
         if (!imgs[i]) return
@@ -250,12 +254,22 @@ function phoneSlots(win, imgs, albums) {
         im.removeAttribute('class'); im.removeAttribute('style'); im.alt = ''
         slot.appendChild(im)
         const album = albums[i]
-        const credit = D.createElement(album.href ? 'a' : 'span')
+        // UAT-285: the credit is text; the link is the caption's own button (a copy of the element, never a second pattern)
+        const credit = D.createElement('span')
         credit.className = 'slot-am'
-        if (album.href) { credit.href = album.href; credit.target = '_blank'; credit.rel = 'noopener' }
+        const who = D.createElement('span')
+        who.className = 'slot-who'
+        credit.appendChild(who)
+        let link = null
+        if (album.href && button) {
+            link = button.cloneNode(true)
+            link.removeAttribute('id')
+            link.href = album.href
+            credit.appendChild(link)
+        }
         slot.appendChild(credit)
         slot.removeAttribute('aria-hidden')
-        credits.push([credit, album])
+        credits.push([who, link, album])
     })
     const pending = D.querySelectorAll('.slot.pre')
     if ('IntersectionObserver' in win) {
@@ -266,8 +280,9 @@ function phoneSlots(win, imgs, albums) {
     } else {
         pending.forEach(s => s.classList.remove('pre'))
     }
-    return (lang) => credits.forEach(([credit, album]) => {
-        credit.textContent = `${album.t} · ${album.a} — ${album.href ? t('c.listen', lang) : t('c.fictional', lang)}`
+    return (lang) => credits.forEach(([who, link, album]) => {
+        who.textContent = link ? album.t : `${album.t} · ${album.a} — ${t('c.fictional', lang)}` // UAT-286: beside the button, the album only; the artist stays in the button's name
+        if (link) link.setAttribute('aria-label', listenLabel(album, lang))
     })
 }
 

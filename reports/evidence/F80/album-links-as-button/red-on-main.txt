@@ -1,0 +1,6 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/splash/splash.test.js > the page wired > on the phone each story brings its record with its credit
+ FAIL  test/splash/splash.test.js > the page wired > on the phone every album link is the caption's button: one class, same icon, name that says the album (UAT-285)
+ FAIL  test/splash/splash.test.js > the page wired > the button of a phone record follows the language (UAT-285)
+ Test Files  1 failed (1)
+      Tests  3 failed | 24 passed (27)

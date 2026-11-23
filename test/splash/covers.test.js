@@ -42,6 +42,15 @@ describe('the two sets', () => {
         real.forEach(a => expect(a.href).toMatch(/^https:\/\/music\.apple\.com\/us\//))
     })
 
+    it('every real record points to the album itself, never to a search: music.apple.com/us/album/<name>/<id>', () => {
+        const real = albumsOf('real')
+        real.forEach(a => expect(a.href, a.t).toMatch(/^https:\/\/music\.apple\.com\/us\/album\/[A-Za-z0-9%-]+\/\d+$/))
+        expect(new Set(real.map(a => a.href)).size).toBe(real.length)
+        const byKey = Object.fromEntries(real.map(a => [a.k, a.href]))
+        expect(byKey.dsotm).toBe('https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699')
+        expect(byKey.homogenic).toBe('https://music.apple.com/us/album/homogenic/20833577')
+    })
+
     it('a real cover comes from Apple\'s image CDN at 360 px, never from the repository', () => {
         const src = coverSrc(COVER_SETS.real[0])
         expect(src).toMatch(/^https:\/\/is1-ssl\.mzstatic\.com\/image\/thumb\/.+\/360x360bb\.webp$/)

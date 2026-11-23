@@ -1,0 +1,30 @@
+webkit-390 pt start     visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 119.5 | The Dark Side of the Moon
+webkit-390 pt albums    visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 119.5 | The Velvet Underground & Nico
+webkit-390 pt blend     visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 119.5 | Dummy
+webkit-390 pt playlists visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 119.5 | In the Aeroplane Over the Sea
+webkit-390 pt inventory visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 119.5 | Desire, I Want to Turn Into You
+webkit-390 en start     visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 124.4 | The Dark Side of the Moon
+webkit-390 en albums    visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 124.4 | The Velvet Underground & Nico
+webkit-390 en blend     visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 124.4 | Dummy
+webkit-390 en playlists visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 124.4 | In the Aeroplane Over the Sea
+webkit-390 en inventory visual x 202 w 172 | button x 202 w 172 h 44 font 12px label 124.4 | Desire, I Want to Turn Into You
+webkit-393 pt start     visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 119.5 | The Dark Side of the Moon
+webkit-393 pt albums    visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 119.5 | The Velvet Underground & Nico
+webkit-393 pt blend     visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 119.5 | Dummy
+webkit-393 pt playlists visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 119.5 | In the Aeroplane Over the Sea
+webkit-393 pt inventory visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 119.5 | Desire, I Want to Turn Into You
+webkit-393 en start     visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 124.4 | The Dark Side of the Moon
+webkit-393 en albums    visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 124.4 | The Velvet Underground & Nico
+webkit-393 en blend     visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 124.4 | Dummy
+webkit-393 en playlists visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 124.4 | In the Aeroplane Over the Sea
+webkit-393 en inventory visual x 202 w 175 | button x 202 w 175 h 44 font 12px label 124.4 | Desire, I Want to Turn Into You
+webkit-375 pt start     visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 119.5 | The Dark Side of the Moon
+webkit-375 pt albums    visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 119.5 | The Velvet Underground & Nico
+webkit-375 pt blend     visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 119.5 | Dummy
+webkit-375 pt playlists visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 119.5 | In the Aeroplane Over the Sea
+webkit-375 pt inventory visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 119.5 | Desire, I Want to Turn Into You
+webkit-375 en start     visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 124.4 | The Dark Side of the Moon
+webkit-375 en albums    visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 124.4 | The Velvet Underground & Nico
+webkit-375 en blend     visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 124.4 | Dummy
+webkit-375 en playlists visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 124.4 | In the Aeroplane Over the Sea
+webkit-375 en inventory visual x 202 w 157 | button x 202 w 157 h 44 font 12px label 124.4 | Desire, I Want to Turn Into You

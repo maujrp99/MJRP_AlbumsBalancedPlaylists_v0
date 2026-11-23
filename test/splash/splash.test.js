@@ -185,8 +185,66 @@ describe('the page wired', () => {
         startSplash(fakeWindow({ phone: true }))
         const slot = document.querySelector('#blend .slot')
         expect(slot.querySelector('img').alt).toBe('')
-        expect(slot.querySelector('a.slot-am').textContent).toBe(`Dummy · Portishead — ${COPY.pt['c.listen']}`)
+        // UAT-285: the credit is text beside the SAME button as the caption's, never a text link; UAT-286: the text is the album's name only
+        const credit = slot.querySelector('.slot-am')
+        expect(credit.querySelector('.slot-who').textContent).toBe('Dummy')
+        expect(slot.querySelector('a.slot-am')).toBeNull()
         expect(slot.hasAttribute('aria-hidden')).toBe(false)
+    })
+
+    it('on the phone every album link is the caption\'s button: one class, same icon, name that says the album (UAT-285)', () => {
+        loadPage('real')
+        startSplash(fakeWindow({ phone: true }))
+        const caption = document.getElementById('am')
+        const links = [...document.querySelectorAll('.slot .slot-am a')]
+        expect(links).toHaveLength(5)
+        for (const a of links) {
+            expect(a.className).toBe(caption.className)
+            expect(a.querySelector('.mk').textContent).toBe(caption.querySelector('.mk').textContent)
+            expect(a.querySelector('.mk').getAttribute('aria-hidden')).toBe('true')
+            expect(a.target).toBe('_blank')
+            expect(a.rel).toBe('noopener')
+            expect(a.textContent).toContain(COPY.pt['c.listen'])
+            // UAT-286: the text beside the button is the album only; the button's name still says the album AND the artist
+            const who = a.closest('.slot-am').querySelector('.slot-who').textContent
+            expect(who).not.toContain(' · ')
+            expect(a.getAttribute('aria-label')).toMatch(new RegExp(`^${COPY.pt['c.listen']}: .+, .+ \\(abre numa nova aba\\)$`))
+            expect(a.getAttribute('aria-label').startsWith(`${COPY.pt['c.listen']}: ${who}, `)).toBe(true)
+            expect(a.closest('.slot-am').querySelector('.slot-who').contains(a)).toBe(false)
+        }
+    })
+
+    it('the button of a phone record follows the language (UAT-285)', () => {
+        loadPage('real')
+        startSplash(fakeWindow({ phone: true }))
+        document.querySelector('[data-lang="en"]').click()
+        const a = document.querySelector('#blend .slot .slot-am a')
+        expect(a.textContent).toContain(COPY.en['c.listen'])
+        expect(a.getAttribute('aria-label')).toBe(`${COPY.en['c.listen']}: Dummy, Portishead${COPY.en['c.newtab']}`)
+        expect(a.closest('.slot-am').querySelector('.slot-who').textContent).toBe('Dummy')
+    })
+
+    it('the page has one rule of the button (.am) and the phone record\'s credit reuses it (UAT-285)', () => {
+        const page = readFileSync(resolve(process.cwd(), 'public/splash.html'), 'utf8')
+        expect(page.match(/^\.am\{/gm)).toHaveLength(1)
+        expect(page).toMatch(/^\.am\{[^}]*min-height:44px/m)
+        expect(page).not.toMatch(/slot-am[^{]*\{[^}]*text-decoration:underline/)
+        // the album and the artist beside it may shrink and wrap, and never push the button out of the column
+        expect(page).toMatch(/\.slot-who\{[^}]*min-width:0/)
+    })
+
+    it('on the phone the credit has the columns of the story above it: the album under the record, the button under the visual, as wide as it (UAT-286)', () => {
+        const page = readFileSync(resolve(process.cwd(), 'public/splash.html'), 'utf8')
+        const lead = page.match(/^ {2}\.v4-lead\{[^}]*gap:(\d+)px/m)[1]
+        const record = page.match(/^ {2}\.v4-lead \.slot\{[^}]*width:(\d+)px/m)[1]
+        const credit = page.match(/^ {2}\.v4-lead \.slot-am\{([^}]*)\}/m)[1]
+        expect(credit).toContain(`grid-template-columns:${record}px minmax(0,1fr)`)
+        expect(credit).toContain(`column-gap:${lead}px`)
+        const button = page.match(/^ {2}\.slot-am \.am\{([^}]*)\}/m)[1]
+        expect(button).toContain('width:100%')
+        expect(button).toContain('box-sizing:border-box')
+        expect(Number(button.match(/font-size:(\d+)px/)[1])).toBeGreaterThanOrEqual(12)
+        expect(button).not.toMatch(/min-height|white-space/) // still 44 px high and on one line, from the one rule of .am
     })
 
     it('on a computer the CSS crate turns to the same diagonal as the 3D one; on the phone it does not (UAT-235)', () => {

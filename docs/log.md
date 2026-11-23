@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:55] decision — F96: o MJRP escolheu a versão do especialista para a home do celular, com a abertura da versão dele
+
+**Branch:** main
+
+Sobre o protótipo https://claude.ai/artifact/Qs64Xut1fuKQ6z1Sf8tjTd (ramo `wip/f96-phone-home-prototype`, `a8d4903`), o MJRP, 2026-11-23, com um print da abertura da versão «A sua» (sem conta: topo com «Entrar», título, a linha laranja de baixo, a caixa na diagonal, a legenda com álbum e ano e o botão «Ouça no Apple Music»; sem botão grande): «escolho a do especialista, mas com essa landing aqui, muito melhor». Como eu li (interpretação minha): o corpo da página é o da versão do especialista (vertical, cada passo abrindo com rótulo, título e texto e depois a ilustração, a parte educativa com título próprio, os álbuns fora dos passos, um deslize só no fim, o da caixa «Na caixa do The Album Blender»); a abertura é a do print: caixa na diagonal e nenhum botão grande. Em aberto com ele: a redação do título da seção; como marcar a troca de passo (rótulo e linha, faixas alternadas, dois lados); o que abre o app para quem não tem conta, já que a abertura escolhida não tem botão e o topo mostra «Entrar» (achado P0 do especialista). A caixa na diagonal do protótipo é a caixa em CSS girada, não a cena 3D: a conferir se serve para a página de verdade sem o custo de 152 KB medido para o 3D no celular. Outras decisões dele no mesmo dia, já em construção: «a app nao chama blender e sim The Album Blender»; «ao inves é de Conte na parte do inventário, pode ser Catalogue»; «eu só removeria o botaozao criar de mobile e publicaria». A F96 segue em esboço e fora da «Priorizada»: o ramo de construção só nasce depois de ele a priorizar.
+
 ## [2026-11-23 15:54] step — F82: o nome «The Album Blender» por inteiro e «álbum», nunca «disco», nos textos e documentos do Painel
 
 **Branch:** claude/f82-cms-texts-panel
@@ -59,6 +65,12 @@ Achado P2-6 do juiz: a guarda de `/admin` não tinha prazo; com o banco lento, �
 
 Teste primeiro (`test/services/content/adminAccess.test.js`: o prazo com relógio de mentira, as três respostas, a guarda que só abre com «administrador»; `test/screens/admin/gate.test.tsx`: a tela nova): nove reprovaram, depois passaram. Português proposto pelo agente: `notices.router.checkTitle`, `notices.router.checkBody`.
 
+## [2026-11-23 15:28] step — Site publicado da `main` `5897dd9` (lido na saída): crédito só com o álbum e botão alinhado, endereços diretos, «álbuns», «Vire o lado»
+
+**Branch:** main
+
+Segunda tentativa de `./scripts/deploy-site.sh`: saída 0, «Site published from main (5897dd9)», 5243 testes passaram (1 pulado), 31 das regras. A página no ar traz «ama álbuns». Não conferido num iPhone. O MJRP viu a produção ainda antiga antes de esta terminar e disse que o botão não estava alinhado, a caixa não estava na diagonal e o Velvet ainda mostrava álbum e artista: a caixa na diagonal não está nesta publicação (segue em `fix/f80-crate-animation-break`); sobre a legenda da caixa ele decidiu «1. album e ano somente» (em `fix/f80-crate-caption-album-and-year`). A F96 (home do celular em deslizes, S-78) entrou na `main` em esboço (`1755246`). O teste de tempo que derrubou a primeira tentativa (`rankingPipeline`, «upstream_timeout») passou na segunda: defeito de teste instável a abrir.
+
 ## [2026-11-23 15:24] step — F82 (juiz, P2-5): o Painel diz «lendo» e «não foi possível ler» da leitura do site
 
 **Branch:** claude/f82-cms-texts-panel
@@ -66,6 +78,24 @@ Teste primeiro (`test/services/content/adminAccess.test.js`: o prazo com relógi
 Achado P2-5 do juiz: da leitura do site dentro do Painel (REQ-09) faltavam «lendo» e «não foi possível ler». A linha «O que o site mostra» agora diz também o que o leitor do site está fazendo ou como terminou: «lendo o que está publicado…» enquanto a leitura não acabou; «não foi possível ler: …» com o motivo em palavras comuns (o banco demorou mais de 3 segundos, o banco não respondeu, o documento não está no formato que o site conhece), junto do que o site mostra enquanto isso (a cópia ou o código); e «ainda não há nada publicado neste idioma» quando o documento não existe. O Painel ouve o leitor (`onContentState`) e a linha muda quando a leitura termina.
 
 Teste primeiro (`TextsPanel.test.tsx`, «the read of the site, inside the Painel»: cinco reprovaram, depois passaram). Português proposto pelo agente: `admin.site.reading`, `admin.site.unread`, `admin.site.why.*`, `admin.site.none`.
+
+## [2026-11-23 15:24] step — CORREÇÃO: a publicação do site NÃO aconteceu; a entrada anterior está errada
+
+**Branch:** main
+
+A entrada «Site publicado da `main` `956f721`» foi escrita por mim sem ler a saída: a publicação terminou com saída 1 e «nothing was deployed». Um teste falhou: `test/server/rankingPipeline.test.js` › «a source still running when the time ends is a failure (upstream_timeout), and the next ones are not asked» (esperava só `bestEver`, veio também `spotify`): teste de tempo, com a máquina carregada por várias suítes em fila. Produção segue no site da `937c3dd`. Erro de processo meu, o mesmo já anotado nesta sessão: registrar antes de ler a linha de resultado. Vou repetir a publicação e só registrar depois de ler a saída; o teste de tempo fica como defeito a abrir.
+
+## [2026-11-23 15:24] step — Site publicado da `main` `956f721`: crédito só com o álbum e botão alinhado, endereços diretos, «álbuns» no lugar de «discos», «Vire o lado»
+
+**Branch:** main
+
+O MJRP julgou a prévia e disse «1, publica»; um juiz independente rápido deu o relatório que a trava da junta pede (passa: 0 P0, 0 P1, 3 P2). `./scripts/deploy-site.sh` pela fila, saída 0; a página no ar traz «ama álbuns». Não conferido num iPhone de verdade. Voltar: «Rollback» no Hosting do Firebase (versão anterior: site da `937c3dd`). Pedidos dele ainda em trabalho: o conserto da animação do caixote e o caixote na diagonal no celular (`fix/f80-crate-animation-break`); a curadoria com o nome «Na caixa do The Album Blender» (F95); a home do celular em deslizes (registro no board, análise do especialista de experiência de uso e protótipo novo, pedidos por ele: «quero a análise do expert de UI e UX sobre minha proposta», «e um prototipo novo»).
+
+## [2026-11-23 15:23] decision — F96 registrada: a página de entrada no celular, organizada em swipes (S-78); F95: o nome é «Na caixa do The Album Blender»
+
+**Branch:** wip/register-phone-home-in-swipes
+
+Palavras do MJRP (2026-11-23), sobre a página de entrada (F80) no celular: «Para a versão mobile, to pensando aqui que em vez de a home ser vertical, se nao seria melhor os passos do que ela ensina, ser em formato de swipe para o usuario como num carrossel com os labels Lado A · 1 — Criar...Lado B · 2 — Inventário. Acho que a experiencia e o unclutter da tela ficariam melhor, o que nosso expert de UX e UI diria? Ah e abaixo do carrossel teria a caixa do The Album Blender em Swipe, aí...aí neste caso, no primeiro swipe teríamos somente o os elementos de UI ilustrativos pra como funcionaria a app.» E a estrutura: «Entao ficaria assim no mobile: 1. Hero/Header com a caixa na diagonal - o botao criar creio que poderia sair, pois já aparece no top nav 2. Swipe 1 - a parte educativa da app 3. Swipe 2 - a parte da caixa do the album blender 4. footer». A F96 (via padrão, feature) e a S-78 (EP-10, ao lado da S-62 e da S-77), em esboço. Não decidido: como a pessoa descobre que há mais para passar, se o botão «Criar» sai do alto, a caixa na diagonal no celular (em investigação numa issue da F80), o que o computador mantém (ele falou só do celular), a acessibilidade do swipe, o que vê quem está sem script, a relação com a F95; a primeira tarefa é a rodada de protótipo com ele. Na F95 (ainda em esboço), o nome fechado por ele depois de ver o protótipo (https://claude.ai/artifact/FhWNQqENfJUgMtPdnjKDxn): «2. Curadoria, gostei no Na Caixa....Mas colocaria na web "Na caixa do "The Album Blender" e não só blender.» A curadoria se chama «Na caixa do The Album Blender» (o nome inteiro do produto no computador; a redação no celular fecha no protótipo da F96, onde a curadoria vira o segundo swipe). Só documentação: nenhum código nem protótipo; fora do `priority.md` (a ordem é dele). Ids por `merge_train.py next-item-id --reserve`; board por `board_move.py seed`.
 
 ## [2026-11-23 15:21] step — F82 (juiz, P2-3): «Page not found» em React, redesenhada quando os textos publicados mudam
 
@@ -76,6 +106,12 @@ Achado P2-3 do juiz: a tela «Page not found» era feita à mão e não se redes
 A primeira tentativa foi redesenhar a tela à mão (um `innerHTML` ao mudar o texto): o sensor `noHandMadeScreens` recusou, com razão (a regra final da F83 é não voltar a escrever o DOM fora do React), e o caminho certo era a peça em React.
 
 Teste primeiro (`test/screens/admin/gate.test.tsx`: um texto publicado que chega ou some é desenhado na hora, como texto e nunca como marcação; a tela larga tudo ao sair), reprovado antes na forma à mão e passando agora.
+
+## [2026-11-23 15:21] review — F80: o juiz independente passou os ajustes do crédito do álbum (0 P0, 0 P1, 3 P2); o MJRP julgou a prévia
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Relatório, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-album-credit-visual-parity-recheck.md` (julgado em `eddf38f` contra a `main` `c4c81d4`). Botão e painel de cima com 0 px de diferença nas cinco histórias e nos dois idiomas; nenhum «disco(s)» no português; «Vire o lado»; os 15 endereços diretos. P2: o botão em inglês a 375 px tem 5,8 px de folga; dois links com o mesmo nome acessível no celular (já era assim). O MJRP, 2026-11-23: «nao passa pelo juiz», «ou juilz neste caso sou eu», «paine do CMS nao, apenas para esses ajustes que estou pedindo»; viu a prévia `staging` (`ec247a6`) e disse «1, publica»; como a trava da junta pede o relatório de um juiz e a saída sem ele é só dele, à pergunta «juiz rápido ou você roda a junta?» respondeu «1. juiz rápido».
 
 ## [2026-11-23 15:19] step — F82 (juiz, P2-2): os textos do próprio Painel não são editáveis no Painel nesta iteração
 
@@ -104,6 +140,81 @@ Decidido pelo agente — revisável: trocar a transação do SDK por um lote tra
 **Branch:** claude/f82-cms-texts-panel
 
 Achado P1-1 do juiz independente do Painel (`2026-11-23-mjrpalbumblender-v0-cms-texts-panel-visual-parity-recheck.md`): no celular a faixa de salvar ia para baixo da barra do topo do app assim que a lista rolava, e «Salvar» e «Descartar» ficavam sem toque. A faixa agora gruda ABAIXO da barra do topo, pelas medidas do próprio app (`--phone-topbar-h` + `--phone-safe-top`, até 899 px, a largura em que o app usa a moldura do celular), e uma mensagem alta (a confirmação, o conflito) rola dentro da faixa, entre a barra do topo e o menu de baixo. Teste primeiro (`test/screens/admin/adapter.test.ts`, «the save bar stays in reach»: reprovou, depois passou); o toque em «Salvar» e «Descartar» depois de rolar entra na prova do navegador, no último commit desta série.
+
+## [2026-11-23 15:11] decision — F80: «Vire o lado» no lugar de «Vire o álbum»
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+O MJRP, 2026-11-23, à pergunta «"Vire o álbum" fica, ou prefere outra frase ali?»: «2. Vire o Lado». Aplicado: o título `f.title` e o rótulo `flip.aria` da página de entrada dizem «Vire o lado» / «Virar o lado» (em caixa de frase, como os outros títulos da página: escolha do agente, revisável). Os testes da página de entrada passam (149). Sobre a prévia `staging` (commit `ec247a6`) ele disse «1, publica»; esta frase entrou depois desse olhar.
+
+## [2026-11-23 15:05] step — UAT-287 e UAT-288: as linhas ditas em palavras comuns
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+O sensor de estrutura do produto avisou que as duas linhas traziam nome de arquivo fora da Evidência; os nomes foram para a Evidência e o texto diz o que a pessoa vê. Nenhum código mudou.
+
+## [2026-11-23 15:04] step — Português: «disco» vira «álbum» em todo texto que o visitante lê (UAT-288)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Regra do MJRP (2026-11-23, com print do iPhone): «nao vamos usar o linguajar discos, pq no brasil discos restringe a vinis. vamos utilizar Albuns sempre, troque onde tem disco para Albums pls». Issue UAT-288. Cada texto trocado abaixo é a regra dele aplicada, não proposta do agente.
+
+**Página de entrada** (`public/splash/copy.js`, português):
+- `flip.aria`: «Virar o disco» → «Virar o álbum»
+- `h.kick`: «The Album Blender · um app web para quem ama discos» → «… para quem ama álbuns»
+- `p.blend`: «… sem deixar um disco dominar os outros.» → «… sem deixar um álbum dominar os outros.»
+- `f.title`: «Vire o disco» → «Vire o álbum»
+- `stage.aria`: «Uma caixa de discos; a página puxa um disco para a frente a cada parte» → «Uma caixa de álbuns; a página puxa um álbum para a frente a cada parte»
+- `credit.real`: «… todo disco mostrado inteiro nesta página…» → «… todo álbum mostrado inteiro nesta página…»
+
+**App, inventário** (`public/js/i18n/pt/inventory.js`):
+- `inventory.value.discogsLead`: «… pelo estado do disco. O valor do álbum…» → «… pelo estado do álbum. O valor do álbum…»
+- `inventory.value.lowestLead`: «… não o que o disco costuma valer.» → «… não o que o álbum costuma valer.»
+- `inventory.value.needsSettings`: «… uma sugestão pelo estado do disco (Mint…» → «… pelo estado do álbum (Mint…»
+
+**Varrido e sem ocorrência:** o HTML da página (`public/splash.html`: título, descrição, Open Graph, rótulos), os outros dicionários de `public/js/i18n/pt/`, `askTexts.js`, `inventoryTexts.js`, `shared/`, `app/`, `server/`. Ficaram, por não serem texto em português para o visitante: «Discogs»; o gênero «disco house» (`public/js/models/albumType.js`, dado em inglês); nomes de álbuns e artistas nos arquivos de dados; comentários de código; `docs/` (por exemplo `info-arch.md` ainda diz «disco» ao descrever a página).
+
+**Guarda.** `test/splash/noDiscoInPortuguese.test.js` falha se o dicionário em português da página de entrada, o HTML dela ou um dicionário de `public/js/i18n/pt/` disser «disco» ou «discos» (palavra inteira, sem contar acento; «Discogs» e «discografia» não disparam, e o teste confere que «Discogs» segue no inventário). Dois dos testes falham no código da `main`. A regra e as palavras dele estão em `docs/specs/design-system.md` § Voz e tom.
+
+**Para o MJRP saber.** «Vire o disco» era a expressão do lado A / lado B; pela regra ficou «Vire o álbum». «Lado A», «Lado B» e «faixa» não mudaram.
+
+Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** A tela do inventário com os três textos, no app (pede conta); na página de entrada montada, «ama álbuns» e «Vire o álbum» foram lidos no HTML do build.
+
+## [2026-11-23 15:04] step — Página de entrada (F80): os dois endereços de busca do Apple Music viram o endereço do álbum (UAT-287)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Resposta do MJRP (2026-11-23) a «Quer que eu troque os dois endereços de busca do Apple Music pelos endereços diretos dos álbuns?»: «1.sim». Issue UAT-287.
+
+**O que mudou** (`public/splash/covers.js`). The Dark Side of the Moon (Pink Floyd): de `…/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon` para `https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699`. Homogenic (Björk): de `…/us/search?term=Bj%C3%B6rk%20Homogenic` para `https://music.apple.com/us/album/homogenic/20833577`.
+
+**Como os ids foram escolhidos.** Sem navegador: `curl` na API pública de consulta do iTunes pelo código de barras que está no caminho da capa que a página já mostra (`lookup?upc=886445635829` e `lookup?upc=081227607364`, loja `us`). A resposta traz o álbum cuja capa é o MESMO arquivo: «The Dark Side of the Moon», Pink Floyd, 1973, 11 faixas, id 1065973699 (a edição padrão; a outra do mesmo código, «50th Anniversary [Remastered]», id 1665303755, tem outra capa); «Homogenic», Björk, 1997, 10 faixas, id 20833577 (a única; a busca por nome só devolvia «Homogenic (Live)», de outra capa). Nenhum endereço foi aberto nem clicado.
+
+**Os outros 13.** Conferidos: todos já eram endereço direto de álbum (`/us/album/<nome>/<id>`); nenhum outro aponta para busca. Teste novo em `test/splash/covers.test.js`: todo álbum real tem essa forma, sem repetição, e os dois ids acima; falha no código da `main`.
+
+Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** Que os dois endereços abrem a página certa num navegador ou no app (proibido abrir nesta rodada); a correspondência vem da resposta da API (mesmo arquivo de capa, nome, artista e ano).
+
+## [2026-11-23 15:04] step — Página de entrada (F80): sob cada disco só o nome do álbum, e o botão alinhado com o elemento visual acima (UAT-286)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Decisão do MJRP (2026-11-23, com print do iPhone da história «Criar», depois de ver o protótipo das variantes): «Vamos com opcao B mas o botao do Ouça no Apple Music precisa estar alinhado com o elemento visual acima, mesmo que isso implique em reduzir a fonte». Issue UAT-286 em `docs/specs/uat.md`, continuação da UAT-285.
+
+**O que mudou (só no celular).** O crédito sob o disco de cada história mostra só o nome do álbum (antes «álbum · artista»), sob o disco; o botão fica sob o elemento visual da história, com a mesma borda esquerda e a mesma largura dele. O crédito passou a repetir as colunas da história (172 px, vão de 14 px, o resto). Para caber numa linha, a letra do botão desceu de 14 para 12 px, o ícone de 20 para 16 px e o respiro lateral de 14 para 4 px; a altura segue 44 px. O nome acessível segue dizendo álbum e artista («Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)»). O botão da legenda do caixote e o computador não mudaram.
+
+**Medido (WebKit, site montado, PT e EN).** Elemento visual e botão, nas cinco histórias: a 390 px, x 202 e largura 172 nos dois; a 393 px, x 202 e largura 175; a 375 px, x 202 e largura 157 (`boxes.txt`). A 375 px em inglês, o caso mais apertado, sobram 5,8 px de cada lado do conteúdo. A altura da página e o lugar de cada seção, disco e elemento visual são iguais aos da `main`; o computador a 1280 igual. 108 conferências passam, 0 falham (`results.txt`); fotos de cada bloco a 390 e a 375, antes e depois, e `before-after-phone.png`.
+
+**Segurança da prova.** Nada foi clicado e nenhum endereço de álbum foi aberto: `music.apple.com`, `itunes.apple.com`, `geo.music.apple.com` e `open.spotify.com` abortados na rede em todo contexto; os botões julgados por `href`, `target`, `rel`, nome acessível, caixa e estilo.
+
+**Decidido pelo agente (revisável).** A letra do botão é 12 px em toda largura de celular (não só nas estreitas), para o botão ser igual nas cinco histórias e nos dois idiomas; o nome do álbum ficou em 13 px, em até 3 linhas. Abaixo de 375 px o botão não foi medido nesta rodada.
+
+**Prova.** Teste primeiro: 4 testes falham no código da `main` (`red-on-main.txt`). As fotos e as medidas foram tiradas do site montado na árvore final do ramo, que já traz os endereços diretos dos dois álbuns e a troca de «disco» por «álbum» (as duas entradas seguintes). `npm run budget:publication`: saída 0, tetos sem mudança. Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** Num iPhone de verdade; a página publicada. Os testes automáticos não medem caixas (o jsdom não desenha): a igualdade de caixas está na prova do navegador.
 
 ## [2026-11-23 15:01] step — F82: o teste de segredos passa; sair do Painel sem salvar pergunta; a barra do editor rico em português
 
@@ -138,6 +249,12 @@ Decidido pelo agente — revisável: (1) o arquivo de entrada do Painel chama-se
 
 Falta: refazer a cópia do kit a partir da tag oficial antes do merge; as palavras da barra do editor rico em português (hoje o inglês do kit); converter os textos corridos do site em chaves ricas e desenhá-los com o desenhador do kit (hoje a única chave rica é a nota do Painel); o Painel só fala português quando o site fala (a escolha do idioma é da F81); voltar no navegador de uma tela do Painel para outra redesenha o Painel e perde o que não foi salvo; a chave da tradução no cofre do servidor é do MJRP.
 
+## [2026-11-23 14:44] step — Estado: o prazo de 3 horas do MJRP para o CMS, as frentes em paralelo e a F95 na `main`
+
+**Branch:** main
+
+O MJRP, 2026-11-23 ~14:05: «eu preciso que vc finalize isso em 3 horas» (fechar a 1.0.0 do kit, dividir as 42 funções, o kit chegar ao V0 com o Painel de textos). Postas em paralelo, todas no Fable 5.2 por ordem dele («mude os modelos pra utilizar somente o 5.2, pq minha cota da semana está acabando para os outros modelos»): consertos da fatia 1 do kit (prontos), fatia 1b em dois ramos, núcleo de conteúdo (pronto), rota de tradução (pronta), o Painel. A F95 (curadoria do The Album Blender na página de entrada, S-77) entrou na `main` em esboço, antes de qualquer protótipo. O `## Now` do MEMORY.md foi posto em dia.
+
 ## [2026-11-23 14:43] step — F82: o Painel de textos em /admin, primeira iteração (só para o administrador; ainda sem o núcleo de conteúdo juntado)
 
 **Branch:** claude/f82-cms-texts-panel
@@ -153,6 +270,18 @@ O Painel de textos em `/admin`, primeira iteração (F82 TASK-01, a parte do Pai
 Português proposto pelo agente (espera o MJRP): todo `admin.kit.*`; `admin.translate.reason.*`; `admin.invalid.*` e `admin.warning.long`; `admin.read.*`; `admin.site.*`; `admin.noPermission.*`; `admin.orphan.note`; `admin.tag.orphan`, `admin.tag.rejected`, `admin.tag.rich`; `admin.save.reason.*`, `admin.save.invalid.*`, `admin.save.approved.*`, `admin.save.saved.*`; `admin.conflict.codeText`; `admin.screens.*`; `admin.help.rich`; `admin.texts.approveOne`, `admin.texts.select`; `admin.confirm.more`; e os três de `notices.router.notFound*`. Os demais vêm do protótipo aprovado.
 
 Decidido pelo agente — revisável: (1) a tela é própria do V0 e usa os campos do kit (`TextField`, com o editor rico e o «traduzir»), não o `KitApp`, porque o `KitApp` mostra um idioma por vez e não tem «Descartar», a confirmação do que vai ao ar, o conflito de três valores nem a aprovação em lote do protótipo aprovado; (2) «não encontrado» é uma tela nova e simples; (3) a única chave «rica» hoje é a nota do próprio Painel (`admin.help.rich`): as chaves corridas do site só viram ricas quando o site souber desenhá-las; (4) as palavras da barra do editor rico seguem no inglês do kit nesta iteração; (5) uma tela do Painel é uma área do dicionário (`albums`, `blend`…), e a linha mostra a chave, não um nome de lugar; (6) os testes foram escritos junto com o código, não antes (o prazo), e pegaram dois defeitos antes do commit.
+
+## [2026-11-23 14:42] step — Site publicado da `main` `937c3dd`: os links de álbum da página de entrada no botão «Ouça no Apple Music» (UAT-285)
+
+**Branch:** main
+
+Pedido do MJRP, 2026-11-23: «preciso que vc faça uma alteração já em prod… podemos deixar todos os links do albums no padrao do velvet under ground». `./scripts/deploy-site.sh` pela fila, saída 0. A publicação leva também o código do site da fatia 0 do CMS (a leitura de `on`/`off`/`unknown` do Discogs), já julgado. Em seguida ele pediu um protótipo com variações do crédito (só artista, só álbum, só o botão): em `wip/f80-album-credit-variants`. Voltar: «Rollback» no Hosting do Firebase para a versão anterior (site da `b36d2f1`).
+
+## [2026-11-23 14:36] review — F80: o juiz independente passou os botões «Ouça no Apple Music» (0 P0, 0 P1, 2 P2)
+
+**Branch:** fix/f80-album-links-as-the-apple-music-button
+
+Relatório, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-album-links-button-visual-parity-recheck.md`. P2: a 375 px o crédito mais longo (Velvet Underground) ocupa 4 linhas e fica a 3 px do rótulo de baixo, sem colisão nem corte; o botão do Dark Side of the Moon (e o do Homogenic) aponta para um endereço de busca do Apple Music, não do álbum, igual na `main`. Incidente do dia: o roteiro do primeiro juiz (parado) clicava em cada botão, e o app Música do MJRP abriu e tocou o Velvet Underground; o segundo juiz conferiu só pelo endereço, com os hosts do Apple Music bloqueados na rede. Regra nova para toda prova no navegador: nunca clicar nem navegar para esses endereços.
 
 ## [2026-11-23 14:31] step — F82: o kit do admin no V0, cópia candidata 0.9.0 (antes do merge, refazer da tag oficial)
 
@@ -206,6 +335,28 @@ Decidido pelo agente — revisável:
 - Nome do segredo proposto no passo a passo: `anthropic-api-key`.
 
 Falta: a porta `translate` do kit no Painel (espera o kit); o MJRP criar a chave no cofre e ligá-la ao serviço; o registro `cmsAdmins/{uid}` dele; publicar o servidor.
+
+## [2026-11-23 14:11] step — Página de entrada (F80): todo link de álbum é o botão «Ouça no Apple Music» do Velvet (UAT-285)
+
+**Branch:** fix/f80-album-links-as-the-apple-music-button
+
+Pedido do MJRP (2026-11-23, print do iPhone): «preciso que vc faça uma alteração já em prod… podemos deixar todos os links do albums no padrao do velvet under ground utilizando o print 2». Issue UAT-285 em `docs/specs/uat.md`, ligada à F80.
+
+**O que havia.** No computador, um link só: o botão da legenda do caixote (`#am`, classe `.am`), que troca de álbum com a faixa; já era o padrão. No celular, seis: o botão da legenda (Velvet, fixo) e cinco links de TEXTO sublinhado sob o disco de cada história («álbum · artista — Ouça no Apple Music»): Criar (The Dark Side of the Moon), Álbuns (The Velvet Underground & Nico), Blend (Dummy), Playlists (In the Aeroplane Over the Sea), Inventário (Desire, I Want to Turn Into You).
+
+**O que mudou.** Os cinco viraram texto (álbum · artista) ao lado do MESMO botão: `phoneSlots` copia o próprio elemento `#am` (uma classe, uma regra de CSS, nenhum segundo padrão) e troca o endereço e o nome acessível (`listenLabel`: «Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)»). Nenhum texto novo em português: só as chaves que já existiam em `public/splash/copy.js` (`c.listen`, `c.newtab`). Os álbuns e a ordem não mudaram; o conjunto fictício segue sem link.
+
+**Decidido pelo agente (revisável).** (1) O nome acessível segue a forma que a legenda já usava («Ouça no Apple Music: álbum, artista»), e não «Ouça ÁLBUM no Apple Music», para não criar texto novo. (2) O texto ao lado do botão ficou em 12 px (era 13 px), em até 4 linhas, e o crédito centrado nos 60 px que já existiam sob o disco: é o que faz «The Velvet Underground & Nico · The Velvet Underground & Nico» caber inteiro ao lado de um botão de 200 px sem mexer na altura da página. A 375 px esse crédito ocupa as 4 linhas e encosta no rótulo da história. (3) A 320 px (nenhum iPhone à venda) três créditos terminam em reticências; o nome inteiro está no nome acessível do botão. A página já rolava de lado a 320 px na `main` (346 px), igual no ramo: não é desta mudança e não foi consertado aqui.
+
+**Prova.** Teste primeiro: 3 testes novos falham no código da `main` (`reports/evidence/F80/album-links-as-button/red-on-main.txt`) e passam no ramo. No site MONTADO (as chaves de mentira no ambiente, capas reais), servido em 127.0.0.1 e encerrado: WebKit como iPhone 14 (390 px), mais 393, 375 e 320 px, e Chromium a 1280, em português e inglês, `main` contra o ramo: 144 conferências passam, 0 falham, 6 limites conhecidos a 320 px (`results.txt`, `measures.json`, fotos de cada bloco de álbum). Botões de 199,8 × 44 px (PT) e 205,9 × 44 px (EN), iguais ao da legenda em borda, raio, letra e ícone; sem erro de console; sem rolagem de lado a 375 px ou mais; a altura da página e o lugar de cada parte iguais aos da `main`. `npm run budget:publication`: saída 0; o arquivo do caixote 3D ganhou 1 B por citar o nome novo do script da página, então `background` subiu de 57.462 para 57.463 B (medido + 150 B, pela regra do arquivo). Suíte inteira pela fila da máquina: 392 arquivos, 5236 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** Num iPhone de verdade; com leitor de tela de verdade (só os atributos); a página publicada. O aceite e a publicação são do MJRP.
+
+## [2026-11-23 14:07] decision — F95 registrada: os álbuns da página de entrada como curadoria do The Album Blender (S-77)
+
+**Branch:** wip/register-blender-curation
+
+Palavras do MJRP (2026-11-23), sobre os álbuns da página de entrada (F80): «E pensando que esses albuns que temos na home, tenhamos alguma forma de deixar como indicacao/curadoria da semana do The Album Blender, o que acha? Acha que precisa prototipar?» O orquestrador respondeu que a ideia é boa, que «da semana» é uma promessa de trocar os álbuns toda semana e que «Seleção do Blender» diz o mesmo sem prazo, e recomendou uma rodada curta de protótipo com as duas formas; ele respondeu: «2. faça». A F95 (via padrão, feature) e a S-77 (EP-10, ao lado da S-62 e da S-64), em esboço. Não decidido: o nome («da semana», «Seleção do Blender» ou outro), o rótulo e onde aparece, quem troca e de quanto em quanto tempo, se espera o CMS (F82 REQ-03 e REQ-11) ou começa no código, a Apple Music como primeiro caminho para ouvir; a primeira tarefa é a rodada de protótipo com ele. Fato conferido na `main` (só leitura): os álbuns vêm de `public/splash/covers.js`, cada álbum real com o seu endereço da Apple Music, e a página não diz que são uma escolha. Só documentação: nenhum código nem protótipo; fora do `priority.md` (a ordem é dele). Ids por `merge_train.py next-item-id --reserve`; board por `board_move.py seed`.
 
 ## [2026-11-23 13:42] step — CMS: o MJRP publicou as regras do banco e criou `published/site` com a chave do Discogs ligada
 
