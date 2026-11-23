@@ -14,6 +14,7 @@
         "test": "vitest",
         "test:ui": "vitest --ui",
         "test:coverage": "vitest --coverage",
+        "rules:emulator": "firebase emulators:start --only firestore --project demo-mjrp-rules",
         "lint": "eslint .",
         "app:check": "npm run check --workspace app",
         "app:scan-bundles": "node scripts/app-bundle-scan.mjs",
@@ -37,6 +38,7 @@
     "license": "MIT",
     "devDependencies": {
         "@eslint/js": "^9.39.2",
+        "@firebase/rules-unit-testing": "^3.0.4",
         "@playwright/test": "1.63.0",
         "@vitest/coverage-v8": "^1.1.0",
         "@vitest/ui": "^1.1.0",

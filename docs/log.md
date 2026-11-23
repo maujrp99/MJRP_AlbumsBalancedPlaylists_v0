@@ -3,6 +3,17 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-23 00:45] step — CMS, fatia 0: as regras do conteúdo publicado e o teste que as roda no emulador (F82 TASK-07/08/05, F92 TASK-04)
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- `firestore.rules` (rascunho; quem publica é o MJRP): `published/{site,texts_en,texts_pt,recipes}` (todos leem sem login; só o administrador grava: login que não é anônimo e `cmsAdmins/{uid}.role == 'super'` por `get()` de caminho absoluto; campos, tipos e contagens fechados; `_schemaVersion` que não desce; `rev` = anterior + 1, e 1 na criação), `cmsAdmins/{uid}` (cada pessoa lê só o seu; ninguém grava pelo app), `cmsWork/*` (só o administrador) e `albums/` fechada para escrita (sem escritor desde a F65; a leitura ficou). Nada do que existia foi afrouxado; sem regra curinga na raiz.
+- `test/security/firestoreRules.test.js` agora RODA as regras no emulador do Firestore (`@firebase/rules-unit-testing` 3.0.4, dependência de desenvolvimento, compatível com o firebase 10 do projeto): 30 casos — convidado, outra conta, a conta dele com login anônimo, `cmsAdmins/*`, campo fora da lista, `_schemaVersion` descendo e `rev` errado recusados; o administrador aceito; e o que o teste de texto da F59/F78 dizia, agora como comportamento. A escrita de convidados em `spotify_enrichment/` é a exceção declarada numa lista que só encolhe (F92 TASK-04).
+- O emulador é um servidor fora da suíte: `npm run rules:emulator` (precisa de Java e do Firebase CLI; `firebase.json` ganhou o bloco `emulators`, porta 8089, projeto `demo-mjrp-rules`); a suíte o acha por `FIRESTORE_EMULATOR_HOST`. Sem emulador a suíte FALHA alto; `MJRP_RULES_EMULATOR=skip` é a saída declarada.
+- Decidido pelo agente — revisável: (1) `published/*` sem apagar pelo app (voltar atrás é o console); (2) os documentos listados são `site`, `texts_en`, `texts_pt`, `recipes` e nada mais: `entry` (fatia 2) entra quando a fatia 2 chegar, antes do Painel que a grava; (3) tetos: 6.000 textos, 100 receitas, 10 chaves em `previous` do site; (4) `cmsWork/*` também exige `_schemaVersion` que não desce nas atualizações; (5) a leitura de `published/*` é a única regra com `if true`, e o teste a fixa; (6) a suíte falha sem o emulador em vez de pular calada.
+- O que é do MJRP: publicar as regras no console; criar `cmsAdmins/{uid}`. Nada foi publicado.
+
+
 ## [2026-11-23 00:32] decision — ADR-0024: o MJRP aceitou em conversa («Aceito»); o carimbo no registro continua dele
 
 **Branch:** main
