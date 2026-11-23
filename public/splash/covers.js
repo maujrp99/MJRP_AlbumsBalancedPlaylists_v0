@@ -188,8 +188,8 @@ export function coverImagesHtml(setName) {
         + ` src="${coverSrc(album)}">`).join('\n        ')
 }
 
-/** "Artist · Year", or "Artist · fictional album": the line under the title in the caption (the fictional tag in the page's language). */
-export const captionLine = (album, lang = 'pt') => album.kind === 'real' ? `${album.a} · ${album.y}` : `${album.a} · ${t('c.fictional', lang)}`
+/** The line under the title in the caption: the year, or "fictional album" (in the page's language); the artist is not shown (UAT-290). */
+export const captionLine = (album, lang = 'pt') => album.kind === 'real' ? `${album.y}` : t('c.fictional', lang)
 
 /** The caption of the stage, written for the front record (the page changes it as the record plays). Its texts are filled from copy.js by the build. */
 export function captionHtml(setName) {

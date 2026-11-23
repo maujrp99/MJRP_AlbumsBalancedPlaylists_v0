@@ -2,6 +2,22 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:31] step — Página de entrada (F80): a legenda da caixa mostra o álbum e o ano, sem o artista (UAT-290)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Resposta do MJRP (2026-11-23) a «A legenda da caixa, no topo, também deve mostrar só o nome do álbum?»: «1. album e ano somente». Issue UAT-290.
+
+**O que mudou.** A linha sob o nome do álbum era «artista · ano»; agora é só o ano («1967»). A linha «Capa do Apple Music» e o botão não mudaram; o nome acessível do botão segue «Ouça no Apple Music: álbum, artista (abre numa nova aba)». No conjunto de capas fictícias a linha passa a ser só «álbum fictício». A mesma legenda serve o celular e o computador, então mudou nos dois: **decidido pelo orquestrador, revisável**.
+
+**Forma escolhida pelo agente (revisável).** As três linhas de antes, na mesma ordem e nos mesmos estilos: o nome em destaque, o ano embaixo, a linha da capa. Nenhuma regra de CSS mudou; só a cena da caixa não foi tocada.
+
+**Altura.** No computador (1280) a legenda segue com 76,5 px em toda parte da página e com cada um dos 15 álbuns; a página não mudou de altura nem de lugar. No celular a legenda ENCOLHE 36 px (em português de 151 para 115 px, em inglês de 167 para 131 px, a 390 e a 375 px), porque a linha do artista do Velvet quebrava em três e agora é uma; tudo abaixo dela sobe 36 px e a página fica 36 px mais curta. Não segurei a altura antiga com espaço vazio.
+
+**Prova.** Teste primeiro: 6 testes da página de entrada falham no código da `main` (`red-on-main.txt`); no ramo, `npx vitest run test/splash` pela fila da máquina: 12 arquivos, 150 testes passando. A suíte inteira não foi rodada (roda na publicação). No site MONTADO, WebKit a 390 e a 375 px e Chromium a 1280, português e inglês, `main` contra o ramo: 74 conferências passam, 0 falham; nenhum texto fora da legenda nem sobre o botão, com os 15 álbuns (no computador pelas sete partes da página; os 15 nomes, nos dois, escritos na legenda como a página escreve: ensaio do desenho, não a rolagem). `npm run budget:publication`: saída 0. Nada foi clicado; os endereços de música abortados na rede.
+
+**Não conferido.** Num iPhone de verdade; a caixa em 3D e a animação (outro agente trabalha nelas em `fix/f80-crate-animation-break`).
+
 ## [2026-11-23 15:24] step — CORREÇÃO: a publicação do site NÃO aconteceu; a entrada anterior está errada
 
 **Branch:** main

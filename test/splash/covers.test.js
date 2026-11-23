@@ -101,12 +101,12 @@ describe('what the page receives', () => {
 
     it('the caption names the front record: real with the credit and the link, fictional with the tag', () => {
         const real = captionHtml('real')
-        expect(real).toContain('<b>The Velvet Underground &amp; Nico</b>The Velvet Underground &amp; Nico · 1967')
+        expect(real).toContain('<b>The Velvet Underground &amp; Nico</b>1967<')
         expect(real).toContain('data-i18n="c.src"')
         expect(real).toContain('href="https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"')
         expect(real).toContain('data-i18n="c.listen"')
         const fictional = captionHtml('fictional')
-        expect(fictional).toContain('<b>Copper Year</b>North Atlas · álbum fictício')
+        expect(fictional).toContain('<b>Copper Year</b>álbum fictício<')
         expect(fictional).toContain('data-i18n="c.src.fict"')
         expect(fictional).not.toContain('Apple Music')
     })

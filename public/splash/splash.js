@@ -99,8 +99,8 @@ export const albumOf = (img) => ({
     t: img.dataset.t || '', a: img.dataset.a || '', y: img.dataset.y || '', href: img.dataset.href || ''
 })
 
-/** "Artist · Year", or "Artist · fictional album" (in the page's language). */
-export const captionLine = (album, lang = 'pt') => (album.y ? `${album.a} · ${album.y}` : `${album.a} · ${t('c.fictional', lang)}`)
+/** The line under the title in the caption: the year, or "fictional album" (in the page's language). */
+export const captionLine = (album, lang = 'pt') => (album.y ? `${album.y}` : t('c.fictional', lang)) // UAT-290: the album's name and the year, no artist (the button's name still says the artist)
 
 function hasWebGL(D) {
     try {

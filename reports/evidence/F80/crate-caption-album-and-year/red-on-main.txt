@@ -1,0 +1,8 @@
+ FAIL  test/splash/covers.test.js > what the page receives > the caption names the front record: real with the credit and the link, fictional with the tag
+ FAIL  test/splash/splash.test.js > the record playing > the caption names the pulled record, or the one in front
+ FAIL  test/splash/splash.test.js > the page wired > marks the page as scripted, builds the bar and starts on the opening, side A
+ FAIL  test/splash/splash.test.js > the page wired > the crate's caption says the album and the year, not the artist; its button still names the artist (UAT-290)
+ FAIL  test/splash/splash.test.js > the language and the account, wired (UAT-240, UAT-241) > the caption and the pause label follow the language
+ FAIL  test/splash/splash.test.js > the language and the account, wired (UAT-240, UAT-241) > the caption of the front record follows the language, on the phone too
+ Test Files  2 failed (2)
+      Tests  6 failed | 36 passed (42)

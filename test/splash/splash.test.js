@@ -53,9 +53,10 @@ describe('the record playing', () => {
         expect(captionIndex('start', 15)).toBe(2)
         expect(captionIndex('playlists', 15)).toBe(11)
         expect(captionIndex('end', 15)).toBe(14)
-        expect(captionLine({ a: 'Nas', y: '1994' })).toBe('Nas · 1994')
-        expect(captionLine({ a: 'North Atlas', y: '' })).toBe('North Atlas · álbum fictício')
-        expect(captionLine({ a: 'North Atlas', y: '' }, 'en')).toBe('North Atlas · fictional album')
+        // UAT-290: the caption says the album and the year, without the artist
+        expect(captionLine({ a: 'Nas', y: '1994' })).toBe('1994')
+        expect(captionLine({ a: 'North Atlas', y: '' })).toBe('álbum fictício')
+        expect(captionLine({ a: 'North Atlas', y: '' }, 'en')).toBe('fictional album')
     })
 })
 
@@ -153,7 +154,7 @@ describe('the page wired', () => {
         expect(document.documentElement.classList.contains('js')).toBe(true)
         expect(document.querySelectorAll('#eqbar i').length).toBeGreaterThanOrEqual(30)
         expect(page.state.track).toBe('a1')
-        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · álbum fictício')
+        expect(document.getElementById('who').textContent).toBe('Copper Yearálbum fictício')
         expect(document.querySelectorAll('#box .sl.vis')).toHaveLength(7)
         expect(document.documentElement.lang).not.toBe('en')
     })
@@ -222,6 +223,16 @@ describe('the page wired', () => {
         expect(a.textContent).toContain(COPY.en['c.listen'])
         expect(a.getAttribute('aria-label')).toBe(`${COPY.en['c.listen']}: Dummy, Portishead${COPY.en['c.newtab']}`)
         expect(a.closest('.slot-am').querySelector('.slot-who').textContent).toBe('Dummy')
+    })
+
+    it('the crate\'s caption says the album and the year, not the artist; its button still names the artist (UAT-290)', () => {
+        loadPage('real')
+        startSplash(fakeWindow())
+        const who = document.getElementById('who')
+        expect(who.querySelector('b').textContent).toBe('The Velvet Underground & Nico')
+        expect(who.textContent).toBe('The Velvet Underground & Nico1967')
+        expect(document.getElementById('am').getAttribute('aria-label')).toBe(`${COPY.pt['c.listen']}: The Velvet Underground & Nico, The Velvet Underground & Nico${COPY.pt['c.newtab']}`)
+        expect(document.querySelector('.caption .src').textContent).toBe(COPY.pt['c.src'])
     })
 
     it('the page has one rule of the button (.am) and the phone record\'s credit reuses it (UAT-285)', () => {
@@ -299,15 +310,15 @@ describe('the language and the account, wired (UAT-240, UAT-241)', () => {
 
     it('the caption and the pause label follow the language', () => {
         startSplash(fakeWindow({ store: englishStore() }))
-        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · fictional album')
+        expect(document.getElementById('who').textContent).toBe('Copper Yearfictional album')
         expect(document.getElementById('motion').getAttribute('aria-label')).toBe(COPY.en.pause)
     })
 
     it('the caption of the front record follows the language, on the phone too', () => {
         startSplash(fakeWindow({ phone: true, store: englishStore() }))
-        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · fictional album')
+        expect(document.getElementById('who').textContent).toBe('Copper Yearfictional album')
         document.querySelector('[data-lang="pt"]').click()
-        expect(document.getElementById('who').textContent).toBe('Copper YearNorth Atlas · álbum fictício')
+        expect(document.getElementById('who').textContent).toBe('Copper Yearálbum fictício')
     })
 
     it('signed out (the default) the menu scrolls to the stories', async () => {
