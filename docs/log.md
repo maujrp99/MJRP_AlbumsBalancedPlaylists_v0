@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:28] step — F82 (juiz, P2-6): a guarda de /admin tem prazo de 3 s e diz «não deu para conferir agora»
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-6 do juiz: a guarda de `/admin` não tinha prazo; com o banco lento, «não encontrado» levou 8,4 s. A leitura do registro do administrador agora tem o prazo do leitor do site, 3 segundos (`ADMIN_CHECK_DEADLINE_MS`), e três respostas em vez de duas: administrador; não é (convidado, sem registro, outro papel, leitura recusada pelas regras: «Page not found»); e **não deu para conferir** (o banco não respondeu ou passou do prazo), que mostra uma tela em palavras comuns, «Could not check right now» / «Não deu para conferir agora», com «Try again», em vez de uma página em branco comprida ou de um «não encontrado» errado para o próprio administrador. Em nenhum dos dois «não» o arquivo do Painel é pedido; só a resposta exata «administrador» o abre.
+
+Teste primeiro (`test/services/content/adminAccess.test.js`: o prazo com relógio de mentira, as três respostas, a guarda que só abre com «administrador»; `test/screens/admin/gate.test.tsx`: a tela nova): nove reprovaram, depois passaram. Português proposto pelo agente: `notices.router.checkTitle`, `notices.router.checkBody`.
+
 ## [2026-11-23 15:24] step — F82 (juiz, P2-5): o Painel diz «lendo» e «não foi possível ler» da leitura do site
 
 **Branch:** claude/f82-cms-texts-panel

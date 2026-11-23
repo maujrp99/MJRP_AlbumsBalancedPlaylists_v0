@@ -16,6 +16,8 @@ export const notices = {
     'notices.router.notFoundTitle': 'Page not found',
     'notices.router.notFoundBody': 'There is nothing at this address.',
     'notices.router.notFoundBack': 'Go to Create',
+    'notices.router.checkTitle': 'Could not check right now',
+    'notices.router.checkBody': 'The site could not confirm in time whether this page is for you. Try again in a moment.',
 
     'notices.blend.cancelled': 'The blend was cancelled',
     'notices.blend.generating': 'Generating playlists with {recipe}...',
