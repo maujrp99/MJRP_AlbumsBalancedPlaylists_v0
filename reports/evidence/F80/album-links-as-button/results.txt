@@ -1,0 +1,278 @@
+PASS  iphone14-webkit-390-pt-main: no console error
+PASS  iphone14-webkit-390-pt-main: no horizontal scroll
+      scrollWidth 390, window 390
+PASS  iphone14-webkit-390-pt-main: the page is in pt
+      pt-BR
+PASS  iphone14-webkit-390-pt-branch: no console error
+PASS  iphone14-webkit-390-pt-branch: no horizontal scroll
+      scrollWidth 390, window 390
+PASS  iphone14-webkit-390-pt-branch: the page is in pt
+      pt-BR
+PASS  iphone14-webkit-390-pt-branch: 6 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      start:am, albums:am, blend:am, playlists:am, inventory:am, caption:am
+PASS  iphone14-webkit-390-pt-branch: every button has the caption's size, border, radius, type and icon
+      start 199.8x44, albums 199.8x44, blend 199.8x44, playlists 199.8x44, inventory 199.8x44, caption 199.8x44
+PASS  iphone14-webkit-390-pt-branch: touch target at least 44 px
+      199.8x44, 199.8x44, 199.8x44, 199.8x44, 199.8x44, 199.8x44
+PASS  iphone14-webkit-390-pt-branch: the name of each button says the album, in pt
+      Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: Dummy, Portishead (abre numa nova aba) | Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba) | Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)
+PASS  iphone14-webkit-390-pt-branch: album and artist are text beside the button, not inside it
+      The Dark Side of the Moon · Pink Floyd | The Velvet Underground & Nico · The Velvet Underground & Nico | Dummy · Portishead | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek | The Velvet Underground & Nico The Velvet Underground & Nico · 1967
+PASS  iphone14-webkit-390-pt-branch: no album or artist is cut
+PASS  iphone14-webkit-390-pt-branch: each credit ends before the story's text begins
+      start: credit ends 1146, text starts 1146; albums: credit ends 1651, text starts 1651; blend: credit ends 2473, text starts 2473; playlists: credit ends 3069, text starts 3069; inventory: credit ends 3598, text starts 3598
+PASS  iphone14-webkit-390-en-main: no console error
+PASS  iphone14-webkit-390-en-main: no horizontal scroll
+      scrollWidth 390, window 390
+PASS  iphone14-webkit-390-en-main: the page is in en
+      en
+PASS  iphone14-webkit-390-en-branch: no console error
+PASS  iphone14-webkit-390-en-branch: no horizontal scroll
+      scrollWidth 390, window 390
+PASS  iphone14-webkit-390-en-branch: the page is in en
+      en
+PASS  iphone14-webkit-390-en-branch: 6 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      start:am, albums:am, blend:am, playlists:am, inventory:am, caption:am
+PASS  iphone14-webkit-390-en-branch: every button has the caption's size, border, radius, type and icon
+      start 205.9x44, albums 205.9x44, blend 205.9x44, playlists 205.9x44, inventory 205.9x44, caption 205.9x44
+PASS  iphone14-webkit-390-en-branch: touch target at least 44 px
+      205.9x44, 205.9x44, 205.9x44, 205.9x44, 205.9x44, 205.9x44
+PASS  iphone14-webkit-390-en-branch: the name of each button says the album, in en
+      Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: Dummy, Portishead (opens in a new tab) | Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab) | Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)
+PASS  iphone14-webkit-390-en-branch: album and artist are text beside the button, not inside it
+      The Dark Side of the Moon · Pink Floyd | The Velvet Underground & Nico · The Velvet Underground & Nico | Dummy · Portishead | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek | The Velvet Underground & Nico The Velvet Underground & Nico · 1967
+PASS  iphone14-webkit-390-en-branch: no album or artist is cut
+PASS  iphone14-webkit-390-en-branch: each credit ends before the story's text begins
+      start: credit ends 1125, text starts 1125; albums: credit ends 1599, text starts 1599; blend: credit ends 2421, text starts 2421; playlists: credit ends 2993, text starts 2993; inventory: credit ends 3498, text starts 3498
+PASS  webkit-393-pt-branch: no console error
+PASS  webkit-393-pt-branch: no horizontal scroll
+      scrollWidth 393, window 393
+PASS  webkit-393-pt-branch: the page is in pt
+      pt-BR
+PASS  webkit-393-pt-branch: 6 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      start:am, albums:am, blend:am, playlists:am, inventory:am, caption:am
+PASS  webkit-393-pt-branch: every button has the caption's size, border, radius, type and icon
+      start 199.8x44, albums 199.8x44, blend 199.8x44, playlists 199.8x44, inventory 199.8x44, caption 199.8x44
+PASS  webkit-393-pt-branch: touch target at least 44 px
+      199.8x44, 199.8x44, 199.8x44, 199.8x44, 199.8x44, 199.8x44
+PASS  webkit-393-pt-branch: the name of each button says the album, in pt
+      Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: Dummy, Portishead (abre numa nova aba) | Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba) | Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)
+PASS  webkit-393-pt-branch: album and artist are text beside the button, not inside it
+      The Dark Side of the Moon · Pink Floyd | The Velvet Underground & Nico · The Velvet Underground & Nico | Dummy · Portishead | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek | The Velvet Underground & Nico The Velvet Underground & Nico · 1967
+PASS  webkit-393-pt-branch: no album or artist is cut
+PASS  webkit-393-pt-branch: each credit ends before the story's text begins
+      start: credit ends 1146, text starts 1146; albums: credit ends 1651, text starts 1651; blend: credit ends 2473, text starts 2473; playlists: credit ends 3069, text starts 3069; inventory: credit ends 3598, text starts 3598
+PASS  webkit-393-en-branch: no console error
+PASS  webkit-393-en-branch: no horizontal scroll
+      scrollWidth 393, window 393
+PASS  webkit-393-en-branch: the page is in en
+      en
+PASS  webkit-393-en-branch: 6 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      start:am, albums:am, blend:am, playlists:am, inventory:am, caption:am
+PASS  webkit-393-en-branch: every button has the caption's size, border, radius, type and icon
+      start 205.9x44, albums 205.9x44, blend 205.9x44, playlists 205.9x44, inventory 205.9x44, caption 205.9x44
+PASS  webkit-393-en-branch: touch target at least 44 px
+      205.9x44, 205.9x44, 205.9x44, 205.9x44, 205.9x44, 205.9x44
+PASS  webkit-393-en-branch: the name of each button says the album, in en
+      Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: Dummy, Portishead (opens in a new tab) | Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab) | Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)
+PASS  webkit-393-en-branch: album and artist are text beside the button, not inside it
+      The Dark Side of the Moon · Pink Floyd | The Velvet Underground & Nico · The Velvet Underground & Nico | Dummy · Portishead | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek | The Velvet Underground & Nico The Velvet Underground & Nico · 1967
+PASS  webkit-393-en-branch: no album or artist is cut
+PASS  webkit-393-en-branch: each credit ends before the story's text begins
+      start: credit ends 1125, text starts 1125; albums: credit ends 1599, text starts 1599; blend: credit ends 2421, text starts 2421; playlists: credit ends 2993, text starts 2993; inventory: credit ends 3498, text starts 3498
+PASS  webkit-375-pt-main: no console error
+PASS  webkit-375-pt-main: no horizontal scroll
+      scrollWidth 375, window 375
+PASS  webkit-375-pt-main: the page is in pt
+      pt-BR
+PASS  webkit-375-pt-branch: no console error
+PASS  webkit-375-pt-branch: no horizontal scroll
+      scrollWidth 375, window 375
+PASS  webkit-375-pt-branch: the page is in pt
+      pt-BR
+PASS  webkit-375-pt-branch: 6 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      start:am, albums:am, blend:am, playlists:am, inventory:am, caption:am
+PASS  webkit-375-pt-branch: every button has the caption's size, border, radius, type and icon
+      start 199.8x44, albums 199.8x44, blend 199.8x44, playlists 199.8x44, inventory 199.8x44, caption 199.8x44
+PASS  webkit-375-pt-branch: touch target at least 44 px
+      199.8x44, 199.8x44, 199.8x44, 199.8x44, 199.8x44, 199.8x44
+PASS  webkit-375-pt-branch: the name of each button says the album, in pt
+      Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: Dummy, Portishead (abre numa nova aba) | Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba) | Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)
+PASS  webkit-375-pt-branch: album and artist are text beside the button, not inside it
+      The Dark Side of the Moon · Pink Floyd | The Velvet Underground & Nico · The Velvet Underground & Nico | Dummy · Portishead | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek | The Velvet Underground & Nico The Velvet Underground & Nico · 1967
+PASS  webkit-375-pt-branch: no album or artist is cut
+PASS  webkit-375-pt-branch: each credit ends before the story's text begins
+      start: credit ends 1146, text starts 1146; albums: credit ends 1651, text starts 1651; blend: credit ends 2488, text starts 2488; playlists: credit ends 3084, text starts 3084; inventory: credit ends 3613, text starts 3613
+PASS  webkit-375-en-main: no console error
+PASS  webkit-375-en-main: no horizontal scroll
+      scrollWidth 375, window 375
+PASS  webkit-375-en-main: the page is in en
+      en
+PASS  webkit-375-en-branch: no console error
+PASS  webkit-375-en-branch: no horizontal scroll
+      scrollWidth 375, window 375
+PASS  webkit-375-en-branch: the page is in en
+      en
+PASS  webkit-375-en-branch: 6 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      start:am, albums:am, blend:am, playlists:am, inventory:am, caption:am
+PASS  webkit-375-en-branch: every button has the caption's size, border, radius, type and icon
+      start 205.9x44, albums 205.9x44, blend 205.9x44, playlists 205.9x44, inventory 205.9x44, caption 205.9x44
+PASS  webkit-375-en-branch: touch target at least 44 px
+      205.9x44, 205.9x44, 205.9x44, 205.9x44, 205.9x44, 205.9x44
+PASS  webkit-375-en-branch: the name of each button says the album, in en
+      Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: Dummy, Portishead (opens in a new tab) | Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab) | Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)
+PASS  webkit-375-en-branch: album and artist are text beside the button, not inside it
+      The Dark Side of the Moon · Pink Floyd | The Velvet Underground & Nico · The Velvet Underground & Nico | Dummy · Portishead | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek | The Velvet Underground & Nico The Velvet Underground & Nico · 1967
+PASS  webkit-375-en-branch: no album or artist is cut
+PASS  webkit-375-en-branch: each credit ends before the story's text begins
+      start: credit ends 1125, text starts 1125; albums: credit ends 1599, text starts 1599; blend: credit ends 2436, text starts 2436; playlists: credit ends 3039, text starts 3039; inventory: credit ends 3568, text starts 3568
+PASS  webkit-320-pt-main: no console error
+KNOWN  webkit-320-pt-main: no horizontal scroll
+      scrollWidth 346, window 320 (the same on main: it was there before this change)
+PASS  webkit-320-pt-main: the page is in pt
+      pt-BR
+PASS  webkit-320-pt-branch: no console error
+KNOWN  webkit-320-pt-branch: no horizontal scroll
+      scrollWidth 346, window 320 (the same on main: it was there before this change)
+PASS  webkit-320-pt-branch: the page is in pt
+      pt-BR
+PASS  webkit-320-pt-branch: 6 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      start:am, albums:am, blend:am, playlists:am, inventory:am, caption:am
+PASS  webkit-320-pt-branch: every button has the caption's size, border, radius, type and icon
+      start 199.8x44, albums 199.8x44, blend 199.8x44, playlists 199.8x44, inventory 199.8x44, caption 199.8x44
+PASS  webkit-320-pt-branch: touch target at least 44 px
+      199.8x44, 199.8x44, 199.8x44, 199.8x44, 199.8x44, 199.8x44
+PASS  webkit-320-pt-branch: the name of each button says the album, in pt
+      Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: Dummy, Portishead (abre numa nova aba) | Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba) | Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)
+PASS  webkit-320-pt-branch: album and artist are text beside the button, not inside it
+      The Dark Side of the Moon · Pink Floyd | The Velvet Underground & Nico · The Velvet Underground & Nico | Dummy · Portishead | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek | The Velvet Underground & Nico The Velvet Underground & Nico · 1967
+KNOWN  webkit-320-pt-branch: no album or artist is cut
+      The Velvet Underground & Nico · The Velvet Underground & Nico | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek (ends in an ellipsis; the whole name is in the button's accessible name)
+PASS  webkit-320-pt-branch: each credit ends before the story's text begins
+      start: credit ends 1237, text starts 1237; albums: credit ends 1742, text starts 1742; blend: credit ends 2603, text starts 2603; playlists: credit ends 3199, text starts 3199; inventory: credit ends 3728, text starts 3728
+PASS  webkit-320-en-main: no console error
+KNOWN  webkit-320-en-main: no horizontal scroll
+      scrollWidth 347, window 320 (the same on main: it was there before this change)
+PASS  webkit-320-en-main: the page is in en
+      en
+PASS  webkit-320-en-branch: no console error
+KNOWN  webkit-320-en-branch: no horizontal scroll
+      scrollWidth 347, window 320 (the same on main: it was there before this change)
+PASS  webkit-320-en-branch: the page is in en
+      en
+PASS  webkit-320-en-branch: 6 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      start:am, albums:am, blend:am, playlists:am, inventory:am, caption:am
+PASS  webkit-320-en-branch: every button has the caption's size, border, radius, type and icon
+      start 205.9x44, albums 205.9x44, blend 205.9x44, playlists 205.9x44, inventory 205.9x44, caption 205.9x44
+PASS  webkit-320-en-branch: touch target at least 44 px
+      205.9x44, 205.9x44, 205.9x44, 205.9x44, 205.9x44, 205.9x44
+PASS  webkit-320-en-branch: the name of each button says the album, in en
+      Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: Dummy, Portishead (opens in a new tab) | Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab) | Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)
+PASS  webkit-320-en-branch: album and artist are text beside the button, not inside it
+      The Dark Side of the Moon · Pink Floyd | The Velvet Underground & Nico · The Velvet Underground & Nico | Dummy · Portishead | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek | The Velvet Underground & Nico The Velvet Underground & Nico · 1967
+KNOWN  webkit-320-en-branch: no album or artist is cut
+      The Velvet Underground & Nico · The Velvet Underground & Nico | In the Aeroplane Over the Sea · Neutral Milk Hotel | Desire, I Want to Turn Into You · Caroline Polachek (ends in an ellipsis; the whole name is in the button's accessible name)
+PASS  webkit-320-en-branch: each credit ends before the story's text begins
+      start: credit ends 1276, text starts 1276; albums: credit ends 1781, text starts 1781; blend: credit ends 2642, text starts 2642; playlists: credit ends 3269, text starts 3269; inventory: credit ends 3798, text starts 3798
+PASS  chromium-1280-pt-main: no console error
+PASS  chromium-1280-pt-main: no horizontal scroll
+      scrollWidth 1280, window 1280
+PASS  chromium-1280-pt-main: the page is in pt
+      pt-BR
+PASS  chromium-1280-pt-branch: no console error
+PASS  chromium-1280-pt-branch: no horizontal scroll
+      scrollWidth 1280, window 1280
+PASS  chromium-1280-pt-branch: the page is in pt
+      pt-BR
+PASS  chromium-1280-pt-branch: 1 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      caption:am
+PASS  chromium-1280-pt-branch: every button has the caption's size, border, radius, type and icon
+      caption 199.8x44
+PASS  chromium-1280-pt-branch: touch target at least 44 px
+      199.8x44
+PASS  chromium-1280-pt-branch: the name of each button says the album, in pt
+      Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)
+PASS  chromium-1280-en-main: no console error
+PASS  chromium-1280-en-main: no horizontal scroll
+      scrollWidth 1280, window 1280
+PASS  chromium-1280-en-main: the page is in en
+      en
+PASS  chromium-1280-en-branch: no console error
+PASS  chromium-1280-en-branch: no horizontal scroll
+      scrollWidth 1280, window 1280
+PASS  chromium-1280-en-branch: the page is in en
+      en
+PASS  chromium-1280-en-branch: 1 album link(s) in sight, every one the button (class am, icon, border, no underline)
+      caption:am
+PASS  chromium-1280-en-branch: every button has the caption's size, border, radius, type and icon
+      caption 205.9x44
+PASS  chromium-1280-en-branch: touch target at least 44 px
+      205.9x44
+PASS  chromium-1280-en-branch: the name of each button says the album, in en
+      Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)
+PASS  iphone14-webkit-390-pt: the same records, in the same order, before and after
+      15 records, 6 link(s)
+PASS  iphone14-webkit-390-pt: nothing moved: the page has the same height and every part the same place and size
+      height 4635 -> 4635
+PASS  iphone14-webkit-390-pt: the page is not wider than on main
+      main 390, branch 390
+PASS  iphone14-webkit-390-pt: layout shift of the branch not above main's
+      main 0, branch 0
+PASS  iphone14-webkit-390-en: the same records, in the same order, before and after
+      15 records, 6 link(s)
+PASS  iphone14-webkit-390-en: nothing moved: the page has the same height and every part the same place and size
+      height 4504 -> 4504
+PASS  iphone14-webkit-390-en: the page is not wider than on main
+      main 390, branch 390
+PASS  iphone14-webkit-390-en: layout shift of the branch not above main's
+      main 0, branch 0
+PASS  webkit-375-pt: the same records, in the same order, before and after
+      15 records, 6 link(s)
+PASS  webkit-375-pt: nothing moved: the page has the same height and every part the same place and size
+      height 4674 -> 4674
+PASS  webkit-375-pt: the page is not wider than on main
+      main 375, branch 375
+PASS  webkit-375-pt: layout shift of the branch not above main's
+      main 0, branch 0
+PASS  webkit-375-en: the same records, in the same order, before and after
+      15 records, 6 link(s)
+PASS  webkit-375-en: nothing moved: the page has the same height and every part the same place and size
+      height 4605 -> 4605
+PASS  webkit-375-en: the page is not wider than on main
+      main 375, branch 375
+PASS  webkit-375-en: layout shift of the branch not above main's
+      main 0, branch 0
+PASS  webkit-320-pt: the same records, in the same order, before and after
+      15 records, 6 link(s)
+PASS  webkit-320-pt: nothing moved: the page has the same height and every part the same place and size
+      height 4933 -> 4933
+PASS  webkit-320-pt: the page is not wider than on main
+      main 346, branch 346
+PASS  webkit-320-pt: layout shift of the branch not above main's
+      main 0, branch 0
+PASS  webkit-320-en: the same records, in the same order, before and after
+      15 records, 6 link(s)
+PASS  webkit-320-en: nothing moved: the page has the same height and every part the same place and size
+      height 4948 -> 4948
+PASS  webkit-320-en: the page is not wider than on main
+      main 347, branch 347
+PASS  webkit-320-en: layout shift of the branch not above main's
+      main 0, branch 0
+PASS  chromium-1280-pt: the same records, in the same order, before and after
+      15 records, 1 link(s)
+PASS  chromium-1280-pt: nothing moved: the page has the same height and every part the same place and size
+      height 4578 -> 4578
+PASS  chromium-1280-pt: the page is not wider than on main
+      main 1280, branch 1280
+PASS  chromium-1280-pt: layout shift of the branch not above main's
+      main 0.010967716741561889, branch 0.010967716741561889
+PASS  chromium-1280-en: the same records, in the same order, before and after
+      15 records, 1 link(s)
+PASS  chromium-1280-en: nothing moved: the page has the same height and every part the same place and size
+      height 4543 -> 4543
+PASS  chromium-1280-en: the page is not wider than on main
+      main 1280, branch 1280
+PASS  chromium-1280-en: layout shift of the branch not above main's
+      main 0.015132762444019317, branch 0.015132762444019317
+
+144 passed, 0 failed, 6 known limit(s) at 320 px; servers closed

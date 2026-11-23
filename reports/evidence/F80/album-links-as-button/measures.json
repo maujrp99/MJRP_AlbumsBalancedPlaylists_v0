@@ -1,0 +1,6616 @@
+{
+ "iphone14-webkit-390-pt-main": {
+  "lang": "pt-BR",
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4635,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 877,
+    "w": 358,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1382,
+    "w": 358,
+    "h": 822
+   },
+   "blend": {
+    "x": 16,
+    "y": 2204,
+    "w": 358,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2733,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2800,
+    "w": 358,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3329,
+    "w": 358,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3889,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "The Dark Side of the Moon · Pink Floyd — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1086,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "albums",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "The Velvet Underground & Nico · The Velvet Underground & Nico — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1591,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "blend",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "Dummy · Portishead — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 2413,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 2413,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3009,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3009,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "Desire, I Want to Turn Into You · Caroline Polachek — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3538,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3538,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 174.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 189.2,
+      "y": 790,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 914,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd — Ouça no Apple Music",
+    "nextTop": 1146
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1419,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico — Ouça no Apple Music",
+    "nextTop": 1651
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2241,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2413,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "Dummy · Portishead — Ouça no Apple Music",
+    "nextTop": 2473
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2837,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3009,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Ouça no Apple Music",
+    "nextTop": 3069
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3366,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3538,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek — Ouça no Apple Music",
+    "nextTop": 3598
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "iphone14-webkit-390-pt-branch": {
+  "lang": "pt-BR",
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4635,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 877,
+    "w": 358,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1382,
+    "w": 358,
+    "h": 822
+   },
+   "blend": {
+    "x": 16,
+    "y": 2204,
+    "w": 358,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2733,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2800,
+    "w": 358,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3329,
+    "w": 358,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3889,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 174.2,
+     "y": 1094,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 189.2,
+      "y": 1106,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Dark Side of the Moon · Pink Floyd",
+     "box": {
+      "x": 16,
+      "y": 1101,
+      "w": 146.2,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "albums",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 174.2,
+     "y": 1599,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 189.2,
+      "y": 1611,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico · The Velvet Underground & Nico",
+     "box": {
+      "x": 16,
+      "y": 1598.5,
+      "w": 146.2,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "blend",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 174.2,
+     "y": 2421,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 189.2,
+      "y": 2433,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Dummy · Portishead",
+     "box": {
+      "x": 16,
+      "y": 2435.5,
+      "w": 113.9,
+      "h": 15
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2413,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 174.2,
+     "y": 3017,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 189.2,
+      "y": 3029,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+     "box": {
+      "x": 16,
+      "y": 3024,
+      "w": 146.2,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3009,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 174.2,
+     "y": 3546,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 189.2,
+      "y": 3558,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Desire, I Want to Turn Into You · Caroline Polachek",
+     "box": {
+      "x": 16,
+      "y": 3545.5,
+      "w": 146.2,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3538,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 174.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 189.2,
+      "y": 790,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 914,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 1146
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1419,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 1651
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2241,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2413,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "Dummy · Portishead ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 2473
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2837,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3009,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3069
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3366,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3538,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3598
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "iphone14-webkit-390-en-main": {
+  "lang": "en",
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4504,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 856,
+    "w": 358,
+    "h": 474
+   },
+   "albums": {
+    "x": 16,
+    "y": 1330,
+    "w": 358,
+    "h": 822
+   },
+   "blend": {
+    "x": 16,
+    "y": 2152,
+    "w": 358,
+    "h": 505
+   },
+   "flip": {
+    "x": 16,
+    "y": 2657,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2724,
+    "w": 358,
+    "h": 505
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3229,
+    "w": 358,
+    "h": 529
+   },
+   "end": {
+    "x": 16,
+    "y": 3758,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "The Dark Side of the Moon · Pink Floyd — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1065,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "albums",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "The Velvet Underground & Nico · The Velvet Underground & Nico — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1539,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "blend",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "Dummy · Portishead — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 2361,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 2361,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 2933,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 2933,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "Desire, I Want to Turn Into You · Caroline Polachek — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3438,
+     "w": 358,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3438,
+     "w": 358,
+     "h": 44
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 168.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 183.1,
+      "y": 761,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 893,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd — Listen on Apple Music",
+    "nextTop": 1125
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1367,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico — Listen on Apple Music",
+    "nextTop": 1599
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2189,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2361,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "Dummy · Portishead — Listen on Apple Music",
+    "nextTop": 2421
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2761,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2933,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music",
+    "nextTop": 2993
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3266,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3438,
+     "w": 358,
+     "h": 44
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek — Listen on Apple Music",
+    "nextTop": 3498
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "iphone14-webkit-390-en-branch": {
+  "lang": "en",
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4504,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 856,
+    "w": 358,
+    "h": 474
+   },
+   "albums": {
+    "x": 16,
+    "y": 1330,
+    "w": 358,
+    "h": 822
+   },
+   "blend": {
+    "x": 16,
+    "y": 2152,
+    "w": 358,
+    "h": 505
+   },
+   "flip": {
+    "x": 16,
+    "y": 2657,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2724,
+    "w": 358,
+    "h": 505
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3229,
+    "w": 358,
+    "h": 529
+   },
+   "end": {
+    "x": 16,
+    "y": 3758,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 168.1,
+     "y": 1073,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 183.1,
+      "y": 1085,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Dark Side of the Moon · Pink Floyd",
+     "box": {
+      "x": 16,
+      "y": 1080,
+      "w": 140.1,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "albums",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 168.1,
+     "y": 1547,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 183.1,
+      "y": 1559,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico · The Velvet Underground & Nico",
+     "box": {
+      "x": 16,
+      "y": 1546.5,
+      "w": 140.1,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "blend",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 168.1,
+     "y": 2369,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 183.1,
+      "y": 2381,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Dummy · Portishead",
+     "box": {
+      "x": 16,
+      "y": 2383.5,
+      "w": 113.9,
+      "h": 15
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2361,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 168.1,
+     "y": 2941,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 183.1,
+      "y": 2953,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+     "box": {
+      "x": 16,
+      "y": 2940.5,
+      "w": 140.1,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2933,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 168.1,
+     "y": 3446,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 183.1,
+      "y": 3458,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Desire, I Want to Turn Into You · Caroline Polachek",
+     "box": {
+      "x": 16,
+      "y": 3445.5,
+      "w": 140.1,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3438,
+     "w": 358,
+     "h": 60
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 168.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 183.1,
+      "y": 761,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 893,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 1125
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1367,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 1599
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2189,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2361,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "Dummy · Portishead ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 2421
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2761,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2933,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 2993
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3266,
+     "w": 358,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3438,
+     "w": 358,
+     "h": 60
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 3498
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-393-pt-branch": {
+  "lang": "pt-BR",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "pageHeight": 4604,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 361,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 877,
+    "w": 361,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1382,
+    "w": 361,
+    "h": 822
+   },
+   "blend": {
+    "x": 16,
+    "y": 2204,
+    "w": 361,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2733,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2800,
+    "w": 361,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3329,
+    "w": 361,
+    "h": 529
+   },
+   "end": {
+    "x": 16,
+    "y": 3858,
+    "w": 361,
+    "h": 436
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 177.2,
+     "y": 1094,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 192.2,
+      "y": 1106,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Dark Side of the Moon · Pink Floyd",
+     "box": {
+      "x": 16,
+      "y": 1101,
+      "w": 149.2,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "albums",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 177.2,
+     "y": 1599,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 192.2,
+      "y": 1611,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico · The Velvet Underground & Nico",
+     "box": {
+      "x": 16,
+      "y": 1598.5,
+      "w": 149.2,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "blend",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 177.2,
+     "y": 2421,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 192.2,
+      "y": 2433,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Dummy · Portishead",
+     "box": {
+      "x": 16,
+      "y": 2435.5,
+      "w": 113.9,
+      "h": 15
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2413,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 177.2,
+     "y": 3017,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 192.2,
+      "y": 3029,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+     "box": {
+      "x": 16,
+      "y": 3024,
+      "w": 149.2,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3009,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 177.2,
+     "y": 3546,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 192.2,
+      "y": 3558,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Desire, I Want to Turn Into You · Caroline Polachek",
+     "box": {
+      "x": 16,
+      "y": 3553,
+      "w": 149.2,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3538,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 177.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 192.2,
+      "y": 790,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 914,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 1146
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1419,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 1651
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2241,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2413,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "Dummy · Portishead ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 2473
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2837,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3009,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3069
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3366,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3538,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3598
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-393-en-branch": {
+  "lang": "en",
+  "innerWidth": 393,
+  "scrollWidth": 393,
+  "pageHeight": 4504,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 361,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 856,
+    "w": 361,
+    "h": 474
+   },
+   "albums": {
+    "x": 16,
+    "y": 1330,
+    "w": 361,
+    "h": 822
+   },
+   "blend": {
+    "x": 16,
+    "y": 2152,
+    "w": 361,
+    "h": 505
+   },
+   "flip": {
+    "x": 16,
+    "y": 2657,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2724,
+    "w": 361,
+    "h": 505
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3229,
+    "w": 361,
+    "h": 529
+   },
+   "end": {
+    "x": 16,
+    "y": 3758,
+    "w": 361,
+    "h": 436
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 171.1,
+     "y": 1073,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 186.1,
+      "y": 1085,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Dark Side of the Moon · Pink Floyd",
+     "box": {
+      "x": 16,
+      "y": 1080,
+      "w": 143.1,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "albums",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 171.1,
+     "y": 1547,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 186.1,
+      "y": 1559,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico · The Velvet Underground & Nico",
+     "box": {
+      "x": 16,
+      "y": 1546.5,
+      "w": 143.1,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "blend",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 171.1,
+     "y": 2369,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 186.1,
+      "y": 2381,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Dummy · Portishead",
+     "box": {
+      "x": 16,
+      "y": 2383.5,
+      "w": 113.9,
+      "h": 15
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2361,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 171.1,
+     "y": 2941,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 186.1,
+      "y": 2953,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+     "box": {
+      "x": 16,
+      "y": 2940.5,
+      "w": 143.1,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2933,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 171.1,
+     "y": 3446,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 186.1,
+      "y": 3458,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Desire, I Want to Turn Into You · Caroline Polachek",
+     "box": {
+      "x": 16,
+      "y": 3445.5,
+      "w": 143.1,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3438,
+     "w": 361,
+     "h": 60
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 171.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 186.1,
+      "y": 761,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 893,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 1125
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1367,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 1599
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2189,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2361,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "Dummy · Portishead ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 2421
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2761,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2933,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 2993
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3266,
+     "w": 361,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3438,
+     "w": 361,
+     "h": 60
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 3498
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-375-pt-main": {
+  "lang": "pt-BR",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4674,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 877,
+    "w": 343,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1382,
+    "w": 343,
+    "h": 837
+   },
+   "blend": {
+    "x": 16,
+    "y": 2219,
+    "w": 343,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2748,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2815,
+    "w": 343,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3344,
+    "w": 343,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3904,
+    "w": 343,
+    "h": 460
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "The Dark Side of the Moon · Pink Floyd — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1086,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "albums",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "The Velvet Underground & Nico · The Velvet Underground & Nico — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1591,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "blend",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "Dummy · Portishead — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 2428,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 2428,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3024,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3024,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "Desire, I Want to Turn Into You · Caroline Polachek — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3553,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3553,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 159.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 174.2,
+      "y": 790,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 914,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd — Ouça no Apple Music",
+    "nextTop": 1146
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1419,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico — Ouça no Apple Music",
+    "nextTop": 1651
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2256,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2428,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "Dummy · Portishead — Ouça no Apple Music",
+    "nextTop": 2488
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2852,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3024,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Ouça no Apple Music",
+    "nextTop": 3084
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3381,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3553,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek — Ouça no Apple Music",
+    "nextTop": 3613
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-375-pt-branch": {
+  "lang": "pt-BR",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4674,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 877,
+    "w": 343,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1382,
+    "w": 343,
+    "h": 837
+   },
+   "blend": {
+    "x": 16,
+    "y": 2219,
+    "w": 343,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2748,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2815,
+    "w": 343,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3344,
+    "w": 343,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3904,
+    "w": 343,
+    "h": 460
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 159.2,
+     "y": 1094,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 174.2,
+      "y": 1106,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Dark Side of the Moon · Pink Floyd",
+     "box": {
+      "x": 16,
+      "y": 1101,
+      "w": 131.2,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "albums",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 159.2,
+     "y": 1599,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 174.2,
+      "y": 1611,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico · The Velvet Underground & Nico",
+     "box": {
+      "x": 16,
+      "y": 1591,
+      "w": 131.2,
+      "h": 60
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "blend",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 159.2,
+     "y": 2436,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 174.2,
+      "y": 2448,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Dummy · Portishead",
+     "box": {
+      "x": 16,
+      "y": 2450.5,
+      "w": 113.9,
+      "h": 15
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2428,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 159.2,
+     "y": 3032,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 174.2,
+      "y": 3044,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+     "box": {
+      "x": 16,
+      "y": 3031.5,
+      "w": 131.2,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3024,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 159.2,
+     "y": 3561,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 174.2,
+      "y": 3573,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Desire, I Want to Turn Into You · Caroline Polachek",
+     "box": {
+      "x": 16,
+      "y": 3560.5,
+      "w": 131.2,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3553,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 159.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 174.2,
+      "y": 790,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 914,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1086,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 1146
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1419,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1591,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 1651
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2256,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2428,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "Dummy · Portishead ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 2488
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2852,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3024,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3084
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3381,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3553,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3613
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-375-en-main": {
+  "lang": "en",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4605,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 856,
+    "w": 343,
+    "h": 474
+   },
+   "albums": {
+    "x": 16,
+    "y": 1330,
+    "w": 343,
+    "h": 837
+   },
+   "blend": {
+    "x": 16,
+    "y": 2167,
+    "w": 343,
+    "h": 536
+   },
+   "flip": {
+    "x": 16,
+    "y": 2703,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2770,
+    "w": 343,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3299,
+    "w": 343,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3859,
+    "w": 343,
+    "h": 436
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "The Dark Side of the Moon · Pink Floyd — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1065,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "albums",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "The Velvet Underground & Nico · The Velvet Underground & Nico — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1539,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "blend",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "Dummy · Portishead — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 2376,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 2376,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 2979,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 2979,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "Desire, I Want to Turn Into You · Caroline Polachek — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3508,
+     "w": 343,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3508,
+     "w": 343,
+     "h": 44
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 153.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 168.1,
+      "y": 761,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 893,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd — Listen on Apple Music",
+    "nextTop": 1125
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1367,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico — Listen on Apple Music",
+    "nextTop": 1599
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2204,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2376,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "Dummy · Portishead — Listen on Apple Music",
+    "nextTop": 2436
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2807,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2979,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music",
+    "nextTop": 3039
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3336,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3508,
+     "w": 343,
+     "h": 44
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek — Listen on Apple Music",
+    "nextTop": 3568
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-375-en-branch": {
+  "lang": "en",
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4605,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 856,
+    "w": 343,
+    "h": 474
+   },
+   "albums": {
+    "x": 16,
+    "y": 1330,
+    "w": 343,
+    "h": 837
+   },
+   "blend": {
+    "x": 16,
+    "y": 2167,
+    "w": 343,
+    "h": 536
+   },
+   "flip": {
+    "x": 16,
+    "y": 2703,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2770,
+    "w": 343,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3299,
+    "w": 343,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3859,
+    "w": 343,
+    "h": 436
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 153.1,
+     "y": 1073,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 168.1,
+      "y": 1085,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Dark Side of the Moon · Pink Floyd",
+     "box": {
+      "x": 16,
+      "y": 1080,
+      "w": 125.1,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "albums",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 153.1,
+     "y": 1547,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 168.1,
+      "y": 1559,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico · The Velvet Underground & Nico",
+     "box": {
+      "x": 16,
+      "y": 1539,
+      "w": 125.1,
+      "h": 60
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "blend",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 153.1,
+     "y": 2384,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 168.1,
+      "y": 2396,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Dummy · Portishead",
+     "box": {
+      "x": 16,
+      "y": 2398.5,
+      "w": 113.9,
+      "h": 15
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2376,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 153.1,
+     "y": 2987,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 168.1,
+      "y": 2999,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+     "box": {
+      "x": 16,
+      "y": 2986.5,
+      "w": 125.1,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2979,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 153.1,
+     "y": 3516,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 168.1,
+      "y": 3528,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Desire, I Want to Turn Into You · Caroline Polachek",
+     "box": {
+      "x": 16,
+      "y": 3515.5,
+      "w": 125.1,
+      "h": 45
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 3508,
+     "w": 343,
+     "h": 60
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 153.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 168.1,
+      "y": 761,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 893,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1065,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 1125
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1367,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1539,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 1599
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2204,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2376,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "Dummy · Portishead ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 2436
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2807,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2979,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 3039
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3336,
+     "w": 343,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3508,
+     "w": 343,
+     "h": 60
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 3568
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-320-pt-main": {
+  "lang": "pt-BR",
+  "innerWidth": 320,
+  "scrollWidth": 346,
+  "pageHeight": 4933,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 288,
+    "h": 377
+   },
+   "start": {
+    "x": 16,
+    "y": 968,
+    "w": 319.9,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1473,
+    "w": 288,
+    "h": 861
+   },
+   "blend": {
+    "x": 16,
+    "y": 2334,
+    "w": 288,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2863,
+    "w": 288,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2930,
+    "w": 294,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3459,
+    "w": 288,
+    "h": 584
+   },
+   "end": {
+    "x": 16,
+    "y": 4043,
+    "w": 288,
+    "h": 522
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "The Dark Side of the Moon · Pink Floyd — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1177,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1177,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "albums",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "The Velvet Underground & Nico · The Velvet Underground & Nico — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1682,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1682,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "blend",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "Dummy · Portishead — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 2543,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 2543,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3139,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3139,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "Desire, I Want to Turn Into You · Caroline Polachek — Ouça no Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3668,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3668,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 104.2,
+     "y": 842,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 119.2,
+      "y": 854,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 1005,
+     "w": 319.9,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1177,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd — Ouça no Apple Music",
+    "nextTop": 1237
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1510,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1682,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico — Ouça no Apple Music",
+    "nextTop": 1742
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2371,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2543,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "Dummy · Portishead — Ouça no Apple Music",
+    "nextTop": 2603
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2967,
+     "w": 294,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3139,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Ouça no Apple Music",
+    "nextTop": 3199
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3496,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3668,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek — Ouça no Apple Music",
+    "nextTop": 3728
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-320-pt-branch": {
+  "lang": "pt-BR",
+  "innerWidth": 320,
+  "scrollWidth": 346,
+  "pageHeight": 4933,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 288,
+    "h": 377
+   },
+   "start": {
+    "x": 16,
+    "y": 968,
+    "w": 319.9,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1473,
+    "w": 288,
+    "h": 861
+   },
+   "blend": {
+    "x": 16,
+    "y": 2334,
+    "w": 288,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2863,
+    "w": 288,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2930,
+    "w": 294,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3459,
+    "w": 288,
+    "h": 584
+   },
+   "end": {
+    "x": 16,
+    "y": 4043,
+    "w": 288,
+    "h": 522
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 104.2,
+     "y": 1185,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 119.2,
+      "y": 1197,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Dark Side of the Moon · Pink Floyd",
+     "box": {
+      "x": 16,
+      "y": 1177,
+      "w": 76.2,
+      "h": 60
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1177,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "albums",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 104.2,
+     "y": 1690,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 119.2,
+      "y": 1702,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico · The Velvet Underground & Nico",
+     "box": {
+      "x": 16,
+      "y": 1682,
+      "w": 76.2,
+      "h": 60
+     },
+     "cut": true
+    },
+    "credit": {
+     "x": 16,
+     "y": 1682,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "blend",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 104.2,
+     "y": 2551,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 119.2,
+      "y": 2563,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Dummy · Portishead",
+     "box": {
+      "x": 16,
+      "y": 2558,
+      "w": 76.2,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2543,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 104.2,
+     "y": 3147,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 119.2,
+      "y": 3159,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+     "box": {
+      "x": 16,
+      "y": 3139,
+      "w": 76.2,
+      "h": 60
+     },
+     "cut": true
+    },
+    "credit": {
+     "x": 16,
+     "y": 3139,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 104.2,
+     "y": 3676,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 119.2,
+      "y": 3688,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Desire, I Want to Turn Into You · Caroline Polachek",
+     "box": {
+      "x": 16,
+      "y": 3668,
+      "w": 76.2,
+      "h": 60
+     },
+     "cut": true
+    },
+    "credit": {
+     "x": 16,
+     "y": 3668,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 104.2,
+     "y": 842,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 119.2,
+      "y": 854,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 1005,
+     "w": 319.9,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1177,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 1237
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1510,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1682,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 1742
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2371,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2543,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "Dummy · Portishead ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 2603
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 2967,
+     "w": 294,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3139,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3199
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3496,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3668,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek ♫ Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3728
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-320-en-main": {
+  "lang": "en",
+  "innerWidth": 320,
+  "scrollWidth": 347,
+  "pageHeight": 4948,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 288,
+    "h": 400
+   },
+   "start": {
+    "x": 16,
+    "y": 1007,
+    "w": 319.9,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1512,
+    "w": 288,
+    "h": 861
+   },
+   "blend": {
+    "x": 16,
+    "y": 2373,
+    "w": 288,
+    "h": 560
+   },
+   "flip": {
+    "x": 16,
+    "y": 2933,
+    "w": 288,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 3000,
+    "w": 294,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3529,
+    "w": 288,
+    "h": 584
+   },
+   "end": {
+    "x": 16,
+    "y": 4113,
+    "w": 288,
+    "h": 467
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "The Dark Side of the Moon · Pink Floyd — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1216,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1216,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "albums",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "The Velvet Underground & Nico · The Velvet Underground & Nico — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 1721,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 1721,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "blend",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "Dummy · Portishead — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 2582,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 2582,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3209,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3209,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "slot-am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "Desire, I Want to Turn Into You · Caroline Polachek — Listen on Apple Music",
+    "ariaLabel": null,
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 16,
+     "y": 3738,
+     "w": 288,
+     "h": 44
+    },
+    "border": "0px none rgb(214, 214, 220)",
+    "radius": "0px",
+    "font": "400 13px -apple-system",
+    "decoration": "underline",
+    "padding": "0px 0px",
+    "color": "rgb(214, 214, 220)",
+    "icon": null,
+    "beside": null,
+    "credit": {
+     "x": 16,
+     "y": 3738,
+     "w": 288,
+     "h": 44
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 98.1,
+     "y": 873,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 113.1,
+      "y": 885,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 1044,
+     "w": 319.9,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1216,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd — Listen on Apple Music",
+    "nextTop": 1276
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1549,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1721,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico — Listen on Apple Music",
+    "nextTop": 1781
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2410,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2582,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "Dummy · Portishead — Listen on Apple Music",
+    "nextTop": 2642
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 3037,
+     "w": 294,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3209,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music",
+    "nextTop": 3269
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3566,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3738,
+     "w": 288,
+     "h": 44
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek — Listen on Apple Music",
+    "nextTop": 3798
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "webkit-320-en-branch": {
+  "lang": "en",
+  "innerWidth": 320,
+  "scrollWidth": 347,
+  "pageHeight": 4948,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 288,
+    "h": 400
+   },
+   "start": {
+    "x": 16,
+    "y": 1007,
+    "w": 319.9,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1512,
+    "w": 288,
+    "h": 861
+   },
+   "blend": {
+    "x": 16,
+    "y": 2373,
+    "w": 288,
+    "h": 560
+   },
+   "flip": {
+    "x": 16,
+    "y": 2933,
+    "w": 288,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 3000,
+    "w": 294,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3529,
+    "w": 288,
+    "h": 584
+   },
+   "end": {
+    "x": 16,
+    "y": 4113,
+    "w": 288,
+    "h": 467
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "start",
+    "className": "am",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 98.1,
+     "y": 1224,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 113.1,
+      "y": 1236,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Dark Side of the Moon · Pink Floyd",
+     "box": {
+      "x": 16,
+      "y": 1216,
+      "w": 70.1,
+      "h": 60
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 1216,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "albums",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 98.1,
+     "y": 1729,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 113.1,
+      "y": 1741,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico · The Velvet Underground & Nico",
+     "box": {
+      "x": 16,
+      "y": 1721,
+      "w": 70.1,
+      "h": 60
+     },
+     "cut": true
+    },
+    "credit": {
+     "x": 16,
+     "y": 1721,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "blend",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 98.1,
+     "y": 2590,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 113.1,
+      "y": 2602,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Dummy · Portishead",
+     "box": {
+      "x": 16,
+      "y": 2597,
+      "w": 70.1,
+      "h": 30
+     },
+     "cut": false
+    },
+    "credit": {
+     "x": 16,
+     "y": 2582,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "playlists",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 98.1,
+     "y": 3217,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 113.1,
+      "y": 3229,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+     "box": {
+      "x": 16,
+      "y": 3209,
+      "w": 70.1,
+      "h": 60
+     },
+     "cut": true
+    },
+    "credit": {
+     "x": 16,
+     "y": 3209,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "inventory",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 98.1,
+     "y": 3746,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 113.1,
+      "y": 3758,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "Desire, I Want to Turn Into You · Caroline Polachek",
+     "box": {
+      "x": 16,
+      "y": 3738,
+      "w": 70.1,
+      "h": 60
+     },
+     "cut": true
+    },
+    "credit": {
+     "x": 16,
+     "y": 3738,
+     "w": 288,
+     "h": 60
+    }
+   },
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 98.1,
+     "y": 873,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 113.1,
+      "y": 885,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 1044,
+     "w": 319.9,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1216,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 1276
+   },
+   {
+    "story": "albums",
+    "lead": {
+     "x": 16,
+     "y": 1549,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 1721,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "The Velvet Underground & Nico · The Velvet Underground & Nico ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 1781
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2410,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 2582,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "Dummy · Portishead ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 2642
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 3037,
+     "w": 294,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3209,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 3269
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3566,
+     "w": 288,
+     "h": 172
+    },
+    "credit": {
+     "x": 16,
+     "y": 3738,
+     "w": 288,
+     "h": 60
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek ♫ Listen on Apple Music (opens in a new tab)",
+    "nextTop": 3798
+   }
+  ],
+  "layoutShift": 0,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "chromium-1280-pt-main": {
+  "captions": {
+   "a1": {
+    "who": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967",
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"
+   },
+   "start": {
+    "who": "The Dark Side of the Moon Pink Floyd · 1973",
+    "label": "Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon"
+   },
+   "albums": {
+    "who": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967",
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"
+   },
+   "blend": {
+    "who": "Dummy Portishead · 1994",
+    "label": "Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/dummy/1440653096"
+   },
+   "playlists": {
+    "who": "In the Aeroplane Over the Sea Neutral Milk Hotel · 1998",
+    "label": "Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554"
+   },
+   "inventory": {
+    "who": "Desire, I Want to Turn Into You Caroline Polachek · 2023",
+    "label": "Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245"
+   },
+   "end": {
+    "who": "To Pimp a Butterfly Kendrick Lamar · 2015",
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877"
+   }
+  },
+  "lang": "pt-BR",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4578,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 568.7
+   },
+   "albums": {
+    "x": 16,
+    "y": 1332.7,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1994.8,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2587.5,
+    "w": 500,
+    "h": 143.1
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2754.6,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3323.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3936.4,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 1064.2,
+     "y": 730.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 1079.2,
+      "y": 742.3,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 1056.7,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd — Ouça no Apple Music",
+    "nextTop": 812
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2287.5,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "Dummy · Portishead — Ouça no Apple Music",
+    "nextTop": 2042.8
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 3047.3,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Ouça no Apple Music",
+    "nextTop": 2802.6
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3660.4,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek — Ouça no Apple Music",
+    "nextTop": 3371.3
+   }
+  ],
+  "layoutShift": 0.010967716741561889,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "chromium-1280-pt-branch": {
+  "captions": {
+   "a1": {
+    "who": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967",
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"
+   },
+   "start": {
+    "who": "The Dark Side of the Moon Pink Floyd · 1973",
+    "label": "Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon"
+   },
+   "albums": {
+    "who": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967",
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"
+   },
+   "blend": {
+    "who": "Dummy Portishead · 1994",
+    "label": "Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/dummy/1440653096"
+   },
+   "playlists": {
+    "who": "In the Aeroplane Over the Sea Neutral Milk Hotel · 1998",
+    "label": "Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554"
+   },
+   "inventory": {
+    "who": "Desire, I Want to Turn Into You Caroline Polachek · 2023",
+    "label": "Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245"
+   },
+   "end": {
+    "who": "To Pimp a Butterfly Kendrick Lamar · 2015",
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877"
+   }
+  },
+  "lang": "pt-BR",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4578,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 568.7
+   },
+   "albums": {
+    "x": 16,
+    "y": 1332.7,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1994.8,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2587.5,
+    "w": 500,
+    "h": 143.1
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2754.6,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3323.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3936.4,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+    "ariaLabel": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 1064.2,
+     "y": 730.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 1079.2,
+      "y": 742.3,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 1056.7,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd♫Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 812
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2287.5,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "Dummy · Portishead♫Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 2042.8
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 3047.3,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel♫Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 2802.6
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3660.4,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek♫Ouça no Apple Music (abre numa nova aba)",
+    "nextTop": 3371.3
+   }
+  ],
+  "layoutShift": 0.010967716741561889,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "chromium-1280-en-main": {
+  "captions": {
+   "a1": {
+    "who": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967",
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"
+   },
+   "start": {
+    "who": "The Dark Side of the Moon Pink Floyd · 1973",
+    "label": "Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon"
+   },
+   "albums": {
+    "who": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967",
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"
+   },
+   "blend": {
+    "who": "Dummy Portishead · 1994",
+    "label": "Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/dummy/1440653096"
+   },
+   "playlists": {
+    "who": "In the Aeroplane Over the Sea Neutral Milk Hotel · 1998",
+    "label": "Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554"
+   },
+   "inventory": {
+    "who": "Desire, I Want to Turn Into You Caroline Polachek · 2023",
+    "label": "Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245"
+   },
+   "end": {
+    "who": "To Pimp a Butterfly Kendrick Lamar · 2015",
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877"
+   }
+  },
+  "lang": "en",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4543,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 560
+   },
+   "albums": {
+    "x": 16,
+    "y": 1324,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1986.1,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2578.8,
+    "w": 500,
+    "h": 116.7
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2719.5,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3288.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3901.3,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 1058.1,
+     "y": 730.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 1073.1,
+      "y": 742.3,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 1030.2,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd — Listen on Apple Music",
+    "nextTop": 829.8
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2278.8,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "Dummy · Portishead — Listen on Apple Music",
+    "nextTop": 2034.1
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 3012.3,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel — Listen on Apple Music",
+    "nextTop": 2767.5
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3625.3,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek — Listen on Apple Music",
+    "nextTop": 3336.3
+   }
+  ],
+  "layoutShift": 0.015132762444019317,
+  "consoleErrors": [],
+  "blockedHosts": []
+ },
+ "chromium-1280-en-branch": {
+  "captions": {
+   "a1": {
+    "who": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967",
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"
+   },
+   "start": {
+    "who": "The Dark Side of the Moon Pink Floyd · 1973",
+    "label": "Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+    "href": "https://music.apple.com/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon"
+   },
+   "albums": {
+    "who": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967",
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613"
+   },
+   "blend": {
+    "who": "Dummy Portishead · 1994",
+    "label": "Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/dummy/1440653096"
+   },
+   "playlists": {
+    "who": "In the Aeroplane Over the Sea Neutral Milk Hotel · 1998",
+    "label": "Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554"
+   },
+   "inventory": {
+    "who": "Desire, I Want to Turn Into You Caroline Polachek · 2023",
+    "label": "Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245"
+   },
+   "end": {
+    "who": "To Pimp a Butterfly Kendrick Lamar · 2015",
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877"
+   }
+  },
+  "lang": "en",
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4543,
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 560
+   },
+   "albums": {
+    "x": 16,
+    "y": 1324,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1986.1,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2578.8,
+    "w": 500,
+    "h": 116.7
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2719.5,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3288.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3901.3,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "covers": [
+   "The Velvet Underground & Nico · The Velvet Underground & Nico",
+   "In the Court of the Crimson King · King Crimson",
+   "The Dark Side of the Moon · Pink Floyd",
+   "Low · David Bowie",
+   "Power, Corruption & Lies · New Order",
+   "Dummy · Portishead",
+   "Illmatic · Nas",
+   "Harvest · Neil Young",
+   "Close to the Edge · Yes",
+   "Homogenic · Björk",
+   "Mezzanine · Massive Attack",
+   "In the Aeroplane Over the Sea · Neutral Milk Hotel",
+   "Admirável Chip Novo · Pitty",
+   "Desire, I Want to Turn Into You · Caroline Polachek",
+   "To Pimp a Butterfly · Kendrick Lamar"
+  ],
+  "slotCovers": [
+   "The Dark Side of the Moon",
+   "The Velvet Underground & Nico",
+   "Dummy",
+   "In the Aeroplane Over the Sea",
+   "Desire, I Want to Turn Into You"
+  ],
+  "links": [
+   {
+    "where": "caption",
+    "className": "am",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "text": "♫ Listen on Apple Music (opens in a new tab)",
+    "ariaLabel": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "target": "_blank",
+    "rel": "noopener",
+    "box": {
+     "x": 1058.1,
+     "y": 730.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "border": "1px solid rgba(255, 255, 255, 0.62)",
+    "radius": "10px",
+    "font": "600 14px -apple-system",
+    "decoration": "none",
+    "padding": "14px 14px",
+    "color": "rgb(255, 255, 255)",
+    "icon": {
+     "text": "♫",
+     "box": {
+      "x": 1073.1,
+      "y": 742.3,
+      "w": 20,
+      "h": 20
+     },
+     "background": "linear-gradient(rgb(250, 92, 111), rgb(249, 53, 79))",
+     "hidden": "true"
+    },
+    "beside": {
+     "text": "The Velvet Underground & Nico The Velvet Underground & Nico · 1967"
+    },
+    "credit": null
+   }
+  ],
+  "leads": [
+   {
+    "story": "start",
+    "lead": {
+     "x": 16,
+     "y": 1030.2,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "The Dark Side of the Moon · Pink Floyd♫Listen on Apple Music (opens in a new tab)",
+    "nextTop": 829.8
+   },
+   {
+    "story": "blend",
+    "lead": {
+     "x": 16,
+     "y": 2278.8,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "Dummy · Portishead♫Listen on Apple Music (opens in a new tab)",
+    "nextTop": 2034.1
+   },
+   {
+    "story": "playlists",
+    "lead": {
+     "x": 16,
+     "y": 3012.3,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "In the Aeroplane Over the Sea · Neutral Milk Hotel♫Listen on Apple Music (opens in a new tab)",
+    "nextTop": 2767.5
+   },
+   {
+    "story": "inventory",
+    "lead": {
+     "x": 16,
+     "y": 3625.3,
+     "w": 500,
+     "h": 228
+    },
+    "credit": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0
+    },
+    "creditText": "Desire, I Want to Turn Into You · Caroline Polachek♫Listen on Apple Music (opens in a new tab)",
+    "nextTop": 3336.3
+   }
+  ],
+  "layoutShift": 0.015132762444019317,
+  "consoleErrors": [],
+  "blockedHosts": []
+ }
+}

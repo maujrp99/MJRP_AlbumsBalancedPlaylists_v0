@@ -2,6 +2,22 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 14:11] step — Página de entrada (F80): todo link de álbum é o botão «Ouça no Apple Music» do Velvet (UAT-285)
+
+**Branch:** fix/f80-album-links-as-the-apple-music-button
+
+Pedido do MJRP (2026-11-23, print do iPhone): «preciso que vc faça uma alteração já em prod… podemos deixar todos os links do albums no padrao do velvet under ground utilizando o print 2». Issue UAT-285 em `docs/specs/uat.md`, ligada à F80.
+
+**O que havia.** No computador, um link só: o botão da legenda do caixote (`#am`, classe `.am`), que troca de álbum com a faixa; já era o padrão. No celular, seis: o botão da legenda (Velvet, fixo) e cinco links de TEXTO sublinhado sob o disco de cada história («álbum · artista — Ouça no Apple Music»): Criar (The Dark Side of the Moon), Álbuns (The Velvet Underground & Nico), Blend (Dummy), Playlists (In the Aeroplane Over the Sea), Inventário (Desire, I Want to Turn Into You).
+
+**O que mudou.** Os cinco viraram texto (álbum · artista) ao lado do MESMO botão: `phoneSlots` copia o próprio elemento `#am` (uma classe, uma regra de CSS, nenhum segundo padrão) e troca o endereço e o nome acessível (`listenLabel`: «Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)»). Nenhum texto novo em português: só as chaves que já existiam em `public/splash/copy.js` (`c.listen`, `c.newtab`). Os álbuns e a ordem não mudaram; o conjunto fictício segue sem link.
+
+**Decidido pelo agente (revisável).** (1) O nome acessível segue a forma que a legenda já usava («Ouça no Apple Music: álbum, artista»), e não «Ouça ÁLBUM no Apple Music», para não criar texto novo. (2) O texto ao lado do botão ficou em 12 px (era 13 px), em até 4 linhas, e o crédito centrado nos 60 px que já existiam sob o disco: é o que faz «The Velvet Underground & Nico · The Velvet Underground & Nico» caber inteiro ao lado de um botão de 200 px sem mexer na altura da página. A 375 px esse crédito ocupa as 4 linhas e encosta no rótulo da história. (3) A 320 px (nenhum iPhone à venda) três créditos terminam em reticências; o nome inteiro está no nome acessível do botão. A página já rolava de lado a 320 px na `main` (346 px), igual no ramo: não é desta mudança e não foi consertado aqui.
+
+**Prova.** Teste primeiro: 3 testes novos falham no código da `main` (`reports/evidence/F80/album-links-as-button/red-on-main.txt`) e passam no ramo. No site MONTADO (as chaves de mentira no ambiente, capas reais), servido em 127.0.0.1 e encerrado: WebKit como iPhone 14 (390 px), mais 393, 375 e 320 px, e Chromium a 1280, em português e inglês, `main` contra o ramo: 144 conferências passam, 0 falham, 6 limites conhecidos a 320 px (`results.txt`, `measures.json`, fotos de cada bloco de álbum). Botões de 199,8 × 44 px (PT) e 205,9 × 44 px (EN), iguais ao da legenda em borda, raio, letra e ícone; sem erro de console; sem rolagem de lado a 375 px ou mais; a altura da página e o lugar de cada parte iguais aos da `main`. `npm run budget:publication`: saída 0; o arquivo do caixote 3D ganhou 1 B por citar o nome novo do script da página, então `background` subiu de 57.462 para 57.463 B (medido + 150 B, pela regra do arquivo). Suíte inteira pela fila da máquina: 392 arquivos, 5236 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** Num iPhone de verdade; com leitor de tela de verdade (só os atributos); a página publicada. O aceite e a publicação são do MJRP.
+
 ## [2026-11-23 13:42] step — CMS: o MJRP publicou as regras do banco e criou `published/site` com a chave do Discogs ligada
 
 **Branch:** main
