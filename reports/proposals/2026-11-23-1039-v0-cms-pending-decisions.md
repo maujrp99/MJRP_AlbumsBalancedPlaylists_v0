@@ -13,6 +13,9 @@ Base: forte — li a peça no kit e a ação de tradução do seu site pessoal
 - a) O serviço da Claude, com uma chave sua no servidor (Recomendado)
 - b) Sem tradução automática na primeira iteração; entra depois
 - c) Outro serviço (diga qual)
+→ respondida em 2026-11-23 10:49
+  - a
+→ aplicada em 2026-11-23 10:50: na spec e nas tarefas da F82 (REQ-13, TASK-16): a tradução usa o serviço da Claude, com a chave que só o MJRP cria no cofre do servidor; a rota entra quando o kit chegar
 
 ### D-02 · O conserto do filtro de links no seu site pessoal
 Pergunta: Abro agora o conserto do filtro de links no seu site pessoal, numa sessão daquele projeto?
@@ -21,6 +24,9 @@ Base: forte — o crítico rodou a função do kit com o endereço e ela o aceit
 - a) Sim, abra a sessão no projeto do site pessoal e conserte (Recomendado)
 - b) Conserte só na cópia do kit que vai para o harness; o site pessoal recebe quando trocar para a cópia
 - c) Não agora
+→ respondida em 2026-11-23 10:49
+  - (outra) O master agent está cuidando disso, se alinhe com ele pls
+→ aplicada em 2026-11-23 10:50: alinhado com o agente mestre do harness: ele consertou o filtro no MJRPpersonal (commit c33a33a4, recusa a barra invertida e %5C; teste 11 de 11) e a tarefa TASK-01 do kit está marcada com essa evidência; o mesmo conserto vai ao núcleo do kit no harness (TASK-06)
 
 ### D-03 · A versão 2 do protótipo do Painel
 Pergunta: Como você quer ver a versão 2 do protótipo, com o editor de texto rico?

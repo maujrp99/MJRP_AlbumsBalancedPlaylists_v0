@@ -2,6 +2,22 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 10:50] decision — CMS: aplicadas as respostas D-01 (tradução pelo serviço da Claude) e D-02 (filtro de links) do lote
+
+**Branch:** main
+
+O MJRP respondeu na tela remota, 2026-11-23 10:49: D-01 «a» (o serviço da Claude, com uma chave dele no servidor); D-02 «O master agent está cuidando disso, se alinhe com ele pls». Aplicado: REQ-13 e TASK-16 da F82 dizem o serviço e de quem é a chave; a D-02 está resolvida pelo agente mestre (MJRPpersonal `c33a33a4`) e a TASK-01 da F332 marcada com a evidência. As outras 12 perguntas seguem abertas, com a recomendação valendo, revisável. O registro do kit (CC-ADR-0068) passou na segunda crítica (0 P0, 0 P1, 2 P2) e espera o aceite dele; dois P2 para a construção: `tests/corpus/` fora da cópia que vai aos filhos, e a trava de tag movida cobrir também a volta de versão e a primeira cópia.
+
+## [2026-11-23 10:49] answer — lote 2026-11-23-1039-v0-cms-pending-decisions
+
+- Lote: `reports/proposals/2026-11-23-1039-v0-cms-pending-decisions.md`
+- Envio: 093e695ec366850f
+- Recomendações aceitas: D-01
+- D-02: (outra) O master agent está cuidando disso, se alinhe com ele pls
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lRMUZoZUhGUmN6RTVkMnc0V1MxeWVEaEtiazVZZFZOWGFXdHdVR1kzUVROb1YxcHRkMUJuYTJGa1JTSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTkRReU16ZzJMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVTBOREUzT0RZc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaVVHMTBhbkZOWjBSNU5GUlBVMmxUVlRKWU9XbGljalJuSWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpNdE1UQXpPUzEyTUMxamJYTXRjR1Z1WkdsdVp5MWtaV05wYzJsdmJuTWlMQ0p6ZFdKcVpXTjBJam9pWW1VeVpqUXlNemhrWm1aaU4yVm1PV1UyTldRM016Tm1NRFEzTWpVeFpEY3lZVE5oTmpObU5qTXhabU16TURsaVltTTRaV1JtTUdOallXSTVPRGRsTlNJc0luWWlPakY5Iiwic2lnbmF0dXJlIjoiTUVVQ0lCY2JwTmY4ZFJydTBxc3NsYXhoV19ic0RLakY4Rk9CU3Mwc0xxYnFVVlFfQWlFQV96Qk44LXN0bGpqOEtNbVlvME1SU2xUQ2wzaUROVkJ1QXN3LWJhQUkyUFkifQ==
+- folhas: D-01:9278311213e6415e D-02:4fabfaf2d34edd89
+
 ## [2026-11-23 10:41] step — CMS: a fatia 0 (alicerce) está na `main` (`8ff3028`); NÃO publicar o servidor antes das regras e do registro da chave do Discogs
 
 **Branch:** main
