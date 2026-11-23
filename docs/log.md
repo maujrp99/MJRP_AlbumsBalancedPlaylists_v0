@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 10:31] decision — CMS (F82): o protótipo do Painel está aprovado para uma primeira iteração; dois requisitos novos (texto rico, tradução entre campos)
+
+**Branch:** main
+
+O MJRP, 2026-11-23: «prototipo painel aprovado, desde que contenha o rich text e as Receitas do Blend, eu preciso revisar contigo...enfim, construa do jeito que está para uma primeira iteração pls....ah tb vi que nao está trazendo a feature de traducao de uma campo para outro, vc viu isso nos outros CMS, certo?». Como eu li (interpretação minha): o nível «Painel» do protótipo vale como base da primeira iteração, com o editor rico dentro; as Receitas do Blend entram como estão no protótipo e ele quer revê-las comigo depois; a construção começa sem esperar as cinco perguntas da proposta do kit, que ficam com a minha recomendação, «decidido pelo agente — revisável»: (1) o kit cumpre o histórico pelo roteador e a interface em inglês, e fica isento só do limite de complexidade, com lista que só encolhe; (2) um projeto pode desligar blocos da barra num campo; (3) pausa de um dia nas mudanças do kit do MJRPpersonal durante a mudança; (4) papéis depois das chaves; (5) links para fora do site permitidos (https e e-mail), com o conserto do filtro. Falha do agente: a peça de traduzir do kit (F96 do MJRPpersonal, `ports.translate`, com revisão) existe e não foi levada ao protótipo nem à spec; ele a apontou. Registrados REQ-12 (texto rico nos textos corridos) e REQ-13 (tradução de um campo para o outro) na spec da F82, na story S-64 e nas tarefas (TASK-15, TASK-16). Em aberto com ele: o serviço de tradução no servidor do V0 (qual, a chave, o custo); a versão 2 do protótipo não está publicada (a trava recusou a atualização do artefato).
+
 ## [2026-11-23 09:38] decision — CMS (F82): o editor de texto rico do kit é o padrão nos textos corridos; o kit fica com esta sessão
 
 **Branch:** main

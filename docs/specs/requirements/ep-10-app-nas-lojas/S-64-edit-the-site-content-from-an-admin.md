@@ -13,6 +13,7 @@ planned_for: "[[ROADMAP#^REL-41]]"
 
 Origem: o MJRP, em 2026-11-21: «As próximas features agora serao de internacionalizar o site e criar um admin como temos nos sites do MJRP personal, utilizando o CMS-kit nosso.»
 Hoje todo texto do site mora no código; os sites do MJRPpersonal já têm um admin com o CMS-kit.
+Pedidos do MJRP em 2026-11-23, sobre o protótipo do Painel: o editor de texto rico do kit nos textos corridos («a formatação que defini para os outros CMS, isso deve ser padrão no kit») e a tradução de um campo para o outro, como nos outros CMS (REQ-12 e REQ-13 da F82).
 
 ## en
 
