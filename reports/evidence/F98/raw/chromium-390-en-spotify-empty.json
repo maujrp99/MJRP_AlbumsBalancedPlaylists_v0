@@ -1,0 +1,17 @@
+{
+ "mode": "empty",
+ "spotify": [
+  "GET /me -> 200",
+  "GET /search -> 200",
+  "GET /search -> 200",
+  "GET /search -> 200",
+  "GET /search -> 200",
+  "GET /search -> 200"
+ ],
+ "aborted": [
+  "https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap",
+  "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA8x-II628CK3",
+  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?VE",
+  "https://www.google.com/images/cleardot.gif?zx=4zx0hqcdujis"
+ ]
+}

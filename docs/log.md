@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 20:46] step — F98: a prova no navegador (904 de 904, dois motores, duas larguras, dois idiomas) e a suíte sobre a árvore com a main
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+A prova no navegador, no site construído da ponta do ramo (com a `main` `b76dfeb` juntada), nos dois motores, nas duas larguras e nos dois idiomas: **904 de 904** verificações (Chromium e WebKit, 1280 e 390, inglês e português; 108 por rodada em inglês, 118 em português, que confere também que nenhuma frase em inglês dos relatórios está na tela). Onze cenários por rodada: no Apple Music, sucesso, todas as buscas falhando e depois «Tentar de novo» com o Apple Music de volta, um misto, a autorização não dada, a conta recusada (403) e nada no catálogo; no Spotify, o misto (que deixou de ter título de sucesso), o 403 com o texto suavizado, o 500, as listas vazias e o sucesso. Evidência em `reports/evidence/F98/` (`proof.md`, `browser-proof.mjs`, `run-all.sh`, `raw/`, 104 capturas em `figures/`).
+
+O MusicKit e a API do Spotify foram simulados; os únicos endereços abortados em toda a prova foram os do Google e do Firebase, e nenhum endereço da Apple nem das páginas do Spotify chegou a ser pedido. Nenhum link que sai do site foi pressionado; nenhum app da máquina foi aberto. O substituto do MusicKit dos testes (`test/support/musicKitRecorder.js`) ganhou duas falhas novas (a busca de um título só; o status da busca que falha).
+
+Sobre a árvore com a `main`: suíte inteira (`npx vitest run`, sozinha, pela fila) com 421 arquivos, 5.789 testes passando e 1 pulado, saída 0; `npm run typecheck`, `npx eslint . --quiet` e `npm run budget:publication` com saída 0. O orçamento foi medido de novo pela regra do arquivo: script principal 201.779 B (+1.293 B), depois da primeira tela 258.985 B (+2.527 B); tetos `main` 201.929 e `background` 87.477.
+
+TASK-09 marcada. Ficam para o MJRP: julgar a tela e os textos (TASK-10). Ficam para depois do OK dele: o passo retroativo (TASK-11) e o fecho (TASK-12). O que a prova não cobre está em `reports/evidence/F98/proof.md`, na última seção: o Apple Music de verdade, o limite de chamadas (429), a chave do site vencida, e «Tentar de novo» depois de um resultado parcial, que cria uma playlist nova.
+
 ## [2026-11-23 20:36] step — F98: os dois grupos novos de textos ganham nome no Painel (a suíte inteira acusou)
 
 **Branch:** fix/f98-apple-music-export-says-why-it-failed
