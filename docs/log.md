@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:19] step — F82: a main (página de entrada) juntada ao ramo do Painel; suíte verde, orçamento medido de novo
+
+**Branch:** claude/f82-cms-texts-panel
+
+A `main` (`18f3580`: a rodada da página de entrada e a arrumação do board) foi juntada ao ramo do Painel, para a prévia não desfazer o trabalho de hoje na página de entrada. Conflito só em `scripts/bundle-budget.json`, resolvido pela regra do arquivo: o texto da `main` mais a nota da F82, e os tetos medidos de novo no build com forma de publicação (script principal 198.467 B, teto 198.617 B; depois da primeira tela 238.193 B, `background` 63.373 B; `budget:publication` sai 0). A junta não tocou as telas do Painel (só dois textos de `shell` nos dicionários), então a prova no navegador não foi repetida.
+
+Suíte inteira, sozinha, pela fila, depois da junta: `Test Files 411 passed (411)` · `Tests 5558 passed | 1 skipped (5559)`, sem «Unhandled Errors». Os dois guardas novos da página de entrada leem todos os dicionários do app, os do Painel incluídos (`admin.js`), e passam: `test/splash/productName.test.js` e `test/splash/noDiscoInPortuguese.test.js`.
+
 ## [2026-11-23 16:16] step — F82: o kit do admin oficial 1.0.1 no lugar da cópia candidata; suíte verde sem exceção do kit
 
 **Branch:** claude/f82-cms-texts-panel
