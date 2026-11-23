@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 20:32] step — F98: a main (b76dfeb) juntada ao ramo do conserto, sem conflito
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+A `main` (`b76dfeb`: a aprovação da prévia da seção «Caixa» do Painel, só documentos) juntada ao ramo do conserto, sem conflito: todas as entradas do log dos dois lados ficaram, as linhas do `uat.md` também, e nenhum arquivo de código veio da `main`. Nenhuma marca de conflito nos arquivos (`docs/log.md`, `docs/specs/uat.md`, `scripts/bundle-budget.json`). A suíte inteira, os tipos, o lint, o orçamento de publicação e a prova no navegador são rodados sobre esta árvore, no commit seguinte.
+
 ## [2026-11-23 20:31] step — F98: a exportação para o Apple Music diz por que falhou (UAT-307), e toda frase da exportação e do aviso de pausa vem dos dicionários (UAT-308)
 
 **Branch:** fix/f98-apple-music-export-says-why-it-failed
@@ -31,6 +37,12 @@ Conserto das issues UAT-307 (P1) e UAT-308 (P2), no modelo do conserto do Spotif
 **Conferido:** o grupo de testes da exportação, dos dicionários, da arquitetura, dos modelos e dos serviços (202 arquivos, 2.394 testes) verde; `npm run typecheck` e `npx eslint . --quiet` com saída 0. A suíte inteira e a prova no navegador vêm no commit seguinte.
 
 **O que não foi conferido:** a resposta de verdade do Apple Music e do MusicKit (tudo é simulado; nenhuma conta real foi usada); a redação em português, que é dele aprovar. O `doctor.py` sai vermelho nesta árvore por dois erros do `MEMORY.md` (o bloco «Where the Work Stopped» acima do tamanho, e o `## Now` mais antigo que o log), que já estavam na `main`; este ramo não toca o `MEMORY.md`.
+
+## [2026-11-23 20:19] decision — Caixa do The Album Blender no Painel: o MJRP aprovou a prévia da seção
+
+**Branch:** main
+
+MJRP, sobre a prévia `staging` do ramo `feat/f95-crate-managed-in-the-panel` (`47f6e6b`, seção «Caixa»: lados A e B, reordenar, mudar de lado, remover): «2. Ótimo!». Faltam, antes de valer em produção: a regra do banco para `published/crate` (ele publica), a publicação do servidor (rota de busca no Apple Music), o juiz independente e a palavra dele para publicar.
 
 ## [2026-11-23 19:56] step — F98 (a exportação para o Apple Music diz por que falhou) registrada em esboço no ramo do conserto, com a S-80; conserta a UAT-307 e a UAT-308
 
