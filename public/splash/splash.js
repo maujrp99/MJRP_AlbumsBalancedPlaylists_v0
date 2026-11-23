@@ -254,7 +254,7 @@ function phoneSlots(win, imgs, albums) {
         im.removeAttribute('class'); im.removeAttribute('style'); im.alt = ''
         slot.appendChild(im)
         const album = albums[i]
-        // UAT-285: the album and the artist are text; the link is the caption's own button (a copy of the element, never a second pattern)
+        // UAT-285: the credit is text; the link is the caption's own button (a copy of the element, never a second pattern)
         const credit = D.createElement('span')
         credit.className = 'slot-am'
         const who = D.createElement('span')
@@ -281,7 +281,7 @@ function phoneSlots(win, imgs, albums) {
         pending.forEach(s => s.classList.remove('pre'))
     }
     return (lang) => credits.forEach(([who, link, album]) => {
-        who.textContent = link ? `${album.t} · ${album.a}` : `${album.t} · ${album.a} — ${t('c.fictional', lang)}`
+        who.textContent = link ? album.t : `${album.t} · ${album.a} — ${t('c.fictional', lang)}` // UAT-286: beside the button, the album only; the artist stays in the button's name
         if (link) link.setAttribute('aria-label', listenLabel(album, lang))
     })
 }

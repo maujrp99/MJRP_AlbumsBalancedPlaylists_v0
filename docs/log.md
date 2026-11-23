@@ -2,6 +2,87 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:21] review — F80: o juiz independente passou os ajustes do crédito do álbum (0 P0, 0 P1, 3 P2); o MJRP julgou a prévia
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Relatório, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-album-credit-visual-parity-recheck.md` (julgado em `eddf38f` contra a `main` `c4c81d4`). Botão e painel de cima com 0 px de diferença nas cinco histórias e nos dois idiomas; nenhum «disco(s)» no português; «Vire o lado»; os 15 endereços diretos. P2: o botão em inglês a 375 px tem 5,8 px de folga; dois links com o mesmo nome acessível no celular (já era assim). O MJRP, 2026-11-23: «nao passa pelo juiz», «ou juilz neste caso sou eu», «paine do CMS nao, apenas para esses ajustes que estou pedindo»; viu a prévia `staging` (`ec247a6`) e disse «1, publica»; como a trava da junta pede o relatório de um juiz e a saída sem ele é só dele, à pergunta «juiz rápido ou você roda a junta?» respondeu «1. juiz rápido».
+
+## [2026-11-23 15:11] decision — F80: «Vire o lado» no lugar de «Vire o álbum»
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+O MJRP, 2026-11-23, à pergunta «"Vire o álbum" fica, ou prefere outra frase ali?»: «2. Vire o Lado». Aplicado: o título `f.title` e o rótulo `flip.aria` da página de entrada dizem «Vire o lado» / «Virar o lado» (em caixa de frase, como os outros títulos da página: escolha do agente, revisável). Os testes da página de entrada passam (149). Sobre a prévia `staging` (commit `ec247a6`) ele disse «1, publica»; esta frase entrou depois desse olhar.
+
+## [2026-11-23 15:05] step — UAT-287 e UAT-288: as linhas ditas em palavras comuns
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+O sensor de estrutura do produto avisou que as duas linhas traziam nome de arquivo fora da Evidência; os nomes foram para a Evidência e o texto diz o que a pessoa vê. Nenhum código mudou.
+
+## [2026-11-23 15:04] step — Português: «disco» vira «álbum» em todo texto que o visitante lê (UAT-288)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Regra do MJRP (2026-11-23, com print do iPhone): «nao vamos usar o linguajar discos, pq no brasil discos restringe a vinis. vamos utilizar Albuns sempre, troque onde tem disco para Albums pls». Issue UAT-288. Cada texto trocado abaixo é a regra dele aplicada, não proposta do agente.
+
+**Página de entrada** (`public/splash/copy.js`, português):
+- `flip.aria`: «Virar o disco» → «Virar o álbum»
+- `h.kick`: «The Album Blender · um app web para quem ama discos» → «… para quem ama álbuns»
+- `p.blend`: «… sem deixar um disco dominar os outros.» → «… sem deixar um álbum dominar os outros.»
+- `f.title`: «Vire o disco» → «Vire o álbum»
+- `stage.aria`: «Uma caixa de discos; a página puxa um disco para a frente a cada parte» → «Uma caixa de álbuns; a página puxa um álbum para a frente a cada parte»
+- `credit.real`: «… todo disco mostrado inteiro nesta página…» → «… todo álbum mostrado inteiro nesta página…»
+
+**App, inventário** (`public/js/i18n/pt/inventory.js`):
+- `inventory.value.discogsLead`: «… pelo estado do disco. O valor do álbum…» → «… pelo estado do álbum. O valor do álbum…»
+- `inventory.value.lowestLead`: «… não o que o disco costuma valer.» → «… não o que o álbum costuma valer.»
+- `inventory.value.needsSettings`: «… uma sugestão pelo estado do disco (Mint…» → «… pelo estado do álbum (Mint…»
+
+**Varrido e sem ocorrência:** o HTML da página (`public/splash.html`: título, descrição, Open Graph, rótulos), os outros dicionários de `public/js/i18n/pt/`, `askTexts.js`, `inventoryTexts.js`, `shared/`, `app/`, `server/`. Ficaram, por não serem texto em português para o visitante: «Discogs»; o gênero «disco house» (`public/js/models/albumType.js`, dado em inglês); nomes de álbuns e artistas nos arquivos de dados; comentários de código; `docs/` (por exemplo `info-arch.md` ainda diz «disco» ao descrever a página).
+
+**Guarda.** `test/splash/noDiscoInPortuguese.test.js` falha se o dicionário em português da página de entrada, o HTML dela ou um dicionário de `public/js/i18n/pt/` disser «disco» ou «discos» (palavra inteira, sem contar acento; «Discogs» e «discografia» não disparam, e o teste confere que «Discogs» segue no inventário). Dois dos testes falham no código da `main`. A regra e as palavras dele estão em `docs/specs/design-system.md` § Voz e tom.
+
+**Para o MJRP saber.** «Vire o disco» era a expressão do lado A / lado B; pela regra ficou «Vire o álbum». «Lado A», «Lado B» e «faixa» não mudaram.
+
+Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** A tela do inventário com os três textos, no app (pede conta); na página de entrada montada, «ama álbuns» e «Vire o álbum» foram lidos no HTML do build.
+
+## [2026-11-23 15:04] step — Página de entrada (F80): os dois endereços de busca do Apple Music viram o endereço do álbum (UAT-287)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Resposta do MJRP (2026-11-23) a «Quer que eu troque os dois endereços de busca do Apple Music pelos endereços diretos dos álbuns?»: «1.sim». Issue UAT-287.
+
+**O que mudou** (`public/splash/covers.js`). The Dark Side of the Moon (Pink Floyd): de `…/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon` para `https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699`. Homogenic (Björk): de `…/us/search?term=Bj%C3%B6rk%20Homogenic` para `https://music.apple.com/us/album/homogenic/20833577`.
+
+**Como os ids foram escolhidos.** Sem navegador: `curl` na API pública de consulta do iTunes pelo código de barras que está no caminho da capa que a página já mostra (`lookup?upc=886445635829` e `lookup?upc=081227607364`, loja `us`). A resposta traz o álbum cuja capa é o MESMO arquivo: «The Dark Side of the Moon», Pink Floyd, 1973, 11 faixas, id 1065973699 (a edição padrão; a outra do mesmo código, «50th Anniversary [Remastered]», id 1665303755, tem outra capa); «Homogenic», Björk, 1997, 10 faixas, id 20833577 (a única; a busca por nome só devolvia «Homogenic (Live)», de outra capa). Nenhum endereço foi aberto nem clicado.
+
+**Os outros 13.** Conferidos: todos já eram endereço direto de álbum (`/us/album/<nome>/<id>`); nenhum outro aponta para busca. Teste novo em `test/splash/covers.test.js`: todo álbum real tem essa forma, sem repetição, e os dois ids acima; falha no código da `main`.
+
+Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** Que os dois endereços abrem a página certa num navegador ou no app (proibido abrir nesta rodada); a correspondência vem da resposta da API (mesmo arquivo de capa, nome, artista e ano).
+
+## [2026-11-23 15:04] step — Página de entrada (F80): sob cada disco só o nome do álbum, e o botão alinhado com o elemento visual acima (UAT-286)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Decisão do MJRP (2026-11-23, com print do iPhone da história «Criar», depois de ver o protótipo das variantes): «Vamos com opcao B mas o botao do Ouça no Apple Music precisa estar alinhado com o elemento visual acima, mesmo que isso implique em reduzir a fonte». Issue UAT-286 em `docs/specs/uat.md`, continuação da UAT-285.
+
+**O que mudou (só no celular).** O crédito sob o disco de cada história mostra só o nome do álbum (antes «álbum · artista»), sob o disco; o botão fica sob o elemento visual da história, com a mesma borda esquerda e a mesma largura dele. O crédito passou a repetir as colunas da história (172 px, vão de 14 px, o resto). Para caber numa linha, a letra do botão desceu de 14 para 12 px, o ícone de 20 para 16 px e o respiro lateral de 14 para 4 px; a altura segue 44 px. O nome acessível segue dizendo álbum e artista («Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)»). O botão da legenda do caixote e o computador não mudaram.
+
+**Medido (WebKit, site montado, PT e EN).** Elemento visual e botão, nas cinco histórias: a 390 px, x 202 e largura 172 nos dois; a 393 px, x 202 e largura 175; a 375 px, x 202 e largura 157 (`boxes.txt`). A 375 px em inglês, o caso mais apertado, sobram 5,8 px de cada lado do conteúdo. A altura da página e o lugar de cada seção, disco e elemento visual são iguais aos da `main`; o computador a 1280 igual. 108 conferências passam, 0 falham (`results.txt`); fotos de cada bloco a 390 e a 375, antes e depois, e `before-after-phone.png`.
+
+**Segurança da prova.** Nada foi clicado e nenhum endereço de álbum foi aberto: `music.apple.com`, `itunes.apple.com`, `geo.music.apple.com` e `open.spotify.com` abortados na rede em todo contexto; os botões julgados por `href`, `target`, `rel`, nome acessível, caixa e estilo.
+
+**Decidido pelo agente (revisável).** A letra do botão é 12 px em toda largura de celular (não só nas estreitas), para o botão ser igual nas cinco histórias e nos dois idiomas; o nome do álbum ficou em 13 px, em até 3 linhas. Abaixo de 375 px o botão não foi medido nesta rodada.
+
+**Prova.** Teste primeiro: 4 testes falham no código da `main` (`red-on-main.txt`). As fotos e as medidas foram tiradas do site montado na árvore final do ramo, que já traz os endereços diretos dos dois álbuns e a troca de «disco» por «álbum» (as duas entradas seguintes). `npm run budget:publication`: saída 0, tetos sem mudança. Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** Num iPhone de verdade; a página publicada. Os testes automáticos não medem caixas (o jsdom não desenha): a igualdade de caixas está na prova do navegador.
+
 ## [2026-11-23 14:44] step — Estado: o prazo de 3 horas do MJRP para o CMS, as frentes em paralelo e a F95 na `main`
 
 **Branch:** main
