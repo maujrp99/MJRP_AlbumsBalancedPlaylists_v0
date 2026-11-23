@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:12] decision — Chave da tradução ligada ao servidor pelo MJRP (revisão `mjrp-proxy-00218-cpv`)
+
+**Branch:** main
+
+O MJRP criou a chave no console da Anthropic (sem expiração), gravou-a no segredo `anthropic-api-key` pela área de transferência, deu ao servidor a leitura desse segredo e o ligou como `ANTHROPIC_API_KEY` (saídas coladas por ele no chat; o agente não leu nem digitou a chave). O serviço passou à revisão `mjrp-proxy-00218-cpv`, com 100% do tráfego. Volta do servidor agora: `gcloud run services update-traffic mjrp-proxy --to-revisions=mjrp-proxy-00217-2bb=100 --region southamerica-east1 --project mjrp-playlist-generator`. Falta ele provar o «traduzir» no Painel.
+
 ## [2026-11-23 18:06] decision — Issue UAT-302: o parceiro do MJRP não conseguiu exportar («não encontrou as faixas»)
 
 **Branch:** main
