@@ -249,6 +249,8 @@ serves:: [[ROADMAP#^OUT-04]] ^EP-10
 
 ![[S-75-turn-features-on-and-off-from-the-cms]]
 
+![[S-77-see-the-entry-page-albums-as-a-blender-curation]]
+
 ### Transversais
 
 Os requisitos não funcionais valem para todas as features e não são importados por nenhuma: cada um é um arquivo `docs/specs/requirements/nfr/NFR-xx-<slug>.md`.
