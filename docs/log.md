@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:14] decision — Home nova do celular (F96): o MJRP aprovou a prévia
+
+**Branch:** main
+
+MJRP, depois de ver no iPhone a prévia `staging` do ramo `feat/f96-entry-page-on-the-phone` (`bca8ea9`: faixas alternadas com rótulo e linha, rótulos e links dos passos em laranja, título «Como funciona» em laranja): «perfeito home do cle approvada». Antes: «os textos do Lado a! criar e o link começar uma séries, eu usaria um tom de laranja... (em todas as etapas) fora isso tá aprovado». É a aprovação da tela; a publicação em produção espera a palavra dele («publica»), a prova completa do construtor e o relatório independente que a trava de merge pede.
+
 ## [2026-11-23 18:12] decision — Chave da tradução ligada ao servidor pelo MJRP (revisão `mjrp-proxy-00218-cpv`)
 
 **Branch:** main
