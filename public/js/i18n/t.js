@@ -24,9 +24,18 @@ export const DEFAULT_LOCALE = 'en'
 export const PREVIEW_KEY = 'mjrp.lang.preview'
 
 const texts = { en: { ...en }, pt: {} }
+// What the owner published in the CMS (F82, REQ-10), by language: it wins over the code whatever arrives first.
+const published = { en: {}, pt: {} }
 const loaded = new Set(['en'])
 const listeners = new Set()
+const textsListeners = new Set()
 let current = DEFAULT_LOCALE
+let textsVersion = 0
+
+const tellAll = () => {
+    listeners.forEach(listener => listener(current))
+    textsListeners.forEach(listener => listener())
+}
 
 /** The language the site speaks now. */
 export const getLocale = () => current
@@ -41,7 +50,29 @@ export function registerTexts(locale, entries) {
     texts[locale] = { ...texts[locale], ...entries }
 }
 
-const lookup = (key) => texts[current]?.[key] ?? texts[DEFAULT_LOCALE][key]
+/**
+ * The layer of published texts of a language (the CMS, F82): REPLACES what was there. The version of the texts goes up and
+ * whoever listens to the language draws again, when it is the language spoken and something did change.
+ * @param {string} locale
+ * @param {Record<string, string>} entries - key -> text, already checked (shared/content/texts.js)
+ */
+export function registerPublishedTexts(locale, entries) {
+    const before = published[locale] ?? {}
+    const keys = Object.keys(entries)
+    if (keys.length === Object.keys(before).length && keys.every(key => before[key] === entries[key])) return
+    published[locale] = { ...entries }
+    textsVersion += 1
+    if (locale === current) tellAll()
+}
+
+/** The published layer of a language now (a copy). */
+export const publishedTexts = (locale) => ({ ...published[locale] })
+
+/** Goes up each time the published texts change: with the language, it is what a screen draws from. */
+export const getTextsVersion = () => textsVersion
+
+// Fixed order, by language: the published text, the code's dictionary, the code's English.
+const lookup = (key) => published[current]?.[key] ?? texts[current]?.[key] ?? texts[DEFAULT_LOCALE][key]
 
 const fill = (text, values) => (values ? text.replace(/\{(\w+)\}/g, (whole, name) => (name in values ? String(values[name]) : whole)) : text)
 
@@ -54,6 +85,15 @@ const fill = (text, values) => (values ? text.replace(/\{(\w+)\}/g, (whole, name
 export function t(key, values) {
     return fill(lookup(key) ?? key, values)
 }
+
+/**
+ * The stored Markdown of a rich key (F82, REQ-12), by the same layers; who draws it is the kit's safe renderer, never
+ * `innerHTML`.
+ * @param {string} key
+ * @param {Record<string, string|number>} [values]
+ * @returns {string}
+ */
+export const tRich = (key, values) => t(key, values)
 
 /**
  * The text of a key that has a singular and a plural: `key.one` and `key.other`, chosen by the plural rules of the language.
@@ -91,7 +131,7 @@ export async function setLocale(locale) {
         try { await loadDictionary(locale) } catch { return false }
     }
     current = locale
-    listeners.forEach(listener => listener(locale))
+    tellAll()
     return true
 }
 
@@ -105,5 +145,15 @@ export function onLocaleChange(listener) {
     return () => { listeners.delete(listener) }
 }
 
+/**
+ * Be told when what `t()` answers may have changed: the language, or the published texts of the language spoken.
+ * @param {() => void} listener
+ * @returns {() => void} stops listening
+ */
+export function onTextsChange(listener) {
+    textsListeners.add(listener)
+    return () => { textsListeners.delete(listener) }
+}
+
 /** For the tests of the leave: how many listen now (a screen that was left must not be listening). */
-export const localeListenerCount = () => listeners.size
+export const localeListenerCount = () => listeners.size + textsListeners.size
