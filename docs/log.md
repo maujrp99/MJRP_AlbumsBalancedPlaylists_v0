@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:20] step — F97: dois acertos de texto depois do juiz (a recusa em português sem artigo antes do nome; «1 track not found»)
+
+**Branch:** fix/f97-spotify-export-says-why-it-failed
+
+Dois acertos de texto pedidos depois do julgamento independente da F97 (0 P0, 0 P1, 6 P2), cada um com o seu teste. (a) O texto da recusa em português não põe artigo antes do nome do produto: «No Spotify, The Album Blender está numa fase de testes limitada… Peça a quem cuida de The Album Blender para incluir o e-mail da sua conta do Spotify; a lista tem poucas vagas.» (b) Em inglês, uma faixa não encontrada se diz no singular: «1 track not found» (era «1 tracks not found», herdado da janela feita à mão); os quatro lugares do registro da janela antiga (`test/fixtures/spotifyExportBeforeF83.json`) que guardavam o plural foram reescritos à mão para o texto novo. Prova no navegador refeita no site construído: 132 de 132. Suíte: 5591 passaram, 1 pulado; tipos, lint e orçamento com saída 0 (tetos medidos de novo pela regra: `main` 198.931, `background` 64.088). Os outros P2 ficam como estão.
+
 ## [2026-11-23 18:49] step — F97: a exportação para o Spotify diz por que falhou (UAT-302), construída e provada: 132 de 132 no navegador
 
 **Branch:** fix/f97-spotify-export-says-why-it-failed

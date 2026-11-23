@@ -26,9 +26,18 @@ describe('the texts of an export that could not check the tracks (F97)', () => {
         expect(en['spotifyWindow.refusedNote']).toMatch(/limited test phase/)
         expect(en['spotifyWindow.refusedNote']).toMatch(/Ask the owner/)
         expect(en['spotifyWindow.refusedNote']).toMatch(/Apple Music/)
-        expect(pt['spotifyWindow.refusedNote']).toMatch(/Peça ao dono/)
+        expect(pt['spotifyWindow.refusedNote']).toMatch(/Peça a quem cuida de The Album Blender/)
         expect(pt['spotifyWindow.refusedNote']).toMatch(/Apple Music/)
         expect(`${en['spotifyWindow.refusedNote']} ${pt['spotifyWindow.refusedNote']}`).not.toMatch(/will be added|vai ser incluíd|será incluíd/i)
+    })
+
+    it('in Portuguese the name of the product takes no article before it', () => {
+        expect(NEW_KEYS.map(key => pt[key]).join(' ')).not.toMatch(/\b(o|do|no|ao|pelo) The Album Blender/i)
+    })
+
+    it('one track not found is said in the singular, in both languages', () => {
+        expect(en['spotifyWindow.notFound.one']).toBe('{count} track not found')
+        expect(pt['spotifyWindow.notFound.one']).toBe('{count} faixa não encontrada')
     })
 
     it('the product is named in full, and Portuguese never says «disco»', () => {

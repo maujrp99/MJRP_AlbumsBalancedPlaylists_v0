@@ -7,6 +7,9 @@
  * asked of the world equal what the hand-made window gave at the same step. The pages are kept in test/fixtures/spotifyExportBeforeF83.json, written once
  * by the hand-made window (reports/evidence/F83/wave-8a/capture-spotify-before.test.js).
  *
+ * F97 (the judge's P2): one track not found is said in the singular now («1 track not found»; the hand-made window said «1 tracks not found»). The
+ * four places of the fixture that held the old plural were rewritten by hand to the new text; nothing else of it changed.
+ *
  * KNOWN_DIFFERENCES is empty: there is nothing the window does differently. The last two tests prove the check is not blind: a word, a class, an
  * attribute and a space inside a text, changed on purpose, are accused.
  */

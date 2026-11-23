@@ -31,13 +31,13 @@ Os quatro cenários, em cada motor e largura:
 1. **403 em tudo** (o corpo que o Spotify dá a uma conta fora da lista): a recusa e o próximo passo; nenhuma menção a faixas não encontradas; a exportação parou na primeira busca (1 de 5).
 2. **500 nas buscas:** «your tracks could not be checked», «5 tracks could not be checked», «Try again»; depois, com o Spotify de volta, «Try again» completa a exportação.
 3. **Listas vazias de verdade** (200, `tracks.items: []`): «No tracks found on Spotify» e «5 tracks not found», como antes.
-4. **Misto** (uma busca falha, uma faixa não existe): a exportação completa com 3 de 5; «1 tracks not found» e «1 track could not be checked», cada faixa na sua lista.
+4. **Misto** (uma busca falha, uma faixa não existe): a exportação completa com 3 de 5; «1 track not found» e «1 track could not be checked», cada faixa na sua lista.
 
 ## Suíte e sensores
 
-- Suíte inteira (`npx vitest run`, pela fila): 412 arquivos, 5589 testes passaram, 1 pulado; saída 0.
+- Suíte inteira (`npx vitest run`, pela fila): 412 arquivos, 5591 testes passaram, 1 pulado; saída 0.
 - `npm run typecheck`: saída 0. `npx eslint . --quiet`: saída 0. `npm run budget:publication`: saída 0 (`raw/publication-budget.txt`).
-- **O orçamento de peso mudou.** O script principal cresceu 301 B (198.469 → 198.770): os seis textos em inglês (o inglês mora sempre no script principal) e a propriedade `reason` do evento. O que vem depois da primeira tela cresceu 423 B. Os tetos em `scripts/bundle-budget.json` foram medidos de novo pela regra do arquivo (medido + 150 B): `main` 198.920, `background` 64.103.
+- **O orçamento de peso mudou.** O script principal cresceu 312 B (198.469 → 198.781, com os dois acertos de texto depois do juiz): os seis textos em inglês (o inglês mora sempre no script principal) e a propriedade `reason` do evento. O que vem depois da primeira tela cresceu 397 B. Os tetos em `scripts/bundle-budget.json` foram medidos de novo pela regra do arquivo (medido + 150 B): `main` 198.931, `background` 64.088.
 
 ## Apple Music: o mesmo padrão existe (relatado, não consertado)
 

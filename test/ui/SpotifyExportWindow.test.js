@@ -212,7 +212,8 @@ describe('SpotifyExportWindow (F62)', () => {
             await startExport()
 
             expect(text()).toContain('O Spotify não permitiu esta conta')
-            expect(text()).toContain('Peça ao dono')
+            expect(text()).toContain('Peça a quem cuida de The Album Blender')
+            expect(text()).not.toMatch(/\b(o|do|no|ao|pelo) The Album Blender/i)
             expect(text()).toContain('A exportação para o Apple Music está disponível')
             expect(text()).not.toContain('Spotify did not allow')
         })
@@ -227,7 +228,7 @@ describe('SpotifyExportWindow (F62)', () => {
 
             await startExport()
 
-            expect(text()).toContain('1 tracks not found')
+            expect(text()).toContain('1 track not found')
             expect(text()).toContain('2 tracks could not be checked')
             const lists = [...windowBox().querySelectorAll('details')].map(box => box.textContent.replace(/\s+/g, ' '))
             expect(lists.find(list => list.includes('could not be checked'))).toContain('Artist - Two')

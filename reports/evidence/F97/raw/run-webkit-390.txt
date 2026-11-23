@@ -13,7 +13,7 @@ PASS  webkit-390 · 500 · counts them: 5 tracks could not be checked  Export to
 PASS  webkit-390 · 500 · never says tracks not found  Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Thre
 PASS  webkit-390 · 500 · offers «Try again»
 PASS  webkit-390 · 500 · every track was asked for (5 searches), nothing created  GET /me -> 200 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500
-PASS  webkit-390 · 500 · «Try again», with Spotify back, completes the export  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 4 tracks Open in SpotifyTracks matched4 / 5 1 tracks not found • Artist - Nowhere Man Close 
+PASS  webkit-390 · 500 · «Try again», with Spotify back, completes the export  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 4 tracks Open in SpotifyTracks matched4 / 5 1 track not found • Artist - Nowhere Man Close 
 PASS  webkit-390 · 500 · the window fits the screen, no sideways scroll
 PASS  webkit-390 · 500 · no page error
 PASS  webkit-390 · 500 · the page never left the site
@@ -24,10 +24,10 @@ PASS  webkit-390 · empty · every search was answered 200  GET /me -> 200 ; GET
 PASS  webkit-390 · empty results · the window fits the screen, no sideways scroll
 PASS  webkit-390 · empty results · no page error
 PASS  webkit-390 · empty results · the page never left the site
-PASS  webkit-390 · mixed · the export completes with what was found  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
-PASS  webkit-390 · mixed · «3 / 5» matched  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
-PASS  webkit-390 · mixed · one not found and one not checked, counted apart  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
-PASS  webkit-390 · mixed · the track whose search failed is in the «could not be checked» list only   1 tracks not found • Artist - Nowhere Man ||  1 track could not be checked • Artist - Two
+PASS  webkit-390 · mixed · the export completes with what was found  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
+PASS  webkit-390 · mixed · «3 / 5» matched  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
+PASS  webkit-390 · mixed · one not found and one not checked, counted apart  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
+PASS  webkit-390 · mixed · the track whose search failed is in the «could not be checked» list only   1 track not found • Artist - Nowhere Man ||  1 track could not be checked • Artist - Two
 PASS  webkit-390 · mixed · the window fits the screen, no sideways scroll
 PASS  webkit-390 · mixed · no page error
 PASS  webkit-390 · mixed · the page never left the site

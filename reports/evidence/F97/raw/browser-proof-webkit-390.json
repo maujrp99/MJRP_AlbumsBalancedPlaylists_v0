@@ -81,7 +81,7 @@
   {
    "what": "500 · «Try again», with Spotify back, completes the export",
    "ok": true,
-   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 4 tracks Open in SpotifyTracks matched4 / 5 1 tracks not found • Artist - Nowhere Man Close "
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 4 tracks Open in SpotifyTracks matched4 / 5 1 track not found • Artist - Nowhere Man Close "
   },
   {
    "what": "500 · the window fits the screen, no sideways scroll",
@@ -136,22 +136,22 @@
   {
    "what": "mixed · the export completes with what was found",
    "ok": true,
-   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
   },
   {
    "what": "mixed · «3 / 5» matched",
    "ok": true,
-   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
   },
   {
    "what": "mixed · one not found and one not checked, counted apart",
    "ok": true,
-   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
   },
   {
    "what": "mixed · the track whose search failed is in the «could not be checked» list only",
    "ok": true,
-   "detail": " 1 tracks not found • Artist - Nowhere Man ||  1 track could not be checked • Artist - Two"
+   "detail": " 1 track not found • Artist - Nowhere Man ||  1 track could not be checked • Artist - Two"
   },
   {
    "what": "mixed · the window fits the screen, no sideways scroll",

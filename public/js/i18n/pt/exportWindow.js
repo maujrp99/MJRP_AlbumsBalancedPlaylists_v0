@@ -58,7 +58,7 @@ export const exportWindow = {
     'spotifyWindow.retry': 'Tentar de novo',
     'spotifyWindow.retryNote': 'O que já foi criado não é criado de novo.',
     'spotifyWindow.refused': 'O Spotify não permitiu esta conta',
-    'spotifyWindow.refusedNote': 'Não é um problema com as suas faixas. O The Album Blender está numa fase de testes limitada no Spotify, e o Spotify só atende as contas da lista de testes. Peça ao dono do The Album Blender para incluir o e-mail da sua conta do Spotify; a lista tem poucas vagas. A exportação para o Apple Music está disponível.',
+    'spotifyWindow.refusedNote': 'Não é um problema com as suas faixas. No Spotify, The Album Blender está numa fase de testes limitada, e o Spotify só atende as contas da lista de testes. Peça a quem cuida de The Album Blender para incluir o e-mail da sua conta do Spotify; a lista tem poucas vagas. A exportação para o Apple Music está disponível.',
     'spotifyWindow.unchecked': 'Não foi possível falar com o Spotify, então as suas faixas não puderam ser conferidas. Nada foi criado.',
     'spotifyWindow.uncheckedCount.one': '{count} faixa não pôde ser conferida',
     'spotifyWindow.uncheckedCount.other': '{count} faixas não puderam ser conferidas',

@@ -53,7 +53,7 @@ export const exportWindow = {
     'spotifyWindow.notCreated': 'Not created',
     'spotifyWindow.empty': 'No track found',
     'spotifyWindow.matched': 'Tracks matched',
-    'spotifyWindow.notFound.one': '{count} tracks not found',
+    'spotifyWindow.notFound.one': '{count} track not found',
     'spotifyWindow.notFound.other': '{count} tracks not found',
     'spotifyWindow.notFoundMore': '...and {count} more',
     'spotifyWindow.reconnect': 'Connect to Spotify again',

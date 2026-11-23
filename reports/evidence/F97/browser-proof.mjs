@@ -227,7 +227,7 @@ await scenario('empty', 'empty results', async ({ page, spot, text }) => {
 await scenario('mixed', 'mixed', async ({ page, spot, text }) => {
     note('mixed · the export completes with what was found', /Export Complete/.test(text) && spot.made === 1, text.slice(0, 200))
     note('mixed · «3 / 5» matched', text.includes('3 / 5'), text.slice(0, 400))
-    note('mixed · one not found and one not checked, counted apart', text.includes('1 tracks not found') && text.includes('1 track could not be checked'), text.slice(0, 500))
+    note('mixed · one not found and one not checked, counted apart', text.includes('1 track not found') && text.includes('1 track could not be checked'), text.slice(0, 500))
     const lists = await page.evaluate(() => [...document.querySelectorAll('#spotify-export-modal details')].map(box => box.textContent.replace(/\s+/g, ' ')))
     const unchecked = lists.find(list => /could not be checked/.test(list)) || ''
     const missing = lists.find(list => /not found/.test(list)) || ''

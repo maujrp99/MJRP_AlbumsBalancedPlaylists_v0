@@ -311,7 +311,7 @@ describe('the export window (F90)', () => {
             row('spotify').click()
             await vi.waitFor(() => expect(modal()).not.toBeNull())
             modal().querySelector('#startExportBtn').click()
-            await vi.waitFor(() => expect(modal().textContent).toContain('1 tracks not found'))
+            await vi.waitFor(() => expect(modal().textContent).toContain('1 track not found'))
             expect(modal().textContent).toContain('Artist - Five')
         })
     })
