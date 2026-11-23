@@ -7,16 +7,21 @@
  *   value   the route that reads a price from Discogs with the token of the owner's account
  *           (F75): a signed-in person with an account (no guests), with a limit of its own, so
  *           that reading the values of an inventory does not spend the calls of the AI routes
+ *   admin   the routes of the Painel (F82): the administrator only - a person with an account whose
+ *           record `cmsAdmins/{uid}` says role "super" - with a limit of its own. This door has no
+ *           switch: REQUIRE_SIGN_IN=false does not open it
  *
  * Switches (all optional; with none set the routes are CLOSED to who is not signed in):
  *   REQUIRE_SIGN_IN=false             turns the door off (local experiments only; warns at start)
  *   PAID_ROUTES_ALLOW_ANONYMOUS=true  lets guests use the paid routes
  *   PAID_CALLS_PER_HOUR, COSTLY_CALLS_PER_HOUR, VALUE_CALLS_PER_HOUR   the limits per person (defaults 60, 900 and 900)
+ *   TRANSLATE_CALLS_PER_HOUR          the limit of the administrator's translations (default 120)
  *   FIREBASE_PROJECT_ID               the project whose logins are accepted
  */
 const axios = require('axios')
 const { createIdTokenVerifier } = require('./verifyIdToken')
 const { requireUser } = require('./requireUser')
+const { requireCmsAdmin } = require('./requireCmsAdmin')
 const { createRateLimiter } = require('../rateLimit')
 
 const GOOGLE_KEYS_URL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com'
@@ -35,20 +40,26 @@ function positiveNumber (value, fallback) {
   return Number.isFinite(number) && number > 0 ? number : fallback
 }
 
-function buildGuards (env = {}, { fetchKeys = fetchGoogleKeys, logger = console } = {}) {
-  if (env.REQUIRE_SIGN_IN === 'false') {
-    if (logger && logger.warn) logger.warn('Sign-in is NOT required on the paid routes (REQUIRE_SIGN_IN=false). Never in production.')
-    const open = (req, res, next) => next()
-    return { paid: [open], costly: [open], value: [open], required: false }
-  }
-
+function buildGuards (env = {}, { fetchKeys = fetchGoogleKeys, logger = console, http = axios } = {}) {
   const verifier = createIdTokenVerifier({
     projectId: env.FIREBASE_PROJECT_ID || DEFAULT_PROJECT_ID,
     fetchKeys
   })
+  // The administrator's door is the same with or without the switch below: it is never open
+  const admin = [
+    requireCmsAdmin({ verifier, http, env, logger }),
+    createRateLimiter({ limit: positiveNumber(env.TRANSLATE_CALLS_PER_HOUR, 120), windowMs: HOUR_MS, reason: 'too-many-requests' })
+  ]
+
+  if (env.REQUIRE_SIGN_IN === 'false') {
+    if (logger && logger.warn) logger.warn('Sign-in is NOT required on the paid routes (REQUIRE_SIGN_IN=false). Never in production.')
+    const open = (req, res, next) => next()
+    return { paid: [open], costly: [open], value: [open], admin, required: false }
+  }
 
   return {
     required: true,
+    admin,
     paid: [
       requireUser({ verifier, allowAnonymous: env.PAID_ROUTES_ALLOW_ANONYMOUS === 'true', logger }),
       createRateLimiter({ limit: positiveNumber(env.PAID_CALLS_PER_HOUR, 60), windowMs: HOUR_MS })

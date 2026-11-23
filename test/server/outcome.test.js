@@ -34,7 +34,7 @@ describe('outcome: the success answer', () => {
 
 describe('outcome: the error answer', () => {
     it('the codes are the closed list of the design', () => {
-        expect([...ERROR_CODES].sort()).toEqual(['internal', 'invalid_request', 'rate_limited', 'unauthorized',
+        expect([...ERROR_CODES].sort()).toEqual(['internal', 'invalid_request', 'not_configured', 'rate_limited', 'unauthorized',
             'upstream_busy', 'upstream_failed', 'upstream_timeout', 'upstream_unauthorized'])
         expect(() => failure('something_else')).toThrow()
     })
@@ -47,6 +47,7 @@ describe('outcome: the error answer', () => {
         ['invalid_request', 400, false],
         ['unauthorized', 401, false],
         ['rate_limited', 429, false],
+        ['not_configured', 503, false],
         ['internal', 500, false]
     ]
     defaults.forEach(([code, status, retryable]) => {
