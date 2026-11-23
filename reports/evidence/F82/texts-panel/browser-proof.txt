@@ -1,10 +1,12 @@
-PASS the Painel is not in the page's preload — adminPanel-Bqb3Vzdo.js, adminPanel-DLGAvLMT.css
-PASS the main script carries neither the Painel nor the check of the administrator — main-CWsPsQVt.js
+PASS the Painel is not in the page's preload — adminPanel-BfawCnk7.css, adminPanel-CWyMbi3E.js
+PASS the main script carries neither the Painel nor the check of the administrator — main-yGCQt_a6.js
 PASS 1440 administrator: /admin opens the Painel — 188 texts of the first screen
-PASS 1440 the Painel's files were asked for — adminPanel-Bqb3Vzdo.js, adminPanel-DLGAvLMT.css
+PASS 1440 the Painel's files were asked for — adminPanel-BfawCnk7.css, adminPanel-CWyMbi3E.js
 PASS 1440 the Painel's own words are not in the list, and no text is a rich one yet
 PASS 1440 the line about the site says what it shows — What the site shows: published (from the database) 1 text refused by the current version
-PASS 1440 scrolled to the middle (9506 of 19012 px): nothing covers «Save» — {"reached":true,"top":15,"hit":"ak-btn pri"}
+PASS 1440 every screen chip has a name, none shows a raw key — Albums · Blend · Coming soon · Export window · Spotify export window · Inventory · Notices · Questions and confirmations · Playlists · Saved playlists · Menu and frame · Create · Shared pieces
+PASS 1440 the Painel's bold is drawn: its buttons at 600, the kit's at 700 (computed style) — {".cms-navb":"600",".cms-chip":"600",".cms-lnk":"600",".cms-bar .ak-btn":"700",".cms-bar .ak-btn.pri":"700"}
+PASS 1440 scrolled to the middle (9517 of 19033 px): nothing covers «Save» — {"reached":true,"top":15,"hit":"ak-btn pri"}
 PASS 1440 scrolled to the middle: «Save» is clicked and asks to confirm — 1 text goes live now.
 PASS 1440 scrolled to the end: nothing covers «Discard» — {"reached":true,"top":15,"hit":"ak-btn"}
 PASS 1440 scrolled to the end: «Discard» is clicked and the change is gone
@@ -40,13 +42,15 @@ PASS 1440 an account whose role is «editor»: no horizontal scroll, no console 
 PASS 1440 an account whose role is «Super» (not «super»): /admin says «Page not found»
 PASS 1440 an account whose role is «Super» (not «super»): the Painel's files are never requested — asked: 0
 PASS 1440 an account whose role is «Super» (not «super»): no horizontal scroll, no console errors
-PASS 1440 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3391 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
+PASS 1440 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3411 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
 PASS 1440 the database slow: the Painel's files are not requested
 PASS 393 administrator: /admin opens the Painel — 188 texts of the first screen
-PASS 393 the Painel's files were asked for — adminPanel-Bqb3Vzdo.js, adminPanel-DLGAvLMT.css
+PASS 393 the Painel's files were asked for — adminPanel-BfawCnk7.css, adminPanel-CWyMbi3E.js
 PASS 393 the Painel's own words are not in the list, and no text is a rich one yet
 PASS 393 the line about the site says what it shows — What the site shows: published (from the database) 1 text refused by the current version
-PASS 393 scrolled to the middle (22610 of 45219 px): nothing covers «Save» — {"reached":true,"top":69,"hit":"ak-btn pri"}
+PASS 393 every screen chip has a name, none shows a raw key — Albums · Blend · Coming soon · Export window · Spotify export window · Inventory · Notices · Questions and confirmations · Playlists · Saved playlists · Menu and frame · Create · Shared pieces
+PASS 393 the Painel's bold is drawn: its buttons at 600, the kit's at 700 (computed style) — {".cms-navb":"600",".cms-chip":"600",".cms-lnk":"600",".cms-bar .ak-btn":"700",".cms-bar .ak-btn.pri":"700"}
+PASS 393 scrolled to the middle (22635 of 45269 px): nothing covers «Save» — {"reached":true,"top":69,"hit":"ak-btn pri"}
 PASS 393 scrolled to the middle: «Save» is clicked and asks to confirm — 1 text goes live now.
 PASS 393 scrolled to the end: nothing covers «Discard» — {"reached":true,"top":69,"hit":"ak-btn"}
 PASS 393 scrolled to the end: «Discard» is clicked and the change is gone
@@ -82,7 +86,7 @@ PASS 393 an account whose role is «editor»: no horizontal scroll, no console e
 PASS 393 an account whose role is «Super» (not «super»): /admin says «Page not found»
 PASS 393 an account whose role is «Super» (not «super»): the Painel's files are never requested — asked: 0
 PASS 393 an account whose role is «Super» (not «super»): no horizontal scroll, no console errors
-PASS 393 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3409 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
+PASS 393 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3416 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
 PASS 393 the database slow: the Painel's files are not requested
 
-86 of 86 passed
+90 of 90 passed

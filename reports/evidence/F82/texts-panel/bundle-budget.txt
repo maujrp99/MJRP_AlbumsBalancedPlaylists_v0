@@ -1,9 +1,18 @@
-main script   main-CWsPsQVt.js                               198470 B   (ceiling 198620 B)
+npm run budget:publication (branch claude/f82-cms-texts-panel, after the merge of main 18f3580 and the fixes of the second judge)
+publication-shaped build (stand-ins by length: VITE_SPOTIFY_CLIENT_ID 32, VITE_POSTHOG_KEY 47, VITE_POSTHOG_HOST 24, VITE_SPLASH_COVERS 4, VITE_USAGE_MEASUREMENT 3)
+main script            198469 B   (ceiling 198619 B, margin 150 B)
+after the first screen 238197 B
+main + after           436666 B   (cap 436816 B)
+react-vendor           68691 B   (ceiling 72000 B)
+publication-budget: inside the budget, with the margin
+
+node scripts/bundle-budget.mjs <that build>, file by file
+main script   main-yGCQt_a6.js                               198469 B   (ceiling 198619 B)
 react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
-file (listed) adminPanel-Bqb3Vzdo.js                          53476 B
-file          gate-539ExcBu.js                                  989 B   (ceiling 30000 B)
-file          publishedContentWriter-3XFY04Oi.js               1204 B   (ceiling 30000 B)
-stylesheet    adminPanel-DLGAvLMT.css                          9403 B
-after 1st     React + screens, downloaded after the first screen   238196 B
-1st screen    main script + the biggest screen               292791 B   (ceiling 300620 B)
+file (listed) adminPanel-CWyMbi3E.js                          53540 B
+file          gate-3Cl4tk6T.js                                  987 B   (ceiling 30000 B)
+file          publishedContentWriter-DTfKhY8U.js               1205 B   (ceiling 30000 B)
+stylesheet    adminPanel-BfawCnk7.css                          9446 B
+after 1st     React + screens, downloaded after the first screen   238197 B
+1st screen    main script + the biggest screen               292792 B   (ceiling 300619 B)
 bundle-budget: inside the budget

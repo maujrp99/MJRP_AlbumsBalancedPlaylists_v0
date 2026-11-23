@@ -2,6 +2,16 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:39] step — F82 (2º juiz, P2): a evidência do orçamento gerada de novo; suíte verde e prova 90 de 90
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2 do segundo juiz: `reports/evidence/F82/texts-panel/bundle-budget.txt` mostrava tetos de antes da última junta da `main`. O arquivo foi gerado de novo, agora com as duas saídas inteiras: a do `npm run budget:publication` (o build com forma de publicação, os tetos e a margem) e a do conferidor por arquivo sobre esse mesmo build.
+
+Medido de novo depois dos dois consertos deste lote: script principal 198.469 B (teto 198.619 B), depois da primeira tela 238.197 B (`background` 63.379 B); o teto antigo ficava a 148 B do medido, 2 B abaixo da margem, e foi posto pela regra do arquivo (medido + 150 B). `budget:publication` sai 0.
+
+Suíte inteira, sozinha, pela fila, com os dois consertos: `Test Files 411 passed (411)` · `Tests 5560 passed | 1 skipped (5561)`, sem «Unhandled Errors». Prova no navegador no site montado, a 1440 e 393 px: 90 de 90 (as 86 de antes mais, em cada largura, «nenhuma tela mostra chave crua» e o peso calculado dos botões: 600 nos do Painel, 700 nos do kit); endereços de música abortados, nenhum link para fora clicado. Capturas novas na mesma pasta.
+
 ## [2026-11-23 16:35] step — F82 (2º juiz, P2): o negrito do Painel volta, pela pele do V0
 
 **Branch:** claude/f82-cms-texts-panel
