@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-23 00:48] step — CMS, fatia 0: o validador das chaves em shared/content (F93 TASK-04)
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- `shared/content/switches.js` (F93 TASK-04, REQ-05): a lista fechada das três chaves (`discogsValues`, `usageMeasurement`, `portugueseForAll`), cada uma `true` ou `false`, com o padrão, o que o leitor faz sem leitura (`whenUnknown`) e se o CMS só pode desligá-la (`onlyTurnsOff`); `validateSwitches` recusa a chave fora da lista ou de outro tipo sozinha e segue com as outras (`{ values, rejected }`); `switchValue` devolve o lido ou o padrão. Núcleo puro: sem Firebase, sem `fetch`, sem global (o `coreStaysPortable` o cobre, sem exceção); roda também sem o jsdom (projeto `core-node`). 12 casos em `test/shared/content/switches.test.js`, escritos antes do código.
+- Decidido pelo agente — revisável: os padrões. `discogsValues` = `false` (nada liga o que o dono não ligou), `usageMeasurement` = `true` com `onlyTurnsOff` (a medição segue o build e o CMS só a desliga; chave ausente não a desliga), `portugueseForAll` = `false` (fechada). O servidor passa a usá-lo no próximo commit (o `noDeadModules` exige um importador).
+- A F92 (TASK-04) NÃO foi marcada: o commit que toca a F92 foi barrado pelo gate da «Priorizada» (a F92 não está lá; o caso do emulador existe em `test/security/firestoreRules.test.js`, só a caixa em `tasks.md` espera o MJRP priorizar a F92).
+
+
 ## [2026-11-23 00:45] step — CMS, fatia 0: as regras do conteúdo publicado e o teste que as roda no emulador (F82 TASK-07/08/05, F92 TASK-04)
 
 **Branch:** claude/f82-cms-slice-0-foundation
