@@ -185,7 +185,7 @@ Os estados da rodada 1 acima ficam como estão (nenhum requisito aponta para ele
 - **Movimento reduzido.** Sem three.js, sem animação: o caixote em CSS parado na faixa atual, o fogo num quadro parado, o equalizador em alturas fixas; nenhum botão «Pause motion». A página parece acabada. ^splash-v2-reduced-motion
 - **O movimento que para sozinho.** Dez segundos depois de carregar ou da última rolagem, o fogo e o equalizador param num quadro; o 3D só desenha quando algo muda. «Pause motion» (no fim do fio no computador, sob as chamadas no celular) para tudo; vira «Play motion». ^splash-v2-motion-rest
 - **Sem JavaScript.** Todo o texto e as chamadas; o caixote em CSS parado com as sete capas do lado A, a da frente à vista; o fio aparece sem nada aceso, rotulado na primeira faixa; os discos de cada faixa no celular não aparecem (a legenda e o link do disco da frente ficam). ^splash-v2-no-js
-- **Celular (até 899 px).** Uma coluna; topo com o logotipo e «Sign in»; o caixote em CSS sob a primeira tela; cada faixa abre com o seu disco, a capa com o crédito e o link «Listen on Apple Music»; a barra de baixo presa leva o fio (só progresso) e «Open the app». ^splash-v2-phone
+- **Celular (até 899 px).** Uma coluna; topo com o logotipo e «Sign in»; o caixote em CSS sob a primeira tela; cada faixa abre com o seu disco: a capa, o álbum e o artista em texto e, ao lado, o botão «Ouça no Apple Music» / «Listen on Apple Music», o mesmo da legenda do caixote (UAT-285, 2026-11-23; antes era um link de texto sublinhado); a barra de baixo presa leva o fio (só progresso) e «Open the app». ^splash-v2-phone
 
 #### Rodada 3 · a home com o menu na barra (`splash-menu-{stops,bar,deck}-v1.html`, prévias)
 

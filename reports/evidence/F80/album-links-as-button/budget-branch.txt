@@ -1,0 +1,11 @@
+
+> mjrp-playlist-generator@3.19.0 budget:publication
+> node scripts/publication-budget.mjs --out <scratch>/dist-branch
+
+publication-shaped build (stand-ins by length: VITE_SPOTIFY_CLIENT_ID 32, VITE_POSTHOG_KEY 47, VITE_POSTHOG_HOST 24, VITE_SPLASH_COVERS 4, VITE_USAGE_MEASUREMENT 3) in <scratch>/dist-branch
+main script            194875 B   (ceiling 195025 B, margin 150 B)
+after the first screen 235875 B
+main + after           430750 B   (cap 430900 B)
+react-vendor           68691 B   (ceiling 72000 B)
+publication-budget: inside the budget, with the margin
+exit 0
