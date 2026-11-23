@@ -1,6 +1,9 @@
-publication-shaped build (stand-ins by length: VITE_SPOTIFY_CLIENT_ID 32, VITE_POSTHOG_KEY 47, VITE_POSTHOG_HOST 24, VITE_SPLASH_COVERS 4, VITE_USAGE_MEASUREMENT 3) in /tmp/claude-501/f82panel-dist
-main script            200230 B   (ceiling 200380 B, margin 150 B)
-after the first screen 236928 B
-main + after           437158 B   (cap 437308 B)
-react-vendor           68691 B   (ceiling 72000 B)
-publication-budget: inside the budget, with the margin
+main script   main-CAoU11kz.js                               198465 B   (ceiling 198615 B)
+react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
+file (listed) adminPanel-DJnw8DTo.js                          51882 B
+file          gate-Cif6_I7M.js                                  990 B   (ceiling 30000 B)
+file          publishedContentWriter-q0sMTqvc.js               1204 B   (ceiling 30000 B)
+stylesheet    adminPanel-DLGAvLMT.css                          9403 B
+after 1st     React + screens, downloaded after the first screen   238211 B
+1st screen    main script + the biggest screen               292788 B   (ceiling 300615 B)
+bundle-budget: inside the budget

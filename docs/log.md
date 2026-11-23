@@ -2,6 +2,28 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:53] step — F82 (juiz, P2-8): a prova do Painel no navegador refeita, 86 de 86; orçamento medido de novo
+
+**Branch:** claude/f82-cms-texts-panel
+
+A prova do Painel no navegador, refeita no site MONTADO depois dos achados do juiz (P2-8: o que a primeira prova não cobria), a 1440 e a 393 px: **86 de 86**, repetida três vezes seguidas com o mesmo resultado. Os servidores do Firebase trocados na rede por um dublê; os endereços de música abortados na rede; nenhum link para fora do site clicado (as mudanças de tela são pedidas ao roteador do app). O que entrou:
+
+- **A faixa de salvar depois de rolar** (P1-1): na tela mais longa (Albums, ~25 mil px no celular), rolada até o meio, nada cobre «Save» e o toque abre a confirmação; rolada até o fim, nada cobre «Discard» e o toque descarta. Nas duas larguras, com captura da tela inteira.
+- **O conferidor no navegador**, com o validador real do site: marcação, vazio, longo demais e um `{marcador}` que o inglês não tem são ditos pelo nome, e salvar com um deles não grava nada (o `rev` não muda).
+- **Os nove nomes de falha da tradução**, cada um respondido pela rota de mentira e dito em palavras comuns; o campo não muda em nenhum.
+- **Sair com mudança não salva**: a navegação do app pergunta e «cancelar» mantém a pessoa e a mudança; o voltar do navegador também; trocar de tela dentro do Painel não pergunta nem perde; «sair» sai.
+- **Quem não entra**: visitante, conta sem registro, papel «editor», papel «Super» (não «super»): «Page not found» e os arquivos do Painel nunca pedidos.
+- **O banco lento** (6 s por resposta): «Could not check right now» depois do prazo de 3 s, sem pedir os arquivos do Painel.
+- O salvar pelo lote (P2-1) grava `rev` + 1, `previous` e quem salvou; o conflito mostra os três valores e nada é gravado por cima.
+
+Fora da prova, e dito: o editor rico não aparece no navegador (nenhuma chave é rica hoje, P2-2); ele é coberto pelos testes de componente.
+
+Orçamento pela regra do arquivo, medido de novo depois de todos os achados: script principal **198.465 B** (era 200.227 B antes do P2-1; a `main` tem 194.875 B), depois da primeira tela 238.211 B; tetos `main` 198.615 B e `background` 63.389 B; `budget:publication` sai 0. Dos +3.590 B contra a `main`, 3.161 B são o leitor do conteúdo ao abrir (de todo visitante) e 429 B a porta do Painel (a rota com dois arquivos sob demanda, cinco textos em inglês de «Page not found» e «Could not check right now», um nome de tela).
+
+Capturas, o resultado e os dois scripts da prova em `reports/evidence/F82/texts-panel/`.
+
+Suíte inteira, sozinha, pela fila, antes deste commit: `Test Files 5 failed | 403 passed (408)` · `Tests 6 failed | 5508 passed | 1 skipped (5515)`, sem «Unhandled Errors»; os seis são os sensores da cópia candidata do kit (`complexityLimit` ×2, `noDeadModules` só com os dois arquivos de exemplo, `outsideUrlChecked`, `reactStaysAtTheEdge`, `tailwindBuiltWithSite`). Na rodada anterior, a mesma suíte teve um sétimo, `test/server/rankingPipeline.test.js` («a source still running when the time ends»), um teste de tempo do servidor que este ramo não toca: passou sozinho (47 de 47) e na rodada seguinte; fica registrado como instável sob carga. `tsc` passa; `npm run test:rules` 38 passam.
+
 ## [2026-11-23 15:47] step — F82: os sensores de imports conhecem o apelido do núcleo do kit; um teste segura a tabela junto do build
 
 **Branch:** claude/f82-cms-texts-panel
