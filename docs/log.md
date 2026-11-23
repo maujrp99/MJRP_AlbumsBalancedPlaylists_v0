@@ -2,6 +2,23 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 11:16] decision — CMS: respostas D-12, D-13 e D-14 do lote; o MJRP mandou publicar o servidor já
+
+**Branch:** main
+
+O MJRP, na tela remota, 2026-11-23 11:16: D-12 «a» (papéis depois das chaves; primeiro o editor de textos); D-13 «b» («Publique o servidor já; o Discogs fica desligado até eu fazer a minha parte»); D-14 «b» (as Receitas construídas como no protótipo, revisão em cima do que ficar pronto). A D-13 é a palavra dele para publicar o servidor da `main` agora; efeito que ele aceitou: os valores do Discogs somem do Inventário até ele publicar as regras do banco e criar `published/site` com `discogsValues: true` (eu mando o passo a passo). O lote está todo respondido.
+
+## [2026-11-23 11:16] answer — lote 2026-11-23-1039-v0-cms-pending-decisions
+
+- Lote: `reports/proposals/2026-11-23-1039-v0-cms-pending-decisions.md`
+- Envio: bf9665891225252c
+- Recomendações aceitas: D-12
+- D-13: b
+- D-14: b
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2ljSGN0T1RCd2VEaGtRekI2UWpSM1YxbHphbU5pVmw5R1UxaEhSblp2Y1MxSlkxQjBVVTUwTlU1WVRTSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTkRRek9UWTRMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVTBORE16Tmpnc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaU5GTjRkMDFOVFhKdmVuVmpibk5GWDNwYVpURmlRWEpuSWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpNdE1UQXpPUzEyTUMxamJYTXRjR1Z1WkdsdVp5MWtaV05wYzJsdmJuTWlMQ0p6ZFdKcVpXTjBJam9pWXpNelptWmpNakU1WlRsa01ERXpaall6TkdZMk1tSTJObVkxTXpRNE5HVmpOakV6WkRBNFptRTROVEUxTldZeE1EazFNMkk1T1RBek9UTmxaVFk1TXlJc0luWWlPakY5Iiwic2lnbmF0dXJlIjoiTUVVQ0lGeHRyMm1UYU1qTHM0T3lXWTh1aldNMHIxT01wd0U2RjBDWlBmdVJKM19iQWlFQXJGMGlFMXpqSndxeTVERkgtSDhKQlFTTzMzS2VxZ0g3YkZtZGVMV0pLcEUifQ==
+- folhas: D-12:55ca4249ab62a848 D-13:71b07e1c869f76bc D-14:231e62398fbc285f
+
 ## [2026-11-23 11:15] step — CMS: marcas «aplicada» das respostas D-06 a D-11 no lote
 
 **Branch:** main

@@ -130,6 +130,9 @@ Base: média — o pedido é seu; a ordem é proposta do agente
 - a) Depois das chaves; primeiro o «editor de textos» (Recomendado)
 - b) Antes das chaves
 - c) Só quando houver uma segunda pessoa para usar
+→ respondida em 2026-11-23 11:16
+  - a
+→ aplicada em 2026-11-23 11:16: registrado na F82 (REQ-05) e levado à F332: os papéis entram depois das chaves de ligar e desligar, começando pelo editor de textos
 
 ### D-13 · O Discogs na hora de publicar o servidor novo
 Pergunta: Em que ordem publicamos, para os valores do Discogs não sumirem?
@@ -137,6 +140,8 @@ Contexto: O servidor novo lê a chave do Discogs no CMS, e ela nasce desligada. 
 Base: forte — o juiz independente conferiu os três estados
 - a) Primeiro você publica as regras e cria o registro com a chave ligada (eu mando o passo a passo); depois eu publico o servidor (Recomendado)
 - b) Publique o servidor já; o Discogs fica desligado até eu fazer a minha parte
+→ respondida em 2026-11-23 11:16
+  - b
 
 ### D-14 · A revisão das Receitas do Blend
 Pergunta: Quando revisamos juntos as Receitas do Blend do Painel?
@@ -144,3 +149,6 @@ Contexto: Você aprovou o Painel para uma primeira iteração e disse que precis
 Base: forte — é a ordem das fatias
 - a) Antes de eu construir as Receitas, numa rodada de protótipo só delas (Recomendado)
 - b) Construa como está no protótipo e revisamos em cima do que ficou pronto
+→ respondida em 2026-11-23 11:16
+  - b
+→ aplicada em 2026-11-23 11:16: registrado: as Receitas do Blend são construídas como estão no protótipo e a revisão acontece em cima do que ficar pronto
