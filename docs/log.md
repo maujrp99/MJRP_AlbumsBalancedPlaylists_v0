@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:12] review — F80: o juiz independente passou a rodada da página de entrada em duas partes (0 P0, 0 P1)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Relatórios, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-entry-page-caption-order-kicker-visual-parity-recheck.md` (legenda com álbum e ano, título antes das ilustrações no celular, sem a linha laranja, sem o botão grande «Criar» com conta; julgado até `1d6f7d5`) e `…-recheck-2.md` (o acréscimo até `73f3bf8`: «The Album Blender» por inteiro, «Catalogue», o conserto do caixote 3D no computador: 0 de 16 paradas com capa na madeira, antes 8 de 16). O commit seguinte (`2f7979d`) só trocou o texto fixado do teste da moldura. P2 a abrir: com conta, no celular, o «Criar» do topo passa da borda da tela (406 px em 390 no inglês); o título de reserva do topo do app corta «The Album Blen…» (só aparece de passagem); a 1280 o nome quebra depois de «The» no parágrafo do «Criar». O MJRP é o juiz destes ajustes («ou juilz neste caso sou eu»); sobre a prévia anterior disse «eu só removeria o botaozao criar de mobile e publicaria».
+
 ## [2026-11-23 16:06] step — UAT-295: o texto guardado do cabeçalho do celular acompanha o nome «The Album Blender»; o nome inteiro NÃO cabe ali
 
 **Branch:** fix/f80-crate-caption-album-and-year
