@@ -31,9 +31,9 @@ Pergunta do MJRP em 2026-11-19: «como fica a complexidade ciclomatica de um e d
 
 A feature conserta quatro issues:
 - **UAT-194** — funções do serviço de carga acima do limite. O limite de 10 é do dono do projeto e não é artigo da `constitution.md`: a issue não tem `violates::`.
-- **UAT-14** — o Firestore usado fora dos repositórios. violates:: [[0017-pure-state-stores]] e a regra de dependências de `PRINCIPLES.md` §I.3.
-- **UAT-18** — lojas de estado que chamam banco, API e login. violates:: [[0017-pure-state-stores]].
-- **UAT-19** — controladores e telas pulam a camada de serviço. violates:: [[0016-service-layer-extraction]] e `PRINCIPLES.md` §I.3.
+- **UAT-14** — o Firestore usado fora dos repositórios. violates:: [[adr-0017|0017-pure-state-stores]] e a regra de dependências de `PRINCIPLES.md` §I.3.
+- **UAT-18** — lojas de estado que chamam banco, API e login. violates:: [[adr-0017|0017-pure-state-stores]].
+- **UAT-19** — controladores e telas pulam a camada de serviço. violates:: [[adr-0016|0016-service-layer-extraction]] e `PRINCIPLES.md` §I.3.
 
 ## Requirements
 <!-- Local IDs, two digits. Each REQ traces to an imported node; none is invented here.

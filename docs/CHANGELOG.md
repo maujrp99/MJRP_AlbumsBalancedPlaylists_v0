@@ -3,14 +3,14 @@
 All notable changes to the "The Album Blender" (MJRP) project will be documented in this file.
 
 > **Note**: This changelog starts fresh from **January 2026**.
-> Historical changes (2025) are archived in [docs/archive/CHANGELOG_ARCHIVED_20260108.md](../archive/CHANGELOG_ARCHIVED_20260108.md) and [docs/ROADMAP.md](../ROADMAP.md).
+> Historical changes (2025) are archived in docs/archive/CHANGELOG_ARCHIVED_20260108.md and [docs/ROADMAP.md](../ROADMAP.md).
 
 ---
 
 ## [Unreleased]
 
 ### Added
-- **Manual v3.0**: Published the [Reference Guide](MJRP_Album_Blender_Ref_Guide.md) ("Deep Dive") to `docs/`.
+- **Manual v3.0**: Published the Reference Guide ("Deep Dive") to `docs/`.
 - **New Protocols**: Implemented `onboarding_protocol_v2` and `documentation_audit_v2`.
 - **Docs**: Created `docs/manual/00_Deployment_and_Setup.md` as the unified deployment guide.
 - **Testing**: Added `blending-wizard.test.js` for golden path verification.

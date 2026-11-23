@@ -1,7 +1,7 @@
 # Task Breakdown: V3 Architecture Refactor & Componentization
 
-**Spec**: [spec.md](./spec.md)
-**Plan**: [plan.md](./plan.md)
+**Spec**: [spec.md](../spec.md)
+**Plan**: [plan.md](../plan.md)
 **Branch**: `sprint12-architecture-v3.0`
 **Updated**: 2025-12-23
 
@@ -63,7 +63,7 @@ It addresses the following User Stories:
 - [ ] **Create Mix CTA**: Add prominent "Create Mix" button in header (Desktop) / FAB (Mobile).
 
 ## 4. 🥤 New Features: The Blending Menu (US2) ✅
-> **Detailed Tasks**: [blending-menu/tasks.md](./blending-menu/tasks.md)
+> **Detailed Tasks**: blending-menu/tasks.md
 
 - [x] **Schema**: Implement algorithm flavors and ingredient matrix.
 - [x] **UI**: Create `BlendingMenuView.js`, `BlendFlavorCard.js`, `BlendSeriesSelector.js`, `BlendIngredientsPanel.js`.

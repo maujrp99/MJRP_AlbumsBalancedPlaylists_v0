@@ -1,5 +1,5 @@
 # Task List: Sprint 22 - Enrichment & Filters
-> **Based on Plan**: [plan.md](./plan.md)
+> **Based on Plan**: [plan.md](../plan.md)
 > **Status**: Approved (Reordered)
 
 ## Phase 1: BEA Enrichment Encapsulation (Priority)

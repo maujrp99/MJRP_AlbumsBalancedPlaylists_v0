@@ -3,7 +3,7 @@
 **Created**: 2025-12-22  
 **Updated**: 2025-12-23  
 **Status**: 🟡 PARTIALLY IMPLEMENTED  
-**Spec**: [spec.md](./spec.md)
+**Spec**: [spec.md](../spec.md)
 
 ---
 
@@ -29,7 +29,7 @@ Given the prerequisites identified in the spec, we'll implement in phases:
 
 ### 1.1 Existing Algorithm Audit
 
-#### [ANALYZE] [algorithms/](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/algorithms)
+#### [ANALYZE] algorithms/
 
 **Tasks:**
 - [ ] Analyze `MJRPBalancedCascadeAlgorithm.js` (⭐ recommended base)
@@ -71,7 +71,7 @@ const config = {
 
 ### 2.1 View & Components
 
-#### [NEW] [BlendingMenuView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/BlendingMenuView.js)
+#### [NEW] BlendingMenuView.js
 
 **Responsibilities:**
 - Main wizard container
@@ -79,21 +79,21 @@ const config = {
 - State management for selections
 - Dynamic CTA button generation
 
-#### [NEW] [BlendSeriesSelector.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendSeriesSelector.js)
+#### [NEW] BlendSeriesSelector.js
 
 **Step 1: Choose Your Blend**
 - Entity type dropdown (Albums, Artists, Genres, Tracks)
 - Series loader based on entity selection
 - Single series selection
 
-#### [NEW] [BlendFlavorCard.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendFlavorCard.js)
+#### [NEW] BlendFlavorCard.js
 
 **Step 2: Choose Your Flavor**
 - Visual cards for each algorithm
 - User-friendly descriptions
 - Selection state
 
-#### [NEW] [BlendIngredientsPanel.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendIngredientsPanel.js)
+#### [NEW] BlendIngredientsPanel.js
 
 **Step 3: Pick Your Ingredients**
 - Duration slider (30m/45m/60m)
@@ -102,7 +102,7 @@ const config = {
 
 ### 2.2 Route Update
 
-#### [MODIFY] [app.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/app.js)
+#### [MODIFY] app.js
 
 Replace ComingSoonView with BlendingMenuView for `/blend` route.
 
@@ -112,7 +112,7 @@ Replace ComingSoonView with BlendingMenuView for `/blend` route.
 
 ### 3.1 CurationEngine Integration
 
-#### [MODIFY] [curation.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/curation.js)
+#### [MODIFY] curation.js
 
 - [ ] Add algorithm selection interface
 - [ ] Support new/parametrized algorithms

@@ -1,5 +1,5 @@
 # Plan: Sprint 22 - Enrichment & Filters
-> **Based on Spec**: [spec.md](./spec.md)
+> **Based on Spec**: [spec.md](../spec.md)
 > **Manuals Consulted**:
 > - `00_MJRP_Album_Blender_Ref_Guide_Index.md` (Index)
 > - `01_System_Architecture.md` (Core Principles)

@@ -28,30 +28,30 @@ Current Repositories (`AlbumsRepository`, `SeriesRepository`) usually interact w
 ## Proposed Changes (Files)
 
 ### Shared / Services
-#### [NEW] [AuthService.js](file:///server/services/AuthService.js)
+#### [NEW] AuthService.js
 - `signInWithGoogle()`
 - `signInWithApple()`
 - `signOut()`
 - `onAuthStateChanged(callback)`
 
 ### Stores
-#### [NEW] [UserStore.js](file:///public/js/stores/UserStore.js)
+#### [NEW] [UserStore.js](../../../../../public/js/stores/UserStore.js)
 - Observable store.
 - Subscribes to `AuthService`.
 - On login: Triggers `DataSyncService.migrateGuestToCloud()`.
 - On logout: Clears application state.
 
 ### Data Layer
-#### [MODIFY] [BaseRepository.js](file:///public/js/repositories/BaseRepository.js)
+#### [MODIFY] BaseRepository.js
 - Add support for user-scoped paths (e.g., set `userId` context).
 
-#### [NEW] [DataSyncService.js](file:///public/js/services/DataSyncService.js)
+#### [NEW] [DataSyncService.js](../../../../../public/js/services/DataSyncService.js)
 - `mergeLocalToCloud(uid)`: Reads all LocalStorage/IndexedDB data and batch writes to `/users/{uid}` subcollections.
 
 ### UI
-#### [NEW] [LoginModal.js](file:///public/js/components/LoginModal.js)
-#### [NEW] [UserMenu.js](file:///public/js/components/UserMenu.js)
-#### [MODIFY] [Header.js](file:///public/js/components/Header.js)
+#### [NEW] LoginModal.js
+#### [NEW] UserMenu.js
+#### [MODIFY] Header.js
 
 ## Verification Plan
 

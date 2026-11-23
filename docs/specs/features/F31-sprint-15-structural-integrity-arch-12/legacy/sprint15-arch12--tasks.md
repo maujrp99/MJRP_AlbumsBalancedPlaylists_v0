@@ -1,7 +1,7 @@
 # Sprint 15 Task List: Structural Integrity
 
 **Goal**: Execute ARCH-12 Componentization and Security Hardening.
-**Spec**: [spec.md](./spec.md) | **Plan**: [plan.md](./plan.md)
+**Spec**: [spec.md](../spec.md) | **Plan**: [plan.md](../plan.md)
 
 ## Phase 1: Core Foundation (`src/components/ui/`)
 *Goal: Establish the new 'Source of Truth' for UI components.*

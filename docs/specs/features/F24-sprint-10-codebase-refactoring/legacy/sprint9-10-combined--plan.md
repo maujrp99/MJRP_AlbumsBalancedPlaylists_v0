@@ -1,6 +1,6 @@
 # Implementation Plan: Sprint 10 - Codebase Refactoring
 
-**Branch**: `sprint10-refactor` | **Date**: 2025-12-18 | **Spec**: [spec.md](./spec.md)
+**Branch**: `sprint10-refactor` | **Date**: 2025-12-18 | **Spec**: [spec.md](../spec.md)
 
 ---
 
@@ -82,7 +82,7 @@ public/js/
 
 ### Phase 0: Preparation
 
-#### [DELETE] [app.legacy.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/app.legacy.js)
+#### [DELETE] app.legacy.js
 - Verify no imports reference this file
 - Delete and confirm build passes
 
@@ -90,23 +90,23 @@ public/js/
 
 ### Phase 1: AlbumsView Modularization
 
-#### [NEW] [AlbumsGridRenderer.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsGridRenderer.js)
+#### [NEW] AlbumsGridRenderer.js
 - Extract: `renderAlbumsGrid()`, `renderExpandedList()`, `renderScopedGrid()`, `renderScopedList()`
 - Extract: `renderRankedTracklist()`, `renderOriginalTracklist()`, `renderEmptyState()`, `renderLoadingProgress()`
 - Export as class or functions that receive `view` context
 
-#### [NEW] [AlbumsFilters.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsFilters.js)
+#### [NEW] AlbumsFilters.js
 - Extract: `filterAlbums()`, `getUniqueArtists()`
 - Manage filter state independently
 
-#### [NEW] [SeriesModals.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/SeriesModals.js)
+#### [NEW] SeriesModals.js
 - Extract: `setupSeriesModals()`, `openEditSeriesModal()`, `openDeleteSeriesModal()`
 - Extract: `renderSeriesAlbumsList()`, `closeSeriesModal()`, `initSeriesAutocomplete()`
 
-#### [NEW] [AlbumsDataLoader.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsDataLoader.js)
+#### [NEW] AlbumsDataLoader.js
 - Extract: `loadScope()`, `loadAlbumsFromQueries()`, `updateLoadingProgress()`
 
-#### [MODIFY] [AlbumsView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/AlbumsView.js)
+#### [MODIFY] AlbumsView.js
 - Import new modules
 - Delegate to modules in `render()`, `mount()`, `destroy()`
 - Keep only orchestration logic
@@ -116,18 +116,18 @@ public/js/
 
 ### Phase 2: Server Route Extraction
 
-#### [NEW] [routes/albums.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/albums.js)
+#### [NEW] routes/albums.js
 - Move: `/api/generate` endpoint
 - Move: `/api/enrich-album` endpoint
 
-#### [NEW] [routes/playlists.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/playlists.js)
+#### [NEW] routes/playlists.js
 - Move: `/api/playlists` endpoint
 
-#### [NEW] [routes/debug.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/debug.js)
+#### [NEW] routes/debug.js
 - Move: `/api/debug/*` endpoints
 - Move: `/api/list-models` endpoint
 
-#### [MODIFY] [index.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/index.js)
+#### [MODIFY] index.js
 - Keep: Express app setup, CORS, middleware
 - Keep: Health endpoint `/_health`
 - Use: `app.use('/api', albumRoutes)`
@@ -137,14 +137,14 @@ public/js/
 
 ### Phase 3: PlaylistsView Split
 
-#### [NEW] [PlaylistsDragDrop.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/playlists/PlaylistsDragDrop.js)
+#### [NEW] PlaylistsDragDrop.js
 - Extract: `setupDragAndDrop()`, `onStart()`, `onEnd()`
 - SortableJS configuration and handlers
 
-#### [NEW] [PlaylistsExport.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/playlists/PlaylistsExport.js)
+#### [NEW] PlaylistsExport.js
 - Extract: `handleExportJson()`, `handleExportToAppleMusic()`, `attachExportListeners()`
 
-#### [MODIFY] [PlaylistsView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/PlaylistsView.js)
+#### [MODIFY] PlaylistsView.js
 - Import new modules
 - Delegate to modules
 - Target: < 500 lines

@@ -970,7 +970,7 @@ config: {
 4. **Storefront Validation**: On persist, call authorize and detect region mismatch.
 
 #### Implementation Plan
-See: [Phase 6 Hotfix Plan](./sprint15-arch12/phase6-hotfix-plan.md)
+See: [Phase 6 Hotfix Plan](../specs/features/F31-sprint-15-structural-integrity-arch-12/legacy/phase6-hotfix-plan.md)
 
 #### Files To Change
 - `MusicKitService.js`: Add `getBrowserStorefront()`, remove eager authorize
@@ -1412,7 +1412,7 @@ However, Legacy components (`AlbumCache`, `AlbumIdentity`) expected **String Que
 2. **APICient**: Updated to stringify objects before sending to legacy API.
 3. **AlbumCache**: Updated `normalizeKey` and `_legacyStorageKey` to extract string representation from objects.
 
-**Architectural Decision**: [ADR: Discovery vs Hydration](file:///c:/Users/Mauricio%20Pedroso/.gemini/antigravity/brain/9bae9fee-eaf9-4880-9275-3355e3b08fdd/adr_discovery_vs_hydration.md)
+**Architectural Decision**: ADR: Discovery vs Hydration
 
 #### Files Changed
 - `public/js/cache/albumCache.js`
@@ -4122,7 +4122,7 @@ Refactored to Rich Domain Model:
 - Updated `client.js` to hydrate instances.
 - Updated `curation.js` to use model methods.
 
-**See**: [walkthrough.md](../../docs/walkthrough.md)
+**See**: walkthrough.md
 
 ---
 
@@ -4166,7 +4166,7 @@ Store should persist while series is active
 - [ ] TEST that all views work without reset
 - [ ] VERIFY ghost albums don't return
 
-**See Also**: [ARCHITECTURE.md - Store State Management](../../docs/ARCHITECTURE.md#store-state-management-current)
+**See Also**: ARCHITECTURE.md - Store State Management
 
 ---
 
@@ -4217,7 +4217,7 @@ After implementing new album fields (`bestEverAlbumId`, `bestEverUrl`, `tracksOr
 2. Temporary workaround sufficient (affects only existing cache)
 3. New data normalizes correctly
 
-**See**: [SPRINT_5_PERSISTENCE_ARCHITECTURE.md](../../docs/archive/architecture-artifacts-2025-11-29/SPRINT_5_PERSISTENCE_ARCHITECTURE.md)
+**See**: SPRINT_5_PERSISTENCE_ARCHITECTURE.md
 
 ---
 
@@ -4237,7 +4237,7 @@ After implementing new album fields (`bestEverAlbumId`, `bestEverUrl`, `tracksOr
 2. Implemented "Refresh" button to force cache update.
 3. **Architecture Fix**: Planned migration to Firestore to avoid localStorage schema issues.
 
-**See**: [album_data_schema.md](../../docs/album_data_schema.md) for data mapping.
+**See**: album_data_schema.md for data mapping.
 
 ---
 
@@ -4359,7 +4359,7 @@ Tracks not properly sorted by acclaim ranking in production. "Another Brick in t
 - `tracksOriginalOrder` MUST remain AS IS (1..N based on disc).
 - `tracks` (Ranked) MUST be sorted by rating/rank.
 
-**Full Details**: [HOTFIX_RANKING_ACCLAIM.md](../../docs/archive/hotfixes/HOTFIX_RANKING_ACCLAIM.md)
+**Full Details**: HOTFIX_RANKING_ACCLAIM.md
 
 ---
 

@@ -129,6 +129,6 @@ Refactor the album data pipeline to ensure:
 ## 9. Related Documents
 
 - [Album Data Pipeline Analysis](album-data-pipeline-analysis.md)
-- [DEBUG_LOG #92](../../debug/DEBUG_LOG.md#issue-92)
-- [DEBUG_LOG #93](../../debug/DEBUG_LOG.md#issue-93)
-- [TECHNICAL_DEBT_BACKLOG](../../TECHNICAL_DEBT_BACKLOG.md)
+- [DEBUG_LOG #92](../../../../debug/DEBUG_LOG.md#issue-92)
+- [DEBUG_LOG #93](../../../../debug/DEBUG_LOG.md#issue-93)
+- [TECHNICAL_DEBT_BACKLOG](TECHNICAL_DEBT_BACKLOG.md)

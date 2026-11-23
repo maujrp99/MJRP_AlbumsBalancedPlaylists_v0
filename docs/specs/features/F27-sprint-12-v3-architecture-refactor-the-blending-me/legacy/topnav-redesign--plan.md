@@ -2,7 +2,7 @@
 
 **Created**: 2025-12-22  
 **Status**: ✅ APPROVED  
-**Spec**: [spec.md](./spec.md)
+**Spec**: [spec.md](../spec.md)
 
 ---
 
@@ -27,7 +27,7 @@ Redesign TopNav to consolidate Series navigation under a dropdown and add "The B
 
 ### Component 1: TopNav.js
 
-#### [MODIFY] [TopNav.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/TopNav.js)
+#### [MODIFY] TopNav.js
 
 **Changes:**
 1. Replace separate nav links with new structure:
@@ -56,7 +56,7 @@ Redesign TopNav to consolidate Series navigation under a dropdown and add "The B
 
 ### Component 2: SeriesDropdown.js (Optional)
 
-#### [NEW] [SeriesDropdown.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/navigation/SeriesDropdown.js)
+#### [NEW] SeriesDropdown.js
 
 **Responsibility:**
 - Render dropdown UI
@@ -81,7 +81,7 @@ class SeriesDropdown {
 
 ### Component 3: Router Updates
 
-#### [MODIFY] [router.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/router.js)
+#### [MODIFY] router.js
 
 **Add Routes:**
 ```javascript

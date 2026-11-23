@@ -151,8 +151,8 @@ sequenceDiagram
 **Workflow**: See `.agent/workflows/architecture_protocol.md`
 
 > **For project overview, features, and deployment info, see:**
-> - [PROJECT_SUMMARY.md](product-management/PROJECT_SUMMARY.md)
-> - [ROADMAP.md](product-management/ROADMAP.md)
+> - PROJECT_SUMMARY.md
+> - ROADMAP.md
 
 ---
 
@@ -231,7 +231,7 @@ Store (runtime state) → Repository (Firestore CRUD)
 - `public/js/cache/albumCache.js` - Refactored to async API
 - `public/js/api/client.js` - Updated to await cache methods
 
-**Spec**: [arch-5-cache-consolidation_spec.md](technical/specs/arch-5-cache-consolidation_spec.md)
+**Spec**: [arch-5-cache-consolidation_spec.md](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/arch-5-cache-consolidation_spec.md)
 
 ---
 
@@ -250,7 +250,7 @@ Store (runtime state) → Repository (Firestore CRUD)
 - `public/js/views/SeriesView.js` - Direct loadScope calls
 - `public/js/stores/albums.js` - Preserve Map on reset
 
-**Spec**: [arch-6-series-loading-optimization_spec.md](technical/specs/arch-6-series-loading-optimization_spec.md)
+**Spec**: [arch-6-series-loading-optimization_spec.md](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/arch-6-series-loading-optimization_spec.md)
 
 **Known Issue**: #95 - Series filter dropdown empty on first load (Sprint 14)
 
@@ -281,7 +281,7 @@ Store (runtime state) → Repository (Firestore CRUD)
 - Migrated all core components (`Card`, `TrackRow`, `BaseModal`) to SafeDOM
 - Added `.renderHTML()` adapters for backward compatibility
 
-**Result**: Eliminated 50+ innerHTML sinks. See [Sprint 15 Tasks](technical/specs/sprint15-arch12/tasks.md).
+**Result**: Eliminated 50+ innerHTML sinks. See Sprint 15 Tasks.
 
 ---
 
@@ -298,7 +298,7 @@ Store (runtime state) → Repository (Firestore CRUD)
 - `MusicKitService.js` - `getBrowserStorefront()`, `authorizeAndValidate()`
 - `SeriesModals.js` - Artist scan + filters (deprecated Autocomplete)
 
-**Spec**: [Phase 6 Hotfix Plan](technical/specs/sprint15-arch12/phase6-hotfix-plan.md)
+**Spec**: [Phase 6 Hotfix Plan](../specs/features/F31-sprint-15-structural-integrity-arch-12/legacy/phase6-hotfix-plan.md)
 
 ---
 
@@ -340,7 +340,7 @@ Store (runtime state) → Repository (Firestore CRUD)
 - Backward-compatible flags (`isSingle`, `isCompilation`, `isLive`) maintained
 - Single Source of Truth for classification across all consumers
 
-**Spec**: [sprint17.75-classification-modularization/spec.md](technical/specs/sprint17.75-classification-modularization/spec.md)
+**Spec**: sprint17.75-classification-modularization/spec.md
 
 ---
 
@@ -407,10 +407,10 @@ graph TB
 10. [Previous Architecture (V1/V2)](#v1v2-monolithic-view-pattern)
 
 ### Cross-References
-- **[Debug Log](debug/DEBUG_LOG.md)**: Active debugging sessions and historical resolutions.
-- **[Component Reference](technical/component_reference.md)**: Detailed API and file-level documentation.
-- **[Data Flow Architecture](technical/data_flow_architecture.md)**: Sequence diagrams and technical lifecycle flows.
-- **[Codebase Analysis](technical/codebase_analysis.md)**: Complete architecture map with data flow diagrams (2025-12-25).
+- **[Debug Log](../debug/DEBUG_LOG.md)**: Active debugging sessions and historical resolutions.
+- **Component Reference**: Detailed API and file-level documentation.
+- **Data Flow Architecture**: Sequence diagrams and technical lifecycle flows.
+- **[Codebase Analysis](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/codebase_analysis.md)**: Complete architecture map with data flow diagrams (2025-12-25).
 
 ---
 
@@ -521,8 +521,8 @@ The contract between the UI and the Curation Engine for the **Blending Menu**.
 - [ ] AlbumsView Refactor (Applying V3 pattern - deferred)
 
 ### Related Documentation
-- [AlgorithmsMenu.md](technical/specs/sprint12-architecture-v3.0/blending-menu/AlgorithmsMenu.md) - Flavor definitions and ingredient matrix
-- [background-enrichment-spec.md](technical/specs/sprint12-architecture-v3.0/blending-menu/background-enrichment-spec.md) - Spotify enrichment with Firestore + lazy cleanup
+- [AlgorithmsMenu.md](../specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/legacy/AlgorithmsMenu.md) - Flavor definitions and ingredient matrix
+- [background-enrichment-spec.md](../specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/legacy/background-enrichment-spec.md) - Spotify enrichment with Firestore + lazy cleanup
 
 ---
 
@@ -566,7 +566,7 @@ The core of state management. Stores notify registered views of changes, allowin
 The application uses a custom client-side router based on the History API (`pushState`).
 
 > [!IMPORTANT]
-> Detailed sequence diagrams and lifecycle method definitions are documented in [data_flow_architecture.md](technical/data_flow_architecture.md#view-lifecycle--navigation).
+> Detailed sequence diagrams and lifecycle method definitions are documented in data_flow_architecture.md.
 
 ### Registered Routes
 
@@ -1580,8 +1580,8 @@ node tests/cache/cache.test.js                 # 14/14 ✅
 
 ### 📚 Documentation
 
-- [SPRINT_5_PERSISTENCE_ARCHITECTURE.md](./SPRINT_5_PERSISTENCE_ARCHITECTURE.md) - Full architecture spec
-- [SPRINT_5_UI_SPECS.md](./SPRINT_5_UI_SPECS.md) - UI specifications + mockups
+- SPRINT_5_PERSISTENCE_ARCHITECTURE.md - Full architecture spec
+- SPRINT_5_UI_SPECS.md - UI specifications + mockups
 - Walkthrough artifact - Implementation guide
 - Implementation plan artifact - Phase breakdown
 
@@ -2646,7 +2646,7 @@ Every active JavaScript file in `server/`, `public/js/`, `shared/` and `test/` h
 **Version**: v2.12.0 (Production Stable)  
 **Last Updated**: 2025-12-23
 
-> **See Also**: [Product Vision](MJRP_PRODUCT_VISION.md) | [Roadmap](ROADMAP.md)
+> **See Also**: Product Vision | [Roadmap](../../ROADMAP.md)
 
 ---
 
@@ -2881,7 +2881,7 @@ curl https://mjrp-proxy-540062660076.southamerica-east1.run.app/api/generate \
 - `server/index.js`
 - `public/hybrid-curator.html`
 
-See [CHANGELOG.md](CHANGELOG.md#v161-hotfix-production-deployment-2025-11-26) for details.
+See [CHANGELOG.md](../CHANGELOG.md#v161-hotfix-production-deployment-2025-11-26) for details.
 
 ---
 
@@ -2981,7 +2981,7 @@ public/js/
 - Rollback capability if migration fails
 - Migration script: `migrate-to-v2.js` (Node CLI)
 
-See [ROADMAP.md](ROADMAP.md) for complete sprint breakdown (Sprints 1-9).
+See [ROADMAP.md](../../ROADMAP.md) for complete sprint breakdown (Sprints 1-9).
 
 ---
 
@@ -3148,10 +3148,10 @@ const firebaseConfig = {
 ## References
 
 ### Current Documentation
-- **[ROADMAP.md](ROADMAP.md)** - Product roadmap (Sprints 1-9)
-- **[CHANGELOG.md](CHANGELOG.md)** - Version history and release notes
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Architecture decisions
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Development workflow
+- **[ROADMAP.md](../../ROADMAP.md)** - Product roadmap (Sprints 1-9)
+- **[CHANGELOG.md](../CHANGELOG.md)** - Version history and release notes
+- **ARCHITECTURE.md** - Architecture decisions
+- **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Development workflow
 
 ### Archived Planning Documents
 *Historical v2.0 planning docs (archived 2025-12-02)*:
@@ -34106,8 +34106,8 @@ This removes ~100 lines of complex logic from the View.
 **Workflow**: See `.agent/workflows/architecture_documentation.md`
 
 > **For project overview, features, and deployment info, see:**
-> - [PROJECT_SUMMARY.md](product-management/PROJECT_SUMMARY.md)
-> - [ROADMAP.md](product-management/ROADMAP.md)
+> - PROJECT_SUMMARY.md
+> - ROADMAP.md
 
 ---
 
@@ -34171,9 +34171,9 @@ graph TB
 7. [Caching & Performance](#caching--performance)
 
 ### Cross-References
-- **[Debug Log](DEBUG_LOG.md)**: Active debugging sessions and historical resolutions.
-- **[Component Reference](technical/component_reference.md)**: Detailed API and file-level documentation.
-- **[Data Flow Architecture](technical/data_flow_architecture.md)**: Sequence diagrams and technical lifecycle flows.
+- **[Debug Log](../debug/DEBUG_LOG.md)**: Active debugging sessions and historical resolutions.
+- **Component Reference**: Detailed API and file-level documentation.
+- **Data Flow Architecture**: Sequence diagrams and technical lifecycle flows.
 
 ---
 
@@ -34208,7 +34208,7 @@ The core of state management. Stores notify registered views of changes, allowin
 The application uses a custom client-side router based on the History API (`pushState`). 
 
 > [!IMPORTANT]
-> Detailed sequence diagrams and lifecycle method definitions are documented in [data_flow_architecture.md](technical/data_flow_architecture.md#view-lifecycle--navigation).
+> Detailed sequence diagrams and lifecycle method definitions are documented in data_flow_architecture.md.
 
 ### Registered Routes
 
@@ -34773,11 +34773,11 @@ setupSeriesModals({
 
 ## 📎 Related Documents
 
-- [Sprint 10 Spec](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/specs/sprint10-refactor/spec.md)
-- [Sprint 10 Tasks](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/specs/sprint10-refactor/tasks.md)
-- [ARCHITECTURE.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/ARCHITECTURE.md)
-- [CONSTITUTION.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/CONSTITUTION.md)
-- [CODE_QUALITY_ASSESSMENT v1](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/refactor/CODE_QUALITY_ASSESSMENT.md)
+- Sprint 10 Spec
+- Sprint 10 Tasks
+- ARCHITECTURE.md
+- CONSTITUTION.md
+- CODE_QUALITY_ASSESSMENT v1
 
 
 
@@ -34918,9 +34918,9 @@ Test Status:             74/78 (4 pre-existing failures)
 
 ## 📎 Related Documents
 
-- [Implementation Plan](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/specs/sprint9-10-combined/implementation_plan.md)
-- [CODE_QUALITY_ASSESSMENT v2](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/refactor/CODE_QUALITY_ASSESSMENT_v2.md)
-- [ARCHITECTURE.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/ARCHITECTURE.md)
+- Implementation Plan
+- CODE_QUALITY_ASSESSMENT v2
+- ARCHITECTURE.md
 
 
 
@@ -35014,7 +35014,7 @@ Improve codebase maintainability, readability, and testability by systematically
 
 ### P0.1: Delete Legacy Code
 
-#### [DELETE] [app.legacy.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/app.legacy.js)
+#### [DELETE] app.legacy.js
 - **Size**: 47KB (1,200+ lines)
 - **Reason**: Dead code, superseded by modular `app.js` + views architecture
 - **Action**: Delete after confirming no active imports
@@ -35025,26 +35025,26 @@ Improve codebase maintainability, readability, and testability by systematically
 
 **Current State**: 1,820 lines, 31 methods, 6 responsibilities
 
-#### [NEW] [AlbumsGridRenderer.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsGridRenderer.js)
+#### [NEW] AlbumsGridRenderer.js
 - Extract: `renderAlbumsGrid()`, `renderExpandedList()`, `renderScopedGrid()`, `renderScopedList()`
 - Extract: `renderRankedTracklist()`, `renderOriginalTracklist()`
 - ~400 lines
 
-#### [NEW] [AlbumsFilters.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsFilters.js)
+#### [NEW] AlbumsFilters.js
 - Extract: `filterAlbums()`, `getUniqueArtists()`
 - Filter state management
 - ~100 lines
 
-#### [NEW] [SeriesModals.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/SeriesModals.js)
+#### [NEW] SeriesModals.js
 - Extract: `setupSeriesModals()`, `openEditSeriesModal()`, `openDeleteSeriesModal()`
 - Extract: `renderSeriesAlbumsList()`, `closeSeriesModal()`, `initSeriesAutocomplete()`
 - ~200 lines
 
-#### [NEW] [AlbumsDataLoader.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsDataLoader.js)
+#### [NEW] AlbumsDataLoader.js
 - Extract: `loadScope()`, `loadAlbumsFromQueries()`, `updateLoadingProgress()`
 - ~150 lines
 
-#### [MODIFY] [AlbumsView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/AlbumsView.js)
+#### [MODIFY] AlbumsView.js
 - Reduced to ~500 lines
 - Composition of extracted modules
 - `render()`, `mount()`, `destroy()` orchestration only
@@ -35055,16 +35055,16 @@ Improve codebase maintainability, readability, and testability by systematically
 
 ### P1.1: Server Route Extraction
 
-#### [NEW] [routes/albums.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/albums.js)
+#### [NEW] routes/albums.js
 - Move: `/api/generate`, `/api/enrich-album`
 
-#### [NEW] [routes/playlists.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/playlists.js)
+#### [NEW] routes/playlists.js
 - Move: `/api/playlists`
 
-#### [NEW] [routes/debug.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/debug.js)
+#### [NEW] routes/debug.js
 - Move: `/api/debug/*`, `/api/list-models`
 
-#### [MODIFY] [index.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/index.js)
+#### [MODIFY] index.js
 - Reduced to ~100 lines
 - Use Express Router pattern
 
@@ -35072,11 +35072,11 @@ Improve codebase maintainability, readability, and testability by systematically
 
 ### P1.2: Split PlaylistsView.js
 
-#### [NEW] [PlaylistsDragDrop.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/playlists/PlaylistsDragDrop.js)
+#### [NEW] PlaylistsDragDrop.js
 - Extract: `setupDragAndDrop()`, `onStart()`, `onEnd()`
 - SortableJS configuration
 
-#### [NEW] [PlaylistsExport.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/playlists/PlaylistsExport.js)
+#### [NEW] PlaylistsExport.js
 - Extract: `handleExportJson()`, `handleExportToAppleMusic()`, `attachExportListeners()`
 
 ---
@@ -35085,13 +35085,13 @@ Improve codebase maintainability, readability, and testability by systematically
 
 ### P2.1: MusicKitService Split
 
-#### [NEW] [MusicKitAuth.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/services/musickit/MusicKitAuth.js)
+#### [NEW] MusicKitAuth.js
 - Token management, initialization
 
-#### [NEW] [MusicKitSearch.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/services/musickit/MusicKitSearch.js)
+#### [NEW] MusicKitSearch.js
 - Album/track search operations
 
-#### [NEW] [MusicKitPlaylist.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/services/musickit/MusicKitPlaylist.js)
+#### [NEW] MusicKitPlaylist.js
 - Playlist creation/management
 
 ---
@@ -35316,9 +35316,9 @@ This audit verified that all documentation aligns with the current codebase afte
 **Issue**: All action buttons (Edit, Open, Delete) on series cards are non-responsive.
 
 **Evidence**:
-![Series Management View](file:///Users/mpedroso/.gemini/antigravity/brain/7079f1cc-f610-478a-a72a-bb506cb58e18/series_management_view_1764813360785.png)
+Series Management View
 
-**Recording**: [series_management_crud_1764813325401.webp](file:///Users/mpedroso/.gemini/antigravity/brain/7079f1cc-f610-478a-a72a-bb506cb58e18/series_management_crud_1764813325401.webp)
+**Recording**: series_management_crud_1764813325401.webp
 
 **Root Cause (Hypothesis)**: Event listeners not properly attached in `SeriesListView.mount()`.
 
@@ -35396,7 +35396,7 @@ albumsStore.addAlbum(result.album)  // ❌ Only calls saveToLocalStorage()
 4. Timing Fix (setSeriesId before reset) → FAILED
 
 **Evidence**: 
-- [Initial reproduction](file:///Users/mpedroso/.gemini/antigravity/brain/7079f1cc-f610-478a-a72a-bb506cb58e18/prod_expanded_switch_to_b_1764802058857.png)
+- Initial reproduction
 
 ---
 
@@ -37231,30 +37231,30 @@ Current Repositories (`AlbumsRepository`, `SeriesRepository`) usually interact w
 ## Proposed Changes (Files)
 
 ### Shared / Services
-#### [NEW] [AuthService.js](file:///server/services/AuthService.js)
+#### [NEW] AuthService.js
 - `signInWithGoogle()`
 - `signInWithApple()`
 - `signOut()`
 - `onAuthStateChanged(callback)`
 
 ### Stores
-#### [NEW] [UserStore.js](file:///public/js/stores/UserStore.js)
+#### [NEW] [UserStore.js](../../public/js/stores/UserStore.js)
 - Observable store.
 - Subscribes to `AuthService`.
 - On login: Triggers `DataSyncService.migrateGuestToCloud()`.
 - On logout: Clears application state.
 
 ### Data Layer
-#### [MODIFY] [BaseRepository.js](file:///public/js/repositories/BaseRepository.js)
+#### [MODIFY] BaseRepository.js
 - Add support for user-scoped paths (e.g., set `userId` context).
 
-#### [NEW] [DataSyncService.js](file:///public/js/services/DataSyncService.js)
+#### [NEW] [DataSyncService.js](../../public/js/services/DataSyncService.js)
 - `mergeLocalToCloud(uid)`: Reads all LocalStorage/IndexedDB data and batch writes to `/users/{uid}` subcollections.
 
 ### UI
-#### [NEW] [LoginModal.js](file:///public/js/components/LoginModal.js)
-#### [NEW] [UserMenu.js](file:///public/js/components/UserMenu.js)
-#### [MODIFY] [Header.js](file:///public/js/components/Header.js)
+#### [NEW] LoginModal.js
+#### [NEW] UserMenu.js
+#### [MODIFY] Header.js
 
 ## Verification Plan
 
@@ -37449,7 +37449,7 @@ To prevent a large JSON file blocking load:
 --------------------------------------------------
 # Implementation Plan: Sprint 7 - Apple Music Integration
 
-**Branch**: `sprint-7-apple-music` | **Date**: 2025-12-12 | **Spec**: [spec.md](./spec.md)
+**Branch**: `sprint-7-apple-music` | **Date**: 2025-12-12 | **Spec**: spec.md
 
 ---
 
@@ -38021,7 +38021,7 @@ We will transform the experience from a "Text Editor" to a "Playlist Builder".
 - **Feedback**: Success toast or flash when adding.
 
 ## 7. Visual Mockup
-![UI Proposal Mockup (Split Filter)](file:///Users/mpedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/specs/load_albums_mockup.png)
+UI Proposal Mockup (Split Filter)
 
 ---
 **Status**: Proposal Ready for Review
@@ -38962,9 +38962,9 @@ flowchart TD
 
 ## Cross-References
 
-- [ROADMAP.md](../../../ROADMAP.md) - Sprint 11 planning
-- [SPOTIFY_SETUP.md](../../../SPOTIFY_SETUP.md) - Existing Spotify docs
-- [spotifyPopularity.js](../../../../server/lib/services/spotifyPopularity.js) - Existing service
+- [ROADMAP.md](../../ROADMAP.md) - Sprint 11 planning
+- SPOTIFY_SETUP.md - Existing Spotify docs
+- [spotifyPopularity.js](../../server/lib/services/spotifyPopularity.js) - Existing service
 
 
 
@@ -39193,7 +39193,7 @@ echo "VITE_SPOTIFY_CLIENT_ID=your_id" >> .env
 --------------------------------------------------
 # Implementation Plan: Sprint 11.5 - Stabilization & Refactor
 
-**Branch**: `feature/sprint11.5-stabilization` | **Date**: 2025-12-19 | **Spec**: [spec.md](spec.md)
+**Branch**: `feature/sprint11.5-stabilization` | **Date**: 2025-12-19 | **Spec**: spec.md
 
 ## Summary
 
@@ -39658,7 +39658,7 @@ The V3 component system is well-structured with proper separation of concerns. T
 --------------------------------------------------
 # Implementation Plan: V3 Refactor & Componentization
 
-**Spec**: [spec.md](./spec.md)
+**Spec**: spec.md
 **Status**: Draft
 **Architecture**: Vanilla JS Component-Based (Evolutionary)
 
@@ -39822,7 +39822,7 @@ This object is passed from UI to `CurationEngine`.
 **Created**: 2025-12-21
 **Updated**: 2025-12-23
 **Status**: 🟡 PARTIALLY IMPLEMENTED
-**Vision**: [MJRP_Product_Vision.md](../../product-management/MJRP_Product_Vision.md)
+**Vision**: MJRP_Product_Vision.md
 
 > [!NOTE]
 > **Implementation Status (2025-12-23)**:
@@ -39922,8 +39922,8 @@ As a **User**, I want a **Hero Carousel** on the Home Screen so that I can easil
 --------------------------------------------------
 # Task Breakdown: V3 Architecture Refactor & Componentization
 
-**Spec**: [spec.md](./spec.md)
-**Plan**: [plan.md](./plan.md)
+**Spec**: spec.md
+**Plan**: plan.md
 **Branch**: `sprint12-architecture-v3.0`
 **Updated**: 2025-12-23
 
@@ -39985,7 +39985,7 @@ It addresses the following User Stories:
 - [ ] **Create Mix CTA**: Add prominent "Create Mix" button in header (Desktop) / FAB (Mobile).
 
 ## 4. 🥤 New Features: The Blending Menu (US2) ✅
-> **Detailed Tasks**: [blending-menu/tasks.md](./blending-menu/tasks.md)
+> **Detailed Tasks**: blending-menu/tasks.md
 
 - [x] **Schema**: Implement algorithm flavors and ingredient matrix.
 - [x] **UI**: Create `BlendingMenuView.js`, `BlendFlavorCard.js`, `BlendSeriesSelector.js`, `BlendIngredientsPanel.js`.
@@ -40573,10 +40573,10 @@ const ALGORITHM_INGREDIENTS = {
 
 ## 📁 Related Files
 
-- [BlendIngredientsPanel.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendIngredientsPanel.js)
-- [BlendFlavorCard.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendFlavorCard.js)
-- [BlendingMenuView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/BlendingMenuView.js)
-- [algorithms/index.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/algorithms/index.js)
+- BlendIngredientsPanel.js
+- BlendFlavorCard.js
+- BlendingMenuView.js
+- algorithms/index.js
 
 
 
@@ -40948,7 +40948,7 @@ export const spotifyEnrichmentService = new SpotifyEnrichmentService()
 **Created**: 2025-12-22  
 **Updated**: 2025-12-23  
 **Status**: 🟡 PARTIALLY IMPLEMENTED  
-**Spec**: [spec.md](./spec.md)
+**Spec**: spec.md
 
 ---
 
@@ -40974,7 +40974,7 @@ Given the prerequisites identified in the spec, we'll implement in phases:
 
 ### 1.1 Existing Algorithm Audit
 
-#### [ANALYZE] [algorithms/](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/algorithms)
+#### [ANALYZE] algorithms/
 
 **Tasks:**
 - [ ] Analyze `MJRPBalancedCascadeAlgorithm.js` (⭐ recommended base)
@@ -41016,7 +41016,7 @@ const config = {
 
 ### 2.1 View & Components
 
-#### [NEW] [BlendingMenuView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/BlendingMenuView.js)
+#### [NEW] BlendingMenuView.js
 
 **Responsibilities:**
 - Main wizard container
@@ -41024,21 +41024,21 @@ const config = {
 - State management for selections
 - Dynamic CTA button generation
 
-#### [NEW] [BlendSeriesSelector.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendSeriesSelector.js)
+#### [NEW] BlendSeriesSelector.js
 
 **Step 1: Choose Your Blend**
 - Entity type dropdown (Albums, Artists, Genres, Tracks)
 - Series loader based on entity selection
 - Single series selection
 
-#### [NEW] [BlendFlavorCard.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendFlavorCard.js)
+#### [NEW] BlendFlavorCard.js
 
 **Step 2: Choose Your Flavor**
 - Visual cards for each algorithm
 - User-friendly descriptions
 - Selection state
 
-#### [NEW] [BlendIngredientsPanel.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendIngredientsPanel.js)
+#### [NEW] BlendIngredientsPanel.js
 
 **Step 3: Pick Your Ingredients**
 - Duration slider (30m/45m/60m)
@@ -41047,7 +41047,7 @@ const config = {
 
 ### 2.2 Route Update
 
-#### [MODIFY] [app.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/app.js)
+#### [MODIFY] app.js
 
 Replace ComingSoonView with BlendingMenuView for `/blend` route.
 
@@ -41057,7 +41057,7 @@ Replace ComingSoonView with BlendingMenuView for `/blend` route.
 
 ### 3.1 CurationEngine Integration
 
-#### [MODIFY] [curation.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/curation.js)
+#### [MODIFY] curation.js
 
 - [ ] Add algorithm selection interface
 - [ ] Support new/parametrized algorithms
@@ -41411,8 +41411,8 @@ sequenceDiagram
 **Created**: 2025-12-22  
 **Updated**: 2025-12-23  
 **Status**: 🟡 PARTIALLY IMPLEMENTED  
-**Plan**: [plan.md](./plan.md)  
-**Analysis**: [algorithm-analysis.md](./algorithm-analysis.md)
+**Plan**: plan.md  
+**Analysis**: [algorithm-analysis.md](../specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/legacy/algorithm-analysis.md)
 
 ---
 
@@ -41532,7 +41532,7 @@ public/js/algorithms/
 - [x] Lock ranking for TopN algorithms (popular=spotify, acclaimed=bea)
 
 ### 3.3 Background Enrichment Service ✅ COMPLETED
-> **Spec**: [background-enrichment-spec.md](./background-enrichment-spec.md)
+> **Spec**: [background-enrichment-spec.md](../specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/legacy/background-enrichment-spec.md)
 
 - [x] Create `SpotifyEnrichmentStore.js` (Firestore CRUD with lazy cleanup)
 - [x] Create `SpotifyEnrichmentService.js` (queue + background worker)
@@ -43299,7 +43299,7 @@ export class TrackTransformer {
 
 ### 2.2 Update: Track.js Model
 
-#### [MODIFY] [Track.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/models/Track.js)
+#### [MODIFY] Track.js
 
 Add explicit Spotify and Acclaim fields with JSDoc:
 
@@ -43704,9 +43704,9 @@ The application has **multiple inconsistent data schemas** for Albums and Tracks
 
 ## 8. RELATED DOCUMENTS
 
-- [Data Schema Analysis](file:///C:/Users/Mauricio%20Pedroso/.gemini/antigravity/brain/193cc8af-11a1-49e0-901b-41119c22e5f2/data_schema_analysis.md)
-- [album_data_schema.md](../../../../../../technical/album_data_schema.md)
-- [data_flow_architecture.md](../../../../../../technical/data_flow_architecture.md)
+- Data Schema Analysis
+- album_data_schema.md
+- data_flow_architecture.md
 
 
 
@@ -43881,7 +43881,7 @@ The application has **multiple inconsistent data schemas** for Albums and Tracks
 
 **Created**: 2025-12-22  
 **Status**: ✅ APPROVED  
-**Spec**: [spec.md](./spec.md)
+**Spec**: spec.md
 
 ---
 
@@ -43906,7 +43906,7 @@ Redesign TopNav to consolidate Series navigation under a dropdown and add "The B
 
 ### Component 1: TopNav.js
 
-#### [MODIFY] [TopNav.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/TopNav.js)
+#### [MODIFY] TopNav.js
 
 **Changes:**
 1. Replace separate nav links with new structure:
@@ -43935,7 +43935,7 @@ Redesign TopNav to consolidate Series navigation under a dropdown and add "The B
 
 ### Component 2: SeriesDropdown.js (Optional)
 
-#### [NEW] [SeriesDropdown.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/navigation/SeriesDropdown.js)
+#### [NEW] SeriesDropdown.js
 
 **Responsibility:**
 - Render dropdown UI
@@ -43960,7 +43960,7 @@ class SeriesDropdown {
 
 ### Component 3: Router Updates
 
-#### [MODIFY] [router.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/router.js)
+#### [MODIFY] router.js
 
 **Add Routes:**
 ```javascript
@@ -44029,7 +44029,7 @@ Update mobile drawer in TopNav.js:
 **Status**: ✅ APPROVED  
 **Sprint**: 12 (V3 Architecture)  
 **Sprint**: 12 (V3 Architecture)  
-**Relates To**: [sprint12-architecture-v3.0](../sprint12-architecture-v3.0/spec.md)
+**Relates To**: sprint12-architecture-v3.0
 
 ---
 
@@ -44484,7 +44484,7 @@ async loadAlbumsForEdit(seriesId) {
 
 ## Related Specs
 
-- [ARCH-2: Standardize Stores](specs/sprint13-tech-debt/arch-2-standardize-stores_spec.md)
+- [ARCH-2: Standardize Stores](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/arch-2-standardize-stores_spec.md)
 - [DEBUG_LOG #92](../debug/DEBUG_LOG.md#issue-92)
 - [DEBUG_LOG #93](../debug/DEBUG_LOG.md#issue-93)
 
@@ -44535,7 +44535,7 @@ Refactor `PlaylistsView.js` into smaller, focused modules (Components/Controller
 
 **Created**: 2025-12-26  
 **Status**: ✅ DONE  
-**Spec**: [arch-2-standardize-stores_spec.md](./arch-2-standardize-stores_spec.md)
+**Spec**: [arch-2-standardize-stores_spec.md](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/arch-2-standardize-stores_spec.md)
 
 ---
 
@@ -44861,7 +44861,7 @@ Refactor `SpotifyEnrichmentStore` to use a dedicated `SpotifyEnrichmentRepositor
 
 **Created**: 2025-12-26  
 **Status**: ✅ DONE  
-**Spec**: [arch-3-basecard_spec.md](./arch-3-basecard_spec.md)
+**Spec**: [arch-3-basecard_spec.md](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/arch-3-basecard_spec.md)
 
 ---
 
@@ -45213,7 +45213,7 @@ Create a `BaseCard` component that encapsulates the shared structure and styling
 # ARCH-5: Cache Consolidation - Implementation Plan
 **Status**: 📋 DRAFT - Awaiting Review  
 **Date**: 2025-12-26  
-**Spec**: [arch-5-cache-consolidation_spec.md](./arch-5-cache-consolidation_spec.md)
+**Spec**: [arch-5-cache-consolidation_spec.md](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/arch-5-cache-consolidation_spec.md)
 
 ---
 
@@ -45534,7 +45534,7 @@ graph LR
 
 **Status**: 📋 REVISED - Ready for Implementation  
 **Date**: 2025-12-26  
-**Spec**: [arch-6-series-loading-optimization_spec.md](./arch-6-series-loading-optimization_spec.md)  
+**Spec**: [arch-6-series-loading-optimization_spec.md](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/arch-6-series-loading-optimization_spec.md)  
 **Previous Attempt**: Reverted in `29875ef`
 
 ---
@@ -47046,7 +47046,7 @@ Additionally, the **Reconfigure panel** changes are not applied when regeneratin
 | 2 | No validation of Apple Music search results | `client.js` |
 | 3 | Global store pollution across series | `albumsStore.js` |
 
-See [album-data-pipeline-analysis.md](album-data-pipeline-analysis.md) for detailed analysis.
+See [album-data-pipeline-analysis.md](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/album-data-pipeline-analysis.md) for detailed analysis.
 
 ---
 
@@ -47144,10 +47144,10 @@ Refactor the album data pipeline to ensure:
 
 ## 9. Related Documents
 
-- [Album Data Pipeline Analysis](album-data-pipeline-analysis.md)
-- [DEBUG_LOG #92](../../debug/DEBUG_LOG.md#issue-92)
-- [DEBUG_LOG #93](../../debug/DEBUG_LOG.md#issue-93)
-- [TECHNICAL_DEBT_BACKLOG](../../TECHNICAL_DEBT_BACKLOG.md)
+- [Album Data Pipeline Analysis](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/album-data-pipeline-analysis.md)
+- [DEBUG_LOG #92](../debug/DEBUG_LOG.md#issue-92)
+- [DEBUG_LOG #93](../debug/DEBUG_LOG.md#issue-93)
+- [TECHNICAL_DEBT_BACKLOG](../specs/features/F28-sprint-13-tech-debt-v3-architecture/legacy/TECHNICAL_DEBT_BACKLOG.md)
 
 
 
@@ -47236,7 +47236,7 @@ Upgrade `CacheManager` or `BaseRepository` to persist the L2 Cache to **IndexedD
 # Technical Debt Backlog & Refactoring Roadmap
 
 **Last Updated**: 2025-12-25 22:40
-**Source**: [Code Quality Assessment v5.0](refactor/CODE_QUALITY_ASSESSMENT_v5.0.md) & [Architecture Deep Dive](../ARCHITECTURE.md)
+**Source**: Code Quality Assessment v5.0 & Architecture Deep Dive
 
 ---
 
@@ -47832,7 +47832,7 @@ async searchAlbums(artist, album, limit = 50) {  // Changed from 10
 --------------------------------------------------
 # ARCH-7: Operation Safe Text Implementation Plan (COMPLETED)
 
-**Spec**: [arch-7-security-hardening_spec.md](arch-7-security-hardening_spec.md)
+**Spec**: [arch-7-security-hardening_spec.md](../specs/features/F29-sprint-14-clean-architecture-arch-4-arch-7-arch-8/legacy/arch-7-security-hardening_spec.md)
 
 ## Goal
 Eliminate `innerHTML` usage in Modals and consolidate `escapeHtml` to `utils/stringUtils.js`.
@@ -47968,7 +47968,7 @@ There are **8 duplicate `escapeHtml` functions** scattered across the codebase, 
 --------------------------------------------------
 # ARCH-8: InventoryView V3 Refactor Implementation Plan
 
-**Spec**: [arch-8-inventory-refactor_spec.md](arch-8-inventory-refactor_spec.md)
+**Spec**: [arch-8-inventory-refactor_spec.md](../specs/features/F29-sprint-14-clean-architecture-arch-4-arch-7-arch-8/legacy/arch-8-inventory-refactor_spec.md)
 
 ## Goal
 Decouple `InventoryView.js` into Controller + Renderer pattern.
@@ -48683,7 +48683,7 @@ Critical UI patterns are implemented 4-5 times independently:
 # Sprint 15 Plan: Safely Componentized Architecture (ARCH-12)
 
 **Goal**: Define the Architecture for the Unified Component System, Security Foundation, and Refactor Pilot.
-**Spec**: [spec.md](./spec.md) | **Tasks**: [tasks.md](./tasks.md)
+**Spec**: spec.md | **Tasks**: tasks.md
 
 ---
 
@@ -49070,7 +49070,7 @@ const el = SafeDOM.create('div', { className: 'title' }, title)
 # Sprint 15 Task List: Structural Integrity
 
 **Goal**: Execute ARCH-12 Componentization and Security Hardening.
-**Spec**: [spec.md](./spec.md) | **Plan**: [plan.md](./plan.md)
+**Spec**: spec.md | **Plan**: plan.md
 
 ## Phase 1: Core Foundation (`src/components/ui/`)
 *Goal: Establish the new 'Source of Truth' for UI components.*
@@ -49180,7 +49180,7 @@ const el = SafeDOM.create('div', { className: 'title' }, title)
     - [x] Test artist scan finds "Pink Floyd", "trex" correctly
     - [x] Test adding albums to series
 
-See: [Phase 6 Hotfix Plan](./phase6-hotfix-plan.md)
+See: [Phase 6 Hotfix Plan](../specs/features/F31-sprint-15-structural-integrity-arch-12/legacy/phase6-hotfix-plan.md)
 
 
 
@@ -49803,7 +49803,7 @@ if (!result || result.evidence.length === 0) {
 --------------------------------------------------
 # Implementation Plan: Sprint 10 - Codebase Refactoring
 
-**Branch**: `sprint10-refactor` | **Date**: 2025-12-18 | **Spec**: [spec.md](./spec.md)
+**Branch**: `sprint10-refactor` | **Date**: 2025-12-18 | **Spec**: spec.md
 
 ---
 
@@ -49885,7 +49885,7 @@ public/js/
 
 ### Phase 0: Preparation
 
-#### [DELETE] [app.legacy.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/app.legacy.js)
+#### [DELETE] app.legacy.js
 - Verify no imports reference this file
 - Delete and confirm build passes
 
@@ -49893,23 +49893,23 @@ public/js/
 
 ### Phase 1: AlbumsView Modularization
 
-#### [NEW] [AlbumsGridRenderer.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsGridRenderer.js)
+#### [NEW] AlbumsGridRenderer.js
 - Extract: `renderAlbumsGrid()`, `renderExpandedList()`, `renderScopedGrid()`, `renderScopedList()`
 - Extract: `renderRankedTracklist()`, `renderOriginalTracklist()`, `renderEmptyState()`, `renderLoadingProgress()`
 - Export as class or functions that receive `view` context
 
-#### [NEW] [AlbumsFilters.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsFilters.js)
+#### [NEW] AlbumsFilters.js
 - Extract: `filterAlbums()`, `getUniqueArtists()`
 - Manage filter state independently
 
-#### [NEW] [SeriesModals.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/SeriesModals.js)
+#### [NEW] SeriesModals.js
 - Extract: `setupSeriesModals()`, `openEditSeriesModal()`, `openDeleteSeriesModal()`
 - Extract: `renderSeriesAlbumsList()`, `closeSeriesModal()`, `initSeriesAutocomplete()`
 
-#### [NEW] [AlbumsDataLoader.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/albums/AlbumsDataLoader.js)
+#### [NEW] AlbumsDataLoader.js
 - Extract: `loadScope()`, `loadAlbumsFromQueries()`, `updateLoadingProgress()`
 
-#### [MODIFY] [AlbumsView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/AlbumsView.js)
+#### [MODIFY] AlbumsView.js
 - Import new modules
 - Delegate to modules in `render()`, `mount()`, `destroy()`
 - Keep only orchestration logic
@@ -49919,18 +49919,18 @@ public/js/
 
 ### Phase 2: Server Route Extraction
 
-#### [NEW] [routes/albums.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/albums.js)
+#### [NEW] routes/albums.js
 - Move: `/api/generate` endpoint
 - Move: `/api/enrich-album` endpoint
 
-#### [NEW] [routes/playlists.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/playlists.js)
+#### [NEW] routes/playlists.js
 - Move: `/api/playlists` endpoint
 
-#### [NEW] [routes/debug.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/routes/debug.js)
+#### [NEW] routes/debug.js
 - Move: `/api/debug/*` endpoints
 - Move: `/api/list-models` endpoint
 
-#### [MODIFY] [index.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/server/index.js)
+#### [MODIFY] index.js
 - Keep: Express app setup, CORS, middleware
 - Keep: Health endpoint `/_health`
 - Use: `app.use('/api', albumRoutes)`
@@ -49940,14 +49940,14 @@ public/js/
 
 ### Phase 3: PlaylistsView Split
 
-#### [NEW] [PlaylistsDragDrop.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/playlists/PlaylistsDragDrop.js)
+#### [NEW] PlaylistsDragDrop.js
 - Extract: `setupDragAndDrop()`, `onStart()`, `onEnd()`
 - SortableJS configuration and handlers
 
-#### [NEW] [PlaylistsExport.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/playlists/PlaylistsExport.js)
+#### [NEW] PlaylistsExport.js
 - Extract: `handleExportJson()`, `handleExportToAppleMusic()`, `attachExportListeners()`
 
-#### [MODIFY] [PlaylistsView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/PlaylistsView.js)
+#### [MODIFY] PlaylistsView.js
 - Import new modules
 - Delegate to modules
 - Target: < 500 lines
@@ -50638,13 +50638,13 @@ setupSeriesModals({
 
 ## 📎 Related Documents
 
-- [Sprint 9 Spec](./sprint9-ranking-enrichment/sprint9-specs.md)
-- [Sprint 9 Rankings Architecture](./sprint9-ranking-enrichment/rankings_architecture.md)
-- [Sprint 10 Spec](./sprint10-refactor/spec.md)
-- [Sprint 10 Plan](./sprint10-refactor/plan.md)
-- [Sprint 10 Tasks](./sprint10-refactor/tasks.md)
-- [DEBUG_LOG](../../debug/DEBUG_LOG.md) - Issues #54-58
-- [CODE_QUALITY_ASSESSMENT_v2](../../refactor/CODE_QUALITY_ASSESSMENT_v2.md)
+- Sprint 9 Spec
+- Sprint 9 Rankings Architecture
+- Sprint 10 Spec
+- Sprint 10 Plan
+- Sprint 10 Tasks
+- [DEBUG_LOG](../debug/DEBUG_LOG.md) - Issues #54-58
+- CODE_QUALITY_ASSESSMENT_v2
 
 ---
 
@@ -51203,12 +51203,12 @@ Implement a **Ranking Strategy Pattern** that decouples the sorting/ranking of t
 
 This document maps the **Data Flow Diagrams (DFD)** and **Sequence Diagrams** for data flows through the application.
 
-> For component inventory and API reference, see [component_reference.md](component_reference.md)
+> For component inventory and API reference, see component_reference.md
 > For bug tracking, see [DEBUG_LOG.md](../debug/DEBUG_LOG.md)
 
 ### Version Notes
 - **v2.7.1**: `AlbumSeriesListView` deprecated → Series management consolidated into `AlbumsView`
-- **v2.8.0**: Playlist generation uses **Algorithm Strategy Pattern** (see [ALGORITHM_MENU.md](specs/ALGORITHM_MENU.md))
+- **v2.8.0**: Playlist generation uses **Algorithm Strategy Pattern** (see [ALGORITHM_MENU.md](../specs/features/F22-sprint-8-algorithm-strategy-pattern/legacy/ALGORITHM_MENU.md))
 - **Sprint 11**: Spotify integration with auto-enrichment
 - **Sprint 11.5**: **Event-Driven Persistence** for enrichment (Fix #58) & `AlbumsStateController` introduction.
 - **Sprint 11.5**: **Ranking Strategy Pattern** fully implemented (Balanced, Spotify, BEA).
@@ -53015,9 +53015,9 @@ scope:
 
 ## 📎 Related Documents
 
-- [Implementation Plan](file:///C:/Users/Mauricio%20Pedroso/.gemini/antigravity/brain/143c16bd-1fa9-4271-aac1-d273d531dbbb/implementation_plan.md)
-- [Architecture](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/ARCHITECTURE.md)
-- [Constitution](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/CONSTITUTION.md)
+- Implementation Plan
+- Architecture
+- Constitution
 
 
 
@@ -53027,7 +53027,7 @@ scope:
 
 **Date**: 2026-01-04
 **Scope**: Full Project Audit (V2 Protocol)
-**Protocol Version**: [Code Quality Assessment Protocol v2.0](../../../.agent/workflows/code_quality_assessment_protocol.md)
+**Protocol Version**: [Code Quality Assessment Protocol v2.0](../../.agent/workflows/code_quality_assessment_protocol.md)
 
 ---
 
@@ -53104,7 +53104,7 @@ This directory contains historical evaluations of the MJRP Albums Balanced Playl
 
 ## Protocol Execution
 The official, step-by-step protocol is located at:
-`[code-quality-assessment-protocol.md](../../../.agent/workflows/code_quality_assessment_protocol.md)`
+`[code-quality-assessment-protocol.md](../../.agent/workflows/code_quality_assessment_protocol.md)`
 
 ## Core Assessment Philosophy
 1.  **Metric-Driven**: Use Lines of Code (LOC) and File Counts to track growth and modularization.
@@ -53112,16 +53112,16 @@ The official, step-by-step protocol is located at:
 3.  **Technical Debt Visibility**: Use the 1-10 scoring system to highlight critical refactoring needs before they block future development.
 
 ## Historical Assessments
-- [v1.0 (Initial Baseline)](CODE_QUALITY_ASSESSMENT.md)
-- [v2.0 (Post-Sprint 10 Partial Refactor)](CODE_QUALITY_ASSESSMENT_v2.md)
-- [v3.0 (Post-Sprint 10 Completion)](CODE_QUALITY_ASSESSMENT_v3.md)
-- [v4.0 (V3 Refactor Audit)](../../archive/reports/CODE_QUALITY_ASSESSMENT_v4.0.md)
-- [v5.0 (V3 & Data Schema Refactor)](CODE_QUALITY_ASSESSMENT_v5.0.md)
-- [v6.0 (Post-Sprint 13 Onboarding Audit)](CODE_QUALITY_ASSESSMENT_v6.0.md)
-- [v7.0 (Pre-Sprint 14 Baseline)](CODE_QUALITY_ASSESSMENT_v7.0.md)
-- [v8.0 (Post-Inventory Refactor)](CODE_QUALITY_ASSESSMENT_v8.0.md)
-- [v8.1 (Sprint 15 Mid-Sprint)](CODE_QUALITY_ASSESSMENT_v8.1.md)
-- [v9.0 (SafeDOM Migration Complete)](CODE_QUALITY_ASSESSMENT_v9.0.md)
+- v1.0 (Initial Baseline)
+- v2.0 (Post-Sprint 10 Partial Refactor)
+- v3.0 (Post-Sprint 10 Completion)
+- v4.0 (V3 Refactor Audit)
+- v5.0 (V3 & Data Schema Refactor)
+- v6.0 (Post-Sprint 13 Onboarding Audit)
+- v7.0 (Pre-Sprint 14 Baseline)
+- v8.0 (Post-Inventory Refactor)
+- v8.1 (Sprint 15 Mid-Sprint)
+- v9.0 (SafeDOM Migration Complete)
 
 ---
 **Last Updated**: 2025-12-30
@@ -53487,7 +53487,7 @@ kill -9 <PID>  # Matar processo
 
 ## 📚 Primary Documentation
 
-### [DEVOPS_GUIDE.md](./DEVOPS_GUIDE.md)
+### DEVOPS_GUIDE.md
 
 Este é o **documento consolidado único** para todas as operações de DevOps. Inclui:
 
@@ -54084,7 +54084,7 @@ public/js/algorithms/
 --------------------------------------------------
 # Implementation Plan: Algorithm Strategy Pattern
 
-**Branch**: `feature/sprint8-algorithm-strategy` | **Date**: 2025-12-16 | **Spec**: [spec.md](./spec.md)
+**Branch**: `feature/sprint8-algorithm-strategy` | **Date**: 2025-12-16 | **Spec**: spec.md
 **Input**: Feature specification from `docs/technical/specs/algorithm-strategy/spec.md`
 
 ## Summary
@@ -54432,7 +54432,7 @@ Phase 6 (Polish)
 
 **Branch**: `feature/sprint17-modularization`
 **Date**: 2026-01-03
-**Spec**: [spec.md](./spec.md)
+**Spec**: spec.md
 
 ## Summary
 
@@ -54741,7 +54741,7 @@ description: "Tasks for Sprint 17: Frontend Specialization & Modularization"
 
 # Tasks: Sprint 17 - Architectural Modularization
 
-**Input**: [spec.md](./spec.md), [plan.md](./plan.md)
+**Input**: spec.md, plan.md
 **Status**: Draft
 
 ## Phase 1: Data Normalization (Backend) 🏗️
@@ -54816,7 +54816,7 @@ description: "Tasks for Sprint 17: Frontend Specialization & Modularization"
 **Sprint**: 17.75
 **Created**: 2026-01-06
 **Status**: ✅ IMPLEMENTED
-**Prerequisite**: [spec.md](spec.md) ✅ COMPLETE
+**Prerequisite**: spec.md ✅ COMPLETE
 
 ---
 
@@ -55934,7 +55934,7 @@ graph TD
 **Sprint**: 17.75
 **Created**: 2026-01-06
 **Status**: 📋 READY FOR EXECUTION
-**References**: [spec.md](spec.md) | [plan.md](plan.md)
+**References**: spec.md | plan.md
 
 ---
 
@@ -55944,11 +55944,11 @@ graph TD
   - Path: `public/js/services/album-search/classification/`
   
 - [ ] **T1.2** Create `BaseStrategy.js` interface
-  - Ref: [spec.md#Arquitetura](spec.md#padrões-arquiteturais-utilizados)
+  - Ref: spec.md#Arquitetura
   - Must have: `name` property, `execute(album, context)` method
 
 - [ ] **T1.3** Create `ElectronicGenreDetector.js` helper
-  - Ref: [spec.md#Gêneros Eletrônicos](spec.md#gêneros-eletrônicos-lista-expandida)
+  - Ref: spec.md#Gêneros Eletrônicos
   - Export: `isElectronic(genres)`, `ELECTRONIC_GENRES` array
 
 - [ ] **T1.4** Create `classification/index.js` barrel export
@@ -55958,23 +55958,23 @@ graph TD
 ## Phase 2: Strategies (Pipeline Components)
 
 - [ ] **T2.1** Create `AppleMetadataStrategy.js` (Etapa 1)
-  - Ref: [spec.md#ETAPA 1](spec.md#etapa-1-applemetadatastrategy-fonte-primária-inicial)
+  - Ref: spec.md#ETAPA 1
   - Rules: isSingle → Single, isCompilation → Compilation
 
 - [ ] **T2.2** Create `TitleKeywordStrategy.js` (Etapa 2)
-  - Ref: [spec.md#ETAPA 2](spec.md#etapa-2-titlekeywordstrategy)
+  - Ref: spec.md#ETAPA 2
   - Categories: Live, DJ Mix, Single, EP, Remix, Greatest Hits, Soundtrack
 
 - [ ] **T2.3** Create `RemixTracksStrategy.js` (Etapa 3)
-  - Ref: [spec.md#ETAPA 3](spec.md#etapa-3-remixtracksstrategy)
+  - Ref: spec.md#ETAPA 3
   - Check: ≥50% tracks contain "remix/mix/version/edit"
 
 - [ ] **T2.4** Create `TrackCountStrategy.js` (Etapa 4)
-  - Ref: [spec.md#ETAPA 4](spec.md#etapa-4-trackcountstrategy-com-proteção-prog-rock)
+  - Ref: spec.md#ETAPA 4
   - Rules: 1-3→Single, 4-6→EP, prog rock protection
 
 - [ ] **T2.5** Create `AIWhitelistStrategy.js` (Etapa 5)
-  - Ref: [spec.md#ETAPA 5](spec.md#etapa-5-aiwhiteliststrategy-apenas-eletrônica)
+  - Ref: spec.md#ETAPA 5
   - Logic: Electronic + not in list → Uncategorized
 
 ---
@@ -55982,7 +55982,7 @@ graph TD
 ## Phase 3: Orchestrator
 
 - [ ] **T3.1** Create `AlbumTypeClassifier.js`
-  - Ref: [spec.md#Chain of Responsibility](spec.md#1-chain-of-responsibility-funil)
+  - Ref: spec.md#Chain of Responsibility
   - Import all strategies, define pipeline order
   - Export singleton: `albumTypeClassifier`
 
@@ -56003,7 +56003,7 @@ graph TD
   - New button with "?" icon
 
 - [ ] **T5.2** Add item counters to filter buttons
-  - Ref: [plan.md#UI Mockup](plan.md#2-ui-mockup-filter-bar-with-counters)
+  - Ref: plan.md#UI Mockup
   - Format: `[Albums (X)]`
 
 - [ ] **T5.3** Update `SearchController.js` to calculate counts
@@ -56062,7 +56062,7 @@ Phase 1 (Foundation) → Phase 2 (Strategies) → Phase 3 (Orchestrator)
 -   **Series Management UI**: `/series` route for CRUD operations
 -   **Safe Delete**: Deleting a series does NOT delete its albums from inventory
 
-**See**: [TEST_PLAN_SPRINT5_HARDENING.md](./TEST_PLAN_SPRINT5_HARDENING.md) for specific test scenarios.
+**See**: TEST_PLAN_SPRINT5_HARDENING.md for specific test scenarios.
 
 ---
 
@@ -58433,10 +58433,10 @@ Sprint 15 achieved major milestones in "SafeDOM" migration. The critical data lo
 
 **Goal**: Eradicate legacy patterns (`Modals.js`) and consolidate components.
 **Last Updated**: 2025-12-31
-**Spec**: [spec.md](./spec.md)
+**Spec**: spec.md
 
 ## ~~Phase 1: Critical Integrity Recovery~~ ✅ RESOLVED IN SPRINT 15
-> Moved to Sprint 15 Phase 6. See [phase6-hotfix-plan.md](../sprint15-arch12/phase6-hotfix-plan.md)
+> Moved to Sprint 15 Phase 6. See [phase6-hotfix-plan.md](../specs/features/F31-sprint-15-structural-integrity-arch-12/legacy/phase6-hotfix-plan.md)
 
 - [x] **Fix Export Logic**: Lazy authorize + browser locale storefront implemented.
 - [x] **Fix Series Management**: Artist scan + filters in Edit modal (same as Home).
@@ -58509,7 +58509,7 @@ Sprint 15 achieved major milestones in "SafeDOM" migration. The critical data lo
 **Created**: 2026-01-02
 **Status**: Sprint 15.5 Complete (Hotfix Release v3.15.5)
 **Objective**: Assess codebase quality after Sprint 15.5 fixes and validate Sprint 16 priorities.
-**Previous**: [v9.0](CODE_QUALITY_ASSESSMENT_v9.0.md)
+**Previous**: v9.0
 
 ---
 
@@ -58658,7 +58658,7 @@ Add explicit task for **SeriesView** refactor (421 LOC → <300 LOC) alongside M
 **Created**: 2026-01-03
 **Status**: Onboarding Verification
 **Objective**: Verify findings from v10.0 and establish baseline for Antigravity Agent.
-**Previous**: [v10.0](CODE_QUALITY_ASSESSMENT_v10.0.md)
+**Previous**: v10.0
 
 ---
 
@@ -58697,7 +58697,7 @@ The codebase follows the Architecture defined in `docs/ARCHITECTURE.md`.
 **Created**: 2025-12-24
 **Status**: Post-Deployment (Production Ready)
 **Objective**: Audit of code health following the "Playlist Refactor" and "Data Schema Refactor" milestones.
-**Previous**: [v4.0](../../archive/reports/CODE_QUALITY_ASSESSMENT_v4.0.md)
+**Previous**: v4.0
 
 ---
 
@@ -58768,7 +58768,7 @@ The codebase follows the Architecture defined in `docs/ARCHITECTURE.md`.
 **Created**: 2025-12-26
 **Status**: Post-Sprint 13 (Onboarding Audit)
 **Objective**: Comprehensive code health audit following Sprint 13 PlaylistsView V3 refactor and Blending Menu Phase 2.
-**Previous**: [v5.0](CODE_QUALITY_ASSESSMENT_v5.0.md)
+**Previous**: v5.0
 
 ---
 
@@ -59056,7 +59056,7 @@ SavedPlaylistsView      589     625     ⚠️ +6%
 **Created**: 2025-12-26
 **Status**: Pre-Sprint 14 (Architecture & Security Focus)
 **Objective**: Establish definitive baseline for Sprint 14, incorporating deep analysis of Modal architecture and recent V3 migrations.
-**Previous**: [v6.0](CODE_QUALITY_ASSESSMENT_v6.0.md)
+**Previous**: v6.0
 
 ---
 
@@ -59158,7 +59158,7 @@ Ranked by business risk and technical debt impact.
 **Created**: 2025-12-26
 **Status**: Post-Inventory Refactor (Security Focused)
 **Objective**: Definitive assessment following InventoryView refactor and deep security audit.
-**Previous**: [v7.0](CODE_QUALITY_ASSESSMENT_v7.0.md) (Skipped/Internal)
+**Previous**: v7.0 (Skipped/Internal)
 
 ---
 
@@ -59232,7 +59232,7 @@ Ranked by business risk and technical debt impact.
     *   Refactor `Modals.js` and `InventoryModals.js` into atomic components.
 
 3.- [ ] **ARCH-11: HomeView Refactor** (Priority: High)
-  - **Status**: [IN PROGRESS](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/specs/sprint14-home-refactor/arch-11-home-v3-spec.md)
+  - **Status**: IN PROGRESS
   - **Proto**: `static_prototype_v3.html`
   - **Specs**: Split-Panel Layout, Controllers.
 
@@ -59255,7 +59255,7 @@ Ranked by business risk and technical debt impact.
 **Created**: 2025-12-29
 **Status**: Sprint 15 Mid-Sprint Review (Post-Phase 2)
 **Objective**: Assess impact of `SavedPlaylistsView` refactor and re-evaluate critical phases for Sprint 15 completion.
-**Previous**: [v8.0](CODE_QUALITY_ASSESSMENT_v8.0.md)
+**Previous**: v8.0
 
 ---
 
@@ -59350,7 +59350,7 @@ Ranked by business risk and technical debt impact.
 **Created**: 2025-12-30
 **Status**: Sprint 15 Phase 4 Complete (SafeDOM Migration)
 **Objective**: Validate the SafeDOM migration, reduced XSS exposure, and component unification.
-**Previous**: [v8.1](CODE_QUALITY_ASSESSMENT_v8.1.md)
+**Previous**: v8.1
 
 ---
 

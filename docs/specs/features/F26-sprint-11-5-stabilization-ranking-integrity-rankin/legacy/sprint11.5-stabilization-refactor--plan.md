@@ -1,6 +1,6 @@
 # Implementation Plan: Sprint 11.5 - Stabilization & Refactor
 
-**Branch**: `feature/sprint11.5-stabilization` | **Date**: 2025-12-19 | **Spec**: [spec.md](spec.md)
+**Branch**: `feature/sprint11.5-stabilization` | **Date**: 2025-12-19 | **Spec**: [spec.md](../spec.md)
 
 ## Summary
 

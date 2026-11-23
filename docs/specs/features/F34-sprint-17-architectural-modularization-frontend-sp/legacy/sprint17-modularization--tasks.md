@@ -4,7 +4,7 @@ description: "Tasks for Sprint 17: Frontend Specialization & Modularization"
 
 # Tasks: Sprint 17 - Architectural Modularization
 
-**Input**: [spec.md](./spec.md), [plan.md](./plan.md)
+**Input**: [spec.md](../spec.md), [plan.md](../plan.md)
 **Status**: Draft
 
 ## Phase 1: Data Normalization (Backend) 🏗️

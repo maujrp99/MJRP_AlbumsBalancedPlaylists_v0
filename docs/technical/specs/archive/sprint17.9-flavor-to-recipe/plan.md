@@ -2,7 +2,7 @@
 
 **Goal**: Complete refactoring of "Flavor" to "Recipe" across Code, UI, and Documentation.
 **Sprint**: 17.9
-**Reference**: [Spec](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/specs/sprint17.9-flavor-to-recipe/spec.md)
+**Reference**: Spec
 
 ## User Review Required
 > [!IMPORTANT]
@@ -38,33 +38,33 @@
 
 ### Frontend Components
 
-#### [MODIFY] [BlendingMenuView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/BlendingMenuView.js)
+#### [MODIFY] BlendingMenuView.js
 - Update Stepper labels: "Flavor" -> "Recipe".
 - Update UI Headers: "Choose Your Flavor" -> "Choose Your Recipe".
 - Rename `this.selectedFlavor` -> `this.selectedRecipe`.
 - Change `BlendFlavorCard` import to `BlendRecipeCard`.
 
-#### [DELETE] [BlendFlavorCard.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendFlavorCard.js)
-#### [NEW] [BlendRecipeCard.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendRecipeCard.js)
+#### [DELETE] BlendFlavorCard.js
+#### [NEW] BlendRecipeCard.js
 - Clone `BlendFlavorCard.js` content.
 - Rename class `BlendFlavorCard` -> `BlendRecipeCard`.
 - Update events: `onFlavorSelect` -> `onRecipeSelect`.
 
-#### [MODIFY] [BlendIngredientsPanel.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendIngredientsPanel.js)
+#### [MODIFY] BlendIngredientsPanel.js
 - Rename `ALGORITHM_INGREDIENTS` -> `ALGORITHM_RECIPES`.
 - Rename method `setFlavor(flavor)` -> `setRecipe(recipe)`.
 - Update prop `selectedFlavor` -> `selectedRecipe`.
 
-#### [MODIFY] [RegeneratePanel.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/playlists/RegeneratePanel.js)
+#### [MODIFY] RegeneratePanel.js
 - Switch import to `BlendRecipeCard`.
 - Rename DOM ID `regenerate-flavor-container` -> `regenerate-recipe-container`.
 
 ### Documentation
 
-#### [MODIFY] [MJRP_Album_Blender_Prod_Vision.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/MJRP_Album_Blender_Prod_Vision.md)
+#### [MODIFY] MJRP_Album_Blender_Prod_Vision.md
 - Replace "Flavor" concept with "Recipe".
 
-#### [MODIFY] [15_Frontend_Components_Blend_Wizard.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/manual/15_Frontend_Components_Blend_Wizard.md)
+#### [MODIFY] 15_Frontend_Components_Blend_Wizard.md
 - Update component documentation to reflect renames.
 
 ## Verification Plan

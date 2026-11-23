@@ -2,7 +2,7 @@
 
 **Branch**: `feature/sprint17-modularization`
 **Date**: 2026-01-03
-**Spec**: [spec.md](./spec.md)
+**Spec**: [spec.md](../spec.md)
 
 ## Summary
 

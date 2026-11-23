@@ -1,6 +1,6 @@
 # Implementation Plan: V3 Refactor & Componentization
 
-**Spec**: [spec.md](./spec.md)
+**Spec**: [spec.md](../spec.md)
 **Status**: Draft
 **Architecture**: Vanilla JS Component-Based (Evolutionary)
 

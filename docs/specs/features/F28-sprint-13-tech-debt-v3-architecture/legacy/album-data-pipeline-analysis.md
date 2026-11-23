@@ -256,6 +256,6 @@ async loadAlbumsForEdit(seriesId) {
 
 ## Related Specs
 
-- [ARCH-2: Standardize Stores](specs/sprint13-tech-debt/arch-2-standardize-stores_spec.md)
-- [DEBUG_LOG #92](../debug/DEBUG_LOG.md#issue-92)
-- [DEBUG_LOG #93](../debug/DEBUG_LOG.md#issue-93)
+- [ARCH-2: Standardize Stores](arch-2-standardize-stores_spec.md)
+- [DEBUG_LOG #92](../../../../debug/DEBUG_LOG.md#issue-92)
+- [DEBUG_LOG #93](../../../../debug/DEBUG_LOG.md#issue-93)

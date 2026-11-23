@@ -221,6 +221,6 @@ The application has **multiple inconsistent data schemas** for Albums and Tracks
 
 ## 8. RELATED DOCUMENTS
 
-- [Data Schema Analysis](file:///C:/Users/Mauricio%20Pedroso/.gemini/antigravity/brain/193cc8af-11a1-49e0-901b-41119c22e5f2/data_schema_analysis.md)
-- [album_data_schema.md](../../../../../../technical/album_data_schema.md)
-- [data_flow_architecture.md](../../../../../../technical/data_flow_architecture.md)
+- Data Schema Analysis
+- album_data_schema.md
+- data_flow_architecture.md

@@ -1,7 +1,7 @@
 # Specification - Sprint 19: Frontend Modularization
 **Status**: ✅ COMPLETED (2026-01-10)
 **Created**: 2026-01-10
-**Source**: [refactoring_recommendations.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/refactoring_recommendations.md)
+**Source**: refactoring_recommendations.md
 
 ---
 

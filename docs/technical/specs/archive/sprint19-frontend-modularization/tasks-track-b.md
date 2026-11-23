@@ -2,8 +2,8 @@
 **Status**: ✅ COMPLETED (2026-01-10)
 **Agent**: Agent 2 (This Agent)
 **Branch**: `feature/sprint-19-track-b-stores`
-**Spec**: [spec.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/specs/sprint19-frontend-modularization/spec.md)
-**Plan**: [plan-track-b.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/technical/specs/sprint19-frontend-modularization/plan-track-b.md)
+**Spec**: spec.md
+**Plan**: plan-track-b.md
 
 ---
 

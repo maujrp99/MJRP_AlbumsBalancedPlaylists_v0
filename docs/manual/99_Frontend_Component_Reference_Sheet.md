@@ -31,17 +31,17 @@
 
 | View | Purpose | Size | Status |
 |------|---------|------|--------|
-| [SeriesView.js](file:///public/js/views/SeriesView.js) | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 238 lines | ✅ *(F83: now `screens/albums/Albums.tsx` and `screens/albums/index.ts`)* |
-| [HomeView.js](file:///public/js/views/HomeView.js) | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ *(F83: now `screens/start/Start.tsx`)* |
-| [BlendingMenuView.js](file:///public/js/views/BlendingMenuView.js) | Blend wizard (`/blend`) | 449 lines | ✅ *(F83: now `screens/blend/Blend.tsx`)* |
-| [PlaylistsView.js](file:///public/js/views/PlaylistsView.js) | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ *(F83: now `screens/playlists/Playlists.tsx`)* |
+| SeriesView.js | Albums screen (`/albums`, `/albums/:seriesId`): series and album grid | 238 lines | ✅ *(F83: now `screens/albums/Albums.tsx` and `screens/albums/index.ts`)* |
+| HomeView.js | Artist scan, bulk paste, staging area, new series | 271 lines | ✅ *(F83: now `screens/start/Start.tsx`)* |
+| BlendingMenuView.js | Blend wizard (`/blend`) | 449 lines | ✅ *(F83: now `screens/blend/Blend.tsx`)* |
+| PlaylistsView.js | Generated playlists; also the edit mode (`/playlists/edit`) | 353 lines | ✅ *(F83: now `screens/playlists/Playlists.tsx`)* |
 | `screens/saved-playlists/SavedPlaylists.tsx` | View saved batches (in React since F83 wave 1; was `views/SavedPlaylistsView.js`) | — | ✅ |
-| [InventoryView.js](file:///public/js/views/InventoryView.js) | Personal collection | 270 lines | ✅ *(F83: now `screens/inventory/Inventory.tsx`)* |
-| [ConsolidatedRankingView.js](file:///public/js/views/ConsolidatedRankingView.js) | Cross-album ranking | 319 lines | ✅ *(removed in F65: `ConsolidatedRankingView.js`)* |
-| [RankingView.js](file:///public/js/views/RankingView.js) | Single album ranking | 217 lines | ✅ *(removed in F65: `RankingView.js`)* |
-| [SaveAllView.js](file:///public/js/views/SaveAllView.js) | Data migration | 183 lines | ✅ SafeDOM (Node) *(removed in F65: `SaveAllView.js`)* |
-| [ComingSoonView.js](file:///public/js/views/ComingSoonView.js) | Placeholder for `/artists`, `/genres`, `/tracks` | 66 lines | ✅ *(F83: now `screens/coming-soon/ComingSoon.tsx`)* |
-| [BaseView.js](file:///public/js/views/BaseView.js) | View base class | 144 lines | ✅ *(removed in F83: the tab title is written by `react-bridge/useScreenTitle.ts`)* |
+| InventoryView.js | Personal collection | 270 lines | ✅ *(F83: now `screens/inventory/Inventory.tsx`)* |
+| ConsolidatedRankingView.js | Cross-album ranking | 319 lines | ✅ *(removed in F65: `ConsolidatedRankingView.js`)* |
+| RankingView.js | Single album ranking | 217 lines | ✅ *(removed in F65: `RankingView.js`)* |
+| SaveAllView.js | Data migration | 183 lines | ✅ SafeDOM (Node) *(removed in F65: `SaveAllView.js`)* |
+| ComingSoonView.js | Placeholder for `/artists`, `/genres`, `/tracks` | 66 lines | ✅ *(F83: now `screens/coming-soon/ComingSoon.tsx`)* |
+| BaseView.js | View base class | 144 lines | ✅ *(removed in F83: the tab title is written by `react-bridge/useScreenTitle.ts`)* |
 
 `AlbumsView.js` and `EditPlaylistView.js` no longer exist: the albums screen is `SeriesView` and the edit of a saved batch is `PlaylistsView` in edit mode.
 
@@ -89,11 +89,11 @@
 
 | Controller | Purpose | Status |
 |---|---|---|
-| [SeriesController.js](file:///public/js/controllers/SeriesController.js) | Albums screen: says what the screen wants; the load belongs to `AlbumLoadService` | ✅ |
-| [HomeController.js](file:///public/js/controllers/HomeController.js) | Home: scan, staging, bulk paste, new series | ✅ |
-| [BlendingController.js](file:///public/js/controllers/BlendingController.js) | Blend: asks the album load for the albums of the series (`albumAsks.albumsOf`, F56) and generates from the ones that are ready | ✅ |
-| [PlaylistsController.js](file:///public/js/controllers/PlaylistsController.js) | Playlist Generation, Editing, Saving | ✅ |
-| [InventoryController.js](file:///public/js/controllers/InventoryController.js) | Inventory Management | ✅ |
+| [SeriesController.js](../../public/js/controllers/SeriesController.js) | Albums screen: says what the screen wants; the load belongs to `AlbumLoadService` | ✅ |
+| HomeController.js | Home: scan, staging, bulk paste, new series | ✅ |
+| [BlendingController.js](../../public/js/controllers/BlendingController.js) | Blend: asks the album load for the albums of the series (`albumAsks.albumsOf`, F56) and generates from the ones that are ready | ✅ |
+| [PlaylistsController.js](../../public/js/controllers/PlaylistsController.js) | Playlist Generation, Editing, Saving | ✅ |
+| [InventoryController.js](../../public/js/controllers/InventoryController.js) | Inventory Management | ✅ |
 
 ---
 
@@ -101,13 +101,13 @@
 
 | Store | Purpose | Status |
 |-------|---------|--------|
-| [playlists.js](file:///public/js/stores/playlists.js) | Playlist state (pure state; the operations are in `PlaylistsService`) | ✅ |
-| [albumSeries.js](file:///public/js/stores/albumSeries.js) | Series state | ✅ |
-| [albums.js](file:///public/js/stores/albums.js) | Album data keyed by series | ✅ |
-| [albumLoad.js](file:///public/js/stores/albumLoad.js) | State of the album load (see `06_Frontend_Data_Store.md`) | ✅ |
-| [ownRankings.js](file:///public/js/stores/ownRankings.js) | The person's own rankings | ✅ |
-| [inventory.js](file:///public/js/stores/inventory.js) | Personal collection | ✅ |
-| [UserStore.js](file:///public/js/stores/UserStore.js) | Auth state | ✅ |
+| [playlists.js](../../public/js/stores/playlists.js) | Playlist state (pure state; the operations are in `PlaylistsService`) | ✅ |
+| [albumSeries.js](../../public/js/stores/albumSeries.js) | Series state | ✅ |
+| [albums.js](../../public/js/stores/albums.js) | Album data keyed by series | ✅ |
+| [albumLoad.js](../../public/js/stores/albumLoad.js) | State of the album load (see `06_Frontend_Data_Store.md`) | ✅ |
+| [ownRankings.js](../../public/js/stores/ownRankings.js) | The person's own rankings | ✅ |
+| [inventory.js](../../public/js/stores/inventory.js) | Personal collection | ✅ |
+| [UserStore.js](../../public/js/stores/UserStore.js) | Auth state | ✅ |
 
 #### InventoryStore (93 lines) and InventoryService
 **Purpose**: Manage personal album collection. Since F58 the store (`stores/inventory.js`) only holds state (`reset`, `setLoading`, `setAlbums`, `setError`, `replaceAlbums`, `getAlbums`, `getState`, `getStatistics`, `subscribe`); the API below, but for `getStatistics`, is `inventoryService` (`services/inventory/InventoryService.js`, wired in `inventoryWiring.js`)
@@ -173,25 +173,25 @@ The table lists the main services; the album loading services (`services/albums/
 
 | Service | Purpose | Status |
 |---------|---------|--------|
-| [MusicKitService.js](file:///public/js/services/MusicKitService.js) | **Facade**: Apple Music API | ✅ Sprint 17 |
-| [MusicKitAuth.js](file:///public/js/services/musickit/MusicKitAuth.js) | **Module**: Auth & Tokens | ✅ Sprint 17 |
-| [MusicKitCatalog.js](file:///public/js/services/musickit/MusicKitCatalog.js) | **Module**: Search & Metadata | ✅ Sprint 17 |
-| [MusicKitLibrary.js](file:///public/js/services/musickit/MusicKitLibrary.js) | **Module**: Library & Playlists | ✅ Sprint 17 |
-| [SeriesFilterService.js](file:///public/js/services/SeriesFilterService.js) | Pure func filtering logic | ✅ Sprint 17 *(removed in F65: `SeriesFilterService.js`)* |
-| [PlaylistGenerationService.js](file:///public/js/services/PlaylistGenerationService.js) | **Strategy**: Curation Pipeline | ✅ Sprint 17 |
-| [SpotifyService.js](file:///public/js/services/SpotifyService.js) | Spotify API (search, tracks, export) | ✅ |
-| [SpotifyAuthService.js](file:///public/js/services/SpotifyAuthService.js) | OAuth PKCE flow | ✅ |
-| [AlbumLoader.js](file:///public/js/services/AlbumLoader.js) | Load local album data | ✅ |
-| [OptimizedAlbumLoader.js](file:///public/js/services/OptimizedAlbumLoader.js) | Worker-based fuzzy search | ✅ |
-| [DataSyncService.js](file:///public/js/services/DataSyncService.js) | Guest-to-account migration of inventory and series | ✅ |
-| [PlaylistsService.js](file:///public/js/services/PlaylistsService.js) | Playlist operations, undo/redo, batch persistence | ✅ |
-| [PlaylistPersistenceService.js](file:///public/js/services/PlaylistPersistenceService.js) | Facade over `PlaylistRepository` / `SeriesRepository` | ✅ *(removed in F65: `PlaylistPersistenceService.js`)* |
-| [SeriesService.js](file:///public/js/services/SeriesService.js) | Series CRUD, refetch of album metadata | ✅ |
-| [SpotifyExportService.js](file:///public/js/services/SpotifyExportService.js) | Export of playlists to Spotify; answers with a report (created, not created, why) | ✅ F62 |
+| [MusicKitService.js](../../public/js/services/MusicKitService.js) | **Facade**: Apple Music API | ✅ Sprint 17 |
+| [MusicKitAuth.js](../../public/js/services/musickit/MusicKitAuth.js) | **Module**: Auth & Tokens | ✅ Sprint 17 |
+| [MusicKitCatalog.js](../../public/js/services/musickit/MusicKitCatalog.js) | **Module**: Search & Metadata | ✅ Sprint 17 |
+| [MusicKitLibrary.js](../../public/js/services/musickit/MusicKitLibrary.js) | **Module**: Library & Playlists | ✅ Sprint 17 |
+| SeriesFilterService.js | Pure func filtering logic | ✅ Sprint 17 *(removed in F65: `SeriesFilterService.js`)* |
+| [PlaylistGenerationService.js](../../public/js/services/PlaylistGenerationService.js) | **Strategy**: Curation Pipeline | ✅ Sprint 17 |
+| [SpotifyService.js](../../public/js/services/SpotifyService.js) | Spotify API (search, tracks, export) | ✅ |
+| [SpotifyAuthService.js](../../public/js/services/SpotifyAuthService.js) | OAuth PKCE flow | ✅ |
+| [AlbumLoader.js](../../public/js/services/AlbumLoader.js) | Load local album data | ✅ |
+| [OptimizedAlbumLoader.js](../../public/js/services/OptimizedAlbumLoader.js) | Worker-based fuzzy search | ✅ |
+| [DataSyncService.js](../../public/js/services/DataSyncService.js) | Guest-to-account migration of inventory and series | ✅ |
+| [PlaylistsService.js](../../public/js/services/PlaylistsService.js) | Playlist operations, undo/redo, batch persistence | ✅ |
+| PlaylistPersistenceService.js | Facade over `PlaylistRepository` / `SeriesRepository` | ✅ *(removed in F65: `PlaylistPersistenceService.js`)* |
+| [SeriesService.js](../../public/js/services/SeriesService.js) | Series CRUD, refetch of album metadata | ✅ |
+| [SpotifyExportService.js](../../public/js/services/SpotifyExportService.js) | Export of playlists to Spotify; answers with a report (created, not created, why) | ✅ F62 |
 | `AppleMusicExportService.js` (`public/js/services/`) | Export of playlists to Apple Music; answers with a report | ✅ F62 |
 | `export/exportLedger.js` (`public/js/services/`) | What this session already exported, so nothing is created twice | ✅ F62 |
-| [albums/AlbumLoadService.js](file:///public/js/services/albums/AlbumLoadService.js) | The one owner of the album load of the albums screen | ✅ |
-| [ranking/OwnRankingService.js](file:///public/js/services/ranking/OwnRankingService.js) | Saving of the person's own ranking | ✅ |
+| [albums/AlbumLoadService.js](../../public/js/services/albums/AlbumLoadService.js) | The one owner of the album load of the albums screen | ✅ |
+| [ranking/OwnRankingService.js](../../public/js/services/ranking/OwnRankingService.js) | Saving of the person's own ranking | ✅ |
 
 ---
 
@@ -199,17 +199,17 @@ The table lists the main services; the album loading services (`services/albums/
 
 | Algorithm | Purpose | Status |
 |-----------|---------|--------|
-| [index.js](file:///public/js/algorithms/index.js) | Registry & Factory | ✅ |
-| [BaseAlgorithm.js](file:///public/js/algorithms/BaseAlgorithm.js) | Abstract Strategy Base | ✅ |
-| [MJRPBalancedCascadeAlgorithm.js](file:///public/js/algorithms/MJRPBalancedCascadeAlgorithm.js) | **Recommended** Hybrid | ✅ Registered (`mjrp-balanced-cascade`) |
-| [TopNAlgorithm.js](file:///public/js/algorithms/TopNAlgorithm.js) | Base of the Top N recipes | ✅ |
-| [TopNPopularAlgorithm.js](file:///public/js/algorithms/TopNPopularAlgorithm.js) | Top N by Spotify popularity | ✅ Registered (`top-n-popular`) |
-| [TopNAcclaimedAlgorithm.js](file:///public/js/algorithms/TopNAcclaimedAlgorithm.js) | Top N by BestEverAlbums | ✅ Registered (`top-n-acclaimed`) |
-| [TopNUserAlgorithm.js](file:///public/js/algorithms/TopNUserAlgorithm.js) | Top N by the person's own ranking | ✅ Registered (`top-n-user`) |
-| [MJRPBalancedCascadeV0Algorithm.js](file:///public/js/algorithms/MJRPBalancedCascadeV0Algorithm.js) | Legacy Hybrid | Not registered *(removed in F65: `MJRPBalancedCascadeV0Algorithm.js`)* |
-| [SDraftBalancedAlgorithm.js](file:///public/js/algorithms/SDraftBalancedAlgorithm.js) | S-Draft Variant | Not registered *(removed in F65: `SDraftBalancedAlgorithm.js`)* |
-| [SDraftOriginalAlgorithm.js](file:///public/js/algorithms/SDraftOriginalAlgorithm.js) | Original S-Draft | Not registered *(removed in F65: `SDraftOriginalAlgorithm.js`)* |
-| [LegacyRoundRobinAlgorithm.js](file:///public/js/algorithms/LegacyRoundRobinAlgorithm.js) | Simple Round Robin | Not registered *(removed in F65: `LegacyRoundRobinAlgorithm.js`)* |
+| [index.js](../../public/js/algorithms/index.js) | Registry & Factory | ✅ |
+| [BaseAlgorithm.js](../../public/js/algorithms/BaseAlgorithm.js) | Abstract Strategy Base | ✅ |
+| [MJRPBalancedCascadeAlgorithm.js](../../public/js/algorithms/MJRPBalancedCascadeAlgorithm.js) | **Recommended** Hybrid | ✅ Registered (`mjrp-balanced-cascade`) |
+| [TopNAlgorithm.js](../../public/js/algorithms/TopNAlgorithm.js) | Base of the Top N recipes | ✅ |
+| [TopNPopularAlgorithm.js](../../public/js/algorithms/TopNPopularAlgorithm.js) | Top N by Spotify popularity | ✅ Registered (`top-n-popular`) |
+| [TopNAcclaimedAlgorithm.js](../../public/js/algorithms/TopNAcclaimedAlgorithm.js) | Top N by BestEverAlbums | ✅ Registered (`top-n-acclaimed`) |
+| [TopNUserAlgorithm.js](../../public/js/algorithms/TopNUserAlgorithm.js) | Top N by the person's own ranking | ✅ Registered (`top-n-user`) |
+| MJRPBalancedCascadeV0Algorithm.js | Legacy Hybrid | Not registered *(removed in F65: `MJRPBalancedCascadeV0Algorithm.js`)* |
+| SDraftBalancedAlgorithm.js | S-Draft Variant | Not registered *(removed in F65: `SDraftBalancedAlgorithm.js`)* |
+| SDraftOriginalAlgorithm.js | Original S-Draft | Not registered *(removed in F65: `SDraftOriginalAlgorithm.js`)* |
+| LegacyRoundRobinAlgorithm.js | Simple Round Robin | Not registered *(removed in F65: `LegacyRoundRobinAlgorithm.js`)* |
 | `Top3*Algorithm.js`, `Top5*Algorithm.js` | Fixed-N predecessors of the Top N recipes | Not registered |
 
 #### Strategy Pattern
@@ -227,10 +227,10 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 
 | Model | Purpose | Status |
 |-------|---------|--------|
-| [Album.js](file:///public/js/models/Album.js) | Album entity with tracks | ✅ |
-| [Track.js](file:///public/js/models/Track.js) | Track entity with ranking data | ✅ |
-| [Playlist.js](file:///public/js/models/Playlist.js) | Playlist entity | ✅ *(removed in F65: `Playlist.js`)* |
-| [Series.js](file:///public/js/models/Series.js) | Album series entity | ✅ *(removed in F65: `Series.js`)* |
+| [Album.js](../../public/js/models/Album.js) | Album entity with tracks | ✅ |
+| [Track.js](../../public/js/models/Track.js) | Track entity with ranking data | ✅ |
+| Playlist.js | Playlist entity | ✅ *(removed in F65: `Playlist.js`)* |
+| Series.js | Album series entity | ✅ *(removed in F65: `Series.js`)* |
 | `askedAlbum.js` (in place of `AlbumIdentity.js`, F55), `albumFacts.js`, `albumLoadState.js`, `albumQuery.js`, `bulkPaste.js` (F63), `cloneAlbum.js`, `ownRanking.js`, `paging.js`, `seriesFilter.js`, `text.js` | Pure rules of the album loading, paging, filters and own ranking; see `08_Frontend_Models.md` | ✅ |
 
 **Album Model**:
@@ -247,14 +247,14 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 
 | Repository | Purpose | Status |
 |------------|---------|--------|
-| [BaseRepository.js](file:///public/js/repositories/BaseRepository.js) | Abstract CRUD | ✅ |
-| [InventoryRepository.js](file:///public/js/repositories/InventoryRepository.js) | Inventory Collection | ✅ |
-| [SeriesRepository.js](file:///public/js/repositories/SeriesRepository.js) | Series Collection | ✅ |
-| [PlaylistRepository.js](file:///public/js/repositories/PlaylistRepository.js) | Playlist Subcollection | ✅ |
-| [AlbumRepository.js](file:///public/js/repositories/AlbumRepository.js) | Album Subcollection | ✅ *(removed in F65: `AlbumRepository.js`)* |
-| [SharedAlbumRepository.js](file:///public/js/repositories/SharedAlbumRepository.js) | Root collection `albums`: one document per album, shared by every account; written only by "Refetch Metadata" | ✅ *(removed in F65: `SharedAlbumRepository.js`)* |
-| [UserRankingRepository.js](file:///public/js/repositories/UserRankingRepository.js) | The person's own rankings | ✅ |
-| [SpotifyEnrichmentRepository.js](file:///public/js/repositories/SpotifyEnrichmentRepository.js) | Spotify enrichment data | ✅ |
+| BaseRepository.js | Abstract CRUD | ✅ |
+| InventoryRepository.js | Inventory Collection | ✅ |
+| SeriesRepository.js | Series Collection | ✅ |
+| PlaylistRepository.js | Playlist Subcollection | ✅ |
+| AlbumRepository.js | Album Subcollection | ✅ *(removed in F65: `AlbumRepository.js`)* |
+| SharedAlbumRepository.js | Root collection `albums`: one document per album, shared by every account; written only by "Refetch Metadata" | ✅ *(removed in F65: `SharedAlbumRepository.js`)* |
+| UserRankingRepository.js | The person's own rankings | ✅ |
+| SpotifyEnrichmentRepository.js | Spotify enrichment data | ✅ |
 
 #### BaseRepository
 - `findById(id)`, `findAll(filters)`, `create(data)`, `update(id, data)`, `delete(id)`
@@ -276,10 +276,10 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 
 | Component | Purpose | Status |
 |-----------|---------|--------|
-| [TracksRankingComparison.js](file:///public/js/components/ranking/TracksRankingComparison.js) | Multi-source comparison | ✅ *(F83: now `ui/tracks/TracksComparison.tsx`)* |
-| [TracksTable.js](file:///public/js/components/ranking/TracksTable.js) | Desktop sortable table | ✅ SafeDOM *(F83: now `ui/tracks/TracksTable.tsx`)* |
-| [TracksTabs.js](file:///public/js/components/ranking/TracksTabs.js) | Mobile tabbed view | ✅ SafeDOM *(F83: now `ui/tracks/TracksTabs.tsx`)* |
-| [UserRankModal.js](file:///public/js/components/ranking/UserRankModal.js) | Drag-and-drop modal of the person's own ranking; opens in the order of the saved ranking, reports through `onSubmit`, and the saving is done by `SeriesController.saveRanking` via `OwnRankingService` | ✅ *(F83: now `screens/albums/RankWindow.tsx` and `screens/albums/rankSession.ts`)* |
+| TracksRankingComparison.js | Multi-source comparison | ✅ *(F83: now `ui/tracks/TracksComparison.tsx`)* |
+| TracksTable.js | Desktop sortable table | ✅ SafeDOM *(F83: now `ui/tracks/TracksTable.tsx`)* |
+| TracksTabs.js | Mobile tabbed view | ✅ SafeDOM *(F83: now `ui/tracks/TracksTabs.tsx`)* |
+| UserRankModal.js | Drag-and-drop modal of the person's own ranking; opens in the order of the saved ranking, reports through `onSubmit`, and the saving is done by `SeriesController.saveRanking` via `OwnRankingService` | ✅ *(F83: now `screens/albums/RankWindow.tsx` and `screens/albums/rankSession.ts`)* |
 
 ---
 
@@ -290,10 +290,10 @@ Usage: `createAlgorithm('id').generate(...)` (or `getAlgorithm('id')` for the cl
 
 | Component | Purpose | Status |
 |-----------|---------|--------|
-| [SafeDOM.js](file:///public/js/utils/SafeDOM.js) | DOM Construction Utility | ✅ New *(removed in F83: React escapes text by itself; no hand-made DOM is left to guard)* |
-| [BaseModal.js](file:///public/js/components/ui/BaseModal.js) | Standard Modal Shell | ✅ SafeDOM *(F83: now `ui/ModalShell.tsx`)* |
-| [Card.js](file:///public/js/components/ui/Card.js) | Universal Entity Card | ✅ SafeDOM *(F83: now `screens/inventory/ItemCard.tsx` and `screens/inventory/ItemRow.tsx`)* |
-| [TrackRow.js](file:///public/js/components/ui/TrackRow.js) | Universal Track Row | ✅ SafeDOM *(F83: now `ui/TrackRow.tsx`)* |
+| SafeDOM.js | DOM Construction Utility | ✅ New *(removed in F83: React escapes text by itself; no hand-made DOM is left to guard)* |
+| BaseModal.js | Standard Modal Shell | ✅ SafeDOM *(F83: now `ui/ModalShell.tsx`)* |
+| Card.js | Universal Entity Card | ✅ SafeDOM *(F83: now `screens/inventory/ItemCard.tsx` and `screens/inventory/ItemRow.tsx`)* |
+| TrackRow.js | Universal Track Row | ✅ SafeDOM *(F83: now `ui/TrackRow.tsx`)* |
 
 #### SafeDOM Utility
 **Purpose**: Securely create DOM elements without `innerHTML` sinks.
@@ -319,31 +319,31 @@ All mounted under `/api` (`ai.js` under `/api/ai`). See `03_Backend_API_Layer.md
 
 | Route | Endpoints | Status |
 |-------|-----------|--------|
-| [albums.js](file:///server/routes/albums.js) | `POST /generate`, `POST /enrich-album` | ✅ |
-| [playlists.js](file:///server/routes/playlists.js) | `POST /playlists` | ✅ |
-| [musickit.js](file:///server/routes/musickit.js) | `GET /musickit-token` (Apple Music JWT), `GET /musickit-status` | ✅ |
-| [ai.js](file:///server/routes/ai.js) | `POST /ai/studio-albums` | ✅ |
-| [debug.js](file:///server/routes/debug.js) | `GET /list-models`, `POST /debug/raw-ranking`, `GET /debug/files`, `GET /debug/import` (only with `ENABLE_DEBUG_ROUTES=true`) | ✅ |
+| [albums.js](../../server/routes/albums.js) | `POST /generate`, `POST /enrich-album` | ✅ |
+| playlists.js | `POST /playlists` | ✅ |
+| [musickit.js](../../server/routes/musickit.js) | `GET /musickit-token` (Apple Music JWT), `GET /musickit-status` | ✅ |
+| [ai.js](../../server/routes/ai.js) | `POST /ai/studio-albums` | ✅ |
+| [debug.js](../../server/routes/debug.js) | `GET /list-models`, `POST /debug/raw-ranking`, `GET /debug/files`, `GET /debug/import` (only with `ENABLE_DEBUG_ROUTES=true`) | ✅ |
 
 ### Libraries
 
 | Library | Purpose | Status |
 |---------|---------|--------|
-| [fetchRanking.js](file:///server/lib/fetchRanking.js) | Ranking orchestrator: the pipeline of sources (BestEverAlbums, Spotify popularity, AI) | ✅ |
+| [fetchRanking.js](../../server/lib/fetchRanking.js) | Ranking orchestrator: the pipeline of sources (BestEverAlbums, Spotify popularity, AI) | ✅ |
 | `rankingSources/` (`server/lib/rankingSources/`) | The three sources of the ranking, their typed outcome, and the pure decisions of the pipeline (F52) | ✅ |
 | `albumAnswer.js` (`server/lib/albumAnswer.js`) | The album `POST /api/generate` answers, built in pure steps (F52) | ✅ |
-| [ranking.js](file:///server/lib/ranking.js) | Consolidate and normalize rankings | ✅ |
-| [normalize.js](file:///server/lib/normalize.js) | Data normalization utilities | ✅ |
-| [scrapers/besteveralbums.js](file:///server/lib/scrapers/besteveralbums.js) | Cheerio-based HTML scraper | ✅ |
-| [aiClient.js](file:///server/lib/aiClient.js) | Google Gemini API client | ✅ |
-| [prompts.js](file:///server/lib/prompts.js) | AI prompt templates; throws when the prompts file is missing or unusable (F52) | ✅ |
-| [schema.js](file:///server/lib/schema.js) | AJV validation schemas | ✅ |
-| [logger.js](file:///server/lib/logger.js) | Logging utilities | ✅ |
-| [validateSource.js](file:///server/lib/validateSource.js) | Source validation helper | ✅ |
-| [services/EnrichmentService.js](file:///server/lib/services/EnrichmentService.js) | Logic of `POST /api/enrich-album` | ✅ |
-| [services/GenerationService.js](file:///server/lib/services/GenerationService.js) | Logic of `POST /api/generate` | ✅ |
-| [services/spotifyPopularity.js](file:///server/lib/services/spotifyPopularity.js) | Spotify track popularity (client credentials) | ✅ |
-| [../services/MusicKitTokenService.js](file:///server/services/MusicKitTokenService.js) | Apple MusicKit developer token (`server/services/`) | ✅ |
+| [ranking.js](../../server/lib/ranking.js) | Consolidate and normalize rankings | ✅ |
+| [normalize.js](../../server/lib/normalize.js) | Data normalization utilities | ✅ |
+| [scrapers/besteveralbums.js](../../server/lib/scrapers/besteveralbums.js) | Cheerio-based HTML scraper | ✅ |
+| [aiClient.js](../../server/lib/aiClient.js) | Google Gemini API client | ✅ |
+| [prompts.js](../../server/lib/prompts.js) | AI prompt templates; throws when the prompts file is missing or unusable (F52) | ✅ |
+| [schema.js](../../server/lib/schema.js) | AJV validation schemas | ✅ |
+| [logger.js](../../server/lib/logger.js) | Logging utilities | ✅ |
+| [validateSource.js](../../server/lib/validateSource.js) | Source validation helper | ✅ |
+| [services/EnrichmentService.js](../../server/lib/services/EnrichmentService.js) | Logic of `POST /api/enrich-album` | ✅ |
+| [services/GenerationService.js](../../server/lib/services/GenerationService.js) | Logic of `POST /api/generate` | ✅ |
+| [services/spotifyPopularity.js](../../server/lib/services/spotifyPopularity.js) | Spotify track popularity (client credentials) | ✅ |
+| [../services/MusicKitTokenService.js](../../server/services/MusicKitTokenService.js) | Apple MusicKit developer token (`server/services/`) | ✅ |
 
 ---
 
