@@ -35,6 +35,8 @@ Base: forte — o arquivo existe e foi conferido; a publicação foi recusada
 - a) Publique no mesmo link do artefato (Recomendado)
 - b) Mande o arquivo para eu abrir no computador, sem publicar
 - c) Não preciso ver; siga a construção
+→ respondida em 2026-11-23 10:53
+  - a
 
 ### D-04 · As suas três regras do Album Blender valem para a pasta do kit?
 Pergunta: As três regras que você definiu para o código do Album Blender também valem para a cópia do kit dentro dele?
@@ -43,6 +45,9 @@ Base: forte — o crítico mediu as três regras numa cópia do kit
 - a) Misto: cumpre histórico e inglês; isento só da complexidade, com lista que só encolhe (Recomendado)
 - b) O kit cumpre as três antes de chegar ao Album Blender
 - c) A pasta do kit fica isenta das três
+→ respondida em 2026-11-23 10:53
+  - b
+→ aplicada em 2026-11-23 10:54: registrado no log e levado à F332 do harness: o kit cumpre as três regras (complexidade até 10, inglês, histórico pelo roteador) antes de chegar ao Album Blender; o plano e o registro do kit estão sendo corrigidos
 
 ### D-05 · Desligar partes da barra do editor rico num campo
 Pergunta: Um projeto pode desligar partes da barra de formatação num campo específico?
@@ -50,6 +55,9 @@ Contexto: A barra completa que você aprovou continua sendo o padrão do kit. A 
 Base: média — proposta do agente; você definiu a barra completa como padrão
 - a) Sim, por campo, com a barra completa como padrão (Recomendado)
 - b) Não: a barra é sempre a completa
+→ respondida em 2026-11-23 10:53
+  - (outra) Gostaria de um feature toggle para a opção de edição na tela no kit do CMS, viável? E faz sentido?
+→ aplicada em 2026-11-23 10:54: a edição na própria tela atrás de uma chave do kit virou o REQ-15 da F82 (viável e faz sentido: o Painel sempre existe; a edição na tela entra depois, desligada até você ligar) e vai à F332; desligar blocos da barra por campo segue com a recomendação (sim)
 
 ### D-06 · Imagem, vídeo e «Livro do Jardim» nos textos do Album Blender
 Pergunta: Os botões de imagem, vídeo e livro ficam na barra do editor nos textos do Album Blender?

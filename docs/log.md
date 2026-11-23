@@ -2,6 +2,29 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 10:54] decision — CMS: respostas D-03, D-04 e D-05 do lote; o kit cumpre as três regras antes de chegar ao V0; edição na tela atrás de uma chave
+
+**Branch:** main
+
+O MJRP, na tela remota, 2026-11-23 10:53. D-03 «a»: publicar a versão 2 do protótipo no mesmo link do artefato. D-04 «b»: o kit cumpre as três regras do V0 (complexidade até 10, interface em inglês, histórico pelo roteador) ANTES de chegar ao Album Blender — muda a escolha que eu tinha feito sozinho (isenção da complexidade com lista que só encolhe); custo que eu tinha dito: a primeira fatia do kit passa de dias para semanas (41 funções a dividir). D-05 «(outra) Gostaria de um feature toggle para a opção de edição na tela no kit do CMS, viável? E faz sentido?»: registrado como REQ-15 (viável e faz sentido: o Painel sempre existe; a edição na tela entra depois, desligada até ele ligar); a pergunta da D-05 em si (desligar blocos da barra por campo) ele não respondeu e segue com a recomendação. No chat, antes: o meio-termo do texto rico (REQ-14, barra curta opcional nos rótulos e tamanho de fonte), cujo commit a trava recusou por faltar a tarefa; entra neste, com TASK-17 e TASK-18.
+
+## [2026-11-23 10:54] decision — CMS (F82): meio-termo do texto rico — barra curta opcional nos rótulos e tamanho de fonte no kit
+
+**Branch:** main
+
+O MJRP, 2026-11-23, perguntou «qual o custo do rich text ter em todos os campos do CMS kit?»; à resposta (o custo está no site: textos que não são de tela, risco de layout, quase toda tela muda, peso) e à recomendação do meio-termo, respondeu: «vamos com o meio.termo entao da sua recomendacao, incluindo tamanho de fonte que hj creio que nao tem». Como eu li (interpretação minha): barra completa nos textos corridos, como decidido; barra curta (negrito, itálico, link, sem quebra de linha) ligada campo a campo nos rótulos visíveis; e o kit ganha tamanho de fonte, que de fato não existe hoje (a barra tem só os estilos parágrafo, destaque e subtítulo). Registrado o REQ-14 na F82; as peças entram na F332 do harness. Em aberto com ele: quais tamanhos e em qual barra.
+
+## [2026-11-23 10:53] answer — lote 2026-11-23-1039-v0-cms-pending-decisions
+
+- Lote: `reports/proposals/2026-11-23-1039-v0-cms-pending-decisions.md`
+- Envio: 6ad0a0ed27157c77
+- Recomendações aceitas: D-03
+- D-04: b
+- D-05: (outra) Gostaria de um feature toggle para a opção de edição na tela no kit do CMS, viável? E faz sentido?
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lWMEZuWVZKU05sWlViemx3VGtaMFZUSnllaTFtYUVaRmF5MDRablExWkdSeVNHSlZXbFpuTmtKU2J5SXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTkRReU5qTXlMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVTBOREl3TXpJc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaVFUZFROa054TldzMFlYbFpSemwwYVMxUk1WZHlUM1pxSWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpNdE1UQXpPUzEyTUMxamJYTXRjR1Z1WkdsdVp5MWtaV05wYzJsdmJuTWlMQ0p6ZFdKcVpXTjBJam9pWWpoa1pHWmpZMkl3WlRCaU4yTTJOREV3WkRJelpEYzVaRFEzWWpjM1lXWTVPVEV4WldZd056SXhZekZoTmpabFlUZzRZbVV6TjJNeE56WmhaR001T0NJc0luWWlPakY5Iiwic2lnbmF0dXJlIjoiTUVVQ0lITGxOSUFlSmo2aFZzTHFUVWZTR2diLWRsSFBRMWZXbmxtdThWa2hCQ0VJQWlFQXJiLUQ3UVNFRXVITmZkTVNQQjF6WW95V1k0M3llUHJCRlR1R2VUeDNVTUEifQ==
+- folhas: D-03:7422bf859541756b D-04:876c5c48238caf21 D-05:74e9fb1ebd014309
+
 ## [2026-11-23 10:50] decision — CMS: aplicadas as respostas D-01 (tradução pelo serviço da Claude) e D-02 (filtro de links) do lote
 
 **Branch:** main
