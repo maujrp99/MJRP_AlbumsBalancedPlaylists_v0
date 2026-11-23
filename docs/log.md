@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:57] decision — Painel de textos do CMS em produção, com a palavra do MJRP («2. no ar já»)
+
+**Branch:** main
+
+O MJRP escolheu o Painel no ar já com o visual do kit, e o ajuste ao protótipo depois. Terceira conferência independente do juiz: passa (0 P0, 0 P1, 10 P2; relatório `reports/audits/2026-11-23-mjrpalbumblender-v0-cms-texts-panel-visual-parity-recheck-3.md`). Ramo `claude/f82-cms-texts-panel` mesclado na `main` (`7392870`). Resultados lidos: «Server published from main (7392870)», revisão `mjrp-proxy-00217-2bb` com 100% do tráfego, saída 0; «Site published from main (7392870)», saída 0. Volta do servidor: `gcloud run services update-traffic mjrp-proxy --to-revisions=mjrp-proxy-00216-cxd=100 --region southamerica-east1 --project mjrp-playlist-generator`. O MJRP criou o registro `cmsAdmins/<uid>` no console (disse «feito»; não verificável daqui). A tradução espera a chave dele no cofre do servidor (`reports/proposals/2026-11-23-1420-v0-how-to-translation-key.md`); sem ela a rota responde `translation-not-configured`. P2 abertos a registrar: quatro etiquetas em inglês no Painel em português, editor rico ainda sem textos (`textKinds.js` vazio), visual do kit × protótipo, `proof.mjs` importa um arquivo fora do repositório, o reset do `kit.css` vence os botões do próprio kit (para o harness).
+
 ## [2026-11-23 16:49] review — F82, o Painel de textos: terceira passada do juiz visual (passa: 0 P0, 0 P1, 10 P2)
 
 **Branch:** wip/f82-panel-judge-3
