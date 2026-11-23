@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:23] decision — Página de entrada: rodada publicada em produção, com a palavra do MJRP («1. publica»)
+
+**Branch:** main
+
+O site foi publicado da `main` `18f3580` (legenda com álbum e ano, título antes das ilustrações no celular, sem a linha laranja, sem o botão grande «Criar» com conta no celular, «The Album Blender» por inteiro, «Catalogue», conserto do caixote 3D — UAT-289 a UAT-296). Resultado lido: «Site published from main (18f3580)», saída 0; a verificação de produção achou o script recém-construído (`/assets/main-Cp8CsEb4.js`). O servidor não mudou. Volta: histórico de versões do Hosting no console.
+
 ## [2026-11-23 16:12] review — F80: o juiz independente passou a rodada da página de entrada em duas partes (0 P0, 0 P1)
 
 **Branch:** fix/f80-crate-caption-album-and-year
