@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 13:42] step — CMS: o MJRP publicou as regras do banco e criou `published/site` com a chave do Discogs ligada
+
+**Branch:** main
+
+Ele rodou `firebase deploy --only firestore:rules` (colou a saída: regras compiladas e publicadas) e criou no console `published/site` (`_schemaVersion` 1, `rev` 1, `switches.discogsValues` true), guiado passo a passo; disse «gotcha e saved». Conferido por leitura pública do documento (HTTP 200, os três campos com os tipos certos). Não conferi `/api/value-sources` nem o Inventário no ar (pedem a conta dele). Falta, para o Painel: o registro `cmsAdmins/{uid}` com `role: "super"`, quando o Painel existir.
+
 ## [2026-11-23 13:31] decision — Kit do CMS: as sinopses ficam no corpus do harness; fatia 1 construída, com o juiz independente
 
 **Branch:** main
