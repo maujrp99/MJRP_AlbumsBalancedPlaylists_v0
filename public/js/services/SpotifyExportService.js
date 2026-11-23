@@ -7,9 +7,14 @@
  *   created     the playlists that are in Spotify with all their matched tracks, each with its
  *               address; `alreadyThere` when this session had sent it before (not created again)
  *   incomplete  created, but not every track was added (a second export finishes it)
- *   empty       not created: none of its tracks was found
- *   notCreated  what was left to do when the export stopped
- *   failure     null, or why it stopped: { kind: 'reconnect' | 'rate-limit' | 'error', message }
+ *   empty       not created: Spotify answered every search of its tracks and had none of them
+ *   notCreated  what was left to do when the export stopped, and what had no track that could be checked
+ *   unchecked   how many tracks could not be checked: the search failed (network, 5xx, timeout).
+ *               It is never "not found": a track is not found only when Spotify answered and had none (F97)
+ *   failure     null, or why it stopped:
+ *               { kind: 'reconnect' | 'rate-limit' | 'refused' | 'unchecked' | 'error', message }
+ *               'refused': Spotify answered 403, it does not serve this account (F97, UAT-302)
+ *               'unchecked': no track was matched and at least one search failed
  *
  * - An access that expired is renewed (SpotifyAuthService / SpotifyService); when it cannot be,
  *   the failure is 'reconnect' and only the person can go on.
@@ -18,9 +23,9 @@
 
 import { SpotifyAuthService } from './SpotifyAuthService.js'
 import { SpotifyService } from './SpotifyService.js'
-import { SpotifyReconnectError, SpotifyRateLimitError } from './spotify/spotifyErrors.js'
+import { SpotifyReconnectError, SpotifyRateLimitError, SpotifyRefusedError } from './spotify/spotifyErrors.js'
 import { exportLedger } from './export/exportLedger.js'
-import { exportOutcome } from '../models/exportOutcome.js'
+import { exportOutcome, exportReason } from '../models/exportOutcome.js'
 import { track } from './usage/track.js'
 
 /** Between two searches, so a long export does not run into the rate limit. */
@@ -35,15 +40,18 @@ function failureOf(error) {
     if (error instanceof SpotifyRateLimitError) {
         return { kind: 'rate-limit', message: error.message, retryAfterSeconds: error.retryAfterSeconds }
     }
+    if (error instanceof SpotifyRefusedError) return { kind: 'refused', message: error.message }
     return { kind: 'error', message: error?.message || 'Spotify did not answer' }
 }
 
-/** These two stop the export; any other failure of a search is one track that was not matched. */
-const stopsTheExport = (error) => error instanceof SpotifyReconnectError || error instanceof SpotifyRateLimitError
+/** These three stop the export; any other failure of a search is one track that could not be checked (never "not found"). */
+const stopsTheExport = (error) => error instanceof SpotifyReconnectError || error instanceof SpotifyRateLimitError ||
+    error instanceof SpotifyRefusedError
 
 /** F77: how the export ended, measured once, whatever way it ended. */
 function measured(report, playlists) {
-    track('playlists_exported', { target: 'spotify', outcome: exportOutcome(report), playlist_count: playlists.length })
+    const reason = exportReason(report)
+    track('playlists_exported', { target: 'spotify', outcome: exportOutcome(report), ...(reason ? { reason } : {}), playlist_count: playlists.length })
     return report
 }
 
@@ -58,7 +66,7 @@ export class SpotifyExportService {
      * Export playlists to Spotify.
      * @param {Array} playlists - playlists from the store
      * @param {Object} options - { mode: 'merge'|'separate', name: string }
-     * @param {Object} callbacks - { onProgress(stage, current, total, message), onMatch(count), onNotFound(track) }
+     * @param {Object} callbacks - { onProgress(stage, current, total, message), onMatch(count), onNotFound(track), onUnchecked(track) }
      * @returns {Promise<Object>} ExportReport (see the top of this file)
      * @throws only when there is nothing to export
      */
@@ -69,6 +77,7 @@ export class SpotifyExportService {
             mode: options.mode === 'separate' ? 'separate' : 'merge',
             totalTracks: playlists.reduce((sum, p) => sum + (p.tracks?.length || 0), 0),
             matchCount: 0,
+            unchecked: 0,
             created: [], incomplete: [], empty: [], notCreated: [],
             failure: null,
             createdUrl: null
@@ -97,14 +106,19 @@ export class SpotifyExportService {
                 name: `${name} - ${titleOf(playlist)}`,
                 description: `Part of ${name}`,
                 sources: [playlist],
-                uris: []
+                uris: [],
+                unchecked: 0
             }))
         }
-        return [{ name, description: null, sources: playlists, uris: [] }]
+        return [{ name, description: null, sources: playlists, uris: [], unchecked: 0 }]
     }
 
-    /** Find the Spotify track of every track; the ones not found are told through onNotFound. */
-    static async _match(targets, report, { onProgress = () => { }, onMatch, onNotFound }) {
+    /**
+     * Find the Spotify track of every track. The ones Spotify does not have are told through onNotFound;
+     * the ones whose search failed, through onUnchecked - they are counted apart.
+     */
+    static async _match(targets, report, callbacks) {
+        const { onProgress = () => { } } = callbacks
         let seen = 0
         for (const target of targets) {
             for (const playlist of target.sources) {
@@ -113,40 +127,59 @@ export class SpotifyExportService {
                     seen++
                     onProgress('MATCHING', seen, report.totalTracks, `Searching: ${title}`)
 
-                    const uri = await this._uriOf(track)
-                    if (uri) {
-                        target.uris.push(uri)
-                        report.matchCount++
-                        onMatch?.(report.matchCount)
-                    } else {
-                        onNotFound?.({ title, artist: track.artist, playlist: titleOf(playlist) })
-                    }
+                    const found = await this._uriOf(track)
+                    this._count(found, target, report, { title, artist: track.artist, playlist: titleOf(playlist) }, callbacks)
                 }
             }
         }
     }
 
-    /** The Spotify address of a track: the one it carries, or the one a search finds; null when none. */
+    /** One track, counted where it belongs: matched, not checked (its search failed), or not found (Spotify has none). */
+    static _count(found, target, report, told, { onMatch, onNotFound, onUnchecked }) {
+        if (found.uri) {
+            target.uris.push(found.uri)
+            report.matchCount++
+            onMatch?.(report.matchCount)
+        } else if (found.unchecked) {
+            target.unchecked++
+            report.unchecked++
+            onUnchecked?.(told)
+        } else {
+            onNotFound?.(told)
+        }
+    }
+
+    /**
+     * The Spotify address of a track: the one it carries, or the one a search finds.
+     * @returns {Promise<{ uri: string|null, unchecked?: true }>} `uri: null` alone: Spotify answered and has none;
+     *          `unchecked`: the search could not be made, so nothing is known about the track
+     */
     static async _uriOf(track) {
         const stored = storedUri(track)
-        if (stored) return stored
+        if (stored) return { uri: stored }
         try {
             const found = await SpotifyService.searchTrack(track.title || track.name, track.artist, track.album || '')
             await this.pause(SEARCH_PAUSE_MS)
-            return found?.uri || null
+            return { uri: found?.uri || null }
         } catch (error) {
             if (stopsTheExport(error)) throw error
             console.warn('[SpotifyExport] Track search failed:', track.title, error?.message)
-            return null
+            return { uri: null, unchecked: true }
         }
     }
 
     /** Create what is missing, one target at a time; the first failure stops and is reported. */
     static async _deliverAll(targets, report, { onProgress = () => { } }) {
         const withTracks = targets.filter(target => target.uris.length > 0)
-        report.empty = targets.filter(target => target.uris.length === 0).map(target => target.name)
+        const without = targets.filter(target => target.uris.length === 0)
+        // "no track found" only when Spotify answered for every track; one that could not be checked is "not created"
+        report.empty = without.filter(target => !target.unchecked).map(target => target.name)
+        const notChecked = without.filter(target => target.unchecked).map(target => target.name)
         if (withTracks.length === 0) {
-            report.failure = { kind: 'error', message: 'No tracks found on Spotify' }
+            report.notCreated = notChecked
+            report.failure = report.unchecked > 0
+                ? { kind: 'unchecked', message: 'Spotify could not be reached: the tracks could not be checked.' }
+                : { kind: 'error', message: 'No tracks found on Spotify' }
             return
         }
 
@@ -155,10 +188,11 @@ export class SpotifyExportService {
             const outcome = await this._deliver(target, report, onProgress)
             if (outcome.error) {
                 report.failure = failureOf(outcome.error)
-                report.notCreated = withTracks.slice(index + (outcome.exists ? 1 : 0)).map(item => item.name)
+                report.notCreated = [...withTracks.slice(index + (outcome.exists ? 1 : 0)).map(item => item.name), ...notChecked]
                 return
             }
         }
+        report.notCreated = notChecked
     }
 
     /**

@@ -13,6 +13,7 @@ import { Icon } from '../../ui/Icon'
 import { TrackRow } from '../../ui/TrackRow'
 import { batchTotals, formatMinutes, toMillis } from '../../models/savedPlaylists.js'
 import { t } from '../../i18n/t.js'
+import { dateText } from '../../i18n/dates.js'
 import type { Batch, Handlers, SavedPlaylist } from './types'
 
 /** Open and closed, and whether it was ever opened (the first opening draws what was waiting; the arrow only turns after it). */
@@ -90,7 +91,7 @@ function BatchFact({ icon, text, className = 'flex items-center gap-1' }: { icon
 
 function BatchInfo({ batch }: { batch: Batch }) {
     const totals = batchTotals(batch)
-    const date = batch.savedAt ? new Date(toMillis(batch.savedAt)).toLocaleDateString() : ''
+    const date = batch.savedAt ? dateText(toMillis(batch.savedAt)) : ''
     return (
         <div className="batch-info">
             <h3 className="font-bold text-xl text-white tracking-tight">{batch.name}</h3>

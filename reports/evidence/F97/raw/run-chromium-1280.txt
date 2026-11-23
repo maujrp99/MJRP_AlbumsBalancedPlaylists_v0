@@ -1,0 +1,35 @@
+PASS  chromium-1280 · 403 · says «Spotify did not allow this account»  Export to SpotifyExport FailedSpotify did not allow this accountNot created (1)• MJRP PlaylistThis is not about your tracks. The Album Blender is in a limited test phase on Spotify, and Spotify only s
+PASS  chromium-1280 · 403 · gives the next step: limited test phase, ask the owner, Apple Music
+PASS  chromium-1280 · 403 · promises nothing
+PASS  chromium-1280 · 403 · never says tracks not found, nor «matched 0»  Export to SpotifyExport FailedSpotify did not allow this accountNot created (1)• MJRP PlaylistThis is not about your tracks. The Album Blender is in a limited test phase on Spotify, and Spotify only serves the accounts on its test list. Ask
+PASS  chromium-1280 · 403 · no «Try again» and no «Connect again»: trying again is refused again
+PASS  chromium-1280 · 403 · the export stopped at the first refused search (1 of 5), and every answer was 403  GET /me -> 403 ; GET /search -> 403
+PASS  chromium-1280 · 403 · says the playlist was not created
+PASS  chromium-1280 · 403 · the window fits the screen, no sideways scroll
+PASS  chromium-1280 · 403 · no page error
+PASS  chromium-1280 · 403 · the page never left the site
+PASS  chromium-1280 · 500 · says the tracks could not be checked  Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • A
+PASS  chromium-1280 · 500 · counts them: 5 tracks could not be checked  Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Thre
+PASS  chromium-1280 · 500 · never says tracks not found  Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Thre
+PASS  chromium-1280 · 500 · offers «Try again»
+PASS  chromium-1280 · 500 · every track was asked for (5 searches), nothing created  GET /me -> 200 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500
+PASS  chromium-1280 · 500 · «Try again», with Spotify back, completes the export  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 4 tracks Open in SpotifyTracks matched4 / 5 1 track not found • Artist - Nowhere Man Close 
+PASS  chromium-1280 · 500 · the window fits the screen, no sideways scroll
+PASS  chromium-1280 · 500 · no page error
+PASS  chromium-1280 · 500 · the page never left the site
+PASS  chromium-1280 · empty · says no tracks were found  Export to SpotifyExport FailedNo tracks found on SpotifyNo track found (1)• MJRP PlaylistTracks matched0 / 5 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - No
+PASS  chromium-1280 · empty · counts them as not found: 5  Export to SpotifyExport FailedNo tracks found on SpotifyNo track found (1)• MJRP PlaylistTracks matched0 / 5 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Try againWhat was already crea
+PASS  chromium-1280 · empty · does not say «could not be checked» nor «did not allow»
+PASS  chromium-1280 · empty · every search was answered 200  GET /me -> 200 ; GET /search -> 200 ; GET /search -> 200 ; GET /search -> 200 ; GET /search -> 200 ; GET /search -> 200
+PASS  chromium-1280 · empty results · the window fits the screen, no sideways scroll
+PASS  chromium-1280 · empty results · no page error
+PASS  chromium-1280 · empty results · the page never left the site
+PASS  chromium-1280 · mixed · the export completes with what was found  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
+PASS  chromium-1280 · mixed · «3 / 5» matched  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
+PASS  chromium-1280 · mixed · one not found and one not checked, counted apart  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close 
+PASS  chromium-1280 · mixed · the track whose search failed is in the «could not be checked» list only   1 track not found • Artist - Nowhere Man ||  1 track could not be checked • Artist - Two
+PASS  chromium-1280 · mixed · the window fits the screen, no sideways scroll
+PASS  chromium-1280 · mixed · no page error
+PASS  chromium-1280 · mixed · the page never left the site
+
+chromium-1280: 33 passed, 0 failed

@@ -3,7 +3,8 @@
  * not reach (the playlists just generated, the other kinds of series), the connections (Apple Music first, then Spotify, F88), sign out, plus
  * «Clear album cache», which asks before it clears. A bottom sheet (the motor of the phone's Sheet, ui/SheetWindow), opened from the top bar.
  *
- * What the menu shows is the person as they were when it was opened: it does not change under the finger.
+ * What the menu shows is the person as they were when it was opened: it does not change under the finger. The language does (F81): the menu
+ * has the selector, and picking a language changes the menu where it is.
  */
 import { useEffect } from 'react'
 import { Icon } from '../ui/Icon'
@@ -13,6 +14,7 @@ import { openLoginWindow } from '../stores/loginWindow.js'
 import { t } from '../i18n/t.js'
 import { ConnectionRows, useConnections } from './ConnectionRows'
 import { useClearCacheQuestion } from './ClearCache'
+import { LanguageRows } from './LanguageRows'
 import { MENU_TEXT } from './menuText'
 import { accountInitial, accountName } from './accountNames'
 import { signOut } from './signOut'
@@ -99,6 +101,7 @@ export function PhoneMenuBody({ user, close, onClearCache }: { user: ShellUser |
             </div>
             <div className="phone-menu__section">{MENU_TEXT.connectionsTitle}</div>
             <MenuConnections />
+            <LanguageRows where="sheet" />
             <div className="phone-menu__list">
                 <ActionRow label={t('shell.menu.clearCache')} icon="Trash" onClick={() => { close(); onClearCache() }} />
                 {isSignedIn(user) ? <ActionRow label={t('shell.menu.signOut')} icon="SignOut" danger onClick={() => { close(); signOut() }} /> : null}
@@ -116,7 +119,8 @@ export function usePhoneMenus(user: ShellUser | null) {
         menu.show({
             id: 'phone-menu',
             title: t('shell.menu.title'),
-            closeLabel: t('shell.sheet.close'),
+            // read when the sheet is drawn: the language can change with the menu open (F81), and the label follows it
+            get closeLabel() { return t('shell.sheet.close') },
             render: (close) => <PhoneMenuBody user={user} close={close} onClearCache={question.ask} />
         })
     }

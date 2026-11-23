@@ -1,0 +1,67 @@
+{
+ "base": "the built site behind the Firebase Hosting emulator (firebase emulators:start --only hosting, a demo project)",
+ "passed": 12,
+ "failed": 0,
+ "results": [
+  {
+   "name": "[hosting emulator · chromium 1280] country «br»: Firebase answers {\"country\":\"br\"} and the app opens in Portuguese, the other language never on the page",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · chromium 1280] country «us»: Firebase answers {\"country\":\"\"} and the app opens in English, the other language never on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · chromium 1280] no country: Firebase answers {\"country\":\"\"} and the app opens in English, the other language never on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · chromium 390] country «br»: Firebase answers {\"country\":\"br\"} and the app opens in Portuguese, the other language never on the page",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · chromium 390] country «us»: Firebase answers {\"country\":\"\"} and the app opens in English, the other language never on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · chromium 390] no country: Firebase answers {\"country\":\"\"} and the app opens in English, the other language never on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · webkit 1280] country «br»: Firebase answers {\"country\":\"br\"} and the app opens in Portuguese, the other language never on the page",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · webkit 1280] country «us»: Firebase answers {\"country\":\"\"} and the app opens in English, the other language never on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · webkit 1280] no country: Firebase answers {\"country\":\"\"} and the app opens in English, the other language never on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · webkit 390] country «br»: Firebase answers {\"country\":\"br\"} and the app opens in Portuguese, the other language never on the page",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · webkit 390] country «us»: Firebase answers {\"country\":\"\"} and the app opens in English, the other language never on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · other language seen: []"
+  },
+  {
+   "name": "[hosting emulator · webkit 390] no country: Firebase answers {\"country\":\"\"} and the app opens in English, the other language never on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · other language seen: []"
+  }
+ ]
+}

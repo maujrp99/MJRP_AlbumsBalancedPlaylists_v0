@@ -51,7 +51,7 @@ EOF
 
 verify_production() {
   step "Verifying production ($SITE_URL)"
-  local attempt live_script="" head_bytes
+  local attempt live_script="" head_bytes country
   for attempt in 1 2 3 4 5 6; do
     live_script="$(curl -fsS --max-time 30 -H 'Cache-Control: no-cache' "$SITE_URL/app.html" 2>/dev/null | main_script_of || true)"
     [ "$live_script" = "$MAIN_SCRIPT" ] && break
@@ -70,6 +70,16 @@ verify_production() {
     *"<!doctype"*|*"<html"*) print_rollback; die "the live main script answers with a page, not a script: $SITE_URL$MAIN_SCRIPT" ;;
   esac
   ok "the live main script is served as a script"
+
+  # The country hint (F81). A missing /country.json is answered with app.html and status 200: look at the content.
+  country="$(curl -fsS --max-time 30 "$SITE_URL/country.json" 2>/dev/null | country_hint_of)" \
+    || { print_rollback; die "the live /country.json is not the country hint: the app cannot tell Brazil from elsewhere ($SITE_URL/country.json)"; }
+  ok "the live /country.json is the country hint (from here it says: '${country:-no country}')"
+  # The same address as a visitor in Brazil, told with the test cookie of Firebase Hosting. A warning, not a refusal:
+  # the site works without it (everybody gets the language of «another country»).
+  country="$(curl -fsS --max-time 30 --cookie 'firebase-country-override=br' "$SITE_URL/country.json" 2>/dev/null | country_hint_of || true)"
+  if [ "$country" = "br" ]; then ok "to a visitor in Brazil the live /country.json answers Brazil"
+  else warn "the live /country.json does not answer Brazil to a visitor in Brazil (it says '$country'): check hosting.i18n in firebase.json and dist/geo/ALL_br/"; fi
 }
 
 # --- main --------------------------------------------------------------------

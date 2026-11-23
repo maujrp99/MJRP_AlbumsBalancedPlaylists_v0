@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from 'tailwindcss'
 import tailwindConfig from './tailwind.config.js'
 import { entryPage } from './scripts/entryPage.mjs'
+import { countryHint } from './scripts/countryHint.mjs'
 
 export default defineConfig({
     root: 'public',
@@ -16,7 +17,8 @@ export default defineConfig({
         react(), // the React screens (F83, ADR-0023): the plugin of the Vite that already builds the site
         entryPage({
             coverSet: process.env.VITE_SPLASH_COVERS ?? loadEnv(process.env.NODE_ENV || 'development', __dirname, 'VITE_').VITE_SPLASH_COVERS
-        })
+        }),
+        countryHint() // F81: the file the hosting answers by country (dist/country.json, dist/geo/ALL_br/country.json)
     ],
 
     build: {

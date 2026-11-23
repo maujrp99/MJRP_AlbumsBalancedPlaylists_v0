@@ -51,7 +51,7 @@ export const blend = {
     'blend.failed': 'Não deu para gerar',
     'blend.phone.seriesLabel': 'Série',
     'blend.phone.choose': 'Escolha uma série',
-    'blend.phone.noSeries': 'Nenhuma série ainda: crie uma no Início',
+    'blend.phone.noSeries': 'Nenhuma série ainda: crie uma em Criar',
     'blend.phone.toChoose': '{count} séries para escolher',
     'blend.phone.actionChoose': 'Escolher',
     'blend.phone.actionChange': 'Trocar',

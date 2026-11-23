@@ -27,6 +27,7 @@ import { usePhone } from '../../react-bridge/usePhone'
 import { useNotices, useStore } from '../../react-bridge/useStore'
 import { navigate } from '../../react-bridge/navigation'
 import { t } from '../../i18n/t.js'
+import { timeText } from '../../i18n/dates.js'
 import { router } from '../../router.js'
 import { playlistsStore } from '../../stores/playlists.js'
 import { albumsStore } from '../../stores/albums.js'
@@ -351,7 +352,7 @@ function Layout({ box, state, playlists, editing, phone, isGenerating, activeSer
             {phone && playlists.length > 0 ? <PhoneActionBar isSaving={state.isSaving} onExport={sheets.openExport} onSave={todo.save} /> : null}
             {isGenerating ? <GeneratingOverlay /> : null}
             <footer className="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
-                <p className="last-update">{t('playlists.lastUpdated', { time: new Date().toLocaleTimeString() })}</p>
+                <p className="last-update">{t('playlists.lastUpdated', { time: timeText(new Date()) })}</p>
             </footer>
             {sheets.layer}
             {noticeLayer}
