@@ -2,6 +2,22 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:04] step — Página de entrada (F80): os dois endereços de busca do Apple Music viram o endereço do álbum (UAT-287)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Resposta do MJRP (2026-11-23) a «Quer que eu troque os dois endereços de busca do Apple Music pelos endereços diretos dos álbuns?»: «1.sim». Issue UAT-287.
+
+**O que mudou** (`public/splash/covers.js`). The Dark Side of the Moon (Pink Floyd): de `…/us/search?term=Pink%20Floyd%20The%20Dark%20Side%20of%20the%20Moon` para `https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699`. Homogenic (Björk): de `…/us/search?term=Bj%C3%B6rk%20Homogenic` para `https://music.apple.com/us/album/homogenic/20833577`.
+
+**Como os ids foram escolhidos.** Sem navegador: `curl` na API pública de consulta do iTunes pelo código de barras que está no caminho da capa que a página já mostra (`lookup?upc=886445635829` e `lookup?upc=081227607364`, loja `us`). A resposta traz o álbum cuja capa é o MESMO arquivo: «The Dark Side of the Moon», Pink Floyd, 1973, 11 faixas, id 1065973699 (a edição padrão; a outra do mesmo código, «50th Anniversary [Remastered]», id 1665303755, tem outra capa); «Homogenic», Björk, 1997, 10 faixas, id 20833577 (a única; a busca por nome só devolvia «Homogenic (Live)», de outra capa). Nenhum endereço foi aberto nem clicado.
+
+**Os outros 13.** Conferidos: todos já eram endereço direto de álbum (`/us/album/<nome>/<id>`); nenhum outro aponta para busca. Teste novo em `test/splash/covers.test.js`: todo álbum real tem essa forma, sem repetição, e os dois ids acima; falha no código da `main`.
+
+Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** Que os dois endereços abrem a página certa num navegador ou no app (proibido abrir nesta rodada); a correspondência vem da resposta da API (mesmo arquivo de capa, nome, artista e ano).
+
 ## [2026-11-23 15:04] step — Página de entrada (F80): sob cada disco só o nome do álbum, e o botão alinhado com o elemento visual acima (UAT-286)
 
 **Branch:** fix/f80-album-credit-album-only-and-aligned-button
