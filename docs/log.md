@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 21:48] decision — ADR-0024 (Proposed): o conteúdo publicado do CMS mora no Firestore, lido sem esperar, gravado só pelo administrador
+
+**Branch:** main
+
+- Registro curto da escolha de arquitetura do CMS (`docs/decisions/0024-cms-published-content-in-firestore.md`), nascido na `main` com o número reservado. Fica em `Proposed`: o aceite é do MJRP, no commit dele. A análise está em `design/proposals/f82-cms/architecture-proposal.md`; a crítica independente em `reports/audits/2026-11-22-mjrpalbumblender-v0-cms-published-content-architecture-audit.md`.
+- As escolhas de produto, dinheiro e segurança citadas nele são as palavras do MJRP de hoje (Painel primeiro; gravar já publica; só a conta dele é admin; registro do admin no console; só o valor anterior como rede; a cópia guardada só desliga, com a exceção da medição; fechar a gravação de visitantes na popularidade antes das receitas por blocos).
+
 ## [2026-11-22 21:46] decision — CMS (F82, F92, F93): as specs em dia com a arquitetura decidida, com as fatias e as tarefas da fatia 0
 
 **Branch:** wip/cms-adr-and-specs
