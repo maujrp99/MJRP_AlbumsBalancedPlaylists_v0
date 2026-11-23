@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 01:40] step — F83: o site inteiro em React está em produção (`main` `b36d2f1`; o MJRP disse «1.publica»)
+
+**Branch:** main
+
+O MJRP, 2026-11-23, respondendo a «O teste da prévia do React…; estando bom, a sua palavra "publica" leva para a produção»: «1.publica 2.feito». A linha `integrate/staging-2026-11-21` (`3fd2d33`) entrou na `main` pelo trem (`b36d2f1`) e o site foi publicado por `./scripts/deploy-site.sh` (5189 testes passaram, 1 pulado, saída 0). Conferido no ar: `/`, `/start` e `/albums` respondem 200 e a página serve `assets/main-DV4vNGaZ.js` com `react-vendor-C4_tDHOM.js`. Não conferi no ar com navegador nem com conta; ele não disse que fez os 8 passos do juiz. Como voltar: histórico de versões do Hosting no console do Firebase, «Rollback» para a versão anterior (site da `fe9c93b`). Seguem dele: os carimbos do ADR-0023, da emenda da constituição e do ADR-0024. Correção: a entrada de revisão na linha de integração leva «01:45», hora que estimei errado; a hora real era perto de 01:05.
+
 ## [2026-11-23 01:45] review — F83: o juiz final passou o app React inteiro (0 P0, 0 P1, 4 P2); a onda 8d entra na linha de integração
 
 **Branch:** integrate/staging-2026-11-21
