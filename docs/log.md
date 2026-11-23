@@ -2,6 +2,20 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 20:46] review — F95 e F82 (TASK-04), a Caixa gerida no Painel: juiz independente (visual, comportamento e segurança) — pass, 0 P0, 0 P1, 11 P2
+
+**Branch:** wip/f95-judge
+
+Julgado o commit `188011d` do ramo `feat/f95-crate-managed-in-the-panel`, no site construído como o publicado (o ramo e a `main`), Chromium e WebKit, 1280 e 390, inglês e português pela escolha guardada (`albumblender:lang`), com o banco, o login e a busca do servidor respondidos por dublês; as regras no emulador.
+
+Segurança: só o administrador grava `published/crate` e nenhuma gravação antes recusada em outro documento de `published/*` passou a ser aceita (55 casos do construtor e 57 sondagens minhas). A página de entrada trata o que lê como hostil: 47 respostas hostis em cada navegador e largura (188 corridas), nada virou elemento, nada rodou, nenhum outro servidor foi pedido, nenhum erro na tela. A rota `POST /api/admin/apple-albums` fica atrás da porta do administrador, não busca o endereço colado (só tira dele a loja e o número do álbum) e não devolve a chave. `noSecretsInRepo` passa.
+
+Comportamento e visual: a seção «Caixa» faz o que promete nas duas línguas; no celular todo botão tem 44 px ou mais; a cópia do kit não foi tocada. A página de entrada sem nada publicado está, elemento por elemento, onde está na `main`. O `load` da página é o mesmo da `main` (mediana de 5: 559 contra 585 ms no Chromium a 1280): os 3 a 4 s vistos pelo construtor eram da própria prova.
+
+Os P2 que mais pesam: o caminho da capa sai da pasta das capas (nunca do servidor de imagens da Apple) com pontos codificados (`%2e%2e`), nas regras e no conferidor; as regras não põem teto em nenhum texto (um documento de cerca de 1 MiB é aceito do administrador, e a página o baixa inteiro, com o `previous`); uma busca com dois-pontos depois da primeira palavra («U2: Achtung Baby») é recusada como link; a caixa em 3D passa a esperar a leitura do banco (até 3 s). Não conferido: o banco de verdade, a API de verdade da Apple, a caixa em 3D (sem WebGL no navegador de teste), a bateria inteira.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f95-crate-in-the-panel-visual-parity-recheck.md`.
+
 ## [2026-11-23 20:19] step — F95 e F82 (TASK-04): as regras da Caixa no arquivo do ramo, provadas no emulador; a prova completa no navegador; a bateria inteira
 
 **Branch:** feat/f95-crate-managed-in-the-panel
