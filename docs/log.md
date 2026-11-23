@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:56] step — F98 (a exportação para o Apple Music diz por que falhou) registrada em esboço no ramo do conserto, com a S-80; conserta a UAT-307 e a UAT-308
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+O MJRP, sobre consertar a exportação para o Apple Music (UAT-307): «2.sim». Registrados no próprio ramo do conserto, antes de qualquer código (a sessão que orquestra pediu que o registro viaje com o conserto): a story S-80 (`docs/specs/requirements/ep-04-export-playlists/`), embutida no `prd.md` no épico EP-04, e a feature F98 (`docs/specs/features/F98-apple-music-export-says-why-it-failed/`: spec, plan e tasks em esboço; `lane: fast`, `solution_type: fix`, `fixes: ["UAT-307", "UAT-308"]`, importa a S-80). Os ids foram reservados com `merge_train.py next-item-id --reserve`; a sessão reservou a F98 no board (`session_lease.py claim`).
+
+Oito requisitos: a busca no catálogo com três respostas; a recusa do Apple Music para a exportação e aparece com o próximo passo; «Tentar de novo» quando nada pôde ser conferido; o fim da exportação para o Apple Music na janela de exportar, e o resultado parcial sem título de sucesso nas duas janelas; o evento `playlists_exported` com `reason` para o Apple Music; toda frase da exportação e do aviso de pausa vinda dos dicionários, com teste de guarda (UAT-308); os dois acertos do texto da recusa do Spotify; `role="status"` e o foco no título do resultado.
+
+**Achado ao ler o código, que muda o tamanho do conserto:** a exportação para o Apple Music não tem relatório na janela. O fim dela aparece só em avisos que somem em 12 segundos, escritos em inglês dentro do serviço (`appleExportMessages`), sem «Tentar de novo». Para a janela poder dizer o que aconteceu e oferecer a nova tentativa, o relatório passa a ser desenhado na janela de exportar, com as peças da janela do Spotify (decidido pelo agente, revisável: o MJRP julga a tela).
+
+Os três sensores (`requirements_graph_check --changed`, `product_structure_check`, `sdd_shape_check`) saíram com 0; o primeiro pediu a frase da story mais curta (223 caracteres, teto 220) e foi atendido.
+
 ## [2026-11-23 19:40] decision — Conserto da mensagem do Spotify (F97) publicado em produção, com a palavra do MJRP («3 pública»); UAT-307 e UAT-308 abertas
 
 **Branch:** main
