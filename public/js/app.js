@@ -33,6 +33,7 @@ import { router } from './router.js'
 
 import toast from './stores/toasts.js'
 import { t } from './i18n/t.js'
+import { startLanguage } from './i18n/language.js'
 
 // app.js exports nothing: no module imports the file that mounts the app (UAT-19). Who needs the
 // database or the login is handed it where it is put together (the *Wiring.js files of services/).
@@ -56,12 +57,19 @@ const initUI = () => {
     startShell({ router, userStore, clearCaches: clearAppAlbumCaches })
 }
 
+// The language of this visit (F81): the person's choice on this device, else the country of access (a file of the site itself
+// that the hosting answers by country), else the browser's. Asked now, while the page is still being read; the first draw waits for it.
+const languageReady = startLanguage().catch(() => 'en')
+
 /**
  * Bootstrap the application.
  * Waits for auth to be ready before routing.
  */
 async function bootstrap() {
     console.log('🚀 App Bootstrap Starting...')
+
+    // 0. The language (F81): known before anything is drawn, so no screen shows the other language first
+    await languageReady
 
     // 1. Initialize UI (the shell) - doesn't depend on auth
     initUI()

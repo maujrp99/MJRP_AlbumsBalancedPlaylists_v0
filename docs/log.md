@@ -2,6 +2,30 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:03] review — F81: a escolha de idioma do app, segunda reconferência independente (passa: 0 P0, 0 P1, 11 P2)
+
+**Branch:** wip/f81-judge-2
+
+Juiz independente sobre `aea8013` (`feat/f81-language-by-country-and-switch`), como diferença sobre `aff752c`. Veredito: **pass — 0 P0, 0 P1, 11 P2**. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f81-language-choice-visual-parity-recheck-2.md`.
+
+O P1 do primeiro passe está corrigido: «Ir para Criar» na tela (4 de 4) e o nome da receita em português na janela de classificação; o teste novo (`test/i18n/portugueseNames.test.js`) tira os pares dos dicionários, não de uma lista à mão. Corrigidos também: a linha da Mistura no celular («crie uma em Criar»), as datas e horas no idioma do app (rodapé e Álbuns vistos antes e depois da troca) e a conferência do arquivo do país na publicação — lida: aceita qualquer país e qualquer espaço em branco, e roda depois do deploy, então não recusa uma publicação boa. O miolo do mecanismo segue passando em Chromium e WebKit, a 1280 e a 390 (52 conferências, 52 passam). A página de entrada do ramo é a da `main`.
+
+Contado como prova: o MJRP abriu a prévia no Firebase Hosting de verdade, do Brasil, e o app saiu em português.
+
+P2 abertos: 8 do primeiro passe e 3 novos (o inglês «on Home» da Mistura no celular; os avisos de «carga em pausa» escritos em inglês no código; a conferência do país em produção sem segunda tentativa, que pode dar alarme falso depois de um deploy bom). Nada bloqueia uma publicação.
+
+## [2026-11-23 19:00] step — F81: a troca por país funciona no Firebase Hosting de verdade (o MJRP viu); a main com a página de entrada nova (74a9a87) dentro do ramo
+
+**Branch:** feat/f81-language-by-country-and-switch
+
+**Evidência do MJRP.** Ele abriu, do Brasil, a prévia do commit d00f63b no Firebase Hosting de verdade e o app abriu em português: «sim, saiu em portugues». Era o que faltava provar (até aqui só o emulador): o Hosting troca `/country.json` pelo país do acesso num canal de prévia. O caminho de fora do Brasil (inglês) segue provado só no emulador e pelo cookie de teste.
+
+**A main de novo.** `git merge main` (74a9a87, com a página de entrada nova do celular, F96). Um conflito, em `scripts/bundle-budget.json`, resolvido pela regra do arquivo: medir e pôr os tetos na medição mais a margem — script principal 200.190 B (igual), depois da primeira tela 255.787 B (+1 B, o que a main já tinha medido no arquivo da caixa 3D); tetos 200.340 B e `background` 82.690 B. `docs/specs/uat.md` juntou sozinho, com as linhas em ordem de id (UAT-297 a UAT-306; `uat-check` conferiu). Todas as entradas do log ficaram.
+
+**A página de entrada e o app continuam de acordo.** A chave da escolha é a mesma nos dois lados (`albumblender:lang`, em `public/splash/lang.js` e em `public/js/i18n/language.js`; o teste que prende uma à outra passa) e este ramo não tem diferença nenhuma em `public/splash.html` nem em `public/splash/` contra a main.
+
+Conferido neste estado: `npm run typecheck`, `npx eslint . --quiet` e `npm run budget:publication` com saída 0; os testes de `test/i18n`, `test/shell`, `test/scripts` e `test/splash` pela fila — 34 arquivos, 561 passaram; a prova de navegador no site construído — 140 de 140, e 12 de 12 atrás do emulador do Firebase Hosting. A suíte inteira não foi repetida nesta rodada.
+
 ## [2026-11-23 18:57] decision — Home nova do celular (F96) publicada em produção, com a palavra do MJRP («3 publica!»)
 
 **Branch:** main
@@ -19,6 +43,41 @@ Juiz independente, segundo passe, estreito: a ponta `f3c4770` como diferença so
 Os cinco P2 do primeiro passe seguem abertos. Um a mais, visto agora e igual na `main` (não vem desta feature): no computador, o WebKit de teste deixa a página rolar 32 px de lado.
 
 Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f96-phone-home-visual-parity-recheck-2.md`.
+
+## [2026-11-23 18:50] step — F81: o ramo com o relatório do juiz e a main (65a2005) dentro; orçamento medido de novo; prova de navegador repetida
+
+**Branch:** feat/f81-language-by-country-and-switch
+
+Depois das correções (2d65f42): `git merge --no-ff wip/f81-judge` (o relatório intocado) e `git merge main` (65a2005). Um conflito só, em `docs/specs/uat.md`: as linhas dos dois lados ficaram, por ordem de id (UAT-302 da main, UAT-303 a UAT-306 deste ramo); `merge_train.py uat-check` conferiu os ids. Todas as entradas do log ficaram. `scripts/bundle-budget.json` não conflitou (a main não o mudou), mas a regra do arquivo manda medir de novo: no build no formato da publicação, o script principal mede 200.190 B (+578 B desde aff752c: `i18n/dates.js` e o que veio da main) e o que vem depois da primeira tela 255.786 B; tetos na medição mais a margem (principal 200.340 B, `background` 82.689 B), com a conta no arquivo.
+
+Conferido com tudo junto: a suíte inteira, sozinha na fila — 416 arquivos, 5605 passaram, 1 pulado; `npm run typecheck`, `npx eslint . --quiet` e `npm run budget:publication` com saída 0. Prova de navegador repetida no site construído deste commit (`reports/evidence/F81/`): 140 de 140 (as 132 de antes mais 8 novas: o botão de «Página não encontrada» diz «Ir para Criar», e o rodapé em português escreve «23/11/2026, 18:48:04» num navegador em inglês) e 12 de 12 atrás do emulador do Firebase Hosting.
+
+## [2026-11-23 18:43] step — F81: correções da reconferência do juiz (o P1 dos textos em português com inglês, e três P2)
+
+**Branch:** feat/f81-language-by-country-and-switch
+
+O juiz independente reprovou `aff752c` por um P1 (relatório `reports/audits/2026-11-23-mjrpalbumblender-v0-f81-language-choice-visual-parity-recheck.md`, commit 9c8eeb8 em `wip/f81-judge`); o mecanismo passou. Corrigido aqui, cada item com o teste falhando antes:
+
+- **P1-1, textos em português com palavras em inglês.** `notices.router.notFoundBack` diz «Ir para Criar» (era «Ir para Create»); `albums.rankWindow.tip` e `albums.rankWindow.note` nomeiam a receita como a lista de receitas nomeia, «Top Faixas pela Minha Própria Classificação» (lido de `blend.recipes.topNUser.name`). Guarda nova, `test/i18n/portugueseNames.test.js`: nenhum texto em português, do app ou do Painel, pode trazer o nome em inglês de uma parada do menu ou de uma receita quando existe o nome em português; os pares saem dos próprios dicionários (`shell.phone.tab*` e `blend.recipes.*.name`), não de uma lista à mão. A guarda achou mais um, no Painel: «Receitas do Blend» virou «Receitas da Mistura» (`admin.nav.recipes`).
+- **P2-1.** `blend.phone.noSeries` diz «crie uma em Criar» (era «no Início», que não existe). O inglês («on Home») ficou como está: a página antiga guardada em `test/fixtures/blendBeforeF83.json` compara esse texto letra a letra; fica anotado.
+- **P2-8, a publicação confere o arquivo do país.** `verify_build` (`scripts/lib/site-build.sh`, da produção e da prévia) recusa a build sem `dist/country.json` ou `dist/geo/ALL_br/country.json`, ou com um deles malformado; `verify_production` (`scripts/deploy-site.sh`) lê `/country.json` no ar e para, com o caminho de volta, se a resposta não for o arquivo; pede de novo como visitante do Brasil (o cookie de teste do Firebase) e só avisa se não vier «br». Teste: `test/scripts/countryHintChecks.test.js`, que roda as funções de shell de verdade numa pasta feita na hora.
+- **P2-4, datas e horas no idioma do app.** `public/js/i18n/dates.js` decide a forma: português → brasileira; inglês → o inglês do navegador quando ele fala inglês, senão dia antes do mês. Os cinco pontos que escreviam com o idioma do navegador passaram a perguntar a ele (rodapé, Álbuns, Playlists, cartão das playlists salvas, o aviso de espera da carga). O rodapé e a tela de álbuns agora reescrevem a hora quando o idioma troca. Ficou de fora: os formatos fixos dos modelos (`models/inventoryValue.js`, em inglês britânico), porque os modelos não podem ler o dicionário; é trabalho da TASK-05.
+
+**A pergunta do coordenador — os textos aprovados no Painel escondem estas correções em produção?** Não, pelo que o código faz (nenhum dado de produção foi lido). `published/texts_pt` guarda só o que o dono digitou diferente do código: aprovar um texto sem mexer nele grava a chave em `cmsWork/approved_pt` e nada em `published/texts_pt` (`usePanel.ts`, `approve` → `forSave`: só entram as chaves cujo texto mudou desde a leitura, e um texto igual ao do código vira `null`, que sai do documento). Então os textos corrigidos aqui aparecem em produção, a não ser que ele tenha reescrito essas mesmas chaves no Painel — aí vale o texto dele. Efeito colateral: essas chaves continuam marcadas como aprovadas no Painel, embora o texto tenha mudado depois da aprovação; ele não verá as cinco como «a revisar».
+
+Os outros P2 do relatório ficam como estão, por decisão do coordenador.
+
+## [2026-11-23 18:38] review — F81: a escolha de idioma do app, reconferência independente (visual e comportamento) — reprovada por 1 P1 de texto
+
+**Branch:** wip/f81-judge
+
+Juiz independente sobre `aff752c` (`feat/f81-language-by-country-and-switch`, TASK-02 e TASK-03). Veredito: **fail — 0 P0, 1 P1, 11 P2**. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f81-language-choice-visual-parity-recheck.md`.
+
+O mecanismo passa em Chromium e WebKit, a 1280 e a 390, atrás do emulador do Firebase Hosting (projeto demo, nada publicado): Brasil abre em português sem nenhum quadro em inglês; outro país, ou nenhum, abre em inglês; a escolha sobrevive a recarregar e vence o país; a troca mantém a página, o texto digitado e o foco; o seletor usa as linhas que cada menu já tem e funciona só pelo teclado. Uma publicação muda um endereço só, `/country.json`; os tetos de peso batem com a conta.
+
+O P1: três textos em português ainda mostram inglês — «Ir para Create» (`notices.router.notFoundBack`) e o nome da receita em inglês na janela de classificação dos Álbuns (`albums.rankWindow.tip` e `albums.rankWindow.note`). Os P2 estão no relatório (entre eles: a tela preta e sem palavra enquanto o país é perguntado; o deploy não confere o arquivo do país; «crie uma no Início» no celular).
+
+Não conferido: a troca por país no Firebase Hosting de verdade (só no emulador); as telas com dados; os textos que o MJRP publicou pelo Painel.
 
 ## [2026-11-23 18:34] review — F96: a página de entrada no celular, reconferência visual independente (passa: 0 P0, 0 P1, 5 P2)
 
@@ -60,6 +119,28 @@ A prova completa da F96 no site construído (`vite build` com as capas reais, `v
 
 O doctor segue vermelho pelos mesmos 2 erros do `MEMORY.md`, fora desta tarefa. Fica para o passo retroativo (TASK-10): `info-arch.md`, `behavior.md`, `design-system.md` (a fila de capas, o fundo de passo, o laranja de texto), a spec e o plano completos.
 
+
+## [2026-11-23 18:18] step — F81: o app fala português no Brasil e inglês fora, a escolha da pessoa vence, e há seletor de idioma (TASK-02, TASK-03)
+
+**Branch:** feat/f81-language-by-country-and-switch
+
+O app passa a decidir o idioma ao abrir (`public/js/i18n/language.js`, chamado por `app.js` antes de desenhar qualquer coisa): primeiro a escolha da pessoa, guardada no aparelho; sem escolha, o país do acesso (Brasil → português; outro país, ou nenhum → inglês); sem conseguir ler o país, o idioma do navegador (decisão do MJRP de 2026-11-21: «Sem saber o país: o idioma do navegador da pessoa»). O português fica aberto ao público (`OPEN_LOCALES` = inglês e português).
+
+**De onde vem o país — a escolha e os limites.** Conferido na documentação oficial do Firebase Hosting («Configure i18n rewrites», lida hoje): com `hosting.i18n.root` no `firebase.json`, o Hosting responde, no mesmo endereço, o arquivo da pasta `ALL_<país>` para quem acessa daquele país (o país vem do IP, visto pelo Hosting) e o arquivo comum para os demais. A build escreve dois arquivos minúsculos (`scripts/countryHint.mjs`): `dist/country.json` (`{"country":""}`) e `dist/geo/ALL_br/country.json` (`{"country":"br"}`); o app lê `/country.json`. Sem servidor, sem pedir a localização ao navegador, sem serviço de fora, sem chave; nada do visitante sai do site. Alternativas descartadas: um cabeçalho posto pelo servidor do Cloud Run (um pedido a mais, a um servidor que dorme, e código de servidor para manter) e o fuso horário (adivinha, não sabe). Limites: (1) o país é o do IP — quem usa VPN ou está viajando recebe o idioma do lugar do IP, e é para isso que a escolha no seletor vence; (2) a troca por país só existe no Firebase Hosting: no servidor de desenvolvimento e no `vite preview` o arquivo comum é servido (inglês para quem não escolheu); (3) a documentação não diz como o cache da rede do Firebase trata esse arquivo, então ele sai com `Cache-Control: no-store` (um pedido pequeno por visita de quem ainda não escolheu; quem já escolheu não pede); (4) a primeira tela de quem não escolheu espera esse pedido, no máximo 1,5 s, e depois segue com o idioma do navegador; (5) provado no emulador do Firebase Hosting com o cookie de teste da própria documentação (`firebase-country-override`), não ainda no Hosting de verdade: a prova final é a primeira publicação num canal de prévia.
+
+**O que uma publicação passa a fazer de diferente (`firebase.json`).** Duas coisas, só no Hosting: (a) `"i18n": {"root": "/geo"}` — o Hosting passa a procurar, para cada endereço pedido, um arquivo de mesmo caminho dentro de `dist/geo/ALL_<país>/` (e de `dist/geo/<idioma>/`) antes do arquivo comum; hoje só existe `geo/ALL_br/country.json`, então só `/country.json` muda de resposta, e só para o Brasil; todo outro endereço responde como antes; (b) um cabeçalho novo, `Cache-Control: no-store`, só em `/country.json`. Nenhuma regra de reescrita, nenhum outro cabeçalho e nada do Firestore mudou. Ninguém publicou nada: isto é o que o `firebase deploy --only hosting` faria.
+
+**A escolha.** Fica no aparelho, na chave `albumblender:lang`, a mesma que a página de entrada já usa (lida em `public/splash/lang.js`, sem tocar em nada de `public/splash*`): as duas páginas concordam. **Na conta, não:** não existe documento do usuário nem regra no banco para isso, e `firestore.rules` é do MJRP (a spec já dizia «na conta quando ele publicar a regra»). Virou a linha TASK-02b em `tasks.md`.
+
+**O seletor.** No painel da conta (computador) e no Menu (celular), com as linhas que esses menus já têm (`public/js/shell/LanguageRows.tsx`): «Português» e «English», cada um no próprio idioma, a marca laranja no que vale. Troca a tela inteira sem recarregar, acerta o `lang` da página, guarda a escolha e deixa o foco na linha escolhida. Sem piscar: quem já escolheu português vê «Carregando...» desde o primeiro instante (um script pequeno em `public/index.html`); quem ainda não escolheu espera sem texto até o país chegar.
+
+**O Painel (`/admin`)** segue o idioma do app (já ouvia o idioma; faltava alguém trocá-lo) e as quatro telas que estavam em inglês no português dizem o que o menu diz: «Álbuns», «Mistura», «Acervo», «Criar».
+
+**Custo em bytes (o MJRP decide se aceita).** No build no formato da publicação: o script principal foi de 198.469 B para 199.612 B (+1.143 B, para todos); e o dicionário em português (17.597 B) virou um arquivo próprio, que só quem vê o app em português baixa, uma vez, antes da primeira tela. Antes ele estava dentro do arquivo do Painel, que ninguém além do administrador baixa. Os tetos de `scripts/bundle-budget.json` subiram para a medição mais a margem, com a conta escrita lá.
+
+**Provas.** Testes novos: `test/i18n/language.test.js` (18) e `test/shell/Language.test.tsx` (5); a suíte inteira: 413 arquivos, 5583 passaram, 1 pulado. No navegador, no site construído (`reports/evidence/F81/`): 132 conferências em Chromium e WebKit, a 1280 e a 390, visitante e com conta (Brasil → português sem nenhuma palavra em inglês na tela em nenhum quadro; outro país → inglês; a escolha sobrevive a recarregar e vence o país; troca na tela com o trabalho mantido; só pelo teclado; `/admin` acompanha) e mais 12 atrás do emulador do Firebase Hosting, onde a troca por país é feita pelo código do próprio Firebase. Issues de aceite abertas: UAT-303 a UAT-306.
+
+**Ficou de fora, e por quê.** A cópia da escolha na conta (acima). A página de entrada (outro agente a refaz no ramo `feat/f96-entry-page-on-the-phone`): ela continua abrindo em português para todos que não escolheram, de qualquer país — é a decisão de 2026-11-21 para aquela página, e difere da regra de hoje para o app. O título e a descrição de `index.html` no idioma (TASK-07). Os cinco nomes de página da caixa de link do editor do Painel, ainda em inglês.
 
 ## [2026-11-23 18:14] decision — Home nova do celular (F96): o MJRP aprovou a prévia
 

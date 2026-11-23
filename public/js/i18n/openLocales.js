@@ -1,9 +1,9 @@
 /**
  * OPEN_LOCALES - the languages the site speaks to the public (F83 wave 0, risk R21; F81 owns the decision to open one).
  *
- * While it holds only `en`, the site opens in English for everybody, the language picker does not show and the Portuguese
- * dictionary is not asked for. Portuguese is already in the code and in the tests: the owner reads it in his own browser
- * (mark `mjrp.lang.preview`, see t.js). Opening it is changing this list to ['en', 'pt'] and publishing, when the coverage the
- * MJRP chose (proposal D-8: all the screens, at the end of the waves) is reached.
+ * English and Portuguese, both open since the owner approved the Portuguese texts in the Painel and said the app speaks Portuguese in
+ * Brazil and English elsewhere (MJRP, 2026-11-23; F81, REQ-02). Which of the two a visit gets is decided in language.js (the person's
+ * choice, then the country). A language taken out of this list is refused by `setLocale`, but for whoever carries the preview mark
+ * (`mjrp.lang.preview`, see t.js).
  */
-export const OPEN_LOCALES = Object.freeze(['en'])
+export const OPEN_LOCALES = Object.freeze(['en', 'pt'])

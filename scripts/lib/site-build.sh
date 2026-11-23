@@ -103,6 +103,7 @@ verify_build() {
   ok "the Spotify client id is in the built scripts"
 
   verify_usage_measurement "$dist"
+  verify_country_hint "$dist"
 
   maps="$(find "$dist" -name '*.map' | wc -l | tr -d ' ')"
   [ "$maps" = "0" ] || die "$maps source map file(s) in dist/: the site must not hand out its source"
@@ -142,6 +143,36 @@ EOF
 
 # The measurement of use (F77): on only with VITE_POSTHOG_KEY, unless VITE_USAGE_MEASUREMENT=off.
 # Says which way the site was built; a key that did not reach the built scripts is refused.
+# The country hint (F81): reads from stdin what a file or a server gave for /country.json and prints the country
+# it names, in lower case (`br`, or nothing for «another country, or none»). Fails when the text is not the hint:
+# not JSON, or without a `country` that is text.
+country_hint_of() {
+  node -e '
+    let text = ""
+    process.stdin.on("data", (piece) => { text += piece }).on("end", () => {
+      let hint
+      try { hint = JSON.parse(text) } catch { process.exit(1) }
+      if (!hint || typeof hint.country !== "string") process.exit(1)
+      process.stdout.write(hint.country.toLowerCase())
+    })
+  '
+}
+
+# The app learns the visitor's country from /country.json, which Firebase Hosting answers by country (firebase.json,
+# `i18n.root`: /geo): dist/country.json for everybody, dist/geo/ALL_br/country.json for Brazil (scripts/countryHint.mjs
+# writes both). A missing file is silent in production: Hosting answers app.html with status 200 and every visitor
+# falls to the language of the browser.
+verify_country_hint() {
+  local dist="$1" country
+  [ -f "$dist/country.json" ] || die "dist/country.json (the country hint, for everybody) was not built"
+  country="$(country_hint_of < "$dist/country.json")" || die "dist/country.json is not the country hint: it must be JSON with a \"country\" that is text"
+  [ -z "$country" ] || die "dist/country.json names a country ('$country'): the file for everybody must name none"
+  [ -f "$dist/geo/ALL_br/country.json" ] || die "dist/geo/ALL_br/country.json (the country hint, for Brazil) was not built"
+  country="$(country_hint_of < "$dist/geo/ALL_br/country.json")" || die "dist/geo/ALL_br/country.json is not the country hint: it must be JSON with a \"country\" that is text"
+  [ "$country" = "br" ] || die "dist/geo/ALL_br/country.json does not say Brazil (it says '$country')"
+  ok "the country hint is in dist/ (country.json and geo/ALL_br/country.json)"
+}
+
 verify_usage_measurement() {
   local dist="$1" key switch
   key="$(read_env_value VITE_POSTHOG_KEY "$ENV_FILE")"

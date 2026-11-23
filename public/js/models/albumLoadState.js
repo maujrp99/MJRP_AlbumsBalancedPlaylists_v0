@@ -49,7 +49,7 @@ export const HoldReason = Object.freeze({ UNAUTHORIZED: 'unauthorized', RATE_LIM
  * @param {Function} [formatTime] - (ms) => text
  * @returns {{ message: string, type: string, durationMs: number }}
  */
-export function holdNotice(hold, formatTime = (ms) => new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) {
+export function holdNotice(hold, formatTime = (ms) => new Date(ms).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })) {
     if (hold.reason === HoldReason.UNAUTHORIZED) {
         return { message: 'Your sign-in could not be confirmed. Sign in again to keep loading ratings.', type: 'warning', durationMs: 10000 }
     }

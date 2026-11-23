@@ -7,9 +7,9 @@
  * English is the default and the reserve: a key missing in the language shows the English text, and one missing in both shows
  * the key itself (a test keeps that from reaching `main`). Portuguese is a file of its own, downloaded only by whoever uses it.
  *
- * Which languages are open to the public is `OPEN_LOCALES` (openLocales.js, written by the build): while it holds only `en`,
- * the site speaks English to everybody. The owner sees Portuguese in his own browser with a mark (localStorage
- * `mjrp.lang.preview` = `pt`), to review each wave before it opens.
+ * Which languages are open to the public is `OPEN_LOCALES` (openLocales.js): English and Portuguese since F81. Which one a visit
+ * speaks is decided in language.js (the person's choice, then the country of access); nothing here reads the device. A language
+ * left out of that list is refused, but for whoever carries the mark (localStorage `mjrp.lang.preview` = that language).
  *
  * Nothing under shared/, models/, algorithms/ or ranking/ imports this: a rule gives a code or a datum, and the screen says it.
  */
