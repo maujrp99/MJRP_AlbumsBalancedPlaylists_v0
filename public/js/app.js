@@ -50,9 +50,6 @@ import { isSignedIn } from './utils/isSignedIn.js'
 import { openLoginWindow } from './stores/loginWindow.js'
 import { prefetchScreensAfterTheFirstScreen } from './utils/prefetchScreens.js'
 import { checkAppleWhenIdle } from './shell/appleState.ts'
-import { createAdminAccess } from './services/content/adminAccess.js'
-import { readAdminRecord } from './services/content/adminContent.js'
-import { notFoundView } from './utils/notFoundView.js'
 
 const initUI = () => {
     // The top bar, the footer and the shell of the phone, in React, in their own places outside #app
@@ -167,19 +164,12 @@ router.register('/blend', async () => {
     return blendView()
 })
 
-// The Painel (F82, REQ-01): only for the administrator. The route reads the person's own record (cmsAdmins/{uid}) BEFORE it asks for
-// the Painel's file; anybody else sees «Page not found» and the file is never requested. It is not among the screens that come down in
-// the background, so nobody but the administrator downloads it.
+// The Painel (F82, REQ-01): only for the administrator. The gate (a small file of its own, asked for when somebody opens /admin) reads the
+// person's own record (cmsAdmins/{uid}) BEFORE the Painel's file is asked for; anybody else sees «Page not found» and that file is never
+// requested. Neither file is among the screens that come down in the background: the main script carries only this door.
+const loadAdminGate = loadScreen(() => import('./services/content/adminGate.js'))
 const loadAdmin = loadScreen(() => import('./screens/admin/adminPanel.ts'))
-const isAdministrator = createAdminAccess({
-    currentUser: () => AuthService.getCurrentUser(),
-    readAdmin: readAdminRecord
-})
-const adminRoute = async () => {
-    if (!(await isAdministrator())) return notFoundView()
-    const { adminView } = await loadAdmin()
-    return adminView()
-}
+const adminRoute = async () => (await loadAdminGate()).adminRoute(loadAdmin)
 router.register('/admin', adminRoute)
 router.register('/admin/texts/:screen', adminRoute)
 

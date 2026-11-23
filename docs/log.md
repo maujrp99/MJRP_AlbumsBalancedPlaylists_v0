@@ -2,6 +2,20 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:18] step — F82 (juiz, P2-1): o que é só do administrador saiu do script principal (198.409 B; era 200.227)
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-1 do juiz: o script principal tinha crescido 5.352 B contra a `main` (194.875 → 200.227 B), e eu tinha relatado só os 2,2 kB do meu ramo sobre o núcleo de conteúdo. Cada byte foi rastreado comparando os módulos do script principal da `main` e do ramo (a lista de módulos que o empacotador põe no script principal, com o tamanho de cada um):
+
+- **O que todo visitante precisa** (fica): o leitor do conteúdo publicado ao abrir (`publishedContentReader.js`, `contentWiring.js`, `shared/content/texts.js` e `switches.js`, `PublishedContentRepository.js`, `publishedContent.js`, `textKinds.js` e a camada publicada do `t.js`): 3.161 B, o medido pelo núcleo de conteúdo (198.036 B).
+- **O que era só do administrador** (saiu): o código de transação do banco (o `runTransaction` mora no mesmo módulo do resto do SDK do Firestore, que está no script principal; o Painel era o primeiro a usá-lo: +17,7 kB do módulo antes de compactar) e a guarda da rota com a tela «Page not found». A gravação do Painel passou a ser UM lote travado pela regra do banco que só aceita `rev` igual ao guardado mais um (`shared/data/batchTransaction.js`): um salvar que perde a corrida é recusado inteiro, lê de novo e tenta de novo, como a transação fazia; a transação do SDK não entra mais no build. A conferência do administrador e o «não encontrado» viraram um arquivo próprio (`adminGate-*.js`), pedido só em `/admin`; o `app.js` ficou só com a porta.
+- **Resultado:** script principal 200.227 → **198.409 B** (−1.818 B); contra a `main`, +3.534 B, dos quais 3.161 B são o leitor e 373 B a porta do Painel (a rota com os dois arquivos sob demanda, os três textos «Page not found» em inglês, um nome de tela). Tetos pela regra do arquivo (medido + 150 B): `main` 198.559 B, `background` 62.927 B; `budget:publication` sai 0.
+
+Testes primeiro (reprovaram, depois passaram): `test/shared/data/batchTransaction.test.js` (um lote só; nada gravado num conflito; recusa das regras lida de novo e tentada de novo; desiste na terceira; outra falha não é repetida; o arquivo que grava não importa o Firestore) e `test/services/content/adminAccess.test.js` (o `app.js` não importa a conferência, o «não encontrado» nem o conteúdo do Painel; a guarda pergunta quem é antes de pedir o arquivo). No emulador, com as regras de verdade (`npm run test:rules`, 38 passam): os casos do salvar repetidos pelo caminho do site, mais a corrida (outro aparelho salva entre a leitura e a gravação: recusado, lido de novo, gravado por cima, nenhuma mudança perdida).
+
+Decidido pelo agente — revisável: trocar a transação do SDK por um lote travado pelas regras. A garantia de «tudo ou nada» continua (um lote), e a de «ninguém grava por cima sem ver» passa a ser a regra `revFollows` do banco, que já existia e já era testada; sem essa regra um lote não trava nada, e o arquivo diz isso.
+
 ## [2026-11-23 15:14] step — F82 (juiz, P1-1): a faixa de salvar do Painel fica abaixo da barra do topo no celular
 
 **Branch:** claude/f82-cms-texts-panel

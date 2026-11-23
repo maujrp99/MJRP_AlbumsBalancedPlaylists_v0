@@ -5,7 +5,7 @@
  */
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import fs from 'node:fs'
-import { createAdminAccess } from '../../../public/js/services/content/adminAccess.js'
+import { createAdminAccess, createAdminGate } from '../../../public/js/services/content/adminAccess.js'
 import { notFoundView } from '../../../public/js/utils/notFoundView.js'
 
 afterEach(() => { vi.restoreAllMocks() })
@@ -49,20 +49,37 @@ describe('what everybody else sees at /admin', () => {
     })
 })
 
-describe('the route of the Painel in app.js', () => {
-    const app = fs.readFileSync('public/js/app.js', 'utf8')
-    const route = app.slice(app.indexOf('const adminRoute'), app.indexOf("router.register('/admin'"))
+describe('the gate of /admin', () => {
+    const panel = { adminView: () => 'the Painel' }
 
-    it('reads the administrator record before it asks for the file of the Painel', () => {
-        const guard = route.indexOf('if (!(await isAdministrator())) return notFoundView()')
-        expect(guard).toBeGreaterThan(-1)
-        expect(route.indexOf('loadAdmin()')).toBeGreaterThan(guard)
+    it('asks who the person is BEFORE it asks for the file of the Painel', async () => {
+        const order = []
+        const gate = createAdminGate({ isAdministrator: async () => { order.push('who'); return true }, notFound: () => 'not found' })
+        expect(await gate(async () => { order.push('file'); return panel })).toBe('the Painel')
+        expect(order).toEqual(['who', 'file'])
     })
 
-    it('asks for the file only there: not among the screens that come down in the background, and by no static import', () => {
-        const background = app.slice(app.indexOf('prefetchScreensAfterTheFirstScreen(router, ['))
-        expect(background.slice(0, background.indexOf(')'))).not.toContain('loadAdmin')
-        expect(app.match(/screens\/admin/g)).toEqual(['screens/admin'])
+    it('anybody else gets «not found», and the file of the Painel is never asked for', async () => {
+        const loadPanel = vi.fn(async () => panel)
+        const gate = createAdminGate({ isAdministrator: async () => false, notFound: () => 'not found' })
+        expect(await gate(loadPanel)).toBe('not found')
+        expect(loadPanel).not.toHaveBeenCalled()
+    })
+})
+
+describe('what every visitor downloads for /admin: the door only (the judge of 2026-11-23, P2-1)', () => {
+    const app = fs.readFileSync('public/js/app.js', 'utf8')
+    const statics = app.split('\n').filter(line => /^import /.test(line)).join('\n')
+
+    it('app.js imports neither the check of the administrator, nor «not found», nor the content of the Painel: they come with the gate', () => {
+        expect(statics).not.toMatch(/adminAccess|adminContent|notFoundView|adminGate|screens\/admin/)
+        expect(app).toContain("loadScreen(() => import('./services/content/adminGate.js'))")
         expect(app).toContain("loadScreen(() => import('./screens/admin/adminPanel.ts'))")
+    })
+
+    it('the route hands the gate the way to load the Painel, and neither file comes down in the background', () => {
+        expect(app).toMatch(/const adminRoute = async \(\) => \(await loadAdminGate\(\)\)\.adminRoute\(loadAdmin\)/)
+        const background = app.slice(app.indexOf('prefetchScreensAfterTheFirstScreen(router, ['))
+        expect(background.slice(0, background.indexOf(')'))).not.toMatch(/loadAdmin/)
     })
 })

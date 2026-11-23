@@ -27,3 +27,19 @@ export function createAdminAccess({ currentUser, readAdmin }) {
         }
     }
 }
+
+/**
+ * The gate of the Painel's address: the Painel for the administrator, «not found» for everybody else. The file of the
+ * Painel is asked for only after the answer is yes.
+ * @param {Object} deps
+ * @param {() => Promise<boolean>} deps.isAdministrator
+ * @param {() => Object} deps.notFound - the view of an address with nothing to show
+ * @returns {(loadPanel: () => Promise<{ adminView: () => Object }>) => Promise<Object>} the view the router draws
+ */
+export function createAdminGate({ isAdministrator, notFound }) {
+    return async function adminRoute(loadPanel) {
+        if (!(await isAdministrator())) return notFound()
+        const { adminView } = await loadPanel()
+        return adminView()
+    }
+}
