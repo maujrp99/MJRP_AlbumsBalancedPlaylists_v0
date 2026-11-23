@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:55] decision — F96: o MJRP escolheu a versão do especialista para a home do celular, com a abertura da versão dele
+
+**Branch:** main
+
+Sobre o protótipo https://claude.ai/artifact/Qs64Xut1fuKQ6z1Sf8tjTd (ramo `wip/f96-phone-home-prototype`, `a8d4903`), o MJRP, 2026-11-23, com um print da abertura da versão «A sua» (sem conta: topo com «Entrar», título, a linha laranja de baixo, a caixa na diagonal, a legenda com álbum e ano e o botão «Ouça no Apple Music»; sem botão grande): «escolho a do especialista, mas com essa landing aqui, muito melhor». Como eu li (interpretação minha): o corpo da página é o da versão do especialista (vertical, cada passo abrindo com rótulo, título e texto e depois a ilustração, a parte educativa com título próprio, os álbuns fora dos passos, um deslize só no fim, o da caixa «Na caixa do The Album Blender»); a abertura é a do print: caixa na diagonal e nenhum botão grande. Em aberto com ele: a redação do título da seção; como marcar a troca de passo (rótulo e linha, faixas alternadas, dois lados); o que abre o app para quem não tem conta, já que a abertura escolhida não tem botão e o topo mostra «Entrar» (achado P0 do especialista). A caixa na diagonal do protótipo é a caixa em CSS girada, não a cena 3D: a conferir se serve para a página de verdade sem o custo de 152 KB medido para o 3D no celular. Outras decisões dele no mesmo dia, já em construção: «a app nao chama blender e sim The Album Blender»; «ao inves é de Conte na parte do inventário, pode ser Catalogue»; «eu só removeria o botaozao criar de mobile e publicaria». A F96 segue em esboço e fora da «Priorizada»: o ramo de construção só nasce depois de ele a priorizar.
+
 ## [2026-11-23 15:28] step — Site publicado da `main` `5897dd9` (lido na saída): crédito só com o álbum e botão alinhado, endereços diretos, «álbuns», «Vire o lado»
 
 **Branch:** main
