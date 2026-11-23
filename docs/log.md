@@ -2,6 +2,22 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:54] step — Página de entrada (F80), celular com conta: o botão grande «Criar» da abertura saiu (UAT-294)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Pedido do MJRP (2026-11-23, depois de ver a prévia do `ce1d041`): «eu só removeria o botaozao criar de mobile e publicaria». Issue UAT-294.
+
+**O que mudou.** No celular, para quem tem conta, o botão grande «Criar» da abertura não aparece mais (uma regra de CSS dentro do bloco do celular; escondido com `display:none`, então também sai do teclado e do leitor de tela). O «Criar» da barra do topo fica e leva ao app. A caixa de álbuns sobe.
+
+**O que NÃO mudou, e por quê.** O botão «Abrir o app» da abertura de quem NÃO tem conta ficou: ali a barra do topo mostra «Entrar», não «Criar», e o «Criar» da barra de baixo leva à história, não ao app; aquele botão é o único que abre o app (achado P0 do especialista de UX de hoje). **Decidido pelo orquestrador com base nesse achado, revisável**: as palavras do MJRP falam do «botaozao criar», que é o de quem tem conta. O computador não mudou em nenhuma das duas aberturas.
+
+**Medido (site montado; antes = o `ce1d041`).** Celular com conta, a 390 e a 375 px, PT e EN: a caixa sobe 48 px (em português, de 354 para 306 px do topo da página); a abertura passa de 298 para 250 px; tudo abaixo sobe os mesmos 48 px e a página fica 48 px mais curta. Entre o fim da linha laranja sob o título e a caixa ficam 26 px (antes, entre o botão e a caixa, 8 px): sem faixa vazia. Celular sem conta e computador (com e sem conta): nenhuma caixa mudou. 100 conferências passam, 0 falham.
+
+**Prova.** Teste primeiro: 1 teste falha no código anterior (`red-before.txt`); `npx vitest run test/splash` pela fila da máquina: 12 arquivos, 158 testes passando. `npm run budget:publication`: saída 0. A abertura com conta foi mostrada com um registro de conta de mentira no armazenamento da própria página. Nada clicado; endereços de música abortados na rede.
+
+**Não conferido.** Num iPhone de verdade, com a conta dele; a suíte inteira (roda na publicação). Segue valendo o achado do registro anterior: com conta, no celular, a página é um pouco mais larga que a tela (não é desta mudança).
+
 ## [2026-11-23 15:39] step — Página de entrada (F80): a linha laranja que abria a página saiu (UAT-292)
 
 **Branch:** fix/f80-crate-caption-album-and-year

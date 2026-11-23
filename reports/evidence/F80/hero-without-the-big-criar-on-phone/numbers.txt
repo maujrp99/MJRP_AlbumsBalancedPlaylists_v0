@@ -1,0 +1,12 @@
+webkit-390-pt-in: crate up 48 px (354 -> 306); hero 298 -> 250; page 4772 -> 4724; gap title-line to crate 26 px
+webkit-390-pt-out: unchanged; hero button «Abrir o app»
+webkit-390-en-in: crate up 48 px (317 -> 269); hero 261 -> 213; page 4641 -> 4593; gap title-line to crate 26 px
+webkit-390-en-out: unchanged; hero button «Open the app»
+webkit-375-pt-in: crate up 48 px (354 -> 306); hero 298 -> 250; page 4835 -> 4787; gap title-line to crate 26 px
+webkit-375-pt-out: unchanged; hero button «Abrir o app»
+webkit-375-en-in: crate up 48 px (317 -> 269); hero 261 -> 213; page 4790 -> 4742; gap title-line to crate 26 px
+webkit-375-en-out: unchanged; hero button «Open the app»
+chromium-1280-pt-in: unchanged; hero buttons «Criar»
+chromium-1280-pt-out: unchanged; hero buttons «Abrir o app», «Entrar»
+chromium-1280-en-in: unchanged; hero buttons «Create»
+chromium-1280-en-out: unchanged; hero buttons «Open the app», «Sign in»

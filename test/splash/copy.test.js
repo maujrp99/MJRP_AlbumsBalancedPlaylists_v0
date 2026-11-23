@@ -108,6 +108,30 @@ describe('the hero opens with the title (UAT-292)', () => {
     })
 })
 
+describe('on the phone, signed in, the hero has no big «Criar» (UAT-294)', () => {
+    const phone = page.slice(page.indexOf('/* the phone: the vignette beside'))
+    const block = phone.slice(phone.indexOf('@media (max-width:899px){'), phone.indexOf('\n}\n', phone.indexOf('@media (max-width:899px){')))
+
+    it('the signed-in hero\'s button is hidden on the phone only (the top bar already has «Criar»)', () => {
+        expect(block).toMatch(/\.hero \.only-in \.ctas\{display:none\}/)
+        // on the computer nothing hides it: the rule exists once, inside the phone's block
+        expect(page.match(/\.hero \.only-in \.ctas\{/g)).toHaveLength(1)
+    })
+
+    it('the visitor\'s «Abrir o app» stays: on the phone it is the only button that opens the app', () => {
+        expect(page).not.toMatch(/\.only-out \.ctas\{[^}]*display:none/)
+        expect(page).not.toMatch(/\.hero \.ctas\{[^}]*display:none/)
+        expect(page).not.toMatch(/#hero-ctas\{[^}]*display:none/)
+        const hero = page.slice(page.indexOf('<section class="hero'), page.indexOf('</section>', page.indexOf('<section class="hero')))
+        expect(hero).toMatch(/<div class="only-out">[\s\S]*id="app"[\s\S]*data-i18n="openapp"/)
+    })
+
+    it('the top bar keeps «Criar» for who is signed in', () => {
+        expect(page).toMatch(/<a class="btn btn-primary btn-sm btn-start only-in" href="\/start"><span data-i18n="m\.start">/)
+        expect(page).toMatch(/html\.in \.top \.btn-start\{display:inline-flex\}/)
+    })
+})
+
 describe('the page and the dictionary', () => {
     const filled = captionHtml('real') + captionHtml('fictional') + creditHtml('real') + creditHtml('fictional') + stageTagHtml('fictional')
     const all = page + filled
