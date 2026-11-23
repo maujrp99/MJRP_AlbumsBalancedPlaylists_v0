@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 09:38] decision — CMS (F82): o editor de texto rico do kit é o padrão nos textos corridos; o kit fica com esta sessão
+
+**Branch:** main
+
+O MJRP, 2026-11-23: «Pq o protótipo não considera o rich text editor como pedi para os outros cms?» e, à pergunta «rico só nos textos corridos ou em todos?»: «1. Nos textos corridos, a priori, aceitando quebras de linha, a formatação que defini para os outros CMS, isso deve ser padrão no kit». Falha do agente: o protótipo do CMS nasceu só com campos simples. Como eu li (interpretação minha): a barra de formatação que ele já aprovou no kit (`rich-text-v2` do MJRPpersonal) é o padrão do kit para texto corrido, com quebra de linha; rótulos e botões seguem simples. Consequência a desenhar: o validador de textos previsto recusa `<` e `>`; o formato guardado e a renderização segura entram na proposta do kit. Sobre o kit (F332 do harness, em rascunho): à pergunta «quer que eu peça à sessão do harness para começar?», ele respondeu «1. Pode fazer / Vc aqui»; a proposta de arquitetura do kit está sendo escrita por esta sessão num ramo do harness (`claude/f332-admin-kit-architecture-proposal`). Também: o juiz da fatia 0 reprovou por um P1 (a suíte passa a falhar sem o emulador, e o CI e a publicação não o sobem); o construtor está consertando.
+
 ## [2026-11-23 01:40] step — F83: o site inteiro em React está em produção (`main` `b36d2f1`; o MJRP disse «1.publica»)
 
 **Branch:** main
