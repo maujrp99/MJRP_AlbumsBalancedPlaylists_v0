@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:14] review — F97 (a exportação para o Spotify diz por que falhou): passada independente, visual e comportamento — pass, 0 P0, 0 P1, 6 P2
+
+**Branch:** wip/f97-judge
+
+Julgado o commit `95ef787` do ramo `fix/f97-spotify-export-says-why-it-failed`, por quem não construiu. Site construído por mim (o ramo e a `main`, pela fila), Chromium e WebKit, 1280 e 390, com a API do Spotify respondida só pelo meu script: 403 em tudo, 403 só ao criar a playlist, 500 nas buscas, rede caída, listas vazias de verdade, misto, tudo achado, login vencido, limite de chamadas. A recusa aparece com o próximo passo, sem promessa e sem «Try again»; «não foi possível conferir» fica separado de «não encontrada», e «Try again» completa quando o Spotify volta; o caminho normal, o login vencido e o limite de chamadas são idênticos à `main`, elemento por elemento. Nada estoura a 390. O português foi visto no navegador (servidor de desenvolvimento, `setLocale` com a marca de prévia). A mudança compartilhada em `SpotifyService._fetch` não altera outra tela: só a linha do console.
+
+Seis P2, três herdados: todo 403 recebe o texto da «lista de testes»; o resultado parcial tem título «Export Complete!»; a janela não anuncia falhas a leitor de tela (igual à `main`); «1 tracks not found» (igual à `main`); em português as frases do serviço seguem em inglês (igual à `main`); dois ajustes de redação para o MJRP aprovar. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f97-spotify-export-failure-visual-parity-recheck.md`.
+
 ## [2026-11-23 18:49] step — F97: a exportação para o Spotify diz por que falhou (UAT-302), construída e provada: 132 de 132 no navegador
 
 **Branch:** fix/f97-spotify-export-says-why-it-failed
