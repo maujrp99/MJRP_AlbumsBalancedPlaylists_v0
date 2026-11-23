@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:11] decision — F80: «Vire o lado» no lugar de «Vire o álbum»
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+O MJRP, 2026-11-23, à pergunta «"Vire o álbum" fica, ou prefere outra frase ali?»: «2. Vire o Lado». Aplicado: o título `f.title` e o rótulo `flip.aria` da página de entrada dizem «Vire o lado» / «Virar o lado» (em caixa de frase, como os outros títulos da página: escolha do agente, revisável). Os testes da página de entrada passam (149). Sobre a prévia `staging` (commit `ec247a6`) ele disse «1, publica»; esta frase entrou depois desse olhar.
+
 ## [2026-11-23 15:05] step — UAT-287 e UAT-288: as linhas ditas em palavras comuns
 
 **Branch:** fix/f80-album-credit-album-only-and-aligned-button

@@ -25,7 +25,7 @@ const pt = {
     // the menu and the top of the page
     'm.start': 'Criar', 'm.albums': 'Álbuns', 'm.blend': 'Blend', 'm.playlists': 'Playlists', 'm.inventory': 'Inventário',
     'menu.aria': 'Menu: cada item leva à história dele nesta página',
-    'flip.aria': 'Virar o álbum',
+    'flip.aria': 'Virar o lado',
     'signin': 'Entrar', 'openapp': 'Abrir o app',
     'skip': 'Pular para o conteúdo', 'home.aria': 'The Album Blender, topo da página',
     'pause': 'Pausar o movimento', 'play': 'Retomar o movimento',
@@ -49,7 +49,7 @@ const pt = {
     'r.aria': 'Exemplo de ranking das faixas de The Velvet Underground & Nico',
     't.blend': 'Junte a série numa playlist só.',
     'p.blend': 'Escolha uma receita. O Blender pega faixas de cada álbum, sem deixar um álbum dominar os outros.',
-    'f.title': 'Vire o álbum',
+    'f.title': 'Vire o lado',
     'f.line': 'No lado B fica o que você guarda: suas playlists e seu inventário.',
     't.playlists': 'Guarde as playlists que você curtiu.',
     'p.playlists': 'Toda playlist salva fica aqui, para ouvir de novo, refazer ou exportar para o Spotify ou a Apple Music.',
