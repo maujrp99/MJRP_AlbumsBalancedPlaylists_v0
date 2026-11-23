@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 11:41] decision — Kit do CMS: o MJRP aceitou o registro CC-ADR-0068 em conversa («1.está aceito») e pôs o tamanho de fonte também na barra curta
+
+**Branch:** main
+
+O MJRP, 2026-11-23, respondendo aos itens em aberto «1. O aceite do registro do kit de CMS (CC-ADR-0068), na tela remota» e «2. Tamanho de fonte: só na barra completa (recomendado) ou também na curta?»: «1.está aceito» e «2. na curta tb». Como eu li (interpretação minha): o aceite vale como a palavra dele para a construção começar; o arquivo do registro na `main` do harness segue `Proposed` até o carimbo dele (avisei o integrador do harness; eu não mudo o status). Construção iniciada num ramo do harness, `claude/f332-admin-kit-slice-1` (TASK-02 e TASK-02a). O tamanho de fonte nas duas barras contraria a minha recomendação (só na completa); registrado no REQ-14 da F82 e levado à F332, com a nota de testar o maior tamanho num botão e num item de menu.
+
 ## [2026-11-23 11:31] step — Conformidade: as oito respostas do MJRP (lote de 2026-11-21) aplicadas e marcadas; 9 lacunas viraram 6
 
 **Branch:** main
