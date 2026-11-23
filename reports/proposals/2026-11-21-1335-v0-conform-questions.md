@@ -14,6 +14,7 @@ Base: média — lido da documentação; não conferido com o código
 - b) Quero ajustar; você diz o que mudar
 → respondida em 2026-11-23 11:20
   - (outra) Ok pra primeira iteração dessa versão do produti
+→ aplicada em 2026-11-23 11:31: «O que é» abre o prd.md com o texto do rascunho, aceito para a primeira iteração; não foi conferido contra o código
 
 ### D-02 · Oito relatórios sem tipo na lista do harness
 Pergunta: O que fazer com oito relatórios antigos cujo tipo não existe na lista do harness?
@@ -24,6 +25,7 @@ Base: forte — a regra e a lista de tipos foram lidas
 - c) Deixar sem tipo e aceitar o aviso
 → respondida em 2026-11-23 11:20
   - a
+→ aplicada em 2026-11-23 11:31: pedido ao harness de dois tipos novos de relatório (análise e rascunho), com a tabela dos oito relatórios; os arquivos não foram renomeados porque os tipos ainda não existem
 
 ### D-03 · Nomes dos pareceres para o harness
 Pergunta: Os quatro pareceres para o harness (pasta reports/harness-feedback/) devem ganhar o nome do projeto no nome do arquivo?
@@ -33,6 +35,7 @@ Base: média — não verifiquei se o harness já os triou
 - b) Renomear os quatro já
 → respondida em 2026-11-23 11:20
   - a
+→ aplicada em 2026-11-23 11:31: nada renomeado; os nomes dos pareceres são confirmados com o harness antes
 
 ### D-04 · Quem aceita a decisão do Node 24
 Pergunta: Posso acrescentar ao cabeçalho da decisão sobre o Node 24 (ADR-0020) a linha «Acceptance: MJRP»?
@@ -42,6 +45,7 @@ Base: forte — o texto da decisão diz quem decidiu
 - b) Não; prefiro abrir uma exceção à regra para essa decisão
 → respondida em 2026-11-23 11:20
   - a
+→ aplicada em 2026-11-23 11:31: a linha de quem aceita (MJRP) entrou na decisão do Node 24; o texto e o status não mudaram
 
 ### D-05 · Três issues do aceite com campo copiado
 Pergunta: Corrijo o campo «OK do humano» de três issues de aceite do dia 2026-11-20 (UAT-224, UAT-225 e UAT-226)?
@@ -51,6 +55,7 @@ Base: forte — comparei as linhas no uat.md
 - b) Deixar como está
 → respondida em 2026-11-23 11:20
   - a
+→ aplicada em 2026-11-23 11:31: as três issues (UAT-224, 225, 226) perderam a frase copiada e ganharam as próprias âncoras, com o OK vazio
 
 ### D-06 · A estratégia de entrega do site e do servidor
 Pergunta: A estratégia de entrega que o agente escreveu no arch.md está certa?
@@ -60,6 +65,7 @@ Base: média — lido dos scripts, do CI e do firebase.json; não verifiquei se 
 - b) Ajusto; você diz o quê (principalmente: existe canal de prévia ou projeto de teste?)
 → respondida em 2026-11-23 11:20
   - (outra) Creio que agora temos staging certo?
+→ aplicada em 2026-11-23 11:31: a estratégia de entrega foi reescrita a partir do que existe (a prévia staging, a produção, quem envia cada uma, o que é conferido, como voltar); segue marcada como proposta do agente até você confirmar
 
 ### D-07 · A cor do V0 no Control Center
 Pergunta: Qual é a cor do Album Blender V0 no Control Center?
@@ -69,6 +75,7 @@ Base: forte — a regra e a biblioteca foram lidas
 - b) Deixar sem cor por ora
 → respondida em 2026-11-23 11:20
   - (outra) Use as cores principais da paleta do álbum blender ;)
+→ não aplicada em 2026-11-23 11:31: a cor do projeto no Control Center só aceita as paletas da biblioteca do harness, e nenhuma é o laranja-fogo ao vermelho sobre preto; o pedido de uma paleta nova vai ao harness, com as suas palavras
 
 ### D-08 · O site vai trocar de paleta?
 Pergunta: O site do Album Blender vai poder trocar de paleta (temas)?
@@ -79,3 +86,4 @@ Base: média — o site atual foi visto; o plano futuro é seu
 - c) Decidir quando o design system do site, como artefato (F86), entrar
 → respondida em 2026-11-23 11:20
   - a
+→ aplicada em 2026-11-23 11:31: um tema só; a seção de temas do sistema de design cita a sua resposta e ganhou o bloco de identidade

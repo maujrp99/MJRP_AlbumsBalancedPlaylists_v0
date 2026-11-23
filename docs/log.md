@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 11:31] step — Conformidade: as oito respostas do MJRP (lote de 2026-11-21) aplicadas e marcadas; 9 lacunas viraram 6
+
+**Branch:** main
+
+`wip/v0-conform-answers-2026-11-23` entrou pelo trem (`54d6fcd`); as oito marcas foram feitas no checkout principal. Aplicadas D-01 a D-06 e D-08; não aplicada a D-07 (a cor do projeto no Control Center só aceita paletas da biblioteca do harness; falta pedir ao harness a paleta do fogo). `conformance_check --gaps --pending --strict`: de 9 lacunas e 38 notas para 6 lacunas e 38 notas (fecharam `prd`, `adr-names`, `design-system`). A levar ao harness: o pedido de dois tipos de relatório (`reports/harness-feedback/2026-11-23-…-report-types-request.md`) e a paleta nova.
+
 ## [2026-11-23 11:30] decision — as respostas do MJRP ao lote de adequação ao harness aplicadas (D-01 a D-08, menos as marcas)
 
 **Branch:** `wip/v0-conform-answers-2026-11-23`
