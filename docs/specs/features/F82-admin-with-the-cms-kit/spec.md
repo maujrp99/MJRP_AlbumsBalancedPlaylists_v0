@@ -6,42 +6,63 @@ imports: ["[[S-64-edit-the-site-content-from-an-admin]]"]
 planned_for: "[[ROADMAP#^REL-41]]"
 ---
 # Feature F82: Um admin para o site, com o CMS-kit do MJRP
-**Approved**: pendente
+**Approved**: pendente. Em esboço, com a arquitetura decidida pelo MJRP em 2026-11-22 (`design/proposals/f82-cms/architecture-proposal.md`; o registro curto é a ADR-0024, em `Proposed`). Nenhum código antes de a ADR-0024 ser aceita e de a feature ser priorizada.
 
 ## Summary
-**A feature:** Um admin, feito com o CMS-kit do MJRP, onde o dono edita o conteúdo do site.
+**A feature:** Um admin, o **Painel** (`/admin`), feito com o CMS-kit do MJRP, onde o dono edita o que o site diz: os textos em inglês e em português (esta feature), as chaves de ligar e desligar (F93) e as receitas do Blend (F92). Salvar já põe no ar.
 
-**Por quê:** Hoje todo texto do site mora no código; os sites do MJRPpersonal já têm um admin com o CMS-kit.
+**Por quê:** Hoje todo texto do site mora no código; os sites do MJRPpersonal já têm um admin com o CMS-kit; e há centenas de frases em português propostas por agentes que esperam a revisão dele.
 
-**Como saber que funcionou:** A escrever com a proposta.
+**Como saber que funcionou:** O MJRP, logado com a conta dele, muda um texto do site no Painel, salva, abre o site em outro aparelho e vê o texto novo, sem publicar código; uma outra conta, ou um visitante, não consegue gravar; um texto quebrado nunca deixa o site sem texto.
 
 ## Problem Statement
 Dito pelo MJRP em 2026-11-21: «As próximas features agora serao de internacionalizar o site e criar um admin como temos nos sites do MJRP personal, utilizando o CMS-kit nosso.»
 
+Decidido por ele em 2026-11-22 (`docs/log.md`):
+- Começar o CMS, o Painel na primeira versão e a edição na própria tela depois: «Sigamos sua recomendação».
+- Salvar publica, como o kit faz hoje, sem rascunho, passo de «publicar» nem desfazer na v1: «1. Mantém».
+- A conta dele é a única administradora na v1; depois, papéis: «2. Sim? Mas poderíamos evoluir o kit do CMS pra ter rbac em que eu sou o super admins. Atriibuo e crio roles».
+- As regras do banco o reconhecem por um registro que ele cria uma vez no console do Firebase: «Aceito».
+- A rede de segurança é o valor anterior guardado em cada salvar; a recuperação do banco a um ponto no tempo não é ligada agora: «1 sua recomendação».
+
 ## Requirements
-- [REQ-01] «a escrever depois das conversas com o MJRPpersonal e o harness e da proposta de arquitetura» · fixes S-64
-
-- [REQ-02] O CMS traz uma chave para ligar e desligar a medição de uso do site (F77, PostHog), que nasce desligada. Palavras do MJRP (Control Center, D-05, 2026-11-21 09:08): «Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS». Como foi lido: a medição continua desligada agora; a chave entra no CMS, e ele liga depois da migração para o React e de o CMS estar construído. A regra dele para o kit vale: recurso de CMS nasce no kit e serve a todos os CMS, então a peça «chave de liga e desliga» é assunto da F332 do harness · fixes S-64
-
-- [REQ-03] No CMS o dono escolhe quais álbuns aparecem na página de entrada (a «nova home», o caixote da F80), e em que lado e ordem. Palavras do MJRP (2026-11-21): «ah e gostaria que no CMS fosse configurável os albuns que aparece na nova home». Hoje os álbuns são um arquivo de dados fixo (`public/splash/covers.js`, 14 álbuns, lados A e B). A resolver na proposta: a página de entrada é estática e lida sem script, então como a escolha feita no CMS chega a ela (leitura em tempo de execução com o conjunto fixo como reserva, ou publicação que refaz a página) · fixes S-64
-- [REQ-04] Na primeira versão o único administrador é a conta do próprio MJRP (nunca um convidado), garantido nas regras do banco e no servidor. Decisão do MJRP (2026-11-22), à pergunta «o administrador é só a sua conta (Google ou Apple), fixa nas regras do banco? Recomendo sim»: «2. Sim? Mas poderíamos evoluir o kit do CMS pra ter rbac em que eu sou o super admins. Atriibuo e crio roles» · fixes S-64
-
-- [REQ-05] O kit do CMS evolui para acesso por papéis (RBAC): o MJRP é o superadministrador, cria papéis e os atribui a pessoas. Pedido dele (mesma resposta, 2026-11-22), ainda sem desenho. Como o kit é do harness, o pedido foi ao harness (`harness-feedback` no log de 2026-11-22); este projeto só adota o recurso quando o kit o trouxer (F332). Fica dentro da F82, e não numa feature própria, porque a F82 já lista os requisitos pequenos do CMS (REQ-02, REQ-03) e este é, no V0, a regra de quem entra; vira feature própria se a proposta de arquitetura mostrar que pede uma · fixes S-64
+- [REQ-01] O dono edita no Painel (`/admin`, só dele) os textos do site em inglês e em português, lado a lado, por tela; acha um texto pela palavra; vê os textos em português que esperam a aprovação dele e os aprova (um, vários ou todos da tela). Na primeira versão é o Painel; editar o texto na própria tela fica para depois, só para os textos, quando a migração para React terminar e todo texto visível estiver num dicionário. Palavras do MJRP: «Sigamos sua recomendação». O Painel só carrega para quem é administrador; para os outros o endereço diz «não encontrado» e o código dele nem é baixado · fixes S-64
+- [REQ-02] O CMS traz uma chave para ligar e desligar a medição de uso do site (F77, PostHog), que nasce desligada. Palavras do MJRP (Control Center, D-05, 2026-11-21 09:08): «Deixar desligada e entrar no CMS uma feature toggle pra ligar assim que terminarmos a Migracao para o react e o buil do CMS». Como foi lido: a medição continua desligada agora; a chave entra no CMS, e ele liga depois da migração para o React e de o CMS estar construído. A regra dele para o kit vale: recurso de CMS nasce no kit e serve a todos os CMS, então a peça «chave de liga e desliga» é assunto da F332 do harness. Refinado em 2026-11-22: a medição é a exceção das chaves (segue a configuração do site e o CMS só pode desligá-la): F93, REQ-07 · fixes S-64
+- [REQ-03] No CMS o dono escolhe quais álbuns aparecem na página de entrada (a «nova home», o caixote da F80), e em que lado e ordem. Palavras do MJRP (2026-11-21): «ah e gostaria que no CMS fosse configurável os albuns que aparece na nova home». Hoje os álbuns são um arquivo de dados fixo (`public/splash/covers.js`, 14 álbuns, lados A e B). Resolvido pela arquitetura de 2026-11-22: a página lê a escolha publicada depois de carregar, com o conjunto fixo como reserva (REQ-11) · fixes S-64
+- [REQ-04] Na primeira versão o único administrador é a conta do próprio MJRP (nunca um convidado), garantido nas regras do banco e no servidor. Decisão do MJRP (2026-11-22), à pergunta «o administrador é só a sua conta (Google ou Apple), fixa nas regras do banco? Recomendo sim»: «2. Sim? Mas poderíamos evoluir o kit do CMS pra ter rbac em que eu sou o super admins. Atriibuo e crio roles». Como as regras o reconhecem: REQ-07 · fixes S-64
+- [REQ-05] O kit do CMS evolui para acesso por papéis (RBAC): o MJRP é o superadministrador, cria papéis e os atribui a pessoas. Pedido dele (mesma resposta, 2026-11-22), ainda sem desenho. Como o kit é do harness, o pedido foi ao harness (`harness-feedback` no log de 2026-11-22); este projeto só adota o recurso quando o kit o trouxer (F332). Fica dentro da F82, e não numa feature própria, porque a F82 já lista os requisitos pequenos do CMS (REQ-02, REQ-03) e este é, no V0, a regra de quem entra; vira feature própria se a proposta de arquitetura mostrar que pede uma. O registro do administrador já nasce com um campo de papel (`role`, hoje só «super»), de modo que os papéis chegam sem reescrever as regras · fixes S-64
+- [REQ-06] Salvar publica, e três barreiras seguram um texto quebrado, nesta ordem: **(1)** o Painel confere antes de gravar (texto não vazio, os mesmos `{marcadores}` do inglês, sem `<` nem `>`, até 3 vezes o tamanho do inglês, com aviso a partir de 1,5 vez) e não salva se falhar, dizendo o porquê; **(2)** as regras do banco recusam quem não é o administrador, campos e tipos fora do formato, documento maior que o limite e uma gravação cuja versão (`rev`) não é a anterior mais um; **(3)** o site de cada visitante confere cada texto de novo e, se um for inválido, só aquela chave usa o texto do código. O dono sabe o que foi recusado: o Painel lista «recusado pela versão atual» por chave, e a publicação do site avisa, antes de publicar, quais textos vivos o novo build vai recusar (aviso, não bloqueio) · fixes S-64
+- [REQ-07] As regras do banco reconhecem o administrador por um registro (`cmsAdmins/{uid}`, com `role`) que o próprio MJRP cria uma vez no console do Firebase e que ninguém cria nem muda pelo app; só grava o conteúdo quem tem esse registro e entrou com uma conta de verdade (nunca a anônima). Nenhum identificador dele fica no repositório. Decisão do MJRP (2026-11-22): «Aceito». A gravação do conteúdo e dos dados de trabalho do Painel (`cmsWork/*`: aprovações do português, quem salvou e quando) é só do administrador; os textos publicados são lidos por todos, sem login. Provado rodando as regras num emulador (ADR-0024): convidado, outra conta, a conta dele com login anônimo, qualquer um escrevendo em `cmsAdmins/*`, campo fora da lista, versão do formato descendo e `rev` errado são recusados; o administrador é aceito · fixes S-64
+- [REQ-08] A rede de segurança de cada salvar é o valor anterior das chaves que mudaram, guardado na mesma gravação junto com a versão (`rev`); cobre só o último salvar (o seguinte o sobrescreve) e na v1 ninguém o lê pelo Painel: voltar atrás é ele copiar o valor no console. Não é histórico nem desfazer. A recuperação do banco a um ponto no tempo não é ligada agora. Palavras do MJRP (2026-11-22): «1 sua recomendação». Quem lê o banco sem login aprende esses valores anteriores, e nenhuma identificação de pessoa (quem salvou mora em `cmsWork/*`) · fixes S-64
+- [REQ-09] O Painel mostra, em palavras comuns, cada estado em que o dono pode estar: mudanças não salvas (numa faixa com «Salvar» e «Descartar»); a confirmação do que vai ao ar («3 textos vão ao ar agora»); salvando; salvo e no ar; falha ao salvar, com o motivo (as regras ainda não aceitam um campo novo é dito assim, nunca calado); conflito, quando o mesmo texto mudou em outro aparelho dele (como está, a outra, a sua); sem permissão; vazio (nada aguardando, busca sem resultado); um texto órfão (a chave deixou de existir no código) marcado «órfão»; e a leitura do site no Painel: lendo, publicado, ou não foi possível ler. Aprovar o português salva. O que o protótipo mostra (`design/proposals/f82-cms/prototype.html`) é a referência · fixes S-64
+- [REQ-10] O site lê o que o dono publicou ao abrir, **sem esperar**: a primeira tela desenha com o guardado ou com o código, e o texto publicado entra quando chega (prazo de 3 segundos; sem rede ou documento ruim, fica o guardado ou o código). Por idioma valem, nesta ordem fixa, o texto publicado, o dicionário do código e o inglês do código; um dicionário em português que chega depois não apaga o publicado. A cópia guardada no navegador vale no máximo 30 dias e é apagada quando o documento publicado deixa de existir (voltar atrás chega a quem já visitou). Quando o texto publicado muda, as telas em React e as feitas à mão se redesenham. Quem fala um idioma só pede o documento dele · fixes S-64
+- [REQ-11] A página de entrada (a «nova home») passa a ler, depois de carregar, o que o dono publicou: o texto só entra depois de conferido pelo mesmo validador do site e é escrito como texto, nunca como marcação; a capa de um álbum só aparece se o endereço passa na conferência de endereços e é do único servidor de imagens que a página já libera (o da Apple); a política de conteúdo da página passa a liberar só o servidor do banco para a leitura. Quem lê sem script, ou sem rede, vê o texto do build · fixes S-64
 
 ## Observable States
-A escrever.
+Os de REQ-09 (o Painel) e os da leitura do site, que o Painel mostra: **publicado** (vindo do banco), **cópia** (guardada no navegador, até 30 dias) e **código** (a reserva), cada um com o motivo, e a contagem de textos recusados. Para quem usa o site não há estado novo: nunca tela vazia, lenta ou quebrada.
 
 ## Success Criteria
-A escrever.
+Dado/Quando/Então, para cada requisito; as provas rodam na suíte, no emulador das regras e, onde dito, num navegador real.
+- **REQ-01** · Dado o MJRP logado, quando abre `/admin` e muda um texto em português e aprova, então o texto aparece no site em português; dado um visitante ou outra conta, quando abre `/admin`, então vê «não encontrado» e o arquivo do Painel não é pedido (rede do navegador).
+- **REQ-06** · Dado um texto sem o `{count}` do inglês, quando o dono tenta salvar, então o Painel recusa e diz o porquê; dado um texto inválido que chegou ao banco, quando um visitante abre o site, então só aquela chave usa o código e a contagem de recusados sobe; dado um texto vivo que o novo build recusaria, quando se publica o site, então a publicação o lista.
+- **REQ-07** · Dado o emulador das regras, quando cada caso de REQ-07 é tentado, então só o administrador é aceito; dado o MJRP sem o registro criado, então ele também é recusado (e o Painel diz «sem permissão»).
+- **REQ-08** · Dado um salvar que muda três textos, então o documento guarda o valor anterior só desses três e a versão sobe um; dado um segundo salvar, então o anterior do primeiro some (cobre só o último).
+- **REQ-09** · Dado cada estado listado, então o Painel o mostra com o texto combinado; um teste de componente por estado, e a conferência no navegador a 1440 e 393 px.
+- **REQ-10** · Dado o banco lento ou fora, quando o site abre, então a primeira tela desenha no mesmo tempo (±50 ms) e o prazo é de 3 s; dado um dicionário português tardio, então o publicado continua; dado o documento apagado, então a cópia some na leitura seguinte; dado uma cópia de 31 dias, então vale o código.
+- **REQ-11** · Dado um texto publicado com `<img onerror=…>`, quando a página lê, então nada vira elemento; dado uma capa de outro servidor, então ela não aparece.
+- **REQ-02 a REQ-05** · como estão: REQ-02 pela F93 (REQ-07); REQ-03 pelo REQ-11; REQ-04 pelo REQ-07; REQ-05 quando o kit trouxer os papéis.
 
 ## Out of Scope
-A escrever.
+- Editar o texto na própria tela (depois, só para textos); rascunho, passo «publicar», prévia, desfazer e histórico de versões (decisão dele: salvar publica); a recuperação do banco a um ponto no tempo.
+- As chaves de ligar e desligar (F93) e as receitas do Blend (F92): o Painel as abriga, mas são features próprias.
+- Papéis, convites e «ver o admin como» (REQ-05, no kit); mais de um administrador.
+- O servidor gravar conteúdo (na v1 nenhuma rota do servidor grava; ele só lê um documento público, F93).
+- Escrever os textos em si e a escolha do idioma (F81).
 
 ## Open Questions
-- O que o admin edita: os textos das telas, a página de entrada, as traduções (F81), mais alguma coisa.
-- O que é o CMS-kit hoje: onde mora, que stack pede, como se instala num projeto que não é dele (este site é JavaScript puro com Vite e Firebase).
-- Quem entra no admin e como: decidido para a primeira versão (REQ-04), só a conta do MJRP; o resto cai nas perguntas dos papéis abaixo.
-- Papéis (REQ-05), a decidir, nenhuma respondida: quais papéis existem primeiro (por exemplo, editor de textos, gestor de receitas, gestor de chaves de feature); se um papel vale por seção do CMS; como uma pessoa é convidada; como as regras do banco leem o papel (declarações personalizadas no token ou um documento de papéis); a auditoria de quem mudou o quê.
-- Onde o conteúdo fica guardado e como chega ao site publicado.
-- Pedidos do MJRP de 2026-11-22 que dependem deste CMS e são features próprias: a F92 (algoritmos de mistura criados e gerenciados no CMS) e a F93 (chaves de ligar e desligar features, a começar pelo Discogs; generaliza o REQ-02 daqui).
-- A ordem entre F81 e F82: o admin antes, para as traduções já nascerem nele, ou depois.
+- Quando o kit do CMS chega pelo harness (F332): as telas do Painel dependem dele; a fatia 0 (regras, emulador, servidor) não.
+- Papéis (REQ-05), nenhuma respondida: quais papéis existem primeiro (editor de textos, gestor de receitas, gestor de chaves); se um papel vale por seção (recomendado: sim, por seção só se precisar por tela); como uma pessoa é convidada; a auditoria de quem mudou o quê (hoje só `cmsWork/*`).
+- O desfazer e o histórico: ficam como ideia de depois, só se ele sentir falta; o valor anterior guardado já os alimentaria.
+- O custo do banco: a cota gratuita acaba perto de 20.000 aberturas por dia só com o CMS; um alerta de orçamento é decisão dele quando houver tráfego.
+- O dia em que ligarem a proteção App Check no banco: as leituras sem login mudam de caminho (ADR-0024, gatilho escrito; é tarefa do plano da F78).
+- A ordem entre F81 e F82: o admin antes, para as traduções já nascerem nele, ou depois (a leitura dos textos, REQ-10, é o contrato que a F81 já espera).
