@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 10:56] step — CMS: a versão 2 do protótipo do Painel (editor rico) está publicada no artefato
+
+**Branch:** main
+
+Com a resposta do MJRP na D-03 («a», 10:53), o agente que escreveu o arquivo o publicou no mesmo link, privado: https://claude.ai/artifact/BnhaJv6KQpaEUzdn7qHsBe (abre na versão 2, com a versão 1 para comparar). Fonte: `wip/cms-prototype-v2-rich-text` (`867b5ef`), `design/proposals/f82-cms/prototype-v2.html`. Conferido no arquivo servido localmente (Chromium, 1280 e 390); a página publicada não foi aberta num navegador.
+
 ## [2026-11-23 10:54] decision — CMS: respostas D-03, D-04 e D-05 do lote; o kit cumpre as três regras antes de chegar ao V0; edição na tela atrás de uma chave
 
 **Branch:** main

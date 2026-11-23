@@ -37,6 +37,7 @@ Base: forte — o arquivo existe e foi conferido; a publicação foi recusada
 - c) Não preciso ver; siga a construção
 → respondida em 2026-11-23 10:53
   - a
+→ aplicada em 2026-11-23 10:56: a versão 2 do protótipo está publicada no mesmo link do artefato, privado (https://claude.ai/artifact/BnhaJv6KQpaEUzdn7qHsBe); conferida no arquivo servido localmente a 1280 e 390; a página publicada não foi aberta num navegador
 
 ### D-04 · As suas três regras do Album Blender valem para a pasta do kit?
 Pergunta: As três regras que você definiu para o código do Album Blender também valem para a cópia do kit dentro dele?
