@@ -1,6 +1,6 @@
 # Quality Assessment: 2026-01-10
 **Assessor**: Antigravity (AI Agent)
-**Protocol**: [Code Quality Assessment Protocol v3.0](../.agent/workflows/code_quality_assessment_protocol.md)
+**Protocol**: [Code Quality Assessment Protocol v3.0](../../.agent/workflows/code_quality_assessment_protocol.md)
 
 ## 1. Scorecard
 
