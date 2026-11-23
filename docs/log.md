@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 17:52] decision — Idioma do app: português no Brasil, inglês fora, pelo lugar do acesso (F81, REQ-02); construção da escolha de idioma começa já
+
+**Branch:** main
+
+MJRP, depois de aprovar os textos em português no Painel e perguntar «o que falta entao pra eu ver em prod?»: «o idioma do app é em portugues, está nascendo no brasil, mas fora do brasil a geolocation deve mudar para en». É o REQ-02 da F81 (já registrado: Brasil → português; outro país ou desconhecido → inglês, sem pedir a localização ao navegador), com o REQ-03 (a escolha da pessoa vence) e o REQ-04 (seletor). Hoje nada no app chama `setLocale`: o app só mostra inglês, e as aprovações dele no Painel não aparecem. Decidido pelo agente — revisável: construir já as TASK-02 e TASK-03 da F81 num ramo, sem esperar a ordem em `priority.md` (o pedido dele em conversa é a prioridade); nada vai a produção sem a palavra dele. Ele também pediu para acelerar a home nova do celular (F96): a prévia sai assim que a tela estiver pronta, a prova completa segue depois.
+
 ## [2026-11-23 17:07] step — links ambíguos de docs/specs/features: lote que ficou de fora dos commits anteriores
 
 **Branch:** wip/v0-doctor-broken-links
