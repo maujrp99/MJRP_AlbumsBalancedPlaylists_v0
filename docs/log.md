@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-23 01:08] step — F83: migração para React completa na prévia `staging` (linha de integração `3fd2d33`); falta o teste do dono
+
+**Branch:** main
+
+A onda 8d (fecho) entrou na linha de integração `integrate/staging-2026-11-21` (`3fd2d33`) depois do juiz final (passa: 0 P0, 0 P1, 4 P2; relatório em `reports/audits/2026-11-22-mjrpalbumblender-v0-react-final-visual-parity-recheck.md`, naquela linha). Prévia publicada e respondendo: https://mjrp-playlist-generator--staging-2nu8kutx.web.app (vale até 2026-11-30). A produção não foi tocada. Falta, e é do MJRP: os 8 passos do juiz (Apple Music de verdade, gestos no iPhone, a linha laranja no 4G, a rolagem no Safari do Mac); depois o carimbo do ADR-0023 e da emenda da constituição, e o «publica» para a produção. Também nesta sessão: a fatia 0 do CMS construída em `claude/f82-cms-slice-0-foundation` (`2d9bd11`, 4251 testes), sem juiz e sem merge ainda; as caixas de F92 e F93 esperam a «Priorizada».
+
 ## [2026-11-23 00:32] decision — ADR-0024: o MJRP aceitou em conversa («Aceito»); o carimbo no registro continua dele
 
 **Branch:** main
