@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 20:36] step — F98: os dois grupos novos de textos ganham nome no Painel (a suíte inteira acusou)
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+A suíte inteira, rodada sobre a árvore já com a `main`, acusou um teste: `test/screens/admin/adapter.test.ts` («every screen the Painel can show has a name»). O Painel de textos agrupa as chaves pelo primeiro nome, e os dois grupos novos da F98 (`appleReport`, o relatório da exportação para o Apple Music; `exportReport`, as frases que as duas janelas dividem) não tinham nome na lista do Painel. Ganharam, nos dois idiomas (`public/js/i18n/en/admin.js`, `public/js/i18n/pt/admin.js`): «Apple Music export report» / «Relatório da exportação para o Apple Music» e «Export reports (both services)» / «Relatórios de exportação (os dois serviços)». Assim os textos novos aparecem no Painel para o MJRP aprovar ou reescrever, como os outros.
+
+Depois do acerto: suíte inteira (`npx vitest run`, sozinha, pela fila) com 421 arquivos, 5.789 testes passando e 1 pulado, saída 0.
+
 ## [2026-11-23 20:32] step — F98: a main (b76dfeb) juntada ao ramo do conserto, sem conflito
 
 **Branch:** fix/f98-apple-music-export-says-why-it-failed
