@@ -37,4 +37,4 @@ function requireUser ({ verifier, allowAnonymous = false, logger = console }) {
   }
 }
 
-module.exports = { requireUser }
+module.exports = { requireUser, bearerOf }

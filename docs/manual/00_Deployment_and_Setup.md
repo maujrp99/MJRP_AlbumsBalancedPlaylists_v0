@@ -129,6 +129,14 @@ prompts nem marcava `shared/` como módulo ES, foi removido (UAT-22).
   | `DISCOGS_VALUES_FOR` | variável comum (opcional) | os ids (uid do Firebase) das pessoas para quem a fonte fica ligada, separados por vírgula; ausente, vale para toda pessoa com conta |
   | `VALUE_CALLS_PER_HOUR` | variável comum (opcional) | quantas leituras de valor uma pessoa faz por hora (padrão 900) |
 
+  A tradução do Painel (F82, REQ-13) lê mais três; o passo a passo da chave está em `reports/proposals/2026-11-23-1420-v0-how-to-translation-key.md`:
+
+  | Variável no servidor | De onde vem | Para quê |
+  |---|---|---|
+  | `ANTHROPIC_API_KEY` | segredo `anthropic-api-key` (só o MJRP cria) | a chave da API da Claude; sem ela `POST /api/admin/translate` responde `translation-not-configured` e o resto do servidor segue igual |
+  | `TRANSLATE_MODEL` | variável comum (opcional) | o modelo da tradução (padrão `claude-haiku-5-5`) |
+  | `TRANSLATE_CALLS_PER_HOUR` | variável comum (opcional) | quantas traduções o administrador faz por hora (padrão 120) |
+
   Mudar uma variável ou um segredo é feito no serviço (`gcloud run services update`), não por este script.
 - **Regras do Firestore:** nenhum dos dois scripts publica `firestore.rules`.
 

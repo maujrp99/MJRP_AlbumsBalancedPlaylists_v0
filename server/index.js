@@ -130,6 +130,8 @@ app.use('/api/enrich-album', guards.costly)
 app.use('/api/album-value', guards.value)
 app.use('/api/value-sources', guards.costly)
 app.use('/api/exchange-rates', guards.costly)
+// The Painel's routes (F82): the administrator only (cmsAdmins/{uid}, role "super"), with a limit of its own
+app.use('/api/admin', guards.admin)
 
 // MusicKit routes (Apple Music integration)
 const musickitRoutes = require('./routes/musickit')
@@ -144,6 +146,12 @@ app.use('/api', albumRoutes)
 const { router: valueRoutes, initValueRoutes } = require('./routes/values')
 initValueRoutes({ logger })
 app.use('/api', valueRoutes)
+
+// Admin routes (admin/translate): the Painel's translation of one field, by Claude's API (F82, REQ-13).
+// With no ANTHROPIC_API_KEY the server starts all the same and the route answers `translation-not-configured`
+const { router: adminRoutes, initAdminRoutes } = require('./routes/admin')
+initAdminRoutes({ logger })
+app.use('/api', adminRoutes)
 
 // Debug routes (list-models, raw-ranking, files, import): off unless turned on by name (F59)
 const { debugRoutesEnabled } = require('./lib/debugGate')

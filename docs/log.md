@@ -53,6 +53,24 @@ Conferido pela fila da máquina: `npm run lint` saiu 0 (66 avisos, os de antes);
 
 O que NÃO foi feito aqui: a prova no navegador de que a primeira tela desenha no mesmo tempo (±50 ms) com a leitura bloqueada (TASK-02; por desenho o `app.js` não espera e há teste de que `start()` volta com a leitura presa); as regras do banco não foram tocadas; nada publicado.
 
+## [2026-11-23 14:24] step — F82 (REQ-13, TASK-16): a rota do servidor para a tradução de um campo do Painel, pela API da Claude
+
+**Branch:** claude/f82-cms-translate-route
+
+Construído o lado do servidor da tradução (TASK-16a): `POST /api/admin/translate`, corpo `{ target: 'pt-BR' | 'en', text, kind: 'plain' | 'rich', context? }`, resposta `200 { data: { translation }, outcome: 'found' }`. Só o administrador: login conferido como nas outras portas, visitante recusado, e o registro `cmsAdmins/{uid}` com `role: "super"` lido no Firestore por REST com o login da própria pessoa (sem credencial nova no servidor). A chamada usa o SDK oficial da Anthropic (`@anthropic-ai/sdk`, só em `server/`), modelo `claude-haiku-5-5` (`TRANSLATE_MODEL` troca), chave de `ANTHROPIC_API_KEY`; sem a variável o servidor sobe e a rota responde `translation-not-configured`. Falhas com nome em `error.reason`. Testes com a API e o banco trocados por dublês (`test/server/adminTranslate.test.js`, 52); a API real não foi chamada; nenhuma chave lida nem digitada. Suíte padrão inteira, sozinha, pela fila: `Test Files 393 passed (393)`, `Tests 5286 passed | 1 skipped (5287)`, sem «Unhandled Errors». A 1ª rodada falhou no limite de complexidade (3 funções novas acima de 10); refeitas em partes menores e a suíte rodou de novo, inteira. Passo a passo da chave para o MJRP: `reports/proposals/2026-11-23-1420-v0-how-to-translation-key.md`. `arch.md`, o manual de publicação e as tarefas da F82 atualizados; o `behavior.md` não lista rotas do servidor e não muda (nada novo na tela ainda). O `doctor.py` segue vermelho por erros que já estavam na `main` (links antigos, o bloco do `MEMORY.md`, `board_states` da F75, a cópia da constituição); nenhum aponta arquivo deste ramo.
+
+Decidido pelo agente — revisável:
+- A resposta segue o contrato único do servidor (`{ data: { translation }, outcome }`), não `{ translation }` solto.
+- O nome da falha vai num campo novo e opcional, `error.reason`, ao lado do `code` de sempre; o contrato ganhou o código `not_configured` (503). As outras rotas não mudam.
+- Três nomes além dos seis pedidos: `too-many-requests` (limite da hora), `invalid-request` (corpo fora do contrato) e `translation-unusable` (a resposta do modelo veio cortada, recusada, vazia ou com um `{marcador}` perdido, trocado ou inventado: o servidor confere e recusa).
+- A chave recusada pela Anthropic (401, 403) sai como `translation-not-configured`; o crédito esgotado é o erro de cobrança da API (402, ou o 400 antigo «credit balance»).
+- Limites: 4000 caracteres de texto, 500 de contexto, 120 traduções por hora por administrador (`TRANSLATE_CALLS_PER_HOUR`), prazo de 20 s, uma tentativa, esforço baixo do modelo.
+- A porta do administrador não abre com `REQUIRE_SIGN_IN=false`; se o login ou o registro não puderem ser conferidos, ninguém passa (503).
+- SDK oficial em vez de `fetch`: entra em `server/package.json` e no `package-lock.json` do servidor, carregado só na primeira tradução (os testes da raiz não dependem dele).
+- Nome do segredo proposto no passo a passo: `anthropic-api-key`.
+
+Falta: a porta `translate` do kit no Painel (espera o kit); o MJRP criar a chave no cofre e ligá-la ao serviço; o registro `cmsAdmins/{uid}` dele; publicar o servidor.
+
 ## [2026-11-23 13:42] step — CMS: o MJRP publicou as regras do banco e criou `published/site` com a chave do Discogs ligada
 
 **Branch:** main
