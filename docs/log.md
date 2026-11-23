@@ -8,6 +8,14 @@
 
 Dois acertos de texto pedidos depois do julgamento independente da F97 (0 P0, 0 P1, 6 P2), cada um com o seu teste. (a) O texto da recusa em português não põe artigo antes do nome do produto: «No Spotify, The Album Blender está numa fase de testes limitada… Peça a quem cuida de The Album Blender para incluir o e-mail da sua conta do Spotify; a lista tem poucas vagas.» (b) Em inglês, uma faixa não encontrada se diz no singular: «1 track not found» (era «1 tracks not found», herdado da janela feita à mão); os quatro lugares do registro da janela antiga (`test/fixtures/spotifyExportBeforeF83.json`) que guardavam o plural foram reescritos à mão para o texto novo. Prova no navegador refeita no site construído: 132 de 132. Suíte: 5591 passaram, 1 pulado; tipos, lint e orçamento com saída 0 (tetos medidos de novo pela regra: `main` 198.931, `background` 64.088). Os outros P2 ficam como estão.
 
+## [2026-11-23 19:14] review — F97 (a exportação para o Spotify diz por que falhou): passada independente, visual e comportamento — pass, 0 P0, 0 P1, 6 P2
+
+**Branch:** wip/f97-judge
+
+Julgado o commit `95ef787` do ramo `fix/f97-spotify-export-says-why-it-failed`, por quem não construiu. Site construído por mim (o ramo e a `main`, pela fila), Chromium e WebKit, 1280 e 390, com a API do Spotify respondida só pelo meu script: 403 em tudo, 403 só ao criar a playlist, 500 nas buscas, rede caída, listas vazias de verdade, misto, tudo achado, login vencido, limite de chamadas. A recusa aparece com o próximo passo, sem promessa e sem «Try again»; «não foi possível conferir» fica separado de «não encontrada», e «Try again» completa quando o Spotify volta; o caminho normal, o login vencido e o limite de chamadas são idênticos à `main`, elemento por elemento. Nada estoura a 390. O português foi visto no navegador (servidor de desenvolvimento, `setLocale` com a marca de prévia). A mudança compartilhada em `SpotifyService._fetch` não altera outra tela: só a linha do console.
+
+Seis P2, três herdados: todo 403 recebe o texto da «lista de testes»; o resultado parcial tem título «Export Complete!»; a janela não anuncia falhas a leitor de tela (igual à `main`); «1 tracks not found» (igual à `main`); em português as frases do serviço seguem em inglês (igual à `main`); dois ajustes de redação para o MJRP aprovar. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f97-spotify-export-failure-visual-parity-recheck.md`.
+
 ## [2026-11-23 18:49] step — F97: a exportação para o Spotify diz por que falhou (UAT-302), construída e provada: 132 de 132 no navegador
 
 **Branch:** fix/f97-spotify-export-says-why-it-failed
