@@ -2,8 +2,8 @@
 
 **Sprint**: 20 (Phase 2)
 **Status**: ✅ COMPLETE
-**Spec**: [spec.md](./spec.md) ✅ APPROVED
-**Plan**: [plan.md](./plan.md) ✅ APPROVED
+**Spec**: [spec.md](../spec.md) ✅ APPROVED
+**Plan**: [plan.md](../plan.md) ✅ APPROVED
 **Last Updated**: 2026-01-12
 
 ---

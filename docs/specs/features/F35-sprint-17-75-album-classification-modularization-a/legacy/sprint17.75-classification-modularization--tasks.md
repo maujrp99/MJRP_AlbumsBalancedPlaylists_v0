@@ -3,7 +3,7 @@
 **Sprint**: 17.75
 **Created**: 2026-01-06
 **Status**: 📋 READY FOR EXECUTION
-**References**: [spec.md](spec.md) | [plan.md](plan.md)
+**References**: [spec.md](../spec.md) | [plan.md](../plan.md)
 
 ---
 
@@ -13,11 +13,11 @@
   - Path: `public/js/services/album-search/classification/`
   
 - [ ] **T1.2** Create `BaseStrategy.js` interface
-  - Ref: [spec.md#Arquitetura](spec.md#padrões-arquiteturais-utilizados)
+  - Ref: [spec.md#Arquitetura](../spec.md#padrões-arquiteturais-utilizados)
   - Must have: `name` property, `execute(album, context)` method
 
 - [ ] **T1.3** Create `ElectronicGenreDetector.js` helper
-  - Ref: [spec.md#Gêneros Eletrônicos](spec.md#gêneros-eletrônicos-lista-expandida)
+  - Ref: [spec.md#Gêneros Eletrônicos](../spec.md#gêneros-eletrônicos-lista-expandida)
   - Export: `isElectronic(genres)`, `ELECTRONIC_GENRES` array
 
 - [ ] **T1.4** Create `classification/index.js` barrel export
@@ -27,23 +27,23 @@
 ## Phase 2: Strategies (Pipeline Components)
 
 - [ ] **T2.1** Create `AppleMetadataStrategy.js` (Etapa 1)
-  - Ref: [spec.md#ETAPA 1](spec.md#etapa-1-applemetadatastrategy-fonte-primária-inicial)
+  - Ref: [spec.md#ETAPA 1](../spec.md#etapa-1-applemetadatastrategy-fonte-primária-inicial)
   - Rules: isSingle → Single, isCompilation → Compilation
 
 - [ ] **T2.2** Create `TitleKeywordStrategy.js` (Etapa 2)
-  - Ref: [spec.md#ETAPA 2](spec.md#etapa-2-titlekeywordstrategy)
+  - Ref: [spec.md#ETAPA 2](../spec.md#etapa-2-titlekeywordstrategy)
   - Categories: Live, DJ Mix, Single, EP, Remix, Greatest Hits, Soundtrack
 
 - [ ] **T2.3** Create `RemixTracksStrategy.js` (Etapa 3)
-  - Ref: [spec.md#ETAPA 3](spec.md#etapa-3-remixtracksstrategy)
+  - Ref: [spec.md#ETAPA 3](../spec.md#etapa-3-remixtracksstrategy)
   - Check: ≥50% tracks contain "remix/mix/version/edit"
 
 - [ ] **T2.4** Create `TrackCountStrategy.js` (Etapa 4)
-  - Ref: [spec.md#ETAPA 4](spec.md#etapa-4-trackcountstrategy-com-proteção-prog-rock)
+  - Ref: [spec.md#ETAPA 4](../spec.md#etapa-4-trackcountstrategy-com-proteção-prog-rock)
   - Rules: 1-3→Single, 4-6→EP, prog rock protection
 
 - [ ] **T2.5** Create `AIWhitelistStrategy.js` (Etapa 5)
-  - Ref: [spec.md#ETAPA 5](spec.md#etapa-5-aiwhiteliststrategy-apenas-eletrônica)
+  - Ref: [spec.md#ETAPA 5](../spec.md#etapa-5-aiwhiteliststrategy-apenas-eletrônica)
   - Logic: Electronic + not in list → Uncategorized
 
 ---
@@ -51,7 +51,7 @@
 ## Phase 3: Orchestrator
 
 - [ ] **T3.1** Create `AlbumTypeClassifier.js`
-  - Ref: [spec.md#Chain of Responsibility](spec.md#1-chain-of-responsibility-funil)
+  - Ref: [spec.md#Chain of Responsibility](../spec.md#1-chain-of-responsibility-funil)
   - Import all strategies, define pipeline order
   - Export singleton: `albumTypeClassifier`
 
@@ -72,7 +72,7 @@
   - New button with "?" icon
 
 - [ ] **T5.2** Add item counters to filter buttons
-  - Ref: [plan.md#UI Mockup](plan.md#2-ui-mockup-filter-bar-with-counters)
+  - Ref: [plan.md#UI Mockup](../plan.md#2-ui-mockup-filter-bar-with-counters)
   - Format: `[Albums (X)]`
 
 - [ ] **T5.3** Update `SearchController.js` to calculate counts

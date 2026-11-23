@@ -3,7 +3,7 @@
 **Sprint**: 17.75
 **Created**: 2026-01-06
 **Status**: ✅ IMPLEMENTED
-**Prerequisite**: [spec.md](spec.md) ✅ COMPLETE
+**Prerequisite**: [spec.md](../spec.md) ✅ COMPLETE
 
 ---
 

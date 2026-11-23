@@ -1,6 +1,6 @@
 # Implementation Plan: Sprint 7 - Apple Music Integration
 
-**Branch**: `sprint-7-apple-music` | **Date**: 2025-12-12 | **Spec**: [spec.md](./spec.md)
+**Branch**: `sprint-7-apple-music` | **Date**: 2025-12-12 | **Spec**: [spec.md](../spec.md)
 
 ---
 

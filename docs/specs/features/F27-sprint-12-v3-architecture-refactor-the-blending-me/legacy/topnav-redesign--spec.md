@@ -5,7 +5,7 @@
 **Status**: ✅ APPROVED  
 **Sprint**: 12 (V3 Architecture)  
 **Sprint**: 12 (V3 Architecture)  
-**Relates To**: [sprint12-architecture-v3.0](../sprint12-architecture-v3.0/spec.md)
+**Relates To**: sprint12-architecture-v3.0
 
 ---
 

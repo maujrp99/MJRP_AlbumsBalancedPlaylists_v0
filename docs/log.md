@@ -2,9 +2,44 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 17:07] step — links ambíguos de docs/specs/features: lote que ficou de fora dos commits anteriores
+
+**Branch:** wip/v0-doctor-broken-links
+
+Correção: 16 arquivos de docs/specs/features tinham links ambíguos resolvidos depois da lista de lotes e ficaram sem commit. Também tirei desta branch uma entrada de log duplicada do lote de docs/archive e troquei o nome do ramo nas minhas entradas (estava `claude/…`, que o board recusa).
+
+| arquivo | link | candidatos | escolhido | por quê |
+|---|---|---|---|---|
+| `sprint-7-apple-music--plan.md` | `./spec.md` | 104 | `docs/specs/features/F21-sprint-7-7-5-apple-music-integration-load-albums-u/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `algorithm-strategy--plan.md` | `./spec.md` | 104 | `docs/specs/features/F22-sprint-8-algorithm-strategy-pattern/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint11.5-stabilization-refactor--plan.md` | `spec.md` | 104 | `docs/specs/features/F26-sprint-11-5-stabilization-ranking-integrity-rankin/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `blending-menu--tasks.md` | `./plan.md` | 104 | `docs/specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/plan.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint12-architecture-v3.0--plan.md` | `./spec.md` | 104 | `docs/specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint12-architecture-v3.0--tasks.md` | `./spec.md` | 104 | `docs/specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint12-architecture-v3.0--tasks.md` | `./plan.md` | 104 | `docs/specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/plan.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint12-architecture-v3.0--tasks.md` | `./blending-menu/tasks.md` | 103 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `topnav-redesign--spec.md` | `../sprint12-architecture-v3.0/spec.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `sprint15-arch12--plan.md` | `./spec.md` | 104 | `docs/specs/features/F31-sprint-15-structural-integrity-arch-12/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint15-arch12--plan.md` | `./tasks.md` | 103 | `docs/specs/features/F31-sprint-15-structural-integrity-arch-12/tasks.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint15-arch12--tasks.md` | `./spec.md` | 104 | `docs/specs/features/F31-sprint-15-structural-integrity-arch-12/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint15-arch12--tasks.md` | `./plan.md` | 104 | `docs/specs/features/F31-sprint-15-structural-integrity-arch-12/plan.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint17-modularization--plan.md` | `./spec.md` | 104 | `docs/specs/features/F34-sprint-17-architectural-modularization-frontend-sp/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint17-modularization--tasks.md` | `./spec.md` | 104 | `docs/specs/features/F34-sprint-17-architectural-modularization-frontend-sp/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint17-modularization--tasks.md` | `./plan.md` | 104 | `docs/specs/features/F34-sprint-17-architectural-modularization-frontend-sp/plan.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint17.75-classification-modularization--plan.md` | `spec.md` | 104 | `docs/specs/features/F35-sprint-17-75-album-classification-modularization-a/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint17.75-classification-modularization--tasks.md` | `spec.md` | 104 | `docs/specs/features/F35-sprint-17-75-album-classification-modularization-a/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint17.75-classification-modularization--tasks.md` | `plan.md` | 104 | `docs/specs/features/F35-sprint-17-75-album-classification-modularization-a/plan.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint20-user-ranking-ext--tasks.md` | `./spec.md` | 104 | `docs/specs/features/F39-sprint-20-user-generated-track-ranking-and-recipe/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint20-user-ranking-ext--tasks.md` | `./plan.md` | 104 | `docs/specs/features/F39-sprint-20-user-generated-track-ranking-and-recipe/plan.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint22-enrichment-filters--plan.md` | `./spec.md` | 104 | `docs/specs/features/F42-sprint-22-enrichment-filters-pasta-de-spec/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint22-enrichment-filters--tasks.md` | `./plan.md` | 104 | `docs/specs/features/F42-sprint-22-enrichment-filters-pasta-de-spec/plan.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+
+Continua vermelho por 5 erros fora desta tarefa (3 sensores de código, 2 de memória), já listados nas entradas anteriores.
+
+
 ## [2026-11-23 17:07] step — links quebrados no resto de docs/ e na raiz
 
-**Branch:** claude/v0-doctor-broken-links-115153
+**Branch:** wip/v0-doctor-broken-links
 
 Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 7 links apontados para o arquivo certo e 33 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
 
@@ -13,7 +48,7 @@ Continua vermelho por 5 erros fora desta tarefa, que já existiam antes: 3 senso
 
 ## [2026-11-23 17:06] step — espelho SpecKit regenerado da constituição
 
-**Branch:** claude/v0-doctor-broken-links-115153
+**Branch:** wip/v0-doctor-broken-links
 
 Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 0 links apontados para o arquivo certo e 0 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
 
@@ -22,7 +57,7 @@ Continua vermelho por 5 erros fora desta tarefa, que já existiam antes: 3 senso
 
 ## [2026-11-23 17:06] step — links quebrados em docs/specs (groupings e uat)
 
-**Branch:** claude/v0-doctor-broken-links-115153
+**Branch:** wip/v0-doctor-broken-links
 
 Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 0 links apontados para o arquivo certo e 0 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
 
@@ -31,7 +66,7 @@ Continua vermelho por 5 erros fora desta tarefa, que já existiam antes: 3 senso
 
 ## [2026-11-23 17:06] step — links quebrados em docs/specs/features (legacy e specs)
 
-**Branch:** claude/v0-doctor-broken-links-115153
+**Branch:** wip/v0-doctor-broken-links
 
 Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 18 links apontados para o arquivo certo e 64 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
 
@@ -60,7 +95,7 @@ Continua vermelho por 5 erros fora desta tarefa, que já existiam antes: 3 senso
 
 ## [2026-11-23 17:06] step — links quebrados em docs/manual
 
-**Branch:** claude/v0-doctor-broken-links-115153
+**Branch:** wip/v0-doctor-broken-links
 
 Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 52 links apontados para o arquivo certo e 38 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
 
@@ -69,36 +104,7 @@ Continua vermelho por 5 erros fora desta tarefa, que já existiam antes: 3 senso
 
 ## [2026-11-23 17:06] step — links quebrados em docs/archive (snapshots arquivados)
 
-**Branch:** claude/v0-doctor-broken-links-115153
-
-Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 58 links apontados para o arquivo certo e 75 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
-
-Links ambíguos (mais de um arquivo com o mesmo nome) — decisão do agente, revisável:
-
-| arquivo | link | candidatos | escolhido | por quê |
-|---|---|---|---|---|
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `product-management/ROADMAP.md` | 2 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `technical/specs/sprint15-arch12/tasks.md` | 103 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `technical/specs/sprint17.75-classification-modularization/spec.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./spec.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `spec.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./plan.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./blending-menu/tasks.md` | 103 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `../sprint12-architecture-v3.0/spec.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./tasks.md` | 103 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./sprint9-ranking-enrichment/sprint9-specs.md` | 2 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./sprint9-ranking-enrichment/rankings_architecture.md` | 2 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./sprint10-refactor/spec.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./sprint10-refactor/plan.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `./sprint10-refactor/tasks.md` | 103 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-| `999_ARCHIVE_COMPRESSED_SNAPSHOT_2026_01_10.md` | `plan.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
-
-Continua vermelho por 5 erros fora desta tarefa, que já existiam antes: 3 sensores de código (lint: `error TS7016: Could not find a declaration file for module 'react-dom'`; test e build: `Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@vitejs/plugin-react'`) e 2 de memória (`## Now`: bloco «Where the Work Stopped» com 9500 caracteres; «Pending on Agent» sem carimbo). Ficam com o orquestrador, conforme combinado.
-
-
-## [2026-11-23 17:06] step — links quebrados em docs/archive (snapshots arquivados)
-
-**Branch:** claude/v0-doctor-broken-links-115153
+**Branch:** wip/v0-doctor-broken-links
 
 Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 58 links apontados para o arquivo certo e 75 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
 

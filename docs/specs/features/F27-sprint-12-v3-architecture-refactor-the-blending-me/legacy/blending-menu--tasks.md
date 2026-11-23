@@ -3,7 +3,7 @@
 **Created**: 2025-12-22  
 **Updated**: 2025-12-23  
 **Status**: 🟡 PARTIALLY IMPLEMENTED  
-**Plan**: [plan.md](./plan.md)  
+**Plan**: [plan.md](../plan.md)  
 **Analysis**: [algorithm-analysis.md](./algorithm-analysis.md)
 
 ---

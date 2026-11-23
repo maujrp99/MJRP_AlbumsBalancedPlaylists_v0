@@ -1,7 +1,7 @@
 # Sprint 15 Plan: Safely Componentized Architecture (ARCH-12)
 
 **Goal**: Define the Architecture for the Unified Component System, Security Foundation, and Refactor Pilot.
-**Spec**: [spec.md](./spec.md) | **Tasks**: [tasks.md](./tasks.md)
+**Spec**: [spec.md](../spec.md) | **Tasks**: [tasks.md](../tasks.md)
 
 ---
 

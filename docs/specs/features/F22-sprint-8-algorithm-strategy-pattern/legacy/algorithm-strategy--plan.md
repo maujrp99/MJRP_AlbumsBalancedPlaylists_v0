@@ -1,6 +1,6 @@
 # Implementation Plan: Algorithm Strategy Pattern
 
-**Branch**: `feature/sprint8-algorithm-strategy` | **Date**: 2025-12-16 | **Spec**: [spec.md](./spec.md)
+**Branch**: `feature/sprint8-algorithm-strategy` | **Date**: 2025-12-16 | **Spec**: [spec.md](../spec.md)
 **Input**: Feature specification from `docs/technical/specs/algorithm-strategy/spec.md`
 
 ## Summary
