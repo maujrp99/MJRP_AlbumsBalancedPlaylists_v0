@@ -1,0 +1,228 @@
+{
+ "webkit-iphone14-390 today": {
+  "live": false,
+  "canvas": false,
+  "paint": {
+   "first-contentful-paint": 362
+  },
+  "long": [],
+  "width": 390,
+  "pause": {
+   "hidden": false,
+   "w": 44,
+   "h": 44
+  },
+  "wire": {
+   "127.0.0.1": 110061,
+   "is1-ssl.mzstatic.com": 240408,
+   "fonts.googleapis.com": 1275,
+   "fonts.gstatic.com": 35018
+  },
+  "total": 386762,
+  "frames": {
+   "frames": 151,
+   "median": 33,
+   "p95": 35,
+   "worst": 35,
+   "over33ms": 55,
+   "over50ms": 0
+  },
+  "pauseWorks": "stops and starts",
+  "musicRequests": 0,
+  "reducedMotion": {
+   "canvas": false,
+   "live": false,
+   "library": false
+  }
+ },
+ "webkit-375 today": {
+  "live": false,
+  "canvas": false,
+  "paint": {
+   "first-contentful-paint": 326
+  },
+  "long": [],
+  "width": 375,
+  "pause": {
+   "hidden": false,
+   "w": 44,
+   "h": 44
+  },
+  "wire": {
+   "127.0.0.1": 110061,
+   "is1-ssl.mzstatic.com": 240424,
+   "fonts.googleapis.com": 949,
+   "fonts.gstatic.com": 35018
+  },
+  "total": 386452,
+  "frames": {
+   "frames": 151,
+   "median": 33,
+   "p95": 35,
+   "worst": 35,
+   "over33ms": 55,
+   "over50ms": 0
+  },
+  "pauseWorks": "stops and starts",
+  "musicRequests": 0,
+  "reducedMotion": {
+   "canvas": false,
+   "live": false,
+   "library": false
+  }
+ },
+ "chromium-390-cpu4x today": {
+  "live": false,
+  "canvas": false,
+  "paint": {
+   "first-paint": 784,
+   "first-contentful-paint": 784
+  },
+  "long": [
+   136
+  ],
+  "width": 390,
+  "pause": {
+   "hidden": false,
+   "w": 44,
+   "h": 44
+  },
+  "wire": {
+   "127.0.0.1": 110071,
+   "is1-ssl.mzstatic.com": 236476,
+   "fonts.googleapis.com": 800,
+   "fonts.gstatic.com": 35111
+  },
+  "total": 382458,
+  "frames": {
+   "frames": 288,
+   "median": 16.7,
+   "p95": 16.8,
+   "worst": 166.6,
+   "over33ms": 2,
+   "over50ms": 2
+  },
+  "pauseWorks": "stops and starts",
+  "musicRequests": 0,
+  "reducedMotion": {
+   "canvas": false,
+   "live": false,
+   "library": false
+  }
+ },
+ "webkit-iphone14-390 trial": {
+  "live": true,
+  "canvas": true,
+  "paint": {
+   "first-contentful-paint": 370
+  },
+  "long": [],
+  "width": 390,
+  "pause": {
+   "hidden": false,
+   "w": 44,
+   "h": 44
+  },
+  "wire": {
+   "127.0.0.1": 114348,
+   "is1-ssl.mzstatic.com": 240420,
+   "fonts.googleapis.com": 1075,
+   "fonts.gstatic.com": 35018,
+   "cdn.jsdelivr.net": 155314
+  },
+  "total": 546175,
+  "frames": {
+   "frames": 151,
+   "median": 33,
+   "p95": 34,
+   "worst": 35,
+   "over33ms": 57,
+   "over50ms": 0
+  },
+  "pauseWorks": "stops and starts",
+  "musicRequests": 0,
+  "reducedMotion": {
+   "canvas": false,
+   "live": false,
+   "library": false
+  }
+ },
+ "webkit-375 trial": {
+  "live": true,
+  "canvas": true,
+  "paint": {
+   "first-contentful-paint": 464
+  },
+  "long": [],
+  "width": 375,
+  "pause": {
+   "hidden": false,
+   "w": 44,
+   "h": 44
+  },
+  "wire": {
+   "127.0.0.1": 114348,
+   "is1-ssl.mzstatic.com": 240409,
+   "fonts.googleapis.com": 1092,
+   "fonts.gstatic.com": 35018,
+   "cdn.jsdelivr.net": 155332
+  },
+  "total": 546199,
+  "frames": {
+   "frames": 151,
+   "median": 33,
+   "p95": 35,
+   "worst": 35,
+   "over33ms": 63,
+   "over50ms": 0
+  },
+  "pauseWorks": "stops and starts",
+  "musicRequests": 0,
+  "reducedMotion": {
+   "canvas": false,
+   "live": false,
+   "library": false
+  }
+ },
+ "chromium-390-cpu4x trial": {
+  "live": true,
+  "canvas": true,
+  "paint": {
+   "first-paint": 676,
+   "first-contentful-paint": 676
+  },
+  "long": [
+   254,
+   125
+  ],
+  "width": 390,
+  "pause": {
+   "hidden": false,
+   "w": 44,
+   "h": 44
+  },
+  "wire": {
+   "127.0.0.1": 114360,
+   "is1-ssl.mzstatic.com": 236492,
+   "fonts.googleapis.com": 800,
+   "fonts.gstatic.com": 35111,
+   "cdn.jsdelivr.net": 155315
+  },
+  "total": 542078,
+  "frames": {
+   "frames": 301,
+   "median": 16.7,
+   "p95": 16.7,
+   "worst": 16.8,
+   "over33ms": 0,
+   "over50ms": 0
+  },
+  "pauseWorks": "stops and starts",
+  "musicRequests": 0,
+  "reducedMotion": {
+   "canvas": false,
+   "live": false,
+   "library": false
+  }
+ }
+}

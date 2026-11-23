@@ -2,6 +2,22 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:51] step — Página de entrada no celular (F80): o caixote em diagonal foi medido, não construído; a escolha é do MJRP (UAT-293)
+
+**Branch:** fix/f80-crate-animation-break
+
+Pedido do MJRP (2026-11-23, print do iPhone): «se possivel deixar a caixa de albuns na diagonal como no site tb». Issue UAT-293 em `docs/specs/uat.md`, ligada à F80. Nenhum código mudou neste passo.
+
+**Como o celular desenha hoje.** O caixote em CSS (uma tábua de frente e as capas empilhadas), parado na primeira pose; a cena em 3D só vem ao computador (`shouldLoad3d` em `public/splash/splash.js`). É decisão escrita: REQ-04 e REQ-07 («no celular, o caixote em CSS») e REQ-08 (a primeira visita leve no celular, sem a biblioteca de 3D); a proposta registra que bateria e calor do 3D num iPhone de verdade nunca foram medidos. A diagonal (UAT-235) foi pedida e feita só para o computador.
+
+**Ensaio (fora do ramo).** Um build igual, só sem a condição que segura o 3D no celular, medido contra o de hoje no site montado: WebKit como iPhone 14 (390) e a 375, Chromium a 390 com o processador 4 vezes mais lento. A cena serve sem mexer no desenho: em diagonal, inteira no quadro, a legenda e o botão embaixo iguais. Primeiro texto: 362 → 370 ms (WebKit 390), 784 → 676 ms (Chromium freado), sem piora. Quadros em 5 s de rolagem: iguais nos dois (mediana 33 ms no WebKit sem janela, 16,7 ms no Chromium freado, nenhum acima de 50 ms no ensaio). Tarefas longas com o freio: 136 → 379 ms, depois da página carregada. «Menos movimento»: sem 3D e sem baixar a biblioteca. A pausa para e volta. `npm run budget:publication` saída 0 (a biblioteca vem do CDN, fora dessa conta).
+
+**Por que parei.** O custo é +152 KB por primeira visita no celular (a biblioteca de 3D; os arquivos da página somam 378 KB sem compressão no servidor da prova), contra a regra de peso do celular (REQ-08) e as duas que dizem «CSS no celular»: é mudança de requisito e decisão de custo, do MJRP. Girar o caixote em CSS não entrega a diagonal: sem profundidade, ele só fica mais estreito (`option-css-crate-turned-30deg-webkit-390.jpg`).
+
+**Opções.** (1) O 3D também no celular: igual ao computador e vivo; +152 KB por visita; falta medir num iPhone de verdade; muda REQ-04, REQ-07 e REQ-08. (2) Uma imagem parada do caixote em diagonal: mesmo visual, cerca de +30 KB (estimado, não medido), não se mexe, refeita quando as capas mudam. (3) Deixar como está.
+
+**Não conferido.** Um iPhone de verdade (bateria, calor, quadros com a placa dele): os quadros medidos são da placa deste Mac, e o WebKit não tem freio de processador. Evidência: `reports/evidence/F80/crate-diagonal-on-phone/`.
+
 ## [2026-11-23 15:37] step — Página de entrada (F80): no caixote em 3D nenhuma capa atravessa mais a madeira (UAT-289)
 
 **Branch:** fix/f80-crate-animation-break
