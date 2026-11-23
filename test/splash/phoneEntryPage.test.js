@@ -108,10 +108,22 @@ describe('the part that teaches the app (TASK-03)', () => {
         expect(document.getElementById('x').innerHTML).toBe('Side A · 1 — Create')
     })
 
-    it('the mark between two steps is ONE switch on the page: «line» today, «bands» ready to be tried', () => {
-        expect(source).toMatch(/<main id="main" class="wrap story" data-step-mark="line">/)
-        expect(phone).toMatch(/\[data-step-mark="line"\] > \.step::before,\[data-step-mark="line"\] > \.flip-band::before\{border-top:1px solid var\(--line\)\}/)
-        expect(phone).toMatch(/\[data-step-mark="bands"\] > #albums::before,\[data-step-mark="bands"\] > #playlists::before\{background:#101014\}/)
+    // The owner, 2026-11-23, on the preview: «Troca de passo: opção 3, as duas juntas» - the label AND the thin line AND alternating bands.
+    it('the mark between two steps is ONE switch on the page, a list of words: «line bands» today (the owner\'s «as duas juntas»), each still there alone', () => {
+        expect(source).toMatch(/<main id="main" class="wrap story" data-step-mark="line bands">/)
+        expect(phone).toMatch(/\[data-step-mark~="line"\] > \.step::before,\[data-step-mark~="line"\] > \.flip-band::before\{border-top:1px solid var\(--line\)\}/)
+        expect(phone).toMatch(/\[data-step-mark~="bands"\] > #albums::before,\[data-step-mark~="bands"\] > #playlists::before\{background:var\(--step-band\)\}/)
+    })
+
+    it('the band is the design system\'s «superfície» (#1c1c22), the declared surface nearest to the sketch he saw; the steps go page, band, page, band, page', () => {
+        expect(phone).toMatch(/\.story\{--step-band:#1c1c22\}/)
+        expect(phone).not.toMatch(/#17171a|#0c0c0d/)
+        expect(phone).not.toMatch(/\[data-step-mark~="bands"\] > #(start|blend|inventory)::before/)
+    })
+
+    it('the band runs from edge to edge of the screen, and an illustration on it keeps a visible outline', () => {
+        expect(phone).toMatch(/\.story > \.step::before,\.story > \.flip-band::before\{[^}]*left:calc\(-1 \* var\(--gutter\)\);right:calc\(-1 \* var\(--gutter\)\)/)
+        expect(phone).toMatch(/\[data-step-mark~="bands"\] > #albums \.ranked,\[data-step-mark~="bands"\] > #playlists \.v4-motif\{border-color:rgba\(255,255,255,\.24\)\}/)
     })
 })
 

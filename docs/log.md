@@ -2,6 +2,21 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:02] decision — F96: a troca de passo no celular é rótulo, linha e faixas alternadas («as duas juntas»)
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+O MJRP, 2026-11-23, sobre a prévia da F96 (palavras dele, trazidas pelo orquestrador): «Troca de passo: opção 3, as duas juntas». A troca de passo no celular passa a ter o rótulo, a linha fina **e** faixas alternadas de fundo: o passo 1 sobre o fundo da página, o 2 sobre uma faixa um pouco mais clara, o 3 de volta, o 4 na faixa, o 5 no fundo.
+
+- **A cor da faixa:** no esboço que ele viu eram `#0c0c0d` e `#17171a`; como pedido, entrou o tom declarado mais próximo do design system, a «superfície» `#1c1c22` (`--step-band`), sobre o fundo da página `#0a0a0c`. Nenhum dos dois valores do esboço está no código.
+- **A chave continua uma só:** `data-step-mark` no `<main>`, agora uma lista de palavras: `line bands` (hoje), `line` ou `bands`.
+- **De borda a borda:** a faixa é o `::before` do passo, que vai da borda esquerda à direita da tela.
+- **Contraste na faixa:** o painel ilustrativo é mais escuro que a faixa, então o contorno dele é reforçado (branco a 24 %); a medida do contraste de cada texto sobre a faixa entra na prova completa (próximo commit).
+- **Fica para o passo retroativo:** a linha do papel «fundo de passo» no `docs/specs/design-system.md`.
+
+Conferido: os testes da página e da arquitetura (570), `npm run typecheck` 0, `npx eslint . --quiet` 0; no site construído, WebKit e Chromium a 390: a faixa aparece nos passos 2 e 4, de borda a borda, e a página segue com a largura da tela. O doctor segue vermelho pelos mesmos 2 erros do `MEMORY.md`, fora desta tarefa.
+
+
 ## [2026-11-23 17:56] step — F96: a página de entrada no celular, redesenhada (a tela, pronta para a prévia)
 
 **Branch:** feat/f96-entry-page-on-the-phone

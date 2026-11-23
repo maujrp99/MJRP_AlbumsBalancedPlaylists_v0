@@ -355,8 +355,9 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
    diagonal and no big button; the part that teaches the app under its own title, each step label, title, text and then ONE illustration (the
    measure the computer gives it); the albums in one row at the end, the page's only sideways swipe. The computer keeps its page: what is new
    there is read, not shown.
-   THE STEP MARK is ONE switch, `data-step-mark` on <main>: "line" (today: the label and a thin line from edge to edge above each step) or
-   "bands" (the even steps on the design system's «painel», #101014: a role to be approved in design-system.md before it is used).
+   THE STEP MARK is ONE switch, `data-step-mark` on <main>, a list of words: "line" (a thin line from edge to edge above each step), "bands"
+   (the even steps on a slightly lighter band, edge to edge) or both. Today "line bands": the owner, 2026-11-23, «Troca de passo: opção 3, as
+   duas juntas». The band is `--step-band`, the design system's «superfície» (#1c1c22), the declared surface nearest to the sketch he saw.
    THE ORANGE: in this stretch only the part's title is orange (the design system's `--orange`); labels, the flip and the doors are neutral. ===== */
 .edu-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .story > .shelf-sec{display:none} /* as specific as the page's own rule for a story (.story > section), which would show it */
@@ -377,10 +378,11 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   .story > #start{padding-top:22px}
   .story > section.flip-band{align-self:stretch;border-top:0}
   .story > .step::before,.story > .flip-band::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc(-1 * var(--gutter));right:calc(-1 * var(--gutter))}
-  [data-step-mark="line"] > .step::before,[data-step-mark="line"] > .flip-band::before{border-top:1px solid var(--line)}
-  [data-step-mark="line"] > #start::before{border-top:0}
-  [data-step-mark="bands"] > #albums::before,[data-step-mark="bands"] > #playlists::before{background:#101014}
-  [data-step-mark="bands"] .v4-motif,[data-step-mark="bands"] .ranked{border-color:rgba(255,255,255,.24)}
+  .story{--step-band:#1c1c22}
+  [data-step-mark~="line"] > .step::before,[data-step-mark~="line"] > .flip-band::before{border-top:1px solid var(--line)}
+  [data-step-mark~="line"] > #start::before{border-top:0}
+  [data-step-mark~="bands"] > #albums::before,[data-step-mark~="bands"] > #playlists::before{background:var(--step-band)}
+  [data-step-mark~="bands"] > #albums .ranked,[data-step-mark~="bands"] > #playlists .v4-motif{border-color:rgba(255,255,255,.24)} /* the illustration is darker than the band: its outline is reinforced so it does not melt into it */
   .step .kicker{color:var(--muted)}
   .step .kicker .n{font:800 30px/1 var(--display);letter-spacing:0;margin:0 3px;vertical-align:-4px;color:#fff}
   .step h3.t{font-size:24px;margin-bottom:12px}
@@ -434,7 +436,7 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
 
 <div class="thread pbar"><div class="ms-slot" id="slot-thread"></div></div>
 
-<main id="main" class="wrap story" data-step-mark="line">
+<main id="main" class="wrap story" data-step-mark="line bands">
   <section class="hero" id="a1" data-track="a1" aria-labelledby="h1">
     <div class="only-out">
       <h1 id="h1" data-i18n="h.title"></h1>
