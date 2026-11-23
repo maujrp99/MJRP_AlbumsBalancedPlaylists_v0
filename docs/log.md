@@ -3,6 +3,15 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 21:35] decision — CMS (F82): as outras três decisões da proposta de arquitetura
+
+**Branch:** main
+
+- Decisão 2 (rede de segurança sem desfazer): «só o valor anterior (recomendo), ou também a recuperação de 7 dias?» — o MJRP: «1 sua recomendação». Fica o valor anterior guardado em cada salvar; a recuperação do banco a um ponto no tempo não é ligada agora.
+- Decisão 3 (chaves quando o site não lê o CMS): a cópia guardada no navegador só pode desligar, nunca ligar; a medição de uso é exceção — segue a configuração do site como hoje e o CMS só pode desligá-la. O MJRP: «Aceito».
+- Decisão 4 (popularidade do Spotify): fechar a gravação de visitantes nessa popularidade antes da fatia das receitas por blocos, com um teste segurando a fatia. O MJRP: «Agree».
+- Com a decisão 1 (registro do administrador no console, «Aceito»), as quatro decisões do dono na proposta `design/proposals/f82-cms/architecture-proposal.md` estão tomadas. Próximo: o registro curto da decisão (ADR, em Proposed) e as specs das features F82, F92 e F93; depois a fatia 0 (alicerce).
+
 ## [2026-11-22 21:18] decision — CMS (F82): o administrador é reconhecido por um registro que ele cria no console
 
 **Branch:** main
