@@ -74,7 +74,7 @@ const pt = {
 const en = {
     'meta.title': 'The Album Blender — for people who listen to whole albums',
     'meta.desc': 'The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.',
-    'meta.ogdesc': 'Build series from your albums of the moment, rank the tracks, make balanced playlists and catalogue the physical media on your shelf.',
+    'meta.ogdesc': 'Build series from your albums of the moment, rank the tracks, make balanced playlists and catalogue your physical media.',
     'm.start': 'Create', 'm.albums': 'Albums', 'm.blend': 'Blend', 'm.playlists': 'Playlists', 'm.inventory': 'Inventory',
     'menu.aria': 'Menu: each item takes you to its story on this page',
     'flip.aria': 'Flip the record',

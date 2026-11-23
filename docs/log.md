@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:57] step — UAT-296: a descrição em inglês encurtada para caber no limite de 130 caracteres
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+O commit anterior (`7715ba8`) entrou com um teste falhando: eu encadeei o commit sem ler a linha de resultado. A descrição em inglês para prévias de link, com «catalogue the physical media on your shelf», passou de 130 caracteres (133), o limite que `test/splash/copy.test.js` guarda. Ficou «…make balanced playlists and catalogue your physical media.» (120 caracteres), que espelha o português «…e catalogue suas mídias físicas.» (121). **Decidido pelo agente, revisável**: o texto pedido pelo orquestrador não cabia. O título da história em inglês segue «Catalogue the physical media on your shelf.». Pela fila da máquina, `npx vitest run test/splash test/shell/Shell.carried.test.tsx`: 14 arquivos, 227 testes passando.
+
 ## [2026-11-23 15:56] step — Página de entrada (F80): na história do inventário, «Catalogue» no lugar de «Conte» (UAT-296)
 
 **Branch:** fix/f80-crate-caption-album-and-year
