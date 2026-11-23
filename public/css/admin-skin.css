@@ -119,3 +119,13 @@
 @media (max-width: 899px) {
     .cms-bar { top: calc(var(--phone-topbar-h) + var(--phone-safe-top)); max-height: calc(100dvh - var(--phone-topbar-h) - var(--phone-safe-top) - var(--phone-tabbar-h) - var(--phone-safe-bottom)); overflow-y: auto; }
 }
+
+/* The kit resets the font of every button, input and textarea under the skin (`[data-admin-skin] button { font: inherit }`, kit.css), and that
+   selector outranks a plain class: the Painel's own buttons and the kit's `.ak-btn` were drawn at weight 400 (the second judge of 2026-11-23).
+   The weights and sizes are said again here, under the skin's own attribute, which outranks the reset. The copy of the kit is not edited. */
+[data-admin-skin="albumblender"] .cms-navb { font-weight: 600; font-size: 14px; }
+[data-admin-skin="albumblender"] .cms-chip { font-weight: 600; font-size: 13px; }
+[data-admin-skin="albumblender"] .cms-lnk { font-weight: 600; }
+[data-admin-skin="albumblender"] .ak-btn { font-weight: 700; font-size: 13px; }
+[data-admin-skin="albumblender"] .ak-btn.sm { font-size: 12.5px; }
+[data-admin-skin="albumblender"] .ak-tr-btn { font-weight: 600; font-size: 12px; }

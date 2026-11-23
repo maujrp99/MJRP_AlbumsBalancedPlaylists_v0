@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:35] step — F82 (2º juiz, P2): o negrito do Painel volta, pela pele do V0
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2 do segundo juiz: o negrito do Painel se perdia. O kit zera a fonte de todo botão, campo e caixa de texto sob a pele (`[data-admin-skin] button { font: inherit }`, `kit.css`), e esse seletor ganha de uma classe simples: os botões do Painel (`.cms-navb`, `.cms-chip`, `.cms-lnk`) e o `.ak-btn` do próprio kit eram desenhados com peso 400. O conserto é na pele do V0 (`public/css/admin-skin.css`): os pesos e tamanhos são ditos de novo sob o atributo da pele (`[data-admin-skin="albumblender"] .classe`), que ganha do zeramento. A cópia do kit não foi tocada. Fica para o harness: no kit, `.ak-btn` e `.ak-tr-btn` perdem para o zeramento do próprio `kit.css` em qualquer projeto.
+
+Teste primeiro (`adapter.test.ts`, «the bold of the Painel survives the kit reset»: reprovou, depois passou), e a conferência do estilo calculado no navegador entrou na prova (600 nos botões do Painel, 700 nos do kit), junto com a de que nenhuma tela mostra chave crua.
+
 ## [2026-11-23 16:35] step — F82 (2º juiz, P1): as duas telas do Painel que mostravam a chave crua ganharam nome
 
 **Branch:** claude/f82-cms-texts-panel
