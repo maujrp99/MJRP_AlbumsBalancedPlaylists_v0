@@ -17,6 +17,18 @@ O juiz independente reprovou `aff752c` por um P1 (relatório `reports/audits/202
 
 Os outros P2 do relatório ficam como estão, por decisão do coordenador.
 
+## [2026-11-23 18:38] review — F81: a escolha de idioma do app, reconferência independente (visual e comportamento) — reprovada por 1 P1 de texto
+
+**Branch:** wip/f81-judge
+
+Juiz independente sobre `aff752c` (`feat/f81-language-by-country-and-switch`, TASK-02 e TASK-03). Veredito: **fail — 0 P0, 1 P1, 11 P2**. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f81-language-choice-visual-parity-recheck.md`.
+
+O mecanismo passa em Chromium e WebKit, a 1280 e a 390, atrás do emulador do Firebase Hosting (projeto demo, nada publicado): Brasil abre em português sem nenhum quadro em inglês; outro país, ou nenhum, abre em inglês; a escolha sobrevive a recarregar e vence o país; a troca mantém a página, o texto digitado e o foco; o seletor usa as linhas que cada menu já tem e funciona só pelo teclado. Uma publicação muda um endereço só, `/country.json`; os tetos de peso batem com a conta.
+
+O P1: três textos em português ainda mostram inglês — «Ir para Create» (`notices.router.notFoundBack`) e o nome da receita em inglês na janela de classificação dos Álbuns (`albums.rankWindow.tip` e `albums.rankWindow.note`). Os P2 estão no relatório (entre eles: a tela preta e sem palavra enquanto o país é perguntado; o deploy não confere o arquivo do país; «crie uma no Início» no celular).
+
+Não conferido: a troca por país no Firebase Hosting de verdade (só no emulador); as telas com dados; os textos que o MJRP publicou pelo Painel.
+
 ## [2026-11-23 18:18] step — F81: o app fala português no Brasil e inglês fora, a escolha da pessoa vence, e há seletor de idioma (TASK-02, TASK-03)
 
 **Branch:** feat/f81-language-by-country-and-switch
