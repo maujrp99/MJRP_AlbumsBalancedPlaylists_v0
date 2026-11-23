@@ -1,0 +1,5382 @@
+{
+ "webkit-390-pt-before": {
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4599,
+  "title": "The Album Blender — para quem ouve álbuns inteiros",
+  "lang": "pt-BR",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 841,
+    "w": 358,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1346,
+    "w": 358,
+    "h": 822
+   },
+   "blend": {
+    "x": 16,
+    "y": 2168,
+    "w": 358,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2697,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2764,
+    "w": 358,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3293,
+    "w": 358,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3853,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 340
+  },
+  "heroText": "THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA ÁLBUNS Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada. Abrir o app",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · um app web para quem ama álbuns",
+    "box": {
+     "x": 16,
+     "y": 76,
+     "w": 358,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Mergulhe nos álbuns que você ama.",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 358,
+     "h": 148
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 358,
+     "h": 148
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 276,
+     "w": 354.2,
+     "h": 46
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 340,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 0,
+   "y": 726,
+   "w": 390,
+   "h": 115
+  },
+  "stage": {
+   "x": 0,
+   "y": 396,
+   "w": 390,
+   "h": 445
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "O The Album Blender é um app web para quem ouve álbuns inteiros: monte séries com seus álbuns do momento, ranqueie as faixas e gere playlists equilibradas.",
+  "ogTitle": "The Album Blender — para quem ouve álbuns inteiros",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 841,
+     "w": 358,
+     "h": 505
+    },
+    "dom": {
+     "label": 208,
+     "title": 209,
+     "text": 210,
+     "lead": 179,
+     "record": 180,
+     "visual": 188,
+     "name": 183,
+     "button": 184
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1110,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1139,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1248,
+      "w": 358,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 878,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 878,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 878,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1072,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 1058,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1346,
+     "w": 358,
+     "h": 822
+    },
+    "dom": {
+     "label": 232,
+     "title": 233,
+     "text": 234,
+     "lead": 215,
+     "record": 216,
+     "visual": 224,
+     "name": 219,
+     "button": 220
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1615,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1644,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1753,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 1383,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1383,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1383,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1569,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 1563,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 2168,
+     "w": 358,
+     "h": 529
+    },
+    "dom": {
+     "label": 304,
+     "title": 305,
+     "text": 306,
+     "lead": 264,
+     "record": 265,
+     "visual": 273,
+     "name": 268,
+     "button": 269
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2437,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2466,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2575,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 2205,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2205,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2205,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2399,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 2385,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2764,
+     "w": 358,
+     "h": 529
+    },
+    "dom": {
+     "label": 349,
+     "title": 350,
+     "text": 351,
+     "lead": 316,
+     "record": 317,
+     "visual": 325,
+     "name": 320,
+     "button": 321
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3033,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3062,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 3171,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 2801,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2801,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2801,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2987,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 2981,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3293,
+     "w": 358,
+     "h": 560
+    },
+    "dom": {
+     "label": 377,
+     "title": 378,
+     "text": 379,
+     "lead": 356,
+     "record": 357,
+     "visual": 365,
+     "name": 360,
+     "button": 361
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3562,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3591,
+      "w": 358,
+      "h": 124
+     },
+     "text": {
+      "x": 16,
+      "y": 3731,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3330,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3330,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3330,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3516,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3510,
+      "w": 172,
+      "h": 44
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "webkit-390-pt-after": {
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4649,
+  "title": "The Album Blender — para quem ouve álbuns inteiros",
+  "lang": "pt-BR",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 841,
+    "w": 358,
+    "h": 515
+   },
+   "albums": {
+    "x": 16,
+    "y": 1356,
+    "w": 358,
+    "h": 832
+   },
+   "blend": {
+    "x": 16,
+    "y": 2188,
+    "w": 358,
+    "h": 539
+   },
+   "flip": {
+    "x": 16,
+    "y": 2727,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2794,
+    "w": 358,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3333,
+    "w": 358,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3903,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 340
+  },
+  "heroText": "THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA ÁLBUNS Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada. Abrir o app",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · um app web para quem ama álbuns",
+    "box": {
+     "x": 16,
+     "y": 76,
+     "w": 358,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Mergulhe nos álbuns que você ama.",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 358,
+     "h": 148
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 358,
+     "h": 148
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 276,
+     "w": 354.2,
+     "h": 46
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 340,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 0,
+   "y": 726,
+   "w": 390,
+   "h": 115
+  },
+  "stage": {
+   "x": 0,
+   "y": 396,
+   "w": 390,
+   "h": 445
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "O The Album Blender é um app web para quem ouve álbuns inteiros: monte séries com seus álbuns do momento, ranqueie as faixas e gere playlists equilibradas.",
+  "ogTitle": "The Album Blender — para quem ouve álbuns inteiros",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 841,
+     "w": 358,
+     "h": 515
+    },
+    "dom": {
+     "label": 179,
+     "title": 180,
+     "text": 181,
+     "lead": 185,
+     "record": 186,
+     "visual": 194,
+     "name": 189,
+     "button": 190
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 878,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 907,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1016,
+      "w": 358,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 1088,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1088,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1088,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1282,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 1268,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1356,
+     "w": 358,
+     "h": 832
+    },
+    "dom": {
+     "label": 215,
+     "title": 216,
+     "text": 217,
+     "lead": 246,
+     "record": 247,
+     "visual": 255,
+     "name": 250,
+     "button": 251
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1393,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1422,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1531,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 1920,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1920,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1920,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2106,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 2100,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 2188,
+     "w": 358,
+     "h": 539
+    },
+    "dom": {
+     "label": 264,
+     "title": 265,
+     "text": 266,
+     "lead": 270,
+     "record": 271,
+     "visual": 279,
+     "name": 274,
+     "button": 275
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2225,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2254,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2363,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 2459,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2459,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2459,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2653,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 2639,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2794,
+     "w": 358,
+     "h": 539
+    },
+    "dom": {
+     "label": 316,
+     "title": 317,
+     "text": 318,
+     "lead": 322,
+     "record": 323,
+     "visual": 331,
+     "name": 326,
+     "button": 327
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2831,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2860,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2969,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3065,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3065,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3065,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3251,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3245,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3333,
+     "w": 358,
+     "h": 570
+    },
+    "dom": {
+     "label": 356,
+     "title": 357,
+     "text": 358,
+     "lead": 362,
+     "record": 363,
+     "visual": 371,
+     "name": 366,
+     "button": 367
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3370,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3399,
+      "w": 358,
+      "h": 124
+     },
+     "text": {
+      "x": 16,
+      "y": 3539,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3635,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3635,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3635,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3821,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3815,
+      "w": 172,
+      "h": 44
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "webkit-390-en-before": {
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4468,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "lang": "en",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 820,
+    "w": 358,
+    "h": 474
+   },
+   "albums": {
+    "x": 16,
+    "y": 1294,
+    "w": 358,
+    "h": 822
+   },
+   "blend": {
+    "x": 16,
+    "y": 2116,
+    "w": 358,
+    "h": 505
+   },
+   "flip": {
+    "x": 16,
+    "y": 2621,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2688,
+    "w": 358,
+    "h": 505
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3193,
+    "w": 358,
+    "h": 529
+   },
+   "end": {
+    "x": 16,
+    "y": 3722,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 303
+  },
+  "heroText": "THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS Dig through the albums you love. Your albums of the moment, in one balanced playlist. Open the app",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · a web app for record lovers",
+    "box": {
+     "x": 16,
+     "y": 76,
+     "w": 358,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Dig through the albums you love.",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 358,
+     "h": 111
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 358,
+     "h": 111
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 354.2,
+     "h": 46
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 303,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 0,
+   "y": 689,
+   "w": 390,
+   "h": 131
+  },
+  "stage": {
+   "x": 0,
+   "y": 359,
+   "w": 390,
+   "h": 461
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.",
+  "ogTitle": "The Album Blender — for people who listen to whole albums",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 820,
+     "w": 358,
+     "h": 474
+    },
+    "dom": {
+     "label": 211,
+     "title": 212,
+     "text": 213,
+     "lead": 182,
+     "record": 183,
+     "visual": 191,
+     "name": 186,
+     "button": 187
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1089,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1118,
+      "w": 358,
+      "h": 62
+     },
+     "text": {
+      "x": 16,
+      "y": 1196,
+      "w": 358,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 857,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 857,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 857,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1051,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 1037,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1294,
+     "w": 358,
+     "h": 822
+    },
+    "dom": {
+     "label": 235,
+     "title": 236,
+     "text": 237,
+     "lead": 218,
+     "record": 219,
+     "visual": 227,
+     "name": 222,
+     "button": 223
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1563,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1592,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1701,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 1331,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1331,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1331,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1517,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 1511,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 2116,
+     "w": 358,
+     "h": 505
+    },
+    "dom": {
+     "label": 307,
+     "title": 308,
+     "text": 309,
+     "lead": 267,
+     "record": 268,
+     "visual": 276,
+     "name": 271,
+     "button": 272
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2385,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2414,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2523,
+      "w": 358,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 2153,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2153,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2153,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2347,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 2333,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2688,
+     "w": 358,
+     "h": 505
+    },
+    "dom": {
+     "label": 352,
+     "title": 353,
+     "text": 354,
+     "lead": 319,
+     "record": 320,
+     "visual": 328,
+     "name": 323,
+     "button": 324
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2957,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2986,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 3095,
+      "w": 358,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 2725,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2725,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2725,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2911,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 2905,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3193,
+     "w": 358,
+     "h": 529
+    },
+    "dom": {
+     "label": 380,
+     "title": 381,
+     "text": 382,
+     "lead": 359,
+     "record": 360,
+     "visual": 368,
+     "name": 363,
+     "button": 364
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3462,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3491,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 3600,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3230,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3230,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3230,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3416,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3410,
+      "w": 172,
+      "h": 44
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "webkit-390-en-after": {
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4518,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "lang": "en",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 820,
+    "w": 358,
+    "h": 484
+   },
+   "albums": {
+    "x": 16,
+    "y": 1304,
+    "w": 358,
+    "h": 832
+   },
+   "blend": {
+    "x": 16,
+    "y": 2136,
+    "w": 358,
+    "h": 515
+   },
+   "flip": {
+    "x": 16,
+    "y": 2651,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2718,
+    "w": 358,
+    "h": 515
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3233,
+    "w": 358,
+    "h": 539
+   },
+   "end": {
+    "x": 16,
+    "y": 3772,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 303
+  },
+  "heroText": "THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS Dig through the albums you love. Your albums of the moment, in one balanced playlist. Open the app",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · a web app for record lovers",
+    "box": {
+     "x": 16,
+     "y": 76,
+     "w": 358,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Dig through the albums you love.",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 358,
+     "h": 111
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 358,
+     "h": 111
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 354.2,
+     "h": 46
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 303,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 0,
+   "y": 689,
+   "w": 390,
+   "h": 131
+  },
+  "stage": {
+   "x": 0,
+   "y": 359,
+   "w": 390,
+   "h": 461
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.",
+  "ogTitle": "The Album Blender — for people who listen to whole albums",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 820,
+     "w": 358,
+     "h": 484
+    },
+    "dom": {
+     "label": 182,
+     "title": 183,
+     "text": 184,
+     "lead": 188,
+     "record": 189,
+     "visual": 197,
+     "name": 192,
+     "button": 193
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 857,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 886,
+      "w": 358,
+      "h": 62
+     },
+     "text": {
+      "x": 16,
+      "y": 964,
+      "w": 358,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 1036,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1036,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1036,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1230,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 1216,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1304,
+     "w": 358,
+     "h": 832
+    },
+    "dom": {
+     "label": 218,
+     "title": 219,
+     "text": 220,
+     "lead": 249,
+     "record": 250,
+     "visual": 258,
+     "name": 253,
+     "button": 254
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1341,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1370,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1479,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 1868,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1868,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1868,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2054,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 2048,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 2136,
+     "w": 358,
+     "h": 515
+    },
+    "dom": {
+     "label": 267,
+     "title": 268,
+     "text": 269,
+     "lead": 273,
+     "record": 274,
+     "visual": 282,
+     "name": 277,
+     "button": 278
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2173,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2202,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2311,
+      "w": 358,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 2383,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2383,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2383,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2577,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 2563,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2718,
+     "w": 358,
+     "h": 515
+    },
+    "dom": {
+     "label": 319,
+     "title": 320,
+     "text": 321,
+     "lead": 325,
+     "record": 326,
+     "visual": 334,
+     "name": 329,
+     "button": 330
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2755,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2784,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2893,
+      "w": 358,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 2965,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2965,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2965,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3151,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3145,
+      "w": 172,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3233,
+     "w": 358,
+     "h": 539
+    },
+    "dom": {
+     "label": 359,
+     "title": 360,
+     "text": 361,
+     "lead": 365,
+     "record": 366,
+     "visual": 374,
+     "name": 369,
+     "button": 370
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3270,
+      "w": 358,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3299,
+      "w": 358,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 3408,
+      "w": 358,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3504,
+      "w": 358,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3504,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3504,
+      "w": 172,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3690,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3684,
+      "w": 172,
+      "h": 44
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "webkit-375-pt-before": {
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4638,
+  "title": "The Album Blender — para quem ouve álbuns inteiros",
+  "lang": "pt-BR",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 841,
+    "w": 343,
+    "h": 505
+   },
+   "albums": {
+    "x": 16,
+    "y": 1346,
+    "w": 343,
+    "h": 837
+   },
+   "blend": {
+    "x": 16,
+    "y": 2183,
+    "w": 343,
+    "h": 529
+   },
+   "flip": {
+    "x": 16,
+    "y": 2712,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2779,
+    "w": 343,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3308,
+    "w": 343,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3868,
+    "w": 343,
+    "h": 460
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 340
+  },
+  "heroText": "THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA ÁLBUNS Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada. Abrir o app",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · um app web para quem ama álbuns",
+    "box": {
+     "x": 16,
+     "y": 76,
+     "w": 343,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Mergulhe nos álbuns que você ama.",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 343,
+     "h": 148
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 343,
+     "h": 148
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 276,
+     "w": 343,
+     "h": 46
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 340,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 0,
+   "y": 726,
+   "w": 375,
+   "h": 115
+  },
+  "stage": {
+   "x": 0,
+   "y": 396,
+   "w": 375,
+   "h": 445
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "O The Album Blender é um app web para quem ouve álbuns inteiros: monte séries com seus álbuns do momento, ranqueie as faixas e gere playlists equilibradas.",
+  "ogTitle": "The Album Blender — para quem ouve álbuns inteiros",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 841,
+     "w": 343,
+     "h": 505
+    },
+    "dom": {
+     "label": 206,
+     "title": 207,
+     "text": 208,
+     "lead": 177,
+     "record": 178,
+     "visual": 186,
+     "name": 181,
+     "button": 182
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1110,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1139,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1248,
+      "w": 343,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 878,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 878,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 878,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1072,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 1058,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1346,
+     "w": 343,
+     "h": 837
+    },
+    "dom": {
+     "label": 230,
+     "title": 231,
+     "text": 232,
+     "lead": 213,
+     "record": 214,
+     "visual": 222,
+     "name": 217,
+     "button": 218
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1615,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1644,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1753,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 1383,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1383,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1383,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1569,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 1563,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 2183,
+     "w": 343,
+     "h": 529
+    },
+    "dom": {
+     "label": 302,
+     "title": 303,
+     "text": 304,
+     "lead": 262,
+     "record": 263,
+     "visual": 271,
+     "name": 266,
+     "button": 267
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2452,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2481,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2590,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 2220,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2220,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2220,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2414,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 2400,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2779,
+     "w": 343,
+     "h": 529
+    },
+    "dom": {
+     "label": 347,
+     "title": 348,
+     "text": 349,
+     "lead": 314,
+     "record": 315,
+     "visual": 323,
+     "name": 318,
+     "button": 319
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3048,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3077,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 3186,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 2816,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2816,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2816,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3002,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 2996,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3308,
+     "w": 343,
+     "h": 560
+    },
+    "dom": {
+     "label": 375,
+     "title": 376,
+     "text": 377,
+     "lead": 354,
+     "record": 355,
+     "visual": 363,
+     "name": 358,
+     "button": 359
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3577,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3606,
+      "w": 343,
+      "h": 124
+     },
+     "text": {
+      "x": 16,
+      "y": 3746,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3345,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3345,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3345,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3531,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3525,
+      "w": 157,
+      "h": 44
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "webkit-375-pt-after": {
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4688,
+  "title": "The Album Blender — para quem ouve álbuns inteiros",
+  "lang": "pt-BR",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 340
+   },
+   "start": {
+    "x": 16,
+    "y": 841,
+    "w": 343,
+    "h": 515
+   },
+   "albums": {
+    "x": 16,
+    "y": 1356,
+    "w": 343,
+    "h": 847
+   },
+   "blend": {
+    "x": 16,
+    "y": 2203,
+    "w": 343,
+    "h": 539
+   },
+   "flip": {
+    "x": 16,
+    "y": 2742,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2809,
+    "w": 343,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3348,
+    "w": 343,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3918,
+    "w": 343,
+    "h": 460
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 340
+  },
+  "heroText": "THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA ÁLBUNS Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada. Abrir o app",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · um app web para quem ama álbuns",
+    "box": {
+     "x": 16,
+     "y": 76,
+     "w": 343,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Mergulhe nos álbuns que você ama.",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 343,
+     "h": 148
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 343,
+     "h": 148
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 276,
+     "w": 343,
+     "h": 46
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 340,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 0,
+   "y": 726,
+   "w": 375,
+   "h": 115
+  },
+  "stage": {
+   "x": 0,
+   "y": 396,
+   "w": 375,
+   "h": 445
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "O The Album Blender é um app web para quem ouve álbuns inteiros: monte séries com seus álbuns do momento, ranqueie as faixas e gere playlists equilibradas.",
+  "ogTitle": "The Album Blender — para quem ouve álbuns inteiros",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 841,
+     "w": 343,
+     "h": 515
+    },
+    "dom": {
+     "label": 177,
+     "title": 178,
+     "text": 179,
+     "lead": 183,
+     "record": 184,
+     "visual": 192,
+     "name": 187,
+     "button": 188
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 878,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 907,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1016,
+      "w": 343,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 1088,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1088,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1088,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1282,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 1268,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1356,
+     "w": 343,
+     "h": 847
+    },
+    "dom": {
+     "label": 213,
+     "title": 214,
+     "text": 215,
+     "lead": 244,
+     "record": 245,
+     "visual": 253,
+     "name": 248,
+     "button": 249
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1393,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1422,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1531,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 1935,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1935,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1935,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2121,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 2115,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 2203,
+     "w": 343,
+     "h": 539
+    },
+    "dom": {
+     "label": 262,
+     "title": 263,
+     "text": 264,
+     "lead": 268,
+     "record": 269,
+     "visual": 277,
+     "name": 272,
+     "button": 273
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2240,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2269,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2378,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 2474,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2474,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2474,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2668,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 2654,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2809,
+     "w": 343,
+     "h": 539
+    },
+    "dom": {
+     "label": 314,
+     "title": 315,
+     "text": 316,
+     "lead": 320,
+     "record": 321,
+     "visual": 329,
+     "name": 324,
+     "button": 325
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2846,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2875,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2984,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3080,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3080,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3080,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3266,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3260,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3348,
+     "w": 343,
+     "h": 570
+    },
+    "dom": {
+     "label": 354,
+     "title": 355,
+     "text": 356,
+     "lead": 360,
+     "record": 361,
+     "visual": 369,
+     "name": 364,
+     "button": 365
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3385,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3414,
+      "w": 343,
+      "h": 124
+     },
+     "text": {
+      "x": 16,
+      "y": 3554,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3650,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3650,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3650,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3836,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3830,
+      "w": 157,
+      "h": 44
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "webkit-375-en-before": {
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4569,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "lang": "en",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 820,
+    "w": 343,
+    "h": 474
+   },
+   "albums": {
+    "x": 16,
+    "y": 1294,
+    "w": 343,
+    "h": 837
+   },
+   "blend": {
+    "x": 16,
+    "y": 2131,
+    "w": 343,
+    "h": 536
+   },
+   "flip": {
+    "x": 16,
+    "y": 2667,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2734,
+    "w": 343,
+    "h": 529
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3263,
+    "w": 343,
+    "h": 560
+   },
+   "end": {
+    "x": 16,
+    "y": 3823,
+    "w": 343,
+    "h": 436
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 303
+  },
+  "heroText": "THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS Dig through the albums you love. Your albums of the moment, in one balanced playlist. Open the app",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · a web app for record lovers",
+    "box": {
+     "x": 16,
+     "y": 76,
+     "w": 343,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Dig through the albums you love.",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 343,
+     "h": 111
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 343,
+     "h": 111
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 343,
+     "h": 46
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 303,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 0,
+   "y": 689,
+   "w": 375,
+   "h": 131
+  },
+  "stage": {
+   "x": 0,
+   "y": 359,
+   "w": 375,
+   "h": 461
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.",
+  "ogTitle": "The Album Blender — for people who listen to whole albums",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 820,
+     "w": 343,
+     "h": 474
+    },
+    "dom": {
+     "label": 209,
+     "title": 210,
+     "text": 211,
+     "lead": 180,
+     "record": 181,
+     "visual": 189,
+     "name": 184,
+     "button": 185
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1089,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1118,
+      "w": 343,
+      "h": 62
+     },
+     "text": {
+      "x": 16,
+      "y": 1196,
+      "w": 343,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 857,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 857,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 857,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1051,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 1037,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1294,
+     "w": 343,
+     "h": 837
+    },
+    "dom": {
+     "label": 233,
+     "title": 234,
+     "text": 235,
+     "lead": 216,
+     "record": 217,
+     "visual": 225,
+     "name": 220,
+     "button": 221
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1563,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1592,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1701,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 1331,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1331,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1331,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1517,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 1511,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 2131,
+     "w": 343,
+     "h": 536
+    },
+    "dom": {
+     "label": 305,
+     "title": 306,
+     "text": 307,
+     "lead": 265,
+     "record": 266,
+     "visual": 274,
+     "name": 269,
+     "button": 270
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2400,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2429,
+      "w": 343,
+      "h": 124
+     },
+     "text": {
+      "x": 16,
+      "y": 2569,
+      "w": 343,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 2168,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2168,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2168,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2362,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 2348,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2734,
+     "w": 343,
+     "h": 529
+    },
+    "dom": {
+     "label": 350,
+     "title": 351,
+     "text": 352,
+     "lead": 317,
+     "record": 318,
+     "visual": 326,
+     "name": 321,
+     "button": 322
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3003,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3032,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 3141,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 2771,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2771,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2771,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2957,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 2951,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3263,
+     "w": 343,
+     "h": 560
+    },
+    "dom": {
+     "label": 378,
+     "title": 379,
+     "text": 380,
+     "lead": 357,
+     "record": 358,
+     "visual": 366,
+     "name": 361,
+     "button": 362
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3532,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3561,
+      "w": 343,
+      "h": 124
+     },
+     "text": {
+      "x": 16,
+      "y": 3701,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3300,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3300,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3300,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3486,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3480,
+      "w": 157,
+      "h": 44
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "webkit-375-en-after": {
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4619,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "lang": "en",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 303
+   },
+   "start": {
+    "x": 16,
+    "y": 820,
+    "w": 343,
+    "h": 484
+   },
+   "albums": {
+    "x": 16,
+    "y": 1304,
+    "w": 343,
+    "h": 847
+   },
+   "blend": {
+    "x": 16,
+    "y": 2151,
+    "w": 343,
+    "h": 546
+   },
+   "flip": {
+    "x": 16,
+    "y": 2697,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2764,
+    "w": 343,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3303,
+    "w": 343,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3873,
+    "w": 343,
+    "h": 436
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 303
+  },
+  "heroText": "THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS Dig through the albums you love. Your albums of the moment, in one balanced playlist. Open the app",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · a web app for record lovers",
+    "box": {
+     "x": 16,
+     "y": 76,
+     "w": 343,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Dig through the albums you love.",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 343,
+     "h": 111
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 118,
+     "w": 343,
+     "h": 111
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 343,
+     "h": 46
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 303,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 0,
+   "y": 689,
+   "w": 375,
+   "h": 131
+  },
+  "stage": {
+   "x": 0,
+   "y": 359,
+   "w": 375,
+   "h": 461
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.",
+  "ogTitle": "The Album Blender — for people who listen to whole albums",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 820,
+     "w": 343,
+     "h": 484
+    },
+    "dom": {
+     "label": 180,
+     "title": 181,
+     "text": 182,
+     "lead": 186,
+     "record": 187,
+     "visual": 195,
+     "name": 190,
+     "button": 191
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 857,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 886,
+      "w": 343,
+      "h": 62
+     },
+     "text": {
+      "x": 16,
+      "y": 964,
+      "w": 343,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 1036,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1036,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1036,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 1230,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 1216,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1304,
+     "w": 343,
+     "h": 847
+    },
+    "dom": {
+     "label": 216,
+     "title": 217,
+     "text": 218,
+     "lead": 247,
+     "record": 248,
+     "visual": 256,
+     "name": 251,
+     "button": 252
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1341,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1370,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 1479,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 1883,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 1883,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 1883,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2069,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 2063,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 2151,
+     "w": 343,
+     "h": 546
+    },
+    "dom": {
+     "label": 265,
+     "title": 266,
+     "text": 267,
+     "lead": 271,
+     "record": 272,
+     "visual": 280,
+     "name": 275,
+     "button": 276
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2188,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2217,
+      "w": 343,
+      "h": 124
+     },
+     "text": {
+      "x": 16,
+      "y": 2357,
+      "w": 343,
+      "h": 48
+     },
+     "lead": {
+      "x": 16,
+      "y": 2429,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 2429,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 2429,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 2623,
+      "w": 172,
+      "h": 16
+     },
+     "button": {
+      "x": 202,
+      "y": 2609,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2764,
+     "w": 343,
+     "h": 539
+    },
+    "dom": {
+     "label": 317,
+     "title": 318,
+     "text": 319,
+     "lead": 323,
+     "record": 324,
+     "visual": 332,
+     "name": 327,
+     "button": 328
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2801,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2830,
+      "w": 343,
+      "h": 93
+     },
+     "text": {
+      "x": 16,
+      "y": 2939,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3035,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3035,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3035,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3221,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3215,
+      "w": 157,
+      "h": 44
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3303,
+     "w": 343,
+     "h": 570
+    },
+    "dom": {
+     "label": 357,
+     "title": 358,
+     "text": 359,
+     "lead": 363,
+     "record": 364,
+     "visual": 372,
+     "name": 367,
+     "button": 368
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3340,
+      "w": 343,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3369,
+      "w": 343,
+      "h": 124
+     },
+     "text": {
+      "x": 16,
+      "y": 3509,
+      "w": 343,
+      "h": 72
+     },
+     "lead": {
+      "x": 16,
+      "y": 3605,
+      "w": 343,
+      "h": 172
+     },
+     "record": {
+      "x": 16,
+      "y": 3605,
+      "w": 172,
+      "h": 172
+     },
+     "visual": {
+      "x": 202,
+      "y": 3605,
+      "w": 157,
+      "h": 172
+     },
+     "name": {
+      "x": 16,
+      "y": 3791,
+      "w": 172,
+      "h": 32
+     },
+     "button": {
+      "x": 202,
+      "y": 3785,
+      "w": 157,
+      "h": 44
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "chromium-1280-pt-before": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4578,
+  "title": "The Album Blender — para quem ouve álbuns inteiros",
+  "lang": "pt-BR",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 568.7
+   },
+   "albums": {
+    "x": 16,
+    "y": 1332.7,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1994.8,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2587.5,
+    "w": 500,
+    "h": 143.1
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2754.6,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3323.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3936.4,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroText": "THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA ÁLBUNS Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada. Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas. Abrir o app Entrar",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · um app web para quem ama álbuns",
+    "box": {
+     "x": 16,
+     "y": 197,
+     "w": 391.6,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Mergulhe nos álbuns que você ama.",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 500,
+     "h": 143.7
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 500,
+     "h": 143.7
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 396.7,
+     "w": 476.1,
+     "h": 63.4
+    }
+   },
+   {
+    "cls": "what",
+    "box": {
+     "x": 16,
+     "y": 478.1,
+     "w": 453.2,
+     "h": 58.9
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 567,
+     "w": 500,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4312.4
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "O The Album Blender é um app web para quem ouve álbuns inteiros: monte séries com seus álbuns do momento, ranqueie as faixas e gere playlists equilibradas.",
+  "ogTitle": "The Album Blender — para quem ouve álbuns inteiros",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 764,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 249,
+     "title": 250,
+     "text": 251,
+     "lead": 220,
+     "visual": 229
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 812,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 841,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 990,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 1056.7,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 1084.7,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1332.7,
+     "w": 500,
+     "h": 662.1
+    },
+    "dom": {
+     "label": 273,
+     "title": 274,
+     "text": 275
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1380.7,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1409.7,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 1558.8,
+      "w": 471.1,
+      "h": 79
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 1994.8,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 345,
+     "title": 346,
+     "text": 347,
+     "lead": 305,
+     "visual": 314
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2042.8,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2071.8,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 2220.8,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 2287.5,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 2315.5,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2754.6,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 390,
+     "title": 391,
+     "text": 392,
+     "lead": 357,
+     "visual": 366
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2802.6,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2831.6,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 2980.6,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 3047.3,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 3075.3,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3323.3,
+     "w": 500,
+     "h": 613.1
+    },
+    "dom": {
+     "label": 418,
+     "title": 419,
+     "text": 420,
+     "lead": 397,
+     "visual": 406
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3371.3,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3400.3,
+      "w": 500,
+      "h": 177.4
+     },
+     "text": {
+      "x": 16,
+      "y": 3593.7,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 3660.4,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 3688.4,
+      "w": 420,
+      "h": 200
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "chromium-1280-pt-after": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4578,
+  "title": "The Album Blender — para quem ouve álbuns inteiros",
+  "lang": "pt-BR",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 568.7
+   },
+   "albums": {
+    "x": 16,
+    "y": 1332.7,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1994.8,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2587.5,
+    "w": 500,
+    "h": 143.1
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2754.6,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3323.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3936.4,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroText": "THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA ÁLBUNS Mergulhe nos álbuns que você ama. Seus álbuns do momento, numa playlist balanceada. Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas. Abrir o app Entrar",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · um app web para quem ama álbuns",
+    "box": {
+     "x": 16,
+     "y": 197,
+     "w": 391.6,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Mergulhe nos álbuns que você ama.",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 500,
+     "h": 143.7
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 500,
+     "h": 143.7
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 396.7,
+     "w": 476.1,
+     "h": 63.4
+    }
+   },
+   {
+    "cls": "what",
+    "box": {
+     "x": 16,
+     "y": 478.1,
+     "w": 453.2,
+     "h": 58.9
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 567,
+     "w": 500,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4312.4
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "O The Album Blender é um app web para quem ouve álbuns inteiros: monte séries com seus álbuns do momento, ranqueie as faixas e gere playlists equilibradas.",
+  "ogTitle": "The Album Blender — para quem ouve álbuns inteiros",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 764,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 220,
+     "title": 221,
+     "text": 222,
+     "lead": 226,
+     "visual": 235
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 812,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 841,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 990,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 1056.7,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 1084.7,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1332.7,
+     "w": 500,
+     "h": 662.1
+    },
+    "dom": {
+     "label": 256,
+     "title": 257,
+     "text": 258
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1380.7,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1409.7,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 1558.8,
+      "w": 471.1,
+      "h": 79
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 1994.8,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 305,
+     "title": 306,
+     "text": 307,
+     "lead": 311,
+     "visual": 320
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2042.8,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2071.8,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 2220.8,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 2287.5,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 2315.5,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2754.6,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 357,
+     "title": 358,
+     "text": 359,
+     "lead": 363,
+     "visual": 372
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2802.6,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2831.6,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 2980.6,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 3047.3,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 3075.3,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3323.3,
+     "w": 500,
+     "h": 613.1
+    },
+    "dom": {
+     "label": 397,
+     "title": 398,
+     "text": 399,
+     "lead": 403,
+     "visual": 412
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3371.3,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3400.3,
+      "w": 500,
+      "h": 177.4
+     },
+     "text": {
+      "x": 16,
+      "y": 3593.7,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 3660.4,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 3688.4,
+      "w": 420,
+      "h": 200
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "chromium-1280-en-before": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4543,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "lang": "en",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 560
+   },
+   "albums": {
+    "x": 16,
+    "y": 1324,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1986.1,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2578.8,
+    "w": 500,
+    "h": 116.7
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2719.5,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3288.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3901.3,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroText": "THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS Dig through the albums you love. Your albums of the moment, in one balanced playlist. Build series from your albums of the moment, rank your tracks and make balanced playlists. Open the app Sign in",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · a web app for record lovers",
+    "box": {
+     "x": 16,
+     "y": 197,
+     "w": 391.6,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Dig through the albums you love.",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 500,
+     "h": 143.7
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 500,
+     "h": 143.7
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 396.7,
+     "w": 476.1,
+     "h": 63.4
+    }
+   },
+   {
+    "cls": "what",
+    "box": {
+     "x": 16,
+     "y": 478.1,
+     "w": 453.2,
+     "h": 58.9
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 567,
+     "w": 500,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4277.3
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.",
+  "ogTitle": "The Album Blender — for people who listen to whole albums",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 764,
+     "w": 500,
+     "h": 560
+    },
+    "dom": {
+     "label": 249,
+     "title": 250,
+     "text": 251,
+     "lead": 220,
+     "visual": 229
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 829.8,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 858.8,
+      "w": 500,
+      "h": 88.7
+     },
+     "text": {
+      "x": 16,
+      "y": 963.5,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 1030.2,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 1058.2,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1324,
+     "w": 500,
+     "h": 662.1
+    },
+    "dom": {
+     "label": 273,
+     "title": 274,
+     "text": 275
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1372,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1401,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 1550,
+      "w": 471.1,
+      "h": 79
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 1986.1,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 345,
+     "title": 346,
+     "text": 347,
+     "lead": 305,
+     "visual": 314
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2034.1,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2063.1,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 2212.1,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 2278.8,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 2306.8,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2719.5,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 390,
+     "title": 391,
+     "text": 392,
+     "lead": 357,
+     "visual": 366
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2767.5,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2796.5,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 2945.6,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 3012.3,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 3040.3,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3288.3,
+     "w": 500,
+     "h": 613.1
+    },
+    "dom": {
+     "label": 418,
+     "title": 419,
+     "text": 420,
+     "lead": 397,
+     "visual": 406
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3336.3,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3365.3,
+      "w": 500,
+      "h": 177.4
+     },
+     "text": {
+      "x": 16,
+      "y": 3558.6,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 3625.3,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 3653.3,
+      "w": 420,
+      "h": 200
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ },
+ "chromium-1280-en-after": {
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4543,
+  "title": "The Album Blender — for people who listen to whole albums",
+  "lang": "en",
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 560
+   },
+   "albums": {
+    "x": 16,
+    "y": 1324,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1986.1,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2578.8,
+    "w": 500,
+    "h": 116.7
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2719.5,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3288.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3901.3,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroText": "THE ALBUM BLENDER · A WEB APP FOR RECORD LOVERS Dig through the albums you love. Your albums of the moment, in one balanced playlist. Build series from your albums of the moment, rank your tracks and make balanced playlists. Open the app Sign in",
+  "heroKickers": 2,
+  "heroKickerVisible": [
+   {
+    "text": "The Album Blender · a web app for record lovers",
+    "box": {
+     "x": 16,
+     "y": 197,
+     "w": 391.6,
+     "h": 26
+    }
+   }
+  ],
+  "h1": [
+   {
+    "text": "Dig through the albums you love.",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 500,
+     "h": 143.7
+    }
+   }
+  ],
+  "h1Count": 1,
+  "firstInHero": "P",
+  "heroParts": [
+   {
+    "cls": "H1",
+    "box": {
+     "x": 16,
+     "y": 239,
+     "w": 500,
+     "h": 143.7
+    }
+   },
+   {
+    "cls": "h-sub",
+    "box": {
+     "x": 16,
+     "y": 396.7,
+     "w": 476.1,
+     "h": 63.4
+    }
+   },
+   {
+    "cls": "what",
+    "box": {
+     "x": 16,
+     "y": 478.1,
+     "w": 453.2,
+     "h": 58.9
+    }
+   },
+   {
+    "cls": "ctas",
+    "box": {
+     "x": 16,
+     "y": 567,
+     "w": 500,
+     "h": 48
+    }
+   }
+  ],
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4277.3
+  },
+  "logoAlt": "The Album Blender",
+  "metaDescription": "The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.",
+  "ogTitle": "The Album Blender — for people who listen to whole albums",
+  "bodySaysWebApp": true,
+  "focusOrderMatchesSight": true,
+  "stories": [
+   {
+    "id": "start",
+    "section": {
+     "x": 16,
+     "y": 764,
+     "w": 500,
+     "h": 560
+    },
+    "dom": {
+     "label": 220,
+     "title": 221,
+     "text": 222,
+     "lead": 226,
+     "visual": 235
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 829.8,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 858.8,
+      "w": 500,
+      "h": 88.7
+     },
+     "text": {
+      "x": 16,
+      "y": 963.5,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 1030.2,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 1058.2,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "albums",
+    "section": {
+     "x": 16,
+     "y": 1324,
+     "w": 500,
+     "h": 662.1
+    },
+    "dom": {
+     "label": 256,
+     "title": 257,
+     "text": 258
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 1372,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 1401,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 1550,
+      "w": 471.1,
+      "h": 79
+     }
+    }
+   },
+   {
+    "id": "blend",
+    "section": {
+     "x": 16,
+     "y": 1986.1,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 305,
+     "title": 306,
+     "text": 307,
+     "lead": 311,
+     "visual": 320
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2034.1,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2063.1,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 2212.1,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 2278.8,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 2306.8,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "playlists",
+    "section": {
+     "x": 16,
+     "y": 2719.5,
+     "w": 500,
+     "h": 568.7
+    },
+    "dom": {
+     "label": 357,
+     "title": 358,
+     "text": 359,
+     "lead": 363,
+     "visual": 372
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 2767.5,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 2796.5,
+      "w": 500,
+      "h": 133
+     },
+     "text": {
+      "x": 16,
+      "y": 2945.6,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 3012.3,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 3040.3,
+      "w": 420,
+      "h": 200
+     }
+    }
+   },
+   {
+    "id": "inventory",
+    "section": {
+     "x": 16,
+     "y": 3288.3,
+     "w": 500,
+     "h": 613.1
+    },
+    "dom": {
+     "label": 397,
+     "title": 398,
+     "text": 399,
+     "lead": 403,
+     "visual": 412
+    },
+    "box": {
+     "label": {
+      "x": 16,
+      "y": 3336.3,
+      "w": 391.6,
+      "h": 13
+     },
+     "title": {
+      "x": 16,
+      "y": 3365.3,
+      "w": 500,
+      "h": 177.4
+     },
+     "text": {
+      "x": 16,
+      "y": 3558.6,
+      "w": 471.1,
+      "h": 52.7
+     },
+     "lead": {
+      "x": 16,
+      "y": 3625.3,
+      "w": 500,
+      "h": 228
+     },
+     "visual": {
+      "x": 16,
+      "y": 3653.3,
+      "w": 420,
+      "h": 200
+     }
+    }
+   }
+  ],
+  "errors": [],
+  "blocked": [],
+  "signedIn": false
+ }
+}

@@ -235,6 +235,30 @@ describe('the page wired', () => {
         expect(document.querySelector('.caption .src').textContent).toBe(COPY.pt['c.src'])
     })
 
+    it('in each story the label, the title and the text come first in the page, the illustrations after them (UAT-291)', () => {
+        const page = readFileSync(resolve(process.cwd(), 'public/splash.html'), 'utf8')
+        for (const id of ['start', 'albums', 'blend', 'playlists', 'inventory']) {
+            const section = page.slice(page.indexOf(`<section id="${id}"`), page.indexOf('</section>', page.indexOf(`<section id="${id}"`)))
+            const at = ['class="kicker"', `id="t-${id}"`, `data-i18n="p.${id}"`, 'class="v4-lead"'].map(mark => section.indexOf(mark))
+            at.forEach(i => expect(i).toBeGreaterThan(-1))
+            expect([...at].sort((x, y) => x - y)).toEqual(at)
+            // the illustrations close the story: nothing but the end of the section after them
+            expect(section.slice(section.lastIndexOf('</div></div>') + 12).trim()).toBe('')
+        }
+        // what is seen is what is read: no CSS `order` moves the illustrations, on the phone or on the computer
+        expect(page).not.toMatch(/\.v4-lead\{[^}]*order:/)
+    })
+
+    it('with the page wired, a story\'s button comes after its title for the keyboard and the screen reader (UAT-291)', () => {
+        loadPage('real')
+        startSplash(fakeWindow({ phone: true }))
+        for (const id of ['start', 'albums', 'blend', 'playlists', 'inventory']) {
+            const title = document.getElementById(`t-${id}`)
+            const button = document.querySelector(`#${id} .slot-am a`)
+            expect(title.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+        }
+    })
+
     it('the page has one rule of the button (.am) and the phone record\'s credit reuses it (UAT-285)', () => {
         const page = readFileSync(resolve(process.cwd(), 'public/splash.html'), 'utf8')
         expect(page.match(/^\.am\{/gm)).toHaveLength(1)

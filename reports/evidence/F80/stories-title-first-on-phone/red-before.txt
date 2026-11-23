@@ -1,0 +1,4 @@
+ FAIL  test/splash/splash.test.js > the page wired > in each story the label, the title and the text come first in the page, the illustrations after them (UAT-291)
+ FAIL  test/splash/splash.test.js > the page wired > with the page wired, a story's button comes after its title for the keyboard and the screen reader (UAT-291)
+ Test Files  1 failed (1)
+      Tests  2 failed | 29 passed (31)

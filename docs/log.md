@@ -2,6 +2,24 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:35] step — Página de entrada (F80), celular: em cada história o rótulo, o título e o texto vêm antes das ilustrações (UAT-291)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Pedido do MJRP (2026-11-23): «o que está ruim na atual é que o titulo do mapa educativo nao começa logo depois do velvet, fica abaixo, isso teria que ser invertido se for pra continuar vertical e nao ter swipe»; e, a «Inverto a ordem agora na página atual…?»: «1. inverte já e considera o comentário para o protótipo». Issue UAT-291. Nenhum título de seção foi criado (espera a proposta do especialista e o protótipo).
+
+**Como era.** No HTML, o bloco das ilustrações (`.v4-lead`) era o PRIMEIRO de cada história; no computador o CSS o mandava para o fim (`order:9`) e no celular o deixava no começo (`order:0`). A ordem de leitura e do leitor de tela era a do celular.
+
+**Como ficou.** O bloco passou a ser o ÚLTIMO de cada história no próprio HTML e as duas regras de `order` saíram: o que se vê é o que se lê, nos dois desenhos, e o botão «Ouça no Apple Music» de cada história vem depois do título dela para o teclado e o leitor de tela. No celular: rótulo, título, texto (e o cartão de exemplo, onde há), depois a capa e o painel, o nome do álbum e o botão. Na história «Álbuns» o cartão do ranking fica entre o texto e as ilustrações, como já era no computador.
+
+**Medido (site montado, WebKit a 390 e 375 px, PT e EN; antes = o commit da legenda).** O rótulo da primeira história vai de 1110 para 878 px: 37 px abaixo do fim da legenda da caixa (841), onde antes começava a capa. Entre o botão de uma história e o começo da seguinte: 44 px, mais a linha divisória e 36 px até o rótulo. A página cresce 50 px no celular (4599 para 4649 a 390 px em português): 10 px por história, o respiro novo entre o texto e as ilustrações. No computador (1280) nada mudou: mesma altura e a mesma caixa de cada parte de cada história. 62 conferências passam, 0 falham.
+
+**Decidido pelo agente (revisável).** O respiro de 10 px (somado aos 14 px do parágrafo) entre o texto e as ilustrações; o cartão do ranking antes das ilustrações em «Álbuns».
+
+**Prova.** Teste primeiro: 2 testes falham no código anterior (`red-before.txt`); `npx vitest run test/splash` pela fila: 12 arquivos, 152 testes passando. `npm run budget:publication`: saída 0. Nada clicado; endereços de música abortados na rede. Nas fotos de seção inteira as barras fixas da página aparecem por cima (a seção é mais alta que a tela): é da foto, não da página.
+
+**Não conferido.** Num iPhone de verdade; com leitor de tela de verdade (só a ordem no documento).
+
 ## [2026-11-23 15:31] step — Página de entrada (F80): a legenda da caixa mostra o álbum e o ano, sem o artista (UAT-290)
 
 **Branch:** fix/f80-crate-caption-album-and-year
