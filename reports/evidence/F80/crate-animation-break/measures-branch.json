@@ -1,0 +1,29 @@
+{
+ "chromium-1280 branch": {
+  "states": 91,
+  "moving": {
+   "deep": 0,
+   "where": "",
+   "jump": 0.2562689388422061,
+   "jumpOf": 11
+  }
+ },
+ "chromium-1440 branch": {
+  "states": 40,
+  "moving": {
+   "deep": 0,
+   "where": "",
+   "jump": 0.3026694300000022,
+   "jumpOf": 5
+  }
+ },
+ "webkit-1280 branch": {
+  "states": 36,
+  "moving": {
+   "deep": 0,
+   "where": "",
+   "jump": 0.43888579832151803,
+   "jumpOf": 11
+  }
+ }
+}

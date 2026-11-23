@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: standard
 solution_type: feature
 imports: ["[[S-69-see-the-site-in-a-separate-environment]]"]
@@ -7,6 +7,8 @@ planned_for: "[[ROADMAP#^REL-41]]"
 ---
 # Feature F87: Um ambiente separado para validar o site antes da produção
 **Approved**: pendente
+
+> **Nota de 2026-11-23 (arrumação do board).** A fatia A está construída e em uso: `scripts/deploy-preview.sh` publica a prévia (canais `staging` e `home-menu`, usados pelo MJRP em 2026-11-21 e 22) e o servidor aceita o endereço dela. Falta: provar que a prévia não grava preço do Discogs no banco (TASK-02), a confirmação do MJRP na linha de proposta do `arch.md` § Delivery strategy, e as seções «A escrever» desta spec.
 
 ## Summary
 **A feature:** Um jeito de publicar o site num endereço que não é o da produção, para o MJRP ver e aprovar a versão em React (F83) e a nova home antes de ela ir ao ar.

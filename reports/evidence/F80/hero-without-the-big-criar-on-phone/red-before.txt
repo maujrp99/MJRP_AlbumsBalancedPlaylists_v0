@@ -1,0 +1,3 @@
+ FAIL  test/splash/copy.test.js > on the phone, signed in, the hero has no big «Criar» (UAT-294) > the signed-in hero's button is hidden on the phone only (the top bar already has «Criar»)
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)

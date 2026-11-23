@@ -17,6 +17,8 @@ planned_for: "[[ROADMAP#^REL-40]]"
 # Feature F57: Uma peça só para escolher álbuns de um artista
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> **Nota de 2026-11-23 (arrumação do board).** As telas feitas à mão que esta spec cita (arquivos de `public/js/views/` e `public/js/components/`) não existem mais: o site foi reescrito em React (F83, em produção desde 2026-11-23) e as telas moram em `public/js/screens/` e `public/js/ui/`. Os nomes de arquivo abaixo são históricos; o comportamento pedido continua valendo.
+
 ## Summary
 **A feature:** Criar uma série (Home) e editar uma série usam a mesma peça para buscar um artista, agrupar os álbuns por tipo e escolher; um classificador só diz o tipo de cada álbum, com o motivo; álbuns de estúdio aparecem como álbuns de estúdio nas duas telas. Salvar a edição responde na hora.
 

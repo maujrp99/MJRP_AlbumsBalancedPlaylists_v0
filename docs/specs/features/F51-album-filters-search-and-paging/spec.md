@@ -9,6 +9,8 @@ planned_for: "[[ROADMAP#^REL-39]]"
 # Feature F51: Filtros que valem para todas as séries, busca que deixa digitar e paginação na tela de álbuns
 **Approved**: not a gate (via rápida; o MJRP julga)
 
+> **Nota de 2026-11-23 (arrumação do board).** As telas feitas à mão que esta spec cita (arquivos de `public/js/views/` e `public/js/components/`) não existem mais: o site foi reescrito em React (F83, em produção desde 2026-11-23) e as telas moram em `public/js/screens/` e `public/js/ui/`. Os nomes de arquivo abaixo são históricos; o comportamento pedido continua valendo.
+
 ## Summary
 **A feature:** A tela de álbuns passa a mostrar as séries em páginas, os filtros (série, artista, busca, ano e fonte) valem para todas as séries e não só para as que já carregaram, e o campo de busca deixa digitar a palavra inteira.
 

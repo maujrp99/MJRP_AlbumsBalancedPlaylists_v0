@@ -1,0 +1,28 @@
+
+ RUN  v1.6.1 /Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-af7e98ce76aad6918
+
+(node:28451) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ test/splash/crateRecordsStayInside.test.js  (21 tests | 1 failed) 44ms
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > on its way up and down the record nearest the wall clears the wall first, then comes forward (it used to cross the wall's top plank)
+     → record 0, lift 0.11, tilt 0.25: expected 0.002113220412554906 to be less than or equal to 0.001
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > on its way up and down the record nearest the wall clears the wall first, then comes forward (it used to cross the wall's top plank)
+AssertionError: record 0, lift 0.11, tilt 0.25: expected 0.002113220412554906 to be less than or equal to 0.001
+ ❯ test/splash/crateRecordsStayInside.test.js:138:103
+    136|                     for (let lift = 0; lift <= 1.0001; lift += 0.01) {
+    137|                         const deep = Math.max(...facePoints(sleevePlac…
+    138|                         expect(deep, `record ${i}, lift ${lift.toFixed…
+       |                                                                                                       ^
+    139|                     }
+    140|                 }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  15:13:04
+   Duration  501ms (transform 30ms, setup 10ms, collect 22ms, tests 44ms, environment 332ms, prepare 40ms)
+

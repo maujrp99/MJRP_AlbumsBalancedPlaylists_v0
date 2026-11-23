@@ -1,0 +1,4 @@
+ FAIL  test/splash/copy.test.js > the hero opens with the title (UAT-292) > no small line above the title, in either opening of the page; the title is the page's only h1 of each opening
+ FAIL  test/splash/copy.test.js > the hero opens with the title (UAT-292) > its text left the dictionary, in both languages
+ Test Files  1 failed | 11 passed (12)
+      Tests  2 failed | 153 passed (155)

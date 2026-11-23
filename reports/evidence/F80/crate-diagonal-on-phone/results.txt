@@ -1,0 +1,12 @@
+webkit-iphone14-390 today: 3D not drawn · on the wire 378 KB (3D library 0 KB) · first text 362 ms · long tasks 0 (0 ms, worst 0 ms) · frames 151 in 5 s, median 33 ms, p95 35 ms, worst 35 ms, over 33 ms 55, over 50 ms 0 · page 390 px wide · pause stops and starts · music requests 0
+webkit-iphone14-390 today · less motion asked: 3D canvas absent, 3D library not fetched
+webkit-375 today: 3D not drawn · on the wire 377 KB (3D library 0 KB) · first text 326 ms · long tasks 0 (0 ms, worst 0 ms) · frames 151 in 5 s, median 33 ms, p95 35 ms, worst 35 ms, over 33 ms 55, over 50 ms 0 · page 375 px wide · pause stops and starts · music requests 0
+webkit-375 today · less motion asked: 3D canvas absent, 3D library not fetched
+chromium-390-cpu4x today: 3D not drawn · on the wire 373 KB (3D library 0 KB) · first text 784 ms · long tasks 1 (136 ms, worst 136 ms) · frames 288 in 5 s, median 16.7 ms, p95 16.8 ms, worst 166.6 ms, over 33 ms 2, over 50 ms 2 · page 390 px wide · pause stops and starts · music requests 0
+chromium-390-cpu4x today · less motion asked: 3D canvas absent, 3D library not fetched
+webkit-iphone14-390 trial: 3D drawn · on the wire 533 KB (3D library 152 KB) · first text 370 ms · long tasks 0 (0 ms, worst 0 ms) · frames 151 in 5 s, median 33 ms, p95 34 ms, worst 35 ms, over 33 ms 57, over 50 ms 0 · page 390 px wide · pause stops and starts · music requests 0
+webkit-iphone14-390 trial · less motion asked: 3D canvas absent, 3D library not fetched
+webkit-375 trial: 3D drawn · on the wire 533 KB (3D library 152 KB) · first text 464 ms · long tasks 0 (0 ms, worst 0 ms) · frames 151 in 5 s, median 33 ms, p95 35 ms, worst 35 ms, over 33 ms 63, over 50 ms 0 · page 375 px wide · pause stops and starts · music requests 0
+webkit-375 trial · less motion asked: 3D canvas absent, 3D library not fetched
+chromium-390-cpu4x trial: 3D drawn · on the wire 529 KB (3D library 152 KB) · first text 676 ms · long tasks 2 (379 ms, worst 254 ms) · frames 301 in 5 s, median 16.7 ms, p95 16.7 ms, worst 16.8 ms, over 33 ms 0, over 50 ms 0 · page 390 px wide · pause stops and starts · music requests 0
+chromium-390-cpu4x trial · less motion asked: 3D canvas absent, 3D library not fetched

@@ -8,6 +8,8 @@ planned_for: "[[ROADMAP#^REL-41]]"
 # Feature F91: «Criar» (Create) no menu, com um ícone de adição
 **Approved**: pendente. Em esboço, esperando o MJRP.
 
+> **Nota de 2026-11-23 (arrumação do board).** Construída, julgada por agente separado e em produção desde 2026-11-22 11:55, com a palavra do MJRP («publique»): o menu diz «Create»/«Criar» com o sinal de mais, e o botão diz «Go and create!». O que esta spec chama de «Start» é o nome antigo. Falta só o passo retroativo da via rápida (as seções «A escrever», a S-73 com a entrega e o estado de tela, a declaração dos documentos no plano). As tarefas seguem sem marca e a feature em `Draft` porque ela não está na «Priorizada» de hoje, e a trava do commit recusa marcar o que não foi priorizado.
+
 ## Summary
 **A feature:** O item do menu e a tela hoje chamados «Start» (ícone «Go» na barra de baixo do celular) passam a se chamar «Create», em português «Criar», com um ícone de adição (um sinal de mais).
 

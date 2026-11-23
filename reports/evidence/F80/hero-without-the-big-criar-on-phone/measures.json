@@ -1,0 +1,3646 @@
+{
+ "webkit-390-pt-in-before": {
+  "signedInClass": true,
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4772,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 298
+  },
+  "heroButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 298,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 256.9,
+     "y": 6,
+     "w": 121.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "/inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Criar",
+    "y": 6
+   },
+   {
+    "text": "Criar",
+    "y": 298
+   }
+  ],
+  "subEnds": 280,
+  "stage": {
+   "x": 0,
+   "y": 354,
+   "w": 390,
+   "h": 445
+  },
+  "crate": {
+   "x": 0,
+   "y": 354,
+   "w": 390,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 684,
+   "w": 390,
+   "h": 115
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 298
+   },
+   "start": {
+    "x": 16,
+    "y": 799,
+    "w": 358,
+    "h": 565
+   },
+   "albums": {
+    "x": 16,
+    "y": 1364,
+    "w": 358,
+    "h": 882
+   },
+   "blend": {
+    "x": 16,
+    "y": 2246,
+    "w": 358,
+    "h": 589
+   },
+   "flip": {
+    "x": 16,
+    "y": 2835,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2902,
+    "w": 358,
+    "h": 589
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3491,
+    "w": 358,
+    "h": 620
+   },
+   "end": {
+    "x": 16,
+    "y": 4111,
+    "w": 358,
+    "h": 314
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-pt-in-after": {
+  "signedInClass": true,
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4724,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 250
+  },
+  "heroButtons": [],
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 256.9,
+     "y": 6,
+     "w": 121.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "/inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Criar",
+    "y": 6
+   }
+  ],
+  "subEnds": 280,
+  "stage": {
+   "x": 0,
+   "y": 306,
+   "w": 390,
+   "h": 445
+  },
+  "crate": {
+   "x": 0,
+   "y": 306,
+   "w": 390,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 636,
+   "w": 390,
+   "h": 115
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 250
+   },
+   "start": {
+    "x": 16,
+    "y": 751,
+    "w": 358,
+    "h": 565
+   },
+   "albums": {
+    "x": 16,
+    "y": 1316,
+    "w": 358,
+    "h": 882
+   },
+   "blend": {
+    "x": 16,
+    "y": 2198,
+    "w": 358,
+    "h": 589
+   },
+   "flip": {
+    "x": 16,
+    "y": 2787,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2854,
+    "w": 358,
+    "h": 589
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3443,
+    "w": 358,
+    "h": 620
+   },
+   "end": {
+    "x": 16,
+    "y": 4063,
+    "w": 358,
+    "h": 314
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-pt-out-before": {
+  "signedInClass": false,
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4607,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 298
+  },
+  "heroButtons": [
+   {
+    "text": "Abrir o app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 298,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin",
+    "box": {
+     "x": 285.3,
+     "y": 6,
+     "w": 88.8,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Criar",
+    "href": "#start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "#inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Entrar",
+    "y": 6
+   },
+   {
+    "text": "Abrir o app",
+    "y": 298
+   }
+  ],
+  "subEnds": 280,
+  "stage": {
+   "x": 0,
+   "y": 354,
+   "w": 390,
+   "h": 445
+  },
+  "crate": {
+   "x": 0,
+   "y": 354,
+   "w": 390,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 684,
+   "w": 390,
+   "h": 115
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 298
+   },
+   "start": {
+    "x": 16,
+    "y": 799,
+    "w": 358,
+    "h": 515
+   },
+   "albums": {
+    "x": 16,
+    "y": 1314,
+    "w": 358,
+    "h": 832
+   },
+   "blend": {
+    "x": 16,
+    "y": 2146,
+    "w": 358,
+    "h": 539
+   },
+   "flip": {
+    "x": 16,
+    "y": 2685,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2752,
+    "w": 358,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3291,
+    "w": 358,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3861,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-pt-out-after": {
+  "signedInClass": false,
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4607,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 298
+  },
+  "heroButtons": [
+   {
+    "text": "Abrir o app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 298,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin",
+    "box": {
+     "x": 285.3,
+     "y": 6,
+     "w": 88.8,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Criar",
+    "href": "#start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "#inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Entrar",
+    "y": 6
+   },
+   {
+    "text": "Abrir o app",
+    "y": 298
+   }
+  ],
+  "subEnds": 280,
+  "stage": {
+   "x": 0,
+   "y": 354,
+   "w": 390,
+   "h": 445
+  },
+  "crate": {
+   "x": 0,
+   "y": 354,
+   "w": 390,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 684,
+   "w": 390,
+   "h": 115
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 298
+   },
+   "start": {
+    "x": 16,
+    "y": 799,
+    "w": 358,
+    "h": 515
+   },
+   "albums": {
+    "x": 16,
+    "y": 1314,
+    "w": 358,
+    "h": 832
+   },
+   "blend": {
+    "x": 16,
+    "y": 2146,
+    "w": 358,
+    "h": 539
+   },
+   "flip": {
+    "x": 16,
+    "y": 2685,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2752,
+    "w": 358,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3291,
+    "w": 358,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3861,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-en-in-before": {
+  "signedInClass": true,
+  "innerWidth": 390,
+  "scrollWidth": 406,
+  "pageHeight": 4641,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 261
+  },
+  "heroButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 261,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 256.9,
+     "y": 6,
+     "w": 148.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "/inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Create",
+    "y": 6
+   },
+   {
+    "text": "Create",
+    "y": 261
+   }
+  ],
+  "subEnds": 243,
+  "stage": {
+   "x": 0,
+   "y": 317,
+   "w": 390,
+   "h": 461
+  },
+  "crate": {
+   "x": 0,
+   "y": 317,
+   "w": 390,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 647,
+   "w": 390,
+   "h": 131
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 261
+   },
+   "start": {
+    "x": 16,
+    "y": 778,
+    "w": 358,
+    "h": 534
+   },
+   "albums": {
+    "x": 16,
+    "y": 1312,
+    "w": 358,
+    "h": 882
+   },
+   "blend": {
+    "x": 16,
+    "y": 2194,
+    "w": 358,
+    "h": 565
+   },
+   "flip": {
+    "x": 16,
+    "y": 2759,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2826,
+    "w": 358,
+    "h": 565
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3391,
+    "w": 358,
+    "h": 589
+   },
+   "end": {
+    "x": 16,
+    "y": 3980,
+    "w": 358,
+    "h": 314
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-en-in-after": {
+  "signedInClass": true,
+  "innerWidth": 390,
+  "scrollWidth": 406,
+  "pageHeight": 4593,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 213
+  },
+  "heroButtons": [],
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 256.9,
+     "y": 6,
+     "w": 148.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "/inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Create",
+    "y": 6
+   }
+  ],
+  "subEnds": 243,
+  "stage": {
+   "x": 0,
+   "y": 269,
+   "w": 390,
+   "h": 461
+  },
+  "crate": {
+   "x": 0,
+   "y": 269,
+   "w": 390,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 599,
+   "w": 390,
+   "h": 131
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 213
+   },
+   "start": {
+    "x": 16,
+    "y": 730,
+    "w": 358,
+    "h": 534
+   },
+   "albums": {
+    "x": 16,
+    "y": 1264,
+    "w": 358,
+    "h": 882
+   },
+   "blend": {
+    "x": 16,
+    "y": 2146,
+    "w": 358,
+    "h": 565
+   },
+   "flip": {
+    "x": 16,
+    "y": 2711,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2778,
+    "w": 358,
+    "h": 565
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3343,
+    "w": 358,
+    "h": 589
+   },
+   "end": {
+    "x": 16,
+    "y": 3932,
+    "w": 358,
+    "h": 314
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-en-out-before": {
+  "signedInClass": false,
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4476,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 261
+  },
+  "heroButtons": [
+   {
+    "text": "Open the app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 261,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin",
+    "box": {
+     "x": 283.5,
+     "y": 6,
+     "w": 90.5,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Create",
+    "href": "#start"
+   },
+   {
+    "text": "Albums",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "#inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Sign in",
+    "y": 6
+   },
+   {
+    "text": "Open the app",
+    "y": 261
+   }
+  ],
+  "subEnds": 243,
+  "stage": {
+   "x": 0,
+   "y": 317,
+   "w": 390,
+   "h": 461
+  },
+  "crate": {
+   "x": 0,
+   "y": 317,
+   "w": 390,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 647,
+   "w": 390,
+   "h": 131
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 261
+   },
+   "start": {
+    "x": 16,
+    "y": 778,
+    "w": 358,
+    "h": 484
+   },
+   "albums": {
+    "x": 16,
+    "y": 1262,
+    "w": 358,
+    "h": 832
+   },
+   "blend": {
+    "x": 16,
+    "y": 2094,
+    "w": 358,
+    "h": 515
+   },
+   "flip": {
+    "x": 16,
+    "y": 2609,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2676,
+    "w": 358,
+    "h": 515
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3191,
+    "w": 358,
+    "h": 539
+   },
+   "end": {
+    "x": 16,
+    "y": 3730,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-en-out-after": {
+  "signedInClass": false,
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "pageHeight": 4476,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 358,
+   "h": 261
+  },
+  "heroButtons": [
+   {
+    "text": "Open the app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 261,
+     "w": 358,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin",
+    "box": {
+     "x": 283.5,
+     "y": 6,
+     "w": 90.5,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Create",
+    "href": "#start"
+   },
+   {
+    "text": "Albums",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "#inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Sign in",
+    "y": 6
+   },
+   {
+    "text": "Open the app",
+    "y": 261
+   }
+  ],
+  "subEnds": 243,
+  "stage": {
+   "x": 0,
+   "y": 317,
+   "w": 390,
+   "h": 461
+  },
+  "crate": {
+   "x": 0,
+   "y": 317,
+   "w": 390,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 647,
+   "w": 390,
+   "h": 131
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 358,
+    "h": 261
+   },
+   "start": {
+    "x": 16,
+    "y": 778,
+    "w": 358,
+    "h": 484
+   },
+   "albums": {
+    "x": 16,
+    "y": 1262,
+    "w": 358,
+    "h": 832
+   },
+   "blend": {
+    "x": 16,
+    "y": 2094,
+    "w": 358,
+    "h": 515
+   },
+   "flip": {
+    "x": 16,
+    "y": 2609,
+    "w": 356.9,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2676,
+    "w": 358,
+    "h": 515
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3191,
+    "w": 358,
+    "h": 539
+   },
+   "end": {
+    "x": 16,
+    "y": 3730,
+    "w": 358,
+    "h": 436
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-pt-in-before": {
+  "signedInClass": true,
+  "innerWidth": 375,
+  "scrollWidth": 379,
+  "pageHeight": 4835,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 298
+  },
+  "heroButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 298,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 256.9,
+     "y": 6,
+     "w": 121.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "/inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Criar",
+    "y": 6
+   },
+   {
+    "text": "Criar",
+    "y": 298
+   }
+  ],
+  "subEnds": 280,
+  "stage": {
+   "x": 0,
+   "y": 354,
+   "w": 375,
+   "h": 445
+  },
+  "crate": {
+   "x": 0,
+   "y": 354,
+   "w": 375,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 684,
+   "w": 375,
+   "h": 115
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 298
+   },
+   "start": {
+    "x": 16,
+    "y": 799,
+    "w": 343,
+    "h": 565
+   },
+   "albums": {
+    "x": 16,
+    "y": 1364,
+    "w": 343,
+    "h": 897
+   },
+   "blend": {
+    "x": 16,
+    "y": 2261,
+    "w": 343,
+    "h": 589
+   },
+   "flip": {
+    "x": 16,
+    "y": 2850,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2917,
+    "w": 343,
+    "h": 589
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3506,
+    "w": 343,
+    "h": 620
+   },
+   "end": {
+    "x": 16,
+    "y": 4126,
+    "w": 343,
+    "h": 314
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-pt-in-after": {
+  "signedInClass": true,
+  "innerWidth": 375,
+  "scrollWidth": 379,
+  "pageHeight": 4787,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 250
+  },
+  "heroButtons": [],
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 256.9,
+     "y": 6,
+     "w": 121.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "/inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Criar",
+    "y": 6
+   }
+  ],
+  "subEnds": 280,
+  "stage": {
+   "x": 0,
+   "y": 306,
+   "w": 375,
+   "h": 445
+  },
+  "crate": {
+   "x": 0,
+   "y": 306,
+   "w": 375,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 636,
+   "w": 375,
+   "h": 115
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 250
+   },
+   "start": {
+    "x": 16,
+    "y": 751,
+    "w": 343,
+    "h": 565
+   },
+   "albums": {
+    "x": 16,
+    "y": 1316,
+    "w": 343,
+    "h": 897
+   },
+   "blend": {
+    "x": 16,
+    "y": 2213,
+    "w": 343,
+    "h": 589
+   },
+   "flip": {
+    "x": 16,
+    "y": 2802,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2869,
+    "w": 343,
+    "h": 589
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3458,
+    "w": 343,
+    "h": 620
+   },
+   "end": {
+    "x": 16,
+    "y": 4078,
+    "w": 343,
+    "h": 314
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-pt-out-before": {
+  "signedInClass": false,
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4646,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 298
+  },
+  "heroButtons": [
+   {
+    "text": "Abrir o app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 298,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin",
+    "box": {
+     "x": 270.3,
+     "y": 6,
+     "w": 88.8,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Criar",
+    "href": "#start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "#inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Entrar",
+    "y": 6
+   },
+   {
+    "text": "Abrir o app",
+    "y": 298
+   }
+  ],
+  "subEnds": 280,
+  "stage": {
+   "x": 0,
+   "y": 354,
+   "w": 375,
+   "h": 445
+  },
+  "crate": {
+   "x": 0,
+   "y": 354,
+   "w": 375,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 684,
+   "w": 375,
+   "h": 115
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 298
+   },
+   "start": {
+    "x": 16,
+    "y": 799,
+    "w": 343,
+    "h": 515
+   },
+   "albums": {
+    "x": 16,
+    "y": 1314,
+    "w": 343,
+    "h": 847
+   },
+   "blend": {
+    "x": 16,
+    "y": 2161,
+    "w": 343,
+    "h": 539
+   },
+   "flip": {
+    "x": 16,
+    "y": 2700,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2767,
+    "w": 343,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3306,
+    "w": 343,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3876,
+    "w": 343,
+    "h": 460
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-pt-out-after": {
+  "signedInClass": false,
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4646,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 298
+  },
+  "heroButtons": [
+   {
+    "text": "Abrir o app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 298,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin",
+    "box": {
+     "x": 270.3,
+     "y": 6,
+     "w": 88.8,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Criar",
+    "href": "#start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "#inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Entrar",
+    "y": 6
+   },
+   {
+    "text": "Abrir o app",
+    "y": 298
+   }
+  ],
+  "subEnds": 280,
+  "stage": {
+   "x": 0,
+   "y": 354,
+   "w": 375,
+   "h": 445
+  },
+  "crate": {
+   "x": 0,
+   "y": 354,
+   "w": 375,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 684,
+   "w": 375,
+   "h": 115
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 298
+   },
+   "start": {
+    "x": 16,
+    "y": 799,
+    "w": 343,
+    "h": 515
+   },
+   "albums": {
+    "x": 16,
+    "y": 1314,
+    "w": 343,
+    "h": 847
+   },
+   "blend": {
+    "x": 16,
+    "y": 2161,
+    "w": 343,
+    "h": 539
+   },
+   "flip": {
+    "x": 16,
+    "y": 2700,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2767,
+    "w": 343,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3306,
+    "w": 343,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3876,
+    "w": 343,
+    "h": 460
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-en-in-before": {
+  "signedInClass": true,
+  "innerWidth": 375,
+  "scrollWidth": 406,
+  "pageHeight": 4790,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 261
+  },
+  "heroButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 261,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 256.9,
+     "y": 6,
+     "w": 148.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "/inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Create",
+    "y": 6
+   },
+   {
+    "text": "Create",
+    "y": 261
+   }
+  ],
+  "subEnds": 243,
+  "stage": {
+   "x": 0,
+   "y": 317,
+   "w": 375,
+   "h": 461
+  },
+  "crate": {
+   "x": 0,
+   "y": 317,
+   "w": 375,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 647,
+   "w": 375,
+   "h": 131
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 261
+   },
+   "start": {
+    "x": 16,
+    "y": 778,
+    "w": 343,
+    "h": 534
+   },
+   "albums": {
+    "x": 16,
+    "y": 1312,
+    "w": 343,
+    "h": 897
+   },
+   "blend": {
+    "x": 16,
+    "y": 2209,
+    "w": 343,
+    "h": 596
+   },
+   "flip": {
+    "x": 16,
+    "y": 2805,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2872,
+    "w": 343,
+    "h": 589
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3461,
+    "w": 343,
+    "h": 620
+   },
+   "end": {
+    "x": 16,
+    "y": 4081,
+    "w": 343,
+    "h": 314
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-en-in-after": {
+  "signedInClass": true,
+  "innerWidth": 375,
+  "scrollWidth": 406,
+  "pageHeight": 4742,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 213
+  },
+  "heroButtons": [],
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 256.9,
+     "y": 6,
+     "w": 148.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "/inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Create",
+    "y": 6
+   }
+  ],
+  "subEnds": 243,
+  "stage": {
+   "x": 0,
+   "y": 269,
+   "w": 375,
+   "h": 461
+  },
+  "crate": {
+   "x": 0,
+   "y": 269,
+   "w": 375,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 599,
+   "w": 375,
+   "h": 131
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 213
+   },
+   "start": {
+    "x": 16,
+    "y": 730,
+    "w": 343,
+    "h": 534
+   },
+   "albums": {
+    "x": 16,
+    "y": 1264,
+    "w": 343,
+    "h": 897
+   },
+   "blend": {
+    "x": 16,
+    "y": 2161,
+    "w": 343,
+    "h": 596
+   },
+   "flip": {
+    "x": 16,
+    "y": 2757,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2824,
+    "w": 343,
+    "h": 589
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3413,
+    "w": 343,
+    "h": 620
+   },
+   "end": {
+    "x": 16,
+    "y": 4033,
+    "w": 343,
+    "h": 314
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-en-out-before": {
+  "signedInClass": false,
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4577,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 261
+  },
+  "heroButtons": [
+   {
+    "text": "Open the app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 261,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin",
+    "box": {
+     "x": 268.5,
+     "y": 6,
+     "w": 90.5,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Create",
+    "href": "#start"
+   },
+   {
+    "text": "Albums",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "#inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Sign in",
+    "y": 6
+   },
+   {
+    "text": "Open the app",
+    "y": 261
+   }
+  ],
+  "subEnds": 243,
+  "stage": {
+   "x": 0,
+   "y": 317,
+   "w": 375,
+   "h": 461
+  },
+  "crate": {
+   "x": 0,
+   "y": 317,
+   "w": 375,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 647,
+   "w": 375,
+   "h": 131
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 261
+   },
+   "start": {
+    "x": 16,
+    "y": 778,
+    "w": 343,
+    "h": 484
+   },
+   "albums": {
+    "x": 16,
+    "y": 1262,
+    "w": 343,
+    "h": 847
+   },
+   "blend": {
+    "x": 16,
+    "y": 2109,
+    "w": 343,
+    "h": 546
+   },
+   "flip": {
+    "x": 16,
+    "y": 2655,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2722,
+    "w": 343,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3261,
+    "w": 343,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3831,
+    "w": 343,
+    "h": 436
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-en-out-after": {
+  "signedInClass": false,
+  "innerWidth": 375,
+  "scrollWidth": 375,
+  "pageHeight": 4577,
+  "hero": {
+   "x": 16,
+   "y": 56,
+   "w": 343,
+   "h": 261
+  },
+  "heroButtons": [
+   {
+    "text": "Open the app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 261,
+     "w": 343,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin",
+    "box": {
+     "x": 268.5,
+     "y": 6,
+     "w": 90.5,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [
+   {
+    "text": "Create",
+    "href": "#start"
+   },
+   {
+    "text": "Albums",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "#inventory"
+   }
+  ],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 6
+   },
+   {
+    "text": "PT",
+    "y": 6
+   },
+   {
+    "text": "EN",
+    "y": 6
+   },
+   {
+    "text": "Sign in",
+    "y": 6
+   },
+   {
+    "text": "Open the app",
+    "y": 261
+   }
+  ],
+  "subEnds": 243,
+  "stage": {
+   "x": 0,
+   "y": 317,
+   "w": 375,
+   "h": 461
+  },
+  "crate": {
+   "x": 0,
+   "y": 317,
+   "w": 375,
+   "h": 330
+  },
+  "caption": {
+   "x": 0,
+   "y": 647,
+   "w": 375,
+   "h": 131
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 56,
+    "w": 343,
+    "h": 261
+   },
+   "start": {
+    "x": 16,
+    "y": 778,
+    "w": 343,
+    "h": 484
+   },
+   "albums": {
+    "x": 16,
+    "y": 1262,
+    "w": 343,
+    "h": 847
+   },
+   "blend": {
+    "x": 16,
+    "y": 2109,
+    "w": 343,
+    "h": 546
+   },
+   "flip": {
+    "x": 16,
+    "y": 2655,
+    "w": 343,
+    "h": 67
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2722,
+    "w": 343,
+    "h": 539
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3261,
+    "w": 343,
+    "h": 570
+   },
+   "end": {
+    "x": 16,
+    "y": 3831,
+    "w": 343,
+    "h": 436
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-pt-in-before": {
+  "signedInClass": true,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4828,
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 546,
+     "w": 141.7,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 1142.1,
+     "y": 14,
+     "w": 121.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 14
+   },
+   {
+    "text": "Criar",
+    "y": 10
+   },
+   {
+    "text": "Álbuns",
+    "y": 10
+   },
+   {
+    "text": "Blend",
+    "y": 10
+   },
+   {
+    "text": "Playlists",
+    "y": 10
+   },
+   {
+    "text": "Inventário",
+    "y": 10
+   },
+   {
+    "text": "⟲",
+    "y": 14
+   },
+   {
+    "text": "PT",
+    "y": 14
+   },
+   {
+    "text": "EN",
+    "y": 14
+   },
+   {
+    "text": "Criar",
+    "y": 14
+   },
+   {
+    "text": "Criar",
+    "y": 546
+   }
+  ],
+  "subEnds": 439.1,
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4562.4
+  },
+  "crate": {
+   "x": 567.2,
+   "y": 72,
+   "w": 712.8,
+   "h": 643.5
+  },
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 618.7
+   },
+   "albums": {
+    "x": 16,
+    "y": 1382.7,
+    "w": 500,
+    "h": 712.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 2094.8,
+    "w": 500,
+    "h": 618.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2737.5,
+    "w": 500,
+    "h": 143.1
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2904.6,
+    "w": 500,
+    "h": 618.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3523.3,
+    "w": 500,
+    "h": 663.1
+   },
+   "end": {
+    "x": 16,
+    "y": 4186.4,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-pt-in-after": {
+  "signedInClass": true,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4828,
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 546,
+     "w": 141.7,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start",
+    "box": {
+     "x": 1142.1,
+     "y": 14,
+     "w": 121.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 14
+   },
+   {
+    "text": "Criar",
+    "y": 10
+   },
+   {
+    "text": "Álbuns",
+    "y": 10
+   },
+   {
+    "text": "Blend",
+    "y": 10
+   },
+   {
+    "text": "Playlists",
+    "y": 10
+   },
+   {
+    "text": "Inventário",
+    "y": 10
+   },
+   {
+    "text": "⟲",
+    "y": 14
+   },
+   {
+    "text": "PT",
+    "y": 14
+   },
+   {
+    "text": "EN",
+    "y": 14
+   },
+   {
+    "text": "Criar",
+    "y": 14
+   },
+   {
+    "text": "Criar",
+    "y": 546
+   }
+  ],
+  "subEnds": 439.1,
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4562.4
+  },
+  "crate": {
+   "x": 567.2,
+   "y": 72,
+   "w": 712.8,
+   "h": 643.5
+  },
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 618.7
+   },
+   "albums": {
+    "x": 16,
+    "y": 1382.7,
+    "w": 500,
+    "h": 712.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 2094.8,
+    "w": 500,
+    "h": 618.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2737.5,
+    "w": 500,
+    "h": 143.1
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2904.6,
+    "w": 500,
+    "h": 618.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3523.3,
+    "w": 500,
+    "h": 663.1
+   },
+   "end": {
+    "x": 16,
+    "y": 4186.4,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-pt-out-before": {
+  "signedInClass": false,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4578,
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroButtons": [
+   {
+    "text": "Abrir o app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 546,
+     "w": 226.3,
+     "h": 48
+    }
+   },
+   {
+    "text": "Entrar",
+    "href": "/start?signin",
+    "box": {
+     "x": 254.3,
+     "y": 546,
+     "w": 107.6,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin",
+    "box": {
+     "x": 1175.3,
+     "y": 14,
+     "w": 88.8,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 14
+   },
+   {
+    "text": "Criar",
+    "y": 10
+   },
+   {
+    "text": "Álbuns",
+    "y": 10
+   },
+   {
+    "text": "Blend",
+    "y": 10
+   },
+   {
+    "text": "Playlists",
+    "y": 10
+   },
+   {
+    "text": "Inventário",
+    "y": 10
+   },
+   {
+    "text": "⟲",
+    "y": 14
+   },
+   {
+    "text": "PT",
+    "y": 14
+   },
+   {
+    "text": "EN",
+    "y": 14
+   },
+   {
+    "text": "Entrar",
+    "y": 14
+   },
+   {
+    "text": "Abrir o app",
+    "y": 546
+   },
+   {
+    "text": "Entrar",
+    "y": 546
+   }
+  ],
+  "subEnds": 439.1,
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4312.4
+  },
+  "crate": {
+   "x": 567.2,
+   "y": 72,
+   "w": 712.8,
+   "h": 643.5
+  },
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 568.7
+   },
+   "albums": {
+    "x": 16,
+    "y": 1332.7,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1994.8,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2587.5,
+    "w": 500,
+    "h": 143.1
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2754.6,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3323.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3936.4,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-pt-out-after": {
+  "signedInClass": false,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4578,
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroButtons": [
+   {
+    "text": "Abrir o app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 546,
+     "w": 226.3,
+     "h": 48
+    }
+   },
+   {
+    "text": "Entrar",
+    "href": "/start?signin",
+    "box": {
+     "x": 254.3,
+     "y": 546,
+     "w": 107.6,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin",
+    "box": {
+     "x": 1175.3,
+     "y": 14,
+     "w": 88.8,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [],
+  "focusables": [
+   {
+    "text": "The Album Blender, topo da pág",
+    "y": 14
+   },
+   {
+    "text": "Criar",
+    "y": 10
+   },
+   {
+    "text": "Álbuns",
+    "y": 10
+   },
+   {
+    "text": "Blend",
+    "y": 10
+   },
+   {
+    "text": "Playlists",
+    "y": 10
+   },
+   {
+    "text": "Inventário",
+    "y": 10
+   },
+   {
+    "text": "⟲",
+    "y": 14
+   },
+   {
+    "text": "PT",
+    "y": 14
+   },
+   {
+    "text": "EN",
+    "y": 14
+   },
+   {
+    "text": "Entrar",
+    "y": 14
+   },
+   {
+    "text": "Abrir o app",
+    "y": 546
+   },
+   {
+    "text": "Entrar",
+    "y": 546
+   }
+  ],
+  "subEnds": 439.1,
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4312.4
+  },
+  "crate": {
+   "x": 567.2,
+   "y": 72,
+   "w": 712.8,
+   "h": 643.5
+  },
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 568.7
+   },
+   "albums": {
+    "x": 16,
+    "y": 1332.7,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1994.8,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2587.5,
+    "w": 500,
+    "h": 143.1
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2754.6,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3323.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3936.4,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-en-in-before": {
+  "signedInClass": true,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4758,
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 546,
+     "w": 172,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 1115.1,
+     "y": 14,
+     "w": 148.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 14
+   },
+   {
+    "text": "Create",
+    "y": 10
+   },
+   {
+    "text": "Albums",
+    "y": 10
+   },
+   {
+    "text": "Blend",
+    "y": 10
+   },
+   {
+    "text": "Playlists",
+    "y": 10
+   },
+   {
+    "text": "Inventory",
+    "y": 10
+   },
+   {
+    "text": "⟲",
+    "y": 14
+   },
+   {
+    "text": "PT",
+    "y": 14
+   },
+   {
+    "text": "EN",
+    "y": 14
+   },
+   {
+    "text": "Create",
+    "y": 14
+   },
+   {
+    "text": "Create",
+    "y": 546
+   }
+  ],
+  "subEnds": 439.1,
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4491.7
+  },
+  "crate": {
+   "x": 567.2,
+   "y": 72,
+   "w": 712.8,
+   "h": 643.5
+  },
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 574.4
+   },
+   "albums": {
+    "x": 16,
+    "y": 1338.4,
+    "w": 500,
+    "h": 712.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 2050.5,
+    "w": 500,
+    "h": 618.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2693.2,
+    "w": 500,
+    "h": 116.7
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2833.9,
+    "w": 500,
+    "h": 618.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3452.6,
+    "w": 500,
+    "h": 663.1
+   },
+   "end": {
+    "x": 16,
+    "y": 4115.7,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-en-in-after": {
+  "signedInClass": true,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4758,
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 546,
+     "w": 172,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start",
+    "box": {
+     "x": 1115.1,
+     "y": 14,
+     "w": 148.9,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 14
+   },
+   {
+    "text": "Create",
+    "y": 10
+   },
+   {
+    "text": "Albums",
+    "y": 10
+   },
+   {
+    "text": "Blend",
+    "y": 10
+   },
+   {
+    "text": "Playlists",
+    "y": 10
+   },
+   {
+    "text": "Inventory",
+    "y": 10
+   },
+   {
+    "text": "⟲",
+    "y": 14
+   },
+   {
+    "text": "PT",
+    "y": 14
+   },
+   {
+    "text": "EN",
+    "y": 14
+   },
+   {
+    "text": "Create",
+    "y": 14
+   },
+   {
+    "text": "Create",
+    "y": 546
+   }
+  ],
+  "subEnds": 439.1,
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4491.7
+  },
+  "crate": {
+   "x": 567.2,
+   "y": 72,
+   "w": 712.8,
+   "h": 643.5
+  },
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 574.4
+   },
+   "albums": {
+    "x": 16,
+    "y": 1338.4,
+    "w": 500,
+    "h": 712.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 2050.5,
+    "w": 500,
+    "h": 618.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2693.2,
+    "w": 500,
+    "h": 116.7
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2833.9,
+    "w": 500,
+    "h": 618.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3452.6,
+    "w": 500,
+    "h": 663.1
+   },
+   "end": {
+    "x": 16,
+    "y": 4115.7,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-en-out-before": {
+  "signedInClass": false,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4543,
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroButtons": [
+   {
+    "text": "Open the app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 546,
+     "w": 266.8,
+     "h": 48
+    }
+   },
+   {
+    "text": "Sign in",
+    "href": "/start?signin",
+    "box": {
+     "x": 294.8,
+     "y": 546,
+     "w": 109.5,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin",
+    "box": {
+     "x": 1173.5,
+     "y": 14,
+     "w": 90.5,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 14
+   },
+   {
+    "text": "Create",
+    "y": 10
+   },
+   {
+    "text": "Albums",
+    "y": 10
+   },
+   {
+    "text": "Blend",
+    "y": 10
+   },
+   {
+    "text": "Playlists",
+    "y": 10
+   },
+   {
+    "text": "Inventory",
+    "y": 10
+   },
+   {
+    "text": "⟲",
+    "y": 14
+   },
+   {
+    "text": "PT",
+    "y": 14
+   },
+   {
+    "text": "EN",
+    "y": 14
+   },
+   {
+    "text": "Sign in",
+    "y": 14
+   },
+   {
+    "text": "Open the app",
+    "y": 546
+   },
+   {
+    "text": "Sign in",
+    "y": 546
+   }
+  ],
+  "subEnds": 439.1,
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4277.3
+  },
+  "crate": {
+   "x": 567.2,
+   "y": 72,
+   "w": 712.8,
+   "h": 643.5
+  },
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 560
+   },
+   "albums": {
+    "x": 16,
+    "y": 1324,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1986.1,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2578.8,
+    "w": 500,
+    "h": 116.7
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2719.5,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3288.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3901.3,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-en-out-after": {
+  "signedInClass": false,
+  "innerWidth": 1280,
+  "scrollWidth": 1280,
+  "pageHeight": 4543,
+  "hero": {
+   "x": 16,
+   "y": 72,
+   "w": 500,
+   "h": 692
+  },
+  "heroButtons": [
+   {
+    "text": "Open the app",
+    "href": "/start",
+    "box": {
+     "x": 16,
+     "y": 546,
+     "w": 266.8,
+     "h": 48
+    }
+   },
+   {
+    "text": "Sign in",
+    "href": "/start?signin",
+    "box": {
+     "x": 294.8,
+     "y": 546,
+     "w": 109.5,
+     "h": 48
+    }
+   }
+  ],
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin",
+    "box": {
+     "x": 1173.5,
+     "y": 14,
+     "w": 90.5,
+     "h": 44
+    }
+   }
+  ],
+  "bottom": [],
+  "focusables": [
+   {
+    "text": "The Album Blender, top of the ",
+    "y": 14
+   },
+   {
+    "text": "Create",
+    "y": 10
+   },
+   {
+    "text": "Albums",
+    "y": 10
+   },
+   {
+    "text": "Blend",
+    "y": 10
+   },
+   {
+    "text": "Playlists",
+    "y": 10
+   },
+   {
+    "text": "Inventory",
+    "y": 10
+   },
+   {
+    "text": "⟲",
+    "y": 14
+   },
+   {
+    "text": "PT",
+    "y": 14
+   },
+   {
+    "text": "EN",
+    "y": 14
+   },
+   {
+    "text": "Sign in",
+    "y": 14
+   },
+   {
+    "text": "Open the app",
+    "y": 546
+   },
+   {
+    "text": "Sign in",
+    "y": 546
+   }
+  ],
+  "subEnds": 439.1,
+  "stage": {
+   "x": 567.2,
+   "y": 72,
+   "w": 696.8,
+   "h": 4277.3
+  },
+  "crate": {
+   "x": 567.2,
+   "y": 72,
+   "w": 712.8,
+   "h": 643.5
+  },
+  "caption": {
+   "x": 567.2,
+   "y": 715.5,
+   "w": 696.8,
+   "h": 76.5
+  },
+  "sections": {
+   "a1": {
+    "x": 16,
+    "y": 72,
+    "w": 500,
+    "h": 692
+   },
+   "start": {
+    "x": 16,
+    "y": 764,
+    "w": 500,
+    "h": 560
+   },
+   "albums": {
+    "x": 16,
+    "y": 1324,
+    "w": 500,
+    "h": 662.1
+   },
+   "blend": {
+    "x": 16,
+    "y": 1986.1,
+    "w": 500,
+    "h": 568.7
+   },
+   "flip": {
+    "x": 16,
+    "y": 2578.8,
+    "w": 500,
+    "h": 116.7
+   },
+   "playlists": {
+    "x": 16,
+    "y": 2719.5,
+    "w": 500,
+    "h": 568.7
+   },
+   "inventory": {
+    "x": 16,
+    "y": 3288.3,
+    "w": 500,
+    "h": 613.1
+   },
+   "end": {
+    "x": 16,
+    "y": 3901.3,
+    "w": 500,
+    "h": 448
+   }
+  },
+  "errors": [],
+  "blocked": []
+ }
+}

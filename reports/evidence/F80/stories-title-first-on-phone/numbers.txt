@@ -1,0 +1,6 @@
+webkit-390-pt: page 4599 -> 4649 (50 px); first label 1110 -> 878; caption ends 841
+webkit-390-en: page 4468 -> 4518 (50 px); first label 1089 -> 857; caption ends 820
+webkit-375-pt: page 4638 -> 4688 (50 px); first label 1110 -> 878; caption ends 841
+webkit-375-en: page 4569 -> 4619 (50 px); first label 1089 -> 857; caption ends 820
+chromium-1280-pt: page 4578 -> 4578; unchanged boxes
+chromium-1280-en: page 4543 -> 4543; unchanged boxes

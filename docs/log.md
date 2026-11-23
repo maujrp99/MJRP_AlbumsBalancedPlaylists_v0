@@ -17,6 +17,124 @@ Conferido, com as linhas de resultado lidas:
 - `npm run test:rules`: 38 passam. `npm run budget:publication`: sai 0 (script principal 198.470 B, teto 198.620 B; depois da primeira tela 238.196 B).
 - **Prova no navegador** no site montado, com o kit oficial: 86 de 86, a 1440 e 393 px (endereços de música abortados, nenhum link para fora clicado). Capturas novas em `reports/evidence/F82/texts-panel/`.
 
+## [2026-11-23 16:12] review — F80: o juiz independente passou a rodada da página de entrada em duas partes (0 P0, 0 P1)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Relatórios, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-entry-page-caption-order-kicker-visual-parity-recheck.md` (legenda com álbum e ano, título antes das ilustrações no celular, sem a linha laranja, sem o botão grande «Criar» com conta; julgado até `1d6f7d5`) e `…-recheck-2.md` (o acréscimo até `73f3bf8`: «The Album Blender» por inteiro, «Catalogue», o conserto do caixote 3D no computador: 0 de 16 paradas com capa na madeira, antes 8 de 16). O commit seguinte (`2f7979d`) só trocou o texto fixado do teste da moldura. P2 a abrir: com conta, no celular, o «Criar» do topo passa da borda da tela (406 px em 390 no inglês); o título de reserva do topo do app corta «The Album Blen…» (só aparece de passagem); a 1280 o nome quebra depois de «The» no parágrafo do «Criar». O MJRP é o juiz destes ajustes («ou juilz neste caso sou eu»); sobre a prévia anterior disse «eu só removeria o botaozao criar de mobile e publicaria».
+
+## [2026-11-23 16:11] step — Board: o relatório da arrumação e a sugestão de prioridade
+
+**Branch:** wip/board-tidy-2026-11-23
+
+O relatório da arrumação do board com a sugestão de prioridade, pedida pelo MJRP: `reports/proposals/2026-11-23-mjrpalbumblender-v0-board-tidy-and-priority.md`. Abre com a ordem sugerida de tudo o que está aberto (dez linhas), depois a tabela do estado de cada feature (classe, o que foi fechado, o que falta), a via de cada feature aberta (para ele dizer o que «tudo em fast lane» alcança) e o que não foi conferido. É sugestão: `docs/specs/priority.md` não foi tocado. Registrado no relatório: ele pediu o comando de terminal para reordenar a lista, porque o board do Control Center está se comportando mal, e o orquestrador o entregou; a lista mudou duas vezes durante este trabalho (`71a9f6b`, `965c5ea`), e três features da lista de antes já estão no ar (exportar pelas playlists guardadas, o ambiente de prévia, «Create» no menu). Nenhum teste foi rodado: a fila da máquina estava reservada.
+
+## [2026-11-23 16:08] step — Board: a F73 e a F75 fechadas, tarefas de F87 e F90 marcadas com evidência, e as specs anotadas com o que mudou
+
+**Branch:** wip/board-tidy-2026-11-23
+
+Arrumação do board pedida pelo MJRP («ok, arrume as features do board e sugira a prioridade»): o que as features mescladas e ainda abertas dizem passa a bater com o que foi feito. Só documentos; nenhum carimbo, nenhum aceite.
+
+- **Fechada (`Done`): a F73** (as telas mantêm o campo em uso e largam o que deixaram). A única tarefa aberta era a reconferência visual; as duas reconferências em lote de 2026-11-21, por agente separado, cobrem a feature (sem P0 e sem P1), e o `retro_step_check.py . --staged` respondeu «o passo retroativo confere com o registro». Cada requisito ganhou o seu `verified_by`. O aceite continua do MJRP: as issues são dele.
+- **Tarefas marcadas, com a evidência escrita em cada linha** (arquivo na `main`, relatório do juiz, entrada do log): o ambiente de prévia (F87: o script, a opção de ramo, o servidor que aceita o endereço, o MJRP usando a prévia); exportar pela tela das playlists guardadas (F90: as sete tarefas e o documento; em produção desde 2026-11-22 00:11); e os valores do Discogs guardados no banco (F75: TASK-09 a TASK-11). Com todas as tarefas marcadas, a trava de estado do commit levou a F75 a `Done` sozinha; a marca `needs_human` dela continua (as decisões revisáveis do plano são do MJRP).
+- **Não marcado, por falta de prova:** F87 TASK-02 (a prévia não grava preço do Discogs no banco) e a confirmação dele na linha de proposta do `arch.md`.
+- **Frases que o produto não cumpre mais, anotadas nas specs** (uma nota datada sob o título): as telas feitas à mão viraram React (F51, F57, F71, F73, F75); «Start» virou «Create» (F85, F91); a F87, a F90 e a F91 dizem que já estão construídas e o que falta.
+- **Recusado pela trava do commit, e desfeito:** marcar as tarefas de «Create» no menu (F91, em produção desde 2026-11-22 11:55). Palavras da trava: «a F91 não está na «Priorizada»: o humano a arrasta no board» e «commit bloqueado: REPROVOU - este commit começa uma feature da trilha Humano que o MJRP não priorizou». A F91 saiu da lista na reordenação de hoje (`965c5ea`). Ficou em `Draft`, só com a nota na spec. As caixas das transições suaves (F94) também não foram marcadas: marcá-las poria a feature «em andamento» sem ela ter começado.
+- **Tentado e desfeito:** levar a `Done` as outras da via rápida. A trava do passo retroativo recusa a F51 (a UAT-180 foi consertada pela F46), a F57 (UAT-193 aberta), a F59 (UAT-28 aberta), a F64 (UAT-202 aberta), a F71, a F74, a F84 e a F85 (documentos do passo retroativo). A F69 passa na trava, mas tem uma prova que só vem quando o Spotify falhar em produção. Ficaram como estavam.
+
+Sensores: `requirements_graph_check.py . --changed` sem contradição; `product_structure_check.py .` e `sdd_shape_check.py .` verdes, com avisos de «a escrever» na F87, na F90 e na F91.
+
+## [2026-11-23 16:06] step — UAT-295: o texto guardado do cabeçalho do celular acompanha o nome «The Album Blender»; o nome inteiro NÃO cabe ali
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+A suíte inteira recusou a prévia do `73f3bf8` (1 teste, que eu não tinha rodado): `test/shell/Shell.sameAsBefore.test.tsx`, «the phone: the tab of each address», no endereço desconhecido `/homework`. O teste compara o cabeçalho do celular com uma captura guardada (`test/fixtures/shellBeforeF88.json`, escrita uma vez pelo cabeçalho antigo; não há roteiro que a refaça), e a captura dizia «Album Blender» no título de uma tela sem nome. O texto guardado mudou de propósito, pela regra de nome do MJRP (2026-11-23): «primeira coisa imporntate pra vc e seus agentes. a app nao chama blender e sim The Album Blender». Editada à mão uma ocorrência só, a do título (`phone-topbar__title`), de «Album Blender» para «The Album Blender»; nada mais no arquivo mudou.
+
+**O nome inteiro não cabe no cabeçalho do celular.** Medido no site montado, WebKit: o título tem 173,1 px a 390 px de tela e 158,1 px a 375 px (letra 700 de 17 px); «The Album Blender» pede 176,8 px. Fica cortado com reticências nos dois («The Album Blen…» a 375 px); «Album Blender» pedia 137,9 px e cabia. O corte não empurra o botão do menu nem alarga a página. **Não mexi no tamanho da letra nem no texto: a decisão é do orquestrador / do MJRP.** Dois fatos para ela: (1) no site montado, um endereço desconhecido (`/homework`) vai para a primeira tela e o cabeçalho mostra «Create», então esse título de reserva não apareceu em nenhuma tela aberta nesta prova; a medida foi um ensaio, escrevendo os dois nomes no próprio elemento do título; (2) ao lado do título o logotipo já diz «The Album Blender». Evidência: `reports/evidence/F80/product-name-in-the-phone-header/` (`phone-header-homework.txt`, fotos do cabeçalho).
+
+**Prova.** Suíte inteira, sozinha, pela fila da máquina: 395 arquivos, 5277 testes passando, 1 pulado, sem «Unhandled Errors»; lida antes do commit.
+
+**Não conferido.** Em que telas reais do app o título de reserva aparece (se aparece); um iPhone de verdade.
+
+## [2026-11-23 16:04] decision — F96 e F95: a escolha do MJRP nos esboços, um deslize só, e as duas na via rápida
+
+**Branch:** wip/board-tidy-2026-11-23
+
+As decisões do MJRP de 2026-11-23 entram nos dois esboços mais novos; só documentos.
+
+- **A página de entrada no celular (F96, S-78).** Spec, plano e tarefas reescritos para o que ele escolheu sobre o protótipo («escolho a do especialista, mas com essa landing aqui, muito melhor»): página vertical, abertura com a caixa na diagonal e sem botão grande, a parte que ensina com título próprio, cada passo com o texto antes da ilustração, os álbuns fora dos passos, e um deslize só, o da caixa «Na caixa do The Album Blender» («só vai ter swipe para a caixa, certo?»; sim). O título e a pasta ainda dizem «em swipes»: ficam, com a nota de que são históricos. Para quem não tem conta: «Entrar» no alto e o «Criar» da barra de baixo abrindo o app; ele respondeu «ok» numa mensagem que tratava de outro assunto, e fica registrado como aceito com essa ressalva (leitura do orquestrador). Abertas com ele: o título da seção (três redações) e a marca da troca de passo (três formas). A primeira tarefa de construção diz que a caixa na diagonal é a caixa leve em CSS girada, se servir na página de verdade: a cena 3D no celular custa 152 KB a mais na primeira visita (ramo `fix/f80-crate-animation-break`, `reports/evidence/F80/crate-diagonal-on-phone/`).
+- **A curadoria (F95).** No celular ela é o deslize da F96. Fica só com ela: o nome no computador (o selo junto da caixa), as datas ou notas, e a ligação com a escolha dos álbuns no CMS (F82 REQ-03).
+- **Via rápida.** O MJRP, 2026-11-23: «tudo em fast lane.» Interpretação do orquestrador, revisável por ele: vale para o que está sendo trabalhado agora na página de entrada, a F96 e a F95. As duas passam a `lane: fast`, com o protótipo registrado (`**Prototype**: quick`), a validação dele olhando a tela e o passo retroativo como tarefas. Nenhuma outra feature mudou de via.
+- **Regras de texto dele, gravadas nas duas specs:** o produto é «The Album Blender», inteiro; em português, «álbum» e «álbuns».
+- As duas estão na «Priorizada» desde hoje (`71a9f6b`, só lido).
+
+Sensores: `requirements_graph_check.py . --changed`, `product_structure_check.py .` e `sdd_shape_check.py .` sem contradição nos nós tocados.
+
+## [2026-11-23 15:59] step — UAT-293: a parte «Como ver» que faltava na linha
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Depois da junção, o sensor de estrutura do produto recusou a linha UAT-293 (do outro ramo) por faltar «Como ver». Acrescentei só essa parte («abrir a página de entrada no iPhone e olhar a caixa de álbuns sob o título»); o resto da linha é do agente que a escreveu e não foi tocado. O sensor passa (saída 0); segue um aviso dele sobre um nome de arquivo no texto da mesma linha, não mexido.
+
+## [2026-11-23 15:59] step — Página de entrada (F80): o conserto do caixote em 3D junto com a legenda, as histórias e os textos, num ramo só para a prévia
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Juntado `fix/f80-crate-animation-break` (`4d96cde`: nenhuma capa do caixote em 3D atravessa a madeira, UAT-289; o caixote em diagonal no celular medido e não construído, UAT-293) neste ramo, a pedido do orquestrador, para o MJRP julgar UMA prévia. Conflitos só em documentos, resolvidos ficando com tudo: `docs/specs/uat.md` (as 11 linhas, de UAT-286 a UAT-296, em ordem) e o `tasks.md` da F80 (TASK-14 e TASK-15). O código não conflitou (`framing.js` e `crate3d.js` de lá; a legenda, a ordem das histórias, a abertura e os textos daqui). Procuradas marcas de conflito: nenhuma.
+
+**Depois da junção.** Pela fila da máquina, `npx vitest run test/splash test/shell/Shell.carried.test.tsx test/scripts/publicationBudget.test.js`: 16 arquivos, 254 testes passando (inclui `crateRecordsStayInside.test.js`, 21 testes). `npm run budget:publication` acusou margem de 144 B (menos que os 150 B): medido de novo no build com as cinco chaves de mentira, script principal 194.874 B e depois da primeira tela 235.882 B; tetos refeitos pela regra do arquivo (medido + 150 B): `main` 195.024 B, `background` 57.469 B; saída 0. Não apurei qual arquivo pesa os 7 B a mais.
+
+**Olhada no site montado, a 1280 (Chromium).** A legenda (álbum e ano) e o caixote em 3D juntos em quatro partes da página (abertura, Criar, Blend, Playlists): a legenda troca com a faixa («The Dark Side of the Moon / 1973», «Dummy / 1994», «In the Aeroplane Over the Sea / 1998»), o caixote em 3D carregado, sem erro de console (`reports/evidence/F80/hero-without-the-big-criar-on-phone/merged-1280-look.txt` e quatro fotos). Nada clicado; endereços de música abortados na rede. Foi uma olhada, não a prova das poses: essa é a do outro ramo (`reports/evidence/F80/crate-animation-break/`).
+
+**Não conferido.** A suíte inteira e o doctor; um iPhone de verdade; a prévia publicada.
+
+## [2026-11-23 15:57] step — UAT-296: a descrição em inglês encurtada para caber no limite de 130 caracteres
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+O commit anterior (`7715ba8`) entrou com um teste falhando: eu encadeei o commit sem ler a linha de resultado. A descrição em inglês para prévias de link, com «catalogue the physical media on your shelf», passou de 130 caracteres (133), o limite que `test/splash/copy.test.js` guarda. Ficou «…make balanced playlists and catalogue your physical media.» (120 caracteres), que espelha o português «…e catalogue suas mídias físicas.» (121). **Decidido pelo agente, revisável**: o texto pedido pelo orquestrador não cabia. O título da história em inglês segue «Catalogue the physical media on your shelf.». Pela fila da máquina, `npx vitest run test/splash test/shell/Shell.carried.test.tsx`: 14 arquivos, 227 testes passando.
+
+## [2026-11-23 15:56] step — Página de entrada (F80): na história do inventário, «Catalogue» no lugar de «Conte» (UAT-296)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Palavra do MJRP (2026-11-23): «ao inves é de Conte na parte do inventário, pode ser Catalogue». Issue UAT-296.
+
+**O que mudou** (`public/splash/copy.js`):
+- `t.inventory`, português: «Conte as mídias físicas da sua estante.» → «Catalogue as mídias físicas da sua estante.»
+- `meta.ogdesc`, português: «…e conte suas mídias físicas.» → «…e catalogue suas mídias físicas.»
+- `t.inventory`, inglês: «Count the physical media on your shelf.» → «Catalogue the physical media on your shelf.»
+- `meta.ogdesc`, inglês: «…and count the physical media on your shelf.» → «…and catalogue the physical media on your shelf.»
+
+O inglês foi **decidido pelo orquestrador, revisável**, para as duas línguas dizerem a mesma coisa; o MJRP falou do português. Os dois testes que citavam a frase antiga foram atualizados (`test/splash/copy.test.js`, `test/splash/entryPage.test.js`).
+
+**Conferido e listado, sem mudar.** Os outros textos da história do inventário na página de entrada não usam o verbo: «Lado B · 2 — Inventário», «Marque o que você tem em vinil, CD, fita cassete ou outro formato e veja uma estimativa de quanto vale a coleção.», «Abrir o inventário». No dicionário em português do app, nenhum texto do inventário usa «contar», «conte» ou «contagem» para o inventário; «conta» aparece só em «A ordem conta» (tela Criar, `start.dock.count` e `start.panel.order`, outro sentido) e como «conta» de usuário.
+
+**Prova.** `npx vitest run test/splash` pela fila da máquina, resultado na linha do commit. Nenhuma prova de navegador nova para esta troca de palavra (o título tem o mesmo número de linhas? não medido).
+
+**Não conferido.** A história «Inventário» no aparelho com o título novo (uma palavra mais longa: a quebra de linha pode mudar); a suíte inteira.
+
+## [2026-11-23 15:56] step — O nome do produto é «The Album Blender», sempre inteiro, em todo texto que o visitante lê (UAT-295)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Regra do MJRP (2026-11-23): «primeira coisa imporntate pra vc e seus agentes. a app nao chama blender e sim The Album Blender». Issue UAT-295. Cada texto trocado abaixo é a regra dele aplicada, não proposta do agente; a regra vale para todo texto proposto daqui em diante e está em `docs/specs/design-system.md` § Voz e tom.
+
+**Página de entrada** (`public/splash/copy.js`):
+- `p.start`, português: «…O Blender monta a série.» → «…The Album Blender monta a série.»
+- `p.start`, inglês: «…The Blender builds the series.» → «…The Album Blender builds the series.»
+- `p.blend`, português: «Escolha uma receita. O Blender pega faixas de cada álbum…» → «Escolha uma receita. The Album Blender pega faixas de cada álbum…»
+- `p.blend`, inglês: «Pick a recipe. The Blender draws from every album…» → «Pick a recipe. The Album Blender draws from every album…»
+
+**App** (`public/js/i18n/pt/shell.js` e `public/js/i18n/en/shell.js`):
+- `shell.phone.appName`: «Album Blender» → «The Album Blender» (o título que o celular mostra numa tela sem nome próprio). **Decidido pelo agente, revisável**: não era «Blender» sozinho, mas também não era o nome inteiro; o teste que o citava (`test/shell/Shell.carried.test.tsx`) foi atualizado.
+
+**Varrido e sem ocorrência:** o HTML da página de entrada (título, descrição, rótulos) e os outros dicionários de `public/js/i18n/` nas duas línguas. **Ficou, para o MJRP decidir:** `public/index.html` tem `apple-mobile-web-app-title` «Album Blender» (o rótulo do ícone na tela de início do iPhone, que corta nomes longos: «The Album Blender» não cabe inteiro ali). Não tocados: «Blend» (tela, ação, receita), identificadores de código, rotas, comentários, `docs/` e `design/copy/` (onde ainda há «O Blender» em textos de revisão antigos).
+
+**Guarda.** `test/splash/productName.test.js` falha se um texto do dicionário da página de entrada, o HTML dela ou um dicionário do app (português ou inglês) tiver «Blender» sem «The Album » antes. Dois dos testes falham no código anterior. Pela fila da máquina: `npx vitest run test/splash test/shell/Shell.carried.test.tsx`, resultado na linha do commit.
+
+**Não conferido.** No aparelho: o título «The Album Blender» no cabeçalho do celular do app (é mais longo que o anterior e pode não caber); a suíte inteira.
+
 ## [2026-11-23 15:55] decision — F96: o MJRP escolheu a versão do especialista para a home do celular, com a abertura da versão dele
 
 **Branch:** main
@@ -31,6 +149,22 @@ Duas regras do MJRP de hoje, passadas pelo coordenador, conferidas nos textos e 
 
 - **Dicionários do Painel** (`i18n/en/admin.js`, `i18n/pt/admin.js`) e os textos novos de `notices` («Page not found», «Could not check right now»): nenhum «Blender» sozinho e nenhum «disco»; nada a mudar. («Blend» segue como nome da tela e das receitas.)
 - **O que mudou:** quatro comentários do código do Painel diziam «the Album Blender» e agora dizem «The Album Blender» (`kitPorts.ts`, `richTexts.ts`, `admin-skin.css`); uma linha do `tasks.md` (TASK-15a) idem; e os textos de mentira dos testes do Painel, que usavam «Discos» e «{count} discos» como português de exemplo, passaram a «Os álbuns» e «{count} álbuns seus». Os nomes de código (`albumBlenderPorts`, a pele `albumblender`) são identificadores, não texto, e ficaram.
+
+## [2026-11-23 15:54] step — Página de entrada (F80), celular com conta: o botão grande «Criar» da abertura saiu (UAT-294)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Pedido do MJRP (2026-11-23, depois de ver a prévia do `ce1d041`): «eu só removeria o botaozao criar de mobile e publicaria». Issue UAT-294.
+
+**O que mudou.** No celular, para quem tem conta, o botão grande «Criar» da abertura não aparece mais (uma regra de CSS dentro do bloco do celular; escondido com `display:none`, então também sai do teclado e do leitor de tela). O «Criar» da barra do topo fica e leva ao app. A caixa de álbuns sobe.
+
+**O que NÃO mudou, e por quê.** O botão «Abrir o app» da abertura de quem NÃO tem conta ficou: ali a barra do topo mostra «Entrar», não «Criar», e o «Criar» da barra de baixo leva à história, não ao app; aquele botão é o único que abre o app (achado P0 do especialista de UX de hoje). **Decidido pelo orquestrador com base nesse achado, revisável**: as palavras do MJRP falam do «botaozao criar», que é o de quem tem conta. O computador não mudou em nenhuma das duas aberturas.
+
+**Medido (site montado; antes = o `ce1d041`).** Celular com conta, a 390 e a 375 px, PT e EN: a caixa sobe 48 px (em português, de 354 para 306 px do topo da página); a abertura passa de 298 para 250 px; tudo abaixo sobe os mesmos 48 px e a página fica 48 px mais curta. Entre o fim da linha laranja sob o título e a caixa ficam 26 px (antes, entre o botão e a caixa, 8 px): sem faixa vazia. Celular sem conta e computador (com e sem conta): nenhuma caixa mudou. 100 conferências passam, 0 falham.
+
+**Prova.** Teste primeiro: 1 teste falha no código anterior (`red-before.txt`); `npx vitest run test/splash` pela fila da máquina: 12 arquivos, 158 testes passando. `npm run budget:publication`: saída 0. A abertura com conta foi mostrada com um registro de conta de mentira no armazenamento da própria página. Nada clicado; endereços de música abortados na rede.
+
+**Não conferido.** Num iPhone de verdade, com a conta dele; a suíte inteira (roda na publicação). Segue valendo o achado do registro anterior: com conta, no celular, a página é um pouco mais larga que a tela (não é desta mudança).
 
 ## [2026-11-23 15:53] step — F82 (juiz, P2-8): a prova do Painel no navegador refeita, 86 de 86; orçamento medido de novo
 
@@ -54,6 +188,22 @@ Capturas, o resultado e os dois scripts da prova em `reports/evidence/F82/texts-
 
 Suíte inteira, sozinha, pela fila, antes deste commit: `Test Files 5 failed | 403 passed (408)` · `Tests 6 failed | 5508 passed | 1 skipped (5515)`, sem «Unhandled Errors»; os seis são os sensores da cópia candidata do kit (`complexityLimit` ×2, `noDeadModules` só com os dois arquivos de exemplo, `outsideUrlChecked`, `reactStaysAtTheEdge`, `tailwindBuiltWithSite`). Na rodada anterior, a mesma suíte teve um sétimo, `test/server/rankingPipeline.test.js` («a source still running when the time ends»), um teste de tempo do servidor que este ramo não toca: passou sozinho (47 de 47) e na rodada seguinte; fica registrado como instável sob carga. `tsc` passa; `npm run test:rules` 38 passam.
 
+## [2026-11-23 15:51] step — Página de entrada no celular (F80): o caixote em diagonal foi medido, não construído; a escolha é do MJRP (UAT-293)
+
+**Branch:** fix/f80-crate-animation-break
+
+Pedido do MJRP (2026-11-23, print do iPhone): «se possivel deixar a caixa de albuns na diagonal como no site tb». Issue UAT-293 em `docs/specs/uat.md`, ligada à F80. Nenhum código mudou neste passo.
+
+**Como o celular desenha hoje.** O caixote em CSS (uma tábua de frente e as capas empilhadas), parado na primeira pose; a cena em 3D só vem ao computador (`shouldLoad3d` em `public/splash/splash.js`). É decisão escrita: REQ-04 e REQ-07 («no celular, o caixote em CSS») e REQ-08 (a primeira visita leve no celular, sem a biblioteca de 3D); a proposta registra que bateria e calor do 3D num iPhone de verdade nunca foram medidos. A diagonal (UAT-235) foi pedida e feita só para o computador.
+
+**Ensaio (fora do ramo).** Um build igual, só sem a condição que segura o 3D no celular, medido contra o de hoje no site montado: WebKit como iPhone 14 (390) e a 375, Chromium a 390 com o processador 4 vezes mais lento. A cena serve sem mexer no desenho: em diagonal, inteira no quadro, a legenda e o botão embaixo iguais. Primeiro texto: 362 → 370 ms (WebKit 390), 784 → 676 ms (Chromium freado), sem piora. Quadros em 5 s de rolagem: iguais nos dois (mediana 33 ms no WebKit sem janela, 16,7 ms no Chromium freado, nenhum acima de 50 ms no ensaio). Tarefas longas com o freio: 136 → 379 ms, depois da página carregada. «Menos movimento»: sem 3D e sem baixar a biblioteca. A pausa para e volta. `npm run budget:publication` saída 0 (a biblioteca vem do CDN, fora dessa conta).
+
+**Por que parei.** O custo é +152 KB por primeira visita no celular (a biblioteca de 3D; os arquivos da página somam 378 KB sem compressão no servidor da prova), contra a regra de peso do celular (REQ-08) e as duas que dizem «CSS no celular»: é mudança de requisito e decisão de custo, do MJRP. Girar o caixote em CSS não entrega a diagonal: sem profundidade, ele só fica mais estreito (`option-css-crate-turned-30deg-webkit-390.jpg`).
+
+**Opções.** (1) O 3D também no celular: igual ao computador e vivo; +152 KB por visita; falta medir num iPhone de verdade; muda REQ-04, REQ-07 e REQ-08. (2) Uma imagem parada do caixote em diagonal: mesmo visual, cerca de +30 KB (estimado, não medido), não se mexe, refeita quando as capas mudam. (3) Deixar como está.
+
+**Não conferido.** Um iPhone de verdade (bateria, calor, quadros com a placa dele): os quadros medidos são da placa deste Mac, e o WebKit não tem freio de processador. Evidência: `reports/evidence/F80/crate-diagonal-on-phone/`.
+
 ## [2026-11-23 15:47] step — F82: os sensores de imports conhecem o apelido do núcleo do kit; um teste segura a tabela junto do build
 
 **Branch:** claude/f82-cms-texts-panel
@@ -63,6 +213,77 @@ A tabela de apelidos dos sensores que percorrem os imports (`test/architecture/s
 Para o próximo apelido não ser esquecido, um teste novo (`test/architecture/aliasesAgree.test.js`, escrito antes, reprovou, depois passou): a tabela, o `vite.config.js` e o `vitest.config.js` dizem os mesmos apelidos com os mesmos destinos, o `tsconfig.json` conhece todos, e um apelido mais longo vem antes de um mais curto que comece igual.
 
 Com isso o `noDeadModules` acusa só os dois arquivos de `ui/admin-kit/example/` da cópia candidata, que a versão oficial do kit não traz.
+
+## [2026-11-23 15:39] step — Página de entrada (F80): a linha laranja que abria a página saiu (UAT-292)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Pedido do MJRP (2026-11-23, com um recorte da linha «THE ALBUM BLENDER · UM APP WEB PARA QUEM AMA DISCOS»): «eu acho que essa parte aqui tb é desnecessária, eu removeria já». Issue UAT-292. A linha saiu do celular e do computador: **decidido pelo orquestrador, revisável** (ele pediu que a linha saísse e não limitou ao celular).
+
+**O que mudou.** A linha pequena laranja acima do título saiu das duas aberturas da página (sem conta e com conta), em português e em inglês; a chave `h.kick` saiu de `public/splash/copy.js` nas duas línguas e dos testes que a citavam. O título segue sendo o `h1` da página e passou a ser o primeiro elemento da abertura. Nenhuma regra de CSS mudou: não ficou faixa vazia.
+
+**Medido (site montado; antes = o commit da ordem das histórias).** Celular (390 e 375 px, PT e EN, com e sem conta): a abertura encolhe 42 px (a linha quebrava em duas: 26 px, mais 16 px de margem); o título sobe 42 px e tudo abaixo sobe os mesmos 42 px. Computador (1280): a abertura tem altura mínima e o conteúdo é centrado nela, então o título sobe 21 px e NADA abaixo da abertura se move (0 px); a página mantém a altura. 114 conferências passam, 0 falham.
+
+**O nome do produto.** Segue no `<title>` da página («The Album Blender — para quem ouve álbuns inteiros»), na descrição e no texto alternativo do logotipo. **«app web»: a linha removida era o único texto VISÍVEL da página que dizia que o produto é um app web**; a frase segue só na descrição da página (a que os buscadores e as prévias de link leem: «O The Album Blender é um app web para quem ouve álbuns inteiros…»). Não inventei frase nova para o lugar; fica para o MJRP ou o especialista de texto.
+
+**Achado, fora desta mudança.** Com conta, no celular, a página já era mais larga que a tela antes e depois (406 px numa tela de 390 em inglês; 379 em 375 em português): rola de lado. Não consertado aqui; merece uma issue.
+
+**Prova.** Teste primeiro: 2 testes falham no código anterior (`red-before.txt`); `npx vitest run test/splash` pela fila da máquina: 12 arquivos, 155 testes passando. `npm run budget:publication`: saída 0. A abertura com conta foi mostrada com um registro de conta de mentira no armazenamento da própria página. Nada clicado; endereços de música abortados na rede.
+
+**Não conferido.** Num iPhone de verdade; a suíte inteira (roda na publicação); a página publicada.
+
+
+## [2026-11-23 15:37] step — Página de entrada (F80): no caixote em 3D nenhuma capa atravessa mais a madeira (UAT-289)
+
+**Branch:** fix/f80-crate-animation-break
+
+Pedido do MJRP (2026-11-23, print do computador): «temos um bug (conhecido?) de quebra na animação, é viável arrumar tb?»; e, perguntado o que fez antes: «ela quebra de qualquer jeito, independente da velocidade de rotacao». Issue UAT-289 em `docs/specs/uat.md`, ligada à F80.
+
+**Era conhecido?** Não para o caixote em 3D. Procurado em `docs/specs/uat.md`, na pasta da F80, neste log e nos relatórios dos juízes: o único registro parecido é a UAT-237 (o caixote em CSS, sem WebGL, onde as capas inclinadas passam da frente), e o juiz dela cita o 3D como o que estava certo.
+
+**Como reproduzir.** No computador (1280 ou 1440 de largura), rolar até «Lado A · 1 — Criar» ou «Lado A · 3 — Blend» (no lado B: «Playlists» e «Inventário»). Sempre, em qualquer velocidade: é a pose de repouso, não uma corrida entre animações.
+
+**Causa.** `public/splash/framing.js`, `sleeveTargets`: toda capa à frente do álbum puxado tombava no mesmo ângulo (0,62 rad), sem contar a parede; a primeira da fila está a 0,29 da parede e só pode inclinar 0,25 rad, então as duas mais próximas atravessavam a tábua (a da frente, alaranjada pelo fogo). Vem do protótipo aprovado: a câmera de frente escondia o defeito e a câmera em diagonal (UAT-235) passou a mostrá-lo. Dois defeitos menores do mesmo cálculo, vistos na leitura quadro a quadro: a capa erguida vinha para a frente desde o começo da subida (a primeira da fila cruzava o topo da tábua) e trocava de lado num salto de até 0,69 no meio do giro do caixote.
+
+**Conserto.** A pose passa a contar a madeira (`flippedTilts`): a primeira capa encosta na borda de dentro da parede, cada seguinte na anterior, até o ângulo de folhear de antes (0,62 rad), que continua valendo onde há espaço. A capa erguida só vem para a frente depois de passar do topo da parede, e cruza o giro do caixote sem salto (`sleevePlace`). Consequência: a câmera, que se ajusta ao que o caixote ocupa, chega um pouco mais perto (as capas não saem mais para fora). O celular, o caixote em CSS e o resto da página não mudam.
+
+**Prova.** Teste primeiro: `test/splash/crateRecordsStayInside.test.js`, 11 de 20 vermelhos no código da `main` (`red-on-main.txt`), e o teste do caminho da subida vermelho antes do conserto dele (`red-lift-path-before-its-fix.txt`). No site MONTADO (chaves de mentira no ambiente, capas reais), servido em 127.0.0.1 e encerrado, com a cena lida dos objetos do three.js: Chromium 1280×900 e 1440×900, WebKit 1280×900; cada história em ordem, a roda devagar nos dois sentidos, os 56 saltos entre histórias, uma rajada de dez, o menu da página, redimensionar no meio do movimento, a aba escondida e mostrada, a pausa, «menos movimento» e o processador 6 vezes mais lento. `main`: 80 passam, 102 falham. Ramo: 182 passam, 0 falham. Nenhum pedido a endereço de música. `npm run budget:publication` saída 0, tetos sem mudança. A suíte inteira, sozinha pela fila: 393 arquivos, 5257 testes passam, 1 pulado, sem «Unhandled Errors». Tudo em `reports/evidence/F80/crate-animation-break/`.
+
+**Não conferido.** Um computador de verdade com a placa de vídeo do MJRP (as provas rodam sem janela, com a GPU deste Mac); a aba escondida foi simulada pela página (`document.hidden`), não pelo sistema; o WebKit não tem freio de processador.
+
+## [2026-11-23 15:35] step — Página de entrada (F80), celular: em cada história o rótulo, o título e o texto vêm antes das ilustrações (UAT-291)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Pedido do MJRP (2026-11-23): «o que está ruim na atual é que o titulo do mapa educativo nao começa logo depois do velvet, fica abaixo, isso teria que ser invertido se for pra continuar vertical e nao ter swipe»; e, a «Inverto a ordem agora na página atual…?»: «1. inverte já e considera o comentário para o protótipo». Issue UAT-291. Nenhum título de seção foi criado (espera a proposta do especialista e o protótipo).
+
+**Como era.** No HTML, o bloco das ilustrações (`.v4-lead`) era o PRIMEIRO de cada história; no computador o CSS o mandava para o fim (`order:9`) e no celular o deixava no começo (`order:0`). A ordem de leitura e do leitor de tela era a do celular.
+
+**Como ficou.** O bloco passou a ser o ÚLTIMO de cada história no próprio HTML e as duas regras de `order` saíram: o que se vê é o que se lê, nos dois desenhos, e o botão «Ouça no Apple Music» de cada história vem depois do título dela para o teclado e o leitor de tela. No celular: rótulo, título, texto (e o cartão de exemplo, onde há), depois a capa e o painel, o nome do álbum e o botão. Na história «Álbuns» o cartão do ranking fica entre o texto e as ilustrações, como já era no computador.
+
+**Medido (site montado, WebKit a 390 e 375 px, PT e EN; antes = o commit da legenda).** O rótulo da primeira história vai de 1110 para 878 px: 37 px abaixo do fim da legenda da caixa (841), onde antes começava a capa. Entre o botão de uma história e o começo da seguinte: 44 px, mais a linha divisória e 36 px até o rótulo. A página cresce 50 px no celular (4599 para 4649 a 390 px em português): 10 px por história, o respiro novo entre o texto e as ilustrações. No computador (1280) nada mudou: mesma altura e a mesma caixa de cada parte de cada história. 62 conferências passam, 0 falham.
+
+**Decidido pelo agente (revisável).** O respiro de 10 px (somado aos 14 px do parágrafo) entre o texto e as ilustrações; o cartão do ranking antes das ilustrações em «Álbuns».
+
+**Prova.** Teste primeiro: 2 testes falham no código anterior (`red-before.txt`); `npx vitest run test/splash` pela fila: 12 arquivos, 152 testes passando. `npm run budget:publication`: saída 0. Nada clicado; endereços de música abortados na rede. Nas fotos de seção inteira as barras fixas da página aparecem por cima (a seção é mais alta que a tela): é da foto, não da página.
+
+**Não conferido.** Num iPhone de verdade; com leitor de tela de verdade (só a ordem no documento).
+
+## [2026-11-23 15:31] step — Página de entrada (F80): a legenda da caixa mostra o álbum e o ano, sem o artista (UAT-290)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Resposta do MJRP (2026-11-23) a «A legenda da caixa, no topo, também deve mostrar só o nome do álbum?»: «1. album e ano somente». Issue UAT-290.
+
+**O que mudou.** A linha sob o nome do álbum era «artista · ano»; agora é só o ano («1967»). A linha «Capa do Apple Music» e o botão não mudaram; o nome acessível do botão segue «Ouça no Apple Music: álbum, artista (abre numa nova aba)». No conjunto de capas fictícias a linha passa a ser só «álbum fictício». A mesma legenda serve o celular e o computador, então mudou nos dois: **decidido pelo orquestrador, revisável**.
+
+**Forma escolhida pelo agente (revisável).** As três linhas de antes, na mesma ordem e nos mesmos estilos: o nome em destaque, o ano embaixo, a linha da capa. Nenhuma regra de CSS mudou; só a cena da caixa não foi tocada.
+
+**Altura.** No computador (1280) a legenda segue com 76,5 px em toda parte da página e com cada um dos 15 álbuns; a página não mudou de altura nem de lugar. No celular a legenda ENCOLHE 36 px (em português de 151 para 115 px, em inglês de 167 para 131 px, a 390 e a 375 px), porque a linha do artista do Velvet quebrava em três e agora é uma; tudo abaixo dela sobe 36 px e a página fica 36 px mais curta. Não segurei a altura antiga com espaço vazio.
+
+**Prova.** Teste primeiro: 6 testes da página de entrada falham no código da `main` (`red-on-main.txt`); no ramo, `npx vitest run test/splash` pela fila da máquina: 12 arquivos, 150 testes passando. A suíte inteira não foi rodada (roda na publicação). No site MONTADO, WebKit a 390 e a 375 px e Chromium a 1280, português e inglês, `main` contra o ramo: 74 conferências passam, 0 falham; nenhum texto fora da legenda nem sobre o botão, com os 15 álbuns (no computador pelas sete partes da página; os 15 nomes, nos dois, escritos na legenda como a página escreve: ensaio do desenho, não a rolagem). `npm run budget:publication`: saída 0. Nada foi clicado; os endereços de música abortados na rede.
+
+**Não conferido.** Num iPhone de verdade; a caixa em 3D e a animação (outro agente trabalha nelas em `fix/f80-crate-animation-break`).
 
 ## [2026-11-23 15:30] step — F82 (juiz, P2-7): na rota de tradução, um limite por pessoa antes da leitura do registro do administrador
 

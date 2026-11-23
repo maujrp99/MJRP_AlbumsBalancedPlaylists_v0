@@ -1,0 +1,206 @@
+PASS  webkit-390-pt-before: no console error
+PASS  webkit-390-pt-before: no horizontal scroll
+      390 / 390
+PASS  webkit-390-pt-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-after: no console error
+PASS  webkit-390-pt-after: no horizontal scroll
+      390 / 390
+PASS  webkit-390-pt-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-in-before: no console error
+PASS  webkit-390-pt-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-in-after: no console error
+PASS  webkit-390-pt-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-before: no console error
+PASS  webkit-390-en-before: no horizontal scroll
+      390 / 390
+PASS  webkit-390-en-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-after: no console error
+PASS  webkit-390-en-after: no horizontal scroll
+      390 / 390
+PASS  webkit-390-en-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-in-before: no console error
+PASS  webkit-390-en-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-in-after: no console error
+PASS  webkit-390-en-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-before: no console error
+PASS  webkit-375-pt-before: no horizontal scroll
+      375 / 375
+PASS  webkit-375-pt-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-after: no console error
+PASS  webkit-375-pt-after: no horizontal scroll
+      375 / 375
+PASS  webkit-375-pt-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-in-before: no console error
+PASS  webkit-375-pt-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-in-after: no console error
+PASS  webkit-375-pt-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-before: no console error
+PASS  webkit-375-en-before: no horizontal scroll
+      375 / 375
+PASS  webkit-375-en-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-after: no console error
+PASS  webkit-375-en-after: no horizontal scroll
+      375 / 375
+PASS  webkit-375-en-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-in-before: no console error
+PASS  webkit-375-en-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-in-after: no console error
+PASS  webkit-375-en-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-before: no console error
+PASS  chromium-1280-pt-before: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-pt-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-after: no console error
+PASS  chromium-1280-pt-after: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-pt-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-in-before: no console error
+PASS  chromium-1280-pt-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-in-after: no console error
+PASS  chromium-1280-pt-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-before: no console error
+PASS  chromium-1280-en-before: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-en-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-after: no console error
+PASS  chromium-1280-en-after: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-en-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-in-before: no console error
+PASS  chromium-1280-en-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-in-after: no console error
+PASS  chromium-1280-en-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt: the orange line is gone from the hero (it was «The Album Blender · um app web para quem ama álbuns»)
+      hero now opens with H1: «Mergulhe nos álbuns que você ama.»
+PASS  webkit-390-pt: one h1, the title, first in the hero; no empty band above it
+      title 118 -> 76; the line began at 76 and took 42 px
+PASS  webkit-390-pt: what is below moved up by the same amount everywhere, or not at all
+      title up 42 px; hero 340 -> 298 (-42 px); sections below up 42 px; page 4649 -> 4607
+PASS  webkit-390-pt: the product's name is still in the page's title and on the logo
+      title «The Album Blender — para quem ouve álbuns inteiros»; logo «The Album Blender»
+PASS  webkit-390-pt-in: the page is not wider than before
+      before 390, after 390, screen 390
+PASS  webkit-390-pt-in: the orange line is gone from the hero (it was «The Album Blender · um app web para quem ama álbuns»)
+      hero now opens with H1: «Mergulhe nos álbuns que você ama.»
+PASS  webkit-390-pt-in: one h1, the title, first in the hero; no empty band above it
+      title 118 -> 76; the line began at 76 and took 42 px
+PASS  webkit-390-pt-in: what is below moved up by the same amount everywhere, or not at all
+      title up 42 px; hero 340 -> 298 (-42 px); sections below up 42 px; page 4814 -> 4772
+PASS  webkit-390-pt-in: the product's name is still in the page's title and on the logo
+      title «The Album Blender — para quem ouve álbuns inteiros»; logo «The Album Blender»
+PASS  webkit-390-en: the orange line is gone from the hero (it was «The Album Blender · a web app for record lovers»)
+      hero now opens with H1: «Dig through the albums you love.»
+PASS  webkit-390-en: one h1, the title, first in the hero; no empty band above it
+      title 118 -> 76; the line began at 76 and took 42 px
+PASS  webkit-390-en: what is below moved up by the same amount everywhere, or not at all
+      title up 42 px; hero 303 -> 261 (-42 px); sections below up 42 px; page 4518 -> 4476
+PASS  webkit-390-en: the product's name is still in the page's title and on the logo
+      title «The Album Blender — for people who listen to whole albums»; logo «The Album Blender»
+PASS  webkit-390-en-in: the page is not wider than before (FOUND, not from this change: with an account the page is wider than the screen, before and after)
+      before 406, after 406, screen 390
+PASS  webkit-390-en-in: the orange line is gone from the hero (it was «The Album Blender · a web app for record lovers»)
+      hero now opens with H1: «Dig through the albums you love.»
+PASS  webkit-390-en-in: one h1, the title, first in the hero; no empty band above it
+      title 118 -> 76; the line began at 76 and took 42 px
+PASS  webkit-390-en-in: what is below moved up by the same amount everywhere, or not at all
+      title up 42 px; hero 303 -> 261 (-42 px); sections below up 42 px; page 4683 -> 4641
+PASS  webkit-390-en-in: the product's name is still in the page's title and on the logo
+      title «The Album Blender — for people who listen to whole albums»; logo «The Album Blender»
+PASS  webkit-375-pt: the orange line is gone from the hero (it was «The Album Blender · um app web para quem ama álbuns»)
+      hero now opens with H1: «Mergulhe nos álbuns que você ama.»
+PASS  webkit-375-pt: one h1, the title, first in the hero; no empty band above it
+      title 118 -> 76; the line began at 76 and took 42 px
+PASS  webkit-375-pt: what is below moved up by the same amount everywhere, or not at all
+      title up 42 px; hero 340 -> 298 (-42 px); sections below up 42 px; page 4688 -> 4646
+PASS  webkit-375-pt: the product's name is still in the page's title and on the logo
+      title «The Album Blender — para quem ouve álbuns inteiros»; logo «The Album Blender»
+PASS  webkit-375-pt-in: the page is not wider than before (FOUND, not from this change: with an account the page is wider than the screen, before and after)
+      before 379, after 379, screen 375
+PASS  webkit-375-pt-in: the orange line is gone from the hero (it was «The Album Blender · um app web para quem ama álbuns»)
+      hero now opens with H1: «Mergulhe nos álbuns que você ama.»
+PASS  webkit-375-pt-in: one h1, the title, first in the hero; no empty band above it
+      title 118 -> 76; the line began at 76 and took 42 px
+PASS  webkit-375-pt-in: what is below moved up by the same amount everywhere, or not at all
+      title up 42 px; hero 340 -> 298 (-42 px); sections below up 42 px; page 4877 -> 4835
+PASS  webkit-375-pt-in: the product's name is still in the page's title and on the logo
+      title «The Album Blender — para quem ouve álbuns inteiros»; logo «The Album Blender»
+PASS  webkit-375-en: the orange line is gone from the hero (it was «The Album Blender · a web app for record lovers»)
+      hero now opens with H1: «Dig through the albums you love.»
+PASS  webkit-375-en: one h1, the title, first in the hero; no empty band above it
+      title 118 -> 76; the line began at 76 and took 42 px
+PASS  webkit-375-en: what is below moved up by the same amount everywhere, or not at all
+      title up 42 px; hero 303 -> 261 (-42 px); sections below up 42 px; page 4619 -> 4577
+PASS  webkit-375-en: the product's name is still in the page's title and on the logo
+      title «The Album Blender — for people who listen to whole albums»; logo «The Album Blender»
+PASS  webkit-375-en-in: the page is not wider than before (FOUND, not from this change: with an account the page is wider than the screen, before and after)
+      before 406, after 406, screen 375
+PASS  webkit-375-en-in: the orange line is gone from the hero (it was «The Album Blender · a web app for record lovers»)
+      hero now opens with H1: «Dig through the albums you love.»
+PASS  webkit-375-en-in: one h1, the title, first in the hero; no empty band above it
+      title 118 -> 76; the line began at 76 and took 42 px
+PASS  webkit-375-en-in: what is below moved up by the same amount everywhere, or not at all
+      title up 42 px; hero 303 -> 261 (-42 px); sections below up 42 px; page 4832 -> 4790
+PASS  webkit-375-en-in: the product's name is still in the page's title and on the logo
+      title «The Album Blender — for people who listen to whole albums»; logo «The Album Blender»
+PASS  chromium-1280-pt: the orange line is gone from the hero (it was «The Album Blender · um app web para quem ama álbuns»)
+      hero now opens with H1: «Mergulhe nos álbuns que você ama.»
+PASS  chromium-1280-pt: one h1, the title, first in the hero; no empty band above it
+      title 239 -> 218; the line began at 197 and took 42 px
+PASS  chromium-1280-pt: what is below moved up by the same amount everywhere, or not at all
+      title up 21 px; hero 692 -> 692 (0 px); sections below up 0 px; page 4578 -> 4578
+PASS  chromium-1280-pt: the product's name is still in the page's title and on the logo
+      title «The Album Blender — para quem ouve álbuns inteiros»; logo «The Album Blender»
+PASS  chromium-1280-pt-in: the page is not wider than before
+      before 1280, after 1280, screen 1280
+PASS  chromium-1280-pt-in: the orange line is gone from the hero (it was «The Album Blender · um app web para quem ama álbuns»)
+      hero now opens with H1: «Mergulhe nos álbuns que você ama.»
+PASS  chromium-1280-pt-in: one h1, the title, first in the hero; no empty band above it
+      title 239 -> 218; the line began at 197 and took 42 px
+PASS  chromium-1280-pt-in: what is below moved up by the same amount everywhere, or not at all
+      title up 21 px; hero 692 -> 692 (0 px); sections below up 0 px; page 4828 -> 4828
+PASS  chromium-1280-pt-in: the product's name is still in the page's title and on the logo
+      title «The Album Blender — para quem ouve álbuns inteiros»; logo «The Album Blender»
+PASS  chromium-1280-en: the orange line is gone from the hero (it was «The Album Blender · a web app for record lovers»)
+      hero now opens with H1: «Dig through the albums you love.»
+PASS  chromium-1280-en: one h1, the title, first in the hero; no empty band above it
+      title 239 -> 218; the line began at 197 and took 42 px
+PASS  chromium-1280-en: what is below moved up by the same amount everywhere, or not at all
+      title up 21 px; hero 692 -> 692 (0 px); sections below up 0 px; page 4543 -> 4543
+PASS  chromium-1280-en: the product's name is still in the page's title and on the logo
+      title «The Album Blender — for people who listen to whole albums»; logo «The Album Blender»
+PASS  chromium-1280-en-in: the page is not wider than before
+      before 1280, after 1280, screen 1280
+PASS  chromium-1280-en-in: the orange line is gone from the hero (it was «The Album Blender · a web app for record lovers»)
+      hero now opens with H1: «Dig through the albums you love.»
+PASS  chromium-1280-en-in: one h1, the title, first in the hero; no empty band above it
+      title 239 -> 218; the line began at 197 and took 42 px
+PASS  chromium-1280-en-in: what is below moved up by the same amount everywhere, or not at all
+      title up 21 px; hero 692 -> 692 (0 px); sections below up 0 px; page 4758 -> 4758
+PASS  chromium-1280-en-in: the product's name is still in the page's title and on the logo
+      title «The Album Blender — for people who listen to whole albums»; logo «The Album Blender»
+
+114 passed, 0 failed; nothing clicked, no album address opened; servers closed
