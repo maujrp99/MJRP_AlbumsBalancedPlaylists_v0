@@ -12,7 +12,7 @@
 ## Implementation
 
 ### Fatia 0 · Alicerce
-- [ ] TASK-04 o caso do emulador que lista a escrita de convidados em `spotify_enrichment/` como exceção declarada, numa lista que só encolhe, dentro do teste das regras da F82 (TASK-05); a exceção some quando a TASK-09 fecha a escrita · implements:: REQ-08 · model:: opus
+- [x] TASK-04 o caso do emulador que lista a escrita de convidados em `spotify_enrichment/` como exceção declarada, numa lista que só encolhe, dentro do teste das regras da F82 (TASK-05); a exceção some quando a TASK-09 fecha a escrita · implements:: REQ-08 · model:: opus
 
 ### Fatia 3 · Receitas: aparecer e configurar (esperam a F82 fatia 1, a linha do React em produção e o kit)
 - [ ] TASK-05 o catálogo de receitas (código mais `published/recipes`, num modelo só, executando sempre pelo motor) e a tela de Blend e o painel de gerar de novo desenhando o catálogo, com o selo «recomendada» como texto único; a leitura sob demanda com prazo de 3 s e as receitas do código como reserva · implements:: REQ-02, REQ-03, REQ-07 · model:: opus

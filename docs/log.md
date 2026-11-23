@@ -3,6 +3,13 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-23 01:29] step — CMS, fatia 0: caixas da F92 e da F93 marcadas depois da priorização
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- Com a F92 e a F93 na «Priorizada» (main 51856f8) e a main mergeada no ramo, marquei F92 TASK-04 e F93 TASK-04 e TASK-05 em `tasks.md`; o código e os testes já estavam nos commits anteriores do ramo (6b1e06a, 079c855, 2d9bd11). Nada além das caixas.
+
+
 ## [2026-11-23 01:08] step — F83: migração para React completa na prévia `staging` (linha de integração `3fd2d33`); falta o teste do dono
 
 **Branch:** main
