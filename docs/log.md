@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 11:03] step — Kit do CMS (F332 do harness): o registro CC-ADR-0068 passou na terceira crítica e espera o aceite do MJRP
+
+**Branch:** main
+
+O integrador do harness juntou o plano refeito e corrigiu o registro (harness `376559aba`); terceira crítica: 0 P0, 0 P1, 3 P2 (harness `apps/control-center/reports/audits/2026-11-23-cc-adr-0068-architecture-audit-r3.md`). A levar às tarefas quando a construção começar (só depois do aceite dele): (1) a fatia só de consertos precisa de teste de clique, salvar e navegação das telas reescritas, não só do retrato do render; (2) o tamanho da letra é lido na 1.0.0 e só escrito na 1.1.0: editar um texto numa 1.0.x apagaria o tamanho sem aviso; (3) com a edição na tela ligada, quem não é administrador não carrega o modo de edição. Da segunda crítica: `tests/corpus/` fora da cópia dos filhos; a trava de tag movida cobre volta de versão e primeira cópia (já nas tarefas). Publicado: a versão 2 do protótipo no artefato. Respostas do lote aplicadas: D-01 a D-05. Em aberto com ele no chat: o tamanho de fonte só na barra completa ou também na curta.
+
 ## [2026-11-23 10:56] step — CMS: a versão 2 do protótipo do Painel (editor rico) está publicada no artefato
 
 **Branch:** main
