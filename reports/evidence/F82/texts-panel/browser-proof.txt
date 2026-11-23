@@ -1,0 +1,48 @@
+PASS the Painel is not in the page's preload — adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css
+PASS 1440 administrator: /admin opens the Painel — 188 texts of the first screen
+PASS 1440 the Painel's files were asked for — adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css
+PASS 1440 a label is a plain one-line field — albums.title.all
+PASS 1440 the bar counts 1 change not saved
+PASS 1440 translate says «not configured» in plain words and the field does not change — Could not translate: the translation service is not configured on the server yet (its key is missing). The field stays as it was.
+PASS 1440 the Portuguese field kept its text
+PASS 1440 formatting a running text changes its Markdown — _**Running texts** take the full bar: italic, lists and links (only https, e-mail or a page of the site)._
+PASS 1440 image, video and book are out of the bar — none,none,none
+PASS 1440 approving a Portuguese text saves the approval — albums.title.one · ✓ Approved and live: 1 Portuguese text.
+PASS 1440 save writes the texts with rev + 1 and the previous value — {"rev":3,"text":"Edited in the proof","previous":{"albums.title.all":null,"admin.help.rich":null}}
+PASS 1440 who saved is kept in the work area
+PASS 1440 the conflict shows as it was, the other and yours — AS IT WAS Edited in the proof | THE OTHER CHANGE (ALREADY LIVE) Theirs, from the other device | YOURS Mine, from this device
+PASS 1440 nothing was written over the other device's save
+PASS 1440 «Keep the other» shows what is live
+PASS 1440 an orphan text is marked
+PASS 1440 no horizontal scroll
+PASS 1440 no console errors
+PASS 1440 every database request was answered by the stand-in — []
+PASS 1440 visitor: /admin says «Page not found»
+PASS 1440 visitor: the Painel's files are never requested — files: adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css; asked: 0
+PASS 1440 visitor: no horizontal scroll
+PASS 1440 visitor: no console errors
+PASS 393 administrator: /admin opens the Painel — 188 texts of the first screen
+PASS 393 the Painel's files were asked for — adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css
+PASS 393 a label is a plain one-line field — albums.title.all
+PASS 393 the bar counts 1 change not saved
+PASS 393 translate says «not configured» in plain words and the field does not change — Could not translate: the translation service is not configured on the server yet (its key is missing). The field stays as it was.
+PASS 393 the Portuguese field kept its text
+PASS 393 formatting a running text changes its Markdown — _**Running texts** take the full bar: italic, lists and links (only https, e-mail or a page of the site)._
+PASS 393 image, video and book are out of the bar — none,none,none
+PASS 393 the bar's buttons are 44 px on the phone — 44px
+PASS 393 approving a Portuguese text saves the approval — albums.title.one · ✓ Approved and live: 1 Portuguese text.
+PASS 393 save writes the texts with rev + 1 and the previous value — {"rev":3,"text":"Edited in the proof","previous":{"albums.title.all":null,"admin.help.rich":null}}
+PASS 393 who saved is kept in the work area
+PASS 393 the conflict shows as it was, the other and yours — AS IT WAS Edited in the proof | THE OTHER CHANGE (ALREADY LIVE) Theirs, from the other device | YOURS Mine, from this device
+PASS 393 nothing was written over the other device's save
+PASS 393 «Keep the other» shows what is live
+PASS 393 an orphan text is marked
+PASS 393 no horizontal scroll
+PASS 393 no console errors
+PASS 393 every database request was answered by the stand-in — []
+PASS 393 visitor: /admin says «Page not found»
+PASS 393 visitor: the Painel's files are never requested — files: adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css; asked: 0
+PASS 393 visitor: no horizontal scroll
+PASS 393 visitor: no console errors
+
+46 of 46 passed

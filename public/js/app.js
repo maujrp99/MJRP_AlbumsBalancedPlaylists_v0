@@ -170,7 +170,7 @@ router.register('/blend', async () => {
 // The Painel (F82, REQ-01): only for the administrator. The route reads the person's own record (cmsAdmins/{uid}) BEFORE it asks for
 // the Painel's file; anybody else sees «Page not found» and the file is never requested. It is not among the screens that come down in
 // the background, so nobody but the administrator downloads it.
-const loadAdmin = loadScreen(() => import('./screens/admin/index.ts'))
+const loadAdmin = loadScreen(() => import('./screens/admin/adminPanel.ts'))
 const isAdministrator = createAdminAccess({
     currentUser: () => AuthService.getCurrentUser(),
     readAdmin: readAdminRecord

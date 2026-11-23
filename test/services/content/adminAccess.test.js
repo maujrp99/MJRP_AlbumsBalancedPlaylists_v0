@@ -63,6 +63,6 @@ describe('the route of the Painel in app.js', () => {
         const background = app.slice(app.indexOf('prefetchScreensAfterTheFirstScreen(router, ['))
         expect(background.slice(0, background.indexOf(')'))).not.toContain('loadAdmin')
         expect(app.match(/screens\/admin/g)).toEqual(['screens/admin'])
-        expect(app).toContain("loadScreen(() => import('./screens/admin/index.ts'))")
+        expect(app).toContain("loadScreen(() => import('./screens/admin/adminPanel.ts'))")
     })
 })

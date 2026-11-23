@@ -10,7 +10,7 @@ import { isSignedIn } from '../../utils/isSignedIn.js'
 
 /**
  * @param {Object} deps
- * @param {() => ({ uid: string, isAnonymous?: boolean } | null)} deps.currentUser - who is signed in now
+ * @param {() => (Object | null)} deps.currentUser - who is signed in now (the Firebase user, a guest included)
  * @param {(uid: string) => Promise<{ role?: string } | null>} deps.readAdmin - the person's own record, or null
  * @returns {() => Promise<boolean>}
  */
