@@ -179,6 +179,23 @@ describe('the two locks of the Discogs values (F93, REQ-08)', () => {
         expect(logger.warn.mock.calls.join(' ')).toMatch(/could not be read/)
     })
 
+    it('unknown is said once when it starts and at most once a minute while it lasts, not on every request', async () => {
+        let clock = 1_000_000
+        const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() }
+        const cms = { state: 'unknown', discogsValues: async () => cms.state }
+        const service = createValueService({ source: sourceThat(FOUND), switches: cms, env: ON, now: () => clock, logger })
+        for (let i = 0; i < 5; i++) await service.valueSources(USER)
+        expect(logger.warn).toHaveBeenCalledTimes(1)
+        clock += 61_000
+        await service.valueSources(USER)
+        expect(logger.warn).toHaveBeenCalledTimes(2)
+        cms.state = 'on'
+        await service.valueSources(USER)
+        cms.state = 'unknown'
+        await service.valueSources(USER)
+        expect(logger.warn, 'a new start of unknown is said again').toHaveBeenCalledTimes(3)
+    })
+
     it('"for whom" stays in DISCOGS_VALUES_FOR: a person not named is off, with the CMS on; one named follows the CMS', async () => {
         const env = { DISCOGS_TOKEN: 't', DISCOGS_VALUES_FOR: 'owner-uid' }
         expect((await ask({ env, cms: 'on' })).answer).toBe('on')

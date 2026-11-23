@@ -13,10 +13,11 @@
  *   cmsWork/*      the administrator only
  *   albums/        read by a signed-in person; no writer since F65
  *
- * The emulator is a server outside the suite: `npm run rules:emulator` starts it (it needs Java and
- * the Firebase CLI), and the suite finds it through FIRESTORE_EMULATOR_HOST. With no emulator the
- * suite FAILS, loudly: a rules test that quietly passes proves nothing. `MJRP_RULES_EMULATOR=skip`
- * is the declared way out, for a run that cannot have it (it is said in the output).
+ * This file is NOT part of the default suite (`npx vitest run` does not match it: it is not named
+ * *.test.js, on purpose). It has its own step, `npm run test:rules` (scripts/rules-emulator.mjs:
+ * `firebase emulators:exec`, which needs Java and the Firebase CLI), which the CI and the deploy
+ * scripts run; test/architecture/rulesTestHasItsOwnStep.test.js holds that wiring. Run alone, with
+ * no emulator, it FAILS loudly: a rules test that quietly passes proves nothing.
  */
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest'
@@ -27,9 +28,6 @@ import { doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore'
 
 const RULES = readFileSync(resolve(__dirname, '../../firestore.rules'), 'utf8')
 const HOST = process.env.FIRESTORE_EMULATOR_HOST
-const SKIP = process.env.MJRP_RULES_EMULATOR === 'skip'
-
-if (SKIP) console.warn('[firestoreRules] MJRP_RULES_EMULATOR=skip: the rules were NOT run in the emulator on this run')
 
 const ADMIN = 'admin-uid'
 const OTHER = 'other-uid'
@@ -45,7 +43,7 @@ const GUEST_WRITES_STILL_ALLOWED = Object.freeze({
     spotify_enrichment: 'the Spotify popularity is written by whoever is on the site, until F92 TASK-09 (ADR-0024, decision 4)'
 })
 
-const suite = SKIP ? describe.skip : describe
+const suite = describe
 
 let env
 const as = {
@@ -64,9 +62,8 @@ const SITE = { _schemaVersion: 1, rev: 1, switches: { discogsValues: true, usage
 const TEXTS = { _schemaVersion: 1, rev: 1, texts: { 'nav.home': 'Home' } }
 
 beforeAll(async () => {
-    if (SKIP) return
     if (!HOST) {
-        throw new Error('No Firestore emulator: start it with `npm run rules:emulator` (Java and the Firebase CLI are needed) and run the suite with FIRESTORE_EMULATOR_HOST=127.0.0.1:8089; or declare MJRP_RULES_EMULATOR=skip.')
+        throw new Error('No Firestore emulator: run this test with `npm run test:rules` (it starts the emulator; Java and the Firebase CLI are needed).')
     }
     const [host, port] = HOST.split(':')
     env = await initializeTestEnvironment({ projectId: 'demo-mjrp-rules', firestore: { rules: RULES, host, port: Number(port) } })
@@ -163,6 +160,12 @@ suite('published/*: fields, types, counts, version and sequence (REQ-06)', () =>
         await assertFails(updateDoc(textsPt(), { rev: 5, texts: 'a string' }))
         await assertFails(updateDoc(textsPt(), { rev: 5, previous: 'a string' }))
         await assertFails(updateDoc(textsPt(), { rev: 5, texts: ['a', 'list'] }))
+    })
+
+    it('the site document keeps at most 10 keys in previous', async () => {
+        const keys = (n) => Object.fromEntries(Array.from({ length: n }, (_, i) => [`k${i}`, true]))
+        await assertFails(updateDoc(site(), { rev: 2, previous: keys(11) }))
+        await assertSucceeds(updateDoc(site(), { rev: 2, previous: keys(10) }))
     })
 
     it('a map with more keys than the count allows is refused (texts and previous)', async () => {

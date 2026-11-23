@@ -46,3 +46,14 @@ jobs:
 
       - name: Unit tests
         run: npx vitest run
+
+      # The rules test runs in the Firestore emulator, as its own step (F82 TASK-05): it needs Java
+      # and the Firebase CLI, and the default suite leaves it out.
+      - name: Setup Java (for the Firestore emulator)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Rules test (Firestore emulator)
+        run: npm install -g firebase-tools@15.36.0 && npm run test:rules

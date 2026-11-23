@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 09:48] step — CMS, fatia 0: o teste das regras em passo próprio e os ajustes da recheca independente
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- Correção da recheca independente (1 P1, 4 P2). P1-1: o teste das regras ganhou um passo próprio: `npm run test:rules` (`scripts/rules-emulator.mjs` roda `firebase emulators:exec --only firestore`; acha o Java em `/opt/homebrew/opt/openjdk/bin` mesmo fora do PATH e para com mensagem clara sem Java ou sem o Firebase CLI). O arquivo virou `test/security/firestoreRules.emulator.js` (fora do `*.test.js`, exclusão declarada em `vitest.config.js` e fixada por `test/architecture/rulesTestHasItsOwnStep.test.js`); a suíte padrão (`npx vitest run`) não precisa de emulador. O passo roda no CI (`.github/workflows/ci.yml`, com Java) e no `run_unit_tests` de `scripts/lib/deploy-common.sh` (logo depois da suíte; falha impede o deploy). O sensor `test` do doctor volta a não depender do emulador. `MJRP_RULES_EMULATOR=skip` foi removido.
+- P2: teste do teto de 10 chaves em `previous` de `published/site` (a mutação que sobrevivia). P2: o aviso de `unknown` no servidor sai uma vez no começo do estado e no máximo uma por minuto (teste). P2: a janela de 10 minutos da última leitura boa escrita na spec da F93 (REQ-08, critério) e no `behavior.md` como «decidido pelo agente — revisável». Mergeei a `main` (linha do React) e resolvi `behavior.md` e `package.json`.
+- Decidido pelo agente — revisável: `vitest.workspace.js` troca de projetos quando `MJRP_RULES_STEP=1` (só o script do passo o define), porque o workspace padrão ignorava o `--config` e rodava a suíte inteira. O CI instala `firebase-tools@15.36.0` globalmente. Não toquei no status da ADR nem em `tech-stack.md`.
+
+
 ## [2026-11-23 01:40] step — F83: o site inteiro em React está em produção (`main` `b36d2f1`; o MJRP disse «1.publica»)
 
 **Branch:** main

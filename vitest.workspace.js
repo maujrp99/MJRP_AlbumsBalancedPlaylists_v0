@@ -9,7 +9,11 @@
  */
 import siteConfig from './vitest.config.js'
 
-export default [
+// The rules test has its own step (F82 TASK-05): with MJRP_RULES_STEP=1 (scripts/rules-emulator.mjs) the
+// only project is vitest.rules.config.js, so that step runs that one file and not the whole suite.
+const rulesStep = process.env.MJRP_RULES_STEP === '1'
+
+export default rulesStep ? ['vitest.rules.config.js'] : [
     'vitest.config.js',
     {
         resolve: { alias: siteConfig.resolve.alias },

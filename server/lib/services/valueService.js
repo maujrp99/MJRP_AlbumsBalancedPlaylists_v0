@@ -48,12 +48,24 @@ function albumOf (body) {
  * @param {Object} deps
  * @param {{ name: string, ask: Function }} deps.source - (album, { deadlineAt }) => Promise<outcome>, throws UpstreamError
  * @param {{ discogsValues: () => Promise<'on'|'off'|'unknown'> }} deps.switches - the CMS switches (lib/valueSources/cmsSwitches.js)
+ * @param {Function} [deps.now] - () => ms, for the throttle of the `unknown` warning
  * @param {Object} [deps.env] - the environment, read on every request (the switch)
  * @param {Function} [deps.newBudget] - () => a budget of lib/timeBudget.js, for one request
  * @param {Object} [deps.logger]
  */
-function createValueService ({ source, switches, env = process.env, newBudget = () => createBudget({ ms: VALUE_BUDGET_MS }), logger = console }) {
+function createValueService ({ source, switches, env = process.env, now = () => Date.now(), newBudget = () => createBudget({ ms: VALUE_BUDGET_MS }), logger = console }) {
   if (!switches || typeof switches.discogsValues !== 'function') throw new Error('createValueService needs the CMS switches: the Discogs key is the second lock')
+
+  const WARN_EVERY_MS = 60 * 1000
+  let unknownWarnedAt = null // when `unknown` was last said; null while the state is not unknown
+
+  /** Says `unknown` once when it starts and at most once a minute while it lasts, not on every request. */
+  function sayUnknown (state) {
+    if (state !== UNKNOWN) { unknownWarnedAt = null; return }
+    if (unknownWarnedAt !== null && now() - unknownWarnedAt < WARN_EVERY_MS) return
+    unknownWarnedAt = now()
+    logger.warn('[Value] the Discogs key of the CMS could not be read: the values are unknown, so not shown')
+  }
 
   /**
    * The Discogs switch for who asks: two locks, the environment (read first: when it says off the CMS
@@ -64,7 +76,7 @@ function createValueService ({ source, switches, env = process.env, newBudget = 
     const environmentLock = discogsSwitch(env, user)
     if (environmentLock !== ON) return discogsState(environmentLock, null)
     const state = discogsState(environmentLock, await switches.discogsValues())
-    if (state === UNKNOWN) logger.warn('[Value] the Discogs key of the CMS could not be read: the values are unknown, so not shown')
+    sayUnknown(state)
     return state
   }
 
