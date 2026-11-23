@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:06] decision — Issue UAT-302: o parceiro do MJRP não conseguiu exportar («não encontrou as faixas»)
+
+**Branch:** main
+
+MJRP: «o meu parceiro falou que tentou exportar e nao conseguiu, frustrante tive que dar um potencial motivo, será que consegue investigar?». Registrada a UAT-302 (bug, P1). Achado no código: na exportação para o Spotify, qualquer falha de busca que não seja login vencido ou limite de chamadas é contada como faixa não encontrada (`SpotifyExportService._uriOf`), e com todas falhando a janela diz «No tracks found on Spotify». Hipótese principal, a confirmar com ele: a conta do Spotify do parceiro não está na lista de usuários do app no painel de desenvolvedor do Spotify (app em modo de desenvolvimento). As publicações do dia não coincidem com as 16:50. A feature do conserto nasce a seguir, com a issue que ela corrige.
+
 ## [2026-11-23 17:52] decision — Idioma do app: português no Brasil, inglês fora, pelo lugar do acesso (F81, REQ-02); construção da escolha de idioma começa já
 
 **Branch:** main
