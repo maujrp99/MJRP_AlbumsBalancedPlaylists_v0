@@ -10,6 +10,8 @@
  * scroll; the pause icon stops everything. With reduced motion nothing moves, the icon is hidden
  * and the 3D is not even fetched. The text never waits for any of this. The page's language and
  * the account (signed in: the menu and one «Inicie» button) are decided here too (UAT-240, UAT-241).
+ * On the phone (F96) the crate stays on its first track, turned by the style; the albums are one row
+ * at the end of the page (shelf.js), no longer a record inside each story.
  *
  * Pure parts are exported for the tests; `startSplash(window)` wires them to the page.
  */
@@ -20,6 +22,8 @@ import { chooseLanguage, readStoredLanguage, storeLanguage, pageStorage, applyLa
 import { startMenuBar, applyAccount, threadBarStyle } from './menu.js'
 import { hasAccount } from './gate.js'
 import { startAmbient } from './ambient.js'
+import { startShelf } from './shelf.js'
+import { applyDoor } from './visitorDoor.js'
 
 export { threadBarStyle }
 
@@ -242,50 +246,6 @@ function crateView(win, imgs, albums, langOf) {
     }
 }
 
-/** Phone: each part brings its own record (a copy of the crate's image, no extra bytes on the wire). Returns the redraw of the credits for a language. */
-function phoneSlots(win, imgs, albums) {
-    const D = win.document
-    const credits = []
-    const button = D.getElementById('am')
-    D.querySelectorAll('.slot').forEach((slot) => {
-        const i = recordAt(Number(slot.dataset.pull), imgs.length)
-        if (!imgs[i]) return
-        const im = imgs[i].cloneNode()
-        im.removeAttribute('class'); im.removeAttribute('style'); im.alt = ''
-        slot.appendChild(im)
-        const album = albums[i]
-        // UAT-285: the credit is text; the link is the caption's own button (a copy of the element, never a second pattern)
-        const credit = D.createElement('span')
-        credit.className = 'slot-am'
-        const who = D.createElement('span')
-        who.className = 'slot-who'
-        credit.appendChild(who)
-        let link = null
-        if (album.href && button) {
-            link = button.cloneNode(true)
-            link.removeAttribute('id')
-            link.href = album.href
-            credit.appendChild(link)
-        }
-        slot.appendChild(credit)
-        slot.removeAttribute('aria-hidden')
-        credits.push([who, link, album])
-    })
-    const pending = D.querySelectorAll('.slot.pre')
-    if ('IntersectionObserver' in win) {
-        const io = new win.IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target) } })
-        }, { rootMargin: '0px 0px -25% 0px' })
-        pending.forEach(s => io.observe(s))
-    } else {
-        pending.forEach(s => s.classList.remove('pre'))
-    }
-    return (lang) => credits.forEach(([who, link, album]) => {
-        who.textContent = link ? album.t : `${album.t} · ${album.a} — ${t('c.fictional', lang)}` // UAT-286: beside the button, the album only; the artist stays in the button's name
-        if (link) link.setAttribute('aria-label', listenLabel(album, lang))
-    })
-}
-
 /** The record playing: the browser's scroll decides the track. Returns the scroll handler. */
 function watchTracks(win, page, scene, view) {
     const D = win.document
@@ -360,10 +320,8 @@ export function startSplash(win) {
 
     let lang = 'pt'
     const view = crateView(win, imgs, albums, () => lang)
-    const redrawCredits = phoneSlots(win, imgs, albums)
-    const language = languageControl(win, (next) => { lang = next; redrawCredits(next); view.caption(phone ? 'a1' : page.state.track) })
+    const language = languageControl(win, (next) => { lang = next; view.caption(phone ? 'a1' : page.state.track) })
     lang = language.current()
-    redrawCredits(lang)
     const onScroll = watchTracks(win, page, scene, view)
     win.addEventListener('scroll', () => { onScroll(); wake() }, { passive: true })
     win.addEventListener('resize', onScroll)
@@ -372,7 +330,14 @@ export function startSplash(win) {
 
     startMenuBar(win)
     startAmbient(win)
-    hasAccount(win).then((signedIn) => applyAccount(D, signedIn))
+    startShelf(win)
+    // the account: a visitor until the browser says otherwise; on the phone the visitor's «Criar» opens the app from the first moment (F96)
+    const narrow = win.matchMedia('(max-width:899px)')
+    let signedIn = false
+    const account = () => { applyAccount(D, signedIn); applyDoor(D, signedIn, narrow.matches) }
+    account()
+    if (narrow.addEventListener) narrow.addEventListener('change', account)
+    hasAccount(win).then((answer) => { signedIn = answer; account() })
 
     const fireLevel = () => Number(win.getComputedStyle(scene).getPropertyValue('--fire')) || FIRE.peak
     embers(win, D.getElementById('embers'), fireLevel, page)

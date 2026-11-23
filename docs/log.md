@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:52] review — F96: a página de entrada no celular, segunda reconferência visual (passa: 0 P0, 0 P1, 6 P2)
+
+**Branch:** wip/f96-judge-2
+
+Juiz independente, segundo passe, estreito: a ponta `f3c4770` como diferença sobre `bca8ea9` (o que foi julgado no primeiro passe). Entre as duas, o código da tela mudou num ponto só: a regra «no celular, o "Criar" do visitante abre o app» saiu de `menu.js` e foi para `public/splash/visitorDoor.js`.
+
+**Veredito: passa.** Nada visível mudou. No celular (Chromium e WebKit, 390, português e inglês): o «Criar» do visitante abre `/start` desde o primeiro instante, os outros quatro itens rolam até os passos, a barra com conta está igual, «Entrar» no alto, nada rola de lado, nenhum erro no console; ao alargar a tela o «Criar» volta ao passo, ao estreitar volta a abrir o app. No computador (1280, os dois motores), as mesmas caixas e endereços da `main`. O menu do app não mudou: dos 53 arquivos da construção, 50 são idênticos byte a byte aos da `main`, entre eles o `app.html`, o script principal e o pedaço `menu`; os três que diferem são os da página de entrada.
+
+Os cinco P2 do primeiro passe seguem abertos. Um a mais, visto agora e igual na `main` (não vem desta feature): no computador, o WebKit de teste deixa a página rolar 32 px de lado.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f96-phone-home-visual-parity-recheck-2.md`.
+
 ## [2026-11-23 18:50] step — F81: o ramo com o relatório do juiz e a main (65a2005) dentro; orçamento medido de novo; prova de navegador repetida
 
 **Branch:** feat/f81-language-by-country-and-switch
@@ -37,11 +49,46 @@ O P1: três textos em português ainda mostram inglês — «Ir para Create» (`
 
 Não conferido: a troca por país no Firebase Hosting de verdade (só no emulador); as telas com dados; os textos que o MJRP publicou pelo Painel.
 
+## [2026-11-23 18:34] review — F96: a página de entrada no celular, reconferência visual independente (passa: 0 P0, 0 P1, 5 P2)
+
+**Branch:** wip/f96-judge
+
+Juiz independente (não construiu), passe rápido sobre a ponta `bca8ea9` de `feat/f96-entry-page-on-the-phone`, com o site construído e servido por mim (portas 5496 e 5497, paradas no fim), Chromium e WebKit a 390×844 e 360×740, visitante e com conta (registro substituto), português e inglês, e 1280 contra a `main`.
+
+**Veredito: passa.** Nada rola de lado; a abertura sem botão grande, «Entrar» no alto e o «Criar» da barra abrindo o app; «Como funciona» no laranja forte (7,06:1); rótulos e links no laranja claro (8,74:1 na página, 7,49:1 na faixa); texto antes da ilustração nos cinco passos; linha e faixas de borda a borda; os álbuns numa fileira só, que anda por toque, tecla e dedo e não prende a rolagem; alvos de 44 px; foco visível em todas as paradas; a página do computador igual à da `main`.
+
+Cinco P2: com teclado, o controle em foco pode ficar sob a barra de baixo; com conta, o link do passo «Álbuns» vem depois da ilustração e os outros quatro antes; a 360 o ano e o botão da legenda ficam logo abaixo da primeira tela; a 360 o nome do álbum na legenda quebra com reticências no meio (já era assim na `main`); a ordem do Tab deixa o botão de pausa e o do Apple Music da caixa para depois do fecho (já era assim).
+
+Não conferido: iPhone de verdade, dedo no WebKit, leitor de tela, sem script e «reduzir movimento» no celular (a evidência do construtor cobre), 375×667.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f96-phone-home-visual-parity-recheck.md`.
+
 ## [2026-11-23 18:28] step — F97 (a exportação para o Spotify diz por que falhou) registrada em esboço, com a S-79; conserta a UAT-302
 
 **Branch:** wip/f97-register
 
 O MJRP, sobre a UAT-302: «conserta pls». Registrados, antes de qualquer implementação: a story S-79 (`docs/specs/requirements/ep-04-export-playlists/`), embutida no `prd.md` no épico EP-04, e a feature F97 (`docs/specs/features/F97-spotify-export-says-why-it-failed/`: spec, plan e tasks em esboço; `status: Draft`, `lane: fast`, `solution_type: fix`, `fixes: ["UAT-302"]`, importa a S-79). Cinco requisitos, cada um com a sua tarefa: a recusa do Spotify (403) para a exportação e aparece com o próximo passo; a busca que falha é «não foi possível conferir», separada de «não encontrada»; «Tentar de novo» quando nada pôde ser conferido; os textos em inglês e português; o evento `playlists_exported` distingue o desfecho. Os três sensores (`requirements_graph_check --changed`, `product_structure_check`, `sdd_shape_check`) saíram com 0. O ramo de construção só nasce depois de este registro entrar na `main`.
+
+## [2026-11-23 18:25] step — F96: a prova completa no navegador, a bateria inteira e o orçamento de peso
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+A prova completa da F96 no site construído (`vite build` com as capas reais, `vite preview` em portas livres), sobre o código final, com as duas decisões de hoje dentro (as faixas e o laranja dos rótulos e links). Evidência em `reports/evidence/F96/`: `results.txt` (cada conferência, com o que foi medido), `measures.json`, `proof.mjs` e as capturas.
+
+**Resultado da prova:** 541 conferências passaram, nenhuma falhou. Por motor e largura: Chromium 390 e 360, WebKit 390 e 360, cada um sem conta e com conta, em português e inglês (16 rodadas); cada motor uma vez sem script e uma vez com «reduzir movimento»; Chromium a 1280, antes (`main` 7369dd8) contra depois, nas quatro combinações.
+
+**O que a prova pegou e foi consertado antes do commit da tela:** a caixa aparecia no computador (a página crescia 3.061 px; a regra precisava ser tão específica quanto a das histórias); a fila ficava 438 px mais longa que os álbuns no WebKit (passou a grade de colunas fixas); o texto escondido do botão deixava a página com 2.388 px de largura; a seta «próximo» nascia desligada no WebKit.
+
+**O «Criar» do visitante saiu do `menu.js`** para um módulo próprio sem importações (`public/splash/visitorDoor.js`), com o teste escrito antes (`red-before-visitor-door.txt`): o app empacota o `menu.js` num arquivo que divide com a página de entrada, e o orçamento de peso não tem folga. O `menu.js` voltou a ser, byte a byte, o da `main`.
+
+**Orçamento de peso, medido de novo pela regra do arquivo:** na `main` o que vem depois da primeira tela mede 238.197 B e o teto tinha exatamente a margem de 150 B, sem folga. Neste ramo todos os arquivos do app saem iguais aos da `main`, byte a byte; o único que muda é o pedaço da caixa 3D do computador, 1 B a mais (2.171 → 2.172), porque ele importa o script da página de entrada pelo nome, e o nome tem um código que muda quando o script muda. Em `scripts/bundle-budget.json`: `publication.measured.afterFirstScreen` 238197 → 238198 e `background` 63379 → 63380 (1 B). Fica para o MJRP ou o integrador confirmar: é um teto subindo, ainda que 1 B.
+
+**Bateria inteira, sozinha, pela fila:** 412 arquivos, 5.607 testes passaram, 1 pulado, nenhuma falha. `npm run typecheck` 0; `npx eslint . --quiet` 0; `npm run budget:publication` 0.
+
+**Não conferido:** o giro da caixa no Safari (o WebKit de teste não desenha 3D em CSS, nem numa página mínima; no Chromium o giro aparece); o dedo de verdade (arrastar a fila, descer a página por cima dela, o gesto na borda do Safari); o leitor de tela; a prévia publicada (publicada pelo orquestrador). O peso da primeira visita no celular foi medido pela página em gzip (15.325 B → 17.007 B, +1.682 B: os 15 álbuns da fila escritos nela; a biblioteca 3D não é pedida), não num aparelho.
+
+O doctor segue vermelho pelos mesmos 2 erros do `MEMORY.md`, fora desta tarefa. Fica para o passo retroativo (TASK-10): `info-arch.md`, `behavior.md`, `design-system.md` (a fila de capas, o fundo de passo, o laranja de texto), a spec e o plano completos.
+
 
 ## [2026-11-23 18:18] step — F81: o app fala português no Brasil e inglês fora, a escolha da pessoa vence, e há seletor de idioma (TASK-02, TASK-03)
 
@@ -77,11 +124,74 @@ MJRP, depois de ver no iPhone a prévia `staging` do ramo `feat/f96-entry-page-o
 
 O MJRP criou a chave no console da Anthropic (sem expiração), gravou-a no segredo `anthropic-api-key` pela área de transferência, deu ao servidor a leitura desse segredo e o ligou como `ANTHROPIC_API_KEY` (saídas coladas por ele no chat; o agente não leu nem digitou a chave). O serviço passou à revisão `mjrp-proxy-00218-cpv`, com 100% do tráfego. Volta do servidor agora: `gcloud run services update-traffic mjrp-proxy --to-revisions=mjrp-proxy-00217-2bb=100 --region southamerica-east1 --project mjrp-playlist-generator`. Falta ele provar o «traduzir» no Painel.
 
+## [2026-11-23 18:09] step — F96: tarefas marcadas e cinco linhas de UAT abertas (UAT-297 a UAT-301)
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+As tarefas TASK-02 a TASK-08 da F96 marcadas no `tasks.md`, cada uma com o que foi feito e a decisão do MJRP que a fechou, e cinco linhas de UAT abertas pelo construtor, uma por comportamento: UAT-297 (a abertura: a caixa na diagonal, sem botão grande), UAT-298 («Como funciona», os passos com uma ilustração, a troca de passo e os tons de laranja), UAT-299 (a caixa «Na caixa do The Album Blender» em deslize), UAT-300 (sem conta, o «Criar» da barra de baixo abre o app) e UAT-301 (a página com conta mais larga que a tela). Nenhum aceite foi escrito.
+
+A evidência que as linhas citam (`reports/evidence/F96/results.txt` e as capturas) entra no próximo commit: a prova completa está rodando de novo sobre a ponta `8b7f4d9`, depois das duas decisões de hoje (as faixas e o laranja dos rótulos). A rodada anterior, antes delas, passou com 485 conferências e nenhuma falha.
+
+
 ## [2026-11-23 18:06] decision — Issue UAT-302: o parceiro do MJRP não conseguiu exportar («não encontrou as faixas»)
 
 **Branch:** main
 
 MJRP: «o meu parceiro falou que tentou exportar e nao conseguiu, frustrante tive que dar um potencial motivo, será que consegue investigar?». Registrada a UAT-302 (bug, P1). Achado no código: na exportação para o Spotify, qualquer falha de busca que não seja login vencido ou limite de chamadas é contada como faixa não encontrada (`SpotifyExportService._uriOf`), e com todas falhando a janela diz «No tracks found on Spotify». Hipótese principal, a confirmar com ele: a conta do Spotify do parceiro não está na lista de usuários do app no painel de desenvolvedor do Spotify (app em modo de desenvolvimento). As publicações do dia não coincidem com as 16:50. A feature do conserto nasce a seguir, com a issue que ela corrige.
+
+## [2026-11-23 18:05] decision — F96: no celular, o rótulo e o link de cada passo em tom de laranja (identidade visual)
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+Decisão de identidade visual do MJRP, 2026-11-23, olhando a prévia da F96 no iPhone dele (palavras dele, trazidas pelo orquestrador): «os textos do Lado a! criar e o link começar uma séries, eu usaria um tom de laranja... (em todas as etapas) fora isso tá aprovado». Vale junto com a da troca de passo, do mesmo dia: «Troca de passo: opção 3, as duas juntas» (entrada de 18:02).
+
+- **O que muda, em todos os passos, no celular:** o rótulo do passo («LADO A · 1 — CRIAR», com o número) e o link do passo («Começar uma série →», com o sublinhado e a seta) ficam num tom de laranja.
+- **Substitui** a instrução anterior de que o título «Como funciona» seria o único laranja do trecho (os rótulos e os links estavam em tom neutro desde o commit `0991eda`).
+- **O tom:** o design system declara dois laranjas: o laranja da marca `#f97316` (`--orange`) e o «laranja de texto» `#fb923c` (`--orange-text`), um tom mais claro. O título fica no da marca, o mais forte; rótulos, números e links no de texto. Nenhuma cor nova. O contraste dos dois sobre o fundo da página e sobre a faixa mais clara é medido na prova completa (próximo commit).
+- **O link:** continua sublinhado; ao apontar ou tocar passa ao âmbar do fogo (`--amber`); com o teclado, o anel âmbar da página; não há cor de «visitado» (a mesma do link).
+- **Fica como estava:** a faixa «Vire o lado», em tom neutro; o computador, que não muda.
+- **Para o passo retroativo:** o `design-system.md` chama o `#fb923c` de conflito C2 («decidir se é o laranja de texto da casa ou só da fonte»); esta decisão o usa como laranja de texto na página de entrada.
+
+Conferido: os testes da página e da arquitetura (573), `npm run typecheck` 0, `npx eslint . --quiet` 0; no site construído, WebKit e Chromium a 390, com conta: rótulos, números e links em laranja, a página com a largura da tela. O doctor segue vermelho pelos mesmos 2 erros do `MEMORY.md`, fora desta tarefa.
+
+
+## [2026-11-23 18:02] decision — F96: a troca de passo no celular é rótulo, linha e faixas alternadas («as duas juntas»)
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+O MJRP, 2026-11-23, sobre a prévia da F96 (palavras dele, trazidas pelo orquestrador): «Troca de passo: opção 3, as duas juntas». A troca de passo no celular passa a ter o rótulo, a linha fina **e** faixas alternadas de fundo: o passo 1 sobre o fundo da página, o 2 sobre uma faixa um pouco mais clara, o 3 de volta, o 4 na faixa, o 5 no fundo.
+
+- **A cor da faixa:** no esboço que ele viu eram `#0c0c0d` e `#17171a`; como pedido, entrou o tom declarado mais próximo do design system, a «superfície» `#1c1c22` (`--step-band`), sobre o fundo da página `#0a0a0c`. Nenhum dos dois valores do esboço está no código.
+- **A chave continua uma só:** `data-step-mark` no `<main>`, agora uma lista de palavras: `line bands` (hoje), `line` ou `bands`.
+- **De borda a borda:** a faixa é o `::before` do passo, que vai da borda esquerda à direita da tela.
+- **Contraste na faixa:** o painel ilustrativo é mais escuro que a faixa, então o contorno dele é reforçado (branco a 24 %); a medida do contraste de cada texto sobre a faixa entra na prova completa (próximo commit).
+- **Fica para o passo retroativo:** a linha do papel «fundo de passo» no `docs/specs/design-system.md`.
+
+Conferido: os testes da página e da arquitetura (570), `npm run typecheck` 0, `npx eslint . --quiet` 0; no site construído, WebKit e Chromium a 390: a faixa aparece nos passos 2 e 4, de borda a borda, e a página segue com a largura da tela. O doctor segue vermelho pelos mesmos 2 erros do `MEMORY.md`, fora desta tarefa.
+
+
+## [2026-11-23 17:56] step — F96: a página de entrada no celular, redesenhada (a tela, pronta para a prévia)
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+A tela da F96 construída, do protótipo escolhido (ramo `wip/f96-phone-home-prototype`), com os testes escritos antes (`reports/evidence/F96/red-before.txt`: 34 falhando). O card foi para «Em andamento» (`board_move.py`).
+
+**O que mudou, só no celular** (`public/splash.html`, o bloco de estilo «F96», e `public/splash/*`):
+- **Abertura:** a caixa leve em CSS girada 30 graus (nunca a biblioteca 3D) e nenhum botão grande, com e sem conta.
+- **«Como funciona» / «How it works»:** título próprio antes do primeiro passo, em laranja (`--orange`, o laranja do design system); os rótulos dos passos, a faixa «Vire o lado» e os links de quem tem conta ficam em tom neutro. Cada passo: rótulo, título, texto e depois UMA ilustração, na medida do computador; a capa e o segundo botão do Apple Music saíram dos passos.
+- **Marca da troca de passo:** rótulo e linha fina; uma chave só, `data-step-mark` no `<main>` (`line` hoje, `bands` pronta para testar faixas).
+- **A caixa «Na caixa do The Album Blender»** (`public/splash/shelf.js`, `shelfHtml` em `covers.js`): os 15 álbuns numa fila que rola de lado pelo próprio navegador, escrita pelo build (lê-se sem script), com duas setas e nada que ande sozinho.
+- **Sem conta:** «Entrar» no alto; o «Criar» da barra de baixo leva a `/start` (`menu.js`).
+- **A barra do alto cabe na tela:** com conta, em inglês, eram 406 px em 390; agora o logotipo cede.
+
+**Onde a palavra do MJRP vale sobre a spec** (as decisões vieram com a ordem de construir): o título é «Como funciona» (a spec trazia três redações em aberto); a marca é rótulo e linha, com a chave (em aberto na spec); o botão grande sai também para quem não tem conta (a crítica pedia mantê-lo); a prova é a 390 e 360 px (a spec dizia 375).
+
+**Decidido pelo agente, revisável:** os títulos dos passos desceram um nível (h3, sob o novo h2); no computador o título novo é lido por leitor de tela e não aparece; o número do rótulo fica maior; os nomes das setas («Álbum anterior», «Próximo álbum»); a caixa girada foi 7 % para a esquerda para não ficar sob o botão de pausa; sem script, o celular mantém «Abrir o app» na abertura (a barra de baixo não existe sem script); os acentos laranja dentro das ilustrações ficaram.
+
+**Conferido:** os testes da página e da arquitetura (59 arquivos, 568 testes), `npm run typecheck` 0, `npx eslint . --quiet` 0; no site construído, Chromium e WebKit a 390 e 360, sem e com conta, em português e inglês: a página tem a largura da tela, sem erro no console. **Não conferido ainda:** a bateria inteira, o orçamento de peso e a prova completa (vêm no próximo commit). O WebKit de teste não desenha giro 3D em CSS (nem numa página mínima): a diagonal se viu no Chromium; no Safari fica para o iPhone do MJRP.
+
+O doctor segue vermelho por 2 erros fora desta tarefa, os dois do `MEMORY.md` (o bloco «Where the Work Stopped» longo e o `## Now` atrás do log).
+
 
 ## [2026-11-23 17:52] decision — Idioma do app: português no Brasil, inglês fora, pelo lugar do acesso (F81, REQ-02); construção da escolha de idioma começa já
 

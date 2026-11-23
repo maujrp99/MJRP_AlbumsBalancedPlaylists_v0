@@ -34,7 +34,8 @@ const pt = {
     'h.title': 'Mergulhe nos álbuns que você ama.',
     'h.what': 'Seus álbuns do momento, numa playlist balanceada.',
     'h.para': 'Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas.',
-    // the stories, one per item of the menu
+    // the part that teaches the app, on the phone (F96): its title, then the stories, one per item of the menu
+    'edu.title': 'Como funciona',
     'k.start': 'Lado A · 1 — Criar', 'k.albums': 'Lado A · 2 — Álbuns', 'k.blend': 'Lado A · 3 — Blend',
     'k.playlists': 'Lado B · 1 — Playlists', 'k.inventory': 'Lado B · 2 — Inventário',
     't.start': 'Comece por um artista ou por uma lista.',
@@ -61,6 +62,9 @@ const pt = {
     'e.title': 'Coloque sua primeira série para tocar.',
     'e.what': 'Abra o app e comece uma série com um álbum que você ama. Entre na sua conta para salvá-la.',
     'ei.title': 'Coloque uma série nova para tocar.',
+    // the crate's albums in one row, on the phone (F96; the name is the owner's, 2026-11-23): its title, its name and its arrows for a screen reader
+    'shelf.title': 'Na caixa do The Album Blender', 'shelf.aria': 'Álbuns da caixa do The Album Blender',
+    'shelf.prev': 'Álbum anterior', 'shelf.next': 'Próximo álbum',
     // the stage, the records and the credits (Apple's identity: «Ouça no Apple Music» is its Portuguese badge)
     'stage.aria': 'Uma caixa de álbuns; a página puxa um álbum para a frente a cada parte',
     'c.src': 'Capa do Apple Music', 'c.listen': 'Ouça no Apple Music', 'c.newtab': ' (abre numa nova aba)',
@@ -85,6 +89,7 @@ const en = {
     'h.title': 'Dig through the albums you love.',
     'h.what': 'Your albums of the moment, in one balanced playlist.',
     'h.para': 'Build series from your albums of the moment, rank your tracks and make balanced playlists.',
+    'edu.title': 'How it works',
     'k.start': 'Side A · 1 — Create', 'k.albums': 'Side A · 2 — Albums', 'k.blend': 'Side A · 3 — Blend',
     'k.playlists': 'Side B · 1 — Playlists', 'k.inventory': 'Side B · 2 — Inventory',
     't.start': 'Begin with one artist, or a list.',
@@ -109,6 +114,8 @@ const en = {
     'e.title': 'Drop the needle on your first series.',
     'e.what': 'Open the app and start a series with one album you love. Sign in to keep it.',
     'ei.title': 'Drop the needle on a new series.',
+    'shelf.title': 'In The Album Blender\'s crate', 'shelf.aria': 'Albums in The Album Blender\'s crate',
+    'shelf.prev': 'Previous album', 'shelf.next': 'Next album',
     'stage.aria': 'A crate of albums; the page pulls one record forward for each part',
     'c.src': 'Artwork from Apple Music', 'c.listen': 'Listen on Apple Music', 'c.newtab': ' (opens in a new tab)',
     'c.src.fict': 'Fictional album · original art', 'c.fictional': 'fictional album',
@@ -128,3 +135,10 @@ export function t(key, lang = 'pt') {
     const table = COPY[lang] || COPY.pt
     return table[key] ?? COPY.pt[key] ?? key
 }
+
+/**
+ * A step's label with its number set apart (F96): «Lado A · 1 — Criar» becomes «Lado A · <span class="n">1</span> — Criar», so the phone's
+ * style can make the number stand out. The build (entryPage.mjs) and the language switch (lang.js) apply it to the elements marked `data-num`;
+ * the dictionary keeps plain text. A label without a number comes back as it is.
+ */
+export const stepLabelHtml = (text) => String(text).replace(/\d+/, n => `<span class="n">${n}</span>`)

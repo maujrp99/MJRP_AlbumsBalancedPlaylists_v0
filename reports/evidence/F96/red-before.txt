@@ -1,0 +1,78 @@
+ ❯ test/splash/phoneEntryPage.test.js  (42 tests | 34 failed) 108ms
+   ❯ test/splash/phoneEntryPage.test.js > the texts (TASK-07) > the part that teaches is «Como funciona» / «How it works»
+   ❯ test/splash/phoneEntryPage.test.js > the texts (TASK-07) > the crate is «Na caixa do The Album Blender» / «In The Album Blender's crate», the product named in full
+   ❯ test/splash/phoneEntryPage.test.js > the texts (TASK-07) > the arrows have a name for the screen reader, and say «álbum»
+   ❯ test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > has its own title, written in the page, right before the first step
+   ❯ test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > on the phone the title is in the fire's orange (the design system's `--orange`), and is the stretch's only orange text: the labels, the flip and the doors go neutral
+   ❯ test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > on a computer the title is read, not shown: the page there looks as it did
+   ❯ test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > each of the five steps: its label, its title (one level under the part's), its text, and only then its illustration
+   ❯ test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > the five steps are read by scrolling the page: none of them is inside a sideways row, and the page has one row only
+   ❯ test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > the step's number stands out inside its label, in the build and when the language changes
+   ❯ test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > the mark between two steps is ONE switch on the page: «line» today, «bands» ready to be tried
+   ❯ test/splash/phoneEntryPage.test.js > the albums leave the steps (TASK-04) > no step carries a cover any more: one illustration each, the ranking card being the one of «Álbuns»
+   ❯ test/splash/phoneEntryPage.test.js > the albums leave the steps (TASK-04) > the page's script no longer copies a record into each step, and no rule of the page styles one
+   ❯ test/splash/phoneEntryPage.test.js > the albums leave the steps (TASK-04) > on the phone the illustration has the measure the computer gives it (420 x 200 at most), alone on its line
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > is written by the build, in a place of its own, after the last step and before the invitation
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > every album of the crate is there, in the crate's order: the cover, the name and «Ouça no Apple Music» to the album's own page
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > a cover of the shelf is the crate's own image: the same address, nothing more on the wire
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > a button's name says what it does, the album and the artist, and that it opens a new tab, in the page's language, without script
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > fictional albums carry their name, their artist and the word «fictício», and no link out
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > the row scrolls by the browser itself and may be reached by the keyboard; it has a name
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > two arrows to tap, 44 px, each with its name; without script they are not shown (the row still scrolls)
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > on a computer the shelf is not shown (the computer's curation is another feature's)
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > an arrow takes the row to the next album that starts past the left edge, or back to the one before it
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > wired > at the start «anterior» is off and «próximo» is on; a tap on «próximo» moves the row by one album
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > wired > the arrow keys do the same on the row
+   ❯ test/splash/phoneEntryPage.test.js > the crate «Na caixa do The Album Blender» (TASK-05) > wired > with less motion asked the row jumps instead of gliding
+   ❯ test/splash/phoneEntryPage.test.js > the landing (TASK-02) > on the phone the opening has no big button, with or without an account
+   ❯ test/splash/phoneEntryPage.test.js > the landing (TASK-02) > without script the bottom bar is not there, so the visitor's button stays in the opening
+   ❯ test/splash/phoneEntryPage.test.js > the landing (TASK-02) > the crate stands on the diagonal: the light CSS crate, turned in the style (the covers do not move when the script arrives)
+   ❯ test/splash/phoneEntryPage.test.js > the visitor opens the app (TASK-06) > on the phone, without an account, «Criar» opens the app; the other four still lead to their steps
+   ❯ test/splash/phoneEntryPage.test.js > the visitor opens the app (TASK-06) > applyAccount writes it on the bar
+   ❯ test/splash/phoneEntryPage.test.js > the visitor opens the app (TASK-06) > the page wired > on the phone the bar's «Criar» leads to the app from the first moment, before the account is even known
+   ❯ test/splash/phoneEntryPage.test.js > the visitor opens the app (TASK-06) > the page wired > no step of the wired phone page holds a link to Apple Music: the albums are in the crate only
+   ❯ test/splash/phoneEntryPage.test.js > the top bar fits the phone (the signed-in «Create» made the page 406 px wide on 390) > on the phone the mark gives way: it may shrink, the account side never does
+   ❯ test/splash/phoneEntryPage.test.js > the top bar fits the phone (the signed-in «Create» made the page 406 px wide on 390) > the page itself never scrolls sideways on the phone: only the shelf does
+⎯⎯⎯⎯⎯⎯ Failed Tests 34 ⎯⎯⎯⎯⎯⎯⎯
+ ❯ test/splash/phoneEntryPage.test.js:39:38
+ ❯ test/splash/phoneEntryPage.test.js:44:40
+ ❯ test/splash/phoneEntryPage.test.js:51:64
++         <span class="p-out"><span class="ex ex-sp">Spotify <i>✓</i></span><span class="ex ex-am">Apple Music <i>✓</i></span></span>
+ ❯ test/splash/phoneEntryPage.test.js:64:24
+ ❯ test/splash/phoneEntryPage.test.js:70:23
+ ❯ test/splash/phoneEntryPage.test.js:79:26
+ ❯ test/splash/phoneEntryPage.test.js:85:77
+ ❯ test/splash/phoneEntryPage.test.js:94:45
+ ❯ test/splash/phoneEntryPage.test.js:100:53
+        <span class=\"p-out\"><span class=\"ex ex-sp\">Spotify <i>✓</i></span><span class=\"ex ex-am\">Apple Music <i>✓</i></span></span>
+ ❯ test/splash/phoneEntryPage.test.js:112:24
+        <span class=\"p-out\"><span class=\"ex ex-sp\">Spotify <i>✓</i></span><span class=\"ex ex-am\">Apple Music <i>✓</i></span></span>
+ ❯ test/splash/phoneEntryPage.test.js:120:28
+ ❯ test/splash/phoneEntryPage.test.js:131:28
+ ❯ test/splash/phoneEntryPage.test.js:136:23
+ ❯ test/splash/phoneEntryPage.test.js:146:24
+ ❯ test/splash/phoneEntryPage.test.js:156:23
+ ❯ test/splash/phoneEntryPage.test.js:170:23
+ ❯ test/splash/phoneEntryPage.test.js:176:64
+ ❯ test/splash/phoneEntryPage.test.js:186:53
+ ❯ test/splash/phoneEntryPage.test.js:193:25
+ ❯ test/splash/phoneEntryPage.test.js:201:25
+ ❯ test/splash/phoneEntryPage.test.js:208:26
+ ❯ test/splash/phoneEntryPage.test.js:214:47
+ ❯ layOut test/splash/phoneEntryPage.test.js:227:35
+ ❯ test/splash/phoneEntryPage.test.js:239:25
+ ❯ layOut test/splash/phoneEntryPage.test.js:227:35
+ ❯ test/splash/phoneEntryPage.test.js:253:25
+ ❯ layOut test/splash/phoneEntryPage.test.js:227:35
+ ❯ test/splash/phoneEntryPage.test.js:263:25
+ ❯ test/splash/phoneEntryPage.test.js:280:23
+ ❯ test/splash/phoneEntryPage.test.js:288:26
+ ❯ test/splash/phoneEntryPage.test.js:292:23
+ ❯ test/splash/phoneEntryPage.test.js:311:46
+ ❯ test/splash/phoneEntryPage.test.js:329:90
+ ❯ test/splash/phoneEntryPage.test.js:359:92
+ ❯ test/splash/phoneEntryPage.test.js:374:90
+ ❯ test/splash/phoneEntryPage.test.js:382:23
+ ❯ test/splash/phoneEntryPage.test.js:389:23
+ Test Files  1 failed (1)
+      Tests  34 failed | 8 passed (42)
