@@ -26,11 +26,14 @@ export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 /** Where Vite serves from: an absolute path in the site ("/js/app.js") is under this folder. */
 const SITE_ROOT = 'public'
 
-/** The aliases of vite.config.js and vitest.config.js. */
-const ALIASES = [
+/**
+ * The aliases of vite.config.js and vitest.config.js, mirrored: test/architecture/aliasesAgree.test.js holds this table and
+ * the two configs to say the same. A longer alias comes before a shorter one that starts the same way. `@components` and
+ * `@views` left with the folders they named (F83).
+ */
+export const ALIASES = [
+    ['@mjrp/admin-kit-core', 'shared/admin-kit/index.js'], // the admin kit's core (F82, F332 of the harness)
     ['@stores', 'public/js/stores'],
-    ['@components', 'public/js/components'],
-    ['@views', 'public/js/views'],
     ['@shared', 'shared'],
     ['@', 'public/js']
 ]

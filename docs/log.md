@@ -2,6 +2,16 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:47] step — F82: os sensores de imports conhecem o apelido do núcleo do kit; um teste segura a tabela junto do build
+
+**Branch:** claude/f82-cms-texts-panel
+
+A tabela de apelidos dos sensores que percorrem os imports (`test/architecture/support/importGraph.js`, `ALIASES`) espelha os apelidos do build, e não tinha o `@mjrp/admin-kit-core` (o núcleo do kit do admin em `shared/admin-kit/`), que o `vite.config.js`, o `vitest.config.js` e o `tsconfig.json` já declaram: por isso o `noDeadModules` dava por mortos três arquivos que SÃO alcançados (`shared/admin-kit/index.js`, `rich/doc.js`, `rich/markdown.js`). A linha entrou na tabela. Isto não afrouxa o sensor: ele passa a resolver um apelido que existe no build, como já resolve os outros; nenhum arquivo foi dispensado nem posto em lista de exceção. Saíram da tabela `@components` e `@views`, que o build não tem mais (as pastas saíram na F83).
+
+Para o próximo apelido não ser esquecido, um teste novo (`test/architecture/aliasesAgree.test.js`, escrito antes, reprovou, depois passou): a tabela, o `vite.config.js` e o `vitest.config.js` dizem os mesmos apelidos com os mesmos destinos, o `tsconfig.json` conhece todos, e um apelido mais longo vem antes de um mais curto que comece igual.
+
+Com isso o `noDeadModules` acusa só os dois arquivos de `ui/admin-kit/example/` da cópia candidata, que a versão oficial do kit não traz.
+
 ## [2026-11-23 15:30] step — F82 (juiz, P2-7): na rota de tradução, um limite por pessoa antes da leitura do registro do administrador
 
 **Branch:** claude/f82-cms-texts-panel
