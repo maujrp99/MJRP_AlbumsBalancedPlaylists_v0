@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:50] step — F81: o ramo com o relatório do juiz e a main (65a2005) dentro; orçamento medido de novo; prova de navegador repetida
+
+**Branch:** feat/f81-language-by-country-and-switch
+
+Depois das correções (2d65f42): `git merge --no-ff wip/f81-judge` (o relatório intocado) e `git merge main` (65a2005). Um conflito só, em `docs/specs/uat.md`: as linhas dos dois lados ficaram, por ordem de id (UAT-302 da main, UAT-303 a UAT-306 deste ramo); `merge_train.py uat-check` conferiu os ids. Todas as entradas do log ficaram. `scripts/bundle-budget.json` não conflitou (a main não o mudou), mas a regra do arquivo manda medir de novo: no build no formato da publicação, o script principal mede 200.190 B (+578 B desde aff752c: `i18n/dates.js` e o que veio da main) e o que vem depois da primeira tela 255.786 B; tetos na medição mais a margem (principal 200.340 B, `background` 82.689 B), com a conta no arquivo.
+
+Conferido com tudo junto: a suíte inteira, sozinha na fila — 416 arquivos, 5605 passaram, 1 pulado; `npm run typecheck`, `npx eslint . --quiet` e `npm run budget:publication` com saída 0. Prova de navegador repetida no site construído deste commit (`reports/evidence/F81/`): 140 de 140 (as 132 de antes mais 8 novas: o botão de «Página não encontrada» diz «Ir para Criar», e o rodapé em português escreve «23/11/2026, 18:48:04» num navegador em inglês) e 12 de 12 atrás do emulador do Firebase Hosting.
+
 ## [2026-11-23 18:43] step — F81: correções da reconferência do juiz (o P1 dos textos em português com inglês, e três P2)
 
 **Branch:** feat/f81-language-by-country-and-switch

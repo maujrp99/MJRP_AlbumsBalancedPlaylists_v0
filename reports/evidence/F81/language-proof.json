@@ -1,6 +1,6 @@
 {
  "base": "the built site (vite build + vite preview)",
- "passed": 132,
+ "passed": 140,
  "failed": 0,
  "results": [
   {
@@ -54,6 +54,11 @@
    "detail": "focus on pt · albumblender:lang = pt"
   },
   {
+   "name": "[chromium 1280 visitor] in Portuguese the footer writes the date the Brazilian way, though the browser speaks English",
+   "ok": true,
+   "detail": "Última atualização: 23/11/2026, 18:48:04"
+  },
+  {
    "name": "[chromium 1280 visitor] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
    "ok": true,
    "detail": "reached true · lang en · focus en"
@@ -67,6 +72,11 @@
    "name": "[chromium 1280 visitor] /admin, for who is not the administrator, says «page not found» in Portuguese",
    "ok": true,
    "detail": "Página não encontrada"
+  },
+  {
+   "name": "[chromium 1280 visitor] and its button says where it goes with the menu's own word, «Criar»",
+   "ok": true,
+   "detail": "Ir para Criar"
   },
   {
    "name": "[chromium 1280 visitor] and in English after «English» is picked there, with no reload",
@@ -142,6 +152,11 @@
    "name": "[chromium 1280 signed in] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
    "ok": true,
    "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[chromium 1280 signed in] in Portuguese the footer writes the date the Brazilian way, though the browser speaks English",
+   "ok": true,
+   "detail": "Última atualização: 23/11/2026, 18:48:17"
   },
   {
    "name": "[chromium 1280 signed in] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
@@ -232,6 +247,11 @@
    "name": "[chromium 390 visitor] /admin, for who is not the administrator, says «page not found» in Portuguese",
    "ok": true,
    "detail": "Página não encontrada"
+  },
+  {
+   "name": "[chromium 390 visitor] and its button says where it goes with the menu's own word, «Criar»",
+   "ok": true,
+   "detail": "Ir para Criar"
   },
   {
    "name": "[chromium 390 visitor] and in English after «English» is picked there, with no reload",
@@ -384,6 +404,11 @@
    "detail": "focus on pt · albumblender:lang = pt"
   },
   {
+   "name": "[webkit 1280 visitor] in Portuguese the footer writes the date the Brazilian way, though the browser speaks English",
+   "ok": true,
+   "detail": "Última atualização: 23/11/2026, 18:48:45"
+  },
+  {
    "name": "[webkit 1280 visitor] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
    "ok": true,
    "detail": "reached true · lang en · focus en"
@@ -397,6 +422,11 @@
    "name": "[webkit 1280 visitor] /admin, for who is not the administrator, says «page not found» in Portuguese",
    "ok": true,
    "detail": "Página não encontrada"
+  },
+  {
+   "name": "[webkit 1280 visitor] and its button says where it goes with the menu's own word, «Criar»",
+   "ok": true,
+   "detail": "Ir para Criar"
   },
   {
    "name": "[webkit 1280 visitor] and in English after «English» is picked there, with no reload",
@@ -472,6 +502,11 @@
    "name": "[webkit 1280 signed in] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
    "ok": true,
    "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[webkit 1280 signed in] in Portuguese the footer writes the date the Brazilian way, though the browser speaks English",
+   "ok": true,
+   "detail": "Última atualização: 23/11/2026, 18:48:58"
   },
   {
    "name": "[webkit 1280 signed in] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
@@ -562,6 +597,11 @@
    "name": "[webkit 390 visitor] /admin, for who is not the administrator, says «page not found» in Portuguese",
    "ok": true,
    "detail": "Página não encontrada"
+  },
+  {
+   "name": "[webkit 390 visitor] and its button says where it goes with the menu's own word, «Criar»",
+   "ok": true,
+   "detail": "Ir para Criar"
   },
   {
    "name": "[webkit 390 visitor] and in English after «English» is picked there, with no reload",

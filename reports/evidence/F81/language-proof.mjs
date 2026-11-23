@@ -196,6 +196,11 @@ async function run(type, browserName, width, account) {
     say(`${tag} the work in progress is kept (what was typed on the screen is still there)`, hasField ? value === 'Work in progress 1973' : false, hasField ? `field: «${value}»` : 'no field found on /start')
     say(`${tag} the focus is on the language picked, and the choice is kept on the device under the entry page's key`, p.focus === 'pt' && f.choice === 'pt', `focus on ${p.focus} · ${LANG_KEY} = ${f.choice}`)
     await page.screenshot({ path: file('04-selector-portuguese') })
+    if (!phoneOf(width)) {
+      // the judge's P2-4: the date of the footer follows the language of the app, in a browser that speaks English (en-US)
+      const stamp = await page.locator('#footer-container .last-update').innerText()
+      say(`${tag} in Portuguese the footer writes the date the Brazilian way, though the browser speaks English`, /\d{2}\/\d{2}\/\d{4},? \d{2}:\d{2}:\d{2}/.test(stamp) && !/AM|PM/.test(stamp), stamp.trim())
+    }
 
     // 5. by the keyboard alone (the computer)
     if (!phoneOf(width)) {
@@ -238,6 +243,9 @@ async function run(type, browserName, width, account) {
       await page.waitForSelector('[data-screen="not-found"]', { timeout: 20000 })
       const title = () => page.locator('[data-screen="not-found"] div').first().innerText()
       say(`${tag} /admin, for who is not the administrator, says «page not found» in Portuguese`, await title() === pt['notices.router.notFoundTitle'], await title())
+      // the judge's P1-1: the way back names the stop as the Portuguese menu does
+      const back = (await page.locator('[data-screen="not-found"] a').innerText()).trim()
+      say(`${tag} and its button says where it goes with the menu's own word, «${pt['shell.phone.tabStart']}»`, back === pt['notices.router.notFoundBack'] && back.endsWith(pt['shell.phone.tabStart']) && !back.includes(en['shell.phone.tabStart']), back)
       await openMenu(page, width)
       await pick(page, width, 'en')
       say(`${tag} and in English after «English» is picked there, with no reload`, await title() === en['notices.router.notFoundTitle'], await title())
