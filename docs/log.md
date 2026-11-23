@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-23 00:32] decision — ADR-0024: o MJRP aceitou em conversa («Aceito»); o carimbo no registro continua dele
+
+**Branch:** main
+
+O MJRP, 2026-11-23 00:31, respondendo ao único item em aberto («O aceite da decisão de arquitetura do CMS (o registro ADR-0024), quando puder: é ele que libera a construção do alicerce»): «Aceito». Como eu li (interpretação minha): ele aceita a decisão inteira do ADR-0024; a construção da fatia 0 (alicerce: regras em rascunho, teste das regras no emulador, `shared/content`, o servidor lendo a chave do Discogs) começa agora, num ramo. O registro segue `Proposed` até o commit dele com `Human-accepted: adr:ADR-0024`; o agente não muda o status. A publicação das regras do banco e o registro `cmsAdmins/{uid}` continuam sendo dele.
+
 ## [2026-11-22 21:48] decision — ADR-0024 (Proposed): o conteúdo publicado do CMS mora no Firestore, lido sem esperar, gravado só pelo administrador
 
 **Branch:** main
