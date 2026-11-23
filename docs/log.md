@@ -2,6 +2,31 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 14:25] step — CMS (F82): o núcleo do conteúdo no site, sem o kit: validador de textos, leitor ao abrir e a gravação do Painel (TASK-11, TASK-12, TASK-14)
+
+**Branch:** claude/f82-cms-content-core
+
+Três tarefas num commit só, porque a fila da máquina estava cheia e cada passagem custa minutos (decidido pelo agente — revisável). Teste antes do código em cada peça.
+
+- **TASK-11** · `shared/content/texts.js`: `validateText` e `validateTexts` (texto simples: não vazio, os mesmos `{marcadores}` do inglês, sem `<` nem `>`, até 3× o inglês, aviso a partir de 1,5×; chave rica ou de «barra curta», conferida por TIPO: sem a regra do `<`/`>`, passa por um leitor injetado `parseRich(text) → {ok, links[]}` e só aceita links `https:`, `mailto:` e caminhos do site; a barra curta não aceita quebra de linha). `shared/data/PublishedContentRepository.js` (lê `published/texts_*`, `published/site`, `cmsAdmins/{uid}`, `cmsWork/*`) e o lado do site, `public/js/repositories/publishedContent.js`. Testes: `test/shared/content/texts.test.js`, `test/shared/data/PublishedContentRepository.test.js`.
+- **TASK-12** · `public/js/i18n/t.js` ganhou a camada publicada (publicado > dicionário do código > inglês do código, sem depender da ordem de chegada), `registerPublishedTexts`, a versão dos textos, `onTextsChange` e `tRich`; `useLocale` passa a redesenhar por idioma + versão; `public/js/i18n/textKinds.js` é a marca «rico / barra curta» por chave (vazia até a TASK-15). O leitor (`public/js/services/content/publishedContentReader.js`, montado em `contentWiring.js` e chamado pelo `app.js` sem esperar): aplica a cópia do navegador na hora (até 30 dias), pede o banco com prazo de 3 s, confere chave por chave (a ruim volta ao código sozinha e é contada), «não encontrado» apaga a cópia e a camada, e das chaves de ligar e desligar a cópia só guarda as desligadas. Testes: `test/i18n/publishedLayer.test.tsx`, `test/services/content/publishedContentReader.test.js`.
+- **TASK-14** · `shared/content/textsSave.js` (`buildTextsSave`: `rev` = lido + 1 e `previous` só das chaves que mudaram; `findTextConflicts`: o que este aparelho leu, a outra, a sua) e `shared/data/PublishedContentSaveRepository.js` (`saveTexts`: uma transação que grava o documento e, em `cmsWork/save_texts_<idioma>`, quem salvou e quando; com conflito na mesma chave nada é gravado). Testes: `test/shared/content/textsSave.test.js`, o do repositório e três casos novos no emulador das regras (`test/security/firestoreRules.emulator.js`: o repositório de verdade com a transação de verdade; as regras não foram tocadas).
+
+Decisões que tomei sozinho (decidido pelo agente — revisável):
+- **Leitor de texto rico provisório** (`basicParseRich`): até o núcleo puro do kit ser plugado, recusa HTML cru e recolhe os links do Markdown. Sem ele uma chave rica não poderia ser publicada hoje.
+- **`previous` com `null`** para a chave que não estava publicada (era o texto do código que aparecia).
+- **A gravação mora num arquivo à parte** (`PublishedContentSaveRepository`, `publishedContentWriter.js`), baixado só pelo Painel: o site de todos carrega só a leitura. Hoje ninguém a chama, então o build a deixa de fora; quando o Painel chamar, a função de transação do banco entra no arquivo onde o SDK do Firestore já mora (o principal) e o peso precisa ser medido de novo.
+- **O peso do arquivo principal subiu 3.161 B** (194.875 → 198.036 B), acima dos 2.000 B que o plano declarava: o leitor, os dois validadores e o repositório de leitura rodam antes da primeira tela, porque a cópia é aplicada antes do primeiro desenho. Os tetos ficaram no medido + 150 B.
+- **Quem restaurar o idioma ao abrir (F81)** deve chamar `setLocale` antes de `startPublishedContent()`, ou quem fala português pede também o documento em inglês.
+- **Mudança em OUTRA chave noutro aparelho não é conflito**: a gravação segue por cima do documento vivo (a transação garante `rev` = vivo + 1). Conflito é só a mesma chave com outro valor.
+- **Resposta que chega depois dos 3 s** é guardada como cópia para a próxima abertura, e não desenhada no meio desta.
+- **Uma cópia com data no futuro** é jogada fora, como a de mais de 30 dias.
+- **`cmsWork/save_texts_<idioma>`** é um documento por idioma, sobrescrito a cada gravação (como o `previous`: cobre só a última).
+
+Conferido pela fila da máquina: `npm run lint` saiu 0 (66 avisos, os de antes); `npm run test:rules` 34 verdes (os 31 de antes mais os 3 novos); o orçamento de publicação medido (acima); a suíte padrão inteira rodou verde antes do commit (os totais estão na mensagem do commit). O `doctor` saiu vermelho com 521 erros, o mesmo número que o log já registra como base (517 links quebrados de documentos antigos, a constituição gerada, o tamanho do «Where the Work Stopped», o quadro da F75) mais o aviso de que o `## Now` do MEMORY.md parou às 13:42: não mexi no MEMORY.md neste ramo, fica com quem junta.
+
+O que NÃO foi feito aqui: a prova no navegador de que a primeira tela desenha no mesmo tempo (±50 ms) com a leitura bloqueada (TASK-02; por desenho o `app.js` não espera e há teste de que `start()` volta com a leitura presa); as regras do banco não foram tocadas; nada publicado.
+
 ## [2026-11-23 13:42] step — CMS: o MJRP publicou as regras do banco e criou `published/site` com a chave do Discogs ligada
 
 **Branch:** main
