@@ -66,13 +66,30 @@ describe('the part that teaches the app (TASK-03)', () => {
         expect(built('real')).toContain('<h2 class="edu-t" id="edu" data-i18n="edu.title">Como funciona</h2>')
     })
 
-    it('on the phone the title is in the fire\'s orange (the design system\'s `--orange`), and is the stretch\'s only orange text: the labels, the flip and the doors go neutral', () => {
+    // The owner, on his iPhone, 2026-11-23: «os textos do Lado a! criar e o link começar uma séries, eu usaria um tom de laranja... (em todas as etapas)
+    // fora isso tá aprovado». It replaces the earlier rule that the title was the stretch's only orange.
+    it('on the phone the title is in the fire\'s main orange (`--orange`), the strongest of the stretch', () => {
         expect(phone).toMatch(/\.story > \.edu-t\{[^}]*color:var\(--orange\)/)
-        expect(phone).toMatch(/\.step \.kicker\{[^}]*color:var\(--muted\)/)
-        expect(phone).toMatch(/\.flip-band \.fb-title\{[^}]*color:#d6d6dc/)
-        expect(phone).toMatch(/\.step \.door\{[^}]*color:#fff/)
         const others = phone.replace(/\.story > \.edu-t\{[^}]*\}/, '')
-        expect(others).not.toMatch(/color:var\(--orange(-text)?\)/)
+        expect(others).not.toMatch(/color:var\(--orange\)/)
+    })
+
+    it('in every step the label, its number and the step\'s link are in an orange tone: the design system\'s lighter orange for text (`--orange-text`), no new colour', () => {
+        expect(phone).toMatch(/\.step \.kicker,\.step \.kicker \.n,\.step \.door\{color:var\(--orange-text\)\}/)
+        expect(phone).not.toMatch(/\.step \.kicker\{[^}]*color:var\(--muted\)/)
+        expect(phone).not.toMatch(/\.step \.door\{[^}]*color:#fff/)
+        expect(phone.match(/#f[0-9a-f]{5}\b/gi) || []).toEqual([]) // no orange literal: only the page's tokens
+    })
+
+    it('the link keeps its underline, and shows when it is pointed at or pressed (the amber end of the fire); the keyboard\'s ring is the page\'s', () => {
+        expect(phone).toMatch(/\.step \.door\{text-decoration:underline;text-underline-offset:4px\}/)
+        expect(phone).toMatch(/\.step \.door:hover,\.step \.door:active\{color:var\(--amber\)\}/)
+        expect(source).toMatch(/:focus-visible\{outline:3px solid var\(--amber\);outline-offset:3px\}/)
+        expect(phone).not.toMatch(/\.door[^{]*\{[^}]*outline:\s*(0|none)/)
+    })
+
+    it('the flip band between the two sides stays neutral', () => {
+        expect(phone).toMatch(/\.flip-band \.fb-title\{[^}]*color:#d6d6dc/)
     })
 
     it('on a computer the title is read, not shown: the page there looks as it did', () => {

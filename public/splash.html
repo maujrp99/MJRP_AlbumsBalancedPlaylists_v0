@@ -358,7 +358,9 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
    THE STEP MARK is ONE switch, `data-step-mark` on <main>, a list of words: "line" (a thin line from edge to edge above each step), "bands"
    (the even steps on a slightly lighter band, edge to edge) or both. Today "line bands": the owner, 2026-11-23, «Troca de passo: opção 3, as
    duas juntas». The band is `--step-band`, the design system's «superfície» (#1c1c22), the declared surface nearest to the sketch he saw.
-   THE ORANGE: in this stretch only the part's title is orange (the design system's `--orange`); labels, the flip and the doors are neutral. ===== */
+   THE ORANGE (the owner, on his iPhone, 2026-11-23: «os textos do Lado a! criar e o link começar uma séries, eu usaria um tom de laranja... (em
+   todas as etapas)»): the part's title in the main orange (`--orange`), the strongest; every step's label, its number and its link one tone
+   lighter, the design system's orange for text (`--orange-text`). The flip band stays neutral. ===== */
 .edu-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .story > .shelf-sec{display:none} /* as specific as the page's own rule for a story (.story > section), which would show it */
 @media (max-width:899px){
@@ -383,10 +385,11 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   [data-step-mark~="line"] > #start::before{border-top:0}
   [data-step-mark~="bands"] > #albums::before,[data-step-mark~="bands"] > #playlists::before{background:var(--step-band)}
   [data-step-mark~="bands"] > #albums .ranked,[data-step-mark~="bands"] > #playlists .v4-motif{border-color:rgba(255,255,255,.24)} /* the illustration is darker than the band: its outline is reinforced so it does not melt into it */
-  .step .kicker{color:var(--muted)}
-  .step .kicker .n{font:800 30px/1 var(--display);letter-spacing:0;margin:0 3px;vertical-align:-4px;color:#fff}
+  .step .kicker,.step .kicker .n,.step .door{color:var(--orange-text)}
+  .step .kicker .n{font:800 30px/1 var(--display);letter-spacing:0;margin:0 3px;vertical-align:-4px}
   .step h3.t{font-size:24px;margin-bottom:12px}
-  .step .door{color:#fff;text-decoration:underline;text-underline-offset:4px}
+  .step .door{text-decoration:underline;text-underline-offset:4px}
+  .step .door:hover,.step .door:active{color:var(--amber)}
   .flip-band .fb-title{color:#d6d6dc}
   .v4-lead{display:block;margin:20px 0 0}
   .v4-motif{width:min(100%,420px);height:200px;margin:0}

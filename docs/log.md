@@ -2,6 +2,22 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:05] decision — F96: no celular, o rótulo e o link de cada passo em tom de laranja (identidade visual)
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+Decisão de identidade visual do MJRP, 2026-11-23, olhando a prévia da F96 no iPhone dele (palavras dele, trazidas pelo orquestrador): «os textos do Lado a! criar e o link começar uma séries, eu usaria um tom de laranja... (em todas as etapas) fora isso tá aprovado». Vale junto com a da troca de passo, do mesmo dia: «Troca de passo: opção 3, as duas juntas» (entrada de 18:02).
+
+- **O que muda, em todos os passos, no celular:** o rótulo do passo («LADO A · 1 — CRIAR», com o número) e o link do passo («Começar uma série →», com o sublinhado e a seta) ficam num tom de laranja.
+- **Substitui** a instrução anterior de que o título «Como funciona» seria o único laranja do trecho (os rótulos e os links estavam em tom neutro desde o commit `0991eda`).
+- **O tom:** o design system declara dois laranjas: o laranja da marca `#f97316` (`--orange`) e o «laranja de texto» `#fb923c` (`--orange-text`), um tom mais claro. O título fica no da marca, o mais forte; rótulos, números e links no de texto. Nenhuma cor nova. O contraste dos dois sobre o fundo da página e sobre a faixa mais clara é medido na prova completa (próximo commit).
+- **O link:** continua sublinhado; ao apontar ou tocar passa ao âmbar do fogo (`--amber`); com o teclado, o anel âmbar da página; não há cor de «visitado» (a mesma do link).
+- **Fica como estava:** a faixa «Vire o lado», em tom neutro; o computador, que não muda.
+- **Para o passo retroativo:** o `design-system.md` chama o `#fb923c` de conflito C2 («decidir se é o laranja de texto da casa ou só da fonte»); esta decisão o usa como laranja de texto na página de entrada.
+
+Conferido: os testes da página e da arquitetura (573), `npm run typecheck` 0, `npx eslint . --quiet` 0; no site construído, WebKit e Chromium a 390, com conta: rótulos, números e links em laranja, a página com a largura da tela. O doctor segue vermelho pelos mesmos 2 erros do `MEMORY.md`, fora desta tarefa.
+
+
 ## [2026-11-23 18:02] decision — F96: a troca de passo no celular é rótulo, linha e faixas alternadas («as duas juntas»)
 
 **Branch:** feat/f96-entry-page-on-the-phone
