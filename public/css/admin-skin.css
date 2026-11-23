@@ -113,6 +113,41 @@
     .cms-chip { min-height: 44px; }
 }
 
+/* The «Caixa» section (F82 REQ-03; F95): the two sides of the entry page's crate side by side, each a numbered list of albums
+   (the cover, the name, the artist and the year) with its buttons; under them, the search of an album to add. */
+.cms-crate { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.cms-side { display: grid; gap: 8px; min-width: 0; padding: 14px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: var(--ak-panel); }
+.cms-side[data-count-state="few"], .cms-side[data-count-state="many"] { border-color: var(--ak-err); }
+.cms-side-h { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.cms-side-h h2 { font: 700 20px/1.2 var(--ak-display); }
+.cms-side > p { font-size: 13px; }
+.cms-albums { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+/* An album: its place, its cover and its names on one line; its buttons under the names, so a long name keeps the whole width. */
+.cms-album { display: grid; grid-template-columns: 20px 56px minmax(0, 1fr); gap: 6px 10px; align-items: center; padding: 8px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: var(--ak-bg); }
+.cms-album[data-result] { grid-template-columns: 56px minmax(0, 1fr); }
+.cms-album .cms-row-acts { grid-column: 3; justify-content: flex-start; }
+.cms-album[data-result] .cms-row-acts { grid-column: 2; }
+.cms-album-n { color: var(--ak-soft); font: 700 12px var(--ak-mono); text-align: right; }
+.cms-cover { display: block; width: 56px; height: 56px; border-radius: 3px; background: var(--ak-panel-2); object-fit: cover; }
+.cms-album-t { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.cms-album-t b { font: 700 14.5px/1.25 var(--ak-display); }
+.cms-album-t small { color: var(--ak-soft); font-size: 12.5px; }
+.cms-album .cms-row-acts { align-items: center; }
+.cms-album .cms-cover, .cms-album .cms-album-n { grid-row: span 2; }
+.cms-album .cms-cover { align-self: start; }
+.cms-album .ak-icon { display: inline-grid; place-items: center; min-width: 36px; min-height: 36px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: none; }
+.cms-album .ak-icon:disabled, .cms-album .ak-btn:disabled { opacity: .4; cursor: default; }
+.cms-album button:focus-visible, .cms-add button:focus-visible, .cms-add .ak-input:focus-visible { outline: 2px solid var(--ak-accent); outline-offset: 2px; }
+.cms-add .cms-tools .ak-btn { min-height: 44px; }
+@media (max-width: 1100px) {
+    .cms-crate { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 860px) {
+    .cms-album .cms-cover, .cms-album .cms-album-n { grid-row: auto; }
+    .cms-album .cms-row-acts, .cms-album[data-result] .cms-row-acts { grid-column: 1 / -1; }
+    .cms-album .ak-icon { min-width: 44px; min-height: 44px; }
+}
+
 /* The phone of the app (its shell is the phone's up to 899 px: public/css/mobile.css): the top bar of the app is fixed over the page, so
    the save bar sticks BELOW it, by the app's own measures, and never slides under it (the judge of 2026-11-23, P1-1). A tall message
    (the confirmation, the conflict) scrolls inside the bar, between the top bar and the bottom menu. */

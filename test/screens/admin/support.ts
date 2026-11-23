@@ -8,6 +8,12 @@ import { admin as adminPt } from '../../../public/js/i18n/pt/admin.js'
 import { registerTexts, t, tPlural } from '../../../public/js/i18n/t.js'
 import { richTexts } from '../../../public/js/screens/admin/richTexts'
 import type { PanelProps, SiteState } from '../../../public/js/screens/admin/TextsPanel'
+import type { SearchAnswer } from '../../../public/js/screens/admin/appleAlbums'
+import type { Album, Sides } from '../../../public/js/screens/admin/crateModel'
+import { fixedCrateOf } from '../../../public/js/screens/admin/fixedCrate'
+import { fillEntryPage } from '../../../scripts/entryPage.mjs'
+import { readFileSync } from 'node:fs'
+import type { CrateRead, CrateSaveAnswer, CrateStore } from '../../../public/js/screens/admin/crateStore'
 import { albumBlenderPorts, kitTexts, type ContentStore, type SaveAnswer, type Stored } from '../../../public/js/screens/admin/kitPorts'
 import type { Dict, Locale } from '../../../public/js/screens/admin/model'
 import type { TranslateAsk, TranslateReason } from '../../../public/js/screens/admin/translate'
@@ -87,7 +93,61 @@ export function memoryNavigation(start = ''): KitNavigation & { went: Array<KitL
     }
 }
 
+export const album = (id: number | string, over: Partial<Album> = {}): Album => ({
+    id: String(id), title: `Album ${id}`, artist: `Artist ${id}`, year: 1990, art: `Music1/v4/${id}/cover.jpg`, href: `https://music.apple.com/us/album/a/${id}`, ...over,
+})
+export const side = (from: number, count: number): Album[] => Array.from({ length: count }, (_, i) => album(from + i))
+
+/** The entry page as the build writes it, with the real covers or the fictional ones. */
+export const entryPage = (set: 'real' | 'fictional' = 'real'): string => fillEntryPage(readFileSync('public/splash.html', 'utf8'), { set })
+/** The fixed set, as the Painel reads it from the entry page. */
+export const fixedCrate = (): Sides => fixedCrateOf(entryPage())
+
+export function crateRead(over: Partial<CrateRead> = {}): CrateRead {
+    return { sides: { a: side(1, 6), b: side(20, 4) }, rev: 2, source: 'published', rejected: 0, allowed: true, ...over }
+}
+
+export interface FakeCrate extends CrateStore {
+    saves: Array<{ loadedRev: number; sides: Sides }>
+    searches: string[]
+}
+
+export interface CrateOptions {
+    start?: CrateRead
+    read?: () => Promise<CrateRead>
+    /** What a save answers instead of «saved» (once; the next save goes through). */
+    answer?: (ask: { loadedRev: number; sides: Sides }) => Promise<CrateSaveAnswer>
+    search?: (query: string) => Promise<SearchAnswer>
+}
+
+export function fakeCrate(options: CrateOptions = {}): { store: FakeCrate; search: (query: string) => Promise<SearchAnswer> } {
+    let now = options.start ?? crateRead()
+    let answer = options.answer
+    const store: FakeCrate = {
+        saves: [],
+        searches: [],
+        read: options.read ?? (async () => now),
+        async save(ask) {
+            store.saves.push(ask)
+            if (answer) {
+                const once = answer
+                answer = undefined
+                return once(ask)
+            }
+            now = { ...now, sides: ask.sides, rev: ask.loadedRev + 1, source: 'published' }
+            return { status: 'saved', rev: now.rev, sides: ask.sides }
+        },
+    }
+    const search = async (query: string): Promise<SearchAnswer> => {
+        store.searches.push(query)
+        return options.search ? options.search(query) : { ok: true, albums: [album(900), album(901), album(21)] }
+    }
+    return { store, search }
+}
+
 export interface PropsOptions extends FakeOptions {
+    crate?: CrateOptions
+    section?: PanelProps['section']
     site?: SiteState
     translate?: (ask: TranslateAsk) => Promise<KitResult<string>>
     reason?: () => TranslateReason
@@ -97,7 +157,7 @@ export interface PropsOptions extends FakeOptions {
     onSiteState?: PanelProps['onSiteState']
 }
 
-export function panelProps(options: PropsOptions = {}): PanelProps & { store: FakeStore; went: Array<KitLocation & { replace?: boolean }> } {
+export function panelProps(options: PropsOptions = {}): PanelProps & { store: FakeStore; went: Array<KitLocation & { replace?: boolean }>; crate: { store: FakeCrate } } {
     const store = fakeStore(options)
     const translate = options.translate ?? (async (ask) => ({ ok: true as const, value: `[${ask.target}] ${ask.text}` }))
     const navigation = memoryNavigation(options.screen ?? 'albums')
@@ -108,6 +168,7 @@ export function panelProps(options: PropsOptions = {}): PanelProps & { store: Fa
     })
     return {
         store, ports, translate, check, went: navigation.went, guardLeave: options.guardLeave,
+        crate: fakeCrate(options.crate), section: options.section,
         kindOf: (key) => (key === 'start.lead' ? 'rich' : 'plain'),
         siteState: options.siteState ?? (() => options.site ?? { source: 'published', reason: 'read', rejected: [] }),
         onSiteState: options.onSiteState,

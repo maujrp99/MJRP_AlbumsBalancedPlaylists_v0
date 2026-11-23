@@ -37,10 +37,11 @@ export function startShelf(win) {
     const row = D.getElementById('shelf')
     const prev = D.getElementById('shelf-prev'), next = D.getElementById('shelf-next')
     if (!row || !prev || !next) return null
-    const items = [...row.querySelectorAll('.al')]
-    if (!items.length) return null
+    // read at each step: the albums of the row are replaced when the owner's published crate arrives (publishedCrate.js)
+    const items = () => [...row.querySelectorAll('.al')]
+    if (!items().length) return null
     const reduce = win.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const starts = () => items.map(item => item.offsetLeft - items[0].offsetLeft)
+    const starts = () => { const all = items(); return all.map(item => item.offsetLeft - all[0].offsetLeft) }
     const max = () => Math.max(0, row.scrollWidth - row.clientWidth)
     // an arrow at the end of its way stays focusable (a disabled button would drop the keyboard's focus): it says so and does nothing
     const update = () => {
@@ -62,6 +63,7 @@ export function startShelf(win) {
     win.addEventListener('resize', update)
     // the row may not have its width yet when this runs (WebKit lays it out after the style arrives: «próximo» came up switched off): judge again when it has
     win.addEventListener('load', update)
+    D.addEventListener('cratechange', update)
     if ('ResizeObserver' in win) new win.ResizeObserver(update).observe(row.firstElementChild || row)
     update()
     return { go, update }

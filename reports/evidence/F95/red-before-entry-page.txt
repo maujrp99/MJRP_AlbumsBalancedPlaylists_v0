@@ -1,0 +1,34 @@
+ ❯ test/splash/publishedCrate.test.js  (27 tests | 5 failed) 217ms
+   ❯ test/splash/publishedCrate.test.js > where the crate is read from > the page's content policy is opened for the database read and for nothing else: images stay on Apple's one server
+     → expected [ '\'self\'', …(1) ] to deeply equal [ '\'self\'', …(2) ]
+   ❯ test/splash/publishedCrate.test.js > the page with a published crate > nothing published, a read that fails and a crate that does not pass the check all leave the fixed set, untouched
+     → expected '\n        <img class="sl s0 vis" styl…' to be '\n        <img class="sl s0" style="-…' // Object.is equality
+   ❯ test/splash/publishedCrate.test.js > the page with a published crate > a hostile published value never becomes an element, and a cover from another server never shows
+     → expected <script type="module" …(1)></script> to have a length of +0 but got 1
+   ❯ test/splash/publishedCrate.test.js > the name of the crate on the computer (F95) > with the real albums the stage carries «Na caixa do The Album Blender», the same name as the phone's row, in the two languages
+     → expected '' to contain 'class="credit-tag crate-tag"'
+   ❯ test/splash/publishedCrate.test.js > the name of the crate on the computer (F95) > the label sits by the crate on the computer; on the phone the row carries the name, so the label is not shown there
+     → expected '<!doctype html>\n<html lang="pt-BR" d…' to match /\.crate-tag\{[^}]*text-transform:uppe…/
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/splash/publishedCrate.test.js > where the crate is read from > the page's content policy is opened for the database read and for nothing else: images stay on Apple's one server
+AssertionError: expected [ '\'self\'', …(1) ] to deeply equal [ '\'self\'', …(2) ]
+ ❯ test/splash/publishedCrate.test.js:51:42
+ FAIL  test/splash/publishedCrate.test.js > the page with a published crate > nothing published, a read that fails and a crate that does not pass the check all leave the fixed set, untouched
+AssertionError: expected '\n        <img class="sl s0 vis" styl…' to be '\n        <img class="sl s0" style="-…' // Object.is equality
+ ❯ test/splash/publishedCrate.test.js:280:62
+ FAIL  test/splash/publishedCrate.test.js > the page with a published crate > a hostile published value never becomes an element, and a cover from another server never shows
+AssertionError: expected <script type="module" …(1)></script> to have a length of +0 but got 1
+ ❯ test/splash/publishedCrate.test.js:291:107
+ FAIL  test/splash/publishedCrate.test.js > the name of the crate on the computer (F95) > with the real albums the stage carries «Na caixa do The Album Blender», the same name as the phone's row, in the two languages
+AssertionError: expected '' to contain 'class="credit-tag crate-tag"'
+ ❯ test/splash/publishedCrate.test.js:317:21
+ FAIL  test/splash/publishedCrate.test.js > the name of the crate on the computer (F95) > the label sits by the crate on the computer; on the phone the row carries the name, so the label is not shown there
+AssertionError: expected '<!doctype html>\n<html lang="pt-BR" d…' to match /\.crate-tag\{[^}]*text-transform:uppe…/
+    <a class=\"door only-in\" href=\"/start\"><span data-i18n=\"d.start\"></span> <span aria-hidden=\"true\">→</span></a>
+    <a class=\"door only-in\" href=\"/albums\"><span data-i18n=\"d.albums\"></span> <span aria-hidden=\"true\">→</span></a>
+    <a class=\"door only-in\" href=\"/blend\"><span data-i18n=\"d.blend\"></span> <span aria-hidden=\"true\">→</span></a>
+    <a class=\"door only-in\" href=\"/saved-playlists\"><span data-i18n=\"d.playlists\"></span> <span aria-hidden=\"true\">→</span></a>
+    <a class=\"door only-in\" href=\"/inventory\"><span data-i18n=\"d.inventory\"></span> <span aria-hidden=\"true\">→</span></a>
+ ❯ test/splash/publishedCrate.test.js:333:22
+ Test Files  1 failed (1)
+      Tests  5 failed | 22 passed (27)

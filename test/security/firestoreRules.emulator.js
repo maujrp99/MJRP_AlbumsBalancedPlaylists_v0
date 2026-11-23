@@ -27,6 +27,8 @@ import { initializeTestEnvironment, assertFails, assertSucceeds } from '@firebas
 import { doc, getDoc, setDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, writeBatch } from 'firebase/firestore'
 import { PublishedContentSaveRepository } from '../../shared/data/PublishedContentSaveRepository.js'
 import { batchTransaction } from '../../shared/data/batchTransaction.js'
+import { PublishedCrateRepository } from '../../shared/data/PublishedCrateRepository.js'
+import { knowsCrate, withCrateRules } from './support/crateRulesProposal.js'
 
 const RULES = readFileSync(resolve(__dirname, '../../firestore.rules'), 'utf8')
 const HOST = process.env.FIRESTORE_EMULATOR_HOST
@@ -73,6 +75,11 @@ beforeAll(async () => {
 
 afterAll(async () => { if (env) await env.cleanup() })
 beforeEach(async () => { if (env) await env.clearFirestore() })
+
+/** The crate of the entry page as the Painel saves it (shared/content/crate.js): albums a side, the front record first. */
+const crateAlbum = (id) => ({ id: String(id), title: `Album ${id}`, artist: `Artist ${id}`, year: 1990, art: `Music1/v4/${id}/cover.jpg`, href: `https://music.apple.com/us/album/a/${id}` })
+const crateSide = (from, count) => Array.from({ length: count }, (_, i) => crateAlbum(from + i))
+const CRATE = { _schemaVersion: 1, rev: 1, sideA: crateSide(1, 6), sideB: crateSide(20, 4) }
 
 suite('the rules file', () => {
     it('has no wildcard rule at the root: what is not listed is closed, even to the administrator', async () => {
@@ -456,5 +463,130 @@ suite('what the rules held before the CMS stays held (F59, F78 REQ-10)', () => {
         await seed((db) => setDoc(doc(db, 'spotify_enrichment', 'k'), { a: 1 }))
         await assertSucceeds(getDoc(doc(as.guest(), 'spotify_enrichment', 'k')))
         await assertFails(getDoc(doc(as.nobody(), 'spotify_enrichment', 'k')))
+    })
+})
+
+// ---------------------------------------------------------------------------------------------
+// The crate of the entry page (F82 TASK-04, REQ-03): `published/crate`
+// ---------------------------------------------------------------------------------------------
+suite('published/crate with the rules as they are in the repository', () => {
+    const store = (db) => ({ db, doc, getDoc, setDoc, writeBatch, serverTimestamp })
+    const repository = (db) => { const given = store(db); return new PublishedCrateRepository({ ...given, runTransaction: batchTransaction(given) }) }
+
+    it('everybody reads it, with no login (the entry page reads it for every visitor)', async () => {
+        await seed((db) => setDoc(doc(db, 'published', 'crate'), CRATE))
+        for (const who of ['nobody', 'guest', 'other', 'admin']) await assertSucceeds(getDoc(doc(as[who](), 'published', 'crate')))
+    })
+
+    it(knowsCrate(RULES)
+        ? 'the rules know the crate: the administrator saves it by the Painel\'s own save'
+        : 'the rules do NOT know the crate yet: the administrator\'s save is refused, as a refusal the Painel names, and nothing is written (the owner adds the lines of test/security/support/crateRulesProposal.js)', async () => {
+        await seedAdmin()
+        const save = repository(as.admin()).saveCrate({ loadedRev: 0, sides: { a: CRATE.sideA, b: CRATE.sideB }, updatedBy: ADMIN })
+        if (knowsCrate(RULES)) {
+            expect(await save).toMatchObject({ status: 'saved', rev: 1 })
+            return
+        }
+        const error = await save.then(() => null, (refusal) => refusal)
+        expect(String(error?.code)).toContain('permission-denied')
+        expect((await getDoc(doc(as.nobody(), 'published', 'crate'))).exists()).toBe(false)
+    })
+
+    it('the crate cannot hide in the site document either: a field outside its list is refused', async () => {
+        await seedAdmin()
+        await assertFails(setDoc(doc(as.admin(), 'published', 'site'), { ...SITE, crate: { sideA: CRATE.sideA, sideB: CRATE.sideB } }))
+    })
+})
+
+suite('published/crate with the lines proposed for the rules (test/security/support/crateRulesProposal.js)', () => {
+    let proposed
+    const on = {
+        admin: () => proposed.authenticatedContext(ADMIN, REAL).firestore(),
+        adminAnonymous: () => proposed.authenticatedContext(ADMIN, ANON).firestore(),
+        other: () => proposed.authenticatedContext(OTHER, REAL).firestore(),
+        guest: () => proposed.authenticatedContext('guest-uid', ANON).firestore(),
+        nobody: () => proposed.unauthenticatedContext().firestore()
+    }
+    const store = (db) => ({ db, doc, getDoc, setDoc, writeBatch, serverTimestamp })
+    const repository = (db) => { const given = store(db); return new PublishedCrateRepository({ ...given, runTransaction: batchTransaction(given) }) }
+    const put = (fn) => proposed.withSecurityRulesDisabled(async (context) => fn(context.firestore()))
+    const crate = () => doc(on.admin(), 'published', 'crate')
+
+    beforeAll(async () => {
+        const [host, port] = HOST.split(':')
+        proposed = await initializeTestEnvironment({ projectId: 'demo-mjrp-rules-crate', firestore: { rules: withCrateRules(RULES), host, port: Number(port) } })
+    })
+    afterAll(async () => { if (proposed) await proposed.cleanup() })
+    beforeEach(async () => {
+        await proposed.clearFirestore()
+        await put((db) => setDoc(doc(db, 'cmsAdmins', ADMIN), { role: 'super' }))
+    })
+
+    it('the proposal adds the crate and takes nothing away: every other line of the rules is the same', () => {
+        const after = withCrateRules(RULES)
+        expect(after).toContain("(docId == 'crate' && validCrate())")
+        if (!knowsCrate(RULES)) expect(RULES.split('\n').filter(line => !after.split('\n').includes(line))).toEqual(["        || (docId == 'recipes' && validRecipes());"])
+    })
+
+    it('the administrator saves the crate twice by the Painel\'s own save: rev 1 then 2, the earlier side kept, who saved in cmsWork alone', async () => {
+        const repo = repository(on.admin())
+        const first = await repo.saveCrate({ loadedRev: 0, sides: { a: CRATE.sideA, b: CRATE.sideB }, updatedBy: ADMIN })
+        expect(first).toMatchObject({ status: 'saved', rev: 1 })
+        const turned = [...CRATE.sideB].reverse()
+        const second = await repo.saveCrate({ loadedRev: 1, sides: { a: CRATE.sideA, b: turned }, updatedBy: ADMIN })
+        expect(second).toMatchObject({ status: 'saved', rev: 2 })
+        const stored = (await getDoc(doc(on.nobody(), 'published', 'crate'))).data()
+        expect(stored).toEqual({ _schemaVersion: 1, rev: 2, sideA: CRATE.sideA, sideB: turned, previous: { sideB: CRATE.sideB } })
+        expect(JSON.stringify(stored)).not.toContain(ADMIN)
+        expect((await getDoc(doc(on.admin(), 'cmsWork', 'save_crate'))).data()).toMatchObject({ doc: 'crate', rev: 2, keys: ['sideB'], updatedBy: ADMIN })
+    })
+
+    it('a crate saved on another device in between comes back as a conflict, and nothing is written', async () => {
+        const here = repository(on.admin())
+        const there = repository(on.admin())
+        await here.saveCrate({ loadedRev: 0, sides: { a: CRATE.sideA, b: CRATE.sideB }, updatedBy: ADMIN })
+        await there.saveCrate({ loadedRev: 1, sides: { a: crateSide(40, 6), b: CRATE.sideB }, updatedBy: ADMIN })
+        const result = await here.saveCrate({ loadedRev: 1, sides: { a: crateSide(60, 6), b: CRATE.sideB }, updatedBy: ADMIN })
+        expect(result).toMatchObject({ status: 'conflict', rev: 2 })
+        expect((await getDoc(doc(on.nobody(), 'published', 'crate'))).data().sideA[0].id).toBe('40')
+    })
+
+    it('another account, a guest, a person with no login and the administrator signed in anonymously are refused', async () => {
+        for (const who of ['other', 'guest', 'nobody', 'adminAnonymous']) await assertFails(setDoc(doc(on[who](), 'published', 'crate'), CRATE))
+        await put((db) => setDoc(doc(db, 'published', 'crate'), CRATE))
+        for (const who of ['other', 'guest', 'nobody', 'adminAnonymous']) await assertFails(setDoc(doc(on[who](), 'published', 'crate'), { ...CRATE, rev: 2 }))
+        for (const who of ['other', 'guest', 'nobody']) await assertSucceeds(getDoc(doc(on[who](), 'published', 'crate')))
+    })
+
+    it('a side outside its limits is refused: side A 6 to 10, side B 4 to 10', async () => {
+        await assertFails(setDoc(crate(), { ...CRATE, sideA: crateSide(1, 5) }))
+        await assertFails(setDoc(crate(), { ...CRATE, sideA: crateSide(1, 11) }))
+        await assertFails(setDoc(crate(), { ...CRATE, sideB: crateSide(20, 3) }))
+        await assertFails(setDoc(crate(), { ...CRATE, sideB: crateSide(20, 11) }))
+        await assertSucceeds(setDoc(crate(), { ...CRATE, sideA: crateSide(1, 10), sideB: crateSide(20, 10) }))
+    })
+
+    it('a field outside the list, a side that is not a list, a missing side and a large previous are refused', async () => {
+        await assertFails(setDoc(crate(), { ...CRATE, updatedBy: ADMIN }))
+        await assertFails(setDoc(crate(), { ...CRATE, sideA: { 0: crateAlbum(1) } }))
+        await assertFails(setDoc(crate(), { _schemaVersion: 1, rev: 1, sideA: CRATE.sideA }))
+        await assertFails(setDoc(crate(), { ...CRATE, previous: { sideA: null, sideB: null, more: 1 } }))
+        await assertFails(setDoc(crate(), { ...CRATE, previous: 'x' }))
+    })
+
+    it('rev starts at 1 and follows by one; _schemaVersion never goes down; nobody deletes', async () => {
+        await assertFails(setDoc(crate(), { ...CRATE, rev: 2 }))
+        await assertSucceeds(setDoc(crate(), CRATE))
+        await assertFails(setDoc(crate(), { ...CRATE, rev: 1 }))
+        await assertFails(setDoc(crate(), { ...CRATE, rev: 3 }))
+        await assertSucceeds(setDoc(crate(), { ...CRATE, rev: 2, _schemaVersion: 2 }))
+        await assertFails(setDoc(crate(), { ...CRATE, rev: 3, _schemaVersion: 1 }))
+        await assertFails(deleteDoc(crate()))
+    })
+
+    it('the other published documents keep their rules: a document that is not on the list is still refused', async () => {
+        await assertFails(setDoc(doc(on.admin(), 'published', 'surprise'), CRATE))
+        await assertSucceeds(setDoc(doc(on.admin(), 'published', 'site'), SITE))
+        await assertFails(setDoc(doc(on.admin(), 'published', 'texts_pt'), CRATE))
     })
 })

@@ -1,0 +1,35 @@
+
+ RUN  v1.6.1 /Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-acf5ee4f20ea8f9da
+
+(node:17982) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |core-node| test/shared/content/crate.test.js  (0 test)
+(node:17982) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ test/shared/content/crate.test.js  (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |core-node| test/shared/content/crate.test.js [ test/shared/content/crate.test.js ]
+Error: Failed to load url ../../../shared/content/crate.js (resolved id: ../../../shared/content/crate.js) in test/shared/content/crate.test.js. Does the file exist?
+ ❯ loadAndTransform ../agent-afdfca7c72b7a19fe/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/shared/content/crate.test.js [ test/shared/content/crate.test.js ]
+Error: Failed to resolve import "../../../shared/content/crate.js" from "test/shared/content/crate.test.js". Does the file exist?
+ ❯ TransformPluginContext._formatError ../agent-afdfca7c72b7a19fe/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41
+ ❯ TransformPluginContext.error ../agent-afdfca7c72b7a19fe/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16
+ ❯ normalizeUrl ../agent-afdfca7c72b7a19fe/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23
+ ❯ async file:node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+ ❯ TransformPluginContext.transform ../agent-afdfca7c72b7a19fe/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7
+ ❯ PluginContainer.transform ../agent-afdfca7c72b7a19fe/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18
+ ❯ loadAndTransform ../agent-afdfca7c72b7a19fe/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  18:50:29
+   Duration  261ms (transform 19ms, setup 14ms, collect 0ms, tests 0ms, environment 137ms, prepare 53ms)
+

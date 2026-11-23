@@ -10,7 +10,7 @@ import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { COPY } from '../../public/splash/copy.js'
 import {
-    PLACES, fillEntryPage, fillCopy, isRootAddress, isEntryAddress, isAppAddress, renameBuiltPages, entryPage
+    PLACES, fillEntryPage, fillCopy, isRootAddress, isEntryAddress, isAppAddress, renameBuiltPages, entryPage, ownCopyId, OWN_COPY
 } from '../../scripts/entryPage.mjs'
 
 const ROOT = process.cwd()
@@ -111,6 +111,26 @@ describe('the text comes from the dictionary', () => {
 
     it('the page as built holds no empty marked element', () => {
         expect(built('real')).not.toMatch(/data-i18n="[^"]+"[^>]*><\/(p|h1|h2|span|a|button|title)>/)
+    })
+})
+
+describe('the entry page takes its own copy of the core (F82 REQ-11)', () => {
+    const entryDir = '/repo/public/splash', coreDir = '/repo/shared'
+    const id = (importer, target) => ownCopyId({ importer, target, entryDir, coreDir })
+
+    it('a module of the core imported by the entry page is marked as the page\'s own copy', () => {
+        expect(id('/repo/public/splash/publishedCrate.js', '/repo/shared/content/crate.js')).toBe(`/repo/shared/content/crate.js${OWN_COPY}`)
+    })
+
+    it('and so is what that copy imports of the core in its turn', () => {
+        expect(id(`/repo/shared/content/crate.js${OWN_COPY}`, '/repo/shared/content/texts.js')).toBe(`/repo/shared/content/texts.js${OWN_COPY}`)
+    })
+
+    it('the page\'s own modules and everything the app imports keep their ids', () => {
+        expect(id('/repo/public/splash/splash.js', '/repo/public/splash/copy.js')).toBeNull()
+        expect(id('/repo/public/js/screens/admin/crateStore.ts', '/repo/shared/content/crate.js')).toBeNull()
+        expect(id('/repo/shared/content/crate.js', '/repo/shared/content/texts.js')).toBeNull()
+        expect(id('/repo/public/splashy/x.js', '/repo/shared/content/crate.js')).toBeNull()
     })
 })
 
