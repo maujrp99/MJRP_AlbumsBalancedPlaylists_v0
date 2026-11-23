@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:09] step — F96: tarefas marcadas e cinco linhas de UAT abertas (UAT-297 a UAT-301)
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+As tarefas TASK-02 a TASK-08 da F96 marcadas no `tasks.md`, cada uma com o que foi feito e a decisão do MJRP que a fechou, e cinco linhas de UAT abertas pelo construtor, uma por comportamento: UAT-297 (a abertura: a caixa na diagonal, sem botão grande), UAT-298 («Como funciona», os passos com uma ilustração, a troca de passo e os tons de laranja), UAT-299 (a caixa «Na caixa do The Album Blender» em deslize), UAT-300 (sem conta, o «Criar» da barra de baixo abre o app) e UAT-301 (a página com conta mais larga que a tela). Nenhum aceite foi escrito.
+
+A evidência que as linhas citam (`reports/evidence/F96/results.txt` e as capturas) entra no próximo commit: a prova completa está rodando de novo sobre a ponta `8b7f4d9`, depois das duas decisões de hoje (as faixas e o laranja dos rótulos). A rodada anterior, antes delas, passou com 485 conferências e nenhuma falha.
+
+
 ## [2026-11-23 18:05] decision — F96: no celular, o rótulo e o link de cada passo em tom de laranja (identidade visual)
 
 **Branch:** feat/f96-entry-page-on-the-phone
