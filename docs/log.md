@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 14:42] step — Site publicado da `main` `937c3dd`: os links de álbum da página de entrada no botão «Ouça no Apple Music» (UAT-285)
+
+**Branch:** main
+
+Pedido do MJRP, 2026-11-23: «preciso que vc faça uma alteração já em prod… podemos deixar todos os links do albums no padrao do velvet under ground». `./scripts/deploy-site.sh` pela fila, saída 0. A publicação leva também o código do site da fatia 0 do CMS (a leitura de `on`/`off`/`unknown` do Discogs), já julgado. Em seguida ele pediu um protótipo com variações do crédito (só artista, só álbum, só o botão): em `wip/f80-album-credit-variants`. Voltar: «Rollback» no Hosting do Firebase para a versão anterior (site da `b36d2f1`).
+
 ## [2026-11-23 14:36] review — F80: o juiz independente passou os botões «Ouça no Apple Music» (0 P0, 0 P1, 2 P2)
 
 **Branch:** fix/f80-album-links-as-the-apple-music-button
