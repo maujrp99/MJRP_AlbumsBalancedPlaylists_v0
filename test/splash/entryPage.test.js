@@ -67,7 +67,7 @@ describe('the page as served (what a search engine or an assistant reads, withou
             'Junte a série numa playlist só.',
             'Vire o lado',
             'Guarde as playlists que você curtiu.',
-            'Conte as mídias físicas da sua estante.',
+            'Catalogue as mídias físicas da sua estante.',
             'Coloque sua primeira série para tocar.'
         ]
         const at = order.map(line => text.indexOf(line))

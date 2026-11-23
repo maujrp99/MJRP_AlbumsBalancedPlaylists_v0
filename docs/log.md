@@ -2,6 +2,26 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:56] step — Página de entrada (F80): na história do inventário, «Catalogue» no lugar de «Conte» (UAT-296)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Palavra do MJRP (2026-11-23): «ao inves é de Conte na parte do inventário, pode ser Catalogue». Issue UAT-296.
+
+**O que mudou** (`public/splash/copy.js`):
+- `t.inventory`, português: «Conte as mídias físicas da sua estante.» → «Catalogue as mídias físicas da sua estante.»
+- `meta.ogdesc`, português: «…e conte suas mídias físicas.» → «…e catalogue suas mídias físicas.»
+- `t.inventory`, inglês: «Count the physical media on your shelf.» → «Catalogue the physical media on your shelf.»
+- `meta.ogdesc`, inglês: «…and count the physical media on your shelf.» → «…and catalogue the physical media on your shelf.»
+
+O inglês foi **decidido pelo orquestrador, revisável**, para as duas línguas dizerem a mesma coisa; o MJRP falou do português. Os dois testes que citavam a frase antiga foram atualizados (`test/splash/copy.test.js`, `test/splash/entryPage.test.js`).
+
+**Conferido e listado, sem mudar.** Os outros textos da história do inventário na página de entrada não usam o verbo: «Lado B · 2 — Inventário», «Marque o que você tem em vinil, CD, fita cassete ou outro formato e veja uma estimativa de quanto vale a coleção.», «Abrir o inventário». No dicionário em português do app, nenhum texto do inventário usa «contar», «conte» ou «contagem» para o inventário; «conta» aparece só em «A ordem conta» (tela Criar, `start.dock.count` e `start.panel.order`, outro sentido) e como «conta» de usuário.
+
+**Prova.** `npx vitest run test/splash` pela fila da máquina, resultado na linha do commit. Nenhuma prova de navegador nova para esta troca de palavra (o título tem o mesmo número de linhas? não medido).
+
+**Não conferido.** A história «Inventário» no aparelho com o título novo (uma palavra mais longa: a quebra de linha pode mudar); a suíte inteira.
+
 ## [2026-11-23 15:56] step — O nome do produto é «The Album Blender», sempre inteiro, em todo texto que o visitante lê (UAT-295)
 
 **Branch:** fix/f80-crate-caption-album-and-year

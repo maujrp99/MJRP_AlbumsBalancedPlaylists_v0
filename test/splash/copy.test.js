@@ -52,7 +52,7 @@ describe('the dictionary', () => {
         expect(t('t.albums', 'pt')).toBe('Ranqueie as faixas do seu jeito.')
         expect(t('p.playlists', 'pt')).toMatch(/Spotify ou a Apple Music/)
         expect(t('p.playlists', 'en')).toMatch(/Spotify or Apple Music/)
-        expect(t('t.inventory', 'pt')).toBe('Conte as mídias físicas da sua estante.')
+        expect(t('t.inventory', 'pt')).toBe('Catalogue as mídias físicas da sua estante.')
         expect(t('e.title', 'pt')).toBe('Coloque sua primeira série para tocar.')
         expect(t('h.title', 'pt')).toBe('Mergulhe nos álbuns que você ama.')
         expect(t('h.what', 'pt')).toBe('Seus álbuns do momento, numa playlist balanceada.')

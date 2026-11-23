@@ -21,7 +21,7 @@ const pt = {
     // the document
     'meta.title': 'The Album Blender — para quem ouve álbuns inteiros',
     'meta.desc': 'O The Album Blender é um app web para quem ouve álbuns inteiros: monte séries com seus álbuns do momento, ranqueie as faixas e gere playlists equilibradas.',
-    'meta.ogdesc': 'Monte séries com seus álbuns do momento, ranqueie as faixas, gere playlists equilibradas e conte suas mídias físicas.',
+    'meta.ogdesc': 'Monte séries com seus álbuns do momento, ranqueie as faixas, gere playlists equilibradas e catalogue suas mídias físicas.',
     // the menu and the top of the page
     'm.start': 'Criar', 'm.albums': 'Álbuns', 'm.blend': 'Blend', 'm.playlists': 'Playlists', 'm.inventory': 'Inventário',
     'menu.aria': 'Menu: cada item leva à história dele nesta página',
@@ -52,7 +52,7 @@ const pt = {
     'f.line': 'No lado B fica o que você guarda: suas playlists e seu inventário.',
     't.playlists': 'Guarde as playlists que você curtiu.',
     'p.playlists': 'Toda playlist salva fica aqui, para ouvir de novo, refazer ou exportar para o Spotify ou a Apple Music.',
-    't.inventory': 'Conte as mídias físicas da sua estante.',
+    't.inventory': 'Catalogue as mídias físicas da sua estante.',
     'p.inventory': 'Marque o que você tem em vinil, CD, fita cassete ou outro formato e veja uma estimativa de quanto vale a coleção.',
     // the doors of the stories, with an account
     'd.start': 'Começar uma série', 'd.albums': 'Ver seus álbuns', 'd.blend': 'Gerar uma playlist',
@@ -74,7 +74,7 @@ const pt = {
 const en = {
     'meta.title': 'The Album Blender — for people who listen to whole albums',
     'meta.desc': 'The Album Blender is a web app for people who listen to whole albums: build series from your albums of the moment, rank the tracks and make balanced playlists.',
-    'meta.ogdesc': 'Build series from your albums of the moment, rank the tracks, make balanced playlists and count the physical media on your shelf.',
+    'meta.ogdesc': 'Build series from your albums of the moment, rank the tracks, make balanced playlists and catalogue the physical media on your shelf.',
     'm.start': 'Create', 'm.albums': 'Albums', 'm.blend': 'Blend', 'm.playlists': 'Playlists', 'm.inventory': 'Inventory',
     'menu.aria': 'Menu: each item takes you to its story on this page',
     'flip.aria': 'Flip the record',
@@ -102,7 +102,7 @@ const en = {
     'f.line': 'Side B holds what you keep: your playlists and your inventory.',
     't.playlists': 'Keep the playlists you love.',
     'p.playlists': 'Every playlist you save waits here, to play again, regenerate or export to Spotify or Apple Music.',
-    't.inventory': 'Count the physical media on your shelf.',
+    't.inventory': 'Catalogue the physical media on your shelf.',
     'p.inventory': 'Mark what you own on vinyl, CD, cassette or another format, and see an estimate of what the collection is worth.',
     'd.start': 'Start a series', 'd.albums': 'See your albums', 'd.blend': 'Make a playlist',
     'd.playlists': 'See your playlists', 'd.inventory': 'Open your inventory',
