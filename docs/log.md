@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:59] step — UAT-293: a parte «Como ver» que faltava na linha
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Depois da junção, o sensor de estrutura do produto recusou a linha UAT-293 (do outro ramo) por faltar «Como ver». Acrescentei só essa parte («abrir a página de entrada no iPhone e olhar a caixa de álbuns sob o título»); o resto da linha é do agente que a escreveu e não foi tocado. O sensor passa (saída 0); segue um aviso dele sobre um nome de arquivo no texto da mesma linha, não mexido.
+
 ## [2026-11-23 15:59] step — Página de entrada (F80): o conserto do caixote em 3D junto com a legenda, as histórias e os textos, num ramo só para a prévia
 
 **Branch:** fix/f80-crate-caption-album-and-year
