@@ -12,6 +12,8 @@
  *   403  unauthorized   reason not-an-administrator   a guest; no record; a record with another role
  *   503  upstream_busy  reason service-unavailable    the login or the record could not be checked:
  *                                                     nobody goes through
+ *   429  rate_limited   reason too-many-requests      too many knocks of one person in the hour: the
+ *                                                     record is not read (the limit comes BEFORE it)
  * The body is the one error format of the server (lib/outcome.js) with the name of the failure in
  * `reason`, for the Painel to show. The log says the status of the read, never the login nor the person.
  */
@@ -42,8 +44,10 @@ const statusOf = (err) => (err && err.response && err.response.status) || 0
  * @param {Object} [deps.env] - FIREBASE_PROJECT_ID
  * @param {Object} [deps.logger]
  * @param {number} [deps.deadlineMs] - how long the read of the record may take
+ * @param {Function} [deps.attempts] - a limit per signed-in person (lib/rateLimit.js), counted BEFORE the record is read:
+ *        whoever is not the administrator cannot repeat that read against Firestore without end
  */
-function requireCmsAdmin ({ verifier, http, env = {}, logger = console, deadlineMs = READ_DEADLINE_MS }) {
+function requireCmsAdmin ({ verifier, http, env = {}, logger = console, deadlineMs = READ_DEADLINE_MS, attempts }) {
   const warn = (reason, detail) => { if (logger && logger.warn) logger.warn('admin_refused', { reason, detail }) }
 
   /** 'super' | another text | null (no usable role); throws the HTTP error of the read. */
@@ -96,12 +100,23 @@ function requireCmsAdmin ({ verifier, http, env = {}, logger = console, deadline
     if (!token) return respond(res, SESSION_EXPIRED())
     const { user, refused } = await personOf(token)
     if (refused) return respond(res, refused)
-    const notAdministrator = await refusalFor(user, token)
-    if (notAdministrator) return respond(res, notAdministrator)
-
+    // The limit counts by `req.user.uid` and answers by itself (429) when the person is over it: then the record is not read
     req.user = user
+    if (attempts && !withinTheLimit(attempts, req, res)) return undefined
+    const notAdministrator = await refusalFor(user, token)
+    if (notAdministrator) {
+      delete req.user
+      return respond(res, notAdministrator)
+    }
     return next()
   }
+}
+
+/** Runs a limiter of lib/rateLimit.js and says whether the person may go on (it has already answered when not). */
+function withinTheLimit (limiter, req, res) {
+  let passed = false
+  limiter(req, res, () => { passed = true })
+  return passed
 }
 
 module.exports = { requireCmsAdmin, adminRecordUrl, ADMIN_ROLE, READ_DEADLINE_MS }

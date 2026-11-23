@@ -13,6 +13,7 @@ const require = createRequire(import.meta.url)
 const { requireCmsAdmin, adminRecordUrl } = require('../../server/lib/auth/requireCmsAdmin.js')
 const { AuthError } = require('../../server/lib/auth/verifyIdToken.js')
 const { buildGuards } = require('../../server/lib/auth/guards.js')
+const { createRateLimiter } = require('../../server/lib/rateLimit.js')
 const { createClaudeTranslator, buildTranslationRequest, DEFAULT_MODEL } = require('../../server/lib/translation/claudeTranslator.js')
 const { createTranslateService, MAX_TEXT_CHARS, REASONS } = require('../../server/lib/services/translateService.js')
 const { createAdminHandlers } = require('../../server/routes/handlers/admin.js')
@@ -161,6 +162,59 @@ describe('the door of the administrator routes', () => {
         const [, limiter] = buildGuards({ TRANSLATE_CALLS_PER_HOUR: '1' }, { logger: quiet() }).admin
         const go = (uid) => { const next = vi.fn(); limiter({ user: { uid, anonymous: false } }, fakeResponse(), next); return next.mock.calls.length }
         expect([go('a'), go('a'), go('b')]).toEqual([1, 0, 1])
+    })
+})
+
+describe('a limit BEFORE the record is read (the judge of 2026-11-23, P2-7)', () => {
+    const NOBODY = { uid: 'someone-else', anonymous: false }
+    const doorWith = (limit, http) => buildGuards({ ADMIN_CHECKS_PER_HOUR: String(limit) }, { logger: quiet(), http, fetchKeys: vi.fn() }).admin[0]
+
+    async function knockAs (person, limit, times, http = firestoreThat(record(undefined))) {
+        const attempts = createRateLimiter({ limit, windowMs: 60 * 60 * 1000, reason: 'too-many-requests' })
+        const door = requireCmsAdmin({ verifier: verifierThat(person), http, env: {}, logger: quiet(), attempts })
+        const answers = []
+        for (let turn = 0; turn < times; turn++) {
+            const req = { headers: { authorization: `Bearer ${TOKEN}` }, path: '/translate' }
+            const res = fakeResponse()
+            const next = vi.fn()
+            await door(req, res, next)
+            answers.push({ next, answer: answerOf(res) })
+        }
+        return { answers, http }
+    }
+
+    it('a signed-in person who is not the administrator cannot hammer the read of the record: past the limit the answer is 429 and Firestore is not asked', async () => {
+        const { answers, http } = await knockAs(NOBODY, 2, 4)
+        expect(answers.map(({ answer }) => answer.status)).toEqual([403, 403, 429, 429])
+        expect(answers[2].answer).toMatchObject({ body: { error: { code: 'rate_limited', reason: 'too-many-requests' } } })
+        expect(Number(answers[2].answer.headers['Retry-After'])).toBeGreaterThan(0)
+        expect(http.get).toHaveBeenCalledTimes(2)
+        expect(answers.every(({ next }) => next.mock.calls.length === 0)).toBe(true)
+    })
+
+    it('the count is per person: one person at the limit does not close the door to the administrator', async () => {
+        const attempts = createRateLimiter({ limit: 1, windowMs: 60 * 60 * 1000, reason: 'too-many-requests' })
+        const knockOnce = async (person, http) => {
+            const res = fakeResponse()
+            const next = vi.fn()
+            await requireCmsAdmin({ verifier: verifierThat(person), http, env: {}, logger: quiet(), attempts })({ headers: { authorization: `Bearer ${TOKEN}` }, path: '/translate' }, res, next)
+            return { status: answerOf(res).status, passed: next.mock.calls.length }
+        }
+        expect(await knockOnce(NOBODY, firestoreThat(record(undefined)))).toMatchObject({ status: 403 })
+        expect(await knockOnce(NOBODY, firestoreThat(record(undefined)))).toMatchObject({ status: 429 })
+        expect(await knockOnce(PERSON, firestoreThat(record('super')))).toMatchObject({ passed: 1 })
+    })
+
+    it('a login that does not check and a guest are refused before they count or read anything', async () => {
+        const guest = await knockAs({ uid: 'guest', anonymous: true }, 1, 3)
+        expect(guest.answers.map(({ answer }) => answer.status)).toEqual([403, 403, 403])
+        expect(guest.http.get).not.toHaveBeenCalled()
+    })
+
+    it('the server builds the door with that limit (ADMIN_CHECKS_PER_HOUR, 600 by default), before the limit of the translations', () => {
+        const source = readFileSync('server/lib/auth/guards.js', 'utf8')
+        expect(source).toMatch(/attempts: createRateLimiter\(\{ limit: positiveNumber\(env\.ADMIN_CHECKS_PER_HOUR, 600\)/)
+        expect(doorWith(5, firestoreThat(record('super'))).name).toBe('cmsAdminDoor')
     })
 })
 

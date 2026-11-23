@@ -16,6 +16,8 @@
  *   PAID_ROUTES_ALLOW_ANONYMOUS=true  lets guests use the paid routes
  *   PAID_CALLS_PER_HOUR, COSTLY_CALLS_PER_HOUR, VALUE_CALLS_PER_HOUR   the limits per person (defaults 60, 900 and 900)
  *   TRANSLATE_CALLS_PER_HOUR          the limit of the administrator's translations (default 120)
+ *   ADMIN_CHECKS_PER_HOUR             the limit of knocks on the administrator's door per signed-in person, counted before
+ *                                     the record is read (default 600)
  *   FIREBASE_PROJECT_ID               the project whose logins are accepted
  */
 const axios = require('axios')
@@ -47,7 +49,12 @@ function buildGuards (env = {}, { fetchKeys = fetchGoogleKeys, logger = console,
   })
   // The administrator's door is the same with or without the switch below: it is never open
   const admin = [
-    requireCmsAdmin({ verifier, http, env, logger }),
+    // two limits per person: the knocks on the door, counted BEFORE the record is read (a signed-in person who is not the
+    // administrator cannot hammer Firestore through this server), and, after the door, the translations of the administrator
+    requireCmsAdmin({
+      verifier, http, env, logger,
+      attempts: createRateLimiter({ limit: positiveNumber(env.ADMIN_CHECKS_PER_HOUR, 600), windowMs: HOUR_MS, reason: 'too-many-requests' })
+    }),
     createRateLimiter({ limit: positiveNumber(env.TRANSLATE_CALLS_PER_HOUR, 120), windowMs: HOUR_MS, reason: 'too-many-requests' })
   ]
 

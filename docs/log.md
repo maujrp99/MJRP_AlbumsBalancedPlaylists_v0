@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:30] step — F82 (juiz, P2-7): na rota de tradução, um limite por pessoa antes da leitura do registro do administrador
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-7 do juiz: na rota de tradução o limite vinha depois da porta do administrador, então uma pessoa logada que não é administradora podia repetir sem fim a leitura do registro `cmsAdmins/{uid}` no Firestore por este servidor. A porta (`server/lib/auth/requireCmsAdmin.js`) agora conta as batidas por pessoa logada ANTES de ler o registro (`attempts`, 600 por hora, `ADMIN_CHECKS_PER_HOUR`): acima do limite a resposta é 429 `too-many-requests` com `Retry-After` e o registro não é lido. Quem não tem login que confere e o convidado continuam recusados antes de contar ou ler qualquer coisa; a contagem é por pessoa (uma pessoa no limite não fecha a porta para o administrador); o limite das traduções do administrador (120 por hora) segue depois da porta. `docs/specs/arch.md` diz o limite novo.
+
+Teste primeiro (`test/server/adminTranslate.test.js`, «a limit BEFORE the record is read»: três reprovaram, depois passaram; os 587 testes do servidor passam). A API de tradução de verdade não foi chamada.
+
 ## [2026-11-23 15:28] step — F82 (juiz, P2-6): a guarda de /admin tem prazo de 3 s e diz «não deu para conferir agora»
 
 **Branch:** claude/f82-cms-texts-panel
