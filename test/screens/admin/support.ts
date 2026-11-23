@@ -18,12 +18,12 @@ registerTexts('en', adminEn)
 registerTexts('pt', adminPt)
 
 export const CODE: Record<Locale, Dict> = {
-    en: { 'albums.title': 'Albums', 'albums.count': '{count} albums', 'blend.title': 'Blend', 'admin.help.rich': '**Running** text' },
-    pt: { 'albums.title': 'Álbuns', 'albums.count': '{count} álbuns', 'blend.title': 'Mistura', 'admin.help.rich': '**Texto** corrido' },
+    en: { 'albums.title': 'Albums', 'albums.count': '{count} albums', 'blend.title': 'Blend', 'start.lead': '**Running** text' },
+    pt: { 'albums.title': 'Álbuns', 'albums.count': '{count} álbuns', 'blend.title': 'Mistura', 'start.lead': '**Texto** corrido' },
 }
 
 export function stored(over: Partial<Stored> = {}): Stored {
-    return { sources: { code: CODE, published: { en: {}, pt: {} }, approved: ['blend.title', 'admin.help.rich'] }, revs: { en: 3, pt: 5 }, allowed: true, ...over }
+    return { sources: { code: CODE, published: { en: {}, pt: {} }, approved: ['blend.title', 'start.lead'] }, revs: { en: 3, pt: 5 }, allowed: true, ...over }
 }
 
 const holes = (text: string): string => [...text.matchAll(/\{(\w+)\}/g)].map((match) => match[1]).sort().join(',')
@@ -106,7 +106,7 @@ export function panelProps(options: PropsOptions = {}): PanelProps & { store: Fa
     })
     return {
         store, ports, translate, check, went: navigation.went, guardLeave: options.guardLeave,
-        kindOf: (key) => (key === 'admin.help.rich' ? 'rich' : 'plain'),
+        kindOf: (key) => (key === 'start.lead' ? 'rich' : 'plain'),
         siteState: () => options.site ?? { source: 'published', rejected: [] },
     }
 }

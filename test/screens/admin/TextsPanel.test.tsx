@@ -104,11 +104,11 @@ describe('the texts by screen, English and Portuguese side by side', () => {
 
 describe('the fields of the kit', () => {
     it('a label is a plain one-line field; a running text is the kit rich editor with its bar', async () => {
-        const { app, click } = await show({ screen: 'admin' })
-        await click('[data-key="admin.help.rich"] [data-act="edit"]')
-        expect(app.querySelectorAll('[data-key="admin.help.rich"] .ak-rt-bar').length).toBe(2)
-        expect(app.querySelector('[data-key="admin.help.rich"] .ak-rt-bar [data-cmd="bold"]')?.getAttribute('aria-label')).toBe('Bold (⌘B)')
-        expect(app.querySelector('[data-key="admin.help.rich"] .ak-rt-bar [data-cmd="bold"]')).not.toBeNull()
+        const { app, click } = await show({ screen: 'start' })
+        await click('[data-key="start.lead"] [data-act="edit"]')
+        expect(app.querySelectorAll('[data-key="start.lead"] .ak-rt-bar').length).toBe(2)
+        expect(app.querySelector('[data-key="start.lead"] .ak-rt-bar [data-cmd="bold"]')?.getAttribute('aria-label')).toBe('Bold (⌘B)')
+        expect(app.querySelector('[data-key="start.lead"] .ak-rt-bar [data-cmd="bold"]')).not.toBeNull()
         await click('[data-screen="albums"]')
         await click('[data-key="albums.title"] [data-act="edit"]')
         expect(app.querySelectorAll('[data-key="albums.title"] input.ak-input[type="text"]').length).toBe(2)
@@ -278,7 +278,7 @@ describe('approving the Portuguese saves', () => {
     it('one text: the approval is kept and the text no longer waits', async () => {
         const { app, click, text, props } = await show()
         await click('[data-key="albums.title"] [data-act="approve"]')
-        expect(props.store.approved).toEqual([['blend.title', 'admin.help.rich', 'albums.title']])
+        expect(props.store.approved).toEqual([['blend.title', 'start.lead', 'albums.title']])
         expect(app.querySelector('[data-key="albums.title"] [data-tag="pending"]')).toBeNull()
         expect(text('[data-state="saved"]')).toBe('✓ Approved and live: 1 Portuguese text.')
     })
@@ -296,7 +296,7 @@ describe('approving the Portuguese saves', () => {
     it('all of the screen at once', async () => {
         const { app, click, props } = await show()
         await click('[data-act="approve-screen"]')
-        expect(props.store.approved[0]).toEqual(['blend.title', 'admin.help.rich', 'albums.title', 'albums.count'])
+        expect(props.store.approved[0]).toEqual(['blend.title', 'start.lead', 'albums.title', 'albums.count'])
         expect(app.querySelector('[data-tag="pending"]')).toBeNull()
     })
 })

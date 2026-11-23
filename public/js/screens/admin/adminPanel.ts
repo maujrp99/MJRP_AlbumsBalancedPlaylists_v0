@@ -30,8 +30,6 @@ import { richTexts } from './richTexts'
 import type { TextKind } from './model'
 import { translateText, type TranslateAsk, type TranslateBody, type TranslateReason } from './translate'
 
-/** The Painel's own running text: the one key that is rich before the site's running texts are converted (TASK-15). */
-const OWN_RICH = new Set(['admin.help.rich'])
 const MEDIA = new Set(['image', 'video', 'book'])
 /** The pages of the site a running text may link to, as the link box of the rich editor offers them. */
 const PAGES = [
@@ -41,8 +39,6 @@ const PAGES = [
 
 registerTexts('en', adminEn)
 registerTexts('pt', adminPt)
-
-const kind = (key: string): TextKind => (OWN_RICH.has(key) ? 'rich' : kindOf(key))
 
 /** A running text is read by the site's parser, and carries no image, video or book (the owner hid them here: D-06). */
 function readRich(text: string): { ok: boolean; links: string[] } {
@@ -61,7 +57,8 @@ function panelProps(): PanelProps {
     const store = contentStore({
         repository: (): Promise<ContentRepository> => contentWriter(),
         uid: () => AuthService.getCurrentUser()?.uid ?? '',
-        code: { en: { ...en, ...adminEn }, pt: { ...pt, ...adminPt } },
+        // The site's own dictionaries only: the Painel's words (admin.*) are not edited here in this iteration (the site's reader knows the site's keys alone)
+        code: { en, pt },
         readDocument: readTextsDocument,
     })
     const ports = albumBlenderPorts({
@@ -77,7 +74,7 @@ function panelProps(): PanelProps {
     })
     return {
         store, ports, translate,
-        kindOf: kind,
+        kindOf: (key): TextKind => kindOf(key),
         check: (text, english, of) => {
             const verdict = validateText(text, english, { kind: of, parseRich: readRich })
             return verdict.ok ? { ok: true, warning: verdict.warning } : { ok: false, reason: verdict.reason }

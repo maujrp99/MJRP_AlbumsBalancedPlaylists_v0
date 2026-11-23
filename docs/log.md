@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:19] step — F82 (juiz, P2-2): os textos do próprio Painel não são editáveis no Painel nesta iteração
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-2 do juiz: os textos do próprio Painel (`admin.*`) apareciam na lista e podiam ser salvos, mas o leitor do site só conhece as chaves do site (`contentWiring.js` confere contra o inglês do site) e os recusaria como «chave desconhecida» a cada visitante; e `admin.help.rich` era rica no Painel e simples para o leitor. Regra mais simples e honesta, a que o coordenador indicou: **os textos do Painel não são editáveis no Painel nesta iteração.** O Painel recebe só os dicionários do site (`en`, `pt`); a área «Admin» saiu da lista, e com ela as chaves `admin.help.rich` e `admin.screens.admin`, que não têm mais uso.
+
+Consequência dita no `tasks.md` (TASK-15a): hoje nenhuma chave é rica (`i18n/textKinds.js` está vazio), então o editor rico não aparece no Painel até a TASK-15 marcar as chaves corridas do site; até lá é provado pelos testes de componente, com uma chave rica de mentira (`start.lead`), e não mais no navegador. Teste primeiro (`adapter.test.ts`, «the Painel lists the texts of the site only»: reprovou, depois passou).
+
 ## [2026-11-23 15:18] step — F82 (juiz, P2-1): o que é só do administrador saiu do script principal (198.409 B; era 200.227)
 
 **Branch:** claude/f82-cms-texts-panel

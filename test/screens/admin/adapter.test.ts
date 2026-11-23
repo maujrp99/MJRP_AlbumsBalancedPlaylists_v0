@@ -45,7 +45,7 @@ describe('the dictionaries as the pairs of the kit', () => {
 
     it('counts what waits by screen, and a search looks at every screen', () => {
         const values = toKitValues(sources({ approved: ['albums.title'] }))
-        expect(screensOf(values)).toEqual([{ id: 'albums', waiting: 1 }, { id: 'blend', waiting: 1 }, { id: 'admin', waiting: 1 }])
+        expect(screensOf(values)).toEqual([{ id: 'albums', waiting: 1 }, { id: 'blend', waiting: 1 }, { id: 'start', waiting: 1 }])
         expect(pendingOf(values, 'albums')).toEqual(['albums.count'])
         expect(visibleKeys(values, { screen: 'albums', query: '', onlyPending: true })).toEqual(['albums.count'])
         expect(visibleKeys(values, { screen: 'albums', query: 'MISTURA', onlyPending: false })).toEqual(['blend.title'])
@@ -180,6 +180,15 @@ describe('the ports the kit is given', () => {
         expect(SKIN_TOKENS.filter((token) => !skin.includes(`${token}:`))).toEqual([])
         for (const tool of ['img', 'video', 'book']) expect(skin).toContain(`.ak-rt-bar button[data-cmd="${tool}"]`)
         expect(skin).toMatch(/@media \(max-width: 767px\) \{\s*\[data-admin-skin="albumblender"\] \.ak-rt-bar button \{ min-width: 44px; min-height: 44px; \}/)
+    })
+})
+
+describe('the Painel lists the texts of the site only (the judge of 2026-11-23, P2-2)', () => {
+    it('its own words (admin.*) are not offered for editing: the reader of the site would refuse them as unknown keys', () => {
+        const wiring = fs.readFileSync('public/js/screens/admin/adminPanel.ts', 'utf8')
+        expect(wiring).toContain('code: { en, pt },')
+        expect(wiring).not.toMatch(/OWN_RICH|\.\.\.adminEn|\.\.\.adminPt/)
+        expect(Object.keys(adminEn).filter((key) => /^admin\.(help|screens\.admin)/.test(key))).toEqual([])
     })
 })
 
