@@ -2,6 +2,35 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:04] step — Português: «disco» vira «álbum» em todo texto que o visitante lê (UAT-288)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Regra do MJRP (2026-11-23, com print do iPhone): «nao vamos usar o linguajar discos, pq no brasil discos restringe a vinis. vamos utilizar Albuns sempre, troque onde tem disco para Albums pls». Issue UAT-288. Cada texto trocado abaixo é a regra dele aplicada, não proposta do agente.
+
+**Página de entrada** (`public/splash/copy.js`, português):
+- `flip.aria`: «Virar o disco» → «Virar o álbum»
+- `h.kick`: «The Album Blender · um app web para quem ama discos» → «… para quem ama álbuns»
+- `p.blend`: «… sem deixar um disco dominar os outros.» → «… sem deixar um álbum dominar os outros.»
+- `f.title`: «Vire o disco» → «Vire o álbum»
+- `stage.aria`: «Uma caixa de discos; a página puxa um disco para a frente a cada parte» → «Uma caixa de álbuns; a página puxa um álbum para a frente a cada parte»
+- `credit.real`: «… todo disco mostrado inteiro nesta página…» → «… todo álbum mostrado inteiro nesta página…»
+
+**App, inventário** (`public/js/i18n/pt/inventory.js`):
+- `inventory.value.discogsLead`: «… pelo estado do disco. O valor do álbum…» → «… pelo estado do álbum. O valor do álbum…»
+- `inventory.value.lowestLead`: «… não o que o disco costuma valer.» → «… não o que o álbum costuma valer.»
+- `inventory.value.needsSettings`: «… uma sugestão pelo estado do disco (Mint…» → «… pelo estado do álbum (Mint…»
+
+**Varrido e sem ocorrência:** o HTML da página (`public/splash.html`: título, descrição, Open Graph, rótulos), os outros dicionários de `public/js/i18n/pt/`, `askTexts.js`, `inventoryTexts.js`, `shared/`, `app/`, `server/`. Ficaram, por não serem texto em português para o visitante: «Discogs»; o gênero «disco house» (`public/js/models/albumType.js`, dado em inglês); nomes de álbuns e artistas nos arquivos de dados; comentários de código; `docs/` (por exemplo `info-arch.md` ainda diz «disco» ao descrever a página).
+
+**Guarda.** `test/splash/noDiscoInPortuguese.test.js` falha se o dicionário em português da página de entrada, o HTML dela ou um dicionário de `public/js/i18n/pt/` disser «disco» ou «discos» (palavra inteira, sem contar acento; «Discogs» e «discografia» não disparam, e o teste confere que «Discogs» segue no inventário). Dois dos testes falham no código da `main`. A regra e as palavras dele estão em `docs/specs/design-system.md` § Voz e tom.
+
+**Para o MJRP saber.** «Vire o disco» era a expressão do lado A / lado B; pela regra ficou «Vire o álbum». «Lado A», «Lado B» e «faixa» não mudaram.
+
+Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** A tela do inventário com os três textos, no app (pede conta); na página de entrada montada, «ama álbuns» e «Vire o álbum» foram lidos no HTML do build.
+
 ## [2026-11-23 15:04] step — Página de entrada (F80): os dois endereços de busca do Apple Music viram o endereço do álbum (UAT-287)
 
 **Branch:** fix/f80-album-credit-album-only-and-aligned-button

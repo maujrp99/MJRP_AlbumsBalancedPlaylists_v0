@@ -65,7 +65,7 @@ describe('the page as served (what a search engine or an assistant reads, withou
             'Comece por um artista ou por uma lista.',
             'Ranqueie as faixas do seu jeito.',
             'Junte a série numa playlist só.',
-            'Vire o disco',
+            'Vire o álbum',
             'Guarde as playlists que você curtiu.',
             'Conte as mídias físicas da sua estante.',
             'Coloque sua primeira série para tocar.'

@@ -25,13 +25,13 @@ const pt = {
     // the menu and the top of the page
     'm.start': 'Criar', 'm.albums': 'Álbuns', 'm.blend': 'Blend', 'm.playlists': 'Playlists', 'm.inventory': 'Inventário',
     'menu.aria': 'Menu: cada item leva à história dele nesta página',
-    'flip.aria': 'Virar o disco',
+    'flip.aria': 'Virar o álbum',
     'signin': 'Entrar', 'openapp': 'Abrir o app',
     'skip': 'Pular para o conteúdo', 'home.aria': 'The Album Blender, topo da página',
     'pause': 'Pausar o movimento', 'play': 'Retomar o movimento',
     'lang.aria': 'Idioma',
     // the first screen, without an account
-    'h.kick': 'The Album Blender · um app web para quem ama discos',
+    'h.kick': 'The Album Blender · um app web para quem ama álbuns',
     'h.title': 'Mergulhe nos álbuns que você ama.',
     'h.what': 'Seus álbuns do momento, numa playlist balanceada.',
     'h.para': 'Monte séries com seus álbuns do momento, ranqueie suas faixas e gere playlists equilibradas.',
@@ -48,8 +48,8 @@ const pt = {
     'r.note': 'Exemplo: uma faixa subiu para o topo.',
     'r.aria': 'Exemplo de ranking das faixas de The Velvet Underground & Nico',
     't.blend': 'Junte a série numa playlist só.',
-    'p.blend': 'Escolha uma receita. O Blender pega faixas de cada álbum, sem deixar um disco dominar os outros.',
-    'f.title': 'Vire o disco',
+    'p.blend': 'Escolha uma receita. O Blender pega faixas de cada álbum, sem deixar um álbum dominar os outros.',
+    'f.title': 'Vire o álbum',
     'f.line': 'No lado B fica o que você guarda: suas playlists e seu inventário.',
     't.playlists': 'Guarde as playlists que você curtiu.',
     'p.playlists': 'Toda playlist salva fica aqui, para ouvir de novo, refazer ou exportar para o Spotify ou a Apple Music.',
@@ -63,11 +63,11 @@ const pt = {
     'e.what': 'Abra o app e comece uma série com um álbum que você ama. Entre na sua conta para salvá-la.',
     'ei.title': 'Coloque uma série nova para tocar.',
     // the stage, the records and the credits (Apple's identity: «Ouça no Apple Music» is its Portuguese badge)
-    'stage.aria': 'Uma caixa de discos; a página puxa um disco para a frente a cada parte',
+    'stage.aria': 'Uma caixa de álbuns; a página puxa um álbum para a frente a cada parte',
     'c.src': 'Capa do Apple Music', 'c.listen': 'Ouça no Apple Music', 'c.newtab': ' (abre numa nova aba)',
     'c.src.fict': 'Álbum fictício · arte original', 'c.fictional': 'álbum fictício',
     'tag.fict': 'Álbuns fictícios · arte original',
-    'credit.real': 'As capas vêm do Apple Music e são dos artistas e das gravadoras; todo disco mostrado inteiro nesta página tem link para a página dele no Apple Music. Apple e Apple Music são marcas da Apple Inc., registradas nos EUA e em outros países.',
+    'credit.real': 'As capas vêm do Apple Music e são dos artistas e das gravadoras; todo álbum mostrado inteiro nesta página tem link para a página dele no Apple Music. Apple e Apple Music são marcas da Apple Inc., registradas nos EUA e em outros países.',
     'credit.fict': 'Os álbuns desta página são fictícios, com arte original feita para ela.',
     'footer.aria': 'Rodapé'
 }

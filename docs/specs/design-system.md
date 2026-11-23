@@ -229,6 +229,8 @@ Listados pela F86, não consertados (a feature não muda o código do site).
 
 Os textos do site são em inglês, curtos, no imperativo nos botões («Create series», «Blend it now»); o que é dado de exemplo diz que é («Illustrative · fictional album»). A revisão dos textos e o português são da F81 (`design/copy/album-blender-copy.md`, a página de revisão de texto).
 
+**Vocabulário em português: «álbum», nunca «disco».** Regra do MJRP (2026-11-23): «nao vamos usar o linguajar discos, pq no brasil discos restringe a vinis. vamos utilizar Albuns sempre, troque onde tem disco para Albums pls». Em todo texto em português que o visitante lê, «disco/discos» é «álbum/álbuns», também quando a frase fala do objeto físico ou da caixa («Vire o álbum», «uma caixa de álbuns»). «Discogs» e «discografia» são outras palavras e ficam. O inglês não muda («record»). Guardado por `test/splash/noDiscoInPortuguese.test.js`.
+
 ## Themes
 
 Resposta do MJRP (2026-11-23 11:20, lote 2026-11-21-1335-v0-conform-questions, D-08, opção a): o site não troca de paleta, uma identidade só. Um tema só, escuro, sem seletor: o preto e as cores de § Cores. As cores de estado não vêm da marca. O contraste foi medido sobre o preto e o painel (§ Paleta).
