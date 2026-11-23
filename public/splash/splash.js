@@ -23,6 +23,7 @@ import { startMenuBar, applyAccount, threadBarStyle } from './menu.js'
 import { hasAccount } from './gate.js'
 import { startAmbient } from './ambient.js'
 import { startShelf } from './shelf.js'
+import { applyDoor } from './visitorDoor.js'
 
 export { threadBarStyle }
 
@@ -333,7 +334,7 @@ export function startSplash(win) {
     // the account: a visitor until the browser says otherwise; on the phone the visitor's «Criar» opens the app from the first moment (F96)
     const narrow = win.matchMedia('(max-width:899px)')
     let signedIn = false
-    const account = () => applyAccount(D, signedIn, narrow.matches)
+    const account = () => { applyAccount(D, signedIn); applyDoor(D, signedIn, narrow.matches) }
     account()
     if (narrow.addEventListener) narrow.addEventListener('change', account)
     hasAccount(win).then((answer) => { signedIn = answer; account() })

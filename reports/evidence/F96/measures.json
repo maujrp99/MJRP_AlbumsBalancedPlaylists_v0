@@ -1,0 +1,7538 @@
+{
+ "chromium-390-pt-out": {
+  "W": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "pageHeight": 4699,
+  "signedIn": false,
+  "lang": "pt-BR",
+  "heroButtons": [],
+  "h1": "Mergulhe nos álbuns que você ama.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 174.2,
+   "y": 674.1,
+   "w": 199.8,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 308.9,
+   "caption": 638.9,
+   "edu": 756.2,
+   "start": 823,
+   "albums": 1294.1,
+   "blend": 1881.9,
+   "playlists": 2454.6,
+   "inventory": 2959.3,
+   "flip": 2386.7,
+   "shelf": 3489.3,
+   "end": 3946.9,
+   "footer": 4386
+  },
+  "edu": {
+   "text": "Como funciona",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: Como funciona",
+   "p.kicker: LADO A · 1 — CRIAR",
+   "span.n: 1",
+   "p.kicker: LADO A · 2 — ÁLBUNS",
+   "span.n: 2",
+   "p.kicker: LADO A · 3 — BLEND",
+   "span.n: 3",
+   "p.kicker: LADO B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "p.kicker: LADO B · 2 — INVENTÁRIO",
+   "span.n: 2"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 823,
+    "label": "LADO A · 1 — CRIAR",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     845,
+     891,
+     978.5,
+     1077.3
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1077.3,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Comece por um artista ou por uma lista.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "albums",
+    "top": 1294.1,
+    "label": "LADO A · 2 — ÁLBUNS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1350.1,
+     1396.1,
+     1458.5,
+     1566.9
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1566.9,
+      "w": 358,
+      "h": 283
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Ranqueie as faixas do seu jeito.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "blend",
+    "top": 1881.9,
+    "label": "LADO A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1937.9,
+     1983.9,
+     2046.3,
+     2194.6
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2194.6,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Junte a série numa playlist só.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "playlists",
+    "top": 2454.6,
+    "label": "LADO B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2510.6,
+     2556.6,
+     2619,
+     2780.7
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2780.7,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Guarde as playlists que você curtiu.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "inventory",
+    "top": 2959.3,
+    "label": "LADO B · 2 — INVENTÁRIO",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     3015.3,
+     3061.3,
+     3148.9,
+     3322.7
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3322.7,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue as mídias físicas da sua estante.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "Na caixa do The Album Blender",
+   "rowName": "Álbuns da caixa do The Album Blender",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3605.9,
+    "w": 390,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 390,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Court of the Crimson King, King Crimson (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Low, David Bowie (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Power, Corruption & Lies, New Order (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Illmatic, Nas (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Harvest, Neil Young (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Close to the Edge, Yes (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Homogenic, Björk (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Mezzanine, Massive Attack (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Admirável Chip Novo, Pitty (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Álbum anterior",
+     "off": "true",
+     "shown": true,
+     "x": 274,
+     "y": 3874.9,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Próximo álbum",
+     "off": "false",
+     "shown": true,
+     "x": 330,
+     "y": 3874.9,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 197.3,
+    "y": 5,
+    "w": 176.8,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 197.3,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-ghost btn-sm only-ou",
+    "x": 293.3,
+    "y": 6,
+    "w": 80.8,
+    "h": 44
+   }
+  ],
+  "topRight": 374.1,
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "#inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "chromium-390-pt-in": {
+  "W": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "pageHeight": 4864,
+  "signedIn": true,
+  "lang": "pt-BR",
+  "heroButtons": [],
+  "h1": "Mergulhe nos álbuns que você ama.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 174.2,
+   "y": 674.1,
+   "w": 199.8,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 308.9,
+   "caption": 638.9,
+   "edu": 756.2,
+   "start": 823,
+   "albums": 1344.1,
+   "blend": 1981.9,
+   "playlists": 2604.6,
+   "inventory": 3159.3,
+   "flip": 2536.7,
+   "shelf": 3739.3,
+   "end": 4196.9,
+   "footer": 4512.4
+  },
+  "edu": {
+   "text": "Como funciona",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: Como funciona",
+   "p.kicker: LADO A · 1 — CRIAR",
+   "span.n: 1",
+   "span.: Começar uma série",
+   "span.: →",
+   "p.kicker: LADO A · 2 — ÁLBUNS",
+   "span.n: 2",
+   "span.: Ver seus álbuns",
+   "span.: →",
+   "p.kicker: LADO A · 3 — BLEND",
+   "span.n: 3",
+   "span.: Gerar uma playlist",
+   "span.: →",
+   "p.kicker: LADO B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "span.: Ver suas playlists",
+   "span.: →",
+   "p.kicker: LADO B · 2 — INVENTÁRIO",
+   "span.n: 2",
+   "span.: Abrir o inventário",
+   "span.: →"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 823,
+    "label": "LADO A · 1 — CRIAR",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Começar uma série →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/start"
+    },
+    "number": "30px",
+    "order": [
+     845,
+     891,
+     978.5,
+     1127.3
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1127.3,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Comece por um artista ou por uma lista.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "albums",
+    "top": 1344.1,
+    "label": "LADO A · 2 — ÁLBUNS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Ver seus álbuns →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/albums"
+    },
+    "number": "30px",
+    "order": [
+     1400.1,
+     1446.1,
+     1508.5,
+     1616.9
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1616.9,
+      "w": 358,
+      "h": 283
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Ranqueie as faixas do seu jeito.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "blend",
+    "top": 1981.9,
+    "label": "LADO A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Gerar uma playlist →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/blend"
+    },
+    "number": "30px",
+    "order": [
+     2037.9,
+     2083.9,
+     2146.3,
+     2344.6
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2344.6,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Junte a série numa playlist só.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "playlists",
+    "top": 2604.6,
+    "label": "LADO B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Ver suas playlists →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/saved-playlists"
+    },
+    "number": "30px",
+    "order": [
+     2660.6,
+     2706.6,
+     2769,
+     2980.7
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2980.7,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Guarde as playlists que você curtiu.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "inventory",
+    "top": 3159.3,
+    "label": "LADO B · 2 — INVENTÁRIO",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Abrir o inventário →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/inventory"
+    },
+    "number": "30px",
+    "order": [
+     3215.3,
+     3261.3,
+     3348.9,
+     3572.7
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3572.7,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue as mídias físicas da sua estante.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "Na caixa do The Album Blender",
+   "rowName": "Álbuns da caixa do The Album Blender",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3855.9,
+    "w": 390,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 390,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Court of the Crimson King, King Crimson (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Low, David Bowie (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Power, Corruption & Lies, New Order (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Illmatic, Nas (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Harvest, Neil Young (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Close to the Edge, Yes (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Homogenic, Björk (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Mezzanine, Massive Attack (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Admirável Chip Novo, Pitty (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Álbum anterior",
+     "off": "true",
+     "shown": true,
+     "x": 274,
+     "y": 4124.9,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Próximo álbum",
+     "off": "false",
+     "shown": true,
+     "x": 330,
+     "y": 4124.9,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 166.1,
+    "y": 5,
+    "w": 207.9,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 166.1,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-primary btn-sm btn-s",
+    "x": 262.1,
+    "y": 6,
+    "w": 111.9,
+    "h": 44
+   }
+  ],
+  "topRight": 374,
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "/inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "chromium-390-en-out": {
+  "W": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "pageHeight": 4629,
+  "signedIn": false,
+  "lang": "en",
+  "heroButtons": [],
+  "h1": "Dig through the albums you love.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Listen on Apple Music (opens in a new tab)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 168.1,
+   "y": 644.7,
+   "w": 205.9,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 271.5,
+   "caption": 601.5,
+   "edu": 734.9,
+   "start": 801.7,
+   "albums": 1247.7,
+   "blend": 1835.5,
+   "playlists": 2408.5,
+   "inventory": 2888.5,
+   "flip": 2340.6,
+   "shelf": 3418.5,
+   "end": 3876,
+   "footer": 4315.1
+  },
+  "edu": {
+   "text": "How it works",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: How it works",
+   "p.kicker: SIDE A · 1 — CREATE",
+   "span.n: 1",
+   "p.kicker: SIDE A · 2 — ALBUMS",
+   "span.n: 2",
+   "p.kicker: SIDE A · 3 — BLEND",
+   "span.n: 3",
+   "p.kicker: SIDE B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "p.kicker: SIDE B · 2 — INVENTORY",
+   "span.n: 2"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 801.7,
+    "label": "SIDE A · 1 — CREATE",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     823.7,
+     869.7,
+     932.1,
+     1030.7
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1030.7,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Begin with one artist, or a list.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "albums",
+    "top": 1247.7,
+    "label": "SIDE A · 2 — ALBUMS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1303.7,
+     1349.7,
+     1412.1,
+     1520.5
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1520.5,
+      "w": 358,
+      "h": 283
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Rank your tracks, your way.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "blend",
+    "top": 1835.5,
+    "label": "SIDE A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1891.5,
+     1937.5,
+     2025,
+     2148.3
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2148.3,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Bring the series together in one playlist.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "playlists",
+    "top": 2408.5,
+    "label": "SIDE B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2464.5,
+     2510.5,
+     2572.9,
+     2708.5
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2708.5,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Keep the playlists you love.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "inventory",
+    "top": 2888.5,
+    "label": "SIDE B · 2 — INVENTORY",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2944.5,
+     2990.5,
+     3078.1,
+     3250.5
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3250.5,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue the physical media on your shelf.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "In The Album Blender's crate",
+   "rowName": "Albums in The Album Blender's crate",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3535,
+    "w": 390,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 390,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Court of the Crimson King, King Crimson (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Low, David Bowie (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Power, Corruption & Lies, New Order (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Illmatic, Nas (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Harvest, Neil Young (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Close to the Edge, Yes (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Homogenic, Björk (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Mezzanine, Massive Attack (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Admirável Chip Novo, Pitty (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Previous album",
+     "off": "true",
+     "shown": true,
+     "x": 274,
+     "y": 3804,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Next album",
+     "off": "false",
+     "shown": true,
+     "x": 330,
+     "y": 3804,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 195.5,
+    "y": 5,
+    "w": 178.5,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 195.5,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-ghost btn-sm only-ou",
+    "x": 291.5,
+    "y": 6,
+    "w": 82.5,
+    "h": 44
+   }
+  ],
+  "topRight": 374,
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "#inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "chromium-390-en-in": {
+  "W": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "pageHeight": 4793,
+  "signedIn": true,
+  "lang": "en",
+  "heroButtons": [],
+  "h1": "Dig through the albums you love.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Listen on Apple Music (opens in a new tab)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 168.1,
+   "y": 644.7,
+   "w": 205.9,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 271.5,
+   "caption": 601.5,
+   "edu": 734.9,
+   "start": 801.7,
+   "albums": 1297.7,
+   "blend": 1935.5,
+   "playlists": 2558.5,
+   "inventory": 3088.5,
+   "flip": 2490.6,
+   "shelf": 3668.5,
+   "end": 4126,
+   "footer": 4441.5
+  },
+  "edu": {
+   "text": "How it works",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: How it works",
+   "p.kicker: SIDE A · 1 — CREATE",
+   "span.n: 1",
+   "span.: Start a series",
+   "span.: →",
+   "p.kicker: SIDE A · 2 — ALBUMS",
+   "span.n: 2",
+   "span.: See your albums",
+   "span.: →",
+   "p.kicker: SIDE A · 3 — BLEND",
+   "span.n: 3",
+   "span.: Make a playlist",
+   "span.: →",
+   "p.kicker: SIDE B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "span.: See your playlists",
+   "span.: →",
+   "p.kicker: SIDE B · 2 — INVENTORY",
+   "span.n: 2",
+   "span.: Open your inventory",
+   "span.: →"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 801.7,
+    "label": "SIDE A · 1 — CREATE",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Start a series →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/start"
+    },
+    "number": "30px",
+    "order": [
+     823.7,
+     869.7,
+     932.1,
+     1080.7
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1080.7,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Begin with one artist, or a list.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "albums",
+    "top": 1297.7,
+    "label": "SIDE A · 2 — ALBUMS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "See your albums →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/albums"
+    },
+    "number": "30px",
+    "order": [
+     1353.7,
+     1399.7,
+     1462.1,
+     1570.5
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1570.5,
+      "w": 358,
+      "h": 283
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Rank your tracks, your way.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "blend",
+    "top": 1935.5,
+    "label": "SIDE A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Make a playlist →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/blend"
+    },
+    "number": "30px",
+    "order": [
+     1991.5,
+     2037.5,
+     2125,
+     2298.3
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2298.3,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Bring the series together in one playlist.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "playlists",
+    "top": 2558.5,
+    "label": "SIDE B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "See your playlists →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/saved-playlists"
+    },
+    "number": "30px",
+    "order": [
+     2614.5,
+     2660.5,
+     2722.9,
+     2908.5
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2908.5,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Keep the playlists you love.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "inventory",
+    "top": 3088.5,
+    "label": "SIDE B · 2 — INVENTORY",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Open your inventory →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/inventory"
+    },
+    "number": "30px",
+    "order": [
+     3144.5,
+     3190.5,
+     3278.1,
+     3500.5
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3500.5,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue the physical media on your shelf.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "In The Album Blender's crate",
+   "rowName": "Albums in The Album Blender's crate",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3785,
+    "w": 390,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 390,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Court of the Crimson King, King Crimson (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Low, David Bowie (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Power, Corruption & Lies, New Order (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Illmatic, Nas (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Harvest, Neil Young (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Close to the Edge, Yes (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Homogenic, Björk (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Mezzanine, Massive Attack (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Admirável Chip Novo, Pitty (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Previous album",
+     "off": "true",
+     "shown": true,
+     "x": 274,
+     "y": 4054,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Next album",
+     "off": "false",
+     "shown": true,
+     "x": 330,
+     "y": 4054,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 111.1,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 139.1,
+    "y": 5,
+    "w": 234.9,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 139.1,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-primary btn-sm btn-s",
+    "x": 235.1,
+    "y": 6,
+    "w": 138.9,
+    "h": 44
+   }
+  ],
+  "topRight": 374,
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "/inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "chromium-360-pt-out": {
+  "W": 360,
+  "scrollWidth": 360,
+  "bodyScrollWidth": 360,
+  "pageHeight": 4868,
+  "signedIn": false,
+  "lang": "pt-BR",
+  "heroButtons": [],
+  "h1": "Mergulhe nos álbuns que você ama.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 144.2,
+   "y": 682.2,
+   "w": 199.8,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 308.9,
+   "caption": 638.9,
+   "edu": 772.4,
+   "start": 870,
+   "albums": 1341.1,
+   "blend": 1969.7,
+   "playlists": 2542.3,
+   "inventory": 3072.3,
+   "flip": 2474.5,
+   "shelf": 3602.3,
+   "end": 4090.6,
+   "footer": 4554.5
+  },
+  "edu": {
+   "text": "Como funciona",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: Como funciona",
+   "p.kicker: LADO A · 1 — CRIAR",
+   "span.n: 1",
+   "p.kicker: LADO A · 2 — ÁLBUNS",
+   "span.n: 2",
+   "p.kicker: LADO A · 3 — BLEND",
+   "span.n: 3",
+   "p.kicker: LADO B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "p.kicker: LADO B · 2 — INVENTÁRIO",
+   "span.n: 2"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 870,
+    "label": "LADO A · 1 — CRIAR",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     892,
+     938,
+     1025.5,
+     1129.3
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1129.3,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Comece por um artista ou por uma lista.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "albums",
+    "top": 1341.1,
+    "label": "LADO A · 2 — ÁLBUNS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1397.1,
+     1443.1,
+     1530.7,
+     1639.1
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1639.1,
+      "w": 328,
+      "h": 298.6
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Ranqueie as faixas do seu jeito.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "blend",
+    "top": 1969.7,
+    "label": "LADO A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2025.7,
+     2071.7,
+     2134.1,
+     2292.6
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2292.6,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Junte a série numa playlist só.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "playlists",
+    "top": 2542.3,
+    "label": "LADO B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2598.3,
+     2644.3,
+     2731.9,
+     2905.9
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2905.9,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Guarde as playlists que você curtiu.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "inventory",
+    "top": 3072.3,
+    "label": "LADO B · 2 — INVENTÁRIO",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     3128.3,
+     3174.3,
+     3261.9,
+     3449.4
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3449.4,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue as mídias físicas da sua estante.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "Na caixa do The Album Blender",
+   "rowName": "Álbuns da caixa do The Album Blender",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3749.6,
+    "w": 360,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 360,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Court of the Crimson King, King Crimson (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Low, David Bowie (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Power, Corruption & Lies, New Order (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Illmatic, Nas (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Harvest, Neil Young (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Close to the Edge, Yes (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Homogenic, Björk (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Mezzanine, Massive Attack (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Admirável Chip Novo, Pitty (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Álbum anterior",
+     "off": "true",
+     "shown": true,
+     "x": 244,
+     "y": 4018.6,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Próximo álbum",
+     "off": "false",
+     "shown": true,
+     "x": 300,
+     "y": 4018.6,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 167.3,
+    "y": 5,
+    "w": 176.8,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 167.3,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-ghost btn-sm only-ou",
+    "x": 263.3,
+    "y": 6,
+    "w": 80.8,
+    "h": 44
+   }
+  ],
+  "topRight": 344.1,
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "#inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "chromium-360-pt-in": {
+  "W": 360,
+  "scrollWidth": 360,
+  "bodyScrollWidth": 360,
+  "pageHeight": 5055,
+  "signedIn": true,
+  "lang": "pt-BR",
+  "heroButtons": [],
+  "h1": "Mergulhe nos álbuns que você ama.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 144.2,
+   "y": 682.2,
+   "w": 199.8,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 308.9,
+   "caption": 638.9,
+   "edu": 772.4,
+   "start": 870,
+   "albums": 1391.1,
+   "blend": 2069.7,
+   "playlists": 2692.3,
+   "inventory": 3272.3,
+   "flip": 2624.5,
+   "shelf": 3852.3,
+   "end": 4340.6,
+   "footer": 4656.1
+  },
+  "edu": {
+   "text": "Como funciona",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: Como funciona",
+   "p.kicker: LADO A · 1 — CRIAR",
+   "span.n: 1",
+   "span.: Começar uma série",
+   "span.: →",
+   "p.kicker: LADO A · 2 — ÁLBUNS",
+   "span.n: 2",
+   "span.: Ver seus álbuns",
+   "span.: →",
+   "p.kicker: LADO A · 3 — BLEND",
+   "span.n: 3",
+   "span.: Gerar uma playlist",
+   "span.: →",
+   "p.kicker: LADO B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "span.: Ver suas playlists",
+   "span.: →",
+   "p.kicker: LADO B · 2 — INVENTÁRIO",
+   "span.n: 2",
+   "span.: Abrir o inventário",
+   "span.: →"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 870,
+    "label": "LADO A · 1 — CRIAR",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Começar uma série →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/start"
+    },
+    "number": "30px",
+    "order": [
+     892,
+     938,
+     1025.5,
+     1179.3
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1179.3,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Comece por um artista ou por uma lista.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "albums",
+    "top": 1391.1,
+    "label": "LADO A · 2 — ÁLBUNS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Ver seus álbuns →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/albums"
+    },
+    "number": "30px",
+    "order": [
+     1447.1,
+     1493.1,
+     1580.7,
+     1689.1
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1689.1,
+      "w": 328,
+      "h": 298.6
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Ranqueie as faixas do seu jeito.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "blend",
+    "top": 2069.7,
+    "label": "LADO A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Gerar uma playlist →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/blend"
+    },
+    "number": "30px",
+    "order": [
+     2125.7,
+     2171.7,
+     2234.1,
+     2442.6
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2442.6,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Junte a série numa playlist só.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "playlists",
+    "top": 2692.3,
+    "label": "LADO B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Ver suas playlists →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/saved-playlists"
+    },
+    "number": "30px",
+    "order": [
+     2748.3,
+     2794.3,
+     2881.9,
+     3105.9
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 3105.9,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Guarde as playlists que você curtiu.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "inventory",
+    "top": 3272.3,
+    "label": "LADO B · 2 — INVENTÁRIO",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Abrir o inventário →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/inventory"
+    },
+    "number": "30px",
+    "order": [
+     3328.3,
+     3374.3,
+     3461.9,
+     3699.4
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3699.4,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue as mídias físicas da sua estante.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "Na caixa do The Album Blender",
+   "rowName": "Álbuns da caixa do The Album Blender",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3999.6,
+    "w": 360,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 360,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Court of the Crimson King, King Crimson (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Low, David Bowie (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Power, Corruption & Lies, New Order (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Illmatic, Nas (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Harvest, Neil Young (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Close to the Edge, Yes (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Homogenic, Björk (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Mezzanine, Massive Attack (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Admirável Chip Novo, Pitty (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Álbum anterior",
+     "off": "true",
+     "shown": true,
+     "x": 244,
+     "y": 4268.6,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Próximo álbum",
+     "off": "false",
+     "shown": true,
+     "x": 300,
+     "y": 4268.6,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 108.1,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 136.1,
+    "y": 5,
+    "w": 207.9,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 136.1,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-primary btn-sm btn-s",
+    "x": 232.1,
+    "y": 6,
+    "w": 111.9,
+    "h": 44
+   }
+  ],
+  "topRight": 344,
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "/inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "chromium-360-en-out": {
+  "W": 360,
+  "scrollWidth": 360,
+  "bodyScrollWidth": 360,
+  "pageHeight": 4747,
+  "signedIn": false,
+  "lang": "en",
+  "heroButtons": [],
+  "h1": "Dig through the albums you love.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Listen on Apple Music (opens in a new tab)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 138.1,
+   "y": 644.7,
+   "w": 205.9,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 271.5,
+   "caption": 601.5,
+   "edu": 734.9,
+   "start": 801.7,
+   "albums": 1247.7,
+   "blend": 1851.1,
+   "playlists": 2448.9,
+   "inventory": 2953.7,
+   "flip": 2381,
+   "shelf": 3483.6,
+   "end": 3941.2,
+   "footer": 4411.8
+  },
+  "edu": {
+   "text": "How it works",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: How it works",
+   "p.kicker: SIDE A · 1 — CREATE",
+   "span.n: 1",
+   "p.kicker: SIDE A · 2 — ALBUMS",
+   "span.n: 2",
+   "p.kicker: SIDE A · 3 — BLEND",
+   "span.n: 3",
+   "p.kicker: SIDE B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "p.kicker: SIDE B · 2 — INVENTORY",
+   "span.n: 2"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 801.7,
+    "label": "SIDE A · 1 — CREATE",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     823.7,
+     869.7,
+     932.1,
+     1034.8
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1034.8,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Begin with one artist, or a list.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "albums",
+    "top": 1247.7,
+    "label": "SIDE A · 2 — ALBUMS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1303.7,
+     1349.7,
+     1412.1,
+     1520.5
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1520.5,
+      "w": 328,
+      "h": 298.6
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Rank your tracks, your way.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "blend",
+    "top": 1851.1,
+    "label": "SIDE A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1907.1,
+     1953.1,
+     2040.6,
+     2197.4
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2197.4,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Bring the series together in one playlist.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "playlists",
+    "top": 2448.9,
+    "label": "SIDE B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2504.9,
+     2550.9,
+     2613.3,
+     2784.9
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2784.9,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Keep the playlists you love.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "inventory",
+    "top": 2953.7,
+    "label": "SIDE B · 2 — INVENTORY",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     3009.7,
+     3055.7,
+     3143.3,
+     3328.5
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3328.5,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue the physical media on your shelf.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "In The Album Blender's crate",
+   "rowName": "Albums in The Album Blender's crate",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3600.2,
+    "w": 360,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 360,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Court of the Crimson King, King Crimson (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Low, David Bowie (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Power, Corruption & Lies, New Order (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Illmatic, Nas (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Harvest, Neil Young (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Close to the Edge, Yes (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Homogenic, Björk (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Mezzanine, Massive Attack (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Admirável Chip Novo, Pitty (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Previous album",
+     "off": "true",
+     "shown": true,
+     "x": 244,
+     "y": 3869.2,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Next album",
+     "off": "false",
+     "shown": true,
+     "x": 300,
+     "y": 3869.2,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 165.5,
+    "y": 5,
+    "w": 178.5,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 165.5,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-ghost btn-sm only-ou",
+    "x": 261.5,
+    "y": 6,
+    "w": 82.5,
+    "h": 44
+   }
+  ],
+  "topRight": 344,
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "#inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "chromium-360-en-in": {
+  "W": 360,
+  "scrollWidth": 360,
+  "bodyScrollWidth": 360,
+  "pageHeight": 4928,
+  "signedIn": true,
+  "lang": "en",
+  "heroButtons": [],
+  "h1": "Dig through the albums you love.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Listen on Apple Music (opens in a new tab)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 138.1,
+   "y": 644.7,
+   "w": 205.9,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 271.5,
+   "caption": 601.5,
+   "edu": 734.9,
+   "start": 801.7,
+   "albums": 1297.7,
+   "blend": 1951.1,
+   "playlists": 2598.9,
+   "inventory": 3153.7,
+   "flip": 2531,
+   "shelf": 3733.6,
+   "end": 4191.2,
+   "footer": 4506.7
+  },
+  "edu": {
+   "text": "How it works",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: How it works",
+   "p.kicker: SIDE A · 1 — CREATE",
+   "span.n: 1",
+   "span.: Start a series",
+   "span.: →",
+   "p.kicker: SIDE A · 2 — ALBUMS",
+   "span.n: 2",
+   "span.: See your albums",
+   "span.: →",
+   "p.kicker: SIDE A · 3 — BLEND",
+   "span.n: 3",
+   "span.: Make a playlist",
+   "span.: →",
+   "p.kicker: SIDE B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "span.: See your playlists",
+   "span.: →",
+   "p.kicker: SIDE B · 2 — INVENTORY",
+   "span.n: 2",
+   "span.: Open your inventory",
+   "span.: →"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 801.7,
+    "label": "SIDE A · 1 — CREATE",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Start a series →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/start"
+    },
+    "number": "30px",
+    "order": [
+     823.7,
+     869.7,
+     932.1,
+     1084.8
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1084.8,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Begin with one artist, or a list.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "albums",
+    "top": 1297.7,
+    "label": "SIDE A · 2 — ALBUMS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "See your albums →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/albums"
+    },
+    "number": "30px",
+    "order": [
+     1353.7,
+     1399.7,
+     1462.1,
+     1570.5
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1570.5,
+      "w": 328,
+      "h": 298.6
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Rank your tracks, your way.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "blend",
+    "top": 1951.1,
+    "label": "SIDE A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Make a playlist →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/blend"
+    },
+    "number": "30px",
+    "order": [
+     2007.1,
+     2053.1,
+     2140.6,
+     2347.4
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2347.4,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Bring the series together in one playlist.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "playlists",
+    "top": 2598.9,
+    "label": "SIDE B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "See your playlists →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/saved-playlists"
+    },
+    "number": "30px",
+    "order": [
+     2654.9,
+     2700.9,
+     2763.3,
+     2984.9
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2984.9,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Keep the playlists you love.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "inventory",
+    "top": 3153.7,
+    "label": "SIDE B · 2 — INVENTORY",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Open your inventory →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/inventory"
+    },
+    "number": "30px",
+    "order": [
+     3209.7,
+     3255.7,
+     3343.3,
+     3578.5
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3578.5,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue the physical media on your shelf.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "In The Album Blender's crate",
+   "rowName": "Albums in The Album Blender's crate",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3850.2,
+    "w": 360,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 360,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Court of the Crimson King, King Crimson (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Low, David Bowie (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Power, Corruption & Lies, New Order (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Illmatic, Nas (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Harvest, Neil Young (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Close to the Edge, Yes (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Homogenic, Björk (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Mezzanine, Massive Attack (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Admirável Chip Novo, Pitty (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Previous album",
+     "off": "true",
+     "shown": true,
+     "x": 244,
+     "y": 4119.2,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Next album",
+     "off": "false",
+     "shown": true,
+     "x": 300,
+     "y": 4119.2,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 81.1,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 109.1,
+    "y": 5,
+    "w": 234.9,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 109.1,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-primary btn-sm btn-s",
+    "x": 205.1,
+    "y": 6,
+    "w": 138.9,
+    "h": 44
+   }
+  ],
+  "topRight": 344,
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "/inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "webkit-390-pt-out": {
+  "W": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "pageHeight": 4668,
+  "signedIn": false,
+  "lang": "pt-BR",
+  "heroButtons": [],
+  "h1": "Mergulhe nos álbuns que você ama.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 174.2,
+   "y": 670,
+   "w": 199.8,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 306,
+   "caption": 636,
+   "edu": 751,
+   "start": 817,
+   "albums": 1286,
+   "blend": 1869,
+   "playlists": 2437,
+   "inventory": 2939,
+   "flip": 2371,
+   "shelf": 3466,
+   "end": 3922,
+   "footer": 4358
+  },
+  "edu": {
+   "text": "Como funciona",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: Como funciona",
+   "p.kicker: LADO A · 1 — CRIAR",
+   "span.n: 1",
+   "p.kicker: LADO A · 2 — ÁLBUNS",
+   "span.n: 2",
+   "p.kicker: LADO A · 3 — BLEND",
+   "span.n: 3",
+   "p.kicker: LADO B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "p.kicker: LADO B · 2 — INVENTÁRIO",
+   "span.n: 2"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 817,
+    "label": "LADO A · 1 — CRIAR",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     839,
+     885,
+     972,
+     1066.8
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1066.8,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Comece por um artista ou por uma lista.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "albums",
+    "top": 1286,
+    "label": "LADO A · 2 — ÁLBUNS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1342,
+     1388,
+     1450,
+     1556
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1556,
+      "w": 358,
+      "h": 281
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Ranqueie as faixas do seu jeito.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "blend",
+    "top": 1869,
+    "label": "LADO A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1925,
+     1971,
+     2033,
+     2172.8
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2172.8,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Junte a série numa playlist só.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "playlists",
+    "top": 2437,
+    "label": "LADO B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2493,
+     2539,
+     2601,
+     2755.2
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2755.2,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Guarde as playlists que você curtiu.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "inventory",
+    "top": 2939,
+    "label": "LADO B · 2 — INVENTÁRIO",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2995,
+     3041,
+     3128,
+     3324
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3324,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue as mídias físicas da sua estante.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "Na caixa do The Album Blender",
+   "rowName": "Álbuns da caixa do The Album Blender",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3581,
+    "w": 390,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 390,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Court of the Crimson King, King Crimson (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Low, David Bowie (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Power, Corruption & Lies, New Order (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Illmatic, Nas (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Harvest, Neil Young (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Close to the Edge, Yes (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Homogenic, Björk (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Mezzanine, Massive Attack (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Admirável Chip Novo, Pitty (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Álbum anterior",
+     "off": "true",
+     "shown": true,
+     "x": 274,
+     "y": 3850,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Próximo álbum",
+     "off": "false",
+     "shown": true,
+     "x": 330,
+     "y": 3850,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 197.3,
+    "y": 5,
+    "w": 176.8,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 197.3,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-ghost btn-sm only-ou",
+    "x": 293.3,
+    "y": 6,
+    "w": 80.8,
+    "h": 44
+   }
+  ],
+  "topRight": 374.1,
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "#inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "webkit-390-pt-in": {
+  "W": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "pageHeight": 4833,
+  "signedIn": true,
+  "lang": "pt-BR",
+  "heroButtons": [],
+  "h1": "Mergulhe nos álbuns que você ama.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 174.2,
+   "y": 670,
+   "w": 199.8,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 306,
+   "caption": 636,
+   "edu": 751,
+   "start": 817,
+   "albums": 1336,
+   "blend": 1969,
+   "playlists": 2587,
+   "inventory": 3139,
+   "flip": 2521,
+   "shelf": 3716,
+   "end": 4172,
+   "footer": 4486
+  },
+  "edu": {
+   "text": "Como funciona",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: Como funciona",
+   "p.kicker: LADO A · 1 — CRIAR",
+   "span.n: 1",
+   "span.: Começar uma série",
+   "span.: →",
+   "p.kicker: LADO A · 2 — ÁLBUNS",
+   "span.n: 2",
+   "span.: Ver seus álbuns",
+   "span.: →",
+   "p.kicker: LADO A · 3 — BLEND",
+   "span.n: 3",
+   "span.: Gerar uma playlist",
+   "span.: →",
+   "p.kicker: LADO B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "span.: Ver suas playlists",
+   "span.: →",
+   "p.kicker: LADO B · 2 — INVENTÁRIO",
+   "span.n: 2",
+   "span.: Abrir o inventário",
+   "span.: →"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 817,
+    "label": "LADO A · 1 — CRIAR",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Começar uma série →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/start"
+    },
+    "number": "30px",
+    "order": [
+     839,
+     885,
+     972,
+     1116.8
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1116.8,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Comece por um artista ou por uma lista.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "albums",
+    "top": 1336,
+    "label": "LADO A · 2 — ÁLBUNS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Ver seus álbuns →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/albums"
+    },
+    "number": "30px",
+    "order": [
+     1392,
+     1438,
+     1500,
+     1606
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1606,
+      "w": 358,
+      "h": 281
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Ranqueie as faixas do seu jeito.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "blend",
+    "top": 1969,
+    "label": "LADO A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Gerar uma playlist →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/blend"
+    },
+    "number": "30px",
+    "order": [
+     2025,
+     2071,
+     2133,
+     2322.8
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2322.8,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Junte a série numa playlist só.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "playlists",
+    "top": 2587,
+    "label": "LADO B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Ver suas playlists →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/saved-playlists"
+    },
+    "number": "30px",
+    "order": [
+     2643,
+     2689,
+     2751,
+     2955.2
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2955.2,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Guarde as playlists que você curtiu.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "inventory",
+    "top": 3139,
+    "label": "LADO B · 2 — INVENTÁRIO",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Abrir o inventário →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/inventory"
+    },
+    "number": "30px",
+    "order": [
+     3195,
+     3241,
+     3328,
+     3574
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3574,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue as mídias físicas da sua estante.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "Na caixa do The Album Blender",
+   "rowName": "Álbuns da caixa do The Album Blender",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3831,
+    "w": 390,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 390,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Court of the Crimson King, King Crimson (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Low, David Bowie (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Power, Corruption & Lies, New Order (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Illmatic, Nas (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Harvest, Neil Young (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Close to the Edge, Yes (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Homogenic, Björk (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Mezzanine, Massive Attack (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Admirável Chip Novo, Pitty (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Álbum anterior",
+     "off": "true",
+     "shown": true,
+     "x": 274,
+     "y": 4100,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Próximo álbum",
+     "off": "false",
+     "shown": true,
+     "x": 330,
+     "y": 4100,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 166.1,
+    "y": 5,
+    "w": 207.9,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 166.1,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-primary btn-sm btn-s",
+    "x": 262.1,
+    "y": 6,
+    "w": 111.9,
+    "h": 44
+   }
+  ],
+  "topRight": 374,
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "/inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "webkit-390-en-out": {
+  "W": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "pageHeight": 4599,
+  "signedIn": false,
+  "lang": "en",
+  "heroButtons": [],
+  "h1": "Dig through the albums you love.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Listen on Apple Music (opens in a new tab)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 168.1,
+   "y": 641,
+   "w": 205.9,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 269,
+   "caption": 599,
+   "edu": 730,
+   "start": 796,
+   "albums": 1240,
+   "blend": 1823,
+   "playlists": 2392,
+   "inventory": 2870,
+   "flip": 2326,
+   "shelf": 3397,
+   "end": 3853,
+   "footer": 4289
+  },
+  "edu": {
+   "text": "How it works",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: How it works",
+   "p.kicker: SIDE A · 1 — CREATE",
+   "span.n: 1",
+   "p.kicker: SIDE A · 2 — ALBUMS",
+   "span.n: 2",
+   "p.kicker: SIDE A · 3 — BLEND",
+   "span.n: 3",
+   "p.kicker: SIDE B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "p.kicker: SIDE B · 2 — INVENTORY",
+   "span.n: 2"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 796,
+    "label": "SIDE A · 1 — CREATE",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     818,
+     864,
+     926,
+     1022.8
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1022.8,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Begin with one artist, or a list.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "albums",
+    "top": 1240,
+    "label": "SIDE A · 2 — ALBUMS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1296,
+     1342,
+     1404,
+     1510
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1510,
+      "w": 358,
+      "h": 281
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Rank your tracks, your way.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "blend",
+    "top": 1823,
+    "label": "SIDE A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1879,
+     1925,
+     2012,
+     2133.3
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2133.3,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Bring the series together in one playlist.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "playlists",
+    "top": 2392,
+    "label": "SIDE B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2448,
+     2494,
+     2556,
+     2689.6
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2689.6,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Keep the playlists you love.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "inventory",
+    "top": 2870,
+    "label": "SIDE B · 2 — INVENTORY",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2926,
+     2972,
+     3059,
+     3228.5
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3228.5,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue the physical media on your shelf.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "In The Album Blender's crate",
+   "rowName": "Albums in The Album Blender's crate",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3512,
+    "w": 390,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 390,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Court of the Crimson King, King Crimson (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Low, David Bowie (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Power, Corruption & Lies, New Order (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Illmatic, Nas (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Harvest, Neil Young (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Close to the Edge, Yes (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Homogenic, Björk (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Mezzanine, Massive Attack (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Admirável Chip Novo, Pitty (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Previous album",
+     "off": "true",
+     "shown": true,
+     "x": 274,
+     "y": 3781,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Next album",
+     "off": "false",
+     "shown": true,
+     "x": 330,
+     "y": 3781,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 195.5,
+    "y": 5,
+    "w": 178.5,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 195.5,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-ghost btn-sm only-ou",
+    "x": 291.5,
+    "y": 6,
+    "w": 82.5,
+    "h": 44
+   }
+  ],
+  "topRight": 374,
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "#inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "webkit-390-en-in": {
+  "W": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "pageHeight": 4764,
+  "signedIn": true,
+  "lang": "en",
+  "heroButtons": [],
+  "h1": "Dig through the albums you love.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Listen on Apple Music (opens in a new tab)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 168.1,
+   "y": 641,
+   "w": 205.9,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 269,
+   "caption": 599,
+   "edu": 730,
+   "start": 796,
+   "albums": 1290,
+   "blend": 1923,
+   "playlists": 2542,
+   "inventory": 3070,
+   "flip": 2476,
+   "shelf": 3647,
+   "end": 4103,
+   "footer": 4417
+  },
+  "edu": {
+   "text": "How it works",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: How it works",
+   "p.kicker: SIDE A · 1 — CREATE",
+   "span.n: 1",
+   "span.: Start a series",
+   "span.: →",
+   "p.kicker: SIDE A · 2 — ALBUMS",
+   "span.n: 2",
+   "span.: See your albums",
+   "span.: →",
+   "p.kicker: SIDE A · 3 — BLEND",
+   "span.n: 3",
+   "span.: Make a playlist",
+   "span.: →",
+   "p.kicker: SIDE B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "span.: See your playlists",
+   "span.: →",
+   "p.kicker: SIDE B · 2 — INVENTORY",
+   "span.n: 2",
+   "span.: Open your inventory",
+   "span.: →"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 796,
+    "label": "SIDE A · 1 — CREATE",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Start a series →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/start"
+    },
+    "number": "30px",
+    "order": [
+     818,
+     864,
+     926,
+     1072.8
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1072.8,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Begin with one artist, or a list.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "albums",
+    "top": 1290,
+    "label": "SIDE A · 2 — ALBUMS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "See your albums →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/albums"
+    },
+    "number": "30px",
+    "order": [
+     1346,
+     1392,
+     1454,
+     1560
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1560,
+      "w": 358,
+      "h": 281
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Rank your tracks, your way.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "blend",
+    "top": 1923,
+    "label": "SIDE A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Make a playlist →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/blend"
+    },
+    "number": "30px",
+    "order": [
+     1979,
+     2025,
+     2112,
+     2283.3
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2283.3,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Bring the series together in one playlist.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   },
+   {
+    "id": "playlists",
+    "top": 2542,
+    "label": "SIDE B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "See your playlists →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/saved-playlists"
+    },
+    "number": "30px",
+    "order": [
+     2598,
+     2644,
+     2706,
+     2889.6
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2889.6,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Keep the playlists you love.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 358
+   },
+   {
+    "id": "inventory",
+    "top": 3070,
+    "label": "SIDE B · 2 — INVENTORY",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Open your inventory →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/inventory"
+    },
+    "number": "30px",
+    "order": [
+     3126,
+     3172,
+     3259,
+     3478.5
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3478.5,
+      "w": 358,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue the physical media on your shelf.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 358
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "In The Album Blender's crate",
+   "rowName": "Albums in The Album Blender's crate",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3762,
+    "w": 390,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 390,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Court of the Crimson King, King Crimson (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Low, David Bowie (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Power, Corruption & Lies, New Order (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Illmatic, Nas (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Harvest, Neil Young (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Close to the Edge, Yes (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Homogenic, Björk (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Mezzanine, Massive Attack (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Admirável Chip Novo, Pitty (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Previous album",
+     "off": "true",
+     "shown": true,
+     "x": 274,
+     "y": 4031,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Next album",
+     "off": "false",
+     "shown": true,
+     "x": 330,
+     "y": 4031,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 111.1,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 139.1,
+    "y": 5,
+    "w": 234.9,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 139.1,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-primary btn-sm btn-s",
+    "x": 235.1,
+    "y": 6,
+    "w": 138.9,
+    "h": 44
+   }
+  ],
+  "topRight": 374,
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "/inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "webkit-360-pt-out": {
+  "W": 360,
+  "scrollWidth": 360,
+  "bodyScrollWidth": 360,
+  "pageHeight": 4833,
+  "signedIn": false,
+  "lang": "pt-BR",
+  "heroButtons": [],
+  "h1": "Mergulhe nos álbuns que você ama.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 144.2,
+   "y": 678,
+   "w": 199.8,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 306,
+   "caption": 636,
+   "edu": 767,
+   "start": 863,
+   "albums": 1332,
+   "blend": 1955,
+   "playlists": 2523,
+   "inventory": 3050,
+   "flip": 2457,
+   "shelf": 3577,
+   "end": 4063,
+   "footer": 4523
+  },
+  "edu": {
+   "text": "Como funciona",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: Como funciona",
+   "p.kicker: LADO A · 1 — CRIAR",
+   "span.n: 1",
+   "p.kicker: LADO A · 2 — ÁLBUNS",
+   "span.n: 2",
+   "p.kicker: LADO A · 3 — BLEND",
+   "span.n: 3",
+   "p.kicker: LADO B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "p.kicker: LADO B · 2 — INVENTÁRIO",
+   "span.n: 2"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 863,
+    "label": "LADO A · 1 — CRIAR",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     885,
+     931,
+     1018,
+     1116.1
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1116.1,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Comece por um artista ou por uma lista.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "albums",
+    "top": 1332,
+    "label": "LADO A · 2 — ÁLBUNS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1388,
+     1434,
+     1521,
+     1627
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1627,
+      "w": 328,
+      "h": 296
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Ranqueie as faixas do seu jeito.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "blend",
+    "top": 1955,
+    "label": "LADO A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2011,
+     2057,
+     2119,
+     2265
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2265,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Junte a série numa playlist só.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "playlists",
+    "top": 2523,
+    "label": "LADO B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2579,
+     2625,
+     2712,
+     2873.9
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2873.9,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Guarde as playlists que você curtiu.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "inventory",
+    "top": 3050,
+    "label": "LADO B · 2 — INVENTÁRIO",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     3106,
+     3152,
+     3239,
+     3435
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3435,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue as mídias físicas da sua estante.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "Na caixa do The Album Blender",
+   "rowName": "Álbuns da caixa do The Album Blender",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3722,
+    "w": 360,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 360,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Court of the Crimson King, King Crimson (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Low, David Bowie (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Power, Corruption & Lies, New Order (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Illmatic, Nas (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Harvest, Neil Young (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Close to the Edge, Yes (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Homogenic, Björk (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Mezzanine, Massive Attack (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Admirável Chip Novo, Pitty (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Álbum anterior",
+     "off": "true",
+     "shown": true,
+     "x": 244,
+     "y": 3991,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Próximo álbum",
+     "off": "false",
+     "shown": true,
+     "x": 300,
+     "y": 3991,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 167.3,
+    "y": 5,
+    "w": 176.8,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 167.3,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-ghost btn-sm only-ou",
+    "x": 263.3,
+    "y": 6,
+    "w": 80.8,
+    "h": 44
+   }
+  ],
+  "topRight": 344.1,
+  "topButtons": [
+   {
+    "text": "Entrar",
+    "href": "/start?signin"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "#inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "webkit-360-pt-in": {
+  "W": 360,
+  "scrollWidth": 360,
+  "bodyScrollWidth": 360,
+  "pageHeight": 5022,
+  "signedIn": true,
+  "lang": "pt-BR",
+  "heroButtons": [],
+  "h1": "Mergulhe nos álbuns que você ama.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Ouça no Apple Music (abre numa nova aba)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 144.2,
+   "y": 678,
+   "w": 199.8,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 306,
+   "caption": 636,
+   "edu": 767,
+   "start": 863,
+   "albums": 1382,
+   "blend": 2055,
+   "playlists": 2673,
+   "inventory": 3250,
+   "flip": 2607,
+   "shelf": 3827,
+   "end": 4313,
+   "footer": 4627
+  },
+  "edu": {
+   "text": "Como funciona",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: Como funciona",
+   "p.kicker: LADO A · 1 — CRIAR",
+   "span.n: 1",
+   "span.: Começar uma série",
+   "span.: →",
+   "p.kicker: LADO A · 2 — ÁLBUNS",
+   "span.n: 2",
+   "span.: Ver seus álbuns",
+   "span.: →",
+   "p.kicker: LADO A · 3 — BLEND",
+   "span.n: 3",
+   "span.: Gerar uma playlist",
+   "span.: →",
+   "p.kicker: LADO B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "span.: Ver suas playlists",
+   "span.: →",
+   "p.kicker: LADO B · 2 — INVENTÁRIO",
+   "span.n: 2",
+   "span.: Abrir o inventário",
+   "span.: →"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 863,
+    "label": "LADO A · 1 — CRIAR",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Começar uma série →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/start"
+    },
+    "number": "30px",
+    "order": [
+     885,
+     931,
+     1018,
+     1166.1
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1166.1,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Comece por um artista ou por uma lista.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "albums",
+    "top": 1382,
+    "label": "LADO A · 2 — ÁLBUNS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Ver seus álbuns →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/albums"
+    },
+    "number": "30px",
+    "order": [
+     1438,
+     1484,
+     1571,
+     1677
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1677,
+      "w": 328,
+      "h": 296
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Ranqueie as faixas do seu jeito.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "blend",
+    "top": 2055,
+    "label": "LADO A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Gerar uma playlist →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/blend"
+    },
+    "number": "30px",
+    "order": [
+     2111,
+     2157,
+     2219,
+     2415
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2415,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Junte a série numa playlist só.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "playlists",
+    "top": 2673,
+    "label": "LADO B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Ver suas playlists →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/saved-playlists"
+    },
+    "number": "30px",
+    "order": [
+     2729,
+     2775,
+     2862,
+     3073.9
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 3073.9,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Guarde as playlists que você curtiu.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "inventory",
+    "top": 3250,
+    "label": "LADO B · 2 — INVENTÁRIO",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Abrir o inventário →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/inventory"
+    },
+    "number": "30px",
+    "order": [
+     3306,
+     3352,
+     3439,
+     3685
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3685,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue as mídias físicas da sua estante.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "Na caixa do The Album Blender",
+   "rowName": "Álbuns da caixa do The Album Blender",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3972,
+    "w": 360,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 360,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Court of the Crimson King, King Crimson (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Low, David Bowie (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Power, Corruption & Lies, New Order (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Illmatic, Nas (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Harvest, Neil Young (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Close to the Edge, Yes (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Homogenic, Björk (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Mezzanine, Massive Attack (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Admirável Chip Novo, Pitty (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Álbum anterior",
+     "off": "true",
+     "shown": true,
+     "x": 244,
+     "y": 4241,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Próximo álbum",
+     "off": "false",
+     "shown": true,
+     "x": 300,
+     "y": 4241,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 108.1,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 136.1,
+    "y": 5,
+    "w": 207.9,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 136.1,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-primary btn-sm btn-s",
+    "x": 232.1,
+    "y": 6,
+    "w": 111.9,
+    "h": 44
+   }
+  ],
+  "topRight": 344,
+  "topButtons": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Criar",
+    "href": "/start"
+   },
+   {
+    "text": "Álbuns",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventário",
+    "href": "/inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "webkit-360-en-out": {
+  "W": 360,
+  "scrollWidth": 360,
+  "bodyScrollWidth": 360,
+  "pageHeight": 4714,
+  "signedIn": false,
+  "lang": "en",
+  "heroButtons": [],
+  "h1": "Dig through the albums you love.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Listen on Apple Music (opens in a new tab)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 138.1,
+   "y": 641,
+   "w": 205.9,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 269,
+   "caption": 599,
+   "edu": 730,
+   "start": 796,
+   "albums": 1240,
+   "blend": 1838,
+   "playlists": 2431,
+   "inventory": 2933,
+   "flip": 2365,
+   "shelf": 3460,
+   "end": 3916,
+   "footer": 4383
+  },
+  "edu": {
+   "text": "How it works",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: How it works",
+   "p.kicker: SIDE A · 1 — CREATE",
+   "span.n: 1",
+   "p.kicker: SIDE A · 2 — ALBUMS",
+   "span.n: 2",
+   "p.kicker: SIDE A · 3 — BLEND",
+   "span.n: 3",
+   "p.kicker: SIDE B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "p.kicker: SIDE B · 2 — INVENTORY",
+   "span.n: 2"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 796,
+    "label": "SIDE A · 1 — CREATE",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     818,
+     864,
+     926,
+     1026.9
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1026.9,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Begin with one artist, or a list.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "albums",
+    "top": 1240,
+    "label": "SIDE A · 2 — ALBUMS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1296,
+     1342,
+     1404,
+     1510
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1510,
+      "w": 328,
+      "h": 296
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Rank your tracks, your way.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "blend",
+    "top": 1838,
+    "label": "SIDE A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     1894,
+     1940,
+     2027,
+     2181
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2181,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Bring the series together in one playlist.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "playlists",
+    "top": 2431,
+    "label": "SIDE B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2487,
+     2533,
+     2595,
+     2763.7
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2763.7,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Keep the playlists you love.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "inventory",
+    "top": 2933,
+    "label": "SIDE B · 2 — INVENTORY",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": null,
+    "number": "30px",
+    "order": [
+     2989,
+     3035,
+     3122,
+     3304.2
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3304.2,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue the physical media on your shelf.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "In The Album Blender's crate",
+   "rowName": "Albums in The Album Blender's crate",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3575,
+    "w": 360,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 360,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Court of the Crimson King, King Crimson (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Low, David Bowie (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Power, Corruption & Lies, New Order (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Illmatic, Nas (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Harvest, Neil Young (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Close to the Edge, Yes (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Homogenic, Björk (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Mezzanine, Massive Attack (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Admirável Chip Novo, Pitty (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Previous album",
+     "off": "true",
+     "shown": true,
+     "x": 244,
+     "y": 3844,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Next album",
+     "off": "false",
+     "shown": true,
+     "x": 300,
+     "y": 3844,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 133,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 165.5,
+    "y": 5,
+    "w": 178.5,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 165.5,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-ghost btn-sm only-ou",
+    "x": 261.5,
+    "y": 6,
+    "w": 82.5,
+    "h": 44
+   }
+  ],
+  "topRight": 344,
+  "topButtons": [
+   {
+    "text": "Sign in",
+    "href": "/start?signin"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "#albums"
+   },
+   {
+    "text": "Blend",
+    "href": "#blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "#playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "#inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "webkit-360-en-in": {
+  "W": 360,
+  "scrollWidth": 360,
+  "bodyScrollWidth": 360,
+  "pageHeight": 4896,
+  "signedIn": true,
+  "lang": "en",
+  "heroButtons": [],
+  "h1": "Dig through the albums you love.",
+  "yaw": "-30deg",
+  "boxTransform": "matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0",
+  "canvas3d": false,
+  "sleevesShown": 8,
+  "caption": "The Velvet Underground & Nico 1967",
+  "captionButton": {
+   "text": "♫ Listen on Apple Music (opens in a new tab)",
+   "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+   "target": "_blank",
+   "rel": "noopener",
+   "x": 138.1,
+   "y": 641,
+   "w": 205.9,
+   "h": 44
+  },
+  "tops": {
+   "hero": 56,
+   "scene": 269,
+   "caption": 599,
+   "edu": 730,
+   "start": 796,
+   "albums": 1290,
+   "blend": 1938,
+   "playlists": 2581,
+   "inventory": 3133,
+   "flip": 2515,
+   "shelf": 3710,
+   "end": 4166,
+   "footer": 4480
+  },
+  "edu": {
+   "text": "How it works",
+   "color": "rgb(249, 115, 22)",
+   "shown": true,
+   "tag": "H2",
+   "size": "28px"
+  },
+  "orangeTexts": [
+   "h2#edu.edu-t: How it works",
+   "p.kicker: SIDE A · 1 — CREATE",
+   "span.n: 1",
+   "span.: Start a series",
+   "span.: →",
+   "p.kicker: SIDE A · 2 — ALBUMS",
+   "span.n: 2",
+   "span.: See your albums",
+   "span.: →",
+   "p.kicker: SIDE A · 3 — BLEND",
+   "span.n: 3",
+   "span.: Make a playlist",
+   "span.: →",
+   "p.kicker: SIDE B · 1 — PLAYLISTS",
+   "span.n: 1",
+   "span.: See your playlists",
+   "span.: →",
+   "p.kicker: SIDE B · 2 — INVENTORY",
+   "span.n: 2",
+   "span.: Open your inventory",
+   "span.: →"
+  ],
+  "steps": [
+   {
+    "id": "start",
+    "top": 796,
+    "label": "SIDE A · 1 — CREATE",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Start a series →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/start"
+    },
+    "number": "30px",
+    "order": [
+     818,
+     864,
+     926,
+     1076.9
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-start",
+      "x": 16,
+      "y": 1076.9,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Begin with one artist, or a list.",
+    "titleTag": "H3",
+    "line": "0px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "albums",
+    "top": 1290,
+    "label": "SIDE A · 2 — ALBUMS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "See your albums →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/albums"
+    },
+    "number": "30px",
+    "order": [
+     1346,
+     1392,
+     1454,
+     1560
+    ],
+    "pictures": [
+     {
+      "cls": "ranked rank-real",
+      "x": 16,
+      "y": 1560,
+      "w": 328,
+      "h": 296
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Rank your tracks, your way.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "blend",
+    "top": 1938,
+    "label": "SIDE A · 3 — BLEND",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Make a playlist →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/blend"
+    },
+    "number": "30px",
+    "order": [
+     1994,
+     2040,
+     2127,
+     2331
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-blend",
+      "x": 16,
+      "y": 2331,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Bring the series together in one playlist.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   },
+   {
+    "id": "playlists",
+    "top": 2581,
+    "label": "SIDE B · 1 — PLAYLISTS",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "See your playlists →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/saved-playlists"
+    },
+    "number": "30px",
+    "order": [
+     2637,
+     2683,
+     2745,
+     2963.7
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-pl",
+      "x": 16,
+      "y": 2963.7,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Keep the playlists you love.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgb(28, 28, 34)",
+    "width": 328
+   },
+   {
+    "id": "inventory",
+    "top": 3133,
+    "label": "SIDE B · 2 — INVENTORY",
+    "labelColor": "rgb(251, 146, 60)",
+    "numberColor": "rgb(251, 146, 60)",
+    "door": {
+     "text": "Open your inventory →",
+     "color": "rgb(251, 146, 60)",
+     "underline": true,
+     "href": "/inventory"
+    },
+    "number": "30px",
+    "order": [
+     3189,
+     3235,
+     3322,
+     3554.2
+    ],
+    "pictures": [
+     {
+      "cls": "v4-motif m-inv",
+      "x": 16,
+      "y": 3554.2,
+      "w": 328,
+      "h": 200
+     }
+    ],
+    "covers": 0,
+    "music": 0,
+    "title": "Catalogue the physical media on your shelf.",
+    "titleTag": "H3",
+    "line": "1px",
+    "band": "rgba(0, 0, 0, 0)",
+    "width": 328
+   }
+  ],
+  "mark": "line bands",
+  "shelf": {
+   "title": "In The Album Blender's crate",
+   "rowName": "Albums in The Album Blender's crate",
+   "cards": 15,
+   "shownCards": 15,
+   "rowBox": {
+    "x": 0,
+    "y": 3825,
+    "w": 360,
+    "h": 259
+   },
+   "rowScrollWidth": 2478,
+   "rowClientWidth": 360,
+   "scrollLeft": 0,
+   "peeking": 1,
+   "names": [
+    "The Velvet Underground & Nico",
+    "In the Court of the Crimson King",
+    "The Dark Side of the Moon"
+   ],
+   "links": [
+    {
+     "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-court-of-the-crimson-king-expanded-edition/918534711",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Court of the Crimson King, King Crimson (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/low-2017-remaster/1347895593",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Low, David Bowie (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/power-corruption-lies/1040981945",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Power, Corruption & Lies, New Order (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/dummy/1440653096",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/illmatic/856131729",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Illmatic, Nas (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/harvest/1015739190",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Harvest, Neil Young (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/close-to-the-edge/1049014094",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Close to the Edge, Yes (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/homogenic/20833577",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Homogenic, Björk (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/mezzanine/724466069",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Mezzanine, Massive Attack (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Admirável Chip Novo, Pitty (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    },
+    {
+     "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+     "target": "_blank",
+     "rel": "noopener",
+     "name": "♫Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+     "fits": true,
+     "h": 44
+    }
+   ],
+   "arrows": [
+    {
+     "name": "Previous album",
+     "off": "true",
+     "shown": true,
+     "x": 244,
+     "y": 4094,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "name": "Next album",
+     "off": "false",
+     "shown": true,
+     "x": 300,
+     "y": 4094,
+     "w": 44,
+     "h": 44
+    }
+   ]
+  },
+  "top": [
+   {
+    "what": "home",
+    "x": 16,
+    "y": 6,
+    "w": 81.1,
+    "h": 44
+   },
+   {
+    "what": "acct",
+    "x": 109.1,
+    "y": 5,
+    "w": 234.9,
+    "h": 46
+   },
+   {
+    "what": "lang",
+    "x": 109.1,
+    "y": 5,
+    "w": 90,
+    "h": 46
+   },
+   {
+    "what": "btn btn-primary btn-sm btn-s",
+    "x": 205.1,
+    "y": 6,
+    "w": 138.9,
+    "h": 44
+   }
+  ],
+  "topRight": 344,
+  "topButtons": [
+   {
+    "text": "Create",
+    "href": "/start"
+   }
+  ],
+  "bar": [
+   {
+    "text": "Create",
+    "href": "/start"
+   },
+   {
+    "text": "Albums",
+    "href": "/albums"
+   },
+   {
+    "text": "Blend",
+    "href": "/blend"
+   },
+   {
+    "text": "Playlists",
+    "href": "/saved-playlists"
+   },
+   {
+    "text": "Inventory",
+    "href": "/inventory"
+   }
+  ],
+  "barShown": true,
+  "moving": true,
+  "pauseHidden": false
+ },
+ "chromium-390-pt-out-noscript": {
+  "W": 390,
+  "page": 390,
+  "steps": [
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "edu": "Como funciona",
+  "cards": 15,
+  "links": 15,
+  "rowScrolls": true,
+  "arrows": 0,
+  "heroButtons": [
+   "Abrir o app -> /start"
+  ],
+  "signin": [
+   "Entrar"
+  ]
+ },
+ "webkit-390-pt-out-noscript": {
+  "W": 390,
+  "page": 390,
+  "steps": [
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "edu": "Como funciona",
+  "cards": 15,
+  "links": 15,
+  "rowScrolls": true,
+  "arrows": 0,
+  "heroButtons": [
+   "Abrir o app -> /start"
+  ],
+  "signin": [
+   "Entrar"
+  ]
+ },
+ "chromium-1280-pt-out": {
+  "boxes": [
+   333,
+   333
+  ],
+  "gone": [],
+  "came": [],
+  "pageHeight": [
+   4578,
+   4578
+  ],
+  "after": {
+   "edu": "1x1",
+   "shelf": "none",
+   "heroButtons": [
+    "Abrir o app",
+    "Entrar"
+   ],
+   "menu": [
+    "#start",
+    "#albums",
+    "#blend",
+    "#playlists",
+    "#inventory"
+   ],
+   "yaw": "-15deg"
+  }
+ },
+ "chromium-1280-pt-in": {
+  "boxes": [
+   354,
+   354
+  ],
+  "gone": [],
+  "came": [],
+  "pageHeight": [
+   4828,
+   4828
+  ],
+  "after": {
+   "edu": "1x1",
+   "shelf": "none",
+   "heroButtons": [
+    "Criar"
+   ],
+   "menu": [
+    "/start",
+    "/albums",
+    "/blend",
+    "/saved-playlists",
+    "/inventory"
+   ],
+   "yaw": "-15deg"
+  }
+ },
+ "chromium-1280-en-out": {
+  "boxes": [
+   333,
+   333
+  ],
+  "gone": [],
+  "came": [],
+  "pageHeight": [
+   4543,
+   4543
+  ],
+  "after": {
+   "edu": "1x1",
+   "shelf": "none",
+   "heroButtons": [
+    "Open the app",
+    "Sign in"
+   ],
+   "menu": [
+    "#start",
+    "#albums",
+    "#blend",
+    "#playlists",
+    "#inventory"
+   ],
+   "yaw": "-15deg"
+  }
+ },
+ "chromium-1280-en-in": {
+  "boxes": [
+   354,
+   354
+  ],
+  "gone": [],
+  "came": [],
+  "pageHeight": [
+   4758,
+   4758
+  ],
+  "after": {
+   "edu": "1x1",
+   "shelf": "none",
+   "heroButtons": [
+    "Create"
+   ],
+   "menu": [
+    "/start",
+    "/albums",
+    "/blend",
+    "/saved-playlists",
+    "/inventory"
+   ],
+   "yaw": "-15deg"
+  }
+ },
+ "weight": {
+  "before": {
+   "bytes": 369782,
+   "three": false,
+   "html": 53950,
+   "htmlGzip": 15325
+  },
+  "after": {
+   "bytes": 383435,
+   "three": false,
+   "html": 66552,
+   "htmlGzip": 17007
+  }
+ }
+}

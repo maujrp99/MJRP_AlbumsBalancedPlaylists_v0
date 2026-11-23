@@ -2,6 +2,27 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:25] step — F96: a prova completa no navegador, a bateria inteira e o orçamento de peso
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+A prova completa da F96 no site construído (`vite build` com as capas reais, `vite preview` em portas livres), sobre o código final, com as duas decisões de hoje dentro (as faixas e o laranja dos rótulos e links). Evidência em `reports/evidence/F96/`: `results.txt` (cada conferência, com o que foi medido), `measures.json`, `proof.mjs` e as capturas.
+
+**Resultado da prova:** 541 conferências passaram, nenhuma falhou. Por motor e largura: Chromium 390 e 360, WebKit 390 e 360, cada um sem conta e com conta, em português e inglês (16 rodadas); cada motor uma vez sem script e uma vez com «reduzir movimento»; Chromium a 1280, antes (`main` 7369dd8) contra depois, nas quatro combinações.
+
+**O que a prova pegou e foi consertado antes do commit da tela:** a caixa aparecia no computador (a página crescia 3.061 px; a regra precisava ser tão específica quanto a das histórias); a fila ficava 438 px mais longa que os álbuns no WebKit (passou a grade de colunas fixas); o texto escondido do botão deixava a página com 2.388 px de largura; a seta «próximo» nascia desligada no WebKit.
+
+**O «Criar» do visitante saiu do `menu.js`** para um módulo próprio sem importações (`public/splash/visitorDoor.js`), com o teste escrito antes (`red-before-visitor-door.txt`): o app empacota o `menu.js` num arquivo que divide com a página de entrada, e o orçamento de peso não tem folga. O `menu.js` voltou a ser, byte a byte, o da `main`.
+
+**Orçamento de peso, medido de novo pela regra do arquivo:** na `main` o que vem depois da primeira tela mede 238.197 B e o teto tinha exatamente a margem de 150 B, sem folga. Neste ramo todos os arquivos do app saem iguais aos da `main`, byte a byte; o único que muda é o pedaço da caixa 3D do computador, 1 B a mais (2.171 → 2.172), porque ele importa o script da página de entrada pelo nome, e o nome tem um código que muda quando o script muda. Em `scripts/bundle-budget.json`: `publication.measured.afterFirstScreen` 238197 → 238198 e `background` 63379 → 63380 (1 B). Fica para o MJRP ou o integrador confirmar: é um teto subindo, ainda que 1 B.
+
+**Bateria inteira, sozinha, pela fila:** 412 arquivos, 5.607 testes passaram, 1 pulado, nenhuma falha. `npm run typecheck` 0; `npx eslint . --quiet` 0; `npm run budget:publication` 0.
+
+**Não conferido:** o giro da caixa no Safari (o WebKit de teste não desenha 3D em CSS, nem numa página mínima; no Chromium o giro aparece); o dedo de verdade (arrastar a fila, descer a página por cima dela, o gesto na borda do Safari); o leitor de tela; a prévia publicada (publicada pelo orquestrador). O peso da primeira visita no celular foi medido pela página em gzip (15.325 B → 17.007 B, +1.682 B: os 15 álbuns da fila escritos nela; a biblioteca 3D não é pedida), não num aparelho.
+
+O doctor segue vermelho pelos mesmos 2 erros do `MEMORY.md`, fora desta tarefa. Fica para o passo retroativo (TASK-10): `info-arch.md`, `behavior.md`, `design-system.md` (a fila de capas, o fundo de passo, o laranja de texto), a spec e o plano completos.
+
+
 ## [2026-11-23 18:09] step — F96: tarefas marcadas e cinco linhas de UAT abertas (UAT-297 a UAT-301)
 
 **Branch:** feat/f96-entry-page-on-the-phone

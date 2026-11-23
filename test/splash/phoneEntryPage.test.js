@@ -16,6 +16,7 @@ import { resolve } from 'node:path'
 import { COPY, stepLabelHtml } from '../../public/splash/copy.js'
 import { COVER_SETS, shelfHtml, coverImagesHtml, captionHtml } from '../../public/splash/covers.js'
 import { MENU, menuHref, applyAccount } from '../../public/splash/menu.js'
+import { VISITOR_DOOR, doorHref, applyDoor } from '../../public/splash/visitorDoor.js'
 import { applyLanguage } from '../../public/splash/lang.js'
 import { stepTarget, startShelf } from '../../public/splash/shelf.js'
 import { shouldLoad3d, startSplash } from '../../public/splash/splash.js'
@@ -353,25 +354,40 @@ describe('the visitor opens the app (TASK-06)', () => {
     const start = MENU[0]
 
     it('on the phone, without an account, «Criar» opens the app; the other four still lead to their steps', () => {
-        expect(menuHref(start, false, true)).toBe('/start')
-        expect(MENU.slice(1).map(m => menuHref(m, false, true))).toEqual(['#albums', '#blend', '#playlists', '#inventory'])
+        expect(VISITOR_DOOR).toEqual({ id: start.id, app: start.app }) // the menu's own first item and its screen
+        expect(doorHref(start.id, false, true)).toBe('/start')
+        expect(MENU.slice(1).map(m => doorHref(m.id, false, true))).toEqual([null, null, null, null]) // null: what the menu says stands
     })
 
     it('on a computer nothing changes: «Criar» scrolls to its story', () => {
-        expect(menuHref(start, false, false)).toBe('#start')
-        expect(menuHref(start, false)).toBe('#start')
+        expect(MENU.map(m => doorHref(m.id, false, false))).toEqual([null, null, null, null, null])
     })
 
-    it('with an account every item goes to its screen, on both', () => {
-        expect(MENU.map(m => menuHref(m, true, true))).toEqual(MENU.map(m => menuHref(m, true, false)))
-        expect(menuHref(start, true, true)).toBe('/start')
+    it('with an account every item goes to its screen, on both: the menu already says so', () => {
+        expect(MENU.map(m => doorHref(m.id, true, true))).toEqual([null, null, null, null, null])
+        expect(MENU.map(m => doorHref(m.id, true, false))).toEqual([null, null, null, null, null])
     })
 
-    it('applyAccount writes it on the bar', () => {
+    it('applyDoor writes it on the bar, after the account is applied', () => {
         document.documentElement.className = ''
         document.body.innerHTML = MENU.map(m => `<a class="stop" href="#${m.id}" data-for="${m.id}"></a>`).join('')
-        applyAccount(document, false, true)
+        applyAccount(document, false)
+        applyDoor(document, false, true)
         expect([...document.querySelectorAll('.stop')].map(a => a.getAttribute('href'))).toEqual(['/start', '#albums', '#blend', '#playlists', '#inventory'])
+        // the screen grows past the phone's width: the page applies the account again, then the door, which now leaves the menu's answer alone
+        applyAccount(document, false)
+        applyDoor(document, false, false)
+        expect(document.querySelector('.stop').getAttribute('href')).toBe('#start')
+    })
+
+    it('the rule lives in a module of its own: the app bundles menu.js for the bar\'s look, and that module is byte for byte what it was (the publication budget has no byte to spare)', () => {
+        const menu = readFileSync(resolve(ROOT, 'public/splash/menu.js'), 'utf8')
+        expect(menu).not.toMatch(/VISITOR_DOOR|doorHref|F96/)
+        expect(menu).toContain('export const menuHref = (item, signedIn) => (signedIn ? item.app : `#${item.id}`)')
+        const app = ['public/js/shell/BarMenu.tsx', 'public/js/shell/StopIcon.tsx', 'public/js/app.js'].map(f => readFileSync(resolve(ROOT, f), 'utf8')).join('')
+        expect(app).not.toMatch(/visitorDoor/)
+        // and it imports nothing: the file the home and the app share (menu.js, phoneBar.js) keeps the exports it had, so its bytes and its name do not change
+        expect(readFileSync(resolve(ROOT, 'public/splash/visitorDoor.js'), 'utf8')).not.toMatch(/^import /m)
     })
 
     it('«Entrar» stays at the top for the visitor', () => {

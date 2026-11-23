@@ -5,8 +5,7 @@
  * bar is the header's menu; on the phone it moves to the bottom bar.
  *
  * Signed out an item scrolls to its story; signed in it goes to its screen of the app (decided by the
- * orchestrator, revisable), and the page shows the menu and only the «Criar» button. On the phone the
- * visitor's «Criar» opens the app too (F96): the phone's opening has no button, so the bottom bar is the way in.
+ * orchestrator, revisable), and the page shows the menu and only the «Criar» button.
  * The pure parts are exported for the tests; `startMenuBar(window)` wires them to the page.
  */
 
@@ -21,11 +20,8 @@ export const MENU = Object.freeze([
     { id: 'inventory', key: 'm.inventory', app: '/inventory' }
 ])
 
-/** The item that opens the app for a visitor on the phone (F96): «Criar», where a series begins. */
-export const VISITOR_DOOR = 'start'
-
-/** Where an item leads: its story signed out, its screen of the app signed in; on the phone the visitor's «Criar» is the way into the app. */
-export const menuHref = (item, signedIn, phone = false) => (signedIn || (phone && item.id === VISITOR_DOOR) ? item.app : `#${item.id}`)
+/** Where an item leads: its story signed out, its screen of the app signed in. */
+export const menuHref = (item, signedIn) => (signedIn ? item.app : `#${item.id}`)
 
 /** Where each part of the page sits on the bar (0 to 1): the five items share it, the opening and the close are its two ends. */
 export const SLOTS = Object.freeze({
@@ -57,11 +53,11 @@ export function threadBarStyle(k) {
     return `--h:${h}%;--d:${d}s;--o:-${o}s`
 }
 
-/** Signed in or out, on the phone or not: the page's class and where the menu leads. */
-export function applyAccount(doc, signedIn, phone = false) {
+/** Signed in or out: the page's class and where the menu leads. */
+export function applyAccount(doc, signedIn) {
     doc.documentElement.classList.toggle('in', signedIn)
     MENU.forEach((item) => {
-        doc.querySelectorAll(`.stop[data-for="${item.id}"]`).forEach((a) => a.setAttribute('href', menuHref(item, signedIn, phone)))
+        doc.querySelectorAll(`.stop[data-for="${item.id}"]`).forEach((a) => a.setAttribute('href', menuHref(item, signedIn)))
     })
 }
 
