@@ -13,7 +13,7 @@
  *
  * `VITE_SPLASH_COVERS=real` at build time chooses the real set; anything else is fictional. The
  * Vite plugin `entryPage` (vite.config.js) writes the chosen set into public/splash.html, in the
- * build and in the dev server. Pure: no browser API; its only import is the dictionary (copy.js).
+ * build and in the dev server: the crate's sleeves and, for the phone, the same albums in one row (F96). Pure: no browser API; its only import is the dictionary (copy.js).
  *
  * Order matters: the last seven records are side B of the crate (the last in front when the crate is
  * turned), every one before them side A (0 in front): 7 + 7 in the fictional set, 8 + 7 in the real
@@ -211,4 +211,24 @@ export function creditHtml(setName) {
 /** Over invented covers the stage says so, in words, not only inside the art. */
 export function stageTagHtml(setName) {
     return chooseCoverSet(setName) === 'real' ? '' : '<span class="credit-tag" data-i18n="tag.fict"></span>'
+}
+
+/** The side of a cover in the phone's row of albums, in CSS pixels (the image is the crate's own, 360 px: sharp on a phone's screen). */
+export const SHELF_COVER = 150
+
+/**
+ * The phone's row of albums, «Na caixa do The Album Blender» (F96): one item per record of the crate, in the crate's order, written in the page
+ * so it reads without script. The cover is the crate's own image (the same address and the same `crossorigin`: nothing more on the wire), decorative
+ * here because the name is beside it. A real album carries the page's button to its Apple Music page, whose name is its own text: what it does,
+ * the album and the artist, and that it opens a new tab (the two marked spans follow the language). A fictional one carries its artist and says so.
+ */
+export function shelfHtml(setName) {
+    return albumsOf(setName).map((album) => {
+        const cover = `<img src="${coverSrc(album)}" alt="" width="${SHELF_COVER}" height="${SHELF_COVER}" loading="lazy" decoding="async" crossorigin="anonymous">`
+        const name = `<b>${escapeHtml(album.t)}</b>`
+        const rest = album.kind === 'real'
+            ? `<a class="am" href="${escapeHtml(album.href)}" target="_blank" rel="noopener"><span class="mk" aria-hidden="true">♫</span><span data-i18n="c.listen"></span><span class="sr">: ${escapeHtml(album.t)}, ${escapeHtml(album.a)}</span><span class="sr" data-i18n="c.newtab"></span></a>`
+            : `<span class="al-by">${escapeHtml(album.a)} · <span data-i18n="c.fictional"></span></span>`
+        return `<li class="al">${cover}${name}${rest}</li>`
+    }).join('\n          ')
 }

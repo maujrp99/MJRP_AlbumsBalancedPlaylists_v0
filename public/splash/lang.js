@@ -4,7 +4,7 @@
  * tapped the switch sees what they chose, remembered in localStorage.
  * The texts come from copy.js. Pure apart from the document and the storage handed in.
  */
-import { LANGS, t } from './copy.js'
+import { LANGS, t, stepLabelHtml } from './copy.js'
 
 export const LANG_KEY = 'albumblender:lang'
 
@@ -49,7 +49,10 @@ export function pageStorage(win) {
 export function applyLanguage(doc, lang) {
     doc.documentElement.lang = HTML_LANG[lang] || HTML_LANG.pt
     doc.title = t('meta.title', lang)
-    doc.querySelectorAll('[data-i18n]').forEach((el) => { el.innerHTML = t(el.getAttribute('data-i18n'), lang) })
+    doc.querySelectorAll('[data-i18n]').forEach((el) => {
+        const text = t(el.getAttribute('data-i18n'), lang)
+        el.innerHTML = el.hasAttribute('data-num') ? stepLabelHtml(text) : text // a step's label has its number set apart (F96), as the build writes it
+    })
     for (const [marker, attr] of Object.entries(ATTRS)) {
         doc.querySelectorAll(`[${marker}]`).forEach((el) => el.setAttribute(attr, t(el.getAttribute(marker), lang)))
     }

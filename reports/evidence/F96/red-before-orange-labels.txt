@@ -1,0 +1,4 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > in every step the label, its number and the step's link are in an orange tone: the design system's lighter orange for text (`--orange-text`), no new colour
+ FAIL  test/splash/phoneEntryPage.test.js > the part that teaches the app (TASK-03) > the link keeps its underline, and shows when it is pointed at or pressed (the amber end of the fire); the keyboard's ring is the page's
+      Tests  2 failed | 46 passed (48)
