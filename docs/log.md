@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:28] step — Site publicado da `main` `5897dd9` (lido na saída): crédito só com o álbum e botão alinhado, endereços diretos, «álbuns», «Vire o lado»
+
+**Branch:** main
+
+Segunda tentativa de `./scripts/deploy-site.sh`: saída 0, «Site published from main (5897dd9)», 5243 testes passaram (1 pulado), 31 das regras. A página no ar traz «ama álbuns». Não conferido num iPhone. O MJRP viu a produção ainda antiga antes de esta terminar e disse que o botão não estava alinhado, a caixa não estava na diagonal e o Velvet ainda mostrava álbum e artista: a caixa na diagonal não está nesta publicação (segue em `fix/f80-crate-animation-break`); sobre a legenda da caixa ele decidiu «1. album e ano somente» (em `fix/f80-crate-caption-album-and-year`). A F96 (home do celular em deslizes, S-78) entrou na `main` em esboço (`1755246`). O teste de tempo que derrubou a primeira tentativa (`rankingPipeline`, «upstream_timeout») passou na segunda: defeito de teste instável a abrir.
+
 ## [2026-11-23 15:24] step — CORREÇÃO: a publicação do site NÃO aconteceu; a entrada anterior está errada
 
 **Branch:** main
