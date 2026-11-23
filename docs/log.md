@@ -44,6 +44,12 @@ Achado P1 do segundo juiz do Painel: duas telas apareciam com a chave crua no lu
 
 Para não voltar: um teste (`test/screens/admin/adapter.test.ts`, «every screen the Painel can show has a name», escrito antes, reprovou com as duas, depois passou) tira as áreas dos mesmos dicionários que o Painel lista (`en/index.js`, `pt/index.js`, pela mesma função `screensOf`) e reprova quando alguma não tem nome num dos dois idiomas; nenhuma lista à mão. O mesmo arquivo de teste traz o teste do achado seguinte (o negrito), que entra no commit seguinte com o conserto.
 
+## [2026-11-23 16:23] decision — Página de entrada: rodada publicada em produção, com a palavra do MJRP («1. publica»)
+
+**Branch:** main
+
+O site foi publicado da `main` `18f3580` (legenda com álbum e ano, título antes das ilustrações no celular, sem a linha laranja, sem o botão grande «Criar» com conta no celular, «The Album Blender» por inteiro, «Catalogue», conserto do caixote 3D — UAT-289 a UAT-296). Resultado lido: «Site published from main (18f3580)», saída 0; a verificação de produção achou o script recém-construído (`/assets/main-Cp8CsEb4.js`). O servidor não mudou. Volta: histórico de versões do Hosting no console.
+
 ## [2026-11-23 16:19] step — F82: a main (página de entrada) juntada ao ramo do Painel; suíte verde, orçamento medido de novo
 
 **Branch:** claude/f82-cms-texts-panel
