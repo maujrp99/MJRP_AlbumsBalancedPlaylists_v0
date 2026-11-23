@@ -7,7 +7,7 @@ title: "Sprint 6: Authentication"
 **O que a define:** Sprint 6 de docs/ROADMAP.md · 2025-12-12
 
 ## Features
-- [[F20-sprint-6-authentication-apple-google-persistence-d/spec|F20]] · Sprint 6: Authentication (Apple & Google) + Persistence + Data Enrichment
+- [[F20-sprint-6-authentication-apple-google-persistence-d|F20]] · Sprint 6: Authentication (Apple & Google) + Persistence + Data Enrichment
 
 ## Versões do produto em que as features dela saíram
 
