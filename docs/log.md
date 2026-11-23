@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:00] step — F81: a troca por país funciona no Firebase Hosting de verdade (o MJRP viu); a main com a página de entrada nova (74a9a87) dentro do ramo
+
+**Branch:** feat/f81-language-by-country-and-switch
+
+**Evidência do MJRP.** Ele abriu, do Brasil, a prévia do commit d00f63b no Firebase Hosting de verdade e o app abriu em português: «sim, saiu em portugues». Era o que faltava provar (até aqui só o emulador): o Hosting troca `/country.json` pelo país do acesso num canal de prévia. O caminho de fora do Brasil (inglês) segue provado só no emulador e pelo cookie de teste.
+
+**A main de novo.** `git merge main` (74a9a87, com a página de entrada nova do celular, F96). Um conflito, em `scripts/bundle-budget.json`, resolvido pela regra do arquivo: medir e pôr os tetos na medição mais a margem — script principal 200.190 B (igual), depois da primeira tela 255.787 B (+1 B, o que a main já tinha medido no arquivo da caixa 3D); tetos 200.340 B e `background` 82.690 B. `docs/specs/uat.md` juntou sozinho, com as linhas em ordem de id (UAT-297 a UAT-306; `uat-check` conferiu). Todas as entradas do log ficaram.
+
+**A página de entrada e o app continuam de acordo.** A chave da escolha é a mesma nos dois lados (`albumblender:lang`, em `public/splash/lang.js` e em `public/js/i18n/language.js`; o teste que prende uma à outra passa) e este ramo não tem diferença nenhuma em `public/splash.html` nem em `public/splash/` contra a main.
+
+Conferido neste estado: `npm run typecheck`, `npx eslint . --quiet` e `npm run budget:publication` com saída 0; os testes de `test/i18n`, `test/shell`, `test/scripts` e `test/splash` pela fila — 34 arquivos, 561 passaram; a prova de navegador no site construído — 140 de 140, e 12 de 12 atrás do emulador do Firebase Hosting. A suíte inteira não foi repetida nesta rodada.
+
 ## [2026-11-23 18:52] review — F96: a página de entrada no celular, segunda reconferência visual (passa: 0 P0, 0 P1, 6 P2)
 
 **Branch:** wip/f96-judge-2

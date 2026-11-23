@@ -11,7 +11,7 @@
   {
    "name": "[chromium 1280 visitor] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
    "ok": true,
-   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\",\"Entrar\"] · choice null"
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Entrar\",\"Acervo\"] · choice null"
   },
   {
    "name": "[chromium 1280 visitor] Portuguese fits the screen (no sideways scroll)",
@@ -56,7 +56,7 @@
   {
    "name": "[chromium 1280 visitor] in Portuguese the footer writes the date the Brazilian way, though the browser speaks English",
    "ok": true,
-   "detail": "Última atualização: 23/11/2026, 18:48:04"
+   "detail": "Última atualização: 23/11/2026, 18:58:20"
   },
   {
    "name": "[chromium 1280 visitor] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
@@ -156,7 +156,7 @@
   {
    "name": "[chromium 1280 signed in] in Portuguese the footer writes the date the Brazilian way, though the browser speaks English",
    "ok": true,
-   "detail": "Última atualização: 23/11/2026, 18:48:17"
+   "detail": "Última atualização: 23/11/2026, 18:58:32"
   },
   {
    "name": "[chromium 1280 signed in] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
@@ -406,7 +406,7 @@
   {
    "name": "[webkit 1280 visitor] in Portuguese the footer writes the date the Brazilian way, though the browser speaks English",
    "ok": true,
-   "detail": "Última atualização: 23/11/2026, 18:48:45"
+   "detail": "Última atualização: 23/11/2026, 18:59:01"
   },
   {
    "name": "[webkit 1280 visitor] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
@@ -506,7 +506,7 @@
   {
    "name": "[webkit 1280 signed in] in Portuguese the footer writes the date the Brazilian way, though the browser speaks English",
    "ok": true,
-   "detail": "Última atualização: 23/11/2026, 18:48:58"
+   "detail": "Última atualização: 23/11/2026, 18:59:14"
   },
   {
    "name": "[webkit 1280 signed in] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
