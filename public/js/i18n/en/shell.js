@@ -64,7 +64,7 @@ export const shell = {
     'shell.phone.tabBlend': 'Blend',
     'shell.phone.tabPlaylists': 'Playlists',
     'shell.phone.tabInventory': 'Inventory',
-    'shell.phone.appName': 'Album Blender',
+    'shell.phone.appName': 'The Album Blender',
     'shell.phone.screenStart': 'Create',
     'shell.phone.screenAlbums': 'Albums',
     'shell.phone.screenBlend': 'Blend',

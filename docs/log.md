@@ -2,6 +2,27 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:56] step — O nome do produto é «The Album Blender», sempre inteiro, em todo texto que o visitante lê (UAT-295)
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Regra do MJRP (2026-11-23): «primeira coisa imporntate pra vc e seus agentes. a app nao chama blender e sim The Album Blender». Issue UAT-295. Cada texto trocado abaixo é a regra dele aplicada, não proposta do agente; a regra vale para todo texto proposto daqui em diante e está em `docs/specs/design-system.md` § Voz e tom.
+
+**Página de entrada** (`public/splash/copy.js`):
+- `p.start`, português: «…O Blender monta a série.» → «…The Album Blender monta a série.»
+- `p.start`, inglês: «…The Blender builds the series.» → «…The Album Blender builds the series.»
+- `p.blend`, português: «Escolha uma receita. O Blender pega faixas de cada álbum…» → «Escolha uma receita. The Album Blender pega faixas de cada álbum…»
+- `p.blend`, inglês: «Pick a recipe. The Blender draws from every album…» → «Pick a recipe. The Album Blender draws from every album…»
+
+**App** (`public/js/i18n/pt/shell.js` e `public/js/i18n/en/shell.js`):
+- `shell.phone.appName`: «Album Blender» → «The Album Blender» (o título que o celular mostra numa tela sem nome próprio). **Decidido pelo agente, revisável**: não era «Blender» sozinho, mas também não era o nome inteiro; o teste que o citava (`test/shell/Shell.carried.test.tsx`) foi atualizado.
+
+**Varrido e sem ocorrência:** o HTML da página de entrada (título, descrição, rótulos) e os outros dicionários de `public/js/i18n/` nas duas línguas. **Ficou, para o MJRP decidir:** `public/index.html` tem `apple-mobile-web-app-title` «Album Blender» (o rótulo do ícone na tela de início do iPhone, que corta nomes longos: «The Album Blender» não cabe inteiro ali). Não tocados: «Blend» (tela, ação, receita), identificadores de código, rotas, comentários, `docs/` e `design/copy/` (onde ainda há «O Blender» em textos de revisão antigos).
+
+**Guarda.** `test/splash/productName.test.js` falha se um texto do dicionário da página de entrada, o HTML dela ou um dicionário do app (português ou inglês) tiver «Blender» sem «The Album » antes. Dois dos testes falham no código anterior. Pela fila da máquina: `npx vitest run test/splash test/shell/Shell.carried.test.tsx`, resultado na linha do commit.
+
+**Não conferido.** No aparelho: o título «The Album Blender» no cabeçalho do celular do app (é mais longo que o anterior e pode não caber); a suíte inteira.
+
 ## [2026-11-23 15:54] step — Página de entrada (F80), celular com conta: o botão grande «Criar» da abertura saiu (UAT-294)
 
 **Branch:** fix/f80-crate-caption-album-and-year

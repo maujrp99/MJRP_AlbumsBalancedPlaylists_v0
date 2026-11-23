@@ -418,7 +418,7 @@ describe('the tabs of the phone', () => {
         expect(screenName('/playlists')).toBe('New Playlists')
         expect(screenName('/playlists/edit')).toBe('Edit Playlists')
         expect(screenName('/saved-playlists')).toBe('Playlists')
-        expect(screenName('/somewhere-else')).toBe('Album Blender')
+        expect(screenName('/somewhere-else')).toBe('The Album Blender')
     })
 })
 

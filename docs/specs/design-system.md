@@ -231,6 +231,8 @@ Os textos do site são em inglês, curtos, no imperativo nos botões («Create s
 
 **Vocabulário em português: «álbum», nunca «disco».** Regra do MJRP (2026-11-23): «nao vamos usar o linguajar discos, pq no brasil discos restringe a vinis. vamos utilizar Albuns sempre, troque onde tem disco para Albums pls». Em todo texto em português que o visitante lê, «disco/discos» é «álbum/álbuns», também quando a frase fala do objeto físico ou da caixa («Vire o álbum», «uma caixa de álbuns»). «Discogs» e «discografia» são outras palavras e ficam. O inglês não muda («record»). Guardado por `test/splash/noDiscoInPortuguese.test.js`.
 
+**O nome do produto: «The Album Blender», sempre inteiro.** Regra do MJRP (2026-11-23): «primeira coisa imporntate pra vc e seus agentes. a app nao chama blender e sim The Album Blender». Em todo texto que o visitante lê, em português e em inglês, o produto é «The Album Blender»; nunca «Blender», «o Blender» ou «the Blender» sozinho, nem «Album Blender» sem o «The». Em português o nome vai sem artigo («The Album Blender monta a série.»). «Blend» (a tela, a ação, a receita) é outra palavra e fica. Vale também para todo texto proposto daqui em diante. Guardado por `test/splash/productName.test.js`.
+
 ## Themes
 
 Resposta do MJRP (2026-11-23 11:20, lote 2026-11-21-1335-v0-conform-questions, D-08, opção a): o site não troca de paleta, uma identidade só. Um tema só, escuro, sem seletor: o preto e as cores de § Cores. As cores de estado não vêm da marca. O contraste foi medido sobre o preto e o painel (§ Paleta).
