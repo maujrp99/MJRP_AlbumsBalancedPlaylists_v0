@@ -2,7 +2,7 @@
  * valueApi - the three calls of the value of the inventory to the app's own server (F75):
  *
  *   POST /album-value     the Discogs value of one album
- *   GET  /value-sources   the switch of the Discogs values, for who is on the app
+ *   GET  /value-sources   the switch of the Discogs values, for who is on the app: { discogs: 'on' | 'off' | 'unknown' }
  *   GET  /exchange-rates  the rates of the day from USD
  *
  * Every call goes with the person's login (api/serverFetch.js) and is read by the one reader

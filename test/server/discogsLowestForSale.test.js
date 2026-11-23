@@ -122,7 +122,7 @@ describe('the suggestion refused for the seller settings', () => {
 
     it('the route passes the hint of the app to the source, and only the hint it knows', async () => {
         const source = { name: 'Discogs', ask: vi.fn(async () => ({ outcome: 'not_found' })) }
-        const service = createValueService({ source, env: { DISCOGS_TOKEN: 't' }, logger: { warn: vi.fn() } })
+        const service = createValueService({ source, switches: { discogsValues: async () => 'on' }, env: { DISCOGS_TOKEN: 't' }, logger: { warn: vi.fn() } })
 
         await service.albumValue({ artist: 'A', title: 'T', prices: 'lowest' }, { uid: 'u' })
         await service.albumValue({ artist: 'A', title: 'T', prices: 'everything' }, { uid: 'u' })

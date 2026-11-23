@@ -9,8 +9,8 @@
  *                   forSale, suggestions: 'seller_settings_missing' | 'not_asked', readAt }
  *   not_found       the source has no CD edition of the album; `data` is null
  *   no_value        the edition exists and has no suggestion; `data` is { release }
- *   not_configured  the switch is off for who asks (lib/valueSources/valueSwitch.js): the source
- *                   was not asked; `data` is null
+ *   not_configured  the switch is not on for who asks (lib/valueSources/valueSwitch.js: off, or
+ *                   unknown when the CMS key could not be read): the source was not asked; `data` is null
  *   failure         invalid_request, or the source could not answer: upstream_unauthorized (the
  *                   token was refused), upstream_busy (its limit, with Retry-After),
  *                   upstream_timeout, upstream_failed
@@ -22,7 +22,7 @@
  */
 const { success, failure, UpstreamError } = require('../outcome')
 const { createBudget } = require('../timeBudget')
-const { discogsSwitch, ON } = require('../valueSources/valueSwitch')
+const { discogsSwitch, discogsState, ON, UNKNOWN } = require('../valueSources/valueSwitch')
 
 /** The whole time of one album request: three requests to the source, one a second, and their answers. */
 const VALUE_BUDGET_MS = 20000
@@ -47,13 +47,31 @@ function albumOf (body) {
 /**
  * @param {Object} deps
  * @param {{ name: string, ask: Function }} deps.source - (album, { deadlineAt }) => Promise<outcome>, throws UpstreamError
+ * @param {{ discogsValues: () => Promise<'on'|'off'|'unknown'> }} deps.switches - the CMS switches (lib/valueSources/cmsSwitches.js)
  * @param {Object} [deps.env] - the environment, read on every request (the switch)
  * @param {Function} [deps.newBudget] - () => a budget of lib/timeBudget.js, for one request
  * @param {Object} [deps.logger]
  */
-function createValueService ({ source, env = process.env, newBudget = () => createBudget({ ms: VALUE_BUDGET_MS }), logger = console }) {
-  /** @returns {Object} found, with { discogs: 'on' | 'off' } for who asks */
-  const valueSources = (user) => success({ discogs: discogsSwitch(env, user) })
+function createValueService ({ source, switches, env = process.env, newBudget = () => createBudget({ ms: VALUE_BUDGET_MS }), logger = console }) {
+  if (!switches || typeof switches.discogsValues !== 'function') throw new Error('createValueService needs the CMS switches: the Discogs key is the second lock')
+
+  /**
+   * The Discogs switch for who asks: two locks, the environment (read first: when it says off the CMS
+   * is not asked) and the key of the CMS. `unknown` (the key could not be read) is said in the log.
+   * @returns {Promise<'on'|'off'|'unknown'>}
+   */
+  async function discogsFor (user) {
+    const environmentLock = discogsSwitch(env, user)
+    if (environmentLock !== ON) return discogsState(environmentLock, null)
+    const state = discogsState(environmentLock, await switches.discogsValues())
+    if (state === UNKNOWN) logger.warn('[Value] the Discogs key of the CMS could not be read: the values are unknown, so not shown')
+    return state
+  }
+
+  /** @returns {Promise<Object>} found, with { discogs: 'on' | 'off' | 'unknown' } for who asks */
+  async function valueSources (user) {
+    return success({ discogs: await discogsFor(user) })
+  }
 
   /**
    * @param {Object} body - { artist, title, year?, releaseId? }
@@ -63,7 +81,7 @@ function createValueService ({ source, env = process.env, newBudget = () => crea
   async function albumValue (body, user) {
     const album = albumOf(body)
     if (!album) return failure('invalid_request')
-    if (discogsSwitch(env, user) !== ON) return success(null, 'not_configured')
+    if (await discogsFor(user) !== ON) return success(null, 'not_configured')
 
     const budget = newBudget()
     let answer

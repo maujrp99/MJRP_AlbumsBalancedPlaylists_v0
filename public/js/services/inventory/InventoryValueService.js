@@ -33,6 +33,8 @@ const DAY_MS = 24 * 60 * 60 * 1000
 export const READING_WRITE_SIZE = 25
 
 const DROPPED = 'dropped'
+/** What the server answers when it could not read the key of the CMS (F93, REQ-08): not "off". */
+const UNKNOWN_BY_THE_SERVER = 'unknown'
 const FOUND = 'found'
 const dayOf = (ms) => new Date(ms).toISOString().slice(0, 10)
 const isAborted = (signal) => Boolean(signal && signal.aborted)
@@ -87,14 +89,17 @@ export class InventoryValueService {
 
     /**
      * The switch of the Discogs values, asked to the server now. Anything but a clear "on" is off:
-     * a guest, a server that does not know the route, a call with no answer.
+     * a guest, a server that does not know the route, a call with no answer, and the server's own
+     * "unknown" (it could not read the key of the CMS; F93, REQ-08): not shown, and said apart from "off".
      * @returns {Promise<'on'|'off'>}
      */
     async sourceState({ signal = null } = {}) {
         if (!this.mayAsk()) return SourceState.OFF
         const result = await this.api.valueSources({ signal })
+        const said = result.kind === FOUND ? result.data?.discogs : null
         if (result.kind !== FOUND) console.warn('[InventoryValueService] the switch of the values could not be read:', result.code || result.kind)
-        return result.kind === FOUND && result.data?.discogs === SourceState.ON ? SourceState.ON : SourceState.OFF
+        if (said === UNKNOWN_BY_THE_SERVER) console.warn('[InventoryValueService] the server could not read the Discogs key of the CMS (unknown, not off): no Discogs value is shown')
+        return said === SourceState.ON ? SourceState.ON : SourceState.OFF
     }
 
     /**

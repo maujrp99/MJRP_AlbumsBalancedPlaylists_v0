@@ -26,7 +26,8 @@ const FOUND = {
 }
 const quiet = { info: vi.fn(), warn: vi.fn(), error: vi.fn() }
 const sourceThat = (answer) => ({ name: 'Discogs', ask: vi.fn(async () => { if (answer instanceof Error) throw answer; return answer }) })
-const serviceWith = (source, env = ON) => createValueService({ source, env, logger: quiet })
+const cmsThat = (state) => ({ discogsValues: vi.fn(async () => state) })
+const serviceWith = (source, env = ON, cms = 'on') => createValueService({ source, switches: cmsThat(cms), env, logger: quiet })
 const BODY = { artist: 'Pink Floyd', title: 'The Dark Side of the Moon' }
 const USER = { uid: 'owner-uid', anonymous: false }
 
@@ -126,9 +127,9 @@ describe('the switch as the app reads it', () => {
         expect((await answerFor({})).body.data).toEqual({ discogs: 'off' })
         const env = { DISCOGS_TOKEN: 't' }
         const service = serviceWith(sourceThat(FOUND), env)
-        expect(service.valueSources(USER).data).toEqual({ discogs: 'on' })
+        expect((await service.valueSources(USER)).data).toEqual({ discogs: 'on' })
         env.DISCOGS_VALUES = 'off'
-        expect(service.valueSources(USER).data).toEqual({ discogs: 'off' })
+        expect((await service.valueSources(USER)).data).toEqual({ discogs: 'off' })
     })
 
     it('with DISCOGS_VALUES_FOR it is on only for who is named', async () => {
@@ -139,6 +140,71 @@ describe('the switch as the app reads it', () => {
 
     it('the answer never carries the token', async () => {
         expect(JSON.stringify(await answerFor(ON))).not.toContain('test-token')
+    })
+})
+
+describe('the two locks of the Discogs values (F93, REQ-08)', () => {
+    const ask = async ({ env = ON, cms = 'on', user = USER } = {}) => {
+        const cmsSwitches = cmsThat(cms)
+        const logger = { info: vi.fn(), warn: vi.fn(), error: vi.fn() }
+        const service = createValueService({ source: sourceThat(FOUND), switches: cmsSwitches, env, logger })
+        return { answer: (await service.valueSources(user)).data.discogs, cmsSwitches, logger, service }
+    }
+
+    it('on only with both: the variable of the service and the key of the CMS', async () => {
+        const table = [
+            // [environment, CMS key, answer]
+            [{ DISCOGS_TOKEN: 't' }, 'on', 'on'],
+            [{ DISCOGS_TOKEN: 't' }, 'off', 'off'],
+            [{ DISCOGS_TOKEN: 't', DISCOGS_VALUES: 'off' }, 'on', 'off'],
+            [{ DISCOGS_TOKEN: 't', DISCOGS_VALUES: 'off' }, 'off', 'off'],
+            [{}, 'on', 'off'],
+            [{ DISCOGS_TOKEN: 't' }, 'unknown', 'unknown']
+        ]
+        for (const [env, cms, expected] of table) {
+            expect((await ask({ env, cms })).answer, JSON.stringify([env, cms])).toBe(expected)
+        }
+    })
+
+    it('the variable off is the emergency cut: the answer is off even when the CMS cannot be read, and the CMS is not asked', async () => {
+        const { answer, cmsSwitches } = await ask({ env: { DISCOGS_TOKEN: 't', DISCOGS_VALUES: 'off' }, cms: 'unknown' })
+        expect(answer).toBe('off')
+        expect(cmsSwitches.discogsValues).not.toHaveBeenCalled()
+    })
+
+    it('unknown is not off: when the CMS key cannot be read the answer is "unknown", and the server says so in its log', async () => {
+        const { answer, logger } = await ask({ cms: 'unknown' })
+        expect(answer).toBe('unknown')
+        expect(answer).not.toBe('off')
+        expect(logger.warn.mock.calls.join(' ')).toMatch(/could not be read/)
+    })
+
+    it('"for whom" stays in DISCOGS_VALUES_FOR: a person not named is off, with the CMS on; one named follows the CMS', async () => {
+        const env = { DISCOGS_TOKEN: 't', DISCOGS_VALUES_FOR: 'owner-uid' }
+        expect((await ask({ env, cms: 'on' })).answer).toBe('on')
+        expect((await ask({ env, cms: 'on', user: { uid: 'someone', anonymous: false } })).answer).toBe('off')
+        expect((await ask({ env, cms: 'unknown' })).answer).toBe('unknown')
+    })
+
+    it('the value of an album is not asked of Discogs while the key is off or unknown: not_configured', async () => {
+        for (const cms of ['off', 'unknown']) {
+            const source = sourceThat(FOUND)
+            const service = serviceWith(source, ON, cms)
+            expect(await service.albumValue(BODY, USER)).toMatchObject({ ok: true, outcome: 'not_configured', data: null })
+            expect(source.ask).not.toHaveBeenCalled()
+        }
+    })
+
+    it('the route says "unknown" in its answer, with the token nowhere', async () => {
+        const handlers = createValueHandlers({ valueService: serviceWith(sourceThat(FOUND), ON, 'unknown'), exchangeRates: { today: vi.fn() }, logger: quiet })
+        const res = fakeResponse()
+        await handlers.valueSources({ user: USER }, res)
+        expect(answerOf(res)).toMatchObject({ status: 200, body: { data: { discogs: 'unknown' }, outcome: 'found' } })
+        expect(JSON.stringify(answerOf(res))).not.toContain('test-token')
+    })
+
+    it('a service made without the CMS switches is refused at the start: the second lock cannot be forgotten', () => {
+        expect(() => createValueService({ source: sourceThat(FOUND), env: ON, logger: quiet })).toThrow(/CMS switches/)
     })
 })
 
