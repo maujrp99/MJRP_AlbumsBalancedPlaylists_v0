@@ -36,6 +36,12 @@ Pedido do MJRP (2026-11-23, print do iPhone): «preciso que vc faça uma altera�
 
 **Não conferido.** Num iPhone de verdade; com leitor de tela de verdade (só os atributos); a página publicada. O aceite e a publicação são do MJRP.
 
+## [2026-11-23 14:07] decision — F95 registrada: os álbuns da página de entrada como curadoria do The Album Blender (S-77)
+
+**Branch:** wip/register-blender-curation
+
+Palavras do MJRP (2026-11-23), sobre os álbuns da página de entrada (F80): «E pensando que esses albuns que temos na home, tenhamos alguma forma de deixar como indicacao/curadoria da semana do The Album Blender, o que acha? Acha que precisa prototipar?» O orquestrador respondeu que a ideia é boa, que «da semana» é uma promessa de trocar os álbuns toda semana e que «Seleção do Blender» diz o mesmo sem prazo, e recomendou uma rodada curta de protótipo com as duas formas; ele respondeu: «2. faça». A F95 (via padrão, feature) e a S-77 (EP-10, ao lado da S-62 e da S-64), em esboço. Não decidido: o nome («da semana», «Seleção do Blender» ou outro), o rótulo e onde aparece, quem troca e de quanto em quanto tempo, se espera o CMS (F82 REQ-03 e REQ-11) ou começa no código, a Apple Music como primeiro caminho para ouvir; a primeira tarefa é a rodada de protótipo com ele. Fato conferido na `main` (só leitura): os álbuns vêm de `public/splash/covers.js`, cada álbum real com o seu endereço da Apple Music, e a página não diz que são uma escolha. Só documentação: nenhum código nem protótipo; fora do `priority.md` (a ordem é dele). Ids por `merge_train.py next-item-id --reserve`; board por `board_move.py seed`.
+
 ## [2026-11-23 13:42] step — CMS: o MJRP publicou as regras do banco e criou `published/site` com a chave do Discogs ligada
 
 **Branch:** main
