@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 20:19] decision — Caixa do The Album Blender no Painel: o MJRP aprovou a prévia da seção
+
+**Branch:** main
+
+MJRP, sobre a prévia `staging` do ramo `feat/f95-crate-managed-in-the-panel` (`47f6e6b`, seção «Caixa»: lados A e B, reordenar, mudar de lado, remover): «2. Ótimo!». Faltam, antes de valer em produção: a regra do banco para `published/crate` (ele publica), a publicação do servidor (rota de busca no Apple Music), o juiz independente e a palavra dele para publicar.
+
 ## [2026-11-23 19:40] decision — Conserto da mensagem do Spotify (F97) publicado em produção, com a palavra do MJRP («3 pública»); UAT-307 e UAT-308 abertas
 
 **Branch:** main
