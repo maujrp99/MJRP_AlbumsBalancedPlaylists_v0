@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 10:39] step — CMS, fatia 0: os relatórios dos juízes independentes arquivados
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- Arquivados, sem edição, os três relatórios dos juízes independentes da fatia 0 do CMS em `reports/audits/`: a recheca (falhou, 1 P1), a segunda passada (passou) e a reconferência de paridade visual (passou). Este commit vem depois de todos os outros do ramo, como o portão do merge pede. Suíte padrão, sozinha pela fila: 392 arquivos, 5233 testes passaram, 1 pulado.
+
+
 ## [2026-11-23 10:37] step — CMS, fatia 0: os tetos do orçamento de publicação medidos de novo
 
 **Branch:** claude/f82-cms-slice-0-foundation
