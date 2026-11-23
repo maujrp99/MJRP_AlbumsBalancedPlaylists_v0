@@ -2,6 +2,16 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:21] step — F82 (juiz, P2-3): «Page not found» em React, redesenhada quando os textos publicados mudam
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-3 do juiz: a tela «Page not found» era feita à mão e não se redesenhava quando os textos publicados mudavam (REQ-10). Agora é uma peça em React (`public/js/ui/NotFound.tsx`), que ouve o idioma e a versão dos textos como toda tela; a guarda de `/admin` passou a `public/js/screens/admin/gate.ts` (o arquivo próprio pedido só em `/admin`) e monta essa peça. Saíram `utils/notFoundView.js` e `services/content/adminGate.js`.
+
+A primeira tentativa foi redesenhar a tela à mão (um `innerHTML` ao mudar o texto): o sensor `noHandMadeScreens` recusou, com razão (a regra final da F83 é não voltar a escrever o DOM fora do React), e o caminho certo era a peça em React.
+
+Teste primeiro (`test/screens/admin/gate.test.tsx`: um texto publicado que chega ou some é desenhado na hora, como texto e nunca como marcação; a tela larga tudo ao sair), reprovado antes na forma à mão e passando agora.
+
 ## [2026-11-23 15:19] step — F82 (juiz, P2-2): os textos do próprio Painel não são editáveis no Painel nesta iteração
 
 **Branch:** claude/f82-cms-texts-panel

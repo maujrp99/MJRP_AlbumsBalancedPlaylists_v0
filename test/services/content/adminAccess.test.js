@@ -6,7 +6,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import fs from 'node:fs'
 import { createAdminAccess, createAdminGate } from '../../../public/js/services/content/adminAccess.js'
-import { notFoundView } from '../../../public/js/utils/notFoundView.js'
 
 afterEach(() => { vi.restoreAllMocks() })
 
@@ -39,16 +38,6 @@ describe('who is the administrator', () => {
     })
 })
 
-describe('what everybody else sees at /admin', () => {
-    it('«Page not found», with the way back to the app, and nothing of the Painel', () => {
-        const host = document.createElement('div')
-        host.innerHTML = notFoundView().render()
-        expect(host.querySelector('[data-screen="not-found"] .text-xl')?.textContent).toBe('Page not found')
-        expect(host.querySelector('a')?.getAttribute('href')).toBe('/start')
-        expect(host.textContent).not.toMatch(/admin|Painel/i)
-    })
-})
-
 describe('the gate of /admin', () => {
     const panel = { adminView: () => 'the Painel' }
 
@@ -72,8 +61,8 @@ describe('what every visitor downloads for /admin: the door only (the judge of 2
     const statics = app.split('\n').filter(line => /^import /.test(line)).join('\n')
 
     it('app.js imports neither the check of the administrator, nor «not found», nor the content of the Painel: they come with the gate', () => {
-        expect(statics).not.toMatch(/adminAccess|adminContent|notFoundView|adminGate|screens\/admin/)
-        expect(app).toContain("loadScreen(() => import('./services/content/adminGate.js'))")
+        expect(statics).not.toMatch(/adminAccess|adminContent|NotFound|screens\/admin/)
+        expect(app).toContain("loadScreen(() => import('./screens/admin/gate.ts'))")
         expect(app).toContain("loadScreen(() => import('./screens/admin/adminPanel.ts'))")
     })
 

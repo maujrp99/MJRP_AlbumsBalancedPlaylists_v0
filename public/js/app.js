@@ -167,7 +167,7 @@ router.register('/blend', async () => {
 // The Painel (F82, REQ-01): only for the administrator. The gate (a small file of its own, asked for when somebody opens /admin) reads the
 // person's own record (cmsAdmins/{uid}) BEFORE the Painel's file is asked for; anybody else sees «Page not found» and that file is never
 // requested. Neither file is among the screens that come down in the background: the main script carries only this door.
-const loadAdminGate = loadScreen(() => import('./services/content/adminGate.js'))
+const loadAdminGate = loadScreen(() => import('./screens/admin/gate.ts'))
 const loadAdmin = loadScreen(() => import('./screens/admin/adminPanel.ts'))
 const adminRoute = async () => (await loadAdminGate()).adminRoute(loadAdmin)
 router.register('/admin', adminRoute)
