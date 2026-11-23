@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:57] decision — Home nova do celular (F96) publicada em produção, com a palavra do MJRP («3 publica!»)
+
+**Branch:** main
+
+Site publicado da `main` `74a9a87`; resultado lido: «Site published from main (74a9a87)», saída 0, a verificação de produção achou o script servido. O servidor não mudou. Antes: o MJRP aprovou a prévia no iPhone («perfeito home do cle approvada»); o juiz independente passou duas vezes (0 P0, 0 P1; `…-f96-phone-home-visual-parity-recheck.md` e `-2.md`); o merge esperou o push dele da `main` (a regra do trem com conserto pendente) e a segunda conferência sobre o último commit de tela. P2 abertos do juiz (6) a registrar. No mesmo dia: a prévia `staging` do idioma do app (`feat/f81-language-by-country-and-switch`, `d00f63b`) abriu em português para ele no Hosting de verdade («sim, saiu em portugues»); o defeito igual ao da UAT-302 na exportação para o Apple Music (`MusicKitCatalog.findTrackFromAlbum` engole a falha da busca) fica a registrar como issue própria.
+
 ## [2026-11-23 18:52] review — F96: a página de entrada no celular, segunda reconferência visual (passa: 0 P0, 0 P1, 6 P2)
 
 **Branch:** wip/f96-judge-2
