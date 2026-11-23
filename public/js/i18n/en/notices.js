@@ -13,6 +13,9 @@ export const notices = {
     'notices.router.retry': 'Try again',
     'notices.router.errorTitle': 'View Error',
     'notices.router.errorBack': 'Go Back',
+    'notices.router.notFoundTitle': 'Page not found',
+    'notices.router.notFoundBody': 'There is nothing at this address.',
+    'notices.router.notFoundBack': 'Go to Create',
 
     'notices.blend.cancelled': 'The blend was cancelled',
     'notices.blend.generating': 'Generating playlists with {recipe}...',
