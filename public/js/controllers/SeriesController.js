@@ -24,7 +24,8 @@ import { rankedQueryKeys } from '../models/ownRanking.js';
 import { decodeEntities } from '../models/text.js';
 import { paginate, takeFirst, normalizePageSize, PagingMode } from '../models/paging.js';
 import { AlbumStatus } from '../models/albumLoadState.js';
-import toast from '../components/Toast.js';
+import toast from '../stores/toasts.js';
+import { t } from '../i18n/t.js';
 import { router } from '../router.js';
 import { filterUseOf } from '../models/filterUse.js';
 import { albumsListState } from '../models/albumsListState.js';
@@ -161,7 +162,7 @@ export default class SeriesController {
             this.notifyView('header', this.getHeaderData());
         } catch (err) {
             console.error('[SeriesController] loadScope failed:', err);
-            toast.error('Failed to load series data');
+            toast.error(t('albums.controller.loadFailed'));
             albumSeriesStore.markRead();
             this.renderFromStore();
         }
@@ -406,8 +407,8 @@ export default class SeriesController {
         if (!album?.id) return;
 
         const asked = albumLoadService.reloadAlbum(album.id);
-        if (asked > 0) toast.info(`Loading "${album.title}" again...`);
-        else toast.error(`"${album.title}" is not loaded on this screen`);
+        if (asked > 0) toast.info(t('albums.controller.refetching', { title: album.title }));
+        else toast.error(t('albums.controller.notLoaded', { title: album.title }));
     }
 
     // =========================================
@@ -588,8 +589,8 @@ export default class SeriesController {
         const allSeries = albumSeriesStore.getSeries();
 
         return {
-            title: decodeEntities(activeSeries?.name) || 'All Albums Series',
-            description: activeSeries?.description || `${allSeries.length} series available`,
+            title: decodeEntities(activeSeries?.name) || t('albums.title.all'),
+            description: activeSeries?.description || t('notices.series.available', { count: allSeries.length }),
             seriesList: this.getVisibleSeriesList(),
             activeSeriesId: activeSeries?.id || null
         };

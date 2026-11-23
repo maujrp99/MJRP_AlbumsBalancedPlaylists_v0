@@ -2,11 +2,12 @@
  * F71 (S-54) - one model for the status of an inventory item. The stored value stays what it was
  * (`owned`: true, false, null or missing); every screen asks this module what it means.
  */
+// F83 wave 6c: the English below is what `i18n/inventoryTexts.js` says over the codes the model gives (inventoryModelsGiveCodes.test.js): the very words the model wrote before.
 import { describe, it, expect } from 'vitest'
 import {
-    InventoryStatus, ALL_STATUSES, STATUS_FILTER_OPTIONS, STATUS_SELECT_OPTIONS,
-    statusOf, ownedValueOf, statusLabel, statusCountLabel, statusChangeMessage, passesStatusFilter, countByStatus
+    InventoryStatus, ALL_STATUSES, statusOf, ownedValueOf, passesStatusFilter, countByStatus
 } from '../../public/js/models/inventoryStatus.js'
+import { statusLabel, statusCountLabel, statusChangeMessage, statusFilterOptions, statusSelectOptions } from '../../public/js/i18n/inventoryTexts.js'
 
 const items = [
     { id: 'a', owned: true },
@@ -38,7 +39,7 @@ describe('the status of an inventory item', () => {
 
     it('names each status, with its icon on the card and in the counts', () => {
         expect(Object.values(InventoryStatus).map(statusLabel)).toEqual(['Owned', 'Not Owned', 'Wishlist'])
-        expect(STATUS_SELECT_OPTIONS).toEqual([
+        expect(statusSelectOptions()).toEqual([
             { value: 'not-owned', label: 'Not Owned' },
             { value: 'owned', label: '✓ Owned' },
             { value: 'wishlist', label: '♡ Wishlist' }
@@ -57,7 +58,7 @@ describe('the status of an inventory item', () => {
 
 describe('the status filter', () => {
     it('offers All, Owned, Not Owned and Wishlist, in this order, with plain names', () => {
-        expect(STATUS_FILTER_OPTIONS).toEqual([
+        expect(statusFilterOptions()).toEqual([
             { value: 'all', label: 'All' },
             { value: 'owned', label: 'Owned' },
             { value: 'not-owned', label: 'Not Owned' },

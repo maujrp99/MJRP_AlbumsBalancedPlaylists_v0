@@ -32,7 +32,7 @@ html.moving:not(.paused) .eqbar i.cur{animation:eqb var(--d) ease-in-out var(--o
  * The phone's bottom menu (F88; the owner, on his iPhone, 2026-11-21: «Os menus não eram pra ser iguais?»): ONE component in the home
  * and in the app, the same pixels. A row of equalizer bars (17 px, the home's taller and readable one) on top of five stops, each an
  * icon above its label in Syne, the current stop in orange, its stretch of the row lit in fire. Both pages put `.pbar` on the bottom bar
- * (the home's `.thread`, the app's `.phone-tabbar`) and the markup of the bar is the same (public/js/components/navigation/barMenu.js and
+ * (the home's `.thread`, the app's `.phone-tabbar`) and the markup of the bar is the same (public/js/shell/BarMenu.tsx and
  * public/splash/menu.js, the icons from public/splash/phoneBar.js). Every rule is scoped by `.pbar` so it wins over the computer's rules
  * above whatever the order of the stylesheets in the built page (test/architecture/phoneBarLabelsStayOffTheBars.test.js).
  * Heights: 1 px line + 28 px (bars: 6 + 17, then 5 px of air) + 24 px icon + 3 px + 14 px label + 6 px = 76 px, then the safe area.

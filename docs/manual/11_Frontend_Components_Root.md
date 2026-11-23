@@ -5,9 +5,9 @@
 
 ## 1. App Shell & Navigation
 
-### 1.1 `TopNav.js`
+### 1.1 `TopNav.js` *(F83: now `shell/TopNav.tsx`)*
 **Role**: Main Application Controller & App Shell.
-**Dependencies**: `UserStore`, `navigation/SeriesDropdown.js`, `navigation/AuthNav.js`, `Icons.js`. It imports no database, cache or repository (F58) and is built with no argument (`new TopNav()`): the `MigrationUtility` it used to receive left in F65, with the migration screen.
+**Dependencies**: `UserStore`, `navigation/SeriesDropdown.js`, `navigation/AuthNav.js`, `Icons.js`. Since F83 this is `shell/TopNav.tsx` (React); icons are `ui/Icon.tsx`. It imports no database, cache or repository (F58) and is built with no argument (`new TopNav()`): the `MigrationUtility` it used to receive left in F65, with the migration screen.
 
 *   **Logic Trace**:
     1.  **Auth Subscription**: Subscribes to `UserStore` to toggle between "Guest", "User", and "Admin" views.
@@ -17,7 +17,7 @@
     5.  **Account menu** (F63, `navigation/AuthNav.js`): the avatar is a button (`#userMenuBtn`, `aria-haspopup`, `aria-expanded`) that opens and closes the menu (`#userMenu`) on a click or a tap; a click outside and Escape close it (Escape gives the focus back to the avatar), and Arrow Down on the avatar opens it on the first item. It no longer opens by the mouse being over it. The listeners on the page are attached once per `AuthNav`, however many times the nav is drawn.
     6.  **"Soon" items** (F63, `navigation/SeriesDropdown.js`): By Artist, By Genre and By Track are shown in the "Music Series" menu and are not links.
 
-### 1.2 `Footer.js`
+### 1.2 `Footer.js` *(F83: now `shell/Footer.tsx`)*
 **Role**: Static Footer & Debug Tools.
 **Logic**:
 *   Displays the Last Updated timestamp.
@@ -26,7 +26,7 @@
 *   If the clearing fails, the footer says "Could not clear the cache" and does not reload.
 *   The footer imports no service: what the button does is injected (`new Footer({ clearCaches, reload, reloadDelayMs })`).
 
-### 1.3 `Breadcrumb.js`
+### 1.3 `Breadcrumb.js` *(F83: now `ui/Breadcrumb.tsx`)*
 **Role**: Dynamic Path Visualizer.
 **Logic**:
 *   Parses valid URL segments (`/albums`, `/ranking`, `/playlists`) to build a breadcrumb trail.
@@ -35,15 +35,15 @@
 #### No celular
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **Moldura.** `components/navigation/PhoneShell.js` põe na página, só no celular, a barra do topo (nome da tela e botão do menu), a barra de baixo com os cinco destinos (`phoneTabs.js`) e o «voltar ao topo». O `TopNav` e o `Footer` continuam na página e o CSS os esconde. O `app.js` liga a moldura com `startPhoneShell`.
+*   **Moldura.** `components/navigation/PhoneShell.js` põe na página, só no celular, a barra do topo (nome da tela e botão do menu), a barra de baixo com os cinco destinos (`phoneTabs.js`) e o «voltar ao topo». O `TopNav` e o `Footer` continuam na página e o CSS os esconde. O `app.js` liga a moldura com `startPhoneShell`. *(F83: now `shell/PhoneShell.tsx`)*
 *   **Para ir a outra tela:** a barra de baixo (Create, Albums, Blend, Playlists, Inventory). Tocar no destino atual leva ao topo. Para o resto: o botão do topo abre o menu (`PhoneMenu.js`), uma folha com a conta, as playlists novas, a ligação com o Spotify, «Clear album cache» e «Sign Out».
-*   **Folha.** Toda janela do celular usa `components/ui/Sheet.js` (de tela cheia ou de baixo); as janelas antigas viram folha pela casca, e a página de trás é presa por `windowsHoldThePage.js`.
+*   **Folha.** Toda janela do celular usa `components/ui/Sheet.js` (de tela cheia ou de baixo); as janelas antigas viram folha pela casca, e a página de trás é presa por `windowsHoldThePage.js`. *(F83: now `ui/SheetWindow.tsx`)*
 
 ---
 
 ## 2. Interactive Widgets
 
-### 2.1 `Autocomplete.js`
+### 2.1 `Autocomplete.js` *(removed in F65: `Autocomplete.js`)*
 
 > **F65 (2026-11-19):** `Autocomplete.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Role**: Generic Typeahead Search.
@@ -53,18 +53,18 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 *   **Dynamic Loader**: Delegates search logic to the provided `loader` object (Dependency Injection pattern).
 *   **Artwork Handling**: Supports template strings (`{w}x{h}`) for responsive image fetching.
 
-### 2.2 `SpotifyConnectButton.js`
+### 2.2 `SpotifyConnectButton.js` *(F83: now `shell/ConnectionRows.tsx`)*
 **Role**: Standalone Auth Toggle.
 **Logic**:
 *   **Event Listener**: Listens to custom window event `spotify-auth-change` to update its own state decoupled from the parent view.
 *   **Dual State**: Renders a "Connect" pill (Disconnected) or a "User Badge + Logout X" (Connected).
 
-### 2.3 `Icons.js`
+### 2.3 `Icons.js` *(removed in F83: icons are data in `utils/iconShapes.js`, drawn by `ui/Icon.tsx`)*
 **Role**: Centralized SVG Registry (Lucide-style).
 **Why**: Replaces inconsistent emojis/images with scalable, recolorable vectors.
 **Usage**: `getIcon('Name', 'classes')` returns an SVG string.
 
-### 2.4 `FilterToolbar.js` [NEW]
+### 2.4 `FilterToolbar.js` [NEW] *(F83: now `ui/FilterToolbar.tsx`)*
 **Role**: Generic, Reusable Filter Bar.
 **Used By**: `SeriesView` and `SavedPlaylistsView`.
 **Features**:
@@ -76,7 +76,7 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 
 ## 3. Feedback Systems
 
-### 3.1 `Toast.js`
+### 3.1 `Toast.js` *(F83: now `stores/toasts.js` and `shell/Toasts.tsx`)*
 **Role**: Global Notification System.
 **Replacements**: `alert()`, `console.warn()`.
 **Logic**:
@@ -84,11 +84,11 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 *   **Animation**: CSS Transforms (`translate-x`) for slide-in/out effects.
 *   **Auto-Dismiss**: Uses `setTimeout(4000)` with cleanup handles.
 
-### 3.2 `GlobalProgress.js`
+### 3.2 `GlobalProgress.js` *(F83: now `stores/progress.js` and `shell/GlobalProgress.tsx`)*
 
 > **2026-11-22:** `GlobalProgress.js` (the thin orange loading line at the top of the page) was removed from the repository, with its calls in `SeriesService` and the phone's `#globalProgress` rule. The MJRP: «agora que vi no menu aquela barra laranja que aparece no topo, nao deveria aparecer mesmo»; «a barra laranja aparece apenas qdo clico em album e blend». The Blend screen shows «Loading your series…» while the series are read; the code is in the git history.
 
-### 3.3 `InlineProgress.js`
+### 3.3 `InlineProgress.js` *(removed in F65: `InlineProgress.js`)*
 
 > **F65 (2026-11-19):** `InlineProgress.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Role**: In-flow Progress Bar for Batch Operations.
@@ -97,14 +97,14 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 
 ---
 
-## 4. Modal Dialogs (SafeDOM)
+## 4. Modal Dialogs (SafeDOM) *(F83: these windows are React now, in `ui/` and `shell/`; SafeDOM is removed)*
 
-### 4.1 `LoginModal.js`
+### 4.1 `LoginModal.js` *(F83: now `shell/LoginWindow.tsx`)*
 **Purpose**: Auth Provider Selection.
 **Providers**: Google (Firebase), Apple (Firebase), Guest (Anonymous).
 **Error Handling**: Maps Firebase error codes (e.g., `auth/popup-closed-by-user`) to user-friendly Toast messages.
 
-### 4.2 `SpotifyExportModal.js`
+### 4.2 `SpotifyExportModal.js` *(F83: now `ui/SpotifyExportWindow.tsx`)*
 **Purpose**: The window of the export to Spotify. It runs `SpotifyExportService.exportPlaylists` and always ends on its report (F62).
 **State Machine**:
 1.  **IDLE**: User selects Name & Mode (Merge vs Separate). The text under the button follows the mode.
@@ -130,7 +130,7 @@ stateDiagram-v2
     DONE --> [*]: User Closes / Connect again
 ```
 
-### 4.3 `ViewAlbumModal.js`
+### 4.3 `ViewAlbumModal.js` *(F83: now `ui/albumWindow/AlbumWindow.tsx`)*
 **Purpose**: Detailed Read-Only View.
 **Features**:
 *   **Badges**: Shows Year. Opened from an inventory item (the item holds the album in `albumData`), it also shows what belongs to the item: its status ("OWNED", "NOT OWNED" or "WISHLIST", from `models/inventoryStatus.js`), format, price, condition and notes. Opened for an album that is not an inventory item, it shows no status (F71).
@@ -140,16 +140,16 @@ stateDiagram-v2
 #### No celular (janela do álbum)
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **Tela cheia, uma rolagem só.** Uma barra presa mostra o título quando o do cabeçalho sai da vista e tem o fechar à direita; o «Close» do rodapé não aparece. O cabeçalho tem a capa de 112 px e o título inteiro; as três fontes (`Original`, `BEA`, `Spotify`) são um controle de três opções, e as faixas vêm em linhas de duas linhas (`components/ranking/TracksTabs.js`).
+*   **Tela cheia, uma rolagem só.** Uma barra presa mostra o título quando o do cabeçalho sai da vista e tem o fechar à direita; o «Close» do rodapé não aparece. O cabeçalho tem a capa de 112 px e o título inteiro; as três fontes (`Original`, `BEA`, `Spotify`) são um controle de três opções, e as faixas vêm em linhas de duas linhas (`components/ranking/TracksTabs.js`). Since F83 this is `ui/tracks/TracksTabs.tsx` (React).
 *   **Pelo inventário**, o valor e «Where to buy» viram uma linha cada, antes das faixas; tocar na linha do valor abre a seção inteira.
 
-### 4.4 `EditAlbumModal.js`
+### 4.4 `EditAlbumModal.js` *(removed in F65: `EditAlbumModal.js`)*
 
 > **F65 (2026-11-19):** `EditAlbumModal.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Purpose**: Metadata Editor.
 **Features**: Validates required fields (Title, Artist). Updates via callback.
 
-### 4.5 `InventoryAddModal.js` & `InventoryEditModal.js`
+### 4.5 `InventoryAddModal.js` & `InventoryEditModal.js` *(F83: now `ui/inventoryItem/AddWindow.tsx`)*
 **Purpose**: CRUD operations for User Collection.
 **Fields**:
 *   `Format`: CD, Vinyl, Cassette, Digital, etc. In the edit modal, an item with no format (added from a series, F71) opens with "Not set", and saving without choosing one writes no format.

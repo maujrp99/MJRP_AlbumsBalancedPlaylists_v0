@@ -16,6 +16,7 @@
  *   node test/architecture/support/importGraph.js
  */
 import * as espree from 'espree'
+import { parseSource, isTypeScript } from './parseSource.js'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -45,7 +46,7 @@ const ALIASES = [
  */
 export const ENTRY_POINTS = ['public/index.html', 'server/index.js']
 
-const CODE_EXTENSIONS = ['.js', '.mjs', '.cjs']
+const CODE_EXTENSIONS = ['.js', '.mjs', '.cjs', '.ts', '.tsx'] // .ts/.tsx: the React screens (F83)
 const isCode = (file) => CODE_EXTENSIONS.includes(path.extname(file))
 const posix = (file) => file.split(path.sep).join('/')
 
@@ -66,7 +67,8 @@ export function listFiles(relativeDir, keep = () => true) {
     })
 }
 
-function parse(source) {
+function parse(source, file = 'file.js') {
+    if (isTypeScript(file)) return parseSource(source, file)
     const options = { ecmaVersion: 'latest', loc: false, range: false }
     try {
         return espree.parse(source, { ...options, sourceType: 'module' })
@@ -135,10 +137,10 @@ function walk(node, visit) {
     }
 }
 
-function loadsOfCode(source) {
+function loadsOfCode(source, file) {
     const specifiers = []
     let dynamic = 0
-    walk(parse(source), node => {
+    walk(parse(source, file), node => {
         const load = loadOf(node)
         if (!load) return
         if (load.dynamic) dynamic += 1
@@ -167,7 +169,7 @@ const loadsOfCss = (source) => ({
 /** The specifiers a file loads, and how many of its dynamic loads cannot be read. */
 export function loadsOf(relative) {
     const source = fs.readFileSync(path.join(ROOT, relative), 'utf8')
-    if (isCode(relative)) return loadsOfCode(source)
+    if (isCode(relative)) return loadsOfCode(source, relative)
     if (relative.endsWith('.html')) return loadsOfHtml(source)
     if (relative.endsWith('.css')) return loadsOfCss(source)
     return { specifiers: [], dynamic: 0 }

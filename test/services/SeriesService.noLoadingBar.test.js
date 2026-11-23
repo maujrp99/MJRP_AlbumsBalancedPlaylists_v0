@@ -18,10 +18,12 @@ vi.mock('../../public/js/cache/CacheManager.js', () => {
 import { fake } from '../helpers/fakeFirestore.js'
 import { SeriesService } from '../../public/js/services/SeriesService.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
+import { globalProgress } from '../../public/js/stores/progress.js'
 
 const SERIES_PATH = 'artifacts/mjrp-albums/users/u1/curator/data/series'
 const storage = { save: vi.fn(), load: vi.fn(() => null), remove: vi.fn() }
 const loadingLine = () => document.getElementById('globalProgress')
+const barShows = () => globalProgress.getState().visible || globalProgress.isActive()
 
 describe('the series service draws no loading line at the top of the page', () => {
     let service
@@ -37,6 +39,7 @@ describe('the series service draws no loading line at the top of the page', () =
         const reading = service.loadFromFirestore()
         expect(albumSeriesStore.getState().loading).toBe(true)
         expect(loadingLine()).toBeNull()
+        expect(barShows()).toBe(false)
         await reading
         expect(albumSeriesStore.getState().loading).toBe(false)
         expect(loadingLine()).toBeNull()
@@ -49,9 +52,21 @@ describe('the series service draws no loading line at the top of the page', () =
         expect(loadingLine()).toBeNull()
         await service.deleteSeries(created.id)
         expect(loadingLine()).toBeNull()
+        expect(barShows()).toBe(false)
     })
 
-    it('the component that drew it is no longer in the app', () => {
+    it('the bar of the site (stores/progress.js) is not started by any of the four, and the service no longer imports it', async () => {
+        const start = vi.spyOn(globalProgress, 'start')
+        await service.loadFromFirestore()
+        const created = await service.createSeries({ name: 'New', albumQueries: [] })
+        await service.updateSeries(created.id, { name: 'Renamed' })
+        await service.deleteSeries(created.id)
+        expect(start).not.toHaveBeenCalled()
+        start.mockRestore()
+        expect(fs.readFileSync(path.resolve('public/js/services/SeriesService.js'), 'utf8')).not.toMatch(/stores\/progress|globalProgress/)
+    })
+
+    it('the hand-made component that drew it is no longer in the app (the bar is stores/progress.js and shell/GlobalProgress.tsx, started by the router for a slow screen file)', () => {
         expect(fs.existsSync(path.resolve('public/js/components/GlobalProgress.js'))).toBe(false)
     })
 })

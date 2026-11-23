@@ -12,6 +12,7 @@
  *   node test/architecture/support/measureComplexity.js public/js shared server
  */
 import { ESLint } from 'eslint'
+import tseslint from 'typescript-eslint'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -31,6 +32,12 @@ export async function functionsAbove(targets, limit = COMPLEXITY_LIMIT) {
         overrideConfig: [{
             files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
             languageOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+            linterOptions: { noInlineConfig: true, reportUnusedDisableDirectives: 'off' },
+            rules: { complexity: ['error', limit] }
+        }, {
+            // .ts and .tsx (F83): the same rule, read by the TypeScript parser
+            files: ['**/*.ts', '**/*.tsx'],
+            languageOptions: { parser: tseslint.parser, ecmaVersion: 'latest', sourceType: 'module' },
             linterOptions: { noInlineConfig: true, reportUnusedDisableDirectives: 'off' },
             rules: { complexity: ['error', limit] }
         }],

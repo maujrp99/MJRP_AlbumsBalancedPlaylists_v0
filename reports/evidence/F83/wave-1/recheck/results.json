@@ -1,0 +1,845 @@
+{
+  "results": [
+    {
+      "what": "1280 tab title old = new",
+      "ok": true,
+      "detail": [
+        "MJRP The Album Blender - Playlist Generator",
+        "MJRP The Album Blender - Playlist Generator"
+      ]
+    },
+    {
+      "what": "1280 01-waiting-for-the-list: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 01-waiting-for-the-list: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "5 controls"
+    },
+    {
+      "what": "1280 02-series-loading: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 02-series-loading: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "12 controls"
+    },
+    {
+      "what": "1280 03-refreshing: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 03-refreshing: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "17 controls"
+    },
+    {
+      "what": "1280 04-two-series: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 04-two-series: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "17 controls"
+    },
+    {
+      "what": "1280 05-batch-open: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 05-batch-open: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "18 controls"
+    },
+    {
+      "what": "1280 06-playlist-open-tracks: screenshot old = new",
+      "ok": false,
+      "detail": {
+        "apart": 5,
+        "box": [
+          90,
+          648,
+          1189,
+          654
+        ]
+      }
+    },
+    {
+      "what": "1280 06-playlist-open-tracks: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "18 controls"
+    },
+    {
+      "what": "1280 keyboard focus order (22 Tab) old = new",
+      "ok": true,
+      "detail": "INPUT#genericSearch.form-control.pl-10[] > SELECT#filter-series.form-control.appearance-none[All Albums Series\nPlant\n] > SELECT#filter-batch.form-control.appearance-none[All Playlist Series\nBatc] > SELECT#genericSort.form-control.appearance-none[Recently Updated\nName (A] > BUTTON#genericRefresh.btn.btn-warning[Refresh] > BUTTON#.btn.btn-primary[Add Playlists] > BUTTON#.btn.btn-secondary[Open Albums Series] > BUTTON#.btn.btn-ghost[Delete all playlists in Plant] > BUTTON#.btn.btn-secondary[Edit batch TheAlbumBlender Playlist 2026-11-20 23:21] > BUTTON#.btn.btn-ghost[Delete batch TheAlbumBlender Playlist 2026-11-20 23:21] > BUTTON#.btn.btn-ghost[View the tracks of Playlist p3] > BUTTON#.btn.btn-secondary[Edit batch Sunday mix] > BUTTON#.btn.btn-ghost[Delete batch Sunday mix] > BUTTON#.btn.btn-primary[Add Playlists] > BUTTON#.btn.btn-secondary[Open Albums Series] > BUTTON#.btn.btn-ghost[Delete all playlists in Floyd] > BUTTON#.btn.btn-secondary[Edit batch Batch B] > BUTTON#.btn.btn-ghost[Delete batch Batch B] > A#.hover:text-white.transition-colors[Start] > A#.hover:text-white.transition-colors[Albums] > A#.hover:text-white.transition-colors[Playlists] > BUTTON#footerClearCache.hover:text-red-400.transition-colors[Clear Cache]"
+    },
+    {
+      "what": "1280 07-playlist-window: screenshot old = new",
+      "ok": false,
+      "detail": {
+        "apart": 267,
+        "box": [
+          1024,
+          832,
+          1203,
+          855
+        ]
+      }
+    },
+    {
+      "what": "1280 07-playlist-window: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "20 controls"
+    },
+    {
+      "what": "1280 08-window-escape: screenshot old = new",
+      "ok": false,
+      "detail": {
+        "apart": 267,
+        "box": [
+          1024,
+          832,
+          1203,
+          855
+        ]
+      }
+    },
+    {
+      "what": "1280 08-window-escape: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "20 controls"
+    },
+    {
+      "what": "1280 09-search-floyd: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 09-search-floyd: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "10 controls"
+    },
+    {
+      "what": "1280 10-search-no-match: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 10-search-no-match: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "5 controls"
+    },
+    {
+      "what": "1280 11-filter-series: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 11-filter-series: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "10 controls"
+    },
+    {
+      "what": "1280 12-delete-batch-question: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 12-delete-batch-question: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "20 controls"
+    },
+    {
+      "what": "1280 delete question text old = new",
+      "ok": true,
+      "detail": [
+        "Delete Batch? Are you sure you want to delete batch \"TheAlbumBlender Playlist 2026-11-20 23:21\"? Contains 1 playlists. Cancel Delete Batch",
+        "Delete Batch? Are you sure you want to delete batch \"TheAlbumBlender Playlist 2026-11-20 23:21\"? Contains 1 playlists. Cancel Delete Batch"
+      ]
+    },
+    {
+      "what": "1280 13-delete-all-question: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 13-delete-all-question: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "20 controls"
+    },
+    {
+      "what": "1280 nothing deleted after Cancel",
+      "ok": true,
+      "detail": [
+        null,
+        null
+      ]
+    },
+    {
+      "what": "1280 Edit goes to the same place",
+      "ok": true,
+      "detail": [
+        "/playlists/edit?seriesId=s1abcdefghij&edit=TheAlbumBlender%20Playlist%202026-11-20%2023%3A21",
+        "/playlists/edit?seriesId=s1abcdefghij&edit=TheAlbumBlender%20Playlist%202026-11-20%2023%3A21"
+      ]
+    },
+    {
+      "what": "1280 Back from Edit returns to the screen, the same way",
+      "ok": true,
+      "detail": [
+        {
+          "path": "/saved-playlists",
+          "screens": 1,
+          "groups": 2,
+          "title": "MJRP The Album Blender - Playlist Generator"
+        },
+        {
+          "path": "/saved-playlists",
+          "screens": 1,
+          "groups": 2,
+          "title": "MJRP The Album Blender - Playlist Generator"
+        }
+      ]
+    },
+    {
+      "what": "1280 14-after-back: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 14-after-back: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "17 controls"
+    },
+    {
+      "what": "1280 15-series-failed: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 15-series-failed: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "15 controls"
+    },
+    {
+      "what": "1280 16-list-failed: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 16-list-failed: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "16 controls"
+    },
+    {
+      "what": "1280 17-empty: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 17-empty: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "6 controls"
+    },
+    {
+      "what": "1280 leave to /start and Back, three times: old = new, one screen, nothing left over",
+      "ok": true,
+      "detail": [
+        [
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          },
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          },
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          }
+        ],
+        [
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          },
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          },
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "what": "1280 99-after-returning: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "1280 99-after-returning: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "6 controls"
+    },
+    {
+      "what": "1280 no page error",
+      "ok": true,
+      "detail": [
+        [],
+        []
+      ]
+    },
+    {
+      "what": "393 tab title old = new",
+      "ok": true,
+      "detail": [
+        "MJRP The Album Blender - Playlist Generator",
+        "MJRP The Album Blender - Playlist Generator"
+      ]
+    },
+    {
+      "what": "393 01-waiting-for-the-list: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 01-waiting-for-the-list: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "2 controls"
+    },
+    {
+      "what": "393 02-series-loading: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 02-series-loading: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "4 controls"
+    },
+    {
+      "what": "393 03-refreshing: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 03-refreshing: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "6 controls"
+    },
+    {
+      "what": "393 04-two-series: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 04-two-series: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "6 controls"
+    },
+    {
+      "what": "393 05-series-open: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 05-series-open: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "10 controls"
+    },
+    {
+      "what": "393 06-batch-open: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 06-batch-open: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "11 controls"
+    },
+    {
+      "what": "393 07-series-sheet: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 07-series-sheet: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "15 controls"
+    },
+    {
+      "what": "393 08-batch-sheet: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 08-batch-sheet: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "14 controls"
+    },
+    {
+      "what": "393 keyboard focus order (16 Tab) old = new",
+      "ok": true,
+      "detail": "INPUT#genericSearch.form-control.pl-10[] > BUTTON#.filters-phone.filters-phone-button[Filters] > BUTTON#.saved-series-toggle.saved-phone-series__main[Plant\n2 batches · 3 play] > BUTTON#.phone-more[Actions for series Plant] > BUTTON#.saved-phone-batch__main.batch-header[Saved 20 Nov 2026, 23:21] > BUTTON#.phone-more[Actions for batch TheAlbumBlender Playlist 2026-11-20 23:21] > BUTTON#.saved-phone-playlist[Open the tracks of Playlist p3] > BUTTON#.saved-phone-batch__main.batch-header[Sunday mix\n2 playlists ·] > BUTTON#.phone-more[Actions for batch Sunday mix] > BUTTON#.saved-series-toggle.saved-phone-series__main[Floyd\n1 batch · 2 playli] > BUTTON#.phone-more[Actions for series Floyd] > A#.phone-topbar__logo-link[The Album Blender, the entry page] > BUTTON#phoneMenuBtn.phone-topbar__menu[Menu and account] > A#.phone-tabbar__tab[Start] > A#.phone-tabbar__tab[Albums] > A#.phone-tabbar__tab[Blend]"
+    },
+    {
+      "what": "393 09-filter-sheet: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 09-filter-sheet: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "15 controls"
+    },
+    {
+      "what": "393 10-search-floyd: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 10-search-floyd: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "4 controls"
+    },
+    {
+      "what": "393 11-series-failed: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 11-series-failed: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "11 controls"
+    },
+    {
+      "what": "393 12-empty: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 12-empty: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "3 controls"
+    },
+    {
+      "what": "393 leave to /start and Back, three times: old = new, one screen, nothing left over",
+      "ok": true,
+      "detail": [
+        [
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          },
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          },
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          }
+        ],
+        [
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          },
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          },
+          {
+            "away": {
+              "screens": 0,
+              "overlays": 0,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            },
+            "here": {
+              "path": "/saved-playlists",
+              "screens": 1,
+              "search": true,
+              "title": "MJRP The Album Blender - Playlist Generator"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "what": "393 99-after-returning: screenshot old = new",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "393 99-after-returning: controls (text | aria-label | title) old = new",
+      "ok": true,
+      "detail": "3 controls"
+    },
+    {
+      "what": "393 no page error",
+      "ok": true,
+      "detail": [
+        [],
+        []
+      ]
+    },
+    {
+      "what": "production 393 run 1 (empty): screenshot prod = branch",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "production 393 run 2 (empty): screenshot prod = branch",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "production 393 run 3 (empty): screenshot prod = branch",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "production 393 run 4 (empty): screenshot prod = branch",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "production 1280 run 1 (empty): screenshot prod = branch",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "production 1280 run 2 (empty): screenshot prod = branch",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "production 1280 run 3 (empty): screenshot prod = branch",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "production 1280 run 4 (empty): screenshot prod = branch",
+      "ok": true,
+      "detail": {
+        "apart": 0,
+        "box": null
+      }
+    },
+    {
+      "what": "production 393 against itself",
+      "ok": true,
+      "detail": {
+        "apart": 19,
+        "box": [
+          30,
+          80,
+          254,
+          107
+        ]
+      }
+    },
+    {
+      "what": "offline, open /saved-playlists (NEW)",
+      "ok": true,
+      "detail": "No connection This screen could not be downloaded. Check your connection and try again; what you have open here is kept. Try again"
+    },
+    {
+      "what": "NEW: back online, «Try again» brings the screen",
+      "ok": true,
+      "detail": "/saved-playlists"
+    },
+    {
+      "what": "offline, open /saved-playlists (OLD)",
+      "ok": true,
+      "detail": "Your Playlists Series All Albums Series All Playlist Series Recently Updated Name (A-Z) Name (Z-A) Refresh No Playlists Found Generate and save playlists in your series to see them here. Create Series"
+    }
+  ],
+  "facts": {
+    "inv1280": [
+      "INPUT |  |  | ",
+      "SELECT | All Albums Series Plant Floyd |  | ",
+      "SELECT | All Playlist Series Batch B Sunday mix T |  | ",
+      "SELECT | Recently Updated Name (A-Z) Name (Z-A) |  | ",
+      "BUTTON | Refresh |  | Reload",
+      "BUTTON | Add Playlists |  | ",
+      "BUTTON | Open Albums Series |  | ",
+      "BUTTON |  | Delete all playlists in Plant | Delete all playlists in this series",
+      "BUTTON | Edit Batch | Edit batch TheAlbumBlender Playlist 2026-11-20 23:21 | Edit this batch",
+      "BUTTON |  | Delete batch TheAlbumBlender Playlist 2026-11-20 23:21 | Delete entire batch",
+      "BUTTON | Edit Batch | Edit batch Sunday mix | Edit this batch",
+      "BUTTON |  | Delete batch Sunday mix | Delete entire batch",
+      "BUTTON | Add Playlists |  | ",
+      "BUTTON | Open Albums Series |  | ",
+      "BUTTON |  | Delete all playlists in Floyd | Delete all playlists in this series",
+      "BUTTON | Edit Batch | Edit batch Batch B | Edit this batch",
+      "BUTTON |  | Delete batch Batch B | Delete entire batch"
+    ],
+    "focus1280": [
+      "INPUT#genericSearch.form-control.pl-10[]",
+      "SELECT#filter-series.form-control.appearance-none[All Albums Series\nPlant\n]",
+      "SELECT#filter-batch.form-control.appearance-none[All Playlist Series\nBatc]",
+      "SELECT#genericSort.form-control.appearance-none[Recently Updated\nName (A]",
+      "BUTTON#genericRefresh.btn.btn-warning[Refresh]",
+      "BUTTON#.btn.btn-primary[Add Playlists]",
+      "BUTTON#.btn.btn-secondary[Open Albums Series]",
+      "BUTTON#.btn.btn-ghost[Delete all playlists in Plant]",
+      "BUTTON#.btn.btn-secondary[Edit batch TheAlbumBlender Playlist 2026-11-20 23:21]",
+      "BUTTON#.btn.btn-ghost[Delete batch TheAlbumBlender Playlist 2026-11-20 23:21]",
+      "BUTTON#.btn.btn-ghost[View the tracks of Playlist p3]",
+      "BUTTON#.btn.btn-secondary[Edit batch Sunday mix]",
+      "BUTTON#.btn.btn-ghost[Delete batch Sunday mix]",
+      "BUTTON#.btn.btn-primary[Add Playlists]",
+      "BUTTON#.btn.btn-secondary[Open Albums Series]",
+      "BUTTON#.btn.btn-ghost[Delete all playlists in Floyd]",
+      "BUTTON#.btn.btn-secondary[Edit batch Batch B]",
+      "BUTTON#.btn.btn-ghost[Delete batch Batch B]",
+      "A#.hover:text-white.transition-colors[Start]",
+      "A#.hover:text-white.transition-colors[Albums]",
+      "A#.hover:text-white.transition-colors[Playlists]",
+      "BUTTON#footerClearCache.hover:text-red-400.transition-colors[Clear Cache]"
+    ],
+    "inv393": [
+      "INPUT |  |  | ",
+      "BUTTON | Filters | Filters | ",
+      "BUTTON | Plant 2 batches · 3 playlists |  | ",
+      "BUTTON |  | Actions for series Plant | ",
+      "BUTTON | Floyd 1 batch · 2 playlists |  | ",
+      "BUTTON |  | Actions for series Floyd | "
+    ],
+    "focus393": [
+      "INPUT#genericSearch.form-control.pl-10[]",
+      "BUTTON#.filters-phone.filters-phone-button[Filters]",
+      "BUTTON#.saved-series-toggle.saved-phone-series__main[Plant\n2 batches · 3 play]",
+      "BUTTON#.phone-more[Actions for series Plant]",
+      "BUTTON#.saved-phone-batch__main.batch-header[Saved 20 Nov 2026, 23:21]",
+      "BUTTON#.phone-more[Actions for batch TheAlbumBlender Playlist 2026-11-20 23:21]",
+      "BUTTON#.saved-phone-playlist[Open the tracks of Playlist p3]",
+      "BUTTON#.saved-phone-batch__main.batch-header[Sunday mix\n2 playlists ·]",
+      "BUTTON#.phone-more[Actions for batch Sunday mix]",
+      "BUTTON#.saved-series-toggle.saved-phone-series__main[Floyd\n1 batch · 2 playli]",
+      "BUTTON#.phone-more[Actions for series Floyd]",
+      "A#.phone-topbar__logo-link[The Album Blender, the entry page]",
+      "BUTTON#phoneMenuBtn.phone-topbar__menu[Menu and account]",
+      "A#.phone-tabbar__tab[Start]",
+      "A#.phone-tabbar__tab[Albums]",
+      "A#.phone-tabbar__tab[Blend]"
+    ]
+  }
+}

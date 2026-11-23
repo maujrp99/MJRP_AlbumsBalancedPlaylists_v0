@@ -77,7 +77,7 @@ export const SpotifyAuthService = {
     async login() {
         if (!CLIENT_ID) {
             console.error('[SpotifyAuth] Missing VITE_SPOTIFY_CLIENT_ID in .env')
-            const { default: toast } = await import('../components/Toast.js')
+            const { default: toast } = await import('../stores/toasts.js')
             toast.error('Spotify is not set up for this site: its client id is missing.')
             return
         }

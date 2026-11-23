@@ -23,7 +23,10 @@ import {
 /** Files under the watched folders that no entry point loads, and stay. */
 const KEPT_ON_PURPOSE = {
     // The model a person copies to public/js/firebase-config.js to point the app at a Firebase project.
-    'public/js/firebase-config.example.js': 'configuration template, copied by hand'
+    'public/js/firebase-config.example.js': 'configuration template, copied by hand',
+    // The hook of the React bridge (F83) that no screen has needed yet waits for the screen that does. The line goes out in the
+    // commit of the screen that first uses it: this test fails the moment it stops being true. (navigation, usePhone and
+    // useStore went out with the saved playlists screen, wave 1; the saved playlists screen sets no title of its own.)
 }
 
 const graph = graphFrom(allEntryPoints())
@@ -73,13 +76,26 @@ describe('the graph follows every way a file is loaded', () => {
     })
 
     it('a dynamic import() of the app and of the server, and require()', () => {
-        expect(graph.reachable.has('public/js/views/SavedPlaylistsView.js')).toBe(true) // import() in a route of app.js
+        expect(graph.reachable.has('public/js/screens/saved-playlists/index.ts')).toBe(true) // import() in a route of app.js
         expect(graph.reachable.has('shared/trackIdentity.js')).toBe(true) // import() from the CommonJS server
         expect(graph.reachable.has('server/routes/debug.js')).toBe(true) // require() inside an if
     })
 
     it('CSS @import', () => {
         expect(graph.reachable.has('public/css/neon.css')).toBe(true)
+    })
+
+    it('TypeScript and TSX (F83): a static import of .ts from .tsx and a dynamic import() of .tsx, both followed', () => {
+        const entry = 'test/architecture/fixtures/typescript/Entry.tsx'
+        expect(loadsOf(entry).specifiers).toEqual(['./Leaf', './Lazy'])
+        expect(resolve('./Leaf', entry)).toBe('test/architecture/fixtures/typescript/Leaf.ts')
+        const fromTsx = graphFrom([entry])
+        expect([...fromTsx.reachable].sort()).toEqual([
+            'test/architecture/fixtures/typescript/Entry.tsx',
+            'test/architecture/fixtures/typescript/Lazy.tsx',
+            'test/architecture/fixtures/typescript/Leaf.ts'
+        ])
+        expect(fromTsx.missing).toEqual([])
     })
 
     it('a package or a URL is not a file of the repository', () => {

@@ -1,36 +1,27 @@
 /**
- * F57 - the series being edited: what counts as an album already in the list, and what the modal
- * shows while the save is on its way and when it failed.
+ * F57 - the series being edited: what counts as an album already in the list, and where the save is
+ * (the words of the window are its own, in the dictionary: test/screens/albums/SeriesEdit.test.tsx).
  */
 import { describe, it, expect } from 'vitest'
 import {
-    SaveStatus, SaveProblem, idleSave, canSave, saveStarted, saveFailed, describeSave, problemBeforeSave, hasAlbumQuery
+    SaveStatus, SaveProblem, idleSave, canSave, saveStarted, saveFailed, problemBeforeSave, hasAlbumQuery
 } from '../../public/js/models/seriesDraft.js'
 
 describe('seriesDraft: the save', () => {
-    it('idle: the button free, no message', () => {
-        expect(describeSave(idleSave())).toEqual({ busy: false, confirmLabel: 'Save Changes', message: '' })
+    it('idle: a save may be asked', () => {
+        expect(idleSave()).toEqual({ status: SaveStatus.IDLE, problem: null })
         expect(canSave(idleSave())).toBe(true)
     })
 
-    it('saving: the button busy, and no second save may be asked', () => {
-        expect(describeSave(saveStarted())).toEqual({ busy: true, confirmLabel: 'Saving…', message: '' })
+    it('saving: no second save may be asked', () => {
+        expect(saveStarted()).toEqual({ status: SaveStatus.SAVING, problem: null })
         expect(canSave(saveStarted())).toBe(false)
     })
 
-    it('failed: the button free again, and a message that says the changes are still there', () => {
-        const shown = describeSave(saveFailed())
-
-        expect(shown.busy).toBe(false)
-        expect(shown.confirmLabel).toBe('Save Changes')
-        expect(shown.message).toBe('The series could not be saved. Your changes are still here: you can try again.')
+    it('failed: a save may be asked again, and the problem is kept (a write that failed unless said otherwise)', () => {
+        expect(saveFailed()).toEqual({ status: SaveStatus.FAILED, problem: SaveProblem.WRITE_FAILED })
+        expect(saveFailed(SaveProblem.NO_NAME).problem).toBe(SaveProblem.NO_NAME)
         expect(canSave(saveFailed())).toBe(true)
-    })
-
-    it('each problem has its message; a problem nobody listed reads as a failed write', () => {
-        expect(describeSave(saveFailed(SaveProblem.NO_NAME)).message).toBe('Give the series a name before saving.')
-        expect(describeSave(saveFailed(SaveProblem.NO_DATABASE)).message).toContain('Nothing was saved')
-        expect(describeSave({ status: SaveStatus.FAILED, problem: 'other' }).message).toBe(describeSave(saveFailed()).message)
     })
 
     it('what stops a save before any write: no name, then no database', () => {

@@ -6,8 +6,8 @@
  * ../mobile.css; the guide is docs/specs/features/F76-mobile-redesign/mobile-kit.md.
  *
  * On the phone: the four steps in a row that reads (12 px labels, the current one clear); step 1
- * is one row that opens a full sheet with every series and a search (components/blend/
- * BlendSeriesPhonePicker.js), no box with its own scroll; the recipes in one column with the whole
+ * is one row that opens a full sheet with every series and a search (screens/blend/
+ * phone/PhoneStep.tsx), no box with its own scroll; the recipes in one column with the whole
  * description; «Blend it!» in the action bar, off while a step is missing and the note says which.
  */
 

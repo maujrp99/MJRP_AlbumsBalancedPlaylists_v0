@@ -1,0 +1,47 @@
+{
+ "tag": "edit-webkit-se",
+ "passed": 8,
+ "failed": 0,
+ "results": [
+  {
+   "what": "edit-webkit-se · the file: asked for · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-se · the file: asked for · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-webkit-se · the file: asked for · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "edit-webkit-se · the file: asked for · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-se · the file: asked for · the file handed to the browser",
+   "ok": true,
+   "detail": "playlists_Unsaved Batch_2026-11-22.json 964 B sha256 5503e1a68d6f028d"
+  },
+  {
+   "what": "edit-webkit-se · the file: asked for · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-se · json · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-se · json · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

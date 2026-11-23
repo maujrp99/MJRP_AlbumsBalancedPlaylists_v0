@@ -1,0 +1,210 @@
+{
+ "oldBase": "http://localhost:5193",
+ "newBase": "http://localhost:5194",
+ "firebaseBlocked": "identitytoolkit|securetoken|firestore\\.googleapis|firebaseinstallations",
+ "passed": 38,
+ "failed": 2,
+ "results": [
+  {
+   "what": "P 393 · the first page: groups, a failed series, a half failed one · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the first page: groups, a failed series, a half failed one · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · the first page: groups, a failed series, a half failed one · pixels",
+   "ok": false,
+   "detail": "202124 px apart · box x 48-1130, y 168-410, largest difference 255 of 255"
+  },
+  {
+   "what": "P 393 · typing in the search with real keys · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · typing in the search with real keys · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "P 393 · typing in the search with real keys · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the search emptied · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the search emptied · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "P 393 · the search emptied · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet of the filters · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet of the filters · focus",
+   "ok": true,
+   "detail": "button.filter-sheet__segment / button.filter-sheet__segment"
+  },
+  {
+   "what": "P 393 · the sheet of the filters · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · a filter chosen in the sheet · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · a filter chosen in the sheet · focus",
+   "ok": true,
+   "detail": "select#sheetFilter_artist.form-control.filter-sheet__select / select#sheetFilter_artist.form-control.filter-sheet__select"
+  },
+  {
+   "what": "P 393 · a filter chosen in the sheet · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet closed: the chip · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet closed: the chip · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · the sheet closed: the chip · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the chip taken out · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the chip taken out · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · the chip taken out · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet of an album · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet of an album · focus",
+   "ok": true,
+   "detail": "button.albums-sheet__row / button.albums-sheet__row"
+  },
+  {
+   "what": "P 393 · the sheet of an album · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet closed · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet closed · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · the sheet closed · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet of a series · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet of a series · focus",
+   "ok": true,
+   "detail": "button.albums-sheet__row / button.albums-sheet__row"
+  },
+  {
+   "what": "P 393 · the sheet of a series · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet closed again · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet closed again · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · the sheet closed again · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the list view, in the sheet · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the list view, in the sheet · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · the list view, in the sheet · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · no error of the page on either side",
+   "ok": false,
+   "detail": "old: Worker Error: SyntaxError: The string did not match the expected pattern. // new: Worker Error: SyntaxError: The string did not match the expected pattern."
+  },
+  {
+   "what": "P 393 · one series by the filter · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · one series by the filter · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · one series by the filter · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  }
+ ],
+ "maxPixelsApart": 202124
+}

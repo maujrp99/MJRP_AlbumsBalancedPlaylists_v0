@@ -1,0 +1,1456 @@
+{
+ "oldBase": "http://127.0.0.1:5311",
+ "newBase": "http://127.0.0.1:5311",
+ "engine": "chromium",
+ "firebaseBlocked": "identitytoolkit|securetoken|firestore\\.googleapis|firebaseinstallations",
+ "passed": 279,
+ "failed": 10,
+ "results": [
+  {
+   "what": "A 1280 · edit: the window opens · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the window opens · focus",
+   "ok": true,
+   "detail": "button.btn.btn-secondary.btn-sm.btn-icon / button.btn.btn-secondary.btn-sm.btn-icon"
+  },
+  {
+   "what": "A 1280 · edit: the window opens · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the window opens · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the window opens · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the window opens · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · focus",
+   "ok": true,
+   "detail": "button.btn.btn-primary.px-4.flex.items-center.gap-2 / button.btn.btn-primary.px-4.flex.items-center.gap-2"
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Scan with no text (a notice) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · focus",
+   "ok": true,
+   "detail": "button.filter-btn.px-3.py-1.5.rounded-lg.bg-white/5.hover:bg-white/10.text-gray-400.text-xs.font-bold.border.border-white/5.flex.items-center.gap-1.5.transition-all.whitespace-nowrap.shrink-0 / button.filter-btn.px-3.py-1.5.rounded-lg.bg-white/5.hover:bg-white/10.text-gray-400.text-xs.font-bold.border.border-white/5.flex.items-center.gap-1.5.transition-all.whitespace-nowrap.shrink-0"
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: a filter turned on and off with no results · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the first album taken out · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · focus",
+   "ok": true,
+   "detail": "input.form-control.w-full.mb-6 / input.form-control.w-full.mb-6"
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: the name changed with real keys · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · focus",
+   "ok": true,
+   "detail": "button.btn.btn-primary / button.btn.btn-primary"
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Save with no database (a visitor): the message, the window stays · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: Cancel after the refused save · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Cancel · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, the cross · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · edit: opened again, Escape does nothing (and nothing is lost) · pixels of the window",
+   "ok": false,
+   "detail": "4 px apart · box x 201-212, y 567-574, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · focus",
+   "ok": true,
+   "detail": "button.btn.btn-danger.btn-sm.btn-icon / button.btn.btn-danger.btn-sm.btn-icon"
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · delete: with no database (a visitor): the notice, no question · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · focus",
+   "ok": true,
+   "detail": "button.flex-1.flex.justify-center.items-center.py-1.5.rounded.mx-0.5.transition-colors.text-sky-400.bg-sky-400/10[s0-0] / button.flex-1.flex.justify-center.items-center.py-1.5.rounded.mx-0.5.transition-colors.text-sky-400.bg-sky-400/10[s0-0]"
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Time\",\"1\"],[\"Speak to Me\",\"2\"],[\"Breathe\",\"3\"],[\"Money\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: the window opens (the saved order first, the rest after) · pixels of the window",
+   "ok": false,
+   "detail": "4 px apart · box x 199-211, y 245-251, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Eclipse\",\"1\"],[\"Time\",\"2\"],[\"Speak to Me\",\"3\"],[\"Breathe\",\"4\"],[\"Money\",\"5\"],[\"Us and Them\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged with the mouse, from the bottom to the top · pixels of the window",
+   "ok": false,
+   "detail": "4 px apart · box x 199-211, y 245-251, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Time\",\"1\"],[\"Speak to Me\",\"2\"],[\"Eclipse\",\"3\"],[\"Breathe\",\"4\"],[\"Money\",\"5\"],[\"Us and Them\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: a track dragged a little down · pixels of the window",
+   "ok": false,
+   "detail": "2 px apart · box x 198-207, y 248-252, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Reset · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Reset · focus",
+   "ok": true,
+   "detail": "button.px-4.py-2.text-sm.text-white/60.hover:text-white.transition-colors / button.px-4.py-2.text-sm.text-white/60.hover:text-white.transition-colors"
+  },
+  {
+   "what": "A 1280 · rank: Reset · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Reset · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Reset · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Breathe\",\"2\"],[\"Time\",\"3\"],[\"Money\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: Reset · pixels of the window",
+   "ok": false,
+   "detail": "4 px apart · box x 199-211, y 245-251, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Money\",\"2\"],[\"Breathe\",\"3\"],[\"Time\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: one track moved and the rest left (a partial ranking) · pixels of the window",
+   "ok": false,
+   "detail": "4 px apart · box x 199-211, y 245-251, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · focus",
+   "ok": true,
+   "detail": "button.flex.items-center.gap-2.text-white/60.hover:text-white.transition-colors / button.flex.items-center.gap-2.text-white/60.hover:text-white.transition-colors"
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Money\",\"2\"],[\"Breathe\",\"3\"],[\"Time\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: Back with a change asks · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · focus",
+   "ok": true,
+   "detail": "button.flex.items-center.gap-2.text-white/60.hover:text-white.transition-colors / button.flex.items-center.gap-2.text-white/60.hover:text-white.transition-colors"
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Money\",\"2\"],[\"Breathe\",\"3\"],[\"Time\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: Escape in the question is Keep editing · pixels of the window",
+   "ok": false,
+   "detail": "4 px apart · box x 199-211, y 245-251, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · focus",
+   "ok": true,
+   "detail": "button.px-4.py-2.text-sm.bg-sky-500.text-white.rounded-lg.hover:bg-sky-600.transition-colors.font-medium / button.px-4.py-2.text-sm.bg-sky-500.text-white.rounded-lg.hover:bg-sky-600.transition-colors.font-medium"
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Money\",\"2\"],[\"Breathe\",\"3\"],[\"Time\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "A 1280 · rank: Save: a visitor has no ranking to save: the notice, the window stays · pixels of the window",
+   "ok": false,
+   "detail": "4 px apart · box x 199-211, y 245-251, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: Back and Discard · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · focus",
+   "ok": true,
+   "detail": "button.flex-1.flex.justify-center.items-center.py-1.5.rounded.mx-0.5.transition-colors.text-sky-400.bg-sky-400/10[s0-0] / button.flex-1.flex.justify-center.items-center.py-1.5.rounded.mx-0.5.transition-colors.text-sky-400.bg-sky-400/10[s0-0]"
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, Escape with nothing changed closes it · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · rank: opened again, a click outside the window closes it · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · no error of the page on either side",
+   "ok": false,
+   "detail": "old: Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON | [UserRankingRepository] saveRanking error: FirebaseError: Failed to get document because the client is offline. // new: Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON | [UserRankingRepository] saveRanking error: FirebaseError: Failed to get document because the client is offline."
+  },
+  {
+   "what": "P 393 · edit: the window opens · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the window opens · focus",
+   "ok": true,
+   "detail": "button.series-more.md:hidden / button.series-more.md:hidden"
+  },
+  {
+   "what": "P 393 · edit: the window opens · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the window opens · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the window opens · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the window opens · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · edit: Scan with no text (a notice) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Scan with no text (a notice) · focus",
+   "ok": true,
+   "detail": "button.btn.btn-primary.px-4.flex.items-center.gap-2 / button.btn.btn-primary.px-4.flex.items-center.gap-2"
+  },
+  {
+   "what": "P 393 · edit: Scan with no text (a notice) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Scan with no text (a notice) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Scan with no text (a notice) · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Scan with no text (a notice) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · edit: a filter turned on and off with no results · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: a filter turned on and off with no results · focus",
+   "ok": true,
+   "detail": "button.filter-btn.px-3.py-1.5.rounded-lg.bg-white/5.hover:bg-white/10.text-gray-400.text-xs.font-bold.border.border-white/5.flex.items-center.gap-1.5.transition-all.whitespace-nowrap.shrink-0 / button.filter-btn.px-3.py-1.5.rounded-lg.bg-white/5.hover:bg-white/10.text-gray-400.text-xs.font-bold.border.border-white/5.flex.items-center.gap-1.5.transition-all.whitespace-nowrap.shrink-0"
+  },
+  {
+   "what": "P 393 · edit: a filter turned on and off with no results · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: a filter turned on and off with no results · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: a filter turned on and off with no results · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: a filter turned on and off with no results · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · edit: the first album taken out · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the first album taken out · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · edit: the first album taken out · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the first album taken out · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the first album taken out · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the first album taken out · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · edit: an album moved down by a tap · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: an album moved down by a tap · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · edit: an album moved down by a tap · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: an album moved down by a tap · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: an album moved down by a tap · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: an album moved down by a tap · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · edit: an album moved up by a tap · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: an album moved up by a tap · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · edit: an album moved up by a tap · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: an album moved up by a tap · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: an album moved up by a tap · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: an album moved up by a tap · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · edit: the name changed with real keys · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the name changed with real keys · focus",
+   "ok": true,
+   "detail": "input.form-control.w-full.mb-6 / input.form-control.w-full.mb-6"
+  },
+  {
+   "what": "P 393 · edit: the name changed with real keys · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the name changed with real keys · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the name changed with real keys · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: the name changed with real keys · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · edit: Save with no database (a visitor): the message, the window stays · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Save with no database (a visitor): the message, the window stays · focus",
+   "ok": true,
+   "detail": "button.btn.btn-primary / button.btn.btn-primary"
+  },
+  {
+   "what": "P 393 · edit: Save with no database (a visitor): the message, the window stays · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Save with no database (a visitor): the message, the window stays · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Save with no database (a visitor): the message, the window stays · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Save with no database (a visitor): the message, the window stays · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · edit: Cancel after the refused save · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Cancel after the refused save · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · edit: Cancel after the refused save · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Cancel after the refused save · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: Cancel after the refused save · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Cancel · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Cancel · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · edit: opened again, Cancel · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Cancel · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Cancel · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, the cross · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, the cross · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · edit: opened again, the cross · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, the cross · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, the cross · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Escape does nothing (and nothing is lost) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Escape does nothing (and nothing is lost) · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · edit: opened again, Escape does nothing (and nothing is lost) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Escape does nothing (and nothing is lost) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Escape does nothing (and nothing is lost) · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · edit: opened again, Escape does nothing (and nothing is lost) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · delete: with no database (a visitor): the notice, no question · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · delete: with no database (a visitor): the notice, no question · focus",
+   "ok": true,
+   "detail": "button.series-more.md:hidden / button.series-more.md:hidden"
+  },
+  {
+   "what": "P 393 · delete: with no database (a visitor): the notice, no question · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · delete: with no database (a visitor): the notice, no question · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · delete: with no database (a visitor): the notice, no question · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: the window opens (the saved order first, the rest after) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: the window opens (the saved order first, the rest after) · focus",
+   "ok": true,
+   "detail": "button.album-more[s0-0] / button.album-more[s0-0]"
+  },
+  {
+   "what": "P 393 · rank: the window opens (the saved order first, the rest after) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: the window opens (the saved order first, the rest after) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: the window opens (the saved order first, the rest after) · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Time\",\"1\"],[\"Speak to Me\",\"2\"],[\"Breathe\",\"3\"],[\"Money\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: the window opens (the saved order first, the rest after) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: a track dragged by its handle with a finger, to the top · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a track dragged by its handle with a finger, to the top · focus",
+   "ok": true,
+   "detail": "button.album-more[s0-0] / button.album-more[s0-0]"
+  },
+  {
+   "what": "P 393 · rank: a track dragged by its handle with a finger, to the top · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a track dragged by its handle with a finger, to the top · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a track dragged by its handle with a finger, to the top · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Us and Them\",\"1\"],[\"Time\",\"2\"],[\"Speak to Me\",\"3\"],[\"Breathe\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: a track dragged by its handle with a finger, to the top · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: a finger moved over the text of a row, off the handle: the order does not change · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a finger moved over the text of a row, off the handle: the order does not change · focus",
+   "ok": true,
+   "detail": "button.album-more[s0-0] / button.album-more[s0-0]"
+  },
+  {
+   "what": "P 393 · rank: a finger moved over the text of a row, off the handle: the order does not change · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a finger moved over the text of a row, off the handle: the order does not change · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a finger moved over the text of a row, off the handle: the order does not change · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Us and Them\",\"1\"],[\"Time\",\"2\"],[\"Speak to Me\",\"3\"],[\"Breathe\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: a finger moved over the text of a row, off the handle: the order does not change · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: a track picked · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a track picked · focus",
+   "ok": true,
+   "detail": "button.rank-row__pick / button.rank-row__pick"
+  },
+  {
+   "what": "P 393 · rank: a track picked · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a track picked · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a track picked · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Us and Them\",\"1\"],[\"Time\",\"2\"],[\"Speak to Me\",\"3\"],[\"Breathe\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: a track picked · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Up · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Up · focus",
+   "ok": true,
+   "detail": "button.rank-row__pick / button.rank-row__pick"
+  },
+  {
+   "what": "P 393 · rank: Up · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Up · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Up · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Us and Them\",\"1\"],[\"Time\",\"2\"],[\"Breathe\",\"3\"],[\"Speak to Me\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: Up · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Move to… (the sheet) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Move to… (the sheet) · focus",
+   "ok": true,
+   "detail": "button.rank-moveto__number / button.rank-moveto__number"
+  },
+  {
+   "what": "P 393 · rank: Move to… (the sheet) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Move to… (the sheet) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Move to… (the sheet) · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Us and Them\",\"1\"],[\"Time\",\"2\"],[\"Breathe\",\"3\"],[\"Speak to Me\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: Move to… (the sheet) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: a number chosen in the sheet · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a number chosen in the sheet · focus",
+   "ok": true,
+   "detail": "button.rank-row__pick / button.rank-row__pick"
+  },
+  {
+   "what": "P 393 · rank: a number chosen in the sheet · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a number chosen in the sheet · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: a number chosen in the sheet · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Breathe\",\"1\"],[\"Us and Them\",\"2\"],[\"Time\",\"3\"],[\"Speak to Me\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: a number chosen in the sheet · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Done · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Done · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · rank: Done · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Done · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Done · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Breathe\",\"1\"],[\"Us and Them\",\"2\"],[\"Time\",\"3\"],[\"Speak to Me\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: Done · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Reset, the notice with Undo · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Reset, the notice with Undo · focus",
+   "ok": true,
+   "detail": "button.rank-phone__reset / button.rank-phone__reset"
+  },
+  {
+   "what": "P 393 · rank: Reset, the notice with Undo · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Reset, the notice with Undo · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Reset, the notice with Undo · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Speak to Me\",\"1\"],[\"Breathe\",\"2\"],[\"Time\",\"3\"],[\"Money\",\"4\"],[\"Us and Them\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: Reset, the notice with Undo · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Undo · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Undo · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · rank: Undo · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Undo · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Undo · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Breathe\",\"1\"],[\"Us and Them\",\"2\"],[\"Time\",\"3\"],[\"Speak to Me\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: Undo · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Back with a change asks (the sheet) · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Back with a change asks (the sheet) · focus",
+   "ok": true,
+   "detail": "button.rank-discard__keep / button.rank-discard__keep"
+  },
+  {
+   "what": "P 393 · rank: Back with a change asks (the sheet) · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Back with a change asks (the sheet) · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Back with a change asks (the sheet) · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Breathe\",\"1\"],[\"Us and Them\",\"2\"],[\"Time\",\"3\"],[\"Speak to Me\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: Back with a change asks (the sheet) · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Keep editing · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Keep editing · focus",
+   "ok": true,
+   "detail": "button.rank-phone__back / button.rank-phone__back"
+  },
+  {
+   "what": "P 393 · rank: Keep editing · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Keep editing · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Keep editing · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Breathe\",\"1\"],[\"Us and Them\",\"2\"],[\"Time\",\"3\"],[\"Speak to Me\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: Keep editing · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Save: a visitor has no ranking to save: the notice, the window stays · focus",
+   "ok": true,
+   "detail": "button.btn.btn-primary.rank-phone__save / button.btn.btn-primary.rank-phone__save"
+  },
+  {
+   "what": "P 393 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Save: a visitor has no ranking to save: the notice, the window stays · the rows of the ranking",
+   "ok": true,
+   "detail": "both [[\"Breathe\",\"1\"],[\"Us and Them\",\"2\"],[\"Time\",\"3\"],[\"Speak to Me\",\"4\"],[\"Money\",\"5\"],[\"Eclipse\",\"6\"]]"
+  },
+  {
+   "what": "P 393 · rank: Save: a visitor has no ranking to save: the notice, the window stays · pixels of the window",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · rank: Back and Discard · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Back and Discard · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · rank: Back and Discard · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Back and Discard · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: Back and Discard · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: opened again, Back with nothing changed closes it · the windows",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: opened again, Back with nothing changed closes it · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · rank: opened again, Back with nothing changed closes it · the calls to what is outside",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: opened again, Back with nothing changed closes it · the notices of the app",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · rank: opened again, Back with nothing changed closes it · the rows of the ranking",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · no error of the page on either side",
+   "ok": false,
+   "detail": "old: Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON | [UserRankingRepository] saveRanking error: FirebaseError: Failed to get document because the client is offline. // new: Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON | [UserRankingRepository] saveRanking error: FirebaseError: Failed to get document because the client is offline."
+  }
+ ],
+ "maxPixelsApart": 4
+}

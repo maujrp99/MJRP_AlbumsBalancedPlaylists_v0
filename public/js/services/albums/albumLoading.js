@@ -91,7 +91,7 @@ export const albumCachePort = new AlbumCacheAdapter({
  */
 const showHoldNotice = (hold) => {
     const notice = holdNotice(hold)
-    import('../../components/Toast.js')
+    import('../../stores/toasts.js')
         .then(({ showToast }) => showToast(notice.message, notice.type, notice.durationMs))
         .catch(error => console.warn(`[albumLoading] ${notice.message}`, error?.message || error))
 }

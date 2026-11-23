@@ -1,0 +1,196 @@
+{
+ "tag": "blend-webkit-1280-old-vs-old",
+ "total": 202,
+ "failed": 10,
+ "steps": 32,
+ "failures": [
+  {
+   "what": "generate · ready to blend (multiple): the picture of the panel",
+   "ok": false,
+   "detail": "44024 px differ, at most 2/255, in 169,550,633,951 of 1280x3104"
+  },
+  {
+   "what": "generate · ready to blend (multiple): the picture of the viewport",
+   "ok": false,
+   "detail": "44024 px differ, at most 2/255, in 169,646,633,1047 of 1280x3200"
+  },
+  {
+   "what": "generate · blending, 0.3 s after the press: the box of every element",
+   "ok": false,
+   "detail": "2 of 303 differ: 295:DIV:560.26,1918.66,22.67,22.67 -> 560,1918.4,23.19,23.19 | 301:DIV:617.33,2097.33,45.34,45.34 -> 616.81,2096.81,46.38,46.38"
+  },
+  {
+   "what": "generate · blending, 0.3 s after the press: the picture of the panel",
+   "ok": false,
+   "detail": "44024 px differ, at most 2/255, in 169,550,633,951 of 1280x3104"
+  },
+  {
+   "what": "generate · blending, 0.3 s after the press: the picture of the viewport",
+   "ok": false,
+   "detail": "44024 px differ, at most 2/255, in 169,646,633,1047 of 1280x3200"
+  },
+  {
+   "what": "address · opened from a series: chosen, scrolled to it: the picture of the panel",
+   "ok": false,
+   "detail": "21381 px differ, at most 1/255, in 169,813,395,1027 of 1280x3104"
+  },
+  {
+   "what": "address · opened from a series: chosen, scrolled to it: the picture of the viewport",
+   "ok": false,
+   "detail": "21381 px differ, at most 1/255, in 169,909,395,1123 of 1280x3200"
+  },
+  {
+   "what": "covers · ON PURPOSE the focus on a card after the covers came: old loses the focus (body), new keeps it on the card",
+   "ok": false,
+   "detail": "focus div#. / div#."
+  },
+  {
+   "what": "leave · back: the Blend again, nothing chosen: the picture of the panel",
+   "ok": false,
+   "detail": "1196 px differ, at most 2/255, in 186,550,233,597 of 1280x3104"
+  },
+  {
+   "what": "leave · back: the Blend again, nothing chosen: the picture of the viewport",
+   "ok": false,
+   "detail": "1196 px differ, at most 2/255, in 186,646,233,693 of 1280x3200"
+  }
+ ],
+ "pictures": [
+  {
+   "flow": "generate",
+   "name": "ready to blend (multiple)",
+   "kind": "panel",
+   "dims": true,
+   "count": 44024,
+   "top": 0,
+   "max": 2,
+   "box": [
+    169,
+    550,
+    633,
+    951
+   ],
+   "width": 1280,
+   "height": 3104
+  },
+  {
+   "flow": "generate",
+   "name": "ready to blend (multiple)",
+   "kind": "view",
+   "dims": true,
+   "count": 44024,
+   "top": 4886,
+   "max": 2,
+   "box": [
+    169,
+    646,
+    633,
+    1047
+   ],
+   "width": 1280,
+   "height": 3200
+  },
+  {
+   "flow": "generate",
+   "name": "blending, 0.3 s after the press",
+   "kind": "panel",
+   "dims": true,
+   "count": 44024,
+   "top": 0,
+   "max": 2,
+   "box": [
+    169,
+    550,
+    633,
+    951
+   ],
+   "width": 1280,
+   "height": 3104
+  },
+  {
+   "flow": "generate",
+   "name": "blending, 0.3 s after the press",
+   "kind": "view",
+   "dims": true,
+   "count": 44024,
+   "top": 4886,
+   "max": 2,
+   "box": [
+    169,
+    646,
+    633,
+    1047
+   ],
+   "width": 1280,
+   "height": 3200
+  },
+  {
+   "flow": "address",
+   "name": "opened from a series: chosen, scrolled to it",
+   "kind": "panel",
+   "dims": true,
+   "count": 21381,
+   "top": 0,
+   "max": 1,
+   "box": [
+    169,
+    813,
+    395,
+    1027
+   ],
+   "width": 1280,
+   "height": 3104
+  },
+  {
+   "flow": "address",
+   "name": "opened from a series: chosen, scrolled to it",
+   "kind": "view",
+   "dims": true,
+   "count": 21381,
+   "top": 4886,
+   "max": 1,
+   "box": [
+    169,
+    909,
+    395,
+    1123
+   ],
+   "width": 1280,
+   "height": 3200
+  },
+  {
+   "flow": "leave",
+   "name": "back: the Blend again, nothing chosen",
+   "kind": "panel",
+   "dims": true,
+   "count": 1196,
+   "top": 0,
+   "max": 2,
+   "box": [
+    186,
+    550,
+    233,
+    597
+   ],
+   "width": 1280,
+   "height": 3104
+  },
+  {
+   "flow": "leave",
+   "name": "back: the Blend again, nothing chosen",
+   "kind": "view",
+   "dims": true,
+   "count": 1196,
+   "top": 0,
+   "max": 2,
+   "box": [
+    186,
+    646,
+    233,
+    693
+   ],
+   "width": 1280,
+   "height": 3200
+  }
+ ]
+}

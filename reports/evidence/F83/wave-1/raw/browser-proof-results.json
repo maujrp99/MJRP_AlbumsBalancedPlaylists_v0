@@ -1,0 +1,332 @@
+[
+  {
+    "what": "A 1280: #app of /saved-playlists signed out (empty state): this branch = production",
+    "ok": true,
+    "detail": "2757 chars"
+  },
+  {
+    "what": "A 1280: screenshot signed out: this branch = production",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "A 1280: no page error on this branch",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "A 393: #app of /saved-playlists signed out (empty state): this branch = production",
+    "ok": true,
+    "detail": "2974 chars"
+  },
+  {
+    "what": "A 393: screenshot signed out: this branch = production",
+    "ok": false,
+    "detail": "19 pixels apart"
+  },
+  {
+    "what": "A 393: no page error on this branch",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "B 1280 · first load, waiting for the list: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "2668 chars"
+  },
+  {
+    "what": "B 1280 · first load, waiting for the list: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · two series, closed: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13906 chars"
+  },
+  {
+    "what": "B 1280 · two series, closed: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · a batch open: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "15137 chars"
+  },
+  {
+    "what": "B 1280 · a batch open: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · a playlist open, its tracks drawn: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "16002 chars"
+  },
+  {
+    "what": "B 1280 · a playlist open, its tracks drawn: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · the window of a playlist (real click on the Eye): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "16002 chars"
+  },
+  {
+    "what": "B 1280 · the window of a playlist (real click on the Eye): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · the window closed: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "16002 chars"
+  },
+  {
+    "what": "B 1280 · the window closed: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · search: real keystrokes, the field is the same element and keeps the focus: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "6009 chars"
+  },
+  {
+    "what": "B 1280 · search: real keystrokes, the field is the same element and keeps the focus: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · no match: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "2781 chars"
+  },
+  {
+    "what": "B 1280 · no match: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · search cleared, one series by the filter: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "6021 chars"
+  },
+  {
+    "what": "B 1280 · search cleared, one series by the filter: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · the order by name, backwards: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13906 chars"
+  },
+  {
+    "what": "B 1280 · the order by name, backwards: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · the question before deleting a batch (Cancel, nothing is deleted): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13906 chars"
+  },
+  {
+    "what": "B 1280 · the question before deleting a batch (Cancel, nothing is deleted): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · the question before deleting all playlists of a series: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "13906 chars"
+  },
+  {
+    "what": "B 1280 · the question before deleting all playlists of a series: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · two series failed: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "7243 chars"
+  },
+  {
+    "what": "B 1280 · two series failed: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · the list failed: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "7478 chars"
+  },
+  {
+    "what": "B 1280 · the list failed: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280 · empty state: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "2766 chars"
+  },
+  {
+    "what": "B 1280 · empty state: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 1280: typing: the search field stayed the same element and kept the focus, as before",
+    "ok": true,
+    "detail": "{\"new\":{\"same\":true,\"focused\":true,\"value\":\"floyd\"},\"old\":{\"same\":true,\"focused\":true,\"value\":\"floyd\"}}"
+  },
+  {
+    "what": "B 1280: nothing was deleted or written",
+    "ok": true,
+    "detail": "null"
+  },
+  {
+    "what": "B 1280: no page error on either",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "B 393 · two series on the phone, closed: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "8556 chars"
+  },
+  {
+    "what": "B 393 · two series on the phone, closed: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · a series open: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "8554 chars"
+  },
+  {
+    "what": "B 393 · a series open: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · a batch open: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "8872 chars"
+  },
+  {
+    "what": "B 393 · a batch open: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · the sheet of a series (real tap on ⋯): #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "8872 chars"
+  },
+  {
+    "what": "B 393 · the sheet of a series (real tap on ⋯): screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · the sheet closed by Escape: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "8872 chars"
+  },
+  {
+    "what": "B 393 · the sheet closed by Escape: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · the sheet of a batch: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "8872 chars"
+  },
+  {
+    "what": "B 393 · the sheet of a batch: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · the sheet of a batch closed by its X: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "8872 chars"
+  },
+  {
+    "what": "B 393 · the sheet of a batch closed by its X: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · one filter on (chip), the filters button: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "4999 chars"
+  },
+  {
+    "what": "B 393 · one filter on (chip), the filters button: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · the sheet of the filters: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "4999 chars"
+  },
+  {
+    "what": "B 393 · the sheet of the filters: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · the sheet of the filters closed with «Show series»: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "4999 chars"
+  },
+  {
+    "what": "B 393 · the sheet of the filters closed with «Show series»: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393 · a failure on the phone: #app and what opens over the page are the same",
+    "ok": true,
+    "detail": "3139 chars"
+  },
+  {
+    "what": "B 393 · a failure on the phone: screenshot the same",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "B 393: nothing was deleted or written",
+    "ok": true,
+    "detail": "null"
+  },
+  {
+    "what": "B 393: no page error on either",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "C: five visits: no saved-playlists screen left in #app, no window left on the page",
+    "ok": true,
+    "detail": "[{\"path\":\"/start\",\"savedScreens\":0,\"overlays\":0},{\"path\":\"/start\",\"savedScreens\":0,\"overlays\":0},{\"path\":\"/start\",\"savedScreens\":0,\"overlays\":0},{\"path\":\"/start\",\"savedScreens\":0,\"overlays\":0},{\"path\":\"/start\",\"savedScreens\":0,\"overlays\":0}]"
+  },
+  {
+    "what": "C: the listeners of window after five visits are the ones before (the fixed ones of the bridge are on the stores, not on window)",
+    "ok": true,
+    "detail": "32 -> 32"
+  },
+  {
+    "what": "C: no page error",
+    "ok": true,
+    "detail": ""
+  }
+]

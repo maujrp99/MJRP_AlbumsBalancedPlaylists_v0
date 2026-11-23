@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
+import react from '@vitejs/plugin-react'
 import tailwindcss from 'tailwindcss'
 import tailwindConfig from './tailwind.config.js'
 import { entryPage } from './scripts/entryPage.mjs'
@@ -12,6 +13,7 @@ export default defineConfig({
     // dist/ it is index.html and the app is app.html (scripts/entryPage.mjs, firebase.json).
     // VITE_SPLASH_COVERS=real puts the real covers on it; anything else, the fictional ones.
     plugins: [
+        react(), // the React screens (F83, ADR-0023): the plugin of the Vite that already builds the site
         entryPage({
             coverSet: process.env.VITE_SPLASH_COVERS ?? loadEnv(process.env.NODE_ENV || 'development', __dirname, 'VITE_').VITE_SPLASH_COVERS
         })
@@ -25,6 +27,14 @@ export default defineConfig({
             input: {
                 main: path.resolve(__dirname, 'public/index.html'),
                 splash: path.resolve(__dirname, 'public/splash.html')
+            },
+            output: {
+                // React and its renderer in a file of their own (F83, REQ-07): the main script does not grow with them, they are
+                // downloaded once, when the first screen in React opens, and the browser keeps them between publications while
+                // the version stays. scripts/bundle-budget.mjs checks that there is exactly one such file and its weight.
+                manualChunks(id) {
+                    if (/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) return 'react-vendor'
+                }
             }
         }
     },
@@ -41,8 +51,6 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, 'public/js'),
             '@stores': path.resolve(__dirname, 'public/js/stores'),
-            '@components': path.resolve(__dirname, 'public/js/components'),
-            '@views': path.resolve(__dirname, 'public/js/views'),
             '@shared': path.resolve(__dirname, 'shared')
         }
     },

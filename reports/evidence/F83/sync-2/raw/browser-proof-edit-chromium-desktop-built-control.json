@@ -1,0 +1,432 @@
+{
+ "tag": "edit-chromium-desktop-built-control",
+ "passed": 79,
+ "failed": 6,
+ "results": [
+  {
+   "what": "edit-chromium-desktop-built-control · Export opened · the window",
+   "ok": true,
+   "detail": "3451 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export opened · the focus",
+   "ok": true,
+   "detail": "input[series:MJRP Playlists] | input[series:MJRP Playlists]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export opened · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · the folders have been read · the window",
+   "ok": true,
+   "detail": "3505 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · the folders have been read · the focus",
+   "ok": true,
+   "detail": "input[series:MJRP Playlists] | input[series:MJRP Playlists]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · the folders have been read · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · the folders have been read · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · the folders have been read · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · a folder of the library picked · the window",
+   "ok": true,
+   "detail": "3505 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · a folder of the library picked · the focus",
+   "ok": true,
+   "detail": "input[existing:Workout] | input[existing:Workout]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · a folder of the library picked · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · a folder of the library picked · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · a folder of the library picked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, no name: asked for it · the window",
+   "ok": true,
+   "detail": "3536 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, no name: asked for it · the focus",
+   "ok": true,
+   "detail": "input[New folder name] | input[New folder name]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, no name: asked for it · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, no name: asked for it · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, no name: asked for it · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, a name typed · the window",
+   "ok": true,
+   "detail": "3514 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, a name typed · the focus",
+   "ok": true,
+   "detail": "input[New folder name] | input[New folder name]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, a name typed · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, a name typed · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · New folder, a name typed · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · No folder · the window",
+   "ok": true,
+   "detail": "3514 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · No folder · the focus",
+   "ok": true,
+   "detail": "input[none:] | input[none:]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · No folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · No folder · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · No folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export pressed: what Apple Music is asked · the window",
+   "ok": true,
+   "detail": "3514 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "button[true] | button[true]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "11 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export pressed: what Apple Music is asked · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Unsaved Batch - Greatest Hits\\\", \\\"2. Unsaved Batch - Deep Cuts\\\": not created.\",\"5 tracks were not found in Apple Music and were left out: Artist - One, Artist - Two, Artist - Three, Artist - Four, Artist - Five.\"]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Back to the destinations · the window",
+   "ok": true,
+   "detail": "1581 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Back to the destinations · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Back to the destinations · what MusicKit was asked",
+   "ok": true,
+   "detail": "11 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Back to the destinations · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Unsaved Batch - Greatest Hits\\\", \\\"2. Unsaved Batch - Deep Cuts\\\": not created.\",\"5 tracks were not found in Apple Music and were left out: Artist - One, Artist - Two, Artist - Three, Artist - Four, Artist - Five.\"]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Back to the destinations · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Apple Music again: the last choice is remembered · the window",
+   "ok": true,
+   "detail": "3451 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Apple Music again: the last choice is remembered · the focus",
+   "ok": true,
+   "detail": "input[none:] | input[none:]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Apple Music again: the last choice is remembered · what MusicKit was asked",
+   "ok": true,
+   "detail": "12 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Apple Music again: the last choice is remembered · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Unsaved Batch - Greatest Hits\\\", \\\"2. Unsaved Batch - Deep Cuts\\\": not created.\",\"5 tracks were not found in Apple Music and were left out: Artist - One, Artist - Two, Artist - Three, Artist - Four, Artist - Five.\"]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Apple Music again: the last choice is remembered · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Escape: the window goes, the focus goes back · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button#exportAppleMusicBtn[] | button#exportAppleMusicBtn[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "12 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · Escape: the window goes, the focus goes back · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Unsaved Batch - Greatest Hits\\\", \\\"2. Unsaved Batch - Deep Cuts\\\": not created.\",\"5 tracks were not found in Apple Music and were left out: Artist - One, Artist - Two, Artist - Three, Artist - Four, Artist - Five.\"]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · no page error on main",
+   "ok": false,
+   "detail": "Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · no page error on this branch",
+   "ok": false,
+   "detail": "Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the export opened · the window",
+   "ok": true,
+   "detail": "2952 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the export opened · the focus",
+   "ok": true,
+   "detail": "input[series:MJRP Playlists] | input[series:MJRP Playlists]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the export opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the export opened · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the export opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the folders have been read · the window",
+   "ok": true,
+   "detail": "2988 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the folders have been read · the focus",
+   "ok": true,
+   "detail": "input[series:MJRP Playlists] | input[series:MJRP Playlists]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the folders have been read · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the folders have been read · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] the folders have been read · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] Export pressed with the series folder · the window",
+   "ok": true,
+   "detail": "2988 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] Export pressed with the series folder · the focus",
+   "ok": true,
+   "detail": "button[true] | button[true]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] Export pressed with the series folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "13 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] Export pressed with the series folder · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Unsaved Batch - Greatest Hits\\\", \\\"2. Unsaved Batch - Deep Cuts\\\": not created.\",\"5 tracks were not found in Apple Music and were left out: Artist - One, Artist - Two, Artist - Three, Artist - Four, Artist - Five.\"]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [none] Export pressed with the series folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · no page error on main",
+   "ok": false,
+   "detail": "Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · no page error on this branch",
+   "ok": false,
+   "detail": "Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the export opened · the window",
+   "ok": true,
+   "detail": "2985 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the export opened · the focus",
+   "ok": true,
+   "detail": "input[series:MJRP Playlists] | input[series:MJRP Playlists]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the export opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the export opened · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the export opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the folders have been read · the window",
+   "ok": true,
+   "detail": "3021 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the folders have been read · the focus",
+   "ok": true,
+   "detail": "input[series:MJRP Playlists] | input[series:MJRP Playlists]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the folders have been read · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the folders have been read · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] the folders have been read · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] Export pressed with the series folder · the window",
+   "ok": true,
+   "detail": "3021 chars"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] Export pressed with the series folder · the focus",
+   "ok": true,
+   "detail": "button[true] | button[true]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] Export pressed with the series folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "12 calls"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] Export pressed with the series folder · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Unsaved Batch - Greatest Hits\\\", \\\"2. Unsaved Batch - Deep Cuts\\\": not created.\",\"5 tracks were not found in Apple Music and were left out: Artist - One, Artist - Two, Artist - Three, Artist - Four, Artist - Five.\"]"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · [error] Export pressed with the series folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · no page error on main",
+   "ok": false,
+   "detail": "Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+  },
+  {
+   "what": "edit-chromium-desktop-built-control · no page error on this branch",
+   "ok": false,
+   "detail": "Worker Error: SyntaxError: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+  }
+ ]
+}

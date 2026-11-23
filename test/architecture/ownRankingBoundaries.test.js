@@ -14,7 +14,7 @@ const listJs = (relativeDir) => {
     return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
         const child = path.join(relativeDir, entry.name)
         if (entry.isDirectory()) return listJs(child)
-        return entry.name.endsWith('.js') ? [child] : []
+        return /\.(js|ts|tsx)$/.test(entry.name) ? [child] : []
     })
 }
 const importsOf = (relative) => {
@@ -33,10 +33,10 @@ describe('own ranking boundaries', () => {
         expect(offenders(['models/text.js', 'models/ownRanking.js'], specifier => !specifier.startsWith('./'))).toEqual([])
     })
 
-    it('the ranking modal only shows and reports: no repository, service, store or Firestore', () => {
+    it('the ranking window only shows and reports: no repository, service, store or Firestore', () => {
         const forbidden = /(\/repositories\/|shared\/data\/|\/services\/|\/stores\/|\/api\/|firebase)/
-        // Only the modal: TracksRankingComparison still talks to the Spotify services on its own.
-        expect(offenders(['components/ranking/UserRankModal.js'], specifier => forbidden.test(specifier))).toEqual([])
+        // Only the window (F83 wave 5b: React, screens/albums/RankWindow.tsx, RankPhone.tsx and rankSession.ts): TracksRankingComparison still talks to the Spotify services on its own.
+        expect(offenders(['screens/albums/RankWindow.tsx', 'screens/albums/RankPhone.tsx', 'screens/albums/rankSession.ts'], specifier => forbidden.test(specifier))).toEqual([])
     })
 
     it('the ranking service reaches the outside only through what it is given', () => {
@@ -49,7 +49,7 @@ describe('own ranking boundaries', () => {
     })
 
     it('the screen of the series does not reach the ranking repository or the ranking service', () => {
-        const screen = [...listJs('components/series'), ...listJs('components/ui'), 'views/SeriesView.js', ...listJs('views/helpers')]
+        const screen = [...listJs('screens/albums'), ...listJs('ui'), 'ui/FilterToolbar.tsx']
         const forbidden = /(UserRankingRepository|repositories\/userRankings|services\/ranking\/)/
         expect(offenders(screen, specifier => forbidden.test(specifier))).toEqual([])
     })
@@ -67,9 +67,8 @@ describe('own ranking boundaries', () => {
     it('text is not escaped for HTML on its way into a text node or into the data of the albums screen', () => {
         // escapeHtml belongs to an HTML template. These files draw with text nodes or hand data on,
         // so escaping there shows "&amp;" on screen or stores it (UAT-180).
-        const plain = ['components/ranking/UserRankModal.js', 'components/series/SeriesEditModal.js',
-            'controllers/HomeController.js', 'controllers/SeriesController.js',
-            'views/helpers/SeriesComponentFactory.js', 'views/helpers/SeriesViewUpdater.js']
+        const plain = ['screens/albums/RankWindow.tsx', 'screens/albums/RankPhone.tsx', 'screens/albums/SeriesEdit.tsx', 'screens/albums/seriesEditSession.ts',
+            'screens/start/StartController.ts', 'controllers/SeriesController.js', 'screens/albums/Albums.tsx', 'screens/albums/SeriesGroups.tsx']
         expect(plain.filter(file => /escapeHtml\s*\(/.test(read(file)))).toEqual([])
     })
 })

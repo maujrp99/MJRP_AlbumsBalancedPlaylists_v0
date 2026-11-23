@@ -3,11 +3,11 @@
 ## Home & Search (`home/`, `album-picker/`)
 **Status**: `[ACTIVE]`
 
--   **`album-picker/AlbumPickerController.js`** (F57; it took the place of `home/SearchController.js` and of `series/ArtistScanner.js`):
+-   **`album-picker/AlbumPickerController.js`** (F57; it took the place of `home/SearchController.js` and of `series/ArtistScanner.js`): *(F83: now `ui/albumPicker/pickerController.ts`)*
     -   **Role**: The one album picker - "search an artist, see the albums by type, pick some" - of the Home and of the series edit modal. Owner of the scan's state (F67) and of the type filters.
     -   **Logic**: Holds one scan state (`this.scan`, rules in `models/scanState.js`: idle, scanning, results, empty, failed) and one filter state (`this.filters`, rules in `models/albumPicker.js`), and draws every change through the view port it was given: `drawScan(scan)`, `drawFilters(filters, counts)`, `drawAlbums(albums)`. `searchArtist(query)` calls `albumSearchService.scanArtist` (one instance for the whole app, so the paid AI list of an artist is asked once) and sorts the albums newest first; `retry()` scans the same text; `toggleFilter(key)`; `pick(albumId)` hands the album to `onPick`. While a scan runs another ask does nothing; every answer carries the generation of its scan, so a late answer changes nothing; after `dispose()` nothing is drawn. No `alert()`.
     -   **The seam**: the two screens differ only in `onPick`. Home: `stagingController.addAlbum` (the album goes to the stack of the new series). Series edit: `SeriesEditModal.addAlbum` (the album joins the list of the series being edited).
-    -   **Frames**: the Home (`controllers/HomeController.js` wires the delegated handlers of `#artistScanInput`, `#btnScanArtist`, `#btnScanRetry`, `#home-toolbar [data-filter]`, `#btnAddAll` and the covers; `views/HomeView.js` `drawResults`, `drawStage`, `drawFilters` and `markCards` draw; since F79 the Home draws its own words and chips, and the cards with `DiscographyRenderer` `variant: 'stage'`) and `album-picker/AlbumPickerPanel.js` (the picker as one block inside the edit modal: field, Scan button, status line, filter buttons, cards). Both use the same drawn parts: `album-picker/pickerParts.js` (Scan button, filter button with its count, panel message with "Try again") and `views/renderers/DiscographyRenderer.js` (the album card, `data-action="pick-album"`).
+    -   **Frames**: the Home (`controllers/HomeController.js` wires the delegated handlers of `#artistScanInput`, `#btnScanArtist`, `#btnScanRetry`, `#home-toolbar [data-filter]`, `#btnAddAll` and the covers; `views/HomeView.js` `drawResults`, `drawStage`, `drawFilters` and `markCards` draw; since F79 the Home draws its own words and chips, and the cards with `DiscographyRenderer` `variant: 'stage'`) and `album-picker/AlbumPickerPanel.js` (the picker as one block inside the edit modal: field, Scan button, status line, filter buttons, cards). Both use the same drawn parts: `album-picker/pickerParts.js` (Scan button, filter button with its count, panel message with "Try again") and `views/renderers/DiscographyRenderer.js` (the album card, `data-action="pick-album"`). Since F83: `HomeView.js` is now `screens/start/Start.tsx`; `DiscographyRenderer.js` is now `screens/start/Results.tsx`.
 
     ```mermaid
     flowchart LR
@@ -23,18 +23,18 @@
         Failed --> Draw
         Picker -->|pick| OnPick[onPick: stage it / add it to the series]
     ```
--   **`home/StagingAreaController.js`** (F79):
+-   **`home/StagingAreaController.js`** (F79): *(F83: now `screens/start/StagingArea.ts`)*
     -   **Role**: The series being built: the chosen albums in their order (the order counts in the Blend), each once.
     -   **Logic**: `addAlbum`, `addMany`, `removeAlbum` (gives back the album and its place, for «Undo»), `insertAlbum`, `moveAlbum` (↑ ↓, no dragging: SortableJS left the Home), `snapshot` / `restore` (the «Undo» of «Add all»), `clear`. It draws nothing: every change goes to `onChange`.
--   **`home/HomeDock.js`** (F79): the dock of the series, in view once the first cover is chosen (the same rule on both sizes, `barShows`): on the computer a bar fixed at the bottom with the numbered covers, the name, the count, «Edit order» (the panel with ↑ ↓ ✕) and «Create series», and the «Undo» strip; on the phone the `.phone-action-bar` and the full sheet (`ui/Sheet.js`) with the name, the rows and «Create series» at its foot; the visitor's line. It draws the model it is given and hands every gesture to its handlers.
--   **`home/HomePasteList.js`** (F79): the pasted list, one input per line, each checked as it is typed («ready» or what to fix), with the report after «Add».
--   **`home/HomeEqualizer.js`** (F79): the equalizer bars and their three states (`still`, `live`, `flat`).
+-   **`home/HomeDock.js`** (F79): the dock of the series, in view once the first cover is chosen (the same rule on both sizes, `barShows`): on the computer a bar fixed at the bottom with the numbered covers, the name, the count, «Edit order» (the panel with ↑ ↓ ✕) and «Create series», and the «Undo» strip; on the phone the `.phone-action-bar` and the full sheet (`ui/Sheet.js`) with the name, the rows and «Create series» at its foot; the visitor's line. It draws the model it is given and hands every gesture to its handlers. *(F83: now `screens/start/Dock.tsx`)*
+-   **`home/HomePasteList.js`** (F79): the pasted list, one input per line, each checked as it is typed («ready» or what to fix), with the report after «Add». *(F83: now `screens/start/PasteList.tsx`)*
+-   **`home/HomeEqualizer.js`** (F79): the equalizer bars and their three states (`still`, `live`, `flat`). *(F83: now `screens/start/Equalizer.tsx`)*
 -   **`search/`**: the folder is gone. `DiscographyToolbar.js` and `VariantPickerModal.js`, which no module imported, were removed in F57.
 
 ### No celular (Home e edição da série)
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **Escolher os álbuns.** A grade tem duas colunas; tocar num álbum o escolhe (anel laranja e o número de ordem), e tocar de novo o tira, com Undo. Desde a F79 a base da série é a barra de ação (`components/home/HomeDock.js`): uma capa com a contagem, o nome, «Tap to edit or reorder» e «Create series»; tocar nela abre a série numa folha de tela cheia, com o nome no topo, ↑ ↓ ✕ em cada álbum e «Create series» no pé.
+*   **Escolher os álbuns.** A grade tem duas colunas; tocar num álbum o escolhe (anel laranja e o número de ordem), e tocar de novo o tira, com Undo. Desde a F79 a base da série é a barra de ação (`components/home/HomeDock.js`): uma capa com a contagem, o nome, «Tap to edit or reorder» e «Create series»; tocar nela abre a série numa folha de tela cheia, com o nome no topo, ↑ ↓ ✕ em cada álbum e «Create series» no pé. Since F83 this is `screens/start/Dock.tsx` (React).
 *   **Nome da série.** Sugerido pelos artistas («Pavement selection»), editável na folha. Sem nome, «Create series» não cria e diz «Give the series a name first.», no celular e no computador.
 *   **Editar uma série** (aberta em Albums): janela de tela cheia, a lista dos álbuns sem caixa de rolagem própria, ↑ ↓ ✕ em cada linha, «Cancel» e «Save Changes» no pé.
 
@@ -42,20 +42,20 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 **Status**: `[ACTIVE]`
 **Overview**: These components form the 3-step "Blend" playlist generation wizard.
 
--   **`blend/BlendSeriesSelector.js` (Step 1)**:
+-   **`blend/BlendSeriesSelector.js` (Step 1)**: *(F83: now `screens/blend/SeriesStep.tsx`)*
     -   **Role**: Allows user to select an Entity type and a series. Only "Albums" is available; Artists, Genres and Tracks are listed but disabled.
     -   **Logic**: Loads series from `albumSeriesStore`, handles cache-based thumbnail preloading (`preloadAllThumbnails`, through `OptimizedAlbumLoader`), and renders a grid of series cards (`.blend-series-card`, markup inside this file).
--   **`blend/BlendRecipeCard.js` (Step 2)**:
+-   **`blend/BlendRecipeCard.js` (Step 2)**: *(F83: now `ui/recipe/RecipeCards.tsx`)*
     -   **Role**: Displays available generation algorithms ("Recipes").
     -   **Logic**: Renders cards with metadata (icons, colors, badges) derived from `getAllAlgorithms()`. Highlights "Recommended" algorithms.
--   **`blend/BlendIngredientsPanel.js` (Step 3)**:
+-   **`blend/BlendIngredientsPanel.js` (Step 3)**: *(F83: now `ui/recipe/Ingredients.tsx`)*
     -   **Role**: Configuration panel for the selected algorithm.
     -   **Logic**: Shows only the inputs that change the result of the selected recipe (Top #, Grouping, Output Mode, Duration, Ranking Source; `ALGORITHM_RECIPES` mapping and `showsDuration`). "Discovery Mode" was removed in F62: no recipe read it.
 
 ### No celular (Blend)
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **Fazer uma mistura.** O passo 1 é uma linha: toca-se nela e a folha «Choose a series» abre em tela cheia, com busca; um toque escolhe e fecha (`components/blend/BlendSeriesPhonePicker.js`). As receitas ficam numa coluna. A barra de ação tem «Blend it!», apagado com o motivo escrito («Step 1 of 4: choose a series») até haver série e receita.
+*   **Fazer uma mistura.** O passo 1 é uma linha: toca-se nela e a folha «Choose a series» abre em tela cheia, com busca; um toque escolhe e fecha (`components/blend/BlendSeriesPhonePicker.js`). As receitas ficam numa coluna. A barra de ação tem «Blend it!», apagado com o motivo escrito («Step 1 of 4: choose a series») até haver série e receita. Since F83 this is `screens/blend/phone/PhoneStep.tsx` (React).
 
 ## Inventory (`inventory/`)
 **Status**: `[ACTIVE]`
@@ -63,25 +63,25 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 -   **`inventory/InventoryGrid.js`**: *(removed in F65: `InventoryGrid.js`)*
     -   **Role**: A grid component for the User's Inventory.
     -   **Logic**: A wrapper around `SeriesGridRenderer`. Adds generic event delegation for Inventory actions (Click, Context Menu). Handles "Zero State" (Empty Inventory) display.
-    -   **Usage today**: no module imports it. The inventory screen is `views/InventoryView.js` with `views/renderers/InventoryGridRenderer.js` and `controllers/InventoryController.js`.
+    -   **Usage today**: no module imports it. The inventory screen is `views/InventoryView.js` with `views/renderers/InventoryGridRenderer.js` and `controllers/InventoryController.js`. Since F83: `InventoryView.js` is now `screens/inventory/Inventory.tsx`; `InventoryGridRenderer.js` is now `screens/inventory/Grid.tsx` and `screens/inventory/ItemCard.tsx`.
     -   Deleting an album: `InventoryController.handleDelete` calls `inventoryService.removeAlbum` (`services/inventory/`, since F58; the store only holds state); a failure shows "Failed to delete album". The repository also forgets the "already in inventory" answer kept for that album, so it can be added again at once.
     -   Status, filter and counts (F71): `models/inventoryStatus.js` says what the status of an item is (Owned, Not Owned, Wishlist, from the stored `owned`); `models/inventoryFilter.js` applies the search, the format and the status and gives the three counts of the header. Since F75 the status is chosen with the three counts of the header, which are buttons; there is no status select.
-    -   Values (F75, S-57): `components/InventoryValueSection.js` gives the album window of an item the sections "Estimated value" and "Where to buy"; `components/Footer.js` shows the sentence about the Discogs API while the Discogs values are on (`showDiscogsNotice`).
+    -   Values (F75, S-57): `components/InventoryValueSection.js` gives the album window of an item the sections "Estimated value" and "Where to buy"; `components/Footer.js` shows the sentence about the Discogs API while the Discogs values are on (`showDiscogsNotice`). *(F83: `InventoryValueSection.js` is now `ui/inventoryItem/ValueSection.tsx`; `Footer.js` is now `shell/Footer.tsx`)*
     -   Order and ratings (F71, S-56): the select `#inventorySort` (each criterion in both directions, the arrow in the name: "Avg Rating (↓)", "Avg Rating (↑)"…) asks `models/inventorySort.js` how items compare (an item with no value comes last whatever the direction). The button "Update ratings" (`#updateRatingsBtn`) calls `InventoryController.handleUpdateRatings` -> `InventoryService.updateAverages`, which makes ONE ask to the album load (`albumAsks.albumsOf`, sources `acclaim` and `popularity`), matches each ready album to its item with `findInInventory`, and writes `averages` through `InventoryRepository.setAverages` (`BaseRepository.updateMany`, parts of 100). The averages come from `models/albumAverages.js`, the same module the track comparison of an album uses; "Avg Rank" is gone from there.
     -   "Add the albums of my series" (F71): a button in the filters row of `InventoryView`. `InventoryController.handleAddSeriesAlbums` reads the series, asks `InventoryService.planSeriesAlbums` (the pure rule is `models/inventoryFromSeries.js`: one album once, by the one identity rule, the Apple Music id or the app's album id), asks the person with `dialogService.confirm`, and writes through `InventoryService.addAlbumsAsNotOwned` -> `InventoryRepository.addBatch`. Items made this way hold what the series query holds (no tracks, no format, no price) and the mark `albumData.metadata.addedFrom: 'series'`.
 
 ## Playlists & History (`playlists/`)
 **Status**: `[ACTIVE]`
 
--   **`playlists/SavedSeriesGroup.js`**:
+-   **`playlists/SavedSeriesGroup.js`**: *(F83: now `screens/saved-playlists/SeriesGroup.tsx`)*
     -   **Role**: Container for a Series within the History view.
     -   **Logic**: Draws the entry it is given (`stores/savedPlaylists.js`): the Series Header with its actions and one `SavedPlaylistCard` per batch. When the playlists of the series could not be read it shows a notice with "Try again" (v5.0, F61); the trash button of the header is drawn only when there are playlists.
--   **`playlists/SavedPlaylistsController.js`** (rewritten in v5.0, F61):
+-   **`playlists/SavedPlaylistsController.js`** (rewritten in v5.0, F61): *(F83: now `controllers/SavedPlaylistsController.js`)*
     -   **Role**: What the Saved Playlists screen asks for and what it is told.
     -   **Logic**: Asks `SavedPlaylistsReader` (`open`, `reload`, `retrySeries`, `deleteBatch`, `deleteAllPlaylists`) and hands the view what `SavedPlaylistsStore` holds (`getList`, `findPlaylist`, `subscribe`). It reads nothing itself and imports no repository (`test/architecture/savedPlaylistsBoundaries.test.js`).
--   **`playlists/PlaylistDetailsModal.js`**:
+-   **`playlists/PlaylistDetailsModal.js`**: *(F83: now `screens/saved-playlists/PlaylistDetails.tsx`)*
     -   **Role**: Read-only view of a specific generated playlist.
     -   **Logic**: Uses `BaseModal` and `TrackRow` to render the list of tracks.
--   **`playlists/SavedPlaylistCard.js`**:
+-   **`playlists/SavedPlaylistCard.js`**: *(F83: now `screens/saved-playlists/BatchCard.tsx`)*
     -   **Role**: Represents a "Batch" of playlists.
     -   **Logic**: Displays a cascade of album art (`AlbumCascade`), the totals of the batch (`batchTotals`) and the batch actions (`SavedPlaylistActions`). One `SavedPlaylistRow` per playlist is drawn the first time the card is opened, not before; a row draws its tracks the first time it is opened (v5.0, F61).

@@ -15,7 +15,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
-import * as espree from 'espree'
+import { tokensOf, listSourceFiles } from './support/parseSource.js'
 
 const JS_ROOT = path.join(process.cwd(), 'public/js')
 
@@ -49,13 +49,16 @@ const plainWords = PORTUGUESE_WORDS.filter(word => !NEEDS_NEIGHBOURS.has(word))
 const PLAIN_WORD = new RegExp(`(?<![\\w./-])(?:${plainWords.join('|')})(?![\\w./-])`, 'i')
 const WORD_IN_A_SENTENCE = new RegExp(`[a-z] (?:${[...NEEDS_NEIGHBOURS].join('|')}) [a-z]`, 'i')
 
-function jsFiles(dir) {
-    return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
-        const full = path.join(dir, entry.name)
-        if (entry.isDirectory()) return entry.name === 'vendor' ? [] : jsFiles(full)
-        return entry.name.endsWith('.js') ? [full] : []
-    })
-}
+/**
+ * Where Portuguese may live (F83, F81): only the dictionary of that language. The code speaks English; every visible text
+ * comes from the dictionary (the constitution's art. I.2, as amended by the MJRP on 2026-11-21). Everything else is read.
+ */
+const PORTUGUESE_HOUSE = 'i18n/pt/'
+
+/** Every .js, .ts and .tsx file the check reads, absolute. */
+const jsFiles = (dir) => listSourceFiles(dir)
+    .filter(file => !file.split(path.sep).join('/').startsWith(PORTUGUESE_HOUSE))
+    .map(file => path.join(dir, file))
 
 const withoutAllowed = (text) => ALLOWED.reduce((left, allowed) => left.split(allowed).join(''), text)
 
@@ -69,9 +72,9 @@ export function portugueseIn(text) {
 
 function findings(file) {
     const code = fs.readFileSync(file, 'utf8')
-    const tokens = espree.tokenize(code, { ecmaVersion: 'latest', sourceType: 'module', loc: true })
+    const tokens = tokensOf(code, file)
     return tokens
-        .filter(token => token.type === 'String' || token.type === 'Template')
+        .filter(token => token.type === 'String' || token.type === 'Template' || token.type === 'JSXText')
         .map(token => ({ token, why: portugueseIn(token.value) }))
         .filter(found => found.why)
         .map(({ token, why }) => `${path.relative(process.cwd(), file)}:${token.loc.start.line} ${why}: ${token.value.slice(0, 90)}`)
@@ -90,6 +93,14 @@ describe('the interface speaks English (F63, UAT-192)', () => {
         expect(portugueseIn('https://accounts.spotify.com/authorize?')).toBeNull()
         expect(portugueseIn('flex items-center gap-2 mais-not-a-class')).toBeNull()
         expect(portugueseIn('Failed to connect to Spotify')).toBeNull()
+    })
+
+    it('it reads .tsx (F83): Portuguese in a React file is accused; the Portuguese dictionary is the one house for it', () => {
+        const fixture = path.join(process.cwd(), 'test/architecture/fixtures/typescript/portugueseText.tsx')
+        expect(findings(fixture)).toHaveLength(1)
+        const root = path.join(process.cwd(), 'test/architecture/fixtures')
+        expect(jsFiles(root).map(file => path.relative(root, file))).toContain('typescript/portugueseText.tsx')
+        expect(PORTUGUESE_HOUSE).toBe('i18n/pt/')
     })
 
     it('no string of public/js is in Portuguese', () => {

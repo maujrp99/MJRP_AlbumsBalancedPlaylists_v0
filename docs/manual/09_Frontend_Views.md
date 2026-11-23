@@ -5,7 +5,7 @@
 ## 1. Core Architecture
 **Status**: `[ACTIVE]`
 
-*   **`BaseView.js`**:
+*   **`BaseView.js`**: *(removed in F83: the tab title is written by `react-bridge/useScreenTitle.ts`)*
     *   **Role**: Abstract Base Class.
     *   **Key Behavior**:
         *   `mount()`: Called after DOM insertion.
@@ -16,7 +16,7 @@
 
 ## 2. Main Views (Deep Dive)
 
-### 2.1 Inventory System: `views/InventoryView.js`
+### 2.1 Inventory System: `views/InventoryView.js` *(F83: now `screens/inventory/Inventory.tsx`)*
 **Status**: `[ACTIVE]`
 **Pattern**: MVC (View + Controller + Store)
 **Dependencies**: `InventoryController`, `inventoryStore`, `InventoryGridRenderer`
@@ -28,7 +28,7 @@
         *   Subscribes to `inventoryStore` updates -> triggers `render(state)`.
         *   Calls `controller.initialize()` to fetch initial data.
     2.  **Rendering (`render`)**:
-        *   Shows the Header Stats the controller computed (`renderTitleRow`): "N albums", the three counts "✓ n Owned", "n Not Owned", "♡ n Wishlist" (F71), which are buttons that filter by status (F75, REQ-02). Under the title, the totals strip (`renderTotals`, `views/renderers/InventoryValueHeader.js`): "Estimated value of what I own", "To buy the rest" and the four currencies (F75); then the notices of the values (`renderNotices`).
+        *   Shows the Header Stats the controller computed (`renderTitleRow`): "N albums", the three counts "✓ n Owned", "n Not Owned", "♡ n Wishlist" (F71), which are buttons that filter by status (F75, REQ-02). Under the title, the totals strip (`renderTotals`, `views/renderers/InventoryValueHeader.js`): "Estimated value of what I own", "To buy the rest" and the four currencies (F75); then the notices of the values (`renderNotices`). Since F83 this is `screens/inventory/Totals.tsx` and `screens/inventory/Notices.tsx` (React).
         *   Renders Filters (Search, Format; the status select left the row in F75), the button "Update values" while the Discogs values are on (F75; `renderUpdateValues`, `showValues` draws a run in place), the order select `#inventorySort` (each criterion in both directions: "Artist (A-Z)", "Artist (Z-A)", "Avg Rating (↓)", "Avg Rating (↑)", "Avg Pop (↓)", "Avg Pop (↑)", "Value (↓)", "Value (↑)", "Newest", "Oldest"; F71, S-56; F75), the button "Add the albums of my series" (F71; `renderAddSeriesAlbums`, `showSeriesAdd` for its busy state) and the button "Update ratings" (S-56; `renderUpdateRatings`, `showRatings`; the two buttons lock each other while one runs). `destroy()` (called by the router when the person leaves) drops the ask for the ratings (`controller.dispose()`).
         *   Delegates Grid rendering to `InventoryGridRenderer` (Pure HTML String generation for performance).
     3.  **Event Handling**:
@@ -50,12 +50,12 @@ flowchart Trip
 #### No celular
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **Lista em linhas.** `InventoryView` escolhe entre `renderComputer` (o cartão de cinco linhas, igual ao de antes) e `renderPhone`. No celular cada álbum é uma linha (`views/renderers/InventoryPhoneRow.js`): capa, título, artista, valor com a origem, status, as duas médias e «⋯». Tocar na linha abre a janela do álbum.
+*   **Lista em linhas.** `InventoryView` escolhe entre `renderComputer` (o cartão de cinco linhas, igual ao de antes) e `renderPhone`. No celular cada álbum é uma linha (`views/renderers/InventoryPhoneRow.js`): capa, título, artista, valor com a origem, status, as duas médias e «⋯». Tocar na linha abre a janela do álbum. Since F83 this is `screens/inventory/phone/PhoneRow.tsx` (React).
 *   **De 50 em 50.** A lista desenha 50 linhas (`PHONE_CHUNK` em `models/inventoryJump.js`) e termina com «Show 50 more». O botão «A–Z» da barra presa salta para uma letra de artista (ou, em outra ordem, para um trecho de 25 posições).
-*   **Folhas.** O status, o «⋯» do álbum, «Filters and order», «Collection actions», o salto e «About the values» abrem como folha de baixo (`views/InventoryPhoneSheets.js`). Os totais ficam em duas linhas; a moeda é um controle de quatro opções.
+*   **Folhas.** O status, o «⋯» do álbum, «Filters and order», «Collection actions», o salto e «About the values» abrem como folha de baixo (`views/InventoryPhoneSheets.js`). Os totais ficam em duas linhas; a moeda é um controle de quatro opções. Since F83 this is `screens/inventory/phone/Sheets.tsx` (React).
 *   **Para mudar o status:** tocar na pílula de status da linha, escolher na folha. Para editar ou remover: «⋯» da linha.
 
-### 2.2 Playlist Generator: `views/PlaylistsView.js`
+### 2.2 Playlist Generator: `views/PlaylistsView.js` *(F83: now `screens/playlists/Playlists.tsx`)*
 **Status**: `[ACTIVE]`
 **Pattern**: Complex Interactive/Stateful View
 **Dependencies**: `PlaylistsController`, `playlistsStore`, `PlaylistsGridRenderer`
@@ -97,11 +97,11 @@ sequenceDiagram
 #### No celular
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **Uma playlist por vez.** `/playlists` mostra fichas no topo, uma por playlist («n · Nome», faixas e duração); a aberta rola com a página (`components/playlists/PhonePlaylists.js`). O nome do lote, com Undo e Redo, fica numa linha.
+*   **Uma playlist por vez.** `/playlists` mostra fichas no topo, uma por playlist («n · Nome», faixas e duração); a aberta rola com a página (`components/playlists/PhonePlaylists.js`). O nome do lote, com Undo e Redo, fica numa linha. Since F83 this is `screens/playlists/PhoneParts.tsx` (React).
 *   **Faixas.** Cada faixa tem a posição (é a alça de arrastar) e um «⋯». Para mover ou remover: «⋯» abre a folha da faixa (Move up, Move down, Move to the top, Move to the end, «Move to another playlist», «Remove from this playlist»). Remover mostra «Undo» por 6 segundos; apagar a playlist inteira pergunta antes.
 *   **Gravar e exportar.** A barra de ação tem «Export» (folha com Spotify, Apple Music e JSON) e «Save». O painel «Reconfigure your Music Playlist Blend» abre pelo «⋯» da playlist.
 
-### 2.3 Series Browser: `views/SeriesView.js` (V3)
+### 2.3 Series Browser: `views/SeriesView.js` (V3) *(F83: now `screens/albums/Albums.tsx` and `screens/albums/index.ts`)*
 **Status**: `[ACTIVE]`
 **Pattern**: "Thin View" / Orchestrator
 **LOC**: ~350 (Refactored Sprint 19)
@@ -135,12 +135,12 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 #### No celular
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **De cima para baixo.** Busca e «Filters» (a folha de `components/ui/FilterSheet.js`), fichas dos filtros ligados, depois as séries (`SeriesView`, `components/ui/AlbumPhoneCard.js`). O nome da série aberta vai para a barra do topo (`nameThisScreen`).
-*   **Álbum.** Grade de duas colunas, ou uma linha por álbum na visão em lista. As ações (ver, ranquear, pôr no inventário, buscar de novo, abrir no Spotify, tirar da série) ficam na folha do «⋯» do álbum (`components/series/SeriesPhoneSheets.js`); editar e apagar a série, na folha do «⋯» da série.
+*   **De cima para baixo.** Busca e «Filters» (a folha de `components/ui/FilterSheet.js`), fichas dos filtros ligados, depois as séries (`SeriesView`, `components/ui/AlbumPhoneCard.js`). O nome da série aberta vai para a barra do topo (`nameThisScreen`). *(F83: `FilterSheet.js` is now `ui/FilterToolbar.tsx`; `AlbumPhoneCard.js` is now `screens/albums/AlbumCard.tsx`)*
+*   **Álbum.** Grade de duas colunas, ou uma linha por álbum na visão em lista. As ações (ver, ranquear, pôr no inventário, buscar de novo, abrir no Spotify, tirar da série) ficam na folha do «⋯» do álbum (`components/series/SeriesPhoneSheets.js`); editar e apagar a série, na folha do «⋯» da série. Since F83 this is `screens/albums/PhoneSheets.tsx` (React).
 *   **Filtros.** «Filters» mostra quantos estão ligados; a folha tem a visão (Grid ou List), a ordem, os filtros e «Reload albums from the sources».
 *   **Barras.** O cabeçalho da série fica preso sob a barra do topo. O pager de baixo tem «Page n of m», «Series per page» e Pages/Scroll.
 
-### 2.4 Playlists History: `views/SavedPlaylistsView.js`
+### 2.4 Playlists History: `views/SavedPlaylistsView.js` *(F83: now `screens/saved-playlists/SavedPlaylists.tsx`)*
 **Status**: `[ACTIVE]`
 **Pattern**: Component-Driven View
 **LOC**: ~325 (Refactored Sprint 19; the read moved out in v5.0, F61)
@@ -162,7 +162,7 @@ Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras 
 #### No celular
 Até 767 px de largura (`isPhone()`); a tela de computador não muda. As regras estão em `docs/specs/behavior.md` § No celular e as telas em `docs/specs/info-arch.md` § O celular (F76).
 
-*   **Séries fechadas.** As séries abrem fechadas, cada uma com o resumo na linha («n batches · n playlists»); a tela lembra as abertas (`components/playlists/SavedPlaylistsPhone.js`, `SavedSeriesGroup.js`). O lote mostra o nome legível (`components/playlists/batchNames.js`); o nome real é o usado ao editar e apagar.
+*   **Séries fechadas.** As séries abrem fechadas, cada uma com o resumo na linha («n batches · n playlists»); a tela lembra as abertas (`components/playlists/SavedPlaylistsPhone.js`, `SavedSeriesGroup.js`). O lote mostra o nome legível (`components/playlists/batchNames.js`); o nome real é o usado ao editar e apagar. Since F83: `SavedPlaylistsPhone.js` is now `screens/saved-playlists/PhoneParts.tsx`; `batchNames.js` is now `screens/saved-playlists/listText.ts`.
 *   **Folhas.** O «⋯» da série (Add playlists, Open the album series, apagar tudo) e o do lote (Edit batch, Delete batch) abrem folhas; apagar pergunta antes. Para ver as faixas de uma playlist: tocar nela, e abre a janela da playlist.
 *   **Para exportar** um lote gravado: abrir com «Edit batch» e usar «Export» na barra de ação (a tela não tem exportação própria).
 
@@ -198,15 +198,15 @@ stateDiagram-v2
     GENERATING --> [*]: Redirect to Playlists
 ```
 
-### 3.1 `strategies/ViewModeStrategy.js`
+### 3.1 `strategies/ViewModeStrategy.js` *(removed in F65: `ViewModeStrategy.js`)*
 
 > **F65 (2026-11-19):** `ViewModeStrategy.js` was removed from the repository (nothing reached it from an entry point, or its screen was retired). Where this section describes the code of that file, it describes history; the code is in the git history.
 **Purpose**: Toggles between specific rendering layouts (Compact Card vs Expanded Row) based on user preference, persisting to LocalStorage.
 
-### 3.2 `views/renderers/InventoryGridRenderer.js`
+### 3.2 `views/renderers/InventoryGridRenderer.js` *(F83: now `screens/inventory/Grid.tsx` and `screens/inventory/ItemCard.tsx`)*
 **Purpose**: Pure function that takes `state` and returns HTML strings.
 **Why**: Performance. Generating thousands of DOM nodes individually is slower than `innerHTML` for large grids.
 **Features**:
 *   Money is written by `models/inventoryValue.js` (`moneyOf`, `formatMoney`); `formatPrice` and `renderPrice` left in F75: the card shows the estimated value, not the price paid.
-*   `cardSurface(cardProps, valueBlock)` (F75): the Card of the app made into a surface, with the five lines of `views/renderers/InventoryCardValue.js` under the title.
+*   `cardSurface(cardProps, valueBlock)` (F75): the Card of the app made into a surface, with the five lines of `views/renderers/InventoryCardValue.js` under the title. Since F83 this is `screens/inventory/CardValue.tsx` (React).
 *   `renderCard(album)`: Generates the main card HTML with the Status selector (the status and its options come from `models/inventoryStatus.js`, F71). An item with no format shows no format badge and an item with no price shows no price (`renderPrice`). An item that has `averages` shows one small line, "Avg Rating: 78.4 · Avg Pop: 42.6%" (`renderAverages`, grid and list); an item that has none shows nothing, not a dash (F71, S-56).

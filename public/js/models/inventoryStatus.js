@@ -24,22 +24,10 @@ const STORED = Object.freeze({
     [InventoryStatus.WISHLIST]: false
 })
 
-const LABELS = Object.freeze({
-    [InventoryStatus.OWNED]: 'Owned',
-    [InventoryStatus.NOT_OWNED]: 'Not Owned',
-    [InventoryStatus.WISHLIST]: 'Wishlist'
-})
-
 /** The mark a status has on the card and in the counts. Not Owned has none. */
 const ICONS = Object.freeze({
     [InventoryStatus.OWNED]: '✓',
     [InventoryStatus.WISHLIST]: '♡'
-})
-
-const CHANGED = Object.freeze({
-    [InventoryStatus.OWNED]: 'Moved to Collection',
-    [InventoryStatus.NOT_OWNED]: 'Marked as Not Owned',
-    [InventoryStatus.WISHLIST]: 'Moved to Wishlist'
 })
 
 const isStatus = (value) => Object.hasOwn(STORED, value ?? '')
@@ -61,28 +49,27 @@ export function statusOf(item) {
  */
 export const ownedValueOf = (status) => (isStatus(status) ? STORED[status] : null)
 
-/** "Owned", "Not Owned", "Wishlist". */
-export const statusLabel = (status) => LABELS[isStatus(status) ? status : InventoryStatus.NOT_OWNED]
+/**
+ * The status a text is about: the status itself, and Not Owned for a value that is no status. The words of each status (Owned, Not Owned,
+ * Wishlist, "Moved to Collection"...) are in the dictionary of the screen (i18n/inventoryTexts.js): a rule gives a code, the screen says it.
+ * @param {string} status
+ * @returns {string} one of InventoryStatus
+ */
+export const statusCodeOf = (status) => (isStatus(status) ? status : InventoryStatus.NOT_OWNED)
 
-const withIcon = (status, text) => (ICONS[status] ? `${ICONS[status]} ${text}` : text)
+/** The mark a status has before its name ("✓", "♡"); an empty text for Not Owned. */
+export const statusIconOf = (status) => (Object.hasOwn(ICONS, status ?? '') ? ICONS[status] : '')
 
-/** "✓ 3 Owned", "176 Not Owned", "♡ 2 Wishlist": what the header of the screen shows. */
-export const statusCountLabel = (status, count) => withIcon(status, `${count} ${statusLabel(status)}`)
-
-/** What the person is told after changing the status of an item. */
-export const statusChangeMessage = (status) => CHANGED[isStatus(status) ? status : InventoryStatus.NOT_OWNED]
-
-/** The filter of the screen: plain names, in the order the owner asked for (2026-11-20). */
+/** The values of the filter of the screen, in the order the owner asked for (2026-11-20): the screen names them. */
 export const STATUS_FILTER_OPTIONS = Object.freeze([
-    Object.freeze({ value: ALL_STATUSES, label: 'All' }),
-    ...[InventoryStatus.OWNED, InventoryStatus.NOT_OWNED, InventoryStatus.WISHLIST]
-        .map(status => Object.freeze({ value: status, label: LABELS[status] }))
+    Object.freeze({ value: ALL_STATUSES }),
+    ...[InventoryStatus.OWNED, InventoryStatus.NOT_OWNED, InventoryStatus.WISHLIST].map(status => Object.freeze({ value: status }))
 ])
 
-/** The selector on the card of an item: the status a new item has comes first. */
+/** The selector on the card of an item: the status a new item has comes first; the mark goes before the name the screen gives. */
 export const STATUS_SELECT_OPTIONS = Object.freeze(
     [InventoryStatus.NOT_OWNED, InventoryStatus.OWNED, InventoryStatus.WISHLIST]
-        .map(status => Object.freeze({ value: status, label: withIcon(status, LABELS[status]) }))
+        .map(status => Object.freeze({ value: status, icon: statusIconOf(status) }))
 )
 
 /**

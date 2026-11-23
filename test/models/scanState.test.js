@@ -4,7 +4,7 @@
 import { describe, it, expect } from 'vitest'
 import {
     ScanStatus, ScanFailure, idleScan, startScan, scanFound, scanEmpty, scanFailed, scanReclassified,
-    canStartScan, describeScan, CATALOG_DEADLINE_SECONDS
+    canStartScan
 } from '../../public/js/models/scanState.js'
 
 const album = (title, type = 'Album') => ({ id: title, title, artist: 'Pavement', type })
@@ -88,47 +88,5 @@ describe('scanState: transitions (F67)', () => {
     it('reclassified is ignored when no AI list was awaited', () => {
         const found = scanFound(startScan(idleScan(), 'x'), 1, { albums: [album('A')] })
         expect(scanReclassified(found, 1, [album('B')])).toBe(found)
-    })
-})
-
-describe('scanState: what the screen shows (F67)', () => {
-    it('idle: button free, the invitation in the panel', () => {
-        const shown = describeScan(idleScan())
-        expect(shown).toMatchObject({ busy: false, buttonLabel: 'Scan', statusLine: '' })
-        expect(shown.panel).toMatchObject({ kind: 'idle', title: 'Search for an artist to begin scanning.', retry: false })
-    })
-
-    it('scanning: button busy, a line of status and the wait in the panel', () => {
-        const shown = describeScan(startScan(idleScan(), 'pavement'))
-        expect(shown).toMatchObject({ busy: true, buttonLabel: 'Scanning…', statusLine: 'Scanning…' })
-        expect(shown.panel).toMatchObject({ kind: 'scanning', title: 'Searching the catalog for «pavement»…', retry: false })
-    })
-
-    it('results: the artist in the status, no panel message', () => {
-        const found = scanFound(startScan(idleScan(), 'pavement'), 1, { albums: [album('A')] })
-        expect(describeScan(found)).toMatchObject({ busy: false, statusLine: '→ Pavement', panel: null })
-    })
-
-    it('results while the AI list is awaited: the status says the types are being confirmed', () => {
-        const found = scanFound(startScan(idleScan(), 'pavement'), 1, { albums: [album('A')], classifying: true })
-        expect(describeScan(found).statusLine).toBe('→ Pavement · confirming album types…')
-    })
-
-    it('no results: a message in the panel, no retry', () => {
-        const shown = describeScan(scanEmpty(startScan(idleScan(), 'pavemnt'), 1))
-        expect(shown.statusLine).toBe('→ Not found')
-        expect(shown.panel).toMatchObject({ kind: 'empty', title: 'No albums found for «pavemnt».', retry: false })
-    })
-
-    it('failed by deadline: says the catalog did not answer, with "Try again"', () => {
-        const shown = describeScan(scanFailed(startScan(idleScan(), 'pavement'), 1, ScanFailure.TIMEOUT))
-        expect(shown.statusLine).toBe('→ Search failed')
-        expect(shown.panel).toMatchObject({ kind: 'failed', retry: true })
-        expect(shown.panel.title).toBe(`The catalog did not answer in ${CATALOG_DEADLINE_SECONDS} seconds.`)
-    })
-
-    it('failed for another reason: says the search could not be completed, with "Try again"', () => {
-        const shown = describeScan(scanFailed(startScan(idleScan(), 'pavement'), 1, ScanFailure.ERROR))
-        expect(shown.panel).toMatchObject({ kind: 'failed', title: 'The search could not be completed.', retry: true })
     })
 })

@@ -21,14 +21,14 @@ vi.mock('../../public/js/services/SeriesService.js', () => ({ getSeriesService: 
 vi.mock('../../public/js/stores/albums.js', () => ({
     albumsStore: { subscribe: () => () => { }, setActiveAlbumSeriesId: vi.fn(), getAlbums: () => [] }
 }))
-vi.mock('../../public/js/components/Toast.js', () => {
+vi.mock('../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
 
 import SeriesController from '../../public/js/controllers/SeriesController.js'
 import { getSeriesService } from '../../public/js/services/SeriesService.js'
-import toast from '../../public/js/components/Toast.js'
+import toast from '../../public/js/stores/toasts.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import { albumLoadStore } from '../../public/js/stores/albumLoad.js'
 import { ownRankingsStore } from '../../public/js/stores/ownRankings.js'
@@ -230,19 +230,7 @@ describe('SeriesController', () => {
         })
     })
 
-    describe('a series was edited and saved (UAT-191)', () => {
-        it('the load is asked again as it is, never from scratch: only what changed is loaded', async () => {
-            mocks.load.load.mockClear()
-            const { SeriesModalsManager } = await import('../../public/js/views/helpers/SeriesModalsManager.js')
-            const manager = new SeriesModalsManager({ controller, currentScope: 'ALL', targetSeriesId: null })
-
-            manager.handleSeriesUpdated('s1')
-
-            expect(mocks.load.load).toHaveBeenCalledTimes(1)
-            expect(mocks.load.load.mock.calls[0][0].fresh).toBe(false)
-            expect(mocks.load.load.mock.calls[0][0].scopeKey).toBe('ALL')
-        })
-    })
+    // a series edited and saved (UAT-191): the screen asks the load again as it is - test/screens/albums/Albums.seriesEdited.test.tsx (F83 wave 5a)
 
     it('"Try again" of a series goes to the load service', () => {
         controller.retrySeries('s2')

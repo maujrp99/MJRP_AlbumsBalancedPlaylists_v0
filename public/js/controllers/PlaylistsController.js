@@ -5,9 +5,10 @@ import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { getSeriesService } from '../services/SeriesService.js'
 import { blendingController } from './BlendingController.js'
 import { albumAsks } from '../services/albums/albumLoading.js'
-import { askNotices, noAlbumsMessage } from '../models/albumAsk.js'
+import { askNotices, noAlbumsMessage } from '../i18n/askTexts.js'
 import { ENRICHMENT_SOURCES } from '../models/albumLoadState.js'
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
+import { t } from '../i18n/t.js'
 
 /**
  * PlaylistsController
@@ -56,7 +57,7 @@ export class PlaylistsController {
 
             // Playlists generated and not saved before a reload of the page come back (UAT-05)
             if (existingPlaylists.length === 0 && !isAutoGenerate && service.restoreDraft({ seriesId: seriesIdParam })) {
-                toast.info('Your unsaved playlists were restored')
+                toast.info(t('notices.playlists.restored'))
                 this.loadAlbumsForSeries(playlistsStore.getSeriesId()) // for generating again; not awaited
             }
         }
@@ -85,7 +86,7 @@ export class PlaylistsController {
             }
 
             if (!seriesId) {
-                toast.error('No series context found')
+                toast.error(t('notices.playlists.noSeries'))
                 return
             }
 
@@ -94,7 +95,7 @@ export class PlaylistsController {
             if (batchPlaylists.length === 0) {
                 // Nothing of another batch stays on screen under this batch's name, where a save would store it
                 playlistsStore.setPlaylists([], seriesId)
-                toast.warning(`No playlists found for batch "${batchName}"`)
+                toast.warning(t('notices.playlists.noBatch', { name: batchName }))
                 return
             }
 
@@ -106,7 +107,7 @@ export class PlaylistsController {
 
         } catch (err) {
             console.error('[PlaylistsController] Failed to load edit batch:', err)
-            toast.error('Failed to load playlists')
+            toast.error(t('notices.playlists.loadFailed'))
         }
     }
 
@@ -120,7 +121,7 @@ export class PlaylistsController {
         try {
             const series = await this._seriesOf(seriesId)
             if (!series?.albumQueries?.length) {
-                toast.warning('This series has no albums to generate playlists from.')
+                toast.warning(t('notices.playlists.noAlbumsToGenerate'))
                 return null
             }
 
@@ -137,7 +138,7 @@ export class PlaylistsController {
             return result
         } catch (err) {
             console.error('[PlaylistsController] Failed to load albums:', err)
-            toast.error('Could not load albums for reconfiguration')
+            toast.error(t('notices.playlists.reconfigureFailed'))
             return null
         }
     }
@@ -171,7 +172,7 @@ export class PlaylistsController {
      */
     async deletePlaylist(index) {
         const removed = (await this._service()).removePlaylist(index)
-        if (removed) toast.success(`Playlist "${removed.name}" removed`)
+        if (removed) toast.success(t('notices.playlists.removed', { name: removed.name }))
     }
 
     /**
@@ -188,12 +189,12 @@ export class PlaylistsController {
 
     /** Undo the last change of the set on screen. */
     async undo() {
-        if (!(await this._service()).undo()) toast.info('Nothing to undo')
+        if (!(await this._service()).undo()) toast.info(t('notices.playlists.nothingToUndo'))
     }
 
     /** Redo the change that was undone. */
     async redo() {
-        if (!(await this._service()).redo()) toast.info('Nothing to redo')
+        if (!(await this._service()).redo()) toast.info(t('notices.playlists.nothingToRedo'))
     }
 
     /**
@@ -211,7 +212,7 @@ export class PlaylistsController {
             const result = await blendingController.regenerate(config, { signal: this._leaving.signal })
 
             ;(result.notices || []).forEach(notice => toast.warning(notice))
-            toast.success(`Generated ${result.playlists.length} playlists`)
+            toast.success(t('notices.playlists.generated', { count: result.playlists.length }))
             return result
         } catch (err) {
             if (err?.name === 'BlendCancelledError') return null // the person left the screen
@@ -233,22 +234,23 @@ export class PlaylistsController {
      * Save the playlists on screen. The rule of a save (which series, what is replaced, one save
      * at a time) lives in PlaylistsService.saveCurrentBatch; here the person is told the result.
      * The button shows the save in progress from the store (`isSaving`), not from here.
+     * @param {string|null} [typedBatchName] - what is in the field of the batch name
      */
     async handleSave(typedBatchName = null) {
         const service = await this._service()
 
         const batchName = service.resolveBatchName(typedBatchName)
         if (!batchName) {
-            toast.error('Batch name required')
+            toast.error(t('notices.playlists.batchRequired'))
             return
         }
 
         try {
             const result = await service.saveCurrentBatch({ batchName }) // for the person signed in
-            if (result.status === 'saved') toast.success(`Saved "${batchName}" successfully!`)
+            if (result.status === 'saved') toast.success(t('notices.playlists.saved', { name: batchName }))
         } catch (err) {
             console.error('[PlaylistsController] Save failed:', err)
-            toast.error(`Save failed: ${err.message}. Nothing was changed: what was saved before is still there.`)
+            toast.error(t('notices.playlists.saveFailed', { message: err.message }))
         }
     }
 

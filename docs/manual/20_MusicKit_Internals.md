@@ -51,7 +51,7 @@ sequenceDiagram
 *   **Role**: The "Write" interface for Apple Music.
 *   **Capabilities**:
     *   `createPlaylist`: Creates standard playlists.
-    *   `createOrGetFolder`: Finds a library playlist folder by name or creates it. The Apple Music export (`views/playlists/PlaylistsExport.js`) uses the series name as the folder name.
+    *   `createOrGetFolder`: Finds a library playlist folder by name or creates it. The Apple Music export (`views/playlists/PlaylistsExport.js`) uses the series name as the folder name. Since F83 this is `controllers/playlistExports.js` and `controllers/playlistExportEntries.js` (React).
     *   `createPlaylistInFolder`: Places generated playlists inside a specific folder to keep the user's library clean.
 
 ## 2. Infrastructure Services

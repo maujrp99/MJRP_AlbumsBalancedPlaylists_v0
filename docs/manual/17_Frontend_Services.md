@@ -25,7 +25,7 @@ The application uses a mix of **Singleton Classes**, **Functional Modules**, and
 | **`exportLedger`** (F62) | **Session memory** | `services/export/`. What this session already sent to Spotify or Apple Music (service, name, tracks in order -> the id given), so exporting again creates no second copy. In memory: a reload of the page clears it. |
 | **`UserSyncService`** [NEW] | **Feature Service** | Handles complexity of migrating Guest data to User account upon authentication. Injected into `SeriesService`. |
 | **`BEAEnrichmentHelper`** [NEW] | **Helper Module** | Encapsulates BestEverAlbums enrichment logic (fetching, parsing scores) to keep `SeriesService` clean. |
-| **`DialogService`** | **Singleton** | Manages global modal state. Provides a simple imperative API (`.alert()`, `.confirm()`, `.prompt()`) over the declarative `BaseModal` system. One dialog at a time; Escape, or another dialog taking its place, answers the pending one as cancelled (`false` for `confirm`, `null` for `prompt`: F63; before, the caller waited for ever). |
+| **`DialogService`** | **Singleton** | Manages global modal state. Provides a simple imperative API (`.alert()`, `.confirm()`, `.prompt()`) over the declarative `BaseModal` system. One dialog at a time; Escape, or another dialog taking its place, answers the pending one as cancelled (`false` for `confirm`, `null` for `prompt`: F63; before, the caller waited for ever). *(F83: now `ui/dialogs/dialogs.ts`)* |
 
 ---
 

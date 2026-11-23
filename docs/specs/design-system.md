@@ -115,16 +115,16 @@ Cada padrão que se repete, com o arquivo que o desenha. A página do design sys
 | Fichas | ficha de tipo | 44 px, redonda, borda branca a 14 %; ligada = branca com texto preto | `.home-chip`, `.is-on` | `public/css/views/home.css` | aprovado com o protótipo da F79 |
 | Fichas | selo | redondo, 12 px em caixa alta, verde ou âmbar a 20 % | `.badge`, `.badge-success` | `public/css/tailwind.css` | em uso |
 | Cartões | capa da Home | quadrada, cantos de 10 px, sombra; escolhida = anel laranja de 3 px e o número no fogo | `.home-card`, `.is-in` | `public/css/views/home.css` | aprovado com o protótipo da F79 |
-| Cartões | álbum no celular | capa quadrada, título Syne 15/20 em duas linhas, artista 13/18 `#a0a0a8`, «⋯» de 44 px | `.album-tile` | `public/js/components/ui/AlbumPhoneCard.js`, `public/css/mobile/albums.css` | em uso |
-| Base da série | base do computador | presa embaixo, cantos de 20 px, vidro; até 7 capas numeradas, o nome, «Edit order» e «Create series»; borda laranja quando tem álbum | `.home-dock`, `.is-full`, `.is-done` | `public/js/components/home/HomeDock.js` | aprovado com o protótipo da F79 |
+| Cartões | álbum no celular | capa quadrada, título Syne 15/20 em duas linhas, artista 13/18 `#a0a0a8`, «⋯» de 44 px | `.album-tile` | `public/js/screens/albums/AlbumCard.tsx`, `public/css/mobile/albums.css` | em uso |
+| Base da série | base do computador | presa embaixo, cantos de 20 px, vidro; até 7 capas numeradas, o nome, «Edit order» e «Create series»; borda laranja quando tem álbum | `.home-dock`, `.is-full`, `.is-done` | `public/js/screens/start/Dock.tsx` | aprovado com o protótipo da F79 |
 | Base da série | base do celular | é a barra de ação, acima das abas: uma capa, a nota e um botão de 48 px | `.home-dock.phone-action-bar` | `public/css/mobile/home.css` | aprovado com o protótipo da F79 |
 | Barras do celular | barra do topo | 48 px, vidro, logotipo de 28 px, nome da tela 17/22, menu de 44 px | `.phone-topbar` | `public/css/mobile.css` § 4 | em uso |
-| Barras do celular | barra de abas | cinco destinos, ícone de 24 px e rótulo de 12 px; a atual em laranja com brilho | `.phone-tabbar` | `public/js/components/navigation/phoneTabs.js` | em uso |
+| Barras do celular | barra de abas | cinco destinos, ícone de 24 px e rótulo de 12 px; a atual em laranja com brilho | `.phone-tabbar` | `public/js/shell/phoneTabs.ts` | em uso |
 | Barras do celular | barra de ação e voltar ao topo | 64 px acima das abas, botões de 48 px; botão redondo de 44 px | `.phone-action-bar`, `.phone-to-top` | `public/css/mobile.css` § 6 | em uso |
-| Folhas | folha | `#101014`; de baixo com alça e cantos de 16 px, ou a tela inteira; fechar de 44 px | `.sheet--bottom`, `.sheet--full` | `public/js/components/ui/Sheet.js` | em uso (só no celular; no computador, janela) |
-| Avisos | aviso rápido | no alto à direita, cantos de 8 px; verde, vermelho, âmbar ou escuro | `#toast-container` | `public/js/components/Toast.js` | em uso — defeito D3 |
-| Avisos | faixa de desfazer | clara `#f4f4f5`, texto preto, «Undo» de 44 px sublinhado em vermelho, por 8 s | `.home-undo` | `public/js/components/home/HomeDock.js` | aprovado com o protótipo da F79 |
-| Fogo e equalizador | equalizador da Home | três estados: parado, em movimento, baixo | `.home-eq`, `.is-still`, `.is-live`, `.is-flat` | `public/js/components/home/HomeEqualizer.js` | aprovado com o protótipo da F79 |
+| Folhas | folha | `#101014`; de baixo com alça e cantos de 16 px, ou a tela inteira; fechar de 44 px | `.sheet--bottom`, `.sheet--full` | `public/js/ui/SheetWindow.tsx` | em uso (só no celular; no computador, janela) |
+| Avisos | aviso rápido | no alto à direita, cantos de 8 px; verde, vermelho, âmbar ou escuro | `#toast-container` | `public/js/shell/Toasts.tsx` (a lista e os relógios em `public/js/stores/toasts.js`) | em uso — defeito D3 |
+| Avisos | faixa de desfazer | clara `#f4f4f5`, texto preto, «Undo» de 44 px sublinhado em vermelho, por 8 s | `.home-undo` | `public/js/screens/start/Dock.tsx` | aprovado com o protótipo da F79 |
+| Fogo e equalizador | equalizador da Home | três estados: parado, em movimento, baixo | `.home-eq`, `.is-still`, `.is-live`, `.is-flat` | `public/js/screens/start/Equalizer.tsx` | aprovado com o protótipo da F79 |
 | Página de entrada | barra do topo, fio e primeira tela | o nome do site, «Sign in» e «Open the app»; o fio do equalizador com uma faixa por parte; o título e as chamadas | `header.top`, `.thread`, `.hero` | `public/splash.html` | aprovado com o protótipo da F80 |
 
 ### Famílias
@@ -209,7 +209,7 @@ Listados pela F86, não consertados (a feature não muda o código do site).
 |---|---|---|
 | D1 | `public/css/modals.css:25` | `border: 1px rgba(…)` sem o estilo: a borda da janela não aparece |
 | D2 | `public/css/tech-theme.css:44` | `var(--tech-blue)` nunca definida |
-| D3 | `public/js/components/Toast.js:113` | o aviso «info» pede `bg-surface-dark/95`, que não existe: sem fundo no computador |
+| D3 | `public/js/shell/Toasts.tsx` (`INFO_STYLE`; era `stores/toasts.js:113`) | o aviso «info» pede `bg-surface-dark/95`, que não existe: sem fundo no computador |
 | D4 | JavaScript | classes sem regra: `.btn-ghost` (11 usos), `.text-muted` (76), `.dark-glow`, `bg-surface-lighter`, `animate-fade-in-up`, `animate-progress-indeterminate`, `.fade-in` e outras |
 | D5 | `neon.css`, `tech-theme.css`, `animations.css` | regras sem uso (`.neon-*`, `.tech-panel`, `.badge-warning`, `.progress-bar`…); `.custom-scrollbar` e `@keyframes fadeIn` definidos duas vezes |
 | D6 | contraste | `text-white/30` (2,5:1), `text-white/40` (3,7:1), aviso âmbar com texto branco (3,0:1) |
@@ -298,7 +298,7 @@ Uma folha de baixo aberta pela barra do topo: a conta (ou «Sign In»), o que a 
 
 ### Folha (REQ-04)
 
-Uma janela no celular é uma folha (`components/ui/Sheet.js`):
+Uma janela no celular é uma folha (`ui/SheetWindow.tsx`):
 
 | Forma | Quando | Como |
 |---|---|---|
@@ -441,9 +441,35 @@ A construção (`public/css/views/home.css`, `public/css/mobile/home.css`, `publ
 | Padrão | Como é | Reusa / novo | Por quê |
 |---|---|---|---|
 | A lista colada, editável | cada linha da lista é um campo próprio (o número, o texto, «ready» ou o motivo ao lado, embaixo no celular); colar várias linhas abre várias; Enter abre uma linha; apagar uma linha vazia a fecha | novo (decidido pelo agente — revisável) | o protótipo mostra as linhas prontas, mas não diz como se digita nelas; um campo por linha mantém o número e o motivo presos à linha. A tipografia é a do protótipo (reconferência de 2026-11-21): linha em Syne 15/400 (texto 16/400 no celular); a linha pulada em Syne 18/600 sobre a faixa vermelha, sem caixa |
-| O fechar da folha da série | a Folha `full` do celular usa o botão de fechar dela (✕, com o nome «Done» para o leitor de tela) no lugar do «Done» em texto do protótipo | reusa a Folha (`components/ui/Sheet.js`) | a Folha `full` tem o fechar sempre à vista, de 44 px; dois fechar na mesma folha seriam dois rótulos para uma ação (IA-02) |
+| O fechar da folha da série | a Folha `full` do celular usa o botão de fechar dela (✕, com o nome «Done» para o leitor de tela) no lugar do «Done» em texto do protótipo | reusa a Folha (`ui/SheetWindow.tsx`) | a Folha `full` tem o fechar sempre à vista, de 44 px; dois fechar na mesma folha seriam dois rótulos para uma ação (IA-02) |
 | Os números na fonte de texto | o número da capa, da linha do painel, da base e dos passos na fonte de texto do sistema, também no computador | ajusta a regra de fonte do computador (só nos números) | o «1» da Syne se lê como «ı» justamente no número da ordem (achado 18 da crítica) |
 | Os tokens da Home | `--home-flame`, `--home-flame-text`, `--home-eq-grad`, `--home-panel`, `--home-muted`, `--home-soft`, `--home-line` em `:root` (`css/views/home.css`) | traduz o protótipo; as cores são as declaradas | uma fonte só para as cores da Home no computador, no celular e na folha |
+
+## Portes para React (F83) — peça de hoje → peça em `ui/`
+
+Nenhuma peça é redesenhada: o mesmo HTML, as mesmas classes e as mesmas folhas de estilo (o Tailwind lê `.tsx`; nada de CSS por componente, `oneStyleSystem.test.js`). A prova de cada porte é o teste da tela que o levou.
+
+| Peça de hoje | Peça em React | Onda | Nota |
+|---|---|---|---|
+| `components/Icons.js` `getIcon()` | `ui/Icon.tsx` (lê os mesmos desenhos, `utils/iconShapes.js`) | 0, 8d | HTML igual provado para todo ícone usado; o texto de cada ícone (a régua da prova) mora em `test/support/iconMarkup.js`; `Icons.js` saiu na 8d |
+| `components/common/AlbumCascade.js` | `ui/AlbumCascade.tsx` | 1 | uma escrita só desde a onda 7b (a Blend migrou); `test/ui/AlbumCascade.test.tsx` a prova |
+| `components/ui/coverImage.js` | `ui/CoverImage.tsx` | 1 | a imagem de capa com a reserva; a escuta do erro e o endereço da reserva moram em `ui/coverStandIn.ts` (8b; o módulo à mão saiu) |
+| `components/ui/Sheet.js` (a Folha) | `ui/SheetWindow.tsx` (`useSheetWindow`) | 1 | o motor também é React desde a 8c (`useSheetWindow` para as telas, `openSheet` para código sem componente); `utils/pageScrollLock.js` fica, como utilitário de página |
+| `components/ui/BaseModal.js` (a janela) | `ui/ModalShell.tsx` (`useModalWindow` a usa) | 1, 5b, 8b | a casca é React desde a 5b e a à mão saiu na 8b; o retrato da casca à mão, em 30 tamanhos, é `test/fixtures/windowShellBeforeF83.json` |
+| `components/Toast.js` (os avisos) | `stores/toasts.js` (a API, sem React) + `shell/Toasts.tsx` | 8b | a mesma API `toast.success/error/warning/info(texto, ms)`; o dourado de 13 cenários com tempo falso é `test/fixtures/enginesBeforeF83.json` |
+| `components/GlobalProgress.js` (a barra fina) | `stores/progress.js` + `shell/GlobalProgress.tsx` | 8b | o mesmo `#globalProgress` e as mesmas classes |
+| `services/DialogService.js` + `ConfirmModal.js` + `InputModal.js` (as perguntas) | `ui/dialogs/` (`dialogs.ts`, `ConfirmWindow.tsx`, `InputWindow.tsx`) | 8b | a mesma API `dialogService.confirm/prompt/alert/dismiss`; uma pergunta fica quando a tela sai |
+| `components/ui/FilterToolbar.js` e `FilterSheet.js` | `ui/FilterToolbar.tsx` | 5 | a barra e a folha de filtros das telas dos álbuns e das playlists guardadas; o invólucro de `react-bridge/legacy/` saiu na onda 5 |
+| `components/ui/TrackRow.js` | `ui/TrackRow.tsx` | 2 | porte único: as telas das playlists guardadas e das playlists o usam; mesmo HTML e mesmas classes (a prova é a página das duas telas), os rótulos dos selos vêm do dicionário (`ui.trackRow.*`); o invólucro `TrackRows` saiu |
+| `components/Breadcrumb.js` | `ui/Breadcrumb.tsx` | 2 | a trilha da tela das playlists; a antiga saiu com as telas de séries e de inventário (ondas 5 e 6) |
+| `components/playlists/RegeneratePanel.js` | `screens/playlists/RegeneratePanel.tsx` (a memória do que se mudou em `regenerateMemory.ts`) | 7a | o painel de gerar de novo da tela de playlists; o invólucro `react-bridge/legacy/RegeneratePanel.tsx` saiu; a prova é o dourado do painel à mão (`regenerateBeforeF83.json`) e o da tela inteira |
+| `components/blend/BlendRecipeCard.js` | `ui/recipe/RecipeCards.tsx` (ícone, cores e classes em `models/recipeLooks.js`, escritas inteiras: o Tailwind as acha no código) | 7a | os cartões de receita, sem loja e sem serviço (a escrita à mão saiu com a tela Blend à mão, na 7b; antes eram **duas escritas**, mantidas iguais por um teste); os nomes vêm do dicionário pelo id da receita (`blend.recipes.<id>.*`) |
+| `components/blend/BlendIngredientsPanel.js` | `ui/recipe/Ingredients.tsx` (as regras em `models/recipeIngredients.js`) | 7a | as cinco seções de ingredientes (Top #, agrupamento, estrutura, duração, fonte); o deslizador é ouvido por `input`; a escrita à mão saiu na 7b |
+| `shell/TopNav.tsx`, `navigation/SeriesDropdown.js`, `shell/Account.tsx` | `shell/TopNav.tsx`, `SeriesDropdown.tsx`, `Account.tsx` | 3 | a barra do topo do computador e a gaveta da tela média: mesmo HTML e mesmas classes (a prova é a página de cada estado contra a antiga, `test/shell/Shell.sameAsBefore.test.tsx`); a barra segue o endereço e o chevron da gaveta gira (a antiga girava a nota): únicas diferenças |
+| `components/Footer.js` | `shell/Footer.tsx` | 3 | o rodapé; a frase do Discogs liga e desliga por `stores/discogsNotice.js` |
+| `components/SpotifyConnectButton.js` | `shell/ConnectionRows.tsx` | 3 | os três botões (barra, gaveta, menu do celular), cada um com o seu estado |
+| `shell/PhoneShell.tsx`, `PhoneMenu.js`, `phoneTabs.js` | `shell/PhoneShell.tsx`, `PhoneMenu.tsx`, `phoneTabs.ts` | 3 | a moldura do celular escreve no `body` por um portal; o menu e a pergunta de limpar o cache são `ui/SheetWindow` (que ganhou `id` e rodapé) |
+| `components/LoginModal.js` | `shell/LoginWindow.tsx` | 3 | a janela de entrar, aberta por `stores/loginWindow.js` (qualquer tela chama `openLoginWindow()`) |
 
 ## Arquivo
 

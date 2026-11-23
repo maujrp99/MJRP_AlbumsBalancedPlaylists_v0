@@ -65,12 +65,19 @@ const BADGE_OF_TYPE = Object.freeze({
     [AlbumType.LIVE]: 'Live', [AlbumType.SINGLE]: 'Single', [AlbumType.EP]: 'EP', [AlbumType.COMPILATION]: 'Comp'
 })
 
-/** The badges of an album card: the edition (from the title), then the type (from the classifier). */
-export function badgesOf(album = {}) {
+/** The codes of the badges of an album card, in order: the edition (from the title), then the type (from the classifier). A screen that speaks says each in its language. */
+export function badgeCodesOf(album = {}) {
     const title = String(album.title || '').toLowerCase()
-    const badges = []
-    if (title.includes('deluxe')) badges.push('Deluxe')
-    if (title.includes('remaster')) badges.push('Remaster')
-    if (BADGE_OF_TYPE[album.type]) badges.push(BADGE_OF_TYPE[album.type])
-    return badges
+    const codes = []
+    if (title.includes('deluxe')) codes.push('deluxe')
+    if (title.includes('remaster')) codes.push('remaster')
+    if (BADGE_OF_TYPE[album.type]) codes.push(album.type)
+    return codes
+}
+
+const BADGE_WORDS = Object.freeze({ deluxe: 'Deluxe', remaster: 'Remaster', ...BADGE_OF_TYPE })
+
+/** The badges of an album card, in English (the card of the series edit): one rule for every screen. */
+export function badgesOf(album = {}) {
+    return badgeCodesOf(album).map(code => BADGE_WORDS[code])
 }

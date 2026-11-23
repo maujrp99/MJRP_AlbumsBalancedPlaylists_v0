@@ -8,7 +8,7 @@
  * long wait). The end says what happened, in numbers, and invents nothing.
  */
 
-import { ReadFailure, ReadingKind, failureText, needsKeeping, needsReading, neverRead } from './inventoryValue.js'
+import { ReadFailure, ReadingKind, failureCodeOf, needsKeeping, needsReading, neverRead } from './inventoryValue.js'
 
 /** About how long one album takes: up to three requests to Discogs, one a second, and their answers. */
 const SECONDS_PER_ALBUM = 3.5
@@ -151,78 +151,57 @@ export function countAfter(count, outcome) {
 }
 
 // ---- What the person is told -----------------------------------------------------------------------
+// A rule gives a code and the numbers; the words are in the dictionary of the screen (i18n/inventoryTexts.js).
 
-const albums = (number) => `${number} ${number === 1 ? 'album' : 'albums'}`
+/** How many minutes a run over this many albums takes, at least one ("about a minute" is the screen's word for 1). */
+export const minutesFor = (count) => Math.max(1, Math.ceil((count * SECONDS_PER_ALBUM) / 60))
 
-function durationText(count) {
-    const minutes = Math.ceil((count * SECONDS_PER_ALBUM) / 60)
-    return minutes <= 1 ? 'about a minute' : `about ${minutes} minutes`
-}
-
-/** What the button says while the run goes. */
-export const valuesProgressText = ({ done, total }) => `Reading values… ${done} of ${total}`
-
-/** The notice of a run under way. */
-export const readingNotice = ({ done, total }) => ({
-    strong: `${valuesProgressText({ done, total })}.`,
-    rest: `You can keep using the inventory. This takes ${durationText(total)} for ${albums(total)}.`,
-    action: 'Stop'
-})
+/** The notice of a run under way: the numbers it says. */
+export const readingNoticeOf = ({ done, total }) => ({ done, total, minutes: minutesFor(total) })
 
 /** The notice of an inventory with albums that have no value and no fresh reading. Nothing is read until the person asks. */
-export const waitingNotice = (count) => ({
-    strong: `${albums(count)} ${count === 1 ? 'is' : 'are'} waiting for a value.`,
-    rest: `Reading ${count === 1 ? 'it' : 'them'} takes ${durationText(count)}.`,
-    action: count === 1 ? 'Read it now' : 'Read them now'
-})
+export const waitingNoticeOf = (count) => ({ count, minutes: minutesFor(count) })
 
-const STOP_TEXT = Object.freeze({
-    [ReadFailure.TOKEN_REFUSED]: 'Discogs refused the token of the app, so the reading stopped. The token on the server has to be replaced.',
-    [ReadFailure.SIGN_IN]: 'Reading values needs you signed in with an account, so the reading stopped.',
-    [ReadFailure.LIMIT]: 'The limit of requests was reached and asks for a long wait, so the reading stopped. Try again later.',
-    off: 'Discogs values were turned off on the server, so the reading stopped.'
-})
+/** The reasons a run ends before the end, as the sentence of each is chosen: a failure that stops it, or the source turned off. */
+export const StopReason = Object.freeze({ TOKEN_REFUSED: ReadFailure.TOKEN_REFUSED, SIGN_IN: ReadFailure.SIGN_IN, LIMIT: ReadFailure.LIMIT, OFF: 'off' })
 
-const failedSentence = (failed) => {
-    const parts = Object.entries(failed).map(([failure, number]) => `${failureText(failure)} (${number})`)
-    const total = Object.values(failed).reduce((sum, number) => sum + number, 0)
-    return total > 0 ? [`${albums(total)} could not be read: ${parts.join(', ')}.`] : []
-}
+/** The reason a run stopped: the one given when it is known, "limit" for one that is not. */
+const stopReasonOf = (stopped) => (Object.values(StopReason).includes(stopped) ? stopped : StopReason.LIMIT)
 
 /**
- * The honest end of a run.
+ * The honest end of a run, as the parts the screen says one after the other (each is `{ code, ...numbers }`; the order is the order of the sentences).
  * @param {Object} count - of emptyCount / countAfter, with `stopped` and `aborted`
- * @returns {{ ok: boolean, text: string }}
+ * @returns {{ ok: boolean, parts: Array<Object> }}
  */
 export function valuesOutcome(count) {
     const { total, read, failed, stopped, unkept = 0 } = count
-    const sentences = [`Values read for ${read} of ${albums(total)}.`, ...answerSentences(count), ...failedSentence(failed), ...unkeptSentence(unkept), ...endSentence(count)]
+    const parts = [{ code: 'read', read, total }, ...answerParts(count), ...failedParts(failed), ...unkeptParts(unkept), ...endParts(count)]
     const clean = !stopped && unkept === 0 && Object.keys(failed).length === 0
-    return { ok: clean, text: sentences.join(' ') }
+    return { ok: clean, parts }
 }
 
 /** The albums Discogs answered with no value: no CD edition, no suggested price. */
-function answerSentences({ noEdition, noSuggestion }) {
-    const sentences = []
-    if (noEdition > 0) sentences.push(`${albums(noEdition)} ${noEdition === 1 ? 'has' : 'have'} no CD edition on Discogs.`)
-    if (noSuggestion > 0) sentences.push(`Discogs suggests no price for ${albums(noSuggestion)}.`)
-    return sentences
+function answerParts({ noEdition, noSuggestion }) {
+    const parts = []
+    if (noEdition > 0) parts.push({ code: 'noEdition', count: noEdition })
+    if (noSuggestion > 0) parts.push({ code: 'noSuggestion', count: noSuggestion })
+    return parts
 }
 
-/** What the person is told of ONE value read but not saved to the inventory (REQ-14): the browser keeps it six hours (READING_TTL_MS), and «Update values» saves it. */
-export const UNKEPT_VALUE_TEXT = 'The value was read but not saved to your inventory. This browser keeps it for six hours; Update values tries to save it again.'
+/** The albums that could not be read, and each failure with its number. */
+function failedParts(failed) {
+    const failures = Object.entries(failed).map(([failure, count]) => ({ failure: failureCodeOf(failure), count }))
+    const count = failures.reduce((sum, one) => sum + one.count, 0)
+    return count > 0 ? [{ code: 'failed', count, failures }] : []
+}
 
 /** Values read but not saved to the inventory: said, and they still show in this browser (REQ-14). */
-function unkeptSentence(unkept) {
-    if (unkept <= 0) return []
-    const [noun, them] = unkept === 1 ? ['value', 'it'] : ['values', 'them']
-    return [`${unkept} ${noun} could not be saved to your inventory. This browser keeps ${them} for six hours; Update values tries to save ${them} again.`]
-}
+const unkeptParts = (unkept) => (unkept > 0 ? [{ code: 'unkept', count: unkept }] : [])
 
 /** Why the run ended before the end, when it did. */
-function endSentence({ total, done, stopped, aborted }) {
-    if (stopped) return [STOP_TEXT[stopped] || STOP_TEXT[ReadFailure.LIMIT]]
-    return aborted && done < total ? [`Stopped by you after ${done} of ${total}.`] : []
+function endParts({ total, done, stopped, aborted }) {
+    if (stopped) return [{ code: 'stopped', reason: stopReasonOf(stopped) }]
+    return aborted && done < total ? [{ code: 'aborted', done, total }] : []
 }
 
 /**
@@ -235,6 +214,3 @@ export function valuesRunOutcome({ read, failed, stopped, aborted }) {
     if (stopped || Object.keys(failed || {}).length > 0) return read > 0 ? 'partial' : 'failed'
     return aborted ? 'stopped' : 'complete'
 }
-
-/** What the person is told when one album was read from its window and failed. */
-export const readFailedText = (failure) => `${failureText(failure)}. The value was not read.`

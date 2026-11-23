@@ -19,25 +19,12 @@ import { fileURLToPath } from 'node:url'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 
-/** components/blend/BlendRecipeCard.js: `${recipe.color.from}/10 ${recipe.color.to}/10` on the selected recipe. */
-const RECIPE_GRADIENT_AT_10 = [
-    'from-amber-400/10', 'to-orange-500/10',
-    'from-emerald-500/10', 'to-teal-500/10',
-    'from-indigo-500/10', 'to-purple-500/10',
-    'from-slate-500/10', 'to-gray-600/10',
-    'from-green-500/10', 'to-emerald-600/10',
-    'from-rose-500/10',
-    'from-sky-500/10', 'to-blue-600/10',
-    'from-gray-500/10'
-]
-
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
         path.join(here, 'public/index.html'),
-        path.join(here, 'public/js/**/*.js')
+        path.join(here, 'public/js/**/*.{js,ts,tsx}') // .tsx too: a class written only in JSX must reach the CSS (F83)
     ],
-    safelist: [...RECIPE_GRADIENT_AT_10],
     theme: {
         extend: {
             // `md` is the first screen that is not a phone: 900 px, the line of the phone's shell (js/utils/isPhone.js,

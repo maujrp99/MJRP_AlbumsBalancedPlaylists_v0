@@ -1,0 +1,27 @@
+{
+ "tag": "webkit-iPhone14-grid",
+ "passed": 3,
+ "failed": 1,
+ "results": [
+  {
+   "what": "webkit-iPhone14-grid · the inventory in #app: this branch (the shell in React) = main",
+   "ok": true,
+   "detail": "13936 chars"
+  },
+  {
+   "what": "webkit-iPhone14-grid · the inventory is drawn (cards, tiles or rows are on the page)",
+   "ok": true,
+   "detail": "18 items · My Collection 6 albums ✓ 4 Owned 1 Not Owned ♡ 1 Wishlist Owned $25.00 To buy — USD EUR GBP BRL Exchange rates are not available: values are shown in USD. About"
+  },
+  {
+   "what": "webkit-iPhone14-grid · the pixels of the page",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "webkit-iPhone14-grid · no page error on this branch",
+   "ok": false,
+   "detail": "Refused to connect to https://apis.google.com/js/gen_204?c=50%3A1 because it does not appear in the connect-src directive of the Content Security Policy."
+  }
+ ]
+}

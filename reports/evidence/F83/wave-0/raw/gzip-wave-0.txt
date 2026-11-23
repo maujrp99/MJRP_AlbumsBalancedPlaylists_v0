@@ -1,0 +1,16 @@
+  1088373   301830 main-BAqSWT0A.js
+   419665   129204 posthogAdapter-zbCZhxi6.js
+   221716    68691 react-vendor-C4_tDHOM.js
+   164909    28974 main-BvbNwvoB.css
+    32474    10259 SavedPlaylistsView-B4N-5-kZ.js
+    16926     5047 SpotifyExportModal-Ciu9aM9F.js
+    11223     4994 splash-XzBgMugN.js
+     9573     4632 search.worker-saFDN5Ff.js
+     6133     2606 index-BAGyO4F4.js
+     4132     2178 crate3d-DMlQPKiX.js
+     4390     1986 index-pF16p2IW.js
+     2504     1188 InventoryEditModal-RxzOHJ2a.js
+     2678     1071 SpotifyConnectButton-DfeN_cIL.js
+     1727      901 preload-helper-BxaVoaJg.js
+      535      325 exportOutcome-DbgW7yUg.js
+files 15

@@ -1,0 +1,212 @@
+{
+ "tag": "edit-webkit-1280",
+ "passed": 41,
+ "failed": 0,
+ "results": [
+  {
+   "what": "edit-webkit-1280 · closing: opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4464 chars"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: Escape · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: Escape · the focus",
+   "ok": true,
+   "detail": "button#exportAppleMusicBtn[btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300] | button#exportAppleMusicBtn[btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: Escape · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: Escape · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: Escape · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: Escape · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened again · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4464 chars"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened again · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened again · what MusicKit was asked",
+   "ok": true,
+   "detail": "6 calls"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened again · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened again · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened again · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened again · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: a press outside · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: a press outside · the focus",
+   "ok": true,
+   "detail": "button#exportAppleMusicBtn[btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300] | button#exportAppleMusicBtn[btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: a press outside · what MusicKit was asked",
+   "ok": true,
+   "detail": "6 calls"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: a press outside · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: a press outside · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: a press outside · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened a third time · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4464 chars"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened a third time · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened a third time · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened a third time · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened a third time · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened a third time · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: opened a third time · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: the close button · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: the close button · the focus",
+   "ok": true,
+   "detail": "button#exportAppleMusicBtn[btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300] | button#exportAppleMusicBtn[btn flex items-center gap-2 bg-gradient-to-r from-[#FF4D00] to-[#FF8800] hover:from-[#FF8800] hover:to-[#FFCC00] text-white font-semibold shadow-lg hover:shadow-[#FF4D00]/30 transition-all duration-300]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: the close button · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: the close button · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: the close button · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-1280 · closing: the close button · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-1280 · closing · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-1280 · closing · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

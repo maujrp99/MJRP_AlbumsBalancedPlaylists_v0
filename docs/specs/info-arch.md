@@ -511,7 +511,7 @@ Fonte: os três protótipos acima; cada item tem a mesma etiqueta nos wireframes
 
 - Rodada 1: criar, «Creating…», a falha ao gravar e o depois de criar não estavam desenhados. **Rodada 2 (Transformar v2): desenhados** (`^home-creating`, `^home-created`, `^home-create-failed`, `^home-name-missing`).
 - O nome vazio: hoje o computador cria «New Album Series» sem avisar. Na v2 o nome é sugerido pelo artista como texto de verdade, e o nome apagado pede o nome (decidido pelo agente — revisável).
-- Depois de criar: hoje o site abre a série na tela de séries (`controllers/HomeController.js` linha 235). Na v2 a Home fica e oferece «Blend it now» primeiro e «Open the series» (decidido pelo agente — revisável; a rota `/blend?seriesId=` já existe, `views/BlendingMenuView.js` linha 306).
+- Depois de criar: hoje o site abre a série na tela de séries (`controllers/HomeController.js` linha 235). Na v2 a Home fica e oferece «Blend it now» primeiro e «Open the series» (decidido pelo agente — revisável; a rota `/blend?seriesId=` já existe, `screens/blend/Blend.tsx` linha 306).
 - Arrastar para mudar a ordem: fora da v2 (↑ ↓ basta e funciona igual no toque).
 - As capas dos álbuns que vêm de uma lista colada são marcadores no protótipo (só as capas de Pink Floyd foram capturadas).
 
@@ -608,7 +608,7 @@ Fonte: `design/inception/f88-top-menu-elevar-v1.html` e `design/inception/f88-to
 
 ### Inventário do protótipo · o menu do topo (F88)
 
-O que o menu faz hoje (`TopNav.js`, `navigation/PhoneShell.js`, `PhoneMenu.js`, `AuthNav.js`, `SeriesDropdown.js`, `phoneTabs.js`, `SpotifyConnectButton.js`, `Footer.js`) e onde fica em cada nível. Nada sai.
+O que o menu faz hoje (`shell/TopNav.tsx`, `shell/PhoneShell.tsx`, `PhoneMenu.js`, `AuthNav.js`, `SeriesDropdown.js`, `phoneTabs.js`, `SpotifyConnectButton.js`, `Footer.js`) e onde fica em cada nível. Nada sai.
 
 | ID | Hoje | Elevar | Transformar | Função do produto | Destino |
 |---|---|---|---|---|---|
@@ -629,7 +629,7 @@ O que o menu faz hoje (`TopNav.js`, `navigation/PhoneShell.js`, `PhoneMenu.js`, 
 Decidido pelo MJRP em 2026-11-21 («Elevar no cel e transformar na web»; Apple Music no menu: «2.sim»): **computador = Transformar, celular = Elevar.** Construído no código de hoje, sem React (a migração é outra linha). Pendente de aceite do MJRP.
 
 - **MENU-01, MENU-02, MENU-03, MENU-04, MENU-05, MENU-06, MENU-07, MENU-08, MENU-09** construídos como descritos acima, no nível escolhido para cada tamanho; MENU-06 (Apple Music) entra no painel do computador e na folha do celular, antes do Spotify (ordem alfabética); o estado vem do MusicKit, que guarda a autorização entre visitas: é perguntado quando o painel ou a folha abre, com «Checking…» enquanto não se sabe, e «Could not connect» + «Try again» se o MusicKit não inicia.
-- **MENU-10 (idioma) e MENU-11 (pular para o conteúdo): não construídos.** O app é só em inglês e não há mecanismo de idioma (a F81 trará); os textos do menu estão num lugar só (`components/navigation/menuText.js`, os nomes dos destinos em `phoneTabs.js`) para a F81 achá-los. O «pular para o conteúdo» não existe hoje no app; fica para a verificação de acessibilidade. **Pendente.**
+- **MENU-10 (idioma) e MENU-11 (pular para o conteúdo): não construídos.** O app é só em inglês e não há mecanismo de idioma (a F81 trará); os textos do menu estão num lugar só (`shell/menuText.ts`, os nomes dos destinos em `phoneTabs.js`) para a F81 achá-los. O «pular para o conteúdo» não existe hoje no app; fica para a verificação de acessibilidade. **Pendente.**
 - **Mudou em relação ao protótipo:** a barra tem 72 px e fica **à esquerda, logo depois da marca**, como a da home (a da home passou a ficar também à esquerda: antes centrava entre a marca e a conta e andava até 92 px entre «sem conta» e «com conta»); a linha de baixo de Álbuns mostra os três tipos que vêm (By Artist, By Genre, By Track, «Soon») em vez de um só «outros tipos»; o painel junta «Clear album cache» também no computador (o rodapé continua).
 - **Computador a partir de 768 px (o `md` do projeto); a home troca para a barra de baixo até 899 px.** Entre 768 e 899 px a home mostra a barra no rodapé e o app a barra do topo, e a passagem muda de forma nessa faixa (`reports/evidence/F88/passage-out-800.png`). **Um ponto só não cabe na home:** com a barra no cabeçalho a 800 px, sem conta, a barra fica com 157 px e cada parada com 31 px, e os rótulos (33 a 48 px) se sobrepõem, porque a chave PT · EN e os dois botões ocupam 406 px; com conta cabe (68 px por parada) mas só a partir de cerca de 800 px em português. Fica para a home ganhar um cabeçalho mais compacto nessa faixa (decisão do MJRP). **Pendente.**
 

@@ -34,7 +34,7 @@ const files = [
 
 const TEXT_KEYS = new Set(['title', 'placeholder', 'aria-label', 'ariaLabel', 'alt', 'label', 'text', 'textContent', 'innerText', 'message', 'error', 'description', 'heading', 'subtitle', 'hint', 'empty', 'caption', 'tooltip', 'summary', 'name', 'detail', 'reason', 'note', 'confirmText', 'cancelText', 'body'])
 const ATTR_NAMES = new Set(['title', 'placeholder', 'aria-label', 'alt', 'aria-description', 'aria-valuetext'])
-const ICON_NAMES = new Set([...fs.readFileSync(path.join(ROOT, 'public/js/components/Icons.js'), 'utf8').matchAll(/^\s{2}([A-Za-z0-9]+): `/gm)].map(m => m[1]).concat(['Mic2', 'Mic', 'Tag', 'List', 'Sliders', 'Edit', 'Award', 'Layers', 'ArrowUp', 'ArrowDown', 'ChevronUp', 'ChevronDown']))
+const ICON_NAMES = new Set([...fs.readFileSync(path.join(ROOT, 'public/js/utils/iconShapes.js'), 'utf8').matchAll(/^ {4}([A-Za-z0-9_]+): \{"a":/gm)].map(m => m[1]).concat(['Mic2', 'Mic', 'Tag', 'List', 'Sliders', 'Edit', 'Award', 'Layers', 'ArrowUp', 'ArrowDown', 'ChevronUp', 'ChevronDown']))
 const FIXTURE_FILES = new Set(['public/splash/covers.js']) // fictional demo covers of the entry page: data, not interface copy
 const TEXT_CALLS = /^(showToast|toast|alert|confirm|prompt|notify|announce|setStatus|showError|showMessage)$/
 const DOM_CALLS = new Set(['button', 'span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'li', 'a', 'label', 'strong', 'em', 'small', 'td', 'th', 'legend', 'option', 'text', 'text_', 'summary'])

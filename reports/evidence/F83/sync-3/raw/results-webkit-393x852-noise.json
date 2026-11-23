@@ -1,0 +1,227 @@
+[
+ {
+  "what": "393x852, visitor · first visit: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · first visit: focus",
+  "ok": true,
+  "detail": "body"
+ },
+ {
+  "what": "393x852, visitor · first visit: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · typing: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · typing: focus",
+  "ok": true,
+  "detail": "input#artistScanInput:Search an artist, or pas"
+ },
+ {
+  "what": "393x852, visitor · typing: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · results: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · results: focus",
+  "ok": true,
+  "detail": "input#artistScanInput:Search an artist, or pas"
+ },
+ {
+  "what": "393x852, visitor · results: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · results, nothing chosen: no visitor notice on either side",
+  "ok": true,
+  "detail": "[null,null]"
+ },
+ {
+  "what": "393x852, visitor · three chosen: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · three chosen: focus",
+  "ok": true,
+  "detail": "body"
+ },
+ {
+  "what": "393x852, visitor · three chosen: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · three chosen: the visitor notice shows for a visitor, on both sides",
+  "ok": true,
+  "detail": "[\"You're not signed in: the series is saved to this browser only. Sign in to keep it on every device.\",\"You're not signed in: the series is saved to this browser only. Sign in to keep it on every device.\"]"
+ },
+ {
+  "what": "393x852, visitor · one left: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · one left: focus",
+  "ok": true,
+  "detail": "body"
+ },
+ {
+  "what": "393x852, visitor · one left: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · last album removed (Undo strip only): facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · last album removed (Undo strip only): focus",
+  "ok": true,
+  "detail": "body"
+ },
+ {
+  "what": "393x852, visitor · last album removed (Undo strip only): pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · paste: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · paste: focus",
+  "ok": true,
+  "detail": "input.home-line__text:Line 1"
+ },
+ {
+  "what": "393x852, visitor · paste: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · back from the paste: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · back from the paste: focus",
+  "ok": true,
+  "detail": "input#artistScanInput:Search an artist, or pas"
+ },
+ {
+  "what": "393x852, visitor · back from the paste: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · not found: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · not found: focus",
+  "ok": true,
+  "detail": "input#artistScanInput:Search an artist, or pas"
+ },
+ {
+  "what": "393x852, visitor · not found: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · the list opened from the message: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · the list opened from the message: focus",
+  "ok": true,
+  "detail": "input.home-line__text:Line 1"
+ },
+ {
+  "what": "393x852, visitor · the list opened from the message: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · sheet open: What is a series?: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · sheet open: What is a series?: focus",
+  "ok": true,
+  "detail": "div.sheet__panel:What is a series?A serie"
+ },
+ {
+  "what": "393x852, visitor · sheet open: What is a series?: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · sheet closed by its button: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · sheet closed by its button: focus",
+  "ok": true,
+  "detail": "body"
+ },
+ {
+  "what": "393x852, visitor · sheet closed by its button: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · sheet closed by Escape: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · sheet closed by Escape: focus",
+  "ok": true,
+  "detail": "body"
+ },
+ {
+  "what": "393x852, visitor · sheet closed by Escape: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · the series sheet from the bar: facts (text, boxes, padding, height)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "what": "393x852, visitor · the series sheet from the bar: focus",
+  "ok": true,
+  "detail": "div.sheet__panel:Your series2 albumsSerie"
+ },
+ {
+  "what": "393x852, visitor · the series sheet from the bar: pixels",
+  "ok": true,
+  "detail": "0 pixels apart"
+ },
+ {
+  "what": "393x852, visitor · a click on «Search» with the field focused starts the search (the branch must; UAT-282 is the hand-made button on main in WebKit)",
+  "ok": false,
+  "detail": "main: false · branch: false"
+ }
+]

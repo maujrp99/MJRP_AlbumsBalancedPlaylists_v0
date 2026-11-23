@@ -1,7 +1,7 @@
 /**
  * PlaylistGenerationService
  * 
- * Centralized playlist generation logic extracted from BlendingMenuView + PlaylistsView.
+ * Centralized playlist generation logic extracted from the old Blending menu and the playlists screen.
  * Single source of truth for track transformation and playlist generation.
  * 
  * @module services/PlaylistGenerationService
