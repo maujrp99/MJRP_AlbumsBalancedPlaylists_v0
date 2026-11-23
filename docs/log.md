@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:24] step — F82 (juiz, P2-5): o Painel diz «lendo» e «não foi possível ler» da leitura do site
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-5 do juiz: da leitura do site dentro do Painel (REQ-09) faltavam «lendo» e «não foi possível ler». A linha «O que o site mostra» agora diz também o que o leitor do site está fazendo ou como terminou: «lendo o que está publicado…» enquanto a leitura não acabou; «não foi possível ler: …» com o motivo em palavras comuns (o banco demorou mais de 3 segundos, o banco não respondeu, o documento não está no formato que o site conhece), junto do que o site mostra enquanto isso (a cópia ou o código); e «ainda não há nada publicado neste idioma» quando o documento não existe. O Painel ouve o leitor (`onContentState`) e a linha muda quando a leitura termina.
+
+Teste primeiro (`TextsPanel.test.tsx`, «the read of the site, inside the Painel»: cinco reprovaram, depois passaram). Português proposto pelo agente: `admin.site.reading`, `admin.site.unread`, `admin.site.why.*`, `admin.site.none`.
+
 ## [2026-11-23 15:21] step — F82 (juiz, P2-3): «Page not found» em React, redesenhada quando os textos publicados mudam
 
 **Branch:** claude/f82-cms-texts-panel

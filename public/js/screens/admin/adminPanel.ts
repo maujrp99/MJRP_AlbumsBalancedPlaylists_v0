@@ -21,7 +21,7 @@ import { ReactView } from '../../react-bridge/ReactView'
 import { router } from '../../router.js'
 import { AuthService } from '../../services/AuthService.js'
 import { contentWriter } from '../../services/content/adminContent.js'
-import { getContentState } from '../../services/content/contentWiring.js'
+import { getContentState, onContentState } from '../../services/content/contentWiring.js'
 import { TextsPanel, type PanelProps } from './TextsPanel'
 import { contentStore, type ContentRepository } from './contentStore'
 import { albumBlenderPorts, kitTexts, routerNavigation } from './kitPorts'
@@ -81,6 +81,7 @@ function panelProps(): PanelProps {
         },
         published: (locale, texts) => registerPublishedTexts(locale, texts),
         siteState: (locale) => getContentState(locale),
+        onSiteState: (listener) => onContentState(listener) as () => void,
         guardLeave: (unsaved) => installLeaveGuard({ beforeNavigate: (hook) => router.beforeNavigate(hook) as () => void, question: () => t('admin.leave') }, unsaved),
     }
 }

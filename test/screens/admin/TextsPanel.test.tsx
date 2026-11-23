@@ -5,7 +5,7 @@
  * saved, refused by the check, failed with the reason, and the conflict between two devices.
  */
 import { describe, it, expect, afterEach } from 'vitest'
-import { TextsPanel, type PanelProps } from '../../../public/js/screens/admin/TextsPanel'
+import { TextsPanel, type PanelProps, type SiteState } from '../../../public/js/screens/admin/TextsPanel'
 import type { SaveAnswer, Stored } from '../../../public/js/screens/admin/kitPorts'
 import { renderScreen, itLeavesNoListeners, type RenderedScreen } from '../../support/renderScreen'
 import { CODE, panelProps, stored, type, type PropsOptions } from './support'
@@ -50,11 +50,38 @@ describe('the read of the Painel', () => {
     })
 
     it('says what the site shows: published, a copy or the code, and how many texts the current version refuses', async () => {
-        const { text, app } = await show({ site: { source: 'copy', rejected: [{ key: 'albums.title', reason: 'markup' }] } })
+        const { text, app } = await show({ site: { source: 'copy', reason: 'copy', rejected: [{ key: 'albums.title', reason: 'markup' }] } })
         expect(text('[data-site="copy"] b')).toBe('copy (kept in this browser, up to 30 days)')
         expect(text('[data-rejected="1"]')).toBe('1 text refused by the current version')
         expect(app.querySelector('[data-key="albums.title"] [data-tag="rejected"]')?.textContent).toBe('refused by the current version')
         expect(app.querySelector('[data-key="albums.title"] [data-cell="en"] .ak-err-t')?.textContent).toBe('It cannot have < nor >.')
+    })
+})
+
+describe('the read of the site, inside the Painel (REQ-09; the judge of 2026-11-23, P2-5)', () => {
+    it('says «reading» while the site has not finished its own read, and follows the reader when it ends', async () => {
+        let state: SiteState = { source: 'code', reason: 'not_read', rejected: [] }
+        let told: () => void = () => {}
+        const { text, act, app } = await show({ siteState: () => state, onSiteState: (listener) => { told = listener; return () => {} } })
+        expect(text('[data-site-read="reading"]')).toBe('reading what is published…')
+        await act(() => { state = { source: 'published', reason: 'read', rejected: [] }; told() })
+        expect(text('[data-site="published"] b')).toBe('published (from the database)')
+        expect(app.querySelector('[data-site-read]')).toBeNull()
+    })
+
+    it.each([
+        ['timeout', 'could not be read: the database took more than 3 seconds'],
+        ['failed', 'could not be read: the database did not answer'],
+        ['bad_document', 'could not be read: the published document is not in the format the site knows'],
+    ])('says the read could not be made (%s) and what the site shows meanwhile', async (reason, words) => {
+        const { text } = await show({ siteState: () => ({ source: 'copy', reason, rejected: [] }) })
+        expect(text('[data-site-read="failed"]')).toBe(words)
+        expect(text('[data-site="copy"] b')).toBe('copy (kept in this browser, up to 30 days)')
+    })
+
+    it('says that nothing is published yet when the document does not exist', async () => {
+        const { text } = await show({ siteState: () => ({ source: 'code', reason: 'not_found', rejected: [] }) })
+        expect(text('[data-site-read="none"]')).toBe('nothing is published yet in this language')
     })
 })
 

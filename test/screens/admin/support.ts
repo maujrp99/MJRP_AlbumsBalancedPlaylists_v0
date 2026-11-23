@@ -93,6 +93,8 @@ export interface PropsOptions extends FakeOptions {
     reason?: () => TranslateReason
     screen?: string
     guardLeave?: PanelProps['guardLeave']
+    siteState?: PanelProps['siteState']
+    onSiteState?: PanelProps['onSiteState']
 }
 
 export function panelProps(options: PropsOptions = {}): PanelProps & { store: FakeStore; went: Array<KitLocation & { replace?: boolean }> } {
@@ -107,7 +109,8 @@ export function panelProps(options: PropsOptions = {}): PanelProps & { store: Fa
     return {
         store, ports, translate, check, went: navigation.went, guardLeave: options.guardLeave,
         kindOf: (key) => (key === 'start.lead' ? 'rich' : 'plain'),
-        siteState: () => options.site ?? { source: 'published', rejected: [] },
+        siteState: options.siteState ?? (() => options.site ?? { source: 'published', reason: 'read', rejected: [] }),
+        onSiteState: options.onSiteState,
     }
 }
 

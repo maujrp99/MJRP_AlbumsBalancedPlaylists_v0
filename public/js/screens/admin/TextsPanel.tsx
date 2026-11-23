@@ -19,12 +19,16 @@ import { usePanel, type Panel, type PanelDeps } from './usePanel'
 /** What the site shows of a language now, as its reader says (services/content). */
 export interface SiteState {
     source: 'published' | 'copy' | 'code'
+    /** Why: `read`, `copy`, `not_found`, `timeout`, `failed`, `bad_document`, or `not_read` while the read is still going. */
+    reason: string
     rejected: Array<{ key: string; reason: string }>
 }
 
 export interface PanelProps extends PanelDeps, RowDeps {
     ports: KitPorts
     siteState: (locale: Locale) => SiteState
+    /** Be told when the site's reader changes state (the read ended, a text was refused); returns the way to stop. */
+    onSiteState?: (listener: () => void) => () => void
     /** Asks before the person leaves the Painel with changes not saved; returns the way to stop asking (leaveGuard.ts). */
     guardLeave?: (unsaved: () => boolean) => () => void
 }
@@ -41,11 +45,23 @@ function Rail() {
     )
 }
 
+/** The reader's reasons that mean the read could not be made. */
+const UNREAD = ['timeout', 'failed', 'bad_document']
+
+/** What the site's own read is doing or how it ended, when that is not «read»: reading, could not be read, nothing published. */
+function SiteRead({ reason }: { reason: string }) {
+    if (reason === 'not_read') return <span className="cms-soft" data-site-read="reading">{t('admin.site.reading')}</span>
+    if (UNREAD.includes(reason)) return <span className="ak-badge warn" data-site-read="failed">{t('admin.site.unread', { why: t(`admin.site.why.${reason}`) })}</span>
+    if (reason === 'not_found') return <span className="cms-soft" data-site-read="none">{t('admin.site.none')}</span>
+    return null
+}
+
 function SiteLine({ state }: { state: SiteState }) {
     const count = state.rejected.length
     return (
         <p className="cms-site" data-site={state.source}>
             <span className="cms-soft">{t('admin.site.label')}:</span> <b>{t(`admin.site.${state.source}`)}</b>
+            <SiteRead reason={state.reason} />
             {count > 0 && <span className="ak-badge err" data-rejected={count}>{tPlural('admin.site.rejected', count, { count })}</span>}
         </p>
     )
@@ -137,6 +153,10 @@ export function TextsPanel(props: PanelProps) {
     // What is not saved now, for the question at the moment of leaving.
     const [draft] = useState(() => ({ unsaved: 0 }))
     useEffect(() => { draft.unsaved = panel.unsaved.length }, [draft, panel.unsaved.length])
+    // The site's reader ends its read, or refuses a text, while the Painel is open: the line about the site follows it.
+    const [, setSiteTurn] = useState(0)
+    const onSiteState = props.onSiteState
+    useEffect(() => onSiteState?.(() => setSiteTurn((turn) => turn + 1)), [onSiteState])
     const guardLeave = props.guardLeave
     useEffect(() => guardLeave?.(() => draft.unsaved > 0), [guardLeave, draft])
     return (
