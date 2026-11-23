@@ -8,11 +8,34 @@
 
 O MJRP, 2026-11-23: «pls mande todas as perguntas pendentes do cms e os em abertos para o harness remote». Lote `reports/proposals/2026-11-23-1039-v0-cms-pending-decisions.md` (forma conferida por `proposal_batches.py check`): tradução (serviço e chave), conserto do filtro de links no MJRPpersonal, a versão 2 do protótipo, as três regras do V0 na pasta do kit, blocos da barra, mídia nos textos, formatação aceita, links para fora, frases em pedaços, botões a 44 px, pausa do kit, papéis, a ordem de publicação com o Discogs, a revisão das Receitas. Ficam fora do lote, por serem aceite ou carimbo dele (o lote os recusa): o carimbo do ADR-0024, o aceite do registro do kit (CC-ADR-0068, ainda por nascer na `main` do harness), os carimbos do ADR-0023 e da emenda da constituição.
 
+## [2026-11-23 10:39] step — CMS, fatia 0: os relatórios dos juízes independentes arquivados
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- Arquivados, sem edição, os três relatórios dos juízes independentes da fatia 0 do CMS em `reports/audits/`: a recheca (falhou, 1 P1), a segunda passada (passou) e a reconferência de paridade visual (passou). Este commit vem depois de todos os outros do ramo, como o portão do merge pede. Suíte padrão, sozinha pela fila: 392 arquivos, 5233 testes passaram, 1 pulado.
+
+
+## [2026-11-23 10:37] step — CMS, fatia 0: os tetos do orçamento de publicação medidos de novo
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- `npm run budget:publication` saía 1 no ramo (a margem de 150 B se perdeu com o código da fatia 0 e o merge da main). Medido na fila da máquina, na build com os cinco substitutos: script principal 194.875 B, depois da primeira tela 235.874 B, soma 430.749 B. Tetos pela regra do arquivo (medido + 150 B): `main` 195.025 B, `background` 57.462 B (teto da soma 430.899 B); `publication.measured` em dia. Agora: «inside the budget, with the margin», exit 0.
+
+
 ## [2026-11-23 10:31] decision — CMS (F82): o protótipo do Painel está aprovado para uma primeira iteração; dois requisitos novos (texto rico, tradução entre campos)
 
 **Branch:** main
 
 O MJRP, 2026-11-23: «prototipo painel aprovado, desde que contenha o rich text e as Receitas do Blend, eu preciso revisar contigo...enfim, construa do jeito que está para uma primeira iteração pls....ah tb vi que nao está trazendo a feature de traducao de uma campo para outro, vc viu isso nos outros CMS, certo?». Como eu li (interpretação minha): o nível «Painel» do protótipo vale como base da primeira iteração, com o editor rico dentro; as Receitas do Blend entram como estão no protótipo e ele quer revê-las comigo depois; a construção começa sem esperar as cinco perguntas da proposta do kit, que ficam com a minha recomendação, «decidido pelo agente — revisável»: (1) o kit cumpre o histórico pelo roteador e a interface em inglês, e fica isento só do limite de complexidade, com lista que só encolhe; (2) um projeto pode desligar blocos da barra num campo; (3) pausa de um dia nas mudanças do kit do MJRPpersonal durante a mudança; (4) papéis depois das chaves; (5) links para fora do site permitidos (https e e-mail), com o conserto do filtro. Falha do agente: a peça de traduzir do kit (F96 do MJRPpersonal, `ports.translate`, com revisão) existe e não foi levada ao protótipo nem à spec; ele a apontou. Registrados REQ-12 (texto rico nos textos corridos) e REQ-13 (tradução de um campo para o outro) na spec da F82, na story S-64 e nas tarefas (TASK-15, TASK-16). Em aberto com ele: o serviço de tradução no servidor do V0 (qual, a chave, o custo); a versão 2 do protótipo não está publicada (a trava recusou a atualização do artefato).
+
+## [2026-11-23 09:48] step — CMS, fatia 0: o teste das regras em passo próprio e os ajustes da recheca independente
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- Correção da recheca independente (1 P1, 4 P2). P1-1: o teste das regras ganhou um passo próprio: `npm run test:rules` (`scripts/rules-emulator.mjs` roda `firebase emulators:exec --only firestore`; acha o Java em `/opt/homebrew/opt/openjdk/bin` mesmo fora do PATH e para com mensagem clara sem Java ou sem o Firebase CLI). O arquivo virou `test/security/firestoreRules.emulator.js` (fora do `*.test.js`, exclusão declarada em `vitest.config.js` e fixada por `test/architecture/rulesTestHasItsOwnStep.test.js`); a suíte padrão (`npx vitest run`) não precisa de emulador. O passo roda no CI (`.github/workflows/ci.yml`, com Java) e no `run_unit_tests` de `scripts/lib/deploy-common.sh` (logo depois da suíte; falha impede o deploy). O sensor `test` do doctor volta a não depender do emulador. `MJRP_RULES_EMULATOR=skip` foi removido.
+- P2: teste do teto de 10 chaves em `previous` de `published/site` (a mutação que sobrevivia). P2: o aviso de `unknown` no servidor sai uma vez no começo do estado e no máximo uma por minuto (teste). P2: a janela de 10 minutos da última leitura boa escrita na spec da F93 (REQ-08, critério) e no `behavior.md` como «decidido pelo agente — revisável». Mergeei a `main` (linha do React) e resolvi `behavior.md` e `package.json`.
+- Decidido pelo agente — revisável: `vitest.workspace.js` troca de projetos quando `MJRP_RULES_STEP=1` (só o script do passo o define), porque o workspace padrão ignorava o `--config` e rodava a suíte inteira. O CI instala `firebase-tools@15.36.0` globalmente. Não toquei no status da ADR nem em `tech-stack.md`.
+
 
 ## [2026-11-23 09:38] decision — CMS (F82): o editor de texto rico do kit é o padrão nos textos corridos; o kit fica com esta sessão
 
@@ -32,11 +55,50 @@ O MJRP, 2026-11-23, respondendo a «O teste da prévia do React…; estando bom,
 
 O juiz independente (Opus, não construiu) julgou `claude/f83-wave-8d-closure` (`c159805`) contra a produção (`main` `a88adf4`) e contra o pai (`66cb1ee`): **passa**. Relatório, sem mudança: `reports/audits/2026-11-22-mjrpalbumblender-v0-react-final-visual-parity-recheck.md`. Exportação para o Apple Music: 81 de 81 conferências iguais à produção. O erro `removeChild` vinha dos roteiros de prova (removiam os avisos à mão), não do app. Primeira tela da Create no celular: +0,37 s no 4G rápido e +1,23 s no 4G lento contra a produção. A linha laranja do roteador aparece quando o arquivo da tela demora (fica para a F94). P2: «or paste a list» aceita o primeiro clique com texto no campo (mesma causa do conserto do «Search»); o chip da conta difere por poucos pixels; no WebKit do computador a página repousa em outra rolagem depois de remover uma playlist; o teto de peso está sem folga. Não rodou: a Folha do menu e o «Search» por toque no celular (seletor), iPhone, Safari, Apple Music e Firestore de verdade. Corrigi no relatório de fecho a frase que dizia não haver relatórios de juiz da 8a, 8b e 8c (há) e apontei a lista de teste do dono para a do juiz final.
 
+## [2026-11-23 01:29] step — CMS, fatia 0: caixas da F92 e da F93 marcadas depois da priorização
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- Com a F92 e a F93 na «Priorizada» (main 51856f8) e a main mergeada no ramo, marquei F92 TASK-04 e F93 TASK-04 e TASK-05 em `tasks.md`; o código e os testes já estavam nos commits anteriores do ramo (6b1e06a, 079c855, 2d9bd11). Nada além das caixas.
+
+
 ## [2026-11-23 01:08] step — F83: migração para React completa na prévia `staging` (linha de integração `3fd2d33`); falta o teste do dono
 
 **Branch:** main
 
 A onda 8d (fecho) entrou na linha de integração `integrate/staging-2026-11-21` (`3fd2d33`) depois do juiz final (passa: 0 P0, 0 P1, 4 P2; relatório em `reports/audits/2026-11-22-mjrpalbumblender-v0-react-final-visual-parity-recheck.md`, naquela linha). Prévia publicada e respondendo: https://mjrp-playlist-generator--staging-2nu8kutx.web.app (vale até 2026-11-30). A produção não foi tocada. Falta, e é do MJRP: os 8 passos do juiz (Apple Music de verdade, gestos no iPhone, a linha laranja no 4G, a rolagem no Safari do Mac); depois o carimbo do ADR-0023 e da emenda da constituição, e o «publica» para a produção. Também nesta sessão: a fatia 0 do CMS construída em `claude/f82-cms-slice-0-foundation` (`2d9bd11`, 4251 testes), sem juiz e sem merge ainda; as caixas de F92 e F93 esperam a «Priorizada».
+
+## [2026-11-23 00:49] step — CMS, fatia 0: o servidor lê a chave do Discogs do CMS, com o estado «desconhecido» à parte (F93 TASK-05)
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- O servidor lê a chave do Discogs do CMS (F93 TASK-05, REQ-02 e REQ-08): `server/lib/valueSources/cmsSwitches.js` lê por REST, sem credencial, o documento público `published/site`, confere o mapa `switches` com o validador de `shared/content` (carregado por `server/lib/contentCore.js`, como o `albumIdentity`) e responde `on`, `off` ou `unknown`. Cache de 60 s, prazo de 1,5 s, quem chega junto divide a mesma leitura, o primeiro pedido de uma instância nova ESPERA a leitura, leitura que falhou só é tentada de novo depois de 60 s. `unknown` nunca vira `off` e é sempre dito no registro (aviso com o motivo).
+- As duas travas (`valueSwitch.js` + `valueService.js`): a variável do serviço (corte de emergência, lida primeiro: com ela desligada o CMS nem é consultado) e a chave do CMS; só liga com as duas; `DISCOGS_VALUES_FOR` continua o «para quem». `GET /api/value-sources` responde `{ discogs: 'on' | 'off' | 'unknown' }` e `POST /api/album-value` responde `not_configured` em `off` e em `unknown`, sem perguntar ao Discogs. O `createValueService` recusa nascer sem o leitor do CMS (a segunda trava não se esquece).
+- O app entende o `unknown` (`InventoryValueService.sourceState`): não mostra o Discogs e o diz no console, à parte do `off`; `valueApi.js` documenta o terceiro estado.
+- Testes escritos antes do código: `test/server/cmsSwitches.test.js` (24 casos: os três estados, 404, 403/500/rede/timeout/corpo ruim, tipo errado, cache, leitura compartilhada, espera do primeiro pedido, validade da última leitura) e a matriz das duas travas em `test/server/valueRoutes.test.js`; `arch.md` e `behavior.md` em dia. Suíte inteira verde com o emulador de pé (332 arquivos, 4251 testes).
+- Decidido pelo agente — revisável: (1) leitura REST do projeto de `FIREBASE_PROJECT_ID`, senão o de produção; (2) documento que não existe (404) ou chave que não está nele = `off` (o padrão do Discogs é `false`; é resposta, não falha); logo, depois que o servidor novo for ao ar e ANTES de o MJRP criar o documento e ligar a chave, o Discogs fica desligado em produção (ele já tem esse passo na lista); (3) valor da chave que vem com tipo errado = `off` e dito no registro, não `unknown`; (4) a última leitura boa vale no máximo 10 minutos com o banco fora, depois `unknown` (a spec dizia «o último lido» na tabela de falhas e «desconhecido com o banco fora» no critério de aceite; os 10 minutos reconciliam as duas); (5) leitura que expira ou falha não é repetida antes de 60 s; (6) o app trata `unknown` como `off` na tela, mas o diz.
+- NÃO marcadas as caixas da F93 (TASK-04 e TASK-05) nem a da F92 (TASK-04): o gate da «Priorizada» barra qualquer commit que toque os arquivos de uma feature da trilha Humano que o MJRP não priorizou (a F92 e a F93 não estão lá). O código e os testes estão no ramo; só as caixas esperam a priorização. A trava do `status_sync` também derivou «In Progress» nas duas specs; desfiz, para não iniciar o que ele não priorizou.
+
+
+## [2026-11-23 00:48] step — CMS, fatia 0: o validador das chaves em shared/content (F93 TASK-04)
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- `shared/content/switches.js` (F93 TASK-04, REQ-05): a lista fechada das três chaves (`discogsValues`, `usageMeasurement`, `portugueseForAll`), cada uma `true` ou `false`, com o padrão, o que o leitor faz sem leitura (`whenUnknown`) e se o CMS só pode desligá-la (`onlyTurnsOff`); `validateSwitches` recusa a chave fora da lista ou de outro tipo sozinha e segue com as outras (`{ values, rejected }`); `switchValue` devolve o lido ou o padrão. Núcleo puro: sem Firebase, sem `fetch`, sem global (o `coreStaysPortable` o cobre, sem exceção); roda também sem o jsdom (projeto `core-node`). 12 casos em `test/shared/content/switches.test.js`, escritos antes do código.
+- Decidido pelo agente — revisável: os padrões. `discogsValues` = `false` (nada liga o que o dono não ligou), `usageMeasurement` = `true` com `onlyTurnsOff` (a medição segue o build e o CMS só a desliga; chave ausente não a desliga), `portugueseForAll` = `false` (fechada). O servidor passa a usá-lo no próximo commit (o `noDeadModules` exige um importador).
+- A F92 (TASK-04) NÃO foi marcada: o commit que toca a F92 foi barrado pelo gate da «Priorizada» (a F92 não está lá; o caso do emulador existe em `test/security/firestoreRules.test.js`, só a caixa em `tasks.md` espera o MJRP priorizar a F92).
+
+
+## [2026-11-23 00:45] step — CMS, fatia 0: as regras do conteúdo publicado e o teste que as roda no emulador (F82 TASK-07/08/05, F92 TASK-04)
+
+**Branch:** claude/f82-cms-slice-0-foundation
+
+- `firestore.rules` (rascunho; quem publica é o MJRP): `published/{site,texts_en,texts_pt,recipes}` (todos leem sem login; só o administrador grava: login que não é anônimo e `cmsAdmins/{uid}.role == 'super'` por `get()` de caminho absoluto; campos, tipos e contagens fechados; `_schemaVersion` que não desce; `rev` = anterior + 1, e 1 na criação), `cmsAdmins/{uid}` (cada pessoa lê só o seu; ninguém grava pelo app), `cmsWork/*` (só o administrador) e `albums/` fechada para escrita (sem escritor desde a F65; a leitura ficou). Nada do que existia foi afrouxado; sem regra curinga na raiz.
+- `test/security/firestoreRules.test.js` agora RODA as regras no emulador do Firestore (`@firebase/rules-unit-testing` 3.0.4, dependência de desenvolvimento, compatível com o firebase 10 do projeto): 30 casos — convidado, outra conta, a conta dele com login anônimo, `cmsAdmins/*`, campo fora da lista, `_schemaVersion` descendo e `rev` errado recusados; o administrador aceito; e o que o teste de texto da F59/F78 dizia, agora como comportamento. A escrita de convidados em `spotify_enrichment/` é a exceção declarada numa lista que só encolhe (F92 TASK-04).
+- O emulador é um servidor fora da suíte: `npm run rules:emulator` (precisa de Java e do Firebase CLI; `firebase.json` ganhou o bloco `emulators`, porta 8089, projeto `demo-mjrp-rules`); a suíte o acha por `FIRESTORE_EMULATOR_HOST`. Sem emulador a suíte FALHA alto; `MJRP_RULES_EMULATOR=skip` é a saída declarada.
+- Decidido pelo agente — revisável: (1) `published/*` sem apagar pelo app (voltar atrás é o console); (2) os documentos listados são `site`, `texts_en`, `texts_pt`, `recipes` e nada mais: `entry` (fatia 2) entra quando a fatia 2 chegar, antes do Painel que a grava; (3) tetos: 6.000 textos, 100 receitas, 10 chaves em `previous` do site; (4) `cmsWork/*` também exige `_schemaVersion` que não desce nas atualizações; (5) a leitura de `published/*` é a única regra com `if true`, e o teste a fixa; (6) a suíte falha sem o emulador em vez de pular calada.
+- O que é do MJRP: publicar as regras no console; criar `cmsAdmins/{uid}`. Nada foi publicado.
+
 
 ## [2026-11-23 00:32] decision — ADR-0024: o MJRP aceitou em conversa («Aceito»); o carimbo no registro continua dele
 

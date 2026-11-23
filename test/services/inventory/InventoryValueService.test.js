@@ -58,6 +58,15 @@ describe('the switch (REQ-10)', () => {
         expect(await build({ source: { kind: 'found', data: null } }).service.sourceState()).toBe('off')
     })
 
+    it('"unknown" (the server could not read the key of the CMS, F93 REQ-08) is not shown as on, and is said in the console, apart from off', async () => {
+        const { service } = build({ source: { kind: 'found', data: { discogs: 'unknown' } } })
+        expect(await service.sourceState()).toBe('off')
+        expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('unknown'))
+        console.warn.mockClear()
+        expect(await build({ source: { kind: 'found', data: { discogs: 'off' } } }).service.sourceState()).toBe('off')
+        expect(console.warn).not.toHaveBeenCalled()
+    })
+
     it('a visitor is not asked for: the route answers only to a person with an account', async () => {
         const { service, api } = build({ mayAsk: () => false })
         expect(await service.sourceState()).toBe('off')

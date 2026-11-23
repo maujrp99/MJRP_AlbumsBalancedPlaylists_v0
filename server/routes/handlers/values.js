@@ -24,9 +24,9 @@ function createValueHandlers ({ valueService, exchangeRates, logger = console, n
     return respond(res, result)
   }
 
-  /** GET /api/value-sources - { discogs: 'on' | 'off' } for who asks: the switch, read now. */
+  /** GET /api/value-sources - { discogs: 'on' | 'off' | 'unknown' } for who asks: the two locks, read now. */
   async function valueSources (req, res) {
-    return respond(res, valueService.valueSources(req.user || null))
+    return respond(res, await valueService.valueSources(req.user || null))
   }
 
   /** GET /api/exchange-rates - the rates of the day from USD. */

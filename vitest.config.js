@@ -8,6 +8,7 @@ export default defineConfig({
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./test/setup.js'],
+        // test/security/firestoreRules.emulator.js is left out ON PURPOSE (not *.test.js): it needs the Firestore emulator and runs in its own step, `npm run test:rules` (vitest.rules.config.js; the CI and the deploy run it; test/architecture/rulesTestHasItsOwnStep.test.js holds that)
         include: ['test/**/*.test.{js,ts,tsx}'], // .ts/.tsx: the React screens (F83); the server's tests are in test/server
         exclude: ['node_modules/**', 'test/visual/**'], // test/visual/ is the Playwright visual sensor (mjrp-scripts/visual_parity), not the app's tests
         coverage: {

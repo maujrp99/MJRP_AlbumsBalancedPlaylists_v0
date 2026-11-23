@@ -152,6 +152,22 @@ run_unit_tests() {
     tail -60 "$log" >&2
     die "the unit tests failed: nothing was deployed"
   fi
+  run_rules_tests
+}
+
+# Runs the Firestore rules test in the emulator (F82 TASK-05, ADR-0024): its own step, kept out of
+# the default suite, so it is run here, right after it. It needs Java and the Firebase CLI
+# (scripts/rules-emulator.mjs says which is missing). A failure, or no way to run it, stops the deploy.
+run_rules_tests() {
+  step "Running the rules test in the Firestore emulator (npm run test:rules)"
+  local log="$WORK_DIR/rules.log"
+  if ( cd "$SRC_DIR" && npm run test:rules --silent ) >"$log" 2>&1; then
+    grep -E '^ *(Test Files|Tests) ' "$log" | sed 's/^ */    /' || true
+    ok "the rules test passed"
+  else
+    tail -60 "$log" >&2
+    die "the rules test failed, or could not run (it needs Java and the Firebase CLI): nothing was deployed"
+  fi
 }
 
 # fetch_status URL -- prints the HTTP status of a GET (000 when there is no answer).

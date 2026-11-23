@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: standard
 solution_type: feature
 imports: ["[[S-75-turn-features-on-and-off-from-the-cms]]"]
@@ -39,7 +39,7 @@ Na seção do Painel, por chave: **ligada**, **desligada**, **só pessoas nomead
 - **REQ-05** · Dado `{discogsValues: "yes", foo: true}`, então as duas chaves são recusadas e as demais seguem; dado um documento válido, então as três são lidas.
 - **REQ-06** · Dado uma cópia com `discogsValues: true` e o banco fora, então a função **não** liga por cópia; dado uma cópia com `false`, então desliga já; dada leitura e cópia ausentes, então o estado é «desconhecida» (o Painel diz «não foi possível ler»), e «Português para todos» fica fechado.
 - **REQ-07** · Dado o banco fora e nenhuma cópia, então a medição segue a variável do build; dado o CMS com a medição desligada, então ela desliga já na próxima abertura.
-- **REQ-08** · Dado cada combinação das duas travas, então o servidor liga só com as duas ligadas; dado o banco que não responde, então o servidor devolve «desconhecido» (≠ «desligado»), o registra, e o inventário não mostra o Discogs; dado uma instância nova, então o primeiro pedido espera até 1,5 s.
+- **REQ-08** · Dado cada combinação das duas travas, então o servidor liga só com as duas ligadas; dado o banco que não responde e nenhuma leitura boa nos últimos 10 minutos, então o servidor devolve «desconhecido» (≠ «desligado»), o registra, e o inventário não mostra o Discogs; com uma leitura boa de até 10 minutos atrás, o servidor mantém essa leitura enquanto o banco estiver fora (decidido pelo agente — revisável: a tabela de falhas da proposta diz «o último lido», este critério dizia «desconhecido»; os 10 minutos reconciliam as duas, e nunca viram «ligado» por engano); dado uma instância nova, então o primeiro pedido espera até 1,5 s.
 - **REQ-03, REQ-09** · Dado o Discogs desligado, então a página não tem a marca da função e o navegador não pede o arquivo dela (prova no navegador real); dada a suíte, então o módulo do Discogs só é importado pelo registro e nenhum módulo de função com chave entra na pré-carga.
 - **REQ-04** · Fica pendente da aceitação do MJRP; até lá os sensores do REQ-09 valem só como proposta.
 

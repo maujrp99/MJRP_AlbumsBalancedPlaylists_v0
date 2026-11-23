@@ -54,9 +54,106 @@ service cloud.firestore {
     // =========================================================================
     // LEGACY ALBUMS (Root Collection)
     // =========================================================================
-    // Necessário porque o «Refetch Metadata» grava na raiz '/albums' (repositories/SharedAlbumRepository.js)
+    // Read by a signed-in person. Closed to writing (F82, ADR-0024): nothing writes the root '/albums'
+    // since F65 removed the «Refetch Metadata» writer (SharedAlbumRepository), so no write is allowed.
     match /albums/{albumId} {
-      allow read, write: if request.auth != null;
+      allow read: if request.auth != null;
+    }
+
+    // =========================================================================
+    // THE CMS (F82, F92, F93; ADR-0024) - DRAFT: the owner publishes this file, no pipeline does
+    // =========================================================================
+    // The administrator is a person signed in with a real account (never the anonymous login the
+    // app opens by itself) whose record `cmsAdmins/{uid}` says role "super". The record is created
+    // by the owner once, in the Firebase console; nothing in this repository holds an identifier of
+    // his. `get()` takes the absolute path; a missing record is an error, and an error refuses.
+    function isCmsAdmin() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        && get(/databases/$(database)/documents/cmsAdmins/$(request.auth.uid)).data.role == 'super';
+    }
+
+    // The fields every published document carries: the version of the shape (never down, see
+    // keepsSchemaVersion) and `rev`, the sequence of the saves; `previous` keeps the earlier value
+    // of the keys the last save changed (a map, only what changed).
+    function hasVersionAndRev() {
+      return request.resource.data._schemaVersion is int
+        && request.resource.data._schemaVersion >= 1
+        && request.resource.data.rev is int;
+    }
+    function previousIsMapIfPresent() {
+      return !('previous' in request.resource.data) || request.resource.data.previous is map;
+    }
+    function previousIsSmall(max) {
+      return !('previous' in request.resource.data) || request.resource.data.previous.size() <= max;
+    }
+    // The first save is rev 1; every later one is exactly the stored rev plus one (a document made
+    // by hand with no rev counts as 0).
+    function revStartsAtOne() {
+      return request.resource.data.rev == 1;
+    }
+    function revFollows() {
+      return request.resource.data.rev == resource.data.get('rev', 0) + 1;
+    }
+
+    // The three switches of F93, a closed list, each true or false. A key left out is a key not set.
+    function validSwitches(switches) {
+      return switches is map
+        && switches.keys().hasOnly(['discogsValues', 'usageMeasurement', 'portugueseForAll'])
+        && switches.get('discogsValues', true) is bool
+        && switches.get('usageMeasurement', true) is bool
+        && switches.get('portugueseForAll', true) is bool;
+    }
+
+    // One function per document, over the future document: the fields and types allowed, and the counts.
+    // The rules cannot walk a free map, so a text is not checked here; every reader checks it again
+    // (the validator of shared/content).
+    function validSite() {
+      return request.resource.data.keys().hasOnly(['_schemaVersion', 'rev', 'previous', 'switches'])
+        && request.resource.data.keys().hasAll(['_schemaVersion', 'rev', 'switches'])
+        && hasVersionAndRev()
+        && validSwitches(request.resource.data.switches)
+        && previousIsMapIfPresent() && previousIsSmall(10);
+    }
+    function validTexts() {
+      return request.resource.data.keys().hasOnly(['_schemaVersion', 'rev', 'previous', 'texts'])
+        && request.resource.data.keys().hasAll(['_schemaVersion', 'rev', 'texts'])
+        && hasVersionAndRev()
+        && request.resource.data.texts is map && request.resource.data.texts.size() <= 6000
+        && previousIsMapIfPresent() && previousIsSmall(6000);
+    }
+    function validRecipes() {
+      return request.resource.data.keys().hasOnly(['_schemaVersion', 'rev', 'previous', 'recipes'])
+        && request.resource.data.keys().hasAll(['_schemaVersion', 'rev', 'recipes'])
+        && hasVersionAndRev()
+        && request.resource.data.recipes is map && request.resource.data.recipes.size() <= 100
+        && previousIsMapIfPresent() && previousIsSmall(100);
+    }
+    function validPublished(docId) {
+      return (docId == 'site' && validSite())
+        || ((docId == 'texts_en' || docId == 'texts_pt') && validTexts())
+        || (docId == 'recipes' && validRecipes());
+    }
+
+    // The published content: everybody reads it, with no login (the site reads it on opening, the
+    // server and the entry page too); only the administrator writes it, and only the documents of
+    // the list above. Nobody deletes through the app (going back is the console).
+    match /published/{docId} {
+      allow read: if true;
+      allow create: if isCmsAdmin() && validPublished(docId) && revStartsAtOne();
+      allow update: if isCmsAdmin() && validPublished(docId) && revFollows() && keepsSchemaVersion();
+    }
+
+    // The list of administrators: each person reads only their own record (the Painel asks for it
+    // before it loads); nobody writes it through the app - the owner creates it in the console.
+    match /cmsAdmins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // The Painel's own work area (approvals of the Portuguese, who saved and when): the administrator only.
+    match /cmsWork/{document=**} {
+      allow read, create, delete: if isCmsAdmin();
+      allow update: if isCmsAdmin() && keepsSchemaVersion();
     }
 
     // =========================================================================

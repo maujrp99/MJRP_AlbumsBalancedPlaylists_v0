@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: In Progress
 lane: standard
 solution_type: feature
 imports: ["[[S-74-grow-and-manage-the-blend-algorithms-from-the-cms]]"]
