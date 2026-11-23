@@ -7,8 +7,8 @@
  * the real corners of every plank and every sleeve, not against a guess.
  */
 
-/** The crate: width, depth, height, plank thickness; the sleeves: side, spacing, first position. */
-export const GEOM = Object.freeze({ W: 2.62, DEP: 4.3, HT: 1.05, T: 0.08, SZ: 2.3, Z0: 1.82, SPAN: 3.64, COUNT: 14, LIFT: 1.55, FWD: 0.55 })
+/** The crate: width, depth, height, plank thickness; the sleeves: side, cardboard, spacing, first position. */
+export const GEOM = Object.freeze({ W: 2.62, DEP: 4.3, HT: 1.05, T: 0.08, SZ: 2.3, TH: 0.035, Z0: 1.82, SPAN: 3.64, COUNT: 14, LIFT: 1.55, FWD: 0.55 })
 
 /** The gap between two sleeves: the row keeps its length (front to back of the crate), whatever the count. */
 export const stepOf = (count) => GEOM.SPAN / (count - 1)
@@ -38,17 +38,40 @@ export const VIEWS = Object.freeze({
 /** The view the page shows: «Palco largo», the owner's choice (2026-11-21 «escolha: 2- palco largo»). */
 export const PAGE_VIEW = 'b'
 
-/** How each sleeve stands for a scroll state: lifted (0..1) and leaning (radians), as the page always did. */
+/** The browsing angle (radians): how far a record in front of the pulled one flips forward when nothing stops it; and the air it keeps from what it rests on. */
+export const BROWSE = 0.62
+const AIR = 0.012
+
+/**
+ * How the `n` records in front of the pulled one rest, the one nearest the crate's end wall first (UAT-289):
+ * the first leans on the wall's inner top edge, each next one on the record before it, none past the browsing
+ * angle. At the browsing angle alone the two nearest the wall went through the wood.
+ */
+export function flippedTilts(n, count = GEOM.COUNT) {
+    const { DEP, HT, T, SZ, TH, Z0 } = GEOM
+    // from the first record's foot to the wall's inner top edge
+    const out = (DEP - T) / 2 - Z0, up = HT - T / 2
+    const tilts = []
+    for (let k = 0; k < n; k++) {
+        const rest = k === 0
+            ? Math.atan2(out, up) - Math.asin((TH / 2 + AIR) / Math.hypot(out, up))
+            : tilts[k - 1] + Math.asin((stepOf(count) * Math.cos(tilts[k - 1]) - TH - AIR) / SZ)
+        tilts.push(Math.min(BROWSE, rest))
+    }
+    return tilts
+}
+
+/** How each sleeve stands for a scroll state: lifted (0..1) and leaning (radians). */
 export function sleeveTargets(track, flip, tracks, count = GEOM.COUNT) {
     const tr = tracks[track], s = flip < 0.5 ? 1 : -1
     const lean = -0.16 * s
-    const pull = tr.pull >= 0 ? recordAt(tr.pull, count) : -1
+    const pull = tr.pull >= 0 && flip % 1 === 0 ? recordAt(tr.pull, count) : -1
+    // the records in front of the pulled one: before it on side A, after it on side B (the crate has turned)
+    const flipped = pull >= 0 ? flippedTilts(s > 0 ? pull : count - 1 - pull, count) : []
     return Array.from({ length: count }, (_, i) => {
-        let lift = 0, tilt = lean
-        if (pull >= 0 && flip % 1 === 0) {
-            if (i === pull) { lift = 1; tilt = 0.04 * s } else if ((s > 0 && i < pull) || (s < 0 && i > pull)) tilt = 0.62 * s
-        }
-        return { lift, tilt }
+        if (i === pull) return { lift: 1, tilt: 0.04 * s }
+        const k = s > 0 ? i : count - 1 - i
+        return { lift: 0, tilt: pull >= 0 && k < flipped.length ? flipped[k] * s : lean }
     })
 }
 
@@ -68,6 +91,13 @@ export function faceTurn(azimuthRad, rot) {
     return a
 }
 
+/** How far a lifted record has come forward (0..1): nothing until its foot is over the wall's top, then smoothly the whole step (UAT-289: forward from the start, the record nearest the wall rose through the plank). */
+const forwardOf = (lift) => {
+    const clear = (GEOM.HT - GEOM.T / 2) / GEOM.LIFT + 0.03
+    const u = Math.max(0, (lift - clear) / (1 - clear))
+    return u * u
+}
+
 /** Where a sleeve stands in the crate's own space: its position and its turns. */
 export function sleevePlace(i, lift, tilt, rot, view, count = GEOM.COUNT) {
     const azimuth = (view.azimuth || 0) * DEG
@@ -75,7 +105,8 @@ export function sleevePlace(i, lift, tilt, rot, view, count = GEOM.COUNT) {
     return {
         x: 0,
         y: GEOM.T / 2 + lift * GEOM.LIFT,
-        z: z + lift * GEOM.FWD * (rot < Math.PI / 2 ? 1 : -1),
+        // toward the side facing you; through the crate's turn it crosses over smoothly (a sign here made it leap at the quarter turn)
+        z: z + forwardOf(lift) * GEOM.FWD * Math.cos(rot),
         tilt,
         turn: view.face ? faceTurn(azimuth, rot) * lift : 0
     }
@@ -102,7 +133,7 @@ export function scenePoints(pose, view) {
     }
     pose.sleeves.forEach((s, i) => {
         const pl = sleevePlace(i, s.lift, s.tilt, pose.rot, view, pose.sleeves.length)
-        for (const c of box(-SZ / 2, SZ / 2, 0, SZ, -0.0175, 0.0175)) {
+        for (const c of box(-SZ / 2, SZ / 2, 0, SZ, -GEOM.TH / 2, GEOM.TH / 2)) {
             // the sleeve's own turns (tilt about x first, then the turn about y), then its place, then the crate's turn
             const local = rotY(rotX(c, pl.tilt), pl.turn)
             pts.push(rotY([local[0] + pl.x, local[1] + pl.y, local[2] + pl.z], pose.rot))

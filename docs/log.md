@@ -2,6 +2,24 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:37] step — Página de entrada (F80): no caixote em 3D nenhuma capa atravessa mais a madeira (UAT-289)
+
+**Branch:** fix/f80-crate-animation-break
+
+Pedido do MJRP (2026-11-23, print do computador): «temos um bug (conhecido?) de quebra na animação, é viável arrumar tb?»; e, perguntado o que fez antes: «ela quebra de qualquer jeito, independente da velocidade de rotacao». Issue UAT-289 em `docs/specs/uat.md`, ligada à F80.
+
+**Era conhecido?** Não para o caixote em 3D. Procurado em `docs/specs/uat.md`, na pasta da F80, neste log e nos relatórios dos juízes: o único registro parecido é a UAT-237 (o caixote em CSS, sem WebGL, onde as capas inclinadas passam da frente), e o juiz dela cita o 3D como o que estava certo.
+
+**Como reproduzir.** No computador (1280 ou 1440 de largura), rolar até «Lado A · 1 — Criar» ou «Lado A · 3 — Blend» (no lado B: «Playlists» e «Inventário»). Sempre, em qualquer velocidade: é a pose de repouso, não uma corrida entre animações.
+
+**Causa.** `public/splash/framing.js`, `sleeveTargets`: toda capa à frente do álbum puxado tombava no mesmo ângulo (0,62 rad), sem contar a parede; a primeira da fila está a 0,29 da parede e só pode inclinar 0,25 rad, então as duas mais próximas atravessavam a tábua (a da frente, alaranjada pelo fogo). Vem do protótipo aprovado: a câmera de frente escondia o defeito e a câmera em diagonal (UAT-235) passou a mostrá-lo. Dois defeitos menores do mesmo cálculo, vistos na leitura quadro a quadro: a capa erguida vinha para a frente desde o começo da subida (a primeira da fila cruzava o topo da tábua) e trocava de lado num salto de até 0,69 no meio do giro do caixote.
+
+**Conserto.** A pose passa a contar a madeira (`flippedTilts`): a primeira capa encosta na borda de dentro da parede, cada seguinte na anterior, até o ângulo de folhear de antes (0,62 rad), que continua valendo onde há espaço. A capa erguida só vem para a frente depois de passar do topo da parede, e cruza o giro do caixote sem salto (`sleevePlace`). Consequência: a câmera, que se ajusta ao que o caixote ocupa, chega um pouco mais perto (as capas não saem mais para fora). O celular, o caixote em CSS e o resto da página não mudam.
+
+**Prova.** Teste primeiro: `test/splash/crateRecordsStayInside.test.js`, 11 de 20 vermelhos no código da `main` (`red-on-main.txt`), e o teste do caminho da subida vermelho antes do conserto dele (`red-lift-path-before-its-fix.txt`). No site MONTADO (chaves de mentira no ambiente, capas reais), servido em 127.0.0.1 e encerrado, com a cena lida dos objetos do three.js: Chromium 1280×900 e 1440×900, WebKit 1280×900; cada história em ordem, a roda devagar nos dois sentidos, os 56 saltos entre histórias, uma rajada de dez, o menu da página, redimensionar no meio do movimento, a aba escondida e mostrada, a pausa, «menos movimento» e o processador 6 vezes mais lento. `main`: 80 passam, 102 falham. Ramo: 182 passam, 0 falham. Nenhum pedido a endereço de música. `npm run budget:publication` saída 0, tetos sem mudança. A suíte inteira, sozinha pela fila: 393 arquivos, 5257 testes passam, 1 pulado, sem «Unhandled Errors». Tudo em `reports/evidence/F80/crate-animation-break/`.
+
+**Não conferido.** Um computador de verdade com a placa de vídeo do MJRP (as provas rodam sem janela, com a GPU deste Mac); a aba escondida foi simulada pela página (`document.hidden`), não pelo sistema; o WebKit não tem freio de processador.
+
 ## [2026-11-23 14:44] step — Estado: o prazo de 3 horas do MJRP para o CMS, as frentes em paralelo e a F95 na `main`
 
 **Branch:** main

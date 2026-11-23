@@ -1,0 +1,29 @@
+{
+ "chromium-1280 main": {
+  "states": 91,
+  "moving": {
+   "deep": 0.03999774074954798,
+   "where": "record 14 in the back (-z) plank (lift 0.00, tilt -0.61, track playlists)",
+   "jump": 0.6904276500353257,
+   "jumpOf": 5
+  }
+ },
+ "chromium-1440 main": {
+  "states": 40,
+  "moving": {
+   "deep": 0.03997537242042393,
+   "where": "record 0 in the front (+z) plank (lift 0.00, tilt 0.61, track blend)",
+   "jump": 0.6906348270067071,
+   "jumpOf": 11
+  }
+ },
+ "webkit-1280 main": {
+  "states": 36,
+  "moving": {
+   "deep": 0.039980171007302,
+   "where": "record 1 in the front (+z) plank (lift 0.00, tilt 0.59, track start)",
+   "jump": 0.6847053519527058,
+   "jumpOf": 2
+  }
+ }
+}
