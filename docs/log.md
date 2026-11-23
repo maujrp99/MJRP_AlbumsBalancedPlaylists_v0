@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:59] step — Página de entrada (F80): o conserto do caixote em 3D junto com a legenda, as histórias e os textos, num ramo só para a prévia
+
+**Branch:** fix/f80-crate-caption-album-and-year
+
+Juntado `fix/f80-crate-animation-break` (`4d96cde`: nenhuma capa do caixote em 3D atravessa a madeira, UAT-289; o caixote em diagonal no celular medido e não construído, UAT-293) neste ramo, a pedido do orquestrador, para o MJRP julgar UMA prévia. Conflitos só em documentos, resolvidos ficando com tudo: `docs/specs/uat.md` (as 11 linhas, de UAT-286 a UAT-296, em ordem) e o `tasks.md` da F80 (TASK-14 e TASK-15). O código não conflitou (`framing.js` e `crate3d.js` de lá; a legenda, a ordem das histórias, a abertura e os textos daqui). Procuradas marcas de conflito: nenhuma.
+
+**Depois da junção.** Pela fila da máquina, `npx vitest run test/splash test/shell/Shell.carried.test.tsx test/scripts/publicationBudget.test.js`: 16 arquivos, 254 testes passando (inclui `crateRecordsStayInside.test.js`, 21 testes). `npm run budget:publication` acusou margem de 144 B (menos que os 150 B): medido de novo no build com as cinco chaves de mentira, script principal 194.874 B e depois da primeira tela 235.882 B; tetos refeitos pela regra do arquivo (medido + 150 B): `main` 195.024 B, `background` 57.469 B; saída 0. Não apurei qual arquivo pesa os 7 B a mais.
+
+**Olhada no site montado, a 1280 (Chromium).** A legenda (álbum e ano) e o caixote em 3D juntos em quatro partes da página (abertura, Criar, Blend, Playlists): a legenda troca com a faixa («The Dark Side of the Moon / 1973», «Dummy / 1994», «In the Aeroplane Over the Sea / 1998»), o caixote em 3D carregado, sem erro de console (`reports/evidence/F80/hero-without-the-big-criar-on-phone/merged-1280-look.txt` e quatro fotos). Nada clicado; endereços de música abortados na rede. Foi uma olhada, não a prova das poses: essa é a do outro ramo (`reports/evidence/F80/crate-animation-break/`).
+
+**Não conferido.** A suíte inteira e o doctor; um iPhone de verdade; a prévia publicada.
+
 ## [2026-11-23 15:57] step — UAT-296: a descrição em inglês encurtada para caber no limite de 130 caracteres
 
 **Branch:** fix/f80-crate-caption-album-and-year
@@ -65,6 +77,22 @@ Pedido do MJRP (2026-11-23, depois de ver a prévia do `ce1d041`): «eu só remo
 
 **Não conferido.** Num iPhone de verdade, com a conta dele; a suíte inteira (roda na publicação). Segue valendo o achado do registro anterior: com conta, no celular, a página é um pouco mais larga que a tela (não é desta mudança).
 
+## [2026-11-23 15:51] step — Página de entrada no celular (F80): o caixote em diagonal foi medido, não construído; a escolha é do MJRP (UAT-293)
+
+**Branch:** fix/f80-crate-animation-break
+
+Pedido do MJRP (2026-11-23, print do iPhone): «se possivel deixar a caixa de albuns na diagonal como no site tb». Issue UAT-293 em `docs/specs/uat.md`, ligada à F80. Nenhum código mudou neste passo.
+
+**Como o celular desenha hoje.** O caixote em CSS (uma tábua de frente e as capas empilhadas), parado na primeira pose; a cena em 3D só vem ao computador (`shouldLoad3d` em `public/splash/splash.js`). É decisão escrita: REQ-04 e REQ-07 («no celular, o caixote em CSS») e REQ-08 (a primeira visita leve no celular, sem a biblioteca de 3D); a proposta registra que bateria e calor do 3D num iPhone de verdade nunca foram medidos. A diagonal (UAT-235) foi pedida e feita só para o computador.
+
+**Ensaio (fora do ramo).** Um build igual, só sem a condição que segura o 3D no celular, medido contra o de hoje no site montado: WebKit como iPhone 14 (390) e a 375, Chromium a 390 com o processador 4 vezes mais lento. A cena serve sem mexer no desenho: em diagonal, inteira no quadro, a legenda e o botão embaixo iguais. Primeiro texto: 362 → 370 ms (WebKit 390), 784 → 676 ms (Chromium freado), sem piora. Quadros em 5 s de rolagem: iguais nos dois (mediana 33 ms no WebKit sem janela, 16,7 ms no Chromium freado, nenhum acima de 50 ms no ensaio). Tarefas longas com o freio: 136 → 379 ms, depois da página carregada. «Menos movimento»: sem 3D e sem baixar a biblioteca. A pausa para e volta. `npm run budget:publication` saída 0 (a biblioteca vem do CDN, fora dessa conta).
+
+**Por que parei.** O custo é +152 KB por primeira visita no celular (a biblioteca de 3D; os arquivos da página somam 378 KB sem compressão no servidor da prova), contra a regra de peso do celular (REQ-08) e as duas que dizem «CSS no celular»: é mudança de requisito e decisão de custo, do MJRP. Girar o caixote em CSS não entrega a diagonal: sem profundidade, ele só fica mais estreito (`option-css-crate-turned-30deg-webkit-390.jpg`).
+
+**Opções.** (1) O 3D também no celular: igual ao computador e vivo; +152 KB por visita; falta medir num iPhone de verdade; muda REQ-04, REQ-07 e REQ-08. (2) Uma imagem parada do caixote em diagonal: mesmo visual, cerca de +30 KB (estimado, não medido), não se mexe, refeita quando as capas mudam. (3) Deixar como está.
+
+**Não conferido.** Um iPhone de verdade (bateria, calor, quadros com a placa dele): os quadros medidos são da placa deste Mac, e o WebKit não tem freio de processador. Evidência: `reports/evidence/F80/crate-diagonal-on-phone/`.
+
 ## [2026-11-23 15:39] step — Página de entrada (F80): a linha laranja que abria a página saiu (UAT-292)
 
 **Branch:** fix/f80-crate-caption-album-and-year
@@ -83,6 +111,24 @@ Pedido do MJRP (2026-11-23, com um recorte da linha «THE ALBUM BLENDER · UM AP
 
 **Não conferido.** Num iPhone de verdade; a suíte inteira (roda na publicação); a página publicada.
 
+
+## [2026-11-23 15:37] step — Página de entrada (F80): no caixote em 3D nenhuma capa atravessa mais a madeira (UAT-289)
+
+**Branch:** fix/f80-crate-animation-break
+
+Pedido do MJRP (2026-11-23, print do computador): «temos um bug (conhecido?) de quebra na animação, é viável arrumar tb?»; e, perguntado o que fez antes: «ela quebra de qualquer jeito, independente da velocidade de rotacao». Issue UAT-289 em `docs/specs/uat.md`, ligada à F80.
+
+**Era conhecido?** Não para o caixote em 3D. Procurado em `docs/specs/uat.md`, na pasta da F80, neste log e nos relatórios dos juízes: o único registro parecido é a UAT-237 (o caixote em CSS, sem WebGL, onde as capas inclinadas passam da frente), e o juiz dela cita o 3D como o que estava certo.
+
+**Como reproduzir.** No computador (1280 ou 1440 de largura), rolar até «Lado A · 1 — Criar» ou «Lado A · 3 — Blend» (no lado B: «Playlists» e «Inventário»). Sempre, em qualquer velocidade: é a pose de repouso, não uma corrida entre animações.
+
+**Causa.** `public/splash/framing.js`, `sleeveTargets`: toda capa à frente do álbum puxado tombava no mesmo ângulo (0,62 rad), sem contar a parede; a primeira da fila está a 0,29 da parede e só pode inclinar 0,25 rad, então as duas mais próximas atravessavam a tábua (a da frente, alaranjada pelo fogo). Vem do protótipo aprovado: a câmera de frente escondia o defeito e a câmera em diagonal (UAT-235) passou a mostrá-lo. Dois defeitos menores do mesmo cálculo, vistos na leitura quadro a quadro: a capa erguida vinha para a frente desde o começo da subida (a primeira da fila cruzava o topo da tábua) e trocava de lado num salto de até 0,69 no meio do giro do caixote.
+
+**Conserto.** A pose passa a contar a madeira (`flippedTilts`): a primeira capa encosta na borda de dentro da parede, cada seguinte na anterior, até o ângulo de folhear de antes (0,62 rad), que continua valendo onde há espaço. A capa erguida só vem para a frente depois de passar do topo da parede, e cruza o giro do caixote sem salto (`sleevePlace`). Consequência: a câmera, que se ajusta ao que o caixote ocupa, chega um pouco mais perto (as capas não saem mais para fora). O celular, o caixote em CSS e o resto da página não mudam.
+
+**Prova.** Teste primeiro: `test/splash/crateRecordsStayInside.test.js`, 11 de 20 vermelhos no código da `main` (`red-on-main.txt`), e o teste do caminho da subida vermelho antes do conserto dele (`red-lift-path-before-its-fix.txt`). No site MONTADO (chaves de mentira no ambiente, capas reais), servido em 127.0.0.1 e encerrado, com a cena lida dos objetos do three.js: Chromium 1280×900 e 1440×900, WebKit 1280×900; cada história em ordem, a roda devagar nos dois sentidos, os 56 saltos entre histórias, uma rajada de dez, o menu da página, redimensionar no meio do movimento, a aba escondida e mostrada, a pausa, «menos movimento» e o processador 6 vezes mais lento. `main`: 80 passam, 102 falham. Ramo: 182 passam, 0 falham. Nenhum pedido a endereço de música. `npm run budget:publication` saída 0, tetos sem mudança. A suíte inteira, sozinha pela fila: 393 arquivos, 5257 testes passam, 1 pulado, sem «Unhandled Errors». Tudo em `reports/evidence/F80/crate-animation-break/`.
+
+**Não conferido.** Um computador de verdade com a placa de vídeo do MJRP (as provas rodam sem janela, com a GPU deste Mac); a aba escondida foi simulada pela página (`document.hidden`), não pelo sistema; o WebKit não tem freio de processador.
 
 ## [2026-11-23 15:35] step — Página de entrada (F80), celular: em cada história o rótulo, o título e o texto vêm antes das ilustrações (UAT-291)
 

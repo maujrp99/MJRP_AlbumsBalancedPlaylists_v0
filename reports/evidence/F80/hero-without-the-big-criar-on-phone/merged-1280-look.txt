@@ -1,0 +1,5 @@
+a1: caption «The | Velvet | Underground | & | Nico | 1967»; button «Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)»; 3D canvas true; html class «js moving v4-armed»
+start: caption «The | Dark | Side | of | the | Moon | 1973»; button «Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)»; 3D canvas true; html class «js moving v4-armed»
+blend: caption «Dummy | 1994»; button «Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)»; 3D canvas true; html class «js moving v4-armed»
+playlists: caption «In | the | Aeroplane | Over | the | Sea | 1998»; button «Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)»; 3D canvas true; html class «js moving v4-armed»
+console errors: none; hosts aborted: none

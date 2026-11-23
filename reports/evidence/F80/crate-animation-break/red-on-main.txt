@@ -1,0 +1,183 @@
+
+ RUN  v1.6.1 /Users/maujrp/mjrp/projects/MJRP_AlbumsBalancedPlaylists_v0/.claude/worktrees/agent-af7e98ce76aad6918
+
+(node:11531) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ test/splash/crateRecordsStayInside.test.js  (20 tests | 11 failed) 33ms
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «start» (a crate of 14)
+     → expected [ 'record 0 in the front wall', …(1) ] to deeply equal []
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «blend» (a crate of 14)
+     → expected [ 'record 0 in the front wall', …(1) ] to deeply equal []
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «playlists» (a crate of 14)
+     → expected [ 'record 12 in the back wall', …(1) ] to deeply equal []
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «inventory» (a crate of 14)
+     → expected [ 'record 13 in the back wall' ] to deeply equal []
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «start» (a crate of 15)
+     → expected [ 'record 0 in the front wall', …(1) ] to deeply equal []
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «blend» (a crate of 15)
+     → expected [ 'record 0 in the front wall', …(1) ] to deeply equal []
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «playlists» (a crate of 15)
+     → expected [ 'record 13 in the back wall', …(1) ] to deeply equal []
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «inventory» (a crate of 15)
+     → expected [ 'record 14 in the back wall' ] to deeply equal []
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > the sequence the owner saw: «blend» pulls a later record, the one in front of the row leans on the front wall, not through it
+     → expected 0.62 to be less than 0.2796068478030446
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > side B is the same at the other wall: «playlists» leaves the last record leaning on the back wall, not through it
+     → expected -0.62 to be greater than -0.2796068478030446
+   ❯ test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > a lifted record does not jump while the crate turns (it used to leap from one side to the other at the quarter turn)
+     → at a turn of 1.57: expected 1.1 to be less than 0.02
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «start» (a crate of 14)
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «blend» (a crate of 14)
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «start» (a crate of 15)
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «blend» (a crate of 15)
+AssertionError: expected [ 'record 0 in the front wall', …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   "record 0 in the front wall",
++   "record 1 in the front wall",
++ ]
+
+ ❯ test/splash/crateRecordsStayInside.test.js:61:55
+     59|         for (const [track, flip] of RESTING) {
+     60|             it(`no record is inside a plank on «${track}» (a crate of …
+     61|                 expect(inTheWood(track, flip, count)).toEqual([])
+       |                                                       ^
+     62|             })
+     63|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «playlists» (a crate of 14)
+AssertionError: expected [ 'record 12 in the back wall', …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   "record 12 in the back wall",
++   "record 13 in the back wall",
++ ]
+
+ ❯ test/splash/crateRecordsStayInside.test.js:61:55
+     59|         for (const [track, flip] of RESTING) {
+     60|             it(`no record is inside a plank on «${track}» (a crate of …
+     61|                 expect(inTheWood(track, flip, count)).toEqual([])
+       |                                                       ^
+     62|             })
+     63|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «inventory» (a crate of 14)
+AssertionError: expected [ 'record 13 in the back wall' ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   "record 13 in the back wall",
++ ]
+
+ ❯ test/splash/crateRecordsStayInside.test.js:61:55
+     59|         for (const [track, flip] of RESTING) {
+     60|             it(`no record is inside a plank on «${track}» (a crate of …
+     61|                 expect(inTheWood(track, flip, count)).toEqual([])
+       |                                                       ^
+     62|             })
+     63|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «playlists» (a crate of 15)
+AssertionError: expected [ 'record 13 in the back wall', …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   "record 13 in the back wall",
++   "record 14 in the back wall",
++ ]
+
+ ❯ test/splash/crateRecordsStayInside.test.js:61:55
+     59|         for (const [track, flip] of RESTING) {
+     60|             it(`no record is inside a plank on «${track}» (a crate of …
+     61|                 expect(inTheWood(track, flip, count)).toEqual([])
+       |                                                       ^
+     62|             })
+     63|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > no record is inside a plank on «inventory» (a crate of 15)
+AssertionError: expected [ 'record 14 in the back wall' ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   "record 14 in the back wall",
++ ]
+
+ ❯ test/splash/crateRecordsStayInside.test.js:61:55
+     59|         for (const [track, flip] of RESTING) {
+     60|             it(`no record is inside a plank on «${track}» (a crate of …
+     61|                 expect(inTheWood(track, flip, count)).toEqual([])
+       |                                                       ^
+     62|             })
+     63|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > the sequence the owner saw: «blend» pulls a later record, the one in front of the row leans on the front wall, not through it
+AssertionError: expected 0.62 to be less than 0.2796068478030446
+ ❯ test/splash/crateRecordsStayInside.test.js:72:33
+     70|         const limit = Math.atan2(DEP / 2 - T / 2 - GEOM.Z0, HT - T / 2)
+     71|         expect(targets[0].tilt).toBeGreaterThan(0.16)
+     72|         expect(targets[0].tilt).toBeLessThan(limit)
+       |                                 ^
+     73|     })
+     74| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > side B is the same at the other wall: «playlists» leaves the last record leaning on the back wall, not through it
+AssertionError: expected -0.62 to be greater than -0.2796068478030446
+ ❯ test/splash/crateRecordsStayInside.test.js:79:34
+     77|         const limit = Math.atan2(DEP / 2 - T / 2 - GEOM.Z0, HT - T / 2)
+     78|         expect(targets[14].tilt).toBeLessThan(-0.16)
+     79|         expect(targets[14].tilt).toBeGreaterThan(-limit)
+       |                                  ^
+     80|     })
+     81| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  test/splash/crateRecordsStayInside.test.js > UAT-289 · the records of the 3D crate stay out of the wood > a lifted record does not jump while the crate turns (it used to leap from one side to the other at the quarter turn)
+AssertionError: at a turn of 1.57: expected 1.1 to be less than 0.02
+ ❯ test/splash/crateRecordsStayInside.test.js:134:75
+    132|         for (let rot = 0; rot < Math.PI; rot += 0.01) {
+    133|             const a = sleevePlace(5, 1, 0.04, rot, view, 15), b = slee…
+    134|             expect(Math.abs(a.z - b.z), `at a turn of ${rot.toFixed(2)…
+       |                                                                           ^
+    135|         }
+    136|         expect(sleevePlace(5, 1, 0.04, 0, view, 15).z - sleevePlace(5,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 9 passed (20)
+   Start at  15:05:05
+   Duration  469ms (transform 27ms, setup 8ms, collect 24ms, tests 33ms, environment 318ms, prepare 38ms)
+
