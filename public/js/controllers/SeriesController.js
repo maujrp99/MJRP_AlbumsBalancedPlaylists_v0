@@ -590,7 +590,7 @@ export default class SeriesController {
 
         return {
             title: decodeEntities(activeSeries?.name) || t('albums.title.all'),
-            description: activeSeries?.description || `${allSeries.length} series available`,
+            description: activeSeries?.description || t('notices.series.available', { count: allSeries.length }),
             seriesList: this.getVisibleSeriesList(),
             activeSeriesId: activeSeries?.id || null
         };

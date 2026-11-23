@@ -78,10 +78,8 @@ describe('the labels of the discography', () => {
 
 describe('the empty dock says the next gesture', () => {
     it('points to the search with no covers on screen, to the covers when there are some', () => {
-        expect(dockEmptyNote({ phone: false, covers: false })).toEqual({ title: 'Your series is empty', note: 'Search an artist, then click a cover to add it. You name the series at the end.' })
-        expect(dockEmptyNote({ phone: false, covers: true })).toEqual({ title: 'Your series is empty', note: 'Click a cover to add it. You name the series at the end.' })
-        expect(dockEmptyNote({ phone: true, covers: false })).toEqual({ title: 'No albums yet', note: 'Search, then tap a cover' })
-        expect(dockEmptyNote({ phone: true, covers: true })).toEqual({ title: 'No albums yet', note: 'Tap a cover to add it' })
+        expect(dockEmptyNote({ covers: false })).toEqual({ title: 'No albums yet', note: 'Search, then tap a cover' })
+        expect(dockEmptyNote({ covers: true })).toEqual({ title: 'No albums yet', note: 'Tap a cover to add it' })
     })
 })
 

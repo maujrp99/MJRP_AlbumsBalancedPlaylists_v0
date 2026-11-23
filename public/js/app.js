@@ -32,6 +32,7 @@ import { AuthService } from './services/AuthService.js'
 import { router } from './router.js'
 
 import toast from './stores/toasts.js'
+import { t } from './i18n/t.js'
 
 // app.js exports nothing: no module imports the file that mounts the app (UAT-19). Who needs the
 // database or the login is handed it where it is put together (the *Wiring.js files of services/).
@@ -69,7 +70,7 @@ async function bootstrap() {
 
     if (!user) {
         console.warn('⚠️ App started without authenticated user. Some features may not work.')
-        toast.warning('Authentication issue. Some features may be limited.')
+        toast.warning(t('notices.app.authIssue'))
     }
 
     // 3. (F69) Nothing is started here when Spotify connects: the album load asks the popularity
@@ -165,9 +166,9 @@ router.register('/callback', async () => {
 
     await SpotifyAuthService.handleCallback().then(success => {
         if (success) {
-            toast.success('Connected to Spotify!')
+            toast.success(t('notices.app.spotifyConnected'))
         } else {
-            toast.error('Failed to connect to Spotify')
+            toast.error(t('notices.app.spotifyFailed'))
         }
     })
 

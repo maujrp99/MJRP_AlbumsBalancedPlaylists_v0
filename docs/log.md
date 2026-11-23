@@ -2,6 +2,20 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 01:45] review — F83: o juiz final passou o app React inteiro (0 P0, 0 P1, 4 P2); a onda 8d entra na linha de integração
+
+**Branch:** integrate/staging-2026-11-21
+
+O juiz independente (Opus, não construiu) julgou `claude/f83-wave-8d-closure` (`c159805`) contra a produção (`main` `a88adf4`) e contra o pai (`66cb1ee`): **passa**. Relatório, sem mudança: `reports/audits/2026-11-22-mjrpalbumblender-v0-react-final-visual-parity-recheck.md`. Exportação para o Apple Music: 81 de 81 conferências iguais à produção. O erro `removeChild` vinha dos roteiros de prova (removiam os avisos à mão), não do app. Primeira tela da Create no celular: +0,37 s no 4G rápido e +1,23 s no 4G lento contra a produção. A linha laranja do roteador aparece quando o arquivo da tela demora (fica para a F94). P2: «or paste a list» aceita o primeiro clique com texto no campo (mesma causa do conserto do «Search»); o chip da conta difere por poucos pixels; no WebKit do computador a página repousa em outra rolagem depois de remover uma playlist; o teto de peso está sem folga. Não rodou: a Folha do menu e o «Search» por toque no celular (seletor), iPhone, Safari, Apple Music e Firestore de verdade. Corrigi no relatório de fecho a frase que dizia não haver relatórios de juiz da 8a, 8b e 8c (há) e apontei a lista de teste do dono para a do juiz final.
+
+## [2026-11-22 21:51] step — F83 onda 8d, 8: a prova no navegador, o relatório de fecho e as tarefas
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **Prova no navegador** (`reports/evidence/F83/wave-8d/proof.md`, `summary.json`; sites construídos do pai `66cb1ee` e da ponta; os roteiros das ondas 8a, 8b, 8c e da sync 4, sem mudá-los, cada um com o pai contra o pai): varredura de todas as telas, 0 pixel no Chromium; no WebKit só ruído da marca de fogo (igual no controle e da ponta contra ela mesma); avisos, perguntas e barra 237 e 264 conferências sem falha; Folhas 1.247 sem falha no Chromium 899 e duas falhas de tempo no WebKit que não voltaram em quatro repetições; **a gravação das chamadas ao Apple Music no site construído igual à do pai** (106 sem falha no Chromium, 264 chamadas; no WebKit pai e ponta iguais); o título da aba nas 18 rotas: nenhuma diferença. Um achado que NÃO é desta onda: o pai e a ponta soltam um erro de página `removeChild` nos roteiros da janela de exportar; origem não achada (a olhar antes da exportação do dono).
+- **O relatório de fecho** (`reports/proposals/2026-11-22-mjrpalbumblender-v0-react-migration-closure.md`, em português, com a TASK-17 dentro): o que migrou e o que ficou à mão, o custo medido (a `main` 329 arquivos e 4.182 testes; a ponta 389 e 5.189; o script principal de 301.830 B a 194.872 B), os juízes por onda, cada REQ, as diferenças de propósito, **a tabela de 40 «defeitos mantidos»** para abrir issues, o que ninguém provou e é do dono, e o que ele carimba, em ordem. As listas de passos do Apple Music e dos gestos do iPhone são minhas: os relatórios dos juízes das ondas 8a e 8c **não estão no repositório**.
+- **Tarefas:** TASK-17, TASK-28 (com a linha 8d) e TASK-29 marcadas; a seção 26 de `wave-lessons.md`. A ADR-0023 e a constituição não foram tocadas.
+
 ## [2026-11-22 20:01] review — F83: onda 8c (a folha do celular em React) e a junta 5 com a `main` na linha de integração
 
 **Branch:** integrate/staging-2026-11-21
@@ -9,6 +23,63 @@
 - 8c: o juiz independente passou (0 P0, 0 P1, 4 P2), julgada na `a1ac74f`, cobertura completa em iPhone 14 e SE (WebKit), Pixel 7 e 899 px (Chromium com toque), 1280 e os controles de ruído; relatório guardado como veio em `reports/audits/2026-11-22-mjrpalbumblender-v0-react-phone-sheet-visual-parity-recheck.md`. O arrasto fecha acima de 80 px, igual ao de antes. Diferença de propósito que se vê: uma folha cuja tela é deixada por uma ação dela some na hora, em vez de deslizar vazia sobre a tela seguinte.
 - Junta 5 (`claude/f83-sync-5-lean-create-and-albums-loading`, `66cb1ee`): a «Create» enxuta no computador, o fim da linha laranja ao ler as séries (a barra do roteador para tela lenta fica: é da F94) e o aviso de carregamento da tela Albums, em React, com a posição por leiaute (sem medida). Sem juiz próprio aqui: entra na conferência final, depois da 8d; decidido pelo agente — revisável.
 - Não visto por ninguém: um iPhone de verdade (teclado, elástico, arrasto com o dedo no Safari).
+
+## [2026-11-22 19:48] step — F83 onda 8d, 7: o teto de peso e os totais
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **Peso** (`npm run budget:publication`, fila): principal 194.872 B (teto 195.022 B, folga 150 B), depois da primeira tela 235.808 B, soma 430.680 B (teto 430.830 B), `react-vendor` 68.691 B. O principal **cresceu 231 B** contra a sync 5 (194.641 B): são as chaves em inglês dos avisos do `app.js`, do roteador e dos controladores (o inglês fica no script principal, que é a reserva), menos o ramo morto. O teto do principal subiu de 194.791 para 195.022 B e o do «segundo plano» de 57.265 para 57.393 B (a soma tem de ter 150 B de folga); `publication.measured` refeito.
+- **Totais** (suíte inteira SÓ, pela fila, lida até o fim): 389 arquivos, 5.189 testes verdes e 1 pulado, sem «Unhandled Errors». `tsc` sem erro; `eslint` 0 erros e 65 avisos (dois a menos que o pai, nenhum novo); `requirements_graph_check --changed` limpo; `exportMusicKitRecording.json` com o mesmo sha256 do pai.
+
+## [2026-11-22 19:46] step — F83 onda 8d, 6: o roteador fica, a documentação no estado final
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **O roteador (TASK-29): fica o da casa**, decisão escrita como nota no fim de `plan.md` (não ADR), com o custo da alternativa (React Router: ≈ 15 a 20 kB no script principal, 3 a 5 dias e uma onda de prova, sem mudança visível) e a revisão marcada para quando houver rotas aninhadas.
+- **Documentação no estado final:** `docs/specs/arch.md` (o mapa de componentes: `screens/`, `ui/`, `shell/`, `react-bridge/`; sem `views/`, `components/` nem `react-bridge/legacy/`; a regra final), `docs/specs/tech-stack.md` (React 19 e TypeScript, ADR-0023 ainda «Proposed»: não foi aceita e a constituição não foi tocada; os controladores seguem em JavaScript), `docs/specs/design-system.md` (a tabela de portes fechada; as linhas que diziam «ainda a antiga» e «invólucro» corrigidas) e `docs/specs/behavior.md` (217 caminhos de arquivos à mão trocados pelo arquivo em React, ou «removido na F83»). O manual (`docs/manual/`, 17 arquivos) ganhou, em cada entrada de arquivo apagado, a nota «F83: now …» ou «removed in F83» (os dois instantâneos históricos ficam como estão).
+- **Prova do pixel sem segunda foto escondida:** `reports/evidence/F83/sync-3/browser-proof.mjs` aprende `STRICT=1` (sem a segunda foto depois de 1,5 s); sem ele, a segunda foto já vinha escrita na linha do resultado.
+
+## [2026-11-22 19:38] step — F83 onda 8d, 5: os textos que faltavam vão ao dicionário
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **Os textos que ainda estavam fora do dicionário passam para ele** (inglês igual, letra por letra, na tela; `i18n/en/notices.js` e `i18n/pt/notices.js`, **64 chaves** em cada): os três avisos do `app.js` («Authentication issue…», «Connected to Spotify!», «Failed to connect…»); os painéis do roteador («No connection», «Try again», «This screen could not be loaded», «Load the new version», «A new version of the app was published…») e o painel de erro (`utils/failurePanel.js`: «View Error», «Go Back»), com `escapeHtml` em volta; os avisos de `PlaylistsController` (13), de `playlistExports` (4), o progresso e o cancelamento de `BlendingController` (2) e a linha «N series available» de `SeriesController`.
+- **As frases do pedido de álbuns** (`askNotices`, `noAlbumsMessage`, `askProgressText`): `models/albumAsk.js` não escreve mais frase (regra «a regra não fala»): devolve dados (`askNoticeParts`, `noAlbumsPart`, `askProgressPart`: um código e os números) e `i18n/askTexts.js` as diz pelo dicionário, com plural. Os casos de frase foram levados, com as mesmas asserções, para `test/i18n/askTexts.test.js` (mais um caso em português); o modelo ganha casos de dados.
+- **`dockEmptyNote` e as chaves `start.dock.empty.computer.*`** (só um teste as usava desde a Create enxuta): a função só diz a nota do celular, as 3 chaves (inglês e português) e os 2 casos do computador saem.
+- **Padrões de nome não são texto de tela:** «Unsaved Batch» e «MJRP Playlists» (o nome de um lote e de uma série quando a pessoa não deu nenhum) são DADOS que vão para os lotes salvos e para a exportação: foram para `models/defaultNames.js`, sem mudar com o idioma.
+- **Português: 64 propostas à espera da revisão do MJRP**, todas em `public/js/i18n/pt/notices.js` (aprovar ou trocar). **Ficam fora, de propósito** (não são texto que uma pessoa leia na tela, ou são ordem de ranking dos dados): mensagens internas de `Error` que não chegam à tela, nomes e descrições das receitas (`algorithms/`, `ranking/`: a F81 as trata), `models/recipeSources.js` (a frase «by Spotify popularity where there is one…» que a Blend e as playlists mostram dentro do aviso), os textos de `services/` e `models/` que o contador não vê. Estão no quadro do relatório de fecho.
+- Placar: **0 arquivos à mão, 0 pontes, 0 textos fora do dicionário** (pelo contador, bom a cerca de 10%). Testes de `i18n`, `models`, `controllers`, `screens/start`, `architecture` e `scripts` verdes; `tsc` limpo; lint sem aviso novo.
+
+## [2026-11-22 19:34] step — F83 onda 8d, 4: o último invólucro sai e a regra final vira sensor
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **O último invólucro sai:** `react-bridge/legacy/SessionSeriesController.ts` apagado; `screens/albums/index.ts` importa `controllers/SeriesController.js` direto e guarda o controlador da sessão (o `let made`), como o inventário faz com o dele. A pasta `react-bridge/legacy/` não existe mais. **O controlador continua JavaScript**: reescrevê-lo (e os outros quatro) em TypeScript está fora do escopo da F83 (a spec o diz) e fica como candidata própria, para os cinco de uma vez.
+- **A regra final** (`test/architecture/noHandMadeScreens.test.js`, com `support/handMadeRule.js`) substitui `handMadeScreensOnlyShrink` (+ a lista `handMadeScreensBaseline.js`) e `bridgesOnlyShrink` (+ `BRIDGE_USES`): `views/`, `components/` e `react-bridge/legacy/` não existem; fora de `screens/`, `ui/`, `shell/`, `react-bridge/` nenhum arquivo escreve o DOM (innerHTML, createElement, estilo ou classe do `body`, appendChild) sem estar na lista de exceções com o motivo: o roteador, `utils/pageScrollLock.js` (utilitário de página, sem equivalente em React; **mantido por decisão do orquestrador**), `MusicKitAuth` (a etiqueta de script do SDK), `AuthService` (uma classe no `body`) e `playlistExports` (o link do arquivo JSON). Exceção que não escreve mais o DOM, ou cujo arquivo sumiu, é acusada; há exemplos errados que a regra acusa.
+- **O placar** (`scripts/migration-status.mjs`) não lê mais a lista do dia em que começou: arquivos à mão em `views/` e `components/` (0), pontes (0, contadas só por `import`), textos fora do dicionário (nomes de marca e endereços não contam: Discogs, Spotify, `discogs.com/...`), e as exceções de propósito (5). Agora: 0 arquivos, 0 pontes, 22 textos (os da próxima entrada).
+
+## [2026-11-22 19:27] step — F83 onda 8d, 3: BaseView.js sai (o título da aba mora no gancho da tela)
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **`views/BaseView.js` apagado** (a pasta `views/` deixa de existir). Só o `setTitle` era usado (por `react-bridge/useScreenTitle.ts`, que fazia `new BaseView().setTitle(tab)`); agora o gancho escreve `document.title` ele mesmo: é o lugar único do título da aba, onde a moldura em React já diz o nome da tela.
+- **O sensor primeiro:** `oneTabTitle` passou a aceitar só `react-bridge/useScreenTitle.ts` (vermelho antes da mudança); `viewLifecycle` troca «só sobrou o `BaseView.js`» por «`views/` não existe». O caso de `test/react/bridge/hooks.test.tsx` («sets the tab title through the one place for it») segue igual e verde.
+- A lista que só encolhe fica com um arquivo, `utils/pageScrollLock.js` (que fica de vez); a regra final (`noHandMadeScreens`) a substitui no commit da ponte.
+
+## [2026-11-22 19:27] step — F83 onda 8d, 2: Icons.js sai (a régua de prova vai para os testes)
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **`components/Icons.js` apagado** (a pasta `components/` deixa de existir). Pelo mapa da onda 8, decisão: **não muda de lugar, sai**. Seu último usuário em código de produção (o ramo `btn`) já tinha saído; `splash/phoneBar.js` só o citava num comentário (a página de entrada continua à mão, de propósito). O que ficou foi o texto de cada ícone como **régua de prova**: `iconMarkup`/`getIcon`/`Icons` foram para `test/support/iconMarkup.js` (nenhum arquivo de produção os usa), e os 3 casos de `test/components/Icons.test.js` foram levados para `test/ui/Icon.test.tsx` sem mudar a asserção. `utils/iconShapes.js` perde `iconMarkup` e fica só com os dados; `ui/Icon.tsx` não muda.
+- `scripts/i18n/scan-copy.cjs` lê os nomes dos ícones de `utils/iconShapes.js` (lia `Icons.js`); os apelidos `@components` e `@views` saem de `tsconfig.json`, `vite.config.js` e `vitest.config.js` (nada os usa); sete sensores deixam de varrer `components/` e `views/` (`albumLoadBoundaries`, `ownRankingBoundaries`, `layerBoundaries`, `screensLoadThroughTheService`, `spotifyPopularityOnePath`: onde varriam só essas pastas, passam a varrer `screens/`, `ui/`, `shell/`).
+- A lista que só encolhe perde `components/Icons.js` (2 arquivos, 200 linhas). Sensores, `tsc` verdes.
+
+## [2026-11-22 19:26] step — F83 onda 8d, 1: o ramo morto «btn» da exportação ao Apple Music sai
+
+**Branch:** claude/f83-wave-8d-closure
+
+- `handleExportToAppleMusic` (`controllers/playlistExports.js`) não escreve mais num botão que recebia (`btn`): nenhum chamador o passa desde a F90 (as três telas passam `onStatus`); saem o `progressWriter` com botão, o `giveBackButton`, o uso de `getIcon` e o de `escapeHtml`, e o caso «shows the progress on the button it was given…» de `AppleMusicExport.test`, o único que o alcançava.
+- **A rede de segurança do dono, intacta:** `test/fixtures/exportMusicKitRecording.json` byte a byte igual (sha256 914c71f2…1976) e `AppleMusicExport.recording.test` (30 casos, 264 chamadas ao MusicKit) verde sem mudar. O sensor de módulos mortos passou a acusar `components/Icons.js` (o último usuário saiu): o commit seguinte o apaga.
 
 ## [2026-11-22 19:19] step — F83 sync 5: a grade invisível por layout, a prova no navegador, o peso e o registro
 

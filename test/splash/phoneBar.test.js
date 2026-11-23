@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import { stopIcon, STOP_ICON_SIZE } from '../../public/splash/phoneBar.js'
-import { Icons } from '../../public/js/components/Icons.js'
+import { Icons } from '../support/iconMarkup.js'
 import { MENU } from '../../public/splash/menu.js'
 
 describe('the icon above each label of the phone\'s bottom menu', () => {

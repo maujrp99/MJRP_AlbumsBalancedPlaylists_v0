@@ -6,10 +6,10 @@
  */
 
 import toast from '../stores/toasts.js'
+import { t } from '../i18n/t.js'
+import { DEFAULT_BATCH_NAME, DEFAULT_SERIES_NAME } from '../models/defaultNames.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistsStore } from '../stores/playlists.js'
-import { getIcon } from '../components/Icons.js'
-import { escapeHtml } from '../utils/stringUtils.js'
 import { AppleMusicExportService, appleExportMessages } from '../services/AppleMusicExportService.js'
 import { track } from '../services/usage/track.js'
 
@@ -23,11 +23,11 @@ function getEffectiveBatchName() {
         playlistsStore.editContext?.currentBatchName ||
         playlistsStore.editContext?.batchName ||
         storeState.defaultBatchName ||
-        'Unsaved Batch'
+        DEFAULT_BATCH_NAME
 }
 
 /** The series the playlists belong to: the one given (the saved playlists screen), else the open one. */
-export const seriesNameOf = (given) => given || albumSeriesStore.getActiveSeries()?.name || 'MJRP Playlists'
+export const seriesNameOf = (given) => given || albumSeriesStore.getActiveSeries()?.name || DEFAULT_SERIES_NAME
 
 /**
  * Export playlists as JSON file
@@ -64,23 +64,8 @@ export function handleExportJson(playlists, { batchName: givenBatchName } = {}) 
     track('playlists_exported', { target: 'json', outcome: 'complete', playlist_count: exportData.length })
 }
 
-/** Where the progress of the Apple export is written: told to the screen that draws its own button, or written on the button given. */
-function progressWriter({ btn, onStatus }) {
-    if (onStatus) return onStatus
-    return (text) => {
-        if (!btn) return
-        btn.disabled = true
-        btn.innerHTML = `${getIcon('Apple', 'w-5 h-5')} ${escapeHtml(text)}`
-    }
-}
-
-/** The end of the export: the screen is told it is over, or the button is given back as it was. */
-function giveBackButton({ btn, onStatus, originalText }) {
-    if (onStatus) onStatus(null)
-    if (!btn) return
-    btn.disabled = false
-    btn.innerHTML = originalText || 'Export to Apple Music'
-}
+/** Where the progress of the Apple export is written: the screen is told (a text while it runs, null when it is over); none given: nowhere. */
+const progressWriter = ({ onStatus }) => onStatus || (() => {})
 
 /** How long the report of an export stays: it names playlists, it is not read at a glance. */
 const REPORT_MS = 12000
@@ -95,9 +80,8 @@ let appleExportRunning = false
  * exports the ones it holds; the saved playlists screen gives one playlist or the whole batch (F90).
  *
  * @param {Object} options - Options
- * @param {HTMLElement} [options.btn] - the button pressed: it shows the progress and is given back
- * @param {(text: string|null) => void} [options.onStatus] - a screen that draws its own button is told the progress instead
- *   (a text while it runs, null when it is over)
+ * @param {(text: string|null) => void} [options.onStatus] - the screen that draws the button is told the progress
+ *   (a text while it runs, null when it is over). The branch that wrote on a button of its own (`btn`) is gone: no caller used it since F90.
  * @param {Array} [options.playlists] - what to export; none given: the playlists on the edit screen
  * @param {string} [options.seriesName] - the folder; none given: the open series
  * @param {string} [options.batchName] - the batch; none given: the one on the edit screen
@@ -107,22 +91,21 @@ let appleExportRunning = false
  * @param {boolean} [options.noFolder] - no folder: the top of the library (F90)
  */
 export async function handleExportToAppleMusic(options = {}) {
-    const { btn, onStatus } = options
+    const { onStatus } = options
 
     if (appleExportRunning) {
-        toast.info('The export to Apple Music is already running.')
+        toast.info(t('notices.export.running'))
         return
     }
     const playlists = options.playlists || playlistsStore.getPlaylists()
     if (playlists.length === 0) {
-        toast.warning('No playlists to export')
+        toast.warning(t('notices.export.nothing'))
         return
     }
 
     appleExportRunning = true
-    const originalText = btn?.innerHTML
-    const say = progressWriter({ btn, onStatus })
-    say('Connecting...')
+    const say = progressWriter({ onStatus })
+    say(t('notices.export.connecting'))
 
     try {
         const { musicKitService } = await import('../services/MusicKitService.js')
@@ -134,9 +117,9 @@ export async function handleExportToAppleMusic(options = {}) {
         appleExportMessages(report).forEach(message => toast[message.type](message.text, REPORT_MS))
     } catch (error) {
         console.error('[AppleMusic] Export failed:', error)
-        toast.error(`The export to Apple Music failed: ${error.message}`, REPORT_MS)
+        toast.error(t('notices.export.failed', { message: error.message }), REPORT_MS)
     } finally {
         appleExportRunning = false
-        giveBackButton({ btn, onStatus, originalText })
+        if (onStatus) onStatus(null)
     }
 }

@@ -1,9 +1,9 @@
 /**
  * F56 (UAT-189) - what an asker of albums gets back, as pure rules: when the ask is settled, which
- * albums are ready, which failed and why, which sources are missing, and what to tell the person.
+ * albums are ready, which failed and why, which sources are missing, and what to tell the person (as data).
  */
 import { describe, it, expect } from 'vitest'
-import { readAsk, holdWait, askNotices, noAlbumsMessage, askProgressText, AskFailure, SourceGap } from '../../public/js/models/albumAsk.js'
+import { readAsk, holdWait, askNoticeParts, noAlbumsPart, askProgressPart, AskFailure, SourceGap } from '../../public/js/models/albumAsk.js'
 import { createEntry, reconcileEntry, AlbumStatus, EnrichmentStatus, FailureReason } from '../../public/js/models/albumLoadState.js'
 
 const found = (title, enrichment = {}) => ({
@@ -140,48 +140,56 @@ describe('readAsk', () => {
     })
 })
 
-describe('what the person is told', () => {
+describe('what the person is told, as data (the words are i18n/askTexts.js, test/i18n/askTexts.test.js)', () => {
     it('says nothing when every album is ready with its sources', () => {
-        expect(askNotices(ask([found('One')], ['acclaim']).result)).toEqual([])
+        expect(askNoticeParts(ask([found('One')], ['acclaim']).result)).toEqual([])
     })
 
-    it('says how many albums failed, which and why', () => {
+    it('gives how many albums failed, which, and the reason of each (a code, not a sentence)', () => {
         const result = ask([found('One'), failed('Two'), failed('Three', FailureReason.TIMEOUT)]).result
 
-        expect(askNotices(result)).toEqual([
-            '2 of 3 albums could not be loaded and were left out: Artist - Two (not found), Artist - Three (took too long).'
-        ])
+        expect(askNoticeParts(result)).toEqual([{
+            code: 'failed', count: 2, total: 3,
+            names: { shown: [{ label: 'Artist - Two', reason: 'not-found' }, { label: 'Artist - Three', reason: 'timeout' }], more: 0 }
+        }])
     })
 
     it('names at most three albums and counts the rest', () => {
         const result = ask([failed('A'), failed('B'), failed('C'), failed('D'), failed('E')]).result
 
-        expect(askNotices(result)[0]).toContain('Artist - C (not found) and 2 more.')
+        expect(askNoticeParts(result)[0].names.shown).toHaveLength(3)
+        expect(askNoticeParts(result)[0].names.more).toBe(2)
     })
 
-    it('says which source is missing, for how many albums, and whether it failed or has nothing', () => {
+    it('gives which source is missing, for how many albums, and the gaps by kind', () => {
         const result = ask([
             found('One', { acclaim: EnrichmentStatus.FAILED, popularity: EnrichmentStatus.EMPTY }),
             found('Two', { acclaim: EnrichmentStatus.EMPTY }),
             found('Three')
         ], ['acclaim', 'popularity']).result
 
-        expect(askNotices(result)).toEqual([
-            'Acclaim ratings are missing for 2 of 3 albums (1 did not answer, 1 has none at the source): Artist - One, Artist - Two.',
-            'Spotify popularity is missing for 1 of 3 albums (1 has none at the source): Artist - One.'
+        expect(askNoticeParts(result)).toEqual([
+            { code: 'source', source: 'acclaim', ready: 3, count: 2, names: { shown: [{ label: 'Artist - One' }, { label: 'Artist - Two' }], more: 0 }, gaps: [{ gap: 'failed', count: 1 }, { gap: 'empty', count: 1 }], fallback: null },
+            { code: 'source', source: 'popularity', ready: 3, count: 1, names: { shown: [{ label: 'Artist - One' }], more: 0 }, gaps: [{ gap: 'empty', count: 1 }], fallback: null }
         ])
     })
 
-    it('the message for "nothing could be loaded" carries the reasons', () => {
-        const result = ask([failed('One'), failed('Two', FailureReason.NETWORK)]).result
+    it('carries the way a recipe orders the tracks without the missing source', () => {
+        const result = ask([found('One', { popularity: EnrichmentStatus.NOT_CONNECTED })], ['popularity']).result
 
-        expect(noAlbumsMessage(result)).toBe('None of the 2 albums could be loaded: Artist - One (not found), Artist - Two (network error).')
-        expect(noAlbumsMessage(ask([]).result)).toBe('This series has no albums.')
+        expect(askNoticeParts(result, { popularity: 'by album order' })[0].fallback).toBe('by album order')
     })
 
-    it('the progress line counts what is ready and what it still waits for', () => {
-        expect(askProgressText({ total: 4, found: 1, failed: 1, waitingSources: 0 })).toBe('Loading albums: 2 of 4...')
-        expect(askProgressText({ total: 4, found: 4, failed: 0, waitingSources: 3 })).toBe('Waiting for the ratings of 3 of 4 albums...')
+    it('says an ask with no album at all is empty, or none could be loaded and why', () => {
+        expect(noAlbumsPart(ask([]).result)).toEqual({ code: 'empty' })
+        expect(noAlbumsPart(ask([failed('One'), failed('Two', FailureReason.NETWORK)]).result)).toEqual({
+            code: 'none', total: 2, names: { shown: [{ label: 'Artist - One', reason: 'not-found' }, { label: 'Artist - Two', reason: 'network' }], more: 0 }
+        })
+    })
+
+    it('the progress counts what is ready, then what it still waits for', () => {
+        expect(askProgressPart({ total: 4, found: 1, failed: 1, waitingSources: 0 })).toEqual({ code: 'loading', settled: 2, total: 4 })
+        expect(askProgressPart({ total: 4, found: 4, failed: 0, waitingSources: 3 })).toEqual({ code: 'waiting', waiting: 3, total: 4 })
     })
 })
 

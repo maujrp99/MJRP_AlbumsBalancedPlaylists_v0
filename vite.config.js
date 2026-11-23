@@ -51,8 +51,6 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, 'public/js'),
             '@stores': path.resolve(__dirname, 'public/js/stores'),
-            '@components': path.resolve(__dirname, 'public/js/components'),
-            '@views': path.resolve(__dirname, 'public/js/views'),
             '@shared': path.resolve(__dirname, 'shared')
         }
     },

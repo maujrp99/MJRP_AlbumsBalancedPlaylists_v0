@@ -3,12 +3,9 @@
  *
  * The icons were strings of SVG text inside components/Icons.js, imported by 59 files. A React screen must not put such a
  * string in the page (raw HTML is refused in React screens), so the drawings are data: the root attributes and the elements
- * of each icon, in the order the markup had them. Two readers draw the same data and cannot differ:
- *
- *   - `iconMarkup(name, className)` makes the text the hand-made screens have always used (components/Icons.js getIcon);
- *   - `<Icon>` (ui/Icon.tsx) makes the same elements for a React screen.
- *
- * `test/ui/Icon.test.tsx` proves that both give the HTML the strings of before gave, icon by icon
+ * of each icon, in the order the markup had them. `<Icon>` (ui/Icon.tsx) makes the elements. The text form the hand-made
+ * screens used (`getIcon`) left in wave 8d with its last user; test/support/iconMarkup.js keeps it as the yardstick of the proof:
+ * `test/ui/Icon.test.tsx` proves that `<Icon>` gives the HTML the strings of before gave, icon by icon
  * (test/fixtures/iconMarkupBeforeF83.json holds those strings). One exception, written there with its reason: MJRPLogo, which
  * no screen uses, lost its comments and the line breaks and indentation between its elements; none of that is drawn.
  *
@@ -97,26 +94,4 @@ export const ICON_SHAPES = {
     ArrowUp: {"a":LINE,"n":[{"t":"path","a":{"d":"m5 12 7-7 7 7"}},{"t":"path","a":{"d":"M12 19V5"}}]},
     ChevronRight: {"a":LINE,"n":[{"t":"path","a":{"d":"m9 18 6-6-6-6"}}]},
     SignOut: {"a":LINE,"n":[{"t":"path","a":{"d":"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"}},{"t":"polyline","a":{"points":"16 17 21 12 16 7"}},{"t":"line","a":{"x1":"21","x2":"9","y1":"12","y2":"12"}}]}
-}
-
-const attributes = (attrs) => Object.entries(attrs).map(([name, value]) => ` ${name}="${value}"`).join('')
-
-/** @param {IconNode} node */
-function nodeMarkup(node) {
-    if (typeof node === 'string') return node
-    const open = `<${node.t}${attributes(node.a)}`
-    return node.c?.length ? `${open}>${node.c.map(nodeMarkup).join('')}</${node.t}>` : `${open}/>`
-}
-
-/**
- * The SVG text of an icon, with an optional class on the root (the class comes first, as it always did).
- * @param {string} name
- * @param {string} [className]
- * @returns {string} '' for a name that is not an icon
- */
-export function iconMarkup(name, className = '') {
-    const shape = ICON_SHAPES[name]
-    if (!shape) return ''
-    const root = `<svg${className ? ` class="${className}"` : ''}${attributes(shape.a)}>`
-    return `${root}${shape.n.map(nodeMarkup).join('')}</svg>`
 }

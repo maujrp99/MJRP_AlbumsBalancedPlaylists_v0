@@ -9,6 +9,7 @@
  * Pure: no DOM, no store, no screen.
  */
 import { escapeHtml } from './stringUtils.js'
+import { t } from '../i18n/t.js'
 
 /**
  * What the panel says.
@@ -17,9 +18,9 @@ import { escapeHtml } from './stringUtils.js'
  */
 export function errorPanelModel(error) {
     return {
-        title: 'View Error',
+        title: t('notices.router.errorTitle'),
         detail: `${error?.message}\n${error?.stack}`,
-        backLabel: 'Go Back'
+        backLabel: t('notices.router.errorBack')
     }
 }
 

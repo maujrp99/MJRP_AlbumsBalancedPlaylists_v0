@@ -34,8 +34,8 @@ describe('one title for the tab (UAT-192)', () => {
         .filter(file => WRITES_TITLE.test(fs.readFileSync(file, 'utf8')))
         .map(file => path.relative(root, file))
 
-    it('no screen writes document.title by itself (BaseView.setTitle is the one place)', () => {
-        expect(writersIn(JS_ROOT)).toEqual(['views/BaseView.js'])
+    it('no screen writes document.title by itself (the hook useScreenTitle is the one place, F83 wave 8d)', () => {
+        expect(writersIn(JS_ROOT)).toEqual(['react-bridge/useScreenTitle.ts'])
     })
 
     it('it reads .ts and .tsx: a React file that writes document.title is accused (F83)', () => {

@@ -1,8 +1,8 @@
 /**
  * F83 TASK-06 (REQ-02, REQ-05; proposal § 4.4, risk R20): the icon in React gives the HTML of today, with no raw HTML.
  *
- * The icons are data (utils/iconShapes.js) that two readers draw: `getIcon()` (text, for the hand-made screens) and `<Icon>`
- * (elements, for the React ones). The proof, for every icon the site has, with and without a class: the text is the string
+ * The icons are data (utils/iconShapes.js) that two readers draw: `getIcon()` (text, the yardstick in test/support/iconMarkup.js; the
+ * hand-made screens that used it are gone) and `<Icon>` (elements, for the React screens). The proof, for every icon the site has, with and without a class: the text is the string
  * the site had before (the fixture holds those strings, copied before the change), and the DOM React makes is the DOM the
  * browser makes from that string. One exception, with its reason: MJRPLogo (used by no screen) lost its comments and the line breaks and
  * indentation between its elements, which are not drawn.
@@ -11,7 +11,9 @@ import { describe, it, expect } from 'vitest'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Icon } from '../../public/js/ui/Icon'
-import { getIcon, Icons } from '../../public/js/components/Icons.js'
+import { getIcon, Icons } from '../support/iconMarkup.js'
+import fs from 'node:fs'
+import path from 'node:path'
 import before from '../fixtures/iconMarkupBeforeF83.json'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
@@ -59,6 +61,29 @@ describe('getIcon: the text the hand-made screens have always had', () => {
     it('a name that is not an icon gives an empty text, as before; an empty class adds no attribute', () => {
         expect(getIcon('NoSuchIcon')).toBe('')
         expect(getIcon('Undo', '')).toBe(BEFORE.Undo)
+    })
+})
+
+describe('the registry (F64 UAT-20, carried from test/components/Icons.test.js)', () => {
+    it('Plus is the drawing the app has always shown: a vertical and a horizontal line', () => {
+        expect(Icons.Plus).toContain('<line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/>')
+        expect(Icons.Plus).not.toContain('<path')
+    })
+
+    it('getIcon puts the classes asked for on the drawing', () => {
+        const drawn = getIcon('Plus', 'w-4 h-4')
+
+        expect(drawn).toContain('w-4 h-4')
+        expect(drawn).toContain('<line x1="12" x2="12" y1="5" y2="19"/>')
+    })
+
+    it('no icon is written twice in the data', () => {
+        const source = fs.readFileSync(path.resolve(process.cwd(), 'public/js/utils/iconShapes.js'), 'utf8')
+        const names = [...source.matchAll(/^ {4}([A-Za-z0-9_]+): \{"a":/gm)].map(match => match[1])
+        const twice = names.filter((name, index) => names.indexOf(name) !== index)
+
+        expect(names.length).toBeGreaterThan(30)
+        expect(twice).toEqual([])
     })
 })
 

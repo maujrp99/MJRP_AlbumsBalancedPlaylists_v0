@@ -104,10 +104,9 @@ export function typesLine(filters: Filters, n: number, classifying: boolean): st
     return t(classifying ? 'start.types.classifying' : 'start.types.line', { count: n, noun: nounOf(filters, n) })
 }
 
-/** What the empty dock says: the next gesture, never covers that are not on screen. */
-export function dockEmptyNote({ phone, covers }: { phone: boolean; covers: boolean }): { title: string; note: string } {
-    const where = phone ? 'phone' : 'computer'
-    return { title: t(`start.dock.empty.${where}.title`), note: t(`start.dock.empty.${where}.${covers ? 'covers' : 'noCovers'}`) }
+/** What the empty dock of the phone says: the next gesture, never covers that are not on screen. (The computer has no such note since F79 made it lean.) */
+export function dockEmptyNote({ covers }: { covers: boolean }): { title: string; note: string } {
+    return { title: t('start.dock.empty.phone.title'), note: t(`start.dock.empty.phone.${covers ? 'covers' : 'noCovers'}`) }
 }
 
 /** The equalizer under the field: moving while the catalog is asked, flat when it did not answer. */

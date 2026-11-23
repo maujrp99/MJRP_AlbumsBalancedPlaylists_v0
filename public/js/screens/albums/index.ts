@@ -6,11 +6,22 @@
  * once, when the screen is left.
  */
 import { ReactView, type RouteParams } from '../../react-bridge/ReactView'
-import { sessionSeriesController } from '../../react-bridge/legacy/SessionSeriesController'
+import SeriesController from '../../controllers/SeriesController.js'
 import { closeAllWindows } from '../../ui/windowLayer'
 import { Albums, type AlbumsRoute } from './Albums'
 import { AlbumsBridge } from './AlbumsBridge'
 import type { AlbumsController } from './types'
+
+/**
+ * The controller of the session: hand-written JavaScript (controllers/SeriesController.js; rewriting the controllers in TypeScript is outside the
+ * scope of F83), one for the whole visit to the site: the load goes on in the service after the screen is left and the next visit shows the
+ * progress it made. Made on the first ask (it was react-bridge/legacy/SessionSeriesController.ts until wave 8d).
+ */
+let made: object | null = null
+const sessionSeriesController = (): AlbumsController => {
+    made ??= new SeriesController()
+    return made as AlbumsController
+}
 
 /** The series the address names: `/albums/:seriesId`, or `?seriesId=` (a value of «undefined» or «null» is no series). */
 export function routeOf(params: RouteParams): AlbumsRoute {
@@ -19,7 +30,7 @@ export function routeOf(params: RouteParams): AlbumsRoute {
     return { scope: 'ALL', seriesId: null }
 }
 
-export function albumsView(controller: AlbumsController = sessionSeriesController() as AlbumsController) {
+export function albumsView(controller: AlbumsController = sessionSeriesController()) {
     const bridge = new AlbumsBridge(controller)
     const route: AlbumsRoute = { scope: 'ALL', seriesId: null }
     return new ReactView(Albums, { controller, bridge, route }, {

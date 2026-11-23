@@ -4,20 +4,19 @@
  * keeps its own handle (`this.unsubscribe = ...`) or waits for a call nobody makes (`onUnmount`)
  * goes on hearing the store after it was left, and draws itself over the next screen.
  */
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { listSourceFiles } from './support/parseSource.js'
 
-const VIEWS = join(process.cwd(), 'public/js/views')
-const viewFiles = readdirSync(VIEWS).filter(name => name.endsWith('View.js'))
 
 describe('a screen that is left hears no store', () => {
     // F83 wave 7b: the last hand-made screen (the Blend) went to React, so the four checks of the contract of `this.subscriptions` (no onUnmount, no
-    // own handle, every subscription in the list of BaseView, and that there are views to check) have no view left to read. What replaced them: the
-    // guard below (no hand-made screen is born again in views/: only BaseView.js is left, and it is the title of the tab until wave 8), and the React half
-    // (which reads every file of screens/), with its own test per screen (test/screens/*/ calls the mold: everyScreenHasTheLeaveTest).
-    it('no hand-made screen is left in views/: only BaseView.js (a new one would have to keep the contract of this.subscriptions, and is born in React)', () => {
-        expect(viewFiles).toEqual(['BaseView.js'])
+    // own handle, every subscription in the list of BaseView, and that there are views to check) have no view left to read. Wave 8d deleted BaseView and
+    // the folder: what stands in their place is the guard below (views/ does not exist, so no hand-made screen is born again; the final rule,
+    // test/architecture/noHandMadeScreens.test.js, says it for components/ too) and the React half (which reads every file of screens/), with its own
+    // test per screen (test/screens/*/ calls the mold: everyScreenHasTheLeaveTest).
+    it('views/ does not exist (a hand-made screen would have to keep the contract of this.subscriptions, and is born in React)', () => {
+        expect(existsSync(join(process.cwd(), 'public/js/views'))).toBe(false)
     })
 
     // F83: the screens in React are left by unmounting the root (the router calls destroy(), the bridge unmounts):

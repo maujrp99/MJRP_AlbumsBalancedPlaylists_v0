@@ -34,7 +34,7 @@ const writing = (files, pattern) => files.flatMap(file =>
 
 const ALL = listJs('').filter(file => !file.startsWith('vendor/'))
 /** Everything that is a screen or decides for one. */
-const SCREENS = [...listJs('controllers'), ...listJs('views'), ...listJs('components'), ...listJs('screens'), ...listJs('ui'), ...listJs('shell')]
+const SCREENS = [...listJs('controllers'), ...listJs('screens'), ...listJs('ui'), ...listJs('shell')]
 const COMPOSITION = 'services/albums/albumLoading.js'
 const ASKS = 'services/albums/AlbumAsks.js'
 
@@ -74,7 +74,7 @@ describe('every screen loads albums through the load service (F56)', () => {
         })
 
         const screen = ['screens/playlists/Playlists.tsx', 'screens/playlists/PhoneParts.tsx', 'controllers/playlistExports.js',
-            ...listJs('screens/blend'), ...listJs('components/playlists')]
+            ...listJs('screens/blend')]
         expect(importers(screen, specifier => /services\/albums\//.test(specifier))).toEqual([])
     })
 
