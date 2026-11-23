@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:24] step — Site publicado da `main` `956f721`: crédito só com o álbum e botão alinhado, endereços diretos, «álbuns» no lugar de «discos», «Vire o lado»
+
+**Branch:** main
+
+O MJRP julgou a prévia e disse «1, publica»; um juiz independente rápido deu o relatório que a trava da junta pede (passa: 0 P0, 0 P1, 3 P2). `./scripts/deploy-site.sh` pela fila, saída 0; a página no ar traz «ama álbuns». Não conferido num iPhone de verdade. Voltar: «Rollback» no Hosting do Firebase (versão anterior: site da `937c3dd`). Pedidos dele ainda em trabalho: o conserto da animação do caixote e o caixote na diagonal no celular (`fix/f80-crate-animation-break`); a curadoria com o nome «Na caixa do The Album Blender» (F95); a home do celular em deslizes (registro no board, análise do especialista de experiência de uso e protótipo novo, pedidos por ele: «quero a análise do expert de UI e UX sobre minha proposta», «e um prototipo novo»).
+
 ## [2026-11-23 15:21] review — F80: o juiz independente passou os ajustes do crédito do álbum (0 P0, 0 P1, 3 P2); o MJRP julgou a prévia
 
 **Branch:** fix/f80-album-credit-album-only-and-aligned-button
