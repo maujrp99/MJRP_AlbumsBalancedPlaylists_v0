@@ -4,7 +4,7 @@
 **Created**: 2025-12-21
 **Updated**: 2025-12-23
 **Status**: 🟡 PARTIALLY IMPLEMENTED
-**Vision**: [MJRP_Product_Vision.md](../../product-management/MJRP_Product_Vision.md)
+**Vision**: MJRP_Product_Vision.md
 
 > [!NOTE]
 > **Implementation Status (2025-12-23)**:

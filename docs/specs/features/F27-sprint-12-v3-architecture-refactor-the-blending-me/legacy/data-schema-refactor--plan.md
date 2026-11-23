@@ -316,7 +316,7 @@ export class TrackTransformer {
 
 ### 2.2 Update: Track.js Model
 
-#### [MODIFY] [Track.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/models/Track.js)
+#### [MODIFY] Track.js
 
 Add explicit Spotify and Acclaim fields with JSDoc:
 

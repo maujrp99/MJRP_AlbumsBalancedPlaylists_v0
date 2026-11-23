@@ -162,13 +162,13 @@ setupSeriesModals({
 
 ## 📎 Related Documents
 
-- [Sprint 9 Spec](./sprint9-ranking-enrichment/sprint9-specs.md)
-- [Sprint 9 Rankings Architecture](./sprint9-ranking-enrichment/rankings_architecture.md)
-- [Sprint 10 Spec](./sprint10-refactor/spec.md)
-- [Sprint 10 Plan](./sprint10-refactor/plan.md)
-- [Sprint 10 Tasks](./sprint10-refactor/tasks.md)
-- [DEBUG_LOG](../../debug/DEBUG_LOG.md) - Issues #54-58
-- [CODE_QUALITY_ASSESSMENT_v2](../../refactor/CODE_QUALITY_ASSESSMENT_v2.md)
+- Sprint 9 Spec
+- Sprint 9 Rankings Architecture
+- Sprint 10 Spec
+- Sprint 10 Plan
+- Sprint 10 Tasks
+- [DEBUG_LOG](../../../../debug/DEBUG_LOG.md) - Issues #54-58
+- CODE_QUALITY_ASSESSMENT_v2
 
 ---
 

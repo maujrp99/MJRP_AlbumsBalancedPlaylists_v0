@@ -1,7 +1,7 @@
 # Technical Debt Backlog & Refactoring Roadmap
 
 **Last Updated**: 2025-12-25 22:40
-**Source**: [Code Quality Assessment v5.0](refactor/CODE_QUALITY_ASSESSMENT_v5.0.md) & [Architecture Deep Dive](../ARCHITECTURE.md)
+**Source**: Code Quality Assessment v5.0 & Architecture Deep Dive
 
 ---
 
@@ -23,7 +23,7 @@
 | ID | Issue | Risk | Effort | Fix |
 | :--- | :--- | :--- | :--- | :--- |
 | **CRIT-3** | Missing Firebase Config in Prod | 🔴 HIGH | S | Verify `firebase-config.js` or Environment Variables in Hosting. |
-| **CRIT-5** | **Album Cache/Display Architectural Flaw** | 🔴 HIGH | L | See [DEBUG_LOG #92](../debug/DEBUG_LOG.md#issue-92). Requires album identity model, cache key normalization, series-scoped filtering. |
+| **CRIT-5** | **Album Cache/Display Architectural Flaw** | 🔴 HIGH | L | See [DEBUG_LOG #92](../../../../debug/DEBUG_LOG.md#issue-92). Requires album identity model, cache key normalization, series-scoped filtering. |
 
 ---
 
@@ -62,7 +62,7 @@
 7.  ✅ **[DEBT-2]** IndexedDB Persistence - Already implemented (verified working!)
 
 **Pending:**
-8.  🟠 **[#93]** Reconfigure Panel Ignores Ingredients - See [DEBUG_LOG #93](../debug/DEBUG_LOG.md#issue-93)
+8.  🟠 **[#93]** Reconfigure Panel Ignores Ingredients - See [DEBUG_LOG #93](../../../../debug/DEBUG_LOG.md#issue-93)
 
 **Resolved this session:**
 9.  ✅ **[CRIT-5/#92]** Album Cache Validation - AlbumIdentity model + similarity validation

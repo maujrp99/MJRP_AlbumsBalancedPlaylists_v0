@@ -89,7 +89,7 @@ We will transform the experience from a "Text Editor" to a "Playlist Builder".
 - **Feedback**: Success toast or flash when adding.
 
 ## 7. Visual Mockup
-![UI Proposal Mockup (Split Filter)](file:///Users/mpedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/specs/load_albums_mockup.png)
+UI Proposal Mockup (Split Filter)
 
 ---
 **Status**: Proposal Ready for Review

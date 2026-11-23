@@ -2,10 +2,10 @@
 
 **Goal**: Eradicate legacy patterns (`Modals.js`) and consolidate components.
 **Last Updated**: 2025-12-31
-**Spec**: [spec.md](./spec.md)
+**Spec**: [spec.md](../spec.md)
 
 ## ~~Phase 1: Critical Integrity Recovery~~ ✅ RESOLVED IN SPRINT 15
-> Moved to Sprint 15 Phase 6. See [phase6-hotfix-plan.md](../sprint15-arch12/phase6-hotfix-plan.md)
+> Moved to Sprint 15 Phase 6. See [phase6-hotfix-plan.md](../../F31-sprint-15-structural-integrity-arch-12/legacy/phase6-hotfix-plan.md)
 
 - [x] **Fix Export Logic**: Lazy authorize + browser locale storefront implemented.
 - [x] **Fix Series Management**: Artist scan + filters in Edit modal (same as Home).

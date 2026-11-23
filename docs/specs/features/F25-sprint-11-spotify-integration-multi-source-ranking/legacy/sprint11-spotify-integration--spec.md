@@ -321,6 +321,6 @@ flowchart TD
 
 ## Cross-References
 
-- [ROADMAP.md](../../../ROADMAP.md) - Sprint 11 planning
-- [SPOTIFY_SETUP.md](../../../SPOTIFY_SETUP.md) - Existing Spotify docs
-- [spotifyPopularity.js](../../../../server/lib/services/spotifyPopularity.js) - Existing service
+- [ROADMAP.md](../../../../../ROADMAP.md) - Sprint 11 planning
+- SPOTIFY_SETUP.md - Existing Spotify docs
+- [spotifyPopularity.js](../../../../../server/lib/services/spotifyPopularity.js) - Existing service

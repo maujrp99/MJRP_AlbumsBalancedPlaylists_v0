@@ -102,7 +102,7 @@ const ALGORITHM_INGREDIENTS = {
 
 ## 📁 Related Files
 
-- [BlendIngredientsPanel.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendIngredientsPanel.js)
-- [BlendFlavorCard.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/components/blend/BlendFlavorCard.js)
-- [BlendingMenuView.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/views/BlendingMenuView.js)
-- [algorithms/index.js](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/public/js/algorithms/index.js)
+- BlendIngredientsPanel.js
+- BlendFlavorCard.js
+- BlendingMenuView.js
+- algorithms/index.js

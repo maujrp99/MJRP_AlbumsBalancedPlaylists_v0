@@ -1,6 +1,6 @@
 # Technical Plan: Sprint 23 - Consolidated Ranking Refactor [APPROVED]
 
-> **[⬅️ Back to Reference Guide Index](../../../manual/00_MJRP_Album_Blender_Ref_Guide_Index.md)**
+> **[⬅️ Back to Reference Guide Index](../../../../manual/00_MJRP_Album_Blender_Ref_Guide_Index.md)**
 
 ## 1. Goal
 Implement the `rankingConsolidated` schema to preserve evidence provenance and fix the "Enrichment Persistence" bug.

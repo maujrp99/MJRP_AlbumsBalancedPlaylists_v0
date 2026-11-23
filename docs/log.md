@@ -2,6 +2,35 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 17:06] step — links quebrados em docs/specs/features (legacy e specs)
+
+**Branch:** claude/v0-doctor-broken-links-115153
+
+Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 18 links apontados para o arquivo certo e 64 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
+
+Links ambíguos (mais de um arquivo com o mesmo nome) — decisão do agente, revisável:
+
+| arquivo | link | candidatos | escolhido | por quê |
+|---|---|---|---|---|
+| `SPRINT_9_10_PENDING.md` | `./sprint9-ranking-enrichment/sprint9-specs.md` | 2 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint9-ranking-enrichment/rankings_architecture.md` | 2 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint10-refactor/spec.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint10-refactor/plan.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint10-refactor/tasks.md` | 103 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint9-ranking-enrichment/sprint9-specs.md` | 2 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint9-ranking-enrichment/rankings_architecture.md` | 2 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint10-refactor/spec.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint10-refactor/plan.md` | 104 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `SPRINT_9_10_PENDING.md` | `./sprint10-refactor/tasks.md` | 103 | texto puro | sem pista no texto: ou subpasta de outra sprint, ou arquivo de pasta arquivada (nada separa os candidatos) |
+| `sprint9-10-combined--plan.md` | `./spec.md` | 104 | `docs/specs/features/F24-sprint-10-codebase-refactoring/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `blending-menu--plan.md` | `./spec.md` | 104 | `docs/specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `topnav-redesign--plan.md` | `./spec.md` | 104 | `docs/specs/features/F27-sprint-12-v3-architecture-refactor-the-blending-me/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint16-cleanup--tasks.md` | `./spec.md` | 104 | `docs/specs/features/F33-sprint-16-cleanup-critical-integrity-batch-naming/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+| `sprint20-user-ranking-ext--plan.md` | `./spec.md` | 104 | `docs/specs/features/F39-sprint-20-user-generated-track-ranking-and-recipe/spec.md` | link sem subpasta, no arquivo de uma feature; o arquivo da própria feature |
+
+Continua vermelho por 5 erros fora desta tarefa, que já existiam antes: 3 sensores de código (lint: `error TS7016: Could not find a declaration file for module 'react-dom'`; test e build: `Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@vitejs/plugin-react'`) e 2 de memória (`## Now`: bloco «Where the Work Stopped» com 9500 caracteres; «Pending on Agent» sem carimbo). Ficam com o orquestrador, conforme combinado.
+
+
 ## [2026-11-23 17:06] step — links quebrados em docs/manual
 
 **Branch:** claude/v0-doctor-broken-links-115153
