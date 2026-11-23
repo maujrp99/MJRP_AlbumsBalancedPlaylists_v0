@@ -64,7 +64,7 @@ export const shell = {
     'shell.phone.tabBlend': 'Mistura',
     'shell.phone.tabPlaylists': 'Playlists',
     'shell.phone.tabInventory': 'Acervo',
-    'shell.phone.appName': 'Album Blender',
+    'shell.phone.appName': 'The Album Blender',
     'shell.phone.screenStart': 'Criar',
     'shell.phone.screenAlbums': 'Álbuns',
     'shell.phone.screenBlend': 'Mistura',

@@ -1,0 +1,187 @@
+PASS  chromium-1280 branch: the 3D crate is drawn
+PASS  chromium-1280 branch · in turn · a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · in turn · start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · in turn · albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · in turn · blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · in turn · flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · in turn · playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · in turn · inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · in turn · inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · in turn · playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · in turn · flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · in turn · blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · in turn · albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · in turn · start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · in turn · a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · slow wheel down · at the end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · slow wheel up · at the end (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · jump a1 → start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · jump a1 → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · jump a1 → blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · jump a1 → flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · jump a1 → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · jump a1 → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · jump a1 → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · jump start → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · jump start → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · jump start → blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · jump start → flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · jump start → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · jump start → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · jump start → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · jump albums → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · jump albums → start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · jump albums → blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · jump albums → flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · jump albums → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · jump albums → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · jump albums → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · jump blend → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · jump blend → start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · jump blend → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · jump blend → flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · jump blend → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · jump blend → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · jump blend → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · jump flip → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · jump flip → start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · jump flip → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · jump flip → blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · jump flip → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · jump flip → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · jump flip → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · jump playlists → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · jump playlists → start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · jump playlists → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · jump playlists → blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · jump playlists → flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · jump playlists → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · jump playlists → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · jump inventory → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · jump inventory → start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · jump inventory → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · jump inventory → blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · jump inventory → flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · jump inventory → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · jump inventory → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 branch · jump end → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · jump end → start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · jump end → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · jump end → blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · jump end → flip (track flip, flip 0.611)  sssssssssssssss
+PASS  chromium-1280 branch · jump end → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · jump end → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · a burst of ten jumps, ends on start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · the menu · a.stop[data-for="blend"] (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · the menu · a.stop[data-for="inventory"] (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · the menu · a.stop[data-for="start"] (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · the menu · a.flipmark (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · the menu · a.stop[data-for="playlists"] (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · the menu · a.stop[data-for="albums"] (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · the menu · a.home (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 branch · resized to 1440×900 mid-move (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · resized to 1100×760 mid-move (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1280 branch · resized to 1280×900 mid-move (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · tab hidden mid-move, scrolled behind it, shown again (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · paused mid-move (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · processor 6× slower · a burst, ends on start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1280 branch · processor 6× slower · blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1280 branch · processor 6× slower · inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1280 branch · processor 6× slower · albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 branch · while moving: no record goes into the wood  0 — none
+INFO  chromium-1280 branch · while moving: the largest jump of a record between two frames  0.256 (record 11)
+PASS  chromium-1280 branch: no page error
+PASS  chromium-1280 branch · less motion asked: no 3D scene, no 3D canvas  {"scene":false,"canvas":false,"live":false}
+PASS  chromium-1280 branch: no request to a music host
+PASS  chromium-1440 branch: the 3D crate is drawn
+PASS  chromium-1440 branch · in turn · a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1440 branch · in turn · start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1440 branch · in turn · albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1440 branch · in turn · blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1440 branch · in turn · flip (track flip, flip 0.612)  sssssssssssssss
+PASS  chromium-1440 branch · in turn · playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1440 branch · in turn · inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1440 branch · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1440 branch · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1440 branch · in turn · inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1440 branch · in turn · playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1440 branch · in turn · flip (track flip, flip 0.612)  sssssssssssssss
+PASS  chromium-1440 branch · in turn · blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1440 branch · in turn · albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1440 branch · in turn · start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1440 branch · in turn · a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1440 branch · jump a1 → blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1440 branch · jump blend → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1440 branch · jump playlists → start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1440 branch · jump start → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1440 branch · jump end → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1440 branch · jump albums → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1440 branch · jump inventory → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1440 branch · a burst of ten jumps, ends on start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1440 branch · the menu · a.stop[data-for="blend"] (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1440 branch · the menu · a.stop[data-for="inventory"] (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1440 branch · the menu · a.stop[data-for="start"] (track start, flip 0)  fffssssssssssss
+PASS  chromium-1440 branch · the menu · a.flipmark (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1440 branch · the menu · a.stop[data-for="playlists"] (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1440 branch · the menu · a.stop[data-for="albums"] (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1440 branch · the menu · a.home (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1440 branch · resized to 1280×900 mid-move (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1440 branch · resized to 1100×760 mid-move (track playlists, flip 1)  sssssssssssffff
+PASS  chromium-1440 branch · resized to 1440×900 mid-move (track start, flip 0)  fffssssssssssss
+PASS  chromium-1440 branch · tab hidden mid-move, scrolled behind it, shown again (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1440 branch · paused mid-move (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1440 branch · processor 6× slower · a burst, ends on start (track start, flip 0)  fffssssssssssss
+PASS  chromium-1440 branch · processor 6× slower · blend (track blend, flip 0)  ffffffsssssssss
+PASS  chromium-1440 branch · processor 6× slower · inventory (track inventory, flip 1)  sssssssssssssff
+PASS  chromium-1440 branch · processor 6× slower · albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1440 branch · while moving: no record goes into the wood  0 — none
+INFO  chromium-1440 branch · while moving: the largest jump of a record between two frames  0.303 (record 5)
+PASS  chromium-1440 branch: no page error
+PASS  chromium-1440 branch · less motion asked: no 3D scene, no 3D canvas  {"scene":false,"canvas":false,"live":false}
+PASS  chromium-1440 branch: no request to a music host
+PASS  webkit-1280 branch: the 3D crate is drawn
+PASS  webkit-1280 branch · in turn · a1 (track a1, flip 0)  sssssssssssssss
+PASS  webkit-1280 branch · in turn · start (track start, flip 0)  fffssssssssssss
+PASS  webkit-1280 branch · in turn · albums (track albums, flip 0)  fssssssssssssss
+PASS  webkit-1280 branch · in turn · blend (track blend, flip 0)  ffffffsssssssss
+PASS  webkit-1280 branch · in turn · flip (track flip, flip 0.613)  sssssssssssssss
+PASS  webkit-1280 branch · in turn · playlists (track playlists, flip 1)  sssssssssssffff
+PASS  webkit-1280 branch · in turn · inventory (track inventory, flip 1)  sssssssssssssff
+PASS  webkit-1280 branch · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  webkit-1280 branch · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  webkit-1280 branch · in turn · inventory (track inventory, flip 1)  sssssssssssssff
+PASS  webkit-1280 branch · in turn · playlists (track playlists, flip 1)  sssssssssssffff
+PASS  webkit-1280 branch · in turn · flip (track flip, flip 0.613)  sssssssssssssss
+PASS  webkit-1280 branch · in turn · blend (track blend, flip 0)  ffffffsssssssss
+PASS  webkit-1280 branch · in turn · albums (track albums, flip 0)  fssssssssssssss
+PASS  webkit-1280 branch · in turn · start (track start, flip 0)  fffssssssssssss
+PASS  webkit-1280 branch · in turn · a1 (track a1, flip 0)  sssssssssssssss
+PASS  webkit-1280 branch · jump a1 → blend (track blend, flip 0)  ffffffsssssssss
+PASS  webkit-1280 branch · jump blend → playlists (track playlists, flip 1)  sssssssssssffff
+PASS  webkit-1280 branch · jump playlists → start (track start, flip 0)  fffssssssssssss
+PASS  webkit-1280 branch · jump start → end (track end, flip 1)  sssssssssssssss
+PASS  webkit-1280 branch · jump end → albums (track albums, flip 0)  fssssssssssssss
+PASS  webkit-1280 branch · jump albums → inventory (track inventory, flip 1)  sssssssssssssff
+PASS  webkit-1280 branch · jump inventory → a1 (track a1, flip 0)  sssssssssssssss
+PASS  webkit-1280 branch · a burst of ten jumps, ends on start (track start, flip 0)  fffssssssssssss
+PASS  webkit-1280 branch · the menu · a.stop[data-for="blend"] (track blend, flip 0)  ffffffsssssssss
+PASS  webkit-1280 branch · the menu · a.stop[data-for="inventory"] (track inventory, flip 1)  sssssssssssssff
+PASS  webkit-1280 branch · the menu · a.stop[data-for="start"] (track start, flip 0)  fffssssssssssss
+PASS  webkit-1280 branch · the menu · a.flipmark (track playlists, flip 1)  sssssssssssffff
+PASS  webkit-1280 branch · the menu · a.stop[data-for="playlists"] (track playlists, flip 1)  sssssssssssffff
+PASS  webkit-1280 branch · the menu · a.stop[data-for="albums"] (track albums, flip 0)  fssssssssssssss
+PASS  webkit-1280 branch · the menu · a.home (track a1, flip 0)  sssssssssssssss
+PASS  webkit-1280 branch · resized to 1440×900 mid-move (track blend, flip 0)  ffffffsssssssss
+PASS  webkit-1280 branch · resized to 1100×760 mid-move (track playlists, flip 1)  sssssssssssffff
+PASS  webkit-1280 branch · resized to 1280×900 mid-move (track start, flip 0)  fffssssssssssss
+PASS  webkit-1280 branch · tab hidden mid-move, scrolled behind it, shown again (track blend, flip 0)  ffffffsssssssss
+PASS  webkit-1280 branch · paused mid-move (track inventory, flip 1)  sssssssssssssff
+PASS  webkit-1280 branch · while moving: no record goes into the wood  0 — none
+INFO  webkit-1280 branch · while moving: the largest jump of a record between two frames  0.439 (record 11)
+PASS  webkit-1280 branch: no page error
+PASS  webkit-1280 branch · less motion asked: no 3D scene, no 3D canvas  {"scene":false,"canvas":false,"live":false}
+PASS  webkit-1280 branch: no request to a music host
+
+branch: 182 passed, 0 failed

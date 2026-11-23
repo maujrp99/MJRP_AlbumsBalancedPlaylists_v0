@@ -28,7 +28,7 @@ describe('Portuguese says «álbum», never «disco» (the owner, 2026-11-23)', 
     it('the entry page: no Portuguese text of the dictionary', () => {
         const hits = Object.entries(COPY.pt).filter(([, text]) => says(String(text))).map(([key]) => key)
         expect(hits).toEqual([])
-        expect(COPY.pt['h.kick']).toContain('quem ama álbuns')
+        expect(COPY.pt['stage.aria']).toContain('caixa de álbuns')
     })
 
     it('the entry page: nothing written in the page itself (title, description, labels)', () => {

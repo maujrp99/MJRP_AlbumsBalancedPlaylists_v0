@@ -1,0 +1,187 @@
+PASS  chromium-1280 main: the 3D crate is drawn
+PASS  chromium-1280 main · in turn · a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · in turn · start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · in turn · albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · in turn · blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · in turn · flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · in turn · playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · in turn · inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · in turn · end (track end, flip 1)  sssssssssssssss
+FAIL  chromium-1280 main · in turn · inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · in turn · playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · in turn · flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · in turn · blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · in turn · albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · in turn · start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · in turn · a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 main · slow wheel down · at the end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · slow wheel up · at the end (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · jump a1 → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump a1 → albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · jump a1 → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump a1 → flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · jump a1 → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · jump a1 → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · jump a1 → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · jump start → a1 (track a1, flip 0)  sssssssssssssss
+PASS  chromium-1280 main · jump start → albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · jump start → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump start → flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · jump start → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · jump start → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · jump start → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · jump albums → a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · jump albums → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1280 main · jump albums → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump albums → flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · jump albums → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · jump albums → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · jump albums → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · jump blend → a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · jump blend → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump blend → albums (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 main · jump blend → flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · jump blend → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · jump blend → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · jump blend → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · jump flip → a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · jump flip → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump flip → albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · jump flip → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1280 main · jump flip → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · jump flip → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · jump flip → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · jump playlists → a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · jump playlists → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump playlists → albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · jump playlists → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump playlists → flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · jump playlists → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · jump playlists → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · jump inventory → a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · jump inventory → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump inventory → albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · jump inventory → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump inventory → flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · jump inventory → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · jump inventory → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1280 main · jump end → a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · jump end → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump end → albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · jump end → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1280 main · jump end → flip (track flip, flip 0.611)  sssssssssssssss
+FAIL  chromium-1280 main · jump end → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · jump end → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · a burst of ten jumps, ends on start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1280 main · the menu · a.stop[data-for="blend"] (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.017 inside the front (+z) plank
+FAIL  chromium-1280 main · the menu · a.stop[data-for="inventory"] (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · the menu · a.stop[data-for="start"] (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.017 inside the front (+z) plank
+FAIL  chromium-1280 main · the menu · a.flipmark (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · the menu · a.stop[data-for="playlists"] (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · the menu · a.stop[data-for="albums"] (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1280 main · the menu · a.home (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1280 main · resized to 1440×900 mid-move (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1280 main · resized to 1100×760 mid-move (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · resized to 1280×900 mid-move (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1280 main · tab hidden mid-move, scrolled behind it, shown again (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1280 main · paused mid-move (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1280 main · processor 6× slower · a burst, ends on start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1280 main · processor 6× slower · blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.017 inside the front (+z) plank
+FAIL  chromium-1280 main · processor 6× slower · inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1280 main · processor 6× slower · albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1280 main · while moving: no record goes into the wood  0.04 — record 14 in the back (-z) plank (lift 0.00, tilt -0.61, track playlists)
+INFO  chromium-1280 main · while moving: the largest jump of a record between two frames  0.69 (record 5)
+PASS  chromium-1280 main: no page error
+PASS  chromium-1280 main · less motion asked: no 3D scene, no 3D canvas  {"scene":false,"canvas":false,"live":false}
+PASS  chromium-1280 main: no request to a music host
+PASS  chromium-1440 main: the 3D crate is drawn
+PASS  chromium-1440 main · in turn · a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1440 main · in turn · start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1440 main · in turn · albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1440 main · in turn · blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1440 main · in turn · flip (track flip, flip 0.612)  sssssssssssssss
+FAIL  chromium-1440 main · in turn · playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1440 main · in turn · inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1440 main · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1440 main · in turn · end (track end, flip 1)  sssssssssssssss
+FAIL  chromium-1440 main · in turn · inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1440 main · in turn · playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1440 main · in turn · flip (track flip, flip 0.612)  sssssssssssssss
+FAIL  chromium-1440 main · in turn · blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1440 main · in turn · albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1440 main · in turn · start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1440 main · in turn · a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1440 main · jump a1 → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1440 main · jump blend → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1440 main · jump playlists → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  chromium-1440 main · jump start → end (track end, flip 1)  sssssssssssssss
+PASS  chromium-1440 main · jump end → albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1440 main · jump albums → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1440 main · jump inventory → a1 (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1440 main · a burst of ten jumps, ends on start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1440 main · the menu · a.stop[data-for="blend"] (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.017 inside the front (+z) plank
+FAIL  chromium-1440 main · the menu · a.stop[data-for="inventory"] (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1440 main · the menu · a.stop[data-for="start"] (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.017 inside the front (+z) plank
+FAIL  chromium-1440 main · the menu · a.flipmark (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1440 main · the menu · a.stop[data-for="playlists"] (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1440 main · the menu · a.stop[data-for="albums"] (track albums, flip 0)  fssssssssssssss
+PASS  chromium-1440 main · the menu · a.home (track a1, flip 0)  sssssssssssssss
+FAIL  chromium-1440 main · resized to 1280×900 mid-move (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1440 main · resized to 1100×760 mid-move (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1440 main · resized to 1440×900 mid-move (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1440 main · tab hidden mid-move, scrolled behind it, shown again (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1440 main · paused mid-move (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  chromium-1440 main · processor 6× slower · a burst, ends on start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  chromium-1440 main · processor 6× slower · blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.017 inside the front (+z) plank
+FAIL  chromium-1440 main · processor 6× slower · inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  chromium-1440 main · processor 6× slower · albums (track albums, flip 0)  fssssssssssssss
+FAIL  chromium-1440 main · while moving: no record goes into the wood  0.04 — record 0 in the front (+z) plank (lift 0.00, tilt 0.61, track blend)
+INFO  chromium-1440 main · while moving: the largest jump of a record between two frames  0.691 (record 11)
+PASS  chromium-1440 main: no page error
+PASS  chromium-1440 main · less motion asked: no 3D scene, no 3D canvas  {"scene":false,"canvas":false,"live":false}
+PASS  chromium-1440 main: no request to a music host
+PASS  webkit-1280 main: the 3D crate is drawn
+PASS  webkit-1280 main · in turn · a1 (track a1, flip 0)  sssssssssssssss
+FAIL  webkit-1280 main · in turn · start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  webkit-1280 main · in turn · albums (track albums, flip 0)  fssssssssssssss
+FAIL  webkit-1280 main · in turn · blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  webkit-1280 main · in turn · flip (track flip, flip 0.613)  sssssssssssssss
+FAIL  webkit-1280 main · in turn · playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  webkit-1280 main · in turn · inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  webkit-1280 main · in turn · end (track end, flip 1)  sssssssssssssss
+PASS  webkit-1280 main · in turn · end (track end, flip 1)  sssssssssssssss
+FAIL  webkit-1280 main · in turn · inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  webkit-1280 main · in turn · playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  webkit-1280 main · in turn · flip (track flip, flip 0.613)  sssssssssssssss
+FAIL  webkit-1280 main · in turn · blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  webkit-1280 main · in turn · albums (track albums, flip 0)  fssssssssssssss
+FAIL  webkit-1280 main · in turn · start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  webkit-1280 main · in turn · a1 (track a1, flip 0)  sssssssssssssss
+FAIL  webkit-1280 main · jump a1 → blend (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  webkit-1280 main · jump blend → playlists (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  webkit-1280 main · jump playlists → start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+PASS  webkit-1280 main · jump start → end (track end, flip 1)  sssssssssssssss
+PASS  webkit-1280 main · jump end → albums (track albums, flip 0)  fssssssssssssss
+FAIL  webkit-1280 main · jump albums → inventory (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  webkit-1280 main · jump inventory → a1 (track a1, flip 0)  sssssssssssssss
+FAIL  webkit-1280 main · a burst of ten jumps, ends on start (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  webkit-1280 main · the menu · a.stop[data-for="blend"] (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.017 inside the front (+z) plank
+FAIL  webkit-1280 main · the menu · a.stop[data-for="inventory"] (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  webkit-1280 main · the menu · a.stop[data-for="start"] (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.017 inside the front (+z) plank
+FAIL  webkit-1280 main · the menu · a.flipmark (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  webkit-1280 main · the menu · a.stop[data-for="playlists"] (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.017 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+PASS  webkit-1280 main · the menu · a.stop[data-for="albums"] (track albums, flip 0)  fssssssssssssss
+PASS  webkit-1280 main · the menu · a.home (track a1, flip 0)  sssssssssssssss
+FAIL  webkit-1280 main · resized to 1440×900 mid-move (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  webkit-1280 main · resized to 1100×760 mid-move (track playlists, flip 1)  record 13 (flipped, tilt -0.62 rad) is 0.018 inside the back (-z) plank; record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  webkit-1280 main · resized to 1280×900 mid-move (track start, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  webkit-1280 main · tab hidden mid-move, scrolled behind it, shown again (track blend, flip 0)  record 0 (flipped, tilt 0.62 rad) is 0.036 inside the front (+z) plank; record 1 (flipped, tilt 0.62 rad) is 0.018 inside the front (+z) plank
+FAIL  webkit-1280 main · paused mid-move (track inventory, flip 1)  record 14 (flipped, tilt -0.62 rad) is 0.036 inside the back (-z) plank
+FAIL  webkit-1280 main · while moving: no record goes into the wood  0.04 — record 1 in the front (+z) plank (lift 0.00, tilt 0.59, track start)
+INFO  webkit-1280 main · while moving: the largest jump of a record between two frames  0.685 (record 2)
+PASS  webkit-1280 main: no page error
+PASS  webkit-1280 main · less motion asked: no 3D scene, no 3D canvas  {"scene":false,"canvas":false,"live":false}
+PASS  webkit-1280 main: no request to a music host
+
+main: 80 passed, 102 failed

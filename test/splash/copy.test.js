@@ -52,7 +52,7 @@ describe('the dictionary', () => {
         expect(t('t.albums', 'pt')).toBe('Ranqueie as faixas do seu jeito.')
         expect(t('p.playlists', 'pt')).toMatch(/Spotify ou a Apple Music/)
         expect(t('p.playlists', 'en')).toMatch(/Spotify or Apple Music/)
-        expect(t('t.inventory', 'pt')).toBe('Conte as mídias físicas da sua estante.')
+        expect(t('t.inventory', 'pt')).toBe('Catalogue as mídias físicas da sua estante.')
         expect(t('e.title', 'pt')).toBe('Coloque sua primeira série para tocar.')
         expect(t('h.title', 'pt')).toBe('Mergulhe nos álbuns que você ama.')
         expect(t('h.what', 'pt')).toBe('Seus álbuns do momento, numa playlist balanceada.')
@@ -81,6 +81,54 @@ describe('the dictionary', () => {
     it('the ranking is optional and partial: never «every track»', () => {
         expect(t('t.albums', 'en')).not.toMatch(/every track/i)
         expect(t('p.albums', 'pt')).toMatch(/Uma só ou várias, para cima ou para baixo/)
+    })
+})
+
+describe('the hero opens with the title (UAT-292)', () => {
+    it('no small line above the title, in either opening of the page; the title is the page\'s only h1 of each opening', () => {
+        const hero = page.slice(page.indexOf('<section class="hero'), page.indexOf('</section>', page.indexOf('<section class="hero')))
+        expect(hero).not.toContain('class="kicker"')
+        for (const opening of ['only-out', 'only-in']) {
+            const block = hero.slice(hero.indexOf(`<div class="${opening}">`))
+            expect(block.replace(/^<div class="[^"]+">\s*/, '').startsWith('<h1 ')).toBe(true)
+        }
+        expect(hero.match(/<h1 /g)).toHaveLength(2)
+    })
+
+    it('its text left the dictionary, in both languages', () => {
+        expect(COPY.pt['h.kick']).toBeUndefined()
+        expect(COPY.en['h.kick']).toBeUndefined()
+    })
+
+    it('the product\'s name is still said: the page\'s title, the description and the logo', () => {
+        expect(COPY.pt['meta.title']).toContain('The Album Blender')
+        expect(COPY.pt['meta.desc']).toMatch(/The Album Blender é um app web/)
+        expect(COPY.en['meta.desc']).toMatch(/The Album Blender is a web app/)
+        expect(page).toMatch(/<img class="logo" alt="The Album Blender"/)
+    })
+})
+
+describe('on the phone, signed in, the hero has no big «Criar» (UAT-294)', () => {
+    const phone = page.slice(page.indexOf('/* the phone: the vignette beside'))
+    const block = phone.slice(phone.indexOf('@media (max-width:899px){'), phone.indexOf('\n}\n', phone.indexOf('@media (max-width:899px){')))
+
+    it('the signed-in hero\'s button is hidden on the phone only (the top bar already has «Criar»)', () => {
+        expect(block).toMatch(/\.hero \.only-in \.ctas\{display:none\}/)
+        // on the computer nothing hides it: the rule exists once, inside the phone's block
+        expect(page.match(/\.hero \.only-in \.ctas\{/g)).toHaveLength(1)
+    })
+
+    it('the visitor\'s «Abrir o app» stays: on the phone it is the only button that opens the app', () => {
+        expect(page).not.toMatch(/\.only-out \.ctas\{[^}]*display:none/)
+        expect(page).not.toMatch(/\.hero \.ctas\{[^}]*display:none/)
+        expect(page).not.toMatch(/#hero-ctas\{[^}]*display:none/)
+        const hero = page.slice(page.indexOf('<section class="hero'), page.indexOf('</section>', page.indexOf('<section class="hero')))
+        expect(hero).toMatch(/<div class="only-out">[\s\S]*id="app"[\s\S]*data-i18n="openapp"/)
+    })
+
+    it('the top bar keeps «Criar» for who is signed in', () => {
+        expect(page).toMatch(/<a class="btn btn-primary btn-sm btn-start only-in" href="\/start"><span data-i18n="m\.start">/)
+        expect(page).toMatch(/html\.in \.top \.btn-start\{display:inline-flex\}/)
     })
 })
 

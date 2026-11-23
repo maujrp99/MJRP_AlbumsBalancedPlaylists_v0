@@ -1,0 +1,154 @@
+PASS  webkit-390-pt-in-before: no console error
+PASS  webkit-390-pt-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-in-before: the page shows the signed-in opening
+PASS  webkit-390-pt-in-after: no console error
+PASS  webkit-390-pt-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-in-after: the page shows the signed-in opening
+PASS  webkit-390-pt-out-before: no console error
+PASS  webkit-390-pt-out-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-out-before: the page shows the visitor opening
+PASS  webkit-390-pt-out-after: no console error
+PASS  webkit-390-pt-out-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-out-after: the page shows the visitor opening
+PASS  webkit-390-en-in-before: no console error
+PASS  webkit-390-en-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-in-before: the page shows the signed-in opening
+PASS  webkit-390-en-in-after: no console error
+PASS  webkit-390-en-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-in-after: the page shows the signed-in opening
+PASS  webkit-390-en-out-before: no console error
+PASS  webkit-390-en-out-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-out-before: the page shows the visitor opening
+PASS  webkit-390-en-out-after: no console error
+PASS  webkit-390-en-out-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-out-after: the page shows the visitor opening
+PASS  webkit-375-pt-in-before: no console error
+PASS  webkit-375-pt-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-in-before: the page shows the signed-in opening
+PASS  webkit-375-pt-in-after: no console error
+PASS  webkit-375-pt-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-in-after: the page shows the signed-in opening
+PASS  webkit-375-pt-out-before: no console error
+PASS  webkit-375-pt-out-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-out-before: the page shows the visitor opening
+PASS  webkit-375-pt-out-after: no console error
+PASS  webkit-375-pt-out-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-out-after: the page shows the visitor opening
+PASS  webkit-375-en-in-before: no console error
+PASS  webkit-375-en-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-in-before: the page shows the signed-in opening
+PASS  webkit-375-en-in-after: no console error
+PASS  webkit-375-en-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-in-after: the page shows the signed-in opening
+PASS  webkit-375-en-out-before: no console error
+PASS  webkit-375-en-out-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-out-before: the page shows the visitor opening
+PASS  webkit-375-en-out-after: no console error
+PASS  webkit-375-en-out-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-out-after: the page shows the visitor opening
+PASS  chromium-1280-pt-in-before: no console error
+PASS  chromium-1280-pt-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-in-before: the page shows the signed-in opening
+PASS  chromium-1280-pt-in-after: no console error
+PASS  chromium-1280-pt-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-in-after: the page shows the signed-in opening
+PASS  chromium-1280-pt-out-before: no console error
+PASS  chromium-1280-pt-out-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-out-before: the page shows the visitor opening
+PASS  chromium-1280-pt-out-after: no console error
+PASS  chromium-1280-pt-out-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-out-after: the page shows the visitor opening
+PASS  chromium-1280-en-in-before: no console error
+PASS  chromium-1280-en-in-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-in-before: the page shows the signed-in opening
+PASS  chromium-1280-en-in-after: no console error
+PASS  chromium-1280-en-in-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-in-after: the page shows the signed-in opening
+PASS  chromium-1280-en-out-before: no console error
+PASS  chromium-1280-en-out-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-out-before: the page shows the visitor opening
+PASS  chromium-1280-en-out-after: no console error
+PASS  chromium-1280-en-out-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-out-after: the page shows the visitor opening
+PASS  webkit-390-pt-in: the hero had the big «Criar» and has no button now
+      before: Criar 358x48
+PASS  webkit-390-pt-in: the top bar still has «Criar», to the app
+      Criar -> /start
+PASS  webkit-390-pt-in: the crate comes up and no empty band is left
+      crate 354 -> 306 (up 48 px); from the end of the orange line to the crate: 26 px (before, from the button to the crate: 8 px); everything below up 48 px; page 4772 -> 4724
+PASS  webkit-390-pt-in: the keyboard goes down the page in order (top bar, then nothing left in the hero)
+      The Album Blender, topo da pág > PT > EN > Criar
+PASS  webkit-390-pt-in: the page is not wider than before
+      before 390, after 390, screen 390
+PASS  webkit-390-pt-out: the visitor keeps «Abrir o app» in the hero, and nothing moved
+      hero: Abrir o app; top bar: Entrar; bottom bar: Criar -> #start, Álbuns -> #albums, Blend -> #blend, Playlists -> #playlists, Inventário -> #inventory
+PASS  webkit-390-en-in: the hero had the big «Create» and has no button now
+      before: Create 358x48
+PASS  webkit-390-en-in: the top bar still has «Create», to the app
+      Create -> /start
+PASS  webkit-390-en-in: the crate comes up and no empty band is left
+      crate 317 -> 269 (up 48 px); from the end of the orange line to the crate: 26 px (before, from the button to the crate: 8 px); everything below up 48 px; page 4641 -> 4593
+PASS  webkit-390-en-in: the keyboard goes down the page in order (top bar, then nothing left in the hero)
+      The Album Blender, top of the  > PT > EN > Create
+PASS  webkit-390-en-in: the page is not wider than before
+      before 406, after 406, screen 390
+PASS  webkit-390-en-out: the visitor keeps «Open the app» in the hero, and nothing moved
+      hero: Open the app; top bar: Sign in; bottom bar: Create -> #start, Albums -> #albums, Blend -> #blend, Playlists -> #playlists, Inventory -> #inventory
+PASS  webkit-375-pt-in: the hero had the big «Criar» and has no button now
+      before: Criar 343x48
+PASS  webkit-375-pt-in: the top bar still has «Criar», to the app
+      Criar -> /start
+PASS  webkit-375-pt-in: the crate comes up and no empty band is left
+      crate 354 -> 306 (up 48 px); from the end of the orange line to the crate: 26 px (before, from the button to the crate: 8 px); everything below up 48 px; page 4835 -> 4787
+PASS  webkit-375-pt-in: the keyboard goes down the page in order (top bar, then nothing left in the hero)
+      The Album Blender, topo da pág > PT > EN > Criar
+PASS  webkit-375-pt-in: the page is not wider than before
+      before 379, after 379, screen 375
+PASS  webkit-375-pt-out: the visitor keeps «Abrir o app» in the hero, and nothing moved
+      hero: Abrir o app; top bar: Entrar; bottom bar: Criar -> #start, Álbuns -> #albums, Blend -> #blend, Playlists -> #playlists, Inventário -> #inventory
+PASS  webkit-375-en-in: the hero had the big «Create» and has no button now
+      before: Create 343x48
+PASS  webkit-375-en-in: the top bar still has «Create», to the app
+      Create -> /start
+PASS  webkit-375-en-in: the crate comes up and no empty band is left
+      crate 317 -> 269 (up 48 px); from the end of the orange line to the crate: 26 px (before, from the button to the crate: 8 px); everything below up 48 px; page 4790 -> 4742
+PASS  webkit-375-en-in: the keyboard goes down the page in order (top bar, then nothing left in the hero)
+      The Album Blender, top of the  > PT > EN > Create
+PASS  webkit-375-en-in: the page is not wider than before
+      before 406, after 406, screen 375
+PASS  webkit-375-en-out: the visitor keeps «Open the app» in the hero, and nothing moved
+      hero: Open the app; top bar: Sign in; bottom bar: Create -> #start, Albums -> #albums, Blend -> #blend, Playlists -> #playlists, Inventory -> #inventory
+PASS  chromium-1280-pt-in: the computer did not change (hero, its buttons, the top bar, the crate, every section)
+      hero: Criar; top bar: Criar
+PASS  chromium-1280-pt-out: the computer did not change (hero, its buttons, the top bar, the crate, every section)
+      hero: Abrir o app, Entrar; top bar: Entrar
+PASS  chromium-1280-en-in: the computer did not change (hero, its buttons, the top bar, the crate, every section)
+      hero: Create; top bar: Create
+PASS  chromium-1280-en-out: the computer did not change (hero, its buttons, the top bar, the crate, every section)
+      hero: Open the app, Sign in; top bar: Sign in
+
+100 passed, 0 failed; nothing clicked, no album address opened; servers closed

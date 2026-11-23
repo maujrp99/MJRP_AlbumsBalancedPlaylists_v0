@@ -229,7 +229,7 @@ html.paused .motion-icon .i-pause{display:none}
 .hero .h-sub{font:700 clamp(22px,2.1vw,27px)/1.18 var(--display);letter-spacing:-.01em;color:var(--orange-text);margin:14px 0 0;max-width:24ch;text-wrap:balance}
 .hero .what{margin-top:18px}
 /* the computer: shorter stories, centred; the vignette under the text, the crate on the right as before */
-.v4-lead{order:9;display:block}
+.v4-lead{display:block}
 .v4-lead .slot{display:none}
 .v4-motif{position:relative;display:block;width:min(100%,420px);height:200px;margin:28px 0 0;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;contain:layout paint;
   background:radial-gradient(110% 80% at 50% 125%,rgba(249,115,22,.13),rgba(220,38,38,.04) 55%,transparent 75%),#0f0f13}
@@ -353,7 +353,8 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   .hero .h-sub{margin-bottom:18px}
   .hero .ctas .btn-ghost{display:none}
   .hero .ctas .btn{flex:1 1 auto;padding:0 16px}
-  .v4-lead{order:0;display:flex;align-items:stretch;gap:14px;margin:0 0 60px}
+  .hero .only-in .ctas{display:none} /* UAT-294: signed in, the top bar already has «Criar»; the visitor's «Abrir o app» stays, it is the only one that opens the app */
+  .v4-lead{display:flex;align-items:stretch;gap:14px;margin:10px 0 60px} /* UAT-291: after the story's text, where the page has it; the 60 px hold the album's name and the button */
   .v4-lead .slot{display:block;flex:0 0 172px;width:172px;height:172px;margin:0}
   .v4-motif{flex:1 1 auto;min-width:0;width:auto;height:172px;margin:0}
   /* UAT-286: the credit repeats the columns of the story above it (the record, the gap, the visual): the album's name under the record, the button under the visual and exactly as wide; its type and icon shrink to fit on one line */
@@ -436,14 +437,12 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
 <main id="main" class="wrap story">
   <section class="hero" id="a1" data-track="a1" aria-labelledby="h1">
     <div class="only-out">
-      <p class="kicker" data-i18n="h.kick"></p>
       <h1 id="h1" data-i18n="h.title"></h1>
       <p class="h-sub" data-i18n="h.what"></p>
       <p class="what" data-i18n="h.para"></p>
       <div class="ctas" id="hero-ctas"><a class="btn btn-primary" href="/start" id="app"><span data-i18n="openapp"></span> <span class="eqi" aria-hidden="true"><i></i><i></i><i></i><i></i></span></a><a class="btn btn-ghost" href="/start?signin" id="signin" data-i18n="signin"></a></div>
     </div>
     <div class="only-in">
-      <p class="kicker" data-i18n="h.kick"></p>
       <h1 id="h1in" data-i18n="h.title"></h1>
       <p class="h-sub" data-i18n="h.what"></p>
       <p class="what" data-i18n="h.para"></p>
@@ -452,21 +451,17 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   </section>
 
   <section id="start" data-track="start" aria-labelledby="t-start">
-    <div class="v4-lead"><div class="slot pre" data-pull="2" aria-hidden="true"></div><div class="v4-motif m-start" aria-hidden="true">
-        <div class="s-field"><svg class="s-lens" viewBox="0 0 16 16" width="14" height="14"><circle cx="7" cy="7" r="4.6"/><path d="M10.4 10.4 14 14"/></svg><span class="s-q">Pink Floyd<i class="s-mask"></i></span></div>
-        <ul class="s-rows"><li class="r1"><i class="v4-disc hot"></i><b></b><s></s></li><li class="r2"><i class="v4-disc"></i><b></b><s></s></li><li class="r3"><i class="v4-disc"></i><b></b><s></s></li></ul>
-      </div></div>
     <p class="kicker" data-i18n="k.start"></p>
     <h2 class="t" id="t-start" data-i18n="t.start"></h2>
     <p data-i18n="p.start"></p>
     <a class="door only-in" href="/start"><span data-i18n="d.start"></span> <span aria-hidden="true">→</span></a>
+    <div class="v4-lead"><div class="slot pre" data-pull="2" aria-hidden="true"></div><div class="v4-motif m-start" aria-hidden="true">
+        <div class="s-field"><svg class="s-lens" viewBox="0 0 16 16" width="14" height="14"><circle cx="7" cy="7" r="4.6"/><path d="M10.4 10.4 14 14"/></svg><span class="s-q">Pink Floyd<i class="s-mask"></i></span></div>
+        <ul class="s-rows"><li class="r1"><i class="v4-disc hot"></i><b></b><s></s></li><li class="r2"><i class="v4-disc"></i><b></b><s></s></li><li class="r3"><i class="v4-disc"></i><b></b><s></s></li></ul>
+      </div></div>
   </section>
 
   <section id="albums" data-track="albums" aria-labelledby="t-albums">
-    <div class="v4-lead"><div class="slot pre" data-pull="0" aria-hidden="true"></div><div class="v4-motif m-albums" aria-hidden="true">
-        <span class="a-row"></span><span class="a-row"></span><span class="a-row"></span><span class="a-row"></span>
-        <span class="a-hot"><b>↑</b><i></i></span>
-      </div></div>
     <p class="kicker" data-i18n="k.albums"></p>
     <h2 class="t" id="t-albums" data-i18n="t.albums"></h2>
     <p data-i18n="p.albums"></p>
@@ -482,18 +477,22 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
       <p class="note" data-i18n="r.note"></p>
     </div>
     <a class="door only-in" href="/albums"><span data-i18n="d.albums"></span> <span aria-hidden="true">→</span></a>
+    <div class="v4-lead"><div class="slot pre" data-pull="0" aria-hidden="true"></div><div class="v4-motif m-albums" aria-hidden="true">
+        <span class="a-row"></span><span class="a-row"></span><span class="a-row"></span><span class="a-row"></span>
+        <span class="a-hot"><b>↑</b><i></i></span>
+      </div></div>
   </section>
 
   <section id="blend" data-track="blend" aria-labelledby="t-blend">
+    <p class="kicker" data-i18n="k.blend"></p>
+    <h2 class="t" id="t-blend" data-i18n="t.blend"></h2>
+    <p data-i18n="p.blend"></p>
+    <a class="door only-in" href="/blend"><span data-i18n="d.blend"></span> <span aria-hidden="true">→</span></a>
     <div class="v4-lead"><div class="slot pre" data-pull="5" aria-hidden="true"></div><div class="v4-motif m-blend" aria-hidden="true">
         <span class="b-src"><i class="v4-disc c1"></i><i class="v4-disc c2"></i><i class="v4-disc c3"></i></span>
         <svg class="b-lines" viewBox="0 0 100 120" preserveAspectRatio="none"><path class="ln l0" d="M0 20 C50 20 50 10 100 10"/><path class="ln l1" d="M0 60 C50 60 50 30 100 30"/><path class="ln l2" d="M0 100 C50 100 50 50 100 50"/><path class="ln l3" d="M0 20 C50 20 50 70 100 70"/><path class="ln l4" d="M0 60 C50 60 50 90 100 90"/><path class="ln l5" d="M0 100 C50 100 50 110 100 110"/></svg>
         <ol class="b-list"><li class="k0 c1"><i></i><b></b></li><li class="k1 c2"><i></i><b></b></li><li class="k2 c3"><i></i><b></b></li><li class="k3 c1"><i></i><b></b></li><li class="k4 c2"><i></i><b></b></li><li class="k5 c3"><i></i><b></b></li></ol>
       </div></div>
-    <p class="kicker" data-i18n="k.blend"></p>
-    <h2 class="t" id="t-blend" data-i18n="t.blend"></h2>
-    <p data-i18n="p.blend"></p>
-    <a class="door only-in" href="/blend"><span data-i18n="d.blend"></span> <span aria-hidden="true">→</span></a>
   </section>
 
   <section class="flip flip-band" id="flip" data-track="flip" aria-labelledby="tf">
@@ -502,17 +501,21 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   </section>
 
   <section id="playlists" data-track="playlists" aria-labelledby="t-playlists">
-    <div class="v4-lead"><div class="slot pre" data-pull="10" aria-hidden="true"></div><div class="v4-motif m-pl" aria-hidden="true">
-        <ul class="p-list"><li class="p1"><span class="mos"><i></i><i></i><i></i><i></i></span><b></b><s></s><span class="p-play">▶</span></li><li class="p2"><span class="mos"><i></i><i></i><i></i><i></i></span><b></b><s></s></li></ul>
-        <span class="p-out"><span class="ex ex-sp">Spotify <i>✓</i></span><span class="ex ex-am">Apple Music <i>✓</i></span></span>
-      </div></div>
     <p class="kicker" data-i18n="k.playlists"></p>
     <h2 class="t" id="t-playlists" data-i18n="t.playlists"></h2>
     <p data-i18n="p.playlists"></p>
     <a class="door only-in" href="/saved-playlists"><span data-i18n="d.playlists"></span> <span aria-hidden="true">→</span></a>
+    <div class="v4-lead"><div class="slot pre" data-pull="10" aria-hidden="true"></div><div class="v4-motif m-pl" aria-hidden="true">
+        <ul class="p-list"><li class="p1"><span class="mos"><i></i><i></i><i></i><i></i></span><b></b><s></s><span class="p-play">▶</span></li><li class="p2"><span class="mos"><i></i><i></i><i></i><i></i></span><b></b><s></s></li></ul>
+        <span class="p-out"><span class="ex ex-sp">Spotify <i>✓</i></span><span class="ex ex-am">Apple Music <i>✓</i></span></span>
+      </div></div>
   </section>
 
   <section id="inventory" data-track="inventory" aria-labelledby="t-inventory">
+    <p class="kicker" data-i18n="k.inventory"></p>
+    <h2 class="t" id="t-inventory" data-i18n="t.inventory"></h2>
+    <p data-i18n="p.inventory"></p>
+    <a class="door only-in" href="/inventory"><span data-i18n="d.inventory"></span> <span aria-hidden="true">→</span></a>
     <div class="v4-lead"><div class="slot pre" data-pull="12" aria-hidden="true"></div><div class="v4-motif m-inv" aria-hidden="true">
         <span class="i-row">
           <span class="i-vinyl"><i class="i-disc"></i><i class="i-sleeve"></i></span>
@@ -520,10 +523,6 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
         </span>
         <i class="i-plank"></i>
       </div></div>
-    <p class="kicker" data-i18n="k.inventory"></p>
-    <h2 class="t" id="t-inventory" data-i18n="t.inventory"></h2>
-    <p data-i18n="p.inventory"></p>
-    <a class="door only-in" href="/inventory"><span data-i18n="d.inventory"></span> <span aria-hidden="true">→</span></a>
   </section>
 
   <section class="final" id="end" data-track="end" aria-labelledby="t-end">

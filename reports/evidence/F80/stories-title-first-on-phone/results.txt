@@ -1,0 +1,106 @@
+PASS  webkit-390-pt-before: no console error
+PASS  webkit-390-pt-before: no horizontal scroll
+      390 / 390
+PASS  webkit-390-pt-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-after: no console error
+PASS  webkit-390-pt-after: no horizontal scroll
+      390 / 390
+PASS  webkit-390-pt-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-before: no console error
+PASS  webkit-390-en-before: no horizontal scroll
+      390 / 390
+PASS  webkit-390-en-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-after: no console error
+PASS  webkit-390-en-after: no horizontal scroll
+      390 / 390
+PASS  webkit-390-en-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-before: no console error
+PASS  webkit-375-pt-before: no horizontal scroll
+      375 / 375
+PASS  webkit-375-pt-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-after: no console error
+PASS  webkit-375-pt-after: no horizontal scroll
+      375 / 375
+PASS  webkit-375-pt-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-before: no console error
+PASS  webkit-375-en-before: no horizontal scroll
+      375 / 375
+PASS  webkit-375-en-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-after: no console error
+PASS  webkit-375-en-after: no horizontal scroll
+      375 / 375
+PASS  webkit-375-en-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-before: no console error
+PASS  chromium-1280-pt-before: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-pt-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-after: no console error
+PASS  chromium-1280-pt-after: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-pt-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-before: no console error
+PASS  chromium-1280-en-before: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-en-before: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-after: no console error
+PASS  chromium-1280-en-after: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-en-after: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt: in every story the label, the title and the text are seen first, the illustrations below them
+      start: label 878 < title 907 < text 1016 < lead 1088; albums: label 1393 < title 1422 < text 1531 < lead 1920; blend: label 2225 < title 2254 < text 2363 < lead 2459; playlists: label 2831 < title 2860 < text 2969 < lead 3065; inventory: label 3370 < title 3399 < text 3539 < lead 3635
+PASS  webkit-390-pt: the order in the page is the order seen: label, title, text, record, album's name, button (the panel beside the record is decorative, hidden from the screen reader)
+PASS  webkit-390-pt: the first story's label comes right after the crate's caption
+      caption ends 841, label at 878 (before: record at 878, label at 1110)
+PASS  webkit-390-pt: each story's button stays clear of the next part (at least 24 px, and the line between them)
+      start: button ends 1312, next part (albums) starts 1356: 44 px; albums: button ends 2144, next part (blend) starts 2188: 44 px; blend: button ends 2683, next part (flip) starts 2727: 44 px; playlists: button ends 3289, next part (inventory) starts 3333: 44 px
+PASS  webkit-390-pt: the button still has the box of the visual above it
+PASS  webkit-390-pt: the page's height
+      4599 -> 4649 (+50 px)
+PASS  webkit-390-en: in every story the label, the title and the text are seen first, the illustrations below them
+      start: label 857 < title 886 < text 964 < lead 1036; albums: label 1341 < title 1370 < text 1479 < lead 1868; blend: label 2173 < title 2202 < text 2311 < lead 2383; playlists: label 2755 < title 2784 < text 2893 < lead 2965; inventory: label 3270 < title 3299 < text 3408 < lead 3504
+PASS  webkit-390-en: the order in the page is the order seen: label, title, text, record, album's name, button (the panel beside the record is decorative, hidden from the screen reader)
+PASS  webkit-390-en: the first story's label comes right after the crate's caption
+      caption ends 820, label at 857 (before: record at 857, label at 1089)
+PASS  webkit-390-en: each story's button stays clear of the next part (at least 24 px, and the line between them)
+      start: button ends 1260, next part (albums) starts 1304: 44 px; albums: button ends 2092, next part (blend) starts 2136: 44 px; blend: button ends 2607, next part (flip) starts 2651: 44 px; playlists: button ends 3189, next part (inventory) starts 3233: 44 px
+PASS  webkit-390-en: the button still has the box of the visual above it
+PASS  webkit-390-en: the page's height
+      4468 -> 4518 (+50 px)
+PASS  webkit-375-pt: in every story the label, the title and the text are seen first, the illustrations below them
+      start: label 878 < title 907 < text 1016 < lead 1088; albums: label 1393 < title 1422 < text 1531 < lead 1935; blend: label 2240 < title 2269 < text 2378 < lead 2474; playlists: label 2846 < title 2875 < text 2984 < lead 3080; inventory: label 3385 < title 3414 < text 3554 < lead 3650
+PASS  webkit-375-pt: the order in the page is the order seen: label, title, text, record, album's name, button (the panel beside the record is decorative, hidden from the screen reader)
+PASS  webkit-375-pt: the first story's label comes right after the crate's caption
+      caption ends 841, label at 878 (before: record at 878, label at 1110)
+PASS  webkit-375-pt: each story's button stays clear of the next part (at least 24 px, and the line between them)
+      start: button ends 1312, next part (albums) starts 1356: 44 px; albums: button ends 2159, next part (blend) starts 2203: 44 px; blend: button ends 2698, next part (flip) starts 2742: 44 px; playlists: button ends 3304, next part (inventory) starts 3348: 44 px
+PASS  webkit-375-pt: the button still has the box of the visual above it
+PASS  webkit-375-pt: the page's height
+      4638 -> 4688 (+50 px)
+PASS  webkit-375-en: in every story the label, the title and the text are seen first, the illustrations below them
+      start: label 857 < title 886 < text 964 < lead 1036; albums: label 1341 < title 1370 < text 1479 < lead 1883; blend: label 2188 < title 2217 < text 2357 < lead 2429; playlists: label 2801 < title 2830 < text 2939 < lead 3035; inventory: label 3340 < title 3369 < text 3509 < lead 3605
+PASS  webkit-375-en: the order in the page is the order seen: label, title, text, record, album's name, button (the panel beside the record is decorative, hidden from the screen reader)
+PASS  webkit-375-en: the first story's label comes right after the crate's caption
+      caption ends 820, label at 857 (before: record at 857, label at 1089)
+PASS  webkit-375-en: each story's button stays clear of the next part (at least 24 px, and the line between them)
+      start: button ends 1260, next part (albums) starts 1304: 44 px; albums: button ends 2107, next part (blend) starts 2151: 44 px; blend: button ends 2653, next part (flip) starts 2697: 44 px; playlists: button ends 3259, next part (inventory) starts 3303: 44 px
+PASS  webkit-375-en: the button still has the box of the visual above it
+PASS  webkit-375-en: the page's height
+      4569 -> 4619 (+50 px)
+PASS  chromium-1280-pt: the computer did not change: same page height, sections and every part of every story in the same box
+      height 4578 -> 4578
+PASS  chromium-1280-en: the computer did not change: same page height, sections and every part of every story in the same box
+      height 4543 -> 4543
+
+62 passed, 0 failed; nothing clicked, no album address opened; servers closed

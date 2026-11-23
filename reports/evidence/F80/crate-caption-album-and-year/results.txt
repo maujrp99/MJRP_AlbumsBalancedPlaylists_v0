@@ -1,0 +1,138 @@
+PASS  webkit-390-pt-main: no console error
+PASS  webkit-390-pt-main: no horizontal scroll
+      390 / 390
+PASS  webkit-390-pt-main: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-branch: no console error
+PASS  webkit-390-pt-branch: no horizontal scroll
+      390 / 390
+PASS  webkit-390-pt-branch: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-pt-branch: the caption says the album and the year, no artist; the cover credit stays
+      a1: The Velvet Underground & Nico / 1967
+PASS  webkit-390-pt-branch: the button's name still says album and artist; new tab; Apple Music's address
+      Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)
+PASS  webkit-390-pt-branch: every record of the crate (15): the text stays inside the caption and clear of the button
+      The Velvet Underground & Nico: 115 px; In the Court of the Crimson King: 115 px; The Dark Side of the Moon: 95 px; Low: 75 px; Power, Corruption & Lies: 115 px; Dummy: 75 px; Illmatic: 75 px; Harvest: 75 px; Close to the Edge: 95 px; Homogenic: 75 px; Mezzanine: 75 px; In the Aeroplane Over the Sea: 115 px; Admirável Chip Novo: 95 px; Desire, I Want to Turn Into You: 95 px; To Pimp a Butterfly: 95 px
+PASS  webkit-390-en-main: no console error
+PASS  webkit-390-en-main: no horizontal scroll
+      390 / 390
+PASS  webkit-390-en-main: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-branch: no console error
+PASS  webkit-390-en-branch: no horizontal scroll
+      390 / 390
+PASS  webkit-390-en-branch: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-390-en-branch: the caption says the album and the year, no artist; the cover credit stays
+      a1: The Velvet Underground & Nico / 1967
+PASS  webkit-390-en-branch: the button's name still says album and artist; new tab; Apple Music's address
+      Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)
+PASS  webkit-390-en-branch: every record of the crate (15): the text stays inside the caption and clear of the button
+      The Velvet Underground & Nico: 131 px; In the Court of the Crimson King: 131 px; The Dark Side of the Moon: 111 px; Low: 91 px; Power, Corruption & Lies: 131 px; Dummy: 91 px; Illmatic: 91 px; Harvest: 91 px; Close to the Edge: 111 px; Homogenic: 91 px; Mezzanine: 91 px; In the Aeroplane Over the Sea: 131 px; Admirável Chip Novo: 111 px; Desire, I Want to Turn Into You: 131 px; To Pimp a Butterfly: 111 px
+PASS  webkit-375-pt-main: no console error
+PASS  webkit-375-pt-main: no horizontal scroll
+      375 / 375
+PASS  webkit-375-pt-main: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-branch: no console error
+PASS  webkit-375-pt-branch: no horizontal scroll
+      375 / 375
+PASS  webkit-375-pt-branch: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-pt-branch: the caption says the album and the year, no artist; the cover credit stays
+      a1: The Velvet Underground & Nico / 1967
+PASS  webkit-375-pt-branch: the button's name still says album and artist; new tab; Apple Music's address
+      Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)
+PASS  webkit-375-pt-branch: every record of the crate (15): the text stays inside the caption and clear of the button
+      The Velvet Underground & Nico: 115 px; In the Court of the Crimson King: 115 px; The Dark Side of the Moon: 95 px; Low: 75 px; Power, Corruption & Lies: 115 px; Dummy: 75 px; Illmatic: 75 px; Harvest: 75 px; Close to the Edge: 95 px; Homogenic: 75 px; Mezzanine: 75 px; In the Aeroplane Over the Sea: 115 px; Admirável Chip Novo: 95 px; Desire, I Want to Turn Into You: 115 px; To Pimp a Butterfly: 95 px
+PASS  webkit-375-en-main: no console error
+PASS  webkit-375-en-main: no horizontal scroll
+      375 / 375
+PASS  webkit-375-en-main: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-branch: no console error
+PASS  webkit-375-en-branch: no horizontal scroll
+      375 / 375
+PASS  webkit-375-en-branch: no request left for Apple Music or Spotify
+      aborted: none
+PASS  webkit-375-en-branch: the caption says the album and the year, no artist; the cover credit stays
+      a1: The Velvet Underground & Nico / 1967
+PASS  webkit-375-en-branch: the button's name still says album and artist; new tab; Apple Music's address
+      Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)
+PASS  webkit-375-en-branch: every record of the crate (15): the text stays inside the caption and clear of the button
+      The Velvet Underground & Nico: 131 px; In the Court of the Crimson King: 131 px; The Dark Side of the Moon: 131 px; Low: 91 px; Power, Corruption & Lies: 131 px; Dummy: 91 px; Illmatic: 91 px; Harvest: 91 px; Close to the Edge: 111 px; Homogenic: 91 px; Mezzanine: 91 px; In the Aeroplane Over the Sea: 131 px; Admirável Chip Novo: 111 px; Desire, I Want to Turn Into You: 131 px; To Pimp a Butterfly: 111 px
+PASS  chromium-1280-pt-main: no console error
+PASS  chromium-1280-pt-main: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-pt-main: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-branch: no console error
+PASS  chromium-1280-pt-branch: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-pt-branch: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-pt-branch: the caption says the album and the year, no artist; the cover credit stays
+      a1: The Velvet Underground & Nico / 1967; start: The Dark Side of the Moon / 1973; albums: The Velvet Underground & Nico / 1967; blend: Dummy / 1994; playlists: In the Aeroplane Over the Sea / 1998; inventory: Desire, I Want to Turn Into You / 2023; end: To Pimp a Butterfly / 2015
+PASS  chromium-1280-pt-branch: the button's name still says album and artist; new tab; Apple Music's address
+      Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba) | Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba) | Ouça no Apple Music: Dummy, Portishead (abre numa nova aba) | Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba) | Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba) | Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)
+PASS  chromium-1280-pt-branch: every record of the crate (15): the text stays inside the caption and clear of the button
+      The Velvet Underground & Nico: 76.5 px; In the Court of the Crimson King: 76.5 px; The Dark Side of the Moon: 76.5 px; Low: 76.5 px; Power, Corruption & Lies: 76.5 px; Dummy: 76.5 px; Illmatic: 76.5 px; Harvest: 76.5 px; Close to the Edge: 76.5 px; Homogenic: 76.5 px; Mezzanine: 76.5 px; In the Aeroplane Over the Sea: 76.5 px; Admirável Chip Novo: 76.5 px; Desire, I Want to Turn Into You: 76.5 px; To Pimp a Butterfly: 76.5 px
+PASS  chromium-1280-en-main: no console error
+PASS  chromium-1280-en-main: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-en-main: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-branch: no console error
+PASS  chromium-1280-en-branch: no horizontal scroll
+      1280 / 1280
+PASS  chromium-1280-en-branch: no request left for Apple Music or Spotify
+      aborted: none
+PASS  chromium-1280-en-branch: the caption says the album and the year, no artist; the cover credit stays
+      a1: The Velvet Underground & Nico / 1967; start: The Dark Side of the Moon / 1973; albums: The Velvet Underground & Nico / 1967; blend: Dummy / 1994; playlists: In the Aeroplane Over the Sea / 1998; inventory: Desire, I Want to Turn Into You / 2023; end: To Pimp a Butterfly / 2015
+PASS  chromium-1280-en-branch: the button's name still says album and artist; new tab; Apple Music's address
+      Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab) | Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab) | Listen on Apple Music: Dummy, Portishead (opens in a new tab) | Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab) | Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab) | Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)
+PASS  chromium-1280-en-branch: every record of the crate (15): the text stays inside the caption and clear of the button
+      The Velvet Underground & Nico: 76.5 px; In the Court of the Crimson King: 76.5 px; The Dark Side of the Moon: 76.5 px; Low: 76.5 px; Power, Corruption & Lies: 76.5 px; Dummy: 76.5 px; Illmatic: 76.5 px; Harvest: 76.5 px; Close to the Edge: 76.5 px; Homogenic: 76.5 px; Mezzanine: 76.5 px; In the Aeroplane Over the Sea: 76.5 px; Admirável Chip Novo: 76.5 px; Desire, I Want to Turn Into You: 76.5 px; To Pimp a Butterfly: 76.5 px
+PASS  webkit-390-pt: the caption's height (it changes on the phone: the artist's line wrapped)
+      a1: 151 -> 115; page 4635 -> 4599 (-36 px)
+PASS  webkit-390-pt: the button has the same size and the same right edge
+      199.8x44 at 174.2
+PASS  webkit-390-pt: the title's ellipsis is as on main (no name cut that was whole before)
+      no name cut
+PASS  webkit-390-en: the caption's height (it changes on the phone: the artist's line wrapped)
+      a1: 167 -> 131; page 4504 -> 4468 (-36 px)
+PASS  webkit-390-en: the button has the same size and the same right edge
+      205.9x44 at 168.1
+PASS  webkit-390-en: the title's ellipsis is as on main (no name cut that was whole before)
+      no name cut
+PASS  webkit-375-pt: the caption's height (it changes on the phone: the artist's line wrapped)
+      a1: 151 -> 115; page 4674 -> 4638 (-36 px)
+PASS  webkit-375-pt: the button has the same size and the same right edge
+      199.8x44 at 159.2
+PASS  webkit-375-pt: the title's ellipsis is as on main (no name cut that was whole before)
+      no name cut
+PASS  webkit-375-en: the caption's height (it changes on the phone: the artist's line wrapped)
+      a1: 167 -> 131; page 4605 -> 4569 (-36 px)
+PASS  webkit-375-en: the button has the same size and the same right edge
+      205.9x44 at 153.1
+PASS  webkit-375-en: the title's ellipsis is as on main (no name cut that was whole before)
+      no name cut
+PASS  chromium-1280-pt: the caption has the same height on every part, and with every record
+      a1: 76.5 -> 76.5; start: 76.5 -> 76.5; albums: 76.5 -> 76.5; blend: 76.5 -> 76.5; playlists: 76.5 -> 76.5; inventory: 76.5 -> 76.5; end: 76.5 -> 76.5
+PASS  chromium-1280-pt: nothing moved: same page height and sections
+      4578 -> 4578
+PASS  chromium-1280-pt: the button has the same size and the same right edge
+      199.8x44 at 1064.2; 199.8x44 at 1064.2; 199.8x44 at 1064.2; 199.8x44 at 1064.2; 199.8x44 at 1064.2; 199.8x44 at 1064.2; 199.8x44 at 1064.2
+PASS  chromium-1280-pt: the title's ellipsis is as on main (no name cut that was whole before)
+      no name cut
+PASS  chromium-1280-en: the caption has the same height on every part, and with every record
+      a1: 76.5 -> 76.5; start: 76.5 -> 76.5; albums: 76.5 -> 76.5; blend: 76.5 -> 76.5; playlists: 76.5 -> 76.5; inventory: 76.5 -> 76.5; end: 76.5 -> 76.5
+PASS  chromium-1280-en: nothing moved: same page height and sections
+      4543 -> 4543
+PASS  chromium-1280-en: the button has the same size and the same right edge
+      205.9x44 at 1058.1; 205.9x44 at 1058.1; 205.9x44 at 1058.1; 205.9x44 at 1058.1; 205.9x44 at 1058.1; 205.9x44 at 1058.1; 205.9x44 at 1058.1
+PASS  chromium-1280-en: the title's ellipsis is as on main (no name cut that was whole before)
+      no name cut
+
+74 passed, 0 failed; nothing clicked, no album address opened; servers closed

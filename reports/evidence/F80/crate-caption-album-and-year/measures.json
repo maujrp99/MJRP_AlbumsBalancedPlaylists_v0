@@ -1,0 +1,5966 @@
+{
+ "webkit-390-pt-main": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 151
+    },
+    "button": {
+     "x": 174.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 151
+    },
+    "button": {
+     "x": 174.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "King Crimson · 1969",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 115
+    },
+    "button": {
+     "x": 174.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "Pink Floyd · 1973",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "David Bowie · 1977",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "New Order · 1983",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 115
+    },
+    "button": {
+     "x": 174.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "Portishead · 1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "Nas · 1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "Neil Young · 1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "Yes · 1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "Björk · 1997",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "Massive Attack · 1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "Neutral Milk Hotel · 1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 133
+    },
+    "button": {
+     "x": 174.2,
+     "y": 769,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "Pitty · 2003",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "Caroline Polachek · 2023",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 113
+    },
+    "button": {
+     "x": 174.2,
+     "y": 759,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "Kendrick Lamar · 2015",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4635,
+   "scrollWidth": 390,
+   "innerWidth": 390,
+   "sections": {
+    "a1": {
+     "y": 56,
+     "h": 340
+    },
+    "start": {
+     "y": 877,
+     "h": 505
+    },
+    "albums": {
+     "y": 1382,
+     "h": 822
+    },
+    "blend": {
+     "y": 2204,
+     "h": 529
+    },
+    "flip": {
+     "y": 2733,
+     "h": 67
+    },
+    "playlists": {
+     "y": 2800,
+     "h": 529
+    },
+    "inventory": {
+     "y": 3329,
+     "h": 560
+    },
+    "end": {
+     "y": 3889,
+     "h": 436
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-pt-branch": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 115
+    },
+    "button": {
+     "x": 174.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 115
+    },
+    "button": {
+     "x": 174.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "1969",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 115
+    },
+    "button": {
+     "x": 174.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "1973",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "1977",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "1983",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 115
+    },
+    "button": {
+     "x": 174.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "1997",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 75
+    },
+    "button": {
+     "x": 174.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 115
+    },
+    "button": {
+     "x": 174.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "2003",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "2023",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "2015",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 390,
+     "h": 95
+    },
+    "button": {
+     "x": 174.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4599,
+   "scrollWidth": 390,
+   "innerWidth": 390,
+   "sections": {
+    "a1": {
+     "y": 56,
+     "h": 340
+    },
+    "start": {
+     "y": 841,
+     "h": 505
+    },
+    "albums": {
+     "y": 1346,
+     "h": 822
+    },
+    "blend": {
+     "y": 2168,
+     "h": 529
+    },
+    "flip": {
+     "y": 2697,
+     "h": 67
+    },
+    "playlists": {
+     "y": 2764,
+     "h": 529
+    },
+    "inventory": {
+     "y": 3293,
+     "h": 560
+    },
+    "end": {
+     "y": 3853,
+     "h": 436
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-en-main": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 167
+    },
+    "button": {
+     "x": 168.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 167
+    },
+    "button": {
+     "x": 168.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "King Crimson · 1969",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 131
+    },
+    "button": {
+     "x": 168.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "Pink Floyd · 1973",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 111
+    },
+    "button": {
+     "x": 168.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "David Bowie · 1977",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "New Order · 1983",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 131
+    },
+    "button": {
+     "x": 168.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "Portishead · 1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "Nas · 1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "Neil Young · 1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "Yes · 1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 111
+    },
+    "button": {
+     "x": 168.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "Björk · 1997",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "Massive Attack · 1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 109
+    },
+    "button": {
+     "x": 168.1,
+     "y": 720,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "Neutral Milk Hotel · 1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 149
+    },
+    "button": {
+     "x": 168.1,
+     "y": 740,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "Pitty · 2003",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 111
+    },
+    "button": {
+     "x": 168.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "Caroline Polachek · 2023",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 149
+    },
+    "button": {
+     "x": 168.1,
+     "y": 740,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "Kendrick Lamar · 2015",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 129
+    },
+    "button": {
+     "x": 168.1,
+     "y": 730,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4504,
+   "scrollWidth": 390,
+   "innerWidth": 390,
+   "sections": {
+    "a1": {
+     "y": 56,
+     "h": 303
+    },
+    "start": {
+     "y": 856,
+     "h": 474
+    },
+    "albums": {
+     "y": 1330,
+     "h": 822
+    },
+    "blend": {
+     "y": 2152,
+     "h": 505
+    },
+    "flip": {
+     "y": 2657,
+     "h": 67
+    },
+    "playlists": {
+     "y": 2724,
+     "h": 505
+    },
+    "inventory": {
+     "y": 3229,
+     "h": 529
+    },
+    "end": {
+     "y": 3758,
+     "h": 436
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-390-en-branch": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 131
+    },
+    "button": {
+     "x": 168.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 131
+    },
+    "button": {
+     "x": 168.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "1969",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 131
+    },
+    "button": {
+     "x": 168.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "1973",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 111
+    },
+    "button": {
+     "x": 168.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "1977",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "1983",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 131
+    },
+    "button": {
+     "x": 168.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 111
+    },
+    "button": {
+     "x": 168.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "1997",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 91
+    },
+    "button": {
+     "x": 168.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 131
+    },
+    "button": {
+     "x": 168.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "2003",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 111
+    },
+    "button": {
+     "x": 168.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "2023",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 131
+    },
+    "button": {
+     "x": 168.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "2015",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 390,
+     "h": 111
+    },
+    "button": {
+     "x": 168.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4468,
+   "scrollWidth": 390,
+   "innerWidth": 390,
+   "sections": {
+    "a1": {
+     "y": 56,
+     "h": 303
+    },
+    "start": {
+     "y": 820,
+     "h": 474
+    },
+    "albums": {
+     "y": 1294,
+     "h": 822
+    },
+    "blend": {
+     "y": 2116,
+     "h": 505
+    },
+    "flip": {
+     "y": 2621,
+     "h": 67
+    },
+    "playlists": {
+     "y": 2688,
+     "h": 505
+    },
+    "inventory": {
+     "y": 3193,
+     "h": 529
+    },
+    "end": {
+     "y": 3722,
+     "h": 436
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-pt-main": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 151
+    },
+    "button": {
+     "x": 159.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 151
+    },
+    "button": {
+     "x": 159.2,
+     "y": 778,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "King Crimson · 1969",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 115
+    },
+    "button": {
+     "x": 159.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "Pink Floyd · 1973",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 95
+    },
+    "button": {
+     "x": 159.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "David Bowie · 1977",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "New Order · 1983",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 115
+    },
+    "button": {
+     "x": 159.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "Portishead · 1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "Nas · 1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "Neil Young · 1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "Yes · 1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 95
+    },
+    "button": {
+     "x": 159.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "Björk · 1997",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "Massive Attack · 1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 93
+    },
+    "button": {
+     "x": 159.2,
+     "y": 749,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "Neutral Milk Hotel · 1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 133
+    },
+    "button": {
+     "x": 159.2,
+     "y": 769,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "Pitty · 2003",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 95
+    },
+    "button": {
+     "x": 159.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "Caroline Polachek · 2023",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 133
+    },
+    "button": {
+     "x": 159.2,
+     "y": 769,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "Kendrick Lamar · 2015",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 113
+    },
+    "button": {
+     "x": 159.2,
+     "y": 759,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4674,
+   "scrollWidth": 375,
+   "innerWidth": 375,
+   "sections": {
+    "a1": {
+     "y": 56,
+     "h": 340
+    },
+    "start": {
+     "y": 877,
+     "h": 505
+    },
+    "albums": {
+     "y": 1382,
+     "h": 837
+    },
+    "blend": {
+     "y": 2219,
+     "h": 529
+    },
+    "flip": {
+     "y": 2748,
+     "h": 67
+    },
+    "playlists": {
+     "y": 2815,
+     "h": 529
+    },
+    "inventory": {
+     "y": 3344,
+     "h": 560
+    },
+    "end": {
+     "y": 3904,
+     "h": 460
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-pt-branch": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 115
+    },
+    "button": {
+     "x": 159.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 115
+    },
+    "button": {
+     "x": 159.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "1969",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 115
+    },
+    "button": {
+     "x": 159.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "1973",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 95
+    },
+    "button": {
+     "x": 159.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "1977",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "1983",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 115
+    },
+    "button": {
+     "x": 159.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 95
+    },
+    "button": {
+     "x": 159.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "1997",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 75
+    },
+    "button": {
+     "x": 159.2,
+     "y": 740,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 115
+    },
+    "button": {
+     "x": 159.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "2003",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 95
+    },
+    "button": {
+     "x": 159.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "2023",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 115
+    },
+    "button": {
+     "x": 159.2,
+     "y": 760,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "2015",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 726,
+     "w": 375,
+     "h": 95
+    },
+    "button": {
+     "x": 159.2,
+     "y": 750,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4638,
+   "scrollWidth": 375,
+   "innerWidth": 375,
+   "sections": {
+    "a1": {
+     "y": 56,
+     "h": 340
+    },
+    "start": {
+     "y": 841,
+     "h": 505
+    },
+    "albums": {
+     "y": 1346,
+     "h": 837
+    },
+    "blend": {
+     "y": 2183,
+     "h": 529
+    },
+    "flip": {
+     "y": 2712,
+     "h": 67
+    },
+    "playlists": {
+     "y": 2779,
+     "h": 529
+    },
+    "inventory": {
+     "y": 3308,
+     "h": 560
+    },
+    "end": {
+     "y": 3868,
+     "h": 460
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-en-main": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 167
+    },
+    "button": {
+     "x": 153.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 167
+    },
+    "button": {
+     "x": 153.1,
+     "y": 749,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "King Crimson · 1969",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 149
+    },
+    "button": {
+     "x": 153.1,
+     "y": 740,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "Pink Floyd · 1973",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "David Bowie · 1977",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "New Order · 1983",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "Portishead · 1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "Nas · 1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "Neil Young · 1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "Yes · 1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 111
+    },
+    "button": {
+     "x": 153.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "Björk · 1997",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "Massive Attack · 1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 109
+    },
+    "button": {
+     "x": 153.1,
+     "y": 720,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "Neutral Milk Hotel · 1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 149
+    },
+    "button": {
+     "x": 153.1,
+     "y": 740,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "Pitty · 2003",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 111
+    },
+    "button": {
+     "x": 153.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "Caroline Polachek · 2023",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 149
+    },
+    "button": {
+     "x": 153.1,
+     "y": 740,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "Kendrick Lamar · 2015",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 129
+    },
+    "button": {
+     "x": 153.1,
+     "y": 730,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4605,
+   "scrollWidth": 375,
+   "innerWidth": 375,
+   "sections": {
+    "a1": {
+     "y": 56,
+     "h": 303
+    },
+    "start": {
+     "y": 856,
+     "h": 474
+    },
+    "albums": {
+     "y": 1330,
+     "h": 837
+    },
+    "blend": {
+     "y": 2167,
+     "h": 536
+    },
+    "flip": {
+     "y": 2703,
+     "h": 67
+    },
+    "playlists": {
+     "y": 2770,
+     "h": 529
+    },
+    "inventory": {
+     "y": 3299,
+     "h": 560
+    },
+    "end": {
+     "y": 3859,
+     "h": 436
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "webkit-375-en-branch": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "1969",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "1973",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "1977",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "1983",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 111
+    },
+    "button": {
+     "x": 153.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "1997",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 91
+    },
+    "button": {
+     "x": 153.1,
+     "y": 711,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "2003",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 111
+    },
+    "button": {
+     "x": 153.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "2023",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 131
+    },
+    "button": {
+     "x": 153.1,
+     "y": 731,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 3,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "2015",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 0,
+     "y": 689,
+     "w": 375,
+     "h": 111
+    },
+    "button": {
+     "x": 153.1,
+     "y": 721,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 2,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4569,
+   "scrollWidth": 375,
+   "innerWidth": 375,
+   "sections": {
+    "a1": {
+     "y": 56,
+     "h": 303
+    },
+    "start": {
+     "y": 820,
+     "h": 474
+    },
+    "albums": {
+     "y": 1294,
+     "h": 837
+    },
+    "blend": {
+     "y": 2131,
+     "h": 536
+    },
+    "flip": {
+     "y": 2667,
+     "h": 67
+    },
+    "playlists": {
+     "y": 2734,
+     "h": 529
+    },
+    "inventory": {
+     "y": 3263,
+     "h": 560
+    },
+    "end": {
+     "y": 3823,
+     "h": 436
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-pt-main": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 715.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 730.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "start": {
+    "title": "The Dark Side of the Moon",
+    "line": "Pink Floyd · 1973",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 1399.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 1414.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "albums": {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 1968.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 1983.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "blend": {
+    "title": "Dummy",
+    "line": "Portishead · 1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 2630.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 2645.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "playlists": {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "Neutral Milk Hotel · 1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 3390.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 3405.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "inventory": {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "Caroline Polachek · 2023",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 3958.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 3973.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "end": {
+    "title": "To Pimp a Butterfly",
+    "line": "Kendrick Lamar · 2015",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "King Crimson · 1969",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "Pink Floyd · 1973",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "David Bowie · 1977",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "New Order · 1983",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "Portishead · 1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "Nas · 1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "Neil Young · 1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "Yes · 1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "Björk · 1997",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "Massive Attack · 1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "Neutral Milk Hotel · 1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "Pitty · 2003",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "Caroline Polachek · 2023",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "Kendrick Lamar · 2015",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4578,
+   "scrollWidth": 1280,
+   "innerWidth": 1280,
+   "sections": {
+    "a1": {
+     "y": 72,
+     "h": 692
+    },
+    "start": {
+     "y": 764,
+     "h": 568.7
+    },
+    "albums": {
+     "y": 1332.7,
+     "h": 662.1
+    },
+    "blend": {
+     "y": 1994.8,
+     "h": 568.7
+    },
+    "flip": {
+     "y": 2587.5,
+     "h": 143.1
+    },
+    "playlists": {
+     "y": 2754.6,
+     "h": 568.7
+    },
+    "inventory": {
+     "y": 3323.3,
+     "h": 613.1
+    },
+    "end": {
+     "y": 3936.4,
+     "h": 448
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-pt-branch": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 715.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 730.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "start": {
+    "title": "The Dark Side of the Moon",
+    "line": "1973",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 1399.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 1414.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Dark Side of the Moon, Pink Floyd (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "albums": {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 1968.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 1983.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "blend": {
+    "title": "Dummy",
+    "line": "1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 2630.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 2645.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "playlists": {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 3390.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 3405.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "inventory": {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "2023",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 3958.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 3973.3,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "end": {
+    "title": "To Pimp a Butterfly",
+    "line": "2015",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "1969",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "1973",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "1977",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "1983",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "1994",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "1972",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "1997",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "1998",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "2003",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "2023",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "2015",
+    "src": "Capa do Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4307.9,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1064.2,
+     "y": 4322.6,
+     "w": 199.8,
+     "h": 44
+    },
+    "label": "Ouça no Apple Music: To Pimp a Butterfly, Kendrick Lamar (abre numa nova aba)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4578,
+   "scrollWidth": 1280,
+   "innerWidth": 1280,
+   "sections": {
+    "a1": {
+     "y": 72,
+     "h": 692
+    },
+    "start": {
+     "y": 764,
+     "h": 568.7
+    },
+    "albums": {
+     "y": 1332.7,
+     "h": 662.1
+    },
+    "blend": {
+     "y": 1994.8,
+     "h": 568.7
+    },
+    "flip": {
+     "y": 2587.5,
+     "h": 143.1
+    },
+    "playlists": {
+     "y": 2754.6,
+     "h": 568.7
+    },
+    "inventory": {
+     "y": 3323.3,
+     "h": 613.1
+    },
+    "end": {
+     "y": 3936.4,
+     "h": 448
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-en-main": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 715.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 730.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "start": {
+    "title": "The Dark Side of the Moon",
+    "line": "Pink Floyd · 1973",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 1399.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 1414.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "albums": {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 1959.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 1974.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "blend": {
+    "title": "Dummy",
+    "line": "Portishead · 1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 2621.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 2636.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "playlists": {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "Neutral Milk Hotel · 1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 3355.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 3370.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "inventory": {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "Caroline Polachek · 2023",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 3923.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 3938.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "end": {
+    "title": "To Pimp a Butterfly",
+    "line": "Kendrick Lamar · 2015",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "The Velvet Underground & Nico · 1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "King Crimson · 1969",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "Pink Floyd · 1973",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "David Bowie · 1977",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "New Order · 1983",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "Portishead · 1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "Nas · 1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "Neil Young · 1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "Yes · 1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "Björk · 1997",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "Massive Attack · 1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "Neutral Milk Hotel · 1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "Pitty · 2003",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "Caroline Polachek · 2023",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "Kendrick Lamar · 2015",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4543,
+   "scrollWidth": 1280,
+   "innerWidth": 1280,
+   "sections": {
+    "a1": {
+     "y": 72,
+     "h": 692
+    },
+    "start": {
+     "y": 764,
+     "h": 560
+    },
+    "albums": {
+     "y": 1324,
+     "h": 662.1
+    },
+    "blend": {
+     "y": 1986.1,
+     "h": 568.7
+    },
+    "flip": {
+     "y": 2578.8,
+     "h": 116.7
+    },
+    "playlists": {
+     "y": 2719.5,
+     "h": 568.7
+    },
+    "inventory": {
+     "y": 3288.3,
+     "h": 613.1
+    },
+    "end": {
+     "y": 3901.3,
+     "h": 448
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ },
+ "chromium-1280-en-branch": {
+  "tracks": {
+   "a1": {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 715.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 730.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "start": {
+    "title": "The Dark Side of the Moon",
+    "line": "1973",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 1399.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 1414.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Dark Side of the Moon, Pink Floyd (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-dark-side-of-the-moon/1065973699",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "albums": {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 1959.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 1974.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: The Velvet Underground & Nico, The Velvet Underground & Nico (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "blend": {
+    "title": "Dummy",
+    "line": "1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 2621.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 2636.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: Dummy, Portishead (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/dummy/1440653096",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "playlists": {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 3355.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 3370.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: In the Aeroplane Over the Sea, Neutral Milk Hotel (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/in-the-aeroplane-over-the-sea/1839077554",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "inventory": {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "2023",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 3923.5,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 3938.3,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: Desire, I Want to Turn Into You, Caroline Polachek (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/desire-i-want-to-turn-into-you/1669095245",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   "end": {
+    "title": "To Pimp a Butterfly",
+    "line": "2015",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   }
+  },
+  "every": [
+   {
+    "title": "The Velvet Underground & Nico",
+    "line": "1967",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Court of the Crimson King",
+    "line": "1969",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "The Dark Side of the Moon",
+    "line": "1973",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Low",
+    "line": "1977",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Power, Corruption & Lies",
+    "line": "1983",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Dummy",
+    "line": "1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Illmatic",
+    "line": "1994",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Harvest",
+    "line": "1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Close to the Edge",
+    "line": "1972",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Homogenic",
+    "line": "1997",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Mezzanine",
+    "line": "1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "In the Aeroplane Over the Sea",
+    "line": "1998",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Admirável Chip Novo",
+    "line": "2003",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "Desire, I Want to Turn Into You",
+    "line": "2023",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   },
+   {
+    "title": "To Pimp a Butterfly",
+    "line": "2015",
+    "src": "Artwork from Apple Music",
+    "caption": {
+     "x": 567.2,
+     "y": 4272.8,
+     "w": 696.8,
+     "h": 76.5
+    },
+    "button": {
+     "x": 1058.1,
+     "y": 4287.6,
+     "w": 205.9,
+     "h": 44
+    },
+    "label": "Listen on Apple Music: To Pimp a Butterfly, Kendrick Lamar (opens in a new tab)",
+    "href": "https://music.apple.com/us/album/to-pimp-a-butterfly/1440871877",
+    "target": "_blank",
+    "rel": "noopener",
+    "titleEllipsis": false,
+    "titleLines": 1,
+    "inside": true,
+    "clearOfButton": true
+   }
+  ],
+  "page": {
+   "height": 4543,
+   "scrollWidth": 1280,
+   "innerWidth": 1280,
+   "sections": {
+    "a1": {
+     "y": 72,
+     "h": 692
+    },
+    "start": {
+     "y": 764,
+     "h": 560
+    },
+    "albums": {
+     "y": 1324,
+     "h": 662.1
+    },
+    "blend": {
+     "y": 1986.1,
+     "h": 568.7
+    },
+    "flip": {
+     "y": 2578.8,
+     "h": 116.7
+    },
+    "playlists": {
+     "y": 2719.5,
+     "h": 568.7
+    },
+    "inventory": {
+     "y": 3288.3,
+     "h": 613.1
+    },
+    "end": {
+     "y": 3901.3,
+     "h": 448
+    }
+   }
+  },
+  "errors": [],
+  "blocked": []
+ }
+}

@@ -68,7 +68,7 @@ export async function startCrate3d(win, page) {
     // the sleeves: the page's covers on both faces, standing on the crate floor, pivoting from their bottom edge
     const SZ = GEOM.SZ
     const edge = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.8 })
-    const geo = new THREE.BoxGeometry(SZ, SZ, 0.035); geo.translate(0, SZ / 2, 0)
+    const geo = new THREE.BoxGeometry(SZ, SZ, GEOM.TH); geo.translate(0, SZ / 2, 0)
     const imgs = [...D.querySelectorAll('#box .sl')]
     await Promise.all(imgs.map(im => (im.decode ? im.decode().catch(() => {}) : 0)))
     const maxAniso = renderer.capabilities.getMaxAnisotropy ? Math.min(8, renderer.capabilities.getMaxAnisotropy()) : 4
