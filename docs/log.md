@@ -2,11 +2,45 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:35] review — F97 (a exportação para o Spotify diz por que falhou): segunda passada independente — pass, 0 P0, 0 P1, 5 P2
+
+**Branch:** wip/f97-judge-2
+
+Julgado o commit `6c00545` como diferença sobre o `95ef787` da primeira passada: o commit de redação `fc2c62f` e duas junções da `main`. O commit de redação muda uma linha em cada dicionário (inglês «1 track not found»; em português a nota da recusa sem artigo antes de «The Album Blender») e quatro textos do registro congelado da janela antiga, só essas palavras: o registro continua guardando tudo o mais, e a troca está escrita no teste. As junções não tocaram nenhum arquivo da exportação. No site construído, Chromium e WebKit, 1280 e 390, em inglês e em português pela escolha de idioma do próprio app (`albumblender:lang`): 403, 500 com «Tentar de novo», listas vazias, misto e sucesso se comportam como na primeira passada; singular e plural certos nas duas línguas; nada cortado a 390; nenhuma frase em inglês nos estados novos.
+
+Cinco P2 seguem abertos, todos carregados: todo 403 recebe o texto da «lista de testes»; o resultado parcial tem título de concluído; a janela não anuncia falhas a leitor de tela; as frases do próprio serviço seguem em inglês no português (pesa mais agora que o português está aberto no Brasil); «the list has few places». Nada impede a publicação. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f97-spotify-export-failure-visual-parity-recheck-2.md`.
+
+## [2026-11-23 19:28] step — F97: a main com a escolha de idioma (F81) juntada ao ramo; orçamento medido de novo
+
+**Branch:** fix/f97-spotify-export-says-why-it-failed
+
+A `main` em `a61392b` (a escolha de idioma, F81, com o português aberto ao público) juntada ao ramo da F97. Um conflito só, em `scripts/bundle-budget.json`: os números da `main` como base e os tetos medidos de novo pela regra do arquivo (medido + 150 B) no site juntado: script principal 200.486 B, depois da primeira tela 256.458 B; tetos `main` 200.636 e `background` 83.657. Todas as entradas do log dos dois lados ficaram; o `uat.md` é o da `main`. Os seis textos novos em português passam na guarda de nomes da F81 (`test/i18n/portugueseNames.test.js`); a janela de exportação para o Spotify não mostra datas. Suíte inteira (5683 passaram, 1 pulado), tipos, lint e orçamento com saída 0 no ramo juntado.
+
 ## [2026-11-23 19:26] decision — Idioma do app (F81) publicado em produção, com a palavra do MJRP («1 pública 3 pública»)
 
 **Branch:** main
 
 Site publicado da `main` `a61392b`; resultado lido: «Site published from main (a61392b)», saída 0; a verificação de produção leu `/country.json` («br» daqui) e a resposta para o Brasil. Conferido à parte: com a marca de país `us`, o endereço responde país vazio (inglês). O juiz independente passou na segunda conferência (0 P0, 0 P1, 11 P2; `…-f81-language-choice-visual-parity-recheck-2.md`). O «3 pública» é do conserto da mensagem do Spotify (F97), que ainda recebe a `main` e a conferência final antes de entrar. Decidido pelo agente — revisável: os tetos do orçamento de peso remedidos pelos construtores (F96 +1 B; F81 +1,7 KB no script principal e o dicionário em português como arquivo próprio) foram aceitos.
+
+## [2026-11-23 19:23] step — F97: o relatório do juiz e a main juntados ao ramo; orçamento medido de novo
+
+**Branch:** fix/f97-spotify-export-says-why-it-failed
+
+Juntados ao ramo da F97: o relatório do juiz independente (`wip/f97-judge`, `1eb08c3`, sem tocar no relatório) e a `main` em `feb5d99` (a home nova do celular, F96, publicada). Um conflito só, em `scripts/bundle-budget.json`: resolvido medindo de novo pela regra do arquivo (medido + 150 B) no site juntado: script principal 198.781 B, depois da primeira tela 238.595 B; tetos `main` 198.931 e `background` 64.089. Todas as entradas do log dos dois lados ficaram (999), e as linhas do `uat.md` são as da `main`. Suíte inteira, tipos, lint e orçamento rodados no ramo juntado, todos com saída 0.
+
+## [2026-11-23 19:20] step — F97: dois acertos de texto depois do juiz (a recusa em português sem artigo antes do nome; «1 track not found»)
+
+**Branch:** fix/f97-spotify-export-says-why-it-failed
+
+Dois acertos de texto pedidos depois do julgamento independente da F97 (0 P0, 0 P1, 6 P2), cada um com o seu teste. (a) O texto da recusa em português não põe artigo antes do nome do produto: «No Spotify, The Album Blender está numa fase de testes limitada… Peça a quem cuida de The Album Blender para incluir o e-mail da sua conta do Spotify; a lista tem poucas vagas.» (b) Em inglês, uma faixa não encontrada se diz no singular: «1 track not found» (era «1 tracks not found», herdado da janela feita à mão); os quatro lugares do registro da janela antiga (`test/fixtures/spotifyExportBeforeF83.json`) que guardavam o plural foram reescritos à mão para o texto novo. Prova no navegador refeita no site construído: 132 de 132. Suíte: 5591 passaram, 1 pulado; tipos, lint e orçamento com saída 0 (tetos medidos de novo pela regra: `main` 198.931, `background` 64.088). Os outros P2 ficam como estão.
+
+## [2026-11-23 19:14] review — F97 (a exportação para o Spotify diz por que falhou): passada independente, visual e comportamento — pass, 0 P0, 0 P1, 6 P2
+
+**Branch:** wip/f97-judge
+
+Julgado o commit `95ef787` do ramo `fix/f97-spotify-export-says-why-it-failed`, por quem não construiu. Site construído por mim (o ramo e a `main`, pela fila), Chromium e WebKit, 1280 e 390, com a API do Spotify respondida só pelo meu script: 403 em tudo, 403 só ao criar a playlist, 500 nas buscas, rede caída, listas vazias de verdade, misto, tudo achado, login vencido, limite de chamadas. A recusa aparece com o próximo passo, sem promessa e sem «Try again»; «não foi possível conferir» fica separado de «não encontrada», e «Try again» completa quando o Spotify volta; o caminho normal, o login vencido e o limite de chamadas são idênticos à `main`, elemento por elemento. Nada estoura a 390. O português foi visto no navegador (servidor de desenvolvimento, `setLocale` com a marca de prévia). A mudança compartilhada em `SpotifyService._fetch` não altera outra tela: só a linha do console.
+
+Seis P2, três herdados: todo 403 recebe o texto da «lista de testes»; o resultado parcial tem título «Export Complete!»; a janela não anuncia falhas a leitor de tela (igual à `main`); «1 tracks not found» (igual à `main`); em português as frases do serviço seguem em inglês (igual à `main`); dois ajustes de redação para o MJRP aprovar. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f97-spotify-export-failure-visual-parity-recheck.md`.
 
 ## [2026-11-23 19:03] review — F81: a escolha de idioma do app, segunda reconferência independente (passa: 0 P0, 0 P1, 11 P2)
 
@@ -57,6 +91,18 @@ Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f96-phone-home-visual
 Depois das correções (2d65f42): `git merge --no-ff wip/f81-judge` (o relatório intocado) e `git merge main` (65a2005). Um conflito só, em `docs/specs/uat.md`: as linhas dos dois lados ficaram, por ordem de id (UAT-302 da main, UAT-303 a UAT-306 deste ramo); `merge_train.py uat-check` conferiu os ids. Todas as entradas do log ficaram. `scripts/bundle-budget.json` não conflitou (a main não o mudou), mas a regra do arquivo manda medir de novo: no build no formato da publicação, o script principal mede 200.190 B (+578 B desde aff752c: `i18n/dates.js` e o que veio da main) e o que vem depois da primeira tela 255.786 B; tetos na medição mais a margem (principal 200.340 B, `background` 82.689 B), com a conta no arquivo.
 
 Conferido com tudo junto: a suíte inteira, sozinha na fila — 416 arquivos, 5605 passaram, 1 pulado; `npm run typecheck`, `npx eslint . --quiet` e `npm run budget:publication` com saída 0. Prova de navegador repetida no site construído deste commit (`reports/evidence/F81/`): 140 de 140 (as 132 de antes mais 8 novas: o botão de «Página não encontrada» diz «Ir para Criar», e o rodapé em português escreve «23/11/2026, 18:48:04» num navegador em inglês) e 12 de 12 atrás do emulador do Firebase Hosting.
+
+## [2026-11-23 18:49] step — F97: a exportação para o Spotify diz por que falhou (UAT-302), construída e provada: 132 de 132 no navegador
+
+**Branch:** fix/f97-spotify-export-says-why-it-failed
+
+Construídas as TASK-01 a TASK-07 da F97 (via rápida), com teste antes para cada requisito (`reports/evidence/F97/red-before.txt`: 27 falhando antes). Um 403 do Spotify virou `SpotifyRefusedError` e para a exportação com a falha `refused`: a janela diz «Spotify did not allow this account» e o próximo passo (fase de testes limitada; pedir ao dono; a lista tem poucas vagas; a exportação para o Apple Music está disponível), sem prometer inclusão e sem «Try again». Uma busca que falha (rede, 5xx) é contada como «não foi possível conferir», separada de «não encontrada»; com nada conferido a falha é `unchecked` e a janela oferece «Try again». Seis textos novos em inglês e português. O evento `playlists_exported` ganhou `reason` (`refused`, `unchecked`).
+
+Prova no site construído, com a API do Spotify simulada (403, 500, listas vazias, misto): 132 de 132 em Chromium e WebKit, a 1280 e a 390 (`reports/evidence/F97/proof.md`). Suíte inteira: 5589 passaram, 1 pulado. Tipos, lint e orçamento de publicação: saída 0.
+
+Decidido pelo agente — revisável: os tetos do orçamento de peso foram medidos de novo pela regra do `scripts/bundle-budget.json` (medido + 150 B), porque o script principal cresceu 301 B (os textos em inglês e o `reason` do evento): `main` 198.920, `background` 64.103.
+
+Achado, não consertado aqui: a exportação para o Apple Music tem o mesmo defeito na busca de faixas (`MusicKitCatalog.findTrackFromAlbum` engole toda falha e devolve «não achei»); pede issue própria. Faltam a TASK-08 (o MJRP julga a tela) e o passo retroativo (TASK-09, TASK-10); os textos em português não puderam ser vistos no navegador, porque nada na `main` troca o idioma ainda.
 
 ## [2026-11-23 18:43] step — F81: correções da reconferência do juiz (o P1 dos textos em português com inglês, e três P2)
 

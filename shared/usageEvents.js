@@ -43,6 +43,9 @@ export const FILTERS = freeze(['search', 'artist', 'year', 'source', 'mode', 'fo
 /** How an action that can end half done ended. */
 export const OUTCOMES = freeze(['complete', 'partial', 'stopped', 'failed'])
 
+/** Why an export did not happen, when the reason is not about the playlists (F97): the service refused the account, or nothing could be checked. */
+export const EXPORT_REASONS = freeze(['refused', 'unchecked'])
+
 /** The events, each with its properties. */
 export const USAGE_EVENTS = Object.freeze({
     screen_viewed: Object.freeze({ screen: oneOf(SCREENS) }),
@@ -54,7 +57,7 @@ export const USAGE_EVENTS = Object.freeze({
     ranking_saved: Object.freeze({ track_count: count }),
     playlists_generated: Object.freeze({ recipe: oneOf(RECIPES), playlist_count: count, track_count: count }),
     playlists_saved: Object.freeze({ playlist_count: count, batch: oneOf(['new', 'edited']) }),
-    playlists_exported: Object.freeze({ target: oneOf(['spotify', 'apple_music', 'json']), outcome: oneOf(OUTCOMES), playlist_count: count }),
+    playlists_exported: Object.freeze({ target: oneOf(['spotify', 'apple_music', 'json']), outcome: oneOf(OUTCOMES), reason: oneOf(EXPORT_REASONS), playlist_count: count }),
     inventory_status_changed: Object.freeze({ from: oneOf(INVENTORY_STATUSES), to: oneOf(INVENTORY_STATUSES) }),
     inventory_value_written: Object.freeze({}),
     inventory_value_removed: Object.freeze({}),

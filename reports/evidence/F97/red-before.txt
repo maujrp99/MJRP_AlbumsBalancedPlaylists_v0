@@ -1,0 +1,97 @@
+ ❯ test/i18n/exportWindowTexts.test.js  (9 tests | 7 failed) 5ms
+   ❯ test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.refused is written in both, and differently
+   ❯ test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.refusedNote is written in both, and differently
+   ❯ test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.unchecked is written in both, and differently
+   ❯ test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.uncheckedCount.one is written in both, and differently
+   ❯ test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.uncheckedCount.other is written in both, and differently
+   ❯ test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.uncheckedMore is written in both, and differently
+   ❯ test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > the refusal names the next step and promises nothing
+ ❯ test/services/spotify/SpotifyExport.test.js  (26 tests | 8 failed) 22ms
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > when Spotify refuses the account (F97, UAT-302) > a 403 is a refusal with a name, not any failure
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > when Spotify refuses the account (F97, UAT-302) > stops at the first refused search and says so: never "tracks not found" (REQ-01)
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > when Spotify refuses the account (F97, UAT-302) > a 403 when the playlist is created is the same refusal (REQ-01)
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > a 500 of Spotify: the track is counted as not checked, and the rest
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > the network down: the track is counted as not checked, and the rest
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > a playlist none of whose tracks could be checked is "not created", 
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > when nothing could be checked the export says that, not that nothin
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > a track is "not found" only when Spotify answered and had none
+ ❯ test/services/usage/eventsOfPlaylists.test.js  (25 tests | 7 failed) 318ms
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > the reason (F97, REQ-05): Spotify refused the account
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > the reason (F97, REQ-05): nothing could be checked
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > the reason (F97, REQ-05): any other end has no reason
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > the reason (F97, REQ-05): a complete export has no reason
+   ❯ test/services/usage/eventsOfPlaylists.test.js > playlists_exported > to Spotify, when Spotify refused the account: the event says so (F97, REQ-05)
+   ❯ test/services/usage/eventsOfPlaylists.test.js > playlists_exported > to Spotify, when nothing could be checked: the event says so (F97, REQ-05)
+   ❯ test/services/usage/eventsOfPlaylists.test.js > playlists_exported > the list of events lets the reason through, and only the two it knows
+ ❯ test/ui/SpotifyExportWindow.test.js  (14 tests | 5 failed) 825ms
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > a refusal of Spotify is said as a refusal, with the next step, and never as tracks not 
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > the refusal is said in Portuguese too (REQ-04)
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > tracks that could not be checked are counted apart from the ones not found (REQ-02)
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > when nothing could be checked it says so and offers to try again (REQ-03)
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > nothing checked, in Portuguese (REQ-04)
+⎯⎯⎯⎯⎯⎯ Failed Tests 27 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.refused is written in both, and differently
+ FAIL  test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.refusedNote is written in both, and differently
+ FAIL  test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.unchecked is written in both, and differently
+ FAIL  test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.uncheckedCount.one is written in both, and differently
+ FAIL  test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.uncheckedCount.other is written in both, and differently
+ FAIL  test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > spotifyWindow.uncheckedMore is written in both, and differently
+AssertionError: expected undefined to be truthy
+ ❯ test/i18n/exportWindowTexts.test.js:20:25
+ FAIL  test/i18n/exportWindowTexts.test.js > the texts of an export that could not check the tracks (F97) > the refusal names the next step and promises nothing
+TypeError: .toMatch() expects to receive a string, but got undefined
+ ❯ test/i18n/exportWindowTexts.test.js:26:49
+ FAIL  test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > a refusal of Spotify is said as a refusal, with the next step, and never as tracks not 
+AssertionError: expected 'Export to SpotifyExport FailedSpotify…' to contain 'limited test phase'
+ ❯ test/ui/SpotifyExportWindow.test.js:198:28
+ FAIL  test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > the refusal is said in Portuguese too (REQ-04)
+AssertionError: expected 'Export to SpotifyExport FailedSpotify…' to contain 'O Spotify não permitiu esta conta'
+ ❯ test/ui/SpotifyExportWindow.test.js:213:28
+ FAIL  test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > tracks that could not be checked are counted apart from the ones not found (REQ-02)
+AssertionError: expected 'Export to SpotifyExport Failedhandler…' to contain '1 tracks not found'
+ ❯ test/ui/SpotifyExportWindow.test.js:229:28
+ FAIL  test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > when nothing could be checked it says so and offers to try again (REQ-03)
+AssertionError: expected 'Export to SpotifyExport FailedSpotify…' to contain 'your tracks could not be checked'
+ ❯ test/ui/SpotifyExportWindow.test.js:243:28
+ FAIL  test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > nothing checked, in Portuguese (REQ-04)
+AssertionError: expected 'Export to SpotifyExport Complete! 🎉C…' to contain 'as suas faixas não puderam ser confer…'
+ ❯ test/ui/SpotifyExportWindow.test.js:257:28
+ FAIL  test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > when Spotify refuses the account (F97, UAT-302) > a 403 is a refusal with a name, not any failure
+AssertionError: The instanceof assertion needs a constructor but undefined was given.
+ ❯ test/services/spotify/SpotifyExport.test.js:346:13
+ FAIL  test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > when Spotify refuses the account (F97, UAT-302) > stops at the first refused search and says so: never "tracks not found" (REQ-01)
+AssertionError: expected 'error' to be 'refused' // Object.is equality
+ ❯ test/services/spotify/SpotifyExport.test.js:356:41
+ FAIL  test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > when Spotify refuses the account (F97, UAT-302) > a 403 when the playlist is created is the same refusal (REQ-01)
+AssertionError: expected 'error' to be 'refused' // Object.is equality
+ ❯ test/services/spotify/SpotifyExport.test.js:371:41
+ FAIL  test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > a 500 of Spotify: the track is counted as not checked, and the rest
+ FAIL  test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > the network down: the track is counted as not checked, and the rest
+AssertionError: expected undefined to be 1 // Object.is equality
+ ❯ test/services/spotify/SpotifyExport.test.js:391:38
+ FAIL  test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > a playlist none of whose tracks could be checked is "not created", 
+AssertionError: expected [ 'Road trip - Deep Cuts' ] to deeply equal []
+ ❯ test/services/spotify/SpotifyExport.test.js:406:34
+ FAIL  test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > when nothing could be checked the export says that, not that nothin
+AssertionError: expected 'error' to be 'unchecked' // Object.is equality
+ ❯ test/services/spotify/SpotifyExport.test.js:418:41
+ FAIL  test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > a track is "not found" only when Spotify answered and had none
+AssertionError: expected undefined to be +0 // Object.is equality
+ ❯ test/services/spotify/SpotifyExport.test.js:432:38
+ FAIL  test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > the reason (F97, REQ-05): Spotify refused the account
+ FAIL  test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > the reason (F97, REQ-05): nothing could be checked
+ FAIL  test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > the reason (F97, REQ-05): any other end has no reason
+ FAIL  test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > the reason (F97, REQ-05): a complete export has no reason
+TypeError: exportReason is not a function
+ ❯ test/services/usage/eventsOfPlaylists.test.js:128:16
+ FAIL  test/services/usage/eventsOfPlaylists.test.js > playlists_exported > to Spotify, when Spotify refused the account: the event says so (F97, REQ-05)
+TypeError: SpotifyRefusedError is not a constructor
+ ❯ test/services/usage/eventsOfPlaylists.test.js:153:68
+ FAIL  test/services/usage/eventsOfPlaylists.test.js > playlists_exported > to Spotify, when nothing could be checked: the event says so (F97, REQ-05)
+AssertionError: expected [ [ 'playlists_exported', …(1) ] ] to deeply equal [ [ 'playlists_exported', …(1) ] ]
+ ❯ test/services/usage/eventsOfPlaylists.test.js:162:22
+ FAIL  test/services/usage/eventsOfPlaylists.test.js > playlists_exported > the list of events lets the reason through, and only the two it knows
+AssertionError: expected undefined to be 'refused' // Object.is equality
+ ❯ test/services/usage/eventsOfPlaylists.test.js:166:151
+ Test Files  4 failed (4)
+      Tests  27 failed | 47 passed (74)

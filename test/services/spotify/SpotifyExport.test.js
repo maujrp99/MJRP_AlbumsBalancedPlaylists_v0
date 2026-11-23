@@ -12,6 +12,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { SpotifyExportService } from '../../../public/js/services/SpotifyExportService.js'
 import { SpotifyService } from '../../../public/js/services/SpotifyService.js'
 import { exportLedger } from '../../../public/js/services/export/exportLedger.js'
+import { SpotifyRefusedError } from '../../../public/js/services/spotify/spotifyErrors.js'
 
 const HOUR = 3600 * 1000
 const json = (status, body = {}, headers = {}) => ({
@@ -30,6 +31,7 @@ function fakeSpotify() {
         calls: [],                   // 'METHOD path' of every API call, in order
         refreshes: 0,
         failures: [],                // [{ match: (method, path) => bool, response }] taken once each
+        always: [],                  // [{ match: (method, path) => bool, answer: () => response }] every time (F97); an answer may throw
         catalog: new Set(['One', 'Two', 'Three', 'Four'])
     }
 
@@ -69,6 +71,8 @@ function fakeSpotify() {
         api.calls.push(`${method} ${path.split('?')[0]}`)
         const token = (init.headers?.Authorization || '').replace('Bearer ', '')
         if (!api.validTokens.has(token)) return json(401, { error: { message: 'The access token expired' } })
+        const rule = api.always.find(f => f.match(method, path))
+        if (rule) return rule.answer()
         const at = api.failures.findIndex(f => f.match(method, path))
         if (at !== -1) return api.failures.splice(at, 1)[0].response
         return answer(method, path, init.body ? JSON.parse(init.body) : null)
@@ -328,6 +332,106 @@ describe('exporting to Spotify (F62)', () => {
             await exportAs('merge', [{ ...PLAYLISTS[0], tracks: [track('One')] }])
 
             expect(api.created).toHaveLength(2)
+        })
+    })
+
+    describe('when Spotify refuses the account (F97, UAT-302)', () => {
+        const refusal = () => json(403, { error: { status: 403, message: 'Check settings on developer.spotify.com/dashboard, the user may not be registered.' } })
+        const isSearch = (method, path) => path.startsWith('/search')
+
+        it('a 403 is a refusal with a name, not any failure', async () => {
+            connect()
+            api.always.push({ match: isSearch, answer: refusal })
+
+            await expect(SpotifyService.searchTrack('One', 'Artist')).rejects.toBeInstanceOf(SpotifyRefusedError)
+        })
+
+        it('stops at the first refused search and says so: never "tracks not found" (REQ-01)', async () => {
+            connect()
+            api.always.push({ match: isSearch, answer: refusal })
+            const onNotFound = vi.fn()
+
+            const report = await exportAs('separate', PLAYLISTS, { ...noCallbacks, onNotFound })
+
+            expect(report.failure.kind).toBe('refused')
+            expect(report.failure.message).not.toMatch(/found/i)
+            expect(onNotFound).not.toHaveBeenCalled()
+            expect(report.empty).toEqual([])
+            expect(report.notCreated).toEqual(['Road trip - Greatest Hits', 'Road trip - Deep Cuts'])
+            expect(api.calls.filter(call => call === 'GET /search')).toHaveLength(1)
+            expect(api.created).toEqual([])
+        })
+
+        it('a 403 when the playlist is created is the same refusal (REQ-01)', async () => {
+            connect()
+            api.always.push({ match: (method, path) => method === 'POST' && path === '/users/me/playlists', answer: refusal })
+
+            const report = await exportAs('merge')
+
+            expect(report.failure.kind).toBe('refused')
+            expect(report.notCreated).toEqual(['Road trip'])
+        })
+    })
+
+    describe('a search that failed is not a track that was not found (F97, REQ-02)', () => {
+        const searchOf = (title) => (method, path) => path.startsWith('/search') && decodeURIComponent(path).replace(/\+/g, ' ').includes(`track:${title} `)
+
+        it.each([
+            ['a 500 of Spotify', () => json(500, { error: { message: 'Server error' } })],
+            ['the network down', () => { throw new TypeError('Failed to fetch') }]
+        ])('%s: the track is counted as not checked, and the rest is exported', async (label, answer) => {
+            connect()
+            api.always.push({ match: searchOf('Two'), answer })
+            const onNotFound = vi.fn()
+            const onUnchecked = vi.fn()
+            const playlists = [{ name: 'Mix', title: 'Mix', tracks: [track('One'), track('Two'), track('Nowhere')] }]
+
+            const report = await exportAs('merge', playlists, { ...noCallbacks, onNotFound, onUnchecked })
+
+            expect(report.unchecked).toBe(1)
+            expect(onUnchecked).toHaveBeenCalledWith({ title: 'Two', artist: 'Artist', playlist: 'Mix' })
+            expect(onNotFound).toHaveBeenCalledTimes(1)
+            expect(onNotFound).toHaveBeenCalledWith({ title: 'Nowhere', artist: 'Artist', playlist: 'Mix' })
+            expect(report.failure).toBeNull()
+            expect(api.created[0].uris).toEqual(['spotify:track:One'])
+        })
+
+        it('a playlist none of whose tracks could be checked is "not created", never "no track found"', async () => {
+            connect()
+            api.always.push({ match: searchOf('Three'), answer: () => json(503, {}) }, { match: searchOf('Four'), answer: () => json(503, {}) })
+
+            const report = await exportAs('separate')
+
+            expect(report.created.map(p => p.name)).toEqual(['Road trip - Greatest Hits'])
+            expect(report.empty).toEqual([])
+            expect(report.notCreated).toEqual(['Road trip - Deep Cuts'])
+            expect(report.unchecked).toBe(2)
+        })
+
+        it('when nothing could be checked the export says that, not that nothing was found (REQ-03)', async () => {
+            connect()
+            api.always.push({ match: (method, path) => path.startsWith('/search'), answer: () => json(500, { error: { message: 'Server error' } }) })
+            const onNotFound = vi.fn()
+
+            const report = await exportAs('merge', PLAYLISTS, { ...noCallbacks, onNotFound })
+
+            expect(report.failure.kind).toBe('unchecked')
+            expect(report.failure.message).not.toMatch(/found/i)
+            expect(report.unchecked).toBe(4)
+            expect(onNotFound).not.toHaveBeenCalled()
+            expect(report.empty).toEqual([])
+            expect(report.notCreated).toEqual(['Road trip'])
+            expect(api.created).toEqual([])
+        })
+
+        it('a track is "not found" only when Spotify answered and had none', async () => {
+            connect()
+
+            const report = await exportAs('merge', [{ name: 'Ghosts', tracks: [track('Nowhere')] }])
+
+            expect(report.unchecked).toBe(0)
+            expect(report.failure).toEqual({ kind: 'error', message: 'No tracks found on Spotify' })
+            expect(report.empty).toEqual(['Road trip'])
         })
     })
 
