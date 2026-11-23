@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:52] review — F96: a página de entrada no celular, segunda reconferência visual (passa: 0 P0, 0 P1, 6 P2)
+
+**Branch:** wip/f96-judge-2
+
+Juiz independente, segundo passe, estreito: a ponta `f3c4770` como diferença sobre `bca8ea9` (o que foi julgado no primeiro passe). Entre as duas, o código da tela mudou num ponto só: a regra «no celular, o "Criar" do visitante abre o app» saiu de `menu.js` e foi para `public/splash/visitorDoor.js`.
+
+**Veredito: passa.** Nada visível mudou. No celular (Chromium e WebKit, 390, português e inglês): o «Criar» do visitante abre `/start` desde o primeiro instante, os outros quatro itens rolam até os passos, a barra com conta está igual, «Entrar» no alto, nada rola de lado, nenhum erro no console; ao alargar a tela o «Criar» volta ao passo, ao estreitar volta a abrir o app. No computador (1280, os dois motores), as mesmas caixas e endereços da `main`. O menu do app não mudou: dos 53 arquivos da construção, 50 são idênticos byte a byte aos da `main`, entre eles o `app.html`, o script principal e o pedaço `menu`; os três que diferem são os da página de entrada.
+
+Os cinco P2 do primeiro passe seguem abertos. Um a mais, visto agora e igual na `main` (não vem desta feature): no computador, o WebKit de teste deixa a página rolar 32 px de lado.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f96-phone-home-visual-parity-recheck-2.md`.
+
 ## [2026-11-23 18:34] review — F96: a página de entrada no celular, reconferência visual independente (passa: 0 P0, 0 P1, 5 P2)
 
 **Branch:** wip/f96-judge
