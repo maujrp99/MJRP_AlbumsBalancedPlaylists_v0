@@ -8,6 +8,8 @@ planned_for: "[[ROADMAP#^REL-41]]"
 # Feature F85: «Start» no menu, e o logotipo leva à página de entrada
 **Approved**: pendente
 
+> **Nota de 2026-11-23 (arrumação do board).** O item que esta feature chamou de «Start» hoje se chama «Create» («Criar»), com o sinal de mais (F91, em produção desde 2026-11-22). O menu e a barra foram reescritos em React (F83).
+
 ## Summary
 **A feature:** O item «Home» do menu passa a se chamar «Start» (a tela onde se monta uma série) e o logotipo passa a levar à página de entrada, que vira a home do site.
 

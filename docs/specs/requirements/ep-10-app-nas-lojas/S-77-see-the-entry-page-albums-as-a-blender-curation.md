@@ -3,7 +3,7 @@ id: S-77
 aliases: [S-77]
 type: requirement
 format: story
-status: Backlog
+status: In progress
 epic: "[[prd#^EP-10]]"
 planned_for: "[[ROADMAP#^REL-41]]"
 ---

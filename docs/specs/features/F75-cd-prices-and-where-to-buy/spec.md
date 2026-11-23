@@ -1,5 +1,5 @@
 ---
-status: In Progress
+status: Done
 lane: standard
 solution_type: feature
 needs_human: "decidir: as doze decisões «decidido pelo agente — revisável» do plan.md e se `DISCOGS_VALUES_FOR` fica definida com o id dele"
@@ -8,6 +8,8 @@ planned_for: "[[ROADMAP#^REL-40]]"
 ---
 # Feature F75: Preço de CDs e onde comprar, no inventário
 **Approved**: pendente (o MJRP priorizou em 2026-11-20 01:32, com o protótipo v5.1 escolhido, e saiu; o plano e as decisões do agente esperam o julgamento dele)
+
+> **Nota de 2026-11-23 (arrumação do board).** As telas feitas à mão que esta spec cita (arquivos de `public/js/views/` e `public/js/components/`) não existem mais: o site foi reescrito em React (F83, em produção desde 2026-11-23) e as telas moram em `public/js/screens/` e `public/js/ui/`. Os nomes de arquivo abaixo são históricos; o comportamento pedido continua valendo. As tarefas TASK-09 a TASK-11 (a leitura do Discogs guardada no banco) foram construídas, julgadas por agente separado e publicadas em 2026-11-22 (`docs/log.md`, 00:11); marcadas hoje no `tasks.md`, com a evidência. O que segue aberto é do MJRP: as doze decisões «revisáveis» do plano.
 
 ## Summary
 **A feature:** Cada álbum do inventário mostra quanto custa o CD e traz o link de compra na Amazon, no Discogs e na iMusic; a busca vale para um álbum ou para o inventário inteiro.

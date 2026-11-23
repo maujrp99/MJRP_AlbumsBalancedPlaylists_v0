@@ -1,5 +1,5 @@
 ---
-status: In Progress
+status: Done
 lane: fast
 solution_type: fix
 imports: []
@@ -8,6 +8,8 @@ planned_for: "[[ROADMAP#^REL-40]]"
 ---
 # Feature F73: As telas mantêm o campo em uso e largam o que deixaram
 **Approved**: not a gate (via rápida; o MJRP julga)
+
+> **Nota de 2026-11-23 (arrumação do board).** As telas feitas à mão que esta feature consertou (playlists e inventário) foram reescritas em React (F83, em produção desde 2026-11-23); o `utils/keepField.js` saiu com elas. O comportamento pedido continua valendo, agora nas telas de `public/js/screens/`.
 
 ## Summary
 **A feature:** Quatro defeitos do ciclo de vida das telas, achados pelo MJRP ao testar a exportação em produção: o campo «Batch Name» perde o foco enquanto se digita; os botões de exportar não respondem numa aba aberta durante uma publicação; recarregar sem salvar mostra uma tela antiga de geração; a tela do inventário continua viva depois de deixada.
@@ -21,10 +23,15 @@ Relato do MJRP em produção, 2026-11-19: «bug de foco/keystroke no batch name 
 
 ## Requirements
 - [REQ-01] Um campo de texto em uso continua em uso, com o texto e o cursor, quando a tela é redesenhada. · fixes UAT-212
+  verified_by:: `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md` (a prova no navegador, na entrega); visto de novo pelo juiz separado em 2026-11-21 (`reports/audits/2026-11-21-mjrpalbumblender-v0-playlists-blend-visual-parity-recheck.md`). O teste da entrega (`test/utils/keepField.test.js`) saiu com as telas antigas na migração para React
 - [REQ-02] Um arquivo do app pedido na hora de um clique que não existe mais (a aba roda uma versão antiga) faz o app carregar de novo, uma vez. · fixes UAT-213
+  verified_by:: `test/utils/staleBuild.test.js`; `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md`
 - [REQ-03] `/playlists` sem playlists e fora da edição diz que não há playlists e leva ao Blending Menu; as configurações iniciais antigas não são desenhadas. · fixes UAT-214
+  verified_by:: `test/screens/playlists/Playlists.test.tsx` (o estado «No playlists here yet»); `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md`
 - [REQ-04] Uma tela deixada não escuta mais nenhuma loja; uma regra só diz como uma tela se inscreve e se solta. · fixes UAT-215
+  verified_by:: `test/architecture/viewLifecycle.test.js`; `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md`
 - [REQ-05] Uma tela redesenhada fica onde a pessoa estava na página: a rolagem não volta ao topo. · fixes UAT-219
+  verified_by:: `reports/evidence/F73/2026-11-19-screens-keep-the-field-proof.md` (a seção «REQ-05 — a rolagem fica onde estava»)
 
 ## Observable States
 A feature não importa nenhum requisito (conserto de quatro issues). Os estados de comportamento que mudam ou nascem, em `docs/specs/behavior.md`:
