@@ -1,0 +1,540 @@
+{
+ "engine": "chromium",
+ "entriesFile": "playlistExportEntries-DY2L26Tp.js",
+ "exportsFile": "playlistExports-C_uQBpyD.js",
+ "totalCalls": 264,
+ "passed": 106,
+ "failed": 0,
+ "results": [
+  {
+   "what": "chromium · one playlist, into the folder of the series (not in the library yet: created) · the SDK calls, in order",
+   "ok": true,
+   "detail": "9 events, 5 api.music"
+  },
+  {
+   "what": "chromium · one playlist, into the folder of the series (not in the library yet: created) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · one playlist, into the folder of the series (not in the library yet: created) · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · one playlist, into the folder of the series (not in the library yet: created) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · one playlist, into the folder of the series (already in the library: found by name, any case) · the SDK calls, in order",
+   "ok": true,
+   "detail": "8 events, 4 api.music"
+  },
+  {
+   "what": "chromium · one playlist, into the folder of the series (already in the library: found by name, any case) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · one playlist, into the folder of the series (already in the library: found by name, any case) · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · one playlist, into the folder of the series (already in the library: found by name, any case) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a batch of three into a folder chosen from the library (by id: no lookup) · the SDK calls, in order",
+   "ok": true,
+   "detail": "13 events, 9 api.music"
+  },
+  {
+   "what": "chromium · a batch of three into a folder chosen from the library (by id: no lookup) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a batch of three into a folder chosen from the library (by id: no lookup) · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · a batch of three into a folder chosen from the library (by id: no lookup) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a batch into a NEW folder the person named (looked up by name, missing, created) · the SDK calls, in order",
+   "ok": true,
+   "detail": "15 events, 11 api.music"
+  },
+  {
+   "what": "chromium · a batch into a NEW folder the person named (looked up by name, missing, created) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a batch into a NEW folder the person named (looked up by name, missing, created) · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · a batch into a NEW folder the person named (looked up by name, missing, created) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a remembered folder (the choice the step remembers reaches the export as the folder name; it exists in the library) · the SDK calls, in order",
+   "ok": true,
+   "detail": "8 events, 4 api.music"
+  },
+  {
+   "what": "chromium · a remembered folder (the choice the step remembers reaches the export as the folder name; it exists in the library) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a remembered folder (the choice the step remembers reaches the export as the folder name; it exists in the library) · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · a remembered folder (the choice the step remembers reaches the export as the folder name; it exists in the library) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · one playlist of a batch: it keeps the position it has in the batch · the SDK calls, in order",
+   "ok": true,
+   "detail": "9 events, 5 api.music"
+  },
+  {
+   "what": "chromium · one playlist of a batch: it keeps the position it has in the batch · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · one playlist of a batch: it keeps the position it has in the batch · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · one playlist of a batch: it keeps the position it has in the batch · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · no folder: the top of the library · the SDK calls, in order",
+   "ok": true,
+   "detail": "13 events, 9 api.music"
+  },
+  {
+   "what": "chromium · no folder: the top of the library · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · no folder: the top of the library · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · no folder: the top of the library · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · tracks not found in the catalog, and a playlist with none found · the SDK calls, in order",
+   "ok": true,
+   "detail": "16 events, 12 api.music"
+  },
+  {
+   "what": "chromium · tracks not found in the catalog, and a playlist with none found · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · tracks not found in the catalog, and a playlist with none found · the notices (text)",
+   "ok": true,
+   "detail": "3"
+  },
+  {
+   "what": "chromium · tracks not found in the catalog, and a playlist with none found · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a playlist with 300 tracks that carry their Apple Music id (one request holds them all: no chunking) · the SDK calls, in order",
+   "ok": true,
+   "detail": "7 events, 3 api.music"
+  },
+  {
+   "what": "chromium · a playlist with 300 tracks that carry their Apple Music id (one request holds them all: no chunking) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a playlist with 300 tracks that carry their Apple Music id (one request holds them all: no chunking) · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · a playlist with 300 tracks that carry their Apple Music id (one request holds them all: no chunking) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a playlist with 120 tracks the catalog is asked about one by one · the SDK calls, in order",
+   "ok": true,
+   "detail": "127 events, 123 api.music"
+  },
+  {
+   "what": "chromium · a playlist with 120 tracks the catalog is asked about one by one · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a playlist with 120 tracks the catalog is asked about one by one · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · a playlist with 120 tracks the catalog is asked about one by one · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a library with 250 folders (three pages): the folder of the series is on the last page · the SDK calls, in order",
+   "ok": true,
+   "detail": "10 events, 6 api.music"
+  },
+  {
+   "what": "chromium · a library with 250 folders (three pages): the folder of the series is on the last page · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · a library with 250 folders (three pages): the folder of the series is on the last page · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · a library with 250 folders (three pages): the folder of the series is on the last page · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the rate limit (429) answers the second creation: the others are still tried · the SDK calls, in order",
+   "ok": true,
+   "detail": "15 events, 11 api.music"
+  },
+  {
+   "what": "chromium · the rate limit (429) answers the second creation: the others are still tried · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the rate limit (429) answers the second creation: the others are still tried · the notices (text)",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "what": "chromium · the rate limit (429) answers the second creation: the others are still tried · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · every creation fails (401, the token expired in the middle) · the SDK calls, in order",
+   "ok": true,
+   "detail": "15 events, 11 api.music"
+  },
+  {
+   "what": "chromium · every creation fails (401, the token expired in the middle) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · every creation fails (401, the token expired in the middle) · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · every creation fails (401, the token expired in the middle) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the creation fails, then the same press is repeated: only what was missing is created · the SDK calls, in order",
+   "ok": true,
+   "detail": "19 events, 15 api.music"
+  },
+  {
+   "what": "chromium · the creation fails, then the same press is repeated: only what was missing is created · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the creation fails, then the same press is repeated: only what was missing is created · the notices (text)",
+   "ok": true,
+   "detail": "4"
+  },
+  {
+   "what": "chromium · the creation fails, then the same press is repeated: only what was missing is created · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the authorization expired: the person says no · the SDK calls, in order",
+   "ok": true,
+   "detail": "4 events, 0 api.music"
+  },
+  {
+   "what": "chromium · the authorization expired: the person says no · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the authorization expired: the person says no · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · the authorization expired: the person says no · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the person denies the authorization · the SDK calls, in order",
+   "ok": true,
+   "detail": "4 events, 0 api.music"
+  },
+  {
+   "what": "chromium · the person denies the authorization · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the person denies the authorization · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · the person denies the authorization · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the developer token cannot be had (the site is not set up for Apple Music) · the SDK calls, in order",
+   "ok": true,
+   "detail": "1 events, 0 api.music"
+  },
+  {
+   "what": "chromium · the developer token cannot be had (the site is not set up for Apple Music) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the developer token cannot be had (the site is not set up for Apple Music) · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · the developer token cannot be had (the site is not set up for Apple Music) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the folder cannot be created: the playlists go to the top of the library · the SDK calls, in order",
+   "ok": true,
+   "detail": "9 events, 5 api.music"
+  },
+  {
+   "what": "chromium · the folder cannot be created: the playlists go to the top of the library · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the folder cannot be created: the playlists go to the top of the library · the notices (text)",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "what": "chromium · the folder cannot be created: the playlists go to the top of the library · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the same export pressed again after it ended: nothing is created twice · the SDK calls, in order",
+   "ok": true,
+   "detail": "18 events, 14 api.music"
+  },
+  {
+   "what": "chromium · the same export pressed again after it ended: nothing is created twice · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the same export pressed again after it ended: nothing is created twice · the notices (text)",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "what": "chromium · the same export pressed again after it ended: nothing is created twice · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · pressed twice at once: the second is told one is running · the SDK calls, in order",
+   "ok": true,
+   "detail": "9 events, 5 api.music"
+  },
+  {
+   "what": "chromium · pressed twice at once: the second is told one is running · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · pressed twice at once: the second is told one is running · the notices (text)",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "what": "chromium · pressed twice at once: the second is told one is running · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · nothing to export · the SDK calls, in order",
+   "ok": true,
+   "detail": "0 events, 0 api.music"
+  },
+  {
+   "what": "chromium · nothing to export · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · nothing to export · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · nothing to export · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the edit screen: the playlists, the batch and the series are the screen's own · the SDK calls, in order",
+   "ok": true,
+   "detail": "12 events, 8 api.music"
+  },
+  {
+   "what": "chromium · the edit screen: the playlists, the batch and the series are the screen's own · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the edit screen: the playlists, the batch and the series are the screen's own · the notices (text)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "what": "chromium · the edit screen: the playlists, the batch and the series are the screen's own · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the step reads the folders: some (two pages) · the SDK calls, in order",
+   "ok": true,
+   "detail": "6 events, 2 api.music"
+  },
+  {
+   "what": "chromium · the step reads the folders: some (two pages) · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the step reads the folders: some (two pages) · the notices (text)",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "what": "chromium · the step reads the folders: some (two pages) · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the step reads the folders: none · the SDK calls, in order",
+   "ok": true,
+   "detail": "5 events, 1 api.music"
+  },
+  {
+   "what": "chromium · the step reads the folders: none · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the step reads the folders: none · the notices (text)",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "what": "chromium · the step reads the folders: none · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the step reads the folders: an error · the SDK calls, in order",
+   "ok": true,
+   "detail": "5 events, 1 api.music"
+  },
+  {
+   "what": "chromium · the step reads the folders: an error · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the step reads the folders: an error · the notices (text)",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "what": "chromium · the step reads the folders: an error · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the step reads the folders, the person has not authorized · the SDK calls, in order",
+   "ok": true,
+   "detail": "4 events, 0 api.music"
+  },
+  {
+   "what": "chromium · the step reads the folders, the person has not authorized · the progress texts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the step reads the folders, the person has not authorized · the notices (text)",
+   "ok": true,
+   "detail": "0"
+  },
+  {
+   "what": "chromium · the step reads the folders, the person has not authorized · the folders read",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the file: playlists given, a batch name with characters the file name cannot hold (the file: by the screens, not here)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "chromium · the file: the edit screen's playlists (the file: by the screens, not here)",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

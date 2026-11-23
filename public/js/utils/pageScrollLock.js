@@ -40,7 +40,7 @@ export function unlockPageScroll(win = window) {
 
 /**
  * Frees the page whatever the count says (F76, recheck N22). Only for a hold left behind with
- * nothing open on the page (see components/ui/windowsHoldThePage.js `giveBackAStrayHold`): a sheet
+ * nothing open on the page (see shell/windowsHoldThePage.ts `giveBackAStrayHold`): a sheet
  * taken off the page without its close, or this module loaded again while the page was held (the
  * count starts at 0, the body stays pinned). The place comes from the body itself when it can.
  * @param {Window} [win]

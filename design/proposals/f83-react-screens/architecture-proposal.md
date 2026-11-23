@@ -523,13 +523,40 @@ flowchart LR
 
 | Arquivo | Hoje | Teto proposto |
 |---|---|---|
-| Script principal | 301.051 B | na onda 0: até 316.000 B (entram a ponte, o `i18n/` e o dicionário em inglês; sai só uma tela de 66 linhas — o acréscimo real é «a medir»); a partir da onda 1 o teto é o valor medido na onda anterior: só desce |
+| Script principal | 301.437 B (build publicável, com as chaves do `.env`, `main@3356113`, `main-Cp3Nsp6i.js`; os 301.051 B eram sem as chaves) | na onda 0: até 316.000 B (entram a ponte, o `i18n/` e o dicionário em inglês; sai só uma tela de 66 linhas — o acréscimo real é «a medir»); a partir da onda 1 o teto é o valor medido na onda anterior: só desce |
 | `react-vendor` | não existe (68.922 B na medição) | 72.000 B |
 | Cada tela | a tela medida: 3.960 B | 30.000 B como alarme; a que passar entra numa lista com o motivo |
 | Dicionário em português | não existe | 20.000 B (estimativa a conferir: uns 1.000 textos, cerca de 40 KB sem comprimir) |
 | Para ver a primeira tela, até a onda 2 | o script principal | o teto do script principal + uma tela |
 | Para ver a primeira tela, da onda 3 em diante (a moldura é React) | o script principal | o teto do script principal + 72.000 B + uma tela |
 | Baixado em segundo plano, depois da primeira tela | nada (hoje está tudo no script principal) | as telas do menu: «a medir»; a soma com o script principal não passa do script principal de hoje + 72.000 B + 20.000 B |
+
+**Medido na onda 0 (TASK-08), no build publicável de hoje** (`main@3356113`, com as chaves do `.env`; bytes comprimidos com gzip nível 6; saída bruta em `reports/evidence/F83/wave-0/raw/`):
+
+| O quê | Hoje, medido |
+|---|---|
+| Script principal (`main-Cp3Nsp6i.js`, o mesmo que está em produção) | 301.437 B |
+| Folha de estilos (`main-BvbNwvoB.css`) | 28.974 B |
+| Adaptador da medição (`posthogAdapter`, só com a chave da medição) | 129.204 B |
+| `SavedPlaylistsView` (a maior tela carregada sob demanda) | 10.257 B |
+| Depois da primeira tela (hoje, só o que já é sob demanda) | 28.198 B |
+| Tempo até a primeira tela, `/start` (o `#app` ganha conteúdo; Chromium, cache vazio, servidor local, sem limitação; mediana de 5) | 1.742 ms (cada rodada 1.724 a 1.944 ms) |
+| O mesmo, com a rede limitada (1,6 Mb/s, 150 ms de latência: «Slow 4G»; mediana de 5) | 3.701 ms (3.522 a 4.249 ms) |
+| `/artists` (a tela do canário, hoje feita à mão), sem limitação | 1.765 ms |
+
+**Medido no fim da onda 0** (o mesmo build publicável, com o canário em React; `reports/evidence/F83/wave-0/raw/`):
+
+| O quê | Depois da onda 0 | Diferença para hoje |
+|---|---|---|
+| Script principal (`main-BAqSWT0A.js`) | 301.830 B | +393 B (a ponte do roteador, o `i18n/` e o dicionário em inglês entram; a tela de 66 linhas sai) |
+| `react-vendor` (React, react-dom e scheduler, um arquivo só) | 68.691 B | novo; só desce quando uma tela em React abre |
+| O canário (`screens/coming-soon`, com o ícone, a ponte e o dicionário dela) | 1.986 B | a tela feita à mão ia dentro do script principal |
+| Tempo até a primeira tela, `/start` (sem React), sem limitação / Slow 4G | 1.767 ms / 3.737 ms | +25 ms / +36 ms |
+| Tempo até a primeira tela, `/artists` (o canário: baixa o React), sem limitação / Slow 4G | 1.900 ms / 4.250 ms | +135 ms / (`/start` em Slow 4G + 513 ms) |
+
+O teto do script principal fica em 316.000 B nesta onda; **a partir da onda 1 ele é 301.830 B** (o medido): só desce. A folga de «baixado depois da primeira tela» foi acertada com a medição: a proposta dizia «o script principal de hoje + 72.000 B + 20.000 B», mas os arquivos sob demanda de hoje já pesam 28.198 B (a lista das telas e janelas carregadas tarde), que a conta não tinha; a folga passou a ser a do React mais **48.198 B** (28.198 B de hoje + os 20.000 B para telas novas e o dicionário em português). O React **não** é baixado em segundo plano depois da primeira tela, como a § 9.3 dizia para a espera da onda 3: a decisão desta onda, a pedido de quem a mandou construir, é que a primeira carga do site não baixe React até uma tela em React abrir; o `react-vendor` só passa a vir na abertura na onda 3.
+
+O tempo inclui a espera do login do Firebase (rede real): ele varia mais do que o peso. O teto de tempo da onda 0 é «o de hoje + 300 ms, no pior caso» (§ 7); as telas em React não o mexem até a moldura migrar (onda 3). Quem confere o teto de peso é `scripts/bundle-budget.mjs`, que lê `scripts/bundle-budget.json`.
 
 O redesenho com listas grandes (R17) ganha número na onda 5: o mapa dela mede a tela de hoje com 300 capas, e a tela em React não pode levar mais do que 1,2 vez esse tempo.
 

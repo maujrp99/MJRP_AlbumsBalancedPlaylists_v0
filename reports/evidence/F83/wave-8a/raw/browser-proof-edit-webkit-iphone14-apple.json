@@ -1,0 +1,622 @@
+{
+ "tag": "edit-webkit-iphone14",
+ "passed": 123,
+ "failed": 0,
+ "results": [
+  {
+   "what": "edit-webkit-iphone14 · [folders] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3948 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · a folder of the library picked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4002 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · a folder of the library picked · the focus",
+   "ok": true,
+   "detail": "div[sheet__panel] | div[sheet__panel]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · a folder of the library picked · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · a folder of the library picked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · a folder of the library picked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · a folder of the library picked · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · a folder of the library picked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, no name: asked for it · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4068 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, no name: asked for it · the focus",
+   "ok": true,
+   "detail": "input[New folder name] | input[New folder name]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, no name: asked for it · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, no name: asked for it · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, no name: asked for it · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, no name: asked for it · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, no name: asked for it · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, a name typed · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4011 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, a name typed · the focus",
+   "ok": true,
+   "detail": "input[New folder name] | input[New folder name]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, a name typed · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, a name typed · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, a name typed · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, a name typed · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · New folder, a name typed · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · No folder · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4011 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · No folder · the focus",
+   "ok": true,
+   "detail": "div[sheet__panel] | div[sheet__panel]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · No folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · No folder · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · No folder · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · No folder · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · No folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4011 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "div[sheet__panel] | div[sheet__panel]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "13 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"2 playlists exported to Apple Music, outside any folder.\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "13 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [folders] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · apple folders · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-iphone14 · apple folders · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3372 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3408 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "div[sheet__panel] | div[sheet__panel]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "15 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"2 playlists exported to Apple Music, in the folder \\\"MJRP Playlists\\\".\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "15 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [none] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · apple none · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-iphone14 · apple none · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3438 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3474 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "div[sheet__panel] | div[sheet__panel]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "14 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"2 playlists exported to Apple Music.\",\"The folder \\\"MJRP Playlists\\\" could not be created in Apple Music: the playlists are at the top of your library.\",\"1 track was not found in Apple Music and was"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "14 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [error] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · apple error · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-iphone14 · apple error · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "99573 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · the folder of the series, on the last page of 250 · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "101859 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · the folder of the series, on the last page of 250 · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · the folder of the series, on the last page of 250 · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · the folder of the series, on the last page of 250 · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · the folder of the series, on the last page of 250 · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · the folder of the series, on the last page of 250 · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · the folder of the series, on the last page of 250 · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "101859 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "div[sheet__panel] | div[sheet__panel]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "19 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"2 playlists exported to Apple Music, in the folder \\\"MJRP Playlists\\\".\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button[export] | button[export]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "19 calls"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "edit-webkit-iphone14 · [many] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "edit-webkit-iphone14 · apple many · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "edit-webkit-iphone14 · apple many · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

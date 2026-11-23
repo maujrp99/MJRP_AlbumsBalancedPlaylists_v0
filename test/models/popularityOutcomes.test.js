@@ -5,7 +5,8 @@
 import { describe, it, expect } from 'vitest'
 import { FACTS_VERSION, factsOfEntry, hasSettledFacts, withSettledFacts } from '../../public/js/models/albumFacts.js'
 import { countUnchecked, describeQuery, filterSeries } from '../../public/js/models/seriesFilter.js'
-import { SourceGap, askNotices, readAsk } from '../../public/js/models/albumAsk.js'
+import { SourceGap, readAsk } from '../../public/js/models/albumAsk.js'
+import { askNotices } from '../../public/js/i18n/askTexts.js'
 import { AlbumStatus, createEntry, queryKey } from '../../public/js/models/albumLoadState.js'
 import { hasAnswered, sourceOutcome } from '../../public/js/models/albumSourceAsk.js'
 

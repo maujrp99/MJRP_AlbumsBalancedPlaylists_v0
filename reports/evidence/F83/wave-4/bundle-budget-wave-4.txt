@@ -1,0 +1,22 @@
+main script   main-B7rn1Ckq.js                               285730 B   (ceiling 294897 B)
+react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
+file          CoverImage-fZLcoB7l.js                            268 B   (ceiling 30000 B)
+file          InventoryEditModal-DrWpliIp.js                   1212 B   (ceiling 30000 B)
+file          PlaylistsExport-sKckzzx7.js                      2702 B   (ceiling 30000 B)
+file          ReactView-CkEoNQIG.js                             934 B   (ceiling 30000 B)
+file          SpotifyExportModal-6FZ5rolG.js                   5073 B   (ceiling 30000 B)
+file          crate3d-C6EbChIP.js                              2178 B   (ceiling 30000 B)
+file          exportOutcome-DbgW7yUg.js                         325 B   (ceiling 30000 B)
+file          index-BI54DSA6.js                               11490 B   (ceiling 30000 B)
+file          index-Bd-6jsGc.js                               12176 B   (ceiling 30000 B)
+file          index-CxcQRDgb.js                                9014 B   (ceiling 30000 B)
+file          index-D717L_zE.js                                 711 B   (ceiling 30000 B)
+file          listText-DkPkv8-y.js                             2964 B   (ceiling 30000 B)
+file (listed) posthogAdapter-zbCZhxi6.js                     129204 B
+file          preload-helper-BxaVoaJg.js                        901 B   (ceiling 30000 B)
+file          search.worker-saFDN5Ff.js                        4632 B   (ceiling 30000 B)
+file          splash-C9Z_K8lX.js                               9913 B   (ceiling 30000 B)
+stylesheet    main-BLJymPDb.css                               29025 B
+after 1st     React + screens, downloaded after the first screen   123271 B
+1st screen    main script + the biggest screen               366597 B   (ceiling 396897 B)
+bundle-budget: inside the budget

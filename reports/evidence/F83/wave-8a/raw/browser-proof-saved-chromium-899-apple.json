@@ -1,0 +1,622 @@
+{
+ "tag": "saved-chromium-899",
+ "passed": 123,
+ "failed": 0,
+ "results": [
+  {
+   "what": "saved-chromium-899 · [folders] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3935 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · a folder of the library picked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3989 chars"
+  },
+  {
+   "what": "saved-chromium-899 · a folder of the library picked · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-chromium-899 · a folder of the library picked · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-899 · a folder of the library picked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · a folder of the library picked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · a folder of the library picked · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · a folder of the library picked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, no name: asked for it · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4055 chars"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, no name: asked for it · the focus",
+   "ok": true,
+   "detail": "input[New folder name] | input[New folder name]"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, no name: asked for it · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, no name: asked for it · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, no name: asked for it · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, no name: asked for it · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, no name: asked for it · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, a name typed · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3998 chars"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, a name typed · the focus",
+   "ok": true,
+   "detail": "input[New folder name] | input[New folder name]"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, a name typed · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, a name typed · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, a name typed · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, a name typed · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · New folder, a name typed · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · No folder · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3998 chars"
+  },
+  {
+   "what": "saved-chromium-899 · No folder · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-chromium-899 · No folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-899 · No folder · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · No folder · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · No folder · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · No folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3998 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "14 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"3 playlists exported to Apple Music, outside any folder.\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button[Actions for batch Sunday mix] | button[Actions for batch Sunday mix]"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "14 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [folders] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · apple folders · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-899 · apple folders · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-899 · [none] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3355 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3391 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "16 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"3 playlists exported to Apple Music, in the folder \\\"Plant\\\".\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button[Actions for batch Sunday mix] | button[Actions for batch Sunday mix]"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "16 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [none] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · apple none · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-899 · apple none · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-899 · [error] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3421 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "3457 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "15 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"3 playlists exported to Apple Music.\",\"The folder \\\"Plant\\\" could not be created in Apple Music: the playlists are at the top of your library.\",\"1 track was not found in Apple Music and was left out"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button[Actions for batch Sunday mix] | button[Actions for batch Sunday mix]"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "15 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [error] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · apple error · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-899 · apple error · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-899 · [many] Apple Music: the window opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "97735 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Apple Music: the window opened · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Apple Music: the window opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Apple Music: the window opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Apple Music: the window opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Apple Music: the window opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Apple Music: the window opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · the folder of the series, on the last page of 250 · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "100021 chars"
+  },
+  {
+   "what": "saved-chromium-899 · the folder of the series, on the last page of 250 · the focus",
+   "ok": true,
+   "detail": "input[accent-orange-500] | input[accent-orange-500]"
+  },
+  {
+   "what": "saved-chromium-899 · the folder of the series, on the last page of 250 · what MusicKit was asked",
+   "ok": true,
+   "detail": "7 calls"
+  },
+  {
+   "what": "saved-chromium-899 · the folder of the series, on the last page of 250 · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · the folder of the series, on the last page of 250 · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · the folder of the series, on the last page of 250 · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · the folder of the series, on the last page of 250 · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Export pressed: what Apple Music is asked · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "100021 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "20 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Export pressed: what Apple Music is asked · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Export pressed: what Apple Music is asked · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Export pressed: what Apple Music is asked · the notices (text)",
+   "ok": true,
+   "detail": "[\"3 playlists exported to Apple Music, in the folder \\\"Plant\\\".\",\"1 track was not found in Apple Music and was left out: Artist - Nowhere Man.\"]"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Escape: the window goes, the focus goes back · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Escape: the window goes, the focus goes back · the focus",
+   "ok": true,
+   "detail": "button[Actions for batch Sunday mix] | button[Actions for batch Sunday mix]"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Escape: the window goes, the focus goes back · what MusicKit was asked",
+   "ok": true,
+   "detail": "20 calls"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Escape: the window goes, the focus goes back · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Escape: the window goes, the focus goes back · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · [many] Escape: the window goes, the focus goes back · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · apple many · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-899 · apple many · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+  "wave 2 tip (shell hand-made)": {
+    "runs": [
+      {
+        "bar": 2217,
+        "screen": 3702,
+        "paint": 688,
+        "bytes": 322491
+      },
+      {
+        "bar": 2143,
+        "screen": 3984,
+        "paint": 656,
+        "bytes": 322491
+      },
+      {
+        "bar": 2155,
+        "screen": 3779,
+        "paint": 668,
+        "bytes": 322491
+      },
+      {
+        "bar": 2146,
+        "screen": 3666,
+        "paint": 644,
+        "bytes": 322491
+      },
+      {
+        "bar": 2156,
+        "screen": 3737,
+        "paint": 652,
+        "bytes": 322491
+      }
+    ],
+    "median": {
+      "bytes": 322491,
+      "paint": 656,
+      "bar": 2155,
+      "screen": 3737
+    }
+  },
+  "this branch (shell in React)": {
+    "runs": [
+      {
+        "bar": 2546,
+        "screen": 4111,
+        "paint": 808,
+        "bytes": 407902
+      },
+      {
+        "bar": 2564,
+        "screen": 4314,
+        "paint": 792,
+        "bytes": 407902
+      },
+      {
+        "bar": 2525,
+        "screen": 4088,
+        "paint": 796,
+        "bytes": 407902
+      },
+      {
+        "bar": 2555,
+        "screen": 4051,
+        "paint": 796,
+        "bytes": 407902
+      },
+      {
+        "bar": 2537,
+        "screen": 4195,
+        "paint": 788,
+        "bytes": 407902
+      }
+    ],
+    "median": {
+      "bytes": 407902,
+      "paint": 796,
+      "bar": 2546,
+      "screen": 4111
+    }
+  }
+}

@@ -9,11 +9,11 @@ import path from 'node:path'
 
 const ROOT = path.resolve(process.cwd(), 'public/js')
 
-/** Every .js file under public/js, as a path relative to it. */
+/** Every .js, .ts and .tsx file under public/js, as a path relative to it (F83: the picker is TypeScript since wave 5b). */
 const sourceFiles = (dir = ROOT) => fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
     const full = path.join(dir, entry.name)
     if (entry.isDirectory()) return sourceFiles(full)
-    return entry.name.endsWith('.js') ? [path.relative(ROOT, full).split(path.sep).join('/')] : []
+    return /\.(js|ts|tsx)$/.test(entry.name) ? [path.relative(ROOT, full).split(path.sep).join('/')] : []
 })
 const read = (relative) => fs.readFileSync(path.join(ROOT, relative), 'utf8')
 /** The source without its comments: a comment may name what the code must not do. */
@@ -34,9 +34,12 @@ const importsOf = (relative) => {
 const CLASSIFIER = 'models/albumType.js'
 const PICKER_RULES = 'models/albumPicker.js'
 const SCAN_SERVICE = 'services/album-search/AlbumSearchService.js'
-const PICKER = 'components/album-picker/AlbumPickerController.js'
-const PICKER_PANEL = 'components/album-picker/AlbumPickerPanel.js'
-const CARD = 'views/renderers/DiscographyRenderer.js'
+const PICKER = 'ui/albumPicker/pickerController.ts'
+const PICKER_PANEL = 'ui/albumPicker/AlbumPickerPanel.tsx'
+const CARD = 'ui/albumPicker/PickerParts.tsx'
+const SERIES_EDIT = 'screens/albums/SeriesEdit.tsx'
+const START_CONTROLLER = 'screens/start/StartController.ts'
+const START_CARD = 'screens/start/Results.tsx'
 const CATALOG = ['services/MusicKitService.js', 'services/musickit/MusicKitCatalog.js']
 
 describe('one classifier says the type of an album', () => {
@@ -56,7 +59,8 @@ describe('one classifier says the type of an album', () => {
     it('no other module names an album type: the screens use the picker rules', () => {
         const namesAType = /['"]Uncategorized['"]|\.type\s*[!=]==?\s*['"](?:Album|EP|Single|Live|Compilation)['"]/
 
-        expect(filesWith(namesAType, [CLASSIFIER])).toEqual([])
+        // the dictionaries say the heading «Uncategorized» of the albums that belong to no series: a heading, not a classification
+        expect(filesWith(namesAType, [CLASSIFIER]).filter(file => !file.startsWith('i18n/'))).toEqual([])
     })
 
     it('the old classifiers are gone', () => {
@@ -86,9 +90,9 @@ describe('one picker shows them', () => {
         expect(filesWith(transitions, ['models/scanState.js'])).toEqual([PICKER])
     })
 
-    it('the picker is made in two frames only: the Home and the block inside the series edit', () => {
-        expect(filesWith(/new AlbumPickerController\(/).sort()).toEqual([PICKER_PANEL, 'controllers/HomeController.js'].sort())
-        expect(filesWith(/new AlbumPickerPanel\(/)).toEqual(['components/series/SeriesEditModal.js'])
+    it('the picker is made in two frames only: the Start screen (React, F83 wave 4) and the block inside the series edit (React, wave 5b)', () => {
+        expect(filesWith(/new AlbumPickerController\(/).sort()).toEqual([PICKER_PANEL, START_CONTROLLER].sort())
+        expect(filesWith(/<AlbumPickerPanel\b/)).toEqual([SERIES_EDIT])
     })
 
     it('the picker knows no screen: what a screen does with a pick comes in as onPick', () => {
@@ -98,16 +102,18 @@ describe('one picker shows them', () => {
         expect(importsOf(PICKER_RULES)).toEqual(['./albumType.js'])
     })
 
-    it('one album card: only the discography renderer draws it', () => {
-        expect(filesWith(/action:\s*['"]pick-album['"]/)).toEqual([CARD])
+    it('one album card for the series edit: only the picker pieces draw it; the Start screen has its own', () => {
+        expect(filesWith(/data-action="pick-album"/).sort()).toEqual([CARD, START_CARD].sort())
+        expect(filesWith(/<PickerCard\b/)).toEqual([PICKER_PANEL])
     })
 
     it('one set of filters: only the picker rules name them', () => {
-        expect(filesWith(/['"]Compendiums['"]|['"]Singles\/EPs['"]/, [PICKER_RULES])).toEqual([])
+        // the English dictionaries of the Start screen (F83 wave 4) and of the picker panel (wave 5b) say the names of the filters in words: a text, not a second set of filters
+        expect(filesWith(/['"]Compendiums['"]|['"]Singles\/EPs['"]/, [PICKER_RULES, 'i18n/en/start.js', 'i18n/en/ui.js'])).toEqual([])
     })
 
     it('the pickers before F57 are gone', () => {
-        const gone = ['components/home/SearchController.js', 'components/series/ArtistScanner.js',
+        const gone = ['components/home/SearchController.js', 'controllers/HomeController.js', 'views/HomeView.js', 'components/series/ArtistScanner.js',
             'components/search/DiscographyToolbar.js', 'components/search/VariantPickerModal.js']
 
         expect(gone.filter(file => fs.existsSync(path.join(ROOT, file)))).toEqual([])

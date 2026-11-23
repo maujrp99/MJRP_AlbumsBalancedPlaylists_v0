@@ -2,7 +2,7 @@
  * BlendingController
  * 
  * Centralized controller for playlist generation workflow.
- * Shared by BlendingMenuView and PlaylistsView/RegeneratePanel.
+ * Shared by the Blend screen (screens/blend/) and the playlists screen (generate again).
  * 
  * Responsibilities:
  * - Ask the album load for the albums of a series (it never loads an album itself: F56)
@@ -20,8 +20,13 @@ import { playlistGenerationService } from '../services/PlaylistGenerationService
 import { getPlaylistsService } from '../services/playlists/playlistsWiring.js'
 import { albumAsks } from '../services/albums/albumLoading.js'
 import { sourcesForRecipe, fallbacksForRecipe } from '../models/recipeSources.js'
-import { askNotices, askProgressText, noAlbumsMessage } from '../models/albumAsk.js'
+import { askNotices, askProgressText, noAlbumsMessage } from '../i18n/askTexts.js'
+import { t } from '../i18n/t.js'
 import { defaultBatchName } from '../models/batchNaming.js'
+
+// For the browser console and browser-driven checks. Exposed here, not by app.js (F83 wave 7b): this file is where the Blend and the playlists screens share the
+// store, so the store is no longer in the main script and a dynamic import of it in app.js made every first screen download a file of its own just for this.
+if (typeof window !== 'undefined') window.playlistsStore = playlistsStore
 
 /**
  * @typedef {Object} GenerationConfig
@@ -44,7 +49,7 @@ import { defaultBatchName } from '../models/batchNaming.js'
 /** The person left the screen while the albums were loading: nothing was generated. */
 export class BlendCancelledError extends Error {
     constructor() {
-        super('The blend was cancelled')
+        super(t('notices.blend.cancelled'))
         this.name = 'BlendCancelledError'
     }
 }
@@ -76,7 +81,7 @@ class BlendingController {
 
         const load = await this._albumsFor(series, config, { onProgress, signal })
 
-        onProgress(`Generating playlists with ${config.algorithmId}...`)
+        onProgress(t('notices.blend.generating', { recipe: config.algorithmId }))
         const result = playlistGenerationService.generate(load.albums, config)
 
         albumSeriesStore.setActiveSeries(seriesId)

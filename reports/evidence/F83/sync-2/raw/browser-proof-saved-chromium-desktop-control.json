@@ -1,0 +1,372 @@
+{
+ "tag": "saved-chromium-desktop-control",
+ "passed": 73,
+ "failed": 0,
+ "results": [
+  {
+   "what": "saved-chromium-desktop-control · Export on the batch · the window",
+   "ok": true,
+   "detail": "1582 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on the batch · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on the batch · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on the batch · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on the batch · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Escape · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Escape · the focus",
+   "ok": true,
+   "detail": "button[Export batch Sunday mix] | button[Export batch Sunday mix]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Escape · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Escape · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · the batch opens · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · the batch opens · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-chromium-desktop-control · the batch opens · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · the batch opens · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on a playlist · the window",
+   "ok": true,
+   "detail": "1583 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on a playlist · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on a playlist · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on a playlist · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export on a playlist · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Apple Music chosen · the window",
+   "ok": true,
+   "detail": "3430 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Apple Music chosen · the focus",
+   "ok": true,
+   "detail": "input[series:Plant] | input[series:Plant]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Apple Music chosen · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Apple Music chosen · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Apple Music chosen · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · a folder picked · the window",
+   "ok": true,
+   "detail": "3484 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · a folder picked · the focus",
+   "ok": true,
+   "detail": "input[existing:Favorites] | input[existing:Favorites]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · a folder picked · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · a folder picked · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · a folder picked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export pressed: what Apple Music is asked · the window",
+   "ok": true,
+   "detail": "3484 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export pressed: what Apple Music is asked · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export pressed: what Apple Music is asked · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export pressed: what Apple Music is asked · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Sunday mix - Playlist p1\\\": not created.\",\"2 tracks were not found in Apple Music and were left out: Artist - Kashmir, Artist - Ramble On.\"]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Export pressed: what Apple Music is asked · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Escape · the window",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Escape · the focus",
+   "ok": true,
+   "detail": "button[Export Playlist p1] | button[Export Playlist p1]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Escape · what MusicKit was asked",
+   "ok": true,
+   "detail": "5 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · Escape · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Sunday mix - Playlist p1\\\": not created.\",\"2 tracks were not found in Apple Music and were left out: Artist - Kashmir, Artist - Ramble On.\"]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · no page error on main",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-desktop-control · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] the export opened · the window",
+   "ok": true,
+   "detail": "1582 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] the export opened · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] the export opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] the export opened · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] the export opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Apple Music chosen · the window",
+   "ok": true,
+   "detail": "2930 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Apple Music chosen · the focus",
+   "ok": true,
+   "detail": "input[series:Plant] | input[series:Plant]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Apple Music chosen · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Apple Music chosen · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Apple Music chosen · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Export pressed with the series folder · the window",
+   "ok": true,
+   "detail": "2966 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Export pressed with the series folder · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Export pressed with the series folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "11 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Export pressed with the series folder · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Sunday mix - Playlist p1\\\", \\\"2. Sunday mix - Playlist p2\\\", \\\"3. Sunday mix - Playlist p3\\\": not created.\",\"4 tracks were not found in Apple Music and were left out: Artist - Kashmir, Artist - Ramble On, Artist - Gone Gone Gone, Artist - Song.\"]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [none] Export pressed with the series folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · no page error on main",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-desktop-control · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] the export opened · the window",
+   "ok": true,
+   "detail": "1582 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] the export opened · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] the export opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "0 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] the export opened · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] the export opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Apple Music chosen · the window",
+   "ok": true,
+   "detail": "2963 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Apple Music chosen · the focus",
+   "ok": true,
+   "detail": "input[series:Plant] | input[series:Plant]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Apple Music chosen · what MusicKit was asked",
+   "ok": true,
+   "detail": "1 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Apple Music chosen · the notices",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Apple Music chosen · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Export pressed with the series folder · the window",
+   "ok": true,
+   "detail": "2999 chars"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Export pressed with the series folder · the focus",
+   "ok": true,
+   "detail": "body | body"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Export pressed with the series folder · what MusicKit was asked",
+   "ok": true,
+   "detail": "10 calls"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Export pressed with the series folder · the notices",
+   "ok": true,
+   "detail": "[\"No track was found in Apple Music for \\\"1. Sunday mix - Playlist p1\\\", \\\"2. Sunday mix - Playlist p2\\\", \\\"3. Sunday mix - Playlist p3\\\": not created.\",\"4 tracks were not found in Apple Music and were left out: Artist - Kashmir, Artist - Ramble On, Artist - Gone Gone Gone, Artist - Song.\"]"
+  },
+  {
+   "what": "saved-chromium-desktop-control · [error] Export pressed with the series folder · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-desktop-control · no page error on main",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-desktop-control · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

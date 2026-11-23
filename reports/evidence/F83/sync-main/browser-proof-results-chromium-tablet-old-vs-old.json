@@ -1,0 +1,202 @@
+[
+  {
+    "what": "tablet, /start: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /start: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /start: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "tablet, /albums: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /albums: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /albums: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "tablet, /blend: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /blend: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /blend: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "tablet, /saved-playlists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /saved-playlists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /saved-playlists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "tablet, /playlist-series: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /playlist-series: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /playlist-series: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "tablet, /playlists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /playlists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /playlists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "tablet, /inventory: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /inventory: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /inventory: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "tablet, /artists: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /artists: the top bar: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, /artists: no label sits over the row of bars",
+    "ok": true,
+    "detail": "labels over the bars: old 0, new 0"
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music authorized: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music authorized: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music authorized: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music not authorized: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music not authorized: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music not authorized: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music script unreachable: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music script unreachable: focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "tablet, the Menu sheet, Apple Music script unreachable: what Apple's script was asked",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "tablet, larger text: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, larger text: no label sits over the row of bars",
+    "ok": true,
+    "detail": "old 0, new 0"
+  },
+  {
+    "what": "tablet, the home has its bottom menu",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "tablet, the home: the bottom menu: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, the passage home to app: the address",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "tablet, the passage home to app: the bottom menu in the app: pixels",
+    "ok": true,
+    "detail": "0 pixels apart"
+  },
+  {
+    "what": "tablet, a tap on a stop: the address and the focus",
+    "ok": true,
+    "detail": ""
+  }
+]

@@ -1,0 +1,14 @@
+{
+ "tag": "blend-webkit-iphone14-old-vs-old",
+ "total": 222,
+ "failed": 1,
+ "steps": 35,
+ "failures": [
+  {
+   "what": "generate · blending, 0.3 s after the press: the box of every element",
+   "ok": false,
+   "detail": "1 of 284 differ: 279:DIV:172.54,2634.54,44.91,44.92 -> 172.01,2634.01,45.97,45.97"
+  }
+ ],
+ "pictures": []
+}

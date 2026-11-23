@@ -1,0 +1,22 @@
+Safari, after a mouse drop in the ranking window: the row in the dragged row's old place stays lit (`:hover`).
+Box: main.tsx (the bridge and the profile of the ranking window), a mouse drag of row One down, then the mouse moves on to another row.
+Playwright WebKit and Chromium, desktop, `vite` dev server of vite.config.mjs; drive.mjs prints which rows match :hover.
+
+BEFORE (react-bridge/sortableTracks.ts of the branch tip before this step; the row put back, nothing held)
+webkit
+ after drop : Two (hover) | One | Three | Four | Five          <- Two is in the old place of the dragged row One
+ mouse moved: Two (hover) | One | Three | Four (hover) | Five  <- Two stays lit although the pointer is on Four (the bug)
+chromium
+ after drop : Two (hover) | One | Three | Four | Five
+ mouse moved: Two | One | Three | Four (hover) | Five          <- Chromium lets go at the next move
+
+AFTER (holdHover: the list is out of the pointer's way while the row is put back, until the first mouse move)
+webkit
+ after drop : Two | One | Three | Four | Five
+ mouse moved: Two | One | Three | Four (hover) | Five
+chromium
+ after drop : Two | One | Three | Four | Five
+ mouse moved: Two | One | Three | Four (hover) | Five
+
+Tried first and not enough in WebKit: pointer-events off for one frame; display none for a frame; new elements for every row after a drop (key per drop);
+the old place was lit in all three. forceFallback (no native drag) was not kept: it changes the feel of the drag in Safari and WebKit did not finish the reorder under the synthetic mouse.

@@ -14,19 +14,22 @@
  * @module controllers/InventoryController
  */
 
+import { t, tPlural } from '../i18n/t.js'
 import { inventoryStore } from '../stores/inventory.js'
 import { inventoryService, readSeriesOfThePerson } from '../services/inventory/inventoryWiring.js'
 import { inventoryValues } from '../services/inventory/inventoryValueWiring.js'
 import { InventoryValues } from './InventoryValues.js'
 import { optimizedAlbumLoader } from '../services/OptimizedAlbumLoader.js'
-import toast from '../components/Toast.js'
+import toast from '../stores/toasts.js'
 import { filterInventory, statusCountsFor } from '../models/inventoryFilter.js'
-import { ALL_STATUSES, InventoryStatus, ownedValueOf, statusChangeMessage, statusOf } from '../models/inventoryStatus.js'
+import { ALL_STATUSES, InventoryStatus, ownedValueOf, statusOf } from '../models/inventoryStatus.js'
 import { filterUseOf } from '../models/filterUse.js'
 import { track } from '../services/usage/track.js'
-import { confirmationText, nothingToAddText, outcomeText, progressText } from '../models/inventoryFromSeries.js'
 import { sortInventory, sortingFor } from '../models/inventorySort.js'
-import { CONFIRM_FROM, ratingsOutcome, ratingsProgressText, ratingsQuestion } from '../models/inventoryRatings.js'
+import { CONFIRM_FROM } from '../models/inventoryRatings.js'
+import {
+    confirmationText, nothingToAddText, outcomeText, progressText, ratingsOutcome, ratingsProgressText, ratingsQuestion, statusChangeMessage
+} from '../i18n/inventoryTexts.js'
 import { VIEW_STORAGE_KEY, isViewMode } from '../models/inventoryViewMode.js'
 
 /** A status as the measurement of use writes it (F77): 'not-owned' -> 'not_owned'. */
@@ -46,9 +49,9 @@ const RATINGS_IDLE = Object.freeze({ busy: false, text: null })
 
 /** What the person is asked before the albums of the series are written. */
 const seriesAddQuestion = (plan) => ({
-    title: 'Add the albums of your series?',
+    title: t('inventory.dialog.add.title'),
     message: confirmationText(plan),
-    confirmText: `Add ${plan.toAdd.length === 1 ? '1 album' : `${plan.toAdd.length} albums`}`
+    confirmText: tPlural('inventory.dialog.add.confirm', plan.toAdd.length, { count: plan.toAdd.length })
 })
 
 export class InventoryController {
@@ -159,7 +162,7 @@ export class InventoryController {
             this.updateStateFromStore()
         } catch (error) {
             console.error('[InventoryController] Load error:', error)
-            toast.error('Failed to load inventory')
+            toast.error(t('inventory.toast.loadFailed'))
         } finally {
             this.state.isLoading = false
             this.refresh()
@@ -355,7 +358,7 @@ export class InventoryController {
             track('inventory_status_changed', { from: usageStatus(from), to: usageStatus(status) })
         } catch (error) {
             console.error('[InventoryController] Failed to update status:', error)
-            toast.error('Failed to update status')
+            toast.error(t('inventory.toast.statusFailed'))
         }
         this.updateStateFromStore()
         this.refresh()
@@ -382,13 +385,13 @@ export class InventoryController {
 
     /** @returns {Promise<Object|null>} the plan when there is something to add; null when not (the person was told why) */
     async _planSeriesAlbums() {
-        this._showSeriesAdd({ busy: true, text: 'Reading your series…' })
+        this._showSeriesAdd({ busy: true, text: t('inventory.progress.series') })
         let plan
         try {
             plan = await inventoryService.planSeriesAlbums(await readSeriesOfThePerson())
         } catch (error) {
             console.error('[InventoryController] Could not read the series or the inventory:', error)
-            toast.error('Could not read your series and your inventory. Nothing was added.')
+            toast.error(t('inventory.toast.seriesReadFailed'))
             return null
         }
         if (plan.skipped.length > 0) console.info('[InventoryController] Entries of the series that are not added:', plan.skipped)
@@ -430,11 +433,11 @@ export class InventoryController {
         if (this._isBusy()) return
         const total = this.state.albums.length
         if (total === 0) {
-            toast.info('Your inventory has no albums yet. There are no ratings to read.')
+            toast.info(t('inventory.toast.noRatings'))
             return
         }
         // The button is busy from the question on: a second press while it is open does nothing
-        this._showRatings({ busy: true, text: 'Reading ratings…' })
+        this._showRatings({ busy: true, text: t('inventory.progress.ratings') })
         try {
             if (total > CONFIRM_FROM && !await confirm(ratingsQuestion(total))) return
             if (this._leaving.signal.aborted) return
@@ -453,7 +456,7 @@ export class InventoryController {
             })
         } catch (error) {
             console.error('[InventoryController] Could not update the ratings:', error)
-            toast.error('Could not update the ratings. Your inventory was not changed.')
+            toast.error(t('inventory.toast.ratingsFailed'))
             return
         }
         if (result.aborted) return
@@ -477,10 +480,10 @@ export class InventoryController {
     async handleUpdatePrice(albumId, newPrice, currency) {
         try {
             await inventoryService.updatePrice(albumId, newPrice, currency)
-            toast.success('Price updated')
+            toast.success(t('inventory.toast.priceUpdated'))
         } catch (error) {
             console.error('[InventoryController] Failed to update price:', error)
-            toast.error('Failed to update price')
+            toast.error(t('inventory.toast.priceFailed'))
         }
         // Either way the store says what is true now: the new price, or the old one put back
         this.updateStateFromStore()
@@ -490,11 +493,11 @@ export class InventoryController {
     async handleUpdateAlbum(albumId, updates) {
         const success = await inventoryService.updateAlbum(albumId, updates)
         if (success) {
-            toast.success('Album updated')
+            toast.success(t('inventory.toast.albumUpdated'))
             this.updateStateFromStore()
             this.refresh()
         } else {
-            toast.error('Failed to update album')
+            toast.error(t('inventory.toast.albumFailed'))
         }
     }
 
@@ -504,10 +507,10 @@ export class InventoryController {
             await inventoryService.removeAlbum(albumId)
         } catch (error) {
             console.error('[InventoryController] Failed to remove album:', error)
-            toast.error('Failed to delete album')
+            toast.error(t('inventory.toast.deleteFailed'))
             return
         }
-        toast.success('Album removed from inventory')
+        toast.success(t('inventory.toast.removed'))
         this.updateStateFromStore()
         this.refresh()
     }

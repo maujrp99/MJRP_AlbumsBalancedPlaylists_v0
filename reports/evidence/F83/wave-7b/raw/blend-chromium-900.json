@@ -1,0 +1,807 @@
+{
+ "tag": "blend-chromium-900",
+ "total": 203,
+ "failed": 37,
+ "steps": 32,
+ "failures": [
+  {
+   "what": "blend · a series chosen: the picture of the panel",
+   "ok": false,
+   "detail": "21 px differ, at most 5/255, in 241,138,247,219 of 900x3104"
+  },
+  {
+   "what": "blend · a series chosen: the picture of the viewport",
+   "ok": false,
+   "detail": "21 px differ, at most 5/255, in 241,234,247,315 of 900x3200"
+  },
+  {
+   "what": "blend · recipe top-n-user: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · recipe top-n-user: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · Top 1: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · Top 1: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · Top 10: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · Top 10: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · grouping by_album: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · grouping by_album: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · grouping flat_ranked: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · grouping flat_ranked: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · grouping artist_rank: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · grouping artist_rank: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · grouping ranked_interleave: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · grouping ranked_interleave: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · grouping shuffle: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · grouping shuffle: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · structure single: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · structure single: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · structure multiple: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · structure multiple: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · structure auto: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · structure auto: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · source spotify: the picture of the panel",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1157,30,1162 of 900x3104"
+  },
+  {
+   "what": "blend · source spotify: the picture of the viewport",
+   "ok": false,
+   "detail": "12 px differ, at most 6/255, in 21,1253,30,1258 of 900x3200"
+  },
+  {
+   "what": "blend · source bea: the picture of the panel",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1157,655,1650 of 900x3104"
+  },
+  {
+   "what": "blend · source bea: the picture of the viewport",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1253,655,1746 of 900x3200"
+  },
+  {
+   "what": "blend · source combined: the picture of the panel",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1157,655,1650 of 900x3104"
+  },
+  {
+   "what": "blend · source combined: the picture of the viewport",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1253,655,1746 of 900x3200"
+  },
+  {
+   "what": "blend · slider after three keys (the focus stays on it): the picture of the panel",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1157,655,1650 of 900x3104"
+  },
+  {
+   "what": "blend · slider after three keys (the focus stays on it): the picture of the viewport",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1253,655,1746 of 900x3200"
+  },
+  {
+   "what": "blend · slider at the end: the picture of the panel",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1157,655,1650 of 900x3104"
+  },
+  {
+   "what": "blend · slider at the end: the picture of the viewport",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1253,655,1746 of 900x3200"
+  },
+  {
+   "what": "blend · a button after the slider: the slider keeps its place: the picture of the panel",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1157,655,1650 of 900x3104"
+  },
+  {
+   "what": "blend · a button after the slider: the slider keeps its place: the picture of the viewport",
+   "ok": false,
+   "detail": "23 px differ, at most 6/255, in 21,1253,655,1746 of 900x3200"
+  },
+  {
+   "what": "generate · blending, 0.3 s after the press: the box of every element",
+   "ok": false,
+   "detail": "2 of 303 differ: 295:DIV:369.73,2204.01,23.73,23.73 -> 370.6,2204.88,21.99,21.99 | 301:DIV:426.27,2382.15,47.46,47.46 -> 428.01,2383.89,43.97,43.97"
+  }
+ ],
+ "pictures": [
+  {
+   "flow": "blend",
+   "name": "a series chosen",
+   "kind": "panel",
+   "dims": true,
+   "count": 21,
+   "top": 0,
+   "max": 5,
+   "box": [
+    241,
+    138,
+    247,
+    219
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "a series chosen",
+   "kind": "view",
+   "dims": true,
+   "count": 21,
+   "top": 25817,
+   "max": 5,
+   "box": [
+    241,
+    234,
+    247,
+    315
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "recipe top-n-user",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "recipe top-n-user",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "Top 1",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "Top 1",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "Top 10",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "Top 10",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "grouping by_album",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "grouping by_album",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "grouping flat_ranked",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "grouping flat_ranked",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "grouping artist_rank",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "grouping artist_rank",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "grouping ranked_interleave",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "grouping ranked_interleave",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "grouping shuffle",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "grouping shuffle",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "structure single",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "structure single",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "structure multiple",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "structure multiple",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "structure auto",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "structure auto",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "source spotify",
+   "kind": "panel",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    30,
+    1162
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "source spotify",
+   "kind": "view",
+   "dims": true,
+   "count": 12,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    30,
+    1258
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "source bea",
+   "kind": "panel",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    655,
+    1650
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "source bea",
+   "kind": "view",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    655,
+    1746
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "source combined",
+   "kind": "panel",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    655,
+    1650
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "source combined",
+   "kind": "view",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    655,
+    1746
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "slider after three keys (the focus stays on it)",
+   "kind": "panel",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    655,
+    1650
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "slider after three keys (the focus stays on it)",
+   "kind": "view",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    655,
+    1746
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "slider at the end",
+   "kind": "panel",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    655,
+    1650
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "slider at the end",
+   "kind": "view",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    655,
+    1746
+   ],
+   "width": 900,
+   "height": 3200
+  },
+  {
+   "flow": "blend",
+   "name": "a button after the slider: the slider keeps its place",
+   "kind": "panel",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1157,
+    655,
+    1650
+   ],
+   "width": 900,
+   "height": 3104
+  },
+  {
+   "flow": "blend",
+   "name": "a button after the slider: the slider keeps its place",
+   "kind": "view",
+   "dims": true,
+   "count": 23,
+   "top": 0,
+   "max": 6,
+   "box": [
+    21,
+    1253,
+    655,
+    1746
+   ],
+   "width": 900,
+   "height": 3200
+  }
+ ]
+}

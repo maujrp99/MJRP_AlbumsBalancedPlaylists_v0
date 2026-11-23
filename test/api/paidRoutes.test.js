@@ -16,7 +16,7 @@ import { musicKitService } from '../../public/js/services/MusicKitService.js'
 import { AlbumSearchService } from '../../public/js/services/album-search/AlbumSearchService.js'
 import { CatalogAdapter } from '../../public/js/services/albums/adapters/CatalogAdapter.js'
 import { AlbumNotFoundError } from '../../public/js/services/albums/AlbumLoadService.js'
-import { scanFound, startScan, idleScan, describeScan } from '../../public/js/models/scanState.js'
+import { scanFound, startScan, idleScan } from '../../public/js/models/scanState.js'
 import { appFiles, importsOf, read } from '../architecture/support/sourceImports.js'
 
 const electronic = (title) => ({
@@ -75,10 +75,10 @@ describe('a visitor makes no paid call', () => {
         expect(reclassified).toBeNull()
         expect(albums.map(a => [a.title, a.type, a.typeReason])).toEqual([['Brown Album', 'Album', 'electronic-no-ai-list']])
         expect(fetchMock).not.toHaveBeenCalled()
-        // The picker's status line is drawn from `classifying`, which is "reclassified is on its way"
+        // The picker's status line is drawn from `classifying`, which is "reclassified is on its way": here nothing is on its way
         const scanning = startScan(idleScan(), 'Orbital')
         const state = scanFound(scanning, scanning.generation, { albums, classifying: Boolean(reclassified) })
-        expect(describeScan(state).statusLine).toBe('→ Orbital')
+        expect(state.classifying).toBe(false)
     })
 
     it('the scan of the same artist asks the list once the visitor has an account', async () => {
@@ -145,7 +145,8 @@ describe('every caller of a paid route asks the one place', () => {
     it('the guest login is read for the paid routes nowhere else', () => {
         const readers = appFiles().filter(file => /isAnonymous/.test(read(file)))
 
-        // AuthNav draws the person's menu; it decides nothing about the server
-        expect(readers.sort()).toEqual(['api/paidRoutes.js', 'components/navigation/AuthNav.js'])
+        // utils/isSignedIn.js says whether somebody signed in with an account (the shell and the Start screen draw from it) and shell/context.ts
+        // names the field in the type of the person the shell reads; neither decides anything about the server
+        expect(readers.sort()).toEqual(['api/paidRoutes.js', 'shell/context.ts', 'utils/isSignedIn.js'])
     })
 })

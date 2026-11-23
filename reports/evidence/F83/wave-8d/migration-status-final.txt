@@ -1,0 +1,5 @@
+Migration status (F83), 2026-11-23
+hand-made screens             0 files, 0 lines  (the day it began: 102 files, 17277 lines; 5 files outside React write the DOM on purpose, with the reason in test/architecture/support/handMadeRule.js)
+React screens and pieces      148 files, 15670 lines  (screens 76, ui 39, shell 24, react-bridge 9)
+bridges to old pieces         0 files in react-bridge/legacy/, used by 0 files
+texts outside the dictionary  0  (hand-made 0, React 0; a count good to about 10%)

@@ -32,25 +32,8 @@ export const SourceGap = Object.freeze({
     NOT_CONNECTED: 'not-connected' // the person is not connected to the source: it was not asked (F69)
 })
 
-const REASON_TEXT = Object.freeze({
-    [AskFailure.NOT_FOUND]: 'not found',
-    [AskFailure.TIMEOUT]: 'took too long',
-    [AskFailure.NETWORK]: 'network error',
-    [AskFailure.ON_HOLD]: 'the server is waiting for your sign-in'
-})
-
-const SOURCE_TEXT = Object.freeze({
-    acclaim: { name: 'Acclaim ratings', verb: 'are' },
-    popularity: { name: 'Spotify popularity', verb: 'is' },
-    userRanking: { name: 'Your own ranking', verb: 'is' }
-})
-
-const GAP_TEXT = Object.freeze({
-    [SourceGap.FAILED]: 'did not answer',
-    [SourceGap.EMPTY]: 'none at the source',
-    [SourceGap.WAITING]: 'not waited for: the server paused the load',
-    [SourceGap.NOT_CONNECTED]: 'because Spotify is not connected'
-})
+/** The sources a notice can name, in the order the notices say them. The words for each are the screen's (i18n/askTexts.js). */
+export const SOURCE_ORDER = Object.freeze(['acclaim', 'popularity', 'userRanking'])
 
 /** How many albums a notice names before it counts the rest. */
 const NAMED_AT_MOST = 3
@@ -152,62 +135,49 @@ export function readAsk(asked, sources = [], { onHold = false, heldTooLong = fal
     return { settled: waitingAlbums === 0 && progress.waitingSources === 0, progress, result }
 }
 
-const named = (items, text) => {
-    const shown = items.slice(0, NAMED_AT_MOST).map(text).join(', ')
-    const rest = items.length - NAMED_AT_MOST
-    return rest > 0 ? `${shown} and ${rest} more` : shown
-}
-
-const failureText = (failure) => `${failure.label} (${REASON_TEXT[failure.reason] || failure.reason})`
-
-const plural = (count) => (count === 1 ? 'album' : 'albums')
-
-function sourceNotice(source, gaps, ready, fallback) {
-    const text = SOURCE_TEXT[source] || { name: source, verb: 'is' }
-    const counts = Object.values(SourceGap)
-        .map(gap => ({ gap, count: gaps.filter(item => item.gap === gap).length }))
-        .filter(item => item.count > 0)
-        .map(item => (item.gap === SourceGap.EMPTY
-            ? `${item.count} ${item.count === 1 ? 'has' : 'have'} ${GAP_TEXT[item.gap]}`
-            : `${item.count} ${GAP_TEXT[item.gap]}`))
-        .join(', ')
-    const missing = `${text.name} ${text.verb} missing for ${gaps.length} of ${ready} ${plural(ready)} (${counts}): ${named(gaps, item => item.label)}.`
-    if (!fallback) return missing
-    return `${missing} ${gaps.length === 1 ? 'Its' : 'Their'} tracks were ordered ${fallback} instead.`
-}
+/** The first albums a notice names, and how many more there are: the screen says «A, B, C and 2 more». */
+const named = (items, reasonOf) => ({
+    shown: items.slice(0, NAMED_AT_MOST).map(item => (reasonOf ? { label: item.label, reason: item.reason } : { label: item.label })),
+    more: Math.max(0, items.length - NAMED_AT_MOST)
+})
 
 /**
- * What to tell the person about an ask that was served with something missing: one line for the
- * albums left out, one line per source that is missing for some album. Empty when nothing is.
+ * What to tell the person about an ask that was served with something missing, as DATA (the rules do not speak, models/ does not import
+ * i18n/): one entry for the albums left out `{ code: 'failed', count, total, names }`, one per source missing for some album
+ * `{ code: 'source', source, ready, gaps: [{ gap, count }], count, names, fallback }`. Empty when nothing is missing. The words are
+ * said by i18n/askTexts.js `askNotices`, the English the model used to write, word for word.
  * @param {Object} result - AlbumsResult
- * @param {Object<string, string>} [fallbacks] - for an asker that orders tracks by a source: how
- *        the tracks of an album are ordered without it (models/recipeSources.js); the line of that
- *        source says it
- * @returns {string[]}
+ * @param {Object<string, string>} [fallbacks] - for an asker that orders tracks by a source: how the tracks of an album are ordered
+ *        without it (models/recipeSources.js); the entry of that source carries it
+ * @returns {Object[]}
  */
-export function askNotices(result, fallbacks = {}) {
-    const notices = []
+export function askNoticeParts(result, fallbacks = {}) {
+    const parts = []
     if (result.failed.length > 0) {
-        const left = result.failed.length === 1 ? 'was' : 'were'
-        notices.push(`${result.failed.length} of ${result.total} ${plural(result.total)} could not be loaded and ${left} left out: ${named(result.failed, failureText)}.`)
+        parts.push({ code: 'failed', count: result.failed.length, total: result.total, names: named(result.failed, true) })
     }
     const sources = [...new Set(result.missingSources.map(item => item.source))]
-    sources.sort((a, b) => Object.keys(SOURCE_TEXT).indexOf(a) - Object.keys(SOURCE_TEXT).indexOf(b))
+    sources.sort((a, b) => SOURCE_ORDER.indexOf(a) - SOURCE_ORDER.indexOf(b))
     sources.forEach(source => {
-        notices.push(sourceNotice(source, result.missingSources.filter(item => item.source === source), result.albums.length, fallbacks[source]))
+        const gaps = result.missingSources.filter(item => item.source === source)
+        parts.push({
+            code: 'source', source, ready: result.albums.length, count: gaps.length, names: named(gaps),
+            gaps: Object.values(SourceGap).map(gap => ({ gap, count: gaps.filter(item => item.gap === gap).length })).filter(item => item.count > 0),
+            fallback: fallbacks[source] || null
+        })
     })
-    return notices
+    return parts
 }
 
-/** What to say when an ask ended with no album at all. */
-export function noAlbumsMessage(result) {
-    if (result.total === 0) return 'This series has no albums.'
-    return `None of the ${result.total} ${plural(result.total)} could be loaded: ${named(result.failed, failureText)}.`
+/** What an ask that ended with no album at all is: `{ code: 'empty' }` (no album was asked for) or `{ code: 'none', total, names }`. */
+export function noAlbumsPart(result) {
+    if (result.total === 0) return { code: 'empty' }
+    return { code: 'none', total: result.total, names: named(result.failed, true) }
 }
 
-/** The line a screen shows while it waits for an ask. */
-export function askProgressText(progress) {
+/** Where a waiting ask stands: `{ code: 'loading', settled, total }` while albums are being found, then `{ code: 'waiting', waiting, total }` for the ratings. */
+export function askProgressPart(progress) {
     const settled = progress.found + progress.failed
-    if (settled < progress.total) return `Loading albums: ${settled} of ${progress.total}...`
-    return `Waiting for the ratings of ${progress.waitingSources} of ${progress.total} ${plural(progress.total)}...`
+    if (settled < progress.total) return { code: 'loading', settled, total: progress.total }
+    return { code: 'waiting', waiting: progress.waitingSources, total: progress.total }
 }

@@ -12,7 +12,7 @@ const read = (file) => fs.readFileSync(path.resolve(process.cwd(), file), 'utf8'
 const flat = (text) => text.replace(/\s+/g, '')
 
 describe('the grids of covers on a tablet in the phone layout (768-899 px)', () => {
-    it.each(['public/js/views/albums/AlbumsGridRenderer.js', 'public/js/views/albums/AlbumsScopedRenderer.js'])('%s has 3 columns from 640 px', (file) => {
+    it.each(['public/js/screens/albums/SeriesGroups.tsx'])('%s has 3 columns from 640 px', (file) => {
         expect(read(file)).toMatch(/grid-cols-2 sm:grid-cols-3/)
     })
 

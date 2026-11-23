@@ -1,0 +1,365 @@
+{
+ "oldBase": "http://localhost:5191",
+ "newBase": "http://localhost:5192",
+ "firebaseBlocked": "identitytoolkit|securetoken|firestore\\.googleapis|firebaseinstallations",
+ "passed": 66,
+ "failed": 5,
+ "results": [
+  {
+   "what": "A 1280 · the first page: groups, a failed series, a half failed one · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · the first page: groups, a failed series, a half failed one · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · the first page: groups, a failed series, a half failed one · pixels",
+   "ok": false,
+   "detail": "24091 px apart · box x 796-1266, y 16-78, largest difference 255 of 255"
+  },
+  {
+   "what": "A 1280 · typing in the search with real keys · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · typing in the search with real keys · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "A 1280 · typing in the search with real keys · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · the search emptied · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · the search emptied · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "A 1280 · the search emptied · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · the artist filter (a real selection) · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · the artist filter (a real selection) · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "A 1280 · the artist filter (a real selection) · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · the filter off · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · the filter off · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "A 1280 · the filter off · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · another order · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · another order · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "A 1280 · another order · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · Load more albums of the big series · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · Load more albums of the big series · focus",
+   "ok": true,
+   "detail": "div.flex.flex-col.rounded-xl.overflow-hidden.border.border-white/10.bg-gray-800.shadow-lg.hover:shadow-xl.transition-all.duration-300.isolate[s2-12] / div.flex.flex-col.rounded-xl.overflow-hidden.border.border-white/10.bg-gray-800.shadow-lg.hover:shadow-xl.transition-all.duration-300.isolate[s2-12]"
+  },
+  {
+   "what": "A 1280 · Load more albums of the big series · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "A 1280 · the list view · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · the list view · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · the list view · pixels",
+   "ok": false,
+   "detail": "11 px apart · box x 1213-1215, y 156-184, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · a column of a track table pressed · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · a column of a track table pressed · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · a column of a track table pressed · pixels",
+   "ok": false,
+   "detail": "11 px apart · box x 1213-1215, y 156-184, largest difference 1 of 255"
+  },
+  {
+   "what": "A 1280 · no error of the page on either side",
+   "ok": true,
+   "detail": "old:  // new: "
+  },
+  {
+   "what": "P 393 · the first page: groups, a failed series, a half failed one · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the first page: groups, a failed series, a half failed one · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · the first page: groups, a failed series, a half failed one · pixels",
+   "ok": false,
+   "detail": "22548 px apart · box x 16-376, y 56-137, largest difference 255 of 255"
+  },
+  {
+   "what": "P 393 · typing in the search with real keys · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · typing in the search with real keys · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "P 393 · typing in the search with real keys · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the search emptied · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the search emptied · focus",
+   "ok": true,
+   "detail": "input#genericSearch.form-control.pl-10.w-full / input#genericSearch.form-control.pl-10.w-full"
+  },
+  {
+   "what": "P 393 · the search emptied · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet of the filters · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet of the filters · focus",
+   "ok": true,
+   "detail": "button.filter-sheet__segment / button.filter-sheet__segment"
+  },
+  {
+   "what": "P 393 · the sheet of the filters · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · a filter chosen in the sheet · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · a filter chosen in the sheet · focus",
+   "ok": true,
+   "detail": "select#sheetFilter_artist.form-control.filter-sheet__select / select#sheetFilter_artist.form-control.filter-sheet__select"
+  },
+  {
+   "what": "P 393 · a filter chosen in the sheet · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet closed: the chip · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet closed: the chip · focus",
+   "ok": true,
+   "detail": "button.filters-phone.filters-phone-button.is-on / button.filters-phone.filters-phone-button.is-on"
+  },
+  {
+   "what": "P 393 · the sheet closed: the chip · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the chip taken out · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the chip taken out · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · the chip taken out · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet of an album · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet of an album · focus",
+   "ok": true,
+   "detail": "button.albums-sheet__row / button.albums-sheet__row"
+  },
+  {
+   "what": "P 393 · the sheet of an album · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet closed · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet closed · focus",
+   "ok": true,
+   "detail": "button.album-more[s0-0] / button.album-more[s0-0]"
+  },
+  {
+   "what": "P 393 · the sheet closed · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet of a series · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet of a series · focus",
+   "ok": true,
+   "detail": "button.albums-sheet__row / button.albums-sheet__row"
+  },
+  {
+   "what": "P 393 · the sheet of a series · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the sheet closed again · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the sheet closed again · focus",
+   "ok": true,
+   "detail": "button.series-more.md:hidden / button.series-more.md:hidden"
+  },
+  {
+   "what": "P 393 · the sheet closed again · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · the list view, in the sheet · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · the list view, in the sheet · focus",
+   "ok": true,
+   "detail": "button.filters-phone.filters-phone-button / button.filters-phone.filters-phone-button"
+  },
+  {
+   "what": "P 393 · the list view, in the sheet · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  },
+  {
+   "what": "P 393 · no error of the page on either side",
+   "ok": true,
+   "detail": "old:  // new: "
+  },
+  {
+   "what": "A 1280 · one series by the filter · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "A 1280 · one series by the filter · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "A 1280 · one series by the filter · pixels",
+   "ok": false,
+   "detail": "101 px apart · box x 584-693, y 875-886, largest difference 255 of 255"
+  },
+  {
+   "what": "P 393 · one series by the filter · the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "P 393 · one series by the filter · focus",
+   "ok": true,
+   "detail": "body / body"
+  },
+  {
+   "what": "P 393 · one series by the filter · pixels",
+   "ok": true,
+   "detail": "0 px apart"
+  }
+ ],
+ "maxPixelsApart": 24091
+}

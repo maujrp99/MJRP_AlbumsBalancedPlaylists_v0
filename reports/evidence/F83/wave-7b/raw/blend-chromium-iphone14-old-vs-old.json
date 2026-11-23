@@ -1,0 +1,14 @@
+{
+ "tag": "blend-chromium-iphone14-old-vs-old",
+ "total": 222,
+ "failed": 1,
+ "steps": 35,
+ "failures": [
+  {
+   "what": "generate · blending, 0.3 s after the press: the box of every element",
+   "ok": false,
+   "detail": "1 of 284 differ: 279:DIV:171.27,2657.27,47.45,47.45 -> 173.01,2659.01,43.98,43.98"
+  }
+ ],
+ "pictures": []
+}

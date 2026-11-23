@@ -1,0 +1,103 @@
+{
+ "tag": "blend-webkit-iphone14",
+ "total": 222,
+ "failed": 5,
+ "steps": 35,
+ "failures": [
+  {
+   "what": "generate · ready to blend (multiple): the picture of the panel",
+   "ok": false,
+   "detail": "428866 px differ, at most 1/255, in 99,1467,1070,2507 of 1170x9207"
+  },
+  {
+   "what": "generate · ready to blend (multiple): the picture of the viewport",
+   "ok": false,
+   "detail": "428866 px differ, at most 1/255, in 99,1635,1070,2675 of 1170x9600"
+  },
+  {
+   "what": "generate · blending, 0.3 s after the press: the box of every element",
+   "ok": false,
+   "detail": "1 of 284 differ: 279:DIV:172.54,2634.54,44.91,44.92 -> 172.33,2634.33,45.34,45.34"
+  },
+  {
+   "what": "generate · blending, 0.3 s after the press: the picture of the panel",
+   "ok": false,
+   "detail": "428866 px differ, at most 1/255, in 99,1467,1070,2507 of 1170x9207"
+  },
+  {
+   "what": "generate · blending, 0.3 s after the press: the picture of the viewport",
+   "ok": false,
+   "detail": "428866 px differ, at most 1/255, in 99,1635,1070,2675 of 1170x9600"
+  }
+ ],
+ "pictures": [
+  {
+   "flow": "generate",
+   "name": "ready to blend (multiple)",
+   "kind": "panel",
+   "dims": true,
+   "count": 428866,
+   "top": 0,
+   "max": 1,
+   "box": [
+    99,
+    1467,
+    1070,
+    2507
+   ],
+   "width": 1170,
+   "height": 9207
+  },
+  {
+   "flow": "generate",
+   "name": "ready to blend (multiple)",
+   "kind": "view",
+   "dims": true,
+   "count": 428866,
+   "top": 0,
+   "max": 1,
+   "box": [
+    99,
+    1635,
+    1070,
+    2675
+   ],
+   "width": 1170,
+   "height": 9600
+  },
+  {
+   "flow": "generate",
+   "name": "blending, 0.3 s after the press",
+   "kind": "panel",
+   "dims": true,
+   "count": 428866,
+   "top": 0,
+   "max": 1,
+   "box": [
+    99,
+    1467,
+    1070,
+    2507
+   ],
+   "width": 1170,
+   "height": 9207
+  },
+  {
+   "flow": "generate",
+   "name": "blending, 0.3 s after the press",
+   "kind": "view",
+   "dims": true,
+   "count": 428866,
+   "top": 0,
+   "max": 1,
+   "box": [
+    99,
+    1635,
+    1070,
+    2675
+   ],
+   "width": 1170,
+   "height": 9600
+  }
+ ]
+}

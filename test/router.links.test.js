@@ -5,10 +5,14 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-vi.mock('../public/js/components/Icons.js', () => ({ getIcon: () => '' }))
+vi.mock('../public/js/services/auth/signIn.js', async () => ({ authService: (await import('./support/shellScenarios.js')).stand.login }))
+vi.mock('../public/js/services/MusicKitService.js', async () => ({ musicKitService: (await import('./support/shellScenarios.js')).stand.musicKit }))
+vi.mock('../public/js/services/SpotifyAuthService.js', async () => ({ SpotifyAuthService: (await import('./support/shellScenarios.js')).stand.spotify }))
+vi.mock('../public/js/stores/toasts.js', async (importOriginal) => ({ ...(await importOriginal()), default: (await import('./support/shellScenarios.js')).stand.toast }))
+vi.mock('../public/js/ui/dialogs/dialogs', async () => ({ dialogService: (await import('./support/shellScenarios.js')).stand.dialog }))
 
 import { Router } from '../public/js/router.js'
-import { renderSubRow } from '../public/js/components/navigation/subRow.js'
+import { startOn } from './support/renderShell'
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 10))
 const address = () => window.location.pathname + window.location.search
@@ -53,8 +57,10 @@ describe('Router: links (F63)', () => {
     })
 
     it('the "Soon" items of the line under the bar do not navigate; "By Album" does', async () => {
-        holder.innerHTML = renderSubRow('/albums')
-        const row = holder.querySelector('nav')
+        // the line under the top bar, in React (F83 wave 3, F88), on the page next to the router: its links are the router's to follow
+        const shell = await startOn('/albums')
+        window.history.replaceState({}, '', '/home') // the page is drawn; the address is the test's again
+        const row = document.querySelector('#top-menu-sub nav')
         const soon = [...row.querySelectorAll('[aria-disabled="true"]')]
 
         expect(soon.map(item => item.textContent.replace(/\s+/g, ' ').trim())).toEqual(['By Artist Soon', 'By Genre Soon', 'By Track Soon'])
@@ -68,5 +74,6 @@ describe('Router: links (F63)', () => {
         row.querySelector('a[href="/albums"]').click()
         await settle()
         expect(address()).toBe('/albums')
+        shell.stop()
     })
 })

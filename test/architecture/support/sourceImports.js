@@ -7,25 +7,28 @@ import path from 'node:path'
 
 export const APP_ROOT = path.resolve(process.cwd(), 'public/js')
 
-/** Every .js file under a folder of the app, as paths relative to public/js. */
-export function listJs(relativeDir = '') {
-    const dir = path.join(APP_ROOT, relativeDir)
+/**
+ * Every source file (.js, .ts, .tsx: the React screens are read like the rest, F83) under a folder of the app,
+ * as paths relative to public/js. `root` is for the tests of the reader itself, which point it at a fixture folder.
+ */
+export function listJs(relativeDir = '', root = APP_ROOT) {
+    const dir = path.join(root, relativeDir)
     if (!fs.existsSync(dir)) return []
     return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
         const child = path.join(relativeDir, entry.name)
-        if (entry.isDirectory()) return listJs(child)
-        return entry.name.endsWith('.js') ? [child] : []
+        if (entry.isDirectory()) return listJs(child, root)
+        return /\.(js|ts|tsx)$/.test(entry.name) && !entry.name.endsWith('.d.ts') ? [child] : []
     })
 }
 
-export const read = (relative) => fs.readFileSync(path.join(APP_ROOT, relative), 'utf8')
+export const read = (relative, root = APP_ROOT) => fs.readFileSync(path.join(root, relative), 'utf8')
 
 /** As `wc -l` counts them. */
 export const lineCount = (relative) => (read(relative).match(/\n/g) || []).length
 
 /** The module specifiers a file imports, static and dynamic. */
-export function importsOf(relative) {
-    const source = read(relative)
+export function importsOf(relative, root = APP_ROOT) {
+    const source = read(relative, root)
     const found = []
     const pattern = /(?:import\s+(?:[^'"]*?\sfrom\s+)?|import\s*\(\s*)['"]([^'"]+)['"]/g
     let match

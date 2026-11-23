@@ -6,7 +6,7 @@ This document audits the foundational UI components located in `public/js/compon
 
 | Component | Responsibility | Features |
 | :--- | :--- | :--- |
-| **`Component.js`** | Abstract base class for all V3 components. Enforces a standard lifecycle (`mount`, `update`, `unmount`) to manage DOM operations and memory cleanup. | • **Lifecycle Hooks**: `onMount()`, `onUpdate()`, `onUnmount()`<br>• **State Management**: Simple `props` merging strategy.<br>• **DOM Management**: Enforces container ownership. |
+| **`Component.js`** | Abstract base class for all V3 components. Enforces a standard lifecycle (`mount`, `update`, `unmount`) to manage DOM operations and memory cleanup. | • **Lifecycle Hooks**: `onMount()`, `onUpdate()`, `onUnmount()`<br>• **State Management**: Simple `props` merging strategy.<br>• **DOM Management**: Enforces container ownership. *(removed in F83: the base class of the hand-made components; React components replaced it)* |
 
 ### Architectural Note
 `Component.js` is deliberately lightweight. While it doesn't strictly depend on `SafeDOM` internally (to minimize circular dependencies), it is designed to be used *with* `SafeDOM` in subclasses.
@@ -19,8 +19,8 @@ These components are the "Universals" - reliable, reusable, and secure implement
 
 | Component | Responsibility | Deep Dive Features |
 | :--- | :--- | :--- |
-| **`Card.js`** | **Universal Entity Card**. Displays interacting media for Albums, Playlists, or any other entity. | • **Variants**: Supports `grid` (compact) and `list` (expanded) layouts.<br>• **SafeDOM**: Fully secure rendering without `innerHTML`.<br>• **Smart Actions**: Configurable action buttons passed via props.<br>• **Ranking Badges**: Automatic recognition of BestEverAlbums and Spotify metadata. |
-| **`BaseModal.js`** | **Universal Modal Shell**. The standard "Glass Panel" dialog container. | • **Animation**: Built-in entry/exit animations (Zoom/Fade).<br>• **Helper**: `createFooterButtons` factory for standard interactions.<br>• **Security**: Replaces legacy `innerHTML` modals, ensuring XSS safety for dynamic content. |
+| **`Card.js`** | **Universal Entity Card**. Displays interacting media for Albums, Playlists, or any other entity. | • **Variants**: Supports `grid` (compact) and `list` (expanded) layouts.<br>• **SafeDOM**: Fully secure rendering without `innerHTML`.<br>• **Smart Actions**: Configurable action buttons passed via props.<br>• **Ranking Badges**: Automatic recognition of BestEverAlbums and Spotify metadata. *(F83: now `screens/inventory/ItemCard.tsx` and `screens/inventory/ItemRow.tsx`)* |
+| **`BaseModal.js`** | **Universal Modal Shell**. The standard "Glass Panel" dialog container. | • **Animation**: Built-in entry/exit animations (Zoom/Fade).<br>• **Helper**: `createFooterButtons` factory for standard interactions.<br>• **Security**: Replaces legacy `innerHTML` modals, ensuring XSS safety for dynamic content. *(F83: now `ui/ModalShell.tsx`)* |
 | **`TrackRow.js`** | **Universal Track Item**. Standardizes how songs are listed across Ranking, Playlist, and Inventory views. | • **Context Aware**: Adapts based on `variant` ('compact', 'detailed', 'ranking').<br>• **Medal System**: Renders 🥇/🥈/🥉 for top 3 tracks in Ranking view.<br>• **Drag & Drop**: Native support for drag handles when `draggable=true`.<br>• **Replacement**: supersedes the older `TrackItem.js`.<br>• **Actions without a mouse** (F63): the action buttons of a row (the X that removes a track) are hidden until hover only where the device can hover (`@media (hover:hover)`); on a touch screen they are always shown, and the keyboard focus shows them anywhere. Each button has an `aria-label`. *(removed in F65: `TrackItem.js`)* |
 
 ---
@@ -29,8 +29,8 @@ These components are the "Universals" - reliable, reusable, and secure implement
 
 | Component | Responsibility | Details |
 | :--- | :--- | :--- |
-| **`ui/coverImage.js`** | **The one way an album cover is drawn** (F70, UAT-63). `coverImage({ src, alt, className, ... })` gives the `<img>`, marked `data-cover`. | • with no address, or when the address fails to load, the image shows the same stand-in (an inline SVG, `COVER_STAND_IN`), once per image (`data-cover-stand-in`).<br>• the failure is heard by one listener on the document (`watchCovers`, capture phase), because most cards are written into the page as text; no inline `onerror`.<br>• used by `AlbumCardRenderer`, `Card`, `AlbumCascade`, `ViewAlbumModal`, `DiscographyRenderer` and `StagingAreaRenderer`; `test/components/ui/coverImage.test.js` fails when one of them stops using it or when a file writes an inline error handler. |
-| **`AlbumCascade.js`** | Visualization component that renders a stack of album thumbnails. | • used in `BlendSeriesSelector`, `SavedPlaylistCard` and `SavedPlaylistsView` to visually represent a collection of albums.<br>• handles empty states and efficient Z-indexing for the "Deck of Cards" effect. |
+| **`ui/coverImage.js`** | **The one way an album cover is drawn** (F70, UAT-63). `coverImage({ src, alt, className, ... })` gives the `<img>`, marked `data-cover`. | • with no address, or when the address fails to load, the image shows the same stand-in (an inline SVG, `COVER_STAND_IN`), once per image (`data-cover-stand-in`).<br>• the failure is heard by one listener on the document (`watchCovers`, capture phase), because most cards are written into the page as text; no inline `onerror`.<br>• used by `AlbumCardRenderer`, `Card`, `AlbumCascade`, `ViewAlbumModal`, `DiscographyRenderer` and `StagingAreaRenderer`; `test/components/ui/coverImage.test.js` fails when one of them stops using it or when a file writes an inline error handler. *(F83: now `ui/coverStandIn.ts`)* |
+| **`AlbumCascade.js`** | Visualization component that renders a stack of album thumbnails. | • used in `BlendSeriesSelector`, `SavedPlaylistCard` and `SavedPlaylistsView` to visually represent a collection of albums.<br>• handles empty states and efficient Z-indexing for the "Deck of Cards" effect. *(F83: now `ui/AlbumCascade.tsx`)* |
 
 ## Architectural Shift: The "Universal" Pattern
 

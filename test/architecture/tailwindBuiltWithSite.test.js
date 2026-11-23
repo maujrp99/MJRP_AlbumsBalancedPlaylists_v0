@@ -25,6 +25,7 @@ import postcss from 'postcss'
 import tailwindcss from 'tailwindcss'
 import tailwindConfig from '../../tailwind.config.js'
 import viteConfig from '../../vite.config.js'
+import { listSourceFiles } from './support/parseSource.js'
 
 const REPO = process.cwd()
 const JS_ROOT = path.join(REPO, 'public/js')
@@ -43,21 +44,16 @@ const COMPONENT_CLASSES = [
  * it makes are in the safelist. This list can only shrink; a new entry needs the reason.
  */
 const PUT_TOGETHER_AT_RUN_TIME = {
-    // Tailwind classes: gradient colors of a recipe with /10 - all in the safelist (checked below)
-    'components/blend/BlendRecipeCard.js': ['${recipe.color.from}/10', '${recipe.color.to}/10'],
-    // ids of elements, not classes
-    'components/ui/FilterToolbar.js': ['filter-${group.id}', 'this.container.querySelector(`#filter-${group.id}`);'],
+    // ids and keys of elements, not classes
+    'ui/FilterToolbar.tsx': ['id={`filter-${group.id}`}'],
+    'screens/albums/Pager.tsx': ['key={`gap-${index}`}'],
     // a class of the app's own, with its rules written in a <style> beside it
-    'components/playlists/PlaylistGrid.js': ['.custom-scrollbar-${index}::-webkit-scrollbar', '.custom-scrollbar-${index}::-webkit-scrollbar-track', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb:hover', 'custom-scrollbar-${index}']
+    'screens/playlists/PlaylistCards.tsx': ['.custom-scrollbar-${index}::-webkit-scrollbar', '.custom-scrollbar-${index}::-webkit-scrollbar-track', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb', '.custom-scrollbar-${index}::-webkit-scrollbar-thumb:hover', 'custom-scrollbar-${index}']
 }
 
 const GLUED = /[^\s"'<>]*(?:[a-z0-9\]]-\$\{|\$\{[^}]*\}-[a-z0-9[]|\}\/\d|[a-z]-['"]\s*\+|\+\s*['"][-/][a-z0-9])[^\s"'<>]*/g
 
-const listJs = (dir = '') => fs.readdirSync(path.join(JS_ROOT, dir), { withFileTypes: true }).flatMap(entry => {
-    const child = path.join(dir, entry.name)
-    if (entry.isDirectory()) return listJs(child)
-    return entry.name.endsWith('.js') ? [child] : []
-})
+const listJs = (dir = '') => listSourceFiles(JS_ROOT, dir) // .js, .ts and .tsx: a class written only in JSX must reach the CSS (F83)
 
 const read = (file) => fs.readFileSync(file, 'utf8')
 const pagesOfTheSite = () => Object.values(viteConfig.build.rollupOptions.input)
@@ -113,6 +109,16 @@ describe('Tailwind is built with the site', () => {
         expect(missing).toEqual([])
     })
 
+    it('a class written only in a .tsx file reaches the CSS: the content of the config reads the same files as the screens are written in (F83)', async () => {
+        const jsGlob = tailwindConfig.content.find(entry => typeof entry === 'string' && entry.includes('public/js'))
+        const fixtureGlob = jsGlob.replace('public/js/**', 'test/architecture/fixtures/typescript')
+        expect(fixtureGlob).not.toBe(jsGlob)
+
+        const css = await build({ ...tailwindConfig, content: [fixtureGlob], safelist: [] })
+
+        expect(classesOf(css).has('bg-fuchsia-950')).toBe(true)
+    })
+
     it('the theme of the page came along: the font, the brand colors, the gradients', () => {
         expect(builtCss).toMatch(/\.font-syne\s*\{[^}]*font-family:\s*Syne, sans-serif/)
         expect(builtCss).toMatch(/\.text-brand-orange\s*\{[^}]*249 115 22/)
@@ -140,10 +146,10 @@ describe('Tailwind is built with the site', () => {
         expect(stale).toEqual([])
     })
 
-    it('the recipe colors with /10, put together at run time, are in the built CSS', () => {
-        const source = read(path.join(JS_ROOT, 'components/blend/BlendRecipeCard.js'))
-        const colors = [...new Set([...source.matchAll(/\b(?:from|to): '([a-z0-9-]+)'/g)].map(match => match[1]))]
-        expect(colors.length).toBeGreaterThan(8)
-        expect(colors.map(color => `${color}/10`).filter(name => !built.has(name))).toEqual([])
+    it('the recipe tints with /10, written whole in models/recipeLooks.js, are in the built CSS', () => {
+        const source = read(path.join(JS_ROOT, 'models/recipeLooks.js'))
+        const tints = [...new Set([...source.matchAll(/'((?:from|to)-[a-z0-9-]+\/10)'/g)].map(match => match[1]))]
+        expect(tints.length).toBeGreaterThan(8)
+        expect(tints.filter(name => !built.has(name))).toEqual([])
     })
 })

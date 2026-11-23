@@ -1,0 +1,32 @@
+{
+ "tag": "chromium-393x852-values",
+ "total": 5,
+ "failed": 0,
+ "results": [
+  {
+   "what": "the sheet of the values, and the sheet of the actions with values on: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the sheet of the values, and the sheet of the actions with values on: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the sheet of the values, and the sheet of the actions with values on: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the sheet of the values, and the sheet of the actions with values on: the focus and the scroll",
+   "ok": true,
+   "detail": "old BUTTON#addSeriesAlbumsBtn.btn.btn-secondary.flex.items-center.gap-2.whitespace-nowrap.inv-collection-action @0 / new BUTTON#addSeriesAlbumsBtn.btn.btn-secondary.flex.items-center.gap-2.whitespace-nowrap.inv-collection-action @0"
+  },
+  {
+   "what": "the sheet of the values, and the sheet of the actions with values on: no error on the page",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

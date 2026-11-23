@@ -301,55 +301,30 @@ export const lowestValuesShown = (values) => [...values.values()].filter(value =
 export const usdOf = (value, rates) => (value?.origin ? toUsd(value.amount, value.currency, rates) : null)
 
 // ---- What is said ----------------------------------------------------------------------------------
+// A rule gives a code and the numbers; the words are in the dictionary of the screen (i18n/inventoryTexts.js).
 
-const FAILURE_TEXT = Object.freeze({
-    [ReadFailure.NO_ANSWER]: 'Discogs did not answer',
-    [ReadFailure.LIMIT]: 'Discogs limit reached',
-    [ReadFailure.TOKEN_REFUSED]: 'Discogs refused the token',
-    [ReadFailure.SIGN_IN]: 'Sign in to read values',
-    [ReadFailure.OTHER]: 'The value could not be read'
-})
+/** The failure a text is about: the one given, or "other" for one this module does not know. */
+export const failureCodeOf = (failure) => (Object.values(ReadFailure).includes(failure) ? failure : ReadFailure.OTHER)
 
-const NONE_TEXT = Object.freeze({
-    [NoValue.NEVER_READ]: 'No value yet',
-    [NoValue.SOURCE_OFF]: 'No value yet',
-    [NoValue.WAITING]: 'Waiting for a value',
-    [NoValue.READING]: 'Reading…',
-    [NoValue.NO_CD_EDITION]: 'No CD edition found',
-    [NoValue.NO_SUGGESTION]: 'No price suggested on Discogs',
-    [NoValue.NONE_FOR_SALE]: 'None for sale on Discogs now'
-})
-
-export const failureText = (failure) => FAILURE_TEXT[failure] || FAILURE_TEXT[ReadFailure.OTHER]
-
-/** The short line of a card for an item with no value. */
-export const noValueText = (value) => (value.reason === NoValue.FAILED ? failureText(value.failure) : NONE_TEXT[value.reason] || NONE_TEXT[NoValue.NEVER_READ])
-
-/** The label of the value of a card, by the status of the item. */
-export const valueLabel = (item) => (statusOf(item) === InventoryStatus.OWNED ? 'In my collection · worth' : 'Not mine yet · costs')
-
-export const DISCOGS_MEAN_TITLE = 'Mean of Mint, Near Mint and Very Good Plus on Discogs, for the most common CD edition'
-export const DISCOGS_CREDIT = 'Data provided by Discogs.'
-export const DISCOGS_LOWEST_TITLE = 'Lowest asking price for this CD edition on Discogs'
-
-/** What kind of Discogs value this is, in words: a lowest asking price is never called a mean (and the other way round). */
-export const discogsKindNote = (value) => (value?.basis === ValueBasis.LOWEST_FOR_SALE ? DISCOGS_LOWEST_TITLE : DISCOGS_MEAN_TITLE)
-
-/** The `title` of an origin line: what the value is, and when it was read, said once. */
-export function discogsHint(value) {
-    const moment = momentText(value?.readAt)
-    return `${discogsKindNote(value)}${moment ? `, read on ${moment}` : ''}.`
+/** Why an item shows no value, for the short line of a card: a NoValue (FAILED says its failure beside, `failureCodeOf`). "Source off" and a reason not known read as "never read". */
+export function noValueCodeOf(value) {
+    const reason = value?.reason
+    if (reason === NoValue.SOURCE_OFF || !Object.values(NoValue).includes(reason)) return NoValue.NEVER_READ
+    return reason
 }
-export const LOWEST_PRICES_NOTE = 'Discogs values are lowest asking prices for now.'
-export const RATES_MISSING_TEXT = 'Exchange rates are not available: values are shown in USD.'
 
-/** "3 of 14 owned albums have a value": the words of the prototype, the same for every count. */
-export const ownedNote = ({ valued, total }) => `${valued} of ${total} owned albums have a value`
-/** "9 of 197 albums have a value". */
-export const toBuyNote = ({ valued, total }) => `${valued} of ${total} albums have a value`
+/** What the label of the value of a card is about: the item is owned, or it is still to buy. */
+export const ValueLabel = Object.freeze({ OWNED: 'owned', TO_BUY: 'to_buy' })
+export const valueLabelCodeOf = (item) => (statusOf(item) === InventoryStatus.OWNED ? ValueLabel.OWNED : ValueLabel.TO_BUY)
 
-/** The line under the totals when the screen is not in USD. */
-export const rateNote = (currency, rates) => `Converted from USD at today's rate (1 USD = ${rates[currency]} ${currency}).`
+/** The text the terms of Discogs ask for beside every Discogs value: the same in every language, so it is the one text a model keeps. */
+export const DISCOGS_CREDIT = 'Data provided by Discogs.'
+
+/** What kind of Discogs value this is: a lowest asking price is never called a mean (and the other way round). A ValueBasis. */
+export const discogsKindOf = (value) => (value?.basis === ValueBasis.LOWEST_FOR_SALE ? ValueBasis.LOWEST_FOR_SALE : ValueBasis.SUGGESTION)
+
+/** What the `title` of an origin line is made of: the kind of the value, and when it was read ("20 Nov 2026, 14:05", or '' with no valid date). */
+export const discogsHintOf = (value) => ({ kind: discogsKindOf(value), moment: momentText(value?.readAt) })
 
 /** "20 Nov 2026". */
 export function dayText(iso) {

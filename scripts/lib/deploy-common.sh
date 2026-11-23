@@ -131,10 +131,10 @@ install_root_dependencies() {
 
 # Runs the code check (lint) of the clean copy. An error stops the deploy; a warning does not.
 run_lint() {
-  step "Checking the code (npx eslint . --quiet)"
+  step "Checking the types and the code (npm run typecheck; npx eslint . --quiet)"
   local log="$WORK_DIR/eslint.log"
-  if ( cd "$SRC_DIR" && npx eslint . --quiet ) >"$log" 2>&1; then
-    ok "no lint errors"
+  if ( cd "$SRC_DIR" && npm run typecheck --silent && npx eslint . --quiet ) >"$log" 2>&1; then
+    ok "no type errors, no lint errors"
   else
     tail -40 "$log" >&2
     die "the code check (lint) found errors: nothing was deployed"

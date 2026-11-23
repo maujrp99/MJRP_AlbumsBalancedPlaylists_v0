@@ -1,0 +1,212 @@
+{
+ "tag": "saved-chromium-899",
+ "passed": 41,
+ "failed": 0,
+ "results": [
+  {
+   "what": "saved-chromium-899 · closing: opened · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "1763 chars"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · closing: Escape · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-899 · closing: Escape · the focus",
+   "ok": true,
+   "detail": "button[Actions for batch Sunday mix] | button[Actions for batch Sunday mix]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: Escape · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "saved-chromium-899 · closing: Escape · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · closing: Escape · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · closing: Escape · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened again · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "1763 chars"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened again · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened again · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened again · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened again · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened again · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened again · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · closing: a press outside · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-899 · closing: a press outside · the focus",
+   "ok": true,
+   "detail": "button[Actions for batch Sunday mix] | button[Actions for batch Sunday mix]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: a press outside · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "saved-chromium-899 · closing: a press outside · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · closing: a press outside · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · closing: a press outside · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened a third time · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "1763 chars"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened a third time · the focus",
+   "ok": true,
+   "detail": "button[apple] | button[apple]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened a third time · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened a third time · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened a third time · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened a third time · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: opened a third time · the pixels of the window",
+   "ok": true,
+   "detail": "0 pixels apart"
+  },
+  {
+   "what": "saved-chromium-899 · closing: the close button · the window (elements, text nodes, boxes)",
+   "ok": true,
+   "detail": "4 chars"
+  },
+  {
+   "what": "saved-chromium-899 · closing: the close button · the focus",
+   "ok": true,
+   "detail": "button[Actions for batch Sunday mix] | button[Actions for batch Sunday mix]"
+  },
+  {
+   "what": "saved-chromium-899 · closing: the close button · what MusicKit was asked",
+   "ok": true,
+   "detail": "3 calls"
+  },
+  {
+   "what": "saved-chromium-899 · closing: the close button · what Spotify was asked",
+   "ok": true,
+   "detail": "1 requests"
+  },
+  {
+   "what": "saved-chromium-899 · closing: the close button · the file handed to the browser",
+   "ok": true,
+   "detail": "none"
+  },
+  {
+   "what": "saved-chromium-899 · closing: the close button · the notices (text)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "what": "saved-chromium-899 · closing · no page error on the parent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "saved-chromium-899 · closing · no page error on this branch",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

@@ -91,24 +91,25 @@ export function alreadyAskedFor(albumQueries, album) {
 }
 
 /**
- * What the card says for each rule of the second tier (shared/albumIdentity.js, SECOND_TIER_RULES).
- * A rule added there needs its line here: test/components/ui/AlbumCardIdentityNote.test.js fails without it.
+ * The rules of the second tier that the card says something about (shared/albumIdentity.js, SECOND_TIER_RULES). The screen says it, in
+ * words, from the dictionary (`albums.identity.<reason>`): a rule added there needs its line in both dictionaries
+ * (test/screens/albums/identityNotice.test.tsx fails without it).
  */
-const IDENTITY_NOTICES = Object.freeze({
-    [Reason.TITLE_BEFORE_SUBTITLE]: 'Asked for by its short title: the catalog only has this one, with a subtitle.',
-    [Reason.TITLE_WITHOUT_PARENTHESES]: 'Asked for by its short title: the catalog only has this one, with more in parentheses.',
-    [Reason.TITLE_IN_PARENTHESES]: 'Asked for by the name the catalog writes in parentheses.',
-    [Reason.TITLE_WITH_ARTIST_NAME]: 'Asked for by its title: the catalog writes the artist\'s name in front of it.',
-    [Reason.TITLE_WRITTEN_OTHERWISE]: 'Asked for in another spelling: the catalog writes the title this way.'
-})
+const NOTICE_REASONS = Object.freeze([
+    Reason.TITLE_BEFORE_SUBTITLE,
+    Reason.TITLE_WITHOUT_PARENTHESES,
+    Reason.TITLE_IN_PARENTHESES,
+    Reason.TITLE_WITH_ARTIST_NAME,
+    Reason.TITLE_WRITTEN_OTHERWISE
+])
 
 /**
- * The one line an album shows when it is not, to the letter, the title that was asked for: the
- * album was accepted by a rule of the second tier, and the line says which.
+ * The reason an album shows a note: it is not, to the letter, the title that was asked for, and was accepted by a rule of the second
+ * tier. The note itself is the screen's (a rule gives a code, the screen says it, from the dictionary: `albums.identity.<reason>`).
  * @param {Object} album - a loaded album
- * @returns {string|null} null when there is nothing to say
+ * @returns {string|null} the reason, or null when there is nothing to say
  */
-export function identityNotice(album) {
+export function identityReasonOf(album) {
     const reason = album?.metadata?.identityReason
-    return Object.hasOwn(IDENTITY_NOTICES, reason ?? '') ? IDENTITY_NOTICES[reason] : null
+    return NOTICE_REASONS.includes(reason) ? reason : null
 }

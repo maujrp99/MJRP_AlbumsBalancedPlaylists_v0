@@ -12,7 +12,11 @@ updated: 2026-11-20
 | Linguagem | JavaScript, ES Modules no navegador e na raiz (`"type": "module"`, `package.json`) | — | o código do site, do núcleo (`shared/`) e do servidor, com JSDoc; o servidor é CommonJS (`require`, `server/index.js`). TypeScript é permitido no produto (constituição v2.0.0, *Tipagem*); passar uma dessas partes a TypeScript é um ADR por passo | — |
 | Linguagem | TypeScript, no app (`app/`) | — | o código do app; a pasta `app/` ainda não existe, a versão entra com ela | [[ADR-0022]] |
 | Runtime | Node.js | 24 | roda o servidor (`FROM node:24-slim`, `server/Dockerfile`); a CI e a máquina do dono rodam os testes em Node 26 (`.github/workflows/ci.yml`); era 18, fora de suporte, até 2026-11-19 | [[ADR-0020]] |
-| Front | Vanilla JS em SPA (MVC com Stores), sem framework | — | interface do site; framework de interface no site só por ADR (constituição v2.0.0, artigo II e *Proibições*; «Decidido não usar», abaixo) | — |
+| Front | JavaScript (ES Modules e JSDoc) debaixo das telas | — | regras, serviços, stores, repositórios, **controladores** e o roteador da casa (`router.js`; a decisão de mantê-lo está no `plan.md` da F83, TASK-29) seguem em JavaScript, sem conhecer o React; a página de entrada (`public/splash/`) é feita à mão, de propósito (F80). Não há mais tela feita à mão: `views/` e `components/` não existem (`noHandMadeScreens.test.js`) | [[ADR-0023]] |
+| Front | React e react-dom | 19.3.0 | as telas do site, todas, em `public/js/screens/` e `ui/`, ligadas ao roteador da casa por `public/js/react-bridge/` (a tela é uma «view» do roteador); versão exata e **a mesma do app** (`overrides` da raiz: um React só, `oneReact.test.js`); o React sai num arquivo à parte (`react-vendor`), baixado na abertura desde a moldura em React (onda 3). A ADR está em «Proposed», à espera do aceite do MJRP | [[ADR-0023]] |
+| Front | TypeScript (nas telas, nas peças e na moldura) | 6.0.3 | `.ts`/`.tsx` em `public/js/screens`, `ui`, `shell`, `react-bridge` e nos testes deles (o resto do site segue JavaScript: passar os controladores para TypeScript está fora do escopo da F83); estrito, com `allowJs` e sem `checkJs` (o JavaScript antigo é lido pelos tipos do JSDoc e não verificado por dentro); `npm run typecheck` está dentro de `npm run lint`, do CI e da publicação (`tsconfig.json`) | [[ADR-0023]] |
+| Front | `@vitejs/plugin-react` | 4.7.0 | o plugin do React no Vite que já constrói o site e no Vitest (`vite.config.js`, `vitest.config.js`). Dependência de desenvolvimento | [[ADR-0023]] |
+| Front | Textos por idioma (`public/js/i18n/`) | — | `en` e `pt`, JavaScript puro, um dicionário por idioma e por área, `t()`; o inglês no script principal, o português num arquivo à parte, fechado ao público por `OPEN_LOCALES` até a F81 abri-lo | [[ADR-0023]] |
 | Front | Vite | 5.4.21 | servidor de desenvolvimento (porta 5000, proxy de `/api` para a 3000) e build para `dist` (`vite.config.js`) | — |
 | Front | Tailwind CSS, compilado junto com o site | 3.4.19 | classes utilitárias da interface. Dependência de desenvolvimento; o Vite o roda pelo PostCSS (`vite.config.js`, `css.postcss`) no servidor de desenvolvimento e no build, a partir de `public/css/tailwind.css` (importado por `public/js/app.js`). O tema e a lista dos arquivos onde há classes (`public/index.html`, `public/js/**/*.js`) ficam no `tailwind.config.js` da raiz; classe montada na hora entra na `safelist` de lá. Até 2026-11-19 vinha por `<script>` do CDN `cdn.tailwindcss.com`, sem versão fixa. A ADR está em «Proposed», à espera do aceite do MJRP | [[ADR-0021]] |
 | Front | SortableJS | 1.15.6 | arrastar e soltar (séries, área de montagem da Home, tabela de faixas) | — |
@@ -32,10 +36,10 @@ updated: 2026-11-20
 | Integrações externas | posthog-js, build `module.no-external`, pelo npm | 1.447.0 | medição do uso (F77): carregado só com a medição ligada, num pedaço próprio do build (419,64 kB, 129,20 kB com gzip); só `services/usage/posthogAdapter.js` o importa | — |
 | Integrações externas | Spotify Web API, com OAuth PKCE | — | busca, popularidade e exportação; token guardado no navegador | — |
 | Integrações externas | BestEverAlbums (raspagem) | — | a fonte das notas de faixa; não tem API | — |
-| Testes | Vitest com jsdom | 1.6.1 / 23.2.0 | testes unitários da raiz (`test/**/*.test.js`, `vitest.config.js:9`) | — |
+| Testes | Vitest com jsdom | 1.6.1 / 23.2.0 | testes unitários da raiz (`test/**/*.test.{js,ts,tsx}`, `vitest.config.js`); as telas em React são testadas com o próprio React (`createRoot` e `act`) por `test/support/renderScreen.tsx`, sem biblioteca de teste | [[ADR-0023]] |
 | Testes | @vitest/coverage-v8 | 1.6.1 | cobertura | — |
 | Testes | espree e postcss | 10.4.0 / 8.5.6 | leem o código e o CSS nos testes de arquitetura (`test/architecture/`); declarados na raiz desde a F65 | — |
-| Testes | ESLint | 9.39.2 | lint do repositório inteiro, pela raiz (`eslint.config.mjs`, um bloco por tipo de código desde a F65); ainda não é portão | — |
+| Testes | ESLint | 9.39.2 | lint do repositório inteiro, pela raiz (`eslint.config.mjs`, um bloco por tipo de código desde a F65); portão da publicação e do CI. Um bloco para `.ts`/`.tsx` (`typescript-eslint` 8.73.0, `eslint-plugin-react-hooks` 7.1.1): complexidade 10, regras dos hooks, sem `dangerouslySetInnerHTML`, sem `any` nem `as unknown as` em `screens/`, `ui/` e `shell/` | [[ADR-0023]] |
 | Build | Docker, imagem base `node:24-slim` | 24 | empacota o servidor (`server/Dockerfile`) | [[ADR-0020]] |
 | Build | `gcloud run deploy --source` (Cloud Build por baixo) | — | constrói a imagem pelo `server/Dockerfile` e implanta o servidor no Cloud Run (`scripts/deploy-server.sh`); o `cloudbuild.yaml` foi removido na F64 | — |
 | Build | GitHub Actions (`actions/checkout@v4`, `actions/setup-node@v4`) e `firebase-tools` por `npx` | — | CI e implantação do frontend; `firebase-tools` sem versão fixa (`.github/workflows/ci-firebase.yml`) | — |
@@ -57,10 +61,10 @@ updated: 2026-11-20
 ## Decidido não usar
 | Tecnologia | Por que não | Decisão |
 |---|---|---|
-| Framework de UI (React, Vue e semelhantes) no site | o site segue sem framework de interface; adotar um é ADR primeiro (constituição v2.0.0, *Proibições* e artigo II, item 2). O app usa React Native, decisão do [[ADR-0022]], e não leva a sua pilha de interface para o site | [[ADR-0022]] |
+| Vue e Next.js no site | o MJRP escolheu o React em 2026-11-21 (análise `reports/audits/2026-11-21-mjrpalbumblender-v0-frontend-framework-analysis.md`); o Next volta à mesa só se o produto público ganhar muitas páginas abertas e indexáveis. Nenhuma biblioteca de estado, de rotas, de formulário, de estilos nem de componentes prontos com o React (`oneStyleSystem.test.js`) | [[ADR-0023]] |
 
 ## Restrições
-- O site em JavaScript com ES Modules e JSDoc, Vite, variáveis CSS e Tailwind compilado com o site; TypeScript permitido no produto e obrigatório no app — constituição v2.0.0, *Tipagem* e artigo II.
+- O site em JavaScript com ES Modules e JSDoc, Vite, variáveis CSS e Tailwind compilado com o site; as telas do site, todas, em React com TypeScript ([[ADR-0023]], em «Proposed»: a emenda da constituição v2.0.0, *Tipagem*, *Proibições* e artigo II, é do MJRP); TypeScript obrigatório no app — constituição v2.0.0, *Tipagem* e artigo II.
 - A lógica de negócio nova entra como Service e a rota ou o componente só orquestra — [[ADR-0016]].
 - A Store guarda apenas estado; a lógica, o Firestore e a persistência ficam no Service — [[ADR-0017]].
 - Backend em Node.js, contêiner sem estado no Cloud Run, lógica compartilhada com o frontend pelo diretório `/shared` e validação (AJV) de todo dado externo — constituição v2.0.0, artigo II.

@@ -1,0 +1,174 @@
+PASS  A 1280 · first visit · the page
+PASS  A 1280 · first visit · focus and what the page says besides  body / body
+PASS  A 1280 · first visit · pixels  0 px apart
+PASS  A 1280 · typing: the hint points to Enter (real keys) · the page
+PASS  A 1280 · typing: the hint points to Enter (real keys) · focus and what the page says besides  input#artistScanInput / input#artistScanInput
+FAIL  A 1280 · typing: the hint points to Enter (real keys) · pixels  24768 px apart · box x 806-1279, y 16-78, largest difference 255 of 255
+PASS  A 1280 · searching (the catalog held back) · the page
+PASS  A 1280 · searching (the catalog held back) · focus and what the page says besides  input#artistScanInput / input#artistScanInput
+PASS  A 1280 · searching (the catalog held back) · pixels  0 px apart
+PASS  P 393 · first visit · the page
+PASS  P 393 · first visit · focus and what the page says besides  body / body
+FAIL  P 393 · first visit · pixels  2 px apart · box x 275-369, y 315-315, largest difference 6 of 255
+PASS  P 393 · typing: the hint points to Enter (real keys) · the page
+PASS  P 393 · typing: the hint points to Enter (real keys) · focus and what the page says besides  input#artistScanInput / input#artistScanInput
+FAIL  P 393 · typing: the hint points to Enter (real keys) · pixels  27652 px apart · box x 16-392, y 56-133, largest difference 255 of 255
+PASS  P 393 · searching (the catalog held back) · the page
+PASS  P 393 · searching (the catalog held back) · focus and what the page says besides  input#artistScanInput / input#artistScanInput
+FAIL  P 393 · searching (the catalog held back) · pixels  1260 px apart · box x 22-370, y 208-224, largest difference 122 of 255
+PASS  A 1280 · the discography · the page
+PASS  A 1280 · the discography · focus and what the page says besides  body / body
+PASS  A 1280 · the discography · pixels  0 px apart
+PASS  A 1280 · a filter pressed (EPs and Singles on) · the page
+PASS  A 1280 · a filter pressed (EPs and Singles on) · focus and what the page says besides  button#btnFilterSingles / button#btnFilterSingles
+FAIL  A 1280 · a filter pressed (EPs and Singles on) · pixels  24772 px apart · box x 81-1279, y 16-359, largest difference 255 of 255
+PASS  A 1280 · …and off · the page
+PASS  A 1280 · …and off · focus and what the page says besides  button#btnFilterSingles / button#btnFilterSingles
+FAIL  A 1280 · …and off · pixels  10 px apart · box x 912-1188, y 194-304, largest difference 1 of 255
+PASS  A 1280 · a cover pressed: the ring, the number, the dock · the page
+PASS  A 1280 · a cover pressed: the ring, the number, the dock · focus and what the page says besides  button.home-card.is-in / button.home-card.is-in
+FAIL  A 1280 · a cover pressed: the ring, the number, the dock · pixels  16 px apart · box x 606-1188, y 194-331, largest difference 4 of 255
+PASS  A 1280 · three more covers · the page
+PASS  A 1280 · three more covers · focus and what the page says besides  button.home-card.is-in / button.home-card.is-in
+FAIL  A 1280 · three more covers · pixels  16 px apart · box x 606-1188, y 194-331, largest difference 4 of 255
+PASS  A 1280 · a cover taken out: Undo · the page
+PASS  A 1280 · a cover taken out: Undo · focus and what the page says besides  button.home-card / button.home-card
+FAIL  A 1280 · a cover taken out: Undo · pixels  16 px apart · box x 606-1188, y 194-331, largest difference 4 of 255
+PASS  A 1280 · Undo pressed · the page
+PASS  A 1280 · Undo pressed · focus and what the page says besides  body / body
+FAIL  A 1280 · Undo pressed · pixels  13 px apart · box x 606-1188, y 303-331, largest difference 4 of 255
+PASS  A 1280 · «Add all» · the page
+PASS  A 1280 · «Add all» · focus and what the page says besides  body / body
+FAIL  A 1280 · «Add all» · pixels  32 px apart · box x 606-1188, y 194-340, largest difference 10 of 255
+PASS  A 1280 · Undo of «Add all» · the page
+PASS  A 1280 · Undo of «Add all» · focus and what the page says besides  body / body
+FAIL  A 1280 · Undo of «Add all» · pixels  29 px apart · box x 606-1188, y 303-340, largest difference 10 of 255
+PASS  A 1280 · Edit order: the panel · the page
+PASS  A 1280 · Edit order: the panel · focus and what the page says besides  button#btnEditOrder[toggle] / button#btnEditOrder[toggle]
+FAIL  A 1280 · Edit order: the panel · pixels  43 px apart · box x 606-1188, y 303-340, largest difference 10 of 255
+PASS  A 1280 · a row moved up (real click) · the page
+PASS  A 1280 · a row moved up (real click) · focus and what the page says besides  button[up].home-rbtn__up / button[up].home-rbtn__up
+FAIL  A 1280 · a row moved up (real click) · pixels  10 px apart · box x 912-1188, y 194-304, largest difference 1 of 255
+PASS  A 1280 · the next Tab after a move (the focus kept by the dock) · the page
+PASS  A 1280 · the next Tab after a move (the focus kept by the dock) · focus and what the page says besides  button[down].home-rbtn__down / button[down].home-rbtn__down
+FAIL  A 1280 · the next Tab after a move (the focus kept by the dock) · pixels  10 px apart · box x 912-1188, y 194-304, largest difference 1 of 255
+PASS  A 1280 · a row removed · the page
+PASS  A 1280 · a row removed · focus and what the page says besides  body / body
+FAIL  A 1280 · a row removed · pixels  60 px apart · box x 74-986, y 194-395, largest difference 10 of 255
+PASS  A 1280 · Done · the page
+PASS  A 1280 · Done · focus and what the page says besides  body / body
+FAIL  A 1280 · Done · pixels  60 px apart · box x 74-986, y 194-395, largest difference 10 of 255
+PASS  A 1280 · the name typed with real keys · the page
+PASS  A 1280 · the name typed with real keys · focus and what the page says besides  input#seriesNameInput[name] / input#seriesNameInput[name]
+FAIL  A 1280 · the name typed with real keys · pixels  60 px apart · box x 74-986, y 194-395, largest difference 10 of 255
+PASS  A 1280 · the name emptied, «Create series»: it asks for a name, focus on the field · the page
+PASS  A 1280 · the name emptied, «Create series»: it asks for a name, focus on the field · focus and what the page says besides  input#seriesNameInput[name] / input#seriesNameInput[name]
+FAIL  A 1280 · the name emptied, «Create series»: it asks for a name, focus on the field · pixels  52 px apart · box x 610-986, y 194-340, largest difference 10 of 255
+PASS  A 1280 · «Use …» · the page
+PASS  A 1280 · «Use …» · focus and what the page says besides  body / body
+FAIL  A 1280 · «Use …» · pixels  54 px apart · box x 74-986, y 194-395, largest difference 10 of 255
+PASS  A 1280 · creating (the writing held back) · the page
+PASS  A 1280 · creating (the writing held back) · focus and what the page says besides  body / body
+FAIL  A 1280 · creating (the writing held back) · pixels  122 px apart · box x 279-986, y 194-844, largest difference 38 of 255
+PASS  P 393 · the discography · the page
+PASS  P 393 · the discography · focus and what the page says besides  body / body
+PASS  P 393 · the discography · pixels  0 px apart
+PASS  P 393 · a filter pressed (EPs and Singles on) · the page
+PASS  P 393 · a filter pressed (EPs and Singles on) · focus and what the page says besides  button#btnFilterSingles / button#btnFilterSingles
+FAIL  P 393 · a filter pressed (EPs and Singles on) · pixels  26874 px apart · box x 16-376, y 56-133, largest difference 255 of 255
+PASS  P 393 · …and off · the page
+PASS  P 393 · …and off · focus and what the page says besides  button#btnFilterSingles / button#btnFilterSingles
+FAIL  P 393 · …and off · pixels  13 px apart · box x 35-297, y 103-130, largest difference 19 of 255
+PASS  P 393 · a cover pressed: the ring, the number, the dock · the page
+PASS  P 393 · a cover pressed: the ring, the number, the dock · focus and what the page says besides  button.home-card.is-in / button.home-card.is-in
+FAIL  P 393 · a cover pressed: the ring, the number, the dock · pixels  13 px apart · box x 35-297, y 103-130, largest difference 19 of 255
+PASS  P 393 · three more covers · the page
+PASS  P 393 · three more covers · focus and what the page says besides  button.home-card.is-in / button.home-card.is-in
+PASS  P 393 · three more covers · pixels  0 px apart
+PASS  P 393 · a cover taken out: Undo · the page
+PASS  P 393 · a cover taken out: Undo · focus and what the page says besides  button.home-card / button.home-card
+PASS  P 393 · a cover taken out: Undo · pixels  0 px apart
+PASS  P 393 · Undo pressed · the page
+PASS  P 393 · Undo pressed · focus and what the page says besides  body / body
+PASS  P 393 · Undo pressed · pixels  0 px apart
+PASS  P 393 · «Add all» · the page
+PASS  P 393 · «Add all» · focus and what the page says besides  body / body
+FAIL  P 393 · «Add all» · pixels  10 px apart · box x 35-46, y 93-94, largest difference 19 of 255
+PASS  P 393 · Undo of «Add all» · the page
+PASS  P 393 · Undo of «Add all» · focus and what the page says besides  body / body
+FAIL  P 393 · Undo of «Add all» · pixels  21 px apart · box x 22-373, y 93-385, largest difference 19 of 255
+PASS  P 393 · the bar is tapped: the sheet · the page
+PASS  P 393 · the bar is tapped: the sheet · focus and what the page says besides  div.sheet__panel / div.sheet__panel
+PASS  P 393 · the bar is tapped: the sheet · pixels  0 px apart
+PASS  P 393 · a row moved down in the sheet · the page
+PASS  P 393 · a row moved down in the sheet · focus and what the page says besides  body / body
+PASS  P 393 · a row moved down in the sheet · pixels  0 px apart
+PASS  P 393 · a row removed in the sheet: Undo is in the sheet · the page
+PASS  P 393 · a row removed in the sheet: Undo is in the sheet · focus and what the page says besides  body / body
+PASS  P 393 · a row removed in the sheet: Undo is in the sheet · pixels  0 px apart
+PASS  P 393 · the name typed in the sheet with real keys · the page
+PASS  P 393 · the name typed in the sheet with real keys · focus and what the page says besides  input#homeChosenName[name] / input#homeChosenName[name]
+PASS  P 393 · the name typed in the sheet with real keys · pixels  0 px apart
+PASS  P 393 · Undo pressed in the sheet · the page
+PASS  P 393 · Undo pressed in the sheet · focus and what the page says besides  body / body
+PASS  P 393 · Undo pressed in the sheet · pixels  0 px apart
+PASS  P 393 · the sheet closed · the page
+PASS  P 393 · the sheet closed · focus and what the page says besides  body / body
+PASS  P 393 · the sheet closed · pixels  0 px apart
+PASS  P 393 · the sheet closed with an Undo still pending: the old dock hid the strip, the new one shows it (on purpose)  [0,1]
+PASS  P 393 · creating (the writing held back) · the page
+PASS  P 393 · creating (the writing held back) · focus and what the page says besides  body / body
+FAIL  P 393 · creating (the writing held back) · pixels  10 px apart · box x 35-46, y 93-94, largest difference 19 of 255
+PASS  A 1280 · created · the page
+PASS  A 1280 · created · focus and what the page says besides  body / body
+PASS  A 1280 · created · pixels  0 px apart
+PASS  A 1280 · another series started · the page
+PASS  A 1280 · another series started · focus and what the page says besides  body / body
+FAIL  A 1280 · another series started · pixels  24771 px apart · box x 806-1279, y 16-198, largest difference 255 of 255
+PASS  A 1280 · the series not saved · the page
+PASS  A 1280 · the series not saved · focus and what the page says besides  body / body
+FAIL  A 1280 · the series not saved · pixels  3 px apart · box x 912-916, y 194-198, largest difference 1 of 255
+PASS  A 1280 · artist not found · the page
+PASS  A 1280 · artist not found · focus and what the page says besides  body / body
+PASS  A 1280 · artist not found · pixels  0 px apart
+PASS  A 1280 · the catalog did not answer · the page
+PASS  A 1280 · the catalog did not answer · focus and what the page says besides  body / body
+PASS  A 1280 · the catalog did not answer · pixels  0 px apart
+PASS  A 1280 · the list · the page
+PASS  A 1280 · the list · focus and what the page says besides  input.home-line__text / input.home-line__text
+PASS  A 1280 · the list · pixels  0 px apart
+PASS  A 1280 · the list added: a line left to fix · the page
+PASS  A 1280 · the list added: a line left to fix · focus and what the page says besides  body / body
+PASS  A 1280 · the list added: a line left to fix · pixels  0 px apart
+PASS  A 1280 · a visitor · the page
+PASS  A 1280 · a visitor · focus and what the page says besides  body / body
+PASS  A 1280 · a visitor · pixels  0 px apart
+PASS  A 1280 · no error of the page on either side  old:  // new: 
+PASS  P 393 · created · the page
+PASS  P 393 · created · focus and what the page says besides  body / body
+PASS  P 393 · created · pixels  0 px apart
+PASS  P 393 · another series started · the page
+PASS  P 393 · another series started · focus and what the page says besides  body / body
+FAIL  P 393 · another series started · pixels  26150 px apart · box x 16-392, y 56-133, largest difference 255 of 255
+PASS  P 393 · the series not saved · the page
+PASS  P 393 · the series not saved · focus and what the page says besides  body / body
+FAIL  P 393 · the series not saved · pixels  3 px apart · box x 293-297, y 126-130, largest difference 1 of 255
+PASS  P 393 · artist not found · the page
+PASS  P 393 · artist not found · focus and what the page says besides  body / body
+PASS  P 393 · artist not found · pixels  0 px apart
+PASS  P 393 · the catalog did not answer · the page
+PASS  P 393 · the catalog did not answer · focus and what the page says besides  body / body
+PASS  P 393 · the catalog did not answer · pixels  0 px apart
+PASS  P 393 · the list · the page
+PASS  P 393 · the list · focus and what the page says besides  input.home-line__text / input.home-line__text
+PASS  P 393 · the list · pixels  0 px apart
+PASS  P 393 · the list added: a line left to fix · the page
+PASS  P 393 · the list added: a line left to fix · focus and what the page says besides  body / body
+PASS  P 393 · the list added: a line left to fix · pixels  0 px apart
+PASS  P 393 · a visitor · the page
+PASS  P 393 · a visitor · focus and what the page says besides  body / body
+PASS  P 393 · a visitor · pixels  0 px apart
+PASS  P 393 · no error of the page on either side  old:  // new: 
+PASS  time to the stage, ms (old / new, three loads each, dev server)  {"old":[453,474,457],"new":[446,495,455]}
+
+141 passed, 31 failed of 172; max pixels apart 27652

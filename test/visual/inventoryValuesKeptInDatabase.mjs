@@ -79,7 +79,7 @@ const shown = await pageB.evaluate(async ({ path, short }) => {
     const { valueOfItem, momentText, SourceState } = await import('/js/models/inventoryValue.js')
     const { itemsNeverRead, itemsToRead } = await import('/js/models/inventoryValueRun.js')
     const { waitingNotice } = await import('/js/models/inventoryValueRun.js')
-    const { cardValueBlock } = await import('/js/views/renderers/InventoryCardValue.js')
+    const { readOnText, DISCOGS_CREDIT } = await import('/js/models/inventoryValue.js') // the card (screens/inventory/CardValue.tsx) writes the day with readOnText and carries the credit in the title of the link
     const service = new InventoryValueService({ api: {}, cache: new CacheManager(), inventory: { userId: 'user-1' } })
     const stored = await window.dbRead(path)
     const item = { id: 'item-1', artist: 'Neil Young', title: 'Harvest', owned: true, ...stored }
@@ -87,11 +87,11 @@ const shown = await pageB.evaluate(async ({ path, short }) => {
     const held = await service.readingsOf([item])
     const value = valueOfItem(item, { reading: held.get(item.id) ?? null, now: Date.now(), source: SourceState.ON })
     const neverRead = itemsNeverRead([item], held).length
-    const card = cardValueBlock(item, value, { currency: 'USD', rates: null })
+    const when = readOnText(value)
     return {
         heldInBrowser: held.size, origin: value.origin, amount: value.amount, readAt: value.readAt, moment: momentText(value.readAt),
         waiting: neverRead, notice: neverRead ? waitingNotice(neverRead).strong : null,
-        cardSaysWhen: card.replace(/\u00a0|&nbsp;/g, " ").includes(`· ${short.replace(/\u00a0/g, " ")}`), cardCredit: card.includes('Data provided by Discogs'),
+        cardSaysWhen: Boolean(when) && when.replace(/\u00a0/g, ' ') === short.replace(/\u00a0/g, ' '), cardCredit: DISCOGS_CREDIT.includes('Data provided by Discogs'),
         writtenWins: valueOfItem(written, { reading: null, now: Date.now(), source: SourceState.ON }).origin,
         updateWouldRead: itemsToRead([item], held, Date.now()).length
     }

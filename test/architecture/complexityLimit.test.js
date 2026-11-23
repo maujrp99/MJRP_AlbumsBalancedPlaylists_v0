@@ -150,4 +150,10 @@ describe(`no function passes a complexity of ${COMPLEXITY_LIMIT}`, () => {
 
         expect(rows.map(row => [row.name, row.complexity])).toEqual([['tooManyPaths', 11]])
     }, TIMEOUT_MS)
+
+    it('and it reads TypeScript and TSX: a .tsx function above the limit is seen (F83)', async () => {
+        const rows = await functionsAbove(['test/architecture/fixtures/typescript/aboveTheLimit.tsx'])
+
+        expect(rows.map(row => [row.name, row.complexity])).toEqual([['tooManyPaths', 11]])
+    }, TIMEOUT_MS)
 })

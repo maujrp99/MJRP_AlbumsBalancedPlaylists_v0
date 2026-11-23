@@ -31,7 +31,7 @@ Use these IDs to reference specific UI elements:
 | `nav.menu-item` | Navigation link | text-sm uppercase, font-semibold, `.nav-link-glow` |
 
 ### AlbumsView Elements
-The albums screen is `views/SeriesView.js` today (there is no `AlbumsView.js`); the element IDs below keep the `albums.` prefix.
+The albums screen is `views/SeriesView.js` today (there is no `AlbumsView.js`); the element IDs below keep the `albums.` prefix. Since F83 this is `screens/albums/Albums.tsx` and `screens/albums/index.ts` (React).
 
 | Element ID | Description | Class / Style |
 |------------|-------------|---------------|
@@ -113,7 +113,7 @@ The albums screen is `views/SeriesView.js` today (there is no `AlbumsView.js`); 
 | Variant | Classes | Location |
 |---------|---------|----------|
 | Primary | `tech-btn-primary` | Albums screen "Blend" button (`SeriesHeader`), Blend screen "Blend It!" |
-| Secondary | `tech-btn tech-btn-secondary` | Album card actions (`components/ui/Card.js`) |
+| Secondary | `tech-btn tech-btn-secondary` | Album card actions (`components/ui/Card.js`) *(F83: now `screens/inventory/ItemCard.tsx` and `screens/inventory/ItemRow.tsx`)* |
 | Danger | `tech-btn tech-btn-danger` | Defined in `tech-theme.css`; no screen uses it today |
 
 ### Icon Buttons

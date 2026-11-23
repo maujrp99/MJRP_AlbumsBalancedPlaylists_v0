@@ -1,0 +1,182 @@
+{
+ "tag": "chromium-900",
+ "total": 35,
+ "failed": 2,
+ "results": [
+  {
+   "what": "the grid: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the grid: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the grid: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the grid: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the grid: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the list: the picture",
+   "ok": false,
+   "detail": "29 pixels differ, at most 56 of 255"
+  },
+  {
+   "what": "the list: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the list: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the list: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the list: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the search typed: the picture",
+   "ok": false,
+   "detail": "1043 pixels differ, at most 77 of 255"
+  },
+  {
+   "what": "the search typed: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the search typed: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the search typed: the focus and the scroll",
+   "ok": true,
+   "detail": "old INPUT#inventorySearch.form-control.pl-10.w-full @19911 / new INPUT#inventorySearch.form-control.pl-10.w-full @19911"
+  },
+  {
+   "what": "the search typed: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the format Vinyl: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the format Vinyl: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the format Vinyl: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the format Vinyl: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the format Vinyl: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the order Artist Z-A: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the order Artist Z-A: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the order Artist Z-A: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the order Artist Z-A: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "the order Artist Z-A: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "a count of the header pressed: the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "a count of the header pressed: the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "a count of the header pressed: the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "a count of the header pressed: the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @0 / new the page @0"
+  },
+  {
+   "what": "a count of the header pressed: no error on the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the album window opened by a card (hand-made window): the picture",
+   "ok": true,
+   "detail": "0 pixels differ, at most 0 of 255"
+  },
+  {
+   "what": "the album window opened by a card (hand-made window): the visible text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the album window opened by a card (hand-made window): the boxes and the height of the page",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the album window opened by a card (hand-made window): the focus and the scroll",
+   "ok": true,
+   "detail": "old the page @517 / new the page @517"
+  },
+  {
+   "what": "the album window opened by a card (hand-made window): no error on the page",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

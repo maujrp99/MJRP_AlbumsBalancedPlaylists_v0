@@ -1,0 +1,8 @@
+Baseline: the publishable build of main@3356113 (with the keys of the .env), served from dist/ as firebase.json does.
+node measure-first-screen.mjs <dist> <path> 5 <slow>
+Chromium (Playwright 1.63), empty cache, viewport 1280x800, Firebase real network; "#app has content" = first child added to #app.
+
+/start, no throttling:   runs ms = 1944 1742 1724 1792 1729   median 1742   DOMContentLoaded median 239
+/start, Slow 4G (1.6 Mb/s down, 150 ms):   runs ms = 3701 3628 4134 4249 3522   median 3701   DOMContentLoaded median 2127
+/artists, no throttling: median 1765   DOMContentLoaded median 275   (hand-made ComingSoonView, before the canary)
+scripts downloaded for /start: preload-helper, main-Cp3Nsp6i, SpotifyConnectButton, search.worker

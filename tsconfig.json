@@ -1,0 +1,25 @@
+{
+    "//": "F83 (ADR-0023): TypeScript for the site's React screens only (public/js/screens, ui, shell, react-bridge and their tests). The hand-made JavaScript is read for its JSDoc types (allowJs) and not checked inside (checkJs off): an error here is the React code meeting the JavaScript it calls. The app (app/) has its own tsconfig.",
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "strict": true,
+        "noEmit": true,
+        "allowJs": true,
+        "checkJs": false,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "allowImportingTsExtensions": true,
+        "resolveJsonModule": true,
+        "types": ["vitest/globals"],
+        "paths": {
+            "@/*": ["./public/js/*"],
+            "@stores/*": ["./public/js/stores/*"],
+            "@shared/*": ["./shared/*"]
+        }
+    },
+    "include": ["public/js/**/*.ts", "public/js/**/*.tsx", "test/**/*.ts", "test/**/*.tsx", "types/**/*.d.ts"]
+}

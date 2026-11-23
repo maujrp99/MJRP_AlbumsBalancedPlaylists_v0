@@ -348,7 +348,7 @@
     bottom: calc(var(--phone-tabbar-h) + var(--phone-safe-bottom) + var(--phone-action-bar-h) + 16px);
   }
 
-  /* ── 7. Sheet (REQ-04; components/ui/Sheet.js) ───────────────────────────────────────────── */
+  /* ── 7. Sheet (REQ-04; ui/SheetWindow.tsx) ───────────────────────────────────────────── */
   .sheet {
     position: fixed;
     inset: 0;
@@ -515,7 +515,7 @@
   /* Only the shell: the whole screen or from the bottom, the title read, close in view, the
      safe areas. What is inside each window belongs to its screen's file. */
 
-  /* 8.1 BaseModal (components/ui/BaseModal.js): edit windows, lists, prompts */
+  /* 8.1 ModalShell (ui/ModalShell.tsx; was components/ui/BaseModal.js): edit windows, lists, prompts */
   .app-modal.app-modal--full {
     padding: 0;
     align-items: stretch;
@@ -751,7 +751,7 @@
     padding: 16px var(--phone-gutter-right) 20px var(--phone-gutter-left);
   }
 
-  /* 8.6 The Spotify export (components/SpotifyExportModal.js): from the bottom */
+  /* 8.6 The Spotify export (ui/SpotifyExportWindow.tsx): from the bottom */
   #spotify-export-modal {
     align-items: flex-end;
     padding: 0;

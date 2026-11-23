@@ -5,7 +5,7 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-vi.mock('../../../public/js/components/Toast.js', () => {
+vi.mock('../../../public/js/stores/toasts.js', () => {
     const toast = { info: vi.fn(), success: vi.fn(), error: vi.fn(), warning: vi.fn() }
     return { default: toast, toast }
 })
@@ -21,7 +21,7 @@ import { SpotifyExportService } from '../../../public/js/services/SpotifyExportS
 import { SpotifyAuthService } from '../../../public/js/services/SpotifyAuthService.js'
 import { AppleMusicExportService } from '../../../public/js/services/AppleMusicExportService.js'
 import { exportLedger } from '../../../public/js/services/export/exportLedger.js'
-import { handleExportJson } from '../../../public/js/views/playlists/PlaylistsExport.js'
+import { handleExportJson } from '../../../public/js/controllers/playlistExports.js'
 import { exportOutcome } from '../../../public/js/models/exportOutcome.js'
 import { playlistsStore } from '../../../public/js/stores/playlists.js'
 

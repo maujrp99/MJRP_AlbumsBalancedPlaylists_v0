@@ -15,6 +15,7 @@ import '../css/safe-area.css' // a phone lying down: the page keeps clear of the
 import './services/platform/platformWiring.js' // the id port gets the browser's source before any module runs (F78)
 import { canonicalLocalUrl } from './utils/localAddress.js'
 import { installStaleBuildGuard } from './utils/staleBuild.js'
+import { loadScreen } from './utils/loadScreen.js'
 
 // One local address (F50): a page opened at `localhost` goes to the same place at 127.0.0.1,
 // where the logins, the Spotify redirect and the caches live.
@@ -25,54 +26,33 @@ if (localUrl) window.location.replace(localUrl)
 installStaleBuildGuard(window)
 import './firebase-init.js' // Firebase starts before anything that uses it
 import './services/auth/userSession.js' // the user store starts hearing who is signed in (F58)
+import './services/inventory/inventoryWiring.js' // the inventory is read when the person signs in, whatever screen is open (F83 wave 6a: the screen loads on demand)
 import { AuthService } from './services/AuthService.js'
 
 import { router } from './router.js'
-import { HomeView } from './views/HomeView.js'
-// V3 Architecture: SeriesView replaces AlbumsView
-import SeriesView from './views/SeriesView.js'
-import SeriesController from './controllers/SeriesController.js'
-import { PlaylistsView } from './views/PlaylistsView.js'
-import { InventoryView } from './views/InventoryView.js'
-import { ComingSoonView } from './views/ComingSoonView.js'
-import { BlendingMenuView } from './views/BlendingMenuView.js'
 
-import toast from './components/Toast.js'
+import toast from './stores/toasts.js'
+import { t } from './i18n/t.js'
 
 // app.js exports nothing: no module imports the file that mounts the app (UAT-19). Who needs the
 // database or the login is handed it where it is put together (the *Wiring.js files of services/).
 
-// Initialize UI Components
-import { TopNav } from './components/TopNav.js'
-import { Footer } from './components/Footer.js'
+// The shell: the top bar and the footer of the computer, the shell of the phone, the window to sign in (F83 wave 3, in React). Its code is in
+// the main script and React comes with it, as a file of its own (react-vendor), at the start; the screens in React come after the first screen.
+import { startShell } from './shell/Shell.tsx'
 import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
-import { startPhoneShell } from './components/navigation/PhoneShell.js'
 import { userStore } from './stores/UserStore.js'
 import { startUsageMeasurement } from './services/usage/usageWiring.js'
-import { openSignInWhenAsked } from './components/navigation/signInFromLink.js'
-import { START_PATH, leaveToHome } from './components/navigation/startRoute.js'
-import { isSignedIn } from './components/navigation/AuthNav.js'
-import { showLoginModal } from './components/LoginModal.js'
-import { checkAppleWhenIdle } from './components/navigation/appleState.js'
+import { openSignInWhenAsked } from './utils/signInFromLink.js'
+import { START_PATH, leaveToHome } from './utils/startRoute.js'
+import { isSignedIn } from './utils/isSignedIn.js'
+import { openLoginWindow } from './stores/loginWindow.js'
+import { prefetchScreensAfterTheFirstScreen } from './utils/prefetchScreens.js'
+import { checkAppleWhenIdle } from './shell/appleState.ts'
 
 const initUI = () => {
-    const topNav = new TopNav({ clearCaches: clearAppAlbumCaches })
-    router.afterNavigate((path) => topNav.followScreen(path))
-    const headerEl = document.getElementById('header-container')
-    if (headerEl) {
-        headerEl.innerHTML = topNav.render()
-        topNav.attachListeners()
-    }
-
-    const footer = new Footer({ clearCaches: clearAppAlbumCaches })
-    const footerEl = document.getElementById('footer-container')
-    if (footerEl) {
-        footerEl.innerHTML = footer.render()
-        footer.attachListeners()
-    }
-
-    // The phone (F76): its top bar, its tab bar and its menu exist only on a screen up to 899 px
-    startPhoneShell({ router, userStore, clearCaches: clearAppAlbumCaches })
+    // The top bar, the footer and the shell of the phone, in React, in their own places outside #app
+    startShell({ router, userStore, clearCaches: clearAppAlbumCaches })
 }
 
 /**
@@ -82,7 +62,7 @@ const initUI = () => {
 async function bootstrap() {
     console.log('🚀 App Bootstrap Starting...')
 
-    // 1. Initialize UI (TopNav, Footer) - doesn't depend on auth
+    // 1. Initialize UI (the shell) - doesn't depend on auth
     initUI()
 
     // 2. Wait for authentication to be ready
@@ -90,7 +70,7 @@ async function bootstrap() {
 
     if (!user) {
         console.warn('⚠️ App started without authenticated user. Some features may not work.')
-        toast.warning('Authentication issue. Some features may be limited.')
+        toast.warning(t('notices.app.authIssue'))
     }
 
     // 3. (F69) Nothing is started here when Spotify connects: the album load asks the popularity
@@ -109,7 +89,7 @@ async function bootstrap() {
     openSignInWhenAsked({
         location: window.location,
         signedIn: isSignedIn(user),
-        openSignIn: showLoginModal,
+        openSignIn: openLoginWindow,
         setAddress: (address) => router.setAddress(address, { replace: true })
     })
 
@@ -128,10 +108,15 @@ startUsageMeasurement({ router })
 checkAppleWhenIdle()
 
 // Register Routes
-// V3: SeriesController is instantiated once and passed to view
-const seriesController = new SeriesController();
-
-router.register(START_PATH, () => new HomeView())
+// The Start screen (F83 wave 4, in React) is the first screen the person sees, so its file starts to come down now, while the login
+// is asked, and not when the route asks for it; the route waits for it. It is also one of the screens that come down in the background.
+const loadStart = loadScreen(() => import('./screens/start/index.ts'))
+const startRoute = async () => {
+    const { startView } = await loadStart()
+    return startView()
+}
+loadStart().catch(() => {}) // no network or a slow one: the route asks again and says so
+router.register(START_PATH, startRoute)
 // F85 (MJRP, 2026-11-21): /home is the entry page, not a screen of the app. If the app is ever asked
 // for it, it leaves to the browser (a full load); a server that answers /home with the app would loop,
 // so the second ask inside the window stays and goes to /start.
@@ -139,27 +124,51 @@ router.register('/home', () => {
     if (!leaveToHome(window)) router.redirect(START_PATH + window.location.search)
     return null
 })
-router.register('/albums', () => new SeriesView(seriesController))
-router.register('/albums/:seriesId', () => new SeriesView(seriesController))
-router.register('/playlists', () => new PlaylistsView())
-router.register('/inventory', () => new InventoryView())
+// The albums screen (F83 wave 5a, in React): its file comes when the route asks for it and in the background. The controller of the
+// session (one for the whole visit, with the load going on in the service) lives in the screen's file.
+const loadAlbums = loadScreen(() => import('./screens/albums/index.ts'))
+const albumsRoute = async () => {
+    const { albumsView } = await loadAlbums()
+    return albumsView()
+}
+router.register('/albums', albumsRoute)
+router.register('/albums/:seriesId', albumsRoute)
+// The inventory screen (F83 wave 6a, in React): its file comes when the route asks for it and in the background. The controller (one for each visit,
+// hand-written) lives in the screen's file; the inventory itself is read when the person signs in (services/inventory/inventoryWiring.js, above).
+const loadInventory = loadScreen(() => import('./screens/inventory/index.ts'))
+router.register('/inventory', async () => {
+    const { inventoryView } = await loadInventory()
+    return inventoryView()
+})
 
-// TopNav v2: New entity type routes (Coming Soon)
-router.register('/artists', () => new ComingSoonView())
-router.register('/genres', () => new ComingSoonView())
-router.register('/tracks', () => new ComingSoonView())
-router.register('/blend', () => new BlendingMenuView())
+// TopNav v2: New entity type routes (Coming Soon). The first screen in React (F83): its file, and React with it, come when
+// the person opens one of the three; the main script carries neither.
+const loadComingSoon = loadScreen(() => import('./screens/coming-soon/index.ts'))
+const comingSoonRoute = (kind) => async () => {
+    const { comingSoonView } = await loadComingSoon()
+    return comingSoonView(kind)
+}
+router.register('/artists', comingSoonRoute('artists'))
+router.register('/genres', comingSoonRoute('genres'))
+router.register('/tracks', comingSoonRoute('tracks'))
+// The Blend screen (F83 wave 7b, in React): its file comes when the route asks for it and in the background. The controller that generates
+// (controllers/BlendingController.js, hand-written) is shared with the playlists screen: the bundler makes it a file of its own.
+const loadBlend = loadScreen(() => import('./screens/blend/index.ts'))
+router.register('/blend', async () => {
+    const { blendView } = await loadBlend()
+    return blendView()
+})
 
 // Sprint 11 Phase 1: Spotify Auth Callback
 router.register('/callback', async () => {
     const { SpotifyAuthService } = await import('./services/SpotifyAuthService.js')
-    const toast = (await import('./components/Toast.js')).default
+    const toast = (await import('./stores/toasts.js')).default
 
     await SpotifyAuthService.handleCallback().then(success => {
         if (success) {
-            toast.success('Connected to Spotify!')
+            toast.success(t('notices.app.spotifyConnected'))
         } else {
-            toast.error('Failed to connect to Spotify')
+            toast.error(t('notices.app.spotifyFailed'))
         }
     })
 
@@ -167,27 +176,36 @@ router.register('/callback', async () => {
     return null
 })
 
-// Sprint 11: EditPlaylistView for editing existing batches
-// ARCH-1 Refactor: Consolidated into PlaylistsView
-router.register('/playlists/edit', () => new PlaylistsView())
-
 // Redirect routes
 router.register('/album-series', () => {
     router.redirect('/albums')
     return null
 })
-router.register('/playlist-series', async () => {
-    const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
-    return new SavedPlaylistsView()
-})
-router.register('/saved-playlists', async () => {
-    const { SavedPlaylistsView } = await import('./views/SavedPlaylistsView.js')
-    return new SavedPlaylistsView()
-})
+// The screens loaded late: the file comes with a deadline of 10 s (F83: after it, «no connection», not «new version»).
+// loadScreen gives each file a deadline and, after a lost network, asks for it again in a way the browser does not refuse
+const loadSavedPlaylists = loadScreen(() => import('./screens/saved-playlists/index.ts'))
+const savedPlaylistsRoute = async () => {
+    const { savedPlaylistsView } = await loadSavedPlaylists()
+    return savedPlaylistsView()
+}
+const loadPlaylists = loadScreen(() => import('./screens/playlists/index.ts'))
+const playlistsRoute = async () => {
+    const { playlistsView } = await loadPlaylists()
+    return playlistsView()
+}
+// The playlists screen (F83 wave 2): the set the blend made, or a saved batch being edited (/playlists/edit), the same screen
+router.register('/playlists', playlistsRoute)
+router.register('/playlists/edit', playlistsRoute)
+router.register('/playlist-series', savedPlaylistsRoute)
+router.register('/saved-playlists', savedPlaylistsRoute)
 router.register('/series', () => {
     router.redirect('/albums')
     return null
 })
+
+// The screens in React come down in the background once the first screen is on the page (F83, REQ-10): changing screens still works
+// with no network after the first load, as it did when everything was in the main script. React itself is already there: the shell is React.
+prefetchScreensAfterTheFirstScreen(router, [loadStart, loadAlbums, loadInventory, loadSavedPlaylists, loadPlaylists, loadBlend, loadComingSoon])
 
 // Global Error Handler
 window.addEventListener('error', (e) => {
@@ -198,7 +216,8 @@ window.addEventListener('error', (e) => {
 if (typeof window !== 'undefined') {
     import('./stores/albumSeries.js').then(m => { window.albumSeriesStore = m.albumSeriesStore })
     import('./stores/albums.js').then(m => { window.albumsStore = m.albumsStore })
-    import('./stores/playlists.js').then(m => { window.playlistsStore = m.playlistsStore })
+    // window.playlistsStore is exposed by controllers/BlendingController.js, when a screen that uses it loads (the bundler made the store a file of its own
+    // in wave 7b: importing it here would make every first screen download that file)
     import('./stores/albumLoad.js').then(m => { window.albumLoadStore = m.albumLoadStore })
     import('./services/albums/albumLoading.js').then(m => {
         window.albumLoadService = m.albumLoadService

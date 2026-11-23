@@ -1,0 +1,80 @@
+# F83 wave 1 - the weight budget, publishable build (the keys of the .env, not printed), gzip level 6
+# BEFORE = a912eaf, the commit of integrate/staging-2026-11-21 this branch was cut from (a912eaf was the line when wave 1 began); AFTER = this branch with the saved playlists screen in React
+
+## BEFORE
+main script   main-DgcYUApe.js                               302542 B   (ceiling 302542 B)
+react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
+file          InventoryEditModal-Bw5P1qNI.js                   1187 B   (ceiling 30000 B)
+file          SavedPlaylistsView-C51TRc1-.js                  10261 B   (ceiling 30000 B)
+file          SpotifyConnectButton-DPTLVFhK.js                 1070 B   (ceiling 30000 B)
+file          SpotifyExportModal-l95iZ9Md.js                   5046 B   (ceiling 30000 B)
+file          crate3d-C6EbChIP.js                              2178 B   (ceiling 30000 B)
+file          exportOutcome-DbgW7yUg.js                         325 B   (ceiling 30000 B)
+file          index-CUgQAg40.js                                1985 B   (ceiling 30000 B)
+file          index-DSKNh5ah.js                                2605 B   (ceiling 30000 B)
+file (listed) posthogAdapter-zbCZhxi6.js                     129204 B
+file          preload-helper-BxaVoaJg.js                        901 B   (ceiling 30000 B)
+file          search.worker-saFDN5Ff.js                        4632 B   (ceiling 30000 B)
+file          splash-C9Z_K8lX.js                               9913 B   (ceiling 30000 B)
+stylesheet    main-Cufjooey.css                               29013 B
+after 1st     React + screens, downloaded after the first screen    98881 B
+1st screen    main script + the biggest screen               312803 B   (ceiling 332542 B)
+bundle-budget: inside the budget
+
+## AFTER
+main script   main-CCjsUGpB.js                               302424 B   (ceiling 302542 B)
+react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
+file          InventoryEditModal-6h2f0uox.js                   1189 B   (ceiling 30000 B)
+file          SpotifyConnectButton-5Z9l0jlm.js                 1071 B   (ceiling 30000 B)
+file          SpotifyExportModal-Dvz267i4.js                   5047 B   (ceiling 30000 B)
+file          crate3d-C6EbChIP.js                              2178 B   (ceiling 30000 B)
+file          exportOutcome-DbgW7yUg.js                         325 B   (ceiling 30000 B)
+file          index-BLhW1LGu.js                                2604 B   (ceiling 30000 B)
+file          index-DVhyBLmL.js                                 710 B   (ceiling 30000 B)
+file          index-DWooNCIV.js                               10846 B   (ceiling 30000 B)
+file (listed) posthogAdapter-zbCZhxi6.js                     129204 B
+file          preload-helper-BxaVoaJg.js                        901 B   (ceiling 30000 B)
+file          search.worker-saFDN5Ff.js                        4632 B   (ceiling 30000 B)
+file          splash-C9Z_K8lX.js                               9913 B   (ceiling 30000 B)
+file          useLocale-CHJE6OoJ.js                            2660 B   (ceiling 30000 B)
+stylesheet    main-Cufjooey.css                               29013 B
+after 1st     React + screens, downloaded after the first screen   100854 B
+1st screen    main script + the biggest screen               313270 B   (ceiling 332542 B)
+bundle-budget: inside the budget
+
+## every file, BEFORE (raw, gzip)
+  1090626   302542 main-DgcYUApe.js
+   419665   129204 posthogAdapter-zbCZhxi6.js
+   221716    68691 react-vendor-C4_tDHOM.js
+   165027    29013 main-Cufjooey.css
+    32474    10261 SavedPlaylistsView-C51TRc1-.js
+    25128     9913 splash-C9Z_K8lX.js
+    16926     5046 SpotifyExportModal-l95iZ9Md.js
+     9573     4632 search.worker-saFDN5Ff.js
+     6133     2605 index-DSKNh5ah.js
+     4132     2178 crate3d-C6EbChIP.js
+     4390     1985 index-CUgQAg40.js
+     2504     1187 InventoryEditModal-Bw5P1qNI.js
+     2678     1070 SpotifyConnectButton-DPTLVFhK.js
+     1727      901 preload-helper-BxaVoaJg.js
+      535      325 exportOutcome-DbgW7yUg.js
+files 15
+
+## every file, AFTER (raw, gzip)
+  1090306   302424 main-CCjsUGpB.js
+   419665   129204 posthogAdapter-zbCZhxi6.js
+   221716    68691 react-vendor-C4_tDHOM.js
+   165027    29013 main-Cufjooey.css
+    35386    10846 index-DWooNCIV.js
+    25128     9913 splash-C9Z_K8lX.js
+    16926     5047 SpotifyExportModal-Dvz267i4.js
+     9573     4632 search.worker-saFDN5Ff.js
+     7639     2660 useLocale-CHJE6OoJ.js
+     6133     2604 index-BLhW1LGu.js
+     4132     2178 crate3d-C6EbChIP.js
+     2509     1189 InventoryEditModal-6h2f0uox.js
+     2678     1071 SpotifyConnectButton-5Z9l0jlm.js
+     1727      901 preload-helper-BxaVoaJg.js
+     1569      710 index-DVhyBLmL.js
+      535      325 exportOutcome-DbgW7yUg.js
+files 16

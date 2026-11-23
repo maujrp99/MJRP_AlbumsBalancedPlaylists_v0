@@ -7,35 +7,38 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
+import { listSourceFiles } from './support/parseSource.js'
 
 const REPO = process.cwd()
 const JS_ROOT = path.join(REPO, 'public/js')
 
-function jsFiles(dir) {
-    return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
-        const full = path.join(dir, entry.name)
-        if (entry.isDirectory()) return entry.name === 'vendor' ? [] : jsFiles(full)
-        return entry.name.endsWith('.js') ? [full] : []
-    })
-}
+/** Every .js, .ts and .tsx file of the app, absolute (F83: a React screen sets no title of its own either). */
+const jsFiles = (dir) => listSourceFiles(dir).map(file => path.join(dir, file))
+// `.setTitle('…')` of a hand-made screen, and `useScreenTitle({ tab: '…' })` of a screen in React (F83 wave 4: the Start screen)
+const TITLES = /(?:\.setTitle\(\s*|\btab:\s*)(['"`])(.*?)\1/g
+const WRITES_TITLE = /document\.title\s*=[^=]/
 
 describe('one title for the tab (UAT-192)', () => {
     const pageTitle = fs.readFileSync(path.join(REPO, 'public/index.html'), 'utf8').match(/<title>([^<]*)<\/title>/)[1]
 
     it('every title a screen sets is the title of the page', () => {
         const titles = jsFiles(JS_ROOT).flatMap(file =>
-            [...fs.readFileSync(file, 'utf8').matchAll(/\.setTitle\(\s*(['"`])(.*?)\1/g)].map(found => found[2])
+            [...fs.readFileSync(file, 'utf8').matchAll(TITLES)].map(found => found[2])
         )
 
         expect(titles.length).toBeGreaterThan(0)
         expect([...new Set(titles)]).toEqual([pageTitle])
     })
 
-    it('no screen writes document.title by itself (BaseView.setTitle is the one place)', () => {
-        const writers = jsFiles(JS_ROOT)
-            .filter(file => /document\.title\s*=[^=]/.test(fs.readFileSync(file, 'utf8')))
-            .map(file => path.relative(JS_ROOT, file))
+    const writersIn = (root) => jsFiles(root)
+        .filter(file => WRITES_TITLE.test(fs.readFileSync(file, 'utf8')))
+        .map(file => path.relative(root, file))
 
-        expect(writers).toEqual(['views/BaseView.js'])
+    it('no screen writes document.title by itself (the hook useScreenTitle is the one place, F83 wave 8d)', () => {
+        expect(writersIn(JS_ROOT)).toEqual(['react-bridge/useScreenTitle.ts'])
+    })
+
+    it('it reads .ts and .tsx: a React file that writes document.title is accused (F83)', () => {
+        expect(writersIn(path.join(REPO, 'test/architecture/fixtures/typescript'))).toEqual(['writesTitle.tsx'])
     })
 })

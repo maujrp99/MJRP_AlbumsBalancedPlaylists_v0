@@ -46,6 +46,8 @@ export const OUTCOMES = freeze(['complete', 'partial', 'stopped', 'failed'])
 /** The events, each with its properties. */
 export const USAGE_EVENTS = Object.freeze({
     screen_viewed: Object.freeze({ screen: oneOf(SCREENS) }),
+    // A screen in React could not be drawn (F83): the barrier of the bridge counts it, by the name of the screen and nothing else
+    screen_error: Object.freeze({ screen: oneOf(SCREENS) }),
     series_created: Object.freeze({ album_count: count }),
     series_edited: Object.freeze({ album_count: count }),
     series_deleted: Object.freeze({}),

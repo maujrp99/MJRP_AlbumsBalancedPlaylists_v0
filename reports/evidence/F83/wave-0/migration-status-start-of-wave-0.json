@@ -1,0 +1,28 @@
+{
+  "handMade": {
+    "files": 103,
+    "lines": 17624,
+    "baselineFiles": 103,
+    "baselineLines": 17779,
+    "migratedFiles": 0
+  },
+  "react": {
+    "files": 7,
+    "lines": 307,
+    "byFolder": {
+      "screens": 0,
+      "ui": 1,
+      "shell": 0,
+      "react-bridge": 6
+    }
+  },
+  "bridges": {
+    "files": 0,
+    "uses": 0
+  },
+  "texts": {
+    "handMade": 987,
+    "react": 0,
+    "total": 987
+  }
+}

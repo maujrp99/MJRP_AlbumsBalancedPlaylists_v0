@@ -1,0 +1,82 @@
+[
+  {
+    "what": "#app of /artists at 1280: new = production (white space collapsed)",
+    "ok": true,
+    "detail": "1729 chars"
+  },
+  {
+    "what": "no page error on /artists at 1280",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "#app of /genres at 1280: new = production (white space collapsed)",
+    "ok": true,
+    "detail": "1406 chars"
+  },
+  {
+    "what": "no page error on /genres at 1280",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "#app of /tracks at 1280: new = production (white space collapsed)",
+    "ok": true,
+    "detail": "1750 chars"
+  },
+  {
+    "what": "no page error on /tracks at 1280",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "#app of /artists at 393: new = production (white space collapsed)",
+    "ok": true,
+    "detail": "1729 chars"
+  },
+  {
+    "what": "no page error on /artists at 393",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "#app of /genres at 393: new = production (white space collapsed)",
+    "ok": true,
+    "detail": "1406 chars"
+  },
+  {
+    "what": "no page error on /genres at 393",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "#app of /tracks at 393: new = production (white space collapsed)",
+    "ok": true,
+    "detail": "1750 chars"
+  },
+  {
+    "what": "no page error on /tracks at 393",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "leaving and returning six times: always one screen in #app, the right one at the end",
+    "ok": true,
+    "detail": "[{\"path\":\"/start\",\"kids\":1,\"h1\":1},{\"path\":\"/genres\",\"kids\":1,\"h1\":1},{\"path\":\"/albums\",\"kids\":1,\"h1\":1},{\"path\":\"/tracks\",\"kids\":1,\"h1\":1},{\"path\":\"/start\",\"kids\":1,\"h1\":1},{\"path\":\"/artists\",\"kids\":1,\"h1\":1}]"
+  },
+  {
+    "what": "the back button leaves the canary and the app answers",
+    "ok": true,
+    "detail": "/start"
+  },
+  {
+    "what": "Start draws",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "what": "the albums screen draws",
+    "ok": true,
+    "detail": ""
+  }
+]
