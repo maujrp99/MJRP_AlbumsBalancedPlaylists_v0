@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 13:31] decision — Kit do CMS: as sinopses ficam no corpus do harness; fatia 1 construída, com o juiz independente
+
+**Branch:** main
+
+O MJRP, 2026-11-23, à pergunta «as 433 sinopses de editoras guardadas no harness: tirar (recomendado) ou deixar?»: «pode deixar as sinopses». A levar ao log do harness no próximo commit do ramo do kit. Estado do kit (harness, ramo `claude/f332-admin-kit-slice-1`, ponta `faff0faea`): TASK-02 a TASK-12 feitas e as conferências da TASK-13; o ensaio passa no MJRPpersonal e falha no V0 nas 42 funções acima de 10 e em cerca de 15 achados do lint do V0 (dois `as unknown as`, comentários de regra do Next, HTML em texto no editor, `no-control-regex` do filtro de links, um espaço irregular): tudo para a fatia 1b. O juiz independente (TASK-14) está rodando. Ele perguntou se a primeira versão do CMS do Album Blender já pode ir ao ar: não; falta o juiz, a tag 1.0.0, a fatia 1b, o kit chegar ao V0 e o Painel de textos.
+
 ## [2026-11-23 11:41] decision — Kit do CMS: o MJRP aceitou o registro CC-ADR-0068 em conversa («1.está aceito») e pôs o tamanho de fonte também na barra curta
 
 **Branch:** main
