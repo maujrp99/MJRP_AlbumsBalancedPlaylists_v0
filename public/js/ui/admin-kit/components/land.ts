@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * Brings a block (or a field) to the top, below the top bar, which wraps to more lines on a phone (UAT-194). It only
  * scrolls: the address is the router's (F332), so nothing here writes the hash.

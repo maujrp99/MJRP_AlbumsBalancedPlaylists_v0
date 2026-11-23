@@ -1,9 +1,9 @@
-main script   main-CAoU11kz.js                               198465 B   (ceiling 198615 B)
+main script   main-CWsPsQVt.js                               198470 B   (ceiling 198620 B)
 react-vendor  react-vendor-C4_tDHOM.js                        68691 B   (ceiling 72000 B)
-file (listed) adminPanel-DJnw8DTo.js                          51882 B
-file          gate-Cif6_I7M.js                                  990 B   (ceiling 30000 B)
-file          publishedContentWriter-q0sMTqvc.js               1204 B   (ceiling 30000 B)
+file (listed) adminPanel-Bqb3Vzdo.js                          53476 B
+file          gate-539ExcBu.js                                  989 B   (ceiling 30000 B)
+file          publishedContentWriter-3XFY04Oi.js               1204 B   (ceiling 30000 B)
 stylesheet    adminPanel-DLGAvLMT.css                          9403 B
-after 1st     React + screens, downloaded after the first screen   238211 B
-1st screen    main script + the biggest screen               292788 B   (ceiling 300615 B)
+after 1st     React + screens, downloaded after the first screen   238196 B
+1st screen    main script + the biggest screen               292791 B   (ceiling 300620 B)
 bundle-budget: inside the budget

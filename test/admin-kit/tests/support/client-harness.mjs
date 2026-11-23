@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // Runs a client component (.tsx) of the kit in Node's test runner, with no DOM and no new dependency (F332, TASK-08; brought
 // from the MJRPpersonal's tests/support/client-harness.mjs at c33a33a4): the kit's `typescript` transpiles, and `react` becomes a
 // useState/useEffect/useSyncExternalStore of a few lines. No reconciler: the component is called as a function and gives back

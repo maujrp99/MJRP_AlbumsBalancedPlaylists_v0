@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The admin kit's own check (F332, REQ-01 and REQ-02; TASK-07): what the kit promises every project, measured by a tool
  * that answers 0 or 1, in the harness before a version leaves and in a project that has the kit.
@@ -207,8 +207,7 @@ const RADIUS_OK = /^(0|50%|999px)$/;
 /** What the kit writes on its own, line by line: a colour, a font, a radius, a `var()` outside the contract. */
 export function scanKitStyle(dirs, tokens) {
     const findings = [];
-    const isSkin = (file) => file.startsWith(path.join(dirs.ui, 'example') + path.sep) && file.endsWith('.css');
-    for (const file of uiFiles(dirs, /\.(css|tsx?)$/).filter((name) => !isSkin(name) && path.basename(name) !== SKIN_CONTRACT)) {
+    for (const file of uiFiles(dirs, /\.(css|tsx?)$/).filter((name) => path.basename(name) !== SKIN_CONTRACT)) {
         readFileSync(file, 'utf8').split('\n').forEach((raw, index) => {
             const line = raw.replace(/\/\*.*?\*\//g, '').replace(/^\s*(\/\/|\*).*$/, '');
             const at = `${kitName(dirs, file)}:${index + 1}`;
@@ -451,7 +450,8 @@ function parseArgs(argv) {
         else if (arg === '--write-surface') options.writeSurface = true;
         else throw new Error(`unknown option ${arg}`);
     }
-    if (!options.skins.length) options.skins = filesUnder(path.join(options.ui, 'example'), /\.css$/);
+    // No skin named: the example's, which lives with the tests (`tests/example/`, beside the lists; in a project, under `tools_path`).
+    if (!options.skins.length) options.skins = filesUnder(path.join(options.root ?? path.dirname(options.ui), 'tests', 'example'), /\.css$/);
     return options;
 }
 

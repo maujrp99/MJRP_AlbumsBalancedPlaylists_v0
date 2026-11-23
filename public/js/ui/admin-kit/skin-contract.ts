@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The contract of a skin (ADR-0011; critique P1-4 and P2-10): the only tokens the kit's components read. A skin is CSS
  * that declares every one of them on the element that carries `data-admin-skin`; the kit has no color, font or radius of

@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * A gravação do kit, numa regra só (F87, REQ-04): o que o botão «Salvar» faz e o que uma peça do projeto faz ao gravar
  * pela mesma porta — confere a regra, grava com a versão lida e devolve o conteúdo limpo e a versão nova, ou a falha.

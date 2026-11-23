@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // The kit speaks English and imports no CSS (F332, REQ-01 and REQ-05; TASK-04): every text of the kit's code is English —
 // a project hands its own words through the ports (`KitTexts`, `RichTexts`, `RequiredTexts`) — and the screens' entrance
 // imports no stylesheet: the project imports `kit.css` and `required.css` itself, so a compiler that checks a side-effect

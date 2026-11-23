@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // A lista de ordem fixa do kit (F158, TASK-04; S-173 R4, `^cms-kit-fixed-order`; o CMS profissional v33): as linhas da lista com criar,
 // editar e remover, sem «+ Novo» e sem «Remover»; cada linha com a alça, ↑, ↓ (ícones de linha), o número da posição e o nome; uma frase
 // diz o novo lugar de quem se moveu. O kit não sabe de seção nem de site profissional: o teste a usa num projeto que não é este

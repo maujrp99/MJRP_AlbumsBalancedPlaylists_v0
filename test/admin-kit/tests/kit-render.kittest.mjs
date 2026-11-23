@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // O kit monta as telas de um projeto que não é este (F75, TASK-01 e TASK-03; S-112, `^admin-kit-screen`): o esquema e
 // as portas de um livro de receitas, em inglês e espanhol, desenhados pelo React no servidor, sem nada do MJRP.
 // Trazido do MJRPpersonal (tests/admin-kit/kit-render.test.mjs, c33a33a4) para o kit no harness (F332, TASK-08): a pasta do kit por parâmetro.
@@ -17,7 +17,7 @@ const load = (file) => import(pathToFileURL(path.join(UI, file)).href);
 const { KitContext } = await load('components/context.ts');
 const { SectionView } = await load('components/SectionView.tsx');
 const { SiteMap } = await load('components/SiteMap.tsx');
-const { EXAMPLE_SCHEMA: schema } = await load('example/example-schema.ts');
+const { EXAMPLE_SCHEMA: schema } = await import('./example/example-schema.mjs');
 
 const texts = new Proxy({ problems: {}, onPage: 'On the page · {title}', sectionCount: '{fields} fields · {states}' }, { get: (target, key) => key === 'rich' ? undefined : target[key] ?? `«${String(key)}»` });
 const ports = { texts, imageRule: (slot) => `rule of ${slot}`, hrefOf: (p, item) => `/kit/${p}${item ? `/${item}` : ''}`, signInHref: '/in' };

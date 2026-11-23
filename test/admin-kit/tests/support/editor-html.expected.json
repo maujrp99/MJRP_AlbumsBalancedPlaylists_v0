@@ -1,0 +1,1140 @@
+{
+  "_vendored": "cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`",
+ "drawn": [
+  "<p><br></p>",
+  "<p>Um <strong>dois</strong> <em>três</em> <u>quatro</u> <s>cinco</s> <mark>seis</mark> <sup>sete</sup> <sub>oito</sub> <code>nove &lt;b&gt;</code> <a href=\"/x\">dez</a> onze &amp; &lt; &gt; &quot; &#39;</p>",
+  "<p>linha um<br>linha dois</p>",
+  "<p>um <span data-size=\"large\">grande</span>, <strong><span data-size=\"xlarge\">forte e enorme</span></strong> e <span data-size=\"small\">pequeno</span></p>",
+  "<p class=\"lead\">Texto grande</p><h3>Subtítulo</h3><blockquote><p>Uma citação</p><p>Outra</p></blockquote><div class=\"callout\" data-rt=\"callout\"><p>Um aviso</p><p>Segue</p></div><div class=\"callout\" data-rt=\"callout\"><p><br></p></div>",
+  "<ul><li>um</li><li>dois <strong>forte</strong></li></ul><ol><li>a</li><li>b</li><li>sete</li><li>oito</li></ol><hr>",
+  "<figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"image\" data-src=\"/media/a.jpg\" data-alt=\"Foto &lt;1&gt;\" data-caption=\"Legenda &amp; tal\" data-wide=\"\"><img src=\"/media/a.jpg\" alt=\"Foto &lt;1&gt;\"><figcaption>Legenda &amp; tal</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure><figure class=\"ak-rt-media wide\" contenteditable=\"false\" data-rt=\"image\" data-src=\"/media/b.jpg\" data-alt=\"Larga\" data-caption=\"\" data-wide=\"1\"><img src=\"/media/b.jpg\" alt=\"Larga\"><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure><figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"video\" data-url=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" data-caption=\"Uma palestra\"><span class=\"ak-rt-video\" style=\"background-image:url('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg')\"><i aria-hidden=\"true\">▶</i></span><figcaption>Uma palestra</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure><figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"video\" data-url=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" data-caption=\"\"><span class=\"ak-rt-video\" style=\"background-image:url('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg')\"><i aria-hidden=\"true\">▶</i></span><figcaption>YouTube · video</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure><figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"video\" data-url=\"https://vimeo.com/76979871\" data-caption=\"\"><span class=\"ak-rt-video\"><i aria-hidden=\"true\">▶</i></span><figcaption>Vimeo · video</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure>",
+  "<div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"atomic-habits\" data-title=\"Atomic Habits\"><img src=\"/covers/atomic.jpg\" alt=\"\"><span><b>Atomic Habits &lt;2nd&gt;</b>James Clear<small>On the shelf · Read</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div><div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"no-cover\" data-title=\"Sem capa\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Sem capa</b><small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div><div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"bad-cover\" data-title=\"Capa ruim\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Bad</b>A &amp; B<small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div><div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"unknown\" data-title=\"Fora da estante\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Fora da estante</b><small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div>",
+  "<p>&lt;script&gt;alert(1)&lt;/script&gt;</p><p>&lt;img src=x onerror=y&gt;</p>"
+ ],
+ "drawnWithoutShelf": [
+  "<p><br></p>",
+  "<p>Um <strong>dois</strong> <em>três</em> <u>quatro</u> <s>cinco</s> <mark>seis</mark> <sup>sete</sup> <sub>oito</sub> <code>nove &lt;b&gt;</code> <a href=\"/x\">dez</a> onze &amp; &lt; &gt; &quot; &#39;</p>",
+  "<p>linha um<br>linha dois</p>",
+  "<p>um <span data-size=\"large\">grande</span>, <strong><span data-size=\"xlarge\">forte e enorme</span></strong> e <span data-size=\"small\">pequeno</span></p>",
+  "<p class=\"lead\">Texto grande</p><h3>Subtítulo</h3><blockquote><p>Uma citação</p><p>Outra</p></blockquote><div class=\"callout\" data-rt=\"callout\"><p>Um aviso</p><p>Segue</p></div><div class=\"callout\" data-rt=\"callout\"><p><br></p></div>",
+  "<ul><li>um</li><li>dois <strong>forte</strong></li></ul><ol><li>a</li><li>b</li><li>sete</li><li>oito</li></ol><hr>",
+  "<figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"image\" data-src=\"/media/a.jpg\" data-alt=\"Foto &lt;1&gt;\" data-caption=\"Legenda &amp; tal\" data-wide=\"\"><img src=\"/media/a.jpg\" alt=\"Foto &lt;1&gt;\"><figcaption>Legenda &amp; tal</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure><figure class=\"ak-rt-media wide\" contenteditable=\"false\" data-rt=\"image\" data-src=\"/media/b.jpg\" data-alt=\"Larga\" data-caption=\"\" data-wide=\"1\"><img src=\"/media/b.jpg\" alt=\"Larga\"><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure><figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"video\" data-url=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" data-caption=\"Uma palestra\"><span class=\"ak-rt-video\" style=\"background-image:url('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg')\"><i aria-hidden=\"true\">▶</i></span><figcaption>Uma palestra</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure><figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"video\" data-url=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" data-caption=\"\"><span class=\"ak-rt-video\" style=\"background-image:url('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg')\"><i aria-hidden=\"true\">▶</i></span><figcaption>YouTube · video</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure><figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"video\" data-url=\"https://vimeo.com/76979871\" data-caption=\"\"><span class=\"ak-rt-video\"><i aria-hidden=\"true\">▶</i></span><figcaption>Vimeo · video</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure>",
+  "<div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"atomic-habits\" data-title=\"Atomic Habits\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Atomic Habits</b><small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div><div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"no-cover\" data-title=\"Sem capa\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Sem capa</b><small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div><div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"bad-cover\" data-title=\"Capa ruim\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Capa ruim</b><small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div><div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"unknown\" data-title=\"Fora da estante\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Fora da estante</b><small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div>",
+  "<p>&lt;script&gt;alert(1)&lt;/script&gt;</p><p>&lt;img src=x onerror=y&gt;</p>"
+ ],
+ "media": [
+  "",
+  "",
+  "<figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"image\" data-src=\"\" data-alt=\"A &quot;b&quot;\" data-caption=\"\" data-wide=\"\"><img src=\"\" alt=\"A &quot;b&quot;\"><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure>",
+  "<figure class=\"ak-rt-media wide\" contenteditable=\"false\" data-rt=\"image\" data-src=\"/a.jpg\" data-alt=\"\" data-caption=\"c\" data-wide=\"1\"><img src=\"/a.jpg\" alt=\"\"><figcaption>c</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure>",
+  "<figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"video\" data-url=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" data-caption=\"\"><span class=\"ak-rt-video\" style=\"background-image:url('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg')\"><i aria-hidden=\"true\">▶</i></span><figcaption>YouTube · video</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure>",
+  "<figure class=\"ak-rt-media\" contenteditable=\"false\" data-rt=\"video\" data-url=\"https://vimeo.com/76979871\" data-caption=\"Fala\"><span class=\"ak-rt-video\"><i aria-hidden=\"true\">▶</i></span><figcaption>Fala</figcaption><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></figure>",
+  "<div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"atomic-habits\" data-title=\"Written title\"><img src=\"/covers/atomic.jpg\" alt=\"\"><span><b>Atomic Habits &lt;2nd&gt;</b>James Clear<small>On the shelf · Read</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div>",
+  "<div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"no-cover\" data-title=\"Written title\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Written title</b><small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div>",
+  "<div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"bad-cover\" data-title=\"Written title\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Bad</b>A &amp; B<small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div>",
+  "<div class=\"ak-rt-book\" contenteditable=\"false\" data-rt=\"book\" data-slug=\"unknown\" data-title=\"Written &lt;title&gt;\"><span class=\"ak-rt-cover\" aria-hidden=\"true\"></span><span><b>Written &lt;title&gt;</b><small>On the shelf</small></span><button type=\"button\" class=\"ak-rt-x\" contenteditable=\"false\" tabindex=\"-1\">Remove</button></div>"
+ ],
+ "read": [
+  [],
+  [],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "a "
+     },
+     {
+      "t": "strong",
+      "c": [
+       {
+        "t": "text",
+        "v": "b"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "em",
+      "c": [
+       {
+        "t": "text",
+        "v": "c"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "u",
+      "c": [
+       {
+        "t": "text",
+        "v": "d"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "s",
+      "c": [
+       {
+        "t": "text",
+        "v": "e"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "mark",
+      "c": [
+       {
+        "t": "text",
+        "v": "f"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "sup",
+      "c": [
+       {
+        "t": "text",
+        "v": "g"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "sub",
+      "c": [
+       {
+        "t": "text",
+        "v": "h"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "s",
+      "c": [
+       {
+        "t": "text",
+        "v": "i"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "s",
+      "c": [
+       {
+        "t": "text",
+        "v": "j"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "u",
+      "c": [
+       {
+        "t": "text",
+        "v": "k"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "em",
+      "c": [
+       {
+        "t": "text",
+        "v": "l"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "strong",
+      "c": [
+       {
+        "t": "text",
+        "v": "m"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " n"
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "strong",
+      "c": [
+       {
+        "t": "text",
+        "v": "a"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "strong",
+      "c": [
+       {
+        "t": "em",
+        "c": [
+         {
+          "t": "text",
+          "v": "b"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " c "
+     },
+     {
+      "t": "u",
+      "c": [
+       {
+        "t": "s",
+        "c": [
+         {
+          "t": "text",
+          "v": "d"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "sup",
+      "c": [
+       {
+        "t": "text",
+        "v": "e"
+       }
+      ]
+     },
+     {
+      "t": "sub",
+      "c": [
+       {
+        "t": "text",
+        "v": "f"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "strong",
+      "c": [
+       {
+        "t": "text",
+        "v": "g"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " h "
+     },
+     {
+      "t": "strong",
+      "c": [
+       {
+        "t": "em",
+        "c": [
+         {
+          "t": "u",
+          "c": [
+           {
+            "t": "text",
+            "v": "i"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "link",
+      "href": "/ok",
+      "c": [
+       {
+        "t": "text",
+        "v": "a"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " b c "
+     },
+     {
+      "t": "link",
+      "href": "https://x.y/z",
+      "c": [
+       {
+        "t": "strong",
+        "c": [
+         {
+          "t": "text",
+          "v": "d"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": " "
+     },
+     {
+      "t": "code",
+      "v": "e f"
+     },
+     {
+      "t": "text",
+      "v": " x"
+     },
+     {
+      "t": "br"
+     },
+     {
+      "t": "text",
+      "v": "y"
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "ab"
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "a b c"
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "solto "
+     },
+     {
+      "t": "strong",
+      "c": [
+       {
+        "t": "text",
+        "v": "forte"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "par"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "mais "
+     },
+     {
+      "t": "size",
+      "size": "small",
+      "c": [
+       {
+        "t": "text",
+        "v": "pequeno"
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "h3",
+    "c": [
+     {
+      "t": "text",
+      "v": "a"
+     }
+    ]
+   },
+   {
+    "t": "h3",
+    "c": [
+     {
+      "t": "text",
+      "v": "b"
+     }
+    ]
+   },
+   {
+    "t": "h3",
+    "c": [
+     {
+      "t": "text",
+      "v": "c"
+     }
+    ]
+   },
+   {
+    "t": "lead",
+    "c": [
+     {
+      "t": "text",
+      "v": "d"
+     }
+    ]
+   },
+   {
+    "t": "h3",
+    "c": [
+     {
+      "t": "text",
+      "v": "e"
+     }
+    ]
+   },
+   {
+    "t": "h3",
+    "c": [
+     {
+      "t": "text",
+      "v": "f"
+     }
+    ]
+   },
+   {
+    "t": "lead",
+    "c": [
+     {
+      "t": "text",
+      "v": "g"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "h"
+     }
+    ]
+   },
+   {
+    "t": "lead",
+    "c": [
+     {
+      "t": "text",
+      "v": "i"
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "quote",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "a"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "b"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "c"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "d"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "e"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "f"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "g"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "h "
+      },
+      {
+       "t": "strong",
+       "c": [
+        {
+         "t": "text",
+         "v": "i"
+        }
+       ]
+      }
+     ]
+    ]
+   }
+  ],
+  [
+   {
+    "t": "callout",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "a"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "callout",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "b"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "callout",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "c"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "callout",
+    "c": []
+   }
+  ],
+  [
+   {
+    "t": "ul",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "a"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "b"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "c"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "d"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "e"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "f"
+      },
+      {
+       "t": "br"
+      },
+      {
+       "t": "text",
+       "v": "g"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "h"
+      },
+      {
+       "t": "br"
+      },
+      {
+       "t": "text",
+       "v": "i"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "j"
+      }
+     ],
+     [
+      {
+       "t": "strong",
+       "c": [
+        {
+         "t": "text",
+         "v": "k"
+        }
+       ]
+      }
+     ]
+    ]
+   }
+  ],
+  [
+   {
+    "t": "ol",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "a"
+      }
+     ]
+    ],
+    "start": 3
+   },
+   {
+    "t": "ol",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "b"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "ol",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "c"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "ol",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "d"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "ol",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "e"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "f"
+      }
+     ],
+     [
+      {
+       "t": "text",
+       "v": "g"
+      }
+     ]
+    ]
+   }
+  ],
+  [
+   {
+    "t": "ul",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "a"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "ul",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "b "
+      },
+      {
+       "t": "em",
+       "c": [
+        {
+         "t": "text",
+         "v": "c"
+        }
+       ]
+      }
+     ]
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "a"
+     }
+    ]
+   },
+   {
+    "t": "ul",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "b"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "c"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "t"
+     }
+    ]
+   },
+   {
+    "t": "quote",
+    "c": [
+     [
+      {
+       "t": "text",
+       "v": "q"
+      }
+     ]
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "u"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "x"
+     }
+    ]
+   },
+   {
+    "t": "image",
+    "src": "/a.jpg",
+    "alt": "A",
+    "caption": "",
+    "wide": true
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "y"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "z"
+     }
+    ]
+   },
+   {
+    "t": "hr"
+   }
+  ],
+  [
+   {
+    "t": "image",
+    "src": "/media/a.jpg",
+    "alt": "Foto",
+    "caption": "Legenda",
+    "wide": true
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "antes"
+     }
+    ]
+   },
+   {
+    "t": "video",
+    "provider": "youtube",
+    "id": "dQw4w9WgXcQ",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "caption": "Fala"
+   },
+   {
+    "t": "video",
+    "provider": "vimeo",
+    "id": "76979871",
+    "url": "https://vimeo.com/76979871",
+    "caption": ""
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "depois"
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "a"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "b"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "c"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "d"
+     }
+    ]
+   },
+   {
+    "t": "book",
+    "slug": "atomic-habits",
+    "title": "Atomic Habits"
+   },
+   {
+    "t": "book",
+    "slug": "x",
+    "title": "X"
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "a"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "b"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "c"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "d"
+     }
+    ]
+   },
+   {
+    "t": "hr"
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "e"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "f"
+     }
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "g"
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "size",
+      "size": "large",
+      "c": [
+       {
+        "t": "strong",
+        "c": [
+         {
+          "t": "text",
+          "v": "a"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "t": "strong",
+      "c": [
+       {
+        "t": "text",
+        "v": "b"
+       }
+      ]
+     },
+     {
+      "t": "text",
+      "v": "c"
+     },
+     {
+      "t": "size",
+      "size": "xlarge",
+      "c": [
+       {
+        "t": "em",
+        "c": [
+         {
+          "t": "text",
+          "v": "d"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "text",
+      "v": "a"
+     }
+    ]
+   }
+  ]
+ ],
+ "round": [
+  "",
+  "Um **dois** _três_ ++quatro++ ~~cinco~~ ==seis== ^sete^ ~oito~ `nove <b>` [dez](/x) onze & < > \" '",
+  "linha um\nlinha dois",
+  "um [grande]{.large}, **[forte e enorme]{.xlarge}** e [pequeno]{.small}",
+  "#### Texto grande\n\n### Subtítulo\n\n> Uma citação\n>\n> Outra\n\n> [!NOTE]\n> Um aviso\n>\n> Segue\n\n> [!NOTE]",
+  "- um\n- dois **forte**\n\n1. a\n2. b\n3. sete\n4. oito\n\n---",
+  "![Foto <1>](/media/a.jpg \"Legenda & tal\")\n\n![Larga](/media/b.jpg#largo)\n\n![Uma palestra](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n\n![](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n\n![](https://vimeo.com/76979871)",
+  "[Atomic Habits](/livro/atomic-habits \"livro\")\n\n[Sem capa](/livro/no-cover \"livro\")\n\n[Capa ruim](/livro/bad-cover \"livro\")\n\n[Fora da estante](/livro/unknown \"livro\")",
+  "<script>alert(1)</script>\n\n<img src=x onerror=y>"
+ ]
+}

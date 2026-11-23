@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * O obrigatório (F125, S-151; a peça do kit v1, aprovada pelo MJRP em 2026-11-17: o CMS profissional v30 e o CMS do Jardim v30,
  * `design/prototypes/assets/cms/required-v1.css`), nos dois CMS: o nome do campo com o * preso à última palavra, a legenda no
@@ -7,6 +7,7 @@
  * Só React e a pele do kit (`required.css`): o CMS do Jardim usa as mesmas peças, com as palavras dele.
  */
 import type { MouseEvent } from 'react';
+import { safeHref as safeUrl } from '@mjrp/admin-kit-core';
 
 /** As palavras da peça, que cada projeto entrega (o kit pelas `KitTexts`, o Jardim pelas dele). */
 export interface RequiredTexts {
@@ -71,7 +72,7 @@ export function MissingNotice({ items, t, onGo }: { items: MissingItem[]; t: Pic
             <ul>
                 {items.map((item) => (
                     <li key={`${item.id}-${item.lang ?? ''}`}>
-                        <a href={`#${item.id}`} onClick={(event: MouseEvent) => { event.preventDefault(); onGo(item); }}>
+                        <a href={safeUrl(`#${item.id}`) ?? '#'} onClick={(event: MouseEvent) => { event.preventDefault(); onGo(item); }}>
                             {item.label}{item.lang && <i>{item.lang.toUpperCase()}</i>}
                         </a>
                     </li>

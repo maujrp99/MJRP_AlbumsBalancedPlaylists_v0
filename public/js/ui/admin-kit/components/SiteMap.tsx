@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -10,6 +10,7 @@ import { elementsOf, type KitSchema, type KitSection } from '../schema';
 import { fill } from '../ports';
 import { itemsOf, stateOf, type KitValues } from '../values';
 import { useKit } from './context';
+import { safeHref as safeUrl } from '@mjrp/admin-kit-core';
 
 /** The texts of a section: its own fields and every field of every item of its lists, with their review states. */
 function countOf(schema: KitSchema, section: KitSection, values: KitValues): { fields: number; states: string } {
@@ -40,7 +41,7 @@ export function SiteMap({ values, lead, sections }: { values: KitValues; lead?: 
                 {(sections ?? schema.sections).filter((section) => !section.hidden && section.path).map((section) => {
                     const { fields, states } = countOf(schema, section, values);
                     return (
-                        <a key={section.id} className="ak-map-row" href={ports.hrefOf(section.path)}
+                        <a key={section.id} className="ak-map-row" href={safeUrl(ports.hrefOf(section.path)) ?? '#'}
                             onClick={(event) => { event.preventDefault(); go(section.path); }}>
                             <b>{section.title}</b>
                             <span>{fill(ports.texts.sectionCount, { fields, states: states || '—' })}</span>

@@ -1,11 +1,11 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * A project that is not this one (ADR-0011; S-112): a cookbook in English and Spanish, with its own review states and
- * image slots. The kit's tests build it with no import from the project, to prove the kit knows nothing of the MJRP site.
+ * image slots. It lives with the tests (`tests/example/`) and travels with them, never inside a project's `ui/` folder,
+ * where nothing would load it. The kit's tests build it with no import from the project, to prove the kit knows nothing of the MJRP site.
  */
-import type { KitSchema } from '../schema';
-
-export const EXAMPLE_SCHEMA: KitSchema = {
+/** @type {import('../../ui/schema').KitSchema} */
+export const EXAMPLE_SCHEMA = {
     name: 'Cookbook',
     languages: ['en', 'es'],
     states: { draft: { label: 'draft', tone: 'warn' }, ok: { label: 'checked', tone: 'accent' }, touched: { label: 'touched', tone: 'neutral' } },

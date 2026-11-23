@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // A tradução nas duas vias no kit do admin (F96, S-128): a regra de origem e destino e a peça, sem nada deste projeto.
 // Trazido do MJRPpersonal (tests/admin-kit/kit-translate.test.mjs, c33a33a4) para o kit no harness (F332, TASK-08): a pasta do kit por parâmetro.
 import { test } from 'node:test';
@@ -39,7 +39,7 @@ const load = (file) => import(pathToFileURL(path.join(UI, file)).href);
 const { KitContext } = await load('components/context.ts');
 const { FieldInput } = await load('components/inputs.tsx');
 const { TranslateField } = await load('components/TranslateField.tsx');
-const { EXAMPLE_SCHEMA: schema } = await load('example/example-schema.ts');
+const { EXAMPLE_SCHEMA: schema } = await import('./example/example-schema.mjs');
 
 const translateTexts = {
     languages: { en: 'English', es: 'Spanish' }, from: 'Translate from {language}', busy: 'Translating…', nothing: 'No text in {language} to translate',

@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // The internal link that leaves the site (F332, REQ-07; TASK-06, the core's side of the MJRPpersonal's TASK-01): a browser
 // reads a backslash as a slash, so `/\evil.com` and its escape `%5C` (in any case) would leave the site disguised as a link
 // of the site itself; a space or a control character in any position is no address either. The good ones stay.

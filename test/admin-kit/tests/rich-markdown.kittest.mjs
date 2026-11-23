@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // O dialeto do texto rico (F128, REQ-06 e REQ-07; ADR-0015; no núcleo do kit desde a F332): o que o campo grava o site lê
 // igual, e nada fora da lista entra pelo texto — HTML é texto, endereço perigoso perde o link, vídeo só do YouTube e do Vimeo.
 // Trazido do MJRPpersonal (tests/admin-kit/rich-markdown.test.mjs, c33a33a4); a pasta do núcleo por parâmetro (`ADMIN_KIT_CORE`).
@@ -8,7 +8,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const CORE = path.resolve(import.meta.dirname, '..', process.env.ADMIN_KIT_CORE ?? 'core');
-const { parseRich, toMarkdown, normalizeDoc, safeHref, safeImage, videoOf, countOf, plainText } = await import(pathToFileURL(path.join(CORE, 'index.js')).href);
+const { parseRich, parseInline, toMarkdown, normalizeDoc, safeHref, safeImage, videoOf, countOf, plainText } = await import(pathToFileURL(path.join(CORE, 'index.js')).href);
 
 const t = (v) => ({ t: 'text', v });
 const p = (...c) => ({ t: 'p', c });
@@ -175,4 +175,79 @@ test('ida e volta com 3000 documentos aleatórios', () => {
         }, []);
         assert.deepEqual(parseRich(md), merged, `documento ${n}:\n${JSON.stringify(doc)}\n---\n${md}`);
     }
+});
+
+// F332 slice 1b (TASK-28): the branches the split of the core touched and no test held.
+test('nenhum caractere de controle nem espaço de qualquer tipo passa num endereço, um a um', () => {
+    const controls = [...Array.from({ length: 32 }, (_, code) => code), 127].map((code) => String.fromCharCode(code));
+    for (const char of [...controls, ' ', '\u00A0', '\u2028', '\u3000']) {
+        const label = `U+${char.charCodeAt(0).toString(16)}`;
+        assert.equal(safeHref(`/a${char}b`), null, label);
+        assert.equal(safeHref(`https://a.b/${char}`.concat('c')), null, label);
+        assert.equal(safeImage(`/a${char}b.jpg`), null, label);
+    }
+    // The first character past the controls, and the one past DEL, are text of an address.
+    assert.equal(safeHref('/a!b'), '/a!b');
+    assert.equal(safeHref('/a\u0080b'), '/a\u0080b');
+    assert.equal(safeImage('/a\u0080b.jpg'), '/a\u0080b.jpg');
+    for (const bad of ["/a'b.jpg", '/a<b.jpg', '/a>b.jpg', '/a\\b.jpg', '', '   ']) assert.equal(safeImage(bad), null, JSON.stringify(bad));
+    assert.equal(safeImage('  /a.jpg  '), '/a.jpg');
+});
+
+test('o leitor tira o caractere nulo do texto e lê o resto', () => {
+    assert.deepEqual(parseRich('a\u0000b **c\u0000**'), [{ t: 'p', c: [{ t: 'text', v: 'ab ' }, { t: 'strong', c: [{ t: 'text', v: 'c' }] }] }]);
+});
+
+test('o endereço de vídeo em cada forma que o leitor aceita, e as que não aceita', () => {
+    const yt = { provider: 'youtube', id: 'dQw4w9WgXcQ' };
+    for (const good of ['https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'http://youtube.com/watch?v=dQw4w9WgXcQ&t=3', 'https://m.youtube.com/watch?v=dQw4w9WgXcQ',
+        'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://www.youtube.com/live/dQw4w9WgXcQ', 'https://www.youtube.com/v/dQw4w9WgXcQ',
+        'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', '  https://youtu.be/dQw4w9WgXcQ?t=1  ', 'https://WWW.YouTube.com/shorts/dQw4w9WgXcQ']) {
+        assert.deepEqual(videoOf(good), yt, good);
+    }
+    const vm = { provider: 'vimeo', id: '76979871' };
+    for (const good of ['https://vimeo.com/76979871', 'https://www.vimeo.com/channels/staffpicks/76979871', 'https://player.vimeo.com/video/76979871?dnt=1']) {
+        assert.deepEqual(videoOf(good), vm, good);
+    }
+    for (const bad of ['', 'não é endereço', 'ftp://youtu.be/dQw4w9WgXcQ', 'https://www.youtube.com/watch', 'https://www.youtube.com/watch?v=abc', 'https://www.youtube.com/channel/dQw4w9WgXcQ',
+        'https://www.youtube.com/embed', 'https://youtu.be/', 'https://youtu.be/abc', 'https://vimeo.com/', 'https://vimeo.com/123', 'https://player.vimeo.com/76979871',
+        'https://player.vimeo.com/video/abc', 'https://player.vimeo.com/video', 'https://example.com/watch?v=dQw4w9WgXcQ', null, undefined]) {
+        assert.equal(videoOf(bad), null, String(bad));
+    }
+});
+
+test('a lista: a de outro tipo começa outra, a aninhada sobe, a linha em branco só continua com item do mesmo tipo', () => {
+    assert.deepEqual(parseRich('- a\n1. b').map((block) => block.t), ['ul', 'ol']);
+    assert.deepEqual(parseRich('- a\n   1. b\n  - c'), [{ t: 'ul', c: [[{ t: 'text', v: 'a' }], [{ t: 'text', v: 'b' }], [{ t: 'text', v: 'c' }]] }]);
+    assert.deepEqual(parseRich('- a\n\n\n- b\n\ntexto').map((block) => block.t), ['ul', 'p']);
+    assert.deepEqual(parseRich('- a\n\n1. b').map((block) => block.t), ['ul', 'ol']);
+    assert.deepEqual(parseRich('3. a\n  segue\nmais\n# Título'), [{ t: 'ol', start: 3, c: [[{ t: 'text', v: 'a' }, { t: 'br' }, { t: 'text', v: 'segue' }, { t: 'br' }, { t: 'text', v: 'mais' }]] }, { t: 'h3', c: [{ t: 'text', v: 'Título' }] }]);
+});
+
+test('a marca fecha no fim de uma sequência mais longa, e a simples pula o par', () => {
+    assert.deepEqual(parseInline('**a *b***'), [{ t: 'strong', c: [{ t: 'text', v: 'a ' }, { t: 'em', c: [{ t: 'text', v: 'b' }] }] }]);
+    assert.deepEqual(parseInline('*a **b** c*'), [{ t: 'em', c: [{ t: 'text', v: 'a ' }, { t: 'strong', c: [{ t: 'text', v: 'b' }] }, { t: 'text', v: ' c' }] }]);
+    assert.deepEqual(parseInline('x^a\nb^'), [{ t: 'text', v: 'x^a' }, { t: 'br' }, { t: 'text', v: 'b^' }]);
+    assert.deepEqual(parseInline('a\\\nb \\* \\q `` c'), [{ t: 'text', v: 'a' }, { t: 'br' }, { t: 'text', v: 'b * \\q `` c' }]);
+    assert.deepEqual(parseInline('![foto](/a.jpg) []() [x](/y)'), [{ t: 'text', v: 'foto  ' }, { t: 'link', href: '/y', c: [{ t: 'text', v: 'x' }] }]);
+});
+
+test('o escritor: os sinais dobrados, o título e cada mídia', () => {
+    const p = (v) => toMarkdown([{ t: 'p', c: [{ t: 'text', v }] }]);
+    assert.equal(p('a == b ++ c = d + e a_b _c ![x'), 'a \\=\\= b \\+\\+ c = d + e a_b \\_c \\!\\[x');
+    assert.equal(toMarkdown([{ t: 'lead', c: [{ t: 'text', v: 'Grande #' }] }, { t: 'h3', c: [{ t: 'text', v: 'Sub' }, { t: 'br' }, { t: 'text', v: 'título' }] }]), '#### Grande \\#\n\n### Sub título');
+    assert.equal(toMarkdown([{ t: 'image', src: '/a b.jpg', alt: 'Uma [foto]', caption: 'Diz "oi"', wide: true }]), '');
+    assert.equal(toMarkdown([{ t: 'image', src: '/a(b).jpg', alt: 'Uma [foto]', caption: 'Diz "oi"', wide: true }]), '![Uma \\[foto\\]](/a(b).jpg#largo "Diz \\"oi\\"")');
+    assert.equal(toMarkdown([{ t: 'video', provider: 'vimeo', id: '76979871', url: '', caption: 'Fala' }, { t: 'video', provider: 'youtube', id: '', url: 'x', caption: '' }]), '![Fala](https://vimeo.com/76979871)');
+    assert.equal(toMarkdown([{ t: 'book', slug: 'atomic-habits', title: '' }, { t: 'book', slug: 'Não', title: 'x' }, { t: 'hr' }, { t: 'quote', c: [] }, { t: 'callout', c: [] }, { t: 'ul', c: [[]] }]), '[atomic-habits](/livro/atomic-habits "livro")\n\n---\n\n> [!NOTE]');
+    assert.equal(plainText([{ t: 'hr' }, { t: 'image', src: '/a.jpg', alt: 'a', caption: 'Legenda', wide: false }, { t: 'book', slug: 'x', title: 'Livro' }, { t: 'ul', c: [[{ t: 'text', v: 'um' }], [{ t: 'text', v: 'dois' }]] }]), 'Legenda\n\nLivro\n\num\ndois');
+});
+
+test('a forma normal: o sub cede ao riscado, a marca dentro da mesma some, o espaço sai da borda', () => {
+    const n = (c) => normalizeDoc([{ t: 'p', c }])[0]?.c;
+    assert.deepEqual(n([{ t: 's', c: [{ t: 'text', v: 'a' }] }, { t: 'sub', c: [{ t: 'text', v: 'b' }] }]), [{ t: 's', c: [{ t: 'text', v: 'a' }] }, { t: 'text', v: 'b' }]);
+    assert.deepEqual(n([{ t: 'sub', c: [{ t: 'text', v: 'b' }] }, { t: 's', c: [{ t: 'text', v: 'a' }] }]), [{ t: 'text', v: 'b' }, { t: 's', c: [{ t: 'text', v: 'a' }] }]);
+    assert.deepEqual(n([{ t: 'strong', c: [{ t: 'text', v: ' a ' }, { t: 'strong', c: [{ t: 'text', v: 'b ' }] }, { t: 'br' }] }, { t: 'text', v: 'c' }]), [{ t: 'strong', c: [{ t: 'text', v: 'a b' }] }, { t: 'br' }, { t: 'text', v: 'c' }]);
+    assert.deepEqual(n([{ t: 'sup', c: [{ t: 'text', v: 'a\nb' }] }, { t: 'code', v: '' }, { t: 'code', v: 'x\ny' }, { t: 'link', href: 'javascript:x', c: [{ t: 'text', v: 'l' }] }, { t: 'link', href: '/a', c: [] }]),
+        [{ t: 'text', v: 'a' }, { t: 'br' }, { t: 'text', v: 'b' }, { t: 'code', v: 'x y' }, { t: 'text', v: 'l' }]);
 });

@@ -118,5 +118,5 @@ admin_kit:    # o kit do admin, copiado do harness por versão (new_project.py -
   core_path: shared/admin-kit
   ui_path: public/js/ui/admin-kit
   tools_path: test/admin-kit
-  version: 0.9.0
+  version: 1.0.1
   skins: []

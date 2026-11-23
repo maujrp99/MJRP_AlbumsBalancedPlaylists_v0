@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // The texts of the kit's source (F332): every string, template and JSX text of a `.js`, `.ts` or `.tsx` file, comments
 // left out, read by the kit's own TypeScript parser; and the same Portuguese detector as the V0's `interfaceInEnglish`
 // (a letter with a Portuguese accent, or a word that is Portuguese and not English), so the kit is judged before it gets

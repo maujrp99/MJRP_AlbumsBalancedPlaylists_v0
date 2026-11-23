@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // A small DOM for the editor's way back (`fromEditor`), with no browser and no package: it reads the HTML the editor itself
 // writes (`toEditorHtml`) into nodes with the few members `fromEditor` reads — nodeType, nodeValue, tagName, childNodes,
 // children, textContent, getAttribute, hasAttribute, classList. Not an HTML parser for anything else.

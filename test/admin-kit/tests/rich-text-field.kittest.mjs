@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // O campo de texto do kit (F128, REQ-02 a REQ-04): o texto simples longo aceita Enter e diz que a linha em branco vira
 // parágrafo; o curto segue numa linha; o rico traz a barra inteira do `rich-text-v2` aprovado, cada botão com nome,
 // atalho e o que faz, e o texto gravado desenhado no campo. Desenhado pelo React no servidor, num esquema que não é do MJRP.
@@ -62,9 +62,15 @@ test('o rico traz a barra inteira, na ordem do protótipo, cada botão com nome 
     assert.match(html, /«\/» inserts · Enter opens a paragraph · Shift\+Enter breaks the line/);
 });
 
-test('o rico desenha o Markdown gravado, com a mídia fechada e «Remover», e conta palavras e mídias (REQ-05, REQ-06)', () => {
+test('o rico desenha o Markdown gravado, com a mídia fechada e «Remover», e conta palavras e mídias (REQ-05, REQ-06)', async () => {
     const value = 'Um **dois** três.\n\n> Uma citação\n\n![Foto do Jardim](/media/text/a.jpg "Legenda")\n\n![](https://youtu.be/dQw4w9WgXcQ)\n\n[Atomic Habits](/livro/atomic-habits "livro")\n\n<script>x</script>';
-    const html = renderToStaticMarkup(h(RichTextField, { label: 'A história', value, onChange: () => {} }));
+    const page = renderToStaticMarkup(h(RichTextField, { label: 'A história', value, onChange: () => {} }));
+    // Since 1.0.1 the saved text is drawn in the browser, before the first paint (the scene «the field as it opens» of
+    // rich-editor-clicks proves the drawing): the server writes the editable body empty, and the count with the text's numbers.
+    assert.match(page, /class="ak-rt-body"[^>]*><\/div>/, 'o servidor escreve o corpo vazio');
+    const { toEditorHtml } = await load('rich/editor-html.ts');
+    const { parseRich } = await load('index.ts');
+    const html = toEditorHtml(parseRich(value), RICH_TEXTS_EN.media) + page;
     assert.match(html, /<p>Um <strong>dois<\/strong> três\.<\/p><blockquote><p>Uma citação<\/p><\/blockquote>/);
     assert.match(html, /<figure class="ak-rt-media" contenteditable="false" data-rt="image" data-src="\/media\/text\/a\.jpg" data-alt="Foto do Jardim" data-caption="Legenda" data-wide=""><img src="\/media\/text\/a\.jpg" alt="Foto do Jardim"><figcaption>Legenda<\/figcaption><button type="button" class="ak-rt-x" contenteditable="false" tabindex="-1">Remove<\/button><\/figure>/);
     assert.match(html, /data-rt="video" data-url="https:\/\/www\.youtube\.com\/watch\?v=dQw4w9WgXcQ"/);
@@ -75,7 +81,8 @@ test('o rico desenha o Markdown gravado, com a mídia fechada e «Remover», e c
 
 test('o rico no kit: o mesmo campo dentro da seção, com o valor do idioma aberto', () => {
     const html = draw({ title: { en: '' }, intro: { en: '' }, story: { en: 'Hello **world**' } });
-    assert.match(html, /class="ak-rt-body"[^>]*><p>Hello <strong>world<\/strong><\/p><\/div>/);
+    assert.match(html, /class="ak-rt-body"[^>]*><\/div>/, 'o corpo vem vazio do servidor: o texto é desenhado no navegador (1.0.1)');
+    assert.match(html, /2 words/, 'a contagem é a do valor do idioma aberto');
     assert.doesNotMatch(html, /<textarea[^>]*>Hello/);
 });
 

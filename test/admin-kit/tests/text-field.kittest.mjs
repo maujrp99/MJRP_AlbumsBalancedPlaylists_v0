@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // O campo de texto padrão do kit (F135, REQ-01): o par de chaves soltas (`synopsis`/`synopsis_en`) lido e escrito pelo
 // `FieldInput` e pelo `TextField`, com as abas dos idiomas e o «Traduzir» nos dois sentidos. Nenhuma chamada paga: a porta é simulada.
 // Trazido do MJRPpersonal (tests/admin-kit/text-field.test.mjs, c33a33a4) para o kit no harness (F332, TASK-08): a pasta do kit por parâmetro.

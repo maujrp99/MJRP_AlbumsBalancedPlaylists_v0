@@ -1,7 +1,7 @@
-PASS the Painel is not in the page's preload — adminPanel-DJnw8DTo.js, adminPanel-DLGAvLMT.css
-PASS the main script carries neither the Painel nor the check of the administrator — main-CAoU11kz.js
+PASS the Painel is not in the page's preload — adminPanel-Bqb3Vzdo.js, adminPanel-DLGAvLMT.css
+PASS the main script carries neither the Painel nor the check of the administrator — main-CWsPsQVt.js
 PASS 1440 administrator: /admin opens the Painel — 188 texts of the first screen
-PASS 1440 the Painel's files were asked for — adminPanel-DJnw8DTo.js, adminPanel-DLGAvLMT.css
+PASS 1440 the Painel's files were asked for — adminPanel-Bqb3Vzdo.js, adminPanel-DLGAvLMT.css
 PASS 1440 the Painel's own words are not in the list, and no text is a rich one yet
 PASS 1440 the line about the site says what it shows — What the site shows: published (from the database) 1 text refused by the current version
 PASS 1440 scrolled to the middle (9506 of 19012 px): nothing covers «Save» — {"reached":true,"top":15,"hit":"ak-btn pri"}
@@ -40,10 +40,10 @@ PASS 1440 an account whose role is «editor»: no horizontal scroll, no console 
 PASS 1440 an account whose role is «Super» (not «super»): /admin says «Page not found»
 PASS 1440 an account whose role is «Super» (not «super»): the Painel's files are never requested — asked: 0
 PASS 1440 an account whose role is «Super» (not «super»): no horizontal scroll, no console errors
-PASS 1440 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3400 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
+PASS 1440 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3391 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
 PASS 1440 the database slow: the Painel's files are not requested
 PASS 393 administrator: /admin opens the Painel — 188 texts of the first screen
-PASS 393 the Painel's files were asked for — adminPanel-DJnw8DTo.js, adminPanel-DLGAvLMT.css
+PASS 393 the Painel's files were asked for — adminPanel-Bqb3Vzdo.js, adminPanel-DLGAvLMT.css
 PASS 393 the Painel's own words are not in the list, and no text is a rich one yet
 PASS 393 the line about the site says what it shows — What the site shows: published (from the database) 1 text refused by the current version
 PASS 393 scrolled to the middle (22610 of 45219 px): nothing covers «Save» — {"reached":true,"top":69,"hit":"ak-btn pri"}
@@ -82,7 +82,7 @@ PASS 393 an account whose role is «editor»: no horizontal scroll, no console e
 PASS 393 an account whose role is «Super» (not «super»): /admin says «Page not found»
 PASS 393 an account whose role is «Super» (not «super»): the Painel's files are never requested — asked: 0
 PASS 393 an account whose role is «Super» (not «super»): no horizontal scroll, no console errors
-PASS 393 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3392 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
+PASS 393 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3409 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
 PASS 393 the database slow: the Painel's files are not requested
 
 86 of 86 passed

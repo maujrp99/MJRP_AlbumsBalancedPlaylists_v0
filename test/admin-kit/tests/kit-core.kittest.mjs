@@ -1,6 +1,6 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // O miolo do kit do admin (F75, TASK-01; ADR-0011, S-112): os valores, as listas e a conferência dos limites, montados com
-// o esquema de um projeto de exemplo, sem nada deste projeto (`ui/example/`).
+// o esquema de um projeto de exemplo, sem nada deste projeto (`tests/example/`).
 // Trazido do MJRPpersonal (tests/admin-kit/kit-core.test.mjs, c33a33a4) para o kit no harness (F332, TASK-08): a pasta do kit por parâmetro.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -13,7 +13,7 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const UI = path.resolve(ROOT, process.env.ADMIN_KIT_UI ?? 'ui');
 const kit = await import(pathToFileURL(path.join(UI, 'index.ts')).href);
 const values = await import(pathToFileURL(path.join(UI, 'values.ts')).href);
-const { EXAMPLE_SCHEMA: schema } = await import(pathToFileURL(path.join(UI, 'example/example-schema.ts')).href);
+const { EXAMPLE_SCHEMA: schema } = await import('./example/example-schema.mjs');
 const recipes = kit.listByKey(schema, 'recipes');
 
 test('os idiomas, os estados e os espaços de imagem são do esquema, não do kit', () => {

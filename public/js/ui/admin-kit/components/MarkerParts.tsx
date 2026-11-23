@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -11,6 +11,8 @@ import { Fragment, useState, type ReactNode } from 'react';
 import { fill } from '../ports';
 import { excerpt, firstWord, followsValue, groupPlaces, hasLiteral, markerNames, markerPlaces, markerValue } from '../marker';
 import { useKit } from './context';
+import { nameOf } from '../values';
+import { safeHref as safeUrl } from '@mjrp/admin-kit-core';
 
 /** The phrase with the token swapped for the value, the value in bold: what the site shows, and where the name is. */
 function Phrase({ text, token, value }: { text: string; token: string; value: string }): ReactNode {
@@ -46,9 +48,9 @@ export function MarkerWhere() {
                         if (!place.go) return <span className="ak-mk-p" key={`${place.group}-${place.name}`}>{body}</span>;
                         const { path, itemId, block } = place.go;
                         return (
-                            <a key={`${path}-${itemId ?? ''}-${block}-${place.name}`} className="ak-mk-p" href={`${ports.hrefOf(path, itemId)}#blk-${block}`}
+                            <a key={`${path}-${itemId ?? ''}-${block}-${place.name}`} className="ak-mk-p" href={safeUrl(`${ports.hrefOf(path, itemId)}#${nameOf('blk', block)}`) ?? '#'}
                                 aria-label={fill(t.goTo, { name: place.name })}
-                                onClick={(event) => { event.preventDefault(); go(path, itemId, `blk-${block}`); }}>{body}</a>
+                                onClick={(event) => { event.preventDefault(); go(path, itemId, nameOf('blk', block)); }}>{body}</a>
                         );
                     })}
                 </div>

@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The admin kit's one entrance (ADR-0011; critique P2-9): a project imports the kit only from here, so the folder can
  * leave for a package of its own without breaking anyone. The layer sensor refuses an import of the kit's inside.

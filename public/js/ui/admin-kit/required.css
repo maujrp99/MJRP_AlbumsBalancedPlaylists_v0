@@ -1,4 +1,4 @@
-/* cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit` */
+/* cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit` */
 /* O obrigatório (F125), a peça do kit v1 aprovada pelo MJRP em 2026-11-17 (`design/prototypes/assets/cms/required-v1.css`), nos
    dois CMS: o kit e o editor do Jardim, que veste a pele do kit (`data-admin-skin="garden"`). Só os tokens do contrato da pele.
    - O * fica preso à última palavra do nome do campo (.rq-last, sem quebra): nunca cai sozinho na linha de baixo (UAT-262).

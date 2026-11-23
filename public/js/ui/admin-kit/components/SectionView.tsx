@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -11,18 +11,20 @@ import { elementsOf, type KitBlock, type KitSchema, type KitSection, type KitSte
 import { itemsOf, withItem, type KitItem, type KitValues } from '../values';
 import { Notice } from './bits';
 import { useKit } from './context';
+import { nameOf } from '../values';
 import { ElementView } from './ElementView';
 import { DndScope } from './dnd-scope';
 import { READING_LINE, WithSectionIndex, type SectionIndexEntry } from './SectionIndex';
+import { safeHref as safeUrl } from '@mjrp/admin-kit-core';
 
 function BlockCard({ block, values, onChange, at }: { block: KitBlock; values: KitValues; onChange: (next: KitValues) => void; at: string[] }) {
     return (
-        <section className="ak-blk" id={`blk-${block.id}`} aria-labelledby={block.title ? `blk-${block.id}-t` : undefined}>
+        <section className="ak-blk" id={nameOf('blk', block.id)} aria-labelledby={block.title ? nameOf('blk', block.id, 't') : undefined}>
             {(block.number || block.title) && (
                 <header className="ak-blk-h">
                     {block.number && <span className="ak-num">{block.number}</span>}
                     <span>
-                        <b id={`blk-${block.id}-t`}>{block.title}</b>
+                        <b id={nameOf('blk', block.id, 't')}>{block.title}</b>
                         {block.subtitle && <p>{block.subtitle}</p>}
                     </span>
                 </header>
@@ -41,7 +43,7 @@ function StepsBar({ steps, title, path, itemId }: { steps: KitStep[]; title?: st
         // The step being read is the last one whose block has reached the reading line; at the end of the page, the last.
         const measure = () => {
             const reached = steps.filter((step) => {
-                const block = document.getElementById(`blk-${step.block}`);
+                const block = document.getElementById(nameOf('blk', step.block));
                 return block && block.getBoundingClientRect().top <= READING_LINE;
             });
             const atEnd = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
@@ -56,8 +58,8 @@ function StepsBar({ steps, title, path, itemId }: { steps: KitStep[]; title?: st
         <nav className="ak-steps" aria-label={ports.texts.sequence}>
             {title && <span className="ak-steps-t">{title}</span>}
             {steps.map((step) => (
-                <a key={`${step.n}-${step.block}`} href={`#blk-${step.block}`} aria-current={current === step.block ? 'step' : undefined}
-                    onClick={(event) => { event.preventDefault(); go(path, itemId, `blk-${step.block}`); }}>
+                <a key={`${step.n}-${step.block}`} href={safeUrl(`#${nameOf('blk', step.block)}`) ?? '#'} aria-current={current === step.block ? 'step' : undefined}
+                    onClick={(event) => { event.preventDefault(); go(path, itemId, nameOf('blk', step.block)); }}>
                     <span>{step.n}</span>{step.label}{step.effect && <small>{step.effect}</small>}
                 </a>
             ))}
@@ -66,10 +68,43 @@ function StepsBar({ steps, title, path, itemId }: { steps: KitStep[]; title?: st
 }
 
 /** The sections the index of a screen lists: the blocks that have a name, each leading to its card. */
-const entriesOf = (blocks: KitBlock[]): SectionIndexEntry[] => blocks.filter((block) => block.title && block.inIndex !== false).map((block) => ({ id: `blk-${block.id}`, title: block.title! }));
+const entriesOf = (blocks: KitBlock[]): SectionIndexEntry[] => blocks.filter((block) => block.title && block.inIndex !== false).map((block) => ({ id: nameOf('blk', block.id), title: block.title! }));
+
+/** The steps of the model the item chose, and the bar's title, when the section's steps follow a model. */
+function stepsOf(section: KitSection, item: KitItem): { steps?: KitStep[]; title?: string } {
+    const model = section.steps ? item[section.steps.by] : undefined;
+    if (!section.steps || typeof model !== 'string') return {};
+    return { steps: section.steps.options[model], title: section.steps.titles?.[model] };
+}
+
+/** A step's block: the block with the step's number and name, and the step's own words for its lists (UAT-156: «+ Nova tela em camadas» in Elevar). */
+const blockOfStep = (block: KitBlock, step: KitStep): KitBlock => ({
+    ...block, number: step.n, title: step.label,
+    ...(step.addLabel ? { elements: block.elements.map((element) => (element.kind === 'list' ? { ...element, addLabel: step.addLabel! } : element)) } : {}),
+});
+
+/**
+ * With a model chosen, the blocks follow its steps (`^pro-admin-case-sequence`): the blocks that are no step come
+ * first, then each step's block in the step's order, with the step's number and name. A block of another model is out.
+ */
+function blocksOf(section: KitSection, steps: KitStep[] | undefined): KitBlock[] {
+    if (!steps) return section.blocks;
+    const stepped = new Set(Object.values(section.steps?.options ?? {}).flat().map((step) => step.block));
+    return [
+        ...section.blocks.filter((block) => !stepped.has(block.id)),
+        ...steps.flatMap((step) => section.blocks.filter((block) => block.id === step.block).map((block) => blockOfStep(block, step))),
+    ];
+}
+
+/** «←»: back to the section that holds the list, on the list's block. */
+function BackButton({ list }: { list: string }) {
+    const { schema, ports, go } = useKit();
+    const holder = holderOf(schema, list);
+    return <p><button type="button" className="ak-btn sm" onClick={() => go(holder?.path ?? '', undefined, nameOf('blk', list))}>← {holder?.title ?? ports.texts.back}</button></p>;
+}
 
 export function SectionView({ section, values, onChange, itemId }: { section: KitSection; values: KitValues; onChange: (next: KitValues) => void; itemId?: string }) {
-    const { schema, ports, go } = useKit();
+    const { ports } = useKit();
     const index = { heading: ports.texts.sectionIndex, label: ports.texts.sectionIndexLabel };
     if (!section.scope) {
         return (
@@ -84,26 +119,11 @@ export function SectionView({ section, values, onChange, itemId }: { section: Ki
         return <p className="ak-empty">{ports.texts.empty}</p>;
     }
     const change = (next: KitValues) => onChange(withItem(values, list, item.id, () => next as KitItem));
-    const holder = holderOf(schema, list);
-    const model = section.steps ? item[section.steps.by] : undefined;
-    const steps = section.steps && typeof model === 'string' ? section.steps.options[model] : undefined;
-    const stepsTitle = section.steps?.titles && typeof model === 'string' ? section.steps.titles[model] : undefined;
-    // With a model chosen, the blocks follow its steps (`^pro-admin-case-sequence`): the blocks that are no step come
-    // first, then each step's block in the step's order, with the step's number and name. A block of another model is out.
-    const stepped = new Set(Object.values(section.steps?.options ?? {}).flat().map((step) => step.block));
-    const shown: KitBlock[] = steps
-        ? [
-            ...section.blocks.filter((block) => !stepped.has(block.id)),
-            ...steps.flatMap((step) => section.blocks.filter((block) => block.id === step.block).map((block) => ({
-                ...block, number: step.n, title: step.label,
-                // The step's own words for the block's lists (UAT-156: «+ Nova tela em camadas» in Elevar).
-                ...(step.addLabel ? { elements: block.elements.map((element) => (element.kind === 'list' ? { ...element, addLabel: step.addLabel! } : element)) } : {}),
-            }))),
-        ]
-        : section.blocks;
+    const { steps, title: stepsTitle } = stepsOf(section, item);
+    const shown = blocksOf(section, steps);
     return (
         <>
-            <p><button type="button" className="ak-btn sm" onClick={() => go(holder?.path ?? '', undefined, `blk-${list}`)}>← {holder?.title ?? ports.texts.back}</button></p>
+            <BackButton list={list} />
             {item.fresh && section.scope.freshNotice && <Notice tone="ok">{section.scope.freshNotice}</Notice>}
             {steps && <StepsBar steps={steps} title={stepsTitle} path={section.path} itemId={item.id} />}
             <DndScope values={item} onChange={change}>

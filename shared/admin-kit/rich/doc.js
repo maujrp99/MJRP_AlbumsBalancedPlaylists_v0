@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The rich text document (F128, ADR-0015; the kit's core since F332): what the kit's rich field edits and what a site draws.
  * Blocks and spans of a closed list, so nothing outside it (HTML, a script, an address of another kind) can come in through
@@ -41,13 +41,26 @@
 export const RICH_SIZES = ['small', 'large', 'xlarge'];
 
 /**
+ * Whether a text holds a control character (0 to 31, or 127) or a space of any kind: no address takes one. The control
+ * characters are read by their code, so no pattern holds one.
+ * @param {string} text
+ */
+function hasControlOrSpace(text) {
+    for (let k = 0; k < text.length; k++) {
+        const code = text.charCodeAt(k);
+        if (code < 32 || code === 127) return true;
+    }
+    return /\s/.test(text);
+}
+
+/**
  * The address a link may take: the web, mail, or a place of the site itself. Anything else is no link.
  * @param {string} raw
  * @returns {string | null}
  */
 export function safeHref(raw) {
     const href = String(raw ?? '').trim();
-    if (!href || /[\u0000-\u001F\u007F\s]/.test(href)) return null;
+    if (!href || hasControlOrSpace(href)) return null;
     // A backslash (or its %5C escape, in any case) reads as a slash to the browser: `/\evil.com` would leave the site.
     if (href.startsWith('//') || /\\|%5c/i.test(href)) return null;
     if (href.startsWith('/') || href.startsWith('#')) return href;
@@ -63,7 +76,7 @@ export function safeHref(raw) {
  */
 export function safeImage(raw) {
     const src = String(raw ?? '').trim();
-    if (!src || /[\u0000-\u001F\u007F\s"'<>\\]/.test(src) || src.startsWith('//')) return null;
+    if (!src || hasControlOrSpace(src) || /["'<>\\]/.test(src) || src.startsWith('//')) return null;
     if (src.startsWith('/')) return src;
     return /^https:\/\/[^/]/i.test(src) ? src : null;
 }
@@ -74,31 +87,62 @@ const VIMEO_ID = /^\d{4,12}$/;
 /** @typedef {{ provider: 'youtube' | 'vimeo'; id: string }} RichVideo */
 
 /**
+ * The address read as a URL, or null when it is not one.
+ * @param {string} raw
+ * @returns {URL | null}
+ */
+function urlOf(raw) {
+    try {
+        return new URL(String(raw ?? '').trim());
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * @param {string | null | undefined} id
+ * @returns {RichVideo | null}
+ */
+const youtube = (id) => (id && YOUTUBE_ID.test(id) ? { provider: 'youtube', id } : null);
+/**
+ * @param {string | null | undefined} id
+ * @returns {RichVideo | null}
+ */
+const vimeo = (id) => (id && VIMEO_ID.test(id) ? { provider: 'vimeo', id } : null);
+
+/**
+ * Where a YouTube address carries the video's id: `/watch?v=`, or after `embed`, `shorts`, `live` or `v`.
+ * @param {URL} url
+ * @param {string[]} parts
+ */
+function youtubeId(url, parts) {
+    if (url.pathname === '/watch') return url.searchParams.get('v');
+    return ['embed', 'shorts', 'live', 'v'].includes(parts[0]) ? parts[1] : null;
+}
+
+/**
+ * Where a Vimeo address carries the video's id: any part of the site's address, or after `video` in the player's.
+ * @param {string} host
+ * @param {string[]} parts
+ */
+function vimeoId(host, parts) {
+    if (host === 'vimeo.com') return parts.find((part) => VIMEO_ID.test(part));
+    return parts[0] === 'video' ? parts[1] : null;
+}
+
+/**
  * A YouTube or Vimeo address, with the video's id checked; null for any other address.
  * @param {string} raw
  * @returns {RichVideo | null}
  */
 export function videoOf(raw) {
-    /** @type {URL} */
-    let url;
-    try {
-        url = new URL(String(raw ?? '').trim());
-    } catch {
-        return null;
-    }
-    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+    const url = urlOf(raw);
+    if (!url || (url.protocol !== 'https:' && url.protocol !== 'http:')) return null;
     const host = url.hostname.toLowerCase().replace(/^www\.|^m\./, '');
     const parts = url.pathname.split('/').filter(Boolean);
-    if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
-        const id = url.pathname === '/watch' ? url.searchParams.get('v') : ['embed', 'shorts', 'live', 'v'].includes(parts[0]) ? parts[1] : null;
-        return id && YOUTUBE_ID.test(id) ? { provider: 'youtube', id } : null;
-    }
-    if (host === 'youtu.be') return parts[0] && YOUTUBE_ID.test(parts[0]) ? { provider: 'youtube', id: parts[0] } : null;
-    if (host === 'vimeo.com') {
-        const id = parts.find((part) => VIMEO_ID.test(part));
-        return id ? { provider: 'vimeo', id } : null;
-    }
-    if (host === 'player.vimeo.com' && parts[0] === 'video') return parts[1] && VIMEO_ID.test(parts[1]) ? { provider: 'vimeo', id: parts[1] } : null;
+    if (host === 'youtube.com' || host === 'youtube-nocookie.com') return youtube(youtubeId(url, parts));
+    if (host === 'youtu.be') return youtube(parts[0]);
+    if (host === 'vimeo.com' || host === 'player.vimeo.com') return vimeo(vimeoId(host, parts));
     return null;
 }
 
@@ -140,21 +184,38 @@ export function inlineText(spans) {
 }
 
 /**
+ * The text of a block that holds no spans: the caption of an image or a video, the title of a book; a rule has none.
+ * @param {Extract<RichBlock, { t: 'hr' | 'image' | 'video' | 'book' }>} block
+ * @returns {string}
+ */
+function mediaText(block) {
+    switch (block.t) {
+        case 'image': case 'video': return block.caption;
+        case 'book': return block.title;
+        default: return '';
+    }
+}
+
+/**
+ * The text of one block, its items or paragraphs one a line.
+ * @param {RichBlock} block
+ * @returns {string}
+ */
+function blockText(block) {
+    switch (block.t) {
+        case 'p': case 'lead': case 'h3': return inlineText(block.c);
+        case 'quote': case 'callout': case 'ul': case 'ol': return block.c.map(inlineText).join('\n');
+        default: return mediaText(block);
+    }
+}
+
+/**
  * The document as plain text, one block a paragraph.
  * @param {RichDoc} doc
  * @returns {string}
  */
 export function plainText(doc) {
-    return doc.map((block) => {
-        switch (block.t) {
-            case 'p': case 'lead': case 'h3': return inlineText(block.c);
-            case 'quote': case 'callout': case 'ul': case 'ol': return block.c.map(inlineText).join('\n');
-            case 'image': return block.caption;
-            case 'video': return block.caption;
-            case 'book': return block.title;
-            default: return '';
-        }
-    }).filter(Boolean).join('\n\n');
+    return doc.map(blockText).filter(Boolean).join('\n\n');
 }
 
 /**

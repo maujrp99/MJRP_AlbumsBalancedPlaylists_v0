@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // A click on the steps bar tells the router's port which block the panel is on (F332, recheck P2-7 of TASK-14): before the
 // navigation port the step was a plain `#blk-…` link, the browser wrote the hash and the menu marked that block; with the
 // port, the click goes through `go(path, itemId, block)`, so the place has the block and the submenu's mark follows it
@@ -22,7 +22,7 @@ let SectionView, EXAMPLE_SCHEMA;
 before(async () => {
     if (SKIP) return;
     ({ SectionView } = await importComponent('components/SectionView.tsx'));
-    ({ EXAMPLE_SCHEMA } = await importComponent('example/example-schema.ts'));
+    ({ EXAMPLE_SCHEMA } = await import('./example/example-schema.mjs'));
 });
 
 const all = (node, predicate, hits = []) => {

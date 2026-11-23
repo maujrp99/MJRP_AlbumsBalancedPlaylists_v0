@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // O cartão da publicação do kit depois de salvar (F158; UAT-347 e UAT-349): a regra pura que lê cada resposta do porto da publicação
 // e diz o que o cartão mostra. O cartão sai assim que se sabe que não há build; uma consulta que falhou depois de salvar diz que não
 // foi possível confirmar; uma resposta pedida antes de salvar só ensina qual era o deploy de antes. Os textos são do teste.

@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // Loads the kit's TypeScript in the tests (F332): Node strips the types of a `.ts` by itself, but does not resolve an import
 // without its extension, does not read JSX and does not know the core's alias. An import without extension from a
 // `.ts`/`.tsx` becomes the file; a `.tsx` is transpiled with the React JSX by the kit's own TypeScript; the alias

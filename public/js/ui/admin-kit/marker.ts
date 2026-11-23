@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The marker (F127, S-153; `info-arch.md` `^cms-company-where`, `^cms-company-changed`, `^cms-company-marker`,
  * `^cms-company-literal`): a value the author types once, in one field, and the phrases that need it carry a token. This
@@ -7,7 +7,7 @@
  *
  * Pure: no React, no project import. The kit knows no name; the schema says which field it is and which token.
  */
-import { elementsOf, type KitField, type KitMarker, type KitSchema } from './schema';
+import { elementsOf, type KitField, type KitList, type KitMarker, type KitSchema, type KitSection } from './schema';
 import { itemsOf, textOf, type KitValues } from './values';
 
 /** One place of the site that carries the token: where it is, what it is called, and the phrase. */
@@ -87,6 +87,67 @@ export function followsValue(marker: KitMarker, schema: KitSchema, values: KitVa
     return !marker.mark || schema.languages.every((language) => !textOf(values, marker.mark!.key, language).trim());
 }
 
+/** What the search of the places carries: the token, the languages, and the places already listed. */
+interface PlaceSearch {
+    schema: KitSchema;
+    language: string;
+    token: string;
+    /** The same text can sit on two screens (a project's summary, in its list and in its case): it is one place, the first. */
+    fresh: (...path: Array<string | undefined>) => boolean;
+}
+
+type Go = NonNullable<MarkerPlace['go']>;
+
+/** The phrase of a field that carries the token: the language on the screen's, or the other's when only that one carries it. */
+function phraseOf(search: PlaceSearch, container: KitValues, field: KitField): string | null {
+    const order = [search.language, ...search.schema.languages.filter((code) => code !== search.language)];
+    const found = order.map((code) => textOf(container, field.key, code)).find((text) => text.includes(search.token));
+    return found ?? null;
+}
+
+/** The place of one field, when it is `marked`, its phrase carries the token and it was not listed yet. */
+function fieldPlace(search: PlaceSearch, field: KitField, container: KitValues, path: Array<string | undefined>, place: { group: string; name: string; go: Go }): MarkerPlace[] {
+    if (!field.marked) return [];
+    const phrase = phraseOf(search, container, field);
+    if (phrase === null || !search.fresh(...path, field.key)) return [];
+    return [{ group: place.group, name: place.name, phrase, go: { ...place.go } }];
+}
+
+/** The places in the items of a list: each marked field, named with the item's title. */
+function listPlaces(search: PlaceSearch, list: KitList, container: KitValues, path: Array<string | undefined>, group: string, go: Go): MarkerPlace[] {
+    const out: MarkerPlace[] = [];
+    for (const item of itemsOf(container, list.key)) {
+        const title = textOf(item, list.titleField, search.language) || textOf(item, list.titleField, search.schema.languages[0]);
+        for (const field of list.fields) {
+            if (field.kind !== 'field') continue;
+            out.push(...fieldPlace(search, field, item, [...path, list.key, item.id], { group, name: title ? `${field.label} · ${title}` : field.label, go }));
+        }
+    }
+    return out;
+}
+
+/** The contents a section reads: the panel's, or each item of the list it shows one of. */
+function holdersOf(section: KitSection, values: KitValues): Array<{ container: KitValues; itemId: string | undefined }> {
+    if (!section.scope) return [{ container: values, itemId: undefined }];
+    return itemsOf(values, section.scope.list).map((item) => ({ container: item as KitValues, itemId: item.id }));
+}
+
+/** The places of one section, block by block, in the order of the screen. */
+function sectionPlaces(search: PlaceSearch, section: KitSection, values: KitValues): MarkerPlace[] {
+    const out: MarkerPlace[] = [];
+    for (const { container, itemId } of holdersOf(section, values)) {
+        const path = section.scope ? [section.scope.list, itemId] : [];
+        for (const block of section.blocks) {
+            const go: Go = { path: section.path, itemId, block: block.id };
+            for (const element of elementsOf([block])) {
+                if (element.kind === 'field') out.push(...fieldPlace(search, element, container, path, { group: section.title, name: element.label, go }));
+                else if (element.kind === 'list') out.push(...listPlaces(search, element, container, path, section.title, go));
+            }
+        }
+    }
+    return out;
+}
+
 /**
  * Every place of the panel whose phrase carries the token, in the order of the menu, then the places outside the panel.
  * A phrase counts when it is a `marked` field with the token in any language; the one shown is the language on the screen's,
@@ -96,12 +157,6 @@ export function markerPlaces(schema: KitSchema, values: KitValues, language: str
     const marker = schema.marker;
     if (!marker) return [];
     const out: MarkerPlace[] = [];
-    const phraseOf = (container: KitValues, field: KitField): string | null => {
-        const order = [language, ...schema.languages.filter((code) => code !== language)];
-        const found = order.map((code) => textOf(container, field.key, code)).find((text) => text.includes(marker.token));
-        return found ?? null;
-    };
-    // The same text can sit on two screens (a project's summary, in its list and in its case): it is one place, the first.
     const seen = new Set<string>();
     const fresh = (...path: Array<string | undefined>): boolean => {
         const id = path.join('/');
@@ -109,34 +164,10 @@ export function markerPlaces(schema: KitSchema, values: KitValues, language: str
         seen.add(id);
         return true;
     };
+    const search: PlaceSearch = { schema, language, token: marker.token, fresh };
     // The box at the top is the first place while it follows the value: it shows the value's first word.
     if (marker.mark && followsValue(marker, schema, values)) out.push({ group: marker.mark.group, name: marker.mark.name, phrase: '', highlight: firstWord(markerValue(schema, values, language)) });
-    for (const section of schema.sections) {
-        const holders = section.scope
-            ? itemsOf(values, section.scope.list).map((item) => ({ container: item as KitValues, itemId: item.id }))
-            : [{ container: values, itemId: undefined as string | undefined }];
-        for (const { container, itemId } of holders) {
-            for (const block of section.blocks) {
-                for (const element of elementsOf([block])) {
-                    if (element.kind === 'field' && element.marked) {
-                        const phrase = phraseOf(container, element);
-                        const scoped = section.scope ? [section.scope.list, itemId] : [];
-                        if (phrase !== null && fresh(...scoped, element.key)) out.push({ group: section.title, name: element.label, phrase, go: { path: section.path, itemId, block: block.id } });
-                    } else if (element.kind === 'list') {
-                        for (const item of itemsOf(container, element.key)) {
-                            const title = textOf(item, element.titleField, language) || textOf(item, element.titleField, schema.languages[0]);
-                            for (const field of element.fields) {
-                                if (field.kind !== 'field' || !field.marked) continue;
-                                const phrase = phraseOf(item, field);
-                                const scoped = section.scope ? [section.scope.list, itemId] : [];
-                                if (phrase !== null && fresh(...scoped, element.key, item.id, field.key)) out.push({ group: section.title, name: title ? `${field.label} · ${title}` : field.label, phrase, go: { path: section.path, itemId, block: block.id } });
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    for (const section of schema.sections) out.push(...sectionPlaces(search, section, values));
     for (const place of marker.elsewhere ?? []) out.push({ group: place.group, name: place.name, phrase: '' });
     return out;
 }

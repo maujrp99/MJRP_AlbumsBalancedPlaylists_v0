@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // The kit navigates only through the port the project hands it (F332, REQ-01 and REQ-05; TASK-05): `KitPorts.navigation`
 // says where the panel is, takes it somewhere and tells it when the place changed outside it. The kit never writes the
 // browser's history nor the hash, nor listens to `popstate`/`hashchange`: the project's router owns them (the V0's
@@ -18,10 +18,10 @@ const UI = path.resolve(import.meta.dirname, '..', process.env.ADMIN_KIT_UI ?? '
 const load = (file) => import(pathToFileURL(path.join(UI, file)).href);
 const { KitApp } = await load('components/KitApp.tsx');
 const { useKit } = await load('components/context.ts');
-const { EXAMPLE_SCHEMA } = await load('example/example-schema.ts');
+const { EXAMPLE_SCHEMA } = await import('./example/example-schema.mjs');
 // The front page with its block in the menu (`subnav`), so the menu shows which block the place points to.
 const schema = { ...EXAMPLE_SCHEMA, sections: EXAMPLE_SCHEMA.sections.map((section) => (section.id === 'front' ? { ...section, subnav: ['hero'] } : section)) };
-const { memoryNavigation } = await load('example/example-navigation.ts');
+const { memoryNavigation } = await import('./example/example-navigation.mjs');
 
 const texts = new Proxy({ problems: {} }, { get: (target, key) => (key === 'rich' || key === 'required' ? undefined : target[key] ?? `«${String(key)}»`) });
 const portsWith = (navigation) => ({

@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -36,6 +36,44 @@ export interface TranslateFieldProps {
     onReview?: (id: string, open: boolean) => void;
 }
 
+/** Why the translation failed, in the project's words: the session, the service's credit, or the service not answering. */
+function reasonOf(result: Extract<KitResult<string>, { ok: false }>, t: KitTranslateTexts): string {
+    if (result.failure === 'session-expired') return t.reasons.session;
+    return result.message === 'credit' ? t.reasons.credit : t.reasons.service;
+}
+
+/** The review under the field: the original above the suggestion, which the author edits before accepting it. */
+function Review({ phase, id, t, limit, replaces, name, target, onEdit, onAgain, onDiscard, onAccept }: {
+    phase: Extract<Phase, { step: 'review' }>; id: string; t: KitTranslateTexts; limit?: number; replaces: boolean; name: (language: string) => string; target: string;
+    onEdit: (suggestion: string) => void; onAgain: () => void; onDiscard: () => void; onAccept: () => void;
+}) {
+    const over = limit !== undefined && phase.suggestion.length > limit;
+    return (
+        <div className="ak-tr-rev" role="group" aria-label={t.review}>
+            <div className="ak-tr-src">
+                <span className="ak-tr-lb">{fill(t.original, { language: name(phase.from) })}</span>
+                <p>{phase.source}</p>
+            </div>
+            <div className="ak-f">
+                <label className="ak-tr-lb" htmlFor={id}>{fill(t.suggestion, { language: name(target) })}</label>
+                {/* campo-proprio: a sugestão da tradução, para revisar antes de aceitar */}
+                <textarea id={id} className="ak-input ak-tr-sug" value={phase.suggestion} aria-invalid={over}
+                    onChange={(event) => onEdit(event.target.value)} />
+            </div>
+            <div className="ak-tr-foot">
+                {replaces && <span className="ak-tr-swap">{t.replaces}</span>}
+                {limit !== undefined && <span className={over ? 'ak-count over' : 'ak-count'}>{phase.suggestion.length} / {limit}</span>}
+                {over && <span className="ak-err-t ak-tr-over">{fill(t.overLimit, { count: phase.suggestion.length - limit })}</span>}
+                <span className="ak-tr-acts">
+                    <button type="button" className="ak-btn sm" onClick={onAgain}>{t.again}</button>
+                    <button type="button" className="ak-btn sm" onClick={onDiscard}>{t.discard}</button>
+                    <button type="button" className="ak-btn sm pri" disabled={over} onClick={onAccept}>{t.accept}</button>
+                </span>
+            </div>
+        </div>
+    );
+}
+
 export function TranslateField({ texts, languages, onScreen, limit, translate, t, onAccept, reviewId = '', onReview }: TranslateFieldProps) {
     const [phase, setPhase] = useState<Phase>({ step: 'idle' });
     const id = useId();
@@ -58,7 +96,7 @@ export function TranslateField({ texts, languages, onScreen, limit, translate, t
         const result = await translate(source, route.to);
         if (turn !== asked.current) return;
         if (!result.ok) {
-            setPhase({ step: 'failed', reason: result.failure === 'session-expired' ? t.reasons.session : result.message === 'credit' ? t.reasons.credit : t.reasons.service });
+            setPhase({ step: 'failed', reason: reasonOf(result, t) });
             return;
         }
         setPhase({ step: 'review', from: route.from, source, suggestion: result.value });
@@ -69,30 +107,9 @@ export function TranslateField({ texts, languages, onScreen, limit, translate, t
     };
 
     if (phase.step === 'review') {
-        const over = limit !== undefined && phase.suggestion.length > limit;
         return (
-            <div className="ak-tr-rev" role="group" aria-label={t.review}>
-                <div className="ak-tr-src">
-                    <span className="ak-tr-lb">{fill(t.original, { language: name(phase.from) })}</span>
-                    <p>{phase.source}</p>
-                </div>
-                <div className="ak-f">
-                    <label className="ak-tr-lb" htmlFor={id}>{fill(t.suggestion, { language: name(onScreen) })}</label>
-                    {/* campo-proprio: a sugestão da tradução, para revisar antes de aceitar */}
-                    <textarea id={id} className="ak-input ak-tr-sug" value={phase.suggestion} aria-invalid={over}
-                        onChange={(event) => setPhase({ ...phase, suggestion: event.target.value })} />
-                </div>
-                <div className="ak-tr-foot">
-                    {current && <span className="ak-tr-swap">{t.replaces}</span>}
-                    {limit !== undefined && <span className={over ? 'ak-count over' : 'ak-count'}>{phase.suggestion.length} / {limit}</span>}
-                    {over && <span className="ak-err-t ak-tr-over">{fill(t.overLimit, { count: phase.suggestion.length - limit })}</span>}
-                    <span className="ak-tr-acts">
-                        <button type="button" className="ak-btn sm" onClick={() => void ask()}>{t.again}</button>
-                        <button type="button" className="ak-btn sm" onClick={close}>{t.discard}</button>
-                        <button type="button" className="ak-btn sm pri" disabled={over} onClick={() => { onAccept(phase.suggestion); close(); }}>{t.accept}</button>
-                    </span>
-                </div>
-            </div>
+            <Review phase={phase} id={id} t={t} limit={limit} replaces={current} name={name} target={onScreen}
+                onEdit={(suggestion) => setPhase({ ...phase, suggestion })} onAgain={() => void ask()} onDiscard={close} onAccept={() => { onAccept(phase.suggestion); close(); }} />
         );
     }
     return (

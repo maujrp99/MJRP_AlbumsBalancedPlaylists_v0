@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // F134, S-160 REQ-05: o desenho da peça «propor, escolher, aplicar» com o React de verdade (no servidor): as linhas de cada
 // opção, nenhuma marcada, «Aplicar» apagado, o aviso com o papel certo. O comportamento (escolher, aplicar) está em suggest.test.mjs.
 // Trazido do MJRPpersonal (tests/admin-kit/suggest-render.test.mjs, c33a33a4) para o kit no harness (F332, TASK-08): a pasta do kit por parâmetro.

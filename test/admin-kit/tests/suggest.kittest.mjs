@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // F134, S-160 REQ-05: a peça do kit «propor, escolher, aplicar» serve aos dois CMS. Nada muda no campo sem o clique em «Aplicar»
 // (ou em «Usar»); com várias propostas, nenhuma vem marcada e «Aplicar» só acende com uma escolhida; o aviso vermelho é `alert`.
 // A peça não conhece nenhum CMS: o teste a monta com textos de um livro e com textos de um site de empresa, e ela serve aos dois.

@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -13,6 +13,7 @@
  * own, because at the end of the page the scroll never reaches the last sections (`^panel-section-index-active`).
  */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { safeHref as safeUrl } from '@mjrp/admin-kit-core';
 
 export interface SectionIndexEntry {
     /** The id of the element the item leads to. */
@@ -101,7 +102,7 @@ export function SectionIndex({ entries, heading, label }: { entries: SectionInde
             <ol>
                 {entries.map((entry, i) => (
                     <li key={entry.id}>
-                        <a href={`#${entry.id}`} aria-current={current === i ? 'location' : undefined}
+                        <a href={safeUrl(`#${entry.id}`) ?? '#'} aria-current={current === i ? 'location' : undefined}
                             onClick={(event) => { event.preventDefault(); lead(i); }}>{entry.title}</a>
                     </li>
                 ))}

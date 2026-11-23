@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -11,15 +11,23 @@ import { imageOf, textOf } from '../values';
 import { useKit } from './context';
 import type { KitValues } from '../values';
 
+/** The icon the tab shows: the one sent, or the one the code carries. */
+const iconOf = (values: KitValues, data?: Record<string, string>): string => imageOf(values, data?.iconKey ?? '')?.src ?? data?.standard ?? '';
+
+/** The tab's title: in the language on screen, in the main one, or the place's own. */
+function tabTitleOf(values: KitValues, data: Record<string, string> | undefined, language: string, main: string): string {
+    const key = data?.titleKey ?? '';
+    return textOf(values, key, language) || textOf(values, key, main) || data?.fallback || '';
+}
+
 export function BrowserIdentityTab({ values, language, data }: { values: KitValues; language: string; data?: Record<string, string> }) {
     const { ports, schema } = useKit();
-    const src = imageOf(values, data?.iconKey ?? '')?.src ?? data?.standard ?? '';
-    const title = textOf(values, data?.titleKey ?? '', language) || textOf(values, data?.titleKey ?? '', schema.languages[0]) || data?.fallback || '';
+    const src = iconOf(values, data);
+    const title = tabTitleOf(values, data, language, schema.languages[0]);
     return (
         <div className={data?.wide ? 'ak-tabs wide' : 'ak-tabs'} role="img" aria-label={`${ports.texts.tabSample}: ${title}`}>
             {(['dark', 'light'] as const).map((theme) => (
                 <span key={theme} className={`ak-tab ${theme}`} aria-hidden="true">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- o kit não importa o Next (ADR-0011): o ícone a 16 px, como a aba o mostra */}
                     {src && <img src={src} alt="" width={16} height={16} />}
                     <span>{title}</span>
                 </span>

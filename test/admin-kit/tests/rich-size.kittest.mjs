@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // O tamanho da letra no núcleo (F332, REQ-08; TASK-03): o leitor reconhece `[trecho]{.small|.large|.xlarge}` já na 1.0.0,
 // para nenhuma versão a partir dela mostrar os sinais crus; qualquer outra classe, ou mais de uma, fica texto. A barra o
 // oferece na 1.1.0 (TASK-20b); até lá, o escritor o preserva, para uma edição não descartar um tamanho em silêncio.

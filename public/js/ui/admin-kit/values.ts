@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The content the kit edits, as a plain tree (ADR-0011): a text field is `{ <language>: text, state? }`, a list is an array
  * of items, each item `{ id, live?, fresh?, ...its own fields }`, and an image is `{ src }`. The project reads and writes
@@ -78,14 +78,21 @@ export function withValue(container: KitValues, key: string, value: unknown): Ki
     return next;
 }
 
+/** A name of the kit made of parts (an id, a key, an anchor): `blk` + the block's id is `blk-<id>`. One place writes the dash, so the
+ * names are the same everywhere they are read. */
+export const nameOf = (...parts: Array<string | number>): string => parts.join('-');
+
 export function itemsOf(container: KitValues, key: string): KitItem[] {
     const value = container[key];
     return Array.isArray(value) ? value.filter((item): item is KitItem => isRecord(item) && typeof item.id === 'string') : [];
 }
 
+/** An image as the kit stores it: an object with its address. The guard says the type, so no cast is needed. */
+const isImage = (value: unknown): value is KitImageValue => isRecord(value) && typeof value.src === 'string' && value.src !== '';
+
 export function imageOf(container: KitValues, key: string): KitImageValue | null {
     const value = container[key];
-    return isRecord(value) && typeof value.src === 'string' && value.src ? (value as unknown as KitImageValue) : null;
+    return isImage(value) ? value : null;
 }
 
 export function newItemId(): string {

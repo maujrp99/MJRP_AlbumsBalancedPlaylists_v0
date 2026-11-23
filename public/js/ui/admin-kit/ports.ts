@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The kit's boundary, written down (critique of ADR-0011, P1-1): everything the project hands the kit. Besides these
  * ports, the kit imports only `react`, `react-dom`, `@dnd-kit/*` and `clsx` — the layer sensor holds that list

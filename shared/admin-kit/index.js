@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The admin kit's core (F332, CC-ADR-0068): the one entrance to the part of the kit that knows neither React nor the
  * browser — the rich text document, the reader and the writer of its dialect, the safe addresses and the plain text. A

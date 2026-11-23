@@ -2,6 +2,21 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:16] step — F82: o kit do admin oficial 1.0.1 no lugar da cópia candidata; suíte verde sem exceção do kit
+
+**Branch:** claude/f82-cms-texts-panel
+
+A cópia candidata do kit do admin (0.9.0) saiu e entrou a **oficial, 1.0.1**, pelo comando de verdade rodado do checkout principal do harness (`new_project.py --refresh-admin-kit --version 1.0.1`, tag `admin-kit-v1.0.1` → `8820335429e9`, conferida contra o registro `kits/admin-kit/releases.json`): 80 arquivos, 3 que saíram do kit removidos (os exemplos de `ui/example/`, que agora vêm com as ferramentas, em `test/admin-kit/tests/example/`); o registro `.mjrp-admin-kit.json` e o bloco `admin_kit:` do contrato dizem 1.0.1. Nenhuma edição à mão na cópia. Antes, a `main` do V0 foi juntada ao ramo (conflito só no `scripts/bundle-budget.json`: ficou o texto da `main` mais a nota da F82, e os tetos foram medidos de novo).
+
+**O que precisei adaptar no Painel: nada.** O adaptador, as portas, os textos e a pele já usavam só as entradas do kit (`ui/index.ts`, `ui/react.ts`, o núcleo pelo apelido), a navegação já ia pela porta do roteador, e os textos do kit já vinham do dicionário; o `tsc` e os testes do Painel passaram sem mudança.
+
+Conferido, com as linhas de resultado lidas:
+- **O conferidor do próprio kit** na cópia oficial (`node test/admin-kit/check.mjs --ui public/js/ui/admin-kit --core shared/admin-kit --root test/admin-kit`): `admin-kit check: green`, e também com `--no-complexity-exceptions`: `admin-kit check: green`. Com `--project .` (o modo que olha os imports do projeto) ele acusa 2 achados, os dois imports de folha de estilo do Painel (`kit.css` e `required.css` em `screens/admin/adminPanel.ts`): «a project enters only by ui/index.ts, ui/react.ts, core/index.js». O próprio kit manda o projeto importar essas duas folhas (`ui/react.ts`: «the project imports `kit.css` and `required.css` where it mounts the panel»), então o achado é do conferidor (ele não tem as folhas de estilo entre as entradas), não do Painel; fica para o harness.
+- **Suíte inteira**, sozinha, pela fila: `Test Files 409 passed (409)` · `Tests 5524 passed | 1 skipped (5525)`, sem «Unhandled Errors». Todos os sensores de arquitetura passam, sem exceção para o kit.
+- `eslint .`: 0 erros (110 avisos, os de antes). `tsc`: 0 erros.
+- `npm run test:rules`: 38 passam. `npm run budget:publication`: sai 0 (script principal 198.470 B, teto 198.620 B; depois da primeira tela 238.196 B).
+- **Prova no navegador** no site montado, com o kit oficial: 86 de 86, a 1440 e 393 px (endereços de música abortados, nenhum link para fora clicado). Capturas novas em `reports/evidence/F82/texts-panel/`.
+
 ## [2026-11-23 15:55] decision — F96: o MJRP escolheu a versão do especialista para a home do celular, com a abertura da versão dele
 
 **Branch:** main

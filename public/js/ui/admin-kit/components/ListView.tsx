@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -16,10 +16,11 @@ import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalList
 import { CSS } from '@dnd-kit/utilities';
 import type { KitList } from '../schema';
 import { useDndScope } from './dnd-scope';
-import { fill } from '../ports';
+import { fill, type KitPorts } from '../ports';
 import { imageOf, itemsOf, newItemId, stateOf, textOf, roleOf, withItem, withItemPassed, withMovedItem, withNewItem, withRole, withUnique, withoutItem, type KitImageValue, type KitItem, type KitValues } from '../values';
 import { Badge, OrderButtons, Switch } from './bits';
 import { problemsAt, useKit } from './context';
+import { nameOf } from '../values';
 import { ElementView } from './ElementView';
 import { ImageSlot, sizeOf } from './inputs';
 
@@ -34,34 +35,25 @@ function titleOf(item: KitItem, key: string, language: string, main: string): st
     return textOf(item, key, language) || textOf(item, key, main);
 }
 
-function Row({ list, item, index, total, position, open, onOpen, onChange, onRole, onMove, onMoveTo, onRemove, at }: {
-    list: KitList; item: KitItem; index: number; total: number; position: string; open: boolean; at: string[];
-    onOpen: (open: boolean) => void; onChange: (item: KitItem) => void; onRole: (value: string) => void; onMove: (to: number) => void; onMoveTo: (list: string) => void; onRemove: () => void;
-}) {
-    const { schema, language, ports, problems, go } = useKit();
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id, disabled: !list.ordered, data: { list: list.key, drops: list.roles?.key } });
-    const [confirming, setConfirming] = useState(false);
-    const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
-    const firstInput = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        if (item.fresh && open) firstInput.current?.querySelector<HTMLElement>('input, textarea')?.focus();
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- only when the new item opens: afterwards the author moves the cursor himself
-    }, []);
-    const main = schema.languages[0];
-    const title = titleOf(item, list.titleField, language, main) || (list.fallbackTitle ? titleOf(item, list.fallbackTitle, language, main) : '');
-    const summary = list.summaryField ? titleOf(item, list.summaryField, language, main) : '';
-    const live = list.live ? item.live === true : true;
-    const flagged = problemsAt(problems, [...at, item.id]).length > 0;
-    // An item with a required text left empty stays open after a refused save, so the notice can lead to the field (F125).
-    const shown = open || problemsAt(problems, [...at, item.id]).some((problem) => problem.code === 'required');
-    const state = list.titleState ? stateOf(item, list.titleField) : undefined;
+/** The item's name in the row: its title, or the field that names it when the title is empty. */
+const rowTitleOf = (list: KitList, item: KitItem, language: string, main: string): string => titleOf(item, list.titleField, language, main) || (list.fallbackTitle ? titleOf(item, list.fallbackTitle, language, main) : '');
+
+/** The first letters of the two first words: what a thumbnail with no image shows. */
+const initialsOf = (title: string): string => (title || '?').split(/\s+/).slice(0, 2).map((word) => word[0]).join('');
+
+/** The item's small image and what the project says of it (below the least size, out of proportion). */
+function thumbOf(list: KitList, item: KitItem, ports: KitPorts): { thumb: KitImageValue | null; warnings: string[] } {
     const thumb = list.thumb ? imageOf(item, list.thumb) : null;
     const thumbSlot = list.fields.find((field) => field.kind === 'image' && field.key === list.thumb);
     const warnings = thumb && thumbSlot?.kind === 'image' ? ports.describeImage?.(thumbSlot.slot, thumb) ?? [] : [];
-    const wide = list.thumbShape === 'wide';
-    // The role the item plays elsewhere (F85, `^pro-case-arrival-mark`): fixed by its position, or picked in the row.
-    const role = list.roles ? roleOf(item, index, list.roles) : null;
+    return { thumb, warnings };
+}
+
+/** «Remover» asks on the button itself and goes back to «Remover» by itself after `CONFIRM_MS`. */
+function useConfirmedRemove(onRemove: () => void) {
+    const [confirming, setConfirming] = useState(false);
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
     const remove = () => {
         if (!confirming) {
             setConfirming(true);
@@ -71,6 +63,138 @@ function Row({ list, item, index, total, position, open, onOpen, onChange, onRol
         if (timer.current) clearTimeout(timer.current);
         onRemove();
     };
+    return { confirming, remove };
+}
+
+/** A new item opens with the cursor in its first field. */
+function useFirstFieldFocus(fresh: boolean, open: boolean) {
+    const fields = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (fresh && open) fields.current?.querySelector<HTMLElement>('input, textarea')?.focus();
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- only when the new item opens: afterwards the author moves the cursor himself
+    }, []);
+    return fields;
+}
+
+type Role = ReturnType<typeof roleOf>;
+
+function RowThumb({ list, thumb, title }: { list: KitList; thumb: KitImageValue | null; title: string }) {
+    const { ports } = useKit();
+    if (!list.thumb) return null;
+    return (
+        <span className={clsx('ak-row-thumb', list.thumbShape)} aria-hidden="true">
+            {thumb ? <img src={thumb.src} alt="" style={thumb.position ? { objectPosition: thumb.position } : undefined} />
+                : list.thumbShape === 'wide' ? ports.texts.noImage : initialsOf(title)}
+        </span>
+    );
+}
+
+function RowTitle({ list, title, summary, role, thumb }: { list: KitList; title: string; summary: string; role: Role; thumb: KitImageValue | null }) {
+    const { ports } = useKit();
+    return (
+        <span className="ak-row-t">
+            {/* The role's badge sits beside the title, as in the admin v12 (F85): it does not push the row's actions down. */}
+            <b>{title || '—'}{role && list.roles && <> <Badge tone="accent">{fill(list.roles.badge, { role: role.label })}</Badge></>}</b>
+            {summary && <small>{summary}</small>}
+            {list.thumbShape === 'wide' && thumb?.width && thumb.height ? <small className="ak-measure">{fill(ports.texts.measure, { width: thumb.width, height: thumb.height, size: sizeOf(thumb.bytes) })}</small> : null}
+        </span>
+    );
+}
+
+/** The review state of the title field, as a badge in the row. */
+function StateBadge({ list, item }: { list: KitList; item: KitItem }) {
+    const { schema } = useKit();
+    const state = list.titleState ? stateOf(item, list.titleField) : undefined;
+    if (!state || !schema.states[state]) return null;
+    return <Badge tone={schema.states[state].tone}>{schema.states[state].label}</Badge>;
+}
+
+function RowBadges({ list, item, thumb, warnings, flagged }: { list: KitList; item: KitItem; thumb: KitImageValue | null; warnings: string[]; flagged: boolean }) {
+    const { ports } = useKit();
+    return (
+        <>
+            {list.thumbShape === 'wide' && thumb && (warnings.length ? warnings.map((warning) => <Badge key={warning} tone="warn">{warning}</Badge>) : <Badge tone="accent">{ports.texts.ready}</Badge>)}
+            <StateBadge list={list} item={item} />
+            {list.badges?.filter((badge) => item[badge.key] === badge.value).map((badge) => <Badge key={`${badge.key}-${badge.value}`} tone={badge.tone}>{badge.label}{list.badgeDetail?.(item) ?? ''}</Badge>)}
+            {item.fresh && <Badge tone="new">{list.freshLabel ?? ports.texts.fresh}</Badge>}
+            {flagged && <Badge tone="err">!</Badge>}
+        </>
+    );
+}
+
+/** On or off the air, in the list's own words, and what «off» means. */
+function LiveSwitch({ list, live, onChange }: { list: KitList; live: boolean; onChange: (on: boolean) => void }) {
+    const { ports } = useKit();
+    if (!list.live) return null;
+    return (
+        <>
+            <Switch on={live} label={live ? list.live.on ?? ports.texts.live : list.live.off ?? ports.texts.offAir} onChange={onChange} />
+            {!live && list.offHint && <span className="ak-hint">{list.offHint}</span>}
+        </>
+    );
+}
+
+/** Each selector is named by its chapter («Na chegada: O resultado»), so a screen reader tells the five apart. */
+function RoleSelect({ roles, role, title, onRole }: { roles: NonNullable<KitList['roles']>; role: Role; title: string; onRole: (value: string) => void }) {
+    return (
+        <label className="ak-role">
+            <span>{roles.label}</span>
+            {role?.fixed ? (
+                <select className="ak-input" aria-label={`${roles.label}: ${title || '—'}`} value="" disabled><option value="">{role.label}</option></select>
+            ) : (
+                <select className="ak-input" aria-label={`${roles.label}: ${title || '—'}`} value={role?.value ?? ''} onChange={(event) => onRole(event.target.value)}>
+                    <option value="">{roles.none}</option>
+                    {roles.pick.map((pick) => <option key={pick.value} value={pick.value}>{pick.label}</option>)}
+                </select>
+            )}
+        </label>
+    );
+}
+
+function RowActions({ list, item, title, role, live, shown, confirming, onOpen, onChange, onRole, onMoveTo, onRemove }: {
+    list: KitList; item: KitItem; title: string; role: Role; live: boolean; shown: boolean; confirming: boolean;
+    onOpen: (open: boolean) => void; onChange: (item: KitItem) => void; onRole: (value: string) => void; onMoveTo: (list: string) => void; onRemove: () => void;
+}) {
+    const { ports, go } = useKit();
+    return (
+        <span className="ak-row-acts">
+            {list.unique && (
+                <label className="ak-check">
+                    <input type="radio" name={`${list.key}-${list.unique.key}`} checked={item[list.unique.key] === true}
+                        onChange={() => onChange({ ...item, [list.unique!.key]: true })} />
+                    <span>{list.unique.label}</span>
+                </label>
+            )}
+            <LiveSwitch list={list} live={live} onChange={(on) => onChange({ ...item, live: on })} />
+            {list.opens && <button type="button" className="ak-btn sm pri" onClick={() => go(list.opens!.section, item.id)}>{list.opens.label}</button>}
+            {list.roles && <RoleSelect roles={list.roles} role={role} title={title} onRole={onRole} />}
+            {list.moveTo?.map((target) => <button key={target.list} type="button" className="ak-btn sm" onClick={() => onMoveTo(target.list)}>{target.label}</button>)}
+            <button type="button" className="ak-btn sm" aria-expanded={shown} onClick={() => onOpen(!shown)}>{shown ? ports.texts.close : ports.texts.edit}</button>
+            <button type="button" className={clsx('ak-btn sm', confirming ? 'confirm' : 'danger')} onClick={onRemove}>
+                {confirming ? `${ports.texts.confirmRemove}${list.removeAlso ? ` ${list.removeAlso}` : ''}` : ports.texts.remove}
+            </button>
+        </span>
+    );
+}
+
+function Row({ list, item, index, total, position, open, onOpen, onChange, onRole, onMove, onMoveTo, onRemove, at }: {
+    list: KitList; item: KitItem; index: number; total: number; position: string; open: boolean; at: string[];
+    onOpen: (open: boolean) => void; onChange: (item: KitItem) => void; onRole: (value: string) => void; onMove: (to: number) => void; onMoveTo: (list: string) => void; onRemove: () => void;
+}) {
+    const { schema, language, ports, problems } = useKit();
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id, disabled: !list.ordered, data: { list: list.key, drops: list.roles?.key } });
+    const { confirming, remove } = useConfirmedRemove(onRemove);
+    const fields = useFirstFieldFocus(Boolean(item.fresh), open);
+    const main = schema.languages[0];
+    const title = rowTitleOf(list, item, language, main);
+    const summary = list.summaryField ? titleOf(item, list.summaryField, language, main) : '';
+    const live = list.live ? item.live === true : true;
+    const mine = problemsAt(problems, [...at, item.id]);
+    // An item with a required text left empty stays open after a refused save, so the notice can lead to the field (F125).
+    const shown = open || mine.some((problem) => problem.code === 'required');
+    const { thumb, warnings } = thumbOf(list, item, ports);
+    // The role the item plays elsewhere (F85, `^pro-case-arrival-mark`): fixed by its position, or picked in the row.
+    const role = list.roles ? roleOf(item, index, list.roles) : null;
     return (
         <li ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }} className={clsx('ak-row', !live && 'off', isDragging && 'dragging')}>
             <div className="ak-row-h">
@@ -85,59 +209,15 @@ function Row({ list, item, index, total, position, open, onOpen, onChange, onRol
                     <span className="ak-pos" data-position>{position}</span>
                 </span>
                 <span className="ak-row-main">
-                    {list.thumb && (
-                        <span className={clsx('ak-row-thumb', list.thumbShape)} aria-hidden="true">
-                            {/* eslint-disable-next-line @next/next/no-img-element -- o kit não importa o Next (ADR-0011) */}
-                            {thumb ? <img src={thumb.src} alt="" style={thumb.position ? { objectPosition: thumb.position } : undefined} />
-                                : wide ? ports.texts.noImage : (title || '?').split(/\s+/).slice(0, 2).map((word) => word[0]).join('')}
-                        </span>
-                    )}
-                    <span className="ak-row-t">
-                        {/* The role's badge sits beside the title, as in the admin v12 (F85): it does not push the row's actions down. */}
-                        <b>{title || '—'}{role && list.roles && <> <Badge tone="accent">{fill(list.roles.badge, { role: role.label })}</Badge></>}</b>
-                        {summary && <small>{summary}</small>}
-                        {wide && thumb?.width && thumb.height ? <small className="ak-measure">{fill(ports.texts.measure, { width: thumb.width, height: thumb.height, size: sizeOf(thumb.bytes) })}</small> : null}
-                    </span>
-                    {wide && thumb && (warnings.length ? warnings.map((warning) => <Badge key={warning} tone="warn">{warning}</Badge>) : <Badge tone="accent">{ports.texts.ready}</Badge>)}
-                    {state && schema.states[state] && <Badge tone={schema.states[state].tone}>{schema.states[state].label}</Badge>}
-                    {list.badges?.filter((badge) => item[badge.key] === badge.value).map((badge) => <Badge key={`${badge.key}-${badge.value}`} tone={badge.tone}>{badge.label}{list.badgeDetail?.(item) ?? ''}</Badge>)}
-                    {item.fresh && <Badge tone="new">{list.freshLabel ?? ports.texts.fresh}</Badge>}
-                    {flagged && <Badge tone="err">!</Badge>}
-                    <span className="ak-row-acts">
-                        {list.unique && (
-                            <label className="ak-check">
-                                <input type="radio" name={`${list.key}-${list.unique.key}`} checked={item[list.unique.key] === true}
-                                    onChange={() => onChange({ ...item, [list.unique!.key]: true })} />
-                                <span>{list.unique.label}</span>
-                            </label>
-                        )}
-                        {list.live && <Switch on={live} label={live ? list.live.on ?? ports.texts.live : list.live.off ?? ports.texts.offAir} onChange={(on) => onChange({ ...item, live: on })} />}
-                        {list.live && !live && list.offHint && <span className="ak-hint">{list.offHint}</span>}
-                        {list.opens && <button type="button" className="ak-btn sm pri" onClick={() => go(list.opens!.section, item.id)}>{list.opens.label}</button>}
-                        {list.roles && (
-                            // Each selector is named by its chapter («Na chegada: O resultado»), so a screen reader tells the five apart.
-                            <label className="ak-role">
-                                <span>{list.roles.label}</span>
-                                {role?.fixed ? (
-                                    <select className="ak-input" aria-label={`${list.roles.label}: ${title || '—'}`} value="" disabled><option value="">{role.label}</option></select>
-                                ) : (
-                                    <select className="ak-input" aria-label={`${list.roles.label}: ${title || '—'}`} value={role?.value ?? ''} onChange={(event) => onRole(event.target.value)}>
-                                        <option value="">{list.roles.none}</option>
-                                        {list.roles.pick.map((pick) => <option key={pick.value} value={pick.value}>{pick.label}</option>)}
-                                    </select>
-                                )}
-                            </label>
-                        )}
-                        {list.moveTo?.map((target) => <button key={target.list} type="button" className="ak-btn sm" onClick={() => onMoveTo(target.list)}>{target.label}</button>)}
-                        <button type="button" className="ak-btn sm" aria-expanded={shown} onClick={() => onOpen(!shown)}>{shown ? ports.texts.close : ports.texts.edit}</button>
-                        <button type="button" className={clsx('ak-btn sm', confirming ? 'confirm' : 'danger')} onClick={remove}>
-                            {confirming ? `${ports.texts.confirmRemove}${list.removeAlso ? ` ${list.removeAlso}` : ''}` : ports.texts.remove}
-                        </button>
-                    </span>
+                    <RowThumb list={list} thumb={thumb} title={title} />
+                    <RowTitle list={list} title={title} summary={summary} role={role} thumb={thumb} />
+                    <RowBadges list={list} item={item} thumb={thumb} warnings={warnings} flagged={mine.length > 0} />
+                    <RowActions list={list} item={item} title={title} role={role} live={live} shown={shown} confirming={confirming}
+                        onOpen={onOpen} onChange={onChange} onRole={onRole} onMoveTo={onMoveTo} onRemove={remove} />
                 </span>
             </div>
             {shown && (
-                <div className="ak-row-b" ref={firstInput}>
+                <div className="ak-row-b" ref={fields}>
                     {list.fields.map((field) => (
                         <ElementView key={field.id} element={field} values={item} at={[...at, item.id]} onChange={(next) => onChange(next as KitItem)} />
                     ))}
@@ -230,7 +310,7 @@ export function ListView({ list, values, onChange, at }: { list: KitList; values
             {(list.max === undefined || items.length < list.max) && <button type="button" className="ak-btn ak-add" onClick={add}>{list.addLabel}</button>}
             {list.directUpload && (
                 <div className="ak-direct">
-                    <ImageSlot element={{ kind: 'image', id: `${list.key}-direct`, label: list.directUpload.label, key: list.directUpload.field, slot: list.directUpload.slot }}
+                    <ImageSlot element={{ kind: 'image', id: nameOf(list.key, 'direct'), label: list.directUpload.label, key: list.directUpload.field, slot: list.directUpload.slot }}
                         values={{}} at={atList}
                         onChange={(sent) => onChange({ ...values, [list.key]: [...items, { id: newItemId(), fresh: true, [list.directUpload!.field]: sent[list.directUpload!.field] }] })} />
                 </div>

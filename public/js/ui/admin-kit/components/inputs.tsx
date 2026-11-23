@@ -1,18 +1,20 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
  * A field, a flag, a choice and an image slot: each edits one value of the scope it is given and hands back the new scope.
  */
-import { useEffect, useId, useRef, useState } from 'react';
-import type { KitChoice, KitField, KitFlag, KitImage } from '../schema';
-import { fill } from '../ports';
+import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from 'react';
+import type { KitChoice, KitField, KitFlag, KitImage, KitSchema } from '../schema';
+import { fill, type KitImageVerdict, type KitPorts, type KitTexts } from '../ports';
+import type { KitProblem } from '../validate';
 import { imageOf, pairText, stateOf, textOf, withPairText, withText, withValue, type KitImageValue, type KitValues } from '../values';
 import { Badge, Notice } from './bits';
 import { TextField, type TextFieldKind } from './TextField';
 import type { RichFieldPorts } from './RichTextField';
 import { RICH_TEXTS_EN } from '../rich/tools';
 import { fieldAnchor, problemsAt, useKit } from './context';
+import { nameOf } from '../values';
 import { RequiredMessage, RequiredName } from './Required';
 import { MarkerHint, MarkerWhere, PhraseTools } from './MarkerParts';
 import { insertToken, withToken } from '../marker';
@@ -24,44 +26,57 @@ interface Props<E> {
     at: string[];
 }
 
-export function FieldInput({ element, values, onChange, at }: Props<KitField>) {
-    const { schema, language, ports, problems } = useKit();
-    const id = useId();
-    // O campo da frase (F127): o botão do marcador põe o marcador onde está o cursor.
-    const box = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
-    const main = schema.languages[0];
-    // Onde mora o texto de cada idioma (F135, REQ-01): um par de chaves soltas (`synopsis`/`synopsis_en`), um valor só, um idioma fixo ou um por idioma.
+/** The languages a field is written in: its pair's, the main one for a single value, its fixed one, or the schema's. */
+function languagesOf(element: KitField, schema: KitSchema, single: boolean): string[] {
+    if (element.pair) return Object.keys(element.pair);
+    if (single) return [schema.languages[0]];
+    return element.language ? [element.language] : [...schema.languages];
+}
+
+/**
+ * Where the text of each language lives (F135, REQ-01): a pair of loose keys (`synopsis`/`synopsis_en`), one value only, one
+ * fixed language or one per language. `lang` is the language the field shows (none for a single value).
+ */
+function fieldStore(element: KitField, values: KitValues, schema: KitSchema, language: string) {
     const pair = element.pair;
     const single = !pair && element.single === true;
-    const languages = pair ? Object.keys(pair) : single ? [main] : element.language ? [element.language] : [...schema.languages];
-    const read = (code: string) => pair ? pairText(values, pair, code) : single ? (typeof values[element.key] === 'string' ? (values[element.key] as string) : '') : textOf(values, element.key, code);
-    const write = (code: string, text: string): KitValues => pair ? withPairText(values, pair, code, text) : withText(values, element.key, single ? null : code, text, schema.editedState);
-    const lang = single ? null : element.language ?? language;
-    const text = read(lang ?? main);
-    const state = stateOf(values, element.key);
-    const mine = problemsAt(problems, [...at, element.key]).filter((problem) => !problem.language || problem.language === (element.language ?? language));
-    const over = element.limit !== undefined && text.length > element.limit;
-    // O que o campo é: curto, link e número são simples; o longo é rico, e simples quando tem limite de caracteres ou leva o marcador no cursor (F135).
-    const marker = schema.marker;
-    const markerTexts = ports.texts.marker;
-    const source = Boolean(marker && markerTexts && element.id === marker.key);
-    const phrase = Boolean(marker && markerTexts && element.marked && (element.type === 'short' || element.type === 'long') && lang !== null);
-    const kind: TextFieldKind = element.type === 'short' ? 'short' : element.type === 'link' ? 'link' : element.type === 'number' ? 'number'
-        : element.type === 'long' && element.limit !== undefined ? 'plain' : 'rich';
-    const [shown, setShown] = useState(language);
-    const putToken = () => {
-        const code = shown;
-        const now = read(code);
-        const field = box.current;
-        // Na caixa simples o marcador entra onde está o cursor; no texto rico, no fim, que a caixa editável não dá a posição.
-        const put = kind === 'rich' ? { text: `${now}${now && !/\s$/.test(now) ? ' ' : ''}${marker!.token}`, caret: -1 } : insertToken(now, field?.selectionStart ?? now.length, field?.selectionEnd ?? now.length, marker!.token);
-        onChange(write(code, put.text));
-        if (put.caret >= 0) requestAnimationFrame(() => { field?.focus(); field?.setSelectionRange(put.caret, put.caret); });
+    const own = values[element.key];
+    const read = (code: string): string => {
+        if (pair) return pairText(values, pair, code);
+        if (!single) return textOf(values, element.key, code);
+        return typeof own === 'string' ? own : '';
     };
-    const fixHand = (names: string[]) => onChange(write(shown, withToken(read(shown), names, marker!.token)));
-    // The rich field (F128): the project's slot for the images of a text, its shelf and its pages, through the ports.
+    const write = (code: string, text: string): KitValues => (pair ? withPairText(values, pair, code, text) : withText(values, element.key, single ? null : code, text, schema.editedState));
+    const lang = single ? null : element.language ?? language;
+    return { main: schema.languages[0], languages: languagesOf(element, schema, single), read, write, lang };
+}
+
+/** What the field is: short, link and number are plain; the long one is rich, and plain when it has a limit of characters (F135). */
+function kindOf(element: KitField): TextFieldKind {
+    if (element.type === 'short' || element.type === 'link' || element.type === 'number') return element.type;
+    return element.type === 'long' && element.limit !== undefined ? 'plain' : 'rich';
+}
+
+/** The marker (F127): whether this field holds the value (`source`) or is a phrase that can carry it (`phrase`). */
+function markerRoleOf(schema: KitSchema, ports: KitPorts, element: KitField, lang: string | null): { source: boolean; phrase: boolean } {
+    const marker = schema.marker;
+    if (!marker || !ports.texts.marker) return { source: false, phrase: false };
+    const prose = element.type === 'short' || element.type === 'long';
+    return { source: element.id === marker.key, phrase: Boolean(element.marked && prose && lang !== null) };
+}
+
+type Caret = { selectionStart: number | null; selectionEnd: number | null } | null;
+
+/** In the plain box the marker goes where the cursor is; in the rich text, at the end, since the editable box gives no position. */
+function tokenPut(kind: TextFieldKind, now: string, field: Caret, token: string): { text: string; caret: number } {
+    if (kind === 'rich') return { text: `${now}${now && !/\s$/.test(now) ? ' ' : ''}${token}`, caret: -1 };
+    return insertToken(now, field?.selectionStart ?? now.length, field?.selectionEnd ?? now.length, token);
+}
+
+/** The rich field (F128): the project's slot for the images of a text, its shelf and its pages, through the ports. */
+function richPortsOf(ports: KitPorts): RichFieldPorts {
     const slot = ports.richText?.imageSlot;
-    const richPorts: RichFieldPorts = {
+    return {
         pages: ports.richText?.pages,
         books: ports.richText?.books ? () => ports.richText!.books!() : undefined,
         imageRule: slot ? ports.imageRule(slot) : undefined,
@@ -72,47 +87,60 @@ export function FieldInput({ element, values, onChange, at }: Props<KitField>) {
             return sent.ok ? { ok: true, src: sent.value.src } : { ok: false, message: sent.message ?? ports.texts.saveFailed };
         } : undefined,
     };
-    // A tradução do campo (F96): só onde há uma versão por idioma e texto, e o projeto entregou a porta e as palavras.
-    const translate = languages.length > 1 && ports.translate && ports.texts.translate ? { run: ports.translate, t: ports.texts.translate } : undefined;
-    // A frase de um idioma que ainda não tem tradução diz isso no próprio campo.
-    const untranslatedIn = (code: string) => code !== main && !read(code).trim() && read(main).trim() !== '';
-    const placeholder = Object.fromEntries(languages.map((code) => [code, untranslatedIn(code) ? ports.texts.untranslated : element.placeholder ?? '']));
-    // The required one left empty, in the language on the screen (F125; the kit v1 piece): red border and the sentence under it.
-    const required = ports.texts.required;
-    const missing = mine.some((problem) => problem.code === 'required');
-    const missingId = missing ? `${id}-missing` : undefined;
-    const field = (
-        <div className={missing && required ? 'ak-f rq-bad' : 'ak-f'} id={fieldAnchor([...at, element.key], element.language)} data-pin={element.language ? '' : undefined}>
-            <TextField id={id} kind={kind} languages={languages} showing={lang ?? main} onOpen={setShown} values={Object.fromEntries(languages.map((code) => [code, read(code)]))}
-                label={(
-                    <>
-                        {/* O obrigatório leva * preso à última palavra do nome (F125; UAT-262). */}
-                        <RequiredName text={element.label} required={element.required} />
-                        {element.badge && <Badge tone="warn">{element.badge}</Badge>}
-                        {state && schema.states[state] && <Badge tone={schema.states[state].tone}>{schema.states[state].label}</Badge>}
-                    </>
-                )}
-                labelText={element.label} keyName={element.quiet ? undefined : element.id} required={element.required} invalid={mine.length > 0 || over}
-                limit={element.limit} placeholder={placeholder} hint={element.hint} inputRef={box} describedBy={missingId} bare
-                below={missing && required ? <RequiredMessage id={missingId} english={(mine.find((problem) => problem.code === 'required')?.language ?? lang) === 'en'} t={required} /> : undefined}
-                rich={{ ports: richPorts, texts: ports.texts.rich ?? RICH_TEXTS_EN }} translate={translate}
-                words={ports.texts.paragraphsHint ? { paragraphs: ports.texts.paragraphsHint, plain: ports.texts.paragraphsHint } : undefined}
-                onChange={(code, next) => onChange(write(code, next))} />
-            {lang !== null && untranslatedIn(lang) && <span className="ak-hint">{ports.texts.untranslated}</span>}
-            {source && <MarkerHint />}
-            {phrase && <PhraseTools text={read(shown)} lang={shown} onInsert={putToken} onFix={fixHand} />}
-            {mine.map((problem) => problem.code === 'required' && required
-                ? null
-                : <span key={problem.code} className="ak-err-t">{fill(ports.texts.problems[problem.code] ?? problem.code, { limit: problem.limit ?? '' })}</span>)}
-        </div>
+}
+
+/** What the text field takes from the ports: the rich editor's, the translation (F96: only with a version per language, the port and the words) and the hint of the paragraphs. */
+function textOptionsOf(ports: KitPorts, languages: string[]) {
+    const t = ports.texts;
+    return {
+        rich: { ports: richPortsOf(ports), texts: t.rich ?? RICH_TEXTS_EN },
+        translate: languages.length > 1 && ports.translate && t.translate ? { run: ports.translate, t: t.translate } : undefined,
+        words: t.paragraphsHint ? { paragraphs: t.paragraphsHint, plain: t.paragraphsHint } : undefined,
+    };
+}
+
+/**
+ * The required one left empty, in the language on the screen (F125; the kit v1 piece): the sentence under the field and the id
+ * that ties it to the box. Without the project's words for it, only the id (the problem's own line says it).
+ */
+function lackOf(mine: KitProblem[], required: KitTexts['required'], id: string, lang: string | null): { describedBy?: string; message?: ReactNode } {
+    const problem = mine.find((candidate) => candidate.code === 'required');
+    if (!problem) return {};
+    const describedBy = nameOf(id, 'missing');
+    return { describedBy, message: required ? <RequiredMessage id={describedBy} english={(problem.language ?? lang) === 'en'} t={required} /> : undefined };
+}
+
+const overLimit = (element: KitField, text: string): boolean => element.limit !== undefined && text.length > element.limit;
+
+/** The field's name: with the * of the required one tied to its last word (F125; UAT-262), its badge and its review state. */
+function FieldName({ element, values }: { element: KitField; values: KitValues }) {
+    const { schema } = useKit();
+    const state = stateOf(values, element.key);
+    return (
+        <>
+            <RequiredName text={element.label} required={element.required} />
+            {element.badge && <Badge tone="warn">{element.badge}</Badge>}
+            {state && schema.states[state] && <Badge tone={schema.states[state].tone}>{schema.states[state].label}</Badge>}
+        </>
     );
+}
+
+/** The field's problems, one line each; the required one left empty has its own sentence, when the project has the words. */
+function ProblemLines({ mine }: { mine: KitProblem[] }) {
+    const { ports } = useKit();
+    const lines = ports.texts.required ? mine.filter((problem) => problem.code !== 'required') : mine;
+    return <>{lines.map((problem) => <span key={problem.code} className="ak-err-t">{fill(ports.texts.problems[problem.code] ?? problem.code, { limit: problem.limit ?? '' })}</span>)}</>;
+}
+
+/** Beside the field: the list of the marker's places for the value's field, or «Onde aparece» with the text in each place. */
+function framed(field: ReactNode, element: KitField, source: boolean, text: string, title: string) {
     if (source) return <div className="ak-split">{field}<MarkerWhere /></div>;
     if (!element.where?.length) return field;
     return (
         <div className="ak-split">
             {field}
             <aside className="ak-where" aria-live="polite">
-                <b>{ports.texts.whereItShows}</b>
+                <b>{title}</b>
                 {element.where.map((place) => {
                     // «O topo: Founder, {value}»: the value inside the phrase it shows in; without `{value}`, the value alone.
                     const [name, phrase = '{value}'] = place.split(/:\s*(.+)/);
@@ -122,6 +150,48 @@ export function FieldInput({ element, values, onChange, at }: Props<KitField>) {
             </aside>
         </div>
     );
+}
+
+export function FieldInput({ element, values, onChange, at }: Props<KitField>) {
+    const { schema, language, ports, problems } = useKit();
+    const id = useId();
+    // O campo da frase (F127): o botão do marcador põe o marcador onde está o cursor.
+    const box = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
+    const { main, languages, read, write, lang } = fieldStore(element, values, schema, language);
+    const open = lang ?? main;
+    const text = read(open);
+    const mine = problemsAt(problems, [...at, element.key]).filter((problem) => !problem.language || problem.language === (element.language ?? language));
+    const { source, phrase } = markerRoleOf(schema, ports, element, lang);
+    const kind = kindOf(element);
+    const [shown, setShown] = useState(language);
+    const putToken = () => {
+        const field = box.current;
+        const put = tokenPut(kind, read(shown), field, schema.marker!.token);
+        onChange(write(shown, put.text));
+        if (put.caret >= 0) requestAnimationFrame(() => { field?.focus(); field?.setSelectionRange(put.caret, put.caret); });
+    };
+    const fixHand = (names: string[]) => onChange(write(shown, withToken(read(shown), names, schema.marker!.token)));
+    // A frase de um idioma que ainda não tem tradução diz isso no próprio campo.
+    const untranslatedIn = (code: string) => code !== main && !read(code).trim() && read(main).trim() !== '';
+    const placeholder = Object.fromEntries(languages.map((code) => [code, untranslatedIn(code) ? ports.texts.untranslated : element.placeholder ?? '']));
+    const lack = lackOf(mine, ports.texts.required, id, lang);
+    const options = textOptionsOf(ports, languages);
+    const field = (
+        <div className={lack.message ? 'ak-f rq-bad' : 'ak-f'} id={fieldAnchor([...at, element.key], element.language)} data-pin={element.language ? '' : undefined}>
+            <TextField id={id} kind={kind} languages={languages} showing={open} onOpen={setShown} values={Object.fromEntries(languages.map((code) => [code, read(code)]))}
+                label={<FieldName element={element} values={values} />}
+                labelText={element.label} keyName={element.quiet ? undefined : element.id} required={element.required} invalid={mine.length > 0 || overLimit(element, text)}
+                limit={element.limit} placeholder={placeholder} hint={element.hint} inputRef={box} describedBy={lack.describedBy} bare
+                below={lack.message}
+                rich={options.rich} translate={options.translate} words={options.words}
+                onChange={(code, next) => onChange(write(code, next))} />
+            {lang !== null && untranslatedIn(lang) && <span className="ak-hint">{ports.texts.untranslated}</span>}
+            {source && <MarkerHint />}
+            {phrase && <PhraseTools text={read(shown)} lang={shown} onInsert={putToken} onFix={fixHand} />}
+            <ProblemLines mine={mine} />
+        </div>
+    );
+    return framed(field, element, source, text, ports.texts.whereItShows);
 }
 
 export function FlagInput({ element, values, onChange, at }: Props<KitFlag>) {
@@ -187,10 +257,177 @@ function CropFrame({ url, width, height, target, point }: { url: string; width?:
     const at = point === 'top' ? 0 : point === 'center' ? (100 - keep) / 2 : 100 - keep;
     return (
         <div className="ak-crop" style={{ aspectRatio: String(ratio) }} data-point={point} aria-hidden="true">
-            {/* eslint-disable-next-line @next/next/no-img-element -- o kit não importa o Next (ADR-0011): a prévia vem do arquivo escolhido */}
             <img src={url} alt="" />
             <i style={tall ? { left: 0, right: 0, height: `${keep}%`, top: `${at}%` } : { top: 0, bottom: 0, width: `${keep}%`, left: `${at}%` }} />
         </div>
+    );
+}
+
+type CropPoint = 'top' | 'center' | 'bottom';
+type SlotResult = { tone: 'ok' | 'err' | 'info'; text: string };
+type Cropping = { file: File; width?: number; height?: number; target?: readonly [number, number]; url: string };
+/** The image the upload replaced, kept while the author can still take it back (the Harness site, F101). */
+type Undo = { previous: KitImageValue | null };
+type Sent = { src: string; width?: number; height?: number; bytes?: number };
+
+/** «Não enviada», why, and for a space with a standard, that the one in use stays. */
+const refusalOf = (element: KitImage, t: KitTexts, why: string): SlotResult => ({ tone: 'err', text: [t.notSent, why, element.standard ? (element.words?.stays ?? t.iconStays) : ''].filter(Boolean).join(' ') });
+
+/** The value of an image sent: its address, what the project measured of it, and the crop point the author chose. */
+const sentValue = ({ src, width, height, bytes }: Sent, position?: CropPoint): KitImageValue => ({ src, ...(width ? { width } : {}), ...(height ? { height } : {}), ...(bytes ? { bytes } : {}), ...(position ? { position } : {}) });
+
+/** What is said of an image the site shows only at the next build: the project's words, or for an icon the sentence of the v18. */
+function buildNoteOf(element: KitImage, t: KitTexts): SlotResult | null {
+    if (element.words) return { tone: 'info', text: element.words.sentNote };
+    return element.square ? { tone: 'ok', text: t.sentBuild } : null;
+}
+
+/** «Enviada», its measure and what to do next. */
+const sentNoteOf = (t: KitTexts, { width, height, bytes }: Sent): SlotResult => ({ tone: 'ok', text: [t.sent, width && height ? fill(t.measure, { width, height, size: sizeOf(bytes) }) : '', t.sentNext].filter(Boolean).join(' ') });
+
+/** The upload of a slot: the project's verdict, the crop point when the image is out of proportion, the sending and the way back. */
+function useImageUpload(element: KitImage, values: KitValues, onChange: (next: KitValues) => void, image: KitImageValue | null) {
+    const { ports } = useKit();
+    const t = ports.texts;
+    const [busy, setBusy] = useState(false);
+    const [result, setResult] = useState<SlotResult | null>(null);
+    const [undo, setUndo] = useState<Undo | null>(null);
+    const [cropping, setCropping] = useState<Cropping | null>(null);
+    // The crop point the frame shows: the one under the pointer or the focus, «Topo» to begin (UAT-154).
+    const [framed, setFramed] = useState<CropPoint>('top');
+    useEffect(() => () => { if (cropping) URL.revokeObjectURL(cropping.url); }, [cropping]);
+    // The file just sent, shown from the browser while the site does not carry it yet: the address of an image sent is only served after the next build.
+    const [preview, setPreview] = useState<string | null>(null);
+    const send = async (file: File, position?: CropPoint) => {
+        setBusy(true);
+        setResult(null);
+        setCropping(null);
+        const sent = await ports.uploadImage(element.slot, file);
+        setBusy(false);
+        if (!sent.ok) {
+            setResult(refusalOf(element, t, sent.message ?? t.saveFailed));
+            return;
+        }
+        if (element.buildNote) setPreview((old) => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(file); });
+        onChange(withValue(values, element.key, sentValue(sent.value, position)));
+        if (element.buildNote) {
+            // The site shows it only at the next build: the mark and the way back.
+            setUndo((kept) => kept ?? { previous: image });
+            setResult(buildNoteOf(element, t));
+            return;
+        }
+        setResult(sentNoteOf(t, sent.value));
+    };
+    const crop = (file: File, verdict: Extract<KitImageVerdict, { ok: true }>) => {
+        setFramed('top');
+        setCropping({ file, width: verdict.width, height: verdict.height, target: verdict.ratio, url: URL.createObjectURL(file) });
+    };
+    const choose = async (file: File) => {
+        setResult(null);
+        const verdict = await ports.checkImage(element.slot, file);
+        if (!verdict.ok) {
+            setResult(refusalOf(element, t, verdict.message));
+            return;
+        }
+        if (verdict.crop) {
+            crop(file, verdict);
+            return;
+        }
+        await send(file);
+    };
+    const takeBack = () => {
+        onChange(withValue(values, element.key, undo?.previous ?? undefined));
+        setUndo(null);
+        setResult(null);
+    };
+    return { busy, result, undo, cropping, framed, setFramed, preview, send, choose, takeBack };
+}
+
+/** What the thumbnail shows: the file just sent, the image of the slot, or the standard the code carries (F113). */
+function shownOf(element: KitImage, image: KitImageValue | null, undo: Undo | null, preview: string | null): { src: string } | null {
+    if (undo && preview) return { src: preview };
+    if (image) return image;
+    return element.standard ? { src: element.standard.src } : null;
+}
+
+function thumbClass(element: KitImage): string {
+    if (element.square) return element.small ? 'ak-img-thumb square small' : 'ak-img-thumb square';
+    return element.wide ? 'ak-img-thumb wide' : 'ak-img-thumb';
+}
+
+/** The name of the image's file, without the stamp the store puts before it. */
+const fileNameOf = (image: KitImageValue): string | undefined => image.src.split('/').pop()?.replace(/^\d+-/, '');
+
+function SlotLabel({ element, undo, warnings, t }: { element: KitImage; undo: Undo | null; warnings: string[]; t: KitTexts }) {
+    const words = element.words;
+    const marked = undo && (!element.standard || words);
+    return <span className="ak-lb">{element.label}{marked && <Badge tone="new">{words?.newMark ?? t.newMark}</Badge>}{warnings.map((warning) => <Badge key={warning} tone="warn">{warning}</Badge>)}{words && <span className="ak-key">{element.id}</span>}</span>;
+}
+
+/** Under the name of an image with a standard: in use, waiting for the build, or the standard's own sentence. */
+function standingOf(element: KitImage, image: KitImageValue | null, undo: Undo | null, t: KitTexts): string {
+    const words = element.words;
+    if (!image) return element.standard!.text;
+    return undo ? (words?.pending ?? t.keepsUntilBuild) : (words?.inUse ?? t.inUse);
+}
+
+/** An icon with a standard (F113): which image is in use, by its name, and what stands now. */
+function StandardNow({ element, image, undo, t }: { element: KitImage; image: KitImageValue | null; undo: Undo | null; t: KitTexts }) {
+    const words = element.words;
+    if (!element.standard) return null;
+    return (
+        <span className="ak-img-now">
+            {image ? <b>{fileNameOf(image)}{undo && !words && <Badge tone="new">{t.iconNewMark}</Badge>}</b> : <b>{words?.title ?? t.standardTitle}</b>}
+            <small>{standingOf(element, image, undo, t)}</small>
+        </span>
+    );
+}
+
+/** The upload button's words: the project's own for the space (the header logo, F122), the icon's, or the image's. */
+function uploadLabelOf(element: KitImage, has: boolean, busy: boolean, t: KitTexts): string {
+    if (busy) return t.uploading;
+    if (element.words) return has ? element.words.replace : element.words.upload;
+    if (element.standard) return t.uploadIcon;
+    return has ? t.replace : t.upload;
+}
+
+function SlotActions({ element, image, undo, busy, t, input, onUndo, onRemove }: {
+    element: KitImage; image: KitImageValue | null; undo: Undo | null; busy: boolean; t: KitTexts; input: RefObject<HTMLInputElement | null>; onUndo: () => void; onRemove: () => void;
+}) {
+    return (
+        <span className="ak-img-acts">
+            <button type="button" className="ak-btn sm" disabled={busy} onClick={() => input.current?.click()}>
+                {uploadLabelOf(element, image !== null, busy, t)}
+            </button>
+            {undo && <button type="button" className="ak-btn sm" onClick={onUndo}>{t.undo}</button>}
+            {image && !undo && <button type="button" className="ak-btn sm danger" onClick={onRemove}>{element.standard ? t.backToStandard : t.removeImage}</button>}
+        </span>
+    );
+}
+
+const CROP_POINTS = ['top', 'center', 'bottom'] as const;
+const cropWord = (t: KitTexts, point: CropPoint): string => ({ top: t.cropTop, center: t.cropCenter, bottom: t.cropBottom })[point];
+
+/** «Falta o recorte»: the image is out of the slot's proportion; the three points, and the frame of the one about to be chosen. */
+function CropAsk({ cropping, framed, onFrame, onSend, t, language }: { cropping: Cropping; framed: CropPoint; onFrame: (point: CropPoint) => void; onSend: (point: CropPoint) => void; t: KitTexts; language: string }) {
+    return (
+        <>
+            <Notice tone="warn" action={(
+                <span className="ak-img-acts">
+                    {CROP_POINTS.map((point) => (
+                        <button key={point} type="button" className="ak-btn sm" aria-pressed={framed === point}
+                            onMouseEnter={() => onFrame(point)} onFocus={() => onFrame(point)} onClick={() => onSend(point)}>
+                            {cropWord(t, point)}
+                        </button>
+                    ))}
+                </span>
+            )}>{fill(t.cropNeeded, {
+                width: cropping.width ?? '?', height: cropping.height ?? '?',
+                ratio: cropping.width && cropping.height ? shapeOf(cropping.width, cropping.height, language) : '?',
+                target: cropping.target ? `${cropping.target[0]}:${cropping.target[1]}` : '16:10',
+            })}</Notice>
+            <CropFrame url={cropping.url} width={cropping.width} height={cropping.height} target={cropping.target ?? [16, 10]} point={framed} />
+        </>
     );
 }
 
@@ -203,81 +440,20 @@ export function ImageSlot({ element, values, onChange }: Props<KitImage>) {
     const { ports, language } = useKit();
     const t = ports.texts;
     const input = useRef<HTMLInputElement>(null);
-    const [busy, setBusy] = useState(false);
-    const [result, setResult] = useState<{ tone: 'ok' | 'err' | 'info'; text: string } | null>(null);
-    // The image the upload replaced, kept while the author can still take it back (the Harness site, F101).
-    const [undo, setUndo] = useState<{ previous: KitImageValue | null } | null>(null);
-    const [cropping, setCropping] = useState<{ file: File; width?: number; height?: number; target?: readonly [number, number]; url: string } | null>(null);
-    // The crop point the frame shows: the one under the pointer or the focus, «Topo» to begin (UAT-154).
-    const [framed, setFramed] = useState<'top' | 'center' | 'bottom'>('top');
-    useEffect(() => () => { if (cropping) URL.revokeObjectURL(cropping.url); }, [cropping]);
-    // The file just sent, shown from the browser while the site does not carry it yet: the address of an image sent is only served after the next build.
-    const [preview, setPreview] = useState<string | null>(null);
     const image = imageOf(values, element.key);
+    const { busy, result, undo, cropping, framed, setFramed, preview, send, choose, takeBack } = useImageUpload(element, values, onChange, image);
     const warnings = image ? ports.describeImage?.(element.slot, image) ?? [] : [];
-    // An icon with a standard (F113): the thumbnail shows the image the code carries until one is sent, and says which is in use.
-    const standard = element.standard;
-    // The project's own words for the image space (the header logo, F122); without them, the tab icon's, from the ports.
-    const words = element.words;
-    const shown = undo && preview ? { src: preview } : image ?? (standard ? { src: standard.src } : null);
-    const fileName = image ? image.src.split('/').pop()?.replace(/^\d+-/, '') : undefined;
-    const send = async (file: File, position?: 'top' | 'center' | 'bottom') => {
-        setBusy(true);
-        setResult(null);
-        setCropping(null);
-        const sent = await ports.uploadImage(element.slot, file);
-        setBusy(false);
-        if (!sent.ok) {
-            setResult({ tone: 'err', text: [t.notSent, sent.message ?? t.saveFailed, element.standard ? (words?.stays ?? t.iconStays) : ''].filter(Boolean).join(' ') });
-            return;
-        }
-        const { src, width, height, bytes } = sent.value;
-        if (element.buildNote) setPreview((old) => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(file); });
-        onChange(withValue(values, element.key, { src, ...(width ? { width } : {}), ...(height ? { height } : {}), ...(bytes ? { bytes } : {}), ...(position ? { position } : {}) }));
-        if (element.buildNote) {
-            // The site shows it only at the next build: the mark and the way back, and for an icon the sentence of the v18.
-            setUndo((kept) => kept ?? { previous: image });
-            setResult(words ? { tone: 'info', text: words.sentNote } : element.square ? { tone: 'ok', text: t.sentBuild } : null);
-            return;
-        }
-        setResult({ tone: 'ok', text: [t.sent, width && height ? fill(t.measure, { width, height, size: sizeOf(bytes) }) : '', t.sentNext].filter(Boolean).join(' ') });
-    };
-    const choose = async (file: File) => {
-        setResult(null);
-        const verdict = await ports.checkImage(element.slot, file);
-        if (!verdict.ok) {
-            setResult({ tone: 'err', text: [t.notSent, verdict.message, element.standard ? (words?.stays ?? t.iconStays) : ''].filter(Boolean).join(' ') });
-            return;
-        }
-        if (verdict.crop) {
-            setFramed('top');
-            setCropping({ file, width: verdict.width, height: verdict.height, target: verdict.ratio, url: URL.createObjectURL(file) });
-            return;
-        }
-        await send(file);
-    };
+    const shown = shownOf(element, image, undo, preview);
     return (
         <div className="ak-f">
-            <span className="ak-lb">{element.label}{undo && (!standard || words) && <Badge tone="new">{words?.newMark ?? t.newMark}</Badge>}{warnings.map((warning) => <Badge key={warning} tone="warn">{warning}</Badge>)}{words && <span className="ak-key">{element.id}</span>}</span>
+            <SlotLabel element={element} undo={undo} warnings={warnings} t={t} />
             <div className="ak-img">
-                <span className={element.square ? (element.small ? 'ak-img-thumb square small' : 'ak-img-thumb square') : element.wide ? 'ak-img-thumb wide' : 'ak-img-thumb'}>
-                    {/* eslint-disable-next-line @next/next/no-img-element -- o kit não importa o Next (ADR-0011): a miniatura do envio é uma imagem simples */}
+                <span className={thumbClass(element)}>
                     {shown ? <img src={shown.src} alt="" style={image?.position ? { objectFit: 'cover', objectPosition: image.position } : undefined} /> : t.noImage}
                 </span>
-                {standard && (
-                    <span className="ak-img-now">
-                        {image ? <b>{fileName}{undo && !words && <Badge tone="new">{t.iconNewMark}</Badge>}</b> : <b>{words?.title ?? t.standardTitle}</b>}
-                        <small>{image ? (undo ? (words?.pending ?? t.keepsUntilBuild) : (words?.inUse ?? t.inUse)) : standard.text}</small>
-                    </span>
-                )}
-                <span className="ak-img-acts">
-                    <button type="button" className="ak-btn sm" disabled={busy} onClick={() => input.current?.click()}>
-                        {busy ? t.uploading : words ? (image ? words.replace : words.upload) : standard ? t.uploadIcon : image ? t.replace : t.upload}
-                    </button>
-                    {undo && <button type="button" className="ak-btn sm" onClick={() => { onChange(withValue(values, element.key, undo.previous ?? undefined)); setUndo(null); setResult(null); }}>{t.undo}</button>}
-                    {image && !undo && <button type="button" className="ak-btn sm danger" onClick={() => onChange(withValue(values, element.key, undefined))}>{standard ? t.backToStandard : t.removeImage}</button>}
-                </span>
-                {image?.width && image.height ? <span className="ak-hint">{fill(t.measure, { width: image.width, height: image.height, size: sizeOf(image.bytes) })}</span> : null}
+                <StandardNow element={element} image={image} undo={undo} t={t} />
+                <SlotActions element={element} image={image} undo={undo} busy={busy} t={t} input={input} onUndo={takeBack} onRemove={() => onChange(withValue(values, element.key, undefined))} />
+                <Measure image={image} t={t} />
                 {!element.quiet && <span className="ak-img-rule">{ports.imageRule(element.slot)}</span>}
                 <input ref={input} type="file" hidden accept="image/png, image/jpeg, image/webp" onChange={(event) => {
                     const file = event.target.files?.[0];
@@ -286,27 +462,15 @@ export function ImageSlot({ element, values, onChange }: Props<KitImage>) {
                 }} />
             </div>
             <div aria-live="polite">
-                {cropping && (
-                    <>
-                        <Notice tone="warn" action={(
-                            <span className="ak-img-acts">
-                                {(['top', 'center', 'bottom'] as const).map((point) => (
-                                    <button key={point} type="button" className="ak-btn sm" aria-pressed={framed === point}
-                                        onMouseEnter={() => setFramed(point)} onFocus={() => setFramed(point)} onClick={() => void send(cropping.file, point)}>
-                                        {point === 'top' ? t.cropTop : point === 'center' ? t.cropCenter : t.cropBottom}
-                                    </button>
-                                ))}
-                            </span>
-                        )}>{fill(t.cropNeeded, {
-                            width: cropping.width ?? '?', height: cropping.height ?? '?',
-                            ratio: cropping.width && cropping.height ? shapeOf(cropping.width, cropping.height, language) : '?',
-                            target: cropping.target ? `${cropping.target[0]}:${cropping.target[1]}` : '16:10',
-                        })}</Notice>
-                        <CropFrame url={cropping.url} width={cropping.width} height={cropping.height} target={cropping.target ?? [16, 10]} point={framed} />
-                    </>
-                )}
+                {cropping && <CropAsk cropping={cropping} framed={framed} onFrame={setFramed} onSend={(point) => void send(cropping.file, point)} t={t} language={language} />}
                 {result && <Notice tone={result.tone}>{result.text}</Notice>}
             </div>
         </div>
     );
+}
+
+/** The image's size and weight, when the project measured it. */
+function Measure({ image, t }: { image: KitImageValue | null; t: KitTexts }) {
+    if (!image?.width || !image.height) return null;
+    return <span className="ak-hint">{fill(t.measure, { width: image.width, height: image.height, size: sizeOf(image.bytes) })}</span>;
 }

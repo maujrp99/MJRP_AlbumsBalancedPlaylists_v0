@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -12,6 +12,7 @@
  * anterior não passa para ela.
  */
 import { useId, useState, type ReactNode } from 'react';
+import { nameOf } from '../values';
 
 export interface SuggestOption {
     /** A linha de cima: a categoria, ou o texto da proposta. */
@@ -101,7 +102,7 @@ export function SuggestPick({ state, t }: { state: Extract<SuggestState, { step:
             <fieldset className="ak-sg-list" role="radiogroup" aria-labelledby={id}>
                 {state.options.map((option, index) => (
                     <label key={index} className={`ak-sg-opt${option.sub ? '' : ' txt'}`}>
-                        <input type="radio" name={`${id}-r`} value={index} checked={chosen === index} onChange={() => setChosen(index)} />
+                        <input type="radio" name={nameOf(id, 'r')} value={index} checked={chosen === index} onChange={() => setChosen(index)} />
                         <span className="ak-sg-main">{option.main}</span>
                         {option.sub && <span className="ak-sg-sub">{option.sub}</span>}
                         {option.why && <small className="ak-sg-why">{option.why}</small>}
@@ -136,9 +137,12 @@ export function SuggestOne({ state, t }: { state: Extract<SuggestState, { step: 
 }
 
 /** O aviso: não achou, a cota acabou, a IA não respondeu. O vermelho é `alert`; o resto, `status`. */
+/** The class of each tone, written whole: a class name is never put together when the app runs. */
+const TONE_CLASS = { warn: 'ak-sg is-warn', err: 'ak-sg is-err', note: 'ak-sg is-note' } as const;
+
 export function SuggestNote({ state, t }: { state: Extract<SuggestState, { step: 'note' }>; t: SuggestTexts }) {
     return (
-        <div className={`ak-sg is-${state.tone}`} role={state.tone === 'err' ? 'alert' : 'status'}>
+        <div className={TONE_CLASS[state.tone]} role={state.tone === 'err' ? 'alert' : 'status'}>
             <p className="ak-sg-msg">{state.message}</p>
             {state.retry && (
                 <div className="ak-sg-f">

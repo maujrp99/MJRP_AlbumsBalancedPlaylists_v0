@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 // F125, S-151: a peça do obrigatório do kit (o kit v1, aprovado pelo MJRP em 2026-11-17 no CMS profissional v30 e no do Jardim v30),
 // desenhada pelo React no servidor: o * preso à última palavra (UAT-262), a legenda, o campo que falta com a borda e a frase, e o
 // aviso «Falta preencher: …. Nada foi gravado.» com um botão por campo.
@@ -18,7 +18,7 @@ const load = (file) => import(pathToFileURL(path.join(UI, file)).href);
 const { KitContext } = await load('components/context.ts');
 const { SectionView } = await load('components/SectionView.tsx');
 const { MissingNotice, RequiredLegend, RequiredName } = await load('components/Required.tsx');
-const { EXAMPLE_SCHEMA: schema } = await load('example/example-schema.ts');
+const { EXAMPLE_SCHEMA: schema } = await import('./example/example-schema.mjs');
 
 const required = {
     legend: 'obrigatório: não salva vazio', rest: 'Os outros, vazios, somem do site com o que depende deles',

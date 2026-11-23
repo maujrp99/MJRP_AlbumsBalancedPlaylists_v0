@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 /**
  * The Markdown of the rich text (F128, ADR-0015; the kit's core since F332): the reader and the writer of the kit's dialect,
  * the same for the editor and for the site, so what the field saves is what the page draws.
@@ -162,6 +162,43 @@ function continuesList(line, ordered) {
 }
 
 /**
+ * Where the list goes on after the blank lines that start at `i`, or -1 when it ends there.
+ * @param {string[]} lines
+ * @param {number} i
+ * @param {boolean} ordered
+ */
+function afterBlank(lines, i, ordered) {
+    let next = i + 1;
+    while (next < lines.length && !lines[next].trim()) next++;
+    return next < lines.length && continuesList(lines[next], ordered) ? next : -1;
+}
+
+/**
+ * Take line `i` into the list: the line to read next, or -1 when the list ends before it.
+ * @param {string[]} lines
+ * @param {number} i
+ * @param {boolean} ordered
+ * @param {string[][]} items the lines of each item so far, changed in place
+ */
+function listStep(lines, i, ordered, items) {
+    const current = lines[i];
+    const item = itemOf(current);
+    if (item) {
+        // A list of the other kind starts a list of its own, unless it is nested (then it comes up to this one).
+        if (item.indent < 2 && (item.number !== undefined) !== ordered) return -1;
+        // A nested item of either kind comes up to this list: the dialect has one level.
+        items.push([item.text ?? '']);
+        return i + 1;
+    }
+    if (!current.trim()) return afterBlank(lines, i, ordered);
+    if (/^[ \t]{2,}/.test(current) || !startsBlock(current)) {
+        items[items.length - 1].push(current);
+        return i + 1;
+    }
+    return -1;
+}
+
+/**
  * The list that starts at `at`: the block and the line after it.
  * @param {string[]} lines
  * @param {number} at
@@ -175,36 +212,38 @@ function listAt(lines, at) {
     const items = [];
     let i = at;
     while (i < lines.length) {
-        const current = lines[i];
-        const item = itemOf(current);
-        // A list of the other kind starts a list of its own, unless it is nested (then it comes up to this one).
-        if (item && item.indent < 2 && (item.number !== undefined) !== ordered) break;
-        if (item) {
-            // A nested item of either kind comes up to this list: the dialect has one level.
-            items.push([item.text ?? '']);
-            i++;
-            continue;
-        }
-        if (!current.trim()) {
-            let next = i + 1;
-            while (next < lines.length && !lines[next].trim()) next++;
-            if (next < lines.length && continuesList(lines[next], ordered)) {
-                i = next;
-                continue;
-            }
-            break;
-        }
-        if (/^[ \t]{2,}/.test(current) || !startsBlock(current)) {
-            items[items.length - 1].push(current);
-            i++;
-            continue;
-        }
-        break;
+        const next = listStep(lines, i, ordered, items);
+        if (next < 0) break;
+        i = next;
     }
     const c = items.map((item) => parseInline(joinLines(item)));
     /** @type {RichBlock} */
     const block = ordered ? { t: 'ol', c, ...(start !== undefined && start !== 1 ? { start } : {}) } : { t: 'ul', c };
     return { block, next: i };
+}
+
+/**
+ * The heading read from its line: «####» is the large text, any other level the subtitle; none when it has no text.
+ * @param {RegExpExecArray} heading
+ * @param {number} next
+ * @returns {{ block: RichBlock | null; next: number }}
+ */
+function headingBlock(heading, next) {
+    const spans = parseInline((heading[2] ?? '').replace(/(?:^|[ \t]+)#+$/, ''));
+    return { block: spans.length ? { t: heading[1].length === 4 ? 'lead' : 'h3', c: spans } : null, next };
+}
+
+/**
+ * The media of line `i`, when the line is alone in its paragraph (the next one is blank, or there is none); else null.
+ * @param {string[]} lines
+ * @param {number} i
+ * @returns {{ block: RichBlock | null; next: number } | null}
+ */
+function mediaAlone(lines, i) {
+    const alone = i + 1 >= lines.length || !lines[i + 1].trim();
+    const media = alone ? mediaOf(lines[i]) : null;
+    if (!media) return null;
+    return { block: media.t !== 'p' || media.c.length ? media : null, next: i + 1 };
 }
 
 /**
@@ -218,17 +257,11 @@ function listAt(lines, at) {
 function blockAt(lines, i, startsHere) {
     const line = lines[i];
     const heading = HEADING.exec(line);
-    if (heading) {
-        const spans = parseInline((heading[2] ?? '').replace(/(?:^|[ \t]+)#+$/, ''));
-        return { block: spans.length ? { t: heading[1].length === 4 ? 'lead' : 'h3', c: spans } : null, next: i + 1 };
-    }
+    if (heading) return headingBlock(heading, i + 1);
     if (RULE.test(line)) return { block: { t: 'hr' }, next: i + 1 };
     if (QUOTE.test(line)) return quoteAt(lines, i);
     if (isItem(line)) return listAt(lines, i);
-    const alone = startsHere && (i + 1 >= lines.length || !lines[i + 1].trim());
-    const media = alone ? mediaOf(line) : null;
-    if (media) return { block: media.t !== 'p' || media.c.length ? media : null, next: i + 1 };
-    return null;
+    return startsHere ? mediaAlone(lines, i) : null;
 }
 
 /**
@@ -237,7 +270,7 @@ function blockAt(lines, i, startsHere) {
  * @returns {RichDoc}
  */
 export function parseRich(markdown) {
-    const lines = String(markdown ?? '').replace(/\r\n?/g, '\n').replace(/\u0000/g, '').split('\n');
+    const lines = String(markdown ?? '').replace(/\r\n?/g, '\n').split('\u0000').join('').split('\n');
     /** @type {RichDoc} */
     const doc = [];
     /** @type {string[]} */
@@ -385,6 +418,29 @@ function skipAt(src, k) {
 }
 
 /**
+ * Where a run of `run` delimiter characters at `k` closes the mark: at the end of a run longer than the delimiter, so the
+ * inner mark keeps its own («**a *b***»); -1 for the run of two that a single delimiter skips, which is a pair of its own.
+ * @param {number} k
+ * @param {number} run
+ * @param {string} delim
+ */
+function closeOfRun(k, run, delim) {
+    if (run <= delim.length) return k;
+    return delim.length === 1 && run === 2 ? -1 : k + run - delim.length;
+}
+
+/**
+ * How many times the character at `k` repeats from there.
+ * @param {string} src
+ * @param {number} k
+ */
+function runAt(src, k) {
+    let run = 0;
+    while (src[k + run] === src[k]) run++;
+    return run;
+}
+
+/**
  * Where the mark opened at `at` closes, skipping escapes, code spans, links, sizes and the runs of a longer delimiter; -1
  * when it does not.
  * @param {string} src
@@ -392,22 +448,15 @@ function skipAt(src, k) {
  * @param {string} delim
  */
 function closerOf(src, at, delim) {
-    const single = delim.length === 1;
+    // Sub and superscript live inside one line.
+    const inOneLine = delim === '^' || delim === '~';
     for (let k = at + delim.length; k < src.length; k++) {
-        const char = src[k];
-        if (char === '\n' && (delim === '^' || delim === '~')) return -1;
+        if (inOneLine && src[k] === '\n') return -1;
         const skip = skipAt(src, k);
         if (skip >= 0) { k = skip - 1; continue; }
         if (!src.startsWith(delim, k)) continue;
-        let run = 0;
-        while (src[k + run] === char) run++;
-        // A run longer than the delimiter closes at its end, so the inner mark keeps its own («**a *b***»); a single
-        // delimiter skips a run of two, which is a pair of its own.
-        let close = k;
-        if (run > delim.length) {
-            if (single && run === 2) { k += 1; continue; }
-            close = k + run - delim.length;
-        }
+        const run = runAt(src, k);
+        const close = closeOfRun(k, run, delim);
         if (close > at + delim.length && canClose(src, close, delim)) return close;
         k += run - 1;
     }
@@ -485,6 +534,78 @@ function codeAt(src, i) {
     return { span: null, text: src.slice(i, i + run), end: i + run };
 }
 
+/** The spans read so far and the text that is not a span yet. @typedef {{ out: RichInline[]; text: string }} Reading */
+
+/**
+ * Spans into the reading, after the text that came before them.
+ * @param {Reading} reading
+ * @param {RichInline[]} nodes
+ */
+function pushSpans(reading, nodes) {
+    if (!nodes.length) return;
+    if (reading.text) reading.out.push({ t: 'text', v: reading.text });
+    reading.text = '';
+    reading.out.push(...nodes);
+}
+
+/**
+ * The escape at `i` (a backslash before a sign, or before the end of a line, which is a line break): where it ends, or -1
+ * when there is none.
+ * @param {string} src
+ * @param {number} i
+ * @param {Reading} reading
+ */
+function readEscape(src, i, reading) {
+    if (src[i] !== '\\' || i + 1 >= src.length) return -1;
+    const next = src[i + 1];
+    if (next === '\n') pushSpans(reading, [{ t: 'br' }]);
+    else if (PUNCT.test(next)) reading.text += next;
+    else return -1;
+    return i + 2;
+}
+
+/**
+ * The code span or the run of backticks at `i` into the reading: where it ends.
+ * @param {string} src
+ * @param {number} i
+ * @param {Reading} reading
+ */
+function readCode(src, i, reading) {
+    const code = codeAt(src, i);
+    if (code.span) pushSpans(reading, [code.span]);
+    else reading.text += code.text;
+    return code.end;
+}
+
+/**
+ * @param {string} src
+ * @param {number} i
+ */
+const opensBracket = (src, i) => src[i] === '[' || (src[i] === '!' && src[i + 1] === '[');
+
+/**
+ * Read what starts at `i` into the reading: where the next thing starts.
+ * @param {string} src
+ * @param {number} i
+ * @param {number} depth
+ * @param {Map<string, number>} exhausted
+ * @param {Reading} reading
+ */
+function readAt(src, i, depth, exhausted, reading) {
+    const escaped = readEscape(src, i, reading);
+    if (escaped >= 0) return escaped;
+    const char = src[i];
+    if (char === '\n') { pushSpans(reading, [{ t: 'br' }]); return i + 1; }
+    if (char === '`') return readCode(src, i, reading);
+    const bracket = opensBracket(src, i) ? bracketAt(src, i, depth) : null;
+    // A link with no text leaves nothing: the text on each side joins, as it always did.
+    if (bracket) { pushSpans(reading, bracket.spans); return bracket.end; }
+    const mark = markAt(src, i, depth, exhausted);
+    if (mark) { pushSpans(reading, mark.span ? [mark.span] : []); return mark.end; }
+    reading.text += char;
+    return i + 1;
+}
+
 /**
  * Read the spans of a paragraph: the marks, the sizes, the links, the code, the line breaks; everything else is text.
  * @param {string} src
@@ -492,54 +613,15 @@ function codeAt(src, i) {
  * @returns {RichInline[]}
  */
 export function parseInline(src, depth = 0) {
-    /** @type {RichInline[]} */
-    const out = [];
-    let text = '';
-    /** @param {RichInline[]} nodes */
-    const push = (...nodes) => {
-        if (!nodes.length) return;
-        if (text) out.push({ t: 'text', v: text });
-        text = '';
-        out.push(...nodes);
-    };
+    /** @type {Reading} */
+    const reading = { out: [], text: '' };
     // A delimiter that found no closer from a position finds none from any later one: it is not searched again.
     /** @type {Map<string, number>} */
     const exhausted = new Map();
     let i = 0;
-    while (i < src.length) {
-        const char = src[i];
-        if (char === '\\' && i + 1 < src.length && (src[i + 1] === '\n' || PUNCT.test(src[i + 1]))) {
-            if (src[i + 1] === '\n') push({ t: 'br' });
-            else text += src[i + 1];
-            i += 2;
-            continue;
-        }
-        if (char === '\n') { push({ t: 'br' }); i++; continue; }
-        if (char === '`') {
-            const code = codeAt(src, i);
-            if (code.span) push(code.span);
-            else text += code.text;
-            i = code.end;
-            continue;
-        }
-        const bracket = char === '[' || (char === '!' && src[i + 1] === '[') ? bracketAt(src, i, depth) : null;
-        if (bracket) {
-            // A link with no text leaves nothing: the text on each side joins, as it always did.
-            if (bracket.spans.length) push(...bracket.spans);
-            i = bracket.end;
-            continue;
-        }
-        const mark = markAt(src, i, depth, exhausted);
-        if (mark) {
-            if (mark.span) push(mark.span);
-            i = mark.end;
-            continue;
-        }
-        text += char;
-        i++;
-    }
-    if (text) out.push({ t: 'text', v: text });
-    return mergeText(out);
+    while (i < src.length) i = readAt(src, i, depth, exhausted, reading);
+    if (reading.text) reading.out.push({ t: 'text', v: reading.text });
+    return mergeText(reading.out);
 }
 
 /**
@@ -592,15 +674,13 @@ const hasChildren = (span) => isStyled(span) || span?.t === 'link';
 const withChildren = (span, c) => (span.t === 'size' ? { t: 'size', size: span.size, c } : { t: span.t, c });
 
 /**
- * The spaces and breaks at the edges of a styled span's children, moved out of it.
+ * The spaces and breaks at the start of a styled span's children, taken out of them.
  * @param {RichInline[]} c the children, changed in place
- * @returns {{ lead: RichInline[]; tail: RichInline[] }}
+ * @returns {RichInline[]}
  */
-function edgesOut(c) {
+function leadOut(c) {
     /** @type {RichInline[]} */
     const lead = [];
-    /** @type {RichInline[]} */
-    const tail = [];
     while (c.length && (c[0].t === 'br' || (c[0].t === 'text' && /^\s/.test(c[0].v)))) {
         const first = c[0];
         if (first.t === 'text') {
@@ -609,6 +689,17 @@ function edgesOut(c) {
             if (trimmed) c[0] = { t: 'text', v: trimmed }; else c.shift();
         } else lead.push(/** @type {RichInline} */ (c.shift()));
     }
+    return lead;
+}
+
+/**
+ * The spaces and breaks at the end of a styled span's children, taken out of them.
+ * @param {RichInline[]} c the children, changed in place
+ * @returns {RichInline[]}
+ */
+function tailOut(c) {
+    /** @type {RichInline[]} */
+    const tail = [];
     while (c.length) {
         const last = c[c.length - 1];
         if (!(last.t === 'br' || (last.t === 'text' && /\s$/.test(last.v)))) break;
@@ -618,7 +709,61 @@ function edgesOut(c) {
             if (trimmed) c[c.length - 1] = { t: 'text', v: trimmed }; else c.pop();
         } else tail.unshift(/** @type {RichInline} */ (c.pop()));
     }
-    return { lead, tail };
+    return tail;
+}
+
+/**
+ * The spaces and breaks at the edges of a styled span's children, moved out of it.
+ * @param {RichInline[]} c the children, changed in place
+ * @returns {{ lead: RichInline[]; tail: RichInline[] }}
+ */
+function edgesOut(c) {
+    const lead = leadOut(c);
+    return { lead, tail: tailOut(c) };
+}
+
+/**
+ * A text in the normal shape: a line break is a span of its own, a no-break space is a space.
+ * @param {string} v
+ * @returns {RichInline[]}
+ */
+function textSpans(v) {
+    /** @type {RichInline[]} */
+    const out = [];
+    v.replace(/\u00A0/g, ' ').replace(/\r/g, '').split('\n').forEach((part, index) => {
+        if (index > 0) out.push({ t: 'br' });
+        if (part) out.push({ t: 'text', v: part });
+    });
+    return out;
+}
+
+/**
+ * A link in the normal shape: none without text, only its text when the address is one the site does not take.
+ * @param {Extract<RichInline, { t: 'link' }>} span
+ * @param {string[]} inside
+ * @returns {RichInline[]}
+ */
+function linkSpans(span, inside) {
+    const href = safeHref(span.href);
+    const c = normalizeInline(span.c, inside);
+    if (!c.length) return [];
+    return href ? [{ t: 'link', href, c }] : c;
+}
+
+/**
+ * A mark or a size in the normal shape: undone inside one of its own kind, its edge spaces moved out, none when empty.
+ * @param {RichStyled} span
+ * @param {string[]} inside
+ * @returns {RichInline[]}
+ */
+function styledSpans(span, inside) {
+    const key = keyOf(span);
+    if (inside.includes(key)) return normalizeInline(span.c, inside);
+    const c = normalizeInline(span.c, [...inside, key]);
+    // Sub and superscript live inside one line.
+    if ((span.t === 'sup' || span.t === 'sub') && c.some((node) => node.t === 'br')) return c;
+    const { lead, tail } = edgesOut(c);
+    return [...lead, ...(c.length ? [withChildren(span, c)] : []), ...tail];
 }
 
 /**
@@ -628,30 +773,13 @@ function edgesOut(c) {
  * @returns {RichInline[]}
  */
 function normalizeSpan(span, inside) {
-    if (span.t === 'text') {
-        /** @type {RichInline[]} */
-        const out = [];
-        span.v.replace(/\u00A0/g, ' ').replace(/\r/g, '').split('\n').forEach((part, index) => {
-            if (index > 0) out.push({ t: 'br' });
-            if (part) out.push({ t: 'text', v: part });
-        });
-        return out;
+    switch (span.t) {
+        case 'text': return textSpans(span.v);
+        case 'code': return span.v ? [{ t: 'code', v: span.v.replace(/\n/g, ' ') }] : [];
+        case 'br': return [span];
+        case 'link': return linkSpans(span, inside);
+        default: return styledSpans(span, inside);
     }
-    if (span.t === 'code') return span.v ? [{ t: 'code', v: span.v.replace(/\n/g, ' ') }] : [];
-    if (span.t === 'br') return [span];
-    if (span.t === 'link') {
-        const href = safeHref(span.href);
-        const c = normalizeInline(span.c, inside);
-        if (!c.length) return [];
-        return href ? [{ t: 'link', href, c }] : c;
-    }
-    const key = keyOf(span);
-    if (inside.includes(key)) return normalizeInline(span.c, inside);
-    const c = normalizeInline(span.c, [...inside, key]);
-    // Sub and superscript live inside one line.
-    if ((span.t === 'sup' || span.t === 'sub') && c.some((node) => node.t === 'br')) return c;
-    const { lead, tail } = edgesOut(c);
-    return [...lead, ...(c.length ? [withChildren(span, c)] : []), ...tail];
 }
 
 /**
@@ -688,10 +816,12 @@ function separateTildes(spans) {
      * @param {RichMarkKind} kind
      */
     const edgeIs = (span, kind) => isMark(span) && (span.c[0]?.t === kind || span.c[span.c.length - 1]?.t === kind);
+    /** @param {number} index */
+    const besideStrike = (index) => spans[index - 1]?.t === 's' || spans[index + 1]?.t === 's';
     /** @type {RichInline[]} */
     const out = [];
     spans.forEach((span, index) => {
-        if (span.t === 'sub' && (spans[index - 1]?.t === 's' || spans[index + 1]?.t === 's' || edgeIs(span, 's') || out[out.length - 1]?.t === 's')) { out.push(...span.c); return; }
+        if (span.t === 'sub' && (besideStrike(index) || edgeIs(span, 's') || out[out.length - 1]?.t === 's')) { out.push(...span.c); return; }
         if (span.t === 's' && edgeIs(span, 'sub')) { out.push({ t: 's', c: span.c.flatMap((child, at) => (child.t === 'sub' && (at === 0 || at === span.c.length - 1) ? child.c : [child])) }); return; }
         out.push(span);
     });
@@ -790,21 +920,64 @@ function listItems(items) {
 }
 
 /**
+ * @param {Extract<RichBlock, { t: 'image' }>} block
+ * @returns {RichBlock[]}
+ */
+function normalizeImage(block) {
+    const src = safeImage(block.src);
+    return src && block.alt.trim() ? [{ t: 'image', src, alt: oneLine(block.alt), caption: oneLine(block.caption), wide: !!block.wide }] : [];
+}
+
+/**
+ * @param {Extract<RichBlock, { t: 'video' }>} block
+ * @returns {RichBlock[]}
+ */
+function normalizeVideo(block) {
+    const video = videoOf(block.url) ?? (block.id ? { provider: block.provider, id: block.id } : null);
+    const checked = video && videoOf(canonicalVideo(video));
+    return checked ? [{ t: 'video', provider: checked.provider, id: checked.id, url: canonicalVideo(checked), caption: oneLine(block.caption) }] : [];
+}
+
+/**
  * A media block in the normal shape, or none when it does not hold.
  * @param {Extract<RichBlock, { t: 'image' | 'video' | 'book' }>} block
  * @returns {RichBlock[]}
  */
 function normalizeMedia(block) {
-    if (block.t === 'image') {
-        const src = safeImage(block.src);
-        return src && block.alt.trim() ? [{ t: 'image', src, alt: oneLine(block.alt), caption: oneLine(block.caption), wide: !!block.wide }] : [];
-    }
-    if (block.t === 'video') {
-        const video = videoOf(block.url) ?? (block.id ? { provider: block.provider, id: block.id } : null);
-        const checked = video && videoOf(canonicalVideo(video));
-        return checked ? [{ t: 'video', provider: checked.provider, id: checked.id, url: canonicalVideo(checked), caption: oneLine(block.caption) }] : [];
-    }
+    if (block.t === 'image') return normalizeImage(block);
+    if (block.t === 'video') return normalizeVideo(block);
     return BOOK_SLUG.test(block.slug) ? [{ t: 'book', slug: block.slug, title: oneLine(block.title) || block.slug }] : [];
+}
+
+/**
+ * A heading in the normal shape: one line, its breaks become spaces; none when empty.
+ * @param {Extract<RichBlock, { t: 'lead' | 'h3' }>} block
+ * @returns {RichBlock[]}
+ */
+function normalizeHeading(block) {
+    const c = blockSpans(block.c.map((span) => (span.t === 'br' ? { t: 'text', v: ' ' } : span)));
+    return c.length ? [{ t: block.t, c }] : [];
+}
+
+/**
+ * A quote or a callout in the normal shape: an empty quote is none, an empty callout stays.
+ * @param {Extract<RichBlock, { t: 'quote' | 'callout' }>} block
+ * @returns {RichBlock[]}
+ */
+function normalizeQuote(block) {
+    const c = block.c.flatMap(splitAtBlankLine);
+    return c.length || block.t === 'callout' ? [{ t: block.t, c }] : [];
+}
+
+/**
+ * A list in the normal shape: none without items; a numbered one keeps a start other than 1.
+ * @param {Extract<RichBlock, { t: 'ul' | 'ol' }>} block
+ * @returns {RichBlock[]}
+ */
+function normalizeList(block) {
+    const c = listItems(block.c);
+    if (!c.length) return [];
+    return [block.t === 'ol' ? { t: 'ol', c, ...(block.start && block.start !== 1 ? { start: block.start } : {}) } : { t: 'ul', c }];
 }
 
 /**
@@ -814,26 +987,12 @@ function normalizeMedia(block) {
  */
 function normalizeBlock(block) {
     switch (block.t) {
-        case 'p':
-            return splitAtBlankLine(block.c).map((c) => /** @type {RichBlock} */ ({ t: 'p', c }));
-        case 'lead': case 'h3': {
-            // A heading is one line: its breaks become spaces.
-            const c = blockSpans(block.c.map((span) => (span.t === 'br' ? { t: 'text', v: ' ' } : span)));
-            return c.length ? [{ t: block.t, c }] : [];
-        }
-        case 'quote': case 'callout': {
-            const c = block.c.flatMap(splitAtBlankLine);
-            return c.length || block.t === 'callout' ? [{ t: block.t, c }] : [];
-        }
-        case 'ul': case 'ol': {
-            const c = listItems(block.c);
-            if (!c.length) return [];
-            return [block.t === 'ol' ? { t: 'ol', c, ...(block.start && block.start !== 1 ? { start: block.start } : {}) } : { t: 'ul', c }];
-        }
-        case 'hr':
-            return [{ t: 'hr' }];
-        default:
-            return normalizeMedia(block);
+        case 'p': return splitAtBlankLine(block.c).map((c) => /** @type {RichBlock} */ ({ t: 'p', c }));
+        case 'lead': case 'h3': return normalizeHeading(block);
+        case 'quote': case 'callout': return normalizeQuote(block);
+        case 'ul': case 'ol': return normalizeList(block);
+        case 'hr': return [{ t: 'hr' }];
+        default: return normalizeMedia(block);
     }
 }
 
@@ -852,6 +1011,14 @@ export function normalizeDoc(doc) {
 const WRAP = { strong: '**', em: '_', u: '++', s: '~~', mark: '==', sup: '^', sub: '~' };
 
 /**
+ * An equals or a plus sign beside another of its own: the pair would read as a highlight or an underline.
+ * @param {string} char
+ * @param {string} prev
+ * @param {string} next
+ */
+const isDoubled = (char, prev, next) => (char === '=' || char === '+') && (prev === char || next === char);
+
+/**
  * The escape a character of a text needs so the reader takes it as text, or the character itself.
  * @param {string} char
  * @param {string} prev
@@ -860,7 +1027,7 @@ const WRAP = { strong: '**', em: '_', u: '++', s: '~~', mark: '==', sup: '^', su
 function escapeChar(char, prev, next) {
     if ('\\*`[]~^'.includes(char)) return `\\${char}`;
     if (char === '_' && !(WORD.test(prev) && WORD.test(next))) return '\\_';
-    if ((char === '=' || char === '+') && (prev === char || next === char)) return `\\${char}`;
+    if (isDoubled(char, prev, next)) return `\\${char}`;
     if (char === '!' && next === '[') return '\\!';
     return char;
 }
@@ -975,6 +1142,19 @@ function writeList(block) {
 }
 
 /**
+ * A media block in the dialect, alone in its paragraph.
+ * @param {Extract<RichBlock, { t: 'image' | 'video' | 'book' }>} block
+ * @returns {string}
+ */
+function writeMedia(block) {
+    switch (block.t) {
+        case 'image': return `![${escapeLabel(block.alt)}](${encodeDestination(block.src)}${block.wide ? WIDE : ''}${block.caption ? ` "${escapeAttr(block.caption)}"` : ''})`;
+        case 'video': return `![${escapeLabel(block.caption)}](${block.url})`;
+        case 'book': return `[${escapeLabel(block.title)}](${bookPath(block.slug)} "livro")`;
+    }
+}
+
+/**
  * One block in the dialect.
  * @param {RichBlock} block
  * @returns {string}
@@ -982,14 +1162,13 @@ function writeList(block) {
 function writeBlock(block) {
     switch (block.t) {
         case 'p': return writeLines(block.c).join('\n');
-        case 'lead': case 'h3': return `${block.t === 'lead' ? '####' : '###'} ${writeInline(block.c).replace(/#$/, '\\#')}`;
+        case 'lead': return `#### ${writeInline(block.c).replace(/#$/, '\\#')}`;
+        case 'h3': return `### ${writeInline(block.c).replace(/#$/, '\\#')}`;
         case 'quote': return block.c.map(quoted).join('\n>\n');
         case 'callout': return ['> [!NOTE]', ...block.c.map(quoted)].join('\n>\n').replace('> [!NOTE]\n>\n', '> [!NOTE]\n');
         case 'ul': case 'ol': return writeList(block);
         case 'hr': return '---';
-        case 'image': return `![${escapeLabel(block.alt)}](${encodeDestination(block.src)}${block.wide ? WIDE : ''}${block.caption ? ` "${escapeAttr(block.caption)}"` : ''})`;
-        case 'video': return `![${escapeLabel(block.caption)}](${block.url})`;
-        case 'book': return `[${escapeLabel(block.title)}](${bookPath(block.slug)} "livro")`;
+        default: return writeMedia(block);
     }
 }
 

@@ -1,4 +1,4 @@
-// cópia carimbada do kit do admin do MJRP Harness · admin-kit v0.9.0 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
+// cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`
 "use client";
 
 /**
@@ -9,7 +9,7 @@ import { createContext, useContext, type ReactNode } from 'react';
 import type { KitProblem } from '../validate';
 import type { KitPorts } from '../ports';
 import type { KitSchema } from '../schema';
-import type { KitValues } from '../values';
+import { nameOf, type KitValues } from '../values';
 
 /** A piece the project draws itself, given the scope it sits in and a way to change it. */
 export type KitExtension = (props: {
@@ -53,7 +53,7 @@ export function useKit(): KitContextValue {
  * title in PT and in EN, side by side) carries its language, since the two share the key.
  */
 export function fieldAnchor(path: string[], language?: string): string {
-    return `akf-${path.join('.')}${language ? `@${language}` : ''}`;
+    return `${nameOf('akf', path.join('.'))}${language ? `@${language}` : ''}`;
 }
 
 /** The problems at a path, or under it. */
