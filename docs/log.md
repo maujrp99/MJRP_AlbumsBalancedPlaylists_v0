@@ -2,6 +2,21 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 11:30] decision — as respostas do MJRP ao lote de adequação ao harness aplicadas (D-01 a D-08, menos as marcas)
+
+**Branch:** `wip/v0-conform-answers-2026-11-23`
+
+As oito respostas de 2026-11-23 11:20 ao lote `reports/proposals/2026-11-21-1335-v0-conform-questions.md` (as marcas `→ respondida` copiadas do checkout principal, sem mudar nada).
+- D-01: a seção «## O que é» entrou como primeiro `##` do `docs/specs/prd.md` com o texto do rascunho; «Ok pra primeira iteração» lido como aceite do texto como está; CM-0158 passa.
+- D-02: pedido ao harness de dois tipos novos de relatório (`analysis`, `draft`) em `reports/harness-feedback/`; os oito relatórios não foram retipados (os tipos ainda não existem).
+- D-03: pareceres não renomeados; o orquestrador confirma com o harness.
+- D-04: só a linha `**Acceptance**: MJRP` no cabeçalho da ADR-0020; texto e status intactos.
+- D-05: UAT-224, UAT-225 e UAT-226: tirada a frase copiada, âncora própria de cada uma, OK do humano vazio.
+- D-06: a seção «Delivery strategy» do `arch.md` reescrita do que existe (ramos, a prévia `staging` da F87, a produção da F64, quem envia, o que se confere, como se volta); segue marcada «proposal by the agent» até ele confirmar; o «Creio que agora temos staging certo?» foi lido como «escreva do que existe», não como a confirmação.
+- D-07: não aplicada: o contrato só aceita um par da biblioteca de paletas (L1-L8, D1-D5) e nenhuma é o laranja-vermelho sobre preto do Album Blender; uma paleta nova é do harness.
+- D-08: `## Themes` (um tema só), Identity Specs em «Conceito e DNA» e a linha «Design system no Claude» com o link que já existia; o item `design-system` sai das lacunas.
+- Marcas `aplicada`/`nao-aplicada` do lote: o `proposal_batches.py mark` recusa rodar num worktree; ficam para o checkout principal.
+
 ## [2026-11-23 11:21] step — Servidor publicado da `main` `4080f73` (revisão `mjrp-proxy-00216-cxd`), com a leitura da chave do Discogs no CMS
 
 **Branch:** main
