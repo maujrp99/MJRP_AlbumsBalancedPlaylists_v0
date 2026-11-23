@@ -5,6 +5,8 @@
  */
 import { describe, it, expect, vi } from 'vitest'
 import { admin as adminEn } from '../../../public/js/i18n/en/admin.js'
+import { en as siteEn } from '../../../public/js/i18n/en/index.js'
+import { pt as sitePt } from '../../../public/js/i18n/pt/index.js'
 import { admin as adminPt } from '../../../public/js/i18n/pt/admin.js'
 import { t, tPlural } from '../../../public/js/i18n/t.js'
 import { APPROVED_ID, contentStore, type ContentRepository } from '../../../public/js/screens/admin/contentStore'
@@ -189,6 +191,26 @@ describe('the Painel lists the texts of the site only (the judge of 2026-11-23, 
         expect(wiring).toContain('code: { en, pt },')
         expect(wiring).not.toMatch(/OWN_RICH|\.\.\.adminEn|\.\.\.adminPt/)
         expect(Object.keys(adminEn).filter((key) => /^admin\.(help|screens\.admin)/.test(key))).toEqual([])
+    })
+})
+
+describe('every screen the Painel can show has a name (the second judge of 2026-11-23, P1)', () => {
+    it('in English and in Portuguese: the ids come from the dictionaries the Painel lists, never from a hand list', () => {
+        const ids = screensOf(toKitValues({ code: { en: siteEn, pt: sitePt }, published: { en: {}, pt: {} }, approved: [] })).map((screen) => screen.id)
+        expect(ids.length).toBeGreaterThan(10)
+        expect(ids.filter((id) => !adminEn[`admin.screens.${id}` as keyof typeof adminEn])).toEqual([])
+        expect(ids.filter((id) => !adminPt[`admin.screens.${id}` as keyof typeof adminPt])).toEqual([])
+    })
+})
+
+describe('the bold of the Painel survives the kit reset (the second judge of 2026-11-23, P2)', () => {
+    it('the skin restores the weight of its own buttons and of the kit buttons under a selector that outranks `[data-admin-skin] button { font: inherit }`', () => {
+        const skin = fs.readFileSync('public/css/admin-skin.css', 'utf8')
+        expect(fs.readFileSync('public/js/ui/admin-kit/kit.css', 'utf8')).toContain('[data-admin-skin] button, [data-admin-skin] input, [data-admin-skin] textarea { font: inherit;')
+        for (const [name, weight] of [['.cms-navb', 600], ['.cms-chip', 600], ['.cms-lnk', 600], ['.ak-btn', 700]]) {
+            const rule = new RegExp(`\\[data-admin-skin="albumblender"\\] ${name.replace('.', '\\.')} \\{[^}]*font-weight: ${weight}`)
+            expect(skin, String(name)).toMatch(rule)
+        }
     })
 })
 

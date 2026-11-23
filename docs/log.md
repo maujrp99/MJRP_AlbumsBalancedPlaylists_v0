@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:35] step — F82 (2º juiz, P1): as duas telas do Painel que mostravam a chave crua ganharam nome
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P1 do segundo juiz do Painel: duas telas apareciam com a chave crua no lugar do nome, «admin.screens.spotifyWindow» e «admin.screens.ask», em inglês e em português. O dicionário do Painel nomeava onze áreas e os dicionários do site têm treze. Entraram os dois nomes (`admin.screens.spotifyWindow`: «Spotify export window» / «Janela de exportar para o Spotify»; `admin.screens.ask`: «Questions and confirmations» / «Perguntas e confirmações»; o português é proposto pelo agente).
+
+Para não voltar: um teste (`test/screens/admin/adapter.test.ts`, «every screen the Painel can show has a name», escrito antes, reprovou com as duas, depois passou) tira as áreas dos mesmos dicionários que o Painel lista (`en/index.js`, `pt/index.js`, pela mesma função `screensOf`) e reprova quando alguma não tem nome num dos dois idiomas; nenhuma lista à mão. O mesmo arquivo de teste traz o teste do achado seguinte (o negrito), que entra no commit seguinte com o conserto.
+
 ## [2026-11-23 16:19] step — F82: a main (página de entrada) juntada ao ramo do Painel; suíte verde, orçamento medido de novo
 
 **Branch:** claude/f82-cms-texts-panel

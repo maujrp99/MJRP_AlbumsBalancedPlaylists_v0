@@ -118,6 +118,8 @@ export const admin = {
     'admin.screens.savedPlaylists': "Playlists salvas",
     'admin.screens.shell': "Menu e moldura",
     'admin.screens.start': "Create",
+    'admin.screens.spotifyWindow': "Janela de exportar para o Spotify",
+    'admin.screens.ask': "Perguntas e confirmações",
     'admin.screens.ui': "Peças comuns",
     'admin.kit.saved': "Tudo salvo",
     'admin.kit.unsaved': "{count} mudanças não salvas",

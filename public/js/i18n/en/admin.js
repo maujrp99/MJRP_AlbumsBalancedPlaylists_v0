@@ -119,6 +119,8 @@ export const admin = {
     'admin.screens.savedPlaylists': "Saved playlists",
     'admin.screens.shell': "Menu and frame",
     'admin.screens.start': "Create",
+    'admin.screens.spotifyWindow': "Spotify export window",
+    'admin.screens.ask': "Questions and confirmations",
     'admin.screens.ui': "Shared pieces",
     'admin.kit.saved': "All saved",
     'admin.kit.unsaved': "{count} changes not saved",
