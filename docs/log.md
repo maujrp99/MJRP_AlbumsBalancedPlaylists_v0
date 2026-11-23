@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:41] step — F82: o erro de tipo do teste do negrito consertado; typecheck e eslint do projeto inteiro saem 0
+
+**Branch:** claude/f82-cms-texts-panel
+
+A publicação da prévia do `8ae419d` foi recusada pela conferência de tipos: `test/screens/admin/adapter.test.ts(211,82): error TS2339: Property 'replace' does not exist on type 'string | number'`. O teste do negrito (do commit `6769f08`) percorria uma lista de pares «classe, peso» sem tipo declarado, então o nome saía como texto ou número. A lista ganhou o tipo certo (`Array<[string, number]>`); nenhum `any`, nenhum `ts-ignore`.
+
+A falha passou porque, depois de acrescentar esse teste, eu rodei a suíte e a prova no navegador mas não a conferência de tipos (a última tinha sido na troca do kit). Daqui em diante, antes de relatar qualquer ponta: `npm run typecheck` e `npx eslint . --quiet` no projeto inteiro, lendo as duas saídas. Agora: `typecheck` sai 0 (0 erros), `eslint . --quiet` sai 0, e o arquivo de teste passa (42 de 42).
+
 ## [2026-11-23 16:39] step — F82 (2º juiz, P2): a evidência do orçamento gerada de novo; suíte verde e prova 90 de 90
 
 **Branch:** claude/f82-cms-texts-panel

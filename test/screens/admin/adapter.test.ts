@@ -207,9 +207,10 @@ describe('the bold of the Painel survives the kit reset (the second judge of 202
     it('the skin restores the weight of its own buttons and of the kit buttons under a selector that outranks `[data-admin-skin] button { font: inherit }`', () => {
         const skin = fs.readFileSync('public/css/admin-skin.css', 'utf8')
         expect(fs.readFileSync('public/js/ui/admin-kit/kit.css', 'utf8')).toContain('[data-admin-skin] button, [data-admin-skin] input, [data-admin-skin] textarea { font: inherit;')
-        for (const [name, weight] of [['.cms-navb', 600], ['.cms-chip', 600], ['.cms-lnk', 600], ['.ak-btn', 700]]) {
+        const weights: Array<[string, number]> = [['.cms-navb', 600], ['.cms-chip', 600], ['.cms-lnk', 600], ['.ak-btn', 700]]
+        for (const [name, weight] of weights) {
             const rule = new RegExp(`\\[data-admin-skin="albumblender"\\] ${name.replace('.', '\\.')} \\{[^}]*font-weight: ${weight}`)
-            expect(skin, String(name)).toMatch(rule)
+            expect(skin, name).toMatch(rule)
         }
     })
 })
