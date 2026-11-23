@@ -2,6 +2,24 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:04] step — Página de entrada (F80): sob cada disco só o nome do álbum, e o botão alinhado com o elemento visual acima (UAT-286)
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Decisão do MJRP (2026-11-23, com print do iPhone da história «Criar», depois de ver o protótipo das variantes): «Vamos com opcao B mas o botao do Ouça no Apple Music precisa estar alinhado com o elemento visual acima, mesmo que isso implique em reduzir a fonte». Issue UAT-286 em `docs/specs/uat.md`, continuação da UAT-285.
+
+**O que mudou (só no celular).** O crédito sob o disco de cada história mostra só o nome do álbum (antes «álbum · artista»), sob o disco; o botão fica sob o elemento visual da história, com a mesma borda esquerda e a mesma largura dele. O crédito passou a repetir as colunas da história (172 px, vão de 14 px, o resto). Para caber numa linha, a letra do botão desceu de 14 para 12 px, o ícone de 20 para 16 px e o respiro lateral de 14 para 4 px; a altura segue 44 px. O nome acessível segue dizendo álbum e artista («Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)»). O botão da legenda do caixote e o computador não mudaram.
+
+**Medido (WebKit, site montado, PT e EN).** Elemento visual e botão, nas cinco histórias: a 390 px, x 202 e largura 172 nos dois; a 393 px, x 202 e largura 175; a 375 px, x 202 e largura 157 (`boxes.txt`). A 375 px em inglês, o caso mais apertado, sobram 5,8 px de cada lado do conteúdo. A altura da página e o lugar de cada seção, disco e elemento visual são iguais aos da `main`; o computador a 1280 igual. 108 conferências passam, 0 falham (`results.txt`); fotos de cada bloco a 390 e a 375, antes e depois, e `before-after-phone.png`.
+
+**Segurança da prova.** Nada foi clicado e nenhum endereço de álbum foi aberto: `music.apple.com`, `itunes.apple.com`, `geo.music.apple.com` e `open.spotify.com` abortados na rede em todo contexto; os botões julgados por `href`, `target`, `rel`, nome acessível, caixa e estilo.
+
+**Decidido pelo agente (revisável).** A letra do botão é 12 px em toda largura de celular (não só nas estreitas), para o botão ser igual nas cinco histórias e nos dois idiomas; o nome do álbum ficou em 13 px, em até 3 linhas. Abaixo de 375 px o botão não foi medido nesta rodada.
+
+**Prova.** Teste primeiro: 4 testes falham no código da `main` (`red-on-main.txt`). As fotos e as medidas foram tiradas do site montado na árvore final do ramo, que já traz os endereços diretos dos dois álbuns e a troca de «disco» por «álbum» (as duas entradas seguintes). `npm run budget:publication`: saída 0, tetos sem mudança. Suíte inteira pela fila da máquina, na árvore final do ramo (as três mudanças juntas): 393 arquivos, 5243 testes passando, 1 pulado, sem «Unhandled Errors».
+
+**Não conferido.** Num iPhone de verdade; a página publicada. Os testes automáticos não medem caixas (o jsdom não desenha): a igualdade de caixas está na prova do navegador.
+
 ## [2026-11-23 14:44] step — Estado: o prazo de 3 horas do MJRP para o CMS, as frentes em paralelo e a F95 na `main`
 
 **Branch:** main
