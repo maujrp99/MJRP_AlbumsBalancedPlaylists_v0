@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:28] step — F97 (a exportação para o Spotify diz por que falhou) registrada em esboço, com a S-79; conserta a UAT-302
+
+**Branch:** wip/f97-register
+
+O MJRP, sobre a UAT-302: «conserta pls». Registrados, antes de qualquer implementação: a story S-79 (`docs/specs/requirements/ep-04-export-playlists/`), embutida no `prd.md` no épico EP-04, e a feature F97 (`docs/specs/features/F97-spotify-export-says-why-it-failed/`: spec, plan e tasks em esboço; `status: Draft`, `lane: fast`, `solution_type: fix`, `fixes: ["UAT-302"]`, importa a S-79). Cinco requisitos, cada um com a sua tarefa: a recusa do Spotify (403) para a exportação e aparece com o próximo passo; a busca que falha é «não foi possível conferir», separada de «não encontrada»; «Tentar de novo» quando nada pôde ser conferido; os textos em inglês e português; o evento `playlists_exported` distingue o desfecho. Os três sensores (`requirements_graph_check --changed`, `product_structure_check`, `sdd_shape_check`) saíram com 0. O ramo de construção só nasce depois de este registro entrar na `main`.
+
 ## [2026-11-23 18:14] decision — Home nova do celular (F96): o MJRP aprovou a prévia
 
 **Branch:** main
