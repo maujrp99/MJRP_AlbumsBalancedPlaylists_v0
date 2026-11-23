@@ -39,7 +39,7 @@ npm test              # Unit, architecture and security tests (Vitest); `npx vit
 *   [**Onboarding**](docs/onboarding/README.md) - Role-based guides (Dev, DevOps, QA).
 
 **Reference**:
-*   [**UI Style Guide**](docs/technical/UI_STYLE_GUIDE.md) - Design Tokens.
+*   **UI Style Guide** - Design Tokens.
 *   [**Changelog**](docs/CHANGELOG.md) - Historic Versioning.
 *   [**Archives**](docs/archive/) - Deprecated Specs & Notes.
 

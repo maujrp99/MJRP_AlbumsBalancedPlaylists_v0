@@ -14,10 +14,10 @@
 
 | Document | Relevance |
 |----------|-----------|
-| [01_System_Architecture.md](../../manual/01_System_Architecture.md) | MVC pattern, data flow |
-| [07_Frontend_Data_Infra.md](../../manual/07_Frontend_Data_Infra.md) | Repository pattern, CacheManager |
-| [18_Frontend_Logic_Core.md](../../manual/18_Frontend_Logic_Core.md) | Algorithms, Strategies |
-| [31_UI_Style_Guide.md](../../manual/31_UI_Style_Guide.md) | Color tokens, button system |
+| [01_System_Architecture.md](../../../../manual/01_System_Architecture.md) | MVC pattern, data flow |
+| [07_Frontend_Data_Infra.md](../../../../manual/07_Frontend_Data_Infra.md) | Repository pattern, CacheManager |
+| [18_Frontend_Logic_Core.md](../../../../manual/18_Frontend_Logic_Core.md) | Algorithms, Strategies |
+| [31_UI_Style_Guide.md](../../../../manual/31_UI_Style_Guide.md) | Color tokens, button system |
 
 ---
 
@@ -63,10 +63,10 @@ flowchart TD
 
 | File | Type | Purpose | Reference |
 |------|------|---------|-----------|
-| `ranking/UserRankingStrategy.js` | Strategy | Sort tracks by user-defined rank | [18_Frontend_Logic_Core](../../manual/18_Frontend_Logic_Core.md) |
+| `ranking/UserRankingStrategy.js` | Strategy | Sort tracks by user-defined rank | [18_Frontend_Logic_Core](../../../../manual/18_Frontend_Logic_Core.md) |
 | `algorithms/TopNUserAlgorithm.js` | Algorithm | TopN using UserRankingStrategy | Pattern: TopNPopularAlgorithm |
 | `components/ranking/UserRankModal.js` | Component | Drag-and-drop ranking UI | - |
-| `repositories/UserRankingRepository.js` | Repository | Firestore CRUD for rankings | [07_Frontend_Data_Infra](../../manual/07_Frontend_Data_Infra.md) |
+| `repositories/UserRankingRepository.js` | Repository | Firestore CRUD for rankings | [07_Frontend_Data_Infra](../../../../manual/07_Frontend_Data_Infra.md) |
 
 ### 2.2 Modified Files
 
@@ -87,7 +87,7 @@ flowchart TD
 
 #### 3.1.1 UserRankingRepository.js
 
-Following **BaseRepository pattern** from [07_Frontend_Data_Infra](../../manual/07_Frontend_Data_Infra.md):
+Following **BaseRepository pattern** from [07_Frontend_Data_Infra](../../../../manual/07_Frontend_Data_Infra.md):
 
 ```javascript
 // Extends BaseRepository with CacheManager integration
@@ -122,7 +122,7 @@ album.hasUserRanking = true/false
 
 #### 3.2.1 UserRankingStrategy.js
 
-Following **Strategy Pattern** from [18_Frontend_Logic_Core](../../manual/18_Frontend_Logic_Core.md):
+Following **Strategy Pattern** from [18_Frontend_Logic_Core](../../../../manual/18_Frontend_Logic_Core.md):
 
 ```javascript
 import { RankingStrategy } from './RankingStrategy.js'
@@ -283,7 +283,7 @@ export class UserRankModal {
 
 #### 3.6.1 SeriesView - "Rank It" Button
 
-Following **tech-btn pattern** from [31_UI_Style_Guide](../../manual/31_UI_Style_Guide.md):
+Following **tech-btn pattern** from [31_UI_Style_Guide](../../../../manual/31_UI_Style_Guide.md):
 
 ```javascript
 // Add to album card buttons (SeriesViewUpdater.js)
@@ -312,7 +312,7 @@ algorithms.set('top-n-user', TopNUserAlgorithm)
 
 ## 4. Style Guide Updates
 
-Add to [31_UI_Style_Guide.md](../../manual/31_UI_Style_Guide.md) **Data Source Color Coding** table:
+Add to [31_UI_Style_Guide.md](../../../../manual/31_UI_Style_Guide.md) **Data Source Color Coding** table:
 
 | Source | Color Name | Hex | Tailwind Class | Usage |
 |--------|------------|-----|----------------|-------|
@@ -369,7 +369,7 @@ npm run build
 ### 8.1 Menu Option Parity
 Enable `trackCount`, `outputMode`, and `groupingStrategy` for the `top-n-user` recipe.
 
-#### [MODIFY] [BlendIngredientsPanel.js](../../public/js/components/blend/BlendIngredientsPanel.js)
+#### [MODIFY] BlendIngredientsPanel.js
 ```javascript
 const ALGORITHM_RECIPES = {
     // ... items
@@ -384,7 +384,7 @@ const ALGORITHM_RECIPES = {
 }
 ```
 
-#### [MODIFY] [BlendRecipeCard.js](../../public/js/components/blend/BlendRecipeCard.js)
+#### [MODIFY] BlendRecipeCard.js
 ```javascript
 // Add icon and color for top-n-user
 getRecipeIcon(id) {
@@ -407,7 +407,7 @@ getRecipeColor(id) {
 ### 8.2 Execution Logic Refinement
 Ensure `PlaylistGenerationService` correctly identifies and locks the `user` ranking strategy for the new recipe.
 
-#### [MODIFY] [PlaylistGenerationService.js](../../public/js/services/PlaylistGenerationService.js)
+#### [MODIFY] [PlaylistGenerationService.js](../../../../../public/js/services/PlaylistGenerationService.js)
 ```javascript
 // Inside generate() method
 let rankingId = config.rankingId || 'balanced'

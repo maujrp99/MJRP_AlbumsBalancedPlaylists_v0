@@ -324,5 +324,5 @@
 
 **See Also**:
 - [CHANGELOG.md](CHANGELOG.md) - Detailed development history
-- [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Executive summary
-- [component_reference.md](technical/component_reference.md) - Technical details
+- PROJECT_SUMMARY.md - Executive summary
+- component_reference.md - Technical details

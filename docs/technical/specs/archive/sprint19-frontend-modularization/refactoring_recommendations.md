@@ -2,7 +2,7 @@
 
 > **Source**: Code Quality Assessment v10 + Deep Manual Review
 > **Status**: Backlog (Pending Sprint Assignment)
-> **Reference Architecture**: [01_System_Architecture.md](file:///c:/Users/Mauricio%20Pedroso/VibeCoding/MyProjects/MJRP_AlbumsBalancedPlaylists_v0/docs/manual/01_System_Architecture.md)
+> **Reference Architecture**: 01_System_Architecture.md
 
 ## Review Summary
 I have read all frontend manuals (01, 06, 07, 09, 10, 11, 12, 14, 17, 18, 29) and cross-referenced them with the God Files and Route Thinness findings.
