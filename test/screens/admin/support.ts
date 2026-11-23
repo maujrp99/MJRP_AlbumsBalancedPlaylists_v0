@@ -5,7 +5,8 @@
  */
 import { admin as adminEn } from '../../../public/js/i18n/en/admin.js'
 import { admin as adminPt } from '../../../public/js/i18n/pt/admin.js'
-import { registerTexts, t } from '../../../public/js/i18n/t.js'
+import { registerTexts, t, tPlural } from '../../../public/js/i18n/t.js'
+import { richTexts } from '../../../public/js/screens/admin/richTexts'
 import type { PanelProps, SiteState } from '../../../public/js/screens/admin/TextsPanel'
 import { albumBlenderPorts, kitTexts, type ContentStore, type SaveAnswer, type Stored } from '../../../public/js/screens/admin/kitPorts'
 import type { Dict, Locale } from '../../../public/js/screens/admin/model'
@@ -74,14 +75,14 @@ export function fakeStore(options: FakeOptions = {}): FakeStore {
     return store
 }
 
-export function memoryNavigation(start = ''): KitNavigation & { went: KitLocation[] } {
+export function memoryNavigation(start = ''): KitNavigation & { went: Array<KitLocation & { replace?: boolean }> } {
     let where: KitLocation = { path: start }
     const listeners = new Set<() => void>()
-    const went: KitLocation[] = []
+    const went: Array<KitLocation & { replace?: boolean }> = []
     return {
         went,
         where: () => where,
-        go: (target) => { where = target; went.push(target) },
+        go: (target, options) => { where = target; went.push({ ...target, ...options }) },
         listen: (changed) => { listeners.add(changed); return () => { listeners.delete(changed) } },
     }
 }
@@ -91,18 +92,20 @@ export interface PropsOptions extends FakeOptions {
     translate?: (ask: TranslateAsk) => Promise<KitResult<string>>
     reason?: () => TranslateReason
     screen?: string
+    guardLeave?: PanelProps['guardLeave']
 }
 
-export function panelProps(options: PropsOptions = {}): PanelProps & { store: FakeStore } {
+export function panelProps(options: PropsOptions = {}): PanelProps & { store: FakeStore; went: Array<KitLocation & { replace?: boolean }> } {
     const store = fakeStore(options)
     const translate = options.translate ?? (async (ask) => ({ ok: true as const, value: `[${ask.target}] ${ask.text}` }))
+    const navigation = memoryNavigation(options.screen ?? 'albums')
     const ports = albumBlenderPorts({
-        store, navigation: memoryNavigation(options.screen ?? 'albums'), pages: [{ label: '/start', href: '/start' }],
+        store, navigation, pages: [{ label: '/start', href: '/start' }],
         translate: (text, target) => translate({ text, target, kind: 'plain' }),
-        texts: kitTexts(t, options.reason),
+        texts: { ...kitTexts(t, options.reason), rich: richTexts(t, tPlural) },
     })
     return {
-        store, ports, translate, check,
+        store, ports, translate, check, went: navigation.went, guardLeave: options.guardLeave,
         kindOf: (key) => (key === 'admin.help.rich' ? 'rich' : 'plain'),
         siteState: () => options.site ?? { source: 'published', rejected: [] },
     }

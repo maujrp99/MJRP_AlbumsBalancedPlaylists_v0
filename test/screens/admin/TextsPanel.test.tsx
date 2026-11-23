@@ -72,7 +72,7 @@ describe('the texts by screen, English and Portuguese side by side', () => {
         const { app, click, props } = await show()
         await click('[data-screen="blend"]')
         expect([...app.querySelectorAll('.cms-row')].map((row) => row.getAttribute('data-key'))).toEqual(['blend.title'])
-        expect((props.ports.navigation as unknown as { went: unknown[] }).went).toEqual([{ path: 'blend' }])
+        expect(props.went).toEqual([{ path: 'blend', replace: true }])
         expect(app.querySelector('[data-key="blend.title"] [data-tag="live"]')?.textContent).toBe('live')
         expect([...app.querySelectorAll<HTMLButtonElement>('[data-later]')].map((button) => button.disabled)).toEqual([true, true])
     })
@@ -107,6 +107,7 @@ describe('the fields of the kit', () => {
         const { app, click } = await show({ screen: 'admin' })
         await click('[data-key="admin.help.rich"] [data-act="edit"]')
         expect(app.querySelectorAll('[data-key="admin.help.rich"] .ak-rt-bar').length).toBe(2)
+        expect(app.querySelector('[data-key="admin.help.rich"] .ak-rt-bar [data-cmd="bold"]')?.getAttribute('aria-label')).toBe('Bold (⌘B)')
         expect(app.querySelector('[data-key="admin.help.rich"] .ak-rt-bar [data-cmd="bold"]')).not.toBeNull()
         await click('[data-screen="albums"]')
         await click('[data-key="albums.title"] [data-act="edit"]')
@@ -219,6 +220,22 @@ describe('the save bar', () => {
         expect(text('[data-state="failed"] span')).toContain('the database did not answer.')
         await click('[data-act="save-retry"]')
         expect(text('[data-state="saved"]')).toBe('✓ Saved and live: 1 text.')
+    })
+})
+
+describe('leaving with changes not saved', () => {
+    it('tells the guard whether something is not saved, at the moment it is asked, and lets go of it on leaving', async () => {
+        let unsaved: () => boolean = () => false
+        let stopped = 0
+        const { edit, click } = await show({ guardLeave: (asked) => { unsaved = asked; return () => { stopped++ } } })
+        expect(unsaved()).toBe(false)
+        await edit('albums.title', 'en', 'Records')
+        expect(unsaved()).toBe(true)
+        await click('[data-act="discard"]')
+        expect(unsaved()).toBe(false)
+        await open?.leave()
+        open = null
+        expect(stopped).toBeGreaterThan(0)
     })
 })
 

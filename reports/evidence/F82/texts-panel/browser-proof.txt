@@ -1,6 +1,6 @@
-PASS the Painel is not in the page's preload — adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css
+PASS the Painel is not in the page's preload — adminPanel-b27LVHU1.js, adminPanel-lFtj2gPc.css
 PASS 1440 administrator: /admin opens the Painel — 188 texts of the first screen
-PASS 1440 the Painel's files were asked for — adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css
+PASS 1440 the Painel's files were asked for — adminPanel-b27LVHU1.js, adminPanel-lFtj2gPc.css
 PASS 1440 a label is a plain one-line field — albums.title.all
 PASS 1440 the bar counts 1 change not saved
 PASS 1440 translate says «not configured» in plain words and the field does not change — Could not translate: the translation service is not configured on the server yet (its key is missing). The field stays as it was.
@@ -18,11 +18,11 @@ PASS 1440 no horizontal scroll
 PASS 1440 no console errors
 PASS 1440 every database request was answered by the stand-in — []
 PASS 1440 visitor: /admin says «Page not found»
-PASS 1440 visitor: the Painel's files are never requested — files: adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css; asked: 0
+PASS 1440 visitor: the Painel's files are never requested — files: adminPanel-b27LVHU1.js, adminPanel-lFtj2gPc.css; asked: 0
 PASS 1440 visitor: no horizontal scroll
 PASS 1440 visitor: no console errors
 PASS 393 administrator: /admin opens the Painel — 188 texts of the first screen
-PASS 393 the Painel's files were asked for — adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css
+PASS 393 the Painel's files were asked for — adminPanel-b27LVHU1.js, adminPanel-lFtj2gPc.css
 PASS 393 a label is a plain one-line field — albums.title.all
 PASS 393 the bar counts 1 change not saved
 PASS 393 translate says «not configured» in plain words and the field does not change — Could not translate: the translation service is not configured on the server yet (its key is missing). The field stays as it was.
@@ -41,7 +41,7 @@ PASS 393 no horizontal scroll
 PASS 393 no console errors
 PASS 393 every database request was answered by the stand-in — []
 PASS 393 visitor: /admin says «Page not found»
-PASS 393 visitor: the Painel's files are never requested — files: adminPanel-DW__1yux.js, adminPanel-lFtj2gPc.css; asked: 0
+PASS 393 visitor: the Painel's files are never requested — files: adminPanel-b27LVHU1.js, adminPanel-lFtj2gPc.css; asked: 0
 PASS 393 visitor: no horizontal scroll
 PASS 393 visitor: no console errors
 

@@ -6,9 +6,11 @@
 import { describe, it, expect, vi } from 'vitest'
 import { admin as adminEn } from '../../../public/js/i18n/en/admin.js'
 import { admin as adminPt } from '../../../public/js/i18n/pt/admin.js'
-import { t } from '../../../public/js/i18n/t.js'
+import { t, tPlural } from '../../../public/js/i18n/t.js'
 import { APPROVED_ID, contentStore, type ContentRepository } from '../../../public/js/screens/admin/contentStore'
 import { albumBlenderPorts, failureOf, hrefOf, kitTexts, locationOf, routerNavigation } from '../../../public/js/screens/admin/kitPorts'
+import { installLeaveGuard } from '../../../public/js/screens/admin/leaveGuard'
+import { richTexts } from '../../../public/js/screens/admin/richTexts'
 import { editsOf, pendingOf, screensOf, toKitValues, unsavedKeys, visibleKeys, withEdit, type Sources } from '../../../public/js/screens/admin/model'
 import { bodyOf, reasonOf, translateText } from '../../../public/js/screens/admin/translate'
 import { forSave, invalidEdits, saveAll } from '../../../public/js/screens/admin/usePanel'
@@ -216,5 +218,58 @@ describe('the translation by the route of the server', () => {
         expect(await translateText({ post: async () => ({ status: 401, body: null }) }, ask)).toEqual({ ok: false, failure: 'session-expired' })
         expect(await translateText({ post: async () => ({ status: 200, body: { data: {} } }) }, ask)).toMatchObject({ ok: false, message: 'unusable' })
         expect(await translateText({ post: async () => { throw new Error('offline') } }, ask)).toMatchObject({ ok: false, message: 'service' })
+    })
+})
+
+describe('the words of the rich editor', () => {
+    it('come from the dictionary for every tool the bar shows, and count the words in the language', () => {
+        const words = richTexts(t, tPlural)
+        expect(words.tools.bold).toEqual({ name: 'Bold', does: 'Stresses the stretch; on the site, in the accent colour.' })
+        expect(words.tools.undo).toEqual({ name: 'Undo', does: '' })
+        expect(words.count(1, 1, 0)).toBe('1 word · 1 min read')
+        expect(words.count(19, 1, 0)).toBe('19 words · 1 min read')
+        const raw = JSON.stringify([words.tools, words.styles, words.inserts, words.link, words.expanded, words.toolbar, words.footHint, words.pasted, words.calloutPlaceholder, words.plainHint])
+        expect(raw).not.toContain('admin.rich.')
+        expect(adminPt['admin.rich.tools.bold.name']).toBe('Negrito')
+        expect(adminPt['admin.rich.count.other']).toBe('{count} palavras · {minutes} min de leitura')
+    })
+})
+
+describe('leaving the Painel with changes not saved', () => {
+    const install = (unsaved: boolean, answer = false) => {
+        let hook: () => boolean = () => true
+        const removed = vi.fn()
+        const confirm = vi.fn(() => answer)
+        const uninstall = installLeaveGuard({ beforeNavigate: (asked) => { hook = asked; return removed }, question: () => t('admin.leave'), confirm }, () => unsaved)
+        return { move: () => hook(), confirm, removed, uninstall }
+    }
+
+    it('asks before a move of the app, and a «no» keeps the person in the Painel', () => {
+        const guard = install(true, false)
+        expect(guard.move()).toBe(false)
+        expect(guard.confirm).toHaveBeenCalledWith('There are changes not saved. Leave the admin and lose them?')
+        const yes = install(true, true)
+        expect(yes.move()).toBe(true)
+        guard.uninstall()
+        yes.uninstall()
+    })
+
+    it('does not ask when everything is saved', () => {
+        const guard = install(false)
+        expect(guard.move()).toBe(true)
+        expect(guard.confirm).not.toHaveBeenCalled()
+        guard.uninstall()
+    })
+
+    it('asks through the browser when the tab is closed, and lets go of everything when the Painel is left', () => {
+        const guard = install(true)
+        const closing = new Event('beforeunload', { cancelable: true })
+        window.dispatchEvent(closing)
+        expect(closing.defaultPrevented).toBe(true)
+        guard.uninstall()
+        expect(guard.removed).toHaveBeenCalled()
+        const later = new Event('beforeunload', { cancelable: true })
+        window.dispatchEvent(later)
+        expect(later.defaultPrevented).toBe(false)
     })
 })

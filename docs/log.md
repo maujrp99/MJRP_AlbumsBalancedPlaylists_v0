@@ -2,6 +2,23 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:01] step — F82: o teste de segredos passa; sair do Painel sem salvar pergunta; a barra do editor rico em português
+
+**Branch:** claude/f82-cms-texts-panel
+
+Quatro acertos no ramo do Painel, a pedido do coordenador:
+
+- **O teste de segredos passa.** `test/server/adminTranslate.test.js` tinha uma constante inventada no próprio teste, com cara de chave de provedor («sk-…», só palavras minúsculas com hífen, sem nada de aleatório): lida e conferida como dublê, trocada por `test-key-not-a-secret`. As conferências «a chave nunca vai ao registro» seguem valendo, sobre o valor novo.
+- **Sair do Painel com mudanças não salvas pergunta antes** (`screens/admin/leaveGuard.ts`): um link, o voltar e o avançar do navegador perguntam pelo roteador («Há mudanças não salvas. Sair do admin e perdê-las?») e o «não» deixa a pessoa onde estava; fechar ou recarregar a aba pergunta pelo aviso do próprio navegador. Trocar de tela dentro do Painel passou a substituir o endereço em vez de somar um: o «voltar» sempre sai do Painel (e pergunta), nunca o redesenha por cima do que foi digitado.
+- **As palavras da barra do editor rico em português**, pelo `KitTexts.rich` (`screens/admin/richTexts.ts`, chaves `admin.rich.*` no dicionário, em inglês e português): os botões com o que cada um faz, os estilos, o menu «+», a caixa de link, o rodapé. As palavras de imagem, vídeo e livro, que a pele esconde, ficam as do kit.
+- **`tasks.md`**: TASK-01 marcada (sobre a cópia candidata do kit), e as partes feitas das outras em linhas próprias (TASK-15a, TASK-16b, TASK-02a), com o que falta escrito em cada tarefa-mãe.
+
+Português proposto pelo agente (espera o MJRP): `admin.leave`; em `admin.rich.*`, «Para títulos de álbuns, termos e ênfase leve.» (o do MJRPpersonal fala de livros) e as duas frases de contagem (`admin.rich.count.*`). O resto de `admin.rich.*` é o português que o kit já tinha no MJRPpersonal (`RICH_TEXTS_PT`).
+
+Suíte inteira, sozinha, pela fila: 5 arquivos e 6 testes reprovam, todos os seis sensores da cópia do kit (os mesmos de antes); 5472 passam. `tsc` passa; `budget:publication` sai 0 (script principal 200.227 B); a prova no navegador repetida no site montado, 46 de 46.
+
+Decidido pelo agente — revisável: a pergunta ao sair usa o `confirm` do navegador, como a tela de playlists já faz; as palavras do kit são lidas quando o Painel abre (trocar o idioma com o Painel aberto só vale ao reabri-lo).
+
 ## [2026-11-23 14:53] step — F82: o Painel de textos sobre os módulos reais, com o orçamento em dia e a prova no navegador (46 de 46)
 
 **Branch:** claude/f82-cms-texts-panel

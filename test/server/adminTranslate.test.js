@@ -18,7 +18,8 @@ const { createTranslateService, MAX_TEXT_CHARS, REASONS } = require('../../serve
 const { createAdminHandlers } = require('../../server/routes/handlers/admin.js')
 const { ERROR_CODES, failure, bodyOf } = require('../../server/lib/outcome.js')
 
-const SECRET = 'sk-ant-test-never-a-real-key'
+// A made-up value, on purpose not shaped like a provider's key (test/security/noSecretsInRepo.test.js reads this file too): the tests only prove it never reaches a log
+const SECRET = 'test-key-not-a-secret'
 const TOKEN = 'aaa.bbb.ccc'
 const quiet = () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() })
 const everythingLogged = (logger) => JSON.stringify([logger.info.mock.calls, logger.warn.mock.calls, logger.error.mock.calls])

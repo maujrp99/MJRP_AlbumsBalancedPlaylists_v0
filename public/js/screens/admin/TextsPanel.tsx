@@ -25,6 +25,8 @@ export interface SiteState {
 export interface PanelProps extends PanelDeps, RowDeps {
     ports: KitPorts
     siteState: (locale: Locale) => SiteState
+    /** Asks before the person leaves the Painel with changes not saved; returns the way to stop asking (leaveGuard.ts). */
+    guardLeave?: (unsaved: () => boolean) => () => void
 }
 
 const LATER = ['switches', 'recipes'] as const
@@ -100,7 +102,8 @@ function Texts({ props, panel }: { props: PanelProps; panel: Panel }) {
     const waiting = pendingOf(panel.values, current)
     const selected = picked.filter((key) => waiting.includes(key))
     const rejected = (key: string) => Object.fromEntries((['en', 'pt'] as const).map((locale) => [locale, props.siteState(locale).rejected.find((entry) => entry.key === key)?.reason]))
-    const go = (id: string) => { setQuery(''); setScreen(id); navigation.go({ path: id }) }
+    // The Painel replaces its own address: «back» leaves the Painel (and asks first), it never redraws it over what was typed.
+    const go = (id: string) => { setQuery(''); setScreen(id); navigation.go({ path: id }, { replace: true }) }
     return (
         <>
             <SaveBar panel={panel} />
@@ -131,6 +134,11 @@ function Texts({ props, panel }: { props: PanelProps; panel: Panel }) {
 export function TextsPanel(props: PanelProps) {
     const locale = useLocale() // draws again when the language or the published texts change
     const panel = usePanel(props)
+    // What is not saved now, for the question at the moment of leaving.
+    const [draft] = useState(() => ({ unsaved: 0 }))
+    useEffect(() => { draft.unsaved = panel.unsaved.length }, [draft, panel.unsaved.length])
+    const guardLeave = props.guardLeave
+    useEffect(() => guardLeave?.(() => draft.unsaved > 0), [guardLeave, draft])
     return (
         <div className="cms" data-admin-skin="albumblender" data-phase={panel.phase}>
             <Rail />

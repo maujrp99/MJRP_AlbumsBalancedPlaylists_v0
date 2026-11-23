@@ -15,7 +15,7 @@ import { en } from '../../i18n/en/index.js'
 import { admin as adminEn } from '../../i18n/en/admin.js'
 import { pt } from '../../i18n/pt/index.js'
 import { admin as adminPt } from '../../i18n/pt/admin.js'
-import { registerPublishedTexts, registerTexts, t } from '../../i18n/t.js'
+import { registerPublishedTexts, registerTexts, t, tPlural } from '../../i18n/t.js'
 import { kindOf } from '../../i18n/textKinds.js'
 import { ReactView } from '../../react-bridge/ReactView'
 import { router } from '../../router.js'
@@ -25,6 +25,8 @@ import { getContentState } from '../../services/content/contentWiring.js'
 import { TextsPanel, type PanelProps } from './TextsPanel'
 import { contentStore, type ContentRepository } from './contentStore'
 import { albumBlenderPorts, kitTexts, routerNavigation } from './kitPorts'
+import { installLeaveGuard } from './leaveGuard'
+import { richTexts } from './richTexts'
 import type { TextKind } from './model'
 import { translateText, type TranslateAsk, type TranslateBody, type TranslateReason } from './translate'
 
@@ -70,7 +72,7 @@ function panelProps(): PanelProps {
             afterNavigate: (hook) => router.afterNavigate(hook) as () => void,
         }),
         translate: (text, target) => translate({ text, target, kind: 'plain' }),
-        texts: kitTexts(t, () => reason),
+        texts: { ...kitTexts(t, () => reason), rich: richTexts(t, tPlural) },
         pages: PAGES,
     })
     return {
@@ -82,6 +84,7 @@ function panelProps(): PanelProps {
         },
         published: (locale, texts) => registerPublishedTexts(locale, texts),
         siteState: (locale) => getContentState(locale),
+        guardLeave: (unsaved) => installLeaveGuard({ beforeNavigate: (hook) => router.beforeNavigate(hook) as () => void, question: () => t('admin.leave') }, unsaved),
     }
 }
 
