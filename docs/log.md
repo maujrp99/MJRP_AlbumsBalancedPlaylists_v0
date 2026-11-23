@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 17:06] step — espelho SpecKit regenerado da constituição
+
+**Branch:** claude/v0-doctor-broken-links-115153
+
+Doctor: 524 erros antes desta tarefa, 5 depois (todos os links resolvidos neste lote e nos demais). Neste lote: 0 links apontados para o arquivo certo e 0 virados texto puro (mesmas palavras, sem o link), nos arquivos abaixo. Nada foi apagado nem inventado.
+
+Continua vermelho por 5 erros fora desta tarefa, que já existiam antes: 3 sensores de código (lint: `error TS7016: Could not find a declaration file for module 'react-dom'`; test e build: `Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@vitejs/plugin-react'`) e 2 de memória (`## Now`: bloco «Where the Work Stopped» com 9500 caracteres; «Pending on Agent» sem carimbo). Ficam com o orquestrador, conforme combinado.
+
+
 ## [2026-11-23 17:06] step — links quebrados em docs/specs (groupings e uat)
 
 **Branch:** claude/v0-doctor-broken-links-115153
