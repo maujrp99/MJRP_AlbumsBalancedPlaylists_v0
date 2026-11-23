@@ -26,11 +26,11 @@ This feature implements the "Refetch Metadata" action for albums, allowing users
 ## Verification Results
 
 ### Final Badge Layout (Swapped)
-![Refined Badge Layout](/Users/mpedroso/.gemini/antigravity/brain/3a2e64e8-1d7a-435b-a328-4034fd71f1f0/refined_badge_layout_swapped_1768696490547.png)
+Refined Badge Layout
 *Confirmed: BEA on top row. My Ranking moved to the Bottom Right. Spotify reserved for Bottom Left.*
 
 ### Refetch Functionality
-![Refetch Click Feedback](/Users/mpedroso/.gemini/antigravity/brain/3a2e64e8-1d7a-435b-a328-4034fd71f1f0/.system_generated/click_feedback/click_feedback_1768695160659.png)
+Refetch Click Feedback
 *Confirmed: Toast notification indicates successful wiring.*
 
 ## Regression Check
