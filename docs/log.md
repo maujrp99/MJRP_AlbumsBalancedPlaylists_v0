@@ -2,6 +2,20 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:04] decision — F96 e F95: a escolha do MJRP nos esboços, um deslize só, e as duas na via rápida
+
+**Branch:** wip/board-tidy-2026-11-23
+
+As decisões do MJRP de 2026-11-23 entram nos dois esboços mais novos; só documentos.
+
+- **A página de entrada no celular (F96, S-78).** Spec, plano e tarefas reescritos para o que ele escolheu sobre o protótipo («escolho a do especialista, mas com essa landing aqui, muito melhor»): página vertical, abertura com a caixa na diagonal e sem botão grande, a parte que ensina com título próprio, cada passo com o texto antes da ilustração, os álbuns fora dos passos, e um deslize só, o da caixa «Na caixa do The Album Blender» («só vai ter swipe para a caixa, certo?»; sim). O título e a pasta ainda dizem «em swipes»: ficam, com a nota de que são históricos. Para quem não tem conta: «Entrar» no alto e o «Criar» da barra de baixo abrindo o app; ele respondeu «ok» numa mensagem que tratava de outro assunto, e fica registrado como aceito com essa ressalva (leitura do orquestrador). Abertas com ele: o título da seção (três redações) e a marca da troca de passo (três formas). A primeira tarefa de construção diz que a caixa na diagonal é a caixa leve em CSS girada, se servir na página de verdade: a cena 3D no celular custa 152 KB a mais na primeira visita (ramo `fix/f80-crate-animation-break`, `reports/evidence/F80/crate-diagonal-on-phone/`).
+- **A curadoria (F95).** No celular ela é o deslize da F96. Fica só com ela: o nome no computador (o selo junto da caixa), as datas ou notas, e a ligação com a escolha dos álbuns no CMS (F82 REQ-03).
+- **Via rápida.** O MJRP, 2026-11-23: «tudo em fast lane.» Interpretação do orquestrador, revisável por ele: vale para o que está sendo trabalhado agora na página de entrada, a F96 e a F95. As duas passam a `lane: fast`, com o protótipo registrado (`**Prototype**: quick`), a validação dele olhando a tela e o passo retroativo como tarefas. Nenhuma outra feature mudou de via.
+- **Regras de texto dele, gravadas nas duas specs:** o produto é «The Album Blender», inteiro; em português, «álbum» e «álbuns».
+- As duas estão na «Priorizada» desde hoje (`71a9f6b`, só lido).
+
+Sensores: `requirements_graph_check.py . --changed`, `product_structure_check.py .` e `sdd_shape_check.py .` sem contradição nos nós tocados.
+
 ## [2026-11-23 15:55] decision — F96: o MJRP escolheu a versão do especialista para a home do celular, com a abertura da versão dele
 
 **Branch:** main
