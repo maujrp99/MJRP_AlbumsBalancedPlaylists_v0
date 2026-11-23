@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 14:44] step — Estado: o prazo de 3 horas do MJRP para o CMS, as frentes em paralelo e a F95 na `main`
+
+**Branch:** main
+
+O MJRP, 2026-11-23 ~14:05: «eu preciso que vc finalize isso em 3 horas» (fechar a 1.0.0 do kit, dividir as 42 funções, o kit chegar ao V0 com o Painel de textos). Postas em paralelo, todas no Fable 5.2 por ordem dele («mude os modelos pra utilizar somente o 5.2, pq minha cota da semana está acabando para os outros modelos»): consertos da fatia 1 do kit (prontos), fatia 1b em dois ramos, núcleo de conteúdo (pronto), rota de tradução (pronta), o Painel. A F95 (curadoria do The Album Blender na página de entrada, S-77) entrou na `main` em esboço, antes de qualquer protótipo. O `## Now` do MEMORY.md foi posto em dia.
+
 ## [2026-11-23 14:42] step — Site publicado da `main` `937c3dd`: os links de álbum da página de entrada no botão «Ouça no Apple Music» (UAT-285)
 
 **Branch:** main
