@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:26] decision — Idioma do app (F81) publicado em produção, com a palavra do MJRP («1 pública 3 pública»)
+
+**Branch:** main
+
+Site publicado da `main` `a61392b`; resultado lido: «Site published from main (a61392b)», saída 0; a verificação de produção leu `/country.json` («br» daqui) e a resposta para o Brasil. Conferido à parte: com a marca de país `us`, o endereço responde país vazio (inglês). O juiz independente passou na segunda conferência (0 P0, 0 P1, 11 P2; `…-f81-language-choice-visual-parity-recheck-2.md`). O «3 pública» é do conserto da mensagem do Spotify (F97), que ainda recebe a `main` e a conferência final antes de entrar. Decidido pelo agente — revisável: os tetos do orçamento de peso remedidos pelos construtores (F96 +1 B; F81 +1,7 KB no script principal e o dicionário em português como arquivo próprio) foram aceitos.
+
 ## [2026-11-23 19:03] review — F81: a escolha de idioma do app, segunda reconferência independente (passa: 0 P0, 0 P1, 11 P2)
 
 **Branch:** wip/f81-judge-2
