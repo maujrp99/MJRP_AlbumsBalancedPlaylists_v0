@@ -12,6 +12,7 @@
  */
 import { useCallback, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { t } from '../../i18n/t.js'
+import { timeText } from '../../i18n/dates.js'
 import { decodeEntities } from '../../models/text.js'
 import { listArtists } from '../../models/seriesFilter.js'
 import { SERIES_ALBUM_LIMIT } from '../../models/seriesExpansion.js'
@@ -122,7 +123,7 @@ export function Albums({ controller, bridge, route }: Props) {
         onSeriesUpdated: () => controller.requestLoad(false),
         onSeriesDeleted: (seriesId) => { if (route.seriesId === seriesId) navigate('/albums') }
     })
-    const openedAt = useState(() => new Date().toLocaleTimeString())[0]
+    const openedAt = useState(() => new Date())[0] // written when drawn, in the language of the app (F81)
     const wantFocus = useRef<{ seriesId: string; index: number } | null>(null)
 
     const state = controller.getState()
@@ -215,7 +216,7 @@ export function Albums({ controller, bridge, route }: Props) {
             <div id="series-pager-mount"><Pager {...pagerProps} /></div>
             <div id="emptyStateContainer">{waiting ? <LoadingReserve phone={phone} /> : showEmpty ? <EmptyState /> : null}</div>
             <footer className="view-footer mt-12 text-center text-muted text-sm border-t border-white/5 pt-6">
-                <p className="last-update">{t('albums.footer.lastUpdated', { time: openedAt })}</p>
+                <p className="last-update">{t('albums.footer.lastUpdated', { time: timeText(openedAt) })}</p>
             </footer>
             <div id="series-modals-mount">{windows.layer}</div>
             {sheets.layer}

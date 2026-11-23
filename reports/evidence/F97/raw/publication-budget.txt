@@ -2,9 +2,9 @@
 > mjrp-playlist-generator@3.19.0 budget:publication
 > node scripts/publication-budget.mjs
 
-publication-shaped build (stand-ins by length: VITE_SPOTIFY_CLIENT_ID 32, VITE_POSTHOG_KEY 47, VITE_POSTHOG_HOST 24, VITE_SPLASH_COVERS 4, VITE_USAGE_MEASUREMENT 3) in /var/folders/07/f1b946917xb802qwhlst7m480000gn/T/mjrp-publication-budget-Q9bAZL
-main script            198781 B   (ceiling 198931 B, margin 150 B)
-after the first screen 238595 B
-main + after           437376 B   (cap 437526 B)
+publication-shaped build (stand-ins by length: VITE_SPOTIFY_CLIENT_ID 32, VITE_POSTHOG_KEY 47, VITE_POSTHOG_HOST 24, VITE_SPLASH_COVERS 4, VITE_USAGE_MEASUREMENT 3) in /var/folders/07/f1b946917xb802qwhlst7m480000gn/T/mjrp-publication-budget-vMu5gQ
+main script            200486 B   (ceiling 200636 B, margin 150 B)
+after the first screen 256458 B
+main + after           456944 B   (cap 457094 B)
 react-vendor           68691 B   (ceiling 72000 B)
 publication-budget: inside the budget, with the margin

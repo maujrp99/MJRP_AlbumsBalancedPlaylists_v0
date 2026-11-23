@@ -119,5 +119,8 @@ export const shell = {
     'shell.m.connectedSummary': '{names} conectado',
     'shell.m.nothingConnected': 'Nada conectado',
     'shell.m.and': ' e ',
-    'shell.sheet.close': 'Fechar'
+    'shell.sheet.close': 'Fechar',
+    'shell.lang.title': 'Idioma',
+    'shell.lang.pt': 'Português',
+    'shell.lang.en': 'English'
 }

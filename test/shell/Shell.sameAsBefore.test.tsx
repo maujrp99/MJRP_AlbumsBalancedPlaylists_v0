@@ -49,9 +49,17 @@ const expectedPage = (key: string, label: string): string | null => {
     const change = KNOWN_DIFFERENCES[`${key} · ${label}`]
     return page && change ? change(page) : page
 }
+/**
+ * F81 put the language selector in the account panel and in the menu of the phone, which the hand-made shell never had (its own test is
+ * test/shell/Language.test.tsx). It is taken out of the new page here (its title, its group and, in the panel, the rule that follows it), so
+ * that everything around it is still compared to the letter.
+ */
+const LANGUAGE_SELECTOR = /<div class="(?:top-panel|phone-menu)__section" id="[^"]*">Language<\/div><div [^>]*data-language-picker=""[^>]*>.*?<\/div>(?:<div class="top-panel__rule"><\/div>)?/g
+const withoutLanguageSelector = (page: string | null): string | null => (typeof page === 'string' ? page.replace(LANGUAGE_SELECTOR, '') : page)
 const shownPage = (key: string, label: string, page: string | null): string | null => {
     const change = KNOWN_DIFFERENCES[`${key} · ${label}`]
-    return page && change ? change(tidy(page)!) : tidy(page)
+    const tidied = tidy(withoutLanguageSelector(page))
+    return tidied && change ? change(tidied) : tidied
 }
 
 describe('the shell in React draws what the hand-made one drew', () => {

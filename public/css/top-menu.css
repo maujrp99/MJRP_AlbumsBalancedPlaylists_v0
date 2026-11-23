@@ -271,6 +271,42 @@
   color: #f87171;
 }
 
+/* A language (F81): a row of this panel and of the phone's sheet; the one spoken now carries the mark, in the orange of the current item */
+.lang-row__check {
+  flex: none;
+  visibility: hidden;
+}
+
+.lang-row__name {
+  flex: 1;
+}
+
+.lang-row__code {
+  flex: none;
+  color: var(--faint, #9a9aa4);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.lang-row[aria-pressed="true"] {
+  color: #fff;
+}
+
+.lang-row[aria-pressed="true"] .lang-row__check {
+  visibility: visible;
+  color: #f97316;
+}
+
+.lang-row[aria-pressed="true"] .lang-row__code {
+  color: var(--orange-text, #fb923c);
+}
+
+.lang-row:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
 /* A connection (Spotify, Apple Music): used in this panel and in the phone's sheet */
 .conn {
   display: flex;

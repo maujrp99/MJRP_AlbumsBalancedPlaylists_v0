@@ -24,7 +24,8 @@ const ALLOWED = [
     'eletrônica', // genre keyword as the catalog writes it (album type classifier)
     'electrónica', // the same, in Spanish
     "Zé's", // the owner's name, in the name of his recipes ("Zé's Balanced Playlists")
-    "Zé\\'s" // the same, as the source writes it inside single quotes
+    "Zé\\'s", // the same, as the source writes it inside single quotes
+    'Português' // the name of the language in the language selector (F81): each language is written in its own language, in both dictionaries
 ]
 
 const PORTUGUESE_LETTERS = /[ãõçáéíóúâêôàÃÕÇÁÉÍÓÚÂÊÔÀ]/
