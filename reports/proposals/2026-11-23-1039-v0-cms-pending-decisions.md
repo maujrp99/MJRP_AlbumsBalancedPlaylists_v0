@@ -67,6 +67,8 @@ Base: média — o protótipo mostra os três; a decisão é de produto
 - a) Esconder os três nos textos do Album Blender (Recomendado)
 - b) Manter vídeo; esconder imagem e livro
 - c) Manter os três como no kit
+→ respondida em 2026-11-23 11:14
+  - a
 
 ### D-07 · Que formatação os textos do site aceitam
 Pergunta: Os textos corridos do site aceitam só negrito, itálico e link, ou também subtítulo, citação, lista e caixa de destaque?
@@ -75,6 +77,8 @@ Base: média — proposta de aparência do agente, ainda sem o seu olhar
 - a) Todos os que a barra oferece, com a aparência da prévia (Recomendado)
 - b) Só negrito, itálico, sublinhado, link e quebra de linha na primeira iteração
 - c) Quero ver a prévia antes de decidir
+→ respondida em 2026-11-23 11:14
+  - a
 
 ### D-08 · Links para fora do site nos textos ricos
 Pergunta: Um texto rico publicado pode ter link para fora do site?
@@ -82,6 +86,8 @@ Contexto: Os seus outros CMS permitem (endereços https e de e-mail). Segui com 
 Base: forte — é o que o kit faz hoje
 - a) Sim: https e e-mail, com o filtro consertado (Recomendado)
 - b) Só links para dentro do site
+→ respondida em 2026-11-23 11:14
+  - a
 
 ### D-09 · Frases divididas em pedaços viram um texto só?
 Pergunta: As frases que hoje são três pedaços (texto, link, texto) viram um texto corrido só, com o link dentro?
@@ -89,6 +95,8 @@ Contexto: Exemplo: «You're not signed in…» + «Sign in» + «to keep it…»
 Base: média — achado do protótipo; o custo é estimativa
 - a) Sim, onde o link leva a uma página do site (Recomendado)
 - b) Não: ficam em pedaços, como hoje
+→ respondida em 2026-11-23 11:14
+  - a
 
 ### D-10 · O tamanho dos botões da barra no celular
 Pergunta: Os botões da barra do editor sobem de 34 para 44 pixels no celular?
@@ -97,6 +105,8 @@ Base: forte — medido no kit e no sistema de design do Album Blender
 - a) 44 pixels no celular, só na pele do Album Blender (Recomendado)
 - b) 44 pixels no kit, para todos os CMS
 - c) Fica em 34, como no kit
+→ respondida em 2026-11-23 11:14
+  - a
 
 ### D-11 · A pausa no kit do seu site pessoal durante a mudança
 Pergunta: Posso pausar por um dia as mudanças no kit do seu site pessoal, no dia em que ele passar a usar a cópia do harness?
@@ -104,6 +114,8 @@ Contexto: No dia da troca, uma mudança feita no kit antigo depois da cópia se 
 Base: forte — é a ordem da mudança na proposta
 - a) Sim, um dia (Recomendado)
 - b) Não: a troca do site pessoal fica para depois; por enquanto só o Album Blender usa a cópia
+→ respondida em 2026-11-23 11:14
+  - (outra) Eu gerencio essa pausa, só me avisar que eu pauso o uso
 
 ### D-12 · Papéis no painel: quando, e qual primeiro
 Pergunta: Quando entram os papéis (você como superadministrador, criando e atribuindo papéis), e qual é o primeiro?

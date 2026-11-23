@@ -2,6 +2,22 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 11:14] decision — CMS: respostas D-06 a D-11 do lote aplicadas
+
+**Branch:** main
+
+O MJRP, na tela remota, 2026-11-23 11:14: D-06 «a» (esconder imagem, vídeo e livro nos textos do Album Blender); D-07 «a» (todos os formatos da barra, com a aparência da prévia); D-08 «a» (links para fora: https e e-mail, com o filtro consertado); D-09 «a» (frases em pedaços viram um texto só onde o link leva a uma página do site); D-10 «a» (44 px no celular, só na pele do Album Blender); D-11 «(outra) Eu gerencio essa pausa, só me avisar que eu pauso o uso». Aplicado no REQ-12 da F82; a D-11 muda o plano do kit: no dia da troca do MJRPpersonal eu aviso e ele pausa (a levar à TASK-15 da F332). Abertas no lote: D-12 (papéis), D-13 (ordem de publicação com o Discogs), D-14 (revisão das Receitas).
+
+## [2026-11-23 11:14] answer — lote 2026-11-23-1039-v0-cms-pending-decisions
+
+- Lote: `reports/proposals/2026-11-23-1039-v0-cms-pending-decisions.md`
+- Envio: 1dcd5c8ab1f11201
+- Recomendações aceitas: D-06, D-07, D-08, D-09, D-10
+- D-11: (outra) Eu gerencio essa pausa, só me avisar que eu pauso o uso
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lhR3BIYkV0MVdXd3pYMFJwTkZGMk1FMVhkV28xV21wd1IyWnpjamhRUVc1V2JFNTBjRXg0T0dZeU1DSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTkRRek9EVXhMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVTBORE15TlRFc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaVMzSm9YMjh5VjJZMGFsbHJXV3Q1WVhGelduaG5XSFZ2SWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpNdE1UQXpPUzEyTUMxamJYTXRjR1Z1WkdsdVp5MWtaV05wYzJsdmJuTWlMQ0p6ZFdKcVpXTjBJam9pWVRSaU1tTTRZMlkzWmpJeFpUQmtNVGxsTXpabE9ETTJOemcyWVRJd09XSmxPV1V6WWpjMU5ESXlaREExT0RReFpUTXlORFkxWkRnM01HUXlZelZoTlNJc0luWWlPakY5Iiwic2lnbmF0dXJlIjoiTUVRQ0lDaXZHYWxhSktHUmpZSGhZTEsxT28wMkUtZmpqMnVpcXZ0eFdqb3g1UzlMQWlBZDhvYUU1elBxQVVyVFBYeERxTklQUkpOWXB5Wl9wd1JXRGFyWTE1UnVsZyJ9
+- folhas: D-06:c7b9df47c3467a89 D-07:c9ed1394675f4354 D-08:6afa58d164b8d035 D-09:3efef346563eb0e8 D-10:c807e6adf9afc807 D-11:cf895df9be3d89ba
+
 ## [2026-11-23 11:03] step — Kit do CMS (F332 do harness): o registro CC-ADR-0068 passou na terceira crítica e espera o aceite do MJRP
 
 **Branch:** main
