@@ -7,11 +7,24 @@
  *               did not give one, and the playlists went to the top of the library
  *   created     the playlists that are in the library: { name, tracks, total, alreadyThere }
  *               (`alreadyThere`: this session had sent it before, so it was not created again)
- *   failed      [{ name, message }] - Apple Music refused to create it; the others are still tried
- *   empty       not created: none of its tracks was found in the catalog
- *   notFound    the tracks left out ("Artist - Title")
- *   notCreated  everything, when the export stopped before it began
- *   failure     null, or why it never began: { kind: 'not-configured' | 'authorization' | 'error', message }
+ *   failed      [{ name, detail }] - Apple Music did not create it (`detail`: what Apple Music said, or null); the others are still tried
+ *   empty       not created: Apple Music answered every search of its tracks and had none of them
+ *   notFound    the tracks left out because the catalogue has none ("Artist - Title"). A track is here ONLY when
+ *               Apple Music answered and had none (F98, UAT-307)
+ *   unchecked   how many tracks could not be checked: their search failed (network, 5xx, timeout). Never "not found" (F98)
+ *   uncheckedTracks  those tracks ("Artist - Title")
+ *   notCreated  what was left to do when the export stopped, and what had no track that could be checked
+ *   failure     null, or why it stopped or created nothing: { kind, detail? }
+ *               'not-configured'  Apple Music is not set up for this site
+ *               'authorization'   the person did not authorize
+ *               'refused'         Apple Music refused the person: no subscription, an authorization revoked, 401/403 (F98)
+ *               'unreachable'     MusicKit did not start in time, or its script did not load
+ *               'unchecked'       nothing was created and at least one search failed (F98)
+ *               'not-found'       nothing was created: Apple Music answered every search and had none
+ *               'error'           it did not start, for another reason; `detail`: what was said, or null
+ *
+ * The service writes no sentence (F98, UAT-308): the report is data, the progress is a step and a name, and whoever shows them says
+ * the words in the language of the app (ui/AppleExportReport.tsx, i18n/exportTexts.js).
  *
  * No second copy: a playlist this session already created is not created again. The id Apple
  * Music gave it is remembered for the session (services/export/exportLedger.js). The library is
@@ -20,30 +33,36 @@
  */
 
 import { exportLedger } from './export/exportLedger.js'
-import { exportOutcome } from '../models/exportOutcome.js'
+import { exportOutcome, exportReason } from '../models/exportOutcome.js'
+import { AppleMusicAuthorizationError, isRefusal } from './musickit/musicKitErrors.js'
 import { track } from './usage/track.js'
 
 /** Between two creations, as the export always did. */
 const BETWEEN_PLAYLISTS_MS = 500
 
-/** How many names a message lists before it counts the rest. */
-const NAMED_AT_MOST = 5
-
 const titleOf = (playlist) => playlist.title || playlist.name
+const nameOf = (track) => `${track.artist} - ${track.title}`
 
-/** F77: how the export ended, measured once, whatever way it ended. */
+/** F77: how the export ended, measured once, whatever way it ended; the reason, as for Spotify (F98). */
 function measured(report, playlists) {
-    track('playlists_exported', { target: 'apple_music', outcome: exportOutcome(report), playlist_count: playlists.length })
+    const reason = exportReason(report)
+    track('playlists_exported', { target: 'apple_music', outcome: exportOutcome(report), ...(reason ? { reason } : {}), playlist_count: playlists.length })
     return report
 }
 const isCatalogId = (id) => !!id && /^\d+$/.test(String(id))
 
-/** Why the export never began, in the terms the screen tells the person. */
+/** MusicKit did not start in time, or its script did not come. */
+const isUnreachable = (error) => error?.name === 'DeadlineError' || /Failed to load MusicKit/i.test(String(error?.message || ''))
+
+/** Why the export stopped, in the terms the screen acts on. */
 function failureOf(error) {
-    const message = error?.message || 'Apple Music did not answer'
-    if (/not configured/i.test(message)) return { kind: 'not-configured', message }
-    if (/authoriz/i.test(message)) return { kind: 'authorization', message }
-    return { kind: 'error', message }
+    const said = error?.message ? String(error.message) : null
+    if (error instanceof AppleMusicAuthorizationError) return { kind: 'authorization' }
+    if (isRefusal(error)) return { kind: 'refused' }
+    if (/not configured/i.test(said || '')) return { kind: 'not-configured' }
+    if (/authoriz/i.test(said || '')) return { kind: 'authorization' }
+    if (isUnreachable(error)) return { kind: 'unreachable' }
+    return { kind: 'error', detail: said }
 }
 
 /** What an export will do: the folder (the series' name unless another was chosen) and each playlist with the name it gets. */
@@ -60,8 +79,16 @@ function emptyReport({ folderName, noFolder }) {
     return {
         folder: noFolder ? { name: null, created: false, none: true } : { name: folderName, created: false },
         created: [], failed: [], empty: [], notFound: [], notCreated: [],
+        unchecked: 0, uncheckedTracks: [],
         failure: null
     }
+}
+
+/** Nothing was created and nothing stopped the export: why. Null when something was created or Apple Music refused a creation. */
+function nothingCreatedOf(report) {
+    if (report.created.length > 0 || report.failed.length > 0) return null
+    if (report.unchecked > 0) return { kind: 'unchecked' }
+    return report.empty.length > 0 ? { kind: 'not-found' } : null
 }
 
 export class AppleMusicExportService {
@@ -83,7 +110,7 @@ export class AppleMusicExportService {
      *        one playlist or some of a batch: the name is then the one the export of the whole batch gives
      * @param {Object} deps
      * @param {Object} deps.musicKit - MusicKitService
-     * @param {Function} [deps.onProgress] - (text) => void
+     * @param {Function} [deps.onProgress] - ({ step: 'connecting'|'authorizing'|'folder'|'exporting', name? }) => void
      * @returns {Promise<Object>} AppleExportReport (see the top of this file)
      * @throws only when there is nothing to export
      */
@@ -105,30 +132,45 @@ export class AppleMusicExportService {
         }
         report.folder.created = !!folderId
 
-        for (const target of targets) {
-            onProgress(`Exporting ${target.name}...`)
-            await this._deliver(target, folderId || null, report, musicKit)
+        for (const [index, target] of targets.entries()) {
+            onProgress({ step: 'exporting', name: target.name })
+            try {
+                await this._deliver(target, folderId || null, report, musicKit)
+            } catch (error) {
+                // only a refusal of Apple Music comes here: the playlists left would be refused too
+                console.error('[AppleMusicExport] stopped:', error)
+                report.failure = failureOf(error)
+                report.notCreated.push(...targets.slice(index).map(left => left.name))
+                return measured(report, playlists)
+            }
         }
+        report.failure = nothingCreatedOf(report)
         return measured(report, playlists)
     }
 
     /** Connect, authorize and have the folder (none when the person chose no folder). @returns {Promise<string|undefined>} the folder id */
     static async _start(musicKit, { folderName, folderId, noFolder }, onProgress) {
-        onProgress('Connecting...')
+        onProgress({ step: 'connecting' })
         await musicKit.init()
-        onProgress('Authorizing...')
+        onProgress({ step: 'authorizing' })
         await musicKit.authorize()
         if (noFolder) return undefined
         if (folderId) return folderId // picked from the library's own list: no second lookup by name
-        onProgress('Creating folder...')
+        onProgress({ step: 'folder' })
         return musicKit.createOrGetFolder(folderName)
     }
 
-    /** Have one playlist in the library, unless this session already put it there. */
+    /**
+     * Have one playlist in the library, unless this session already put it there.
+     * @throws when Apple Music refuses the person (a search or the creation): the export stops
+     */
     static async _deliver(target, folderId, report, musicKit) {
+        const before = report.unchecked
         const trackIds = await this._catalogIdsOf(target.tracks, report, musicKit)
         if (trackIds.length === 0) {
-            report.empty.push(target.name)
+            // "no track found" only when Apple Music answered for every track; one that could not be checked is "not created"
+            const list = report.unchecked > before ? report.notCreated : report.empty
+            list.push(target.name)
             return
         }
 
@@ -144,96 +186,45 @@ export class AppleMusicExportService {
             exportLedger.set(key, { id: playlist?.id || null })
             report.created.push({ ...entry, alreadyThere: false })
         } catch (error) {
+            if (isRefusal(error)) throw error
             console.error(`[AppleMusicExport] "${target.name}" was not created:`, error)
-            report.failed.push({ name: target.name, message: error?.message || 'Apple Music did not answer' })
+            report.failed.push({ name: target.name, detail: error?.message ? String(error.message) : null })
         }
         await this.pause(BETWEEN_PLAYLISTS_MS)
     }
 
-    /** The catalog id of each track: the one it carries, or the one a search finds. */
+    /**
+     * The catalog id of each track: the one it carries, or the one a search finds. A track the catalogue does not have goes
+     * to `notFound`; one whose search failed, to the unchecked - they are counted apart (F98).
+     */
     static async _catalogIdsOf(tracks, report, musicKit) {
         const ids = []
         for (const track of tracks) {
-            const id = isCatalogId(track.appleMusicId) ? String(track.appleMusicId) : await this._searchId(track, musicKit)
-            if (id) ids.push(id)
-            else report.notFound.push(`${track.artist} - ${track.title}`)
+            const found = isCatalogId(track.appleMusicId) ? { id: String(track.appleMusicId) } : await this._searchId(track, musicKit)
+            if (found.id) ids.push(found.id)
+            else if (found.unchecked) {
+                report.unchecked++
+                report.uncheckedTracks.push(nameOf(track))
+            } else report.notFound.push(nameOf(track))
         }
         return ids
     }
 
+    /**
+     * The catalog id of a track, by a search.
+     * @returns {Promise<{ id: string|null, unchecked?: true }>} `id: null` alone: Apple Music answered and has none;
+     *          `unchecked`: the search could not be made, so nothing is known about the track
+     * @throws when Apple Music refuses the person: nothing else would be answered either
+     */
     static async _searchId(track, musicKit) {
         const isLiveAlbum = track.album?.toLowerCase().includes('live') || false
-        const found = await musicKit.findTrackFromAlbum(track.title, track.artist, track.album || '', isLiveAlbum)
-        return found?.id ? String(found.id) : null
+        try {
+            const found = await musicKit.findTrackFromAlbum(track.title, track.artist, track.album || '', isLiveAlbum)
+            return { id: found?.id ? String(found.id) : null }
+        } catch (error) {
+            if (isRefusal(error)) throw error
+            console.warn('[AppleMusicExport] Track search failed:', track.title, error?.message)
+            return { id: null, unchecked: true }
+        }
     }
-}
-
-// ---------- what the person is told ----------
-
-const count = (number, noun) => `${number} ${noun}${number === 1 ? '' : 's'}`
-const quoted = (names) => names.map(name => `"${name}"`).join(', ')
-const listed = (names) => {
-    const shown = names.slice(0, NAMED_AT_MOST).join(', ')
-    return names.length > NAMED_AT_MOST ? `${shown} and ${names.length - NAMED_AT_MOST} more` : shown
-}
-
-const NEVER_BEGAN = Object.freeze({
-    'not-configured': () => ({ type: 'error', text: 'Apple Music is not set up for this site: nothing was exported.' }),
-    authorization: () => ({ type: 'warning', text: 'Apple Music was not authorized: nothing was exported.' }),
-    error: (failure) => ({ type: 'error', text: `The export to Apple Music failed before anything was created: ${failure.message}.` })
-})
-
-function failedMessage(report, total) {
-    const reasons = report.failed.map(item => `"${item.name}" (${item.message})`).join(', ')
-    return {
-        type: 'error',
-        text: `Apple Music did not create ${report.failed.length} of ${count(total, 'playlist')}: ${reasons}. ` +
-            'Export again to create what is missing: what was created is not created twice.'
-    }
-}
-
-function createdMessage(report, fresh) {
-    const where = report.folder.created ? `, in the folder "${report.folder.name}"` : (report.folder.none ? ', outside any folder' : '')
-    const which = report.failed.length > 0 ? `: ${quoted(fresh.map(item => item.name))}` : ''
-    return { type: 'success', text: `${count(fresh.length, 'playlist')} exported to Apple Music${where}${which}.` }
-}
-
-function alreadyThereMessage(already) {
-    const were = already.length === 1 ? 'was' : 'were'
-    return { type: 'info', text: `${count(already.length, 'playlist')} ${were} already exported in this session and ${were} not created again.` }
-}
-
-function leftOutMessages(report, fresh) {
-    const messages = []
-    if (fresh.length > 0 && !report.folder.created && !report.folder.none) {
-        messages.push({ type: 'warning', text: `The folder "${report.folder.name}" could not be created in Apple Music: the playlists are at the top of your library.` })
-    }
-    if (report.empty.length > 0) {
-        messages.push({ type: 'warning', text: `No track was found in Apple Music for ${quoted(report.empty)}: not created.` })
-    }
-    if (report.notFound.length > 0) {
-        const were = report.notFound.length === 1 ? 'was' : 'were'
-        messages.push({ type: 'warning', text: `${count(report.notFound.length, 'track')} ${were} not found in Apple Music and ${were} left out: ${listed(report.notFound)}.` })
-    }
-    return messages
-}
-
-/**
- * What to tell the person about an export, most important first.
- * @param {Object} report - AppleExportReport
- * @returns {Array<{ type: 'success'|'info'|'warning'|'error', text: string }>}
- */
-export function appleExportMessages(report) {
-    if (report.failure) return [NEVER_BEGAN[report.failure.kind](report.failure)]
-
-    const fresh = report.created.filter(item => !item.alreadyThere)
-    const already = report.created.filter(item => item.alreadyThere)
-    const total = report.created.length + report.failed.length + report.empty.length
-
-    return [
-        ...(report.failed.length > 0 ? [failedMessage(report, total)] : []),
-        ...(fresh.length > 0 ? [createdMessage(report, fresh)] : []),
-        ...(already.length > 0 ? [alreadyThereMessage(already)] : []),
-        ...leftOutMessages(report, fresh)
-    ]
 }

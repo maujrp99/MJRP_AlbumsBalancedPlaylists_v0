@@ -6,7 +6,8 @@
  * `exports`: a piece of ui/ imports no controller): this window only chooses and hands over what to export. It writes nothing of the batch.
  *
  * Apple Music asks first in which folder the playlists go (AppleFolderStep) and writes its progress on the step's «Export» button; the
- * window stays to show it. Spotify has its own window and the file is handed to the browser, so the window gives way to them.
+ * window stays to show it, and ends on the report of the export (AppleExportReport, F98): what was created, what was not and why, with
+ * «Try again». Spotify has its own window and the file is handed to the browser, so the window gives way to them.
  *
  * What to export is given: the playlists, the series (the default Apple Music folder), the batch and the position each playlist has in
  * it (so one playlist is named as the export of the whole batch would name it). With none given, the playlists on the edit screen are
@@ -14,11 +15,12 @@
  * window (ui/ModalShell) that closes on Escape and on the backdrop, keeps Tab inside and gives the focus back to what opened it.
  */
 import { flushSync } from 'react-dom'
-import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { ModalShell } from './ModalShell'
 import { useSheetWindow } from './SheetWindow'
 import { Icon } from './Icon'
 import { AppleFolderStep, type FolderChoice } from './AppleFolderStep'
+import { AppleExportReport, type AppleReport } from './AppleExportReport'
 import { isPhone } from '../utils/isPhone.js'
 import { t } from '../i18n/t.js'
 
@@ -56,8 +58,11 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([t
 export interface PlaylistExports {
     openSpotifyExport: (what?: What) => Promise<void>
     exportJson: (what?: What) => Promise<void>
-    /** `onStatus` is told the progress (a text while it runs, null at the end). */
-    exportToAppleMusic: (onStatus: (text: string | null) => void, what?: What & { folderName?: string; folderId?: string; noFolder?: boolean }) => Promise<void>
+    /**
+     * `onStatus` is told the progress (a text while it runs, null at the end). `onReport` is handed the report of the export and answers
+     * true when it drew it (F98): when it does not, the export says how it ended in a notice.
+     */
+    exportToAppleMusic: (onStatus: (text: string | null) => void, what?: What & { folderName?: string; folderId?: string; noFolder?: boolean }, onReport?: (report: AppleReport) => boolean) => Promise<unknown>
     listAppleFolders: () => Promise<Array<{ id: string; name: string }>>
 }
 
@@ -92,7 +97,15 @@ function giveFocusBack(opener: Element | null): void {
     if (target?.focus && document.contains(target)) target.focus({ preventScroll: true })
 }
 
-/** The rows, or the step of the Apple Music folder; the title follows what is shown. `close` gives the window back. */
+/** The report of an Apple Music export on screen, and the folder it went to (so «Try again» goes to the same one). */
+interface AppleResult {
+    report: AppleReport
+    folder: FolderChoice
+    /** Which report this is, counted: a new report is drawn anew, so its heading takes the focus again. */
+    draw: number
+}
+
+/** The rows, the step of the Apple Music folder, or the report of its export; the title follows what is shown. `close` gives the window back. */
 function ExportBody({ what, defaults, title, start, phone, close, setTitle }: {
     what: What
     defaults: ExportDefaults
@@ -103,10 +116,16 @@ function ExportBody({ what, defaults, title, start, phone, close, setTitle }: {
     setTitle: (text: string) => void
 }) {
     const [view, setView] = useState<'rows' | 'step'>(start === 'apple' ? 'step' : 'rows')
+    const [result, setResult] = useState<AppleResult | null>(null)
+    const [retrying, setRetrying] = useState<string | null>(null)
     const box = useRef<HTMLDivElement>(null)
     const rowsTitle = start === 'apple' ? t('exportWindow.title') : title // the title says what the window shows
 
-    // What is shown changed: the title says it, and the first thing to act on takes the focus
+    // Whether the window is still there to draw a report: an export goes on after the window is closed, and then it says its end in a notice
+    const here = useRef(true)
+    useEffect(() => { here.current = true; return () => { here.current = false } }, [])
+
+    // What is shown changed: the title says it, and the first thing to act on takes the focus (the report gives it to its own heading)
     useLayoutEffect(() => {
         setTitle(view === 'rows' ? rowsTitle : title)
         box.current?.querySelector<HTMLElement>('[data-export="apple"], input[type="radio"]:checked, button')?.focus({ preventScroll: true })
@@ -119,10 +138,22 @@ function ExportBody({ what, defaults, title, start, phone, close, setTitle }: {
         else void defaults.exports.exportJson(what)
     }
 
-    const onExport = useCallback((folder: FolderChoice, report: (text: string | null) => void) => {
-        void defaults.exports.exportToAppleMusic(report, { ...what, ...folder })
+    // The export to Apple Music ends on its report, drawn here; `say` writes the progress on the button that started it
+    const onExport = useCallback((folder: FolderChoice, say: (text: string | null) => void) => {
+        void defaults.exports.exportToAppleMusic(say, { ...what, ...folder }, (report) => {
+            if (!here.current) return false
+            setResult(before => ({ report, folder, draw: (before?.draw ?? 0) + 1 }))
+            return true
+        })
     }, [what, defaults.exports])
 
+    if (result) {
+        return (
+            <div ref={box} className="flex flex-col gap-3">
+                <AppleExportReport key={result.draw} report={result.report} progress={retrying} onRetry={() => onExport(result.folder, setRetrying)} onClose={close} />
+            </div>
+        )
+    }
     if (view === 'step') {
         return (
             <div ref={box} className="flex flex-col gap-3">

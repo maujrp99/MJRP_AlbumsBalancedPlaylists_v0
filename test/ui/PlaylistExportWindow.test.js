@@ -26,6 +26,7 @@ import { SpotifyAuthService } from '../../public/js/services/SpotifyAuthService.
 import { exportLedger } from '../../public/js/services/export/exportLedger.js'
 import { playlistsStore } from '../../public/js/stores/playlists.js'
 import toast from '../../public/js/stores/toasts.js'
+import { setLocale, PREVIEW_KEY } from '../../public/js/i18n/t.js'
 
 const track = (title) => ({ title, artist: 'Artist', album: 'Album' })
 const BATCH = [
@@ -48,7 +49,11 @@ function fakeMusicKit() {
         listError: null,
         listFolders: vi.fn(async () => { if (fake.listError) throw fake.listError; return fake.folders }),
         createOrGetFolder: vi.fn(async (name) => fake.folders.find(f => f.name.toLowerCase() === name.toLowerCase())?.id || 'folder-1'),
-        findTrackFromAlbum: vi.fn(async (title) => (fake.catalog[title] ? { id: fake.catalog[title] } : null)),
+        searchFails: {},        // title -> the error its search throws (F98)
+        findTrackFromAlbum: vi.fn(async (title) => {
+            if (fake.searchFails[title]) throw fake.searchFails[title]
+            return fake.catalog[title] ? { id: fake.catalog[title] } : null
+        }),
         createPlaylistInFolder: vi.fn(async (name, trackIds, folderId) => {
             const playlist = { id: `p.${fake.library.length + 1}`, name, trackIds, folderId }
             fake.library.push(playlist)
@@ -65,6 +70,10 @@ const window_ = (job) => openPlaylistExport({ seriesName: SERIES, batchName: BAT
 /** Apple Music from the window: open the folder step, wait for the folders, press its «Export». */
 const stepOf = async () => { row('apple').click(); await vi.waitFor(() => expect(document.querySelector('[data-apple-folder-step]')).not.toBeNull()); await settle() }
 const exportApple = async () => { await stepOf(); document.querySelector('[data-apple-export]').click() }
+/** The report of the Apple Music export, drawn in the window (F98). */
+const appleReport = () => document.querySelector('[data-apple-report]')
+const reportText = () => appleReport().textContent.replace(/\s+/g, ' ')
+const reported = () => vi.waitFor(() => expect(appleReport()).not.toBeNull())
 const textOf = (blob) => new Promise((resolve) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.readAsText(blob) })
 
 describe('the export window (F90)', () => {
@@ -143,39 +152,42 @@ describe('the export window (F90)', () => {
         it('one playlist: the folder of the series is used and only that playlist is created, named as the batch export names it', async () => {
             window_({ playlists: [BATCH[1]], positions: [2] })
             await exportApple()
-            await vi.waitFor(() => expect(toast.success).toHaveBeenCalled())
+            await reported()
 
             expect(musicKit.createOrGetFolder).toHaveBeenCalledWith(SERIES)
             expect(names(musicKit.library)).toEqual(['2. Mix - Deep Cuts'])
             expect(musicKit.library[0].folderId).toBe('folder-1')
-            expect(toast.success.mock.calls[0][0]).toContain('1 playlist exported to Apple Music, in the folder "Road trip"')
+            expect(reportText()).toContain('Export complete')
+            expect(reportText()).toContain('Created (1)')
+            expect(reportText()).toContain('2. Mix - Deep Cuts')
+            expect(reportText()).toContain('In the folder "Road trip"')
         })
 
         it('the whole batch: every playlist is created, in the folder, in the order of the batch', async () => {
             window_({ playlists: BATCH, positions: [1, 2, 3] })
             await exportApple()
-            await vi.waitFor(() => expect(toast.success).toHaveBeenCalled())
+            await reported()
 
             expect(names(musicKit.library)).toEqual(['1. Mix - Greatest Hits', '2. Mix - Deep Cuts'])
-            expect(toast.success.mock.calls[0][0]).toContain('2 playlists exported')
+            expect(reportText()).toContain('Created (2)')
         })
 
         it('one playlist and then the whole batch does not create the first one twice', async () => {
             window_({ playlists: [BATCH[1]], positions: [2] })
             await exportApple()
-            await vi.waitFor(() => expect(toast.success).toHaveBeenCalledTimes(1))
+            await reported()
 
             unmountAll()
         document.body.innerHTML = ''
             window_({ playlists: BATCH, positions: [1, 2, 3] })
             await exportApple()
-            await vi.waitFor(() => expect(toast.info).toHaveBeenCalled())
+            await reported()
 
             expect(names(musicKit.library)).toEqual(['2. Mix - Deep Cuts', '1. Mix - Greatest Hits'])
-            expect(toast.info.mock.calls[0][0]).toContain('1 playlist was already exported in this session')
+            expect(reportText()).toContain('(already exported in this session, not created again)')
         })
 
-        it('the progress is written on its row and the row is given back; the window stays open', async () => {
+        it('the progress is written on the «Export» button, which waits; the window stays open and ends on the report', async () => {
             let release
             musicKit.createOrGetFolder = vi.fn(() => new Promise(resolve => { release = () => resolve('folder-1') }))
             window_({ playlists: [BATCH[0]], positions: [1] })
@@ -186,9 +198,8 @@ describe('the export window (F90)', () => {
             expect(button.disabled).toBe(true)
 
             release()
-            await vi.waitFor(() => expect(toast.success).toHaveBeenCalled())
-            expect(button.disabled).toBe(false)
-            expect(button.textContent).toContain('Export')
+            await reported()
+            expect(document.querySelector('[data-apple-export]')).toBeNull()
             expect(document.getElementById('playlist-export-window')).not.toBeNull()
         })
 
@@ -196,10 +207,11 @@ describe('the export window (F90)', () => {
             musicKit.authorizeError = new Error('User not authorized')
             window_({ playlists: [BATCH[0]], positions: [1] })
             await exportApple()
-            await vi.waitFor(() => expect(toast.warning).toHaveBeenCalled())
+            await reported()
 
             expect(musicKit.authorize).toHaveBeenCalledTimes(1)
-            expect(toast.warning.mock.calls[0][0]).toBe('Apple Music was not authorized: nothing was exported.')
+            expect(reportText()).toContain('Export failed')
+            expect(reportText()).toContain('Apple Music was not authorized, so nothing was exported.')
             expect(musicKit.library).toEqual([])
         })
 
@@ -207,28 +219,201 @@ describe('the export window (F90)', () => {
             musicKit.createPlaylistInFolder = vi.fn(async () => { throw new Error('Apple Music said no') })
             window_({ playlists: [BATCH[0]], positions: [1] })
             await exportApple()
-            await vi.waitFor(() => expect(toast.error).toHaveBeenCalled())
+            await reported()
 
-            expect(toast.error.mock.calls[0][0]).toContain('"1. Mix - Greatest Hits" (Apple Music said no)')
+            expect(reportText()).toContain('Apple Music did not create (1)')
+            expect(reportText()).toContain('1. Mix - Greatest Hits: Apple Music said no')
         })
 
         it('a playlist with tracks the service could not match: it is created without them, and they are named', async () => {
             window_({ playlists: [{ id: 'p4', name: 'Mixed', tracks: [track('One'), track('Five')] }], positions: [4] })
             await exportApple()
-            await vi.waitFor(() => expect(toast.warning).toHaveBeenCalled())
+            await reported()
 
             expect(musicKit.library[0].trackIds).toEqual(['101'])
-            expect(toast.warning.mock.calls[0][0]).toContain('1 track was not found in Apple Music and was left out: Artist - Five')
+            expect(reportText()).toContain('1 track not found')
+            expect(reportText()).toContain('Artist - Five')
         })
 
         it('exporting changes nothing of the batch it was given, and writes nothing on the edit screen', async () => {
             const before = JSON.stringify(BATCH)
             window_({ playlists: BATCH, positions: [1, 2, 3] })
             await exportApple()
-            await vi.waitFor(() => expect(toast.success).toHaveBeenCalled())
+            await reported()
 
             expect(JSON.stringify(BATCH)).toBe(before)
             expect(playlistsStore.getPlaylists()).toEqual([])
+        })
+
+        it('the report takes the place of the notices: nothing is said twice', async () => {
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await reported()
+
+            for (const type of ['success', 'info', 'warning', 'error']) expect(toast[type]).not.toHaveBeenCalled()
+        })
+
+        it('the window closed while the export runs: the end is still told, in a notice', async () => {
+            let release
+            musicKit.createOrGetFolder = vi.fn(() => new Promise(resolve => { release = () => resolve('folder-1') }))
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await vi.waitFor(() => expect(musicKit.createOrGetFolder).toHaveBeenCalled())
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+            expect(document.getElementById('playlist-export-window')).toBeNull()
+
+            release()
+            await vi.waitFor(() => expect(toast.success).toHaveBeenCalled())
+            expect(toast.success.mock.calls[0][0]).toBe('1 playlist exported to Apple Music.')
+        })
+    })
+
+    describe('Apple Music says why it failed (F98, UAT-307)', () => {
+        const down = () => Object.assign(new Error('Search unavailable'), { status: 500 })
+        const refusal = () => Object.assign(new Error('Forbidden'), { status: 403 })
+        const heading = () => appleReport().querySelector('[data-export-heading]')
+        const retry = () => appleReport().querySelector('[data-apple-retry]')
+        const NOT_FOUND = /not found|No track found/i
+        const inPortuguese = async () => { localStorage.setItem(PREVIEW_KEY, 'pt'); expect(await setLocale('pt')).toBe(true) }
+
+        afterEach(async () => { await setLocale('en'); localStorage.removeItem(PREVIEW_KEY) })
+
+        it('every search failing: «could not be checked», counted, with «Try again», and never «not found» (REQ-01, REQ-03)', async () => {
+            musicKit.searchFails.One = down()
+            musicKit.searchFails.Two = down()
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await reported()
+
+            expect(heading().textContent).toBe('Export failed')
+            expect(reportText()).toContain('Apple Music could not be reached, so your tracks could not be checked. Nothing was created.')
+            expect(reportText()).toContain('2 tracks could not be checked')
+            expect(reportText()).toContain('Artist - One')
+            expect(reportText()).not.toMatch(NOT_FOUND)
+            expect(retry()).not.toBeNull()
+            expect(musicKit.library).toEqual([])
+        })
+
+        it('«Try again», with Apple Music back, exports to the same folder and ends on a complete report', async () => {
+            musicKit.searchFails.One = down()
+            musicKit.searchFails.Two = down()
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await reported()
+
+            musicKit.searchFails = {}
+            retry().click()
+            await vi.waitFor(() => expect(heading().textContent).toBe('Export complete'))
+
+            expect(names(musicKit.library)).toEqual(['1. Mix - Greatest Hits'])
+            expect(musicKit.library[0].folderId).toBe('folder-1')
+            expect(retry()).toBeNull()
+        })
+
+        it('a mix: created with what was found, the unchecked apart from the not found, and no heading of success (REQ-04)', async () => {
+            musicKit.searchFails.Two = down()
+            window_({ playlists: [{ id: 'p5', name: 'Mixed', tracks: [track('One'), track('Two'), track('Five')] }], positions: [5] })
+            await exportApple()
+            await reported()
+
+            expect(musicKit.library[0].trackIds).toEqual(['101'])
+            expect(heading().textContent).toBe('Exported, with something left out')
+            expect(reportText()).not.toContain('Export complete')
+            expect(reportText()).toContain('1 track not found')
+            expect(reportText()).toContain('1 track could not be checked')
+            const lists = [...appleReport().querySelectorAll('details')].map(box => box.textContent.replace(/\s+/g, ' '))
+            expect(lists.find(list => list.includes('could not be checked'))).toContain('Artist - Two')
+            expect(lists.find(list => list.includes('not found'))).not.toContain('Artist - Two')
+            expect(retry()).not.toBeNull()
+            expect(reportText()).toContain('A playlist that gets more tracks this time is created as a new one')
+        })
+
+        it('Apple Music refuses the person (403): said plainly, with the next step, and never «not found» (REQ-02)', async () => {
+            musicKit.searchFails.One = refusal()
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await reported()
+
+            expect(heading().textContent).toBe('Export failed')
+            expect(reportText()).toContain('Apple Music did not allow this for your account')
+            expect(reportText()).toContain('Check that your Apple Music subscription is active')
+            expect(reportText()).toContain('connect again')
+            expect(reportText()).not.toMatch(NOT_FOUND)
+            expect(reportText()).toContain('Not created (1)')
+        })
+
+        it('the catalogue answered and has none of the tracks: that, and only that, is «not found»', async () => {
+            window_({ playlists: [BATCH[2]], positions: [3] })
+            await exportApple()
+            await reported()
+
+            expect(heading().textContent).toBe('Export failed')
+            expect(reportText()).toContain('None of the tracks was found in Apple Music. Nothing was created.')
+            expect(reportText()).toContain('1 track not found')
+            expect(reportText()).not.toContain('could not be checked')
+            expect(retry()).toBeNull()
+        })
+
+        it('the result is a status region and its heading takes the focus (REQ-08)', async () => {
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await reported()
+
+            expect(heading().closest('[role="status"]').getAttribute('aria-live')).toBe('polite')
+            expect(document.activeElement).toBe(heading())
+        })
+
+        it('«Close» on the report closes the window', async () => {
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await reported()
+
+            appleReport().querySelector('[data-apple-report-close]').click()
+            expect(document.getElementById('playlist-export-window')).toBeNull()
+        })
+
+        it('on the phone the report is drawn in the sheet', async () => {
+            kit.phone = true
+            musicKit.searchFails.One = down()
+            musicKit.searchFails.Two = down()
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await reported()
+
+            expect(appleReport().closest('.sheet')).not.toBeNull()
+            expect(reportText()).toContain('2 tracks could not be checked')
+        })
+
+        it('in Portuguese: the progress, the failure and the next step (UAT-308, REQ-06)', async () => {
+            await inPortuguese()
+            let release
+            musicKit.searchFails.One = down()
+            musicKit.searchFails.Two = down()
+            musicKit.createOrGetFolder = vi.fn(() => new Promise(resolve => { release = () => resolve('folder-1') }))
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await stepOf()
+            const button = document.querySelector('[data-apple-export]')
+            button.click()
+            await vi.waitFor(() => expect(button.textContent).toContain('Criando a pasta...'))
+
+            release()
+            await reported()
+            expect(heading().textContent).toBe('A exportação falhou')
+            expect(reportText()).toContain('Não foi possível falar com o Apple Music, então as suas faixas não puderam ser conferidas. Nada foi criado.')
+            expect(reportText()).toContain('2 faixas não puderam ser conferidas')
+            expect(retry().textContent).toContain('Tentar de novo')
+            expect(reportText()).not.toMatch(/could not|Try again|not found/i)
+        })
+
+        it('the refusal, in Portuguese', async () => {
+            await inPortuguese()
+            musicKit.searchFails.One = refusal()
+            window_({ playlists: [BATCH[0]], positions: [1] })
+            await exportApple()
+            await reported()
+
+            expect(reportText()).toContain('O Apple Music não permitiu isto para a sua conta')
+            expect(reportText()).toContain('Confira se a sua assinatura do Apple Music está ativa')
         })
     })
 
@@ -271,7 +456,7 @@ describe('the export window (F90)', () => {
         })
 
         it('not connected: the same prompt to connect again', async () => {
-            SpotifyExportService.exportPlaylists.mockResolvedValue(spotifyReport({ failure: { kind: 'reconnect', message: 'Spotify needs you to connect again' }, notCreated: ['Road trip - Greatest Hits'] }))
+            SpotifyExportService.exportPlaylists.mockResolvedValue(spotifyReport({ failure: { kind: 'reconnect' }, notCreated: ['Road trip - Greatest Hits'] }))
             window_({ playlists: [BATCH[0]], positions: [1] })
             row('spotify').click()
             await vi.waitFor(() => expect(modal()).not.toBeNull())
@@ -286,9 +471,9 @@ describe('the export window (F90)', () => {
         it('exporting: the progress is shown and the window cannot be closed; failed: it says so and offers another try', async () => {
             let finish
             SpotifyExportService.exportPlaylists.mockImplementation(async (_playlists, _options, callbacks) => {
-                callbacks.onProgress('MATCHING', 1, 2, 'Searching: One')
+                callbacks.onProgress('MATCHING', 1, 2, { title: 'One' })
                 await new Promise(resolve => { finish = resolve })
-                return spotifyReport({ failure: { kind: 'error', message: 'Spotify did not answer' } })
+                return spotifyReport({ failure: { kind: 'error', detail: null } })
             })
             window_({ playlists: [BATCH[0]], positions: [1] })
             row('spotify').click()

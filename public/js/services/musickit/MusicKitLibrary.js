@@ -4,6 +4,7 @@
  */
 
 import { musicKitAuth } from './MusicKitAuth.js';
+import { isRefusal, namedError } from './musicKitErrors.js';
 
 const FOLDERS_PATH = '/v1/me/library/playlist-folders';
 const FOLDERS_PAGE = 100;
@@ -85,7 +86,9 @@ class MusicKitLibrary {
     }
 
     /**
-     * Create or find a playlist folder by name
+     * Create or find a playlist folder by name.
+     * @returns {Promise<string|null>} the folder id; null when the folder could not be had (the playlists then go to the top of the library)
+     * @throws {AppleMusicRefusedError} when Apple Music refused the person (F98): no playlist would be created either
      */
     async createOrGetFolder(folderName) {
         await musicKitAuth.authorize();
@@ -112,12 +115,14 @@ class MusicKitLibrary {
             return newFolder.data?.data?.[0]?.id || null;
         } catch (error) {
             console.error('[MusicKit] Folder operation failed:', error);
+            if (isRefusal(error)) throw namedError(error);
             return null;
         }
     }
 
     /**
      * Create playlist inside a folder
+     * @throws {AppleMusicRefusedError} when Apple Music refused the person (F98); any other failure as it came
      */
     async createPlaylistInFolder(name, trackIds, folderId = null) {
         await musicKitAuth.authorize();
@@ -159,7 +164,7 @@ class MusicKitLibrary {
             return playlist.data?.data?.[0];
         } catch (error) {
             console.error('[MusicKit] Create playlist in folder failed:', error);
-            throw error;
+            throw namedError(error);
         }
     }
 }

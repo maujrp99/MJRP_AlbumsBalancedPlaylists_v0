@@ -184,11 +184,13 @@ describe('the folder step of the Apple Music export (F90)', () => {
         await toTheStep()
         pick('none')
         await pressExport()
-        await vi.waitFor(() => expect(toast.success).toHaveBeenCalled())
+        // F98: the end of the export is the report drawn in the window, not a notice
+        await vi.waitFor(() => expect(document.querySelector('[data-apple-report]')).not.toBeNull())
 
         expect(musicKit.createOrGetFolder).not.toHaveBeenCalled()
         expect(musicKit.createPlaylistInFolder.mock.calls[0][2]).toBeNull()
-        expect(toast.success.mock.calls[0][0]).toContain('outside any folder')
+        expect(document.querySelector('[data-apple-folder-line]').textContent).toBe('Outside any folder')
+        expect(document.querySelector('[data-apple-report]').textContent).not.toContain('could not be created')
         expect(toast.warning).not.toHaveBeenCalled()
     })
 

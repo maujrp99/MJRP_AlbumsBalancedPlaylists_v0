@@ -2,6 +2,36 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 20:31] step — F98: a exportação para o Apple Music diz por que falhou (UAT-307), e toda frase da exportação e do aviso de pausa vem dos dicionários (UAT-308)
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+Conserto das issues UAT-307 (P1) e UAT-308 (P2), no modelo do conserto do Spotify (F97). Teste antes: os dez arquivos de teste novos e alterados rodaram antes da implementação, com 71 testes falhando e quatro arquivos sem carregar (`reports/evidence/F98/red-before.txt`); depois, verdes.
+
+**O que mudou para quem exporta para o Apple Music**
+- **A busca tem três respostas.** `MusicKitCatalog.findTrackFromAlbum` e `findTrack` não engolem mais a falha: devolvem a faixa, ou «nada» só quando o Apple Music respondeu e não tinha, ou lançam o erro. `AppleMusicExportService` conta à parte as faixas que não puderam ser conferidas (`unchecked`, `uncheckedTracks`); uma playlist sem nenhuma faixa conferida vai para «não criadas», nunca para «nenhuma faixa encontrada».
+- **A recusa tem nome.** `AppleMusicRefusedError` (401, 403, os códigos de recusa do MusicKit) e `AppleMusicAuthorizationError` (a pessoa não autorizou), em `public/js/services/musickit/musicKitErrors.js`. Recusada, a exportação para na hora e diz «o Apple Music não permitiu isto para a sua conta», com o próximo passo (conferir a assinatura; desconectar e conectar de novo no menu).
+- **O fim da exportação aparece na janela.** Até aqui o fim era uma fila de avisos que sumiam em 12 segundos, escritos em inglês dentro do serviço, sem «Tentar de novo». Agora a janela de exportar fica no relatório (`public/js/ui/AppleExportReport.tsx`): o que foi criado e em que pasta, o que não foi, as faixas não encontradas separadas das não conferidas, e «Tentar de novo» quando outra tentativa pode trazer algo. Decidido pelo agente, revisável: o MJRP julga a tela. Se a pessoa fecha a janela durante a exportação, um aviso só diz como terminou.
+- **Resultado parcial não é sucesso**, nas duas janelas: com faixas sem conferir (ou playlist que ficou de fora) o título é «Exported, with something left out», com sinal âmbar, e «Tentar de novo» diz o que faz (a playlist que ganhar faixas é criada como nova; a desta tentativa continua lá).
+- **Acessibilidade**, nas duas janelas: o topo do relatório é uma região `role="status"` e o título recebe o foco quando o relatório aparece. As peças do relatório passaram a ser compartilhadas (`public/js/ui/ExportReportParts.tsx`).
+- **Evento de uso**: `playlists_exported` leva `reason` (`refused`, `unchecked`) também para o Apple Music; faixas sem conferir fazem o desfecho `partial`.
+
+**Toda frase vem do dicionário (UAT-308).** `SpotifyExportService`, `AppleMusicExportService` e `holdNotice` devolvem código e dados (o tipo da falha, a etapa do progresso e os nomes, o motivo da pausa e a hora); as palavras são ditas por `public/js/i18n/exportTexts.js`, `public/js/i18n/holdTexts.js` e pelas duas janelas, o mesmo padrão de `askTexts.js` e `inventoryTexts.js`. 61 chaves novas em cada idioma. O teste de guarda `test/architecture/exportsDoNotSpeak.test.js` lê os três arquivos e falha em qualquer frase pronta (duas palavras ou mais, ou uma palavra escrita como começo de frase); passam o console, o erro lançado e duas descrições que a exportação grava DENTRO do Spotify (listadas com o motivo).
+
+**Os dois textos do juiz da F97.** «the list has few places» virou «the list has only a few places». Sobre o 403: o corpo da resposta do Spotify não separa com segurança a recusa do modo de desenvolvimento dos outros 403 (o texto muda entre versões e pode vir sem JSON), então o texto foi suavizado em vez de ramificado: «Spotify did not allow this for your account», com a lista de testes como «o motivo mais provável» e o passo «peça para incluir o seu e-mail» mantido.
+
+**As falhas do MusicKit que a exportação faz, uma a uma**
+- Cobertas: o site sem a chave do Apple Music («não está configurado»); o MusicKit que não carrega ou passa do prazo («não foi possível falar»); a autorização não dada; a recusa (401, 403, sem assinatura, autorização revogada) ao ler ou criar a pasta, na busca e ao criar a playlist; a busca que falha por rede, 5xx ou qualquer outro erro («não conferida»); a busca respondida sem nada («não encontrada»); a criação recusada por outro motivo (a playlist aparece em «o Apple Music não criou», com o que ele disse, e as outras ainda são tentadas); a pasta que não pôde ser criada (as playlists vão para a raiz da biblioteca, e o relatório diz).
+- Não cobertas: o limite de chamadas (429) não tem espera nem texto próprio (na busca conta como «não conferida», na criação entra em «não criou»); uma chave do site vencida (401 no catálogo) aparece como recusa da conta, com o mesmo próximo passo; o que o MusicKit de verdade lança numa conta recusada não pôde ser lido (a leitura usa o código do erro, o status e as palavras, com folga); faixas que o Apple Music aceite e não inclua na playlist. Não há chamada separada de «incluir faixas»: elas vão no mesmo pedido que cria a playlist.
+
+**As três gravações de referência mudaram de propósito**, regravadas e comparadas linha a linha (`reports/evidence/F98/raw/golden-*.txt`): 16 de 52 páginas da janela do Spotify (a região de status, o foco, as frases da janela, o título do resultado parcial), 4 de 44 da janela de exportar (o relatório no lugar do passo da pasta), e a gravação das chamadas ao MusicKit, em que as chamadas são as mesmas em 26 de 28 cenários (num, o 401 agora para a exportação na primeira criação: 1 pedido em vez de 3).
+
+**Orçamento de peso**, medido de novo pela regra do arquivo (medido + 150 B): script principal 201.784 B (+1.298 B: os textos em inglês e `holdTexts.js`), depois da primeira tela 258.998 B (+2.540 B); tetos `main` 201.934 e `background` 87.495.
+
+**Conferido:** o grupo de testes da exportação, dos dicionários, da arquitetura, dos modelos e dos serviços (202 arquivos, 2.394 testes) verde; `npm run typecheck` e `npx eslint . --quiet` com saída 0. A suíte inteira e a prova no navegador vêm no commit seguinte.
+
+**O que não foi conferido:** a resposta de verdade do Apple Music e do MusicKit (tudo é simulado; nenhuma conta real foi usada); a redação em português, que é dele aprovar. O `doctor.py` sai vermelho nesta árvore por dois erros do `MEMORY.md` (o bloco «Where the Work Stopped» acima do tamanho, e o `## Now` mais antigo que o log), que já estavam na `main`; este ramo não toca o `MEMORY.md`.
+
 ## [2026-11-23 19:56] step — F98 (a exportação para o Apple Music diz por que falhou) registrada em esboço no ramo do conserto, com a S-80; conserta a UAT-307 e a UAT-308
 
 **Branch:** fix/f98-apple-music-export-says-why-it-failed

@@ -7,6 +7,11 @@
  * the hand-made window gave at the same step. The pages are kept in test/fixtures/exportWindowFromMain.json, written once by the
  * hand-made window on `main` (reports/evidence/F83/sync-2/capture-export-from-main.test.js). They are compared element by element,
  * attribute by attribute; a field is compared by its state (checked, typed), not by how each side wrote its attribute.
+ *
+ * F98 (UAT-307): the export to Apple Music ends on its report, drawn in the window (it was a row of notices, and the window went back to
+ * the folder step). 4 of the 44 pages of the fixture were written again by the React window, compared one by one to what was kept
+ * (reports/evidence/F98/raw/golden-export-window.txt): the three «exporting» pages (the stand-in of the service says its progress as the
+ * service does now, a step and a name: «Exporting Greatest Hits...») and the one «done» page, which is the report. The rest is untouched.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { act } from 'react'

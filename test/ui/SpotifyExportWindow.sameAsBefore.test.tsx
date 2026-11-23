@@ -10,7 +10,18 @@
  * F97 (the judge's P2): one track not found is said in the singular now («1 track not found»; the hand-made window said «1 tracks not found»). The
  * four places of the fixture that held the old plural were rewritten by hand to the new text; nothing else of it changed.
  *
- * KNOWN_DIFFERENCES is empty: there is nothing the window does differently. The last two tests prove the check is not blind: a word, a class, an
+ * F98 (UAT-307, UAT-308): the end of an export is no longer what the hand-made window drew, on purpose, and the scenarios hand the progress
+ * as the service does now (a stage and names, not a sentence). 16 of the 52 pages of the fixture were written again by the React window
+ * (once, compared one by one to what was kept: reports/evidence/F98/raw/golden-spotify-window.txt), and only for this:
+ *   - the top of the report is a status region and its heading takes the focus (`role`, `aria-live`, `tabindex`, `data-export-heading`,
+ *     the class that takes the focus ring off a heading; the focus written down is the heading, not the page);
+ *   - a failure is said by the window: «The export stopped: Server error» (it was the bare text), the rate limit without «(Rate Limited)»;
+ *   - a report with something left out and no failure is headed «Exported, with something left out», with the amber sign (the hand-made
+ *     window said «Export Complete! 🎉» over a playlist with no track found);
+ *   - the line under the stage is the window's: «Searching: <the title>».
+ * Everything else of the fixture is the hand-made window's, untouched.
+ *
+ * KNOWN_DIFFERENCES is empty: there is nothing else the window does differently. The last two tests prove the check is not blind: a word, a class, an
  * attribute and a space inside a text, changed on purpose, are accused.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'

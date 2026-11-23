@@ -51,13 +51,16 @@ export async function exportJson(what = {}) {
 }
 
 /**
- * `onStatus` is told the progress (a text while it runs, null at the end): the window draws its own button.
+ * `onStatus` is told the progress (a text while it runs, null at the end): the window draws its own button. `onReport` is handed the
+ * report of the export and answers true when it drew it (F98); with none given, or when it answers no, one notice says how it ended.
  * @param {(text: string | null) => void} onStatus
  * @param {What} [what]
+ * @param {(report: any) => boolean} [onReport]
+ * @returns {Promise<Object|null>} the report; null when no export ran
  */
-export async function exportToAppleMusic(onStatus, what = {}) {
+export async function exportToAppleMusic(onStatus, what = {}, onReport) {
     const { handleExportToAppleMusic } = await import('./playlistExports.js')
-    await handleExportToAppleMusic({ ...what, onStatus })
+    return handleExportToAppleMusic({ ...what, onStatus, onReport })
 }
 
 /** @type {Promise<typeof import('../services/MusicKitService.js')> | null} */

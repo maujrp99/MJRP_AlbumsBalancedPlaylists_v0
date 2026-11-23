@@ -4,6 +4,7 @@
  */
 
 import { withDeadline } from '../../utils/deadline.js';
+import { AppleMusicAuthorizationError } from './musicKitErrors.js';
 
 /** How long the start of MusicKit may take: token route, script and `configure` together (F67). */
 export const MUSICKIT_INIT_DEADLINE_MS = 10000;
@@ -196,6 +197,7 @@ export class MusicKitAuth {
     /**
      * Authorize user for library access
      * @returns {Promise<string>} User token
+     * @throws {AppleMusicAuthorizationError} when the person did not authorize (F98): a name the export can act on
      */
     async authorize() {
         await this.init();
@@ -212,7 +214,7 @@ export class MusicKitAuth {
             return userToken;
         } catch (error) {
             console.error('[MusicKit] Authorization failed:', error);
-            throw error;
+            throw new AppleMusicAuthorizationError(error?.message || null);
         }
     }
 

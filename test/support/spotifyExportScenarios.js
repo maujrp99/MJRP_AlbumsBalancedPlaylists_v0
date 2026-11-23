@@ -130,19 +130,19 @@ export const SCENARIOS = [
             h.snap('pressed, no word yet')
             await h.backdrop()
             h.snap('the backdrop while it waits for the first word')
-            h.progress('MATCHING', 1, 4, 'Artist - One')
+            h.progress('MATCHING', 1, 4, { title: 'One' })
             h.snap('searching 1 of 4')
             h.note('focus', focusOf())
-            h.progress('MATCHING', 3, 4, 'Artist - Three')
+            h.progress('MATCHING', 3, 4, { title: 'Three' })
             h.snap('searching 3 of 4')
-            h.progress('MATCHING', 0, 0, '')
+            h.progress('MATCHING', 0, 0, { title: '' })
             h.snap('searching, no total')
             await h.backdrop()
             await h.key('Escape')
             h.snap('the backdrop and Escape do nothing while it works')
-            h.progress('CREATING', 4, 4, 'Road trip')
+            h.progress('CREATING', 4, 4, { name: 'Road trip' })
             h.snap('creating')
-            h.progress('ADDING', 2, 4, 'Road trip')
+            h.progress('ADDING', 2, 4, { name: 'Road trip', count: 2 })
             h.snap('adding')
         }
     },
@@ -152,7 +152,7 @@ export const SCENARIOS = [
             await h.open()
             await h.choose('separate')
             await h.click('#startExportBtn')
-            h.progress('MATCHING', 4, 4, 'Artist - Four')
+            h.progress('MATCHING', 4, 4, { title: 'Four' })
             h.finish(report({ mode: 'separate', created: [made('Road trip - Greatest Hits', 'pl-1'), made('Road trip - Deep Cuts', 'pl-2', { tracks: 1 })] }))
             await h.settle()
             h.snap('done')
@@ -180,7 +180,7 @@ export const SCENARIOS = [
                 created: [made('Road trip - Greatest Hits', 'pl-1')],
                 incomplete: [{ name: 'Road trip - Deep Cuts', url: 'https://open.spotify.com/playlist/pl-2', tracks: 100, total: 150 }],
                 empty: ['Road trip - Ghosts'], notCreated: ['Road trip - B-Sides'],
-                failure: { kind: 'error', message: 'Server error' }
+                failure: { kind: 'error', detail: 'Server error' }
             }))
             await h.settle()
             h.snap('partial')
@@ -215,7 +215,7 @@ export const SCENARIOS = [
             await h.click('#startExportBtn')
             h.finish(report({
                 mode: 'separate', created: [made('Road trip - Greatest Hits', 'pl-1')], notCreated: ['Road trip - Deep Cuts'],
-                failure: { kind: 'reconnect', message: 'Spotify needs you to connect again.' }
+                failure: { kind: 'reconnect' }
             }))
             await h.settle()
             h.snap('reconnect')
@@ -228,7 +228,7 @@ export const SCENARIOS = [
             h.screen({ playlists: TWO, seriesName: 'Road trip' })
             await h.open()
             await h.click('#startExportBtn')
-            h.finish(report({ notCreated: ['Road trip'], failure: { kind: 'rate-limit', retryAfterSeconds: 600, message: 'Spotify asked to wait 600 seconds before the next request (Rate Limited).' } }))
+            h.finish(report({ notCreated: ['Road trip'], failure: { kind: 'rate-limit', retryAfterSeconds: 600 } }))
             await h.settle()
             h.snap('failed')
             h.note('focus', focusOf())
@@ -309,7 +309,7 @@ export const SCENARIOS = [
             await h.click('#startExportBtn')
             await h.click('.close-modal-btn')
             h.snap('closed')
-            h.progress('MATCHING', 1, 2, 'late')
+            h.progress('MATCHING', 1, 2, { title: 'late' })
             h.finish(report({ created: [made('Road trip', 'pl-1')] }))
             await h.settle()
             h.snap('nothing comes back')
@@ -321,12 +321,12 @@ export const SCENARIOS = [
             await h.open()
             h.snap('idle')
             await h.click('#startExportBtn')
-            h.progress('MATCHING', 1, 2, HOSTILE)
+            h.progress('MATCHING', 1, 2, { title: HOSTILE })
             h.snap('searching')
             h.notFound({ artist: HOSTILE, title: HOSTILE })
             h.finish(report({
                 created: [made(HOSTILE, 'h', { url: `https://open.spotify.com/playlist/"><b>x</b>` })], incomplete: [{ name: HOSTILE, url: 'https://x.y', tracks: 1, total: 2 }],
-                empty: [HOSTILE], notCreated: [HOSTILE], failure: { kind: 'error', message: HOSTILE }
+                empty: [HOSTILE], notCreated: [HOSTILE], failure: { kind: 'error', detail: HOSTILE }
             }))
             await h.settle()
             h.snap('done')

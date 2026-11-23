@@ -35,10 +35,18 @@ export const musicKitService = {
 const plain = (value) => JSON.parse(JSON.stringify(value))
 
 export const appleExportService = {
-    /** Says a first progress, then waits until the scenario lets it finish. */
+    /**
+     * Says a first progress (a step and a name, as the service does since F98), then waits until the scenario lets it finish: every
+     * playlist created, in the folder asked for.
+     */
     exportPlaylists: (playlists, names, { onProgress } = {}) => {
         stand.calls.push(['exportPlaylists', playlists.map(item => item.name), plain(names)])
-        onProgress?.('Creating playlist 1 of ' + playlists.length + '...')
-        return new Promise((resolve) => { stand.finish = () => resolve({ created: [], failed: [], notFound: [], skipped: [] }) })
+        onProgress?.({ step: 'exporting', name: playlists[0].name })
+        const report = {
+            folder: names.noFolder ? { name: null, created: false, none: true } : { name: names.folderName ?? names.seriesName, created: true },
+            created: playlists.map(item => ({ name: item.name, tracks: item.tracks?.length ?? 0, total: item.tracks?.length ?? 0, alreadyThere: false })),
+            failed: [], empty: [], notFound: [], unchecked: 0, uncheckedTracks: [], notCreated: [], failure: null
+        }
+        return new Promise((resolve) => { stand.finish = () => resolve(report) })
     }
 }

@@ -4,6 +4,7 @@
  */
 
 import { musicKitAuth } from './MusicKitAuth.js';
+import { namedError } from './musicKitErrors.js';
 
 class MusicKitCatalog {
     /**
@@ -198,7 +199,12 @@ class MusicKitCatalog {
         }
     }
 
-    /** Search for a track by title and artist */
+    /**
+     * Search for a track by title and artist.
+     * @returns {Promise<Object|null>} the track; null ONLY when Apple Music answered and has none
+     * @throws when the search could not be made (F98): a failure is never answered as «none». A refusal of Apple Music
+     *         (401, 403, no subscription) is thrown with its name (AppleMusicRefusedError).
+     */
     async findTrack(title, artist) {
         const music = await musicKitAuth.init();
         const storefront = musicKitAuth.getStorefront();
@@ -214,17 +220,23 @@ class MusicKitCatalog {
             return tracks[0] || null;
         } catch (error) {
             console.error('[MusicKit] Track search failed:', error);
-            return null;
+            throw namedError(error);
         }
     }
 
-    /** Find track from updated fuzzy match logic */
+    /**
+     * Find a track, searching with the name of its album first. Three answers (F98, UAT-307):
+     *   the track   found
+     *   null        the catalogue has none: Apple Music answered both searches and had nothing
+     *   a throw     it could not be checked: a search failed (network, 5xx, 401/403...). Never answered as «none».
+     */
     async findTrackFromAlbum(title, artist, albumName, isLiveAlbum = false) {
         const music = await musicKitAuth.init();
         const storefront = musicKitAuth.getStorefront();
 
         console.log(`[MusicKit] Searching: "${title}" by ${artist} from "${albumName}"`);
 
+        let tracks;
         try {
             // Search with album name for better precision
             const result = await music.api.music(`/v1/catalog/${storefront}/search`, {
@@ -232,36 +244,26 @@ class MusicKitCatalog {
                 types: 'songs',
                 limit: 20
             });
-
-            const tracks = result.data?.results?.songs?.data || [];
-
-            if (tracks.length === 0) {
-                return this.findTrack(title, artist);
-            }
-
-            // Filter and rank tracks logic...
-            // (Simplified port from original file)
-            // Ideally we could move calculation logic to utility if complex.
-            // For now, I'll inline the simplified version or need to copy the full logic if critical.
-
-            // Full Logic needed for feature parity
-            const ranked = tracks.filter(track => {
-                const trackName = (track.attributes?.name || '').toLowerCase();
-                // Live filter...
-                if (!isLiveAlbum) {
-                    if (trackName.includes('(live)') || trackName.includes(' - live')) return false;
-                }
-                return true;
-            }).sort((a, b) => { // Simple score fallback
-                return 0; // Keeping logic simple for this artifact generation unless strictly required
-            });
-
-            return ranked[0] || tracks[0];
-
+            tracks = result.data?.results?.songs?.data || [];
         } catch (error) {
             console.error('[MusicKit] findTrackFromAlbum failed:', error);
-            return null;
+            throw namedError(error);
         }
+
+        if (tracks.length === 0) {
+            return this.findTrack(title, artist);
+        }
+
+        // The live takes are left out unless the album is live; the first of what is left, else the first found
+        const ranked = tracks.filter(track => {
+            const trackName = (track.attributes?.name || '').toLowerCase();
+            if (!isLiveAlbum) {
+                if (trackName.includes('(live)') || trackName.includes(' - live')) return false;
+            }
+            return true;
+        });
+
+        return ranked[0] || tracks[0];
     }
 
     // _classifyAlbumType() REMOVED - Sprint 17.75-B (ARCH-18)

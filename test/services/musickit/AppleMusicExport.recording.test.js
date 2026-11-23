@@ -8,8 +8,17 @@
  * ordered log: the token request, `configure`, `getInstance`, `authorize`, each `api.music(method, path, params, body)`, each pause,
  * each progress text, each toast, each file handed to the browser.
  *
- * The golden (test/fixtures/exportMusicKitRecording.json) was recorded ONCE, before the modules moved (RECORD_EXPORT=1), and is never
- * recorded again: after the move this test compares to it. The one line that changes with the move is `loadExports`.
+ * The golden (test/fixtures/exportMusicKitRecording.json) was recorded ONCE, before the modules moved (RECORD_EXPORT=1): after the move
+ * this test compares to it. The one line that changes with the move is `loadExports`.
+ *
+ * F98 (UAT-307, UAT-308) recorded it a second time, because the export changed on purpose, and compared the two recordings line by line
+ * (reports/evidence/F98/raw/golden-musickit-recording.txt). Of the 28 scenarios:
+ *   - the calls to MusicKit are the same in 26. They changed in «every creation fails (401...)»: a 401 is Apple Music refusing the person,
+ *     so the export stops at the first creation (1 POST, it was 3); and in «the step reads the folders, the person has not authorized»,
+ *     where only the words of the error changed (it has a name now);
+ *   - what the person is told changed in 21: the report of the export is handed over (a new `report` line, which a window draws), and the
+ *     row of notices became the one notice of an export nobody was there to read;
+ *   - 6 scenarios are as they were (the folders read by the step, the file, nothing to export).
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import fs from 'node:fs'
@@ -79,13 +88,15 @@ async function play(scenario) {
             return {}
         }
         const progress = (text) => log.events.push(['progress', text])
+        // F98: the report the export hands over is part of the recording; answering «not drawn» keeps the notice in it too
+        const report = (given) => { log.events.push(['report', given]); return false }
         let last = null
 
         for (const [index, step] of scenario.steps.entries()) {
             log.events.push(['step', index + 1])
-            if (step.apple) { last = step.apple; await exportsModule.exportToAppleMusic(progress, optionsOf(step.apple)) }
-            else if (step.again) await exportsModule.exportToAppleMusic(progress, optionsOf(last))
-            else if (step.twice) { const options = optionsOf(step.twice); await Promise.all([exportsModule.exportToAppleMusic(progress, options), exportsModule.exportToAppleMusic(progress, options)]) }
+            if (step.apple) { last = step.apple; await exportsModule.exportToAppleMusic(progress, optionsOf(step.apple), report) }
+            else if (step.again) await exportsModule.exportToAppleMusic(progress, optionsOf(last), report)
+            else if (step.twice) { const options = optionsOf(step.twice); await Promise.all([exportsModule.exportToAppleMusic(progress, options, report), exportsModule.exportToAppleMusic(progress, options, report)]) }
             else if (step.folders) {
                 try { log.events.push(['folders', await exportsModule.listAppleFolders()]) } catch (error) { log.events.push(['folders failed', error.message]) }
             } else if (step.json) {

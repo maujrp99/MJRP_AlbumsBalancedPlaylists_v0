@@ -22,7 +22,7 @@ import { SpotifyAuthService } from '../../../public/js/services/SpotifyAuthServi
 import { AppleMusicExportService } from '../../../public/js/services/AppleMusicExportService.js'
 import { exportLedger } from '../../../public/js/services/export/exportLedger.js'
 import { handleExportJson } from '../../../public/js/controllers/playlistExports.js'
-import { exportOutcome, exportReason } from '../../../public/js/models/exportOutcome.js'
+import { exportOutcome, exportReason, exportEnding } from '../../../public/js/models/exportOutcome.js'
 import { SpotifyRefusedError } from '../../../public/js/services/spotify/spotifyErrors.js'
 import { describeEvent } from '../../../shared/usageEvents.js'
 import { playlistsStore } from '../../../public/js/stores/playlists.js'
@@ -114,9 +114,25 @@ describe('exportOutcome: how an export ended', () => {
         ['created, then stopped', { created: [{}], notCreated: ['y'], failure: { kind: 'rate-limit' } }, 'partial'],
         ['Apple said no to one', { created: [{}], failed: [{}], failure: null }, 'partial'],
         ['never began', { created: [], notCreated: ['a'], failure: { kind: 'reconnect' } }, 'failed'],
-        ['nothing found', { created: [], empty: ['a'], failure: null }, 'failed']
+        ['nothing found', { created: [], empty: ['a'], failure: null }, 'failed'],
+        ['created, with tracks that could not be checked (F98)', { created: [{}], unchecked: 1, failure: null }, 'partial'],
+        ['created, every track checked (F98)', { created: [{}], unchecked: 0, failure: null }, 'complete']
     ])('%s', (label, report, outcome) => {
         expect(exportOutcome(report)).toBe(outcome)
+    })
+
+    it.each([
+        ['everything created', { created: [{}], failure: null }, 'complete'],
+        ['tracks not found are a complete export: the catalogue answered', { created: [{}], notFound: ['a'], unchecked: 0, failure: null }, 'complete'],
+        ['tracks that could not be checked: something was left out', { created: [{}], unchecked: 2, failure: null }, 'left-out'],
+        ['a playlist not created, with no failure', { created: [{}], empty: ['x'], failure: null }, 'left-out'],
+        ['Apple Music did not create one', { created: [{}], failed: [{}], failure: null }, 'left-out'],
+        ['stopped part of the way', { created: [{}], notCreated: ['y'], failure: { kind: 'refused' } }, 'stopped'],
+        ['stopped, one half made', { created: [], incomplete: [{}], failure: { kind: 'error' } }, 'stopped'],
+        ['never began', { created: [], notCreated: ['a'], failure: { kind: 'unchecked' } }, 'failed'],
+        ['nothing created and no reason given', { created: [], failed: [{}], failure: null }, 'failed']
+    ])('exportEnding (F98, REQ-04), the heading of the report: %s', (label, report, ending) => {
+        expect(exportEnding(report)).toBe(ending)
     })
 
     it.each([
@@ -176,6 +192,39 @@ describe('playlists_exported', () => {
         vi.spyOn(AppleMusicExportService, 'pause').mockResolvedValue()
         await AppleMusicExportService.exportPlaylists(playlists, { seriesName: 'S', batchName: 'B' }, { musicKit })
         expect(sent).toEqual([['playlists_exported', { target: 'apple_music', outcome: 'partial', playlist_count: 2 }]])
+    })
+
+    describe('to Apple Music, the same reasons as Spotify (F98, REQ-05)', () => {
+        const kit = (over) => ({
+            init: async () => { }, authorize: async () => { }, createOrGetFolder: async () => 'f1',
+            findTrackFromAlbum: async () => ({ id: '101' }),
+            createPlaylistInFolder: async (name) => ({ id: name }),
+            ...over
+        })
+        const run = async (musicKit) => {
+            vi.spyOn(AppleMusicExportService, 'pause').mockResolvedValue()
+            await AppleMusicExportService.exportPlaylists(playlists, { seriesName: 'S', batchName: 'B' }, { musicKit })
+        }
+
+        it('Apple Music refused the person: the event says so', async () => {
+            await run(kit({ findTrackFromAlbum: async () => { throw Object.assign(new Error('Forbidden'), { status: 403 }) } }))
+            expect(sent).toEqual([['playlists_exported', { target: 'apple_music', outcome: 'failed', reason: 'refused', playlist_count: 2 }]])
+        })
+
+        it('nothing could be checked: the event says so', async () => {
+            await run(kit({ findTrackFromAlbum: async () => { throw new TypeError('Failed to fetch') } }))
+            expect(sent).toEqual([['playlists_exported', { target: 'apple_music', outcome: 'failed', reason: 'unchecked', playlist_count: 2 }]])
+        })
+
+        it('some tracks could not be checked: partial, with no reason', async () => {
+            await run(kit({ findTrackFromAlbum: async (title) => { if (title === 'Two') throw new TypeError('Failed to fetch'); return { id: '101' } } }))
+            expect(sent).toEqual([['playlists_exported', { target: 'apple_music', outcome: 'partial', playlist_count: 2 }]])
+        })
+
+        it('the authorization not given has no reason: it is the person\'s answer, not a refusal of Apple Music', async () => {
+            await run(kit({ authorize: async () => { throw new Error('The user denied authorization') } }))
+            expect(sent).toEqual([['playlists_exported', { target: 'apple_music', outcome: 'failed', playlist_count: 2 }]])
+        })
     })
 
     it('as a JSON file', () => {

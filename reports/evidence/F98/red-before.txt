@@ -1,0 +1,212 @@
+F98 — the new and changed tests, run BEFORE the implementation (2026-11-23 20:09, branch fix/f98-apple-music-export-says-why-it-failed at be436c6 + the tests).
+Command: npx vitest run <the ten files below> (through the machine queue).
+Four files do not load at all: the modules they import do not exist yet (services/musickit/musicKitErrors.js, i18n/exportTexts.js, i18n/holdTexts.js).
+
+ ❯ test/ui/SpotifyExportWindow.test.js  (27 tests | 18 failed) 2576ms
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > after the export > asks to connect again, with the button, and says what was created and what was not
+     → expected 'Export to SpotifyExport stopped part …' to contain 'Spotify needs you to connect again.'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > after the export > reports a rate limit with the time asked and offers to try again; trying again exports the same way
+     → expected 'Export to SpotifyExport FailedNot cre…' to contain 'Spotify asked to wait 600 seconds'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > after the export > says which playlists got only part of their tracks and which had no track found
+     → expected 'Export to SpotifyExport Complete! 🎉C…' to contain 'Created without all their tracks (1)'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > a refusal of Spotify is said as a refusal, with the next step, and never as tracks not found (REQ-01)
+     → expected 'Export to SpotifyExport FailedSpotify…' to contain 'Spotify did not allow this for your a…'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > the refusal is said in Portuguese too (REQ-04)
+     → expected 'Exportar para o SpotifyA exportação f…' to contain 'O Spotify não permitiu isto para a su…'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > when the export could not check the tracks (F97, UAT-302) > tracks that could not be checked are counted apart from the ones not found (REQ-02)
+     → expected 'Export to SpotifyExport Complete! 🎉C…' not to contain 'Export Complete'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > a result with something left out is not a clean success (F98, REQ-04) > tracks that could not be checked: the heading says something was left out, never «Export Complete»
+     → Cannot read properties of null (reading 'textContent')
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > a result with something left out is not a clean success (F98, REQ-04) > offers to try again for what was left out, and says what trying again does
+     → expected null not to be null
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > a result with something left out is not a clean success (F98, REQ-04) > a playlist with no track found, beside one created: something was left out, and there is nothing to try again
+     → Cannot read properties of null (reading 'textContent')
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > a result with something left out is not a clean success (F98, REQ-04) > in Portuguese
+     → Cannot read properties of null (reading 'textContent')
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > every sentence comes from the dictionary of the language (F98, UAT-308, REQ-06) > the window says each failure by its kind: the words are not the service's
+     → expected 'Export to SpotifyExport FailedIGNORED…' to contain 'Spotify needs you to connect again.'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > every sentence comes from the dictionary of the language (F98, UAT-308, REQ-06) > connect again, in Portuguese
+     → expected 'Exportar para o SpotifyA exportação f…' to contain 'O Spotify precisa que você conecte de…'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > every sentence comes from the dictionary of the language (F98, UAT-308, REQ-06) > the rate limit, in Portuguese, with the time Spotify asked for, and without it
+     → expected 'Exportar para o SpotifyA exportação f…' to contain 'O Spotify pediu para esperar 600 segu…'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > every sentence comes from the dictionary of the language (F98, UAT-308, REQ-06) > no track found, in Portuguese
+     → expected 'Exportar para o SpotifyA exportação f…' to contain 'Nenhuma faixa encontrada no Spotify'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > every sentence comes from the dictionary of the language (F98, UAT-308, REQ-06) > what Spotify itself said is shown inside a sentence of the app; with nothing said, the app says so
+     → expected 'Exportar para o SpotifyA exportação f…' to contain 'A exportação parou: Server error'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > every sentence comes from the dictionary of the language (F98, UAT-308, REQ-06) > the progress is said by the window, from the stage and the names the service gives
+     → expected 'Exportar para o SpotifyA exportação f…' to contain 'Buscando: One'
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > the result is announced and takes the focus (F98, REQ-08) > the result is a status region, and its heading has the focus when the report appears
+     → Cannot read properties of null (reading 'closest')
+   ❯ test/ui/SpotifyExportWindow.test.js > SpotifyExportWindow (F62) > the result is announced and takes the focus (F98, REQ-08) > a failure too: the heading of the failure has the focus
+     → Cannot read properties of null (reading 'textContent')
+ ❯ test/services/spotify/SpotifyExport.test.js  (28 tests | 9 failed) 16ms
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > an access that expired > with no refresh token asks to connect again and asks Spotify for nothing
+     → expected { kind: 'reconnect', …(1) } to deeply equal { kind: 'reconnect' }
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > when Spotify asks to wait (429) > does not wait a long time: it stops and says how long Spotify asked for
+     → expected { kind: 'rate-limit', …(2) } to deeply equal { kind: 'rate-limit', …(1) }
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > what was created (UAT-09) > reports a failure of Spotify in the middle with what was created and what was not
+     → expected { kind: 'error', …(1) } to deeply equal { kind: 'error', …(1) }
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > what was created (UAT-09) > says when nothing at all was found
+     → expected { kind: 'error', …(1) } to deeply equal { kind: 'not-found' }
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > when Spotify refuses the account (F97, UAT-302) > stops at the first refused search and says so: never "tracks not found" (REQ-01)
+     → expected { kind: 'refused', …(1) } to deeply equal { kind: 'refused' }
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > when nothing could be checked the export says that, not that nothing was found (REQ-03)
+     → expected { kind: 'unchecked', …(1) } to deeply equal { kind: 'unchecked' }
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > a search that failed is not a track that was not found (F97, REQ-02) > a track is "not found" only when Spotify answered and had none
+     → expected { kind: 'error', …(1) } to deeply equal { kind: 'not-found' }
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > the export writes no sentence of its own (F98, UAT-308, REQ-06) > the progress is told in stages and names, for the window to say in its language
+     → expected [ [ 'MATCHING', 1, 1, …(1) ], …(2) ] to deeply equal [ Array(3) ]
+   ❯ test/services/spotify/SpotifyExport.test.js > exporting to Spotify (F62) > the export writes no sentence of its own (F98, UAT-308, REQ-06) > no failure carries a sentence: a kind, and what Spotify itself said when it said something
+     → expected [ 'kind', 'message' ] to deeply equal [ 'kind' ]
+ ❯ test/services/musickit/AppleMusicExport.test.js  (0 test)
+ ❯ test/services/albums/spotifyPopularity.test.js  (0 test)
+ ❯ test/services/usage/eventsOfPlaylists.test.js  (40 tests | 13 failed) 13ms
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > created, with tracks that could not be checked (F98)
+     → expected 'complete' to be 'partial' // Object.is equality
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: everything created
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: tracks not found are a complete export: the catalogue answered
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: tracks that could not be checked: something was left out
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: a playlist not created, with no failure
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: Apple Music did not create one
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: stopped part of the way
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: stopped, one half made
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: never began
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > exportOutcome: how an export ended > exportEnding (F98, REQ-04), the heading of the report: nothing created and no reason given
+     → exportEnding is not a function
+   ❯ test/services/usage/eventsOfPlaylists.test.js > playlists_exported > to Apple Music, the same reasons as Spotify (F98, REQ-05) > Apple Music refused the person: the event says so
+     → Forbidden
+   ❯ test/services/usage/eventsOfPlaylists.test.js > playlists_exported > to Apple Music, the same reasons as Spotify (F98, REQ-05) > nothing could be checked: the event says so
+     → Failed to fetch
+   ❯ test/services/usage/eventsOfPlaylists.test.js > playlists_exported > to Apple Music, the same reasons as Spotify (F98, REQ-05) > some tracks could not be checked: partial, with no reason
+     → Failed to fetch
+ ❯ test/i18n/exportTexts.test.js  (0 test)
+ ❯ test/services/musickit/musicKitErrors.test.js  (0 test)
+ ❯ test/models/albumLoadState.test.js  (20 tests | 5 failed) 15ms
+   ❯ test/models/albumLoadState.test.js > holdNotice (F52): what the person is told when the server said "sign in" or "wait" > "sign in" is a warning, with no hour to resume at
+     → expected { …(3) } to deeply equal { reason: 'unauthorized', …(3) }
+   ❯ test/models/albumLoadState.test.js > holdNotice (F52): what the person is told when the server said "sign in" or "wait" > "wait" is information, with the hour it resumes at
+     → expected { …(3) } to deeply equal { reason: 'rate_limited', …(3) }
+   ❯ test/models/albumLoadState.test.js > holdNotice (F52): what the person is told when the server said "sign in" or "wait" > "the ratings source asked to wait" and "Spotify asked to wait" keep their own reason
+     → expected undefined to be 'source_busy' // Object.is equality
+   ❯ test/models/albumLoadState.test.js > holdNotice (F52): what the person is told when the server said "sign in" or "wait" > a reason it does not know is told as the server asking to wait
+     → expected undefined to be 'rate_limited' // Object.is equality
+   ❯ test/models/albumLoadState.test.js > holdNotice (F52): what the person is told when the server said "sign in" or "wait" > writes no sentence: the model does not speak (F98, REQ-06)
+     → expected 'Your sign-in could not be confirmed. …' to be undefined
+ ❯ test/ui/PlaylistExportWindow.test.js  (32 tests | 23 failed) 23598ms
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > one playlist: the folder of the series is used and only that playlist is created, named as the batch export names it
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > the whole batch: every playlist is created, in the folder, in the order of the batch
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > one playlist and then the whole batch does not create the first one twice
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > the progress is written on the «Export» button, which waits; the window stays open and ends on the report
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > not connected: the prompt to connect is MusicKit's, and the refusal is told, nothing is created
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > failed: Apple Music refusing the playlist is told with the reason
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > a playlist with tracks the service could not match: it is created without them, and they are named
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > exporting changes nothing of the batch it was given, and writes nothing on the edit screen
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > the report takes the place of the notices: nothing is said twice
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music > the window closed while the export runs: the end is still told, in a notice
+     → expected '1 playlist exported to Apple Music, i…' to be '1 playlist exported to Apple Music.' // Object.is equality
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > every search failing: «could not be checked», counted, with «Try again», and never «not found» (REQ-01, REQ-03)
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > «Try again», with Apple Music back, exports to the same folder and ends on a complete report
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > a mix: created with what was found, the unchecked apart from the not found, and no heading of success (REQ-04)
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > Apple Music refuses the person (403): said plainly, with the next step, and never «not found» (REQ-02)
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > the catalogue answered and has none of the tracks: that, and only that, is «not found»
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > the result is a status region and its heading takes the focus (REQ-08)
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > «Close» on the report closes the window
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > on the phone the report is drawn in the sheet
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > in Portuguese: the progress, the failure and the next step (UAT-308, REQ-06)
+     → expected ' Creating folder...' to contain 'Criando a pasta...'
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Apple Music says why it failed (F98, UAT-307) > the refusal, in Portuguese
+     → expected null not to be null
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Spotify > not connected: the same prompt to connect again
+     → expected 'Export to SpotifyExport FailedNot cre…' to contain 'Spotify needs you to connect again'
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > Spotify > exporting: the progress is shown and the window cannot be closed; failed: it says so and offers another try
+     → Cannot read properties of null (reading 'textContent')
+   ❯ test/ui/PlaylistExportWindow.test.js > the export window (F90) > the edit screen (nothing given) > exports the playlists it holds, as it always did
+     → expected +0 to be 1 // Object.is equality
+ ❯ test/architecture/exportsDoNotSpeak.test.js  (9 tests | 3 failed) 19ms
+   ❯ test/architecture/exportsDoNotSpeak.test.js > the exports and the album load do not speak (F98, UAT-308) > public/js/services/SpotifyExportService.js writes no sentence of its own
+     → expected [ …(6) ] to deeply equal []
+   ❯ test/architecture/exportsDoNotSpeak.test.js > the exports and the album load do not speak (F98, UAT-308) > public/js/services/AppleMusicExportService.js writes no sentence of its own
+     → expected [ …(18) ] to deeply equal []
+   ❯ test/architecture/exportsDoNotSpeak.test.js > the exports and the album load do not speak (F98, UAT-308) > public/js/models/albumLoadState.js writes no sentence of its own
+     → expected [ …(5) ] to deeply equal []
+ FAIL  test/i18n/exportTexts.test.js [ test/i18n/exportTexts.test.js ]
+Error: Failed to resolve import "../../public/js/i18n/exportTexts.js" from "test/i18n/exportTexts.test.js". Does the file exist?
+ FAIL  test/services/albums/spotifyPopularity.test.js [ test/services/albums/spotifyPopularity.test.js ]
+Error: Failed to resolve import "../../../public/js/i18n/holdTexts.js" from "test/services/albums/spotifyPopularity.test.js". Does the file exist?
+ FAIL  test/services/musickit/AppleMusicExport.test.js [ test/services/musickit/AppleMusicExport.test.js ]
+Error: Failed to resolve import "../../../public/js/services/musickit/musicKitErrors.js" from "test/services/musickit/AppleMusicExport.test.js". Does the file exist?
+ FAIL  test/services/musickit/musicKitErrors.test.js [ test/services/musickit/musicKitErrors.test.js ]
+Error: Failed to resolve import "../../../public/js/services/musickit/musicKitErrors.js" from "test/services/musickit/musicKitErrors.test.js". Does the file exist?
+ ❯ test/architecture/exportsDoNotSpeak.test.js:81:62
+ ❯ test/architecture/exportsDoNotSpeak.test.js:81:62
+ ❯ test/architecture/exportsDoNotSpeak.test.js:81:62
+ ❯ test/models/albumLoadState.test.js:120:78
+ ❯ test/models/albumLoadState.test.js:124:78
+ ❯ test/models/albumLoadState.test.js:128:84
+ ❯ test/models/albumLoadState.test.js:133:77
+ ❯ test/models/albumLoadState.test.js:139:36
+ ❯ test/ui/PlaylistExportWindow.test.js:76:67
+ ❯ test/ui/PlaylistExportWindow.test.js:267:52
+ ❯ test/ui/PlaylistExportWindow.test.js:397:63
+ ❯ test/ui/PlaylistExportWindow.test.js:468:41
+ ❯ test/ui/PlaylistExportWindow.test.js:482:50
+ ❯ test/ui/PlaylistExportWindow.test.js:543:68
+ ❯ test/ui/SpotifyExportWindow.test.js:128:28
+ ❯ test/ui/SpotifyExportWindow.test.js:147:28
+ ❯ test/ui/SpotifyExportWindow.test.js:168:28
+ ❯ test/ui/SpotifyExportWindow.test.js:197:28
+ ❯ test/ui/SpotifyExportWindow.test.js:214:28
+ ❯ test/ui/SpotifyExportWindow.test.js:233:32
+ ❯ test/ui/SpotifyExportWindow.test.js:279:70
+ ❯ test/ui/SpotifyExportWindow.test.js:290:70
+ ❯ test/ui/SpotifyExportWindow.test.js:311:70
+ ❯ test/ui/SpotifyExportWindow.test.js:322:70
+ ❯ test/ui/SpotifyExportWindow.test.js:336:28
+ ❯ test/ui/SpotifyExportWindow.test.js:346:28
+ ❯ test/ui/SpotifyExportWindow.test.js:357:28
+ ❯ test/ui/SpotifyExportWindow.test.js:369:28
+ ❯ test/ui/SpotifyExportWindow.test.js:380:28
+ ❯ test/ui/SpotifyExportWindow.test.js:400:51
+ ❯ test/ui/SpotifyExportWindow.test.js:417:28
+ ❯ test/ui/SpotifyExportWindow.test.js:429:28
+ ❯ test/services/spotify/SpotifyExport.test.js:147:36
+ ❯ test/services/spotify/SpotifyExport.test.js:206:36
+ ❯ test/services/spotify/SpotifyExport.test.js:269:36
+ ❯ test/services/spotify/SpotifyExport.test.js:279:36
+ ❯ test/services/spotify/SpotifyExport.test.js:353:36
+ ❯ test/services/spotify/SpotifyExport.test.js:414:36
+ ❯ test/services/spotify/SpotifyExport.test.js:428:36
+ ❯ test/services/spotify/SpotifyExport.test.js:440:26
+ ❯ test/services/spotify/SpotifyExport.test.js:449:68
+ ❯ test/services/usage/eventsOfPlaylists.test.js:121:39
+ ❯ test/services/usage/eventsOfPlaylists.test.js:135:16
+ ❯ test/services/usage/eventsOfPlaylists.test.js:210:13
+ ❯ test/services/usage/eventsOfPlaylists.test.js:215:13
+ ❯ test/services/usage/eventsOfPlaylists.test.js:220:13
+ Test Files  10 failed (10)
+      Tests  71 failed | 85 passed (156)

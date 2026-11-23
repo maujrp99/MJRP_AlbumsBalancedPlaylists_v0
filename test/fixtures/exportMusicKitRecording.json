@@ -125,9 +125,33 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -250,9 +274,33 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -490,9 +538,45 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Picked",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "2. Mix - Deep Cuts",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "3. Mix - B-Sides",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "3 playlists exported to Apple Music, in the folder \"Picked\".",
+   "3 playlists exported to Apple Music.",
    12000
   ],
   [
@@ -754,9 +838,45 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Fresh folder",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "2. Mix - Deep Cuts",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "3. Mix - B-Sides",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "3 playlists exported to Apple Music, in the folder \"Fresh folder\".",
+   "3 playlists exported to Apple Music.",
    12000
   ],
   [
@@ -879,9 +999,33 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Remembered",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "1 playlist exported to Apple Music, in the folder \"Remembered\".",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -1015,9 +1159,33 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "3. Mix - B-Sides",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -1231,9 +1399,46 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": null,
+     "created": false,
+     "none": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "2. Mix - Deep Cuts",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "3. Mix - B-Sides",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "3 playlists exported to Apple Music, outside any folder.",
+   "3 playlists exported to Apple Music.",
    12000
   ],
   [
@@ -1444,21 +1649,40 @@
    null
   ],
   [
-   "toast",
-   "success",
-   "1 playlist exported to Apple Music, in the folder \"S\".",
-   12000
+   "report",
+   {
+    "folder": {
+     "name": "S",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Half",
+      "tracks": 1,
+      "total": 3,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [
+     "2. Mix - Ghosts"
+    ],
+    "notFound": [
+     "Artist - Nowhere 0-0",
+     "Artist - Nowhere 0-1",
+     "Artist - Nowhere 1-0",
+     "Artist - Nowhere 1-1"
+    ],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
   ],
   [
    "toast",
    "warning",
-   "No track was found in Apple Music for \"2. Mix - Ghosts\": not created.",
-   12000
-  ],
-  [
-   "toast",
-   "warning",
-   "4 tracks were not found in Apple Music and were left out: Artist - Nowhere 0-0, Artist - Nowhere 0-1, Artist - Nowhere 1-0, Artist - Nowhere 1-1.",
+   "The export to Apple Music ended with something left out: 1 of 2 playlists created.",
    12000
   ],
   [
@@ -2762,9 +2986,33 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "S",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Long",
+      "tracks": 300,
+      "total": 300,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "1 playlist exported to Apple Music, in the folder \"S\".",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -4668,9 +4916,33 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "S",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Searched",
+      "tracks": 120,
+      "total": 120,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "1 playlist exported to Apple Music, in the folder \"S\".",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -4813,9 +5085,33 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -5077,15 +5373,44 @@
    500
   ],
   [
-   "toast",
-   "error",
-   "Apple Music did not create 1 of 3 playlists: \"2. Mix - Deep Cuts\" (Too Many Requests). Export again to create what is missing: what was created is not created twice.",
-   12000
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "3. Mix - B-Sides",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [
+     {
+      "name": "2. Mix - Deep Cuts",
+      "detail": "Too Many Requests"
+     }
+    ],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
   ],
   [
    "toast",
-   "success",
-   "2 playlists exported to Apple Music, in the folder \"Road trip\": \"1. Mix - Greatest Hits\", \"3. Mix - B-Sides\".",
+   "warning",
+   "The export to Apple Music ended with something left out: 2 of 3 playlists created.",
    12000
   ],
   [
@@ -5215,141 +5540,32 @@
    }
   ],
   [
-   "pause",
-   500
-  ],
-  [
-   "progress",
-   "Exporting 2. Mix - Deep Cuts..."
-  ],
-  [
-   "api.music",
-   "GET",
-   "/v1/catalog/us/search",
+   "report",
    {
-    "term": "Three Artist Album",
-    "types": "songs",
-    "limit": 20
-   },
-   null
-  ],
-  [
-   "api.music",
-   "GET",
-   "/v1/catalog/us/search",
-   {
-    "term": "Four Artist Album",
-    "types": "songs",
-    "limit": 20
-   },
-   null
-  ],
-  [
-   "api.music",
-   "POST",
-   "/v1/me/library/playlists",
-   null,
-   {
-    "attributes": {
-     "name": "2. Mix - Deep Cuts",
-     "description": "Created by MJRP's The Album Blender"
+    "folder": {
+     "name": "Road trip",
+     "created": true
     },
-    "relationships": {
-     "tracks": {
-      "data": [
-       {
-        "id": "103",
-        "type": "songs"
-       },
-       {
-        "id": "104",
-        "type": "songs"
-       }
-      ]
-     },
-     "parent": {
-      "data": [
-       {
-        "id": "new-folder-1",
-        "type": "library-playlist-folders"
-       }
-      ]
-     }
+    "created": [],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [
+     "1. Mix - Greatest Hits",
+     "2. Mix - Deep Cuts",
+     "3. Mix - B-Sides"
+    ],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": {
+     "kind": "refused"
     }
    }
-  ],
-  [
-   "pause",
-   500
-  ],
-  [
-   "progress",
-   "Exporting 3. Mix - B-Sides..."
-  ],
-  [
-   "api.music",
-   "GET",
-   "/v1/catalog/us/search",
-   {
-    "term": "One Artist Album",
-    "types": "songs",
-    "limit": 20
-   },
-   null
-  ],
-  [
-   "api.music",
-   "GET",
-   "/v1/catalog/us/search",
-   {
-    "term": "Four Artist Album",
-    "types": "songs",
-    "limit": 20
-   },
-   null
-  ],
-  [
-   "api.music",
-   "POST",
-   "/v1/me/library/playlists",
-   null,
-   {
-    "attributes": {
-     "name": "3. Mix - B-Sides",
-     "description": "Created by MJRP's The Album Blender"
-    },
-    "relationships": {
-     "tracks": {
-      "data": [
-       {
-        "id": "101",
-        "type": "songs"
-       },
-       {
-        "id": "104",
-        "type": "songs"
-       }
-      ]
-     },
-     "parent": {
-      "data": [
-       {
-        "id": "new-folder-1",
-        "type": "library-playlist-folders"
-       }
-      ]
-     }
-    }
-   }
-  ],
-  [
-   "pause",
-   500
   ],
   [
    "toast",
    "error",
-   "Apple Music did not create 3 of 3 playlists: \"1. Mix - Greatest Hits\" (Unauthorized), \"2. Mix - Deep Cuts\" (Unauthorized), \"3. Mix - B-Sides\" (Unauthorized). Export again to create what is missing: what was created is not created twice.",
+   "Apple Music did not allow this for your account. This is not about your tracks. Check that your Apple Music subscription is active. Then open the menu, disconnect Apple Music under Connections, connect again and export again.",
    12000
   ],
   [
@@ -5547,15 +5763,38 @@
    500
   ],
   [
-   "toast",
-   "error",
-   "Apple Music did not create 1 of 2 playlists: \"1. Mix - Greatest Hits\" (Server error). Export again to create what is missing: what was created is not created twice.",
-   12000
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "2. Mix - Deep Cuts",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "detail": "Server error"
+     }
+    ],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
   ],
   [
    "toast",
-   "success",
-   "1 playlist exported to Apple Music, in the folder \"Road trip\": \"2. Mix - Deep Cuts\".",
+   "warning",
+   "The export to Apple Music ended with something left out: 1 of 2 playlists created.",
    12000
   ],
   [
@@ -5693,15 +5932,39 @@
    null
   ],
   [
-   "toast",
-   "success",
-   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
-   12000
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "2. Mix - Deep Cuts",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": true
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
   ],
   [
    "toast",
-   "info",
-   "1 playlist was already exported in this session and was not created again.",
+   "success",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -5747,9 +6010,32 @@
    "authorize"
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": false
+    },
+    "created": [],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [
+     "1. Mix - Greatest Hits",
+     "2. Mix - Deep Cuts",
+     "3. Mix - B-Sides"
+    ],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": {
+     "kind": "authorization"
+    }
+   }
+  ],
+  [
    "toast",
    "warning",
-   "Apple Music was not authorized: nothing was exported.",
+   "Apple Music was not authorized, so nothing was exported. Try again and allow the access in the Apple Music window.",
    12000
   ],
   [
@@ -5795,9 +6081,30 @@
    "authorize"
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": false
+    },
+    "created": [],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [
+     "1. Mix - Greatest Hits"
+    ],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": {
+     "kind": "authorization"
+    }
+   }
+  ],
+  [
    "toast",
    "warning",
-   "Apple Music was not authorized: nothing was exported.",
+   "Apple Music was not authorized, so nothing was exported. Try again and allow the access in the Apple Music window.",
    12000
   ],
   [
@@ -5823,9 +6130,30 @@
    "/api/musickit-token"
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": false
+    },
+    "created": [],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [
+     "1. Mix - Greatest Hits"
+    ],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": {
+     "kind": "not-configured"
+    }
+   }
+  ],
+  [
    "toast",
    "error",
-   "Apple Music is not set up for this site: nothing was exported.",
+   "Apple Music is not set up for this site. Nothing was exported.",
    12000
   ],
   [
@@ -5951,15 +6279,33 @@
    500
   ],
   [
-   "toast",
-   "success",
-   "1 playlist exported to Apple Music.",
-   12000
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": false
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
   ],
   [
    "toast",
-   "warning",
-   "The folder \"Road trip\" could not be created in Apple Music: the playlists are at the top of your library.",
+   "success",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -6157,9 +6503,39 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "2. Mix - Deep Cuts",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "2 playlists exported to Apple Music, in the folder \"Road trip\".",
+   "2 playlists exported to Apple Music.",
    12000
   ],
   [
@@ -6257,6 +6633,36 @@
     "limit": 20
    },
    null
+  ],
+  [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": true
+     },
+     {
+      "name": "2. Mix - Deep Cuts",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": true
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
   ],
   [
    "toast",
@@ -6401,9 +6807,33 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "1 playlist exported to Apple Music, in the folder \"Road trip\".",
+   "1 playlist exported to Apple Music.",
    12000
   ],
   [
@@ -6613,9 +7043,39 @@
    500
   ],
   [
+   "report",
+   {
+    "folder": {
+     "name": "Road trip",
+     "created": true
+    },
+    "created": [
+     {
+      "name": "1. Mix - Greatest Hits",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     },
+     {
+      "name": "2. Mix - Deep Cuts",
+      "tracks": 2,
+      "total": 2,
+      "alreadyThere": false
+     }
+    ],
+    "failed": [],
+    "empty": [],
+    "notFound": [],
+    "notCreated": [],
+    "unchecked": 0,
+    "uncheckedTracks": [],
+    "failure": null
+   }
+  ],
+  [
    "toast",
    "success",
-   "2 playlists exported to Apple Music, in the folder \"Road trip\".",
+   "2 playlists exported to Apple Music.",
    12000
   ],
   [
@@ -7378,7 +7838,7 @@
   ],
   [
    "folders failed",
-   "The user denied authorization"
+   "Apple Music was not authorized."
   ]
  ],
  "the file: playlists given, a batch name with characters the file name cannot hold": [

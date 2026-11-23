@@ -144,7 +144,7 @@ describe('exporting to Spotify (F62)', () => {
 
             const report = await exportAs('merge')
 
-            expect(report.failure).toEqual({ kind: 'reconnect', message: 'Spotify needs you to connect again.' })
+            expect(report.failure).toEqual({ kind: 'reconnect' })
             expect(report.created).toEqual([])
             expect(report.notCreated).toEqual(['Road trip'])
             expect(api.calls).toEqual([])
@@ -203,10 +203,7 @@ describe('exporting to Spotify (F62)', () => {
             const report = await exportAs('merge')
 
             expect(waits).toEqual([])
-            expect(report.failure).toEqual({
-                kind: 'rate-limit', retryAfterSeconds: 600,
-                message: 'Spotify asked to wait 600 seconds before the next request (Rate Limited).'
-            })
+            expect(report.failure).toEqual({ kind: 'rate-limit', retryAfterSeconds: 600 })
             expect(report.notCreated).toEqual(['Road trip'])
         })
     })
@@ -269,7 +266,7 @@ describe('exporting to Spotify (F62)', () => {
 
             const report = await exportAs('separate')
 
-            expect(report.failure).toEqual({ kind: 'error', message: 'Server error' })
+            expect(report.failure).toEqual({ kind: 'error', detail: 'Server error' })
             expect(report.created.map(p => p.name)).toEqual(['Road trip - Greatest Hits'])
             expect(report.notCreated).toEqual(['Road trip - Deep Cuts'])
         })
@@ -279,7 +276,7 @@ describe('exporting to Spotify (F62)', () => {
 
             const report = await exportAs('merge', [{ name: 'Ghosts', tracks: [track('Nowhere')] }])
 
-            expect(report.failure).toEqual({ kind: 'error', message: 'No tracks found on Spotify' })
+            expect(report.failure).toEqual({ kind: 'not-found' })
             expect(api.created).toEqual([])
         })
     })
@@ -353,8 +350,7 @@ describe('exporting to Spotify (F62)', () => {
 
             const report = await exportAs('separate', PLAYLISTS, { ...noCallbacks, onNotFound })
 
-            expect(report.failure.kind).toBe('refused')
-            expect(report.failure.message).not.toMatch(/found/i)
+            expect(report.failure).toEqual({ kind: 'refused' })
             expect(onNotFound).not.toHaveBeenCalled()
             expect(report.empty).toEqual([])
             expect(report.notCreated).toEqual(['Road trip - Greatest Hits', 'Road trip - Deep Cuts'])
@@ -415,8 +411,7 @@ describe('exporting to Spotify (F62)', () => {
 
             const report = await exportAs('merge', PLAYLISTS, { ...noCallbacks, onNotFound })
 
-            expect(report.failure.kind).toBe('unchecked')
-            expect(report.failure.message).not.toMatch(/found/i)
+            expect(report.failure).toEqual({ kind: 'unchecked' })
             expect(report.unchecked).toBe(4)
             expect(onNotFound).not.toHaveBeenCalled()
             expect(report.empty).toEqual([])
@@ -430,8 +425,28 @@ describe('exporting to Spotify (F62)', () => {
             const report = await exportAs('merge', [{ name: 'Ghosts', tracks: [track('Nowhere')] }])
 
             expect(report.unchecked).toBe(0)
-            expect(report.failure).toEqual({ kind: 'error', message: 'No tracks found on Spotify' })
+            expect(report.failure).toEqual({ kind: 'not-found' })
             expect(report.empty).toEqual(['Road trip'])
+        })
+    })
+
+    describe('the export writes no sentence of its own (F98, UAT-308, REQ-06)', () => {
+        it('the progress is told in stages and names, for the window to say in its language', async () => {
+            connect()
+            const told = []
+
+            await exportAs('merge', [{ name: 'Mix', tracks: [track('One')] }], { onProgress: (...args) => told.push(args) })
+
+            expect(told).toEqual([
+                ['MATCHING', 1, 1, { title: 'One' }],
+                ['CREATING', 1, 1, { name: 'Road trip' }],
+                ['ADDING', 0, 1, { name: 'Road trip', count: 1 }]
+            ])
+        })
+
+        it('no failure carries a sentence: a kind, and what Spotify itself said when it said something', async () => {
+            connect({ expiresIn: -HOUR, refresh: null })
+            expect(Object.keys((await exportAs('merge')).failure)).toEqual(['kind'])
         })
     })
 

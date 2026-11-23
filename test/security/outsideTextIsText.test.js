@@ -171,7 +171,7 @@ describe('text from outside is shown as text', () => {
 
         await act(async () => { box().querySelector('#startExportBtn').click() })
         act(() => { handlers.onNotFound({ artist: TEXT, title: TEXT }) })
-        act(() => { handlers.onProgress('MATCHING', 0, 0, TEXT) })
+        act(() => { handlers.onProgress('MATCHING', 0, 0, { title: TEXT }) })
         expectOnlyText(box(), TEXT)
 
         // the end of an export: the names it created or not, the reason it stopped, the tracks not found
@@ -181,7 +181,7 @@ describe('text from outside is shown as text', () => {
                 created: [{ name: TEXT, url: QUOTED, tracks: 1, total: 1, alreadyThere: true }],
                 incomplete: [{ name: TEXT, url: QUOTED, tracks: 1, total: 2 }],
                 empty: [TEXT], notCreated: [TEXT],
-                failure: { kind: 'reconnect', message: TEXT }
+                failure: { kind: 'error', detail: TEXT }
             })
             await new Promise(resolve => setTimeout(resolve, 0))
         })

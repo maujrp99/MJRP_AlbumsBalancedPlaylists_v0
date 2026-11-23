@@ -10,7 +10,10 @@
  * What the window does not do, as it never did (kept on purpose; listed in the proof of wave 8a): it does not close on Escape, does not keep Tab inside,
  * does not take the focus when it opens nor give it back when it closes, and has no role of a dialog. The backdrop and the buttons close it, but not
  * while the export works. It is redrawn whole at each word of the export (a fresh `key`), as the hand-made one rewrote its HTML: the animation of its
- * panel and of the spinner starts again, and the focus goes to the page.
+ * panel and of the spinner starts again, and the focus goes to the page. When the report appears the focus goes to its heading, and the result
+ * is a status region (F98): the pieces of the report are the ones the Apple Music report uses too (ui/ExportReportParts.tsx).
+ *
+ * Every sentence is the window's, from the dictionary of the language (F98, UAT-308): the service gives a kind of failure, a stage and names.
  *
  * `ui/` imports no store, service or controller: the playlists on the edit screen, the open series, the export and the sign-in come as `deps`
  * from whoever opens it (controllers/playlistExportEntries.js).
@@ -22,12 +25,17 @@ import { showWindow } from './windowLayer'
 import { broken } from './recipe/broken'
 import { safeUrl } from '../utils/safeUrl.js'
 import { t, tPlural } from '../i18n/t.js'
+import { leftSomethingOut, worthAnotherTry } from '../models/exportOutcome.js'
+import { Names, ReportHeading, TrackNames, type Ending } from './ExportReportParts'
 
 type Stage = 'IDLE' | 'MATCHING' | 'CREATING' | 'ADDING' | 'DONE'
 type Mode = 'merge' | 'separate'
 
 interface Created { name: string; url?: string; tracks: number; total: number; alreadyThere?: boolean }
-interface Failure { kind: string; message: string }
+/** Why the export stopped: a kind, the seconds Spotify asked to wait (a rate limit), and what Spotify itself said (`detail`). Never a sentence. */
+interface Failure { kind: string; retryAfterSeconds?: number | null; detail?: string | null }
+/** What a stage of the export is about: the track searched, the playlist created, the playlist and how many tracks are added. */
+interface ProgressNames { title?: string; name?: string; count?: number }
 /** What SpotifyExportService answers (its own rules are in services/SpotifyExportService.js). */
 export interface SpotifyReport {
     mode: Mode
@@ -53,7 +61,7 @@ export interface SpotifyExportDeps {
     exportPlaylists: (
         playlists: unknown[],
         options: { mode: Mode; name: string },
-        handlers: { onProgress: (stage: string, current: number, total: number, message: string) => void; onNotFound: (track: Track) => void; onUnchecked: (track: Track) => void }
+        handlers: { onProgress: (stage: string, current: number, total: number, names: ProgressNames) => void; onNotFound: (track: Track) => void; onUnchecked: (track: Track) => void }
     ) => Promise<SpotifyReport>
     /** Leaves the page to sign in to Spotify again. */
     login: () => void
@@ -67,15 +75,44 @@ export interface SpotifyGiven { playlists: unknown[]; seriesName?: string }
 const GREEN = '#1DB954'
 const GREEN_GRADIENT = 'linear-gradient(135deg, #1DB954 0%, #1ed760 100%)'
 const PRIMARY = 'w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02]'
-const NAMES_AT_MOST = 10
 
 /** The report of an export that broke where the service did not foresee. */
 const brokenReport = (error: unknown): SpotifyReport => ({
     mode: 'merge', totalTracks: 0, matchCount: 0, created: [], incomplete: [], empty: [], notCreated: [],
-    failure: { kind: 'error', message: (error as { message?: string } | null)?.message || t('spotifyWindow.end.brokenMessage') }
+    failure: { kind: 'broken', detail: (error as { message?: string } | null)?.message || null }
 })
 
 const STAGE_TEXT: Record<string, string> = { MATCHING: 'spotifyWindow.stage.matching', CREATING: 'spotifyWindow.stage.creating', ADDING: 'spotifyWindow.stage.adding' }
+
+/** What is being done right now, in the language of the app: the service gives the stage and the names. */
+function progressText(stage: string, names: ProgressNames | undefined): string {
+    const { title = '', name = '', count = 0 } = names ?? {}
+    if (stage === 'MATCHING') return t('spotifyWindow.progress.searching', { title })
+    if (stage === 'CREATING') return t('spotifyWindow.progress.creating', { name })
+    return stage === 'ADDING' ? tPlural('spotifyWindow.progress.adding', count, { count, name }) : ''
+}
+
+/** The failures said with a sentence of their own, whatever else the failure carries. */
+const FAILURE_TEXT: Record<string, string> = {
+    reconnect: 'spotifyWindow.failure.reconnect',
+    refused: 'spotifyWindow.refused',
+    unchecked: 'spotifyWindow.unchecked',
+    'not-found': 'spotifyWindow.failure.notFound'
+}
+
+/** Why the export stopped, in the language of the app. What Spotify itself said goes inside a sentence of the window. */
+function failureText(failure: Failure): string {
+    if (FAILURE_TEXT[failure.kind]) return t(FAILURE_TEXT[failure.kind])
+    if (failure.kind === 'rate-limit') {
+        return failure.retryAfterSeconds ? t('spotifyWindow.failure.rateLimitFor', { seconds: failure.retryAfterSeconds }) : t('spotifyWindow.failure.rateLimit')
+    }
+    if (failure.detail) return t('spotifyWindow.failure.said', { detail: failure.detail })
+    return t(failure.kind === 'broken' ? 'spotifyWindow.end.brokenMessage' : 'spotifyWindow.failure.silent')
+}
+
+const HEADINGS: Record<Ending, string> = {
+    complete: 'spotifyWindow.end.complete', 'left-out': 'exportReport.leftOut', stopped: 'spotifyWindow.end.partial', failed: 'spotifyWindow.end.failed'
+}
 
 interface Model {
     state: Stage
@@ -229,39 +266,8 @@ function CreatedList({ created }: { created: Created[] }) {
     )
 }
 
-/** A titled list of names; nothing when the list is empty. */
-function Names({ title, names }: { title: string; names: string[] }) {
-    if (names.length === 0) return null
-    return (
-        <div className="bg-white/5 rounded-xl p-4 text-sm">
-            <p className="text-yellow-400 mb-2">{`${title} (${names.length})`}</p>
-            <ul className="space-y-1 text-white/80">{names.map((name, index) => <li key={index}>{`• ${name}`}</li>)}</ul>
-        </div>
-    )
-}
-
-/** A count of tracks that opens into their names: the ones not found, or the ones that could not be checked. */
-function TrackNames({ summary, more, tracks }: { summary: string; more: string; tracks: Track[] }) {
-    if (tracks.length === 0) return null
-    return (
-        <details>
-            <summary className="text-yellow-400 cursor-pointer hover:text-yellow-300 flex items-center gap-2">
-                <Icon name="AlertTriangle" className="w-4 h-4" />
-                {broken(tPlural(summary, tracks.length, { count: tracks.length }), 28, 24)}
-            </summary>
-            <ul className="mt-2 space-y-1 text-white/60 max-h-32 overflow-y-auto pl-6">
-                {tracks.slice(0, NAMES_AT_MOST).map((track, index) => <li key={index} className="truncate">{`• ${track.artist} - ${track.title}`}</li>)}
-                {tracks.length > NAMES_AT_MOST ? <li className="text-white/40">{t(more, { count: tracks.length - NAMES_AT_MOST })}</li> : null}
-            </ul>
-        </details>
-    )
-}
-
-/** The failures whose reason is not about the tracks (F97): the window says them in its own words, and "matched 0" would read as "not found". */
-const NOT_ABOUT_THE_TRACKS: Record<string, string> = { refused: 'spotifyWindow.refused', unchecked: 'spotifyWindow.unchecked' }
-
 /** How many tracks were found in Spotify, the ones that were not, and the ones that could not be checked. */
-function MatchSummary({ report, missing, unchecked }: { report: SpotifyReport; missing: Track[]; unchecked: Track[] }) {
+function MatchSummary({ report, missing, unchecked }: { report: SpotifyReport; missing: string[]; unchecked: string[] }) {
     if (!report.totalTracks) return null
     if (report.failure?.kind === 'refused' && report.matchCount === 0) return null
     return (
@@ -276,8 +282,11 @@ function MatchSummary({ report, missing, unchecked }: { report: SpotifyReport; m
     )
 }
 
-/** What the person can do after the report: connect again, try again, close. A refusal of Spotify has no button: trying again is refused again. */
-function NextSteps({ failure, onReconnect, onRetry, onClose }: { failure: Failure | null; onReconnect: () => void; onRetry: () => void; onClose: () => void }) {
+/**
+ * What the person can do after the report: connect again, try again, close. A refusal of Spotify has no button: trying again is refused again.
+ * `again` (F98): there is something another try could bring; with no failure, it is what was left out, and the note says what trying again does.
+ */
+function NextSteps({ failure, again, onReconnect, onRetry, onClose }: { failure: Failure | null; again: boolean; onReconnect: () => void; onRetry: () => void; onClose: () => void }) {
     let next: ReactNode = null
     if (failure?.kind === 'reconnect') {
         next = (
@@ -290,13 +299,13 @@ function NextSteps({ failure, onReconnect, onRetry, onClose }: { failure: Failur
         )
     } else if (failure?.kind === 'refused') {
         next = <p id="spotifyRefusedNote" className="text-sm text-white/80 text-center">{t('spotifyWindow.refusedNote')}</p>
-    } else if (failure) {
+    } else if (again) {
         next = (
             <>
                 <button id="retryExportBtn" className={PRIMARY} style={{ background: GREEN_GRADIENT }} onClick={onRetry}>
                     <Icon name="RefreshCw" className="w-5 h-5" />{` ${t('spotifyWindow.retry')}`}
                 </button>
-                <p className="text-xs text-white/40 text-center">{t('spotifyWindow.retryNote')}</p>
+                <p className="text-xs text-white/40 text-center">{failure ? t('spotifyWindow.retryNote') : t('exportReport.retryPartialNote', { service: 'Spotify' })}</p>
             </>
         )
     }
@@ -314,25 +323,22 @@ function NextSteps({ failure, onReconnect, onRetry, onClose }: { failure: Failur
 function Report({ report, missing, unchecked, onReconnect, onRetry, onClose }: { report: SpotifyReport; missing: Track[]; unchecked: Track[]; onReconnect: () => void; onRetry: () => void; onClose: () => void }) {
     const { failure } = report
     const done = report.created.length + report.incomplete.length
-    const heading = !failure ? t('spotifyWindow.end.complete') : (done > 0 ? t('spotifyWindow.end.partial') : t('spotifyWindow.end.failed'))
+    let ending: Ending = leftSomethingOut(report) ? 'left-out' : 'complete'
+    if (failure) ending = done > 0 ? 'stopped' : 'failed'
+    const said = (track: Track) => `${track.artist} - ${track.title}`
+    let under: ReactNode = null
+    if (failure) under = <p className="text-white/80">{failureText(failure)}</p>
+    else if (ending === 'left-out') under = <p className="text-white/80">{t('exportReport.leftOutNote')}</p>
     return (
         <div className="space-y-5 py-4">
-            <div className="text-center">
-                {failure ? (
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-red-500/20"><Icon name="AlertTriangle" className="w-8 h-8 text-red-400" /></div>
-                ) : (
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-[#1DB954]"><Icon name="Check" className="w-8 h-8 text-white" /></div>
-                )}
-                <h3 className="text-xl font-bold text-white mb-2">{heading}</h3>
-                {failure ? <p className="text-white/80">{NOT_ABOUT_THE_TRACKS[failure.kind] ? t(NOT_ABOUT_THE_TRACKS[failure.kind]) : failure.message}</p> : null}
-            </div>
+            <ReportHeading ending={ending} okClass="bg-[#1DB954]" title={t(HEADINGS[ending])}>{under}</ReportHeading>
 
             <CreatedList created={report.created} />
             <Names title={t('spotifyWindow.incomplete')} names={report.incomplete.map(item => t('spotifyWindow.incompleteItem', { name: item.name, tracks: item.tracks, total: item.total }))} />
             <Names title={t('spotifyWindow.notCreated')} names={report.notCreated} />
             <Names title={t('spotifyWindow.empty')} names={report.empty} />
-            <MatchSummary report={report} missing={missing} unchecked={unchecked} />
-            <NextSteps failure={failure} onReconnect={onReconnect} onRetry={onRetry} onClose={onClose} />
+            <MatchSummary report={report} missing={missing.map(said)} unchecked={unchecked.map(said)} />
+            <NextSteps failure={failure} again={worthAnotherTry(report)} onReconnect={onReconnect} onRetry={onRetry} onClose={onClose} />
         </div>
     )
 }
@@ -359,7 +365,7 @@ async function runExport({ deps, playlists, options, redraw, notFound, unchecked
     let report: SpotifyReport
     try {
         report = await deps.exportPlaylists(playlists, options, {
-            onProgress: (stage, current, total, message) => redraw({ state: stage as Stage, progress: { current, total, message } }),
+            onProgress: (stage, current, total, names) => redraw({ state: stage as Stage, progress: { current, total, message: progressText(stage, names) } }),
             onNotFound: (track) => { notFound.push(track) },
             onUnchecked: (track) => { unchecked.push(track) }
         })
