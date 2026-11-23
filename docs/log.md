@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:49] review — F82, o Painel de textos: terceira passada do juiz visual (passa: 0 P0, 0 P1, 10 P2)
+
+**Branch:** wip/f82-panel-judge-3
+
+Terceira passada, curta, sobre `claude/f82-cms-texts-panel` em 8ae419d (os três commits depois da segunda passada: 6769f08, ae04ee4, 8ae419d). No navegador, a 1280 e 390, em inglês e português: nenhuma etiqueta do Painel mostra chave crua (as 13 telas clicadas, 1.235 linhas, editor aberto em cada uma; «Spotify export window» / «Janela de exportar para o Spotify» e «Questions and confirmations» / «Perguntas e confirmações»); o negrito voltou (600 nos botões do Painel, 700 nos do kit, campos em 400, nenhum rótulo cortado); a evidência do orçamento bate com o `bundle-budget.json`. Nenhuma regressão na lista, no editor, na tradução, na barra de salvar e na entrada guardada. Ficam abertos oito P2 da segunda passada (o editor rico sem texto que o abra, a roupa do kit, a linha só com a chave, três peças do editor, o trilho sem contagem, o nome cortado no telefone, miudezas do telefone, +3.595 B no script principal) e dois novos, anteriores aos três commits: quatro telas com nome em inglês no Painel em português, e a prova dos construtores que importa um arquivo que não está no repositório.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-cms-texts-panel-visual-parity-recheck-3.md`.
+
 ## [2026-11-23 16:41] step — F82: o erro de tipo do teste do negrito consertado; typecheck e eslint do projeto inteiro saem 0
 
 **Branch:** claude/f82-cms-texts-panel
