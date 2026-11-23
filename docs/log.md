@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:21] review — F80: o juiz independente passou os ajustes do crédito do álbum (0 P0, 0 P1, 3 P2); o MJRP julgou a prévia
+
+**Branch:** fix/f80-album-credit-album-only-and-aligned-button
+
+Relatório, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-album-credit-visual-parity-recheck.md` (julgado em `eddf38f` contra a `main` `c4c81d4`). Botão e painel de cima com 0 px de diferença nas cinco histórias e nos dois idiomas; nenhum «disco(s)» no português; «Vire o lado»; os 15 endereços diretos. P2: o botão em inglês a 375 px tem 5,8 px de folga; dois links com o mesmo nome acessível no celular (já era assim). O MJRP, 2026-11-23: «nao passa pelo juiz», «ou juilz neste caso sou eu», «paine do CMS nao, apenas para esses ajustes que estou pedindo»; viu a prévia `staging` (`ec247a6`) e disse «1, publica»; como a trava da junta pede o relatório de um juiz e a saída sem ele é só dele, à pergunta «juiz rápido ou você roda a junta?» respondeu «1. juiz rápido».
+
 ## [2026-11-23 15:11] decision — F80: «Vire o lado» no lugar de «Vire o álbum»
 
 **Branch:** fix/f80-album-credit-album-only-and-aligned-button
