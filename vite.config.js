@@ -51,7 +51,8 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, 'public/js'),
             '@stores': path.resolve(__dirname, 'public/js/stores'),
-            '@shared': path.resolve(__dirname, 'shared')
+            '@shared': path.resolve(__dirname, 'shared'),
+            '@mjrp/admin-kit-core': path.resolve(__dirname, 'shared/admin-kit/index.js')
         }
     },
 

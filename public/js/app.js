@@ -43,6 +43,7 @@ import { startShell } from './shell/Shell.tsx'
 import { clearAppAlbumCaches } from './services/albums/albumLoading.js'
 import { userStore } from './stores/UserStore.js'
 import { startUsageMeasurement } from './services/usage/usageWiring.js'
+import { startPublishedContent } from './services/content/contentWiring.js'
 import { openSignInWhenAsked } from './utils/signInFromLink.js'
 import { START_PATH, leaveToHome } from './utils/startRoute.js'
 import { isSignedIn } from './utils/isSignedIn.js'
@@ -98,6 +99,10 @@ async function bootstrap() {
 
 // Start app when DOM is ready
 document.addEventListener('DOMContentLoaded', bootstrap)
+
+// What the owner published in the CMS (F82): the copy kept in the browser is applied now, the database is asked in the
+// background and the first screen never waits for it; the texts that arrive make the screens draw again.
+startPublishedContent()
 
 // The measurement of use (F77): off unless the build has a project key and nobody turned it off.
 // Started before the first route, so the first screen is measured; it never holds the app.
@@ -158,6 +163,15 @@ router.register('/blend', async () => {
     const { blendView } = await loadBlend()
     return blendView()
 })
+
+// The Painel (F82, REQ-01): only for the administrator. The gate (a small file of its own, asked for when somebody opens /admin) reads the
+// person's own record (cmsAdmins/{uid}) BEFORE the Painel's file is asked for; anybody else sees «Page not found» and that file is never
+// requested. Neither file is among the screens that come down in the background: the main script carries only this door.
+const loadAdminGate = loadScreen(() => import('./screens/admin/gate.ts'))
+const loadAdmin = loadScreen(() => import('./screens/admin/adminPanel.ts'))
+const adminRoute = async () => (await loadAdminGate()).adminRoute(loadAdmin)
+router.register('/admin', adminRoute)
+router.register('/admin/texts/:screen', adminRoute)
 
 // Sprint 11 Phase 1: Spotify Auth Callback
 router.register('/callback', async () => {

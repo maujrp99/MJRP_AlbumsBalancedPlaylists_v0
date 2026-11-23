@@ -14,6 +14,10 @@
  *   failure  4xx/5xx  { error: { code, retryable } } code is one of ERROR_CODES;
  *                                                    retryable: the same request, sent again within
  *                                                    seconds, may work
+ *                     { error: { code, retryable, reason } }  on the routes that name their failures for
+ *                                                    a screen to show (the administrator's, F82): `reason`
+ *                                                    is a name from a closed list of that route, never a
+ *                                                    message of a provider
  *
  * "It could not be known" is never a success: a source that is down, slow or busy is a failure.
  * No message of a provider or of the server's inside goes in the body; it goes to the log.
@@ -34,6 +38,7 @@ const ERRORS = Object.freeze({
   invalid_request: Object.freeze({ status: 400, retryable: false }), // the caller sent something unusable
   unauthorized: Object.freeze({ status: 401, retryable: false }), // no login, or one that may not do this
   rate_limited: Object.freeze({ status: 429, retryable: false }), // this person's limit; see Retry-After
+  not_configured: Object.freeze({ status: 503, retryable: false }), // this server was not set up to do this: nothing was asked (F82)
   internal: Object.freeze({ status: 500, retryable: false }) // this server broke
 })
 const ERROR_CODES = Object.freeze(Object.keys(ERRORS))
@@ -54,24 +59,29 @@ function success (data, outcome = OUTCOMES.FOUND) {
  * @param {number} [options.status] - another HTTP status than the code's own
  * @param {boolean} [options.retryable] - another answer to "ask again?" than the code's own
  * @param {number} [options.retryAfterSeconds] - sent as the Retry-After header
- * @returns {{ ok: false, status: number, code: string, retryable: boolean, retryAfterSeconds: number|null }}
+ * @param {string} [options.reason] - the name of the failure, for a screen to show (a route's own closed list)
+ * @returns {{ ok: false, status: number, code: string, retryable: boolean, retryAfterSeconds: number|null, reason?: string }}
  */
-function failure (code, { status, retryable, retryAfterSeconds = null } = {}) {
+function failure (code, { status, retryable, retryAfterSeconds = null, reason } = {}) {
   const known = ERRORS[code]
   if (!known) throw new Error(`Unknown error code: ${code}`)
-  return {
+  const result = {
     ok: false,
     status: status || known.status,
     code,
     retryable: typeof retryable === 'boolean' ? retryable : known.retryable,
     retryAfterSeconds
   }
+  if (reason) result.reason = String(reason)
+  return result
 }
 
 /** The body that goes on the wire for a result. */
 function bodyOf (result) {
   if (result.ok) return { data: result.data, outcome: result.outcome }
-  return { error: { code: result.code, retryable: result.retryable } }
+  const error = { code: result.code, retryable: result.retryable }
+  if (result.reason) error.reason = result.reason
+  return { error }
 }
 
 /** Write a result as the answer of a request. */

@@ -1,0 +1,11 @@
+/* cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit` */
+/* A skin for the example project (ADR-0011; S-112): only the contract's tokens, nothing else. */
+[data-admin-skin="example"] {
+  --ak-bg: #fdf6ec; --ak-panel: #ffffff; --ak-panel-2: #f6ecdc; --ak-fg: #2b1d0e; --ak-soft: #6b5a44; --ak-line: #e2d3bc;
+  --ak-accent: #b4441f; --ak-accent-fg: #ffffff; --ak-accent-soft: #f6dccf;
+  --ak-ok: #2f6b3a; --ak-ok-soft: #e1efe3; --ak-warn: #8a5300; --ak-warn-soft: #f7eedc; --ak-err: #a63d3d; --ak-err-soft: #f7e4e2; --ak-new: #6e2c3d; --ak-new-soft: #f4e4e8;
+  --ak-preview-bg: #2b1d0e; --ak-preview-fg: #fdf6ec; --ak-plate: #fdf6ec; --ak-deep: #2b1d0e;
+  --ak-shadow: rgba(43, 29, 14, .6); --ak-swatch-line: #e2d3bc;
+  --ak-display: Georgia, serif; --ak-sans: system-ui, sans-serif; --ak-mono: ui-monospace, monospace; --ak-radius: 4px;
+  --ak-text: Georgia, serif; --ak-mark: #f6e7b0;
+}

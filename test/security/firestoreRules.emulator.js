@@ -24,7 +24,9 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { initializeTestEnvironment, assertFails, assertSucceeds } from '@firebase/rules-unit-testing'
-import { doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, writeBatch } from 'firebase/firestore'
+import { PublishedContentSaveRepository } from '../../shared/data/PublishedContentSaveRepository.js'
+import { batchTransaction } from '../../shared/data/batchTransaction.js'
 
 const RULES = readFileSync(resolve(__dirname, '../../firestore.rules'), 'utf8')
 const HOST = process.env.FIRESTORE_EMULATOR_HOST
@@ -252,6 +254,105 @@ suite('cmsWork/*: the administrator only', () => {
         await seed((db) => setDoc(doc(db, 'cmsWork', 'approvals'), { _schemaVersion: 2 }))
         await assertFails(updateDoc(doc(as.admin(), 'cmsWork', 'approvals'), { _schemaVersion: 1 }))
         await assertSucceeds(updateDoc(doc(as.admin(), 'cmsWork', 'approvals'), { _schemaVersion: 2 }))
+    })
+})
+
+suite('the save of the Painel (F82 TASK-14), with the real repository and the real transaction', () => {
+    const repository = (db) => new PublishedContentSaveRepository({ db, doc, getDoc, setDoc, runTransaction, serverTimestamp })
+
+    it('the administrator saves twice: rev 1 then 2, previous of the changed keys only, who saved in cmsWork alone', async () => {
+        await seedAdmin()
+        const repo = repository(as.admin())
+
+        const first = await repo.saveTexts('pt', { loadedRev: 0, loadedTexts: {}, edits: { 'nav.home': 'Início', 'nav.albums': 'Álbuns' }, updatedBy: ADMIN })
+        expect(first).toMatchObject({ status: 'saved', rev: 1, changed: ['nav.home', 'nav.albums'] })
+        const second = await repo.saveTexts('pt', { loadedRev: first.rev, loadedTexts: first.texts, edits: { 'nav.home': 'Casa' }, updatedBy: ADMIN })
+        expect(second).toMatchObject({ status: 'saved', rev: 2, changed: ['nav.home'] })
+
+        const stored = (await getDoc(doc(as.nobody(), 'published', 'texts_pt'))).data()
+        expect(stored).toEqual({ _schemaVersion: 1, rev: 2, texts: { 'nav.home': 'Casa', 'nav.albums': 'Álbuns' }, previous: { 'nav.home': 'Início' } })
+        expect(JSON.stringify(stored)).not.toContain(ADMIN)
+        const work = (await getDoc(doc(as.admin(), 'cmsWork', 'save_texts_pt'))).data()
+        expect(work).toMatchObject({ _schemaVersion: 1, doc: 'texts_pt', rev: 2, keys: ['nav.home'], updatedBy: ADMIN })
+        expect(typeof work.updatedAt.toMillis()).toBe('number')
+    })
+
+    it('the same key saved on another device comes back as a conflict, and nothing is written', async () => {
+        await seedAdmin()
+        const here = repository(as.admin())
+        const there = repository(as.admin())
+        const loaded = await here.saveTexts('en', { loadedRev: 0, loadedTexts: {}, edits: { 'nav.home': 'Home' }, updatedBy: ADMIN })
+        await there.saveTexts('en', { loadedRev: 1, loadedTexts: loaded.texts, edits: { 'nav.home': 'Start' }, updatedBy: ADMIN })
+
+        const result = await here.saveTexts('en', { loadedRev: 1, loadedTexts: loaded.texts, edits: { 'nav.home': 'Front page' }, updatedBy: ADMIN })
+
+        expect(result).toEqual({ status: 'conflict', rev: 2, texts: { 'nav.home': 'Start' }, conflicts: [{ key: 'nav.home', loaded: 'Home', other: 'Start', yours: 'Front page' }] })
+        expect((await getDoc(doc(as.nobody(), 'published', 'texts_en'))).data().rev).toBe(2)
+    })
+
+    it('another account, a guest and the administrator signed in anonymously are refused by the rules, and nothing is written', async () => {
+        await seedAdmin()
+        for (const who of ['other', 'guest', 'adminAnonymous']) {
+            await assertFails(repository(as[who]()).saveTexts('pt', { loadedRev: 0, loadedTexts: {}, edits: { 'nav.home': 'x' }, updatedBy: 'someone' }))
+        }
+        expect((await getDoc(doc(as.nobody(), 'published', 'texts_pt'))).exists()).toBe(false)
+    })
+})
+
+suite('the save of the Painel as the SITE makes it: one batch, locked by the rule of `rev` (the judge of 2026-11-23, P2-1)', () => {
+    const store = (db) => ({ db, doc, getDoc, setDoc, writeBatch, serverTimestamp })
+    const repository = (db) => { const given = store(db); return new PublishedContentSaveRepository({ ...given, runTransaction: batchTransaction(given) }) }
+
+    it('the administrator saves twice: rev 1 then 2, previous of the changed keys only, who saved in cmsWork alone', async () => {
+        await seedAdmin()
+        const repo = repository(as.admin())
+        const first = await repo.saveTexts('pt', { loadedRev: 0, loadedTexts: {}, edits: { 'nav.home': 'Início', 'nav.albums': 'Álbuns' }, updatedBy: ADMIN })
+        expect(first).toMatchObject({ status: 'saved', rev: 1 })
+        const second = await repo.saveTexts('pt', { loadedRev: first.rev, loadedTexts: first.texts, edits: { 'nav.home': 'Casa' }, updatedBy: ADMIN })
+        expect(second).toMatchObject({ status: 'saved', rev: 2, changed: ['nav.home'] })
+        const stored = (await getDoc(doc(as.nobody(), 'published', 'texts_pt'))).data()
+        expect(stored).toEqual({ _schemaVersion: 1, rev: 2, texts: { 'nav.home': 'Casa', 'nav.albums': 'Álbuns' }, previous: { 'nav.home': 'Início' } })
+        const work = (await getDoc(doc(as.admin(), 'cmsWork', 'save_texts_pt'))).data()
+        expect(work).toMatchObject({ doc: 'texts_pt', rev: 2, keys: ['nav.home'], updatedBy: ADMIN })
+        expect(typeof work.updatedAt.toMillis()).toBe('number')
+    })
+
+    it('the same key saved on another device comes back as a conflict, and nothing is written', async () => {
+        await seedAdmin()
+        const here = repository(as.admin())
+        const there = repository(as.admin())
+        const loaded = await here.saveTexts('en', { loadedRev: 0, loadedTexts: {}, edits: { 'nav.home': 'Home' }, updatedBy: ADMIN })
+        await there.saveTexts('en', { loadedRev: 1, loadedTexts: loaded.texts, edits: { 'nav.home': 'Start' }, updatedBy: ADMIN })
+        const result = await here.saveTexts('en', { loadedRev: 1, loadedTexts: loaded.texts, edits: { 'nav.home': 'Front page' }, updatedBy: ADMIN })
+        expect(result).toEqual({ status: 'conflict', rev: 2, texts: { 'nav.home': 'Start' }, conflicts: [{ key: 'nav.home', loaded: 'Home', other: 'Start', yours: 'Front page' }] })
+        expect((await getDoc(doc(as.nobody(), 'published', 'texts_en'))).data().rev).toBe(2)
+    })
+
+    it('a save that loses the race (another device saved between its read and its write) is refused by the rule, read again and lands on top: no change is lost', async () => {
+        await seedAdmin()
+        const db = as.admin()
+        const there = repository(as.admin())
+        const first = await there.saveTexts('en', { loadedRev: 0, loadedTexts: {}, edits: { 'nav.home': 'Home' }, updatedBy: ADMIN })
+        // this device reads rev 1; before it writes, the other device saves another key (rev 2)
+        let raced = false
+        const given = store(db)
+        const slow = { ...given, getDoc: async (ref) => {
+            const snapshot = await getDoc(ref)
+            if (!raced) { raced = true; await there.saveTexts('en', { loadedRev: 1, loadedTexts: first.texts, edits: { 'nav.albums': 'Albums' }, updatedBy: ADMIN }) }
+            return snapshot
+        } }
+        const here = new PublishedContentSaveRepository({ ...slow, runTransaction: batchTransaction(slow) })
+        const result = await here.saveTexts('en', { loadedRev: 1, loadedTexts: first.texts, edits: { 'nav.home': 'Front page' }, updatedBy: ADMIN })
+        expect(result).toMatchObject({ status: 'saved', rev: 3 })
+        expect((await getDoc(doc(as.nobody(), 'published', 'texts_en'))).data()).toMatchObject({ rev: 3, texts: { 'nav.home': 'Front page', 'nav.albums': 'Albums' } })
+    })
+
+    it('another account, a guest and the administrator signed in anonymously are refused by the rules, and nothing is written', async () => {
+        await seedAdmin()
+        for (const who of ['other', 'guest', 'adminAnonymous']) {
+            await assertFails(repository(as[who]()).saveTexts('pt', { loadedRev: 0, loadedTexts: {}, edits: { 'nav.home': 'x' }, updatedBy: 'someone' }))
+        }
+        expect((await getDoc(doc(as.nobody(), 'published', 'texts_pt'))).exists()).toBe(false)
     })
 })
 

@@ -1,0 +1,92 @@
+PASS the Painel is not in the page's preload — adminPanel-BfawCnk7.css, adminPanel-CWyMbi3E.js
+PASS the main script carries neither the Painel nor the check of the administrator — main-yGCQt_a6.js
+PASS 1440 administrator: /admin opens the Painel — 188 texts of the first screen
+PASS 1440 the Painel's files were asked for — adminPanel-BfawCnk7.css, adminPanel-CWyMbi3E.js
+PASS 1440 the Painel's own words are not in the list, and no text is a rich one yet
+PASS 1440 the line about the site says what it shows — What the site shows: published (from the database) 1 text refused by the current version
+PASS 1440 every screen chip has a name, none shows a raw key — Albums · Blend · Coming soon · Export window · Spotify export window · Inventory · Notices · Questions and confirmations · Playlists · Saved playlists · Menu and frame · Create · Shared pieces
+PASS 1440 the Painel's bold is drawn: its buttons at 600, the kit's at 700 (computed style) — {".cms-navb":"600",".cms-chip":"600",".cms-lnk":"600",".cms-bar .ak-btn":"700",".cms-bar .ak-btn.pri":"700"}
+PASS 1440 scrolled to the middle (9517 of 19033 px): nothing covers «Save» — {"reached":true,"top":15,"hit":"ak-btn pri"}
+PASS 1440 scrolled to the middle: «Save» is clicked and asks to confirm — 1 text goes live now.
+PASS 1440 scrolled to the end: nothing covers «Discard» — {"reached":true,"top":15,"hit":"ak-btn"}
+PASS 1440 scrolled to the end: «Discard» is clicked and the change is gone
+PASS 1440 the validator names each bad text (markup, empty, too long, a {placeholder} the English has not) — markup,empty,too_long,placeholders
+PASS 1440 a text that fails the check is not saved, and the bar says why — Not saved: 1 text does not pass the check. Fix it and save again.
+PASS 1440 each of the nine failure names of the translation is said in plain words — session-expired, not-an-administrator, translation-not-configured, credit-exhausted, service-unavailable, text-too-long, too-many-requests, invalid-request, translation-unusable
+PASS 1440 the field did not change on any failure
+PASS 1440 a label is a plain one-line field — albums.title.all
+PASS 1440 the bar counts 1 change not saved
+PASS 1440 approving a Portuguese text saves the approval — albums.title.one · ✓ Approved and live: 1 Portuguese text.
+PASS 1440 save writes the texts with rev + 1 and the previous value — {"rev":3,"text":"Edited in the proof","previous":{"albums.title.all":null}}
+PASS 1440 who saved is kept in the work area
+PASS 1440 the conflict shows as it was, the other and yours — AS IT WAS Edited in the proof | THE OTHER CHANGE (ALREADY LIVE) Theirs, from the other device | YOURS Mine, from this device
+PASS 1440 nothing was written over the other device's save
+PASS 1440 «Keep the other» shows what is live
+PASS 1440 an orphan text is marked
+PASS 1440 no horizontal scroll
+PASS 1440 leaving with a change not saved asks, and «cancel» keeps the person and the change — There are changes not saved. Leave the admin and lose them?
+PASS 1440 the browser's back button asks too, and «cancel» keeps the Painel and the change — 2 questions · /admin
+PASS 1440 moving between the screens of the Painel neither asks nor loses the change
+PASS 1440 «leave» leaves
+PASS 1440 no console errors
+PASS 1440 every database request was answered by the stand-in — []
+PASS 1440 visitor: /admin says «Page not found»
+PASS 1440 visitor: the Painel's files are never requested — asked: 0
+PASS 1440 visitor: no horizontal scroll, no console errors
+PASS 1440 an account with no record: /admin says «Page not found»
+PASS 1440 an account with no record: the Painel's files are never requested — asked: 0
+PASS 1440 an account with no record: no horizontal scroll, no console errors
+PASS 1440 an account whose role is «editor»: /admin says «Page not found»
+PASS 1440 an account whose role is «editor»: the Painel's files are never requested — asked: 0
+PASS 1440 an account whose role is «editor»: no horizontal scroll, no console errors
+PASS 1440 an account whose role is «Super» (not «super»): /admin says «Page not found»
+PASS 1440 an account whose role is «Super» (not «super»): the Painel's files are never requested — asked: 0
+PASS 1440 an account whose role is «Super» (not «super»): no horizontal scroll, no console errors
+PASS 1440 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3411 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
+PASS 1440 the database slow: the Painel's files are not requested
+PASS 393 administrator: /admin opens the Painel — 188 texts of the first screen
+PASS 393 the Painel's files were asked for — adminPanel-BfawCnk7.css, adminPanel-CWyMbi3E.js
+PASS 393 the Painel's own words are not in the list, and no text is a rich one yet
+PASS 393 the line about the site says what it shows — What the site shows: published (from the database) 1 text refused by the current version
+PASS 393 every screen chip has a name, none shows a raw key — Albums · Blend · Coming soon · Export window · Spotify export window · Inventory · Notices · Questions and confirmations · Playlists · Saved playlists · Menu and frame · Create · Shared pieces
+PASS 393 the Painel's bold is drawn: its buttons at 600, the kit's at 700 (computed style) — {".cms-navb":"600",".cms-chip":"600",".cms-lnk":"600",".cms-bar .ak-btn":"700",".cms-bar .ak-btn.pri":"700"}
+PASS 393 scrolled to the middle (22635 of 45269 px): nothing covers «Save» — {"reached":true,"top":69,"hit":"ak-btn pri"}
+PASS 393 scrolled to the middle: «Save» is clicked and asks to confirm — 1 text goes live now.
+PASS 393 scrolled to the end: nothing covers «Discard» — {"reached":true,"top":69,"hit":"ak-btn"}
+PASS 393 scrolled to the end: «Discard» is clicked and the change is gone
+PASS 393 the validator names each bad text (markup, empty, too long, a {placeholder} the English has not) — markup,empty,too_long,placeholders
+PASS 393 a text that fails the check is not saved, and the bar says why — Not saved: 1 text does not pass the check. Fix it and save again.
+PASS 393 each of the nine failure names of the translation is said in plain words — session-expired, not-an-administrator, translation-not-configured, credit-exhausted, service-unavailable, text-too-long, too-many-requests, invalid-request, translation-unusable
+PASS 393 the field did not change on any failure
+PASS 393 a label is a plain one-line field — albums.title.all
+PASS 393 the bar counts 1 change not saved
+PASS 393 approving a Portuguese text saves the approval — albums.title.one · ✓ Approved and live: 1 Portuguese text.
+PASS 393 save writes the texts with rev + 1 and the previous value — {"rev":3,"text":"Edited in the proof","previous":{"albums.title.all":null}}
+PASS 393 who saved is kept in the work area
+PASS 393 the conflict shows as it was, the other and yours — AS IT WAS Edited in the proof | THE OTHER CHANGE (ALREADY LIVE) Theirs, from the other device | YOURS Mine, from this device
+PASS 393 nothing was written over the other device's save
+PASS 393 «Keep the other» shows what is live
+PASS 393 an orphan text is marked
+PASS 393 no horizontal scroll
+PASS 393 leaving with a change not saved asks, and «cancel» keeps the person and the change — There are changes not saved. Leave the admin and lose them?
+PASS 393 the browser's back button asks too, and «cancel» keeps the Painel and the change — 2 questions · /admin
+PASS 393 moving between the screens of the Painel neither asks nor loses the change
+PASS 393 «leave» leaves
+PASS 393 no console errors
+PASS 393 every database request was answered by the stand-in — []
+PASS 393 visitor: /admin says «Page not found»
+PASS 393 visitor: the Painel's files are never requested — asked: 0
+PASS 393 visitor: no horizontal scroll, no console errors
+PASS 393 an account with no record: /admin says «Page not found»
+PASS 393 an account with no record: the Painel's files are never requested — asked: 0
+PASS 393 an account with no record: no horizontal scroll, no console errors
+PASS 393 an account whose role is «editor»: /admin says «Page not found»
+PASS 393 an account whose role is «editor»: the Painel's files are never requested — asked: 0
+PASS 393 an account whose role is «editor»: no horizontal scroll, no console errors
+PASS 393 an account whose role is «Super» (not «super»): /admin says «Page not found»
+PASS 393 an account whose role is «Super» (not «super»): the Painel's files are never requested — asked: 0
+PASS 393 an account whose role is «Super» (not «super»): no horizontal scroll, no console errors
+PASS 393 the database slow (6 s per answer): «Could not check right now» after the 3 s deadline, not a long blank — 3416 ms · Could not check right now · The site could not confirm in time whether this page is for you. Try again in a moment. · Try again
+PASS 393 the database slow: the Painel's files are not requested
+
+90 of 90 passed

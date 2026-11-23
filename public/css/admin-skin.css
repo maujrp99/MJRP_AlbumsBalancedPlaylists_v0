@@ -1,0 +1,131 @@
+/*
+ * The Album Blender's skin of the admin kit and the Painel's own layout (F82; docs/specs/design-system.md: the fire, Syne).
+ * A skin is the kit's tokens (`--ak-*`, ui/admin-kit/skin-contract.ts) on the element with `data-admin-skin`; the values are
+ * those of the approved prototype (design/proposals/f82-cms/prototype-v2.html). This file comes down only with the Painel.
+ */
+[data-admin-skin="albumblender"] {
+    --ak-bg: #0a0a0c; --ak-panel: #101014; --ak-panel-2: #1c1c22; --ak-fg: #ffffff; --ak-soft: #a0a0a8; --ak-line: rgba(255, 255, 255, .18);
+    --ak-accent: #f97316; --ak-accent-fg: #0b0b0b; --ak-accent-soft: rgba(249, 115, 22, .18);
+    --ak-ok: #4ade80; --ak-ok-soft: rgba(74, 222, 128, .14); --ak-warn: #fca5a5; --ak-warn-soft: rgba(220, 38, 38, .14);
+    --ak-err: #f87171; --ak-err-soft: rgba(220, 38, 38, .16); --ak-new: #fb923c; --ak-new-soft: rgba(249, 115, 22, .16);
+    --ak-preview-bg: #000000; --ak-preview-fg: #ffffff; --ak-plate: #f4f4f5; --ak-deep: #0a0a0c;
+    --ak-shadow: rgba(0, 0, 0, .6); --ak-swatch-line: rgba(255, 255, 255, .32);
+    --ak-display: "Syne", system-ui, sans-serif;
+    --ak-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --ak-mono: ui-monospace, SFMono-Regular, Menlo, monospace; --ak-radius: 12px;
+    --ak-text: "Syne", system-ui, sans-serif; --ak-mark: rgba(249, 115, 22, .30);
+}
+@media (max-width: 767px) {
+    [data-admin-skin="albumblender"] { --ak-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+}
+
+/* The owner hid image, video and book in The Album Blender's texts (F82 REQ-12, D-06): the kit's bar and its «+» menu keep every
+   other tool. The copy of the kit has no switch for it yet, so the skin takes the three out. */
+[data-admin-skin="albumblender"] .ak-rt-bar button[data-cmd="img"],
+[data-admin-skin="albumblender"] .ak-rt-bar button[data-cmd="video"],
+[data-admin-skin="albumblender"] .ak-rt-bar button[data-cmd="book"],
+[data-admin-skin="albumblender"] .ak-rt-menu button[data-ins="img"],
+[data-admin-skin="albumblender"] .ak-rt-menu button[data-ins="video"],
+[data-admin-skin="albumblender"] .ak-rt-menu button[data-ins="book"],
+[data-admin-skin="albumblender"] .ak-rt-menu .ak-rt-grp:nth-of-type(3) { display: none; }
+/* The bar's buttons are 44 px on the phone, in this skin only (REQ-12, D-10). */
+@media (max-width: 767px) {
+    [data-admin-skin="albumblender"] .ak-rt-bar button { min-width: 44px; min-height: 44px; }
+    [data-admin-skin="albumblender"] .ak-btn, [data-admin-skin="albumblender"] .ak-btn.sm, [data-admin-skin="albumblender"] .ak-tr-btn { min-height: 44px; }
+}
+
+/* The Painel */
+.cms { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0; min-height: 100vh; }
+.cms-rail { display: flex; flex-direction: column; gap: 4px; padding: 16px 10px; background: var(--ak-panel); border-right: 1px solid var(--ak-line); }
+.cms-who { display: flex; align-items: center; gap: 10px; padding: 0 8px 12px; }
+.cms-who small { display: block; color: var(--ak-soft); font-size: 12px; }
+.cms-avatar { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--ak-accent); color: var(--ak-accent-fg); font: 700 15px var(--ak-display); }
+.cms-navb { display: flex; align-items: center; min-height: 44px; padding: 6px 12px; border: 0; border-radius: var(--ak-radius); background: none; text-align: left; font-weight: 600; font-size: 14px; }
+.cms-navb[aria-current="page"] { background: var(--ak-accent-soft); box-shadow: inset 3px 0 0 var(--ak-accent); }
+.cms-navb:disabled { color: var(--ak-soft); cursor: default; }
+.cms-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; width: 100%; max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; }
+.cms-head { display: grid; gap: 6px; }
+.cms-head h1 { font: 700 28px/1.15 var(--ak-display); }
+.cms-head p { color: var(--ak-soft); max-width: 62ch; }
+.cms-soft { color: var(--ak-soft); }
+.cms-site { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; }
+.cms-site b { color: var(--ak-fg); }
+
+.cms-bar { position: sticky; top: 0; z-index: 6; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 12px 14px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: var(--ak-panel); }
+.cms-bar.has { border-color: var(--ak-accent); }
+.cms-bar-info { display: grid; gap: 1px; margin-right: auto; }
+.cms-bar-info span { color: var(--ak-soft); font-size: 12.5px; }
+.cms-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.cms-msg { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; border-radius: var(--ak-radius); background: var(--ak-panel-2); font-size: 13.5px; overflow-wrap: anywhere; }
+.cms-msg.conf { display: grid; border: 1px solid var(--ak-accent); }
+.cms-msg.ok { background: var(--ak-ok-soft); color: var(--ak-ok); }
+.cms-msg.fail { background: var(--ak-err-soft); color: var(--ak-err); }
+.cms-keys { font: 500 12px var(--ak-mono); }
+.cms-conflict { display: grid; gap: 6px; }
+.cms-conflict-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.cms-conflict-grid > div { padding: 8px 10px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: var(--ak-panel); }
+.cms-conflict-grid small { display: block; margin-bottom: 3px; color: var(--ak-soft); font: 700 10.5px var(--ak-mono); letter-spacing: .08em; text-transform: uppercase; }
+.cms-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+.cms-eq i { width: 3px; height: 100%; background: var(--ak-accent); transform-origin: bottom; animation: cms-eq 1s ease-in-out infinite; }
+.cms-eq i:nth-child(2) { animation-delay: .15s; } .cms-eq i:nth-child(3) { animation-delay: .3s; } .cms-eq i:nth-child(4) { animation-delay: .45s; } .cms-eq i:nth-child(5) { animation-delay: .6s; }
+@keyframes cms-eq { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .cms-eq i { animation: none; } }
+
+.cms-screens { display: flex; flex-wrap: wrap; gap: 6px; }
+.cms-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 5px 12px; border: 1px solid var(--ak-line); border-radius: 999px; background: none; font-weight: 600; font-size: 13px; }
+.cms-chip[aria-pressed="true"] { background: var(--ak-accent); color: var(--ak-accent-fg); border-color: var(--ak-accent); }
+.cms-n { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: var(--ak-panel-2); color: var(--ak-new); font: 700 11px var(--ak-mono); }
+.cms-chip[aria-pressed="true"] .cms-n { background: var(--ak-accent-fg); }
+.cms-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.cms-tools .ak-input { flex: 1 1 260px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: var(--ak-panel); }
+.cms-only { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 13px; }
+.cms-bulk { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; border-radius: var(--ak-radius); background: var(--ak-new-soft); font-size: 13.5px; }
+.cms-bulk span { margin-right: auto; }
+
+.cms-rows { display: grid; gap: 8px; }
+.cms-row { display: grid; grid-template-columns: 28px minmax(0, 1.1fr) minmax(0, 1.5fr) minmax(0, 1.5fr) auto; gap: 8px 12px; align-items: start; padding: 12px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: var(--ak-panel); }
+.cms-row.is-edit { border-color: var(--ak-accent); }
+.cms-chk label { display: grid; place-items: center; min-width: 28px; min-height: 28px; }
+.cms-key { font: 500 12px/1.5 var(--ak-mono); color: var(--ak-soft); overflow-wrap: anywhere; }
+.cms-cell { display: grid; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
+.cms-cell.ch .cms-text { color: var(--ak-accent); }
+.cms-lbl { color: var(--ak-soft); font: 700 10.5px var(--ak-mono); letter-spacing: .08em; text-transform: uppercase; }
+.cms-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.cms-row-acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.cms-wide, .cms-editor { grid-column: 1 / -1; }
+.cms-editor { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding-top: 10px; border-top: 1px solid var(--ak-line); }
+.cms-field { min-width: 0; }
+.cms-field .ak-input { width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: var(--ak-bg); }
+.cms-field .ak-input[aria-invalid="true"] { border-color: var(--ak-err); }
+.cms-warn { color: var(--ak-warn); }
+.cms-empty { display: grid; gap: 6px; justify-items: start; padding: 22px 16px; border: 1px dashed var(--ak-line); border-radius: var(--ak-radius); color: var(--ak-soft); }
+.cms-empty b { color: var(--ak-fg); font: 600 17px var(--ak-display); }
+.cms-lnk { min-height: 44px; padding: 0; border: 0; background: none; color: var(--ak-accent); font-weight: 600; text-decoration: underline; }
+
+@media (max-width: 860px) {
+    .cms { grid-template-columns: minmax(0, 1fr); }
+    .cms-rail { flex-direction: row; flex-wrap: wrap; align-items: center; border-right: 0; border-bottom: 1px solid var(--ak-line); padding: 10px 12px; }
+    .cms-who { padding: 0 8px 0 0; }
+    .cms-row { grid-template-columns: 28px minmax(0, 1fr); }
+    .cms-key, .cms-cell, .cms-row-acts { grid-column: 2; }
+    .cms-row-acts { justify-content: flex-start; }
+    .cms-editor, .cms-conflict-grid { grid-template-columns: minmax(0, 1fr); }
+    .cms-chip { min-height: 44px; }
+}
+
+/* The phone of the app (its shell is the phone's up to 899 px: public/css/mobile.css): the top bar of the app is fixed over the page, so
+   the save bar sticks BELOW it, by the app's own measures, and never slides under it (the judge of 2026-11-23, P1-1). A tall message
+   (the confirmation, the conflict) scrolls inside the bar, between the top bar and the bottom menu. */
+@media (max-width: 899px) {
+    .cms-bar { top: calc(var(--phone-topbar-h) + var(--phone-safe-top)); max-height: calc(100dvh - var(--phone-topbar-h) - var(--phone-safe-top) - var(--phone-tabbar-h) - var(--phone-safe-bottom)); overflow-y: auto; }
+}
+
+/* The kit resets the font of every button, input and textarea under the skin (`[data-admin-skin] button { font: inherit }`, kit.css), and that
+   selector outranks a plain class: the Painel's own buttons and the kit's `.ak-btn` were drawn at weight 400 (the second judge of 2026-11-23).
+   The weights and sizes are said again here, under the skin's own attribute, which outranks the reset. The copy of the kit is not edited. */
+[data-admin-skin="albumblender"] .cms-navb { font-weight: 600; font-size: 14px; }
+[data-admin-skin="albumblender"] .cms-chip { font-weight: 600; font-size: 13px; }
+[data-admin-skin="albumblender"] .cms-lnk { font-weight: 600; }
+[data-admin-skin="albumblender"] .ak-btn { font-weight: 700; font-size: 13px; }
+[data-admin-skin="albumblender"] .ak-btn.sm { font-size: 12.5px; }
+[data-admin-skin="albumblender"] .ak-tr-btn { font-weight: 600; font-size: 12px; }

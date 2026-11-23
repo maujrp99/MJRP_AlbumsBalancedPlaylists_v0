@@ -28,7 +28,7 @@ const oneOf = (values) => Object.freeze({ kind: 'oneOf', values: freeze(values) 
 
 /** The screens, by name. Never the address: an address carries the ids of the person's series. */
 export const SCREENS = freeze([
-    'home', 'albums', 'series', 'playlists', 'playlists_edit', 'saved_playlists', 'inventory', 'blend', 'coming_soon'
+    'home', 'albums', 'series', 'playlists', 'playlists_edit', 'saved_playlists', 'inventory', 'blend', 'coming_soon', 'admin'
 ])
 
 /** The recipes of the Blending Menu (public/js/algorithms/index.js; a test keeps the two equal). */

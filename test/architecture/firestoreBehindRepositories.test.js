@@ -43,10 +43,15 @@ describe('one Firebase, and Firestore behind the repositories (UAT-14)', () => {
         const DATA = path.resolve(process.cwd(), 'shared/data')
         const core = fs.readdirSync(DATA).filter(name => name.endsWith('.js')).sort()
 
-        expect(core).toEqual(['BaseRepository.js', 'InventoryRepository.js', 'PlaylistRepository.js', 'SeriesRepository.js',
-            'SpotifyEnrichmentRepository.js', 'UserRankingRepository.js', 'schemaVersion.js', 'store.js'])
-        expect(listJs('repositories').sort()).toEqual(['repositories/firestoreStore.js', 'repositories/userRankings.js'])
-        expect(offenders(listJs('repositories'), specifier => /firebase\/firestore/.test(specifier))).toEqual(['repositories/firestoreStore.js -> firebase/firestore'])
+        expect(core).toEqual(['BaseRepository.js', 'InventoryRepository.js', 'PlaylistRepository.js', 'PublishedContentRepository.js',
+            'PublishedContentSaveRepository.js', 'SeriesRepository.js', 'SpotifyEnrichmentRepository.js', 'UserRankingRepository.js', 'batchTransaction.js', 'schemaVersion.js', 'store.js'])
+        // F82: the CMS's published content has its instance (publishedContent.js) and, in a file only the Painel downloads,
+        // the repository that saves (publishedContentWriter.js). It saves in one batch locked by the rules (shared/data/batchTransaction.js), so it
+        // imports no SDK: firestoreStore.js is again the only file of the repositories that does (the judge of 2026-11-23, P2-1).
+        expect(listJs('repositories').sort()).toEqual(['repositories/firestoreStore.js', 'repositories/publishedContent.js',
+            'repositories/publishedContentWriter.js', 'repositories/userRankings.js'])
+        expect(offenders(listJs('repositories'), specifier => /firebase\/firestore/.test(specifier)).sort()).toEqual([
+            'repositories/firestoreStore.js -> firebase/firestore'])
     })
 
     it('a repository of the core reaches Firestore only through the store it is given', () => {

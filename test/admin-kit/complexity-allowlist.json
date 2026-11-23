@@ -1,0 +1,7 @@
+{
+  "_vendored": "cópia carimbada do kit do admin do MJRP Harness · admin-kit v1.0.1 · não edite aqui — edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit`",
+  "about": "The functions of the kit above a cyclomatic complexity of 10 (F332 TASK-07), by ESLint's own complexity rule (the V0's measure), keyed kit-file:function (arrow functions numbered #2, #3 in the order of the file). The list only shrinks: check.mjs fails on a new one, a worse one, and one brought down but still listed. It is empty since admin kit 1.0.1 (slice 1b of F332, TASK-27 to TASK-29: the 42 functions it held at 1.0.0 were brought to 10 or below) and stays empty: the kit meets the limit with no exception (MJRP).",
+  "limit": 10,
+  "measured": "2026-11-23",
+  "functions": {}
+}

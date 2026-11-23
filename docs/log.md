@@ -2,11 +2,76 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:49] review — F82, o Painel de textos: terceira passada do juiz visual (passa: 0 P0, 0 P1, 10 P2)
+
+**Branch:** wip/f82-panel-judge-3
+
+Terceira passada, curta, sobre `claude/f82-cms-texts-panel` em 8ae419d (os três commits depois da segunda passada: 6769f08, ae04ee4, 8ae419d). No navegador, a 1280 e 390, em inglês e português: nenhuma etiqueta do Painel mostra chave crua (as 13 telas clicadas, 1.235 linhas, editor aberto em cada uma; «Spotify export window» / «Janela de exportar para o Spotify» e «Questions and confirmations» / «Perguntas e confirmações»); o negrito voltou (600 nos botões do Painel, 700 nos do kit, campos em 400, nenhum rótulo cortado); a evidência do orçamento bate com o `bundle-budget.json`. Nenhuma regressão na lista, no editor, na tradução, na barra de salvar e na entrada guardada. Ficam abertos oito P2 da segunda passada (o editor rico sem texto que o abra, a roupa do kit, a linha só com a chave, três peças do editor, o trilho sem contagem, o nome cortado no telefone, miudezas do telefone, +3.595 B no script principal) e dois novos, anteriores aos três commits: quatro telas com nome em inglês no Painel em português, e a prova dos construtores que importa um arquivo que não está no repositório.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-cms-texts-panel-visual-parity-recheck-3.md`.
+
+## [2026-11-23 16:41] step — F82: o erro de tipo do teste do negrito consertado; typecheck e eslint do projeto inteiro saem 0
+
+**Branch:** claude/f82-cms-texts-panel
+
+A publicação da prévia do `8ae419d` foi recusada pela conferência de tipos: `test/screens/admin/adapter.test.ts(211,82): error TS2339: Property 'replace' does not exist on type 'string | number'`. O teste do negrito (do commit `6769f08`) percorria uma lista de pares «classe, peso» sem tipo declarado, então o nome saía como texto ou número. A lista ganhou o tipo certo (`Array<[string, number]>`); nenhum `any`, nenhum `ts-ignore`.
+
+A falha passou porque, depois de acrescentar esse teste, eu rodei a suíte e a prova no navegador mas não a conferência de tipos (a última tinha sido na troca do kit). Daqui em diante, antes de relatar qualquer ponta: `npm run typecheck` e `npx eslint . --quiet` no projeto inteiro, lendo as duas saídas. Agora: `typecheck` sai 0 (0 erros), `eslint . --quiet` sai 0, e o arquivo de teste passa (42 de 42).
+
+## [2026-11-23 16:39] step — F82 (2º juiz, P2): a evidência do orçamento gerada de novo; suíte verde e prova 90 de 90
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2 do segundo juiz: `reports/evidence/F82/texts-panel/bundle-budget.txt` mostrava tetos de antes da última junta da `main`. O arquivo foi gerado de novo, agora com as duas saídas inteiras: a do `npm run budget:publication` (o build com forma de publicação, os tetos e a margem) e a do conferidor por arquivo sobre esse mesmo build.
+
+Medido de novo depois dos dois consertos deste lote: script principal 198.469 B (teto 198.619 B), depois da primeira tela 238.197 B (`background` 63.379 B); o teto antigo ficava a 148 B do medido, 2 B abaixo da margem, e foi posto pela regra do arquivo (medido + 150 B). `budget:publication` sai 0.
+
+Suíte inteira, sozinha, pela fila, com os dois consertos: `Test Files 411 passed (411)` · `Tests 5560 passed | 1 skipped (5561)`, sem «Unhandled Errors». Prova no navegador no site montado, a 1440 e 393 px: 90 de 90 (as 86 de antes mais, em cada largura, «nenhuma tela mostra chave crua» e o peso calculado dos botões: 600 nos do Painel, 700 nos do kit); endereços de música abortados, nenhum link para fora clicado. Capturas novas na mesma pasta.
+
+## [2026-11-23 16:35] step — F82 (2º juiz, P2): o negrito do Painel volta, pela pele do V0
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2 do segundo juiz: o negrito do Painel se perdia. O kit zera a fonte de todo botão, campo e caixa de texto sob a pele (`[data-admin-skin] button { font: inherit }`, `kit.css`), e esse seletor ganha de uma classe simples: os botões do Painel (`.cms-navb`, `.cms-chip`, `.cms-lnk`) e o `.ak-btn` do próprio kit eram desenhados com peso 400. O conserto é na pele do V0 (`public/css/admin-skin.css`): os pesos e tamanhos são ditos de novo sob o atributo da pele (`[data-admin-skin="albumblender"] .classe`), que ganha do zeramento. A cópia do kit não foi tocada. Fica para o harness: no kit, `.ak-btn` e `.ak-tr-btn` perdem para o zeramento do próprio `kit.css` em qualquer projeto.
+
+Teste primeiro (`adapter.test.ts`, «the bold of the Painel survives the kit reset»: reprovou, depois passou), e a conferência do estilo calculado no navegador entrou na prova (600 nos botões do Painel, 700 nos do kit), junto com a de que nenhuma tela mostra chave crua.
+
+## [2026-11-23 16:35] step — F82 (2º juiz, P1): as duas telas do Painel que mostravam a chave crua ganharam nome
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P1 do segundo juiz do Painel: duas telas apareciam com a chave crua no lugar do nome, «admin.screens.spotifyWindow» e «admin.screens.ask», em inglês e em português. O dicionário do Painel nomeava onze áreas e os dicionários do site têm treze. Entraram os dois nomes (`admin.screens.spotifyWindow`: «Spotify export window» / «Janela de exportar para o Spotify»; `admin.screens.ask`: «Questions and confirmations» / «Perguntas e confirmações»; o português é proposto pelo agente).
+
+Para não voltar: um teste (`test/screens/admin/adapter.test.ts`, «every screen the Painel can show has a name», escrito antes, reprovou com as duas, depois passou) tira as áreas dos mesmos dicionários que o Painel lista (`en/index.js`, `pt/index.js`, pela mesma função `screensOf`) e reprova quando alguma não tem nome num dos dois idiomas; nenhuma lista à mão. O mesmo arquivo de teste traz o teste do achado seguinte (o negrito), que entra no commit seguinte com o conserto.
+
 ## [2026-11-23 16:23] decision — Página de entrada: rodada publicada em produção, com a palavra do MJRP («1. publica»)
 
 **Branch:** main
 
 O site foi publicado da `main` `18f3580` (legenda com álbum e ano, título antes das ilustrações no celular, sem a linha laranja, sem o botão grande «Criar» com conta no celular, «The Album Blender» por inteiro, «Catalogue», conserto do caixote 3D — UAT-289 a UAT-296). Resultado lido: «Site published from main (18f3580)», saída 0; a verificação de produção achou o script recém-construído (`/assets/main-Cp8CsEb4.js`). O servidor não mudou. Volta: histórico de versões do Hosting no console.
+
+## [2026-11-23 16:19] step — F82: a main (página de entrada) juntada ao ramo do Painel; suíte verde, orçamento medido de novo
+
+**Branch:** claude/f82-cms-texts-panel
+
+A `main` (`18f3580`: a rodada da página de entrada e a arrumação do board) foi juntada ao ramo do Painel, para a prévia não desfazer o trabalho de hoje na página de entrada. Conflito só em `scripts/bundle-budget.json`, resolvido pela regra do arquivo: o texto da `main` mais a nota da F82, e os tetos medidos de novo no build com forma de publicação (script principal 198.467 B, teto 198.617 B; depois da primeira tela 238.193 B, `background` 63.373 B; `budget:publication` sai 0). A junta não tocou as telas do Painel (só dois textos de `shell` nos dicionários), então a prova no navegador não foi repetida.
+
+Suíte inteira, sozinha, pela fila, depois da junta: `Test Files 411 passed (411)` · `Tests 5558 passed | 1 skipped (5559)`, sem «Unhandled Errors». Os dois guardas novos da página de entrada leem todos os dicionários do app, os do Painel incluídos (`admin.js`), e passam: `test/splash/productName.test.js` e `test/splash/noDiscoInPortuguese.test.js`.
+
+## [2026-11-23 16:16] step — F82: o kit do admin oficial 1.0.1 no lugar da cópia candidata; suíte verde sem exceção do kit
+
+**Branch:** claude/f82-cms-texts-panel
+
+A cópia candidata do kit do admin (0.9.0) saiu e entrou a **oficial, 1.0.1**, pelo comando de verdade rodado do checkout principal do harness (`new_project.py --refresh-admin-kit --version 1.0.1`, tag `admin-kit-v1.0.1` → `8820335429e9`, conferida contra o registro `kits/admin-kit/releases.json`): 80 arquivos, 3 que saíram do kit removidos (os exemplos de `ui/example/`, que agora vêm com as ferramentas, em `test/admin-kit/tests/example/`); o registro `.mjrp-admin-kit.json` e o bloco `admin_kit:` do contrato dizem 1.0.1. Nenhuma edição à mão na cópia. Antes, a `main` do V0 foi juntada ao ramo (conflito só no `scripts/bundle-budget.json`: ficou o texto da `main` mais a nota da F82, e os tetos foram medidos de novo).
+
+**O que precisei adaptar no Painel: nada.** O adaptador, as portas, os textos e a pele já usavam só as entradas do kit (`ui/index.ts`, `ui/react.ts`, o núcleo pelo apelido), a navegação já ia pela porta do roteador, e os textos do kit já vinham do dicionário; o `tsc` e os testes do Painel passaram sem mudança.
+
+Conferido, com as linhas de resultado lidas:
+- **O conferidor do próprio kit** na cópia oficial (`node test/admin-kit/check.mjs --ui public/js/ui/admin-kit --core shared/admin-kit --root test/admin-kit`): `admin-kit check: green`, e também com `--no-complexity-exceptions`: `admin-kit check: green`. Com `--project .` (o modo que olha os imports do projeto) ele acusa 2 achados, os dois imports de folha de estilo do Painel (`kit.css` e `required.css` em `screens/admin/adminPanel.ts`): «a project enters only by ui/index.ts, ui/react.ts, core/index.js». O próprio kit manda o projeto importar essas duas folhas (`ui/react.ts`: «the project imports `kit.css` and `required.css` where it mounts the panel»), então o achado é do conferidor (ele não tem as folhas de estilo entre as entradas), não do Painel; fica para o harness.
+- **Suíte inteira**, sozinha, pela fila: `Test Files 409 passed (409)` · `Tests 5524 passed | 1 skipped (5525)`, sem «Unhandled Errors». Todos os sensores de arquitetura passam, sem exceção para o kit.
+- `eslint .`: 0 erros (110 avisos, os de antes). `tsc`: 0 erros.
+- `npm run test:rules`: 38 passam. `npm run budget:publication`: sai 0 (script principal 198.470 B, teto 198.620 B; depois da primeira tela 238.196 B).
+- **Prova no navegador** no site montado, com o kit oficial: 86 de 86, a 1440 e 393 px (endereços de música abortados, nenhum link para fora clicado). Capturas novas em `reports/evidence/F82/texts-panel/`.
 
 ## [2026-11-23 16:12] review — F80: o juiz independente passou a rodada da página de entrada em duas partes (0 P0, 0 P1)
 
@@ -132,6 +197,15 @@ Regra do MJRP (2026-11-23): «primeira coisa imporntate pra vc e seus agentes. a
 
 Sobre o protótipo https://claude.ai/artifact/Qs64Xut1fuKQ6z1Sf8tjTd (ramo `wip/f96-phone-home-prototype`, `a8d4903`), o MJRP, 2026-11-23, com um print da abertura da versão «A sua» (sem conta: topo com «Entrar», título, a linha laranja de baixo, a caixa na diagonal, a legenda com álbum e ano e o botão «Ouça no Apple Music»; sem botão grande): «escolho a do especialista, mas com essa landing aqui, muito melhor». Como eu li (interpretação minha): o corpo da página é o da versão do especialista (vertical, cada passo abrindo com rótulo, título e texto e depois a ilustração, a parte educativa com título próprio, os álbuns fora dos passos, um deslize só no fim, o da caixa «Na caixa do The Album Blender»); a abertura é a do print: caixa na diagonal e nenhum botão grande. Em aberto com ele: a redação do título da seção; como marcar a troca de passo (rótulo e linha, faixas alternadas, dois lados); o que abre o app para quem não tem conta, já que a abertura escolhida não tem botão e o topo mostra «Entrar» (achado P0 do especialista). A caixa na diagonal do protótipo é a caixa em CSS girada, não a cena 3D: a conferir se serve para a página de verdade sem o custo de 152 KB medido para o 3D no celular. Outras decisões dele no mesmo dia, já em construção: «a app nao chama blender e sim The Album Blender»; «ao inves é de Conte na parte do inventário, pode ser Catalogue»; «eu só removeria o botaozao criar de mobile e publicaria». A F96 segue em esboço e fora da «Priorizada»: o ramo de construção só nasce depois de ele a priorizar.
 
+## [2026-11-23 15:54] step — F82: o nome «The Album Blender» por inteiro e «álbum», nunca «disco», nos textos e documentos do Painel
+
+**Branch:** claude/f82-cms-texts-panel
+
+Duas regras do MJRP de hoje, passadas pelo coordenador, conferidas nos textos e nos documentos do Painel. O nome do produto, nas palavras dele: «primeira coisa imporntate pra vc e seus agentes. a app nao chama blender e sim The Album Blender». E o português nunca diz «disco/discos», sempre «álbum/álbuns».
+
+- **Dicionários do Painel** (`i18n/en/admin.js`, `i18n/pt/admin.js`) e os textos novos de `notices` («Page not found», «Could not check right now»): nenhum «Blender» sozinho e nenhum «disco»; nada a mudar. («Blend» segue como nome da tela e das receitas.)
+- **O que mudou:** quatro comentários do código do Painel diziam «the Album Blender» e agora dizem «The Album Blender» (`kitPorts.ts`, `richTexts.ts`, `admin-skin.css`); uma linha do `tasks.md` (TASK-15a) idem; e os textos de mentira dos testes do Painel, que usavam «Discos» e «{count} discos» como português de exemplo, passaram a «Os álbuns» e «{count} álbuns seus». Os nomes de código (`albumBlenderPorts`, a pele `albumblender`) são identificadores, não texto, e ficaram.
+
 ## [2026-11-23 15:54] step — Página de entrada (F80), celular com conta: o botão grande «Criar» da abertura saiu (UAT-294)
 
 **Branch:** fix/f80-crate-caption-album-and-year
@@ -148,6 +222,28 @@ Pedido do MJRP (2026-11-23, depois de ver a prévia do `ce1d041`): «eu só remo
 
 **Não conferido.** Num iPhone de verdade, com a conta dele; a suíte inteira (roda na publicação). Segue valendo o achado do registro anterior: com conta, no celular, a página é um pouco mais larga que a tela (não é desta mudança).
 
+## [2026-11-23 15:53] step — F82 (juiz, P2-8): a prova do Painel no navegador refeita, 86 de 86; orçamento medido de novo
+
+**Branch:** claude/f82-cms-texts-panel
+
+A prova do Painel no navegador, refeita no site MONTADO depois dos achados do juiz (P2-8: o que a primeira prova não cobria), a 1440 e a 393 px: **86 de 86**, repetida três vezes seguidas com o mesmo resultado. Os servidores do Firebase trocados na rede por um dublê; os endereços de música abortados na rede; nenhum link para fora do site clicado (as mudanças de tela são pedidas ao roteador do app). O que entrou:
+
+- **A faixa de salvar depois de rolar** (P1-1): na tela mais longa (Albums, ~25 mil px no celular), rolada até o meio, nada cobre «Save» e o toque abre a confirmação; rolada até o fim, nada cobre «Discard» e o toque descarta. Nas duas larguras, com captura da tela inteira.
+- **O conferidor no navegador**, com o validador real do site: marcação, vazio, longo demais e um `{marcador}` que o inglês não tem são ditos pelo nome, e salvar com um deles não grava nada (o `rev` não muda).
+- **Os nove nomes de falha da tradução**, cada um respondido pela rota de mentira e dito em palavras comuns; o campo não muda em nenhum.
+- **Sair com mudança não salva**: a navegação do app pergunta e «cancelar» mantém a pessoa e a mudança; o voltar do navegador também; trocar de tela dentro do Painel não pergunta nem perde; «sair» sai.
+- **Quem não entra**: visitante, conta sem registro, papel «editor», papel «Super» (não «super»): «Page not found» e os arquivos do Painel nunca pedidos.
+- **O banco lento** (6 s por resposta): «Could not check right now» depois do prazo de 3 s, sem pedir os arquivos do Painel.
+- O salvar pelo lote (P2-1) grava `rev` + 1, `previous` e quem salvou; o conflito mostra os três valores e nada é gravado por cima.
+
+Fora da prova, e dito: o editor rico não aparece no navegador (nenhuma chave é rica hoje, P2-2); ele é coberto pelos testes de componente.
+
+Orçamento pela regra do arquivo, medido de novo depois de todos os achados: script principal **198.465 B** (era 200.227 B antes do P2-1; a `main` tem 194.875 B), depois da primeira tela 238.211 B; tetos `main` 198.615 B e `background` 63.389 B; `budget:publication` sai 0. Dos +3.590 B contra a `main`, 3.161 B são o leitor do conteúdo ao abrir (de todo visitante) e 429 B a porta do Painel (a rota com dois arquivos sob demanda, cinco textos em inglês de «Page not found» e «Could not check right now», um nome de tela).
+
+Capturas, o resultado e os dois scripts da prova em `reports/evidence/F82/texts-panel/`.
+
+Suíte inteira, sozinha, pela fila, antes deste commit: `Test Files 5 failed | 403 passed (408)` · `Tests 6 failed | 5508 passed | 1 skipped (5515)`, sem «Unhandled Errors»; os seis são os sensores da cópia candidata do kit (`complexityLimit` ×2, `noDeadModules` só com os dois arquivos de exemplo, `outsideUrlChecked`, `reactStaysAtTheEdge`, `tailwindBuiltWithSite`). Na rodada anterior, a mesma suíte teve um sétimo, `test/server/rankingPipeline.test.js` («a source still running when the time ends»), um teste de tempo do servidor que este ramo não toca: passou sozinho (47 de 47) e na rodada seguinte; fica registrado como instável sob carga. `tsc` passa; `npm run test:rules` 38 passam.
+
 ## [2026-11-23 15:51] step — Página de entrada no celular (F80): o caixote em diagonal foi medido, não construído; a escolha é do MJRP (UAT-293)
 
 **Branch:** fix/f80-crate-animation-break
@@ -163,6 +259,16 @@ Pedido do MJRP (2026-11-23, print do iPhone): «se possivel deixar a caixa de al
 **Opções.** (1) O 3D também no celular: igual ao computador e vivo; +152 KB por visita; falta medir num iPhone de verdade; muda REQ-04, REQ-07 e REQ-08. (2) Uma imagem parada do caixote em diagonal: mesmo visual, cerca de +30 KB (estimado, não medido), não se mexe, refeita quando as capas mudam. (3) Deixar como está.
 
 **Não conferido.** Um iPhone de verdade (bateria, calor, quadros com a placa dele): os quadros medidos são da placa deste Mac, e o WebKit não tem freio de processador. Evidência: `reports/evidence/F80/crate-diagonal-on-phone/`.
+
+## [2026-11-23 15:47] step — F82: os sensores de imports conhecem o apelido do núcleo do kit; um teste segura a tabela junto do build
+
+**Branch:** claude/f82-cms-texts-panel
+
+A tabela de apelidos dos sensores que percorrem os imports (`test/architecture/support/importGraph.js`, `ALIASES`) espelha os apelidos do build, e não tinha o `@mjrp/admin-kit-core` (o núcleo do kit do admin em `shared/admin-kit/`), que o `vite.config.js`, o `vitest.config.js` e o `tsconfig.json` já declaram: por isso o `noDeadModules` dava por mortos três arquivos que SÃO alcançados (`shared/admin-kit/index.js`, `rich/doc.js`, `rich/markdown.js`). A linha entrou na tabela. Isto não afrouxa o sensor: ele passa a resolver um apelido que existe no build, como já resolve os outros; nenhum arquivo foi dispensado nem posto em lista de exceção. Saíram da tabela `@components` e `@views`, que o build não tem mais (as pastas saíram na F83).
+
+Para o próximo apelido não ser esquecido, um teste novo (`test/architecture/aliasesAgree.test.js`, escrito antes, reprovou, depois passou): a tabela, o `vite.config.js` e o `vitest.config.js` dizem os mesmos apelidos com os mesmos destinos, o `tsconfig.json` conhece todos, e um apelido mais longo vem antes de um mais curto que comece igual.
+
+Com isso o `noDeadModules` acusa só os dois arquivos de `ui/admin-kit/example/` da cópia candidata, que a versão oficial do kit não traz.
 
 ## [2026-11-23 15:39] step — Página de entrada (F80): a linha laranja que abria a página saiu (UAT-292)
 
@@ -235,11 +341,35 @@ Resposta do MJRP (2026-11-23) a «A legenda da caixa, no topo, também deve most
 
 **Não conferido.** Num iPhone de verdade; a caixa em 3D e a animação (outro agente trabalha nelas em `fix/f80-crate-animation-break`).
 
+## [2026-11-23 15:30] step — F82 (juiz, P2-7): na rota de tradução, um limite por pessoa antes da leitura do registro do administrador
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-7 do juiz: na rota de tradução o limite vinha depois da porta do administrador, então uma pessoa logada que não é administradora podia repetir sem fim a leitura do registro `cmsAdmins/{uid}` no Firestore por este servidor. A porta (`server/lib/auth/requireCmsAdmin.js`) agora conta as batidas por pessoa logada ANTES de ler o registro (`attempts`, 600 por hora, `ADMIN_CHECKS_PER_HOUR`): acima do limite a resposta é 429 `too-many-requests` com `Retry-After` e o registro não é lido. Quem não tem login que confere e o convidado continuam recusados antes de contar ou ler qualquer coisa; a contagem é por pessoa (uma pessoa no limite não fecha a porta para o administrador); o limite das traduções do administrador (120 por hora) segue depois da porta. `docs/specs/arch.md` diz o limite novo.
+
+Teste primeiro (`test/server/adminTranslate.test.js`, «a limit BEFORE the record is read»: três reprovaram, depois passaram; os 587 testes do servidor passam). A API de tradução de verdade não foi chamada.
+
+## [2026-11-23 15:28] step — F82 (juiz, P2-6): a guarda de /admin tem prazo de 3 s e diz «não deu para conferir agora»
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-6 do juiz: a guarda de `/admin` não tinha prazo; com o banco lento, «não encontrado» levou 8,4 s. A leitura do registro do administrador agora tem o prazo do leitor do site, 3 segundos (`ADMIN_CHECK_DEADLINE_MS`), e três respostas em vez de duas: administrador; não é (convidado, sem registro, outro papel, leitura recusada pelas regras: «Page not found»); e **não deu para conferir** (o banco não respondeu ou passou do prazo), que mostra uma tela em palavras comuns, «Could not check right now» / «Não deu para conferir agora», com «Try again», em vez de uma página em branco comprida ou de um «não encontrado» errado para o próprio administrador. Em nenhum dos dois «não» o arquivo do Painel é pedido; só a resposta exata «administrador» o abre.
+
+Teste primeiro (`test/services/content/adminAccess.test.js`: o prazo com relógio de mentira, as três respostas, a guarda que só abre com «administrador»; `test/screens/admin/gate.test.tsx`: a tela nova): nove reprovaram, depois passaram. Português proposto pelo agente: `notices.router.checkTitle`, `notices.router.checkBody`.
+
 ## [2026-11-23 15:28] step — Site publicado da `main` `5897dd9` (lido na saída): crédito só com o álbum e botão alinhado, endereços diretos, «álbuns», «Vire o lado»
 
 **Branch:** main
 
 Segunda tentativa de `./scripts/deploy-site.sh`: saída 0, «Site published from main (5897dd9)», 5243 testes passaram (1 pulado), 31 das regras. A página no ar traz «ama álbuns». Não conferido num iPhone. O MJRP viu a produção ainda antiga antes de esta terminar e disse que o botão não estava alinhado, a caixa não estava na diagonal e o Velvet ainda mostrava álbum e artista: a caixa na diagonal não está nesta publicação (segue em `fix/f80-crate-animation-break`); sobre a legenda da caixa ele decidiu «1. album e ano somente» (em `fix/f80-crate-caption-album-and-year`). A F96 (home do celular em deslizes, S-78) entrou na `main` em esboço (`1755246`). O teste de tempo que derrubou a primeira tentativa (`rankingPipeline`, «upstream_timeout») passou na segunda: defeito de teste instável a abrir.
+
+## [2026-11-23 15:24] step — F82 (juiz, P2-5): o Painel diz «lendo» e «não foi possível ler» da leitura do site
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-5 do juiz: da leitura do site dentro do Painel (REQ-09) faltavam «lendo» e «não foi possível ler». A linha «O que o site mostra» agora diz também o que o leitor do site está fazendo ou como terminou: «lendo o que está publicado…» enquanto a leitura não acabou; «não foi possível ler: …» com o motivo em palavras comuns (o banco demorou mais de 3 segundos, o banco não respondeu, o documento não está no formato que o site conhece), junto do que o site mostra enquanto isso (a cópia ou o código); e «ainda não há nada publicado neste idioma» quando o documento não existe. O Painel ouve o leitor (`onContentState`) e a linha muda quando a leitura termina.
+
+Teste primeiro (`TextsPanel.test.tsx`, «the read of the site, inside the Painel»: cinco reprovaram, depois passaram). Português proposto pelo agente: `admin.site.reading`, `admin.site.unread`, `admin.site.why.*`, `admin.site.none`.
 
 ## [2026-11-23 15:24] step — CORREÇÃO: a publicação do site NÃO aconteceu; a entrada anterior está errada
 
@@ -259,11 +389,49 @@ O MJRP julgou a prévia e disse «1, publica»; um juiz independente rápido deu
 
 Palavras do MJRP (2026-11-23), sobre a página de entrada (F80) no celular: «Para a versão mobile, to pensando aqui que em vez de a home ser vertical, se nao seria melhor os passos do que ela ensina, ser em formato de swipe para o usuario como num carrossel com os labels Lado A · 1 — Criar...Lado B · 2 — Inventário. Acho que a experiencia e o unclutter da tela ficariam melhor, o que nosso expert de UX e UI diria? Ah e abaixo do carrossel teria a caixa do The Album Blender em Swipe, aí...aí neste caso, no primeiro swipe teríamos somente o os elementos de UI ilustrativos pra como funcionaria a app.» E a estrutura: «Entao ficaria assim no mobile: 1. Hero/Header com a caixa na diagonal - o botao criar creio que poderia sair, pois já aparece no top nav 2. Swipe 1 - a parte educativa da app 3. Swipe 2 - a parte da caixa do the album blender 4. footer». A F96 (via padrão, feature) e a S-78 (EP-10, ao lado da S-62 e da S-77), em esboço. Não decidido: como a pessoa descobre que há mais para passar, se o botão «Criar» sai do alto, a caixa na diagonal no celular (em investigação numa issue da F80), o que o computador mantém (ele falou só do celular), a acessibilidade do swipe, o que vê quem está sem script, a relação com a F95; a primeira tarefa é a rodada de protótipo com ele. Na F95 (ainda em esboço), o nome fechado por ele depois de ver o protótipo (https://claude.ai/artifact/FhWNQqENfJUgMtPdnjKDxn): «2. Curadoria, gostei no Na Caixa....Mas colocaria na web "Na caixa do "The Album Blender" e não só blender.» A curadoria se chama «Na caixa do The Album Blender» (o nome inteiro do produto no computador; a redação no celular fecha no protótipo da F96, onde a curadoria vira o segundo swipe). Só documentação: nenhum código nem protótipo; fora do `priority.md` (a ordem é dele). Ids por `merge_train.py next-item-id --reserve`; board por `board_move.py seed`.
 
+## [2026-11-23 15:21] step — F82 (juiz, P2-3): «Page not found» em React, redesenhada quando os textos publicados mudam
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-3 do juiz: a tela «Page not found» era feita à mão e não se redesenhava quando os textos publicados mudavam (REQ-10). Agora é uma peça em React (`public/js/ui/NotFound.tsx`), que ouve o idioma e a versão dos textos como toda tela; a guarda de `/admin` passou a `public/js/screens/admin/gate.ts` (o arquivo próprio pedido só em `/admin`) e monta essa peça. Saíram `utils/notFoundView.js` e `services/content/adminGate.js`.
+
+A primeira tentativa foi redesenhar a tela à mão (um `innerHTML` ao mudar o texto): o sensor `noHandMadeScreens` recusou, com razão (a regra final da F83 é não voltar a escrever o DOM fora do React), e o caminho certo era a peça em React.
+
+Teste primeiro (`test/screens/admin/gate.test.tsx`: um texto publicado que chega ou some é desenhado na hora, como texto e nunca como marcação; a tela larga tudo ao sair), reprovado antes na forma à mão e passando agora.
+
 ## [2026-11-23 15:21] review — F80: o juiz independente passou os ajustes do crédito do álbum (0 P0, 0 P1, 3 P2); o MJRP julgou a prévia
 
 **Branch:** fix/f80-album-credit-album-only-and-aligned-button
 
 Relatório, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-album-credit-visual-parity-recheck.md` (julgado em `eddf38f` contra a `main` `c4c81d4`). Botão e painel de cima com 0 px de diferença nas cinco histórias e nos dois idiomas; nenhum «disco(s)» no português; «Vire o lado»; os 15 endereços diretos. P2: o botão em inglês a 375 px tem 5,8 px de folga; dois links com o mesmo nome acessível no celular (já era assim). O MJRP, 2026-11-23: «nao passa pelo juiz», «ou juilz neste caso sou eu», «paine do CMS nao, apenas para esses ajustes que estou pedindo»; viu a prévia `staging` (`ec247a6`) e disse «1, publica»; como a trava da junta pede o relatório de um juiz e a saída sem ele é só dele, à pergunta «juiz rápido ou você roda a junta?» respondeu «1. juiz rápido».
+
+## [2026-11-23 15:19] step — F82 (juiz, P2-2): os textos do próprio Painel não são editáveis no Painel nesta iteração
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-2 do juiz: os textos do próprio Painel (`admin.*`) apareciam na lista e podiam ser salvos, mas o leitor do site só conhece as chaves do site (`contentWiring.js` confere contra o inglês do site) e os recusaria como «chave desconhecida» a cada visitante; e `admin.help.rich` era rica no Painel e simples para o leitor. Regra mais simples e honesta, a que o coordenador indicou: **os textos do Painel não são editáveis no Painel nesta iteração.** O Painel recebe só os dicionários do site (`en`, `pt`); a área «Admin» saiu da lista, e com ela as chaves `admin.help.rich` e `admin.screens.admin`, que não têm mais uso.
+
+Consequência dita no `tasks.md` (TASK-15a): hoje nenhuma chave é rica (`i18n/textKinds.js` está vazio), então o editor rico não aparece no Painel até a TASK-15 marcar as chaves corridas do site; até lá é provado pelos testes de componente, com uma chave rica de mentira (`start.lead`), e não mais no navegador. Teste primeiro (`adapter.test.ts`, «the Painel lists the texts of the site only»: reprovou, depois passou).
+
+## [2026-11-23 15:18] step — F82 (juiz, P2-1): o que é só do administrador saiu do script principal (198.409 B; era 200.227)
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P2-1 do juiz: o script principal tinha crescido 5.352 B contra a `main` (194.875 → 200.227 B), e eu tinha relatado só os 2,2 kB do meu ramo sobre o núcleo de conteúdo. Cada byte foi rastreado comparando os módulos do script principal da `main` e do ramo (a lista de módulos que o empacotador põe no script principal, com o tamanho de cada um):
+
+- **O que todo visitante precisa** (fica): o leitor do conteúdo publicado ao abrir (`publishedContentReader.js`, `contentWiring.js`, `shared/content/texts.js` e `switches.js`, `PublishedContentRepository.js`, `publishedContent.js`, `textKinds.js` e a camada publicada do `t.js`): 3.161 B, o medido pelo núcleo de conteúdo (198.036 B).
+- **O que era só do administrador** (saiu): o código de transação do banco (o `runTransaction` mora no mesmo módulo do resto do SDK do Firestore, que está no script principal; o Painel era o primeiro a usá-lo: +17,7 kB do módulo antes de compactar) e a guarda da rota com a tela «Page not found». A gravação do Painel passou a ser UM lote travado pela regra do banco que só aceita `rev` igual ao guardado mais um (`shared/data/batchTransaction.js`): um salvar que perde a corrida é recusado inteiro, lê de novo e tenta de novo, como a transação fazia; a transação do SDK não entra mais no build. A conferência do administrador e o «não encontrado» viraram um arquivo próprio (`adminGate-*.js`), pedido só em `/admin`; o `app.js` ficou só com a porta.
+- **Resultado:** script principal 200.227 → **198.409 B** (−1.818 B); contra a `main`, +3.534 B, dos quais 3.161 B são o leitor e 373 B a porta do Painel (a rota com os dois arquivos sob demanda, os três textos «Page not found» em inglês, um nome de tela). Tetos pela regra do arquivo (medido + 150 B): `main` 198.559 B, `background` 62.927 B; `budget:publication` sai 0.
+
+Testes primeiro (reprovaram, depois passaram): `test/shared/data/batchTransaction.test.js` (um lote só; nada gravado num conflito; recusa das regras lida de novo e tentada de novo; desiste na terceira; outra falha não é repetida; o arquivo que grava não importa o Firestore) e `test/services/content/adminAccess.test.js` (o `app.js` não importa a conferência, o «não encontrado» nem o conteúdo do Painel; a guarda pergunta quem é antes de pedir o arquivo). No emulador, com as regras de verdade (`npm run test:rules`, 38 passam): os casos do salvar repetidos pelo caminho do site, mais a corrida (outro aparelho salva entre a leitura e a gravação: recusado, lido de novo, gravado por cima, nenhuma mudança perdida).
+
+Decidido pelo agente — revisável: trocar a transação do SDK por um lote travado pelas regras. A garantia de «tudo ou nada» continua (um lote), e a de «ninguém grava por cima sem ver» passa a ser a regra `revFollows` do banco, que já existia e já era testada; sem essa regra um lote não trava nada, e o arquivo diz isso.
+
+## [2026-11-23 15:14] step — F82 (juiz, P1-1): a faixa de salvar do Painel fica abaixo da barra do topo no celular
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P1-1 do juiz independente do Painel (`2026-11-23-mjrpalbumblender-v0-cms-texts-panel-visual-parity-recheck.md`): no celular a faixa de salvar ia para baixo da barra do topo do app assim que a lista rolava, e «Salvar» e «Descartar» ficavam sem toque. A faixa agora gruda ABAIXO da barra do topo, pelas medidas do próprio app (`--phone-topbar-h` + `--phone-safe-top`, até 899 px, a largura em que o app usa a moldura do celular), e uma mensagem alta (a confirmação, o conflito) rola dentro da faixa, entre a barra do topo e o menu de baixo. Teste primeiro (`test/screens/admin/adapter.test.ts`, «the save bar stays in reach»: reprovou, depois passou); o toque em «Salvar» e «Descartar» depois de rolar entra na prova do navegador, no último commit desta série.
 
 ## [2026-11-23 15:11] decision — F80: «Vire o lado» no lugar de «Vire o álbum»
 
@@ -340,11 +508,60 @@ Decisão do MJRP (2026-11-23, com print do iPhone da história «Criar», depois
 
 **Não conferido.** Num iPhone de verdade; a página publicada. Os testes automáticos não medem caixas (o jsdom não desenha): a igualdade de caixas está na prova do navegador.
 
+## [2026-11-23 15:01] step — F82: o teste de segredos passa; sair do Painel sem salvar pergunta; a barra do editor rico em português
+
+**Branch:** claude/f82-cms-texts-panel
+
+Quatro acertos no ramo do Painel, a pedido do coordenador:
+
+- **O teste de segredos passa.** `test/server/adminTranslate.test.js` tinha uma constante inventada no próprio teste, com cara de chave de provedor («sk-…», só palavras minúsculas com hífen, sem nada de aleatório): lida e conferida como dublê, trocada por `test-key-not-a-secret`. As conferências «a chave nunca vai ao registro» seguem valendo, sobre o valor novo.
+- **Sair do Painel com mudanças não salvas pergunta antes** (`screens/admin/leaveGuard.ts`): um link, o voltar e o avançar do navegador perguntam pelo roteador («Há mudanças não salvas. Sair do admin e perdê-las?») e o «não» deixa a pessoa onde estava; fechar ou recarregar a aba pergunta pelo aviso do próprio navegador. Trocar de tela dentro do Painel passou a substituir o endereço em vez de somar um: o «voltar» sempre sai do Painel (e pergunta), nunca o redesenha por cima do que foi digitado.
+- **As palavras da barra do editor rico em português**, pelo `KitTexts.rich` (`screens/admin/richTexts.ts`, chaves `admin.rich.*` no dicionário, em inglês e português): os botões com o que cada um faz, os estilos, o menu «+», a caixa de link, o rodapé. As palavras de imagem, vídeo e livro, que a pele esconde, ficam as do kit.
+- **`tasks.md`**: TASK-01 marcada (sobre a cópia candidata do kit), e as partes feitas das outras em linhas próprias (TASK-15a, TASK-16b, TASK-02a), com o que falta escrito em cada tarefa-mãe.
+
+Português proposto pelo agente (espera o MJRP): `admin.leave`; em `admin.rich.*`, «Para títulos de álbuns, termos e ênfase leve.» (o do MJRPpersonal fala de livros) e as duas frases de contagem (`admin.rich.count.*`). O resto de `admin.rich.*` é o português que o kit já tinha no MJRPpersonal (`RICH_TEXTS_PT`).
+
+Suíte inteira, sozinha, pela fila: 5 arquivos e 6 testes reprovam, todos os seis sensores da cópia do kit (os mesmos de antes); 5472 passam. `tsc` passa; `budget:publication` sai 0 (script principal 200.227 B); a prova no navegador repetida no site montado, 46 de 46.
+
+Decidido pelo agente — revisável: a pergunta ao sair usa o `confirm` do navegador, como a tela de playlists já faz; as palavras do kit são lidas quando o Painel abre (trocar o idioma com o Painel aberto só vale ao reabri-lo).
+
+## [2026-11-23 14:53] step — F82: o Painel de textos sobre os módulos reais, com o orçamento em dia e a prova no navegador (46 de 46)
+
+**Branch:** claude/f82-cms-texts-panel
+
+O Painel de textos ligado aos módulos reais: juntados `claude/f82-cms-content-core` (`268c92c`) e `claude/f82-cms-translate-route` (`55d0f1c`), sem conflito. O Painel lê e grava pelo repositório de conteúdo (`services/content/adminContent.js` é o serviço por onde a tela chega a ele), confere com o validador de `shared/content/texts.js` e mostra o que o leitor do site diz (`contentWiring.js`).
+
+- **Tradução, no contrato real da rota** (`docs/specs/arch.md`): `target` vai como `pt-BR` ou `en`, `kind` como `plain` ou `rich`; o sucesso vem em `data.translation`; a falha em `error.reason`, e cada um dos nove motivos tem a sua frase no dicionário, em inglês e português (`admin.translate.reason.*`; os três novos, `tooMany`, `invalid` e `unusable`, são português proposto pelo agente).
+- **Peso** (`npm run budget:publication`, saída 0): o arquivo do Painel chama-se `adminPanel-*.js` (≈ 49 kB gzip, com o kit e o editor rico) e está na lista `allowed` do orçamento, porque só é pedido depois de lido o registro do administrador. O script principal cresceu 2.194 B (198.036 → 200.230 B): cerca de 1.800 B são o código de transação do Firestore, que mora no script principal junto com o resto do SDK e passou a ser usado (o Painel é o primeiro a gravar por transação); o resto é a guarda da rota, a tela «Page not found» e os seus três textos. Tetos novos pela regra do arquivo (medido + 150 B): `main` 200.380 B, `background` 63.871 B.
+- **Prova no navegador, no site MONTADO** (Chromium do Playwright, 1440 e 393 px; os servidores do Firebase substituídos na rede por um dublê com um administrador e documentos `published/*` de mentira; os endereços de música abortados na rede): 46 de 46 conferências. Como administrador: abrir `/admin`, editar um texto simples, «traduzir» respondendo «não configurado» sem mudar o campo, formatar um texto corrido no editor rico (imagem, vídeo e livro fora da barra; botões de 44 px no celular), aprovar um texto em português (gravado em `cmsWork/approved_pt`), salvar (a confirmação, depois `rev` + 1, `previous` e quem salvou), o conflito entre aparelhos (como estava, a outra, a sua; nada gravado por cima) e «Ficar com a outra». Como visitante: «Page not found» e os arquivos do Painel nunca pedidos. Sem erro no console, sem rolagem lateral. Capturas e o resultado em `reports/evidence/F82/texts-panel/`.
+
+Sensores vermelhos só por causa da cópia do kit (nenhum foi afrouxado, nenhuma exceção criada): `complexityLimit` (29 funções em `ui/admin-kit`, 13 em `shared/admin-kit`), `noDeadModules` (5 arquivos: os dois de `ui/admin-kit/example/` e os três de `shared/admin-kit/`, que só são alcançados pelo apelido `@mjrp/admin-kit-core`, que o sensor não resolve), `outsideUrlChecked` (12 endereços), `reactStaysAtTheEdge` (2 conversões por `unknown`), `tailwindBuiltWithSite` (22 atributos montados na hora) e o `eslint .` (44 erros, todos nas pastas do kit: 29 de complexidade, 6 `no-img-element`, 5 `no-restricted-syntax`, 3 `no-control-regex`, 1 `no-irregular-whitespace`). O `tsc` passa.
+
+Decidido pelo agente — revisável: (1) o arquivo de entrada do Painel chama-se `adminPanel.ts` (as outras telas usam `index.ts`) para o orçamento poder nomeá-lo; (2) os tetos do orçamento sobem pela regra do arquivo, com o motivo escrito nele; tirar o código de transação do script principal pediria separar o SDK do Firestore num arquivo próprio, o que não foi feito; (3) o conferidor de texto rico do Painel usa o `basicParseRich` do núcleo e recusa imagem, vídeo e livro pelo leitor do kit; (4) o `## Now` do `MEMORY.md` não foi tocado neste ramo (é do coordenador, na `main`).
+
+Falta: refazer a cópia do kit a partir da tag oficial antes do merge; as palavras da barra do editor rico em português (hoje o inglês do kit); converter os textos corridos do site em chaves ricas e desenhá-los com o desenhador do kit (hoje a única chave rica é a nota do Painel); o Painel só fala português quando o site fala (a escolha do idioma é da F81); voltar no navegador de uma tela do Painel para outra redesenha o Painel e perde o que não foi salvo; a chave da tradução no cofre do servidor é do MJRP.
+
 ## [2026-11-23 14:44] step — Estado: o prazo de 3 horas do MJRP para o CMS, as frentes em paralelo e a F95 na `main`
 
 **Branch:** main
 
 O MJRP, 2026-11-23 ~14:05: «eu preciso que vc finalize isso em 3 horas» (fechar a 1.0.0 do kit, dividir as 42 funções, o kit chegar ao V0 com o Painel de textos). Postas em paralelo, todas no Fable 5.2 por ordem dele («mude os modelos pra utilizar somente o 5.2, pq minha cota da semana está acabando para os outros modelos»): consertos da fatia 1 do kit (prontos), fatia 1b em dois ramos, núcleo de conteúdo (pronto), rota de tradução (pronta), o Painel. A F95 (curadoria do The Album Blender na página de entrada, S-77) entrou na `main` em esboço, antes de qualquer protótipo. O `## Now` do MEMORY.md foi posto em dia.
+
+## [2026-11-23 14:43] step — F82: o Painel de textos em /admin, primeira iteração (só para o administrador; ainda sem o núcleo de conteúdo juntado)
+
+**Branch:** claude/f82-cms-texts-panel
+
+O Painel de textos em `/admin`, primeira iteração (F82 TASK-01, a parte do Painel das TASK-14, TASK-15 e TASK-16; REQ-01, 06, 09, 12, 13): só o nível «Painel» e só a seção Textos do protótipo aprovado; «Funções» e «Receitas» ficam no menu, desligadas, como «depois».
+
+- **Só para o administrador:** a rota lê o registro `cmsAdmins/{uid}` de quem está logado (`services/content/adminAccess.js`) ANTES do `import()` do arquivo do Painel; convidado, outra conta, registro com outro papel ou leitura que falha veem «Page not found» (`utils/notFoundView.js`, tela nova: até aqui um endereço sem tela ia para `/start`). O arquivo não está entre os que descem em segundo plano.
+- **A tela** (`screens/admin/`): os textos por tela (a área do dicionário), inglês e português lado a lado, busca pela palavra em todas as telas, «só os que aguardam você», aprovar um, os selecionados ou todos da tela (aprovar salva: a lista vai para `cmsWork/approved_pt`); a faixa com «Salvar» e «Descartar», a confirmação («3 textos vão ao ar agora»), salvando, salvo, recusado pela conferência com o motivo, falha com o motivo (as regras do banco recusarem é dito assim), e o conflito entre aparelhos (como estava, a outra, a sua; «Salvar a minha» ou «Ficar com a outra»); lendo, não foi possível ler, sem permissão, vazio, órfão, recusado pela versão atual, e o que o site mostra (publicado, cópia, código).
+- **O kit:** os campos são o `TextField` do kit (rótulo, botão e item de menu em campo simples de uma linha; texto corrido no editor rico), com o «traduzir» do kit nos dois sentidos e a revisão dele. O que a cópia não tem vem por portas, textos e pele: `KitPorts` (`kitPorts.ts`: armazenamento no repositório de conteúdo, navegação pelo roteador do app, tradução pela rota do servidor), `KitTexts` do dicionário (`admin.kit.*`) e a pele `public/css/admin-skin.css` (fogo, Syne; os valores do protótipo). Imagem, vídeo e livro saem da barra pela pele (a cópia ainda não tem a chave para isso); botões de 44 px no celular só nesta pele.
+- **Tradução:** `POST /api/admin/translate` com `{ target: 'pt-BR' | 'en', text, kind, context }`; cada motivo de falha do servidor tem a sua frase no dicionário («não configurado» é dito em palavras comuns) e o campo não muda.
+- **Os textos do Painel** moram no dicionário (`i18n/en/admin.js`, `i18n/pt/admin.js`, área `admin.*`), fora do `index.js` de cada idioma: descem só com o arquivo do Painel, para não pesar no script principal.
+
+Português proposto pelo agente (espera o MJRP): todo `admin.kit.*`; `admin.translate.reason.*`; `admin.invalid.*` e `admin.warning.long`; `admin.read.*`; `admin.site.*`; `admin.noPermission.*`; `admin.orphan.note`; `admin.tag.orphan`, `admin.tag.rejected`, `admin.tag.rich`; `admin.save.reason.*`, `admin.save.invalid.*`, `admin.save.approved.*`, `admin.save.saved.*`; `admin.conflict.codeText`; `admin.screens.*`; `admin.help.rich`; `admin.texts.approveOne`, `admin.texts.select`; `admin.confirm.more`; e os três de `notices.router.notFound*`. Os demais vêm do protótipo aprovado.
+
+Decidido pelo agente — revisável: (1) a tela é própria do V0 e usa os campos do kit (`TextField`, com o editor rico e o «traduzir»), não o `KitApp`, porque o `KitApp` mostra um idioma por vez e não tem «Descartar», a confirmação do que vai ao ar, o conflito de três valores nem a aprovação em lote do protótipo aprovado; (2) «não encontrado» é uma tela nova e simples; (3) a única chave «rica» hoje é a nota do próprio Painel (`admin.help.rich`): as chaves corridas do site só viram ricas quando o site souber desenhá-las; (4) as palavras da barra do editor rico seguem no inglês do kit nesta iteração; (5) uma tela do Painel é uma área do dicionário (`albums`, `blend`…), e a linha mostra a chave, não um nome de lugar; (6) os testes foram escritos junto com o código, não antes (o prazo), e pegaram dois defeitos antes do commit.
 
 ## [2026-11-23 14:42] step — Site publicado da `main` `937c3dd`: os links de álbum da página de entrada no botão «Ouça no Apple Music» (UAT-285)
 
@@ -357,6 +574,59 @@ Pedido do MJRP, 2026-11-23: «preciso que vc faça uma alteração já em prod�
 **Branch:** fix/f80-album-links-as-the-apple-music-button
 
 Relatório, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-album-links-button-visual-parity-recheck.md`. P2: a 375 px o crédito mais longo (Velvet Underground) ocupa 4 linhas e fica a 3 px do rótulo de baixo, sem colisão nem corte; o botão do Dark Side of the Moon (e o do Homogenic) aponta para um endereço de busca do Apple Music, não do álbum, igual na `main`. Incidente do dia: o roteiro do primeiro juiz (parado) clicava em cada botão, e o app Música do MJRP abriu e tocou o Velvet Underground; o segundo juiz conferiu só pelo endereço, com os hosts do Apple Music bloqueados na rede. Regra nova para toda prova no navegador: nunca clicar nem navegar para esses endereços.
+
+## [2026-11-23 14:31] step — F82: o kit do admin no V0, cópia candidata 0.9.0 (antes do merge, refazer da tag oficial)
+
+**Branch:** claude/f82-cms-texts-panel
+
+O kit do admin chegou ao V0 como **cópia candidata**, pelo comando do harness (`new_project.py --refresh-admin-kit --version 0.9.0`), sem nenhuma edição à mão: o núcleo em `shared/admin-kit/`, as telas em `public/js/ui/admin-kit/`, o conferidor e os testes que viajam em `test/admin-kit/`; 65 arquivos, com o registro `.mjrp-admin-kit.json` e o bloco `admin_kit:` no contrato. A tag oficial `admin-kit-v1.0.x` ainda não existe: a cópia veio de um clone de rascunho do ramo `claude/f332-admin-kit-slice-1` do harness (commit `fa9e5f146`), onde a versão 0.9.0 foi registrada e marcada só nesse clone; o repositório do harness não foi tocado. **Antes do merge na `main`, refazer a cópia a partir da tag oficial.**
+
+Junto: as quatro dependências que o kit importa (`@dnd-kit/core` 6.3.1, `@dnd-kit/sortable` 10.0.0, `@dnd-kit/utilities` 3.2.2, `clsx` 2.1.1, as versões do `package.json` do kit) e o apelido `@mjrp/admin-kit-core` no Vite, no Vitest e no `tsconfig.json`.
+
+Decidido pelo agente — revisável: a versão candidata chama-se 0.9.0 (um número que o registro oficial nunca terá, para ninguém confundir com a 1.0.0); as dependências entram com versão exata.
+
+## [2026-11-23 14:25] step — CMS (F82): o núcleo do conteúdo no site, sem o kit: validador de textos, leitor ao abrir e a gravação do Painel (TASK-11, TASK-12, TASK-14)
+
+**Branch:** claude/f82-cms-content-core
+
+Três tarefas num commit só, porque a fila da máquina estava cheia e cada passagem custa minutos (decidido pelo agente — revisável). Teste antes do código em cada peça.
+
+- **TASK-11** · `shared/content/texts.js`: `validateText` e `validateTexts` (texto simples: não vazio, os mesmos `{marcadores}` do inglês, sem `<` nem `>`, até 3× o inglês, aviso a partir de 1,5×; chave rica ou de «barra curta», conferida por TIPO: sem a regra do `<`/`>`, passa por um leitor injetado `parseRich(text) → {ok, links[]}` e só aceita links `https:`, `mailto:` e caminhos do site; a barra curta não aceita quebra de linha). `shared/data/PublishedContentRepository.js` (lê `published/texts_*`, `published/site`, `cmsAdmins/{uid}`, `cmsWork/*`) e o lado do site, `public/js/repositories/publishedContent.js`. Testes: `test/shared/content/texts.test.js`, `test/shared/data/PublishedContentRepository.test.js`.
+- **TASK-12** · `public/js/i18n/t.js` ganhou a camada publicada (publicado > dicionário do código > inglês do código, sem depender da ordem de chegada), `registerPublishedTexts`, a versão dos textos, `onTextsChange` e `tRich`; `useLocale` passa a redesenhar por idioma + versão; `public/js/i18n/textKinds.js` é a marca «rico / barra curta» por chave (vazia até a TASK-15). O leitor (`public/js/services/content/publishedContentReader.js`, montado em `contentWiring.js` e chamado pelo `app.js` sem esperar): aplica a cópia do navegador na hora (até 30 dias), pede o banco com prazo de 3 s, confere chave por chave (a ruim volta ao código sozinha e é contada), «não encontrado» apaga a cópia e a camada, e das chaves de ligar e desligar a cópia só guarda as desligadas. Testes: `test/i18n/publishedLayer.test.tsx`, `test/services/content/publishedContentReader.test.js`.
+- **TASK-14** · `shared/content/textsSave.js` (`buildTextsSave`: `rev` = lido + 1 e `previous` só das chaves que mudaram; `findTextConflicts`: o que este aparelho leu, a outra, a sua) e `shared/data/PublishedContentSaveRepository.js` (`saveTexts`: uma transação que grava o documento e, em `cmsWork/save_texts_<idioma>`, quem salvou e quando; com conflito na mesma chave nada é gravado). Testes: `test/shared/content/textsSave.test.js`, o do repositório e três casos novos no emulador das regras (`test/security/firestoreRules.emulator.js`: o repositório de verdade com a transação de verdade; as regras não foram tocadas).
+
+Decisões que tomei sozinho (decidido pelo agente — revisável):
+- **Leitor de texto rico provisório** (`basicParseRich`): até o núcleo puro do kit ser plugado, recusa HTML cru e recolhe os links do Markdown. Sem ele uma chave rica não poderia ser publicada hoje.
+- **`previous` com `null`** para a chave que não estava publicada (era o texto do código que aparecia).
+- **A gravação mora num arquivo à parte** (`PublishedContentSaveRepository`, `publishedContentWriter.js`), baixado só pelo Painel: o site de todos carrega só a leitura. Hoje ninguém a chama, então o build a deixa de fora; quando o Painel chamar, a função de transação do banco entra no arquivo onde o SDK do Firestore já mora (o principal) e o peso precisa ser medido de novo.
+- **O peso do arquivo principal subiu 3.161 B** (194.875 → 198.036 B), acima dos 2.000 B que o plano declarava: o leitor, os dois validadores e o repositório de leitura rodam antes da primeira tela, porque a cópia é aplicada antes do primeiro desenho. Os tetos ficaram no medido + 150 B.
+- **Quem restaurar o idioma ao abrir (F81)** deve chamar `setLocale` antes de `startPublishedContent()`, ou quem fala português pede também o documento em inglês.
+- **Mudança em OUTRA chave noutro aparelho não é conflito**: a gravação segue por cima do documento vivo (a transação garante `rev` = vivo + 1). Conflito é só a mesma chave com outro valor.
+- **Resposta que chega depois dos 3 s** é guardada como cópia para a próxima abertura, e não desenhada no meio desta.
+- **Uma cópia com data no futuro** é jogada fora, como a de mais de 30 dias.
+- **`cmsWork/save_texts_<idioma>`** é um documento por idioma, sobrescrito a cada gravação (como o `previous`: cobre só a última).
+
+Conferido pela fila da máquina: `npm run lint` saiu 0 (66 avisos, os de antes); `npm run test:rules` 34 verdes (os 31 de antes mais os 3 novos); o orçamento de publicação medido (acima); a suíte padrão inteira rodou verde antes do commit (os totais estão na mensagem do commit). O `doctor` saiu vermelho com 521 erros, o mesmo número que o log já registra como base (517 links quebrados de documentos antigos, a constituição gerada, o tamanho do «Where the Work Stopped», o quadro da F75) mais o aviso de que o `## Now` do MEMORY.md parou às 13:42: não mexi no MEMORY.md neste ramo, fica com quem junta.
+
+O que NÃO foi feito aqui: a prova no navegador de que a primeira tela desenha no mesmo tempo (±50 ms) com a leitura bloqueada (TASK-02; por desenho o `app.js` não espera e há teste de que `start()` volta com a leitura presa); as regras do banco não foram tocadas; nada publicado.
+
+## [2026-11-23 14:24] step — F82 (REQ-13, TASK-16): a rota do servidor para a tradução de um campo do Painel, pela API da Claude
+
+**Branch:** claude/f82-cms-translate-route
+
+Construído o lado do servidor da tradução (TASK-16a): `POST /api/admin/translate`, corpo `{ target: 'pt-BR' | 'en', text, kind: 'plain' | 'rich', context? }`, resposta `200 { data: { translation }, outcome: 'found' }`. Só o administrador: login conferido como nas outras portas, visitante recusado, e o registro `cmsAdmins/{uid}` com `role: "super"` lido no Firestore por REST com o login da própria pessoa (sem credencial nova no servidor). A chamada usa o SDK oficial da Anthropic (`@anthropic-ai/sdk`, só em `server/`), modelo `claude-haiku-5-5` (`TRANSLATE_MODEL` troca), chave de `ANTHROPIC_API_KEY`; sem a variável o servidor sobe e a rota responde `translation-not-configured`. Falhas com nome em `error.reason`. Testes com a API e o banco trocados por dublês (`test/server/adminTranslate.test.js`, 52); a API real não foi chamada; nenhuma chave lida nem digitada. Suíte padrão inteira, sozinha, pela fila: `Test Files 393 passed (393)`, `Tests 5286 passed | 1 skipped (5287)`, sem «Unhandled Errors». A 1ª rodada falhou no limite de complexidade (3 funções novas acima de 10); refeitas em partes menores e a suíte rodou de novo, inteira. Passo a passo da chave para o MJRP: `reports/proposals/2026-11-23-1420-v0-how-to-translation-key.md`. `arch.md`, o manual de publicação e as tarefas da F82 atualizados; o `behavior.md` não lista rotas do servidor e não muda (nada novo na tela ainda). O `doctor.py` segue vermelho por erros que já estavam na `main` (links antigos, o bloco do `MEMORY.md`, `board_states` da F75, a cópia da constituição); nenhum aponta arquivo deste ramo.
+
+Decidido pelo agente — revisável:
+- A resposta segue o contrato único do servidor (`{ data: { translation }, outcome }`), não `{ translation }` solto.
+- O nome da falha vai num campo novo e opcional, `error.reason`, ao lado do `code` de sempre; o contrato ganhou o código `not_configured` (503). As outras rotas não mudam.
+- Três nomes além dos seis pedidos: `too-many-requests` (limite da hora), `invalid-request` (corpo fora do contrato) e `translation-unusable` (a resposta do modelo veio cortada, recusada, vazia ou com um `{marcador}` perdido, trocado ou inventado: o servidor confere e recusa).
+- A chave recusada pela Anthropic (401, 403) sai como `translation-not-configured`; o crédito esgotado é o erro de cobrança da API (402, ou o 400 antigo «credit balance»).
+- Limites: 4000 caracteres de texto, 500 de contexto, 120 traduções por hora por administrador (`TRANSLATE_CALLS_PER_HOUR`), prazo de 20 s, uma tentativa, esforço baixo do modelo.
+- A porta do administrador não abre com `REQUIRE_SIGN_IN=false`; se o login ou o registro não puderem ser conferidos, ninguém passa (503).
+- SDK oficial em vez de `fetch`: entra em `server/package.json` e no `package-lock.json` do servidor, carregado só na primeira tradução (os testes da raiz não dependem dele).
+- Nome do segredo proposto no passo a passo: `anthropic-api-key`.
+
+Falta: a porta `translate` do kit no Painel (espera o kit); o MJRP criar a chave no cofre e ligá-la ao serviço; o registro `cmsAdmins/{uid}` dele; publicar o servidor.
 
 ## [2026-11-23 14:11] step — Página de entrada (F80): todo link de álbum é o botão «Ouça no Apple Music» do Velvet (UAT-285)
 
