@@ -1,0 +1,667 @@
+{
+ "base": "the built site (vite build + vite preview)",
+ "passed": 132,
+ "failed": 0,
+ "results": [
+  {
+   "name": "[chromium 1280 visitor] first visit, the hosting answers Brazil: the app opens in Portuguese, <html lang=\"pt-BR\">",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · country asked 1x"
+  },
+  {
+   "name": "[chromium 1280 visitor] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
+   "ok": true,
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\",\"Entrar\"] · choice null"
+  },
+  {
+   "name": "[chromium 1280 visitor] Portuguese fits the screen (no sideways scroll)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[chromium 1280 visitor] the country could not be read and the browser speaks English: English",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[chromium 1280 visitor] first visit from another country: English, <html lang=\"en\">, no Portuguese word ever on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[chromium 1280 visitor] the selector is a named group of two buttons, each in its own language, English marked as the one spoken",
+   "ok": true,
+   "detail": "[\"Português false\",\"English true\"]"
+  },
+  {
+   "name": "[chromium 1280 visitor] its rows are inside the screen, at least 44 px tall, in the menu's own type, and the mark of the current one is the orange",
+   "ok": true,
+   "detail": "heights 44/44 · font -apple-system · mark rgb(249, 115, 22)"
+  },
+  {
+   "name": "[chromium 1280 visitor] picking «Português» changes the whole screen with no reload: the bar, the menu, <html lang>, the mark",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · title «Idioma» · same visit: yes"
+  },
+  {
+   "name": "[chromium 1280 visitor] the work in progress is kept (what was typed on the screen is still there)",
+   "ok": true,
+   "detail": "field: «Work in progress 1973»"
+  },
+  {
+   "name": "[chromium 1280 visitor] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
+   "ok": true,
+   "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[chromium 1280 visitor] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
+   "ok": true,
+   "detail": "reached true · lang en · focus en"
+  },
+  {
+   "name": "[chromium 1280 visitor] reload from another country with «Português» chosen: Portuguese, no English word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · English seen: [] · country asked 0x"
+  },
+  {
+   "name": "[chromium 1280 visitor] /admin, for who is not the administrator, says «page not found» in Portuguese",
+   "ok": true,
+   "detail": "Página não encontrada"
+  },
+  {
+   "name": "[chromium 1280 visitor] and in English after «English» is picked there, with no reload",
+   "ok": true,
+   "detail": "Page not found"
+  },
+  {
+   "name": "[chromium 1280 visitor] reload from Brazil with «English» chosen: English, no Portuguese word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: [] · country asked 0x"
+  },
+  {
+   "name": "[chromium 1280 visitor] no error of the page in the whole visit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[chromium 1280 visitor] a browser in Portuguese, from another country: English (the country wins over the browser)",
+   "ok": true,
+   "detail": "lang en · «Create»"
+  },
+  {
+   "name": "[chromium 1280 visitor] a browser in Portuguese, the country could not be read: Portuguese (the browser's language, the owner's rule for «country unknown»)",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar»"
+  },
+  {
+   "name": "[chromium 1280 signed in] first visit, the hosting answers Brazil: the app opens in Portuguese, <html lang=\"pt-BR\">",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · country asked 1x"
+  },
+  {
+   "name": "[chromium 1280 signed in] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
+   "ok": true,
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\"] · choice null"
+  },
+  {
+   "name": "[chromium 1280 signed in] Portuguese fits the screen (no sideways scroll)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[chromium 1280 signed in] the country could not be read and the browser speaks English: English",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[chromium 1280 signed in] first visit from another country: English, <html lang=\"en\">, no Portuguese word ever on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[chromium 1280 signed in] the selector is a named group of two buttons, each in its own language, English marked as the one spoken",
+   "ok": true,
+   "detail": "[\"Português false\",\"English true\"]"
+  },
+  {
+   "name": "[chromium 1280 signed in] its rows are inside the screen, at least 44 px tall, in the menu's own type, and the mark of the current one is the orange",
+   "ok": true,
+   "detail": "heights 44/44 · font -apple-system · mark rgb(249, 115, 22)"
+  },
+  {
+   "name": "[chromium 1280 signed in] picking «Português» changes the whole screen with no reload: the bar, the menu, <html lang>, the mark",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · title «Idioma» · same visit: yes"
+  },
+  {
+   "name": "[chromium 1280 signed in] the work in progress is kept (what was typed on the screen is still there)",
+   "ok": true,
+   "detail": "field: «Work in progress 1973»"
+  },
+  {
+   "name": "[chromium 1280 signed in] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
+   "ok": true,
+   "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[chromium 1280 signed in] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
+   "ok": true,
+   "detail": "reached true · lang en · focus en"
+  },
+  {
+   "name": "[chromium 1280 signed in] reload from another country with «Português» chosen: Portuguese, no English word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · English seen: [] · country asked 0x"
+  },
+  {
+   "name": "[chromium 1280 signed in] /admin opens in Portuguese, and its four chips say what the menu says",
+   "ok": true,
+   "detail": "Álbuns · Mistura · Acervo · Criar"
+  },
+  {
+   "name": "[chromium 1280 signed in] on /admin, picking «English» changes the Painel with no reload",
+   "ok": true,
+   "detail": "Albums · Blend · Inventory · Create"
+  },
+  {
+   "name": "[chromium 1280 signed in] reload from Brazil with «English» chosen: English, no Portuguese word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: [] · country asked 0x"
+  },
+  {
+   "name": "[chromium 1280 signed in] no error of the page in the whole visit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[chromium 390 visitor] first visit, the hosting answers Brazil: the app opens in Portuguese, <html lang=\"pt-BR\">",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · country asked 1x"
+  },
+  {
+   "name": "[chromium 390 visitor] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
+   "ok": true,
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\"] · choice null"
+  },
+  {
+   "name": "[chromium 390 visitor] Portuguese fits the screen (no sideways scroll)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[chromium 390 visitor] the country could not be read and the browser speaks English: English",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[chromium 390 visitor] first visit from another country: English, <html lang=\"en\">, no Portuguese word ever on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[chromium 390 visitor] the selector is a named group of two buttons, each in its own language, English marked as the one spoken",
+   "ok": true,
+   "detail": "[\"Português false\",\"English true\"]"
+  },
+  {
+   "name": "[chromium 390 visitor] its rows are inside the screen, at least 44 px tall, in the menu's own type, and the mark of the current one is the orange",
+   "ok": true,
+   "detail": "heights 52/52 · font Syne · mark rgb(249, 115, 22)"
+  },
+  {
+   "name": "[chromium 390 visitor] picking «Português» changes the whole screen with no reload: the bar, the menu, <html lang>, the mark",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · title «Idioma» · same visit: yes"
+  },
+  {
+   "name": "[chromium 390 visitor] the work in progress is kept (what was typed on the screen is still there)",
+   "ok": true,
+   "detail": "field: «Work in progress 1973»"
+  },
+  {
+   "name": "[chromium 390 visitor] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
+   "ok": true,
+   "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[chromium 390 visitor] reload from another country with «Português» chosen: Portuguese, no English word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · English seen: [] · country asked 0x"
+  },
+  {
+   "name": "[chromium 390 visitor] /admin, for who is not the administrator, says «page not found» in Portuguese",
+   "ok": true,
+   "detail": "Página não encontrada"
+  },
+  {
+   "name": "[chromium 390 visitor] and in English after «English» is picked there, with no reload",
+   "ok": true,
+   "detail": "Page not found"
+  },
+  {
+   "name": "[chromium 390 visitor] reload from Brazil with «English» chosen: English, no Portuguese word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: [] · country asked 0x"
+  },
+  {
+   "name": "[chromium 390 visitor] no error of the page in the whole visit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[chromium 390 visitor] a browser in Portuguese, from another country: English (the country wins over the browser)",
+   "ok": true,
+   "detail": "lang en · «Create»"
+  },
+  {
+   "name": "[chromium 390 visitor] a browser in Portuguese, the country could not be read: Portuguese (the browser's language, the owner's rule for «country unknown»)",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar»"
+  },
+  {
+   "name": "[chromium 390 signed in] first visit, the hosting answers Brazil: the app opens in Portuguese, <html lang=\"pt-BR\">",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · country asked 1x"
+  },
+  {
+   "name": "[chromium 390 signed in] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
+   "ok": true,
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\"] · choice null"
+  },
+  {
+   "name": "[chromium 390 signed in] Portuguese fits the screen (no sideways scroll)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[chromium 390 signed in] the country could not be read and the browser speaks English: English",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[chromium 390 signed in] first visit from another country: English, <html lang=\"en\">, no Portuguese word ever on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[chromium 390 signed in] the selector is a named group of two buttons, each in its own language, English marked as the one spoken",
+   "ok": true,
+   "detail": "[\"Português false\",\"English true\"]"
+  },
+  {
+   "name": "[chromium 390 signed in] its rows are inside the screen, at least 44 px tall, in the menu's own type, and the mark of the current one is the orange",
+   "ok": true,
+   "detail": "heights 52/52 · font Syne · mark rgb(249, 115, 22)"
+  },
+  {
+   "name": "[chromium 390 signed in] picking «Português» changes the whole screen with no reload: the bar, the menu, <html lang>, the mark",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · title «Idioma» · same visit: yes"
+  },
+  {
+   "name": "[chromium 390 signed in] the work in progress is kept (what was typed on the screen is still there)",
+   "ok": true,
+   "detail": "field: «Work in progress 1973»"
+  },
+  {
+   "name": "[chromium 390 signed in] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
+   "ok": true,
+   "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[chromium 390 signed in] reload from another country with «Português» chosen: Portuguese, no English word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · English seen: [] · country asked 0x"
+  },
+  {
+   "name": "[chromium 390 signed in] /admin opens in Portuguese, and its four chips say what the menu says",
+   "ok": true,
+   "detail": "Álbuns · Mistura · Acervo · Criar"
+  },
+  {
+   "name": "[chromium 390 signed in] on /admin, picking «English» changes the Painel with no reload",
+   "ok": true,
+   "detail": "Albums · Blend · Inventory · Create"
+  },
+  {
+   "name": "[chromium 390 signed in] reload from Brazil with «English» chosen: English, no Portuguese word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: [] · country asked 0x"
+  },
+  {
+   "name": "[chromium 390 signed in] no error of the page in the whole visit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[webkit 1280 visitor] first visit, the hosting answers Brazil: the app opens in Portuguese, <html lang=\"pt-BR\">",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · country asked 1x"
+  },
+  {
+   "name": "[webkit 1280 visitor] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
+   "ok": true,
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\",\"Entrar\"] · choice null"
+  },
+  {
+   "name": "[webkit 1280 visitor] Portuguese fits the screen (no sideways scroll)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[webkit 1280 visitor] the country could not be read and the browser speaks English: English",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[webkit 1280 visitor] first visit from another country: English, <html lang=\"en\">, no Portuguese word ever on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[webkit 1280 visitor] the selector is a named group of two buttons, each in its own language, English marked as the one spoken",
+   "ok": true,
+   "detail": "[\"Português false\",\"English true\"]"
+  },
+  {
+   "name": "[webkit 1280 visitor] its rows are inside the screen, at least 44 px tall, in the menu's own type, and the mark of the current one is the orange",
+   "ok": true,
+   "detail": "heights 44/44 · font -apple-system · mark rgb(249, 115, 22)"
+  },
+  {
+   "name": "[webkit 1280 visitor] picking «Português» changes the whole screen with no reload: the bar, the menu, <html lang>, the mark",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · title «Idioma» · same visit: yes"
+  },
+  {
+   "name": "[webkit 1280 visitor] the work in progress is kept (what was typed on the screen is still there)",
+   "ok": true,
+   "detail": "field: «Work in progress 1973»"
+  },
+  {
+   "name": "[webkit 1280 visitor] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
+   "ok": true,
+   "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[webkit 1280 visitor] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
+   "ok": true,
+   "detail": "reached true · lang en · focus en"
+  },
+  {
+   "name": "[webkit 1280 visitor] reload from another country with «Português» chosen: Portuguese, no English word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · English seen: [] · country asked 0x"
+  },
+  {
+   "name": "[webkit 1280 visitor] /admin, for who is not the administrator, says «page not found» in Portuguese",
+   "ok": true,
+   "detail": "Página não encontrada"
+  },
+  {
+   "name": "[webkit 1280 visitor] and in English after «English» is picked there, with no reload",
+   "ok": true,
+   "detail": "Page not found"
+  },
+  {
+   "name": "[webkit 1280 visitor] reload from Brazil with «English» chosen: English, no Portuguese word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: [] · country asked 0x"
+  },
+  {
+   "name": "[webkit 1280 visitor] no error of the page in the whole visit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[webkit 1280 visitor] a browser in Portuguese, from another country: English (the country wins over the browser)",
+   "ok": true,
+   "detail": "lang en · «Create»"
+  },
+  {
+   "name": "[webkit 1280 visitor] a browser in Portuguese, the country could not be read: Portuguese (the browser's language, the owner's rule for «country unknown»)",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar»"
+  },
+  {
+   "name": "[webkit 1280 signed in] first visit, the hosting answers Brazil: the app opens in Portuguese, <html lang=\"pt-BR\">",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · country asked 1x"
+  },
+  {
+   "name": "[webkit 1280 signed in] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
+   "ok": true,
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\"] · choice null"
+  },
+  {
+   "name": "[webkit 1280 signed in] Portuguese fits the screen (no sideways scroll)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[webkit 1280 signed in] the country could not be read and the browser speaks English: English",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[webkit 1280 signed in] first visit from another country: English, <html lang=\"en\">, no Portuguese word ever on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[webkit 1280 signed in] the selector is a named group of two buttons, each in its own language, English marked as the one spoken",
+   "ok": true,
+   "detail": "[\"Português false\",\"English true\"]"
+  },
+  {
+   "name": "[webkit 1280 signed in] its rows are inside the screen, at least 44 px tall, in the menu's own type, and the mark of the current one is the orange",
+   "ok": true,
+   "detail": "heights 44/44 · font -apple-system · mark rgb(249, 115, 22)"
+  },
+  {
+   "name": "[webkit 1280 signed in] picking «Português» changes the whole screen with no reload: the bar, the menu, <html lang>, the mark",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · title «Idioma» · same visit: yes"
+  },
+  {
+   "name": "[webkit 1280 signed in] the work in progress is kept (what was typed on the screen is still there)",
+   "ok": true,
+   "detail": "field: «Work in progress 1973»"
+  },
+  {
+   "name": "[webkit 1280 signed in] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
+   "ok": true,
+   "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[webkit 1280 signed in] by the keyboard alone: Enter opens the panel, Tab reaches «English», Enter picks it, the focus stays on it",
+   "ok": true,
+   "detail": "reached true · lang en · focus en"
+  },
+  {
+   "name": "[webkit 1280 signed in] reload from another country with «Português» chosen: Portuguese, no English word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · English seen: [] · country asked 0x"
+  },
+  {
+   "name": "[webkit 1280 signed in] /admin opens in Portuguese, and its four chips say what the menu says",
+   "ok": true,
+   "detail": "Álbuns · Mistura · Acervo · Criar"
+  },
+  {
+   "name": "[webkit 1280 signed in] on /admin, picking «English» changes the Painel with no reload",
+   "ok": true,
+   "detail": "Albums · Blend · Inventory · Create"
+  },
+  {
+   "name": "[webkit 1280 signed in] reload from Brazil with «English» chosen: English, no Portuguese word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: [] · country asked 0x"
+  },
+  {
+   "name": "[webkit 1280 signed in] no error of the page in the whole visit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[webkit 390 visitor] first visit, the hosting answers Brazil: the app opens in Portuguese, <html lang=\"pt-BR\">",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · country asked 1x"
+  },
+  {
+   "name": "[webkit 390 visitor] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
+   "ok": true,
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\"] · choice null"
+  },
+  {
+   "name": "[webkit 390 visitor] Portuguese fits the screen (no sideways scroll)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[webkit 390 visitor] the country could not be read and the browser speaks English: English",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[webkit 390 visitor] first visit from another country: English, <html lang=\"en\">, no Portuguese word ever on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[webkit 390 visitor] the selector is a named group of two buttons, each in its own language, English marked as the one spoken",
+   "ok": true,
+   "detail": "[\"Português false\",\"English true\"]"
+  },
+  {
+   "name": "[webkit 390 visitor] its rows are inside the screen, at least 44 px tall, in the menu's own type, and the mark of the current one is the orange",
+   "ok": true,
+   "detail": "heights 52/52 · font Syne · mark rgb(249, 115, 22)"
+  },
+  {
+   "name": "[webkit 390 visitor] picking «Português» changes the whole screen with no reload: the bar, the menu, <html lang>, the mark",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · title «Idioma» · same visit: yes"
+  },
+  {
+   "name": "[webkit 390 visitor] the work in progress is kept (what was typed on the screen is still there)",
+   "ok": true,
+   "detail": "field: «Work in progress 1973»"
+  },
+  {
+   "name": "[webkit 390 visitor] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
+   "ok": true,
+   "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[webkit 390 visitor] reload from another country with «Português» chosen: Portuguese, no English word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · English seen: [] · country asked 0x"
+  },
+  {
+   "name": "[webkit 390 visitor] /admin, for who is not the administrator, says «page not found» in Portuguese",
+   "ok": true,
+   "detail": "Página não encontrada"
+  },
+  {
+   "name": "[webkit 390 visitor] and in English after «English» is picked there, with no reload",
+   "ok": true,
+   "detail": "Page not found"
+  },
+  {
+   "name": "[webkit 390 visitor] reload from Brazil with «English» chosen: English, no Portuguese word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: [] · country asked 0x"
+  },
+  {
+   "name": "[webkit 390 visitor] no error of the page in the whole visit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[webkit 390 visitor] a browser in Portuguese, from another country: English (the country wins over the browser)",
+   "ok": true,
+   "detail": "lang en · «Create»"
+  },
+  {
+   "name": "[webkit 390 visitor] a browser in Portuguese, the country could not be read: Portuguese (the browser's language, the owner's rule for «country unknown»)",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar»"
+  },
+  {
+   "name": "[webkit 390 signed in] first visit, the hosting answers Brazil: the app opens in Portuguese, <html lang=\"pt-BR\">",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · country asked 1x"
+  },
+  {
+   "name": "[webkit 390 signed in] first visit from Brazil: no English word was ever on the page (no flash), and nothing was kept as a choice",
+   "ok": true,
+   "detail": "English seen: [] · Portuguese seen: [\"Criar\",\"Acervo\"] · choice null"
+  },
+  {
+   "name": "[webkit 390 signed in] Portuguese fits the screen (no sideways scroll)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "[webkit 390 signed in] the country could not be read and the browser speaks English: English",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[webkit 390 signed in] first visit from another country: English, <html lang=\"en\">, no Portuguese word ever on the page",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: []"
+  },
+  {
+   "name": "[webkit 390 signed in] the selector is a named group of two buttons, each in its own language, English marked as the one spoken",
+   "ok": true,
+   "detail": "[\"Português false\",\"English true\"]"
+  },
+  {
+   "name": "[webkit 390 signed in] its rows are inside the screen, at least 44 px tall, in the menu's own type, and the mark of the current one is the orange",
+   "ok": true,
+   "detail": "heights 52/52 · font Syne · mark rgb(249, 115, 22)"
+  },
+  {
+   "name": "[webkit 390 signed in] picking «Português» changes the whole screen with no reload: the bar, the menu, <html lang>, the mark",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · title «Idioma» · same visit: yes"
+  },
+  {
+   "name": "[webkit 390 signed in] the work in progress is kept (what was typed on the screen is still there)",
+   "ok": true,
+   "detail": "field: «Work in progress 1973»"
+  },
+  {
+   "name": "[webkit 390 signed in] the focus is on the language picked, and the choice is kept on the device under the entry page's key",
+   "ok": true,
+   "detail": "focus on pt · albumblender:lang = pt"
+  },
+  {
+   "name": "[webkit 390 signed in] reload from another country with «Português» chosen: Portuguese, no English word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang pt-BR · «Criar» · English seen: [] · country asked 0x"
+  },
+  {
+   "name": "[webkit 390 signed in] /admin opens in Portuguese, and its four chips say what the menu says",
+   "ok": true,
+   "detail": "Álbuns · Mistura · Acervo · Criar"
+  },
+  {
+   "name": "[webkit 390 signed in] on /admin, picking «English» changes the Painel with no reload",
+   "ok": true,
+   "detail": "Albums · Blend · Inventory · Create"
+  },
+  {
+   "name": "[webkit 390 signed in] reload from Brazil with «English» chosen: English, no Portuguese word ever on the page, the country not asked",
+   "ok": true,
+   "detail": "lang en · «Create» · Portuguese seen: [] · country asked 0x"
+  },
+  {
+   "name": "[webkit 390 signed in] no error of the page in the whole visit",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

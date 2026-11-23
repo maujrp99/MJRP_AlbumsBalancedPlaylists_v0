@@ -1,6 +1,6 @@
 /**
  * Account - the account on the right of the top menu (F88; F83 sync of main: was components/navigation/AuthNav.js): one button that opens ONE
- * panel with who is in (or the way to sign in), the connections (Apple Music, then Spotify), the cache and sign out; «Sign In» beside it for who is
+ * panel with who is in (or the way to sign in), the connections (Apple Music, then Spotify), the language (F81), the cache and sign out; «Sign In» beside it for who is
  * not in. The dots on the closed button, and its label, say only what is known of each service: Apple Music is `null` while it is still being asked.
  *
  * The panel opens with a tap, a click or the keyboard, never by hover alone (F63, UAT-13): a click on the button toggles it, a click anywhere
@@ -18,6 +18,7 @@ import { signOut } from './signOut'
 import { accountInitial } from './accountNames'
 import { ConnectionRows, useConnections } from './ConnectionRows'
 import { useClearCacheQuestion } from './ClearCache'
+import { LanguageRows } from './LanguageRows'
 import { MENU_TEXT } from './menuText'
 import type { ConnectionsModel, Summary } from './connections'
 import type { ShellUser, UserState } from './context'
@@ -91,6 +92,8 @@ function Panel({ open, user, signedIn, model, close, panel }: PanelProps) {
             </div>
             <div className="top-panel__section">{MENU_TEXT.connectionsTitle}</div>
             <ConnectionRows model={model} id="accountConnections" />
+            <div className="top-panel__rule" />
+            <LanguageRows where="panel" />
             <div className="top-panel__rule" />
             <button id="panelClearCache" type="button" className="top-panel__row" onClick={() => { close(); question.ask() }}>
                 <Icon name="Trash" className="w-4 h-4" />{` ${t('shell.menu.clearCache')}`}

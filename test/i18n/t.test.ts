@@ -1,8 +1,8 @@
 /**
  * F83 TASK-10 (REQ-08; the contract of proposal § 5.2, which F81 fills in): the dictionary of the site's texts. Plain
  * JavaScript, one dictionary per language split by area, the key `area.piece.name`, values that are text with {placeholders}
- * and never HTML. English is the default and the fallback; Portuguese is a file of its own, closed to the public by
- * OPEN_LOCALES until F81 opens it, and visible to the owner through a mark in his own browser.
+ * and never HTML. English is the default and the fallback; Portuguese is a file of its own, open to the public since F81
+ * (OPEN_LOCALES); a language that list leaves out is visible only through a mark in the owner's own browser.
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { t, tPlural, getLocale, setLocale, onLocaleChange, localeListenerCount, LOCALES, DEFAULT_LOCALE, PREVIEW_KEY, registerTexts } from '../../public/js/i18n/t.js'
@@ -12,11 +12,11 @@ describe('t: the texts by language', () => {
     beforeEach(() => { window.localStorage.removeItem(PREVIEW_KEY) })
     afterEach(async () => { window.localStorage.removeItem(PREVIEW_KEY); await setLocale('en') })
 
-    it('the languages are en and pt, English is the default and the reserve, and only English is open', () => {
+    it('the languages are en and pt, English is the default and the reserve, and both are open (F81)', () => {
         expect(LOCALES).toEqual(['en', 'pt'])
         expect(DEFAULT_LOCALE).toBe('en')
         expect(getLocale()).toBe('en')
-        expect(OPEN_LOCALES).toEqual(['en'])
+        expect(OPEN_LOCALES).toEqual(['en', 'pt'])
     })
 
     it('gives the text of a key, fills the {placeholders} and leaves a missing one as it was', () => {
@@ -51,12 +51,13 @@ describe('t: the texts by language', () => {
 describe('setLocale: which language the site speaks', () => {
     afterEach(async () => { window.localStorage.removeItem(PREVIEW_KEY); await setLocale('en') })
 
-    it('Portuguese stays closed while OPEN_LOCALES is only English: the request is refused and nobody is told', async () => {
+    it('Portuguese is open to everybody (F81): no mark is needed, and whoever listens is told', async () => {
         const told: string[] = []
         const stop = onLocaleChange((locale: string) => told.push(locale))
-        expect(await setLocale('pt')).toBe(false)
-        expect(getLocale()).toBe('en')
-        expect(told).toEqual([])
+        expect(window.localStorage.getItem(PREVIEW_KEY)).toBeNull()
+        expect(await setLocale('pt')).toBe(true)
+        expect(getLocale()).toBe('pt')
+        expect(told).toEqual(['pt'])
         stop()
     })
 

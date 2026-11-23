@@ -9,6 +9,9 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "i18n": {
+      "root": "/geo"
+    },
     "rewrites": [
       {
         "source": "/api/**",
@@ -27,6 +30,15 @@
       }
     ],
     "headers": [
+      {
+        "source": "/country.json",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
       {
         "source": "**/!(*.*)",
         "headers": [

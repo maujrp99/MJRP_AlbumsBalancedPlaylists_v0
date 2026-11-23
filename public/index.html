@@ -36,6 +36,16 @@
   <!-- Main app container -->
   <div id="header-container"></div>
   <div id="app" class="min-h-screen">Loading...</div>
+  <!-- F81: the wait speaks the language the person chose on this device (the key of js/i18n/language.js); with no choice yet it
+       waits with no words, until the app knows the country, so the page never shows the other language first -->
+  <script data-first-language>
+    (function () {
+      var place = document.getElementById('app'), choice = null
+      try { choice = window.localStorage.getItem('albumblender:lang') } catch (refused) { choice = null }
+      if (choice === 'pt') { document.documentElement.lang = 'pt-BR'; place.textContent = 'Carregando...' }
+      else if (choice !== 'en') place.textContent = ''
+    })()
+  </script>
   <div id="footer-container"></div>
 
   <!-- App initialization -->
