@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:24] step — CORREÇÃO: a publicação do site NÃO aconteceu; a entrada anterior está errada
+
+**Branch:** main
+
+A entrada «Site publicado da `main` `956f721`» foi escrita por mim sem ler a saída: a publicação terminou com saída 1 e «nothing was deployed». Um teste falhou: `test/server/rankingPipeline.test.js` › «a source still running when the time ends is a failure (upstream_timeout), and the next ones are not asked» (esperava só `bestEver`, veio também `spotify`): teste de tempo, com a máquina carregada por várias suítes em fila. Produção segue no site da `937c3dd`. Erro de processo meu, o mesmo já anotado nesta sessão: registrar antes de ler a linha de resultado. Vou repetir a publicação e só registrar depois de ler a saída; o teste de tempo fica como defeito a abrir.
+
 ## [2026-11-23 15:24] step — Site publicado da `main` `956f721`: crédito só com o álbum e botão alinhado, endereços diretos, «álbuns» no lugar de «discos», «Vire o lado»
 
 **Branch:** main
