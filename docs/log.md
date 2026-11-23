@@ -2,6 +2,24 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 11:21] step — Servidor publicado da `main` `4080f73` (revisão `mjrp-proxy-00216-cxd`), com a leitura da chave do Discogs no CMS
+
+**Branch:** main
+
+Com a palavra do MJRP na D-13 («Publique o servidor já; o Discogs fica desligado até eu fazer a minha parte»), `./scripts/deploy-server.sh` pela fila: 5233 testes passaram (1 pulado), o teste das regras no emulador 31 de 31, a revisão nova serve 100% do tráfego, `/api/musickit-status` 200, rotas de depuração fechadas. Não conferi `/api/value-sources` no ar com uma conta (pede login). Efeito aceito por ele: os valores do Discogs ficam desligados no Inventário até ele publicar as regras do banco (`firebase deploy --only firestore:rules`) e criar `published/site` com `_schemaVersion: 1`, `rev: 1`, `switches: { discogsValues: true }`. Voltar: `gcloud run services update-traffic mjrp-proxy --to-revisions=mjrp-proxy-00215-jkz=100 --region southamerica-east1 --project mjrp-playlist-generator`. Ele também respondeu, às 11:20, as 8 perguntas antigas do lote `2026-11-21-1335-v0-conform-questions`; a aplicação vai a um agente.
+
+## [2026-11-23 11:20] answer — lote 2026-11-21-1335-v0-conform-questions
+
+- Lote: `reports/proposals/2026-11-21-1335-v0-conform-questions.md`
+- Envio: cb979b5604d21a2b
+- Recomendações aceitas: D-02, D-03, D-04, D-05, D-08
+- D-01: (outra) Ok pra primeira iteração dessa versão do produti
+- D-06: (outra) Creio que agora temos staging certo?
+- D-07: (outra) Use as cores principais da paleta do álbum blender ;)
+- Pela tela do Control Center, com a passkey.
+- assinatura: eyJhdXRoZW50aWNhdG9yX2RhdGEiOiJvN1kzNVpGREl1ZFNYaXp1NzNvZ1NQaTJkNnBZd2RJTkxvYTA1NU90QWdnZEFBQUFBQSIsImNsaWVudF9kYXRhX2pzb24iOiJleUowZVhCbElqb2lkMlZpWVhWMGFHNHVaMlYwSWl3aVkyaGhiR3hsYm1kbElqb2lZV3BGYkhWZk5HSkRiSHAzVVZSUVFqbFdjekJsV1U1VFNUSjNSMUZWTjFSemJsRjJWRzkyTVVwRFNTSXNJbTl5YVdkcGJpSTZJbWgwZEhCek9pOHZiV3B5Y0MxdE5YQnlieTUwWVdsc01tRXlOakF6TG5SekxtNWxkQ0lzSW1OeWIzTnpUM0pwWjJsdUlqcG1ZV3h6WlgwIiwiY3JlZGVudGlhbF9pZCI6IkJISnRSNXIxaTdUbjlCX1hjSmpMVUk4eFJlMCIsInBheWxvYWRfYnl0ZXNfYjY0IjoiZXlKbGVIQnBjbVZ6WDJGMElqb3hOemsxTkRRME1qUXpMQ0pwYzNOMVpXUmZZWFFpT2pFM09UVTBORE0yTkRNc0ltdHBibVFpT2lKd2NtOXdiM05oYkNJc0ltNXZibU5sSWpvaWVHWnFlVkZRY0V0dVUzcDJWazlVTkZaeVdtdFRabHBISWl3aWNISnZhbVZqZENJNklrMUtVbEJmUVd4aWRXMXpRbUZzWVc1alpXUlFiR0Y1YkdsemRITmZkakFpTENKelkyOXdaU0k2SWpJd01qWXRNVEV0TWpFdE1UTXpOUzEyTUMxamIyNW1iM0p0TFhGMVpYTjBhVzl1Y3lJc0luTjFZbXBsWTNRaU9pSXpOekV6TnpKaE9HTm1aalZrTWpGbE9UTTRPR000WmpRd1pUTm1OamxoTnpVeU56SXhPREk1TXpZMk9XTm1NV1EwWlRNeE1UVTFPVFl3TUdWaVlqRmxJaXdpZGlJNk1YMCIsInNpZ25hdHVyZSI6Ik1FVUNJUUMyNTBBS3BCX1JDczdSajg5bVlqUC1xOEZRY1lGRWxkQldURXNDM2VjZDFBSWdHdWNGYkFvQzM1RE9yc3pDdjA4LVV5eVhzaV8xTFVnTUoxRXQtS1l3LV9vIn0=
+- folhas: D-01:cac629d0d0ab3860 D-02:c2570f6cf1ac3751 D-03:7658c80ea29cd868 D-04:cb3b185cf1b1c7f8 D-05:81b69354218703e6 D-06:05472ba53f8c58bd D-07:aebe2dd75b6ef960 D-08:212933e2d039fd00
+
 ## [2026-11-23 11:16] decision — CMS: respostas D-12, D-13 e D-14 do lote; o MJRP mandou publicar o servidor já
 
 **Branch:** main

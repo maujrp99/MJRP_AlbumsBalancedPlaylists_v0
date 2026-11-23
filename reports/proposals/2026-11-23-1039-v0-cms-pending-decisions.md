@@ -142,6 +142,7 @@ Base: forte — o juiz independente conferiu os três estados
 - b) Publique o servidor já; o Discogs fica desligado até eu fazer a minha parte
 → respondida em 2026-11-23 11:16
   - b
+→ aplicada em 2026-11-23 11:21: o servidor está publicado da main 4080f73 (revisão mjrp-proxy-00216-cxd, 5233 testes e 31 das regras passaram); o Discogs fica desligado até você publicar as regras do banco e criar o registro da chave; o passo a passo vai no chat
 
 ### D-14 · A revisão das Receitas do Blend
 Pergunta: Quando revisamos juntos as Receitas do Blend do Painel?
