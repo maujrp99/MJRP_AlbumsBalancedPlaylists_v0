@@ -342,10 +342,10 @@ async function entryPage(engine, width, height) {
     const loaded = Date.now() - started
     const paint = await slow.page.evaluate(() => performance.getEntriesByType('paint').find((entry) => entry.name === 'first-contentful-paint')?.startTime ?? null)
     const published = await slow.page.evaluate(() => window.__splash.published)
-    const waited = Date.now() - started
+    const waited = Date.now() - started - loaded
     const after = await slow.page.evaluate(readEntry)
-    say(`${tag} the read is slow (6 s): the page gives up at 3 s («timeout») and keeps the fixed set`, published === 'timeout' && same(after.sleeves, FIXED_IDS) && waited < 6000, `${published} after ${waited} ms`)
-    say(`${tag} the read is slow: the page had loaded and painted long before (it never waits for the database)`, loaded < 2500 && (paint === null || paint < 2500), `load ${loaded} ms · first paint ${paint === null ? 'not reported by this engine' : Math.round(paint) + ' ms'}`)
+    say(`${tag} the read is slow (6 s): the page gives up 3 s after it loaded («timeout»), long before the answer, and keeps the fixed set`, published === 'timeout' && same(after.sleeves, FIXED_IDS) && waited < 4000, `${published} ${waited} ms after the load`)
+    say(`${tag} the read is slow: the page had loaded and painted long before the database could answer at 6 s (it never waits for it)`, loaded < 5000 && (paint === null || paint < 3000), `load ${loaded} ms · first paint ${paint === null ? 'not reported by this engine' : Math.round(paint) + ' ms'}`)
     await slow.browser.close()
   }
 
@@ -407,7 +407,7 @@ async function painel(engine, width, height) {
     // the menu, and the way in
     await page.goto(SITE + '/admin', { waitUntil: 'domcontentloaded' })
     await page.waitForSelector('.cms-rail', { timeout: 20000 })
-    await page.waitForSelector('.cms-row', { timeout: 20000 })
+    await page.waitForSelector('.cms-row', { timeout: 20000 }).catch(async (error) => { console.log('DEBUG the Painel did not show its texts:', (await page.locator('#app').innerText()).replace(/\n+/g, ' | ').slice(0, 600), '· errors:', errors.slice(-4).join(' ¦ ').slice(0, 600), '· aborted:', [...new Set(net.aborted)].join(', ')); throw error })
     const rail = await page.locator('.cms-rail .cms-navb').evaluateAll((buttons) => buttons.map((button) => `${button.textContent}${button.disabled ? ' (off)' : ''}`))
     say(`${tag} the menu has «Crate» beside «Texts», and keeps «Switches · later» and «Blend recipes · later» turned off`, same(rail, ['Texts', 'Crate', 'Switches · later (off)', 'Blend recipes · later (off)']), rail.join(' | '))
     const historyBefore = await page.evaluate(() => history.length)

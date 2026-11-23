@@ -1,0 +1,274 @@
+PASS the built entry page carries the real set (15 albums) and the address of the database in its content policy, and no other new host — 15 albums
+PASS the entry page is still its own script: its copy of the crate's validator is inside it, it takes no new file shared with the app, and no Firebase SDK — /assets/splash-Bkk5yQAX.js · 30058 B · imports: menu-DxKDhDTQ.js
+PASS the Painel (with the crate section) is not in the app's preload — adminPanel-Byu68DIS.js, adminPanel-CJYWlOvD.css
+PASS entry chromium 1280 nothing published: the page says so to itself («none») and keeps the fixed set, whole — none · 15 sleeves
+PASS entry chromium 1280 nothing published: the caption is the front album and its year — {"title":"The Velvet Underground & Nico","line":"1967"}
+PASS entry chromium 1280 the crate carries its name on the computer: «Na caixa do The Album Blender», a small label by the crate — {"text":"NA CAIXA DO THE ALBUM BLENDER","shown":true,"box":[567,82,292,32],"font":"-apple-system","size":"12px","weight":"700","upper":"uppercase"}
+PASS entry chromium 1280 the label is in the page's own style: 12 px, bold, capitals, inside the stage and clear of the pause icon — {"tag":[567,82,292,32],"scene":[567,72,713,644]}
+PASS entry chromium 1280 nothing published: the database was asked ONCE, after the page had loaded — read 2910 ms after the start, load at 2906 ms
+PASS entry chromium 1280 nothing published: no console error, and the label adds no sideways scroll —  page 1280 px wide in a window of 1280 px, 1280 px without the label
+PASS entry chromium 1280 published: the crate is swapped in, in the owner's order (side A from the front, side B behind it) — swapped · dummy low vu-nico crimson dsotm pcl illmatic aeroplane pitty desire tpab mezzanine
+PASS entry chromium 1280 published: side A faces the visitor, its 7 albums and no other — dummy low vu-nico crimson dsotm pcl illmatic
+PASS entry chromium 1280 published: the caption stays album and year, of the new front album — {"title":"Dummy","line":"1994"}
+PASS entry chromium 1280 published: every cover comes from Apple's image server and has arrived — 12 of 12 loaded
+PASS entry chromium 1280 published: «Ouça no Apple Music» leads to the front album's page, in a new tab (judged by its address, never opened) — {"href":"https://music.apple.com/us/album/dummy/1440653096","target":"_blank","rel":"noopener","name":"Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)"}
+PASS entry chromium 1280 published: nothing on the page moved or changed size with the swap (the height of the page, the stage, the caption, the row, the close, the footer) — page 4578 px
+PASS entry chromium 1280 published: the browser recorded no layout shift at the swap — []
+PASS entry chromium 1280 published: no console error, and the page is as wide as with the fixed set —  1280 px
+PASS entry chromium 1280 published: scrolling the stories, the caption names the pulled record of the new crate (3rd, 1st and 6th of side A; 4th, 2nd and 1st of side B) — The Velvet Underground & Nico · Dummy · Power, Corruption & Lies · Admirável Chip Novo · To Pimp a Butterfly · Mezzanine
+PASS entry chromium 1280 hostile: the four bad albums are left out (markup in a title, markup in an artist, a cover from another server, a link that runs code) and the others go on — swapped · pcl dummy illmatic harvest edge homogenic mezzanine aeroplane pitty desire tpab
+PASS entry chromium 1280 hostile: nothing became an element and nothing ran — {"pwned":null,"scripts":0,"handlers":0}
+PASS entry chromium 1280 hostile: the other server was never asked for anything, and every image is Apple's or the page's own — 0 requests to the other server
+PASS entry chromium 1280 hostile: every link to listen is an Apple Music page
+PASS entry chromium 1280 hostile: no console error
+PASS entry chromium 1280 a published crate that falls under the limits once its bad albums are out is refused whole: the fixed set stays — refused
+PASS entry chromium 1280 the read fails: the fixed set stays, whole, and nothing breaks — failed 
+PASS entry chromium 1280 the read is slow (6 s): the page gives up 3 s after it loaded («timeout»), long before the answer, and keeps the fixed set — timeout 3002 ms after the load
+PASS entry chromium 1280 the read is slow: the page had loaded and painted long before the database could answer at 6 s (it never waits for it) — load 3268 ms · first paint 1440 ms
+PASS entry chromium 1280 without script: the page reads whole with the fixed set, and the database is never asked — 15 sleeves
+PASS entry chromium 1280 in English the crate is «In The Album Blender's crate», and the albums and artists keep their names — IN THE ALBUM BLENDER'S CRATE
+PASS painel chromium 1280 the menu has «Crate» beside «Texts», and keeps «Switches · later» and «Blend recipes · later» turned off — Texts | Crate | Switches · later (off) | Blend recipes · later (off)
+PASS painel chromium 1280 «Crate» opens the section at its own address, without adding a step to «back» — http://127.0.0.1:43951/admin/crate
+PASS painel chromium 1280 with nothing published it shows the fixed set of the entry page: side A (8) and side B (7), each from its front — A vu-nico crimson dsotm low pcl dummy illmatic harvest | B tpab desire pitty aeroplane mezzanine homogenic edge
+PASS painel chromium 1280 it says what the entry page shows, and the limits of each side — What the entry page shows: the fixed set of the code (nothing is published yet)
+PASS painel chromium 1280 each album shows its cover (Apple's image server), its name, its artist and its year — {"title":"The Velvet Underground & Nico","by":"The Velvet Underground & Nico · 1967","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/92/93/39/9293397f-a707-237e-ec7e-0ca613a67e3c/06UMGIM04143.rgb.jpg/112x112bb.webp","loaded":true}
+PASS painel chromium 1280 nothing to save yet: «All saved», Save and Discard off
+PASS painel chromium 1280 keyboard: Enter on «Move up» moves the album one place up — crimson vu-nico dsotm low pcl dummy illmatic harvest
+PASS painel chromium 1280 keyboard: the focus stays on the album that moved (at the front «up» is off, so on its «down») — crimson:down
+PASS painel chromium 1280 keyboard: Enter twice on «Move down» takes it to the third place, the focus still on it — vu-nico dsotm crimson · focus crimson:down
+PASS painel chromium 1280 keyboard: Tab walks the four buttons of an album in order (up, down, to the other side, remove) — crimson:up → crimson:down → crimson:across → crimson:remove
+PASS painel chromium 1280 the bar says the crate has changes not saved
+PASS painel chromium 1280 «To side B» sends the album to the back of the other side — B tpab desire pitty aeroplane mezzanine homogenic edge harvest
+PASS painel chromium 1280 «Remove» takes the album out
+PASS painel chromium 1280 a side under its minimum says so in words, and Save is off until it is fixed — Side A needs at least 6 albums (up to 10). Add one, or bring one from the other side.
+PASS painel chromium 1280 the search asks THE SERVER's route, with the administrator's session, and never Apple from the browser — {"query":"fleetwood mac","authorized":true}
+PASS painel chromium 1280 a result shows cover, album, artist and year, and «add» for each side — {"title":"Rumours","by":"Fleetwood Mac · 1977","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg/112x112bb.webp","buttons":["Add to side A","Add to side B"]}
+PASS painel chromium 1280 «Add to side A» puts it at the back of side A, and the result then says «already in the crate»
+PASS painel chromium 1280 with six on side A again the problem is gone and Save is on
+PASS painel chromium 1280 a pasted Apple Music album link goes to the server as it is, and brings that album
+PASS painel chromium 1280 nothing found is said in words
+PASS painel chromium 1280 each of the seven failure names of the search is said in plain words, and the crate does not change — search-not-configured, service-unavailable, too-many-requests, not-an-album-link, session-expired, not-an-administrator, invalid-request
+PASS painel chromium 1280 Save asks first and says what goes live: the count of each side, who comes in, who goes out, and that the order changes — The crate goes live now: 6 albums on side A, 9 albums on side B. | 2 albums come in: Rumours · Harvest Moon | 2 albums go out: Dummy · Illmatic | The order or the side of the albums that stay changes. | Everybody sees it within a minute. To go back, you edit again and save. | Save and put live | Back
+PASS painel chromium 1280 nothing was written before the confirmation
+PASS painel chromium 1280 THE DATABASE RULES AS PUBLISHED TODAY refuse the crate: the Painel says so in words, writes nothing and keeps the changes — Not saved: the database refused it: its rules do not accept this save yet (a new field, or a text outside the format). Nothing changed on the site, and your changes are still here.
+PASS painel chromium 1280 once the rules accept it, «Try again» saves: rev 1, the two sides in the order on the screen — {"rev":1,"a":["vu-nico","dsotm","crimson","low","pcl","1440851613"],"b":["tpab","desire","pitty","aeroplane","mezzanine","homogenic","edge","harvest","1015739190"]}
+PASS painel chromium 1280 what is stored of an album is exactly what the entry page needs: id, title, artist, year, artwork path, Apple Music address — {"id":"1440851613","title":"Rumours","artist":"Fleetwood Mac","year":1977,"art":"Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg","href":"https://music.apple.com/us/album/rumours/1440851613"}
+PASS painel chromium 1280 who saved is kept in the work area, never in the public document
+PASS painel chromium 1280 the Painel says «saved and live» and that the entry page shows the published crate
+PASS painel chromium 1280 THE ENTRY PAGE then shows the crate the Painel saved: side A from the front, side B behind it — swapped · vu-nico dsotm crimson low pcl 1440851613 1015739190 harvest edge homogenic mezzanine aeroplane pitty desire tpab
+PASS painel chromium 1280 opened again, the Painel shows the published crate
+PASS painel chromium 1280 the crate changed on another device: the Painel says so and writes nothing over it — The crate changed on another device of yours after you opened this page. | The other crate (already live) has 6 albums on side A and 9 albums on side B. | Save mine | Keep the other
+PASS painel chromium 1280 «Save mine» saves this device's crate on top of the other's: rev 3, the other's side kept as the earlier value — rev 3
+PASS painel chromium 1280 «Keep the other» drops this device's change and shows what is live
+PASS painel chromium 1280 a change of the crate not saved is kept while the owner looks at the texts
+PASS painel chromium 1280 leaving the Painel with the crate not saved asks first, and «cancel» keeps the person and the change — There are changes not saved. Leave the admin and lose them?
+PASS painel chromium 1280 «Discard» puts the crate back as it was read
+PASS painel chromium 1280 no sideways scroll
+PASS painel chromium 1280 no console error
+PASS painel chromium 1280 every database request was answered by the stand-in — []
+PASS painel chromium 1280 nothing outside was reached: only this machine, the stand-ins, Apple's image server and the fonts — aborted on purpose: nothing
+PASS painel chromium 1280 a visitor at /admin/crate sees «Page not found», and the Painel's files are never requested
+PASS entry chromium 390 nothing published: the page says so to itself («none») and keeps the fixed set, whole — none · 15 sleeves
+PASS entry chromium 390 nothing published: the caption is the front album and its year — {"title":"The Velvet Underground & Nico","line":"1967"}
+PASS entry chromium 390 on the phone the row of albums carries the name, and the label over the crate is not shown — Na caixa do The Album Blender · label shown: false
+PASS entry chromium 390 nothing published: the database was asked ONCE, after the page had loaded — read 3325 ms after the start, load at 3324 ms
+PASS entry chromium 390 nothing published: no console error, and the label adds no sideways scroll —  page 390 px wide in a window of 390 px, 390 px without the label
+PASS entry chromium 390 published: the crate is swapped in, in the owner's order (side A from the front, side B behind it) — swapped · dummy low vu-nico crimson dsotm pcl illmatic aeroplane pitty desire tpab mezzanine
+PASS entry chromium 390 published: side A faces the visitor, its 7 albums and no other — dummy low vu-nico crimson dsotm pcl illmatic
+PASS entry chromium 390 published: the caption stays album and year, of the new front album — {"title":"Dummy","line":"1994"}
+PASS entry chromium 390 published: every cover comes from Apple's image server and has arrived — 12 of 12 loaded
+PASS entry chromium 390 published: the phone's row has the same 12 albums in the same order, each with its own Apple Music address — Dummy · Low · The Velvet Underground & Nico · In the Court of the Crimson King · The Dark Side of the Moon · Power, Corruption & Lies · Illmatic · In the Aeroplane Over the Sea · Admirável Chip Novo · Desire, I Want to Turn Into You · To Pimp a Butterfly · Mezzanine
+PASS entry chromium 390 published: each button of the row says what it does, the album and the artist — ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)
+PASS entry chromium 390 published: nothing on the page moved or changed size with the swap (the height of the page, the stage, the caption, the row, the close, the footer) — page 4699 px
+PASS entry chromium 390 published: the browser recorded no layout shift at the swap — [{"at":6871,"value":0.0006,"nodes":["src"]}]
+PASS entry chromium 390 published: no console error, and the page is as wide as with the fixed set —  390 px
+PASS entry chromium 390 hostile: the four bad albums are left out (markup in a title, markup in an artist, a cover from another server, a link that runs code) and the others go on — swapped · pcl dummy illmatic harvest edge homogenic mezzanine aeroplane pitty desire tpab
+PASS entry chromium 390 hostile: nothing became an element and nothing ran — {"pwned":null,"scripts":0,"handlers":0}
+PASS entry chromium 390 hostile: the other server was never asked for anything, and every image is Apple's or the page's own — 0 requests to the other server
+PASS entry chromium 390 hostile: every link to listen is an Apple Music page
+PASS entry chromium 390 hostile: no console error
+PASS entry chromium 390 a published crate that falls under the limits once its bad albums are out is refused whole: the fixed set stays — refused
+PASS entry chromium 390 the read fails: the fixed set stays, whole, and nothing breaks — failed 
+PASS entry chromium 390 the read is slow (6 s): the page gives up 3 s after it loaded («timeout»), long before the answer, and keeps the fixed set — timeout 3003 ms after the load
+PASS entry chromium 390 the read is slow: the page had loaded and painted long before the database could answer at 6 s (it never waits for it) — load 4569 ms · first paint 1128 ms
+PASS entry chromium 390 without script: the page reads whole with the fixed set, and the database is never asked — 15 sleeves
+PASS entry chromium 390 in English the crate is «In The Album Blender's crate», and the albums and artists keep their names — In The Album Blender's crate
+PASS entry chromium 390 in English the row's buttons say «Listen on Apple Music» — ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)
+PASS painel chromium 390 the menu has «Crate» beside «Texts», and keeps «Switches · later» and «Blend recipes · later» turned off — Texts | Crate | Switches · later (off) | Blend recipes · later (off)
+PASS painel chromium 390 «Crate» opens the section at its own address, without adding a step to «back» — http://127.0.0.1:43951/admin/crate
+PASS painel chromium 390 with nothing published it shows the fixed set of the entry page: side A (8) and side B (7), each from its front — A vu-nico crimson dsotm low pcl dummy illmatic harvest | B tpab desire pitty aeroplane mezzanine homogenic edge
+PASS painel chromium 390 it says what the entry page shows, and the limits of each side — What the entry page shows: the fixed set of the code (nothing is published yet)
+PASS painel chromium 390 each album shows its cover (Apple's image server), its name, its artist and its year — {"title":"The Velvet Underground & Nico","by":"The Velvet Underground & Nico · 1967","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/92/93/39/9293397f-a707-237e-ec7e-0ca613a67e3c/06UMGIM04143.rgb.jpg/112x112bb.webp","loaded":true}
+PASS painel chromium 390 nothing to save yet: «All saved», Save and Discard off
+PASS painel chromium 390 keyboard: Enter on «Move up» moves the album one place up — crimson vu-nico dsotm low pcl dummy illmatic harvest
+PASS painel chromium 390 keyboard: the focus stays on the album that moved (at the front «up» is off, so on its «down») — crimson:down
+PASS painel chromium 390 keyboard: Enter twice on «Move down» takes it to the third place, the focus still on it — vu-nico dsotm crimson · focus crimson:down
+PASS painel chromium 390 keyboard: Tab walks the four buttons of an album in order (up, down, to the other side, remove) — crimson:up → crimson:down → crimson:across → crimson:remove
+PASS painel chromium 390 the bar says the crate has changes not saved
+PASS painel chromium 390 «To side B» sends the album to the back of the other side — B tpab desire pitty aeroplane mezzanine homogenic edge harvest
+PASS painel chromium 390 «Remove» takes the album out
+PASS painel chromium 390 a side under its minimum says so in words, and Save is off until it is fixed — Side A needs at least 6 albums (up to 10). Add one, or bring one from the other side.
+PASS painel chromium 390 the search asks THE SERVER's route, with the administrator's session, and never Apple from the browser — {"query":"fleetwood mac","authorized":true}
+PASS painel chromium 390 a result shows cover, album, artist and year, and «add» for each side — {"title":"Rumours","by":"Fleetwood Mac · 1977","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg/112x112bb.webp","buttons":["Add to side A","Add to side B"]}
+PASS painel chromium 390 «Add to side A» puts it at the back of side A, and the result then says «already in the crate»
+PASS painel chromium 390 with six on side A again the problem is gone and Save is on
+PASS painel chromium 390 a pasted Apple Music album link goes to the server as it is, and brings that album
+PASS painel chromium 390 nothing found is said in words
+PASS painel chromium 390 each of the seven failure names of the search is said in plain words, and the crate does not change — search-not-configured, service-unavailable, too-many-requests, not-an-album-link, session-expired, not-an-administrator, invalid-request
+PASS painel chromium 390 Save asks first and says what goes live: the count of each side, who comes in, who goes out, and that the order changes — The crate goes live now: 6 albums on side A, 9 albums on side B. | 2 albums come in: Rumours · Harvest Moon | 2 albums go out: Dummy · Illmatic | The order or the side of the albums that stay changes. | Everybody sees it within a minute. To go back, you edit again and save. | Save and put live | Back
+PASS painel chromium 390 nothing was written before the confirmation
+PASS painel chromium 390 THE DATABASE RULES AS PUBLISHED TODAY refuse the crate: the Painel says so in words, writes nothing and keeps the changes — Not saved: the database refused it: its rules do not accept this save yet (a new field, or a text outside the format). Nothing changed on the site, and your changes are still here.
+PASS painel chromium 390 once the rules accept it, «Try again» saves: rev 1, the two sides in the order on the screen — {"rev":1,"a":["vu-nico","dsotm","crimson","low","pcl","1440851613"],"b":["tpab","desire","pitty","aeroplane","mezzanine","homogenic","edge","harvest","1015739190"]}
+PASS painel chromium 390 what is stored of an album is exactly what the entry page needs: id, title, artist, year, artwork path, Apple Music address — {"id":"1440851613","title":"Rumours","artist":"Fleetwood Mac","year":1977,"art":"Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg","href":"https://music.apple.com/us/album/rumours/1440851613"}
+PASS painel chromium 390 who saved is kept in the work area, never in the public document
+PASS painel chromium 390 the Painel says «saved and live» and that the entry page shows the published crate
+PASS painel chromium 390 THE ENTRY PAGE then shows the crate the Painel saved: side A from the front, side B behind it — swapped · vu-nico dsotm crimson low pcl 1440851613 1015739190 harvest edge homogenic mezzanine aeroplane pitty desire tpab
+PASS painel chromium 390 opened again, the Painel shows the published crate
+PASS painel chromium 390 the crate changed on another device: the Painel says so and writes nothing over it — The crate changed on another device of yours after you opened this page. | The other crate (already live) has 6 albums on side A and 9 albums on side B. | Save mine | Keep the other
+PASS painel chromium 390 «Save mine» saves this device's crate on top of the other's: rev 3, the other's side kept as the earlier value — rev 3
+PASS painel chromium 390 «Keep the other» drops this device's change and shows what is live
+PASS painel chromium 390 a change of the crate not saved is kept while the owner looks at the texts
+PASS painel chromium 390 leaving the Painel with the crate not saved asks first, and «cancel» keeps the person and the change — There are changes not saved. Leave the admin and lose them?
+PASS painel chromium 390 «Discard» puts the crate back as it was read
+PASS painel chromium 390 no sideways scroll
+PASS painel chromium 390 on the phone every button of the section is at least 44 px — smallest 44 px of 63
+PASS painel chromium 390 no console error
+PASS painel chromium 390 every database request was answered by the stand-in — []
+PASS painel chromium 390 nothing outside was reached: only this machine, the stand-ins, Apple's image server and the fonts — aborted on purpose: nothing
+PASS painel chromium 390 a visitor at /admin/crate sees «Page not found», and the Painel's files are never requested
+PASS entry webkit 1280 nothing published: the page says so to itself («none») and keeps the fixed set, whole — none · 15 sleeves
+PASS entry webkit 1280 nothing published: the caption is the front album and its year — {"title":"The Velvet Underground & Nico","line":"1967"}
+PASS entry webkit 1280 the crate carries its name on the computer: «Na caixa do The Album Blender», a small label by the crate — {"text":"NA CAIXA DO THE ALBUM BLENDER","shown":true,"box":[567,82,292,31],"font":"-apple-system","size":"12px","weight":"700","upper":"uppercase"}
+PASS entry webkit 1280 the label is in the page's own style: 12 px, bold, capitals, inside the stage and clear of the pause icon — {"tag":[567,82,292,31],"scene":[567,72,745,645]}
+PASS entry webkit 1280 nothing published: the database was asked ONCE, after the page had loaded — read 3403 ms after the start, load at 3404 ms
+PASS entry webkit 1280 nothing published: no console error, and the label adds no sideways scroll —  page 1312 px wide in a window of 1280 px, 1312 px without the label
+PASS entry webkit 1280 published: the crate is swapped in, in the owner's order (side A from the front, side B behind it) — swapped · dummy low vu-nico crimson dsotm pcl illmatic aeroplane pitty desire tpab mezzanine
+PASS entry webkit 1280 published: side A faces the visitor, its 7 albums and no other — dummy low vu-nico crimson dsotm pcl illmatic
+PASS entry webkit 1280 published: the caption stays album and year, of the new front album — {"title":"Dummy","line":"1994"}
+PASS entry webkit 1280 published: every cover comes from Apple's image server and has arrived — 12 of 12 loaded
+PASS entry webkit 1280 published: «Ouça no Apple Music» leads to the front album's page, in a new tab (judged by its address, never opened) — {"href":"https://music.apple.com/us/album/dummy/1440653096","target":"_blank","rel":"noopener","name":"Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)"}
+PASS entry webkit 1280 published: nothing on the page moved or changed size with the swap (the height of the page, the stage, the caption, the row, the close, the footer) — page 4564 px
+PASS entry webkit 1280 published: no console error, and the page is as wide as with the fixed set —  1312 px
+PASS entry webkit 1280 published: scrolling the stories, the caption names the pulled record of the new crate (3rd, 1st and 6th of side A; 4th, 2nd and 1st of side B) — The Velvet Underground & Nico · Dummy · Power, Corruption & Lies · Admirável Chip Novo · To Pimp a Butterfly · Mezzanine
+PASS entry webkit 1280 hostile: the four bad albums are left out (markup in a title, markup in an artist, a cover from another server, a link that runs code) and the others go on — swapped · pcl dummy illmatic harvest edge homogenic mezzanine aeroplane pitty desire tpab
+PASS entry webkit 1280 hostile: nothing became an element and nothing ran — {"pwned":null,"scripts":0,"handlers":0}
+PASS entry webkit 1280 hostile: the other server was never asked for anything, and every image is Apple's or the page's own — 0 requests to the other server
+PASS entry webkit 1280 hostile: every link to listen is an Apple Music page
+PASS entry webkit 1280 hostile: no console error
+PASS entry webkit 1280 a published crate that falls under the limits once its bad albums are out is refused whole: the fixed set stays — refused
+PASS entry webkit 1280 the read fails: the fixed set stays, whole, and nothing breaks — failed 
+PASS entry webkit 1280 the read is slow (6 s): the page gives up 3 s after it loaded («timeout»), long before the answer, and keeps the fixed set — timeout 3008 ms after the load
+PASS entry webkit 1280 the read is slow: the page had loaded and painted long before the database could answer at 6 s (it never waits for it) — load 4021 ms · first paint 1306 ms
+PASS entry webkit 1280 without script: the page reads whole with the fixed set, and the database is never asked — 15 sleeves
+PASS entry webkit 1280 in English the crate is «In The Album Blender's crate», and the albums and artists keep their names — IN THE ALBUM BLENDER'S CRATE
+PASS painel webkit 1280 the menu has «Crate» beside «Texts», and keeps «Switches · later» and «Blend recipes · later» turned off — Texts | Crate | Switches · later (off) | Blend recipes · later (off)
+PASS painel webkit 1280 «Crate» opens the section at its own address, without adding a step to «back» — http://127.0.0.1:43951/admin/crate
+PASS painel webkit 1280 with nothing published it shows the fixed set of the entry page: side A (8) and side B (7), each from its front — A vu-nico crimson dsotm low pcl dummy illmatic harvest | B tpab desire pitty aeroplane mezzanine homogenic edge
+PASS painel webkit 1280 it says what the entry page shows, and the limits of each side — What the entry page shows: the fixed set of the code (nothing is published yet) 
+PASS painel webkit 1280 each album shows its cover (Apple's image server), its name, its artist and its year — {"title":"The Velvet Underground & Nico","by":"The Velvet Underground & Nico · 1967","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/92/93/39/9293397f-a707-237e-ec7e-0ca613a67e3c/06UMGIM04143.rgb.jpg/112x112bb.webp","loaded":true}
+PASS painel webkit 1280 nothing to save yet: «All saved», Save and Discard off
+PASS painel webkit 1280 keyboard: Enter on «Move up» moves the album one place up — crimson vu-nico dsotm low pcl dummy illmatic harvest
+PASS painel webkit 1280 keyboard: the focus stays on the album that moved (at the front «up» is off, so on its «down») — crimson:down
+PASS painel webkit 1280 keyboard: Enter twice on «Move down» takes it to the third place, the focus still on it — vu-nico dsotm crimson · focus crimson:down
+PASS painel webkit 1280 keyboard: Tab walks the four buttons of an album in order (up, down, to the other side, remove) — crimson:up → crimson:down → crimson:across → crimson:remove
+PASS painel webkit 1280 the bar says the crate has changes not saved
+PASS painel webkit 1280 «To side B» sends the album to the back of the other side — B tpab desire pitty aeroplane mezzanine homogenic edge harvest
+PASS painel webkit 1280 «Remove» takes the album out
+PASS painel webkit 1280 a side under its minimum says so in words, and Save is off until it is fixed — Side A needs at least 6 albums (up to 10). Add one, or bring one from the other side.
+PASS painel webkit 1280 the search asks THE SERVER's route, with the administrator's session, and never Apple from the browser — {"query":"fleetwood mac","authorized":true}
+PASS painel webkit 1280 a result shows cover, album, artist and year, and «add» for each side — {"title":"Rumours","by":"Fleetwood Mac · 1977","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg/112x112bb.webp","buttons":["Add to side A","Add to side B"]}
+PASS painel webkit 1280 «Add to side A» puts it at the back of side A, and the result then says «already in the crate»
+PASS painel webkit 1280 with six on side A again the problem is gone and Save is on
+PASS painel webkit 1280 a pasted Apple Music album link goes to the server as it is, and brings that album
+PASS painel webkit 1280 nothing found is said in words
+PASS painel webkit 1280 each of the seven failure names of the search is said in plain words, and the crate does not change — search-not-configured, service-unavailable, too-many-requests, not-an-album-link, session-expired, not-an-administrator, invalid-request
+PASS painel webkit 1280 Save asks first and says what goes live: the count of each side, who comes in, who goes out, and that the order changes — The crate goes live now: 6 albums on side A, 9 albums on side B. | 2 albums come in: Rumours · Harvest Moon | 2 albums go out: Dummy · Illmatic | The order or the side of the albums that stay changes. | Everybody sees it within a minute. To go back, you edit again and save. | Save and put live | Back | 
+PASS painel webkit 1280 nothing was written before the confirmation
+PASS painel webkit 1280 THE DATABASE RULES AS PUBLISHED TODAY refuse the crate: the Painel says so in words, writes nothing and keeps the changes — Not saved: the database refused it: its rules do not accept this save yet (a new field, or a text outside the format). Nothing changed on the site, and your changes are still here.
+PASS painel webkit 1280 once the rules accept it, «Try again» saves: rev 1, the two sides in the order on the screen — {"rev":1,"a":["vu-nico","dsotm","crimson","low","pcl","1440851613"],"b":["tpab","desire","pitty","aeroplane","mezzanine","homogenic","edge","harvest","1015739190"]}
+PASS painel webkit 1280 what is stored of an album is exactly what the entry page needs: id, title, artist, year, artwork path, Apple Music address — {"id":"1440851613","title":"Rumours","artist":"Fleetwood Mac","year":1977,"art":"Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg","href":"https://music.apple.com/us/album/rumours/1440851613"}
+PASS painel webkit 1280 who saved is kept in the work area, never in the public document
+PASS painel webkit 1280 the Painel says «saved and live» and that the entry page shows the published crate
+PASS painel webkit 1280 THE ENTRY PAGE then shows the crate the Painel saved: side A from the front, side B behind it — swapped · vu-nico dsotm crimson low pcl 1440851613 1015739190 harvest edge homogenic mezzanine aeroplane pitty desire tpab
+PASS painel webkit 1280 opened again, the Painel shows the published crate
+PASS painel webkit 1280 the crate changed on another device: the Painel says so and writes nothing over it — The crate changed on another device of yours after you opened this page. | The other crate (already live) has 6 albums on side A and 9 albums on side B. | Save mine | Keep the other | 
+PASS painel webkit 1280 «Save mine» saves this device's crate on top of the other's: rev 3, the other's side kept as the earlier value — rev 3
+PASS painel webkit 1280 «Keep the other» drops this device's change and shows what is live
+PASS painel webkit 1280 a change of the crate not saved is kept while the owner looks at the texts
+PASS painel webkit 1280 leaving the Painel with the crate not saved asks first, and «cancel» keeps the person and the change — There are changes not saved. Leave the admin and lose them?
+PASS painel webkit 1280 «Discard» puts the crate back as it was read
+PASS painel webkit 1280 no sideways scroll
+PASS painel webkit 1280 no console error
+PASS painel webkit 1280 every database request was answered by the stand-in — []
+PASS painel webkit 1280 nothing outside was reached: only this machine, the stand-ins, Apple's image server and the fonts — aborted on purpose: apis.google.com
+PASS painel webkit 1280 a visitor at /admin/crate sees «Page not found», and the Painel's files are never requested
+PASS entry webkit 390 nothing published: the page says so to itself («none») and keeps the fixed set, whole — none · 15 sleeves
+PASS entry webkit 390 nothing published: the caption is the front album and its year — {"title":"The Velvet Underground & Nico","line":"1967"}
+PASS entry webkit 390 on the phone the row of albums carries the name, and the label over the crate is not shown — Na caixa do The Album Blender · label shown: false
+PASS entry webkit 390 nothing published: the database was asked ONCE, after the page had loaded — read 5956 ms after the start, load at 5957 ms
+PASS entry webkit 390 nothing published: no console error, and the label adds no sideways scroll —  page 390 px wide in a window of 390 px, 390 px without the label
+PASS entry webkit 390 published: the crate is swapped in, in the owner's order (side A from the front, side B behind it) — swapped · dummy low vu-nico crimson dsotm pcl illmatic aeroplane pitty desire tpab mezzanine
+PASS entry webkit 390 published: side A faces the visitor, its 7 albums and no other — dummy low vu-nico crimson dsotm pcl illmatic
+PASS entry webkit 390 published: the caption stays album and year, of the new front album — {"title":"Dummy","line":"1994"}
+PASS entry webkit 390 published: every cover comes from Apple's image server and has arrived — 12 of 12 loaded
+PASS entry webkit 390 published: the phone's row has the same 12 albums in the same order, each with its own Apple Music address — Dummy · Low · The Velvet Underground & Nico · In the Court of the Crimson King · The Dark Side of the Moon · Power, Corruption & Lies · Illmatic · In the Aeroplane Over the Sea · Admirável Chip Novo · Desire, I Want to Turn Into You · To Pimp a Butterfly · Mezzanine
+PASS entry webkit 390 published: each button of the row says what it does, the album and the artist — ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba)
+PASS entry webkit 390 published: nothing on the page moved or changed size with the swap (the height of the page, the stage, the caption, the row, the close, the footer) — page 4668 px
+PASS entry webkit 390 published: no console error, and the page is as wide as with the fixed set —  390 px
+PASS entry webkit 390 hostile: the four bad albums are left out (markup in a title, markup in an artist, a cover from another server, a link that runs code) and the others go on — swapped · pcl dummy illmatic harvest edge homogenic mezzanine aeroplane pitty desire tpab
+PASS entry webkit 390 hostile: nothing became an element and nothing ran — {"pwned":null,"scripts":0,"handlers":0}
+PASS entry webkit 390 hostile: the other server was never asked for anything, and every image is Apple's or the page's own — 0 requests to the other server
+PASS entry webkit 390 hostile: every link to listen is an Apple Music page
+PASS entry webkit 390 hostile: no console error
+PASS entry webkit 390 a published crate that falls under the limits once its bad albums are out is refused whole: the fixed set stays — refused
+PASS entry webkit 390 the read fails: the fixed set stays, whole, and nothing breaks — failed 
+PASS entry webkit 390 the read is slow (6 s): the page gives up 3 s after it loaded («timeout»), long before the answer, and keeps the fixed set — timeout 3004 ms after the load
+PASS entry webkit 390 the read is slow: the page had loaded and painted long before the database could answer at 6 s (it never waits for it) — load 2624 ms · first paint 1158 ms
+PASS entry webkit 390 without script: the page reads whole with the fixed set, and the database is never asked — 15 sleeves
+PASS entry webkit 390 in English the crate is «In The Album Blender's crate», and the albums and artists keep their names — In The Album Blender's crate
+PASS entry webkit 390 in English the row's buttons say «Listen on Apple Music» — ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab)
+PASS painel webkit 390 the menu has «Crate» beside «Texts», and keeps «Switches · later» and «Blend recipes · later» turned off — Texts | Crate | Switches · later (off) | Blend recipes · later (off)
+PASS painel webkit 390 «Crate» opens the section at its own address, without adding a step to «back» — http://127.0.0.1:43951/admin/crate
+PASS painel webkit 390 with nothing published it shows the fixed set of the entry page: side A (8) and side B (7), each from its front — A vu-nico crimson dsotm low pcl dummy illmatic harvest | B tpab desire pitty aeroplane mezzanine homogenic edge
+PASS painel webkit 390 it says what the entry page shows, and the limits of each side — What the entry page shows: the fixed set of the code (nothing is published yet) 
+PASS painel webkit 390 each album shows its cover (Apple's image server), its name, its artist and its year — {"title":"The Velvet Underground & Nico","by":"The Velvet Underground & Nico · 1967","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/92/93/39/9293397f-a707-237e-ec7e-0ca613a67e3c/06UMGIM04143.rgb.jpg/112x112bb.webp","loaded":true}
+PASS painel webkit 390 nothing to save yet: «All saved», Save and Discard off
+PASS painel webkit 390 keyboard: Enter on «Move up» moves the album one place up — crimson vu-nico dsotm low pcl dummy illmatic harvest
+PASS painel webkit 390 keyboard: the focus stays on the album that moved (at the front «up» is off, so on its «down») — crimson:down
+PASS painel webkit 390 keyboard: Enter twice on «Move down» takes it to the third place, the focus still on it — vu-nico dsotm crimson · focus crimson:down
+PASS painel webkit 390 keyboard: Tab walks the four buttons of an album in order (up, down, to the other side, remove) — crimson:up → crimson:down → crimson:across → crimson:remove
+PASS painel webkit 390 the bar says the crate has changes not saved
+PASS painel webkit 390 «To side B» sends the album to the back of the other side — B tpab desire pitty aeroplane mezzanine homogenic edge harvest
+PASS painel webkit 390 «Remove» takes the album out
+PASS painel webkit 390 a side under its minimum says so in words, and Save is off until it is fixed — Side A needs at least 6 albums (up to 10). Add one, or bring one from the other side.
+PASS painel webkit 390 the search asks THE SERVER's route, with the administrator's session, and never Apple from the browser — {"query":"fleetwood mac","authorized":true}
+PASS painel webkit 390 a result shows cover, album, artist and year, and «add» for each side — {"title":"Rumours","by":"Fleetwood Mac · 1977","cover":"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg/112x112bb.webp","buttons":["Add to side A","Add to side B"]}
+PASS painel webkit 390 «Add to side A» puts it at the back of side A, and the result then says «already in the crate»
+PASS painel webkit 390 with six on side A again the problem is gone and Save is on
+PASS painel webkit 390 a pasted Apple Music album link goes to the server as it is, and brings that album
+PASS painel webkit 390 nothing found is said in words
+PASS painel webkit 390 each of the seven failure names of the search is said in plain words, and the crate does not change — search-not-configured, service-unavailable, too-many-requests, not-an-album-link, session-expired, not-an-administrator, invalid-request
+PASS painel webkit 390 Save asks first and says what goes live: the count of each side, who comes in, who goes out, and that the order changes — The crate goes live now: 6 albums on side A, 9 albums on side B. | 2 albums come in: Rumours · Harvest Moon | 2 albums go out: Dummy · Illmatic | The order or the side of the albums that stay changes. | Everybody sees it within a minute. To go back, you edit again and save. | Save and put live | Back | 
+PASS painel webkit 390 nothing was written before the confirmation
+PASS painel webkit 390 THE DATABASE RULES AS PUBLISHED TODAY refuse the crate: the Painel says so in words, writes nothing and keeps the changes — Not saved: the database refused it: its rules do not accept this save yet (a new field, or a text outside the format). Nothing changed on the site, and your changes are still here.
+PASS painel webkit 390 once the rules accept it, «Try again» saves: rev 1, the two sides in the order on the screen — {"rev":1,"a":["vu-nico","dsotm","crimson","low","pcl","1440851613"],"b":["tpab","desire","pitty","aeroplane","mezzanine","homogenic","edge","harvest","1015739190"]}
+PASS painel webkit 390 what is stored of an album is exactly what the entry page needs: id, title, artist, year, artwork path, Apple Music address — {"id":"1440851613","title":"Rumours","artist":"Fleetwood Mac","year":1977,"art":"Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab-c953-f139c72fd337/093624924722.jpg","href":"https://music.apple.com/us/album/rumours/1440851613"}
+PASS painel webkit 390 who saved is kept in the work area, never in the public document
+PASS painel webkit 390 the Painel says «saved and live» and that the entry page shows the published crate
+PASS painel webkit 390 THE ENTRY PAGE then shows the crate the Painel saved: side A from the front, side B behind it — swapped · vu-nico dsotm crimson low pcl 1440851613 1015739190 harvest edge homogenic mezzanine aeroplane pitty desire tpab
+PASS painel webkit 390 opened again, the Painel shows the published crate
+PASS painel webkit 390 the crate changed on another device: the Painel says so and writes nothing over it — The crate changed on another device of yours after you opened this page. | The other crate (already live) has 6 albums on side A and 9 albums on side B. | Save mine | Keep the other | 
+PASS painel webkit 390 «Save mine» saves this device's crate on top of the other's: rev 3, the other's side kept as the earlier value — rev 3
+PASS painel webkit 390 «Keep the other» drops this device's change and shows what is live
+PASS painel webkit 390 a change of the crate not saved is kept while the owner looks at the texts
+PASS painel webkit 390 leaving the Painel with the crate not saved asks first, and «cancel» keeps the person and the change — There are changes not saved. Leave the admin and lose them?
+PASS painel webkit 390 «Discard» puts the crate back as it was read
+PASS painel webkit 390 no sideways scroll
+PASS painel webkit 390 on the phone every button of the section is at least 44 px — smallest 44 px of 63
+PASS painel webkit 390 no console error
+PASS painel webkit 390 every database request was answered by the stand-in — []
+PASS painel webkit 390 nothing outside was reached: only this machine, the stand-ins, Apple's image server and the fonts — aborted on purpose: apis.google.com
+PASS painel webkit 390 a visitor at /admin/crate sees «Page not found», and the Painel's files are never requested
+PASS entry chromium 1280 the 3D crate: this browser has no WebGL here, so it was not asked for at all (the CSS crate stays) — swapped
+
+272 of 272 passed

@@ -11,9 +11,8 @@
  * with no SDK (public/splash/publishedCrate.js). The store is the one the Painel's save already has (`doc`, `getDoc`,
  * `runTransaction`, `serverTimestamp`).
  *
- * The database's rules must list the document `crate` for the save to be accepted (firestore.rules is the owner's; the
- * lines are in test/security/support/crateRulesProposal.js). Until then the save is refused by the rules and the Painel
- * says so.
+ * The database's rules list the document `crate` and check every album of it (firestore.rules, validCrate). The owner
+ * publishes the rules by hand: until the published rules have those lines the save is refused, and the Painel says so.
  */
 import { buildCrateSave, readCrateDocument, sameCrate, validateCrate, CRATE_SCHEMA_VERSION } from '../content/crate.js'
 import { PublishedContentRepository, PUBLISHED, CMS_WORK } from './PublishedContentRepository.js'

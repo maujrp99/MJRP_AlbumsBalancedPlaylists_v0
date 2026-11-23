@@ -38,12 +38,13 @@ describe('one album of the crate', () => {
     it('the cover is a PATH on Apple\'s image server: an address, another server, a way out of the folder or odd characters are refused', () => {
         for (const art of [
             'https://evil.example/x.jpg', '//evil.example/x.jpg', '/Music/x.jpg', 'Music/../../x.jpg', 'Music/x y.jpg', 'Music/x.jpg?u=1',
-            'Music/x.jpg#f', 'Music\\x.jpg', 'Music/a@b/x.jpg', 'javascript:alert(1)', '', 5, `Music/${'a'.repeat(400)}.jpg`
+            'Music/x.jpg#f', 'Music\\x.jpg', 'Music/a@b/x.jpg', 'javascript:alert(1)', '', 5, `Music/${'a'.repeat(400)}.jpg`, 'Music/a..b.jpg', 'x.jpg'
         ]) expect(validateAlbum(album(1, { art })), String(art)).toEqual({ ok: false, reason: 'cover' })
     })
 
     it('the address to listen is an Apple Music one, https, and nothing else', () => {
-        for (const href of ['http://music.apple.com/us/album/x/1', 'https://music.apple.com.evil.example/us/album/x/1', 'https://evil.example/', 'javascript:alert(1)', 'music://x', '', null]) {
+        for (const href of ['http://music.apple.com/us/album/x/1', 'https://music.apple.com.evil.example/us/album/x/1', 'https://evil.example/', 'javascript:alert(1)', 'music://x', '', null,
+            'https://music.apple.com/us/album/<b>/1', 'https://music.apple.com/us/album/álbum/1', 'https://music.apple.com/us/album/x y/1']) {
             expect(validateAlbum(album(1, { href })), String(href)).toEqual({ ok: false, reason: 'link' })
         }
     })

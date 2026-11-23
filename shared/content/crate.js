@@ -65,9 +65,9 @@ function brokenName(text) {
     return text.length > MAX_NAME_CHARS ? REASON_TOO_LONG : null
 }
 
-/** A path inside the artwork folder: letters, digits and . _ - % between single slashes, never «..», never an address. */
+/** A path inside the artwork folder: letters, digits and . _ - % between single slashes, never two dots in a row, never an address (the same rule as the database's: firestore.rules). */
 const isArtPath = (art) => typeof art === 'string' && art.length <= MAX_ART_CHARS
-    && /^[A-Za-z0-9._%-]+(\/[A-Za-z0-9._%-]+)+$/.test(art) && !art.split('/').includes('..')
+    && /^[A-Za-z0-9._%-]+(\/[A-Za-z0-9._%-]+)+$/.test(art) && !art.includes('..')
 
 /**
  * The address of a cover, always on the one image server: the page asks for a square of `size` pixels.
@@ -89,7 +89,8 @@ export function artPathOf(url) {
 }
 
 const isYear = (year) => Number.isInteger(year) && year >= 1000 && year <= 9999
-const isListenLink = (href) => typeof href === 'string' && href.length <= MAX_LINK_CHARS && href.startsWith(LISTEN_SERVER) && isAllowedLink(href)
+// printable ASCII with no < nor >, as the database's rules check it (an address of Apple Music comes percent-encoded)
+const isListenLink = (href) => typeof href === 'string' && href.length <= MAX_LINK_CHARS && href.startsWith(LISTEN_SERVER) && /^[!-;=?-~]+$/.test(href) && isAllowedLink(href)
 const isId = (id) => typeof id === 'string' && /^[\w-]{1,64}$/.test(id)
 
 const refused = (reason) => ({ ok: false, reason })

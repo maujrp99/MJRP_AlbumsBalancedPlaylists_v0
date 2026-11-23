@@ -129,10 +129,46 @@ service cloud.firestore {
         && request.resource.data.recipes is map && request.resource.data.recipes.size() <= 100
         && previousIsMapIfPresent() && previousIsSmall(100);
     }
+    // The crate of albums of the entry page (F82 REQ-03, F95): `published/crate`. Two sides, each a list inside the limits
+    // of shared/content/crate.js (side A 6 to 10 albums, side B 4 to 10). The rules cannot loop, and a side has at most ten
+    // albums, so each of the ten places is checked by name.
+    // The rules evaluate at most 1000 expressions a request, and with twenty albums that leaves room for ONE match an album
+    // (measured in the emulator: a second match, of the title and the artist, already passes the limit at ten a side). So
+    // the rules check what an album can make a browser ask for or follow, and its shape:
+    //   six fields and no other   the size, and three of them read by name (a missing one, or one that is not text, refuses)
+    //   id art href               joined by a space, which none of the three can hold, and matched whole: the id (1 to 64 of
+    //                             A-Z a-z 0-9 _ -); the PATH of the artwork on Apple's image server (two or more segments of
+    //                             A-Z a-z 0-9 . _ % -, never two dots in a row, so never «..», never a scheme nor a leading
+    //                             slash: the page writes the server itself); the album's page on Apple Music
+    //                             (https://music.apple.com/ and printable ASCII, with no < nor >)
+    // The title, the artist and the year are NOT checked here, as a text of `texts` is not: the Painel checks them before
+    // saving and the entry page checks them again on reading (the validator of shared/content/crate.js) and writes them as text.
+    function validCrateAlbum(album) {
+      return album.size() == 6
+        && (album.id + ' ' + album.art + ' ' + album.href).matches('[A-Za-z0-9_-]{1,64} [.]?([A-Za-z0-9_%-]+[.]?)+(/[.]?([A-Za-z0-9_%-]+[.]?)+)+ https://music[.]apple[.]com/[!-;=?-~]*');
+    }
+    function crateAlbumAt(side, place) {
+      return side.size() <= place || validCrateAlbum(side[place]);
+    }
+    function validCrateSide(side, min, max) {
+      return side is list && side.size() >= min && side.size() <= max
+        && crateAlbumAt(side, 0) && crateAlbumAt(side, 1) && crateAlbumAt(side, 2) && crateAlbumAt(side, 3) && crateAlbumAt(side, 4)
+        && crateAlbumAt(side, 5) && crateAlbumAt(side, 6) && crateAlbumAt(side, 7) && crateAlbumAt(side, 8) && crateAlbumAt(side, 9);
+    }
+    function validCrate() {
+      return request.resource.data.keys().hasOnly(['_schemaVersion', 'rev', 'previous', 'sideA', 'sideB'])
+        && request.resource.data.keys().hasAll(['_schemaVersion', 'rev', 'sideA', 'sideB'])
+        && hasVersionAndRev()
+        && validCrateSide(request.resource.data.sideA, 6, 10)
+        && validCrateSide(request.resource.data.sideB, 4, 10)
+        && previousIsMapIfPresent()
+        && (!('previous' in request.resource.data) || request.resource.data.previous.keys().hasOnly(['sideA', 'sideB']));
+    }
     function validPublished(docId) {
       return (docId == 'site' && validSite())
         || ((docId == 'texts_en' || docId == 'texts_pt') && validTexts())
-        || (docId == 'recipes' && validRecipes());
+        || (docId == 'recipes' && validRecipes())
+        || (docId == 'crate' && validCrate());
     }
 
     // The published content: everybody reads it, with no login (the site reads it on opening, the
