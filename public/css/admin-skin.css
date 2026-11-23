@@ -112,3 +112,10 @@
     .cms-editor, .cms-conflict-grid { grid-template-columns: minmax(0, 1fr); }
     .cms-chip { min-height: 44px; }
 }
+
+/* The phone of the app (its shell is the phone's up to 899 px: public/css/mobile.css): the top bar of the app is fixed over the page, so
+   the save bar sticks BELOW it, by the app's own measures, and never slides under it (the judge of 2026-11-23, P1-1). A tall message
+   (the confirmation, the conflict) scrolls inside the bar, between the top bar and the bottom menu. */
+@media (max-width: 899px) {
+    .cms-bar { top: calc(var(--phone-topbar-h) + var(--phone-safe-top)); max-height: calc(100dvh - var(--phone-topbar-h) - var(--phone-safe-top) - var(--phone-tabbar-h) - var(--phone-safe-bottom)); overflow-y: auto; }
+}

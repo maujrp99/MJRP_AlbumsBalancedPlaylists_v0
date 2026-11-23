@@ -183,6 +183,19 @@ describe('the ports the kit is given', () => {
     })
 })
 
+describe('the save bar stays in reach (the judge of 2026-11-23, P1-1)', () => {
+    const skin = fs.readFileSync('public/css/admin-skin.css', 'utf8')
+    const phone = skin.slice(skin.indexOf('@media (max-width: 899px)'))
+
+    it('on the phone it sticks below the top bar of the app, by the app own measures, never under it', () => {
+        expect(phone).toMatch(/\.cms-bar \{[^}]*top: calc\(var\(--phone-topbar-h\) \+ var\(--phone-safe-top\)\)/)
+    })
+
+    it('a tall message (the confirmation, the conflict) scrolls inside the bar instead of pushing the buttons off the screen', () => {
+        expect(phone).toMatch(/\.cms-bar \{[^}]*max-height: calc\(100dvh - var\(--phone-topbar-h\) - var\(--phone-safe-top\) - var\(--phone-tabbar-h\) - var\(--phone-safe-bottom\)\);[^}]*overflow-y: auto/)
+    })
+})
+
 describe('the translation by the route of the server', () => {
     const ask = { target: 'pt', text: 'Albums', kind: 'short', context: 'albums.title' }
     const failed = (reason: string) => ({ error: { code: 'X', retryable: false, reason } })

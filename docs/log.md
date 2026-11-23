@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:14] step — F82 (juiz, P1-1): a faixa de salvar do Painel fica abaixo da barra do topo no celular
+
+**Branch:** claude/f82-cms-texts-panel
+
+Achado P1-1 do juiz independente do Painel (`2026-11-23-mjrpalbumblender-v0-cms-texts-panel-visual-parity-recheck.md`): no celular a faixa de salvar ia para baixo da barra do topo do app assim que a lista rolava, e «Salvar» e «Descartar» ficavam sem toque. A faixa agora gruda ABAIXO da barra do topo, pelas medidas do próprio app (`--phone-topbar-h` + `--phone-safe-top`, até 899 px, a largura em que o app usa a moldura do celular), e uma mensagem alta (a confirmação, o conflito) rola dentro da faixa, entre a barra do topo e o menu de baixo. Teste primeiro (`test/screens/admin/adapter.test.ts`, «the save bar stays in reach»: reprovou, depois passou); o toque em «Salvar» e «Descartar» depois de rolar entra na prova do navegador, no último commit desta série.
+
 ## [2026-11-23 15:01] step — F82: o teste de segredos passa; sair do Painel sem salvar pergunta; a barra do editor rico em português
 
 **Branch:** claude/f82-cms-texts-panel
