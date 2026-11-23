@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 14:36] review — F80: o juiz independente passou os botões «Ouça no Apple Music» (0 P0, 0 P1, 2 P2)
+
+**Branch:** fix/f80-album-links-as-the-apple-music-button
+
+Relatório, sem mudança: `reports/audits/2026-11-23-mjrpalbumblender-v0-album-links-button-visual-parity-recheck.md`. P2: a 375 px o crédito mais longo (Velvet Underground) ocupa 4 linhas e fica a 3 px do rótulo de baixo, sem colisão nem corte; o botão do Dark Side of the Moon (e o do Homogenic) aponta para um endereço de busca do Apple Music, não do álbum, igual na `main`. Incidente do dia: o roteiro do primeiro juiz (parado) clicava em cada botão, e o app Música do MJRP abriu e tocou o Velvet Underground; o segundo juiz conferiu só pelo endereço, com os hosts do Apple Music bloqueados na rede. Regra nova para toda prova no navegador: nunca clicar nem navegar para esses endereços.
+
 ## [2026-11-23 14:11] step — Página de entrada (F80): todo link de álbum é o botão «Ouça no Apple Music» do Velvet (UAT-285)
 
 **Branch:** fix/f80-album-links-as-the-apple-music-button
