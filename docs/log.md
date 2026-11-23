@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:03] review — F81: a escolha de idioma do app, segunda reconferência independente (passa: 0 P0, 0 P1, 11 P2)
+
+**Branch:** wip/f81-judge-2
+
+Juiz independente sobre `aea8013` (`feat/f81-language-by-country-and-switch`), como diferença sobre `aff752c`. Veredito: **pass — 0 P0, 0 P1, 11 P2**. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f81-language-choice-visual-parity-recheck-2.md`.
+
+O P1 do primeiro passe está corrigido: «Ir para Criar» na tela (4 de 4) e o nome da receita em português na janela de classificação; o teste novo (`test/i18n/portugueseNames.test.js`) tira os pares dos dicionários, não de uma lista à mão. Corrigidos também: a linha da Mistura no celular («crie uma em Criar»), as datas e horas no idioma do app (rodapé e Álbuns vistos antes e depois da troca) e a conferência do arquivo do país na publicação — lida: aceita qualquer país e qualquer espaço em branco, e roda depois do deploy, então não recusa uma publicação boa. O miolo do mecanismo segue passando em Chromium e WebKit, a 1280 e a 390 (52 conferências, 52 passam). A página de entrada do ramo é a da `main`.
+
+Contado como prova: o MJRP abriu a prévia no Firebase Hosting de verdade, do Brasil, e o app saiu em português.
+
+P2 abertos: 8 do primeiro passe e 3 novos (o inglês «on Home» da Mistura no celular; os avisos de «carga em pausa» escritos em inglês no código; a conferência do país em produção sem segunda tentativa, que pode dar alarme falso depois de um deploy bom). Nada bloqueia uma publicação.
+
 ## [2026-11-23 19:00] step — F81: a troca por país funciona no Firebase Hosting de verdade (o MJRP viu); a main com a página de entrada nova (74a9a87) dentro do ramo
 
 **Branch:** feat/f81-language-by-country-and-switch
