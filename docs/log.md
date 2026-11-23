@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:11] step — Board: o relatório da arrumação e a sugestão de prioridade
+
+**Branch:** wip/board-tidy-2026-11-23
+
+O relatório da arrumação do board com a sugestão de prioridade, pedida pelo MJRP: `reports/proposals/2026-11-23-mjrpalbumblender-v0-board-tidy-and-priority.md`. Abre com a ordem sugerida de tudo o que está aberto (dez linhas), depois a tabela do estado de cada feature (classe, o que foi fechado, o que falta), a via de cada feature aberta (para ele dizer o que «tudo em fast lane» alcança) e o que não foi conferido. É sugestão: `docs/specs/priority.md` não foi tocado. Registrado no relatório: ele pediu o comando de terminal para reordenar a lista, porque o board do Control Center está se comportando mal, e o orquestrador o entregou; a lista mudou duas vezes durante este trabalho (`71a9f6b`, `965c5ea`), e três features da lista de antes já estão no ar (exportar pelas playlists guardadas, o ambiente de prévia, «Create» no menu). Nenhum teste foi rodado: a fila da máquina estava reservada.
+
 ## [2026-11-23 16:08] step — Board: a F73 e a F75 fechadas, tarefas de F87 e F90 marcadas com evidência, e as specs anotadas com o que mudou
 
 **Branch:** wip/board-tidy-2026-11-23
