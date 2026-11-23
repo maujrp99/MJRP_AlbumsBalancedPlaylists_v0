@@ -4,7 +4,7 @@
     "mainToday": 301437,
     "reactVendor": 72000,
     "screen": 30000,
-    "background": 63379,
+    "background": 63380,
     "reactAtStart": true,
     "allowed": {
         "posthogAdapter": "F77: the measurement adapter (PostHog), 129,204 B; downloaded only when the build has a project key and nobody turned the measurement off",
@@ -21,7 +21,7 @@
         },
         "measured": {
             "main": 198469,
-            "afterFirstScreen": 238197
+            "afterFirstScreen": 238198
         }
     }
 }

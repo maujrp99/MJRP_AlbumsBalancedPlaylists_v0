@@ -1,0 +1,1018 @@
+F96 - the entry page on the phone: browser proof on the BUILT site (vite build with the real covers, vite preview)
+after: the branch feat/f96-entry-page-on-the-phone; before: main 7369dd8
+Chromium and WebKit (Playwright) as a phone at 390x844 and 360x740, visitor and signed in (a stand-in record in the page's storage), pt and en;
+each engine once without script and once with less motion asked; Chromium at 1280x800, before against after.
+Nothing but the page's own two arrow buttons was clicked; no link was opened; music hosts, foreign schemes, Firebase and every other host aborted.
+
+PASS  chromium-390-pt-out: no console error
+PASS  chromium-390-pt-out: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  chromium-390-pt-out: the page shows the visitor opening, in pt
+PASS  chromium-390-pt-out: the page is exactly as wide as the screen and does not scroll sideways
+      screen 390, page 390, body 390, after a push sideways x=0
+PASS  chromium-390-pt-out: the top bar ends inside the screen
+      right edge of the bar's last item 374.1 of 390: home 16+133; acct 197.3+176.8; lang 197.3+90; btn btn-ghost btn-sm only-ou 293.3+80.8
+PASS  chromium-390-pt-out: the opening has no big button
+PASS  chromium-390-pt-out: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  chromium-390-pt-out: the caption names the album and the year, with «Ouça no Apple Music» (a link, not opened)
+      {"text":"♫ Ouça no Apple Music (abre numa nova aba)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":174.2,"y":674.1,"w":199.8,"h":44}
+PASS  chromium-390-pt-out: opening, crate, caption, «Como funciona», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":308.9,"caption":638.9,"edu":756.2,"start":823,"albums":1294.1,"blend":1881.9,"playlists":2454.6,"inventory":2959.3,"flip":2386.7,"shelf":3489.3,"end":3946.9,"footer":4386}
+PASS  chromium-390-pt-out: the part's title is «Como funciona», shown, in the fire's orange
+      Como funciona rgb(249, 115, 22) 28px
+PASS  chromium-390-pt-out: the five labels and their numbers are in the lighter orange, the number standing out
+      LADO A · 1 — CRIAR rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 2 — ÁLBUNS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 2 — INVENTÁRIO rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  chromium-390-pt-out: the orange texts of the stretch are the title, the labels with their numbers, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n
+PASS  chromium-390-pt-out: in each step the label, the title and the text come before its one illustration
+      start: 845 < 891 < 978.5 < 1077.3 | albums: 1350.1 < 1396.1 < 1458.5 < 1566.9 | blend: 1937.9 < 1983.9 < 2046.3 < 2194.6 | playlists: 2510.6 < 2556.6 < 2619 < 2780.7 | inventory: 3015.3 < 3061.3 < 3148.9 < 3322.7
+PASS  chromium-390-pt-out: no step holds a cover or an Apple Music button
+PASS  chromium-390-pt-out: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 358x200, albums 358x283, blend 358x200, playlists 358x200, inventory 358x200
+PASS  chromium-390-pt-out: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  chromium-390-pt-out: the band runs from edge to edge of the screen
+      [[0,390,390],[0,390,390]]
+PASS  chromium-390-pt-out: every text of a step on the band has a contrast of 4.5 to 1 or more
+      22 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  chromium-390-pt-out: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  chromium-390-pt-out: the inventory step says «Catalogue»
+      Catalogue as mídias físicas da sua estante.
+PASS  chromium-390-pt-out: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  chromium-390-pt-out: the shelf is «Na caixa do The Album Blender», 15 albums, its row named for a screen reader
+      Na caixa do The Album Blender; 15 cards; row «Álbuns da caixa do The Album Blender»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  chromium-390-pt-out: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 390 of 2478; albums cut by the right edge: 1
+PASS  chromium-390-pt-out: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba); not fitting: 0
+PASS  chromium-390-pt-out: two arrows to tap, 44 px, named; at the start «Álbum anterior» is off
+      [{"name":"Álbum anterior","off":"true","shown":true,"x":274,"y":3874.9,"w":44,"h":44},{"name":"Próximo álbum","off":"false","shown":true,"x":330,"y":3874.9,"w":44,"h":44}]
+PASS  chromium-390-pt-out: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  chromium-390-pt-out: a tap on «Próximo álbum» moves the row one album (164 px), «Álbum anterior» brings it back
+      164, 328, back to 164
+PASS  chromium-390-pt-out: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  chromium-390-pt-out: at the end of the row «Próximo álbum» is off and the page is still as wide as the screen
+      {"x":2088,"max":2088,"next":"true","page":390}
+PASS  chromium-390-pt-out: the visitor has «Entrar» at the top and the bar's «Criar» opens the app (href judged, not opened); the other four lead to their steps
+      top: Entrar -> /start?signin; bar: Criar -> /start, Álbuns -> #albums, Blend -> #blend, Playlists -> #playlists, Inventário -> #inventory
+PASS  chromium-390-pt-out: at the bottom of the page it is still as wide as the screen
+      page 390
+PASS  chromium-390-pt-in: no console error
+PASS  chromium-390-pt-in: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  chromium-390-pt-in: the page shows the signed-in opening, in pt
+PASS  chromium-390-pt-in: the page is exactly as wide as the screen and does not scroll sideways
+      screen 390, page 390, body 390, after a push sideways x=0
+PASS  chromium-390-pt-in: the top bar ends inside the screen
+      right edge of the bar's last item 374 of 390: home 16+133; acct 166.1+207.9; lang 166.1+90; btn btn-primary btn-sm btn-s 262.1+111.9
+PASS  chromium-390-pt-in: the opening has no big button
+PASS  chromium-390-pt-in: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  chromium-390-pt-in: the caption names the album and the year, with «Ouça no Apple Music» (a link, not opened)
+      {"text":"♫ Ouça no Apple Music (abre numa nova aba)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":174.2,"y":674.1,"w":199.8,"h":44}
+PASS  chromium-390-pt-in: opening, crate, caption, «Como funciona», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":308.9,"caption":638.9,"edu":756.2,"start":823,"albums":1344.1,"blend":1981.9,"playlists":2604.6,"inventory":3159.3,"flip":2536.7,"shelf":3739.3,"end":4196.9,"footer":4512.4}
+PASS  chromium-390-pt-in: the part's title is «Como funciona», shown, in the fire's orange
+      Como funciona rgb(249, 115, 22) 28px
+PASS  chromium-390-pt-in: the five labels and their numbers are in the lighter orange, the number standing out
+      LADO A · 1 — CRIAR rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 2 — ÁLBUNS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 2 — INVENTÁRIO rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  chromium-390-pt-in: the orange texts of the stretch are the title, the labels with their numbers and the five links, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span.
+PASS  chromium-390-pt-in: each step's link is in the lighter orange, underlined, with its arrow
+      {"text":"Começar uma série →","color":"rgb(251, 146, 60)","underline":true,"href":"/start"} {"text":"Ver seus álbuns →","color":"rgb(251, 146, 60)","underline":true,"href":"/albums"} {"text":"Gerar uma playlist →","color":"rgb(251, 146, 60)","underline":true,"href":"/blend"} {"text":"Ver suas playlists →","color":"rgb(251, 146, 60)","underline":true,"href":"/saved-playlists"} {"text":"Abrir o inventário →","color":"rgb(251, 146, 60)","underline":true,"href":"/inventory"}
+PASS  chromium-390-pt-in: in each step the label, the title and the text come before its one illustration
+      start: 845 < 891 < 978.5 < 1127.3 | albums: 1400.1 < 1446.1 < 1508.5 < 1616.9 | blend: 2037.9 < 2083.9 < 2146.3 < 2344.6 | playlists: 2660.6 < 2706.6 < 2769 < 2980.7 | inventory: 3215.3 < 3261.3 < 3348.9 < 3572.7
+PASS  chromium-390-pt-in: no step holds a cover or an Apple Music button
+PASS  chromium-390-pt-in: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 358x200, albums 358x283, blend 358x200, playlists 358x200, inventory 358x200
+PASS  chromium-390-pt-in: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  chromium-390-pt-in: the band runs from edge to edge of the screen
+      [[0,390,390],[0,390,390]]
+PASS  chromium-390-pt-in: every text of a step on the band has a contrast of 4.5 to 1 or more
+      24 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  chromium-390-pt-in: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  chromium-390-pt-in: the inventory step says «Catalogue»
+      Catalogue as mídias físicas da sua estante.
+PASS  chromium-390-pt-in: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  chromium-390-pt-in: the shelf is «Na caixa do The Album Blender», 15 albums, its row named for a screen reader
+      Na caixa do The Album Blender; 15 cards; row «Álbuns da caixa do The Album Blender»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  chromium-390-pt-in: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 390 of 2478; albums cut by the right edge: 1
+PASS  chromium-390-pt-in: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba); not fitting: 0
+PASS  chromium-390-pt-in: two arrows to tap, 44 px, named; at the start «Álbum anterior» is off
+      [{"name":"Álbum anterior","off":"true","shown":true,"x":274,"y":4124.9,"w":44,"h":44},{"name":"Próximo álbum","off":"false","shown":true,"x":330,"y":4124.9,"w":44,"h":44}]
+PASS  chromium-390-pt-in: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  chromium-390-pt-in: a tap on «Próximo álbum» moves the row one album (164 px), «Álbum anterior» brings it back
+      164, 328, back to 164
+PASS  chromium-390-pt-in: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  chromium-390-pt-in: at the end of the row «Próximo álbum» is off and the page is still as wide as the screen
+      {"x":2088,"max":2088,"next":"true","page":390}
+PASS  chromium-390-pt-in: signed in, the top has «Criar» to the app, and the bar's five items go to their screens
+      top: Criar -> /start; bar: Criar -> /start, Álbuns -> /albums, Blend -> /blend, Playlists -> /saved-playlists, Inventário -> /inventory
+PASS  chromium-390-pt-in: at the bottom of the page it is still as wide as the screen
+      page 390
+PASS  chromium-390-en-out: no console error
+PASS  chromium-390-en-out: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  chromium-390-en-out: the page shows the visitor opening, in en
+PASS  chromium-390-en-out: the page is exactly as wide as the screen and does not scroll sideways
+      screen 390, page 390, body 390, after a push sideways x=0
+PASS  chromium-390-en-out: the top bar ends inside the screen
+      right edge of the bar's last item 374 of 390: home 16+133; acct 195.5+178.5; lang 195.5+90; btn btn-ghost btn-sm only-ou 291.5+82.5
+PASS  chromium-390-en-out: the opening has no big button
+PASS  chromium-390-en-out: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  chromium-390-en-out: the caption names the album and the year, with «Listen on Apple Music» (a link, not opened)
+      {"text":"♫ Listen on Apple Music (opens in a new tab)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":168.1,"y":644.7,"w":205.9,"h":44}
+PASS  chromium-390-en-out: opening, crate, caption, «How it works», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":271.5,"caption":601.5,"edu":734.9,"start":801.7,"albums":1247.7,"blend":1835.5,"playlists":2408.5,"inventory":2888.5,"flip":2340.6,"shelf":3418.5,"end":3876,"footer":4315.1}
+PASS  chromium-390-en-out: the part's title is «How it works», shown, in the fire's orange
+      How it works rgb(249, 115, 22) 28px
+PASS  chromium-390-en-out: the five labels and their numbers are in the lighter orange, the number standing out
+      SIDE A · 1 — CREATE rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 2 — ALBUMS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 2 — INVENTORY rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  chromium-390-en-out: the orange texts of the stretch are the title, the labels with their numbers, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n
+PASS  chromium-390-en-out: in each step the label, the title and the text come before its one illustration
+      start: 823.7 < 869.7 < 932.1 < 1030.7 | albums: 1303.7 < 1349.7 < 1412.1 < 1520.5 | blend: 1891.5 < 1937.5 < 2025 < 2148.3 | playlists: 2464.5 < 2510.5 < 2572.9 < 2708.5 | inventory: 2944.5 < 2990.5 < 3078.1 < 3250.5
+PASS  chromium-390-en-out: no step holds a cover or an Apple Music button
+PASS  chromium-390-en-out: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 358x200, albums 358x283, blend 358x200, playlists 358x200, inventory 358x200
+PASS  chromium-390-en-out: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  chromium-390-en-out: the band runs from edge to edge of the screen
+      [[0,390,390],[0,390,390]]
+PASS  chromium-390-en-out: every text of a step on the band has a contrast of 4.5 to 1 or more
+      22 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  chromium-390-en-out: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  chromium-390-en-out: the inventory step says «Catalogue»
+      Catalogue the physical media on your shelf.
+PASS  chromium-390-en-out: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  chromium-390-en-out: the shelf is «In The Album Blender's crate», 15 albums, its row named for a screen reader
+      In The Album Blender's crate; 15 cards; row «Albums in The Album Blender's crate»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  chromium-390-en-out: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 390 of 2478; albums cut by the right edge: 1
+PASS  chromium-390-en-out: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab); not fitting: 0
+PASS  chromium-390-en-out: two arrows to tap, 44 px, named; at the start «Previous album» is off
+      [{"name":"Previous album","off":"true","shown":true,"x":274,"y":3804,"w":44,"h":44},{"name":"Next album","off":"false","shown":true,"x":330,"y":3804,"w":44,"h":44}]
+PASS  chromium-390-en-out: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  chromium-390-en-out: a tap on «Next album» moves the row one album (164 px), «Previous album» brings it back
+      164, 328, back to 164
+PASS  chromium-390-en-out: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  chromium-390-en-out: at the end of the row «Next album» is off and the page is still as wide as the screen
+      {"x":2088,"max":2088,"next":"true","page":390}
+PASS  chromium-390-en-out: the visitor has «Sign in» at the top and the bar's «Create» opens the app (href judged, not opened); the other four lead to their steps
+      top: Sign in -> /start?signin; bar: Create -> /start, Albums -> #albums, Blend -> #blend, Playlists -> #playlists, Inventory -> #inventory
+PASS  chromium-390-en-out: at the bottom of the page it is still as wide as the screen
+      page 390
+PASS  chromium-390-en-in: no console error
+PASS  chromium-390-en-in: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  chromium-390-en-in: the page shows the signed-in opening, in en
+PASS  chromium-390-en-in: the page is exactly as wide as the screen and does not scroll sideways
+      screen 390, page 390, body 390, after a push sideways x=0
+PASS  chromium-390-en-in: the top bar ends inside the screen
+      right edge of the bar's last item 374 of 390: home 16+111.1; acct 139.1+234.9; lang 139.1+90; btn btn-primary btn-sm btn-s 235.1+138.9
+PASS  chromium-390-en-in: the opening has no big button
+PASS  chromium-390-en-in: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  chromium-390-en-in: the caption names the album and the year, with «Listen on Apple Music» (a link, not opened)
+      {"text":"♫ Listen on Apple Music (opens in a new tab)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":168.1,"y":644.7,"w":205.9,"h":44}
+PASS  chromium-390-en-in: opening, crate, caption, «How it works», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":271.5,"caption":601.5,"edu":734.9,"start":801.7,"albums":1297.7,"blend":1935.5,"playlists":2558.5,"inventory":3088.5,"flip":2490.6,"shelf":3668.5,"end":4126,"footer":4441.5}
+PASS  chromium-390-en-in: the part's title is «How it works», shown, in the fire's orange
+      How it works rgb(249, 115, 22) 28px
+PASS  chromium-390-en-in: the five labels and their numbers are in the lighter orange, the number standing out
+      SIDE A · 1 — CREATE rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 2 — ALBUMS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 2 — INVENTORY rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  chromium-390-en-in: the orange texts of the stretch are the title, the labels with their numbers and the five links, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span.
+PASS  chromium-390-en-in: each step's link is in the lighter orange, underlined, with its arrow
+      {"text":"Start a series →","color":"rgb(251, 146, 60)","underline":true,"href":"/start"} {"text":"See your albums →","color":"rgb(251, 146, 60)","underline":true,"href":"/albums"} {"text":"Make a playlist →","color":"rgb(251, 146, 60)","underline":true,"href":"/blend"} {"text":"See your playlists →","color":"rgb(251, 146, 60)","underline":true,"href":"/saved-playlists"} {"text":"Open your inventory →","color":"rgb(251, 146, 60)","underline":true,"href":"/inventory"}
+PASS  chromium-390-en-in: in each step the label, the title and the text come before its one illustration
+      start: 823.7 < 869.7 < 932.1 < 1080.7 | albums: 1353.7 < 1399.7 < 1462.1 < 1570.5 | blend: 1991.5 < 2037.5 < 2125 < 2298.3 | playlists: 2614.5 < 2660.5 < 2722.9 < 2908.5 | inventory: 3144.5 < 3190.5 < 3278.1 < 3500.5
+PASS  chromium-390-en-in: no step holds a cover or an Apple Music button
+PASS  chromium-390-en-in: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 358x200, albums 358x283, blend 358x200, playlists 358x200, inventory 358x200
+PASS  chromium-390-en-in: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  chromium-390-en-in: the band runs from edge to edge of the screen
+      [[0,390,390],[0,390,390]]
+PASS  chromium-390-en-in: every text of a step on the band has a contrast of 4.5 to 1 or more
+      24 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  chromium-390-en-in: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  chromium-390-en-in: the inventory step says «Catalogue»
+      Catalogue the physical media on your shelf.
+PASS  chromium-390-en-in: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  chromium-390-en-in: the shelf is «In The Album Blender's crate», 15 albums, its row named for a screen reader
+      In The Album Blender's crate; 15 cards; row «Albums in The Album Blender's crate»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  chromium-390-en-in: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 390 of 2478; albums cut by the right edge: 1
+PASS  chromium-390-en-in: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab); not fitting: 0
+PASS  chromium-390-en-in: two arrows to tap, 44 px, named; at the start «Previous album» is off
+      [{"name":"Previous album","off":"true","shown":true,"x":274,"y":4054,"w":44,"h":44},{"name":"Next album","off":"false","shown":true,"x":330,"y":4054,"w":44,"h":44}]
+PASS  chromium-390-en-in: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  chromium-390-en-in: a tap on «Next album» moves the row one album (164 px), «Previous album» brings it back
+      164, 328, back to 164
+PASS  chromium-390-en-in: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  chromium-390-en-in: at the end of the row «Next album» is off and the page is still as wide as the screen
+      {"x":2088,"max":2088,"next":"true","page":390}
+PASS  chromium-390-en-in: signed in, the top has «Create» to the app, and the bar's five items go to their screens
+      top: Create -> /start; bar: Create -> /start, Albums -> /albums, Blend -> /blend, Playlists -> /saved-playlists, Inventory -> /inventory
+PASS  chromium-390-en-in: at the bottom of the page it is still as wide as the screen
+      page 390
+PASS  chromium-360-pt-out: no console error
+PASS  chromium-360-pt-out: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  chromium-360-pt-out: the page shows the visitor opening, in pt
+PASS  chromium-360-pt-out: the page is exactly as wide as the screen and does not scroll sideways
+      screen 360, page 360, body 360, after a push sideways x=0
+PASS  chromium-360-pt-out: the top bar ends inside the screen
+      right edge of the bar's last item 344.1 of 360: home 16+133; acct 167.3+176.8; lang 167.3+90; btn btn-ghost btn-sm only-ou 263.3+80.8
+PASS  chromium-360-pt-out: the opening has no big button
+PASS  chromium-360-pt-out: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  chromium-360-pt-out: the caption names the album and the year, with «Ouça no Apple Music» (a link, not opened)
+      {"text":"♫ Ouça no Apple Music (abre numa nova aba)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":144.2,"y":682.2,"w":199.8,"h":44}
+PASS  chromium-360-pt-out: opening, crate, caption, «Como funciona», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":308.9,"caption":638.9,"edu":772.4,"start":870,"albums":1341.1,"blend":1969.7,"playlists":2542.3,"inventory":3072.3,"flip":2474.5,"shelf":3602.3,"end":4090.6,"footer":4554.5}
+PASS  chromium-360-pt-out: the part's title is «Como funciona», shown, in the fire's orange
+      Como funciona rgb(249, 115, 22) 28px
+PASS  chromium-360-pt-out: the five labels and their numbers are in the lighter orange, the number standing out
+      LADO A · 1 — CRIAR rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 2 — ÁLBUNS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 2 — INVENTÁRIO rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  chromium-360-pt-out: the orange texts of the stretch are the title, the labels with their numbers, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n
+PASS  chromium-360-pt-out: in each step the label, the title and the text come before its one illustration
+      start: 892 < 938 < 1025.5 < 1129.3 | albums: 1397.1 < 1443.1 < 1530.7 < 1639.1 | blend: 2025.7 < 2071.7 < 2134.1 < 2292.6 | playlists: 2598.3 < 2644.3 < 2731.9 < 2905.9 | inventory: 3128.3 < 3174.3 < 3261.9 < 3449.4
+PASS  chromium-360-pt-out: no step holds a cover or an Apple Music button
+PASS  chromium-360-pt-out: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 328x200, albums 328x298.6, blend 328x200, playlists 328x200, inventory 328x200
+PASS  chromium-360-pt-out: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  chromium-360-pt-out: the band runs from edge to edge of the screen
+      [[0,360,360],[0,360,360]]
+PASS  chromium-360-pt-out: every text of a step on the band has a contrast of 4.5 to 1 or more
+      22 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  chromium-360-pt-out: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  chromium-360-pt-out: the inventory step says «Catalogue»
+      Catalogue as mídias físicas da sua estante.
+PASS  chromium-360-pt-out: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  chromium-360-pt-out: the shelf is «Na caixa do The Album Blender», 15 albums, its row named for a screen reader
+      Na caixa do The Album Blender; 15 cards; row «Álbuns da caixa do The Album Blender»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  chromium-360-pt-out: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 360 of 2478; albums cut by the right edge: 1
+PASS  chromium-360-pt-out: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba); not fitting: 0
+PASS  chromium-360-pt-out: two arrows to tap, 44 px, named; at the start «Álbum anterior» is off
+      [{"name":"Álbum anterior","off":"true","shown":true,"x":244,"y":4018.6,"w":44,"h":44},{"name":"Próximo álbum","off":"false","shown":true,"x":300,"y":4018.6,"w":44,"h":44}]
+PASS  chromium-360-pt-out: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  chromium-360-pt-out: a tap on «Próximo álbum» moves the row one album (164 px), «Álbum anterior» brings it back
+      164, 328, back to 164
+PASS  chromium-360-pt-out: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  chromium-360-pt-out: at the end of the row «Próximo álbum» is off and the page is still as wide as the screen
+      {"x":2118,"max":2118,"next":"true","page":360}
+PASS  chromium-360-pt-out: the visitor has «Entrar» at the top and the bar's «Criar» opens the app (href judged, not opened); the other four lead to their steps
+      top: Entrar -> /start?signin; bar: Criar -> /start, Álbuns -> #albums, Blend -> #blend, Playlists -> #playlists, Inventário -> #inventory
+PASS  chromium-360-pt-out: at the bottom of the page it is still as wide as the screen
+      page 360
+PASS  chromium-360-pt-in: no console error
+PASS  chromium-360-pt-in: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  chromium-360-pt-in: the page shows the signed-in opening, in pt
+PASS  chromium-360-pt-in: the page is exactly as wide as the screen and does not scroll sideways
+      screen 360, page 360, body 360, after a push sideways x=0
+PASS  chromium-360-pt-in: the top bar ends inside the screen
+      right edge of the bar's last item 344 of 360: home 16+108.1; acct 136.1+207.9; lang 136.1+90; btn btn-primary btn-sm btn-s 232.1+111.9
+PASS  chromium-360-pt-in: the opening has no big button
+PASS  chromium-360-pt-in: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  chromium-360-pt-in: the caption names the album and the year, with «Ouça no Apple Music» (a link, not opened)
+      {"text":"♫ Ouça no Apple Music (abre numa nova aba)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":144.2,"y":682.2,"w":199.8,"h":44}
+PASS  chromium-360-pt-in: opening, crate, caption, «Como funciona», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":308.9,"caption":638.9,"edu":772.4,"start":870,"albums":1391.1,"blend":2069.7,"playlists":2692.3,"inventory":3272.3,"flip":2624.5,"shelf":3852.3,"end":4340.6,"footer":4656.1}
+PASS  chromium-360-pt-in: the part's title is «Como funciona», shown, in the fire's orange
+      Como funciona rgb(249, 115, 22) 28px
+PASS  chromium-360-pt-in: the five labels and their numbers are in the lighter orange, the number standing out
+      LADO A · 1 — CRIAR rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 2 — ÁLBUNS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 2 — INVENTÁRIO rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  chromium-360-pt-in: the orange texts of the stretch are the title, the labels with their numbers and the five links, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span.
+PASS  chromium-360-pt-in: each step's link is in the lighter orange, underlined, with its arrow
+      {"text":"Começar uma série →","color":"rgb(251, 146, 60)","underline":true,"href":"/start"} {"text":"Ver seus álbuns →","color":"rgb(251, 146, 60)","underline":true,"href":"/albums"} {"text":"Gerar uma playlist →","color":"rgb(251, 146, 60)","underline":true,"href":"/blend"} {"text":"Ver suas playlists →","color":"rgb(251, 146, 60)","underline":true,"href":"/saved-playlists"} {"text":"Abrir o inventário →","color":"rgb(251, 146, 60)","underline":true,"href":"/inventory"}
+PASS  chromium-360-pt-in: in each step the label, the title and the text come before its one illustration
+      start: 892 < 938 < 1025.5 < 1179.3 | albums: 1447.1 < 1493.1 < 1580.7 < 1689.1 | blend: 2125.7 < 2171.7 < 2234.1 < 2442.6 | playlists: 2748.3 < 2794.3 < 2881.9 < 3105.9 | inventory: 3328.3 < 3374.3 < 3461.9 < 3699.4
+PASS  chromium-360-pt-in: no step holds a cover or an Apple Music button
+PASS  chromium-360-pt-in: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 328x200, albums 328x298.6, blend 328x200, playlists 328x200, inventory 328x200
+PASS  chromium-360-pt-in: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  chromium-360-pt-in: the band runs from edge to edge of the screen
+      [[0,360,360],[0,360,360]]
+PASS  chromium-360-pt-in: every text of a step on the band has a contrast of 4.5 to 1 or more
+      24 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  chromium-360-pt-in: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  chromium-360-pt-in: the inventory step says «Catalogue»
+      Catalogue as mídias físicas da sua estante.
+PASS  chromium-360-pt-in: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  chromium-360-pt-in: the shelf is «Na caixa do The Album Blender», 15 albums, its row named for a screen reader
+      Na caixa do The Album Blender; 15 cards; row «Álbuns da caixa do The Album Blender»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  chromium-360-pt-in: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 360 of 2478; albums cut by the right edge: 1
+PASS  chromium-360-pt-in: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba); not fitting: 0
+PASS  chromium-360-pt-in: two arrows to tap, 44 px, named; at the start «Álbum anterior» is off
+      [{"name":"Álbum anterior","off":"true","shown":true,"x":244,"y":4268.6,"w":44,"h":44},{"name":"Próximo álbum","off":"false","shown":true,"x":300,"y":4268.6,"w":44,"h":44}]
+PASS  chromium-360-pt-in: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  chromium-360-pt-in: a tap on «Próximo álbum» moves the row one album (164 px), «Álbum anterior» brings it back
+      164, 328, back to 164
+PASS  chromium-360-pt-in: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  chromium-360-pt-in: at the end of the row «Próximo álbum» is off and the page is still as wide as the screen
+      {"x":2118,"max":2118,"next":"true","page":360}
+PASS  chromium-360-pt-in: signed in, the top has «Criar» to the app, and the bar's five items go to their screens
+      top: Criar -> /start; bar: Criar -> /start, Álbuns -> /albums, Blend -> /blend, Playlists -> /saved-playlists, Inventário -> /inventory
+PASS  chromium-360-pt-in: at the bottom of the page it is still as wide as the screen
+      page 360
+PASS  chromium-360-en-out: no console error
+PASS  chromium-360-en-out: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  chromium-360-en-out: the page shows the visitor opening, in en
+PASS  chromium-360-en-out: the page is exactly as wide as the screen and does not scroll sideways
+      screen 360, page 360, body 360, after a push sideways x=0
+PASS  chromium-360-en-out: the top bar ends inside the screen
+      right edge of the bar's last item 344 of 360: home 16+133; acct 165.5+178.5; lang 165.5+90; btn btn-ghost btn-sm only-ou 261.5+82.5
+PASS  chromium-360-en-out: the opening has no big button
+PASS  chromium-360-en-out: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  chromium-360-en-out: the caption names the album and the year, with «Listen on Apple Music» (a link, not opened)
+      {"text":"♫ Listen on Apple Music (opens in a new tab)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":138.1,"y":644.7,"w":205.9,"h":44}
+PASS  chromium-360-en-out: opening, crate, caption, «How it works», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":271.5,"caption":601.5,"edu":734.9,"start":801.7,"albums":1247.7,"blend":1851.1,"playlists":2448.9,"inventory":2953.7,"flip":2381,"shelf":3483.6,"end":3941.2,"footer":4411.8}
+PASS  chromium-360-en-out: the part's title is «How it works», shown, in the fire's orange
+      How it works rgb(249, 115, 22) 28px
+PASS  chromium-360-en-out: the five labels and their numbers are in the lighter orange, the number standing out
+      SIDE A · 1 — CREATE rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 2 — ALBUMS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 2 — INVENTORY rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  chromium-360-en-out: the orange texts of the stretch are the title, the labels with their numbers, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n
+PASS  chromium-360-en-out: in each step the label, the title and the text come before its one illustration
+      start: 823.7 < 869.7 < 932.1 < 1034.8 | albums: 1303.7 < 1349.7 < 1412.1 < 1520.5 | blend: 1907.1 < 1953.1 < 2040.6 < 2197.4 | playlists: 2504.9 < 2550.9 < 2613.3 < 2784.9 | inventory: 3009.7 < 3055.7 < 3143.3 < 3328.5
+PASS  chromium-360-en-out: no step holds a cover or an Apple Music button
+PASS  chromium-360-en-out: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 328x200, albums 328x298.6, blend 328x200, playlists 328x200, inventory 328x200
+PASS  chromium-360-en-out: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  chromium-360-en-out: the band runs from edge to edge of the screen
+      [[0,360,360],[0,360,360]]
+PASS  chromium-360-en-out: every text of a step on the band has a contrast of 4.5 to 1 or more
+      22 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  chromium-360-en-out: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  chromium-360-en-out: the inventory step says «Catalogue»
+      Catalogue the physical media on your shelf.
+PASS  chromium-360-en-out: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  chromium-360-en-out: the shelf is «In The Album Blender's crate», 15 albums, its row named for a screen reader
+      In The Album Blender's crate; 15 cards; row «Albums in The Album Blender's crate»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  chromium-360-en-out: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 360 of 2478; albums cut by the right edge: 1
+PASS  chromium-360-en-out: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab); not fitting: 0
+PASS  chromium-360-en-out: two arrows to tap, 44 px, named; at the start «Previous album» is off
+      [{"name":"Previous album","off":"true","shown":true,"x":244,"y":3869.2,"w":44,"h":44},{"name":"Next album","off":"false","shown":true,"x":300,"y":3869.2,"w":44,"h":44}]
+PASS  chromium-360-en-out: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  chromium-360-en-out: a tap on «Next album» moves the row one album (164 px), «Previous album» brings it back
+      164, 328, back to 164
+PASS  chromium-360-en-out: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  chromium-360-en-out: at the end of the row «Next album» is off and the page is still as wide as the screen
+      {"x":2118,"max":2118,"next":"true","page":360}
+PASS  chromium-360-en-out: the visitor has «Sign in» at the top and the bar's «Create» opens the app (href judged, not opened); the other four lead to their steps
+      top: Sign in -> /start?signin; bar: Create -> /start, Albums -> #albums, Blend -> #blend, Playlists -> #playlists, Inventory -> #inventory
+PASS  chromium-360-en-out: at the bottom of the page it is still as wide as the screen
+      page 360
+PASS  chromium-360-en-in: no console error
+PASS  chromium-360-en-in: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  chromium-360-en-in: the page shows the signed-in opening, in en
+PASS  chromium-360-en-in: the page is exactly as wide as the screen and does not scroll sideways
+      screen 360, page 360, body 360, after a push sideways x=0
+PASS  chromium-360-en-in: the top bar ends inside the screen
+      right edge of the bar's last item 344 of 360: home 16+81.1; acct 109.1+234.9; lang 109.1+90; btn btn-primary btn-sm btn-s 205.1+138.9
+PASS  chromium-360-en-in: the opening has no big button
+PASS  chromium-360-en-in: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  chromium-360-en-in: the caption names the album and the year, with «Listen on Apple Music» (a link, not opened)
+      {"text":"♫ Listen on Apple Music (opens in a new tab)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":138.1,"y":644.7,"w":205.9,"h":44}
+PASS  chromium-360-en-in: opening, crate, caption, «How it works», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":271.5,"caption":601.5,"edu":734.9,"start":801.7,"albums":1297.7,"blend":1951.1,"playlists":2598.9,"inventory":3153.7,"flip":2531,"shelf":3733.6,"end":4191.2,"footer":4506.7}
+PASS  chromium-360-en-in: the part's title is «How it works», shown, in the fire's orange
+      How it works rgb(249, 115, 22) 28px
+PASS  chromium-360-en-in: the five labels and their numbers are in the lighter orange, the number standing out
+      SIDE A · 1 — CREATE rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 2 — ALBUMS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 2 — INVENTORY rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  chromium-360-en-in: the orange texts of the stretch are the title, the labels with their numbers and the five links, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span.
+PASS  chromium-360-en-in: each step's link is in the lighter orange, underlined, with its arrow
+      {"text":"Start a series →","color":"rgb(251, 146, 60)","underline":true,"href":"/start"} {"text":"See your albums →","color":"rgb(251, 146, 60)","underline":true,"href":"/albums"} {"text":"Make a playlist →","color":"rgb(251, 146, 60)","underline":true,"href":"/blend"} {"text":"See your playlists →","color":"rgb(251, 146, 60)","underline":true,"href":"/saved-playlists"} {"text":"Open your inventory →","color":"rgb(251, 146, 60)","underline":true,"href":"/inventory"}
+PASS  chromium-360-en-in: in each step the label, the title and the text come before its one illustration
+      start: 823.7 < 869.7 < 932.1 < 1084.8 | albums: 1353.7 < 1399.7 < 1462.1 < 1570.5 | blend: 2007.1 < 2053.1 < 2140.6 < 2347.4 | playlists: 2654.9 < 2700.9 < 2763.3 < 2984.9 | inventory: 3209.7 < 3255.7 < 3343.3 < 3578.5
+PASS  chromium-360-en-in: no step holds a cover or an Apple Music button
+PASS  chromium-360-en-in: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 328x200, albums 328x298.6, blend 328x200, playlists 328x200, inventory 328x200
+PASS  chromium-360-en-in: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  chromium-360-en-in: the band runs from edge to edge of the screen
+      [[0,360,360],[0,360,360]]
+PASS  chromium-360-en-in: every text of a step on the band has a contrast of 4.5 to 1 or more
+      24 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  chromium-360-en-in: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  chromium-360-en-in: the inventory step says «Catalogue»
+      Catalogue the physical media on your shelf.
+PASS  chromium-360-en-in: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  chromium-360-en-in: the shelf is «In The Album Blender's crate», 15 albums, its row named for a screen reader
+      In The Album Blender's crate; 15 cards; row «Albums in The Album Blender's crate»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  chromium-360-en-in: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 360 of 2478; albums cut by the right edge: 1
+PASS  chromium-360-en-in: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab); not fitting: 0
+PASS  chromium-360-en-in: two arrows to tap, 44 px, named; at the start «Previous album» is off
+      [{"name":"Previous album","off":"true","shown":true,"x":244,"y":4119.2,"w":44,"h":44},{"name":"Next album","off":"false","shown":true,"x":300,"y":4119.2,"w":44,"h":44}]
+PASS  chromium-360-en-in: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  chromium-360-en-in: a tap on «Next album» moves the row one album (164 px), «Previous album» brings it back
+      164, 328, back to 164
+PASS  chromium-360-en-in: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  chromium-360-en-in: at the end of the row «Next album» is off and the page is still as wide as the screen
+      {"x":2118,"max":2118,"next":"true","page":360}
+PASS  chromium-360-en-in: signed in, the top has «Create» to the app, and the bar's five items go to their screens
+      top: Create -> /start; bar: Create -> /start, Albums -> /albums, Blend -> /blend, Playlists -> /saved-playlists, Inventory -> /inventory
+PASS  chromium-360-en-in: at the bottom of the page it is still as wide as the screen
+      page 360
+PASS  webkit-390-pt-out: no console error
+PASS  webkit-390-pt-out: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  webkit-390-pt-out: the page shows the visitor opening, in pt
+PASS  webkit-390-pt-out: the page is exactly as wide as the screen and does not scroll sideways
+      screen 390, page 390, body 390, after a push sideways x=0
+PASS  webkit-390-pt-out: the top bar ends inside the screen
+      right edge of the bar's last item 374.1 of 390: home 16+133; acct 197.3+176.8; lang 197.3+90; btn btn-ghost btn-sm only-ou 293.3+80.8
+PASS  webkit-390-pt-out: the opening has no big button
+PASS  webkit-390-pt-out: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  webkit-390-pt-out: the caption names the album and the year, with «Ouça no Apple Music» (a link, not opened)
+      {"text":"♫ Ouça no Apple Music (abre numa nova aba)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":174.2,"y":670,"w":199.8,"h":44}
+PASS  webkit-390-pt-out: opening, crate, caption, «Como funciona», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":306,"caption":636,"edu":751,"start":817,"albums":1286,"blend":1869,"playlists":2437,"inventory":2939,"flip":2371,"shelf":3466,"end":3922,"footer":4358}
+PASS  webkit-390-pt-out: the part's title is «Como funciona», shown, in the fire's orange
+      Como funciona rgb(249, 115, 22) 28px
+PASS  webkit-390-pt-out: the five labels and their numbers are in the lighter orange, the number standing out
+      LADO A · 1 — CRIAR rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 2 — ÁLBUNS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 2 — INVENTÁRIO rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  webkit-390-pt-out: the orange texts of the stretch are the title, the labels with their numbers, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n
+PASS  webkit-390-pt-out: in each step the label, the title and the text come before its one illustration
+      start: 839 < 885 < 972 < 1066.8 | albums: 1342 < 1388 < 1450 < 1556 | blend: 1925 < 1971 < 2033 < 2172.8 | playlists: 2493 < 2539 < 2601 < 2755.2 | inventory: 2995 < 3041 < 3128 < 3324
+PASS  webkit-390-pt-out: no step holds a cover or an Apple Music button
+PASS  webkit-390-pt-out: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 358x200, albums 358x281, blend 358x200, playlists 358x200, inventory 358x200
+PASS  webkit-390-pt-out: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  webkit-390-pt-out: the band runs from edge to edge of the screen
+      [[0,390,390],[0,390,390]]
+PASS  webkit-390-pt-out: every text of a step on the band has a contrast of 4.5 to 1 or more
+      22 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  webkit-390-pt-out: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  webkit-390-pt-out: the inventory step says «Catalogue»
+      Catalogue as mídias físicas da sua estante.
+PASS  webkit-390-pt-out: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  webkit-390-pt-out: the shelf is «Na caixa do The Album Blender», 15 albums, its row named for a screen reader
+      Na caixa do The Album Blender; 15 cards; row «Álbuns da caixa do The Album Blender»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  webkit-390-pt-out: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 390 of 2478; albums cut by the right edge: 1
+PASS  webkit-390-pt-out: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba); not fitting: 0
+PASS  webkit-390-pt-out: two arrows to tap, 44 px, named; at the start «Álbum anterior» is off
+      [{"name":"Álbum anterior","off":"true","shown":true,"x":274,"y":3850,"w":44,"h":44},{"name":"Próximo álbum","off":"false","shown":true,"x":330,"y":3850,"w":44,"h":44}]
+PASS  webkit-390-pt-out: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  webkit-390-pt-out: a tap on «Próximo álbum» moves the row one album (164 px), «Álbum anterior» brings it back
+      164, 328, back to 164
+PASS  webkit-390-pt-out: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  webkit-390-pt-out: at the end of the row «Próximo álbum» is off and the page is still as wide as the screen
+      {"x":2088,"max":2088,"next":"true","page":390}
+PASS  webkit-390-pt-out: the visitor has «Entrar» at the top and the bar's «Criar» opens the app (href judged, not opened); the other four lead to their steps
+      top: Entrar -> /start?signin; bar: Criar -> /start, Álbuns -> #albums, Blend -> #blend, Playlists -> #playlists, Inventário -> #inventory
+PASS  webkit-390-pt-out: at the bottom of the page it is still as wide as the screen
+      page 390
+PASS  webkit-390-pt-in: no console error
+PASS  webkit-390-pt-in: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  webkit-390-pt-in: the page shows the signed-in opening, in pt
+PASS  webkit-390-pt-in: the page is exactly as wide as the screen and does not scroll sideways
+      screen 390, page 390, body 390, after a push sideways x=0
+PASS  webkit-390-pt-in: the top bar ends inside the screen
+      right edge of the bar's last item 374 of 390: home 16+133; acct 166.1+207.9; lang 166.1+90; btn btn-primary btn-sm btn-s 262.1+111.9
+PASS  webkit-390-pt-in: the opening has no big button
+PASS  webkit-390-pt-in: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  webkit-390-pt-in: the caption names the album and the year, with «Ouça no Apple Music» (a link, not opened)
+      {"text":"♫ Ouça no Apple Music (abre numa nova aba)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":174.2,"y":670,"w":199.8,"h":44}
+PASS  webkit-390-pt-in: opening, crate, caption, «Como funciona», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":306,"caption":636,"edu":751,"start":817,"albums":1336,"blend":1969,"playlists":2587,"inventory":3139,"flip":2521,"shelf":3716,"end":4172,"footer":4486}
+PASS  webkit-390-pt-in: the part's title is «Como funciona», shown, in the fire's orange
+      Como funciona rgb(249, 115, 22) 28px
+PASS  webkit-390-pt-in: the five labels and their numbers are in the lighter orange, the number standing out
+      LADO A · 1 — CRIAR rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 2 — ÁLBUNS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 2 — INVENTÁRIO rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  webkit-390-pt-in: the orange texts of the stretch are the title, the labels with their numbers and the five links, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span.
+PASS  webkit-390-pt-in: each step's link is in the lighter orange, underlined, with its arrow
+      {"text":"Começar uma série →","color":"rgb(251, 146, 60)","underline":true,"href":"/start"} {"text":"Ver seus álbuns →","color":"rgb(251, 146, 60)","underline":true,"href":"/albums"} {"text":"Gerar uma playlist →","color":"rgb(251, 146, 60)","underline":true,"href":"/blend"} {"text":"Ver suas playlists →","color":"rgb(251, 146, 60)","underline":true,"href":"/saved-playlists"} {"text":"Abrir o inventário →","color":"rgb(251, 146, 60)","underline":true,"href":"/inventory"}
+PASS  webkit-390-pt-in: in each step the label, the title and the text come before its one illustration
+      start: 839 < 885 < 972 < 1116.8 | albums: 1392 < 1438 < 1500 < 1606 | blend: 2025 < 2071 < 2133 < 2322.8 | playlists: 2643 < 2689 < 2751 < 2955.2 | inventory: 3195 < 3241 < 3328 < 3574
+PASS  webkit-390-pt-in: no step holds a cover or an Apple Music button
+PASS  webkit-390-pt-in: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 358x200, albums 358x281, blend 358x200, playlists 358x200, inventory 358x200
+PASS  webkit-390-pt-in: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  webkit-390-pt-in: the band runs from edge to edge of the screen
+      [[0,390,390],[0,390,390]]
+PASS  webkit-390-pt-in: every text of a step on the band has a contrast of 4.5 to 1 or more
+      24 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  webkit-390-pt-in: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  webkit-390-pt-in: the inventory step says «Catalogue»
+      Catalogue as mídias físicas da sua estante.
+PASS  webkit-390-pt-in: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  webkit-390-pt-in: the shelf is «Na caixa do The Album Blender», 15 albums, its row named for a screen reader
+      Na caixa do The Album Blender; 15 cards; row «Álbuns da caixa do The Album Blender»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  webkit-390-pt-in: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 390 of 2478; albums cut by the right edge: 1
+PASS  webkit-390-pt-in: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba); not fitting: 0
+PASS  webkit-390-pt-in: two arrows to tap, 44 px, named; at the start «Álbum anterior» is off
+      [{"name":"Álbum anterior","off":"true","shown":true,"x":274,"y":4100,"w":44,"h":44},{"name":"Próximo álbum","off":"false","shown":true,"x":330,"y":4100,"w":44,"h":44}]
+PASS  webkit-390-pt-in: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  webkit-390-pt-in: a tap on «Próximo álbum» moves the row one album (164 px), «Álbum anterior» brings it back
+      164, 328, back to 164
+PASS  webkit-390-pt-in: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  webkit-390-pt-in: at the end of the row «Próximo álbum» is off and the page is still as wide as the screen
+      {"x":2088,"max":2088,"next":"true","page":390}
+PASS  webkit-390-pt-in: signed in, the top has «Criar» to the app, and the bar's five items go to their screens
+      top: Criar -> /start; bar: Criar -> /start, Álbuns -> /albums, Blend -> /blend, Playlists -> /saved-playlists, Inventário -> /inventory
+PASS  webkit-390-pt-in: at the bottom of the page it is still as wide as the screen
+      page 390
+PASS  webkit-390-en-out: no console error
+PASS  webkit-390-en-out: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  webkit-390-en-out: the page shows the visitor opening, in en
+PASS  webkit-390-en-out: the page is exactly as wide as the screen and does not scroll sideways
+      screen 390, page 390, body 390, after a push sideways x=0
+PASS  webkit-390-en-out: the top bar ends inside the screen
+      right edge of the bar's last item 374 of 390: home 16+133; acct 195.5+178.5; lang 195.5+90; btn btn-ghost btn-sm only-ou 291.5+82.5
+PASS  webkit-390-en-out: the opening has no big button
+PASS  webkit-390-en-out: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  webkit-390-en-out: the caption names the album and the year, with «Listen on Apple Music» (a link, not opened)
+      {"text":"♫ Listen on Apple Music (opens in a new tab)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":168.1,"y":641,"w":205.9,"h":44}
+PASS  webkit-390-en-out: opening, crate, caption, «How it works», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":269,"caption":599,"edu":730,"start":796,"albums":1240,"blend":1823,"playlists":2392,"inventory":2870,"flip":2326,"shelf":3397,"end":3853,"footer":4289}
+PASS  webkit-390-en-out: the part's title is «How it works», shown, in the fire's orange
+      How it works rgb(249, 115, 22) 28px
+PASS  webkit-390-en-out: the five labels and their numbers are in the lighter orange, the number standing out
+      SIDE A · 1 — CREATE rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 2 — ALBUMS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 2 — INVENTORY rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  webkit-390-en-out: the orange texts of the stretch are the title, the labels with their numbers, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n
+PASS  webkit-390-en-out: in each step the label, the title and the text come before its one illustration
+      start: 818 < 864 < 926 < 1022.8 | albums: 1296 < 1342 < 1404 < 1510 | blend: 1879 < 1925 < 2012 < 2133.3 | playlists: 2448 < 2494 < 2556 < 2689.6 | inventory: 2926 < 2972 < 3059 < 3228.5
+PASS  webkit-390-en-out: no step holds a cover or an Apple Music button
+PASS  webkit-390-en-out: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 358x200, albums 358x281, blend 358x200, playlists 358x200, inventory 358x200
+PASS  webkit-390-en-out: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  webkit-390-en-out: the band runs from edge to edge of the screen
+      [[0,390,390],[0,390,390]]
+PASS  webkit-390-en-out: every text of a step on the band has a contrast of 4.5 to 1 or more
+      22 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  webkit-390-en-out: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  webkit-390-en-out: the inventory step says «Catalogue»
+      Catalogue the physical media on your shelf.
+PASS  webkit-390-en-out: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  webkit-390-en-out: the shelf is «In The Album Blender's crate», 15 albums, its row named for a screen reader
+      In The Album Blender's crate; 15 cards; row «Albums in The Album Blender's crate»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  webkit-390-en-out: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 390 of 2478; albums cut by the right edge: 1
+PASS  webkit-390-en-out: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab); not fitting: 0
+PASS  webkit-390-en-out: two arrows to tap, 44 px, named; at the start «Previous album» is off
+      [{"name":"Previous album","off":"true","shown":true,"x":274,"y":3781,"w":44,"h":44},{"name":"Next album","off":"false","shown":true,"x":330,"y":3781,"w":44,"h":44}]
+PASS  webkit-390-en-out: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  webkit-390-en-out: a tap on «Next album» moves the row one album (164 px), «Previous album» brings it back
+      164, 328, back to 164
+PASS  webkit-390-en-out: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  webkit-390-en-out: at the end of the row «Next album» is off and the page is still as wide as the screen
+      {"x":2088,"max":2088,"next":"true","page":390}
+PASS  webkit-390-en-out: the visitor has «Sign in» at the top and the bar's «Create» opens the app (href judged, not opened); the other four lead to their steps
+      top: Sign in -> /start?signin; bar: Create -> /start, Albums -> #albums, Blend -> #blend, Playlists -> #playlists, Inventory -> #inventory
+PASS  webkit-390-en-out: at the bottom of the page it is still as wide as the screen
+      page 390
+PASS  webkit-390-en-in: no console error
+PASS  webkit-390-en-in: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  webkit-390-en-in: the page shows the signed-in opening, in en
+PASS  webkit-390-en-in: the page is exactly as wide as the screen and does not scroll sideways
+      screen 390, page 390, body 390, after a push sideways x=0
+PASS  webkit-390-en-in: the top bar ends inside the screen
+      right edge of the bar's last item 374 of 390: home 16+111.1; acct 139.1+234.9; lang 139.1+90; btn btn-primary btn-sm btn-s 235.1+138.9
+PASS  webkit-390-en-in: the opening has no big button
+PASS  webkit-390-en-in: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  webkit-390-en-in: the caption names the album and the year, with «Listen on Apple Music» (a link, not opened)
+      {"text":"♫ Listen on Apple Music (opens in a new tab)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":168.1,"y":641,"w":205.9,"h":44}
+PASS  webkit-390-en-in: opening, crate, caption, «How it works», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":269,"caption":599,"edu":730,"start":796,"albums":1290,"blend":1923,"playlists":2542,"inventory":3070,"flip":2476,"shelf":3647,"end":4103,"footer":4417}
+PASS  webkit-390-en-in: the part's title is «How it works», shown, in the fire's orange
+      How it works rgb(249, 115, 22) 28px
+PASS  webkit-390-en-in: the five labels and their numbers are in the lighter orange, the number standing out
+      SIDE A · 1 — CREATE rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 2 — ALBUMS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 2 — INVENTORY rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  webkit-390-en-in: the orange texts of the stretch are the title, the labels with their numbers and the five links, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span.
+PASS  webkit-390-en-in: each step's link is in the lighter orange, underlined, with its arrow
+      {"text":"Start a series →","color":"rgb(251, 146, 60)","underline":true,"href":"/start"} {"text":"See your albums →","color":"rgb(251, 146, 60)","underline":true,"href":"/albums"} {"text":"Make a playlist →","color":"rgb(251, 146, 60)","underline":true,"href":"/blend"} {"text":"See your playlists →","color":"rgb(251, 146, 60)","underline":true,"href":"/saved-playlists"} {"text":"Open your inventory →","color":"rgb(251, 146, 60)","underline":true,"href":"/inventory"}
+PASS  webkit-390-en-in: in each step the label, the title and the text come before its one illustration
+      start: 818 < 864 < 926 < 1072.8 | albums: 1346 < 1392 < 1454 < 1560 | blend: 1979 < 2025 < 2112 < 2283.3 | playlists: 2598 < 2644 < 2706 < 2889.6 | inventory: 3126 < 3172 < 3259 < 3478.5
+PASS  webkit-390-en-in: no step holds a cover or an Apple Music button
+PASS  webkit-390-en-in: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 358x200, albums 358x281, blend 358x200, playlists 358x200, inventory 358x200
+PASS  webkit-390-en-in: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  webkit-390-en-in: the band runs from edge to edge of the screen
+      [[0,390,390],[0,390,390]]
+PASS  webkit-390-en-in: every text of a step on the band has a contrast of 4.5 to 1 or more
+      24 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  webkit-390-en-in: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  webkit-390-en-in: the inventory step says «Catalogue»
+      Catalogue the physical media on your shelf.
+PASS  webkit-390-en-in: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  webkit-390-en-in: the shelf is «In The Album Blender's crate», 15 albums, its row named for a screen reader
+      In The Album Blender's crate; 15 cards; row «Albums in The Album Blender's crate»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  webkit-390-en-in: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 390 of 2478; albums cut by the right edge: 1
+PASS  webkit-390-en-in: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab); not fitting: 0
+PASS  webkit-390-en-in: two arrows to tap, 44 px, named; at the start «Previous album» is off
+      [{"name":"Previous album","off":"true","shown":true,"x":274,"y":4031,"w":44,"h":44},{"name":"Next album","off":"false","shown":true,"x":330,"y":4031,"w":44,"h":44}]
+PASS  webkit-390-en-in: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  webkit-390-en-in: a tap on «Next album» moves the row one album (164 px), «Previous album» brings it back
+      164, 328, back to 164
+PASS  webkit-390-en-in: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  webkit-390-en-in: at the end of the row «Next album» is off and the page is still as wide as the screen
+      {"x":2088,"max":2088,"next":"true","page":390}
+PASS  webkit-390-en-in: signed in, the top has «Create» to the app, and the bar's five items go to their screens
+      top: Create -> /start; bar: Create -> /start, Albums -> /albums, Blend -> /blend, Playlists -> /saved-playlists, Inventory -> /inventory
+PASS  webkit-390-en-in: at the bottom of the page it is still as wide as the screen
+      page 390
+PASS  webkit-360-pt-out: no console error
+PASS  webkit-360-pt-out: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  webkit-360-pt-out: the page shows the visitor opening, in pt
+PASS  webkit-360-pt-out: the page is exactly as wide as the screen and does not scroll sideways
+      screen 360, page 360, body 360, after a push sideways x=0
+PASS  webkit-360-pt-out: the top bar ends inside the screen
+      right edge of the bar's last item 344.1 of 360: home 16+133; acct 167.3+176.8; lang 167.3+90; btn btn-ghost btn-sm only-ou 263.3+80.8
+PASS  webkit-360-pt-out: the opening has no big button
+PASS  webkit-360-pt-out: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  webkit-360-pt-out: the caption names the album and the year, with «Ouça no Apple Music» (a link, not opened)
+      {"text":"♫ Ouça no Apple Music (abre numa nova aba)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":144.2,"y":678,"w":199.8,"h":44}
+PASS  webkit-360-pt-out: opening, crate, caption, «Como funciona», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":306,"caption":636,"edu":767,"start":863,"albums":1332,"blend":1955,"playlists":2523,"inventory":3050,"flip":2457,"shelf":3577,"end":4063,"footer":4523}
+PASS  webkit-360-pt-out: the part's title is «Como funciona», shown, in the fire's orange
+      Como funciona rgb(249, 115, 22) 28px
+PASS  webkit-360-pt-out: the five labels and their numbers are in the lighter orange, the number standing out
+      LADO A · 1 — CRIAR rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 2 — ÁLBUNS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 2 — INVENTÁRIO rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  webkit-360-pt-out: the orange texts of the stretch are the title, the labels with their numbers, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n
+PASS  webkit-360-pt-out: in each step the label, the title and the text come before its one illustration
+      start: 885 < 931 < 1018 < 1116.1 | albums: 1388 < 1434 < 1521 < 1627 | blend: 2011 < 2057 < 2119 < 2265 | playlists: 2579 < 2625 < 2712 < 2873.9 | inventory: 3106 < 3152 < 3239 < 3435
+PASS  webkit-360-pt-out: no step holds a cover or an Apple Music button
+PASS  webkit-360-pt-out: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 328x200, albums 328x296, blend 328x200, playlists 328x200, inventory 328x200
+PASS  webkit-360-pt-out: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  webkit-360-pt-out: the band runs from edge to edge of the screen
+      [[0,360,360],[0,360,360]]
+PASS  webkit-360-pt-out: every text of a step on the band has a contrast of 4.5 to 1 or more
+      22 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  webkit-360-pt-out: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  webkit-360-pt-out: the inventory step says «Catalogue»
+      Catalogue as mídias físicas da sua estante.
+PASS  webkit-360-pt-out: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  webkit-360-pt-out: the shelf is «Na caixa do The Album Blender», 15 albums, its row named for a screen reader
+      Na caixa do The Album Blender; 15 cards; row «Álbuns da caixa do The Album Blender»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  webkit-360-pt-out: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 360 of 2478; albums cut by the right edge: 1
+PASS  webkit-360-pt-out: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba); not fitting: 0
+PASS  webkit-360-pt-out: two arrows to tap, 44 px, named; at the start «Álbum anterior» is off
+      [{"name":"Álbum anterior","off":"true","shown":true,"x":244,"y":3991,"w":44,"h":44},{"name":"Próximo álbum","off":"false","shown":true,"x":300,"y":3991,"w":44,"h":44}]
+PASS  webkit-360-pt-out: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  webkit-360-pt-out: a tap on «Próximo álbum» moves the row one album (164 px), «Álbum anterior» brings it back
+      164, 328, back to 164
+PASS  webkit-360-pt-out: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  webkit-360-pt-out: at the end of the row «Próximo álbum» is off and the page is still as wide as the screen
+      {"x":2118,"max":2118,"next":"true","page":360}
+PASS  webkit-360-pt-out: the visitor has «Entrar» at the top and the bar's «Criar» opens the app (href judged, not opened); the other four lead to their steps
+      top: Entrar -> /start?signin; bar: Criar -> /start, Álbuns -> #albums, Blend -> #blend, Playlists -> #playlists, Inventário -> #inventory
+PASS  webkit-360-pt-out: at the bottom of the page it is still as wide as the screen
+      page 360
+PASS  webkit-360-pt-in: no console error
+PASS  webkit-360-pt-in: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  webkit-360-pt-in: the page shows the signed-in opening, in pt
+PASS  webkit-360-pt-in: the page is exactly as wide as the screen and does not scroll sideways
+      screen 360, page 360, body 360, after a push sideways x=0
+PASS  webkit-360-pt-in: the top bar ends inside the screen
+      right edge of the bar's last item 344 of 360: home 16+108.1; acct 136.1+207.9; lang 136.1+90; btn btn-primary btn-sm btn-s 232.1+111.9
+PASS  webkit-360-pt-in: the opening has no big button
+PASS  webkit-360-pt-in: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  webkit-360-pt-in: the caption names the album and the year, with «Ouça no Apple Music» (a link, not opened)
+      {"text":"♫ Ouça no Apple Music (abre numa nova aba)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":144.2,"y":678,"w":199.8,"h":44}
+PASS  webkit-360-pt-in: opening, crate, caption, «Como funciona», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":306,"caption":636,"edu":767,"start":863,"albums":1382,"blend":2055,"playlists":2673,"inventory":3250,"flip":2607,"shelf":3827,"end":4313,"footer":4627}
+PASS  webkit-360-pt-in: the part's title is «Como funciona», shown, in the fire's orange
+      Como funciona rgb(249, 115, 22) 28px
+PASS  webkit-360-pt-in: the five labels and their numbers are in the lighter orange, the number standing out
+      LADO A · 1 — CRIAR rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 2 — ÁLBUNS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | LADO B · 2 — INVENTÁRIO rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  webkit-360-pt-in: the orange texts of the stretch are the title, the labels with their numbers and the five links, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span.
+PASS  webkit-360-pt-in: each step's link is in the lighter orange, underlined, with its arrow
+      {"text":"Começar uma série →","color":"rgb(251, 146, 60)","underline":true,"href":"/start"} {"text":"Ver seus álbuns →","color":"rgb(251, 146, 60)","underline":true,"href":"/albums"} {"text":"Gerar uma playlist →","color":"rgb(251, 146, 60)","underline":true,"href":"/blend"} {"text":"Ver suas playlists →","color":"rgb(251, 146, 60)","underline":true,"href":"/saved-playlists"} {"text":"Abrir o inventário →","color":"rgb(251, 146, 60)","underline":true,"href":"/inventory"}
+PASS  webkit-360-pt-in: in each step the label, the title and the text come before its one illustration
+      start: 885 < 931 < 1018 < 1166.1 | albums: 1438 < 1484 < 1571 < 1677 | blend: 2111 < 2157 < 2219 < 2415 | playlists: 2729 < 2775 < 2862 < 3073.9 | inventory: 3306 < 3352 < 3439 < 3685
+PASS  webkit-360-pt-in: no step holds a cover or an Apple Music button
+PASS  webkit-360-pt-in: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 328x200, albums 328x296, blend 328x200, playlists 328x200, inventory 328x200
+PASS  webkit-360-pt-in: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  webkit-360-pt-in: the band runs from edge to edge of the screen
+      [[0,360,360],[0,360,360]]
+PASS  webkit-360-pt-in: every text of a step on the band has a contrast of 4.5 to 1 or more
+      24 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  webkit-360-pt-in: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  webkit-360-pt-in: the inventory step says «Catalogue»
+      Catalogue as mídias físicas da sua estante.
+PASS  webkit-360-pt-in: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  webkit-360-pt-in: the shelf is «Na caixa do The Album Blender», 15 albums, its row named for a screen reader
+      Na caixa do The Album Blender; 15 cards; row «Álbuns da caixa do The Album Blender»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  webkit-360-pt-in: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 360 of 2478; albums cut by the right edge: 1
+PASS  webkit-360-pt-in: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Ouça no Apple Music: Dummy, Portishead (abre numa nova aba); not fitting: 0
+PASS  webkit-360-pt-in: two arrows to tap, 44 px, named; at the start «Álbum anterior» is off
+      [{"name":"Álbum anterior","off":"true","shown":true,"x":244,"y":4241,"w":44,"h":44},{"name":"Próximo álbum","off":"false","shown":true,"x":300,"y":4241,"w":44,"h":44}]
+PASS  webkit-360-pt-in: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  webkit-360-pt-in: a tap on «Próximo álbum» moves the row one album (164 px), «Álbum anterior» brings it back
+      164, 328, back to 164
+PASS  webkit-360-pt-in: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  webkit-360-pt-in: at the end of the row «Próximo álbum» is off and the page is still as wide as the screen
+      {"x":2118,"max":2118,"next":"true","page":360}
+PASS  webkit-360-pt-in: signed in, the top has «Criar» to the app, and the bar's five items go to their screens
+      top: Criar -> /start; bar: Criar -> /start, Álbuns -> /albums, Blend -> /blend, Playlists -> /saved-playlists, Inventário -> /inventory
+PASS  webkit-360-pt-in: at the bottom of the page it is still as wide as the screen
+      page 360
+PASS  webkit-360-en-out: no console error
+PASS  webkit-360-en-out: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  webkit-360-en-out: the page shows the visitor opening, in en
+PASS  webkit-360-en-out: the page is exactly as wide as the screen and does not scroll sideways
+      screen 360, page 360, body 360, after a push sideways x=0
+PASS  webkit-360-en-out: the top bar ends inside the screen
+      right edge of the bar's last item 344 of 360: home 16+133; acct 165.5+178.5; lang 165.5+90; btn btn-ghost btn-sm only-ou 261.5+82.5
+PASS  webkit-360-en-out: the opening has no big button
+PASS  webkit-360-en-out: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  webkit-360-en-out: the caption names the album and the year, with «Listen on Apple Music» (a link, not opened)
+      {"text":"♫ Listen on Apple Music (opens in a new tab)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":138.1,"y":641,"w":205.9,"h":44}
+PASS  webkit-360-en-out: opening, crate, caption, «How it works», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":269,"caption":599,"edu":730,"start":796,"albums":1240,"blend":1838,"playlists":2431,"inventory":2933,"flip":2365,"shelf":3460,"end":3916,"footer":4383}
+PASS  webkit-360-en-out: the part's title is «How it works», shown, in the fire's orange
+      How it works rgb(249, 115, 22) 28px
+PASS  webkit-360-en-out: the five labels and their numbers are in the lighter orange, the number standing out
+      SIDE A · 1 — CREATE rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 2 — ALBUMS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 2 — INVENTORY rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  webkit-360-en-out: the orange texts of the stretch are the title, the labels with their numbers, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n | p.kicker | span.n
+PASS  webkit-360-en-out: in each step the label, the title and the text come before its one illustration
+      start: 818 < 864 < 926 < 1026.9 | albums: 1296 < 1342 < 1404 < 1510 | blend: 1894 < 1940 < 2027 < 2181 | playlists: 2487 < 2533 < 2595 < 2763.7 | inventory: 2989 < 3035 < 3122 < 3304.2
+PASS  webkit-360-en-out: no step holds a cover or an Apple Music button
+PASS  webkit-360-en-out: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 328x200, albums 328x296, blend 328x200, playlists 328x200, inventory 328x200
+PASS  webkit-360-en-out: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  webkit-360-en-out: the band runs from edge to edge of the screen
+      [[0,360,360],[0,360,360]]
+PASS  webkit-360-en-out: every text of a step on the band has a contrast of 4.5 to 1 or more
+      22 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  webkit-360-en-out: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  webkit-360-en-out: the inventory step says «Catalogue»
+      Catalogue the physical media on your shelf.
+PASS  webkit-360-en-out: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  webkit-360-en-out: the shelf is «In The Album Blender's crate», 15 albums, its row named for a screen reader
+      In The Album Blender's crate; 15 cards; row «Albums in The Album Blender's crate»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  webkit-360-en-out: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 360 of 2478; albums cut by the right edge: 1
+PASS  webkit-360-en-out: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab); not fitting: 0
+PASS  webkit-360-en-out: two arrows to tap, 44 px, named; at the start «Previous album» is off
+      [{"name":"Previous album","off":"true","shown":true,"x":244,"y":3844,"w":44,"h":44},{"name":"Next album","off":"false","shown":true,"x":300,"y":3844,"w":44,"h":44}]
+PASS  webkit-360-en-out: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  webkit-360-en-out: a tap on «Next album» moves the row one album (164 px), «Previous album» brings it back
+      164, 328, back to 164
+PASS  webkit-360-en-out: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  webkit-360-en-out: at the end of the row «Next album» is off and the page is still as wide as the screen
+      {"x":2118,"max":2118,"next":"true","page":360}
+PASS  webkit-360-en-out: the visitor has «Sign in» at the top and the bar's «Create» opens the app (href judged, not opened); the other four lead to their steps
+      top: Sign in -> /start?signin; bar: Create -> /start, Albums -> #albums, Blend -> #blend, Playlists -> #playlists, Inventory -> #inventory
+PASS  webkit-360-en-out: at the bottom of the page it is still as wide as the screen
+      page 360
+PASS  webkit-360-en-in: no console error
+PASS  webkit-360-en-in: no request for a music service, a foreign scheme, Firebase or the 3D library
+      aborted: none
+PASS  webkit-360-en-in: the page shows the signed-in opening, in en
+PASS  webkit-360-en-in: the page is exactly as wide as the screen and does not scroll sideways
+      screen 360, page 360, body 360, after a push sideways x=0
+PASS  webkit-360-en-in: the top bar ends inside the screen
+      right edge of the bar's last item 344 of 360: home 16+81.1; acct 109.1+234.9; lang 109.1+90; btn btn-primary btn-sm btn-s 205.1+138.9
+PASS  webkit-360-en-in: the opening has no big button
+PASS  webkit-360-en-in: the crate is the CSS crate, turned 30 degrees, and no 3D canvas exists
+      --yaw -30deg, matrix3d(0.866025, 0, 0.5, 0, 0, 1, 0, 0, sleeves 8
+PASS  webkit-360-en-in: the caption names the album and the year, with «Listen on Apple Music» (a link, not opened)
+      {"text":"♫ Listen on Apple Music (opens in a new tab)","href":"https://music.apple.com/us/album/the-velvet-underground-nico-45th-anniversary-edition/1440851613","target":"_blank","rel":"noopener","x":138.1,"y":641,"w":205.9,"h":44}
+PASS  webkit-360-en-in: opening, crate, caption, «How it works», the five steps, the shelf, the invitation, the footer, in this order
+      {"hero":56,"scene":269,"caption":599,"edu":730,"start":796,"albums":1290,"blend":1938,"playlists":2581,"inventory":3133,"flip":2515,"shelf":3710,"end":4166,"footer":4480}
+PASS  webkit-360-en-in: the part's title is «How it works», shown, in the fire's orange
+      How it works rgb(249, 115, 22) 28px
+PASS  webkit-360-en-in: the five labels and their numbers are in the lighter orange, the number standing out
+      SIDE A · 1 — CREATE rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 2 — ALBUMS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE A · 3 — BLEND rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 1 — PLAYLISTS rgb(251, 146, 60) 30px rgb(251, 146, 60) | SIDE B · 2 — INVENTORY rgb(251, 146, 60) 30px rgb(251, 146, 60)
+PASS  webkit-360-en-in: the orange texts of the stretch are the title, the labels with their numbers and the five links, and nothing else (the flip band is neutral)
+      h2#edu.edu-t | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span. | p.kicker | span.n | span. | span.
+PASS  webkit-360-en-in: each step's link is in the lighter orange, underlined, with its arrow
+      {"text":"Start a series →","color":"rgb(251, 146, 60)","underline":true,"href":"/start"} {"text":"See your albums →","color":"rgb(251, 146, 60)","underline":true,"href":"/albums"} {"text":"Make a playlist →","color":"rgb(251, 146, 60)","underline":true,"href":"/blend"} {"text":"See your playlists →","color":"rgb(251, 146, 60)","underline":true,"href":"/saved-playlists"} {"text":"Open your inventory →","color":"rgb(251, 146, 60)","underline":true,"href":"/inventory"}
+PASS  webkit-360-en-in: in each step the label, the title and the text come before its one illustration
+      start: 818 < 864 < 926 < 1076.9 | albums: 1346 < 1392 < 1454 < 1560 | blend: 1994 < 2040 < 2127 < 2331 | playlists: 2637 < 2683 < 2745 < 2963.7 | inventory: 3189 < 3235 < 3322 < 3554.2
+PASS  webkit-360-en-in: no step holds a cover or an Apple Music button
+PASS  webkit-360-en-in: each panel has the computer's measure (the column, 420 px at most, by 200)
+      start 328x200, albums 328x296, blend 328x200, playlists 328x200, inventory 328x200
+PASS  webkit-360-en-in: the step mark is both: the thin line above every step but the first, and the 2nd and 4th steps on the lighter band (page, band, page, band, page)
+      start line 0px band rgba(0, 0, 0, 0), albums line 1px band rgb(28, 28, 34), blend line 1px band rgba(0, 0, 0, 0), playlists line 1px band rgb(28, 28, 34), inventory line 1px band rgba(0, 0, 0, 0)
+PASS  webkit-360-en-in: the band runs from edge to edge of the screen
+      [[0,360,360],[0,360,360]]
+PASS  webkit-360-en-in: every text of a step on the band has a contrast of 4.5 to 1 or more
+      24 texts; the lowest: albums note 6.7:1; the band against the page: 1.17:1
+PASS  webkit-360-en-in: an illustration on the band keeps its reinforced outline
+      [["albums","rgba(255, 255, 255, 0.24)","rgb(18, 18, 22)"],["playlists","rgba(255, 255, 255, 0.24)","rgb(15, 15, 19)"]]
+PASS  webkit-360-en-in: the inventory step says «Catalogue»
+      Catalogue the physical media on your shelf.
+PASS  webkit-360-en-in: the switch still gives each mark alone (tried and put back): «line» and «bands»
+      {"line":"page/0px page/1px page/1px page/1px page/1px","bands":"page/0px band/0px page/0px band/0px page/0px"}
+PASS  webkit-360-en-in: the shelf is «In The Album Blender's crate», 15 albums, its row named for a screen reader
+      In The Album Blender's crate; 15 cards; row «Albums in The Album Blender's crate»; first: The Velvet Underground & Nico, In the Court of the Crimson King, The Dark Side of the Moon
+PASS  webkit-360-en-in: the row is wider than the screen and stays inside it; the next album's edge is in sight
+      row 360 of 2478; albums cut by the right edge: 1
+PASS  webkit-360-en-in: every album's button goes to the album's own Apple Music page, in a new tab, named with the album and the artist, 44 px high, its text inside it
+      ♫Listen on Apple Music: Dummy, Portishead (opens in a new tab); not fitting: 0
+PASS  webkit-360-en-in: two arrows to tap, 44 px, named; at the start «Previous album» is off
+      [{"name":"Previous album","off":"true","shown":true,"x":244,"y":4094,"w":44,"h":44},{"name":"Next album","off":"false","shown":true,"x":300,"y":4094,"w":44,"h":44}]
+PASS  webkit-360-en-in: nothing moves by itself (2.6 s in view, the row did not move)
+      scrollLeft 0
+PASS  webkit-360-en-in: a tap on «Next album» moves the row one album (164 px), «Previous album» brings it back
+      164, 328, back to 164
+PASS  webkit-360-en-in: the row takes the keyboard: the right arrow moves it one album
+      scrollLeft 328
+PASS  webkit-360-en-in: at the end of the row «Next album» is off and the page is still as wide as the screen
+      {"x":2118,"max":2118,"next":"true","page":360}
+PASS  webkit-360-en-in: signed in, the top has «Create» to the app, and the bar's five items go to their screens
+      top: Create -> /start; bar: Create -> /start, Albums -> /albums, Blend -> /blend, Playlists -> /saved-playlists, Inventory -> /inventory
+PASS  webkit-360-en-in: at the bottom of the page it is still as wide as the screen
+      page 360
+PASS  chromium-390-pt-out-noscript: without script the title and the five steps read whole
+      [true,true,true,true,true]
+PASS  chromium-390-pt-out-noscript: without script the shelf shows its 15 albums with their links and scrolls by itself; the arrows, which need the script, are not shown
+      cards 15, links 15, arrows 0
+PASS  chromium-390-pt-out-noscript: without script (no bottom bar) the visitor keeps «Abrir o app» in the opening, and «Entrar» at the top
+      Abrir o app -> /start; top: Entrar
+PASS  chromium-390-pt-out-noscript: without script the page is as wide as the screen
+      page 390
+PASS  chromium-390-pt-out-noscript: no request for a music service
+PASS  chromium-390-pt-out-less-motion: with less motion asked nothing moves by itself and the pause icon is hidden
+      moving false, pause hidden true
+PASS  chromium-390-pt-out-less-motion: the arrow moves the row at once, without gliding
+      two frames after the tap: 164
+PASS  chromium-390-pt-out-less-motion: no console error
+PASS  webkit-390-pt-out-noscript: without script the title and the five steps read whole
+      [true,true,true,true,true]
+PASS  webkit-390-pt-out-noscript: without script the shelf shows its 15 albums with their links and scrolls by itself; the arrows, which need the script, are not shown
+      cards 15, links 15, arrows 0
+PASS  webkit-390-pt-out-noscript: without script (no bottom bar) the visitor keeps «Abrir o app» in the opening, and «Entrar» at the top
+      Abrir o app -> /start; top: Entrar
+PASS  webkit-390-pt-out-noscript: without script the page is as wide as the screen
+      page 390
+PASS  webkit-390-pt-out-noscript: no request for a music service
+PASS  webkit-390-pt-out-less-motion: with less motion asked nothing moves by itself and the pause icon is hidden
+      moving false, pause hidden true
+PASS  webkit-390-pt-out-less-motion: the arrow moves the row at once, without gliding
+      two frames after the tap: 164
+PASS  webkit-390-pt-out-less-motion: no console error
+PASS  chromium-1280-pt-out: the computer did not change: every visible box, its place, size, colour, type and link are the same before and after
+      333 boxes before, 333 after; gone 0, new 0; page 4578 -> 4578
+PASS  chromium-1280-pt-out: on the computer the new title is read, not shown (1 px), the shelf is not shown, the opening keeps its buttons, the crate keeps its 15 degrees
+      title 1x1, shelf none, buttons Abrir o app, Entrar, yaw -15deg
+PASS  chromium-1280-pt-out: the five step numbers, now a span inside their label, look exactly like the label (colour, size, weight, face, spacing)
+      [true,true,true,true,true]
+PASS  chromium-1280-pt-out: the computer's menu leads where it led
+      #start, #albums, #blend, #playlists, #inventory
+PASS  chromium-1280-pt-out: no console error
+PASS  chromium-1280-pt-in: the computer did not change: every visible box, its place, size, colour, type and link are the same before and after
+      354 boxes before, 354 after; gone 0, new 0; page 4828 -> 4828
+PASS  chromium-1280-pt-in: on the computer the new title is read, not shown (1 px), the shelf is not shown, the opening keeps its buttons, the crate keeps its 15 degrees
+      title 1x1, shelf none, buttons Criar, yaw -15deg
+PASS  chromium-1280-pt-in: the five step numbers, now a span inside their label, look exactly like the label (colour, size, weight, face, spacing)
+      [true,true,true,true,true]
+PASS  chromium-1280-pt-in: the computer's menu leads where it led
+      /start, /albums, /blend, /saved-playlists, /inventory
+PASS  chromium-1280-pt-in: no console error
+PASS  chromium-1280-en-out: the computer did not change: every visible box, its place, size, colour, type and link are the same before and after
+      333 boxes before, 333 after; gone 0, new 0; page 4543 -> 4543
+PASS  chromium-1280-en-out: on the computer the new title is read, not shown (1 px), the shelf is not shown, the opening keeps its buttons, the crate keeps its 15 degrees
+      title 1x1, shelf none, buttons Open the app, Sign in, yaw -15deg
+PASS  chromium-1280-en-out: the five step numbers, now a span inside their label, look exactly like the label (colour, size, weight, face, spacing)
+      [true,true,true,true,true]
+PASS  chromium-1280-en-out: the computer's menu leads where it led
+      #start, #albums, #blend, #playlists, #inventory
+PASS  chromium-1280-en-out: no console error
+PASS  chromium-1280-en-in: the computer did not change: every visible box, its place, size, colour, type and link are the same before and after
+      354 boxes before, 354 after; gone 0, new 0; page 4758 -> 4758
+PASS  chromium-1280-en-in: on the computer the new title is read, not shown (1 px), the shelf is not shown, the opening keeps its buttons, the crate keeps its 15 degrees
+      title 1x1, shelf none, buttons Create, yaw -15deg
+PASS  chromium-1280-en-in: the five step numbers, now a span inside their label, look exactly like the label (colour, size, weight, face, spacing)
+      [true,true,true,true,true]
+PASS  chromium-1280-en-in: the computer's menu leads where it led
+      /start, /albums, /blend, /saved-playlists, /inventory
+PASS  chromium-1280-en-in: no console error
+PASS  the first visit on the phone: the 3D library is not fetched, and the page on the wire (gzip) grows by less than 3 KB
+      the page: 53950 B -> 66552 B as written, 15325 B -> 17007 B in gzip (+1682 B); every body received, uncompressed as the preview serves them, covers included: before 361 KB, after 374 KB
+
+541 passed, 0 failed

@@ -60,11 +60,12 @@ describe('the ranking card', () => {
 })
 
 describe('the vignettes on the page', () => {
-    it('five, one per story, decorative, each in the story\'s lead beside the phone\'s cover', () => {
+    it('four, decorative, each alone in its story\'s lead; the story «Álbuns» has the ranking card instead (F96: its phone vignette stood beside a cover, and the covers left the stories)', () => {
         const motifs = [...page.matchAll(/<div class="v4-motif m-(\w+)"[^>]*>/g)]
-        expect(motifs.map(m => m[1])).toEqual(['start', 'albums', 'blend', 'pl', 'inv'])
+        expect(motifs.map(m => m[1])).toEqual(['start', 'blend', 'pl', 'inv'])
         motifs.forEach(m => expect(m[0]).toContain('aria-hidden="true"'))
-        expect(page.match(/<div class="v4-lead">/g)).toHaveLength(5)
+        expect(page.match(/<div class="v4-lead"><div class="v4-motif /g)).toHaveLength(4)
+        expect(page.match(/data-v4-card/g)).toHaveLength(1)
     })
 
     it('the story heights and the phone\'s opening live in the style block', () => {

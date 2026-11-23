@@ -8,7 +8,8 @@
  *
  * The plugin:
  *   - writes into public/splash.html, at the «splash:…» places: the 14 covers of the chosen set, the
- *     stage's tag, the caption of the front record and the footer's credit (public/splash/covers.js);
+ *     stage's tag, the caption of the front record, the footer's credit and the phone's row of albums
+ *     («Na caixa do The Album Blender», F96) (public/splash/covers.js);
  *     the set comes from VITE_SPLASH_COVERS (`real`, else fictional). It also writes the page's text,
  *     in Portuguese, from the dictionary (public/splash/copy.js) into every `data-i18n…` element: the
  *     page reads whole without JavaScript and holds no text of its own. It writes no script: the root
@@ -21,12 +22,12 @@
  */
 import fs from 'node:fs'
 import path from 'node:path'
-import { chooseCoverSet, coverImagesHtml, captionHtml, creditHtml, stageTagHtml } from '../public/splash/covers.js'
-import { t } from '../public/splash/copy.js'
+import { chooseCoverSet, coverImagesHtml, captionHtml, creditHtml, stageTagHtml, shelfHtml } from '../public/splash/covers.js'
+import { t, stepLabelHtml } from '../public/splash/copy.js'
 
 export const ENTRY_SOURCE = 'splash.html'
 export const APP_BUILT = 'app.html'
-export const PLACES = ['covers', 'stage-tag', 'caption', 'credit']
+export const PLACES = ['covers', 'stage-tag', 'caption', 'credit', 'shelf']
 
 const attrEscape = (v) => v.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
 const ATTR_MARKERS = { 'data-i18n-aria': 'aria-label', 'data-i18n-title': 'title', 'data-i18n-content': 'content' }
@@ -42,7 +43,8 @@ export function fillCopy(html, lang = 'pt') {
         if (text === key) throw new Error(`entryPage: no text for «${key}» in public/splash/copy.js`)
         return text
     }
-    let out = html.replace(/(<([a-z0-9]+)\b[^>]*?\sdata-i18n="([^"]+)"[^>]*>)<\/\2>/g, (m, open, tag, key) => `${open}${need(key)}</${tag}>`)
+    // a step's label (`data-num`) has its number set apart, as lang.js does in the browser (F96)
+    let out = html.replace(/(<([a-z0-9]+)\b[^>]*?\sdata-i18n="([^"]+)"[^>]*>)<\/\2>/g, (m, open, tag, key) => `${open}${/\sdata-num\b/.test(open) ? stepLabelHtml(need(key)) : need(key)}</${tag}>`)
     for (const [marker, attr] of Object.entries(ATTR_MARKERS)) {
         const tagRe = new RegExp(`<[a-z0-9]+\\b[^>]*\\s${marker}="([^"]+)"[^>]*>`, 'g')
         const attrRe = new RegExp(`\\s${attr}="[^"]*"`)
@@ -58,7 +60,8 @@ export function fillEntryPage(html, { set }) {
         covers: coverImagesHtml(chosen),
         'stage-tag': stageTagHtml(chosen),
         caption: captionHtml(chosen),
-        credit: creditHtml(chosen)
+        credit: creditHtml(chosen),
+        shelf: shelfHtml(chosen)
     }
     let out = html
     for (const place of PLACES) {
