@@ -3,6 +3,12 @@
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
 
+## [2026-11-22 21:18] decision — CMS (F82): o administrador é reconhecido por um registro que ele cria no console
+
+**Branch:** main
+
+- Decisão 1 da proposta de arquitetura (`design/proposals/f82-cms/architecture-proposal.md`): «como as regras do banco reconhecem você como administrador? Recomendo um registro que você cria uma única vez no console do Firebase» (ganha: nenhum identificador dele no código, nenhuma chave nova, papéis depois sem reescrever; paga: criar o registro e publicar as regras ele mesmo). O MJRP: «Aceito».
+
 ## [2026-11-22 20:49] step — proposta do conteúdo publicado do CMS revista depois da crítica, e movida para design/proposals/f82-cms/
 
 **Branch:** wip/cms-architecture-proposal
