@@ -36,8 +36,8 @@ describe('the dictionaries as the pairs of the kit', () => {
 
     it('gives back only what changed, by language', () => {
         const saved = toKitValues(sources())
-        const values = withEdit(withEdit(saved, 'albums.title', 'pt', 'Discos'), 'blend.title', 'en', 'Mix')
-        expect(editsOf(saved, values, 'pt')).toEqual({ 'albums.title': 'Discos' })
+        const values = withEdit(withEdit(saved, 'albums.title', 'pt', 'Os álbuns'), 'blend.title', 'en', 'Mix')
+        expect(editsOf(saved, values, 'pt')).toEqual({ 'albums.title': 'Os álbuns' })
         expect(editsOf(saved, values, 'en')).toEqual({ 'blend.title': 'Mix' })
         expect(unsavedKeys(saved, values)).toEqual(['blend.title', 'albums.title'])
         expect(unsavedKeys(saved, withEdit(values, 'albums.title', 'pt', 'Álbuns'))).toEqual(['blend.title'])
@@ -54,7 +54,7 @@ describe('the dictionaries as the pairs of the kit', () => {
 
 describe('the storage on the content repository', () => {
     const repository = (over: Partial<ContentRepository> = {}): ContentRepository => ({
-        readTexts: async (locale) => (locale === 'pt' ? { exists: true, data: { rev: 7, texts: { 'albums.title': 'Discos' } } } : { exists: false }),
+        readTexts: async (locale) => (locale === 'pt' ? { exists: true, data: { rev: 7, texts: { 'albums.title': 'Os álbuns' } } } : { exists: false }),
         readAdmin: async () => ({ role: 'super' }),
         readWork: async () => ({ keys: ['albums.title', 7] }),
         writeWork: vi.fn(async () => {}),
@@ -67,7 +67,7 @@ describe('the storage on the content repository', () => {
     it('reads the two languages with their revisions (0 when the document does not exist) and the approvals', async () => {
         const read = await store(repository()).read()
         expect(read.revs).toEqual({ en: 0, pt: 7 })
-        expect(read.sources.published).toEqual({ en: {}, pt: { 'albums.title': 'Discos' } })
+        expect(read.sources.published).toEqual({ en: {}, pt: { 'albums.title': 'Os álbuns' } })
         expect(read.sources.approved).toEqual(['albums.title'])
         expect(read.allowed).toBe(true)
     })
@@ -88,8 +88,8 @@ describe('the storage on the content repository', () => {
 
     it('saves with who saved, and keeps the approvals as one sorted list', async () => {
         const repo = repository()
-        await store(repo).saveTexts('pt', { loadedRev: 7, loadedTexts: {}, edits: { 'albums.title': 'Discos' } })
-        expect(repo.saveTexts).toHaveBeenCalledWith('pt', { loadedRev: 7, loadedTexts: {}, edits: { 'albums.title': 'Discos' }, updatedBy: 'owner' })
+        await store(repo).saveTexts('pt', { loadedRev: 7, loadedTexts: {}, edits: { 'albums.title': 'Os álbuns' } })
+        expect(repo.saveTexts).toHaveBeenCalledWith('pt', { loadedRev: 7, loadedTexts: {}, edits: { 'albums.title': 'Os álbuns' }, updatedBy: 'owner' })
         await store(repo).saveApproved(['b', 'a'])
         expect(repo.writeWork).toHaveBeenCalledWith(APPROVED_ID, { keys: ['a', 'b'] })
     })
@@ -100,19 +100,19 @@ describe('the save of the Painel', () => {
         const store = fakeStore()
         const start = stored()
         const saved = toKitValues(start.sources)
-        const values = withEdit(withEdit(saved, 'albums.title', 'en', 'Records'), 'albums.title', 'pt', 'Discos')
+        const values = withEdit(withEdit(saved, 'albums.title', 'en', 'Records'), 'albums.title', 'pt', 'Os álbuns')
         const live = vi.fn()
         const result = await saveAll(store, start, forSave(start, saved, values), live)
-        expect(store.saves).toEqual([{ locale: 'en', loadedRev: 3, edits: { 'albums.title': 'Records' } }, { locale: 'pt', loadedRev: 5, edits: { 'albums.title': 'Discos' } }])
+        expect(store.saves).toEqual([{ locale: 'en', loadedRev: 3, edits: { 'albums.title': 'Records' } }, { locale: 'pt', loadedRev: 5, edits: { 'albums.title': 'Os álbuns' } }])
         expect(result).toMatchObject({ saved: 2, stored: { revs: { en: 4, pt: 6 } } })
-        expect(live).toHaveBeenCalledWith('pt', { 'albums.title': 'Discos' })
+        expect(live).toHaveBeenCalledWith('pt', { 'albums.title': 'Os álbuns' })
     })
 
     it('stops at a conflict: the language in conflict is not written and the next one is not tried', async () => {
         const store = fakeStore({ answer: async () => ({ status: 'conflict', rev: 9, texts: {}, conflicts: [{ key: 'albums.title', loaded: null, other: 'Discs', yours: 'Records' }] }) })
         const start = stored()
         const saved = toKitValues(start.sources)
-        const values = withEdit(withEdit(saved, 'albums.title', 'en', 'Records'), 'albums.title', 'pt', 'Discos')
+        const values = withEdit(withEdit(saved, 'albums.title', 'en', 'Records'), 'albums.title', 'pt', 'Os álbuns')
         const result = await saveAll(store, start, forSave(start, saved, values))
         expect(result).toMatchObject({ locale: 'en', conflict: { rev: 9 } })
         expect(store.saves.length).toBe(1)
@@ -136,7 +136,7 @@ describe('the ports the kit is given', () => {
         const read = await kit.load()
         if (!read.ok) throw new Error('the read failed')
         expect(read.value.version).toBe('3.5')
-        const saved = await kit.save(withEdit(read.value.values, 'albums.title', 'pt', 'Discos'), read.value.version)
+        const saved = await kit.save(withEdit(read.value.values, 'albums.title', 'pt', 'Os álbuns'), read.value.version)
         expect(saved).toEqual({ ok: true, value: { version: '3.6' } })
         expect(await kit.save(read.value.values, '3.5')).toEqual({ ok: false, failure: 'conflict' })
     })

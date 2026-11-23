@@ -182,7 +182,7 @@ describe('the save bar', () => {
     it('asks to confirm what goes live, and «Back» saves nothing', async () => {
         const { edit, click, text, app, props } = await show()
         await edit('albums.title', 'en', 'Records')
-        await edit('albums.count', 'pt', '{count} discos')
+        await edit('albums.count', 'pt', '{count} álbuns seus')
         await click('[data-act="save"]')
         expect(text('[data-state="confirm"] b')).toBe('2 texts go live now.')
         expect(text('[data-state="confirm"] .cms-keys')).toBe('albums.title · albums.count')
@@ -312,10 +312,10 @@ describe('approving the Portuguese saves', () => {
 
     it('the selected ones, with the change typed in one of them saved along', async () => {
         const { app, edit, click, props } = await show()
-        await edit('albums.count', 'pt', '{count} discos')
+        await edit('albums.count', 'pt', '{count} álbuns seus')
         await click('[data-key="albums.count"] .cms-chk input')
         await click('[data-act="approve-selected"]')
-        expect(props.store.saves).toEqual([{ locale: 'pt', loadedRev: 5, edits: { 'albums.count': '{count} discos' } }])
+        expect(props.store.saves).toEqual([{ locale: 'pt', loadedRev: 5, edits: { 'albums.count': '{count} álbuns seus' } }])
         expect(props.store.approved[0]).toContain('albums.count')
         expect(app.querySelector('[data-key="albums.title"] [data-tag="pending"]')).not.toBeNull()
     })

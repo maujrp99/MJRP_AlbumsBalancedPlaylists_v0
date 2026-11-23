@@ -1,5 +1,5 @@
 /**
- * What the Album Blender hands the admin kit (F82; the kit's boundary is `KitPorts`, ui/admin-kit/ports.ts): the kit's own
+ * What The Album Blender hands the admin kit (F82; the kit's boundary is `KitPorts`, ui/admin-kit/ports.ts): the kit's own
  * words from the site's dictionary (`admin.kit.*`, English and Portuguese), the storage on the content repository, the
  * navigation on the app's router (the kit never touches `history`), the translation by the server's route and the rich
  * field's pages. The copy of the kit is never edited: what it lacks comes through here and through the skin.
@@ -112,7 +112,7 @@ export interface KitPortsDeps {
     pages: Array<{ label: string; href: string }>
 }
 
-/** `KitPorts` for the Album Blender: no image slot (the owner hid image, video and book), the rest on the site's own pieces. */
+/** `KitPorts` for The Album Blender: no image slot (the owner hid image, video and book), the rest on the site's own pieces. */
 export function albumBlenderPorts(deps: KitPortsDeps): KitPorts {
     let stored: Stored | null = null
     return {

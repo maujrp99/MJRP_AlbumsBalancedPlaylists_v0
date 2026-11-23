@@ -2,6 +2,15 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 15:54] step — F82: o nome «The Album Blender» por inteiro e «álbum», nunca «disco», nos textos e documentos do Painel
+
+**Branch:** claude/f82-cms-texts-panel
+
+Duas regras do MJRP de hoje, passadas pelo coordenador, conferidas nos textos e nos documentos do Painel. O nome do produto, nas palavras dele: «primeira coisa imporntate pra vc e seus agentes. a app nao chama blender e sim The Album Blender». E o português nunca diz «disco/discos», sempre «álbum/álbuns».
+
+- **Dicionários do Painel** (`i18n/en/admin.js`, `i18n/pt/admin.js`) e os textos novos de `notices` («Page not found», «Could not check right now»): nenhum «Blender» sozinho e nenhum «disco»; nada a mudar. («Blend» segue como nome da tela e das receitas.)
+- **O que mudou:** quatro comentários do código do Painel diziam «the Album Blender» e agora dizem «The Album Blender» (`kitPorts.ts`, `richTexts.ts`, `admin-skin.css`); uma linha do `tasks.md` (TASK-15a) idem; e os textos de mentira dos testes do Painel, que usavam «Discos» e «{count} discos» como português de exemplo, passaram a «Os álbuns» e «{count} álbuns seus». Os nomes de código (`albumBlenderPorts`, a pele `albumblender`) são identificadores, não texto, e ficaram.
+
 ## [2026-11-23 15:53] step — F82 (juiz, P2-8): a prova do Painel no navegador refeita, 86 de 86; orçamento medido de novo
 
 **Branch:** claude/f82-cms-texts-panel

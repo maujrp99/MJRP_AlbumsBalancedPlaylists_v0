@@ -19,7 +19,7 @@
     [data-admin-skin="albumblender"] { --ak-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 }
 
-/* The owner hid image, video and book in the Album Blender's texts (F82 REQ-12, D-06): the kit's bar and its «+» menu keep every
+/* The owner hid image, video and book in The Album Blender's texts (F82 REQ-12, D-06): the kit's bar and its «+» menu keep every
    other tool. The copy of the kit has no switch for it yet, so the skin takes the three out. */
 [data-admin-skin="albumblender"] .ak-rt-bar button[data-cmd="img"],
 [data-admin-skin="albumblender"] .ak-rt-bar button[data-cmd="video"],

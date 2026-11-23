@@ -1,7 +1,7 @@
 /**
  * The words of the kit's rich editor in the site's language (F82, REQ-12): the bar's buttons with what each one does, the
  * styles, the «+» menu, the link box, the footer. They come from the dictionary (`admin.rich.*`, English and Portuguese) and
- * reach the kit through `KitTexts.rich`. Image, video and book are hidden in the Album Blender (D-06), so their words are
+ * reach the kit through `KitTexts.rich`. Image, video and book are hidden in The Album Blender (D-06), so their words are
  * never drawn and stay the kit's own.
  */
 import { RICH_TEXTS_EN, type RichTexts } from '../../ui/admin-kit/index'
