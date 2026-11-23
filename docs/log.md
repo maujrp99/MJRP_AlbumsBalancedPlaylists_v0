@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 10:41] step — CMS: a fatia 0 (alicerce) está na `main` (`8ff3028`); NÃO publicar o servidor antes das regras e do registro da chave do Discogs
+
+**Branch:** main
+
+`claude/f82-cms-slice-0-foundation` entrou pelo trem depois de três passadas do juiz independente (a primeira reprovou por um P1: a suíte falhava sem o emulador; consertado; a segunda e a reconferência visual passaram; relatórios em `reports/audits/2026-11-23-mjrpalbumblender-v0-cms-slice-0-*.md`). Suíte: 5233 passaram, 1 pulado; `npm run test:rules`: 31. Nada foi publicado. Atenção para a próxima publicação do SERVIDOR: ele lê a chave do Discogs no CMS, que nasce desligada; antes, o MJRP publica as regras do banco e cria `published/site` com `discogsValues: true` (pergunta D-13 do lote). A publicação do SITE agora roda também o teste das regras (precisa de Java; achado em /opt/homebrew/opt/openjdk/bin).
+
 ## [2026-11-23 10:40] step — CMS: lote de 14 decisões pendentes para a tela remota do MJRP
 
 **Branch:** main
