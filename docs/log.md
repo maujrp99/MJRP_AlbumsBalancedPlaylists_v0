@@ -2,6 +2,21 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-22 21:51] step — F83 onda 8d, 8: a prova no navegador, o relatório de fecho e as tarefas
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **Prova no navegador** (`reports/evidence/F83/wave-8d/proof.md`, `summary.json`; sites construídos do pai `66cb1ee` e da ponta; os roteiros das ondas 8a, 8b, 8c e da sync 4, sem mudá-los, cada um com o pai contra o pai): varredura de todas as telas, 0 pixel no Chromium; no WebKit só ruído da marca de fogo (igual no controle e da ponta contra ela mesma); avisos, perguntas e barra 237 e 264 conferências sem falha; Folhas 1.247 sem falha no Chromium 899 e duas falhas de tempo no WebKit que não voltaram em quatro repetições; **a gravação das chamadas ao Apple Music no site construído igual à do pai** (106 sem falha no Chromium, 264 chamadas; no WebKit pai e ponta iguais); o título da aba nas 18 rotas: nenhuma diferença. Um achado que NÃO é desta onda: o pai e a ponta soltam um erro de página `removeChild` nos roteiros da janela de exportar; origem não achada (a olhar antes da exportação do dono).
+- **O relatório de fecho** (`reports/proposals/2026-11-22-mjrpalbumblender-v0-react-migration-closure.md`, em português, com a TASK-17 dentro): o que migrou e o que ficou à mão, o custo medido (a `main` 329 arquivos e 4.182 testes; a ponta 389 e 5.189; o script principal de 301.830 B a 194.872 B), os juízes por onda, cada REQ, as diferenças de propósito, **a tabela de 40 «defeitos mantidos»** para abrir issues, o que ninguém provou e é do dono, e o que ele carimba, em ordem. As listas de passos do Apple Music e dos gestos do iPhone são minhas: os relatórios dos juízes das ondas 8a e 8c **não estão no repositório**.
+- **Tarefas:** TASK-17, TASK-28 (com a linha 8d) e TASK-29 marcadas; a seção 26 de `wave-lessons.md`. A ADR-0023 e a constituição não foram tocadas.
+
+## [2026-11-22 19:48] step — F83 onda 8d, 7: o teto de peso e os totais
+
+**Branch:** claude/f83-wave-8d-closure
+
+- **Peso** (`npm run budget:publication`, fila): principal 194.872 B (teto 195.022 B, folga 150 B), depois da primeira tela 235.808 B, soma 430.680 B (teto 430.830 B), `react-vendor` 68.691 B. O principal **cresceu 231 B** contra a sync 5 (194.641 B): são as chaves em inglês dos avisos do `app.js`, do roteador e dos controladores (o inglês fica no script principal, que é a reserva), menos o ramo morto. O teto do principal subiu de 194.791 para 195.022 B e o do «segundo plano» de 57.265 para 57.393 B (a soma tem de ter 150 B de folga); `publication.measured` refeito.
+- **Totais** (suíte inteira SÓ, pela fila, lida até o fim): 389 arquivos, 5.189 testes verdes e 1 pulado, sem «Unhandled Errors». `tsc` sem erro; `eslint` 0 erros e 65 avisos (dois a menos que o pai, nenhum novo); `requirements_graph_check --changed` limpo; `exportMusicKitRecording.json` com o mesmo sha256 do pai.
+
 ## [2026-11-22 19:46] step — F83 onda 8d, 6: o roteador fica, a documentação no estado final
 
 **Branch:** claude/f83-wave-8d-closure
