@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 10:40] step — CMS: lote de 14 decisões pendentes para a tela remota do MJRP
+
+**Branch:** main
+
+O MJRP, 2026-11-23: «pls mande todas as perguntas pendentes do cms e os em abertos para o harness remote». Lote `reports/proposals/2026-11-23-1039-v0-cms-pending-decisions.md` (forma conferida por `proposal_batches.py check`): tradução (serviço e chave), conserto do filtro de links no MJRPpersonal, a versão 2 do protótipo, as três regras do V0 na pasta do kit, blocos da barra, mídia nos textos, formatação aceita, links para fora, frases em pedaços, botões a 44 px, pausa do kit, papéis, a ordem de publicação com o Discogs, a revisão das Receitas. Ficam fora do lote, por serem aceite ou carimbo dele (o lote os recusa): o carimbo do ADR-0024, o aceite do registro do kit (CC-ADR-0068, ainda por nascer na `main` do harness), os carimbos do ADR-0023 e da emenda da constituição.
+
 ## [2026-11-23 10:31] decision — CMS (F82): o protótipo do Painel está aprovado para uma primeira iteração; dois requisitos novos (texto rico, tradução entre campos)
 
 **Branch:** main
