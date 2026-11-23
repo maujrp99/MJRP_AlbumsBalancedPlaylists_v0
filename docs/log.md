@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 16:58] session — `## Now` atualizado: Painel do CMS e rodada da página de entrada em produção
+
+**Branch:** main
+
+O estado do projeto passa a dizer o que está em produção (`7392870`), o que espera o MJRP (entrar no Painel, a chave da tradução, as duas escolhas da home nova do celular) e o que vem a seguir (F96, depois F95).
+
 ## [2026-11-23 16:57] decision — Painel de textos do CMS em produção, com a palavra do MJRP («2. no ar já»)
 
 **Branch:** main
