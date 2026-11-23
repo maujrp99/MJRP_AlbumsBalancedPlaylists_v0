@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:49] step — F97: a exportação para o Spotify diz por que falhou (UAT-302), construída e provada: 132 de 132 no navegador
+
+**Branch:** fix/f97-spotify-export-says-why-it-failed
+
+Construídas as TASK-01 a TASK-07 da F97 (via rápida), com teste antes para cada requisito (`reports/evidence/F97/red-before.txt`: 27 falhando antes). Um 403 do Spotify virou `SpotifyRefusedError` e para a exportação com a falha `refused`: a janela diz «Spotify did not allow this account» e o próximo passo (fase de testes limitada; pedir ao dono; a lista tem poucas vagas; a exportação para o Apple Music está disponível), sem prometer inclusão e sem «Try again». Uma busca que falha (rede, 5xx) é contada como «não foi possível conferir», separada de «não encontrada»; com nada conferido a falha é `unchecked` e a janela oferece «Try again». Seis textos novos em inglês e português. O evento `playlists_exported` ganhou `reason` (`refused`, `unchecked`).
+
+Prova no site construído, com a API do Spotify simulada (403, 500, listas vazias, misto): 132 de 132 em Chromium e WebKit, a 1280 e a 390 (`reports/evidence/F97/proof.md`). Suíte inteira: 5589 passaram, 1 pulado. Tipos, lint e orçamento de publicação: saída 0.
+
+Decidido pelo agente — revisável: os tetos do orçamento de peso foram medidos de novo pela regra do `scripts/bundle-budget.json` (medido + 150 B), porque o script principal cresceu 301 B (os textos em inglês e o `reason` do evento): `main` 198.920, `background` 64.103.
+
+Achado, não consertado aqui: a exportação para o Apple Music tem o mesmo defeito na busca de faixas (`MusicKitCatalog.findTrackFromAlbum` engole toda falha e devolve «não achei»); pede issue própria. Faltam a TASK-08 (o MJRP julga a tela) e o passo retroativo (TASK-09, TASK-10); os textos em português não puderam ser vistos no navegador, porque nada na `main` troca o idioma ainda.
+
 ## [2026-11-23 18:28] step — F97 (a exportação para o Spotify diz por que falhou) registrada em esboço, com a S-79; conserta a UAT-302
 
 **Branch:** wip/f97-register

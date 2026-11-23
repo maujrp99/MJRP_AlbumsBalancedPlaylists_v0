@@ -22,7 +22,9 @@ import { SpotifyAuthService } from '../../../public/js/services/SpotifyAuthServi
 import { AppleMusicExportService } from '../../../public/js/services/AppleMusicExportService.js'
 import { exportLedger } from '../../../public/js/services/export/exportLedger.js'
 import { handleExportJson } from '../../../public/js/controllers/playlistExports.js'
-import { exportOutcome } from '../../../public/js/models/exportOutcome.js'
+import { exportOutcome, exportReason } from '../../../public/js/models/exportOutcome.js'
+import { SpotifyRefusedError } from '../../../public/js/services/spotify/spotifyErrors.js'
+import { describeEvent } from '../../../shared/usageEvents.js'
 import { playlistsStore } from '../../../public/js/stores/playlists.js'
 
 const storage = { save: vi.fn(), load: vi.fn(() => null), remove: vi.fn() }
@@ -116,6 +118,15 @@ describe('exportOutcome: how an export ended', () => {
     ])('%s', (label, report, outcome) => {
         expect(exportOutcome(report)).toBe(outcome)
     })
+
+    it.each([
+        ['Spotify refused the account', { created: [], notCreated: ['a'], failure: { kind: 'refused' } }, 'refused'],
+        ['nothing could be checked', { created: [], notCreated: ['a'], failure: { kind: 'unchecked' } }, 'unchecked'],
+        ['any other end has no reason', { created: [], notCreated: ['a'], failure: { kind: 'reconnect' } }, undefined],
+        ['a complete export has no reason', { created: [{}], failure: null }, undefined]
+    ])('the reason (F97, REQ-05): %s', (label, report, reason) => {
+        expect(exportReason(report)).toBe(reason)
+    })
 })
 
 describe('playlists_exported', () => {
@@ -135,6 +146,25 @@ describe('playlists_exported', () => {
         vi.spyOn(SpotifyAuthService, 'getAccessToken').mockResolvedValue(null)
         await SpotifyExportService.exportPlaylists(playlists, { mode: 'merge', name: 'x' })
         expect(sent).toEqual([['playlists_exported', { target: 'spotify', outcome: 'failed', playlist_count: 2 }]])
+    })
+
+    it('to Spotify, when Spotify refused the account: the event says so (F97, REQ-05)', async () => {
+        vi.spyOn(SpotifyAuthService, 'getAccessToken').mockResolvedValue('token')
+        vi.spyOn(SpotifyExportService, '_match').mockRejectedValue(new SpotifyRefusedError())
+        await SpotifyExportService.exportPlaylists(playlists, { mode: 'merge', name: 'x' })
+        expect(sent).toEqual([['playlists_exported', { target: 'spotify', outcome: 'failed', reason: 'refused', playlist_count: 2 }]])
+    })
+
+    it('to Spotify, when nothing could be checked: the event says so (F97, REQ-05)', async () => {
+        vi.spyOn(SpotifyAuthService, 'getAccessToken').mockResolvedValue('token')
+        vi.spyOn(SpotifyExportService, '_uriOf').mockResolvedValue({ unchecked: true })
+        await SpotifyExportService.exportPlaylists(playlists, { mode: 'merge', name: 'x' })
+        expect(sent).toEqual([['playlists_exported', { target: 'spotify', outcome: 'failed', reason: 'unchecked', playlist_count: 2 }]])
+    })
+
+    it('the list of events lets the reason through, and only the two it knows', () => {
+        expect(describeEvent('playlists_exported', { target: 'spotify', outcome: 'failed', reason: 'refused', playlist_count: 1 }).properties.reason).toBe('refused')
+        expect(describeEvent('playlists_exported', { target: 'spotify', outcome: 'failed', reason: 'anything', playlist_count: 1 }).properties.reason).toBeUndefined()
     })
 
     it('to Apple Music', async () => {

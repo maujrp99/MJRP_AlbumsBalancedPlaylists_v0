@@ -19,6 +19,7 @@ import { SpotifyAuthService } from '../../public/js/services/SpotifyAuthService.
 import { playlistsStore } from '../../public/js/stores/playlists.js'
 import { albumSeriesStore } from '../../public/js/stores/albumSeries.js'
 import { openSpotifyWindow, closeWindows, windowBox, press, choose, settle } from '../support/spotifyWindowHost.js'
+import { setLocale, PREVIEW_KEY } from '../../public/js/i18n/t.js'
 
 const report = (over = {}) => ({
     mode: 'merge', totalTracks: 4, matchCount: 4, created: [], incomplete: [], empty: [], notCreated: [], failure: null, createdUrl: null, ...over
@@ -179,6 +180,84 @@ describe('SpotifyExportWindow (F62)', () => {
 
             expect(text()).toContain('Export Failed')
             expect(text()).toContain('boom')
+        })
+    })
+
+    describe('when the export could not check the tracks (F97, UAT-302)', () => {
+        const refused = () => report({ matchCount: 0, notCreated: ['Road trip'], failure: { kind: 'refused', message: 'Spotify did not allow this account.' } })
+        const unchecked = () => report({ matchCount: 0, unchecked: 4, notCreated: ['Road trip'], failure: { kind: 'unchecked', message: 'Spotify could not be reached: no track could be checked.' } })
+
+        afterEach(async () => { await setLocale('en'); localStorage.removeItem(PREVIEW_KEY) })
+
+        it('a refusal of Spotify is said as a refusal, with the next step, and never as tracks not found (REQ-01)', async () => {
+            SpotifyExportService.exportPlaylists.mockResolvedValue(refused())
+
+            await startExport()
+
+            expect(text()).toContain('Spotify did not allow this account')
+            expect(text()).toContain('limited test phase')
+            expect(text()).toContain('Ask the owner')
+            expect(text()).toContain('Export to Apple Music is available')
+            expect(text()).not.toMatch(/you will be added/i)
+            expect(text()).not.toMatch(/not found|No track found|Tracks matched/i)
+            expect(windowBox().querySelector('#retryExportBtn')).toBeNull()
+            expect(windowBox().querySelector('#reconnectSpotifyBtn')).toBeNull()
+        })
+
+        it('the refusal is said in Portuguese too (REQ-04)', async () => {
+            localStorage.setItem(PREVIEW_KEY, 'pt')
+            expect(await setLocale('pt')).toBe(true)
+            SpotifyExportService.exportPlaylists.mockResolvedValue(refused())
+
+            await startExport()
+
+            expect(text()).toContain('O Spotify não permitiu esta conta')
+            expect(text()).toContain('Peça ao dono')
+            expect(text()).toContain('A exportação para o Apple Music está disponível')
+            expect(text()).not.toContain('Spotify did not allow')
+        })
+
+        it('tracks that could not be checked are counted apart from the ones not found (REQ-02)', async () => {
+            SpotifyExportService.exportPlaylists.mockImplementation(async (playlists, options, handlers) => {
+                handlers.onNotFound({ artist: 'Artist', title: 'Nowhere' })
+                handlers.onUnchecked({ artist: 'Artist', title: 'Two' })
+                handlers.onUnchecked({ artist: 'Artist', title: 'Three' })
+                return report({ matchCount: 1, unchecked: 2, created: [made('Road trip', 'pl-1', { tracks: 1, total: 1 })] })
+            })
+
+            await startExport()
+
+            expect(text()).toContain('1 tracks not found')
+            expect(text()).toContain('2 tracks could not be checked')
+            const lists = [...windowBox().querySelectorAll('details')].map(box => box.textContent.replace(/\s+/g, ' '))
+            expect(lists.find(list => list.includes('could not be checked'))).toContain('Artist - Two')
+            expect(lists.find(list => list.includes('not found'))).not.toContain('Artist - Two')
+        })
+
+        it('when nothing could be checked it says so and offers to try again (REQ-03)', async () => {
+            SpotifyExportService.exportPlaylists
+                .mockResolvedValueOnce(unchecked())
+                .mockResolvedValueOnce(report({ created: [made('Road trip', 'pl-1')] }))
+
+            await startExport()
+
+            expect(text()).toContain('your tracks could not be checked')
+            expect(text()).not.toMatch(/not found|No track found/i)
+
+            press(windowBox().querySelector('#retryExportBtn'))
+            await vi.waitFor(() => expect(text()).toContain('Export Complete'))
+            expect(SpotifyExportService.exportPlaylists).toHaveBeenCalledTimes(2)
+        })
+
+        it('nothing checked, in Portuguese (REQ-04)', async () => {
+            localStorage.setItem(PREVIEW_KEY, 'pt')
+            expect(await setLocale('pt')).toBe(true)
+            SpotifyExportService.exportPlaylists.mockResolvedValue(unchecked())
+
+            await startExport()
+
+            expect(text()).toContain('as suas faixas não puderam ser conferidas')
+            expect(text()).toContain('Tentar de novo')
         })
     })
 })

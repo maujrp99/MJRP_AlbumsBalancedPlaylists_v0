@@ -1,7 +1,7 @@
 
 import { SpotifyAuthService } from './SpotifyAuthService.js'
 import { pickAlbum, spotifyCandidate, titleWithoutEditionNotes } from '../models/askedAlbum.js'
-import { SpotifyReconnectError, SpotifyRateLimitError } from './spotify/spotifyErrors.js'
+import { SpotifyReconnectError, SpotifyRateLimitError, SpotifyRefusedError } from './spotify/spotifyErrors.js'
 
 /** The longest wait a rate limit may ask of a patient caller before it is reported instead. */
 const MAX_RATE_LIMIT_WAIT_SECONDS = 30
@@ -14,6 +14,19 @@ const TRACKS_PER_REQUEST = 50
 
 /** The seconds a 429 asked to wait, or null when it did not say. */
 const retryAfterOf = (response) => Number(response.headers?.get?.('Retry-After')) || null
+
+/**
+ * The error of an answer that is not a success. 403: Spotify does not serve this account (F97) - a refusal with a
+ * name, never "any failure"; anything else keeps what Spotify said.
+ * @param {Response} response
+ * @returns {Promise<Error>}
+ */
+async function errorOf(response) {
+    const errorData = await response.json().catch(() => ({}))
+    const said = errorData.error?.message
+    if (response.status === 403) return new SpotifyRefusedError(said || null)
+    return new Error(said || `Spotify API Error: ${response.status}`)
+}
 
 /**
  * SpotifyService
@@ -89,7 +102,7 @@ export const SpotifyService = {
      * @param {Object} [policy]
      * @param {boolean} [policy.patient] - wait a short rate limit and try again (the export does;
      *        the album load does not: it has its own deadline)
-     * @throws {SpotifyReconnectError|SpotifyRateLimitError|Error}
+     * @throws {SpotifyReconnectError|SpotifyRateLimitError|SpotifyRefusedError|Error}
      */
     async _fetch(endpoint, options = {}, { patient = false } = {}) {
         try {
@@ -97,10 +110,7 @@ export const SpotifyService = {
             if (response.status === 401) response = await this._sendWithRenewedAccess(endpoint, options)
             if (response.status === 429) response = await this._sendAfterTheWait(response, endpoint, options, patient)
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}))
-                throw new Error(errorData.error?.message || `Spotify API Error: ${response.status}`)
-            }
+            if (!response.ok) throw await errorOf(response)
 
             return await response.json()
 

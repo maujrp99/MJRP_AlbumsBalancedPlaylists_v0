@@ -1,0 +1,172 @@
+{
+ "tag": "chromium-390",
+ "passed": 33,
+ "failed": 0,
+ "results": [
+  {
+   "what": "403 · says «Spotify did not allow this account»",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedSpotify did not allow this accountNot created (1)• MJRP PlaylistThis is not about your tracks. The Album Blender is in a limited test phase on Spotify, and Spotify only s"
+  },
+  {
+   "what": "403 · gives the next step: limited test phase, ask the owner, Apple Music",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "403 · promises nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "403 · never says tracks not found, nor «matched 0»",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedSpotify did not allow this accountNot created (1)• MJRP PlaylistThis is not about your tracks. The Album Blender is in a limited test phase on Spotify, and Spotify only serves the accounts on its test list. Ask the owner of The Album Blender to add the e-mail of your Sp"
+  },
+  {
+   "what": "403 · no «Try again» and no «Connect again»: trying again is refused again",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "403 · the export stopped at the first refused search (1 of 5), and every answer was 403",
+   "ok": true,
+   "detail": "GET /me -> 403 ; GET /search -> 403"
+  },
+  {
+   "what": "403 · says the playlist was not created",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "403 · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "403 · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "403 · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "500 · says the tracks could not be checked",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • A"
+  },
+  {
+   "what": "500 · counts them: 5 tracks could not be checked",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Try againWhat was already created is not created again. Close "
+  },
+  {
+   "what": "500 · never says tracks not found",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Try againWhat was alr"
+  },
+  {
+   "what": "500 · offers «Try again»",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "500 · every track was asked for (5 searches), nothing created",
+   "ok": true,
+   "detail": "GET /me -> 200 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500 ; GET /search -> 500"
+  },
+  {
+   "what": "500 · «Try again», with Spotify back, completes the export",
+   "ok": true,
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 4 tracks Open in SpotifyTracks matched4 / 5 1 tracks not found • Artist - Nowhere Man Close "
+  },
+  {
+   "what": "500 · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "500 · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "500 · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "empty · says no tracks were found",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedNo tracks found on SpotifyNo track found (1)• MJRP PlaylistTracks matched0 / 5 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - No"
+  },
+  {
+   "what": "empty · counts them as not found: 5",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedNo tracks found on SpotifyNo track found (1)• MJRP PlaylistTracks matched0 / 5 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Try againWhat was already created is not created again. Close "
+  },
+  {
+   "what": "empty · does not say «could not be checked» nor «did not allow»",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "empty · every search was answered 200",
+   "ok": true,
+   "detail": "GET /me -> 200 ; GET /search -> 200 ; GET /search -> 200 ; GET /search -> 200 ; GET /search -> 200 ; GET /search -> 200"
+  },
+  {
+   "what": "empty results · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "empty results · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "empty results · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "mixed · the export completes with what was found",
+   "ok": true,
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
+  },
+  {
+   "what": "mixed · «3 / 5» matched",
+   "ok": true,
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
+  },
+  {
+   "what": "mixed · one not found and one not checked, counted apart",
+   "ok": true,
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 tracks not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Close "
+  },
+  {
+   "what": "mixed · the track whose search failed is in the «could not be checked» list only",
+   "ok": true,
+   "detail": " 1 tracks not found • Artist - Nowhere Man ||  1 track could not be checked • Artist - Two"
+  },
+  {
+   "what": "mixed · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "mixed · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "mixed · the page never left the site",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

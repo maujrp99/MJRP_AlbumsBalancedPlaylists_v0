@@ -60,5 +60,11 @@ export const exportWindow = {
     'spotifyWindow.reconnectNote': 'You will leave this page to sign in to Spotify. Export again when you are back: what was created is not created twice in the same visit, but it is after the page reloads.',
     'spotifyWindow.retry': 'Try again',
     'spotifyWindow.retryNote': 'What was already created is not created again.',
+    'spotifyWindow.refused': 'Spotify did not allow this account',
+    'spotifyWindow.refusedNote': 'This is not about your tracks. The Album Blender is in a limited test phase on Spotify, and Spotify only serves the accounts on its test list. Ask the owner of The Album Blender to add the e-mail of your Spotify account; the list has few places. Export to Apple Music is available.',
+    'spotifyWindow.unchecked': 'Spotify could not be reached, so your tracks could not be checked. Nothing was created.',
+    'spotifyWindow.uncheckedCount.one': '{count} track could not be checked',
+    'spotifyWindow.uncheckedCount.other': '{count} tracks could not be checked',
+    'spotifyWindow.uncheckedMore': '...and {count} more',
     'spotifyWindow.nothing': 'No playlists to export'
 }
