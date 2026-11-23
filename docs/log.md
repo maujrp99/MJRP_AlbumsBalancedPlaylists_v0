@@ -2,6 +2,20 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 18:34] review — F96: a página de entrada no celular, reconferência visual independente (passa: 0 P0, 0 P1, 5 P2)
+
+**Branch:** wip/f96-judge
+
+Juiz independente (não construiu), passe rápido sobre a ponta `bca8ea9` de `feat/f96-entry-page-on-the-phone`, com o site construído e servido por mim (portas 5496 e 5497, paradas no fim), Chromium e WebKit a 390×844 e 360×740, visitante e com conta (registro substituto), português e inglês, e 1280 contra a `main`.
+
+**Veredito: passa.** Nada rola de lado; a abertura sem botão grande, «Entrar» no alto e o «Criar» da barra abrindo o app; «Como funciona» no laranja forte (7,06:1); rótulos e links no laranja claro (8,74:1 na página, 7,49:1 na faixa); texto antes da ilustração nos cinco passos; linha e faixas de borda a borda; os álbuns numa fileira só, que anda por toque, tecla e dedo e não prende a rolagem; alvos de 44 px; foco visível em todas as paradas; a página do computador igual à da `main`.
+
+Cinco P2: com teclado, o controle em foco pode ficar sob a barra de baixo; com conta, o link do passo «Álbuns» vem depois da ilustração e os outros quatro antes; a 360 o ano e o botão da legenda ficam logo abaixo da primeira tela; a 360 o nome do álbum na legenda quebra com reticências no meio (já era assim na `main`); a ordem do Tab deixa o botão de pausa e o do Apple Music da caixa para depois do fecho (já era assim).
+
+Não conferido: iPhone de verdade, dedo no WebKit, leitor de tela, sem script e «reduzir movimento» no celular (a evidência do construtor cobre), 375×667.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f96-phone-home-visual-parity-recheck.md`.
+
 ## [2026-11-23 18:25] step — F96: a prova completa no navegador, a bateria inteira e o orçamento de peso
 
 **Branch:** feat/f96-entry-page-on-the-phone
