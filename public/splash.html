@@ -7,7 +7,10 @@
      Served at the site's root (dist/index.html) and at /home to everyone, with or without an account; the app is dist/app.html.
      ALL visible text lives in public/splash/copy.js (pt, en): the Vite plugin `entryPage` writes the Portuguese into every
      data-i18n… element, and the covers, the caption and the credit into the «splash:…» placeholder comments, in the build
-     and in the dev server; lang.js swaps the language in the browser. -->
+     and in the dev server; lang.js swaps the language in the browser.
+     F96 · on the PHONE the page is the owner's choice of 2026-11-23: the crate on the diagonal and no big button; the part that
+     teaches the app under its own title, each step label, title, text and then one illustration; the albums in ONE row at the end
+     («Na caixa do The Album Blender», the only sideways swipe, written by the build). The style of it is the last block, «F96». -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://is1-ssl.mzstatic.com; connect-src 'self' https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
 <title data-i18n="meta.title"></title>
@@ -78,7 +81,7 @@ h1 em{font-style:normal;color:var(--orange)}
 .what{font-size:19px;color:var(--muted);max-width:38ch;margin:22px 0 30px}
 .what strong{color:#fff;font-weight:600}
 .ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-h2.t{font:800 clamp(30px,3.3vw,44px)/1.05 var(--display);letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance}
+h2.t,h3.t{font:800 clamp(30px,3.3vw,44px)/1.05 var(--display);letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance}
 section p{color:var(--muted);margin:0 0 14px;max-width:44ch}
 .ranked{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--panel);margin-top:12px;max-width:440px}
 .ranked .tag{font:700 12px/1.3 var(--body);letter-spacing:.1em;text-transform:uppercase;color:#d6d6dc;display:flex;justify-content:space-between;gap:8px;margin-bottom:8px}
@@ -86,7 +89,6 @@ section p{color:var(--muted);margin:0 0 14px;max-width:44ch}
 .ranked ol{list-style:none;margin:0;padding:0}
 .ranked li{display:grid;grid-template-columns:20px 1fr 84px;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(255,255,255,.07);font-size:15px}
 .ranked .note{font-size:13px;color:var(--faint);margin:8px 0 0}
-.slot{display:none}
 
 /* the stage: ember glow (back), crate (middle); text never sits on it */
 .stage{position:sticky;top:calc(var(--top) + var(--thread));height:calc(100dvh - var(--top) - var(--thread) - 8px);min-height:520px;margin:0;display:flex;flex-direction:column}
@@ -124,7 +126,7 @@ footer p{margin:12px 0 0;max-width:80ch}
 footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
 .b2-fire{display:none}
 
-/* PHONE: one column; the crate is a short CSS fan under the hero; each track brings its sleeve; the thread and the main action live in the bottom bar */
+/* PHONE: one column; the crate is a short CSS fan under the hero; the thread and the main action live in the bottom bar (the phone's own page: the last block, F96) */
 @media (max-width:899px){
   :root{--top:56px;--thread:0px}
   body{font-size:16px;padding-bottom:calc(var(--pbar-h) + env(safe-area-inset-bottom))}
@@ -143,13 +145,6 @@ footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
   .caption{padding:8px var(--gutter) 12px}
   .credit-tag{left:var(--gutter)}
   .caption .who b{white-space:normal}
-  .slot{display:block;width:180px;height:180px;margin:0 0 22px;position:relative;perspective:700px}
-  html:not(.js) .slot{display:none}
-  .slot img{position:absolute;inset:0;width:100%;height:100%;border-radius:3px;box-shadow:0 18px 36px rgba(0,0,0,.7);transform-origin:50% 100%;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
-  .slot.pre img{transform:translateY(22%) rotateX(-28deg)}
-  .slot .slot-am{position:absolute;left:0;top:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;width:calc(100vw - 2 * var(--gutter));min-height:60px;font-size:13px;line-height:1.35;color:#d6d6dc}
-  .slot-who{min-width:0;font-size:13px;line-height:1.3;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
-  .slot{margin-bottom:64px}
   .b2-fire{display:block;position:relative;height:120px;margin:8px calc(-1 * var(--gutter)) -44px;overflow:hidden}
   .b2-fire .glow{bottom:-20%;height:120%}
   .b2-fire canvas{position:absolute;inset:0;width:100%;height:100%}
@@ -157,8 +152,7 @@ footer p a{color:#d6d6dc;display:inline-block;padding:12px 0;margin:-12px 0}
   .crate-css .front{width:min(68%,260px)}
 }
 @media (prefers-reduced-motion:reduce){
-  .crate-css .sl,.slot img,.gl,.crate-css{transition:none!important}
-  .slot.pre img{transform:none}
+  .crate-css .sl,.gl,.crate-css{transition:none!important}
 }
 html.paused *,html.paused *::before,html.paused *::after{animation-play-state:paused!important}
 /* ===== F80 · home menu preview (UAT-241, UAT-240): shared ===== */
@@ -230,11 +224,9 @@ html.paused .motion-icon .i-pause{display:none}
 .hero .what{margin-top:18px}
 /* the computer: shorter stories, centred; the vignette under the text, the crate on the right as before */
 .v4-lead{display:block}
-.v4-lead .slot{display:none}
 .v4-motif{position:relative;display:block;width:min(100%,420px);height:200px;margin:28px 0 0;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;contain:layout paint;
   background:radial-gradient(110% 80% at 50% 125%,rgba(249,115,22,.13),rgba(220,38,38,.04) 55%,transparent 75%),#0f0f13}
 .v4-motif *{box-sizing:border-box}
-.m-albums{display:none}
 .v4-disc{position:relative;display:block;flex:0 0 auto;width:24px;height:24px;border-radius:50%;
   background:radial-gradient(circle,#0f0f13 0 7%,var(--lab,#f97316) 8% 30%,#141418 31% 34%,transparent 35%),repeating-radial-gradient(circle,#1c1c22 0 1.4px,#26262d 1.4px 2.8px);box-shadow:0 0 0 1px rgba(255,255,255,.08)}
 .v4-disc::after{content:"";position:absolute;left:50%;top:30%;width:2px;height:2px;margin-left:-1px;border-radius:50%;background:rgba(255,255,255,.55)}
@@ -251,20 +243,12 @@ html.paused .motion-icon .i-pause{display:none}
 .s-rows s{display:block;height:6px;width:18%;border-radius:3px;background:rgba(255,255,255,.2)}
 .s-rows .r1 b{background:linear-gradient(90deg,rgba(249,115,22,.75),rgba(220,38,38,.45))}
 .v4-disc.hot{box-shadow:0 0 0 1px rgba(255,255,255,.1),0 0 14px rgba(249,115,22,.45)}
-/* Álbuns (the card on every width; beside the banana on the phone, a track climbing to the top) */
+/* Álbuns (the card is the story's illustration, on every width) */
 .rank-real li{height:38px;padding:0}
 .rank-real .tt,.rank-real .mv{transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .5s ease .55s}
 html.v4-armed .rank-real:not(.go) li.up .tt,html.v4-armed .rank-real:not(.go) li.up .mv{transform:translateY(38px)}
 html.v4-armed .rank-real:not(.go) li:nth-child(2) .tt{transform:translateY(-38px)}
 html.v4-armed .rank-real:not(.go) li.up .mv{opacity:0}
-.m-albums{padding:0}
-.a-row{position:absolute;left:34px;right:16px;height:7px;border-radius:4px;background:rgba(255,255,255,.3)}
-.a-row:nth-child(1){top:30px}.a-row:nth-child(2){top:64px;right:36px}.a-row:nth-child(3){top:98px;right:26px}.a-row:nth-child(4){top:132px;right:44px}
-.a-hot{position:absolute;left:12px;right:16px;top:25px;height:17px;display:flex;align-items:center;gap:8px}
-.a-hot b{font:800 15px/1 var(--display);color:var(--orange-text);width:14px}
-.a-hot i{flex:1;height:9px;border-radius:5px;background:linear-gradient(90deg,#f97316,#dc2626);box-shadow:0 0 12px rgba(249,115,22,.45)}
-.m-albums.live .a-hot{animation:v4climb 6s cubic-bezier(.3,.6,.2,1) infinite both}
-@keyframes v4climb{0%,12%{transform:translateY(102px);opacity:0}20%{transform:translateY(102px);opacity:1}55%,90%{transform:none;opacity:1}100%{transform:none;opacity:0}}
 /* Blend */
 .m-blend{display:grid;grid-template-columns:28px minmax(0,1fr) 44%;grid-template-rows:minmax(0,1fr);column-gap:0;padding:16px 18px;height:200px}
 .m-blend > *{min-height:0;height:100%}
@@ -346,54 +330,13 @@ html.paused .rank-real .tt,html.paused .rank-real .mv{transition:none}
 html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){.v4-motif,.v4-motif *,.v4-motif *::before{animation:none!important;transition:none!important}.rank-real .tt,.rank-real .mv{transition:none!important}}
 
-/* the phone: the vignette beside the story's cover (where v3 had nothing), the dead band between stories gone */
+/* the phone's opening (the stories' own phone style is the last block, F96) */
 @media (max-width:899px){
   .hero .h-sub{font-size:20px;margin-top:10px}
   .hero .what{display:none}
   .hero .h-sub{margin-bottom:18px}
   .hero .ctas .btn-ghost{display:none}
   .hero .ctas .btn{flex:1 1 auto;padding:0 16px}
-  .hero .only-in .ctas{display:none} /* UAT-294: signed in, the top bar already has «Criar»; the visitor's «Abrir o app» stays, it is the only one that opens the app */
-  .v4-lead{display:flex;align-items:stretch;gap:14px;margin:10px 0 60px} /* UAT-291: after the story's text, where the page has it; the 60 px hold the album's name and the button */
-  .v4-lead .slot{display:block;flex:0 0 172px;width:172px;height:172px;margin:0}
-  .v4-motif{flex:1 1 auto;min-width:0;width:auto;height:172px;margin:0}
-  /* UAT-286: the credit repeats the columns of the story above it (the record, the gap, the visual): the album's name under the record, the button under the visual and exactly as wide; its type and icon shrink to fit on one line */
-  .v4-lead .slot-am{display:grid;grid-template-columns:172px minmax(0,1fr);column-gap:14px}
-  .slot-who:only-child{grid-column:1 / -1}
-  .slot-am .am{box-sizing:border-box;width:100%;justify-content:center;gap:5px;padding:0 4px;font-size:12px;letter-spacing:-.02em}
-  .slot-am .am .mk{flex:none;width:16px;height:16px;border-radius:4px;font-size:10px}
-  .m-albums{display:grid}
-  .m-start{padding:12px}
-  .s-field{height:34px;gap:7px;padding:0 9px}
-  .s-q{font-size:13px}
-  .s-rows{margin-top:12px;gap:9px}
-  .s-rows li{gap:9px}
-  .s-rows b{width:58%}.s-rows s{width:20%}
-  .v4-disc{width:20px;height:20px}
-  .m-blend{height:172px;padding:12px;grid-template-columns:24px minmax(0,1fr) 46%}
-  .b-src .v4-disc{width:24px;height:24px}
-  .b-list li{gap:6px}
-  .m-pl{padding:10px}
-  .p-list{gap:6px}
-  .p-list li{grid-template-columns:30px minmax(0,1fr) auto;column-gap:8px;row-gap:5px;padding:5px}
-  .mos{width:30px;height:30px}
-  .p-list b{width:80%}.p-list s{width:46%}
-  .p-out{flex-direction:column;gap:5px}
-  .p-out{gap:4px}
-  .ex{font-size:11px}
-  .m-inv{padding:0}
-  .i-row{left:10px;right:6px;bottom:24px;gap:8px}
-  .i-vinyl{width:72px;height:72px;margin-right:24px}
-  .i-stack{flex-direction:column;align-items:flex-start;gap:3px}
-  .i-cd{width:44px;height:40px}
-  .i-cd::before{width:5px}
-  .i-cdd{left:9px;top:4px;width:31px;height:31px}
-  .i-tape{width:50px;height:32px;border-radius:4px}
-  .i-tape::before{left:5px;right:5px;top:4px;height:6px}
-  .i-tape::after{left:11px;right:11px;top:13px;height:13px}
-  .i-reel{top:15px;width:9px;height:9px;border-width:1.5px}
-  .i-reel:first-child{left:14px}.i-reel:last-child{right:14px}
-  .i-plank{bottom:12px;height:12px}
 }
 /* the CSS crate's diagonal on a computer is in the style, not set by the script after load: the covers do not move when it arrives (splash.js sets the same -15deg, half the camera's 30deg azimuth) */
 @media (min-width:900px){.crate-css{--yaw:-15deg}}
@@ -408,8 +351,65 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
   .story > section.final{min-height:var(--story-min-phone,0)}
   .story > section.hero{min-height:0}
 }
+/* ===== F96 (2026-11-23) · the phone's entry page, the owner's choice («escolho a do especialista, mas com essa landing aqui»): the crate on the
+   diagonal and no big button; the part that teaches the app under its own title, each step label, title, text and then ONE illustration (the
+   measure the computer gives it); the albums in one row at the end, the page's only sideways swipe. The computer keeps its page: what is new
+   there is read, not shown.
+   THE STEP MARK is ONE switch, `data-step-mark` on <main>: "line" (today: the label and a thin line from edge to edge above each step) or
+   "bands" (the even steps on the design system's «painel», #101014: a role to be approved in design-system.md before it is used).
+   THE ORANGE: in this stretch only the part's title is orange (the design system's `--orange`); labels, the flip and the doors are neutral. ===== */
+.edu-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.story > .shelf-sec{display:none} /* as specific as the page's own rule for a story (.story > section), which would show it */
+@media (max-width:899px){
+  /* the top bar never makes the page wider than the screen: the mark gives way (it shrinks), the account side keeps its size */
+  .top .wrap{gap:10px}
+  .top .home{flex:0 1 133px;min-width:0}
+  .top .logo{width:100%;height:auto}
+  .top .btn-sm{padding:0 12px;gap:8px}
+  /* the landing: no big button (the visitor's way in is the bottom bar's «Criar»; without script the noscript style keeps the button);
+     the light CSS crate turned to the diagonal, in the style, so the covers do not move when the script arrives (never the 3D library) */
+  .hero .ctas{display:none}
+  .crate-css{--yaw:-30deg}
+  .crate-css .box,.crate-css .front{left:43%} /* turned, the row of covers runs to the right: the crate steps left so it stays in the scene, clear of the pause icon */
+  /* the part that teaches the app (the page's column keeps the computer grid's `align-items:start`: what must be as wide as the screen says `align-self:stretch`) */
+  .story > .edu-t{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal;margin:0;padding:36px 0 0;font:800 28px/1.1 var(--display);letter-spacing:-.015em;color:var(--orange);text-wrap:balance}
+  .story > .step{align-self:stretch;border-top:0;padding:56px 0 32px}
+  .story > #start{padding-top:22px}
+  .story > section.flip-band{align-self:stretch;border-top:0}
+  .story > .step::before,.story > .flip-band::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc(-1 * var(--gutter));right:calc(-1 * var(--gutter))}
+  [data-step-mark="line"] > .step::before,[data-step-mark="line"] > .flip-band::before{border-top:1px solid var(--line)}
+  [data-step-mark="line"] > #start::before{border-top:0}
+  [data-step-mark="bands"] > #albums::before,[data-step-mark="bands"] > #playlists::before{background:#101014}
+  [data-step-mark="bands"] .v4-motif,[data-step-mark="bands"] .ranked{border-color:rgba(255,255,255,.24)}
+  .step .kicker{color:var(--muted)}
+  .step .kicker .n{font:800 30px/1 var(--display);letter-spacing:0;margin:0 3px;vertical-align:-4px;color:#fff}
+  .step h3.t{font-size:24px;margin-bottom:12px}
+  .step .door{color:#fff;text-decoration:underline;text-underline-offset:4px}
+  .flip-band .fb-title{color:#d6d6dc}
+  .v4-lead{display:block;margin:20px 0 0}
+  .v4-motif{width:min(100%,420px);height:200px;margin:0}
+  .ranked{margin-top:20px}
+  /* «Na caixa do The Album Blender»: the browser's own sideways scroll, snapping, the next album's edge in sight; it never moves by itself */
+  .story > .shelf-sec{display:block;align-self:stretch;min-width:0;padding:36px 0 28px}
+  .shelf-t{font:800 28px/1.1 var(--display);letter-spacing:-.015em;margin:0 0 18px;text-wrap:balance}
+  .sw{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding:0 var(--gutter);overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 calc(-1 * var(--gutter))}
+  .sw::-webkit-scrollbar{display:none}
+  .sw:focus-visible{outline-offset:-3px}
+  .shelf{display:grid;grid-auto-flow:column;grid-auto-columns:150px;gap:14px;width:max-content;margin:0;padding:6px var(--gutter) 8px;list-style:none} /* a grid of fixed columns: its width is the same in every engine (as a flex row WebKit made it 438 px longer than its albums) */
+  .al{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0;scroll-snap-align:start} /* relative: the button's screen-reader text stays inside the row, or it would make the page wider */
+  .al img{display:block;width:150px;height:150px;border-radius:3px;box-shadow:0 12px 26px rgba(0,0,0,.6)}
+  .al b{font:700 14px/1.25 var(--display);color:#fff;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:35px}
+  .al-by{font-size:13px;line-height:1.3;color:var(--muted)}
+  .al .am{box-sizing:border-box;width:100%;justify-content:center;gap:4px;padding:0 2px;font-size:12px;letter-spacing:-.03em}
+  .al .am .mk{flex:none;width:14px;height:14px;border-radius:4px;font-size:9px}
+  .sw-ctl{display:flex;justify-content:flex-end;gap:12px;margin-top:10px}
+  .sw-ctl button{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.28);background:rgba(10,10,12,.6);color:#d6d6dc;cursor:pointer;padding:0}
+  .sw-ctl button[aria-disabled="true"]{opacity:.35;cursor:default}
+  .sw-ctl svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  html:not(.js) .sw-ctl{display:none}
+}
 </style>
-<noscript><style>.crate-css{opacity:1}.crate-css .sl:nth-child(-n+7){opacity:1;z-index:calc(20 - var(--p));transform:translate3d(0,calc(var(--p) * -6.5%),calc(var(--p) * -34px)) rotateX(-6deg)}</style></noscript>
+<noscript><style>.crate-css{opacity:1}.crate-css .sl:nth-child(-n+7){opacity:1;z-index:calc(20 - var(--p));transform:translate3d(0,calc(var(--p) * -6.5%),calc(var(--p) * -34px)) rotateX(-6deg)}@media (max-width:899px){.hero .only-out .ctas{display:flex}}</style></noscript>
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="skip"></a>
@@ -434,7 +434,7 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
 
 <div class="thread pbar"><div class="ms-slot" id="slot-thread"></div></div>
 
-<main id="main" class="wrap story">
+<main id="main" class="wrap story" data-step-mark="line">
   <section class="hero" id="a1" data-track="a1" aria-labelledby="h1">
     <div class="only-out">
       <h1 id="h1" data-i18n="h.title"></h1>
@@ -450,20 +450,22 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
     </div>
   </section>
 
-  <section id="start" data-track="start" aria-labelledby="t-start">
-    <p class="kicker" data-i18n="k.start"></p>
-    <h2 class="t" id="t-start" data-i18n="t.start"></h2>
+  <h2 class="edu-t" id="edu" data-i18n="edu.title"></h2>
+
+  <section class="step" id="start" data-track="start" aria-labelledby="t-start">
+    <p class="kicker" data-i18n="k.start" data-num></p>
+    <h3 class="t" id="t-start" data-i18n="t.start"></h3>
     <p data-i18n="p.start"></p>
     <a class="door only-in" href="/start"><span data-i18n="d.start"></span> <span aria-hidden="true">→</span></a>
-    <div class="v4-lead"><div class="slot pre" data-pull="2" aria-hidden="true"></div><div class="v4-motif m-start" aria-hidden="true">
+    <div class="v4-lead"><div class="v4-motif m-start" aria-hidden="true">
         <div class="s-field"><svg class="s-lens" viewBox="0 0 16 16" width="14" height="14"><circle cx="7" cy="7" r="4.6"/><path d="M10.4 10.4 14 14"/></svg><span class="s-q">Pink Floyd<i class="s-mask"></i></span></div>
         <ul class="s-rows"><li class="r1"><i class="v4-disc hot"></i><b></b><s></s></li><li class="r2"><i class="v4-disc"></i><b></b><s></s></li><li class="r3"><i class="v4-disc"></i><b></b><s></s></li></ul>
       </div></div>
   </section>
 
-  <section id="albums" data-track="albums" aria-labelledby="t-albums">
-    <p class="kicker" data-i18n="k.albums"></p>
-    <h2 class="t" id="t-albums" data-i18n="t.albums"></h2>
+  <section class="step" id="albums" data-track="albums" aria-labelledby="t-albums">
+    <p class="kicker" data-i18n="k.albums" data-num></p>
+    <h3 class="t" id="t-albums" data-i18n="t.albums"></h3>
     <p data-i18n="p.albums"></p>
     <div class="ranked rank-real" data-v4-card role="group" aria-label="" data-i18n-aria="r.aria">
       <div class="tag"><span data-i18n="r.tag"></span><b>The Velvet Underground &amp; Nico · 1967</b></div>
@@ -477,18 +479,14 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
       <p class="note" data-i18n="r.note"></p>
     </div>
     <a class="door only-in" href="/albums"><span data-i18n="d.albums"></span> <span aria-hidden="true">→</span></a>
-    <div class="v4-lead"><div class="slot pre" data-pull="0" aria-hidden="true"></div><div class="v4-motif m-albums" aria-hidden="true">
-        <span class="a-row"></span><span class="a-row"></span><span class="a-row"></span><span class="a-row"></span>
-        <span class="a-hot"><b>↑</b><i></i></span>
-      </div></div>
   </section>
 
-  <section id="blend" data-track="blend" aria-labelledby="t-blend">
-    <p class="kicker" data-i18n="k.blend"></p>
-    <h2 class="t" id="t-blend" data-i18n="t.blend"></h2>
+  <section class="step" id="blend" data-track="blend" aria-labelledby="t-blend">
+    <p class="kicker" data-i18n="k.blend" data-num></p>
+    <h3 class="t" id="t-blend" data-i18n="t.blend"></h3>
     <p data-i18n="p.blend"></p>
     <a class="door only-in" href="/blend"><span data-i18n="d.blend"></span> <span aria-hidden="true">→</span></a>
-    <div class="v4-lead"><div class="slot pre" data-pull="5" aria-hidden="true"></div><div class="v4-motif m-blend" aria-hidden="true">
+    <div class="v4-lead"><div class="v4-motif m-blend" aria-hidden="true">
         <span class="b-src"><i class="v4-disc c1"></i><i class="v4-disc c2"></i><i class="v4-disc c3"></i></span>
         <svg class="b-lines" viewBox="0 0 100 120" preserveAspectRatio="none"><path class="ln l0" d="M0 20 C50 20 50 10 100 10"/><path class="ln l1" d="M0 60 C50 60 50 30 100 30"/><path class="ln l2" d="M0 100 C50 100 50 50 100 50"/><path class="ln l3" d="M0 20 C50 20 50 70 100 70"/><path class="ln l4" d="M0 60 C50 60 50 90 100 90"/><path class="ln l5" d="M0 100 C50 100 50 110 100 110"/></svg>
         <ol class="b-list"><li class="k0 c1"><i></i><b></b></li><li class="k1 c2"><i></i><b></b></li><li class="k2 c3"><i></i><b></b></li><li class="k3 c1"><i></i><b></b></li><li class="k4 c2"><i></i><b></b></li><li class="k5 c3"><i></i><b></b></li></ol>
@@ -500,29 +498,42 @@ html:not(.moving) .v4-motif *,html:not(.moving) .v4-motif *::before{animation-pl
     <p class="fb-line" data-i18n="f.line"></p>
   </section>
 
-  <section id="playlists" data-track="playlists" aria-labelledby="t-playlists">
-    <p class="kicker" data-i18n="k.playlists"></p>
-    <h2 class="t" id="t-playlists" data-i18n="t.playlists"></h2>
+  <section class="step" id="playlists" data-track="playlists" aria-labelledby="t-playlists">
+    <p class="kicker" data-i18n="k.playlists" data-num></p>
+    <h3 class="t" id="t-playlists" data-i18n="t.playlists"></h3>
     <p data-i18n="p.playlists"></p>
     <a class="door only-in" href="/saved-playlists"><span data-i18n="d.playlists"></span> <span aria-hidden="true">→</span></a>
-    <div class="v4-lead"><div class="slot pre" data-pull="10" aria-hidden="true"></div><div class="v4-motif m-pl" aria-hidden="true">
+    <div class="v4-lead"><div class="v4-motif m-pl" aria-hidden="true">
         <ul class="p-list"><li class="p1"><span class="mos"><i></i><i></i><i></i><i></i></span><b></b><s></s><span class="p-play">▶</span></li><li class="p2"><span class="mos"><i></i><i></i><i></i><i></i></span><b></b><s></s></li></ul>
         <span class="p-out"><span class="ex ex-sp">Spotify <i>✓</i></span><span class="ex ex-am">Apple Music <i>✓</i></span></span>
       </div></div>
   </section>
 
-  <section id="inventory" data-track="inventory" aria-labelledby="t-inventory">
-    <p class="kicker" data-i18n="k.inventory"></p>
-    <h2 class="t" id="t-inventory" data-i18n="t.inventory"></h2>
+  <section class="step" id="inventory" data-track="inventory" aria-labelledby="t-inventory">
+    <p class="kicker" data-i18n="k.inventory" data-num></p>
+    <h3 class="t" id="t-inventory" data-i18n="t.inventory"></h3>
     <p data-i18n="p.inventory"></p>
     <a class="door only-in" href="/inventory"><span data-i18n="d.inventory"></span> <span aria-hidden="true">→</span></a>
-    <div class="v4-lead"><div class="slot pre" data-pull="12" aria-hidden="true"></div><div class="v4-motif m-inv" aria-hidden="true">
+    <div class="v4-lead"><div class="v4-motif m-inv" aria-hidden="true">
         <span class="i-row">
           <span class="i-vinyl"><i class="i-disc"></i><i class="i-sleeve"></i></span>
           <span class="i-stack"><span class="i-tape"><i class="i-reel"></i><i class="i-reel"></i></span><span class="i-cd"><i class="i-cdd"></i></span></span>
         </span>
         <i class="i-plank"></i>
       </div></div>
+  </section>
+
+  <section class="shelf-sec" id="crate-shelf" aria-labelledby="t-shelf">
+    <h2 class="shelf-t" id="t-shelf" data-i18n="shelf.title"></h2>
+    <div class="sw" id="shelf" tabindex="0" role="group" aria-label="" data-i18n-aria="shelf.aria">
+      <ol class="shelf">
+          <!--splash:shelf-->
+      </ol>
+    </div>
+    <div class="sw-ctl">
+      <button type="button" id="shelf-prev" aria-label="" data-i18n-aria="shelf.prev"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+      <button type="button" id="shelf-next" aria-label="" data-i18n-aria="shelf.next"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+    </div>
   </section>
 
   <section class="final" id="end" data-track="end" aria-labelledby="t-end">

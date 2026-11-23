@@ -108,22 +108,23 @@ describe('the hero opens with the title (UAT-292)', () => {
     })
 })
 
-describe('on the phone, signed in, the hero has no big «Criar» (UAT-294)', () => {
-    const phone = page.slice(page.indexOf('/* the phone: the vignette beside'))
+describe('on the phone the hero has no big button (UAT-294, then F96)', () => {
+    // UAT-294 took the big «Criar» from who is signed in; F96 (the owner, 2026-11-23: «o botao criar creio que poderia sair, pois já aparece no top nav»,
+    // and the landing he chose) takes the visitor's too: the visitor's way in is the bottom bar's «Criar» (test/splash/phoneEntryPage.test.js).
+    const phone = page.slice(page.indexOf('/* ===== F96'))
     const block = phone.slice(phone.indexOf('@media (max-width:899px){'), phone.indexOf('\n}\n', phone.indexOf('@media (max-width:899px){')))
 
-    it('the signed-in hero\'s button is hidden on the phone only (the top bar already has «Criar»)', () => {
-        expect(block).toMatch(/\.hero \.only-in \.ctas\{display:none\}/)
-        // on the computer nothing hides it: the rule exists once, inside the phone's block
-        expect(page.match(/\.hero \.only-in \.ctas\{/g)).toHaveLength(1)
+    it('the hero\'s buttons are hidden on the phone only, in both openings', () => {
+        expect(block).toMatch(/\.hero \.ctas\{display:none\}/)
+        // on the computer nothing hides them: the rule exists once, inside the phone's block
+        expect(page.match(/\.hero \.ctas\{display:none\}/g)).toHaveLength(1)
+        expect(page).not.toMatch(/\.hero \.only-in \.ctas\{/)
     })
 
-    it('the visitor\'s «Abrir o app» stays: on the phone it is the only button that opens the app', () => {
-        expect(page).not.toMatch(/\.only-out \.ctas\{[^}]*display:none/)
-        expect(page).not.toMatch(/\.hero \.ctas\{[^}]*display:none/)
-        expect(page).not.toMatch(/#hero-ctas\{[^}]*display:none/)
+    it('the buttons are still written in the page: the computer shows them, and so does a phone without script', () => {
         const hero = page.slice(page.indexOf('<section class="hero'), page.indexOf('</section>', page.indexOf('<section class="hero')))
         expect(hero).toMatch(/<div class="only-out">[\s\S]*id="app"[\s\S]*data-i18n="openapp"/)
+        expect(page).toMatch(/<noscript><style>[^<]*@media \(max-width:899px\)\{\.hero \.only-out \.ctas\{display:flex\}\}<\/style><\/noscript>/)
     })
 
     it('the top bar keeps «Criar» for who is signed in', () => {

@@ -2,6 +2,29 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 17:56] step — F96: a página de entrada no celular, redesenhada (a tela, pronta para a prévia)
+
+**Branch:** feat/f96-entry-page-on-the-phone
+
+A tela da F96 construída, do protótipo escolhido (ramo `wip/f96-phone-home-prototype`), com os testes escritos antes (`reports/evidence/F96/red-before.txt`: 34 falhando). O card foi para «Em andamento» (`board_move.py`).
+
+**O que mudou, só no celular** (`public/splash.html`, o bloco de estilo «F96», e `public/splash/*`):
+- **Abertura:** a caixa leve em CSS girada 30 graus (nunca a biblioteca 3D) e nenhum botão grande, com e sem conta.
+- **«Como funciona» / «How it works»:** título próprio antes do primeiro passo, em laranja (`--orange`, o laranja do design system); os rótulos dos passos, a faixa «Vire o lado» e os links de quem tem conta ficam em tom neutro. Cada passo: rótulo, título, texto e depois UMA ilustração, na medida do computador; a capa e o segundo botão do Apple Music saíram dos passos.
+- **Marca da troca de passo:** rótulo e linha fina; uma chave só, `data-step-mark` no `<main>` (`line` hoje, `bands` pronta para testar faixas).
+- **A caixa «Na caixa do The Album Blender»** (`public/splash/shelf.js`, `shelfHtml` em `covers.js`): os 15 álbuns numa fila que rola de lado pelo próprio navegador, escrita pelo build (lê-se sem script), com duas setas e nada que ande sozinho.
+- **Sem conta:** «Entrar» no alto; o «Criar» da barra de baixo leva a `/start` (`menu.js`).
+- **A barra do alto cabe na tela:** com conta, em inglês, eram 406 px em 390; agora o logotipo cede.
+
+**Onde a palavra do MJRP vale sobre a spec** (as decisões vieram com a ordem de construir): o título é «Como funciona» (a spec trazia três redações em aberto); a marca é rótulo e linha, com a chave (em aberto na spec); o botão grande sai também para quem não tem conta (a crítica pedia mantê-lo); a prova é a 390 e 360 px (a spec dizia 375).
+
+**Decidido pelo agente, revisável:** os títulos dos passos desceram um nível (h3, sob o novo h2); no computador o título novo é lido por leitor de tela e não aparece; o número do rótulo fica maior; os nomes das setas («Álbum anterior», «Próximo álbum»); a caixa girada foi 7 % para a esquerda para não ficar sob o botão de pausa; sem script, o celular mantém «Abrir o app» na abertura (a barra de baixo não existe sem script); os acentos laranja dentro das ilustrações ficaram.
+
+**Conferido:** os testes da página e da arquitetura (59 arquivos, 568 testes), `npm run typecheck` 0, `npx eslint . --quiet` 0; no site construído, Chromium e WebKit a 390 e 360, sem e com conta, em português e inglês: a página tem a largura da tela, sem erro no console. **Não conferido ainda:** a bateria inteira, o orçamento de peso e a prova completa (vêm no próximo commit). O WebKit de teste não desenha giro 3D em CSS (nem numa página mínima): a diagonal se viu no Chromium; no Safari fica para o iPhone do MJRP.
+
+O doctor segue vermelho por 2 erros fora desta tarefa, os dois do `MEMORY.md` (o bloco «Where the Work Stopped» longo e o `## Now` atrás do log).
+
+
 ## [2026-11-23 17:07] step — links ambíguos de docs/specs/features: lote que ficou de fora dos commits anteriores
 
 **Branch:** wip/v0-doctor-broken-links
