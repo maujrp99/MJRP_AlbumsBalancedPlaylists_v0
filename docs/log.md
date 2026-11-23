@@ -2,6 +2,14 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-23 19:35] review — F97 (a exportação para o Spotify diz por que falhou): segunda passada independente — pass, 0 P0, 0 P1, 5 P2
+
+**Branch:** wip/f97-judge-2
+
+Julgado o commit `6c00545` como diferença sobre o `95ef787` da primeira passada: o commit de redação `fc2c62f` e duas junções da `main`. O commit de redação muda uma linha em cada dicionário (inglês «1 track not found»; em português a nota da recusa sem artigo antes de «The Album Blender») e quatro textos do registro congelado da janela antiga, só essas palavras: o registro continua guardando tudo o mais, e a troca está escrita no teste. As junções não tocaram nenhum arquivo da exportação. No site construído, Chromium e WebKit, 1280 e 390, em inglês e em português pela escolha de idioma do próprio app (`albumblender:lang`): 403, 500 com «Tentar de novo», listas vazias, misto e sucesso se comportam como na primeira passada; singular e plural certos nas duas línguas; nada cortado a 390; nenhuma frase em inglês nos estados novos.
+
+Cinco P2 seguem abertos, todos carregados: todo 403 recebe o texto da «lista de testes»; o resultado parcial tem título de concluído; a janela não anuncia falhas a leitor de tela; as frases do próprio serviço seguem em inglês no português (pesa mais agora que o português está aberto no Brasil); «the list has few places». Nada impede a publicação. Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f97-spotify-export-failure-visual-parity-recheck-2.md`.
+
 ## [2026-11-23 19:28] step — F97: a main com a escolha de idioma (F81) juntada ao ramo; orçamento medido de novo
 
 **Branch:** fix/f97-spotify-export-says-why-it-failed
