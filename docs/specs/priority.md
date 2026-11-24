@@ -1,4 +1,3 @@
 # Prioridade
 
-1. F91
-2. F94
+1. F94
