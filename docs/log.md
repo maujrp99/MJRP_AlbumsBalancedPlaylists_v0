@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 13:18] step — Deep cuts e As menos ouvidas publicadas em produção (F92)
+
+**Branch:** main
+
+Pedido do MJRP: «Pode publicar as novas receitas pls». Juiz visual independente: `fail` sem P0 (1 P1, 4 P2 → UAT-313..317, fixing F92). Merge `wip/f92-deep-cuts-judge` (c62a367; uat-check com `--no-reservations`: ninguém mais usa UAT-313..317). `deploy-site.sh`: «Site published from main (c62a367).» EXIT=0. Servidor não mudou. O construtor do Painel de receitas foi interrompido; o trabalho dele ficou guardado em `claude/f92-recipes-in-the-panel` (ae2226b, sem conferência).
+
 ## [2026-11-24 13:05] review — F92 («Deep cuts», «As menos ouvidas», o controle de pulo): reconferência visual independente — fail, 0 P0, 1 P1, 4 P2
 
 **Branch:** wip/f92-deep-cuts-judge
