@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import { getAllAlgorithms } from '../../public/js/algorithms/index.js'
-import { DEFAULT_CHOICES, ingredientsOf, showsDuration, configOf, choicesOf, TRACK_COUNTS, OUTPUT_MODES, RANKING_TYPES, GROUPING_STRATEGIES } from '../../public/js/models/recipeIngredients.js'
+import { DEFAULT_CHOICES, ingredientsOf, showsDuration, configOf, choicesOf, TRACK_COUNTS, OUTPUT_MODES, RANKING_TYPES, GROUPING_STRATEGIES, SKIP_RANGE, groupingsOf } from '../../public/js/models/recipeIngredients.js'
 
 describe('recipeIngredients: what a recipe shows', () => {
     it('is what the hand-made panel showed, for every recipe of the menu and for one it does not know', () => {
@@ -13,7 +13,10 @@ describe('recipeIngredients: what a recipe shows', () => {
             'mjrp-balanced-cascade': { duration: true, outputMode: false, rankingType: true, groupingStrategy: false },
             'top-n-popular': { groupingStrategy: true, outputMode: true, duration: false, rankingType: false, trackCount: true },
             'top-n-acclaimed': { groupingStrategy: true, outputMode: true, duration: false, rankingType: false, trackCount: true },
-            'top-n-user': { groupingStrategy: true, outputMode: true, duration: false, rankingType: false, trackCount: true }
+            'top-n-user': { groupingStrategy: true, outputMode: true, duration: false, rankingType: false, trackCount: true },
+            // F92: the recipes made of blocks (no Top #, no source: their blocks decide; no shuffle; «Deep cuts» has the skip slider)
+            'deep-cuts': { groupingStrategy: true, outputMode: true, duration: false, rankingType: false, trackCount: false, noShuffle: true, skip: true },
+            'least-played': { groupingStrategy: true, outputMode: true, duration: false, rankingType: false, trackCount: false, noShuffle: true }
         }
         expect(getAllAlgorithms().map(recipe => recipe.id)).toEqual(Object.keys(SHOWN))
         for (const [id, shown] of Object.entries(SHOWN)) expect(ingredientsOf(id), id).toEqual(shown)
@@ -60,14 +63,14 @@ describe('recipeIngredients: the configuration the generation takes', () => {
     })
 
     it('the defaults are the ones of the hand-made panel', () => {
-        expect(DEFAULT_CHOICES).toEqual({ duration: 60, outputMode: 'auto', groupingStrategy: 'by_album', rankingType: 'combined', trackCount: 3 })
+        expect(DEFAULT_CHOICES).toEqual({ duration: 60, outputMode: 'auto', groupingStrategy: 'by_album', rankingType: 'combined', trackCount: 3, skip: 3 })
     })
 })
 
 describe('recipeIngredients: the choices that a generated recipe stands for', () => {
     it('are read back from the configuration (seconds to minutes, the ranking id to the ranking type); what the recipe does not carry keeps the default', () => {
         expect(choicesOf({ algorithmId: 'top-n-user', rankingId: 'user', trackCount: 5, outputMode: 'multiple', groupingStrategy: 'artist_rank', targetDuration: 45 * 60 }))
-            .toEqual({ duration: 45, outputMode: 'multiple', groupingStrategy: 'artist_rank', rankingType: 'combined', trackCount: 5 })
+            .toEqual({ duration: 45, outputMode: 'multiple', groupingStrategy: 'artist_rank', rankingType: 'combined', trackCount: 5, skip: 3 })
         expect(choicesOf({ algorithmId: 'mjrp-balanced-cascade', rankingId: 'spotify' })).toEqual({ ...DEFAULT_CHOICES, rankingType: 'spotify' })
         expect(choicesOf({ rankingId: 'bea', trackCount: null }).rankingType).toBe('bea')
         expect(choicesOf({}).trackCount).toBe(3)
@@ -81,5 +84,31 @@ describe('recipeIngredients: the options on offer', () => {
         expect(shape(RANKING_TYPES)).toEqual([['spotify', 'TrendingUp'], ['bea', 'Award'], ['combined', 'Scale']])
         expect(shape(GROUPING_STRATEGIES)).toEqual([['by_album', 'Disc'], ['flat_ranked', 'TrendingUp'], ['artist_rank', 'Users'], ['ranked_interleave', 'GitMerge'], ['shuffle', 'Shuffle']])
         expect(TRACK_COUNTS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    })
+})
+
+describe('the skip of «Deep cuts» on the Blend screen (F92, REQ-10)', () => {
+    it('goes from the 3 of the recipe (X = 0) to 10, the limit of REQ-06 with a take of 3; it starts at 3', () => {
+        expect(SKIP_RANGE).toEqual({ min: 3, max: 10 })
+        expect(DEFAULT_CHOICES.skip).toBe(3)
+    })
+
+    it('is handed to the generation only for the recipe that shows it', () => {
+        const choices = { ...DEFAULT_CHOICES, skip: 5 }
+        expect(configOf(choices, 'deep-cuts')).toMatchObject({ skip: 5 })
+        expect(configOf(choices, 'least-played')).not.toHaveProperty('skip')
+        expect(configOf(choices, 'top-n-popular')).not.toHaveProperty('skip')
+        expect(configOf(choices)).not.toHaveProperty('skip')
+    })
+
+    it('comes back from the playlists that remember it («generate again»), and the default when they do not', () => {
+        expect(choicesOf({ algorithmId: 'deep-cuts', skip: 6 }).skip).toBe(6)
+        expect(choicesOf({ algorithmId: 'deep-cuts' }).skip).toBe(3)
+    })
+
+    it('a recipe made of blocks is not offered the shuffle; the others are', () => {
+        expect(groupingsOf('deep-cuts').map(g => g.value)).not.toContain('shuffle')
+        expect(groupingsOf('least-played').map(g => g.value)).not.toContain('shuffle')
+        expect(groupingsOf('top-n-popular')).toEqual(GROUPING_STRATEGIES)
     })
 })

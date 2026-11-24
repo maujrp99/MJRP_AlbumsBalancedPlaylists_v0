@@ -31,7 +31,7 @@ export async function generate({ visit, chosen, recipe, choices, onProgress }: G
     const signal = visit.beginGeneration() // aborted if the person leaves while the albums load
     const controller: object = blendingController
     try {
-        const config = { algorithmId: recipe.id, ...configOf(choices) }
+        const config = { algorithmId: recipe.id, ...configOf(choices, recipe.id) }
         const result = await (controller as BlendingController).generateFromSeries(chosen.id, config, { onProgress, signal })
         // what the load left out (albums that failed, sources missing) is said before the result
         result.notices.forEach((notice: string) => toast.warning(notice, NOTICE_MS))

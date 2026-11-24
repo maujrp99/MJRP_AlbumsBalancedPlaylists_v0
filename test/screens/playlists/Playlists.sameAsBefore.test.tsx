@@ -15,6 +15,8 @@
  */
 import { describe, it, expect, vi, afterEach } from 'vitest'
 
+// the pictures were taken with the four recipes of then (F92 added two): see test/support/registryOfBefore.js
+vi.mock('../../../public/js/algorithms/index.js', async (importOriginal) => (await import('../../support/registryOfBefore.js')).registryOfBefore(await importOriginal()))
 vi.mock('../../../public/js/services/playlists/playlistsWiring.js', async () => (await import('../../support/playlistsScenarios.js')).wiring())
 vi.mock('../../../public/js/ui/dialogs/dialogs', async () => ({ dialogService: { confirm: vi.fn(async (o: { title: string; message: string }) => { (await import('../../support/playlistsScenarios.js')).outside.push(['confirm', o.title, o.message]); return true }) } }))
 vi.mock('../../../public/js/ui/SpotifyExportWindow.tsx', async () => ({ showSpotifyExportWindow: () => import('../../support/playlistsScenarios.js').then(m => m.outside.push(['spotifyWindow'])) }))

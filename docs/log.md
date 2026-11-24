@@ -2,6 +2,17 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 11:05] session — F92: «Deep cuts» e «As menos ouvidas» no Blend, com o pulo ajustável (TASK-07, TASK-02, TASK-10)
+
+**Branch:** claude/f92-deep-cuts-and-least-played
+
+O MJRP (2026-11-24): «Queria começar colocando no ar as Menos Populares e os Deep Cuts»; «pular as 3+X mais populares com um slider?».
+- Um motor só: `TopNAlgorithm.generate` escolhe as faixas de cada álbum por blocos (`algorithms/selectByBlocks.js`); as três «Top N» são definições fixas no mesmo vocabulário, com o comportamento de hoje mantido. O validador da definição mora em `shared/content/recipeDefinition.js` (limites do REQ-06).
+- «Deep cuts» (Spotify, do topo, pula 3, pega 3) e «As menos ouvidas» (Spotify, do fim, pega 3): faixa sem popularidade nunca conta, empate pela ordem no álbum. O pulo de «Deep cuts» vai de 3 a 10 num controle na tela de Blend e fica guardado na playlist (`skip`), junto do id da receita.
+- [revisável] **Desvio do REQ-04, decidido agora:** as duas receitas nascem VISÍVEIS no Blend, não escondidas: o dono quer as duas no ar e o Painel que as esconderia (TASK-05, TASK-06, TASK-08) ainda não existe.
+- [revisável] Equivalência das «Top N» (REQ-05): iguais na amostra fixa. Duas diferenças listadas, levadas ao MJRP, nada mudado: a «Top N por popularidade» pega faixa sem popularidade quando faltam faixas, e desempata pela nota do BestEverAlbums; os blocos não pegam e desempatam pela ordem no álbum.
+- Os testes «igual ao de antes» das telas de Blend e de gerar de novo comparam com fotos de quando havia quatro receitas: passam a desenhar com as quatro de então (`test/support/registryOfBefore.js`). Corpus dourado regravado: só casos novos e a ordem de casos de embaralhar (semente deslocada). Prova: `reports/evidence/F92/proof.md`.
+
 ## [2026-11-24 10:40] decision — a popularidade do Spotify passa a ser gravada só pelo administrador (F92 TASK-09)
 
 **Branch:** claude/f92-close-popularity-writes

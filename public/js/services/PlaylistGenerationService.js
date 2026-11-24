@@ -30,7 +30,7 @@ import { track } from './usage/track.js'
  */
 
 /** The options of a recipe that are remembered with the playlists it generated. */
-const REMEMBERED_OPTIONS = ['trackCount', 'outputMode', 'groupingStrategy', 'targetDuration']
+const REMEMBERED_OPTIONS = ['trackCount', 'outputMode', 'groupingStrategy', 'targetDuration', 'skip']
 
 /**
  * What the generated playlists remember of their recipe. Only what was chosen: an option left
@@ -94,7 +94,9 @@ export class PlaylistGenerationService {
             outputMode: config.outputMode,
             groupingStrategy: config.groupingStrategy,
             // Sprint 17: Pass variable track count (N)
-            trackCount: config.trackCount || config.n
+            trackCount: config.trackCount || config.n,
+            // F92 (REQ-10): how many of the most popular «Deep cuts» skips (only a recipe with an adjustable skip reads it)
+            skip: config.skip
         })
 
         // Transform result to normalized playlist format
