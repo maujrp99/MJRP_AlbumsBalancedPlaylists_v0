@@ -8,6 +8,12 @@
 
 Palavras dele: «Protótipo v1 aprovado! Bora construir». O protótipo: `design/proposals/f92-recipes/prototype-v1.html` (ramo `wip/f92-recipes-prototype`, 50cf2e7), publicado em https://claude.ai/artifact/2a9G3kXngUoPLBeX3sr7AF. Entendido como aprovação das quatro telas como estão, com as escolhas que o agente fez sozinho: a recomendada não pode ser escondida; a equilibrada diz «EQUILIBRADA»; o construtor começa «Em branco» ou «Uma cópia de»; três cores e quatro ícones novos na lista fechada. Reserva: não passou pela crítica de interface separada. Próximo: construir a seção Receitas do Painel, o catálogo publicado e o construtor (TASK-05, 06, 08) sobre o ramo das duas receitas.
 
+## [2026-11-24 11:19] step — F92: protótipo das receitas (tela de Blend e seção do Painel), rodada 1
+
+**Branch:** wip/f92-recipes-prototype
+
+Pedido do MJRP (2026-11-24): «faça protótipo da tela do admin e do blend menu pra eu ver como fica no admin e no site». `design/proposals/f92-recipes/prototype-v1.html` (título «Receitas do Blend»): um comparador com quatro abas — o Blend no computador e no celular, «Receitas da Mistura» no Painel e o construtor de receita — cada uma com hoje ao lado da proposta. «Deep cuts» com o deslizador do pulo (3 a 10) e «As menos ouvidas»; mostrar e esconder, ordem, uma recomendada, cor e ícone de lista fechada, textos PT/EN, ingredientes; o construtor por blocos com a prévia em OK Computer e The Velvet Underground & Nico; «Criar algoritmo próprio com IA» marcado como depois (REQ-11). Autoconferência no navegador: sem rolagem lateral a 1440 e 390 px em todos os 27 estados, sem erros, só Syne 400/700/800, nenhum pedido externo. Descrição em `docs/specs/info-arch.md` § As receitas da mistura (F92); padrões novos em `design-system.md`, pendentes. Falta a crítica de UX (`mjrp-critiquing-ux-ui`) antes da aprovação.
+
 ## [2026-11-24 11:00] decision — F92 REQ-11 e TASK-11 entram na spec (o commit 30e1234 só levou a story S-74)
 
 **Branch:** main
