@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 10:40] decision — a popularidade do Spotify passa a ser gravada só pelo administrador (F92 TASK-09)
+
+**Branch:** claude/f92-close-popularity-writes
+
+O MJRP: «1. sim, vamos fechar» (fechar a brecha antes das receitas). Escolha do agente, entre as duas do TASK-09: só a conta do administrador (`isCmsAdmin()`) grava `spotify_enrichment/`; qualquer pessoa com login lê. O servidor gravando ficou de fora: pediria a chave do Spotify no Cloud Run (hoje ausente). Custo: quem não é administrador guarda o que o Spotify respondeu só na sessão (o app já trata a recusa como «não guardado», com um aviso no console). A lista de exceções de convidados ficou vazia; testes das regras 59 de 59. As regras são publicadas pelo MJRP.
+
 ## [2026-11-24 10:30] decision — receitas de mistura: o pulo dos Deep cuts ajustável na tela; o board arrumado
 
 **Branch:** main

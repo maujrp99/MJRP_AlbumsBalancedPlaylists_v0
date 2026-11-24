@@ -22,7 +22,7 @@
 - [ ] TASK-07 o motor de seleção por ranking generalizado com sentido, pular, pegar e exclusão; as três receitas «Top N» como definições fixas no mesmo vocabulário; o validador da definição em `shared/content` com os limites do REQ-06; o teste de equivalência de cada «Top N» com a sua forma em blocos (a diferença da regra «sem dado fora» listada e levada ao MJRP) · implements:: REQ-05, REQ-06 · model:: opus
 - [ ] TASK-08 o construtor de receita por blocos no Painel, com a prévia num álbum de exemplo, a receita nova nascendo escondida, e os ids nunca reaproveitados · implements:: REQ-01, REQ-07, REQ-09 · model:: sonnet
 - [ ] TASK-02 as receitas «Deep cuts» (fonte Spotify, do topo, pular 3, pegar 3) e «As menos ouvidas» (fonte Spotify, do fim, pular 0, pegar 3), faixa sem dado nunca conta, escondidas · implements:: REQ-04 · model:: sonnet
-- [ ] TASK-09 fechar a escrita de convidados em `spotify_enrichment/`: decidir quem passa a gravar a popularidade (o servidor ou só a conta que enriquece), mudar o código que grava e escrever o rascunho da regra em `firestore.rules`; o teste do catálogo de blocos passa a falhar se a exceção da TASK-04 existir · implements:: REQ-08 · model:: opus
+- [x] TASK-09 fechar a escrita de convidados em `spotify_enrichment/`: decidir quem passa a gravar a popularidade (o servidor ou só a conta que enriquece), mudar o código que grava e escrever o rascunho da regra em `firestore.rules`; o teste do catálogo de blocos passa a falhar se a exceção da TASK-04 existir · implements:: REQ-08 · model:: opus
 - [ ] TASK-10 o controle deslizante de «Deep cuts» na tela de Blend: pular as 3+X mais populares, dentro dos limites do REQ-06 · implements:: REQ-10
 
 ## Verification

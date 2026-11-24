@@ -43,9 +43,7 @@ const ANON = { firebase: { sign_in_provider: 'anonymous' } }
  * shrinks: when a feature closes one, it leaves here, and the case below that says "a guest writes
  * it" starts to fail until it does. F92 TASK-09 closes `spotify_enrichment`.
  */
-const GUEST_WRITES_STILL_ALLOWED = Object.freeze({
-    spotify_enrichment: 'the Spotify popularity is written by whoever is on the site, until F92 TASK-09 (ADR-0024, decision 4)'
-})
+const GUEST_WRITES_STILL_ALLOWED = Object.freeze({})
 
 const suite = describe
 
@@ -403,9 +401,18 @@ suite('what guests may still write: a declared list that only shrinks (F92 TASK-
         }
     })
 
-    it('the list names one collection today, with its reason', () => {
-        expect(Object.keys(GUEST_WRITES_STILL_ALLOWED)).toEqual(['spotify_enrichment'])
-        Object.values(GUEST_WRITES_STILL_ALLOWED).forEach(reason => expect(reason.length).toBeGreaterThan(20))
+    it('the list is empty: F92 TASK-09 closed the last one, spotify_enrichment', () => {
+        expect(Object.keys(GUEST_WRITES_STILL_ALLOWED)).toEqual([])
+    })
+
+    it('the Spotify popularity: anyone signed in reads it, only the administrator writes it (F92 REQ-08)', async () => {
+        const path = COLLECTIONS.spotify_enrichment
+        await seedAdmin()
+        await assertSucceeds(getDoc(doc(as.guest(), ...path)))
+        await assertSucceeds(getDoc(doc(as.other(), ...path)))
+        await assertFails(setDoc(doc(as.other(), path[0], 'other-new'), { a: 1 }))
+        await assertFails(setDoc(doc(as.adminAnonymous(), path[0], 'anon-new'), { a: 1 }))
+        await assertSucceeds(setDoc(doc(as.admin(), path[0], 'admin-new'), { a: 1 }))
     })
 })
 
@@ -446,9 +453,10 @@ suite('what the rules held before the CMS stays held (F59, F78 REQ-10)', () => {
             await assertSucceeds(deleteDoc(doc(as.other(), ...path)))
             await assertSucceeds(setDoc(doc(as.other(), ...path), { _schemaVersion: 1 })) // creating is not asked
         }
+        await seedAdmin()
         await seed((db) => setDoc(doc(db, 'spotify_enrichment', 'k'), { _schemaVersion: 2 }))
-        await assertFails(updateDoc(doc(as.guest(), 'spotify_enrichment', 'k'), { _schemaVersion: 1 }))
-        await assertSucceeds(updateDoc(doc(as.guest(), 'spotify_enrichment', 'k'), { _schemaVersion: 2 }))
+        await assertFails(updateDoc(doc(as.admin(), 'spotify_enrichment', 'k'), { _schemaVersion: 1 }))
+        await assertSucceeds(updateDoc(doc(as.admin(), 'spotify_enrichment', 'k'), { _schemaVersion: 2 }))
     })
 
     it('the Discogs reading of an inventory item needs no field list: any field of the owner is accepted (F75 REQ-14)', async () => {
