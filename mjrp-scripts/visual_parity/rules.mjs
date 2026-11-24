@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The rules of the visual parity kit, as pure functions: no file, no browser, no clock. They compare the facts of the
 // approved prototype and of the product (facts.mjs) for one screen, one state and one condition, and say what diverges
 // and how much: P0 breaks the identity or misses the component, P1 diverges the form visibly, P2 is detail (does not

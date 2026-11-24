@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 board_mapping_check.py - the judge of how a project's existing items enter the board (F136, S-202; the board@1 of ADR-0025,
 ADR-0026 and ADR-0027, read by _board.py).

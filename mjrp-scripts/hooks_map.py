@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """hooks_map.py - reads the hooks a project really has and compares them with the map (F291, S-245).
 
 Reason to exist: on 2026-11-18 the orchestrator rules failed because they lived in the agent's memory, and nobody could see in one place

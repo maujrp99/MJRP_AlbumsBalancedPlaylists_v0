@@ -4,7 +4,7 @@ item: adr-names
 from: 4
 to: 5
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0112 · adr-names@4 → adr-names@5
 
 ## Por que

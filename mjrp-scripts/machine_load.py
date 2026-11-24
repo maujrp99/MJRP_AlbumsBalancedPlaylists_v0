@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """machine_load.py - one heavy suite at a time on the machine (F293, S-245, orchestrator rules 37 and 44).
 
 Incident (2026-11-18): more than 40 doctors ran together, the load went past 50 and the machine stopped answering; the rule «uma bateria

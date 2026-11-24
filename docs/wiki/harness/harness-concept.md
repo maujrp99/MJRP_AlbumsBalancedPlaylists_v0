@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-11
 fontes: [google-cloud-tech-what-is-an-agentic-harness, cloud-x-berry-agent-harness-6min, don-woodlock-what-is-harness-engineering, fernanda-kipper-harness-alem-do-claude-md, quintanilha-o-que-e-harness]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **harness** é tudo o que envolve o modelo para transformá-lo em agente: as ferramentas, o loop

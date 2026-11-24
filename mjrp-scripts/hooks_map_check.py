@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """hooks_map_check.py - the judge of the hooks map (F291, S-245): every hook on disk is in `hooks-catalog.json`, and the map cites no hook that is gone.
 
 The rule behind it (orchestrator rule 47, MJRP 2026-11-18): every rule of the orchestrator has a hook and every hook is in the map; a rule that

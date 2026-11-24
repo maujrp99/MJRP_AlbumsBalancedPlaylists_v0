@@ -1,4 +1,4 @@
-<!-- kernel do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # A rodada de design — do pedido à construção
 
 > Kernel · página conceitual · criada 2026-11-07 14:15 · fonte: o how-to da sessão Designer do `MJRPpersonal`, aprovado pelo MJRP em 2026-11-07, e a narrativa do design de 3 a 7/11 (o parecer, no harness: `docs/wiki/feedback-from-other-projects/2026-11-07-mjrppersonal-design-round-how-to.md`)

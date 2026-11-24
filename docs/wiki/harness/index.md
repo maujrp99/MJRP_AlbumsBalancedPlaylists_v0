@@ -5,7 +5,7 @@ summary: as 31 páginas do harness que este projeto carrega — o que os campos 
 
 ## Definition
 
-Cópia carimbada (versão **2026-11-24**, fonte `926c1c410`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-11-24**, fonte `ea9bb8495`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte (no harness, `docs/wiki/kernel/<tema>/`).
 
