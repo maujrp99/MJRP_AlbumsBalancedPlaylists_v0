@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 10:30] decision — receitas de mistura: o pulo dos Deep cuts ajustável na tela; o board arrumado
+
+**Branch:** main
+
+- F92 ganha o REQ-10: «Deep cuts» com um controle deslizante na tela de Blend para pular as 3+X mais populares (MJRP, 2026-11-24).
+- Board: a priorização de hoje (5b5f459) só tinha movido nada; `board_move.py stamped` levou F91 à «Priorizada» (F94 não andou: pede o carimbo dele de novo). As features já na main e em produção (F51, F52, F57, F59, F64, F69, F71, F74, F77, F81, F82, F83, F84, F85, F86, F87, F88, F89, F90, F95, F96, F97) foram para «Pronto para UAT», a pedido dele («O que estiver feito deveria estar tudo em pronto pra UAT»). Ficam: F78 (app do celular, 12 tasks abertas) em espera, F76 e F79 em «Reaberto» pelas issues que ele abriu (UAT-274, UAT-281, UAT-284).
+
 ## [2026-11-24 10:30] acceptance — F45, F46, F50, F55, F61, F67, F68, F72, F79 aceitas pelo MJRP
 
 > Participantes: MJRP (pela tela do Control Center) · Branch: main
