@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 10:11] session — o primeiro salvar da Caixa em produção funcionou, nas palavras do MJRP
+
+**Branch:** main
+
+O MJRP salvou a Caixa do The Album Blender no Painel, em produção, e viu a página de entrada com os álbuns dele: «funcionou, ficou muito top!!!». É a primeira prova no banco real das regras publicadas (`validCrate`) e da caixa com os álbuns escolhidos por ele (F95, UAT-309..312). Não é carimbo de aceite: o carimbo é dele. Limites ditos a ele: lado A de 6 a 10 álbuns, lado B de 4 a 10.
+
 ## [2026-11-24 08:55] decision — Caixa do The Album Blender (F95, F82 TASK-04) em produção, com a palavra do MJRP («Publicar») e a liberação dele no merge
 
 **Branch:** main
