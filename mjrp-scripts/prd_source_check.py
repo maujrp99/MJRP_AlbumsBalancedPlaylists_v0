@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """prd_source_check.py - the PRD is the source of truth of the content; the screen only renders it (catalog item `prd@2`, CM-0077).
 
 Decision of the MJRP, 2026-10-19: "o source of truth do conteudo e o prd.md; a tela e apenas uma renderizacao organizada do prd.md"

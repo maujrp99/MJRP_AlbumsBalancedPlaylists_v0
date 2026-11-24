@@ -1,4 +1,4 @@
-// cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+// cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 // The kit's contract with the projects that consume it — versioned (architecture audit of ADR-0017, 2026-10-12,
 // finding 7). The kit is vendored into a child that IMPORTS it (the Control Center's judge imports rules.mjs and
 // judge.mjs), so its surface is a contract like any other.

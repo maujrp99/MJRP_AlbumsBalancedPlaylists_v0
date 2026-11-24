@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """adr_on_main.py - the ADR that waits for the MJRP is born on `main`, with a number nobody else holds (F300, UAT-595).
 
 The failure (2026-11-17): the CC-ADR-0057 and the CC-ADR-0058, `Proposed` and routed to the MJRP's acceptance, lived only on the branch of the

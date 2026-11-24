@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _passkey.py - what the merge hook and `remote_approval.py` share about a remote approval (CC-ADR-0038): where the approvals live, the list of
 trusted keys read from `main:` of the harness, the verifier and the book of used nonces. The checks of a signature live in one place, the

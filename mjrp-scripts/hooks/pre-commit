@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-commit - structure by nature (EP-09) and the coherence of the requirements graph (S-67). Blocks a commit that ADDS something outside its nature
 # (docs/ only memory; reports/, design/, data/ with their declared subfolders). Only what this commit
 # adds is judged - an old misplacement is the doctor's W9 warning, not a blocked commit.

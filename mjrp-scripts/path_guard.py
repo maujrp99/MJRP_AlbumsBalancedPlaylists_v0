@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 path_guard.py - the PreToolUse hook of the structure by nature (EP-09, fatia 5).
 
@@ -30,7 +30,8 @@ sys.dont_write_bytecode = True                      # runs inside every project:
 GUARDED = {"Write", "Edit", "MultiEdit", "NotebookEdit"}
 # F244 (CC-ADR-0045 § 8): the MJRP's registry of push destinations and the project's record of the SHA its gate approved are never written by an
 # agent's file tools, whether the file exists or not and whether or not it sits under a project: they come before every early exit below.
-PROTECTED = {"push-targets.json": "approvals", "push-gate-passed.json": ".mjrp"}
+# F339 (CC-ADR-0066 § 5): the newest full run the gate keeps apart, too.
+PROTECTED = {"push-targets.json": "approvals", "push-gate-passed.json": ".mjrp", "push-gate-full.json": ".mjrp"}
 
 
 def protected(path):

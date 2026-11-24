@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The harness default of the board configuration (board@1; ADR-0025 § 6, ADR-0026). A project's docs/specs/board.json adds record types and boards and replaces the stages of a phase (it may leave one out: ADR-0027), columns, hidden_categories, origin_rules and waiting_after_days; states and structure_types are the harness's. Judged by mjrp-scripts/_board.py (board_config_shape) and read by the Control Center's itemboard. No waiting_after_days here: a project without it falls back to its contract's requirements.stale_days. F275: as colunas «Esperando o cliente», «Esperando o agente» e «Esperando o merge» recebem só o que o registro do board (board_move.py) gravou; o estágio «Backlog» abre a Discovery (ninguém tocou), separado de «Explorar», e a etapa gravada (lote 1b) põe a fase e o estágio do item.",
   "format": "board@1",
   "phases": [

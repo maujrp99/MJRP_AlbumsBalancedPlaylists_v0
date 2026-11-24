@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """conflict_marker_check_selftest.py - proves the gate of F305 (UAT-617) with the REAL pre-commit and pre-merge-commit hooks on throwaway repositories
 in $TMPDIR: a staged file with an open/middle/close block is refused with file and line; a setext `=======` heading passes; markers already in HEAD are
 not judged; a binary passes; the open with no close and the close with no open are findings; the merge hook refuses a merge that brings the block. Without

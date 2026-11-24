@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
   "version": 1,
   "paths": {

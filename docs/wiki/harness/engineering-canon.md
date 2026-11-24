@@ -7,7 +7,7 @@ status: vivo
 atualizado: 2026-10-25
 fontes: [pragmatic-programmer, clean-code, clean-architecture, refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The

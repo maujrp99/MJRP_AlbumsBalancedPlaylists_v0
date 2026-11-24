@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """state_first_check.py - «o estado primeiro» (F295, S-245, orchestrator rule 39): no write in a feature's worktree while its card is not «Em andamento».
 
 Born from an incident (ADR-0002 asks for one): the orchestrator delegated sessions without telling them to mark the state, and the board kept

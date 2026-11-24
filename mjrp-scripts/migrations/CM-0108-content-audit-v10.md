@@ -4,7 +4,7 @@ item: content-audit
 from: 9
 to: 10
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0108 · content-audit@9 → content-audit@10
 
 ## Por que

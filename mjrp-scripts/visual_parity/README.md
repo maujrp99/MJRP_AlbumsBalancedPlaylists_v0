@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte 926c1c410 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # O kit de paridade visual
 
 Compara a tela do produto com a **referência visual aprovada** dela, na mesma tela, no mesmo estado e nas mesmas
