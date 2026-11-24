@@ -129,10 +129,48 @@ service cloud.firestore {
         && request.resource.data.recipes is map && request.resource.data.recipes.size() <= 100
         && previousIsMapIfPresent() && previousIsSmall(100);
     }
+    // The crate of albums of the entry page (F82 REQ-03, F95): `published/crate`. Two sides, each a list inside the limits
+    // of shared/content/crate.js (side A 6 to 10 albums, side B 4 to 10), and nothing else in the document (the earlier
+    // value of a save is kept in cmsWork, which only the administrator reads: no visitor downloads it).
+    // The rules cannot loop, and they evaluate at most 1000 expressions a request. So an album is stored as ONE LINE OF
+    // TEXT, its six values joined by «<», which none of them can hold, and each of the ten places of a side is checked by
+    // name with one size and one match (an album stored as a map of six fields left no room, with twenty albums, to check
+    // more than three of the fields: measured in the emulator). The line, whole, at most 1300 characters:
+    //   title < artist < year < id < artwork path < Apple Music address
+    //   title, artist   1 to 200 characters, no < nor >
+    //   year            four digits
+    //   id              1 to 64 of A-Z a-z 0-9 _ -
+    //   artwork path    the PATH on Apple's image server, never an address (the page writes the server itself): two or more
+    //                   segments of A-Z a-z 0-9 _ - with single dots inside, between single slashes; so no scheme, no leading
+    //                   slash, no «..», and no % nor backslash (an encoded dot cannot leave the folder either)
+    //   address         https://music.apple.com/ and up to 470 printable ASCII characters, with no < nor >
+    // A place that holds anything but such a line (a map, a number, a longer line) is refused.
+    // The Painel checks the same before saving and the entry page checks again on reading (shared/content/crate.js), which
+    // also refuses what a rule cannot say: control characters and invisible ones in a name, the same album twice.
+    function validCrateRecord(record) {
+      return record.size() <= 1300
+        && record.matches('[^<>]{1,200}<[^<>]{1,200}<[1-9][0-9]{3}<[A-Za-z0-9_-]{1,64}<[A-Za-z0-9_-]+([.][A-Za-z0-9_-]+)*(/[A-Za-z0-9_-]+([.][A-Za-z0-9_-]+)*)+<https://music[.]apple[.]com/[!-;=?-~]{0,470}');
+    }
+    function crateRecordAt(side, place) {
+      return side.size() <= place || validCrateRecord(side[place]);
+    }
+    function validCrateSide(side, min, max) {
+      return side is list && side.size() >= min && side.size() <= max
+        && crateRecordAt(side, 0) && crateRecordAt(side, 1) && crateRecordAt(side, 2) && crateRecordAt(side, 3) && crateRecordAt(side, 4)
+        && crateRecordAt(side, 5) && crateRecordAt(side, 6) && crateRecordAt(side, 7) && crateRecordAt(side, 8) && crateRecordAt(side, 9);
+    }
+    function validCrate() {
+      return request.resource.data.keys().hasOnly(['_schemaVersion', 'rev', 'sideA', 'sideB'])
+        && request.resource.data.keys().hasAll(['_schemaVersion', 'rev', 'sideA', 'sideB'])
+        && hasVersionAndRev()
+        && validCrateSide(request.resource.data.sideA, 6, 10)
+        && validCrateSide(request.resource.data.sideB, 4, 10);
+    }
     function validPublished(docId) {
       return (docId == 'site' && validSite())
         || ((docId == 'texts_en' || docId == 'texts_pt') && validTexts())
-        || (docId == 'recipes' && validRecipes());
+        || (docId == 'recipes' && validRecipes())
+        || (docId == 'crate' && validCrate());
     }
 
     // The published content: everybody reads it, with no login (the site reads it on opening, the

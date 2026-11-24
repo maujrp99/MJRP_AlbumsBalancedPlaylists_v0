@@ -3,7 +3,8 @@
  * the kit, the skin and the Painel's own texts come down only then: nobody else ever asks for them.
  *
  * It hands the Painel everything it uses: the storage on the content repository, the site's check of a text, the kit's
- * ports (the router, the translation by the server's route, the kit's words from the dictionary) and what the site reads.
+ * ports (the router, the translation by the server's route, the kit's words from the dictionary) and what the site reads;
+ * and, for the «Caixa» section, the storage of the entry page's crate and the search of Apple Music's catalogue by the server.
  */
 import '../../ui/admin-kit/kit.css'
 import '../../ui/admin-kit/required.css'
@@ -21,10 +22,14 @@ import { ReactView } from '../../react-bridge/ReactView'
 import { router } from '../../router.js'
 import { AuthService } from '../../services/AuthService.js'
 import { contentWriter } from '../../services/content/adminContent.js'
+import { crateWriter, entryPageHtml } from '../../services/content/adminCrate.js'
 import { getContentState, onContentState } from '../../services/content/contentWiring.js'
-import { TextsPanel, type PanelProps } from './TextsPanel'
+import { TextsPanel, type PanelProps, type Section } from './TextsPanel'
+import { searchAlbums } from './appleAlbums'
 import { contentStore, type ContentRepository } from './contentStore'
-import { albumBlenderPorts, kitTexts, routerNavigation } from './kitPorts'
+import { crateStore, type CrateRepository } from './crateStore'
+import { fixedCrateOf } from './fixedCrate'
+import { ADMIN_PATH, albumBlenderPorts, hrefOf, kitTexts, routerNavigation } from './kitPorts'
 import { installLeaveGuard } from './leaveGuard'
 import { richTexts } from './richTexts'
 import type { TextKind } from './model'
@@ -46,7 +51,11 @@ function readRich(text: string): { ok: boolean; links: string[] } {
     return basicParseRich(text)
 }
 
-async function post(path: string, body: TranslateBody): Promise<{ status: number; body: unknown }> {
+/** The address of the «Caixa» section. */
+const CRATE_PATH = `${ADMIN_PATH}/crate`
+const sectionOf = (pathname: string): Section => (pathname === CRATE_PATH ? 'crate' : 'texts')
+
+async function post(path: string, body: TranslateBody | { query: string }): Promise<{ status: number; body: unknown }> {
     const response = await serverFetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
     return { status: response.status, body: await response.json().catch(() => null) }
 }
@@ -72,8 +81,19 @@ function panelProps(): PanelProps {
         texts: { ...kitTexts(t, () => reason), rich: richTexts(t, tPlural) },
         pages: PAGES,
     })
+    const uid = () => AuthService.getCurrentUser()?.uid ?? ''
     return {
         store, ports, translate,
+        crate: {
+            store: crateStore({ repository: (): Promise<CrateRepository> => crateWriter(), uid, fixed: async () => fixedCrateOf(await entryPageHtml()) }),
+            search: (query) => searchAlbums({ post }, query),
+        },
+        // The Painel replaces its own address between its sections too: «back» always leaves the Painel.
+        section: {
+            where: () => sectionOf(window.location.pathname),
+            go: (section) => router.setAddress(section === 'crate' ? CRATE_PATH : hrefOf(''), { replace: true }),
+            listen: (changed) => router.afterNavigate(changed) as () => void,
+        },
         kindOf: (key): TextKind => kindOf(key),
         check: (text, english, of) => {
             const verdict = validateText(text, english, { kind: of, parseRich: readRich })

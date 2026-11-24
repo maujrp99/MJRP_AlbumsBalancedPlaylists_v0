@@ -12,6 +12,8 @@
  * the account (signed in: the menu and one «Inicie» button) are decided here too (UAT-240, UAT-241).
  * On the phone (F96) the crate stays on its first track, turned by the style; the albums are one row
  * at the end of the page (shelf.js), no longer a record inside each story.
+ * After the page has loaded, the crate the owner published in the Painel takes the place of the fixed set, in the crate
+ * and in the phone's row (publishedCrate.js; F82 REQ-11): the fixed set stays when there is none, or when it cannot be read.
  *
  * Pure parts are exported for the tests; `startSplash(window)` wires them to the page.
  */
@@ -24,6 +26,7 @@ import { hasAccount } from './gate.js'
 import { startAmbient } from './ambient.js'
 import { startShelf } from './shelf.js'
 import { applyDoor } from './visitorDoor.js'
+import { startPublishedCrate, shelfItemOf, readsPublishedCrate } from './publishedCrate.js'
 
 export { threadBarStyle }
 
@@ -64,16 +67,19 @@ export function flipProgress(flipTop, flipHeight, viewportHeight, track) {
 /** The record the caption names on a track: the pulled one, or the one in front. */
 export const captionIndex = (track, count = 14) => recordAt(TRACKS[track].pull >= 0 ? TRACKS[track].pull : TRACKS[track].face, count)
 
+/** How many records of the fixed set are side B: its last seven (covers.js). A published crate says its own count. */
+export const FIXED_SIDE_B = 7
+
 /**
- * The CSS crate on a track: for each of the 14 sleeves, whether it shows, its transform and its
+ * The CSS crate on a track: for each of the sleeves, whether it shows, its transform and its
  * stacking. The side facing you stands in a row going back; the pulled record is lifted; the ones in
  * front of it lean forward.
  */
-export function cssCrateLayout(track, count = 14) {
+export function cssCrateLayout(track, count = 14, sideB = FIXED_SIDE_B) {
     const s = TRACKS[track]
-    // side A is every record before the last seven (7 or 8 of them); side B the last seven, the last in front
-    const sideA = Array.from({ length: count - 7 }, (_, i) => i)
-    const order = s.side === 'A' ? sideA : Array.from({ length: 7 }, (_, i) => count - 1 - i)
+    // side A is every record before the last `sideB`; side B those last ones, the last in front
+    const sideA = Array.from({ length: count - sideB }, (_, i) => i)
+    const order = s.side === 'A' ? sideA : Array.from({ length: sideB }, (_, i) => count - 1 - i)
     const pull = s.pull >= 0 ? recordAt(s.pull, count) : -1
     const pulledPos = order.indexOf(pull)
     const out = Array.from({ length: count }, () => ({ visible: false, transform: '', zIndex: '' }))
@@ -219,19 +225,22 @@ function pauseIcon(win, reduce, wake) {
 /** The accessible name of an album's button: what it does, the album and the artist, and that it opens a new tab. */
 const listenLabel = (album, lang) => `${t('c.listen', lang)}: ${album.t}, ${album.a}${t('c.newtab', lang)}`
 
-/** The CSS crate and the caption of the front record; `caption` is drawn again when the language changes. */
-function crateView(win, imgs, albums, langOf) {
+/**
+ * The CSS crate and the caption of the front record; `caption` is drawn again when the language changes.
+ * `crate` is what the page shows now (`imgs`, `albums`, `sideB`): the published crate replaces its three fields.
+ */
+function crateView(win, crate, langOf) {
     const D = win.document
     return {
         layoutCss(track) {
-            cssCrateLayout(track, imgs.length).forEach((place, i) => {
-                const im = imgs[i]
+            cssCrateLayout(track, crate.imgs.length, crate.sideB).forEach((place, i) => {
+                const im = crate.imgs[i]
                 im.classList.toggle('vis', place.visible)
                 if (place.visible) { im.style.transform = place.transform; im.style.zIndex = place.zIndex }
             })
         },
         caption(track) {
-            const album = albums[captionIndex(track, albums.length)]
+            const album = crate.albums[captionIndex(track, crate.albums.length)]
             if (!album) return
             const lang = langOf()
             const b = D.createElement('b')
@@ -244,6 +253,41 @@ function crateView(win, imgs, albums, langOf) {
             }
         }
     }
+}
+
+/**
+ * The caption keeps the room it has when the albums change under it: its height, and as many lines for the album's name as
+ * the name it shows now takes (on the phone the name wraps; a shorter or a longer one would move the page under it).
+ */
+function holdCaption(win) {
+    const D = win.document
+    const caption = D.getElementById('caption')
+    const name = D.querySelector('#who b')
+    if (!caption || !name) return
+    const line = parseFloat(win.getComputedStyle(name).lineHeight) || name.offsetHeight || 1
+    caption.style.minHeight = `${caption.offsetHeight}px`
+    caption.style.setProperty('--name-lines', String(Math.max(1, Math.round(name.offsetHeight / line))))
+    caption.classList.add('held')
+}
+
+/**
+ * The published crate takes the place of the one on the page: the sleeves of the crate, the albums the caption names and
+ * the phone's row, in one go (their images have already arrived). The sleeves keep their place and their size and the row
+ * keeps its height, so nothing on the page moves. The 3D crate is not there yet: it comes after this (startSplash).
+ */
+function swapCrate(win, page, crate, view, langOf, next) {
+    const D = win.document
+    holdCaption(win)
+    D.getElementById('box').replaceChildren(...next.imgs)
+    crate.imgs = next.imgs
+    crate.albums = next.imgs.map(albumOf)
+    crate.sideB = next.sideB
+    page.albums = crate.albums
+    const track = page.phone ? 'a1' : page.state.track
+    view.layoutCss(track); view.caption(track)
+    const row = D.querySelector('#shelf .shelf')
+    if (row) row.replaceChildren(...next.row.map(album => shelfItemOf(D, album, langOf())))
+    D.dispatchEvent(new win.CustomEvent('cratechange'))
 }
 
 /** The record playing: the browser's scroll decides the track. Returns the scroll handler. */
@@ -306,10 +350,10 @@ export function startSplash(win) {
     const reduce = win.matchMedia('(prefers-reduced-motion: reduce)').matches
     const phone = win.matchMedia('(max-width:899px)').matches
     const imgs = [...D.querySelectorAll('#box .sl')]
-    const albums = imgs.map(albumOf)
+    const crate = { imgs, albums: imgs.map(albumOf), sideB: FIXED_SIDE_B }
     const scene = D.getElementById('scene')
     const page = {
-        TRACKS, ORDER, albums, reduce, phone,
+        TRACKS, ORDER, albums: crate.albums, reduce, phone,
         state: { track: 'a1', flip: 0 },
         moving: () => H.classList.contains('moving') && !H.classList.contains('paused')
     }
@@ -319,7 +363,7 @@ export function startSplash(win) {
     pauseIcon(win, reduce, wake)
 
     let lang = 'pt'
-    const view = crateView(win, imgs, albums, () => lang)
+    const view = crateView(win, crate, () => lang)
     const language = languageControl(win, (next) => { lang = next; view.caption(phone ? 'a1' : page.state.track) })
     lang = language.current()
     const onScroll = watchTracks(win, page, scene, view)
@@ -342,6 +386,11 @@ export function startSplash(win) {
     const fireLevel = () => Number(win.getComputedStyle(scene).getPropertyValue('--fire')) || FIRE.peak
     embers(win, D.getElementById('embers'), fireLevel, page)
     if (phone) embers(win, D.getElementById('embers-b2'), () => FIRE.peak, page)
-    load3d(win, page)
+    // the owner's crate, after the load: it never delays the page, and the fixed set stays when it does not come
+    const waits = readsPublishedCrate(win, crate.imgs)
+    page.published = startPublishedCrate(win, crate, (next) => swapCrate(win, page, crate, view, () => lang, next)).catch(() => 'failed')
+    // the 3D crate stands the sleeves it finds on the page, once: on a page that reads the owner's crate it comes after that read
+    // (3 s at most, then the covers), so it is never built for the fixed set and built again
+    if (waits) page.published.then(() => load3d(win, page)); else load3d(win, page)
     return page
 }

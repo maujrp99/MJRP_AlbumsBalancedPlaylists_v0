@@ -27,6 +27,8 @@ import { initializeTestEnvironment, assertFails, assertSucceeds } from '@firebas
 import { doc, getDoc, setDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, writeBatch } from 'firebase/firestore'
 import { PublishedContentSaveRepository } from '../../shared/data/PublishedContentSaveRepository.js'
 import { batchTransaction } from '../../shared/data/batchTransaction.js'
+import { PublishedCrateRepository } from '../../shared/data/PublishedCrateRepository.js'
+import { CRATE, crateAlbums, crateLine, crateSide, longestLine } from './support/crateFixtures.js'
 
 const RULES = readFileSync(resolve(__dirname, '../../firestore.rules'), 'utf8')
 const HOST = process.env.FIRESTORE_EMULATOR_HOST
@@ -73,6 +75,7 @@ beforeAll(async () => {
 
 afterAll(async () => { if (env) await env.cleanup() })
 beforeEach(async () => { if (env) await env.clearFirestore() })
+
 
 suite('the rules file', () => {
     it('has no wildcard rule at the root: what is not listed is closed, even to the administrator', async () => {
@@ -456,5 +459,196 @@ suite('what the rules held before the CMS stays held (F59, F78 REQ-10)', () => {
         await seed((db) => setDoc(doc(db, 'spotify_enrichment', 'k'), { a: 1 }))
         await assertSucceeds(getDoc(doc(as.guest(), 'spotify_enrichment', 'k')))
         await assertFails(getDoc(doc(as.nobody(), 'spotify_enrichment', 'k')))
+    })
+})
+
+// ---------------------------------------------------------------------------------------------
+// The crate of the entry page (F82 TASK-04, REQ-03): `published/crate`
+// ---------------------------------------------------------------------------------------------
+suite('published/crate: the crate of albums of the entry page (F82 REQ-03, F95)', () => {
+    const store = (db) => ({ db, doc, getDoc, setDoc, writeBatch, serverTimestamp })
+    const repository = (db) => { const given = store(db); return new PublishedCrateRepository({ ...given, runTransaction: batchTransaction(given) }) }
+    const crate = () => doc(as.admin(), 'published', 'crate')
+    /** The crate with the first line of side A replaced. */
+    const withLine = (line) => ({ ...CRATE, sideA: [line, ...crateSide(2, 5)] })
+    const withAlbum = (over) => withLine(crateLine(1, over))
+    const refusedEach = async (documents) => { for (const data of documents) await assertFails(setDoc(crate(), data)) }
+
+    beforeEach(async () => { await seedAdmin() })
+
+    it('everybody reads it, with no login (the entry page reads it for every visitor)', async () => {
+        await seed((db) => setDoc(doc(db, 'published', 'crate'), CRATE))
+        for (const who of ['nobody', 'guest', 'other', 'admin']) await assertSucceeds(getDoc(doc(as[who](), 'published', 'crate')))
+    })
+
+    it('the administrator saves the crate twice by the Painel\'s own save: rev 1 then 2; the public document is the crate alone, and the earlier side and who saved are in cmsWork', async () => {
+        const repo = repository(as.admin())
+        const sides = { a: crateAlbums(1, 6), b: crateAlbums(20, 4) }
+        const first = await repo.saveCrate({ loadedRev: 0, sides, updatedBy: ADMIN })
+        expect(first).toMatchObject({ status: 'saved', rev: 1 })
+        const turned = [...sides.b].reverse()
+        const second = await repo.saveCrate({ loadedRev: 1, sides: { a: sides.a, b: turned }, updatedBy: ADMIN })
+        expect(second).toMatchObject({ status: 'saved', rev: 2 })
+        const stored = (await getDoc(doc(as.nobody(), 'published', 'crate'))).data()
+        expect(stored).toEqual({ _schemaVersion: 1, rev: 2, sideA: CRATE.sideA, sideB: [...CRATE.sideB].reverse() })
+        expect(JSON.stringify(stored)).not.toContain(ADMIN)
+        expect((await getDoc(doc(as.admin(), 'cmsWork', 'save_crate'))).data()).toMatchObject({ doc: 'crate', rev: 2, keys: ['sideB'], previous: { sideB: CRATE.sideB }, updatedBy: ADMIN })
+        await assertFails(getDoc(doc(as.nobody(), 'cmsWork', 'save_crate')))
+    })
+
+    it('the largest crate (ten a side, every line at its longest) is accepted, created and updated: the check of twenty albums fits the rules\' limit of 1000 expressions', async () => {
+        const full = (from) => ({ sideA: Array.from({ length: 10 }, (_, i) => longestLine(from + i)), sideB: Array.from({ length: 10 }, (_, i) => longestLine(from + 50 + i)) })
+        expect(longestLine(1).length).toBeGreaterThan(1200)
+        await assertSucceeds(setDoc(crate(), { ...CRATE, ...full(1) }))
+        await assertSucceeds(setDoc(crate(), { ...CRATE, rev: 2, ...full(200) }))
+    })
+
+    it('the margin under the limit of 1000 expressions, measured: the largest save still fits with 32 more checks added to the rule, created and updated', async () => {
+        const end = '        && validCrateSide(request.resource.data.sideB, 4, 10);'
+        expect(RULES).toContain(end)
+        const padded = RULES.replace(end, end.slice(0, -1) + ' && request.resource.data.rev is int'.repeat(32) + ';')
+        const [host, port] = HOST.split(':')
+        const wider = await initializeTestEnvironment({ projectId: 'demo-mjrp-rules-margin', firestore: { rules: padded, host, port: Number(port) } })
+        try {
+            await wider.withSecurityRulesDisabled((context) => setDoc(doc(context.firestore(), 'cmsAdmins', ADMIN), { role: 'super' }))
+            const target = doc(wider.authenticatedContext(ADMIN, REAL).firestore(), 'published', 'crate')
+            const full = (from) => ({ sideA: Array.from({ length: 10 }, (_, i) => longestLine(from + i)), sideB: Array.from({ length: 10 }, (_, i) => longestLine(from + 50 + i)) })
+            await assertSucceeds(setDoc(target, { ...CRATE, ...full(1) }))
+            await assertSucceeds(setDoc(target, { ...CRATE, rev: 2, ...full(200) }))
+        } finally { await wider.cleanup() }
+    })
+
+    it('a crate saved on another device in between comes back as a conflict, and nothing is written', async () => {
+        const here = repository(as.admin())
+        const there = repository(as.admin())
+        const b = crateAlbums(20, 4)
+        await here.saveCrate({ loadedRev: 0, sides: { a: crateAlbums(1, 6), b }, updatedBy: ADMIN })
+        await there.saveCrate({ loadedRev: 1, sides: { a: crateAlbums(40, 6), b }, updatedBy: ADMIN })
+        const result = await here.saveCrate({ loadedRev: 1, sides: { a: crateAlbums(60, 6), b }, updatedBy: ADMIN })
+        expect(result).toMatchObject({ status: 'conflict', rev: 2 })
+        expect((await getDoc(doc(as.nobody(), 'published', 'crate'))).data().sideA[0]).toBe(crateLine(40))
+    })
+
+    it('another account, a guest, a person with no login and the administrator signed in anonymously are refused, create and update', async () => {
+        for (const who of ['other', 'guest', 'nobody', 'adminAnonymous']) await assertFails(setDoc(doc(as[who](), 'published', 'crate'), CRATE))
+        await seed((db) => setDoc(doc(db, 'published', 'crate'), CRATE))
+        for (const who of ['other', 'guest', 'nobody', 'adminAnonymous']) await assertFails(setDoc(doc(as[who](), 'published', 'crate'), { ...CRATE, rev: 2 }))
+    })
+
+    it('the record must say "super": another role writes nothing', async () => {
+        await seedAdmin('editor')
+        await assertFails(setDoc(crate(), CRATE))
+    })
+
+    it('a side outside its limits is refused: side A 6 to 10, side B 4 to 10', async () => {
+        await refusedEach([
+            { ...CRATE, sideA: crateSide(1, 5) }, { ...CRATE, sideA: crateSide(1, 11) }, { ...CRATE, sideB: crateSide(20, 3) }, { ...CRATE, sideB: crateSide(20, 11) }
+        ])
+    })
+
+    it('the document is the two sides and nothing else: a field more (a «previous» too), a side that is not a list and a missing side are refused', async () => {
+        await refusedEach([
+            { ...CRATE, updatedBy: ADMIN }, { ...CRATE, previous: { sideA: null, sideB: null } }, { ...CRATE, previous: { sideA: ['x'.repeat(900000)] } },
+            { ...CRATE, sideA: { 0: crateLine(1) } }, { _schemaVersion: 1, rev: 1, sideA: CRATE.sideA }, { ...CRATE, sideB: 'x' }
+        ])
+    })
+
+    it('an album is one line of text of six values: a map (with any keys), a number, a line with a value more or a value less are refused', async () => {
+        await refusedEach([
+            withLine({ id: '1', title: 'T', artist: 'A', year: 1990, art: 'Music1/v4/1/c.jpg', href: 'https://music.apple.com/us/album/a/1' }),
+            withLine({ id: '1', art: 'Music1/v4/1/c.jpg', href: 'https://music.apple.com/us/album/a/1', x: 1, y: 2, z: 3 }),
+            withLine(7), withLine(null), withLine(true),
+            withLine(`${crateLine(1)}<more`), withLine(crateLine(1).split('<').slice(1).join('<')), withLine('')
+        ])
+    })
+
+    it('no text has room to grow: a line over 1300 characters is refused, whichever value is the long one (a title of 900 KB too)', async () => {
+        await refusedEach([
+            withAlbum({ title: 'x'.repeat(900000) }), withAlbum({ title: 'x'.repeat(201) }), withAlbum({ artist: 'x'.repeat(201) }),
+            withAlbum({ id: 'x'.repeat(65) }), withAlbum({ href: `https://music.apple.com/${'x'.repeat(471)}` }),
+            withAlbum({ art: `Music1/${'a'.repeat(1400)}.jpg` }), withAlbum({ title: 'T'.repeat(200), artist: 'A'.repeat(200), art: `Music1/${'a'.repeat(900)}.jpg` })
+        ])
+    })
+
+    it('a title or an artist with markup or empty is refused; so is a bad id, and a year that is not four digits', async () => {
+        await refusedEach([
+            withAlbum({ title: '<img src=x onerror=alert(1)>' }), withAlbum({ artist: 'A > B' }), withAlbum({ title: 'a<b' }), withAlbum({ title: '' }), withAlbum({ artist: '' }),
+            withAlbum({ id: 'a b' }), withAlbum({ id: '../x' }), withAlbum({ id: '' }), withAlbum({ id: 'a.b' }),
+            withAlbum({ year: 90 }), withAlbum({ year: 19900 }), withAlbum({ year: '199x' }), withAlbum({ year: '0990' }), withAlbum({ year: 1990.5 })
+        ])
+    })
+
+    it('the cover is a path on Apple\'s image server, never an address: another server, a way out of the folder (written plainly or as %2e), % and backslash are refused', async () => {
+        for (const art of [
+            'https://evil.example/x.jpg', '//evil.example/x.jpg', '/Music/x.jpg', 'Music/../../x.jpg', '../x.jpg', 'Music/..', 'Music/x y.jpg', 'Music/x.jpg?u=1',
+            'Music/x.jpg#f', 'Music\\x.jpg', 'Music/a@b/x.jpg', 'javascript:alert(1)', 'x.jpg', '', 'Music/a..b.jpg', 'Music//x.jpg', 'Music/x.jpg/',
+            'a/%2e%2e/%2e%2e/x', 'Music/%2E%2E/x.jpg', 'Music/a%2fb/x.jpg', 'Music/%5c/x.jpg', 'Music/.hidden/x.jpg', 'Music/x.jpg.'
+        ]) await assertFails(setDoc(crate(), withAlbum({ art })))
+        await assertSucceeds(setDoc(crate(), withAlbum({ art: 'Music115/v4/e0/4b/c4/e04bc4e6-9d3a-0bab/093624924722.rgb.jpg' })))
+    })
+
+    it('the address to listen is an Apple Music page, https, in printable ASCII: anything else is refused', async () => {
+        for (const href of [
+            'http://music.apple.com/us/album/x/1', 'https://music.apple.com.evil.example/us/album/x/1', 'https://musicXapple.com/x', 'https://evil.example/', 'javascript:alert(1)',
+            'music://x', 'https://music.apple.com/us/album/x y/1', 'https://music.apple.com/us\nx', 'https://music.apple.com/us/>b', 'https://music.apple.com/us/álbum', ''
+        ]) await assertFails(setDoc(crate(), withAlbum({ href })))
+        await assertSucceeds(setDoc(crate(), withAlbum({ href: 'https://music.apple.com/us/album/admir%C3%A1vel-chip-novo/977428211' })))
+    })
+
+    it('a bad album is refused in any place of either side, the last ones too', async () => {
+        const bad = crateLine(99, { art: 'https://evil.example/x.jpg' })
+        await refusedEach([
+            { ...CRATE, sideA: [...crateSide(1, 9), bad] }, { ...CRATE, sideB: [...crateSide(20, 9), bad] }, { ...CRATE, sideB: [...crateSide(20, 3), bad] },
+            { ...CRATE, sideA: [...crateSide(1, 5), bad] }
+        ])
+    })
+
+    it('rev starts at 1 and follows by one; _schemaVersion never goes down; nobody deletes', async () => {
+        await assertFails(setDoc(crate(), { ...CRATE, rev: 2 }))
+        await assertSucceeds(setDoc(crate(), CRATE))
+        await assertFails(setDoc(crate(), { ...CRATE, rev: 1 }))
+        await assertFails(setDoc(crate(), { ...CRATE, rev: 3 }))
+        await assertSucceeds(setDoc(crate(), { ...CRATE, rev: 2, _schemaVersion: 2 }))
+        await assertFails(setDoc(crate(), { ...CRATE, rev: 3, _schemaVersion: 1 }))
+        await assertFails(deleteDoc(crate()))
+    })
+
+    it('the crate cannot hide in another document: a field outside the site\'s list is refused, and so is a crate under another name', async () => {
+        await assertFails(setDoc(doc(as.admin(), 'published', 'site'), { ...SITE, crate: { sideA: CRATE.sideA, sideB: CRATE.sideB } }))
+        await assertFails(setDoc(doc(as.admin(), 'published', 'surprise'), CRATE))
+        await assertFails(setDoc(doc(as.admin(), 'published', 'texts_pt'), CRATE))
+    })
+
+    it('the rules and the Painel\'s validator say the same of an album: what one accepts the other accepts, what one refuses the other refuses', async () => {
+        const { validateAlbum, decodeAlbum } = await import('../../shared/content/crate.js')
+        const cases = [
+            {}, { title: 'Admirável Chip Novo', artist: 'Pitty' }, { title: 'A "quoted" & odd title' }, { art: 'Music5/v4/2f/c7/19/2fc71988/Court_2500px.jpg' },
+            { title: '<b>x</b>' }, { art: 'a/%2e%2e/x' }, { art: 'Music/../x.jpg' }, { href: 'https://evil.example/' }, { year: 90 }, { id: 'a b' }, { title: 'x'.repeat(201) }
+        ]
+        for (const over of cases) {
+            await env.clearFirestore()
+            await seedAdmin()
+            const line = crateLine(1, over)
+            const byTheRules = await setDoc(crate(), withLine(line)).then(() => true, () => false)
+            expect(byTheRules, JSON.stringify(over).slice(0, 60)).toBe(validateAlbum(decodeAlbum(line)).ok)
+        }
+    })
+
+    it('what the rules cannot say the readers refuse: a control character or a mark that turns the text around in a name passes the rules and is refused by the validator of the Painel and of the entry page', async () => {
+        const { validateAlbum, decodeAlbum } = await import('../../shared/content/crate.js')
+        for (const title of ['evil‮gnp.exe', 'bell\u0007', '​​']) {
+            await env.clearFirestore()
+            await seedAdmin()
+            await assertSucceeds(setDoc(crate(), withAlbum({ title })))
+            expect(validateAlbum(decodeAlbum(crateLine(1, { title }))).ok, JSON.stringify(title)).toBe(false)
+        }
+    })
+
+    it('the fixed set of the entry page saves as it is', async () => {
+        const { COVER_SETS } = await import('../../public/splash/covers.js')
+        const { encodeAlbum, validateAlbum } = await import('../../shared/content/crate.js')
+        const real = COVER_SETS.real.map((r) => ({ id: r.k, title: r.t, artist: r.a, year: r.y, art: r.art, href: r.href }))
+        expect(real.every((album) => validateAlbum(album).ok)).toBe(true)
+        await assertSucceeds(setDoc(crate(), { ...CRATE, sideA: real.slice(0, 8).map(encodeAlbum), sideB: real.slice(8).reverse().map(encodeAlbum) }))
     })
 })

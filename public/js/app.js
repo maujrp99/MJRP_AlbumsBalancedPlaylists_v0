@@ -178,8 +178,8 @@ router.register('/blend', async () => {
 const loadAdminGate = loadScreen(() => import('./screens/admin/gate.ts'))
 const loadAdmin = loadScreen(() => import('./screens/admin/adminPanel.ts'))
 const adminRoute = async () => (await loadAdminGate()).adminRoute(loadAdmin)
-router.register('/admin', adminRoute)
-router.register('/admin/texts/:screen', adminRoute)
+// one address pattern for the Painel and its two sections (the router reads it as a regular expression): /admin, /admin/texts/<screen>, /admin/crate
+router.register('/admin(/texts/:screen|/crate)?', adminRoute)
 
 // Sprint 11 Phase 1: Spotify Auth Callback
 router.register('/callback', async () => {

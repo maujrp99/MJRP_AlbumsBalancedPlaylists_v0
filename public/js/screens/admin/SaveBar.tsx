@@ -49,19 +49,29 @@ function ConflictNotice({ state, panel }: { state: Conflict; panel: Panel }) {
     )
 }
 
+/** «Saving…», with the equalizer: the same words for the texts and for the crate. */
+export function SavingMessage() {
+    return <div className="cms-msg" role="status" data-state="saving"><span className="cms-eq" aria-hidden="true"><i /><i /><i /><i /><i /></span>{t('admin.save.saving')}</div>
+}
+
+/** A save that failed, with its reason in plain words and «Try again». */
+export function FailedMessage({ reason, detail, onRetry }: { reason: string; detail: string; onRetry: () => void }) {
+    return (
+        <div className="cms-msg fail" role="alert" data-state="failed">
+            <span>{t('admin.save.failed', { reason: t(`admin.save.reason.${reason}`, { detail }) })}</span>
+            <button type="button" className="ak-btn sm" data-act="save-retry" onClick={onRetry}>{t('admin.save.retry')}</button>
+        </div>
+    )
+}
+
 function Message({ panel }: { panel: Panel }) {
     const state = panel.save
     switch (state.step) {
         case 'confirm': return panel.unsaved.length ? <Confirm panel={panel} /> : null
-        case 'saving': return <div className="cms-msg" role="status" data-state="saving"><span className="cms-eq" aria-hidden="true"><i /><i /><i /><i /><i /></span>{t('admin.save.saving')}</div>
+        case 'saving': return <SavingMessage />
         case 'saved': return <div className="cms-msg ok" role="status" data-state="saved">✓ {tPlural(state.approved ? 'admin.save.approved' : 'admin.save.saved', state.count, { count: state.count })}</div>
         case 'invalid': return <div className="cms-msg fail" role="alert" data-state="invalid">{tPlural('admin.save.invalid', state.count, { count: state.count })}</div>
-        case 'failed': return (
-            <div className="cms-msg fail" role="alert" data-state="failed">
-                <span>{t('admin.save.failed', { reason: t(`admin.save.reason.${state.reason}`, { detail: state.detail }) })}</span>
-                <button type="button" className="ak-btn sm" data-act="save-retry" onClick={panel.confirm}>{t('admin.save.retry')}</button>
-            </div>
-        )
+        case 'failed': return <FailedMessage reason={state.reason} detail={state.detail} onRetry={panel.confirm} />
         case 'conflict': return <ConflictNotice state={state} panel={panel} />
         default: return null
     }
