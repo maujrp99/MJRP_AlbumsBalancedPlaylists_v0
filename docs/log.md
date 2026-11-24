@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 11:43] decision — faixa sem dado e desempate: uma regra só em todas as receitas (F92 REQ-12)
+
+**Branch:** main
+
+O MJRP, sobre as duas diferenças do «Top N por popularidade»: «Faixa nova : usar regra nova ; empate: usar o BEA pra desempatar, e o fallback pra regra nova, caso não tenha dado para BEA (e vice-versa para a popularidade do BEA)». Entendido como: faixa sem dado nunca entra (também nas «Top N»); empate no Spotify desempata pela nota do BEA, sem ela pela ordem no álbum; empate no BEA desempata pela popularidade do Spotify, sem ela pela ordem no álbum. REQ-12 e TASK-12; o REQ-06 passa a apontar para o REQ-12.
+
 ## [2026-11-24 11:32] decision — o MJRP aprovou o protótipo v1 das receitas de mistura (F92)
 
 **Branch:** main
