@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 15:51] decision — a ordem de agora: terminar a F92, depois a F94, depois a F93
+
+**Branch:** main
+
+O MJRP: «ah nao prefiro a f94 antes da f93 na verdade, mas vamos finalizar a f92 primeiro». As chaves do Painel (F93) não começam em paralelo; as transições entre telas (F94) vêm antes delas.
+
 ## [2026-11-24 15:42] step — F98: a main trazida para o ramo da exportação do Apple Music, sem juiz por palavra do MJRP
 
 **Branch:** fix/f98-apple-music-export-says-why-it-failed
