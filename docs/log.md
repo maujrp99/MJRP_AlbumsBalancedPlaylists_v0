@@ -8,6 +8,20 @@
 
 O juiz independente passou a `188011d` (0 P0, 0 P1, 11 P2) e apontou onde a regra de `published/crate` podia apertar. Feito, com o teste antes: cada álbum passa a ser guardado como UMA linha de texto (nome < artista < ano < id < caminho da capa < endereço), o que cabe no limite de 1000 expressões das regras e deixa conferir tudo: linha de no máximo 1300 caracteres, nome e artista de 1 a 200 sem `<` nem `>`, ano de quatro dígitos, caminho da capa sem `%`, sem barra invertida e sem `..`, endereço só de `https://music.apple.com/`; o documento só tem `_schemaVersion`, `rev`, `sideA`, `sideB` (o valor anterior de um salvar saiu do documento público e fica em `cmsWork/save_crate`). O conferidor (`shared/content/crate.js`) recusa caracteres de controle, marcas de direção, nome só de caracteres invisíveis e o mesmo álbum duas vezes. A busca só trata como link o que começa por endereço (um «U2: Achtung Baby» volta a ser busca). Um lado cheio diz isso numa linha visível. A confirmação do salvar diz o que é verdade para a caixa. Teste da rota `POST /api/admin/apple-albums` por HTTP (sem conta, outra conta, acima do limite). O passo a passo do dono foi atualizado. O construtor parou no meio por falta de cota semanal; o orquestrador terminou: dois consertos pequenos (um aviso do lint sobre a expressão que casa caracteres de controle, de propósito; um tipo num teste) e os tetos do orçamento remedidos pela regra do arquivo (script principal 200.514 B, teto 200.664). Conferido: regras no emulador 58 de 58; suíte inteira pela fila `Test Files 428 passed`, `Tests 5858 passed | 1 skipped`, saída 0; conferência de tipos 0; lint 0; orçamento de publicação 0. Não refeita: a prova completa no navegador (272 conferências da `188011d`).
 
+## [2026-11-23 20:46] review — F95 e F82 (TASK-04), a Caixa gerida no Painel: juiz independente (visual, comportamento e segurança) — pass, 0 P0, 0 P1, 11 P2
+
+**Branch:** wip/f95-judge
+
+Julgado o commit `188011d` do ramo `feat/f95-crate-managed-in-the-panel`, no site construído como o publicado (o ramo e a `main`), Chromium e WebKit, 1280 e 390, inglês e português pela escolha guardada (`albumblender:lang`), com o banco, o login e a busca do servidor respondidos por dublês; as regras no emulador.
+
+Segurança: só o administrador grava `published/crate` e nenhuma gravação antes recusada em outro documento de `published/*` passou a ser aceita (55 casos do construtor e 57 sondagens minhas). A página de entrada trata o que lê como hostil: 47 respostas hostis em cada navegador e largura (188 corridas), nada virou elemento, nada rodou, nenhum outro servidor foi pedido, nenhum erro na tela. A rota `POST /api/admin/apple-albums` fica atrás da porta do administrador, não busca o endereço colado (só tira dele a loja e o número do álbum) e não devolve a chave. `noSecretsInRepo` passa.
+
+Comportamento e visual: a seção «Caixa» faz o que promete nas duas línguas; no celular todo botão tem 44 px ou mais; a cópia do kit não foi tocada. A página de entrada sem nada publicado está, elemento por elemento, onde está na `main`. O `load` da página é o mesmo da `main` (mediana de 5: 559 contra 585 ms no Chromium a 1280): os 3 a 4 s vistos pelo construtor eram da própria prova.
+
+Os P2 que mais pesam: o caminho da capa sai da pasta das capas (nunca do servidor de imagens da Apple) com pontos codificados (`%2e%2e`), nas regras e no conferidor; as regras não põem teto em nenhum texto (um documento de cerca de 1 MiB é aceito do administrador, e a página o baixa inteiro, com o `previous`); uma busca com dois-pontos depois da primeira palavra («U2: Achtung Baby») é recusada como link; a caixa em 3D passa a esperar a leitura do banco (até 3 s). Não conferido: o banco de verdade, a API de verdade da Apple, a caixa em 3D (sem WebGL no navegador de teste), a bateria inteira.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f95-crate-in-the-panel-visual-parity-recheck.md`.
+
 ## [2026-11-23 20:19] step — F95 e F82 (TASK-04): as regras da Caixa no arquivo do ramo, provadas no emulador; a prova completa no navegador; a bateria inteira
 
 **Branch:** feat/f95-crate-managed-in-the-panel
