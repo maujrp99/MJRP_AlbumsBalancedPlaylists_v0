@@ -8,6 +8,7 @@
 > Página de entrada (F80), rodada 3 · v3, 2026-11-21: design/inception/splash-menu-bar-v3.html (o texto em português revisado depois da leitura do MJRP; a abertura é dele; o visual é o da v2); nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v3.mjs; mesmo comparador
 > Página de entrada (F80), rodada 3 · v4, 2026-11-21: design/inception/splash-menu-bar-v4.html (o ritmo da rolagem: histórias mais curtas e uma vinheta viva por história; a abertura com título curto e linha menor); nenhuma aprovada; gerador design/proposals/f80-splash/home-menu/build_v4.mjs; mesmo comparador
 > O menu do topo do app (F88), rodada 1 de desenho, 2026-11-21: dois níveis, design/inception/f88-top-menu-elevar-v1.html e design/inception/f88-top-menu-transformar-v1.html, com o menu de hoje como «Referência»; nenhum aprovado; comparador https://claude.ai/artifact/AtUiGYy1YAL9iLd58yJ3aF (cópia local design/proposals/f88-top-menu/comparator.html; gerador design/proposals/f88-top-menu/build/)
+> As receitas da mistura (F92), rodada 1 de desenho, 2026-11-24: design/proposals/f92-recipes/prototype-v1.html (a tela de Blend no computador e no celular, a seção «Receitas da Mistura» do Painel e o construtor de receita, cada uma com hoje ao lado); nenhuma aprovada; § As receitas da mistura (F92)
 > Página de leitura: design/proposals/info-arch/info-arch.html, gerada deste arquivo (`build_info_arch_page.py`)
 
 ## Como este documento está organizado
@@ -657,3 +658,105 @@ Decidido pelo MJRP em 2026-11-21 («Elevar no cel e transformar na web»; Apple 
 | Painel | Conta e conexões · Entrou como · Conexões · Conectado · <conta> · Para exportar suas playlists · Conectar · Desconectar · Idioma · Limpar o cache dos álbuns · Sair | Account and connections · Signed in as · Connections · Connected · <account> · To export your playlists · Connect · Disconnect · Language · Clear album cache · Sign out | proposta do agente; texto final pela F81 |
 | Sem conta (painel do celular) | Entre para guardar suas séries em qualquer aparelho. · Entrar | Sign in to keep your series on every device. · Sign in | proposta do agente |
 
+## As receitas da mistura (F92) · rodada 1 de desenho
+
+Fonte: `design/proposals/f92-recipes/prototype-v1.html` (2026-11-24; nenhum aprovado), um arquivo só que é também o comparador: quatro abas («Site · Blend (computador)», «Site · Blend (celular)», «Admin · Receitas», «Admin · Construtor de receita»), cada uma com hoje («Referência») ao lado da proposta; o construtor não tem hoje (uma receita nova é código). Capturas com os itens do inventário marcados em `design/wireframes/f92-recipes-v1-<aba>-<desk|phone>.png`. Parte da direção aprovada no protótipo do CMS (`design/proposals/f82-cms/prototype.html`, a seção de receitas) e das telas reais (`screens/blend/Blend.tsx`, `ui/recipe/RecipeCards.tsx`, `ui/recipe/Ingredients.tsx`, `screens/admin/TextsPanel.tsx`, `css/admin-skin.css`); os nomes e as regras das duas receitas novas vêm do ramo `claude/f92-deep-cuts-and-least-played` (lido, não escrito). Requisitos: F92 REQ-01, REQ-02, REQ-03, REQ-04, REQ-06, REQ-09, REQ-10 e o lugar marcado do REQ-11.
+
+**Sem três níveis:** rodada de convergência sobre uma direção já aprovada (o Painel da F82); a tela de Blend muda só o que os requisitos pedem. Decisão do agente — revisável.
+
+**Sitemap:** `/admin` ganha o nó «Receitas da Mistura» (hoje «Receitas da Mistura · depois», apagado), com a subpágina do construtor («Receitas da Mistura › Nova receita», e «› <receita> · os blocos»). Organização: a lista é **ordenada pelo dono** (a ordem é a da tela de Blend). Navegação: global, o trilho do Painel; contextual, «Configurar» e «Mudar os blocos» na linha, a trilha de volta no construtor.
+
+### Inventário do protótipo · receitas (F92)
+
+| ID | Hoje | Proposta | Função do produto | Destino |
+|---|---|---|---|---|
+| BLEND-R01 | Quatro cartões fixos no código, numa grade de 4 (uma coluna no celular) | Os cartões vêm do catálogo do Painel, só os visíveis, na ordem do dono; grade igual | agir (escolher a receita) | F92 REQ-03 |
+| BLEND-R02 | «★ RECOMENDADA» em cima do cartão e «RECOMENDADA» no selo da equilibrada | Um selo só, «★ RECOMENDADA», da tela, no cartão que o dono marcou; o selo próprio da equilibrada passa a «EQUILIBRADA» | informar | F92 REQ-03 |
+| BLEND-R03 | — | Cartão «Deep cuts» (violeta, bússola, selo SPOTIFY) | agir | F92 REQ-04 |
+| BLEND-R04 | — | Cartão «As menos ouvidas» (água, seta para baixo, selo SPOTIFY) | agir | F92 REQ-04 |
+| BLEND-R05 | — | Deslizador «Quantas das mais populares pular», de 3 a 10, com o número grande e «as 3 + X» | agir (ajustar antes de gerar) | F92 REQ-10 |
+| BLEND-R06 | — | A faixa das posições 1 a 13: puladas riscadas, as que entram em laranja, as de fora tracejadas; «Pula as K mais tocadas … (da K+1ª à K+3ª)» | informar (o que o pulo faz) | F92 REQ-10 |
+| BLEND-R07 | Agrupamento com «Aleatório» | Nas receitas de blocos, sem «Aleatório», com a linha do porquê | informar | F92 REQ-06 |
+| BLEND-R08 | Resumo «Usando <receita> em <série> (60 min, modo …)»; barra do celular «<receita> · 60 min» | Com «pula K» quando a receita tem o pulo | informar | F92 REQ-10 |
+| RCP-01 | «O que o site mostra» (textos) | «O que a tela de Blend mostra»: as publicadas aqui · as do código (nada publicado) · as do código, com «não foi possível ler» | informar | F92 REQ-02, REQ-03 |
+| RCP-02 | A barra de salvar do Painel | A mesma barra, contando as mudanças das receitas | agir | F92 REQ-02 (F82: salvar publica) |
+| RCP-03 | — | A lista ordenável: puxador, ↑ ↓, a posição, o ícone na cor da receita, nome, nome em inglês, «do código» ou «de blocos», selos; a linha mexida fica marcada e uma frase diz para onde foi | agir | F92 REQ-02 |
+| RCP-04 | — | A chave «Aparece» / «Escondida»; escondida = borda tracejada e selo «escondida»; a recomendada não se esconde | agir | F92 REQ-01, REQ-02 |
+| RCP-05 | — | «Recomendar» (estrela); uma só fica «Recomendada»; apagado numa receita escondida | agir | F92 REQ-02, REQ-03 |
+| RCP-06 | Só nome e descrição, como textos | Nome, descrição e selo em português e inglês, ao lado; os mesmos textos da seção Textos | agir | F92 REQ-02 |
+| RCP-07 | — | Cor (8, lista fechada) e ícone (10, lista fechada) | agir | F92 REQ-02 |
+| RCP-08 | — | Os ingredientes que a pessoa vê e onde cada um começa; o que a receita não usa fica apagado com o motivo («os blocos decidem») | agir | F92 REQ-02 |
+| RCP-09 | — | «Como fica na tela de Blend»: o cartão real, ao vivo | informar | F92 REQ-02 |
+| RCP-10 | — | «Nova receita, de blocos» e «Uma receita nova nasce escondida. Receita não se apaga: só se esconde.» | agir | F92 REQ-01 |
+| RCP-11 | — | «Criar algoritmo próprio com IA · depois»: a fonte do ranking, sem o Spotify nem o BestEverAlbums; marcado, não desenhado | — (lugar reservado) | F92 REQ-11 |
+| RCP-12 | A confirmação do salvar (textos, caixa) | «As receitas vão ao ar agora»: as que aparecem, na ordem; as escondidas; a recomendada; «Uma playlist guardada nunca muda de faixas.» | agir | F92 REQ-02, REQ-07 |
+| BLD-01 | — | «Começar de: Em branco · Uma cópia de <receita de blocos>» | agir | F92 REQ-01 (REQ-11: o MJRP não quer exemplos fixos depois das duas receitas) |
+| BLD-02 | — | 1 · Fonte do ranking: Spotify, crítica (BestEverAlbums), combinada, minha classificação | agir | F92 REQ-06 |
+| BLD-03 | — | 2 · De onde começar: do topo (as mais) ou do fim (as menos) | agir | F92 REQ-06 |
+| BLD-04 | — | 3 · Pular, em cada álbum (0 a 10) | agir | F92 REQ-06 |
+| BLD-05 | — | 4 · Pegar, em cada álbum (1 a 10) e «pular + pegar: N de no máximo 15» | agir | F92 REQ-06 |
+| BLD-06 | — | 5 · Tirar as faixas curtas (0 a 5 minutos) | agir | F92 REQ-06 |
+| BLD-07 | — | 6 · Agrupamento, sem «Aleatório» | agir | F92 REQ-06 |
+| BLD-08 | — | As regras fixas: faixa sem dado fica fora; empate pela ordem no álbum | informar | F92 REQ-04, REQ-06 |
+| BLD-09 | — | 7 · Nome, descrição, selo e aparência | agir | F92 REQ-02 |
+| BLD-10 | — | A prévia num álbum de exemplo (OK Computer, The Velvet Underground & Nico): a ordem como a receita lê, a popularidade, e «entra», «pulada», «fica de fora», «sem dado», «curta demais»; a contagem e o cartão | informar | F92 REQ-09 |
+| BLD-11 | — | «Pôr na lista, escondida» (nova) ou «Guardar os blocos» (uma da lista), e «Cancelar» | agir | F92 REQ-01 |
+| BLD-12 | — | Os avisos: sem nome; fora dos limites (o botão apaga e a prévia espera) | informar | F92 REQ-06 |
+| BLD-13 | — | «Uma fonte própria, criada com IA · depois», no bloco 1 | — (lugar reservado) | F92 REQ-11 |
+
+#### Lacunas
+- O passo 1 do Blend aparece resumido nas duas colunas: não muda.
+- A prévia usa dois álbuns de exemplo com popularidade inventada (a spec já deixa a prévia sobre os álbuns do dono para depois).
+- Arrastar no toque (segurar para arrastar) e o Esc que desfaz um arraste estão só no computador; no celular, as setas fazem o mesmo.
+
+### Estados · receitas (F92)
+
+- **Blend com as receitas do catálogo.** Série escolhida: os cartões visíveis na ordem do dono, hoje 4 e mais «Deep cuts» e «As menos ouvidas»; o selo «★ RECOMENDADA» num só. ^f92-blend-catalog
+- **Deep cuts escolhida.** Passo 3 com o deslizador (3 a 10, partida 3), o número, «as 3 + X», a frase do que entra e a faixa das posições; agrupamento sem «Aleatório»; estrutura; duração quando não é «uma playlist»; o resumo e a barra do celular dizem «pula K». ^f92-blend-deep-cuts-slider
+- **As menos ouvidas escolhida.** Passo 3 sem Top nº e sem fonte (os blocos decidem), agrupamento sem «Aleatório», estrutura e duração. ^f92-blend-least-played
+- **Nenhuma receita ainda.** Passos 2 aberto e 4 trancado («Conclua os passos anteriores para liberar»). ^f92-blend-no-recipe
+- **Sem série.** Passo 2 trancado; no celular, «Passo 1 de 4: escolha uma série» e «Misturar!» apagado. ^f92-blend-locked
+- **Outra recomendada.** O dono recomendou «Deep cuts»: só ela traz «★ RECOMENDADA»; a equilibrada fica com o seu selo, «EQUILIBRADA». ^f92-blend-recommended-single
+- **Receita escondida.** Some da tela, sem buraco na grade. ^f92-blend-recipe-hidden
+- **Nada publicado, ou banco fora.** As receitas do código, iguais às de hoje (as duas novas nascem escondidas); nada é dito à pessoa. ^f92-blend-code-fallback
+- **Painel · a lista publicada.** «O que a tela de Blend mostra: as receitas publicadas aqui», a barra «Tudo salvo», as seis linhas com chave, estrela, setas e «Configurar»; «Nova receita, de blocos»; o lugar de «Criar algoritmo próprio com IA · depois». ^f92-admin-recipes-list
+- **Painel · configurando uma receita.** A linha abre: nomes, descrições e selos nos dois idiomas; cor e ícone; ingredientes e partida; os blocos com «Mudar os blocos» (receita de blocos) ou «Receita do código: o que ela escolhe não muda aqui»; o cartão ao vivo. ^f92-admin-recipes-configure
+- **Painel · receita escondida.** Borda tracejada, selo «escondida», estrela apagada; a frase «… está escondida: não aparece na tela de Blend.» ^f92-admin-recipes-hidden
+- **Painel · esconder a recomendada.** Recusado: «A recomendada não pode sumir da tela de Blend. Recomende outra receita antes de esconder esta.» ^f92-admin-recipes-recommended-guard
+- **Painel · salvar.** A barra mostra «N mudanças não salvas»; «Salvar» abre a confirmação com o que vai ao ar; «Pôr no ar» leva a «Salvo e no ar: as receitas da tela de Blend.»; «Descartar» volta ao publicado. ^f92-admin-recipes-save
+- **Painel · nada publicado ainda.** «as receitas do código · nada publicado ainda: a tela é igual à de hoje»; as duas novas escondidas. ^f92-admin-recipes-code
+- **Painel · a leitura falhou.** «as receitas do código (a reserva)» e «não foi possível ler: o banco não respondeu», com o aviso de que a lista é a do código e salvar a publica. ^f92-admin-recipes-read-failed
+- **Construtor · os blocos de uma receita.** Trilha «Receitas da Mistura › <receita> · os blocos», os seis blocos com os valores dela, a prévia e «Guardar os blocos». ^f92-admin-builder-edit
+- **Construtor · nova receita.** «Começar de: Em branco · Uma cópia de …»; ao guardar, ela entra no fim da lista, escondida, com «nova · não salva». ^f92-admin-builder-new
+- **Construtor · prévia com faixa sem dado.** Em The Velvet Underground & Nico, «European Son» fica «sem dado» e nunca entra, nem como a menos ouvida. ^f92-admin-builder-preview-no-data
+- **Construtor · sem nome.** «Dê um nome à receita, em pelo menos um idioma. Sem nome, ela não entra na lista.» ^f92-admin-builder-no-name
+- **Construtor · fora dos limites.** «Pular 10 e pegar 6 passa do limite: pular mais pegar vai até 15. Pegue até 5, ou pule menos.»; o botão apaga; a prévia espera. ^f92-admin-builder-out-of-bounds
+
+### Content Map · receitas (F92)
+
+Tudo é **texto proposto pelo agente** (sublinhado tracejado no protótipo), à espera do MJRP; os textos de hoje vêm de `i18n/pt/blend.js`, `ui.js` e `admin.js`.
+
+| Elemento | Português | English | Nota |
+|---|---|---|---|
+| Deep cuts | «Deep cuts» · «Pula as faixas mais conhecidas de cada álbum e pega as que vêm logo depois.» · SPOTIFY | «Deep Cuts» · «Skips each album's best-known tracks and picks the ones right after them.» | do protótipo da F82 |
+| As menos ouvidas | «As menos ouvidas» · «O oposto do top: as faixas menos ouvidas de cada álbum, pela popularidade no Spotify. Faixa sem dado nunca conta.» · SPOTIFY | «Least Played» · «The opposite of the top: … A track with no data never counts.» | do protótipo da F82, mais a frase do sem dado |
+| Selo da equilibrada | «EQUILIBRADA» | «BALANCED» | o «RECOMENDADA» passa a ser só o selo da tela |
+| Deslizador | «Quantas das mais populares pular» · «as 3 + X» / «as 3 da receita» · «Pula as K mais tocadas de cada álbum no Spotify e pega as 3 seguintes (da K+1ª à K+3ª).» · «pulada · entra · fica de fora» · «Num álbum com menos faixas com dado, entram menos.» | — | REQ-10 |
+| Agrupamento (blocos) | «Sem «Aleatório»: esta receita dá sempre as mesmas faixas.» | — | REQ-06 |
+| Resumo e barra | «(60 min, pula 5, modo automático)» · «Deep cuts · pula 5 · 60 min» | — | |
+| Painel · seção | «Receitas da Mistura» · «As receitas que a tela de Blend oferece: quais aparecem, em que ordem, qual é a recomendada, como cada uma se parece e com que ingredientes começa. Salvar põe no ar na hora, depois de você confirmar o que vai.» | — | o menu perde o «· depois» |
+| Painel · origem | «O que a tela de Blend mostra:» «as receitas publicadas aqui» / «as receitas do código · nada publicado ainda: a tela é igual à de hoje» / «as receitas do código (a reserva)» + «não foi possível ler: o banco não respondeu» | — | o padrão do «O que o site mostra» |
+| Painel · linha | «Aparece» / «Escondida» · «Recomendar» / «Recomendada» · «Configurar» / «Fechar» · «do código» / «de blocos» · «escondida» · «nova · não salva» | — | |
+| Painel · avisos | «A recomendada não pode sumir da tela de Blend. Recomende outra receita antes de esconder esta.» · «<receita> foi para o Nº lugar.» · «<receita> é a recomendada: só ela traz o selo na tela de Blend.» | — | |
+| Painel · salvar | «As receitas vão ao ar agora, na tela de Blend:» «Aparecem N, nesta ordem: …» «Escondidas: …» «A recomendada: …» «Quem abrir a tela de Blend a partir de agora vê esta lista. Uma playlist guardada nunca muda de faixas. Para voltar atrás, você muda de novo e salva.» «Pôr no ar» · «Salvo e no ar: as receitas da tela de Blend.» | — | o padrão da confirmação da Caixa |
+| Painel · nova e IA | «Nova receita, de blocos» · «Uma receita nova nasce escondida. Receita não se apaga: só se esconde.» · «Criar algoritmo próprio com IA» · «depois: ainda não existe» · «Você cria, com ajuda de IA, a fonte do ranking de uma receita, como a sua equilibrada, sem depender do Spotify nem do BestEverAlbums. Ela passa por testes e pela prévia antes de você ligá-la.» | — | REQ-11 só marcado |
+| Construtor | os títulos dos blocos (acima, BLD-02 a BLD-09); «Sempre, em toda receita de blocos: uma faixa sem dado fica fora (nunca conta, nem como a menos ouvida); no empate, vale a ordem da faixa no álbum.» · «O que este álbum daria» · «Como ler: as faixas na ordem em que a receita as lê, com a popularidade de 0 a 100. As faixas são reais; a popularidade é um número de exemplo, inventado.» · «N faixas entram deste álbum: …» · «entra · pulada · fica de fora · sem dado · curta demais» · «Pôr na lista, escondida» · «Ela nasce escondida: aparece na tela de Blend só quando você a liga e salva a lista.» | — | |
+
+### Decisões do agente nesta rodada (revisáveis)
+
+- A recomendada não pode ser escondida, e uma receita escondida não pode ser recomendada (a tela nunca fica sem o selo nem com o selo numa receita que não aparece).
+- O selo próprio da equilibrada vira «EQUILIBRADA»; a cor do selo segue a fonte (SPOTIFY verde, BEA rosa) e, nas outras, a cor da receita.
+- Três cores novas na lista fechada (Violeta, Água, Fogo) e quatro ícones novos (bússola, seta para baixo, fones, chama); registradas em `design-system.md`, pendentes.
+- «Começar de» deixa de oferecer «Deep cuts» e «As menos ouvidas» como exemplos fixos (REQ-11, palavras do MJRP de 2026-11-24): oferece «Em branco» e «Uma cópia de» uma receita de blocos da lista; as duas se abrem por «Mudar os blocos».
+- A grade dos cartões fica em 4 colunas (6 receitas dão 4 + 2), como hoje: a tela não muda de forma quando uma receita entra (REQ-03).
+- No comparador, a moldura segue o claro ou o escuro de quem olha; as telas ficam escuras (um tema só, D-08). No celular, a proposta vem antes de hoje.

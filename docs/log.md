@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 11:19] step — F92: protótipo das receitas (tela de Blend e seção do Painel), rodada 1
+
+**Branch:** wip/f92-recipes-prototype
+
+Pedido do MJRP (2026-11-24): «faça protótipo da tela do admin e do blend menu pra eu ver como fica no admin e no site». `design/proposals/f92-recipes/prototype-v1.html` (título «Receitas do Blend»): um comparador com quatro abas — o Blend no computador e no celular, «Receitas da Mistura» no Painel e o construtor de receita — cada uma com hoje ao lado da proposta. «Deep cuts» com o deslizador do pulo (3 a 10) e «As menos ouvidas»; mostrar e esconder, ordem, uma recomendada, cor e ícone de lista fechada, textos PT/EN, ingredientes; o construtor por blocos com a prévia em OK Computer e The Velvet Underground & Nico; «Criar algoritmo próprio com IA» marcado como depois (REQ-11). Autoconferência no navegador: sem rolagem lateral a 1440 e 390 px em todos os 27 estados, sem erros, só Syne 400/700/800, nenhum pedido externo. Descrição em `docs/specs/info-arch.md` § As receitas da mistura (F92); padrões novos em `design-system.md`, pendentes. Falta a crítica de UX (`mjrp-critiquing-ux-ui`) antes da aprovação.
+
 ## [2026-11-24 11:00] decision — F92 REQ-11 e TASK-11 entram na spec (o commit 30e1234 só levou a story S-74)
 
 **Branch:** main
