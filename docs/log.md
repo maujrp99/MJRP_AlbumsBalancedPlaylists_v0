@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 11:44] step — prévia das receitas Deep cuts e As menos ouvidas publicada (F92)
+
+**Branch:** main
+
+`deploy-preview.sh --branch claude/f92-deep-cuts-and-least-played staging`: «Preview published: branch claude/f92-deep-cuts-and-least-played, commit 144cfa0, channel staging. Production was not touched.» EXIT=0. Endereço: https://mjrp-playlist-generator--staging-2nu8kutx.web.app (sem a regra de desempate do REQ-12 e sem o Painel de receitas, que estão em construção).
+
 ## [2026-11-24 11:43] decision — faixa sem dado e desempate: uma regra só em todas as receitas (F92 REQ-12)
 
 **Branch:** main
