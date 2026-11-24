@@ -26,6 +26,8 @@
 - [x] TASK-10 o controle deslizante de «Deep cuts» na tela de Blend: pular as 3+X mais populares, dentro dos limites do REQ-06 · implements:: REQ-10
 - [ ] TASK-11 a proposta de arquitetura dos algoritmos próprios com IA (fonte do ranking), a crítica separada, a decisão do MJRP, depois a construção · implements:: REQ-11
 - [ ] TASK-12 a regra única de faixa sem dado e de desempate (a outra fonte, depois a ordem no álbum) no motor, valendo para as «Top N» e as de blocos; o corpus de referência refeito, com a diferença listada · implements:: REQ-12
+- [ ] TASK-13 a exclusão das faixas mais longas (REQ-13): o limite no validador único, nas regras do banco, no motor e no construtor do Painel, com testes dos limites e do caso L ≤ S · implements:: REQ-13
+- [ ] TASK-14 a prévia do construtor numa série de exemplo (REQ-14): vários álbuns, por álbum o que entra, é pulado ou fica fora, e o total da playlist (faixas, duração) · implements:: REQ-14
 
 ## Verification
 - [ ] TASK-03 a prova: a equivalência das «Top N», os limites, as duas receitas novas na amostra fixa, uma playlist guardada que não muda ao esconder ou redefinir uma receita, e no navegador a tela de Blend com receitas escondidas, reordenadas e a recomendada trocada, a 1440 e 393 px · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-09 · model:: sonnet
