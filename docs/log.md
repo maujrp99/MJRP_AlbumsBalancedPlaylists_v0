@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 13:05] review — F92 («Deep cuts», «As menos ouvidas», o controle de pulo): reconferência visual independente — fail, 0 P0, 1 P1, 4 P2
+
+**Branch:** wip/f92-deep-cuts-judge
+
+Juiz que não implementou; build local do ramo `claude/f92-deep-cuts-and-least-played` (144cfa0) contra `design/proposals/f92-recipes/prototype-v1.html`, 1440 e 393, Chromium e WebKit, todo host fora de 127.0.0.1 abortado. As linhas P0/P1 do sensor são da moldura do comparador (falso positivo do juiz). Real: o controle de pulo sem a faixa das posições, o «as 3 + X» e a dica que segue o valor (UAT-313, P1); o resumo sem «pula N» (UAT-314), textos dos cartões (UAT-315), a nota do «Aleatório» (UAT-316), o ícone de «As menos ouvidas» (UAT-317). Sem P0: pode ir para a `main` com as issues em `fixing (F92)`. Relatório: `reports/audits/2026-11-24-mjrpalbumblender-v0-visual-parity-recheck.md`.
+
 ## [2026-11-24 12:59] review — F92 («Deep cuts», «As menos ouvidas», o controle de pulo): reconferência visual independente começou
 
 **Branch:** wip/f92-deep-cuts-judge
