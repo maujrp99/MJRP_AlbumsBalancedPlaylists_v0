@@ -24,6 +24,7 @@
 - [ ] TASK-02 as receitas «Deep cuts» (fonte Spotify, do topo, pular 3, pegar 3) e «As menos ouvidas» (fonte Spotify, do fim, pular 0, pegar 3), faixa sem dado nunca conta, escondidas · implements:: REQ-04 · model:: sonnet
 - [x] TASK-09 fechar a escrita de convidados em `spotify_enrichment/`: decidir quem passa a gravar a popularidade (o servidor ou só a conta que enriquece), mudar o código que grava e escrever o rascunho da regra em `firestore.rules`; o teste do catálogo de blocos passa a falhar se a exceção da TASK-04 existir · implements:: REQ-08 · model:: opus
 - [ ] TASK-10 o controle deslizante de «Deep cuts» na tela de Blend: pular as 3+X mais populares, dentro dos limites do REQ-06 · implements:: REQ-10
+- [ ] TASK-11 a proposta de arquitetura dos algoritmos próprios com IA (fonte do ranking), a crítica separada, a decisão do MJRP, depois a construção · implements:: REQ-11
 
 ## Verification
 - [ ] TASK-03 a prova: a equivalência das «Top N», os limites, as duas receitas novas na amostra fixa, uma playlist guardada que não muda ao esconder ou redefinir uma receita, e no navegador a tela de Blend com receitas escondidas, reordenadas e a recomendada trocada, a 1440 e 393 px · implements:: REQ-01, REQ-02, REQ-03, REQ-04, REQ-05, REQ-06, REQ-07, REQ-09 · model:: sonnet

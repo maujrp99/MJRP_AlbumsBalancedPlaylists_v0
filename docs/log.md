@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 11:00] decision — F92 REQ-11 e TASK-11 entram na spec (o commit 30e1234 só levou a story S-74)
+
+**Branch:** main
+
+Conserto do registro anterior: o REQ-11 (algoritmos próprios com IA, a fonte do ranking) e a TASK-11 entram em `spec.md` e `tasks.md` da F92. O hook `post-commit` do board chegou ao V0 no refresh do kernel (b8d6758).
+
 ## [2026-11-24 10:46] decision — receitas de mistura: algoritmos próprios escritos com IA registrados (F92 REQ-11)
 
 **Branch:** main
