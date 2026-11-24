@@ -51,7 +51,7 @@ async function play(scenario: (typeof SCENARIOS)[number]): Promise<Record<string
             act(() => { set?.call(field, value); field.dispatchEvent(new Event('input', { bubbles: true })) })
         },
         key: async (key: string) => { act(() => { document.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true })) }) },
-        settle: async () => { await wait(30) },
+        settle: async () => { await wait(200) }, // 30 ms lost the order of two exports under a loaded full suite (2026-11-24, the F92 preview refused twice)
         finish: () => { act(() => { stand.finish?.() }) },
         snap: (label: string, selector?: string) => { snaps[label] = snapOf(selector || onWindow(state.phone)) },
         note: (label: string, value: unknown) => { snaps[label] = JSON.stringify(value) }

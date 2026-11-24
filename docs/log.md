@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 11:31] step — teste instável da janela de exportação ganha folga de tempo (barrou a prévia da F92 duas vezes)
+
+**Branch:** claude/f92-deep-cuts-and-least-played
+
+`test/ui/PlaylistExportWindow.sameAsBefore.test.tsx`: o `settle` esperava 30 ms; com a suíte inteira carregada, a ordem de duas exportações trocava («computer · Spotify and the file») e a publicação da prévia era recusada. Passa sozinho; agora espera 200 ms. Não muda o que o teste confere.
+
 ## [2026-11-24 11:05] session — F92: «Deep cuts» e «As menos ouvidas» no Blend, com o pulo ajustável (TASK-07, TASK-02, TASK-10)
 
 **Branch:** claude/f92-deep-cuts-and-least-played
