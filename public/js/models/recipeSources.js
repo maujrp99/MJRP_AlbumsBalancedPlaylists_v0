@@ -23,7 +23,11 @@ const LOCKED_BY_NAME = Object.freeze([['popular', 'spotify'], ['acclaimed', 'bea
  * @param {{ algorithmId: string, rankingId?: string }} config
  * @returns {string} 'spotify' | 'bea' | 'user' | 'balanced' | whatever was chosen
  */
+/** F92: a recipe made of blocks has its source locked by its definition (Spotify for both). */
+const LOCKED_BY_ID = Object.freeze({ 'deep-cuts': 'spotify', 'least-played': 'spotify' })
+
 export function resolveRankingId(config) {
+    if (LOCKED_BY_ID[config.algorithmId]) return LOCKED_BY_ID[config.algorithmId]
     const locked = LOCKED_BY_NAME.find(([word]) => String(config.algorithmId || '').includes(word))
     return locked ? locked[1] : (config.rankingId || BALANCED)
 }

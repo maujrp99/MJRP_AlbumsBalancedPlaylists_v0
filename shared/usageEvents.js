@@ -32,7 +32,7 @@ export const SCREENS = freeze([
 ])
 
 /** The recipes of the Blending Menu (public/js/algorithms/index.js; a test keeps the two equal). */
-export const RECIPES = freeze(['mjrp-balanced-cascade', 'top-n-popular', 'top-n-acclaimed', 'top-n-user'])
+export const RECIPES = freeze(['mjrp-balanced-cascade', 'top-n-popular', 'top-n-acclaimed', 'top-n-user', 'deep-cuts', 'least-played'])
 
 /** The statuses of an inventory item (public/js/models/inventoryStatus.js, written with «_»). */
 export const INVENTORY_STATUSES = freeze(['owned', 'not_owned', 'wishlist'])

@@ -1,0 +1,84 @@
+{
+ "tag": "webkit-1440",
+ "passed": 14,
+ "failed": 0,
+ "results": [
+  {
+   "what": "the six recipe cards, the two new ones last",
+   "ok": true,
+   "detail": "mjrp-balanced-cascade, top-n-popular, top-n-acclaimed, top-n-user, deep-cuts, least-played"
+  },
+  {
+   "what": "«Deep cuts» card: name, SPOTIFY badge, what it does",
+   "ok": true,
+   "detail": "Deep cuts SPOTIFY Skips the most popular tracks of each album on Spotify and takes the next three."
+  },
+  {
+   "what": "«Least played» card: name, SPOTIFY badge, what it does",
+   "ok": true,
+   "detail": "Least played SPOTIFY The three least popular tracks of each album on Spotify. A track with no popularity is left out."
+  },
+  {
+   "what": "the page does not scroll sideways",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "«Deep cuts» shows the skip slider: 3 to 10, at 3",
+   "ok": true,
+   "detail": "3..10 at 3"
+  },
+  {
+   "what": "the slider says what it does",
+   "ok": true,
+   "detail": "Skip the most popular3How many of the most popular tracks of each album on Spotify to skip before taking three: 3 to start, up to 10.Grouping Tracks By AlbumKeep Album SequenceBy RankingEvery #1, then every #2...By Artist then By RankCluster by ArtistBalanced InterleaveRound Robin by RankPlaylist St"
+  },
+  {
+   "what": "«Deep cuts» shows no Top # and no shuffle",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "moved two steps, the slider says 5",
+   "ok": true,
+   "detail": "5"
+  },
+  {
+   "what": "the slider keeps the focus while it moves",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "it stops at 10 (the limit for a take of 3)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "«Least played» shows no skip slider",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "step 4 is ready with «Least played» on the series",
+   "ok": true,
+   "detail": "Blend your Album Playlist! Using Least played on Proof mix (60 min, auto mode) "
+  },
+  {
+   "what": "no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "the page never left the site",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "aborted": [
+  "https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap",
+  "https://apis.google.com/js/api.js?onload=__iframefcb331273",
+  "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA8x-II628CK3",
+  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?VE",
+  "https://www.google.com/images/cleardot.gif?zx=mj361i5xq0nd"
+ ]
+}

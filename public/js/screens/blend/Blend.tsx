@@ -252,7 +252,7 @@ export function Blend({ visit }: Props) {
     const drawnAnew = () => setDraws(count => count + 1)
     // the sections of the ingredients drawn anew by a choice of series or recipe or a turn (a button of their own draws them anew by itself, the slider does not)
     const [ingredientDraws, setIngredientDraws] = useState(0)
-    useFocusLikeAfterAnewDraw({ keep: (held) => held.id === 'blend-duration-slider', after: draws })
+    useFocusLikeAfterAnewDraw({ keep: (held) => held.id === 'blend-duration-slider' || held.id === 'blend-skip-slider', after: draws })
 
     // undefined: the person chose nothing yet (the series of the address, if any, is the one chosen)
     const [picked, setPicked] = useState<Series | null | undefined>(undefined)

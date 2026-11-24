@@ -11,6 +11,9 @@ import { MJRPBalancedCascadeAlgorithm } from './MJRPBalancedCascadeAlgorithm.js'
 import { TopNPopularAlgorithm } from './TopNPopularAlgorithm.js'
 import { TopNAcclaimedAlgorithm } from './TopNAcclaimedAlgorithm.js'
 import { TopNUserAlgorithm } from './TopNUserAlgorithm.js'
+// F92: the recipes made of blocks
+import { DeepCutsAlgorithm } from './DeepCutsAlgorithm.js'
+import { LeastPlayedAlgorithm } from './LeastPlayedAlgorithm.js'
 
 /**
  * Registry of all available algorithms
@@ -26,6 +29,9 @@ algorithms.set('mjrp-balanced-cascade', MJRPBalancedCascadeAlgorithm) // RECOMME
 algorithms.set('top-n-popular', TopNPopularAlgorithm)
 algorithms.set('top-n-acclaimed', TopNAcclaimedAlgorithm)
 algorithms.set('top-n-user', TopNUserAlgorithm)
+// F92 (REQ-04): visible on the Blend screen (the owner wants them live; the Painel that hides a recipe does not exist yet)
+algorithms.set('deep-cuts', DeepCutsAlgorithm)
+algorithms.set('least-played', LeastPlayedAlgorithm)
 
 /**
  * Get algorithm class by ID

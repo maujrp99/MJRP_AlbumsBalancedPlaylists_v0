@@ -3,12 +3,18 @@
  * 
  * Selects top N tracks from each album based on a ranking strategy.
  * Used by Blending Menu "flavor" algorithms.
+ *
+ * F92 (REQ-05): the one engine of the recipes by ranking. The tracks of each album are chosen by blocks (selectByBlocks.js: direction, skip,
+ * take, exclusion); a «Top N» recipe is the blocks «from the top, skip 0, take N», with today's behaviour kept (a track with no data still
+ * counts, in the order of the strategy) until the owner decides on the listed difference. The recipes made of blocks (BlockRecipeAlgorithm.js)
+ * run through this same `generate`.
  * 
  * @module algorithms/TopNAlgorithm
  */
 
 import { BaseAlgorithm } from './BaseAlgorithm.js'
 import { BalancedRankingStrategy } from '../ranking/BalancedRankingStrategy.js'
+import { selectByBlocks } from './selectByBlocks.js'
 
 const DEFAULT_TARGET_SECONDS = 45 * 60 // 45 minutes
 
@@ -56,7 +62,9 @@ export class TopNAlgorithm extends BaseAlgorithm {
 
         // Sprint 17: Determine N (allow override from opts)
         const trackCount = opts.trackCount || this.trackCount
+        const blocks = this.blocksFor({ ...opts, trackCount })
         this._currentTrackCount = trackCount // Sprint 20: Store for getPlaylistTitle()
+        this._currentBlocks = blocks
         this._currentGroupingStrategy = groupingStrategy // Sprint 20: Store for title suffix
 
         // Collect top N tracks from each album
@@ -76,13 +84,13 @@ export class TopNAlgorithm extends BaseAlgorithm {
             const rankedTracks = rankingStrategy.rank(album)
             if (!Array.isArray(rankedTracks) || rankedTracks.length === 0) continue
 
-            // Select top N
-            const topN = rankedTracks.slice(0, trackCount)
+            // Select by the blocks of the recipe (a «Top N»: from the top, skip 0, take N)
+            const chosen = selectByBlocks(rankedTracks, album, blocks)
 
-            for (let i = 0; i < topN.length; i++) {
-                const track = { ...topN[i] }
+            for (let i = 0; i < chosen.length; i++) {
+                const track = { ...chosen[i] }
                 this.markTrackOrigin(track, album.id)
-                this.annotateTrack(track, `Top ${i + 1} of ${trackCount}`, this.defaultRankingSource, 1 - (i * 0.1))
+                this.annotateTrack(track, this.rankLabel(i, blocks), this.defaultRankingSource, 1 - (i * 0.1))
                 track._rank = i + 1
                 allSelectedTracks.push(track)
             }
@@ -102,7 +110,7 @@ export class TopNAlgorithm extends BaseAlgorithm {
             playlists.push({
                 id: 'p1',
                 title: this.getPlaylistTitle(),
-                subtitle: `Top ${trackCount} from each album`,
+                subtitle: this.getPlaylistSubtitle(),
                 tracks: allSelectedTracks
             })
         } else {
@@ -113,7 +121,7 @@ export class TopNAlgorithm extends BaseAlgorithm {
                 playlists.push({
                     id: `p${i + 1}`,
                     title: `${this.getPlaylistTitle()} Vol. ${i + 1}`,
-                    subtitle: `Top ${trackCount} from each album`,
+                    subtitle: this.getPlaylistSubtitle(),
                     tracks: []
                 })
             }
@@ -142,6 +150,26 @@ export class TopNAlgorithm extends BaseAlgorithm {
             rankingSummary,
             rankingSources: this.getRankingSources()
         }
+    }
+
+    /**
+     * The blocks this recipe chooses the tracks of each album by. A «Top N» recipe: from the top, skip 0, take N, and a track with no data
+     * still counts (today's behaviour, kept: REQ-05).
+     * @param {{ trackCount: number }} opts
+     * @returns {{ source?: string, direction: string, skip: number, take: number, minSeconds: number, countsTracksWithoutData: boolean }}
+     */
+    blocksFor({ trackCount }) {
+        return { direction: 'top', skip: 0, take: trackCount, minSeconds: 0, countsTracksWithoutData: true }
+    }
+
+    /** The label of the i-th track chosen in an album. */
+    rankLabel(i, blocks) {
+        return `Top ${i + 1} of ${blocks.take}`
+    }
+
+    /** The line under the title of a playlist. */
+    getPlaylistSubtitle() {
+        return `Top ${this._currentTrackCount || this.trackCount} from each album`
     }
 
     /**

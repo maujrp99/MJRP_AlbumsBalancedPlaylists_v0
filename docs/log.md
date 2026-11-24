@@ -2,6 +2,18 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 13:05] review — F92 («Deep cuts», «As menos ouvidas», o controle de pulo): reconferência visual independente — fail, 0 P0, 1 P1, 4 P2
+
+**Branch:** wip/f92-deep-cuts-judge
+
+Juiz que não implementou; build local do ramo `claude/f92-deep-cuts-and-least-played` (144cfa0) contra `design/proposals/f92-recipes/prototype-v1.html`, 1440 e 393, Chromium e WebKit, todo host fora de 127.0.0.1 abortado. As linhas P0/P1 do sensor são da moldura do comparador (falso positivo do juiz). Real: o controle de pulo sem a faixa das posições, o «as 3 + X» e a dica que segue o valor (UAT-313, P1); o resumo sem «pula N» (UAT-314), textos dos cartões (UAT-315), a nota do «Aleatório» (UAT-316), o ícone de «As menos ouvidas» (UAT-317). Sem P0: pode ir para a `main` com as issues em `fixing (F92)`. Relatório: `reports/audits/2026-11-24-mjrpalbumblender-v0-visual-parity-recheck.md`.
+
+## [2026-11-24 12:59] review — F92 («Deep cuts», «As menos ouvidas», o controle de pulo): reconferência visual independente começou
+
+**Branch:** wip/f92-deep-cuts-judge
+
+Juiz que não implementou; relatório `reports/audits/2026-11-24-mjrpalbumblender-v0-visual-parity-recheck.md` em `verdict: running` até o veredito.
+
 ## [2026-11-24 11:44] step — prévia das receitas Deep cuts e As menos ouvidas publicada (F92)
 
 **Branch:** main
@@ -14,17 +26,40 @@
 
 O MJRP, sobre as duas diferenças do «Top N por popularidade»: «Faixa nova : usar regra nova ; empate: usar o BEA pra desempatar, e o fallback pra regra nova, caso não tenha dado para BEA (e vice-versa para a popularidade do BEA)». Entendido como: faixa sem dado nunca entra (também nas «Top N»); empate no Spotify desempata pela nota do BEA, sem ela pela ordem no álbum; empate no BEA desempata pela popularidade do Spotify, sem ela pela ordem no álbum. REQ-12 e TASK-12; o REQ-06 passa a apontar para o REQ-12.
 
+## [2026-11-24 11:37] step — teto de peso do site re-medido para as receitas novas (F92), pela regra do arquivo
+
+**Branch:** claude/f92-deep-cuts-and-least-played
+
+A prévia foi recusada pelo orçamento de peso. `node scripts/publication-budget.mjs` no build de publicação: script principal 200.712 B, depois da primeira tela 258.539 B. Tetos pela regra (medido + 150 B): main 200.862 B, background 85.964 B; `publication.measured` atualizado; `publicationBudget.test.js` verde.
+
 ## [2026-11-24 11:32] decision — o MJRP aprovou o protótipo v1 das receitas de mistura (F92)
 
 **Branch:** main
 
 Palavras dele: «Protótipo v1 aprovado! Bora construir». O protótipo: `design/proposals/f92-recipes/prototype-v1.html` (ramo `wip/f92-recipes-prototype`, 50cf2e7), publicado em https://claude.ai/artifact/2a9G3kXngUoPLBeX3sr7AF. Entendido como aprovação das quatro telas como estão, com as escolhas que o agente fez sozinho: a recomendada não pode ser escondida; a equilibrada diz «EQUILIBRADA»; o construtor começa «Em branco» ou «Uma cópia de»; três cores e quatro ícones novos na lista fechada. Reserva: não passou pela crítica de interface separada. Próximo: construir a seção Receitas do Painel, o catálogo publicado e o construtor (TASK-05, 06, 08) sobre o ramo das duas receitas.
 
+## [2026-11-24 11:31] step — teste instável da janela de exportação ganha folga de tempo (barrou a prévia da F92 duas vezes)
+
+**Branch:** claude/f92-deep-cuts-and-least-played
+
+`test/ui/PlaylistExportWindow.sameAsBefore.test.tsx`: o `settle` esperava 30 ms; com a suíte inteira carregada, a ordem de duas exportações trocava («computer · Spotify and the file») e a publicação da prévia era recusada. Passa sozinho; agora espera 200 ms. Não muda o que o teste confere.
+
 ## [2026-11-24 11:19] step — F92: protótipo das receitas (tela de Blend e seção do Painel), rodada 1
 
 **Branch:** wip/f92-recipes-prototype
 
 Pedido do MJRP (2026-11-24): «faça protótipo da tela do admin e do blend menu pra eu ver como fica no admin e no site». `design/proposals/f92-recipes/prototype-v1.html` (título «Receitas do Blend»): um comparador com quatro abas — o Blend no computador e no celular, «Receitas da Mistura» no Painel e o construtor de receita — cada uma com hoje ao lado da proposta. «Deep cuts» com o deslizador do pulo (3 a 10) e «As menos ouvidas»; mostrar e esconder, ordem, uma recomendada, cor e ícone de lista fechada, textos PT/EN, ingredientes; o construtor por blocos com a prévia em OK Computer e The Velvet Underground & Nico; «Criar algoritmo próprio com IA» marcado como depois (REQ-11). Autoconferência no navegador: sem rolagem lateral a 1440 e 390 px em todos os 27 estados, sem erros, só Syne 400/700/800, nenhum pedido externo. Descrição em `docs/specs/info-arch.md` § As receitas da mistura (F92); padrões novos em `design-system.md`, pendentes. Falta a crítica de UX (`mjrp-critiquing-ux-ui`) antes da aprovação.
+
+## [2026-11-24 11:05] session — F92: «Deep cuts» e «As menos ouvidas» no Blend, com o pulo ajustável (TASK-07, TASK-02, TASK-10)
+
+**Branch:** claude/f92-deep-cuts-and-least-played
+
+O MJRP (2026-11-24): «Queria começar colocando no ar as Menos Populares e os Deep Cuts»; «pular as 3+X mais populares com um slider?».
+- Um motor só: `TopNAlgorithm.generate` escolhe as faixas de cada álbum por blocos (`algorithms/selectByBlocks.js`); as três «Top N» são definições fixas no mesmo vocabulário, com o comportamento de hoje mantido. O validador da definição mora em `shared/content/recipeDefinition.js` (limites do REQ-06).
+- «Deep cuts» (Spotify, do topo, pula 3, pega 3) e «As menos ouvidas» (Spotify, do fim, pega 3): faixa sem popularidade nunca conta, empate pela ordem no álbum. O pulo de «Deep cuts» vai de 3 a 10 num controle na tela de Blend e fica guardado na playlist (`skip`), junto do id da receita.
+- [revisável] **Desvio do REQ-04, decidido agora:** as duas receitas nascem VISÍVEIS no Blend, não escondidas: o dono quer as duas no ar e o Painel que as esconderia (TASK-05, TASK-06, TASK-08) ainda não existe.
+- [revisável] Equivalência das «Top N» (REQ-05): iguais na amostra fixa. Duas diferenças listadas, levadas ao MJRP, nada mudado: a «Top N por popularidade» pega faixa sem popularidade quando faltam faixas, e desempata pela nota do BestEverAlbums; os blocos não pegam e desempatam pela ordem no álbum.
+- Os testes «igual ao de antes» das telas de Blend e de gerar de novo comparam com fotos de quando havia quatro receitas: passam a desenhar com as quatro de então (`test/support/registryOfBefore.js`). Corpus dourado regravado: só casos novos e a ordem de casos de embaralhar (semente deslocada). Prova: `reports/evidence/F92/proof.md`.
 
 ## [2026-11-24 11:00] decision — F92 REQ-11 e TASK-11 entram na spec (o commit 30e1234 só levou a story S-74)
 
