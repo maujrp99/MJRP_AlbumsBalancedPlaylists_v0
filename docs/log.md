@@ -42,6 +42,12 @@ Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f95-crate-in-the-pane
 
 UAT abertas: UAT-309 (a seção «Caixa»), UAT-310 (a busca), UAT-311 (salvar publica e a página mostra), UAT-312 (o rótulo no computador). Tarefas marcadas: F82 TASK-04; F95 TASK-02, TASK-04 e TASK-05.
 
+## [2026-11-23 20:19] decision — Caixa do The Album Blender no Painel: o MJRP aprovou a prévia da seção
+
+**Branch:** main
+
+MJRP, sobre a prévia `staging` do ramo `feat/f95-crate-managed-in-the-panel` (`47f6e6b`, seção «Caixa»: lados A e B, reordenar, mudar de lado, remover): «2. Ótimo!». Faltam, antes de valer em produção: a regra do banco para `published/crate` (ele publica), a publicação do servidor (rota de busca no Apple Music), o juiz independente e a palavra dele para publicar.
+
 ## [2026-11-23 19:54] step — F95: a `main` (9cfb859: a escolha de idioma e o conserto do Spotify) entra no ramo da Caixa
 
 **Branch:** feat/f95-crate-managed-in-the-panel
