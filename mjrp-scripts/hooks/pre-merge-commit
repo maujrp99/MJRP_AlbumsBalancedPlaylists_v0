@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # pre-merge-commit - a branch that changed a screen is merged with the independent visual recheck's report: evaluated
 # (`verdict: pass` or `fail`, never `incomplete`) and with `p0: 0`. ADR-0017 of the harness, 2026-10-12; revised
 # 2026-10-17 (decision of the MJRP, pdlc-loops § 5): the judge evaluates, it does not block - a `fail` without P0

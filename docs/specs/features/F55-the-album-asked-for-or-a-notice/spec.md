@@ -1,10 +1,11 @@
 ---
-status: Done
+status: Accepted
 lane: fast
 solution_type: fix
 imports: []
 fixes: ["UAT-184"]
 planned_for: "[[ROADMAP#^REL-40]]"
+accepted_in: "log 2026-11-24 10:30"
 ---
 <!-- docs/specs/features/Fxx-slug/spec.md — the folder is the feature (Fxx, two digits).
      status: In progress while the cycle runs; Done when every task is closed and every REQ has verified_by.

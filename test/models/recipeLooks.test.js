@@ -13,9 +13,11 @@ describe('recipeLooks: the icon and the colors of a recipe', () => {
             'top-n-popular': ['TrendingUp', 'from-green-500', 'to-emerald-600'],
             'top-n-acclaimed': ['Award', 'from-rose-500', 'to-orange-500'],
             'top-n-user': ['User', 'from-sky-500', 'to-blue-600'],
+            'deep-cuts': ['Compass', 'from-violet-500', 'to-purple-600'], // F92
+            'least-played': ['Search', 'from-teal-500', 'to-cyan-600'], // F92
             'gone-recipe': ['Music', 'from-gray-500', 'to-gray-600']
         }
-        expect(getAllAlgorithms().map(recipe => recipe.id)).toEqual(Object.keys(TABLE).slice(0, 4))
+        expect(getAllAlgorithms().map(recipe => recipe.id)).toEqual(Object.keys(TABLE).slice(0, 6))
         for (const [id, [icon, from, to]] of Object.entries(TABLE)) {
             const looks = recipeLooksOf(id)
             expect([looks.icon, looks.from, looks.to], id).toEqual([icon, from, to])
@@ -55,7 +57,7 @@ describe('recipeLooks: the class of the card', () => {
 describe('recipeLooks: the recipes of the registry as the cards take them', () => {
     it('keep the order of the registry and carry what the card needs, not the texts (the screen says the names by the dictionary)', () => {
         const recipes = recipesOf(getAllAlgorithms())
-        expect(recipes.map(recipe => recipe.id)).toEqual(['mjrp-balanced-cascade', 'top-n-popular', 'top-n-acclaimed', 'top-n-user'])
+        expect(recipes.map(recipe => recipe.id)).toEqual(['mjrp-balanced-cascade', 'top-n-popular', 'top-n-acclaimed', 'top-n-user', 'deep-cuts', 'least-played'])
         expect(recipes[0]).toMatchObject({ id: 'mjrp-balanced-cascade', badge: 'RECOMMENDED', isRecommended: true, looks: { icon: 'Sparkles' } })
         expect(recipes.map(recipe => Object.keys(recipe).sort())).toEqual(recipes.map(() => ['badge', 'id', 'isRecommended', 'looks']))
     })

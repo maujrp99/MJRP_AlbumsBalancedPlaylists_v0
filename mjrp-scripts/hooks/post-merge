@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # post-merge - F290 (UAT-600): the fast lane leaves the `Done` for after the merge, and a child has no merge train to say so. After a merge
 # that lands on the trunk, session_close.py lists the features the merge touched that are still open (a task unmarked, a spec short of
 # `Done`); the same list stays on the orchestrator's start and Stop until they close. It never fails: the merge is already made.

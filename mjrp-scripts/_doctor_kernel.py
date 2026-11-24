@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_kernel.py - the doctor's checks of what the harness hands down to a project: the kernel pages, the vendored
 copies, the canonical catalog, the constitution mirror and the portfolio (I5 kernel, W7, W16, I5 constitution, I6).
@@ -602,3 +602,106 @@ def i6_conformance(root, cfg, rep):
                        "o `--refresh-kernel` carimba o dia em que o projeto recebeu a obrigação")
     if not gaps:
         rep.note("I6", f"conformidade canônica: {len(items)} item(ns) no catálogo, nenhuma lacuna neste projeto")
+
+
+ADMIN_KIT_RECORD = ".mjrp-admin-kit.json"   # new_project_admin_kit.RECORD (the doctor travels without the builder)
+
+
+def i5_admin_kit(root, rep):
+    """F332 (REQ-03, TASK-10; CC-ADR-0068): the admin kit is edited only in the harness. A project whose contract declares
+    `admin_kit:` keeps the record of what `new_project.py --refresh-admin-kit` wrote (`.mjrp-admin-kit.json`, each file and its
+    sha256); a file of the copy that differs, that is gone, or a file added inside the kit's folders is an ERROR that says where
+    to edit. Reads only the project's own files (a child's doctor has no harness)."""
+    import hashlib
+    import json
+    inc = ("2026-11-23 (F332, CC-ADR-0068): o kit do admin passa a ter uma fonte só, o harness; uma edição dentro do filho "
+           "divergiria em silêncio da versão que o contrato diz ter")
+    root = Path(root)
+    contract = root / CONTRACT
+    try:
+        raw = read_yaml(contract.read_text(encoding="utf-8")) if contract.is_file() else {}
+    except Exception:
+        return
+    block = (raw or {}).get("admin_kit")
+    if not isinstance(block, dict):
+        return
+    where = "edite no harness (kits/admin-kit/) e rode `new_project.py --refresh-admin-kit --version X.Y.Z` neste projeto"
+    record_path = root / ADMIN_KIT_RECORD
+    try:
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+        files = dict(record["files"])
+    except (OSError, ValueError, KeyError, TypeError):
+        rep.fail("I5", f"o contrato declara `admin_kit:` e o registro do que veio do kit ({ADMIN_KIT_RECORD}) falta ou não se lê: "
+                       f"a cópia não pode ser conferida — {where}", inc)
+        return
+    problems = []
+    strays = _admin_kit_outside(root, files, [block.get(k) for k in ("ui_path", "core_path", "tools_path")])
+    for rel in strays:
+        problems.append(f"o registro nomeia {rel}, fora das pastas do kit (o refresh apagaria o que ele lista)")
+        files.pop(rel, None)
+    if str(record.get("version")) != str(block.get("version")):
+        problems.append(f"o contrato diz admin_kit.version {block.get('version')} e o registro diz {record.get('version')}")
+    for rel, sha in sorted(files.items()):
+        path = root / rel
+        if not path.is_file():
+            problems.append(f"{rel} sumiu")
+        elif hashlib.sha256(path.read_bytes()).hexdigest() != sha:
+            problems.append(f"{rel} foi editado")
+    for key in ("ui_path", "core_path", "tools_path"):
+        folder = block.get(key)
+        if not folder or not (root / folder).is_dir():
+            continue
+        for path in sorted((root / folder).rglob("*")):
+            rel = path.relative_to(root).as_posix()
+            if path.is_file() and path.name != ".DS_Store" and "node_modules" not in path.parts and rel not in files:
+                problems.append(f"{rel} foi acrescentado dentro do kit")
+    problems += _admin_kit_sensors(root, raw, block)
+    problems = list(dict.fromkeys(problems))
+    if problems:
+        rep.fail("I5", f"a cópia do kit do admin {record.get('version')} foi mexida neste projeto ({len(problems)}): "
+                       + "; ".join(problems[:6]) + (" …" if len(problems) > 6 else "") + f". O kit não se edita aqui: {where}", inc)
+    else:
+        rep.note("I5", f"kit do admin {record.get('version')}: {len(files)} arquivo(s) iguais ao que o refresh escreveu")
+
+
+def _admin_kit_outside(root, rels, folders):
+    """The record's paths outside the kit's folders: absolute, with `..`, under no declared folder, or out through a link
+    (TASK-14, recheck P1-2; the same rule as new_project_admin_kit.outside_paths, which the child's doctor does not have)."""
+    folders = [Path(f).as_posix().rstrip("/") for f in folders if f]
+    bases = [(root / f).resolve() for f in folders]
+    out = []
+    for rel in list(rels):
+        path = Path(rel)
+        if not str(rel).strip() or path.is_absolute() or ".." in path.parts \
+                or not any(path.as_posix().startswith(f + "/") for f in folders):
+            out.append(rel)
+        elif not any(base in (root / rel).resolve().parents for base in bases):
+            out.append(rel)
+    return out
+
+
+def _admin_kit_sensors(root, raw, block):
+    """F332 TASK-11: the kit's own sensors (`process_sensors.json -> kit_sensors`, today `check.mjs`) travel with the kit to the
+    contract's `tools_path`, and the contract runs them (`mjrp_harness.sensors`, a command naming the file). What is missing."""
+    import json
+    try:
+        manifest = json.loads((root / "mjrp-scripts" / "process_sensors.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []    # the manifest itself is the I5 of the process sensors
+    out = []
+    declared = " ".join(str(v) for v in (((raw or {}).get("mjrp_harness") or {}).get("sensors") or {}).values())
+    for name, entry in (manifest.get("kit_sensors") or {}).items():
+        if entry.get("kit") != "admin_kit":
+            continue
+        folder = block.get(entry.get("lands_in", "tools_path"))
+        if not folder:
+            out.append(f"o contrato não diz `admin_kit.{entry.get('lands_in', 'tools_path')}`: o sensor herdado do kit ({name}) não chega "
+                       f"— rode o refresh com --tools-path")
+            continue
+        target = f"{folder}/{entry['file']}"
+        if not (root / target).is_file():
+            out.append(f"o sensor herdado do kit {target} falta")
+        elif target not in declared and entry["file"] not in declared:
+            out.append(f"o sensor herdado do kit {target} chega e nada o roda: declare-o em `sensors:` do contrato "
+                       f"(`{entry.get('contract_sensor', 'admin_kit')}: \"{entry.get('command', '')}\"`)")
+    return out

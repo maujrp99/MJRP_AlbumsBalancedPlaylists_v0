@@ -1,7 +1,7 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
  "version": 1,
- "about": "O manifesto único dos sensores do processo (F182, UAT-489). Todo mjrp-scripts/*_check.py está em `sensors` (vai ao filho, e `runs` diz onde roda) ou em `harness_only` (com o motivo). Quem confere: o autoteste do kernel (new_project_selftest) no harness, e o I5 do doctor no filho. Para um sensor novo: ponha-o aqui E em VENDORED_FILES (new_project_kernel.py). Toda trava que um hook git do kernel capaz de recusar (pre-commit, commit-msg, pre-merge-commit) executa está em `taught_by` (F306, UAT-618): a skill que ensina o passo que ela cobra, e que a nomeia no próprio texto, ou `none: <motivo>`; o autoteste do kernel (`untaught_gates`) reprova o que falta, o que sobra e a skill que não a nomeia. Para uma trava nova: a linha aqui e o nome dela na skill, no mesmo commit.",
+ "about": "O manifesto único dos sensores do processo (F182, UAT-489). Todo mjrp-scripts/*_check.py está em `sensors` (vai ao filho, e `runs` diz onde roda) ou em `harness_only` (com o motivo). Quem confere: o autoteste do kernel (new_project_selftest) no harness, e o I5 do doctor no filho. Para um sensor novo: ponha-o aqui E em VENDORED_FILES (new_project_kernel.py). Toda trava que um hook git do kernel capaz de recusar (pre-commit, commit-msg, pre-merge-commit) executa está em `taught_by` (F306, UAT-618): a skill que ensina o passo que ela cobra, e que a nomeia no próprio texto, ou `none: <motivo>`; o autoteste do kernel (`untaught_gates`) reprova o que falta, o que sobra e a skill que não a nomeia. Para uma trava nova: a linha aqui e o nome dela na skill, no mesmo commit. Os sensores que viajam com um kit (não com o kernel) estão em `kit_sensors`: chegam só ao filho que declara o kit, na pasta que o contrato dele diz, e o I5 do doctor cobra que o contrato os rode (F332).",
  "runs_values": {
   "pre-commit": "o hook pre-commit o chama",
   "commit-msg": "o hook commit-msg o chama",
@@ -250,5 +250,18 @@
   "template_catalog_check.py": "mjrp-crafting-skills",
   "uat_readable_check.py": "mjrp-integrating-branches",
   "visual_gate.py": "mjrp-ensuring-quality"
+ },
+ "kit_sensors": {
+  "admin-kit/check.mjs": {
+   "kit": "admin_kit",
+   "lands_in": "tools_path",
+   "file": "check.mjs",
+   "runs": [
+    "contract"
+   ],
+   "contract_sensor": "admin_kit",
+   "command": "node <tools_path>/check.mjs --ui <ui_path> --core <core_path> --root <tools_path> --project . --skin <skin> [--no-complexity-exceptions]",
+   "about": "the admin kit's own check (F332 TASK-11, CC-ADR-0068): the boundary, the skin, the complexity list, the surface. It travels with the kit (new_project.py --refresh-admin-kit, kits/admin-kit/admin-kit.files.json), not with the kernel, and only to a child that declares `admin_kit:`; the doctor's I5 (i5_admin_kit) refuses the child whose contract does not run it. A project whose rules allow no complexity exception (the V0) adds --no-complexity-exceptions."
+  }
  }
 }

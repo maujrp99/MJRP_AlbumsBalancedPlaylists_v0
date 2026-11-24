@@ -1,0 +1,62 @@
+{
+ "chromium-1440": {
+  "ingredients": "Pular as mais populares5Quantas das faixas mais populares de cada álbum no Spotify pular antes de pegar três: 3 de partida, até 10.Agrupamento das faixas Por álbumMantém a sequência do álbumPor posiçãoTodas as nº 1, depois todas as nº 2...Por artista e depois por posiçãoAgrupa por artistaIntercalado equilibradoRevezamento por posiçãoEstrutura da playlist Uma playlistUma playlist com todas as faixasVárias playlistsDividida pelos limites de duraçãoAutomáticoUma playlist, dividida quando passa da m",
+  "generate": "Misture a sua playlist de álbuns! Usando Deep cuts em Proof mix (60 min, modo automático) ",
+  "bodyTail": "",
+  "deepCard": "Deep cuts SPOTIFY Pula as faixas mais populares de cada álbum no Spotify e pega as três seguintes.",
+  "leastCard": "As menos ouvidas SPOTIFY As três faixas menos populares de cada álbum no Spotify. Faixa sem dado de popularidade fica de fora.",
+  "cardClamp": {
+   "scrollH": 45,
+   "clientH": 30
+  },
+  "hscroll": false,
+  "leastGenerate": "Misture a sua playlist de álbuns! Usando As menos ouvidas em Proof mix (60 min, modo automático) ",
+  "errors": [],
+  "protoSummary": "Usando Deep cuts em Radiohead · anos 90 (60 min, pula 3, modo automático)",
+  "protoIngredients": "Quantas das mais populares pular 5as 3 + 2 Pula as 5 mais tocadas de cada álbum no Spotify e pega as 3 seguintes (da 6ª à 8ª). 12345678910111213 puladaentrafica de fora Num álbum com menos faixas com dado, entram menos.Agrupamento das faixasPor álbumMantém a sequência do álbumPor posiçãoTodas as nº 1, depois todas as nº 2...Por artista e depois por posiçãoAgrupa por artistaIntercalado equilibradoRevezamento por posiçãoSem «Aleatório»: esta receita dá sempre as mesmas faixas.Estrutura da playlist"
+ },
+ "chromium-393": {
+  "ingredients": "Pular as mais populares5Quantas das faixas mais populares de cada álbum no Spotify pular antes de pegar três: 3 de partida, até 10.Agrupamento das faixas Por álbumMantém a sequência do álbumPor posiçãoTodas as nº 1, depois todas as nº 2...Por artista e depois por posiçãoAgrupa por artistaIntercalado equilibradoRevezamento por posiçãoEstrutura da playlist Uma playlistUma playlist com todas as faixasVárias playlistsDividida pelos limites de duraçãoAutomáticoUma playlist, dividida quando passa da m",
+  "generate": "Misture a sua playlist de álbuns! Usando Deep cuts em Proof mix (60 min, modo automático) ",
+  "bodyTail": "",
+  "deepCard": "Deep cuts SPOTIFY Pula as faixas mais populares de cada álbum no Spotify e pega as três seguintes.",
+  "leastCard": "As menos ouvidas SPOTIFY As três faixas menos populares de cada álbum no Spotify. Faixa sem dado de popularidade fica de fora.",
+  "cardClamp": {
+   "scrollH": 60,
+   "clientH": 60
+  },
+  "hscroll": false,
+  "leastGenerate": "Misture a sua playlist de álbuns! Usando As menos ouvidas em Proof mix (60 min, modo automático) ",
+  "errors": [],
+  "protoSummary": "Deep cuts · pula 3 · 60 min",
+  "protoIngredients": "Quantas das mais populares pular 5as 3 + 2 Pula as 5 mais tocadas de cada álbum no Spotify e pega as 3 seguintes (da 6ª à 8ª). 12345678910111213 puladaentrafica de fora Num álbum com menos faixas com dado, entram menos.Agrupamento das faixasPor álbumMantém a sequência do álbumPor posiçãoTodas as nº 1, depois todas as nº 2...Por artista e depois por posiçãoAgrupa por artistaIntercalado equilibradoRevezamento por posiçãoSem «Aleatório»: esta receita dá sempre as mesmas faixas.Estrutura da playlist"
+ },
+ "webkit-1440": {
+  "ingredients": "Pular as mais populares5Quantas das faixas mais populares de cada álbum no Spotify pular antes de pegar três: 3 de partida, até 10.Agrupamento das faixas Por álbumMantém a sequência do álbumPor posiçãoTodas as nº 1, depois todas as nº 2...Por artista e depois por posiçãoAgrupa por artistaIntercalado equilibradoRevezamento por posiçãoEstrutura da playlist Uma playlistUma playlist com todas as faixasVárias playlistsDividida pelos limites de duraçãoAutomáticoUma playlist, dividida quando passa da m",
+  "generate": "Misture a sua playlist de álbuns! Usando Deep cuts em Proof mix (60 min, modo automático) ",
+  "bodyTail": "",
+  "deepCard": "Deep cuts SPOTIFY Pula as faixas mais populares de cada álbum no Spotify e pega as três seguintes.",
+  "leastCard": "As menos ouvidas SPOTIFY As três faixas menos populares de cada álbum no Spotify. Faixa sem dado de popularidade fica de fora.",
+  "cardClamp": {
+   "scrollH": 45,
+   "clientH": 30
+  },
+  "hscroll": false,
+  "leastGenerate": "Misture a sua playlist de álbuns! Usando As menos ouvidas em Proof mix (60 min, modo automático) ",
+  "errors": []
+ },
+ "webkit-393": {
+  "ingredients": "Pular as mais populares5Quantas das faixas mais populares de cada álbum no Spotify pular antes de pegar três: 3 de partida, até 10.Agrupamento das faixas Por álbumMantém a sequência do álbumPor posiçãoTodas as nº 1, depois todas as nº 2...Por artista e depois por posiçãoAgrupa por artistaIntercalado equilibradoRevezamento por posiçãoEstrutura da playlist Uma playlistUma playlist com todas as faixasVárias playlistsDividida pelos limites de duraçãoAutomáticoUma playlist, dividida quando passa da m",
+  "generate": "Misture a sua playlist de álbuns! Usando Deep cuts em Proof mix (60 min, modo automático) ",
+  "bodyTail": "",
+  "deepCard": "Deep cuts SPOTIFY Pula as faixas mais populares de cada álbum no Spotify e pega as três seguintes.",
+  "leastCard": "As menos ouvidas SPOTIFY As três faixas menos populares de cada álbum no Spotify. Faixa sem dado de popularidade fica de fora.",
+  "cardClamp": {
+   "scrollH": 60,
+   "clientH": 60
+  },
+  "hscroll": false,
+  "leastGenerate": "Misture a sua playlist de álbuns! Usando As menos ouvidas em Proof mix (60 min, modo automático) ",
+  "errors": []
+ }
+}

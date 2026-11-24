@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """critique_subject_check.py - the `subject` of an architecture critique names every ADR by its whole id, never by a range (F269, UAT-585).
 
 The incident (2026-11-16): the critique of the Control Center ADRs had `subject: "CC-ADR-0047 a 0053 · ..."`. The acceptance rule finds the

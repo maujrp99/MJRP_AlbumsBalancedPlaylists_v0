@@ -14,6 +14,10 @@
  *     in Portuguese, from the dictionary (public/splash/copy.js) into every `data-i18n…` element: the
  *     page reads whole without JavaScript and holds no text of its own. It writes no script: the root
  *     shows the page to everyone, signed in or not (F85, MJRP 2026-11-21);
+ *   - gives the entry page ITS OWN COPY of what it uses of the core (shared/): the validator of the published crate
+ *     (shared/content/crate.js; F82 REQ-11) is the same source the Painel and the server use, and in the build it is written
+ *     into the entry page's own script, so the page stays one small bundle and takes no file of the app (and the app takes
+ *     none of the page's);
  *   - renames the two pages in dist/ after the build;
  *   - in the dev server, answers the root and /home with the entry page (the app keeps every other address);
  *   - in `vite preview`, answers /home with the entry page and every other address without an
@@ -74,6 +78,23 @@ export function fillEntryPage(html, { set }) {
 
 const pathOf = (url) => String(url || '/').split(/[?#]/)[0]
 
+/** The mark, on a module's id, of the entry page's own copy of a module of the core. */
+export const OWN_COPY = '?entry-page'
+const withoutQuery = (id) => String(id).split('?')[0]
+const isInside = (file, dir) => file.startsWith(dir + path.sep)
+
+/**
+ * The id a module of the core takes when the entry page imports it: the same file, marked, so the bundler keeps it apart
+ * from the copy the app uses. Anything else (a module of the page itself, a module the app imports) keeps its id: null.
+ * @param {{ importer: string, target: string, entryDir: string, coreDir: string }} ids - who imports, the file it resolved
+ *   to, the entry page's folder and the core's
+ * @returns {string|null}
+ */
+export function ownCopyId({ importer, target, entryDir, coreDir }) {
+    const fromEntryPage = String(importer).endsWith(OWN_COPY) || isInside(withoutQuery(importer), entryDir)
+    return fromEntryPage && isInside(withoutQuery(target), coreDir) ? withoutQuery(target) + OWN_COPY : null
+}
+
 /** The root, with or without a query: the entry page. */
 export const isRootAddress = (url) => pathOf(url) === '/'
 
@@ -107,9 +128,29 @@ const wantsPage = (req) => req.method === 'GET' || req.method === 'HEAD'
  */
 export function entryPage({ coverSet }) {
     let outDir = null
+    let entryDir = null, coreDir = null, building = false
     return {
         name: 'entry-page',
-        configResolved(config) { outDir = path.resolve(config.root, config.build.outDir) },
+        configResolved(config) {
+            outDir = path.resolve(config.root, config.build.outDir)
+            entryDir = path.resolve(config.root, 'splash')
+            coreDir = path.resolve(config.root, '..', 'shared')
+            building = config.command === 'build'
+        },
+        // the entry page's own copy of the core (only in the build: the dev server bundles nothing)
+        resolveId: {
+            order: 'pre', // before the bundler's own resolver, which would answer first and leave no say here
+            async handler(source, importer, options) {
+                if (!building || !importer) return null
+                const resolved = await this.resolve(source, withoutQuery(importer), { ...options, skipSelf: true })
+                if (!resolved || resolved.external) return null
+                const id = ownCopyId({ importer, target: resolved.id, entryDir, coreDir })
+                return id ? { ...resolved, id } : null
+            }
+        },
+        load(id) {
+            return String(id).endsWith(OWN_COPY) ? fs.readFileSync(withoutQuery(id), 'utf8') : null
+        },
         transformIndexHtml: {
             order: 'pre',
             handler(html, ctx) {

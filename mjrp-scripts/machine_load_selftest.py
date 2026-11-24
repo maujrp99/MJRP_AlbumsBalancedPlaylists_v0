@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """machine_load_selftest.py - proves the one-heavy-suite-at-a-time semaphore (machine_load.py, hooks/machine_load_guard.py, the doctor's turn; F293).
 
 Incident behind it (2026-11-18): 40+ doctors ran together and the load went past 50. Each case fails if the trava is removed: the second

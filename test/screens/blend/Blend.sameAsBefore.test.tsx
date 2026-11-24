@@ -14,6 +14,8 @@
  */
 import { describe, it, expect, afterEach, vi } from 'vitest'
 
+// the pictures were taken with the four recipes of then (F92 added two): see test/support/registryOfBefore.js
+vi.mock('../../../public/js/algorithms/index.js', async (importOriginal) => (await import('../../support/registryOfBefore.js')).registryOfBefore(await importOriginal()))
 vi.mock('../../../public/js/controllers/BlendingController.js', async () => (await import('../../support/blendStandIns.js')).controller())
 vi.mock('../../../public/js/stores/albumSeries.js', async () => (await import('../../support/blendStandIns.js')).seriesStore())
 vi.mock('../../../public/js/services/SeriesService.js', async () => (await import('../../support/blendStandIns.js')).seriesService())

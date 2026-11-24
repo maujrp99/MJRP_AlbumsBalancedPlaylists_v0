@@ -7,7 +7,7 @@ status: vivo
 atualizado: 2026-10-25
 fontes: [originals/design-patterns-guide/design-patterns-v1.md, reports/audits/2026-10-25-design-patterns-guide-and-doctor-architecture-audit.md, kernel/architecture/engineering-canon, kernel/architecture/architecture-review, wiki/sources/1994-gof-design-patterns.md, wiki/sources/2002-fowler-poeaa.md, wiki/sources/2003-evans-ddd.md, wiki/sources/2003-hohpe-woolf-eip.md, wiki/sources/2007-nygard-release-it.md, wiki/sources/2008-bloch-effective-java.md, wiki/sources/1988-meyer-2011-fowler-cqs-cqrs.md, wiki/sources/1997-beck-smalltalk-best-practice-patterns.md, wiki/sources/2003-alur-crupi-malks-core-j2ee-patterns.md, wiki/sources/2015-brooker-exponential-backoff-and-jitter.md, wiki/sources/2014-sato-parallel-change.md, wiki/sources/1987-garcia-molina-salem-sagas-2018-richardson.md, wiki/sources/2005-cockburn-hexagonal-architecture.md, wiki/sources/2011-seemann-composition-root.md, wiki/sources/2012-bernhardt-boundaries.md, wiki/sources/2004-fowler-presentation-model.md, wiki/sources/2014-wlaschin-railway-oriented-programming.md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Design patterns — o catálogo de padrões do harness
 

@@ -4,7 +4,7 @@ item: record-shapes
 from: 2
 to: 3
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0109 · record-shapes@2 → record-shapes@3
 
 ## Por que

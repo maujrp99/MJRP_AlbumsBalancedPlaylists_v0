@@ -1,9 +1,10 @@
 ---
-status: Done
+status: Accepted
 lane: standard
 solution_type: feature
 imports: ["[[S-61-build-a-series-on-a-home-that-explains-itself]]"]
 planned_for: "[[ROADMAP#^REL-41]]"
+accepted_in: "log 2026-11-24 10:30"
 ---
 # Feature F79: A Home que se explica, para montar uma série
 **Approved**: decidido pelo agente — revisável (dispensa de 2026-11-19)

@@ -1,9 +1,10 @@
 ---
-status: Done
+status: Accepted
 lane: fast
 solution_type: fix
 imports: []
 fixes: ["UAT-172"]
+accepted_in: "log 2026-11-24 10:30"
 ---
 # Feature F45: A tela de álbuns carrega vários álbuns ao mesmo tempo, com prazo, e as séries do topo primeiro
 **Approved**: not a gate (via rápida; o MJRP julga)

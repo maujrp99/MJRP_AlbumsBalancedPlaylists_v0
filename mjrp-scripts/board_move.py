@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 board_move.py - the one way a work item changes state on the board (F275, UAT-592): it checks the passage on the single graph
 (`board_states.json`) and records it; the board draws only what this recorded (the Jira principle: the state changes by an
@@ -352,7 +352,9 @@ def stamped(root, commit, graph=None):
             before = set(priority_ids(show_at(top, f"{sha}^", f"{prefix}{PRIORITY}")))
             after = set(priority_ids(show_at(top, sha, f"{prefix}{PRIORITY}")))
             feats = features_of(top, rel)
-            wanted += [(i, "queued") for i in sorted(after - before) if i in feats and board.state(i) in (None, "prep")]
+            # every listed item still in «Preparação», not only the one that entered: an item listed while its card stayed behind (a
+            # post-commit that did not run, a seed after the order) moves on his next save, or it never would (V0 F94, 2026-11-24)
+            wanted += [(i, "queued") for i in sorted(after) if i in feats and board.state(i) in (None, "prep")]
             wanted += [(i, "prep") for i in sorted(before - after) if i in feats and board.state(i) == "queued"]
         for path in changed:
             m = re.match(rf"^{re.escape(prefix)}{FEATURES}/(F\d{{2,}})-[^/]+/spec\.md$", path)

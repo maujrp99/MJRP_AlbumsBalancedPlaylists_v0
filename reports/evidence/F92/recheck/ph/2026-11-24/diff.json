@@ -1,0 +1,514 @@
+{
+  "date": "2026-11-24",
+  "total": {
+    "P0": 3,
+    "P1": 18,
+    "P2": 21
+  },
+  "lines": [
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "font: body",
+      "sev": "P0",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "-apple-system (-apple-system, \"system-ui\", \"SF Pro Text\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif)",
+      "product": "Syne (Syne, sans-serif)"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "font: body",
+      "sev": "P0",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "-apple-system (-apple-system, \"system-ui\", \"SF Pro Text\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif)",
+      "product": "Syne (Syne, sans-serif)"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "font: body",
+      "sev": "P0",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "-apple-system (-apple-system, \"system-ui\", \"SF Pro Text\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif)",
+      "product": "Syne (Syne, sans-serif)"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "card-padding",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px 0px 0px 0px",
+      "product": "16px 16px 16px 16px"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "card-padding",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px 0px 0px 0px",
+      "product": "16px 16px 16px 16px"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "card-padding",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px 0px 0px 0px",
+      "product": "16px 16px 16px 16px"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "font-size: cardTitle",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "16px",
+      "product": "18px"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "font-size: cardTitle",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "16px",
+      "product": "18px"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "font-size: cardTitle",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "16px",
+      "product": "18px"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "font-size: h1",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "26px",
+      "product": "22px"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "font-size: h1",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "26px",
+      "product": "22px"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "font-size: h1",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "26px",
+      "product": "22px"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "font-size: h2",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "16px",
+      "product": "18px"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "font-size: h2",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "16px",
+      "product": "18px"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "font-size: h2",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "16px",
+      "product": "18px"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "font-weight: cardTitle",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "800",
+      "product": "700"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "font-weight: cardTitle",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "800",
+      "product": "700"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "font-weight: cardTitle",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "800",
+      "product": "700"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "font-weight: h2",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "800",
+      "product": "700"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "font-weight: h2",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "800",
+      "product": "700"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "font-weight: h2",
+      "sev": "P1",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "800",
+      "product": "700"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "card-border",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px none rgb(255, 255, 255)",
+      "product": "1px solid rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "card-border",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px none rgb(255, 255, 255)",
+      "product": "1px solid rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "card-border",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px none rgb(255, 255, 255)",
+      "product": "1px solid rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "card-gap",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "-1793px",
+      "product": "12px"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "card-gap",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "-1793px",
+      "product": "12px"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "card-gap",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "-1793px",
+      "product": "12px"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "card-radius",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px",
+      "product": "16px"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "card-radius",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px",
+      "product": "16px"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "card-radius",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px",
+      "product": "16px"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "cards-order-or-title",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "Proposta · v1 Nova celular · 390 px · Escolha a Sua Mistura · Escolha a Sua Receita · Escolha os Seus Ingredientes",
+      "product": "Escolha a Sua Mistura · Escolha a Sua Receita · Escolha os Seus Ingredientes · Misture!"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "cards-order-or-title",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "Proposta · v1 Nova celular · 390 px · Escolha a Sua Mistura · Escolha a Sua Receita · Escolha os Seus Ingredientes",
+      "product": "Escolha a Sua Mistura · Escolha a Sua Receita · Escolha os Seus Ingredientes · Misture!"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "cards-order-or-title",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "Proposta · v1 Nova celular · 390 px · Escolha a Sua Mistura · Escolha a Sua Receita · Escolha os Seus Ingredientes",
+      "product": "Escolha a Sua Mistura · Escolha a Sua Receita · Escolha os Seus Ingredientes · Misture!"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "font-size: body",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "15px",
+      "product": "16px"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "font-size: body",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "15px",
+      "product": "16px"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "font-size: body",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "15px",
+      "product": "16px"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px",
+      "product": "56px"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px",
+      "product": "56px"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "header-height",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "0px",
+      "product": "56px"
+    },
+    {
+      "scenario": "ph-deep-3",
+      "title": "Blend · Deep cuts escolhida, pulo 3",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --c-accent --c-accent-soft --c-bg --c-line --c-on-accent --c-panel --c-raised --c-soft --c-text --syne --sys",
+      "product": "só no produto: --bar-w --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font --neon-blue --neon-green --neon-orange --pbar-h --phone-accent --phone-action-bar-h --phone-bar-bg --phone-bar-line --phone-cover-columns --phone-cover-gap-x --phone-cover-gap-y --phone-cover-radius --phone-font-text --phone-font-title --phone-gutter --phone-gutter-left --phone-gutter-right --phone-safe-bottom --phone-safe-top --phone-seg-line --phone-seg-on --phone-seg-on-line --phone-seg-text --phone-seg-track --phone-sheet-bg --phone-slide --phone-tabbar-h --phone-target --phone-topbar-h --pl-base --pl-chips-h --pl-danger --pl-line --pl-raised --pl-sans --pl-sticky-top --pl-text --pl-text-2 --tech-bg --tech-border --tech-green --tech-green-dim --tech-orange --tech-orange-dim"
+    },
+    {
+      "scenario": "ph-deep-5",
+      "title": "Blend · Deep cuts, pulo movido para 5",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --c-accent --c-accent-soft --c-bg --c-line --c-on-accent --c-panel --c-raised --c-soft --c-text --syne --sys",
+      "product": "só no produto: --bar-w --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font --neon-blue --neon-green --neon-orange --pbar-h --phone-accent --phone-action-bar-h --phone-bar-bg --phone-bar-line --phone-cover-columns --phone-cover-gap-x --phone-cover-gap-y --phone-cover-radius --phone-font-text --phone-font-title --phone-gutter --phone-gutter-left --phone-gutter-right --phone-safe-bottom --phone-safe-top --phone-seg-line --phone-seg-on --phone-seg-on-line --phone-seg-text --phone-seg-track --phone-sheet-bg --phone-slide --phone-tabbar-h --phone-target --phone-topbar-h --pl-base --pl-chips-h --pl-danger --pl-line --pl-raised --pl-sans --pl-sticky-top --pl-text --pl-text-2 --tech-bg --tech-border --tech-green --tech-green-dim --tech-orange --tech-orange-dim"
+    },
+    {
+      "scenario": "ph-least",
+      "title": "Blend · As menos ouvidas escolhida",
+      "id": "token-names",
+      "sev": "P2",
+      "projects": [
+        "chromium-w393-dark",
+        "webkit-w393-dark"
+      ],
+      "proto": "só no protótipo: --c-accent --c-accent-soft --c-bg --c-line --c-on-accent --c-panel --c-raised --c-soft --c-text --syne --sys",
+      "product": "só no produto: --bar-w --home-dock-h --home-eq-grad --home-flame --home-flame-a --home-flame-b --home-flame-text --home-line --home-muted --home-panel --home-soft --home-text-font --neon-blue --neon-green --neon-orange --pbar-h --phone-accent --phone-action-bar-h --phone-bar-bg --phone-bar-line --phone-cover-columns --phone-cover-gap-x --phone-cover-gap-y --phone-cover-radius --phone-font-text --phone-font-title --phone-gutter --phone-gutter-left --phone-gutter-right --phone-safe-bottom --phone-safe-top --phone-seg-line --phone-seg-on --phone-seg-on-line --phone-seg-text --phone-seg-track --phone-sheet-bg --phone-slide --phone-tabbar-h --phone-target --phone-topbar-h --pl-base --pl-chips-h --pl-danger --pl-line --pl-raised --pl-sans --pl-sticky-top --pl-text --pl-text-2 --tech-bg --tech-border --tech-green --tech-green-dim --tech-orange --tech-orange-dim"
+    }
+  ]
+}

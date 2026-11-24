@@ -31,9 +31,9 @@ const JAZZ = album('jazz', 'Abba', [['J-one', 5, 20, 50], ['J-two', 5, 90, 95], 
 afterEach(() => vi.restoreAllMocks())
 
 describe('the recipes of the blend menu', () => {
-    it('are four, and each has a name and a description', () => {
+    it('are six (F92 added «Deep cuts» and «Least played»), and each has a name and a description', () => {
         const recipes = getAllAlgorithms()
-        expect(recipes.map(r => r.id)).toEqual(['mjrp-balanced-cascade', 'top-n-popular', 'top-n-acclaimed', 'top-n-user'])
+        expect(recipes.map(r => r.id)).toEqual(['mjrp-balanced-cascade', 'top-n-popular', 'top-n-acclaimed', 'top-n-user', 'deep-cuts', 'least-played'])
         recipes.forEach(r => { expect(r.name).toBeTruthy(); expect(r.description).toBeTruthy() })
     })
 })

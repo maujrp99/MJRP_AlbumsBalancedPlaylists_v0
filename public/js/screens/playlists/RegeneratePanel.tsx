@@ -78,11 +78,11 @@ function PanelBody({ seriesId, batchName, playlistCount, generatedWith, expanded
     const chooseRecipe = (recipe: RecipeOfCard) => {
         setRecipeId(recipe.id)
         setRecipeChosen(count => count + 1)
-        remember({ algorithmId: recipe.id, ...configOf(choices) })
+        remember({ algorithmId: recipe.id, ...configOf(choices, recipe.id) })
     }
     const change = (next: Choices) => {
         setChoices(next)
-        remember({ algorithmId: recipeId, ...configOf(next) })
+        remember({ algorithmId: recipeId, ...configOf(next, recipeId) })
     }
 
     return (
@@ -104,7 +104,7 @@ function PanelBody({ seriesId, batchName, playlistCount, generatedWith, expanded
                 <div id="regenerate-ingredients-container">
                     <Ingredients recipeId={recipeId} choices={choices} onChange={change} recipeChosen={recipeChosen} />
                 </div>
-                <button className="btn btn-primary w-full flex items-center justify-center gap-2" data-action="regenerate-playlists" onClick={() => onRegenerate({ algorithmId: recipeId, ...configOf(choices) })}>
+                <button className="btn btn-primary w-full flex items-center justify-center gap-2" data-action="regenerate-playlists" onClick={() => onRegenerate({ algorithmId: recipeId, ...configOf(choices, recipeId) })}>
                     <Icon name="RefreshCw" className="w-5 h-5" />
                     <span>{t('playlists.regenerate.button')}</span>
                 </button>

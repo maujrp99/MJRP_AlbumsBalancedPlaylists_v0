@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "version": "2026-10-14",
   "default_grace_days": 30,
   "open_warning_notes": {
@@ -4519,7 +4519,7 @@
     },
     {
       "id": "process-sensors",
-      "version": 13,
+      "version": 14,
       "title": "os sensores do processo que o filho herda (`mjrp-scripts/process_sensors.json`) rodam no filho: o contrato declara os que só rodam declarados",
       "path": ".mjrp-project.yml",
       "applies_to": {
@@ -4535,7 +4535,7 @@
       },
       "since": "2026-11-04",
       "grace_days": 30,
-      "born_of": "UAT-489 (MJRPpersonal, 2026-11-04): o contrato do harness declara 73 sensores e o do MJRPpersonal, 6; o pdlc_vocabulary_check chegava ao filho e nada o rodava, e as travas do fecho vinham sem o registro e os moldes que julgam; cinco features de via rápida entraram na main sem o passo retroativo com o doctor verde. O MJRP, 2026-11-04: o sensor do processo é parte do kernel · v2 (2026-11-07): F200 (S-215): chega o design_system_mirror_check.py, o juiz que a mjrp-defining-design-systems roda antes de publicar o design system no Claude, e o manifesto ganha o lugar `skill` (o sensor que a skill dona roda à mão); o check não muda · v3 (2026-11-07): F220 (S-226): chega o returned_check.py, o sensor do que o MJRP devolve pelo iPhone sem ação além do prazo (`returned_deadline_hours` do contrato, padrão 24 h), que o doctor (W22) e a trava de fim de turno do orquestrador importam; o check não muda · v4 (2026-11-08): F222 (S-227): chega o pile_up_check.py, o sensor do acúmulo do board, só do harness (`harness_only`: o filho não tem o servidor do board); o check não muda · v6 (2026-11-17): F275 (UAT-592): chegam o grafo único dos estados do board, o board_move.py que grava cada passagem e o board_states_check.py, sensor do contrato (`sensors.board_states`); o check pede a chave · v7 (2026-11-18): F289 (UAT-599): chega o schema_bump_check.py, a trava do pre-commit que recusa a subida de versão de um schema do bundle sem os testes de compatibilidade no mesmo commit; o check não muda · v8 (2026-11-18): F291 (S-245, regra 47 do orquestrador): chegam o hooks_map_check.py, sensor do contrato (`sensors.hooks_map`) que reprova o hook do disco fora do mapa, e o mapa `hooks-catalog.json`; o check pede a chave · v9 (2026-11-18): F297 (UAT-603): chega o template_catalog_check.py, a trava do pre-commit que recusa o modelo novo numa skill sem o catálogo canônico no mesmo commit — só do harness (`harness_only`); o check não muda · v10 (2026-11-18): F306 (UAT-618): o manifesto ganha `taught_by` — toda trava que um hook git do kernel capaz de recusar roda declara a skill que ensina o passo que ela cobra, ou `none:` com o motivo, e o autoteste do kernel reprova o que falta; nenhum sensor novo chega ao filho; o check não muda · v11 (2026-11-18): F305 (UAT-617): chega o conflict_marker_check.py, a trava do pre-commit e do pre-merge-commit que recusa marcador de conflito do git no que o commit traz; o check não muda · v12 (2026-11-19): F295 (S-245, regras 39 e 40 do orquestrador): chegam o state_first_check.py, a trava do pre-commit (e o juiz do hook PreToolUse state_first_guard.py) que recusa a escrita e o commit num worktree de feature com o card fora de «Em andamento», e o delegation_brief.py, que gera o brief de delegação; o check não muda · v13 (2026-11-19): F295 (decisão do MJRP, D-03 no Harness Remote): a trava `adr_on_main.py` (F300) declara em `taught_by` a skill que a ensina, `mjrp-recording-decisions`; o check não muda",
+      "born_of": "UAT-489 (MJRPpersonal, 2026-11-04): o contrato do harness declara 73 sensores e o do MJRPpersonal, 6; o pdlc_vocabulary_check chegava ao filho e nada o rodava, e as travas do fecho vinham sem o registro e os moldes que julgam; cinco features de via rápida entraram na main sem o passo retroativo com o doctor verde. O MJRP, 2026-11-04: o sensor do processo é parte do kernel · v2 (2026-11-07): F200 (S-215): chega o design_system_mirror_check.py, o juiz que a mjrp-defining-design-systems roda antes de publicar o design system no Claude, e o manifesto ganha o lugar `skill` (o sensor que a skill dona roda à mão); o check não muda · v3 (2026-11-07): F220 (S-226): chega o returned_check.py, o sensor do que o MJRP devolve pelo iPhone sem ação além do prazo (`returned_deadline_hours` do contrato, padrão 24 h), que o doctor (W22) e a trava de fim de turno do orquestrador importam; o check não muda · v4 (2026-11-08): F222 (S-227): chega o pile_up_check.py, o sensor do acúmulo do board, só do harness (`harness_only`: o filho não tem o servidor do board); o check não muda · v6 (2026-11-17): F275 (UAT-592): chegam o grafo único dos estados do board, o board_move.py que grava cada passagem e o board_states_check.py, sensor do contrato (`sensors.board_states`); o check pede a chave · v7 (2026-11-18): F289 (UAT-599): chega o schema_bump_check.py, a trava do pre-commit que recusa a subida de versão de um schema do bundle sem os testes de compatibilidade no mesmo commit; o check não muda · v8 (2026-11-18): F291 (S-245, regra 47 do orquestrador): chegam o hooks_map_check.py, sensor do contrato (`sensors.hooks_map`) que reprova o hook do disco fora do mapa, e o mapa `hooks-catalog.json`; o check pede a chave · v9 (2026-11-18): F297 (UAT-603): chega o template_catalog_check.py, a trava do pre-commit que recusa o modelo novo numa skill sem o catálogo canônico no mesmo commit — só do harness (`harness_only`); o check não muda · v10 (2026-11-18): F306 (UAT-618): o manifesto ganha `taught_by` — toda trava que um hook git do kernel capaz de recusar roda declara a skill que ensina o passo que ela cobra, ou `none:` com o motivo, e o autoteste do kernel reprova o que falta; nenhum sensor novo chega ao filho; o check não muda · v11 (2026-11-18): F305 (UAT-617): chega o conflict_marker_check.py, a trava do pre-commit e do pre-merge-commit que recusa marcador de conflito do git no que o commit traz; o check não muda · v12 (2026-11-19): F295 (S-245, regras 39 e 40 do orquestrador): chegam o state_first_check.py, a trava do pre-commit (e o juiz do hook PreToolUse state_first_guard.py) que recusa a escrita e o commit num worktree de feature com o card fora de «Em andamento», e o delegation_brief.py, que gera o brief de delegação; o check não muda · v13 (2026-11-19): F295 (decisão do MJRP, D-03 no Harness Remote): a trava `adr_on_main.py` (F300) declara em `taught_by` a skill que a ensina, `mjrp-recording-decisions`; o check não muda · v14 (2026-11-23): F332 TASK-11 (CC-ADR-0068): o manifesto ganha `kit_sensors`, os sensores que viajam com um kit e não com o kernel — hoje o `check.mjs` do kit do admin, que chega a `tools_path` e roda em `sensors.admin_kit`, cobrado pelo I5 do doctor; o check não muda",
       "owner_skill": "mjrp-pdlc-bootstrap",
       "judge_skill": null,
       "check": [
@@ -4564,9 +4564,9 @@
         "mjrp-scripts/process_sensors.json"
       ],
       "pattern_digest": {
-        "mjrp-scripts/process_sensors.json": "sha256:0fe81c7b0703671e7f6509cd370ab1600a6321b8eb126cba107e363ad904a7ae"
+        "mjrp-scripts/process_sensors.json": "sha256:c07e3b64e648d9dd7eb78afc5d6fe7dc9d4e410ead8fdc9113b7de2bffd3ca85"
       },
-      "migration": "CM-0157",
+      "migration": "CM-0168",
       "superseded": [
         {
           "version": 12,
@@ -4829,6 +4829,32 @@
             {
               "kind": "contract_key",
               "key": "sensors.requirements_graph_check"
+            }
+          ]
+        },
+        {
+          "version": 13,
+          "migration": "CM-0157",
+          "check": [
+            {
+              "kind": "contract_key",
+              "key": "sensors.pdlc_vocabulary"
+            },
+            {
+              "kind": "contract_key",
+              "key": "sensors.sdd_shape"
+            },
+            {
+              "kind": "contract_key",
+              "key": "sensors.requirements_graph_check"
+            },
+            {
+              "kind": "contract_key",
+              "key": "sensors.board_states"
+            },
+            {
+              "kind": "contract_key",
+              "key": "sensors.hooks_map"
             }
           ]
         }
@@ -5126,6 +5152,53 @@
       },
       "migration": "CM-0130",
       "superseded": []
+    },
+    {
+      "id": "admin-kit",
+      "version": 1,
+      "title": "o kit do admin chega por versão do harness, não se edita no filho, e o check do kit roda como sensor (`sensors.admin_kit`)",
+      "path": ".mjrp-project.yml",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:.mjrp-admin-kit.json"
+      },
+      "since": "2026-11-23",
+      "grace_days": 30,
+      "born_of": "F332 (CC-ADR-0068, aceita pelo MJRP em conversa em 2026-11-23, «1.está aceito»; o selo segue dele): o kit do admin do MJRPpersonal vira uma fonte só no harness, entregue por versão (`new_project.py --refresh-admin-kit`), para o MJRPpersonal e o V0; a cópia editada no filho divergiria em silêncio da versão que o contrato diz ter",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "judge_skill": null,
+      "check": [
+        {
+          "kind": "exists",
+          "paths": [
+            ".mjrp-admin-kit.json"
+          ]
+        },
+        {
+          "kind": "contains",
+          "path": ".mjrp-project.yml",
+          "pattern": "^admin_kit:[^\\n]*\\n(?:[ \\t]+[^\\n]*\\n|[ \\t]*\\n)*?[ \\t]+tools_path:[ \\t]*[^\\s#]",
+          "label": "o contrato não diz `admin_kit.tools_path`: o check do kit não chega"
+        },
+        {
+          "kind": "contract_key",
+          "key": "sensors.admin_kit"
+        }
+      ],
+      "pattern_sources": [
+        "kits/admin-kit/admin-kit.files.json"
+      ],
+      "migration": "CM-0167",
+      "pattern_digest": {
+        "kits/admin-kit/admin-kit.files.json": "sha256:7486e6500b3dd194ec7c10f5add5c4ac8205936841ef86fdcda1a6a00441905a"
+      }
     }
   ],
   "history": [
@@ -6266,6 +6339,10 @@
     {
       "at": "2026-11-21 00:14",
       "change": "visual-sensor: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-11-23 12:40",
+      "change": "admin-kit@1 (CM-0167, F332 TASK-11); process-sensors@14 (CM-0168): `kit_sensors`"
     }
   ]
 }

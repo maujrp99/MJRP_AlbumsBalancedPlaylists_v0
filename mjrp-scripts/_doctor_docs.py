@@ -1,4 +1,4 @@
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 _doctor_docs.py - the doctor's checks of the documents: paths that exist, links that resolve, the identity files,
 the folder indexes, the scripts catalog and the shape of the features (I2, I3, I4, I5 inheritance, W6 charter, W17, W19, W20).

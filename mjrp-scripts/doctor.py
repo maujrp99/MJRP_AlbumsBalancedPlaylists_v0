@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -35,7 +35,7 @@ from _doctor_contract import f2_gates, i1_contract
 from _doctor_docs import (i2_paths, i3_links, i4_agents, i5_principles_inheritance, w6_charter_not_migrated,
                           w17_folder_index, w19_scripts_catalog, w20_sdd_shape, w21_screen_answers,
                           w22_returned, w23_pile_up)
-from _doctor_kernel import (i5_constitution_generated, i5_kernel, i6_conformance, w7_kernel_downstream,
+from _doctor_kernel import (i5_admin_kit, i5_constitution_generated, i5_kernel, i6_conformance, w7_kernel_downstream,
                             w16_portfolio_conformance)
 from _doctor_memory import f1_log_shape, f1_memory, f1_wow_growth
 from _doctor_repo import (f3_git, w4_uncommitted_edits, w9_structure, w10_sessions, w11_prototype_inventory,
@@ -142,6 +142,7 @@ CHECKS = [
     Check("I4", i4_agents, ("root", "rep",), ERRO),
     Check("I5", i5_principles_inheritance, ("root", "rep",), ERRO),
     Check("I5", i5_kernel, ("root", "cfg", "rep", "ctx",), ERRO),
+    Check("I5", i5_admin_kit, ("root", "rep",), ERRO),
     Check("W7", w7_kernel_downstream, ("root", "cfg", "rep", "ctx",), AVISO),
     Check("W16", w16_portfolio_conformance, ("root", "cfg", "rep",), AVISO),
     Check("I5", i5_constitution_generated, ("root", "cfg", "rep",), ERRO),

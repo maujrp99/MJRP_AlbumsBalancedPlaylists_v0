@@ -102,6 +102,45 @@ describe('Ingredients', () => {
         })
     })
 
+    // F92, REQ-10: «Deep cuts» lets the person skip 3 + X of the most popular tracks of each album
+    describe('the skip slider of «Deep cuts»', () => {
+        const slider = () => container.querySelector<HTMLInputElement>('#blend-skip-slider')
+
+        it('is drawn for «Deep cuts», from 3 to 10, at 3, and says how many it skips', async () => {
+            await draw('deep-cuts')
+            expect(slider()).not.toBeNull()
+            expect([slider()!.min, slider()!.max, slider()!.value]).toEqual(['3', '10', '3'])
+            expect(container.querySelector('#blend-skip-display')!.textContent).toBe('3')
+            expect(container.textContent).toContain('Skip the most popular')
+        })
+
+        it('moving it hands the new skip to the owner and shows it', async () => {
+            await draw('deep-cuts')
+            await act(async () => {
+                slider()!.value = '5'
+                slider()!.dispatchEvent(new Event('input', { bubbles: true }))
+            })
+            expect(mockCallback.mock.calls.at(-1)![0].skip).toBe(5)
+            expect(container.querySelector('#blend-skip-display')!.textContent).toBe('5')
+        })
+
+        it('is not drawn for «Least played» nor for a Top N recipe', async () => {
+            await draw('least-played')
+            expect(slider()).toBeNull()
+            await draw('top-n-popular')
+            expect(slider()).toBeNull()
+        })
+
+        it('the recipes made of blocks show no Top # and no shuffle', async () => {
+            for (const id of ['deep-cuts', 'least-played']) {
+                await draw(id)
+                expect(container.textContent, id).not.toContain('Choose your Top #')
+                expect(container.querySelector('[data-grouping="shuffle"]'), id).toBeNull()
+                expect(container.querySelector('[data-grouping="by_album"]'), id).not.toBeNull()
+            }
+        })
+    })
+
     describe('Interactions', () => {
         it('should update config and call callback on output mode change', async () => {
             await draw('s-draft-original')

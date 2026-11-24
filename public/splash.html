@@ -12,7 +12,7 @@
      teaches the app under its own title, each step label, title, text and then one illustration; the albums in ONE row at the end
      («Na caixa do The Album Blender», the only sideways swipe, written by the build). The style of it is the last block, «F96». -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://is1-ssl.mzstatic.com; connect-src 'self' https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://is1-ssl.mzstatic.com; connect-src 'self' https://cdn.jsdelivr.net https://firestore.googleapis.com; object-src 'none'; base-uri 'self'">
 <title data-i18n="meta.title"></title>
 <meta name="description" content="" data-i18n-content="meta.desc">
 <link rel="canonical" href="https://mjrp-playlist-generator.web.app/">
@@ -115,6 +115,17 @@ html.js .crate-css{opacity:1}
 .am:hover{border-color:#fff}
 .am .mk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:linear-gradient(180deg,#fa5c6f,#f9354f);color:#fff;font:800 12px/1 var(--body)}
 .credit-tag{position:absolute;top:10px;left:0;z-index:5;font:600 12px/1.3 var(--body);color:#e6e6ea;background:rgba(10,10,12,.72);padding:6px 9px;border-radius:6px;letter-spacing:.02em}
+/* F95: the crate's name over the real albums, «Na caixa do The Album Blender», in the same place and pattern: a small label, the equalizer bars still, in fire */
+.crate-tag{display:inline-flex;align-items:center;gap:8px;max-width:calc(100% - 64px);padding:7px 10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;border:1px solid rgba(249,115,22,.45)}
+.crate-tag .eq{display:inline-flex;align-items:flex-end;gap:2px;height:12px;flex:0 0 auto}
+.crate-tag .eq i{width:3px;border-radius:1px;background:linear-gradient(0deg,#dc2626,#f97316)}
+.crate-tag .eq i:nth-child(1){height:55%}.crate-tag .eq i:nth-child(2){height:100%}.crate-tag .eq i:nth-child(3){height:70%}.crate-tag .eq i:nth-child(4){height:40%}
+@media (max-width:899px){
+  .crate-tag{display:none} /* on the phone the row of albums carries the name (F96) */
+  /* when the owner's published crate takes the place of the fixed set, the caption keeps its room (splash.js holdCaption): the name never takes more lines than before */
+  .caption.held .who{align-self:flex-start} /* a shorter name stays at the top of its room, where the longer one began */
+  .caption.held .who b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--name-lines,3);overflow:hidden}
+}
 
 /* side B: the CTA */
 .final .ctas{margin-top:8px}

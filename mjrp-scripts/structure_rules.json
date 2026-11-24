@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -426,6 +426,11 @@
         "glob": "**/.mjrp/push-gate-passed.json",
         "owner": "the gate of the project that declared one (F244, CC-ADR-0045): it writes the SHA it approved by tmp + os.replace and erases it when a run fails",
         "why": "the one commit the iPhone push may send for that project; the agent never writes it, and a stale one only closes the push"
+      },
+      {
+        "glob": "**/.mjrp/push-gate-full.json",
+        "owner": "the gate of the project that declared one (F339, CC-ADR-0066): its full run writes the same record here by tmp + os.replace and erases it when a full run fails; the short run never writes it",
+        "why": "the newest full run a bug-fix record builds on; the agent never writes it, and a stale or missing one only closes the push"
       },
       {
         "glob": "**/.mjrp/turn.json",

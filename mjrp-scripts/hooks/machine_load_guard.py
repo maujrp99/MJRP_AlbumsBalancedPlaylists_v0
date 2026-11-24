@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """machine_load_guard.py - the PreToolUse(Bash) hook behind «uma suíte pesada por vez» (F293, S-245, orchestrator rule 44).
 
 It refuses (exit 2, one line on stderr that goes back to the agent) a simple command that is a heavy suite - the full doctor, the whole

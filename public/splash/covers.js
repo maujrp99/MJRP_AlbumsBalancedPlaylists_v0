@@ -208,9 +208,14 @@ export function creditHtml(setName) {
     return `<p data-i18n="${chooseCoverSet(setName) === 'real' ? 'credit.real' : 'credit.fict'}"></p>`
 }
 
-/** Over invented covers the stage says so, in words, not only inside the art. */
+/**
+ * The label over the crate, in the place the stage has for one. Over invented covers it says so, in words, not only inside
+ * the art. Over the real ones it names the crate, «Na caixa do The Album Blender» (F95): the albums are a choice of the
+ * house; the same name, from the same key, as the phone's row, with the still equalizer bars in fire. Never the two together.
+ */
 export function stageTagHtml(setName) {
-    return chooseCoverSet(setName) === 'real' ? '' : '<span class="credit-tag" data-i18n="tag.fict"></span>'
+    if (chooseCoverSet(setName) !== 'real') return '<span class="credit-tag" data-i18n="tag.fict"></span>'
+    return '<span class="credit-tag crate-tag"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-i18n="shelf.title"></span></span>'
 }
 
 /** The side of a cover in the phone's row of albums, in CSS pixels (the image is the crate's own, 360 px: sharp on a phone's screen). */

@@ -3,10 +3,11 @@ id: S-61
 aliases: [S-61]
 type: requirement
 format: story
-status: Done
+status: Accepted
 epic: "[[prd#^EP-01]]"
 points_to: ["[[info-arch#^home-empty]]", "[[info-arch#^home-typing]]", "[[info-arch#^home-searching]]", "[[info-arch#^home-discography]]", "[[info-arch#^home-dock-one]]", "[[info-arch#^home-albums-chosen]]", "[[info-arch#^home-dock-many]]", "[[info-arch#^home-dock-reorder]]", "[[info-arch#^home-dock-removed-undo]]", "[[info-arch#^home-paste-list]]", "[[info-arch#^home-paste-report]]", "[[info-arch#^home-artist-not-found]]", "[[info-arch#^home-catalog-error]]", "[[info-arch#^home-name-missing]]", "[[info-arch#^home-creating]]", "[[info-arch#^home-created]]", "[[info-arch#^home-create-failed]]", "[[info-arch#^home-guest]]"]
 planned_for: "[[ROADMAP#^REL-41]]"
+accepted_in: "log 2026-11-24 10:30"
 ---
 # S-61 · Como quem monta uma série de álbuns, quero que a tela inicial diga com clareza o que fazer e para que serve, para que eu monte a série sem decifrar a tela.
 

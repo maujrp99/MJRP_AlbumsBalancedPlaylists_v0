@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receitas do Blend</title>
+<meta name="description" content="F92 · v1: a tela de Blend com as receitas do catálogo (Deep cuts com o deslizador, As menos ouvidas) e a seção Receitas do Painel, com o construtor por blocos. Hoje ao lado da proposta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+/*
+ * F92 · prototype v1 (mjrp-designing-ui, converge, one round). ONE file, the comparator itself: four tabs, each with today («Referência»)
+ * beside the proposal. The frame around the screens follows the viewer's light or dark; the screens themselves stay dark, because The Album
+ * Blender has one dark theme (docs/specs/design-system.md § Themes, D-08). Site tokens: design-system.md § Cores and models/recipeLooks.js;
+ * Panel tokens: public/css/admin-skin.css (the --ak-* skin) and the Panel's own .cms-* layout.
+ */
+:root{
+  --c-bg:#f6f5f3; --c-panel:#ffffff; --c-raised:#efede9; --c-text:#17171a; --c-soft:#55555d; --c-line:rgba(0,0,0,.14);
+  --c-accent:#c2410c; --c-accent-soft:rgba(249,115,22,.14); --c-on-accent:#ffffff;
+  --syne:"Syne",system-ui,-apple-system,sans-serif;
+  --sys:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){ --c-bg:#0a0a0c; --c-panel:#101014; --c-raised:#1c1c22; --c-text:#ffffff; --c-soft:#a0a0a8; --c-line:rgba(255,255,255,.14); --c-accent:#fb923c; --c-accent-soft:rgba(249,115,22,.16); --c-on-accent:#0b0b0b; }
+}
+:root[data-theme="dark"]{ --c-bg:#0a0a0c; --c-panel:#101014; --c-raised:#1c1c22; --c-text:#ffffff; --c-soft:#a0a0a8; --c-line:rgba(255,255,255,.14); --c-accent:#fb923c; --c-accent-soft:rgba(249,115,22,.16); --c-on-accent:#0b0b0b; }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--c-bg);color:var(--c-text);font:15px/1.5 var(--sys);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3,h4{margin:0;line-height:1.2}
+:focus-visible{outline:2px solid #fb923c;outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ===== the comparator's frame ===== */
+.wrap{max-width:1600px;margin:0 auto;padding:0 24px}
+@media (max-width:767px){ .wrap{padding:0 16px} }
+.top{padding-top:22px;padding-bottom:10px}
+.brandline{font:700 13px/1.4 var(--syne);color:var(--c-soft)}
+.top h1{font:800 30px/1.15 var(--syne);margin:4px 0 6px}
+.top p{margin:0;color:var(--c-soft);max-width:80ch}
+.top .row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 10px;border-bottom:1px solid var(--c-line);padding-bottom:10px}
+.tab{min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--c-line);background:var(--c-panel);font:700 14px var(--syne);color:var(--c-text)}
+.tab[aria-selected="true"]{background:var(--c-text);color:var(--c-bg);border-color:var(--c-text)}
+.tools{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:12px;font-size:14px;color:var(--c-soft)}
+.tools label{display:inline-flex;align-items:center;gap:6px;min-height:44px;max-width:100%}
+.tools select{min-height:44px;max-width:min(100%,520px);min-width:0;padding:0 10px;border-radius:10px;border:1px solid var(--c-line);background:var(--c-panel);color:var(--c-text);font-size:15px}
+.seg{display:inline-flex;padding:3px;border-radius:12px;border:1px solid var(--c-line);background:var(--c-panel)}
+.seg button{min-height:38px;padding:0 12px;border:0;border-radius:9px;background:transparent;color:var(--c-soft);font:700 13px var(--syne)}
+.seg button[aria-pressed="true"]{background:var(--c-accent);color:var(--c-on-accent)}
+.ghostbtn{min-height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--c-line);background:var(--c-panel);color:var(--c-text);font-weight:700;font-size:13px}
+.say{margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--c-accent);background:var(--c-panel);border-radius:0 10px 10px 0;font-size:14px;max-width:110ch}
+.say b{color:var(--c-text)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start;padding-bottom:40px}
+.cols.one{grid-template-columns:minmax(0,1fr)}
+.cols.ph{grid-template-columns:repeat(2,minmax(0,390px));justify-content:center}
+.cols.ph.one{grid-template-columns:minmax(0,390px)}
+@media (max-width:899px){ .cols,.cols.ph{grid-template-columns:minmax(0,1fr)} .cols.ph,.cols.ph.one{grid-template-columns:minmax(0,390px)} .col.is-new{order:-1} }
+.col{min-width:0}
+.col h2{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;font:800 16px/1.3 var(--syne);margin:0 0 8px}
+.col h2 small{font:400 12px var(--sys);color:var(--c-soft)}
+.pill{display:inline-flex;align-items:center;padding:1px 8px;border-radius:999px;font:700 11px/18px var(--sys);border:1px solid var(--c-line)}
+.pill.new{background:var(--c-accent);color:var(--c-on-accent);border-color:var(--c-accent)}
+.fit{position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--c-line);background:#000}
+.fit-in{transform-origin:0 0;container-type:inline-size}
+.prop-on .prop{text-decoration:underline dashed rgba(251,146,60,.85);text-decoration-thickness:1px;text-underline-offset:3px}
+.ids-on [data-inv]{outline:1px dashed rgba(251,146,60,.9);outline-offset:2px;position:relative}
+.ids-on [data-inv]::after{content:attr(data-inv);position:absolute;top:-9px;right:-4px;z-index:9;padding:0 4px;border-radius:4px;background:#fb923c;color:#0b0b0b;font:700 10px/14px ui-monospace,Menlo,monospace;pointer-events:none;white-space:nowrap}
+.ids-on [data-inv=""]{outline:0}.ids-on [data-inv=""]::after{display:none}
+
+/* ===== THE SITE (one dark theme): the Blend screen ===== */
+.site{background:#000;color:#fff;font-family:var(--syne);min-height:100%}
+.site .muted{color:#a0a0a8}
+.site button{color:#fff}
+.s-nav{display:flex;align-items:center;gap:22px;height:64px;padding:0 28px;border-bottom:1px solid rgba(255,255,255,.1);background:#0a0a0c}
+.s-brand{font:800 18px var(--syne);background:linear-gradient(90deg,#f97316,#dc2626);-webkit-background-clip:text;background-clip:text;color:transparent}
+.s-menu{display:flex;gap:18px;font:700 14px var(--syne);color:rgba(255,255,255,.72)}
+.s-menu .cur{color:#fb923c}
+.s-av{margin-left:auto;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#f97316,#dc2626);color:#0b0b0b;font:800 14px/34px var(--syne);text-align:center}
+.s-wrap{max-width:1024px;margin:0 auto;padding:32px 16px 40px}
+.s-head{text-align:center;margin-bottom:32px}
+.s-title{display:inline-flex;align-items:center;gap:12px;margin-bottom:12px}
+.s-title span{font-size:36px}
+.s-title h1{font:700 36px/1.1 var(--syne);background:linear-gradient(90deg,#fb923c,#fcd34d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.s-motto{color:#a0a0a8;font-size:18px;margin:0 0 24px}
+.stepper{display:inline-flex;align-items:center;gap:16px;padding:12px 16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.st{display:flex;align-items:center;gap:8px}
+.st-m{display:flex;flex-direction:column;align-items:center}
+.st-c{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#a0a0a8;display:grid;place-items:center}
+.st-c .i{width:22px;height:22px}
+.st-c.done{background:#22c55e;border-color:#22c55e;color:#fff}
+.st-c.cur{background:#fb923c;border-color:#fb923c;color:#000;box-shadow:0 10px 15px -3px rgba(251,146,60,.3)}
+.st-l{font-size:12px;margin-top:4px;color:#a0a0a8}
+.st-l.done{color:#4ade80}.st-l.cur{color:#fb923c;font-weight:700}
+.st-line{width:32px;height:2px;background:rgba(255,255,255,.2)}.st-line.done{background:#22c55e}
+.glass{background:rgba(10,10,12,.6);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.37);border-radius:16px;padding:24px;margin-bottom:24px}
+.glass.locked{opacity:.4}
+.glass.go{border:2px solid rgba(251,146,60,.3)}
+.hd{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.hd .i{width:32px;height:32px;color:#fb923c}
+.hd h2{font:700 20px var(--syne)}
+.stepb{font-size:12px;color:#a0a0a8;padding:4px 8px;background:rgba(255,255,255,.05);border-radius:999px}
+.lockhd{display:flex;align-items:center;gap:12px}.lockhd h2{font:400 20px var(--syne);color:#a0a0a8}
+.s-lbl{display:block;font-size:14px;margin-bottom:12px;color:#a0a0a8}
+.s-lbl .i{width:16px;height:16px;vertical-align:-3px;margin-right:8px}
+.s-select{width:100%;padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(28,28,34,.6);color:#fff;font-size:15px;margin-bottom:24px}
+.series{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ser{display:flex;align-items:center;gap:12px;padding:16px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);text-align:left}
+.ser.on{border-color:#fb923c;background:rgba(251,146,60,.1);box-shadow:0 0 0 1px #fb923c}
+.ser h4{font:400 15px var(--syne)}.ser.on h4{color:#fb923c}
+.ser p{margin:0;font-size:12px;color:#a0a0a8}
+.casc{display:flex;flex:none}.casc i{display:block;width:34px;height:34px;border-radius:4px;border:1px solid rgba(0,0,0,.5);margin-left:-14px;box-shadow:2px 0 4px rgba(0,0,0,.5)}.casc i:first-child{margin-left:0}
+/* recipe cards (ui/recipe/RecipeCards.tsx + models/recipeLooks.js) */
+.rcs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.rc{position:relative;display:block;width:100%;padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);text-align:left;font-family:var(--syne)}
+.rc:hover{border-color:rgba(255,255,255,.2)}
+.rc.rec{border-color:rgba(251,191,36,.4);background:linear-gradient(135deg,rgba(120,53,15,.1),rgba(124,45,18,.05))}
+.rc.sel{border-color:#fbbf24;box-shadow:0 0 0 2px #fb923c,0 10px 15px -3px rgba(251,146,60,.2)}
+.rc-top{position:absolute;top:-8px;left:50%;transform:translateX(-50%);padding:2px 8px;font-size:10px;font-weight:700;border-radius:999px;background:#fbbf24;color:#000;white-space:nowrap}
+.rc-icw{display:flex;justify-content:center;margin-bottom:12px}
+.rc-ic{width:48px;height:48px;margin:0 auto 8px;border-radius:12px;display:grid;place-items:center;box-shadow:0 10px 15px -3px rgba(0,0,0,.4);color:#fff}
+.rc-ic .i{width:24px;height:24px}
+.rc h4{font:700 16px/1.3 var(--syne);margin:0 0 4px}
+.rc.sel h4,.rc.rec h4{color:#fbbf24}
+.rc-pill{display:inline-block;padding:2px 8px;font-size:10px;border-radius:999px;margin-bottom:8px;font-weight:700}
+.rc p{margin:0;font-size:11px;line-height:1.35;color:#a0a0a8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* ingredients (ui/recipe/Ingredients.tsx) */
+.ingr{display:grid;gap:24px}
+.tcg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.tcb{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);font:700 14px var(--syne);text-align:center}
+.tcb.on{border-color:#fb923c;background:rgba(251,146,60,.2);color:#fb923c;box-shadow:0 0 0 1px #fb923c}
+.hint{font-size:12px;color:#a0a0a8;margin:8px 0 0}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.opts.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.opt{display:flex;align-items:center;gap:12px;padding:16px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);text-align:left;font-family:var(--syne)}
+.opt.on{border-color:#fb923c;background:rgba(251,146,60,.1);box-shadow:0 0 0 1px #fb923c}
+.opt .ob{flex:none;width:40px;height:40px;border-radius:8px;background:rgba(28,28,34,.6);display:grid;place-items:center;color:#a0a0a8}
+.opt.on .ob{color:#fb923c}.opt .ob .i{width:20px;height:20px}
+.opt b{display:block;font-weight:400}.opt.on b{color:#fb923c}
+.opt small{font-size:12px;color:#a0a0a8}
+.gb{display:block;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);text-align:left;font-family:var(--syne)}
+.gb.on{border-color:#fb923c;background:rgba(251,146,60,.1);box-shadow:0 0 0 1px #fb923c}
+.gb span{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:4px}.gb.on span{color:#fb923c}
+.gb .i{width:16px;height:16px;color:#a0a0a8}.gb.on .i{color:#fb923c}
+.gb small{display:block;font-size:10px;line-height:1.25;color:#a0a0a8}
+.slide{display:flex;align-items:center;gap:16px}
+.slide input{flex:1;accent-color:#fb923c;min-height:44px}
+.slide output{font:700 24px var(--syne);color:#fb923c;min-width:48px;text-align:center}
+/* NEW (F92): the skip of «Deep cuts» — the number, what it means and the strip of positions */
+.skipv{display:grid;justify-items:center;min-width:72px}
+.skipv output{font:700 28px/1 var(--syne);color:#fb923c}
+.skipv small{font-size:11px;color:#a0a0a8;margin-top:4px;white-space:nowrap}
+.strip{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;margin-top:12px}
+.cell{height:28px;border-radius:6px;display:grid;place-items:center;font:700 11px var(--syne)}
+.cell.sk{background:rgba(255,255,255,.07);color:#a0a0a8;text-decoration:line-through}
+.cell.in{background:#fb923c;color:#0b0b0b}
+.cell.rest{border:1px dashed rgba(255,255,255,.22);color:#a0a0a8}
+.stripkey{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11px;color:#a0a0a8}
+.stripkey i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.gen-wrap{text-align:center;padding:16px 0}
+.gen{padding:16px 32px;font:800 18px var(--syne);border-radius:12px;text-transform:uppercase;letter-spacing:.1em;border:1px solid #ff8800;background:linear-gradient(90deg,rgba(255,136,0,.2),rgba(255,136,0,.4) 50%,rgba(255,136,0,.2));color:#fff}
+.gen .i{width:20px;height:20px;vertical-align:-3px;margin-right:8px}
+.sum{font-size:14px;color:#a0a0a8;margin:16px 0 0}.sum b{color:#fff}
+/* the phone (public/css/mobile.css, mobile/blend.css) */
+.phone{position:relative;width:390px;height:844px;overflow:hidden;background:#000;font-family:var(--sys)}
+.ph-top{position:absolute;inset:0 0 auto 0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(8,8,10,.92);border-bottom:1px solid rgba(255,255,255,.1);z-index:3}
+.ph-top b{font:800 17px var(--syne)}
+.ph-top .s-av{margin:0;width:32px;height:32px;line-height:32px}
+.ph-scroll{position:absolute;top:52px;left:0;right:0;bottom:128px;overflow-y:auto;padding:20px 16px 24px}
+.ph-scroll .glass{padding:16px;margin-bottom:16px}
+.ph-scroll .hd{margin-bottom:12px}.ph-scroll .hd h2{font-size:18px}.ph-scroll .hd .i{width:26px;height:26px}
+.ph-scroll .s-head{margin-bottom:20px}
+.ph-scroll .s-title span{font-size:26px}.ph-scroll .s-title h1{font-size:26px}
+.ph-scroll .s-motto{font-size:15px;margin-bottom:14px}
+.ph-scroll .stepper{gap:6px;padding:10px 12px}
+.ph-scroll .st{gap:4px}.ph-scroll .st-c{width:32px;height:32px}.ph-scroll .st-c .i{width:18px;height:18px}
+.ph-scroll .st-l{font-size:10px}.ph-scroll .st-line{width:14px}
+.pick-l{font-size:13px;color:#a0a0a8;margin:0 0 8px}
+.pick{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:12px;border-radius:12px;border:1px solid #fb923c;background:rgba(251,146,60,.08);text-align:left}
+.pick .t{flex:1;min-width:0}.pick .t b{display:block;font:700 15px var(--syne);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pick .t small{color:#a0a0a8;font-size:13px}
+.pick .a{font:700 14px var(--sys);color:#fb923c}
+.phone .rcs{grid-template-columns:minmax(0,1fr)}
+.phone .rc{display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:14px;align-items:start;padding:16px}
+.phone .rc-icw{grid-column:1;grid-row:1/span 3;margin:0}
+.phone .rc-ic{margin:0}
+.phone .rc h4,.phone .rc .rc-pill,.phone .rc p{grid-column:2;justify-self:start}
+.phone .rc p{font:14px/1.4 var(--sys);-webkit-line-clamp:unset;display:block}
+.phone .opts,.phone .opts.g4{grid-template-columns:minmax(0,1fr)}
+.phone .tcb{padding:10px 0;min-height:44px}
+.phone .s-lbl{font:14px var(--sys)}
+.phone .hint{font:13px/1.4 var(--sys)}
+.ph-bar{position:absolute;left:0;right:0;bottom:64px;min-height:64px;display:flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(8,8,10,.92);border-top:1px solid rgba(255,255,255,.12);z-index:3}
+.ph-bar span{flex:1;min-width:0;font-size:14px;line-height:18px;color:rgba(255,255,255,.8)}
+.ph-bar button{flex:1;min-width:0;min-height:48px;border:0;border-radius:12px;background:linear-gradient(135deg,#f97316,#dc2626);color:#0b0b0b;font:800 16px var(--syne)}
+.ph-bar button[disabled]{opacity:.45}
+.ph-tabs{position:absolute;left:0;right:0;bottom:0;height:64px;display:grid;grid-template-columns:repeat(5,1fr);background:#0a0a0c;border-top:1px solid rgba(255,255,255,.12);z-index:3}
+.ph-tabs span{display:grid;justify-items:center;align-content:center;gap:2px;font:700 12px/14px var(--sys);color:rgba(255,255,255,.72)}
+.ph-tabs span .i{width:20px;height:20px}
+.ph-tabs .cur{color:#fb923c}
+
+/* ===== THE PANEL (/admin): the kit's skin of The Album Blender (public/css/admin-skin.css) and the Panel's .cms-* ===== */
+[data-admin-skin]{
+  --ak-bg:#0a0a0c; --ak-panel:#101014; --ak-panel-2:#1c1c22; --ak-fg:#ffffff; --ak-soft:#a0a0a8; --ak-line:rgba(255,255,255,.18);
+  --ak-accent:#f97316; --ak-accent-fg:#0b0b0b; --ak-accent-soft:rgba(249,115,22,.18);
+  --ak-ok:#4ade80; --ak-ok-soft:rgba(74,222,128,.14); --ak-warn:#fca5a5; --ak-warn-soft:rgba(220,38,38,.14);
+  --ak-err:#f87171; --ak-err-soft:rgba(220,38,38,.16); --ak-new:#fb923c; --ak-new-soft:rgba(249,115,22,.16);
+  --ak-preview-bg:#000000; --ak-preview-fg:#ffffff; --ak-display:"Syne",system-ui,sans-serif;
+  --ak-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ak-mono:ui-monospace,SFMono-Regular,Menlo,monospace; --ak-radius:12px;
+  background:var(--ak-bg);color:var(--ak-fg);font:400 14px/1.5 var(--ak-sans);min-height:100%
+}
+[data-admin-skin] button{color:var(--ak-fg)}
+.cms{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:900px}
+.cms-rail{display:flex;flex-direction:column;gap:4px;padding:16px 10px;background:var(--ak-panel);border-right:1px solid var(--ak-line)}
+.cms-who{display:flex;align-items:center;gap:10px;padding:0 8px 12px}
+.cms-who small{display:block;color:var(--ak-soft);font-size:12px}
+.cms-avatar{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--ak-accent);color:var(--ak-accent-fg);font:700 15px var(--ak-display)}
+.cms-navb{display:flex;align-items:center;min-height:44px;padding:6px 12px;border:0;border-radius:var(--ak-radius);background:none;text-align:left;font-weight:600;font-size:14px}
+.cms-navb[aria-current="page"]{background:var(--ak-accent-soft);box-shadow:inset 3px 0 0 var(--ak-accent)}
+[data-admin-skin] .cms-navb:disabled{color:var(--ak-soft);cursor:default}
+.cms-main{display:flex;flex-direction:column;gap:14px;min-width:0;width:100%;max-width:1180px;margin:0 auto;padding:20px 16px 48px}
+.cms-head{display:grid;gap:6px}
+.cms-head h1{font:700 28px/1.15 var(--ak-display)}
+.cms-head p{margin:0;color:var(--ak-soft);max-width:62ch}
+.crumb{margin:0;font-size:13px;color:var(--ak-soft)}.crumb button{background:none;border:0;padding:0;min-height:44px;color:var(--ak-fg);text-decoration:underline;text-decoration-color:var(--ak-accent);text-underline-offset:3px;font-weight:600}
+.cms-soft{color:var(--ak-soft)}
+.cms-site{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;margin:0}
+.cms-site b{color:var(--ak-fg)}
+.cms-bar{position:sticky;top:0;z-index:6;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:12px 14px;border:1px solid var(--ak-line);border-radius:var(--ak-radius);background:var(--ak-panel)}
+.cms-bar.has{border-color:var(--ak-accent)}
+.cms-bar-info{display:grid;gap:1px;margin-right:auto}
+.cms-bar-info span{color:var(--ak-soft);font-size:12.5px}
+.cms-acts{display:flex;flex-wrap:wrap;gap:8px}
+.cms-msg{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;border-radius:var(--ak-radius);background:var(--ak-panel-2);font-size:13.5px}
+.cms-msg.conf{display:grid;border:1px solid var(--ak-accent)}
+.cms-msg.conf ul{margin:0;padding-left:18px}
+.cms-msg.ok{background:var(--ak-ok-soft);color:var(--ak-ok)}
+.ak-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:6px 14px;background:transparent;border:1px solid var(--ak-line);border-radius:var(--ak-radius);font:700 13.5px var(--ak-sans)}
+.ak-btn:hover{background:var(--ak-panel-2)}
+[data-admin-skin] .ak-btn.pri{background:var(--ak-accent);color:var(--ak-accent-fg);border-color:var(--ak-accent)}
+.ak-btn:disabled{opacity:.5;cursor:not-allowed}
+.ak-btn .i{width:16px;height:16px}
+.ak-badge{display:inline-block;padding:0 7px;border-radius:999px;font:700 10.5px/18px var(--ak-mono);background:var(--ak-panel-2);color:var(--ak-soft);border:1px solid var(--ak-line);white-space:nowrap}
+.ak-badge.accent{background:var(--ak-accent-soft);color:var(--ak-fg);border-color:transparent}
+.ak-badge.warn{background:var(--ak-warn-soft);color:var(--ak-warn);border-color:transparent}
+.ak-badge.new{background:var(--ak-new-soft);color:var(--ak-new);border-color:transparent}
+.ak-badge.prop{border-style:dashed;color:var(--ak-soft);background:transparent}
+.ak-badge.hid{border:1px dashed var(--ak-soft);background:transparent;color:var(--ak-fg)}
+.ak-notice{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 14px;border-radius:var(--ak-radius);font-size:13.5px;background:var(--ak-panel-2)}
+.ak-notice.warn{background:var(--ak-warn-soft);color:var(--ak-warn)}
+.ak-notice.err{background:var(--ak-err-soft);color:var(--ak-err)}
+.ak-switch{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;background:transparent;border:0;font-size:12.5px;font-weight:700}
+.ak-switch i{position:relative;width:36px;height:20px;border-radius:999px;background:var(--ak-line);transition:background .2s}
+.ak-switch i::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--ak-fg);transition:transform .2s}
+.ak-switch[aria-checked="true"] i{background:var(--ak-accent)}
+.ak-switch[aria-checked="true"] i::after{transform:translateX(16px);background:var(--ak-accent-fg)}
+.ak-icon{display:inline-grid;place-items:center;width:44px;height:44px;padding:0;background:transparent;border:1px solid var(--ak-line);border-radius:calc(var(--ak-radius) - 4px);font-size:16px}
+.ak-icon:disabled{opacity:.35;cursor:not-allowed}
+.ak-icon .i{width:18px;height:18px}
+.ak-input{width:100%;min-height:44px;padding:8px 12px;background:var(--ak-bg);border:1px solid var(--ak-line);border-radius:calc(var(--ak-radius) - 2px);color:var(--ak-fg);font-size:14px}
+textarea.ak-input{min-height:68px;resize:vertical;line-height:1.45}
+.ak-input[aria-invalid="true"]{border-color:var(--ak-err)}
+select.ak-input{padding:0 10px}
+.ak-lb{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12.5px;font-weight:700}
+.ak-hint{font-size:12px;color:var(--ak-soft);margin:0}
+.ak-err-t{font-size:12.5px;font-weight:700;color:var(--ak-err);margin:0}
+.ak-num{flex:none;display:grid;place-items:center;min-width:30px;height:30px;padding:0 6px;border-radius:999px;background:var(--ak-accent-soft);font:700 12px var(--ak-mono)}
+.ak-where{display:grid;gap:8px;padding:12px;background:var(--ak-preview-bg);color:var(--ak-preview-fg);border-radius:var(--ak-radius);font-size:13px}
+.ak-where>b{font:700 10px var(--ak-mono);letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+/* NEW (F92): the list of recipes — the kit's ordered row, with the look of the recipe, its switch and the one star */
+.rlist{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.rrow{border:1px solid var(--ak-line);border-radius:var(--ak-radius);background:var(--ak-panel);transition:box-shadow .15s,background-color .3s}
+.rrow.off{border-style:dashed;background:var(--ak-bg)}
+.rrow.off .rrow-t b{color:var(--ak-soft)}
+.rrow.moved{background:var(--ak-accent-soft)}
+.rrow.dragging{opacity:.5}
+.rrow.over{box-shadow:inset 0 3px 0 var(--ak-accent)}
+.rrow.open{border-color:var(--ak-accent)}
+.rrow-h{display:flex;align-items:center;gap:8px;padding:8px 10px}
+.grip{cursor:grab;color:var(--ak-soft);display:grid;place-items:center;width:24px;height:44px;touch-action:none}
+.grip .i{width:16px;height:16px}
+.ord{display:inline-flex;gap:2px}
+.pos{min-width:28px;font:700 15px var(--ak-mono);color:color-mix(in srgb,var(--ak-accent) 70%,var(--ak-fg));text-align:center}
+.rrow.off .pos{color:var(--ak-soft)}
+.rico{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff}
+.rico .i{width:20px;height:20px}
+.rrow-t{flex:1 1 200px;min-width:0}
+.rrow-t b{display:block;font:600 16px/1.3 var(--ak-display)}
+.rrow-t small{display:block;font-size:12px;color:var(--ak-soft)}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.rrow-acts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-left:auto;justify-content:flex-end}
+.star{min-height:44px;padding:0 10px;border-radius:calc(var(--ak-radius) - 4px);border:1px solid var(--ak-line);background:transparent;font:700 12.5px var(--ak-sans);display:inline-flex;align-items:center;gap:6px}
+.star .i{width:16px;height:16px}
+[data-admin-skin] .star[aria-pressed="true"]{background:#fbbf24;border-color:#fbbf24;color:#0b0b0b}
+.star:disabled{opacity:.4;cursor:not-allowed}
+.said{min-height:20px;margin:2px 2px 0;font-size:13px;color:var(--ak-soft)}.said b{color:var(--ak-fg)}
+.rrow-b{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,1fr);gap:16px;padding:12px 14px 16px;border-top:1px solid var(--ak-line)}
+.fset{display:grid;gap:10px;margin:0 0 6px;padding:0;border:0;min-width:0}
+.fset>legend{padding:0;margin-bottom:8px;font:600 15px var(--ak-display)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fld{display:grid;gap:5px;min-width:0}
+.sws{display:flex;flex-wrap:wrap;gap:6px}
+.sw-c{width:44px;height:44px;border-radius:10px;border:2px solid transparent;padding:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.sw-c[aria-checked="true"]{border-color:#fff;box-shadow:0 0 0 2px var(--ak-accent)}
+.sw-i{width:44px;height:44px;border-radius:10px;border:1px solid var(--ak-line);background:var(--ak-panel-2);display:grid;place-items:center;padding:0}
+.sw-i .i{width:20px;height:20px}
+.sw-i[aria-checked="true"]{border-color:var(--ak-accent);background:var(--ak-accent-soft);box-shadow:0 0 0 1px var(--ak-accent)}
+.ig{display:grid;gap:6px}
+.igr{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:8px;align-items:center;padding:6px 10px;border:1px solid var(--ak-line);border-radius:10px;background:var(--ak-panel-2)}
+.igr.dim{opacity:.6}
+.igr label.ck{display:flex;align-items:center;gap:8px;min-height:44px;font-size:13.5px}
+.igr input[type=checkbox]{width:18px;height:18px;accent-color:var(--ak-accent)}
+.igr small{display:block;color:var(--ak-soft);font-size:12px}
+.blocksum{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 12px;border-radius:10px;background:var(--ak-panel-2);font-size:13.5px}
+.side{display:grid;gap:10px;align-content:start}
+.later{display:grid;gap:8px;padding:14px;border:1px dashed var(--ak-line);border-radius:var(--ak-radius);color:var(--ak-soft)}
+.later h3{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--ak-fg);font:600 16px var(--ak-display)}
+.later h3 .i{width:18px;height:18px;color:var(--ak-new)}
+.addrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+/* the texts section of today (reference) */
+.cms-chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:5px 12px;border:1px solid var(--ak-line);border-radius:999px;background:none;font-weight:600;font-size:13px}
+[data-admin-skin] .cms-chip[aria-pressed="true"]{background:var(--ak-accent);color:var(--ak-accent-fg);border-color:var(--ak-accent)}
+.cms-screens{display:flex;flex-wrap:wrap;gap:6px}
+.cms-rows{display:grid;gap:8px}
+.cms-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) minmax(0,1.5fr);gap:8px 12px;padding:12px;border:1px solid var(--ak-line);border-radius:var(--ak-radius);background:var(--ak-panel)}
+.cms-key{font:500 12px/1.5 var(--ak-mono);color:var(--ak-soft);overflow-wrap:anywhere}
+.cms-lbl{display:block;color:var(--ak-soft);font:700 10.5px var(--ak-mono);letter-spacing:.08em;text-transform:uppercase}
+.todaynote{padding:14px;border:1px dashed var(--ak-line);border-radius:var(--ak-radius);color:var(--ak-soft);font-size:13.5px}
+.todaynote b{color:var(--ak-fg)}
+/* NEW (F92): the builder — numbered blocks at the left, the preview on a sample album at the right */
+.bld{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,1fr);gap:16px;align-items:start}
+.blk{display:grid;gap:10px;padding:14px;border:1px solid var(--ak-line);border-radius:var(--ak-radius);background:var(--ak-panel)}
+.blk-h{display:flex;align-items:flex-start;gap:10px}
+.blk-h b{display:block;font:600 16px/1.25 var(--ak-display)}
+.blk-h p{margin:2px 0 0;font-size:12.5px;color:var(--ak-soft)}
+.blk.bad{border-color:var(--ak-err)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border:1px solid var(--ak-line);border-radius:999px;background:none;font-weight:600;font-size:13.5px}
+.chip .i{width:16px;height:16px}
+[data-admin-skin] .chip[aria-pressed="true"]{background:var(--ak-accent);color:var(--ak-accent-fg);border-color:var(--ak-accent)}
+.chip:disabled{opacity:.45;cursor:not-allowed}
+.akseg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--ak-line);border-radius:var(--ak-radius);overflow:hidden}
+.akseg button{min-height:44px;padding:4px 14px;background:transparent;border:0;font-size:13.5px;font-weight:700}
+[data-admin-skin] .akseg button[aria-pressed="true"]{background:var(--ak-accent);color:var(--ak-accent-fg)}
+.stp{display:inline-flex;align-items:center;gap:8px}
+.stp output{min-width:40px;text-align:center;font:700 22px var(--ak-display)}
+.meter{margin:0;font-size:12.5px;color:var(--ak-soft)}
+.meter b{color:var(--ak-fg)}
+.meter.bad b{color:var(--ak-err)}
+.rng{display:flex;align-items:center;gap:12px}
+.rng input{flex:1;accent-color:var(--ak-accent);min-height:44px}
+.rng output{min-width:120px;font-weight:700}
+.fixed{padding:10px 12px;border-radius:10px;border:1px dashed var(--ak-line);font-size:13px;color:var(--ak-soft)}
+.fixed b{color:var(--ak-fg)}
+.pv{position:sticky;top:8px;display:grid;gap:8px;padding:14px;border:1px solid var(--ak-line);border-radius:var(--ak-radius);background:var(--ak-panel)}
+.pv h3{font:600 17px var(--ak-display)}
+.pvguide{margin:0;padding:8px 10px;border-left:3px solid var(--ak-accent);background:var(--ak-panel-2);border-radius:0 8px 8px 0;font-size:12.5px;color:var(--ak-soft)}
+.pvguide b{color:var(--ak-fg)}
+.pvsum{margin:0;font-size:14px}
+.pvsum b{font:700 18px var(--ak-display)}
+.pvcount{display:flex;flex-wrap:wrap;gap:6px}
+.pvlist{display:grid;gap:3px;margin:0;padding:0;list-style:none}
+.pvr{display:grid;grid-template-columns:26px minmax(0,1fr) 64px 104px;gap:8px;align-items:center;padding:6px 8px;border-radius:8px;font-size:13px}
+.pvr .n{font:700 12px var(--ak-mono);color:var(--ak-soft);text-align:right}
+.pvr .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pvr .t small{color:var(--ak-soft);margin-left:6px;font-size:11.5px}
+.pvr .b{height:6px;border-radius:3px;background:var(--ak-panel-2);overflow:hidden}
+.pvr .b i{display:block;height:100%;background:#a0a0a8}
+.pvr .v{justify-self:end}
+.pvr.in{background:var(--ak-accent-soft)}
+.pvr.in .t{font-weight:700}
+.pvr.in .b i{background:var(--ak-accent)}
+.pvr.skip .t,.pvr.out .t{color:var(--ak-soft)}
+.pvr.skip .t{text-decoration:line-through}
+.pvr.nodata .t,.pvr.short .t{color:var(--ak-soft);font-style:italic}
+.bact{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--ak-line);border-radius:var(--ak-radius);background:var(--ak-panel)}
+.bact p{margin:0;font-size:13px;color:var(--ak-soft);flex:1 1 260px}
+/* the Panel on the phone (the .cms rules at 860 px, here by the width of its frame) */
+@container (max-width:860px){
+  .cms{grid-template-columns:minmax(0,1fr)}
+  .cms-rail{flex-direction:row;flex-wrap:wrap;align-items:center;border-right:0;border-bottom:1px solid var(--ak-line);padding:10px 12px}
+  .cms-who{padding:0 8px 0 0}
+  .cms-head h1{font-size:24px}
+  .cms-row{grid-template-columns:minmax(0,1fr)}
+  .rrow-h{display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:start;column-gap:8px}
+  .rrow-h .ctl{display:flex;flex-direction:column;align-items:center;gap:4px;grid-row:span 2}
+  .rrow-h .ord{flex-direction:column}
+  .rrow-acts{grid-column:2/-1;margin-left:0;justify-content:flex-start}
+  .rrow-b,.bld,.two{grid-template-columns:minmax(0,1fr)}
+  .igr{grid-template-columns:minmax(0,1fr)}
+  .pv{position:static}
+  .pvr{grid-template-columns:22px minmax(0,1fr) 96px}
+  .pvr .b{display:none}
+}
+@container (min-width:861px){ .rrow-h .ctl{display:contents} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body class="prop-on">
+<header class="wrap top">
+  <div class="row">
+    <div>
+      <div class="brandline">The Album Blender · receitas de mistura (F92) · protótipo v1</div>
+      <h1>Receitas do Blend</h1>
+      <p>Como ficam a tela de Blend e a seção de receitas do Painel. Em cada aba, hoje à esquerda e a proposta à direita. Clique e mexa: nada é salvo. O que você muda no Painel aparece na tela de Blend da proposta.</p>
+    </div>
+    <button class="ghostbtn" id="theme" type="button" aria-label="Trocar o tema da moldura">Tema da moldura: automático</button>
+  </div>
+</header>
+<main class="wrap">
+  <div class="tabs" role="tablist" aria-label="Telas">
+    <button class="tab" role="tab" data-tab="blend-pc" aria-selected="true">Site · Blend (computador)</button>
+    <button class="tab" role="tab" data-tab="blend-ph" aria-selected="false">Site · Blend (celular)</button>
+    <button class="tab" role="tab" data-tab="admin" aria-selected="false">Admin · Receitas</button>
+    <button class="tab" role="tab" data-tab="builder" aria-selected="false">Admin · Construtor de receita</button>
+  </div>
+  <div class="tools" id="tools"></div>
+  <p class="say" id="say"></p>
+  <div id="stage"></div>
+</main>
+<script>
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+const ord = n => n + 'ª';
+const ordm = n => n + 'º';
+
+/* icons: Lucide's shapes, drawn here (the app uses lucide through ui/Icon) */
+const ICONS = {
+  sparkles: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+  'trending-up': '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  'trending-down': '<polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  compass: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
+  music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  disc: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/>',
+  headphones: '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+  flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8M16 17H8M10 9H8"/>',
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  layers: '<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+  'list-music': '<path d="M21 15V6M12 12H3M16 6H3M12 18H3"/><circle cx="18.5" cy="15.5" r="2.5"/>',
+  bar: '<path d="M12 20V10M18 20V4M6 20v-4"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  merge: '<circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/>',
+  scale: '<path d="M12 3v18M7 21h10M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/><path d="m16 16 3-8 3 8a4.5 4.5 0 0 1-6 0ZM2 16l3-8 3 8a4.5 4.5 0 0 1-6 0Z"/>',
+  shuffle: '<path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4M2 6h1.9c1.5 0 2.9.9 3.6 2.2M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  grip: '<circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/>',
+  up: '<path d="m18 15-6-6-6 6"/>', down: '<path d="m6 9 6 6 6-6"/>',
+  wand: '<path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3M5 6v4M19 14v4M10 2v2M7 8H3M21 16h-4M11 3H9"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>', home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>', box: '<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/>'
+};
+const ic = (n, c = '') => `<svg class="i ${c}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ICONS.music}</svg>`;
+
+/* ---------- the closed lists of looks (REQ-02): colours and icons ---------- */
+const LOOKS = [
+  { id: 'amber', name: 'Âmbar', c1: '#fbbf24', c2: '#f97316', txt: '#fbbf24' },
+  { id: 'green', name: 'Verde', c1: '#22c55e', c2: '#059669', txt: '#4ade80' },
+  { id: 'rose', name: 'Rosa', c1: '#f43f5e', c2: '#f97316', txt: '#fb7185' },
+  { id: 'sky', name: 'Azul', c1: '#0ea5e9', c2: '#2563eb', txt: '#60a5fa' },
+  { id: 'violet', name: 'Violeta', c1: '#8b5cf6', c2: '#c026d3', txt: '#c4b5fd', isNew: 1 },
+  { id: 'teal', name: 'Água', c1: '#0d9488', c2: '#0e7490', txt: '#5eead4', isNew: 1 },
+  { id: 'fire', name: 'Fogo', c1: '#f97316', c2: '#dc2626', txt: '#fb923c', isNew: 1 },
+  { id: 'gray', name: 'Cinza', c1: '#6b7280', c2: '#4b5563', txt: '#9ca3af' }
+];
+const LOOK = id => LOOKS.find(l => l.id === id) || LOOKS[7];
+const ICON_LIST = [['sparkles', 'Brilho'], ['trending-up', 'Sobe'], ['award', 'Prêmio'], ['user', 'Pessoa'], ['compass', 'Bússola'], ['trending-down', 'Desce'], ['disc', 'Álbum'], ['music', 'Nota'], ['headphones', 'Fones'], ['flame', 'Chama']];
+
+/* ---------- the recipes: today's four (algorithms/index.js, i18n/pt/blend.js) and the two new ones (F92 REQ-04) ---------- */
+const DEF = { duration: 60, outputMode: 'auto', groupingStrategy: 'by_album', rankingType: 'combined', trackCount: 3, skip: 3 };
+const R = (o) => Object.assign({ on: true, rec: false, kind: 'code', prop: {}, def: clone(DEF) }, o);
+const TODAY = [
+  R({ id: 'mjrp-balanced-cascade', look: 'amber', icon: 'sparkles', rec: true, badge: 'RECOMENDADA', badgeEn: 'RECOMMENDED',
+      pt: '[MJRP] Playlists Equilibradas do Zé', en: "[MJRP] Zé's Balanced Playlists",
+      dpt: 'Monta playlists equilibradas misturando as melhores faixas de cada álbum. As playlists curtas são juntadas automaticamente.',
+      den: 'Builds balanced playlists by blending the best tracks of each album. Short playlists are merged automatically.', shown: { duration: 1, rankingType: 1 } }),
+  R({ id: 'top-n-popular', look: 'green', icon: 'trending-up', badge: 'SPOTIFY', badgeEn: 'SPOTIFY', pt: 'Top Faixas por Popularidade no Spotify', en: 'Top Tracks by Spotify Popularity',
+      dpt: 'Escolha as suas faixas favoritas, com base na popularidade no Spotify.', den: 'Pick your favorite tracks, based on Spotify popularity.', shown: { trackCount: 1, groupingStrategy: 1, outputMode: 1 } }),
+  R({ id: 'top-n-acclaimed', look: 'rose', icon: 'award', badge: 'BEA', badgeEn: 'BEA', pt: 'Top Faixas Aclamadas no BestEverAlbums', en: 'Top Acclaimed Tracks on BestEverAlbums',
+      dpt: 'Escolha as faixas aclamadas pela crítica, com base no BestEverAlbums.', den: 'Pick the critically acclaimed tracks, based on BestEverAlbums.', shown: { trackCount: 1, groupingStrategy: 1, outputMode: 1 } }),
+  R({ id: 'top-n-user', look: 'sky', icon: 'user', badge: 'MINHA', badgeEn: 'USER', pt: 'Top Faixas pela Minha Própria Classificação', en: 'Top Tracks by My Own Ranking',
+      dpt: 'Crie playlists a partir das suas classificações pessoais das faixas.', den: 'Create playlists from your personal track rankings.', shown: { trackCount: 1, groupingStrategy: 1, outputMode: 1 } })
+];
+const PROPOSAL0 = clone(TODAY).map(r => r.id === 'mjrp-balanced-cascade' ? Object.assign(r, { badge: 'EQUILIBRADA', badgeEn: 'BALANCED', prop: { badge: 1 } }) : r).concat([
+  R({ id: 'deep-cuts', kind: 'blocks', look: 'violet', icon: 'compass', badge: 'SPOTIFY', badgeEn: 'SPOTIFY', pt: 'Deep cuts', en: 'Deep Cuts',
+      dpt: 'Pula as faixas mais conhecidas de cada álbum e pega as que vêm logo depois.', den: "Skips each album's best-known tracks and picks the ones right after them.",
+      prop: { pt: 1, dpt: 1 }, shown: { skip: 1, groupingStrategy: 1, outputMode: 1 },
+      blocks: { source: 'spotify', from: 'top', skip: 3, take: 3, short: 0, group: 'by_album' } }),
+  R({ id: 'least-played', kind: 'blocks', look: 'teal', icon: 'trending-down', badge: 'SPOTIFY', badgeEn: 'SPOTIFY', pt: 'As menos ouvidas', en: 'Least Played',
+      dpt: 'O oposto do top: as faixas menos ouvidas de cada álbum, pela popularidade no Spotify. Faixa sem dado nunca conta.',
+      den: 'The opposite of the top: the least played tracks of each album, by Spotify popularity. A track with no data never counts.',
+      prop: { pt: 1, dpt: 1 }, shown: { groupingStrategy: 1, outputMode: 1 },
+      blocks: { source: 'spotify', from: 'bottom', skip: 0, take: 3, short: 0, group: 'by_album' } })
+]);
+const SKIP_MAX = 10; // REQ-06: skip 0..10, take 1..10, skip+take <= 15; Deep cuts takes 3, so its slider runs 3..10
+
+/* the ingredients (models/recipeIngredients.js; texts of i18n/pt/ui.js) */
+const STRUCT = [['single', 'list-music', 'Uma playlist', 'Uma playlist com todas as faixas'], ['multiple', 'grid', 'Várias playlists', 'Dividida pelos limites de duração'], ['auto', 'sparkles', 'Automático', 'Uma playlist, dividida quando passa da meta']];
+const SOURCE = [['spotify', 'trending-up', 'Popularidade no Spotify', 'Com base nas reproduções'], ['bea', 'award', 'Escolha da crítica', 'Com base nas posições do BEA'], ['combined', 'scale', 'Combinada', 'Primeiro a crítica, a popularidade onde não há nota']];
+const GROUP = [['by_album', 'disc', 'Por álbum', 'Mantém a sequência do álbum'], ['flat_ranked', 'trending-up', 'Por posição', 'Todas as nº 1, depois todas as nº 2...'], ['artist_rank', 'users', 'Por artista e depois por posição', 'Agrupa por artista'], ['ranked_interleave', 'merge', 'Intercalado equilibrado', 'Revezamento por posição'], ['shuffle', 'shuffle', 'Aleatório', 'Surpreenda-me']];
+const ING = {
+  trackCount: { name: 'Quantas por álbum (Top nº)', opts: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => [n, 'Top ' + n]) },
+  skip: { name: 'Quantas das mais populares pular (deslizador)', opts: [3, 4, 5, 6, 7, 8, 9, 10].map(n => [n, 'pular ' + n]) },
+  groupingStrategy: { name: 'Agrupamento das faixas', opts: GROUP.map(g => [g[0], g[2]]) },
+  outputMode: { name: 'Estrutura da playlist', opts: STRUCT.map(g => [g[0], g[2]]) },
+  duration: { name: 'Duração alvo', opts: [30, 45, 60, 75, 90, 120, 150, 180].map(n => [n, n + ' min']) },
+  rankingType: { name: 'Fonte do ranking', opts: SOURCE.map(g => [g[0], g[2]]) }
+};
+const why = (r, k) => {
+  if (k === 'skip' && !(r.kind === 'blocks' && r.blocks.from === 'top' && r.blocks.skip > 0)) return 'só nas receitas de blocos que pulam as do topo';
+  if (r.kind === 'blocks' && (k === 'trackCount' || k === 'rankingType')) return 'os blocos decidem';
+  return '';
+};
+
+/* ---------- sample albums for the preview (real tracks; popularity INVENTED for the example) ---------- */
+const ALBUMS = {
+  okc: { name: 'OK Computer · Radiohead (1997)', tracks: [['Airbag', '4:44', 62], ['Paranoid Android', '6:27', 74], ['Subterranean Homesick Alien', '4:27', 58], ['Exit Music (For a Film)', '4:24', 70], ['Let Down', '4:59', 76], ['Karma Police', '4:21', 82], ['Fitter Happier', '1:57', 45], ['Electioneering', '3:50', 50], ['Climbing Up the Walls', '4:45', 55], ['No Surprises', '3:48', 80], ['Lucky', '4:19', 56], ['The Tourist', '5:24', 54]] },
+  vu: { name: 'The Velvet Underground & Nico (1967)', tracks: [['Sunday Morning', '2:56', 72], ["I'm Waiting for the Man", '4:39', 66], ['Femme Fatale', '2:38', 60], ['Venus in Furs', '5:12', 68], ['Run Run Run', '4:22', 45], ["All Tomorrow's Parties", '6:00', 50], ['Heroin', '7:12', 58], ['There She Goes Again', '2:41', 42], ["I'll Be Your Mirror", '2:14', 48], ["The Black Angel's Death Song", '3:11', 33], ['European Son', '7:46', null]] }
+};
+const SERIES = [
+  { name: 'Radiohead · anos 90', n: 4, c: ['#3b5f8a', '#c9c9c9', '#7a1f1f'] },
+  { name: 'Velvet Underground e Lou Reed', n: 3, c: ['#f2e6c8', '#111', '#a3a3a3'] },
+  { name: 'Rock progressivo · 1969 a 1973', n: 5, c: ['#c2410c', '#1e3a8a', '#e5e7eb'] },
+  { name: 'MPB dos anos 70', n: 6, c: ['#f59e0b', '#065f46', '#7c2d12'] }
+];
+const PRESETS = {
+  deep: { pt: 'Deep cuts', en: 'Deep Cuts', dpt: 'Pula as faixas mais conhecidas de cada álbum e pega as que vêm logo depois.', den: "Skips each album's best-known tracks and picks the ones right after them.", badge: 'SPOTIFY', badgeEn: 'SPOTIFY', look: 'violet', icon: 'compass', source: 'spotify', from: 'top', skip: 3, take: 3, short: 0, group: 'by_album' },
+  least: { pt: 'As menos ouvidas', en: 'Least Played', dpt: 'O oposto do top: as faixas menos ouvidas de cada álbum, pela popularidade no Spotify. Faixa sem dado nunca conta.', den: 'The opposite of the top: the least played tracks of each album, by Spotify popularity. A track with no data never counts.', badge: 'SPOTIFY', badgeEn: 'SPOTIFY', look: 'teal', icon: 'trending-down', source: 'spotify', from: 'bottom', skip: 0, take: 3, short: 0, group: 'by_album' },
+  blank: { pt: '', en: '', dpt: '', den: '', badge: '', badgeEn: '', look: 'gray', icon: 'music', source: 'spotify', from: 'top', skip: 0, take: 3, short: 0, group: 'by_album' }
+};
+
+/* ---------- state ---------- */
+const S = {
+  tab: 'blend-pc', view: 'both', width: 'pc', theme: 'auto', ids: false,
+  state: { blend: 'deep', admin: 'list', builder: 'deep' },
+  recipes: clone(PROPOSAL0), pub: '', open: null, msg: null, src: 'published', said: '', guard: '', drag: null, moved: null,
+  site: {}, builder: null
+};
+S.pub = JSON.stringify(S.recipes);
+
+/* ---------- the site ---------- */
+function catalogFor(proposal) {
+  if (!proposal) return TODAY;
+  const st = S.state.blend;
+  if (st === 'code') return TODAY.map(r => r.id === 'mjrp-balanced-cascade' ? Object.assign(clone(r), { badge: 'EQUILIBRADA', prop: { badge: 1 } }) : r);
+  const list = clone(S.recipes);
+  if (st === 'rec') list.forEach(r => { r.rec = r.id === 'deep-cuts'; });
+  if (st === 'hidden') list.forEach(r => { if (r.id === 'least-played') r.on = false; });
+  return list.filter(r => r.on);
+}
+const P = (r, f, text) => (r.prop && r.prop[f]) || r.isNew ? `<span class="prop">${esc(text)}</span>` : esc(text);
+function pillStyle(r) {
+  if (r.badge === 'SPOTIFY') return 'background:rgba(34,197,94,.2);color:#4ade80';
+  if (r.badge === 'BEA') return 'background:rgba(244,63,94,.2);color:#fb7185';
+  const l = LOOK(r.look); return `background:${rgba(l.c1, .2)};color:${l.txt}`;
+}
+function card(r, { sel, today, ctx }) {
+  const l = LOOK(r.look);
+  let cls = 'rc'; let style = '';
+  if (sel) { cls += ' sel'; style = `background:linear-gradient(135deg,${rgba(l.c1, .1)},${rgba(l.c2, .1)})`; } else if (r.rec) cls += ' rec';
+  const pill = today ? (r.rec ? 'background:rgba(251,191,36,.2);color:#fbbf24' : r.badge === 'SPOTIFY' ? 'background:rgba(34,197,94,.2);color:#4ade80' : r.badge === 'BEA' ? 'background:rgba(244,63,94,.2);color:#fb7185' : 'background:rgba(107,114,128,.2);color:#9ca3af') : pillStyle(r);
+  const inv = today || ctx === 'mini' ? '' : (r.id === 'deep-cuts' ? ' data-inv="BLEND-R03"' : r.id === 'least-played' ? ' data-inv="BLEND-R04"' : '');
+  return `<button type="button" class="${cls}" style="${style}" data-act="pick" data-ctx="${ctx}" data-id="${r.id}" aria-pressed="${!!sel}"${inv}>
+    ${r.rec ? `<span class="rc-top"${today || ctx === 'mini' ? '' : ' data-inv="BLEND-R02"'}>★ RECOMENDADA</span>` : ''}
+    <div class="rc-icw"><div class="rc-ic" style="background:linear-gradient(135deg,${l.c1},${l.c2})">${ic(r.icon)}</div></div>
+    <h4>${P(r, 'pt', r.pt)}</h4>
+    <span class="rc-pill" style="${pill}">${P(r, 'badge', r.badge || 'ALGORITMO')}</span>
+    <p>${P(r, 'dpt', r.dpt)}</p></button>`;
+}
+function stepper(series, recipe) {
+  let cur = 1; if (series) cur = 2; if (recipe) cur = 3; if (series && recipe) cur = 4;
+  const steps = [['disc', 'Mistura'], ['file-text', 'Receita'], ['list', 'Ingredientes'], ['sparkles', 'Misture! Pronto!']];
+  return `<div class="stepper">${steps.map((s, i) => { const n = i + 1; const k = n < cur ? 'done' : n === cur ? 'cur' : '';
+    return `<div class="st"><div class="st-m"><div class="st-c ${k}">${k === 'done' ? ic('check') : ic(s[0])}</div><span class="st-l ${k}">${s[1]}</span></div>${i < 3 ? `<div class="st-line ${k === 'done' ? 'done' : ''}"></div>` : ''}</div>`; }).join('')}</div>`;
+}
+const heading = (icon, title, n) => `<div class="hd">${ic(icon)}<h2>${title}</h2><span class="stepb">Passo ${n}</span></div>`;
+const locked = (title, n, about) => `<div class="lockhd"><span style="font-size:24px" aria-hidden="true">🔒</span><h2>${title}</h2><span class="stepb">Passo ${n}</span></div><p class="muted" style="font-size:14px;margin:8px 0 0">${about}</p>`;
+const skipText = (k, take) => `Pula as ${k} mais tocadas de cada álbum no Spotify e pega as ${take} seguintes (da ${ord(k + 1)} à ${ord(k + take)}).`;
+
+function ingredients(r, st, ctx, today) {
+  const sh = r.shown || {}; const c = st.choices; const out = [];
+  if (sh.trackCount) out.push(`<div><span class="s-lbl">${ic('music')}Escolha o seu Top nº</span><div class="tcg">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<button type="button" class="tcb ${c.trackCount === n ? 'on' : ''}" data-act="ch" data-ctx="${ctx}" data-k="trackCount" data-v="${n}">Top ${n}</button>`).join('')}</div><p class="hint">Escolha quantas das melhores faixas pegar de cada álbum.</p></div>`);
+  if (sh.skip && !today && r.blocks) {
+    const base = r.blocks.skip, take = r.blocks.take, k = c.skip, x = k - base;
+    const cells = Array.from({ length: 13 }, (_, i) => { const p = i + 1; const t = p <= k ? 'sk' : p <= k + take ? 'in' : 'rest'; return `<span class="cell ${t}">${p}</span>`; }).join('');
+    out.push(`<div data-inv="BLEND-R05"><label class="s-lbl" for="skip-${ctx}">${ic('compass')}<span class="prop">Quantas das mais populares pular</span></label>
+      <div class="slide"><input type="range" id="skip-${ctx}" min="${base}" max="${Math.min(SKIP_MAX, 15 - take)}" step="1" value="${k}" data-act="skip" data-ctx="${ctx}" data-take="${take}" aria-describedby="skiph-${ctx}">
+      <div class="skipv"><output id="skipo-${ctx}">${k}</output><small class="prop" id="skipx-${ctx}">${x ? `as ${base} + ${x}` : `as ${base} da receita`}</small></div></div>
+      <p class="hint" id="skiph-${ctx}"><span class="prop" id="skipt-${ctx}">${skipText(k, take)}</span></p>
+      <div class="strip" id="strip-${ctx}" data-inv="BLEND-R06" aria-hidden="true">${cells}</div>
+      <div class="stripkey" aria-hidden="true"><span><i style="background:rgba(255,255,255,.12)"></i><span class="prop">pulada</span></span><span><i style="background:#fb923c"></i><span class="prop">entra</span></span><span><i style="border:1px dashed rgba(255,255,255,.35)"></i><span class="prop">fica de fora</span></span></div>
+      <p class="hint"><span class="prop">Num álbum com menos faixas com dado, entram menos.</span></p></div>`);
+  }
+  if (sh.groupingStrategy) {
+    const g = r.kind === 'blocks' ? GROUP.filter(x => x[0] !== 'shuffle') : GROUP;
+    out.push(`<div${r.kind === 'blocks' && !today ? ' data-inv="BLEND-R07"' : ''}><span class="s-lbl">${ic('layers')}Agrupamento das faixas</span><div class="opts g4">${g.map(x => `<button type="button" class="gb ${c.groupingStrategy === x[0] ? 'on' : ''}" data-act="ch" data-ctx="${ctx}" data-k="groupingStrategy" data-v="${x[0]}"><span>${ic(x[1])}${x[2]}</span><small>${x[3]}</small></button>`).join('')}</div>${r.kind === 'blocks' ? '<p class="hint"><span class="prop">Sem «Aleatório»: esta receita dá sempre as mesmas faixas.</span></p>' : ''}</div>`);
+  }
+  if (sh.outputMode) out.push(`<div><span class="s-lbl">${ic('grid')}Estrutura da playlist</span><div class="opts">${STRUCT.map(x => `<button type="button" class="opt ${c.outputMode === x[0] ? 'on' : ''}" data-act="ch" data-ctx="${ctx}" data-k="outputMode" data-v="${x[0]}"><span class="ob">${ic(x[1])}</span><span><b>${x[2]}</b><small>${x[3]}</small></span></button>`).join('')}</div></div>`);
+  if (sh.duration || (sh.outputMode && c.outputMode !== 'single')) out.push(`<div><label class="s-lbl" for="dur-${ctx}">${ic('clock')}Duração alvo (minutos)</label><div class="slide"><input type="range" id="dur-${ctx}" min="30" max="180" step="5" value="${c.duration}" data-act="dur" data-ctx="${ctx}"><output id="duro-${ctx}">${c.duration}m</output></div><p class="hint">Quanto tempo cada volume deve ter?</p></div>`);
+  if (sh.rankingType) out.push(`<div><span class="s-lbl">${ic('bar')}Fonte do ranking</span><div class="opts">${SOURCE.map(x => `<button type="button" class="opt ${c.rankingType === x[0] ? 'on' : ''}" data-act="ch" data-ctx="${ctx}" data-k="rankingType" data-v="${x[0]}"><span class="ob">${ic(x[1])}</span><span><b>${x[2]}</b><small>${x[3]}</small></span></button>`).join('')}</div></div>`);
+  return `<div class="ingr">${out.join('')}</div>`;
+}
+function choicesFor(r) { return Object.assign(clone(DEF), r ? r.def : {}, r && r.blocks ? { skip: r.def.skip && r.def.skip >= r.blocks.skip ? r.def.skip : r.blocks.skip } : {}); }
+function siteState(ctx) {
+  if (!S.site[ctx]) {
+    const st = S.state.blend, prop = !ctx.startsWith('ref');
+    let id = prop ? (st === 'least' ? 'least-played' : st === 'none' || st === 'locked' ? null : 'deep-cuts') : (st === 'none' || st === 'locked' ? null : 'top-n-popular');
+    if (prop && st === 'code') id = 'mjrp-balanced-cascade';
+    const r = id && catalogFor(prop).find(x => x.id === id);
+    S.site[ctx] = { recipe: id, series: st !== 'locked', choices: prop ? choicesFor(r) : clone(DEF) };
+  }
+  return S.site[ctx];
+}
+function summaryTail(r, st, today) { return !today && r.shown && r.shown.skip ? `, <span class="prop">pula ${st.choices.skip}</span>` : ''; }
+function blendPC(ctx) {
+  const today = ctx.startsWith('ref'); const cat = catalogFor(!today); const st = siteState(ctx);
+  const r = cat.find(x => x.id === st.recipe) || null;
+  const step1 = `<section class="glass">${heading('disc', 'Escolha a Sua Mistura', 1)}
+    <label class="s-lbl" for="ent-${ctx}">Misture a sua música por</label><select class="s-select" id="ent-${ctx}"><option>Álbuns</option><option disabled>Artistas (Em breve)</option><option disabled>Gêneros (Em breve)</option><option disabled>Faixas (Em breve)</option></select>
+    <span class="s-lbl">Escolha a série</span><div class="series">${SERIES.map((s, i) => `<button type="button" class="ser ${st.series && i === 0 ? 'on' : ''}" data-act="series" data-ctx="${ctx}"><span class="casc" aria-hidden="true">${s.c.map(c => `<i style="background:${c}"></i>`).join('')}</span><span style="flex:1;min-width:0"><h4>${esc(s.name)}</h4><p>${s.n} álbuns</p></span>${st.series && i === 0 ? `<span style="color:#fb923c">${ic('check')}</span>` : ''}</button>`).join('')}</div></section>`;
+  const step2 = !st.series ? `<section class="glass locked">${locked('Escolha a Sua Receita', 2, 'Conclua o Passo 1 para liberar')}</section>`
+    : `<section class="glass">${heading('file-text', 'Escolha a Sua Receita', 2)}<div class="rcs"${today ? '' : ' data-inv="BLEND-R01"'}>${cat.map(x => card(x, { sel: r && x.id === r.id, today, ctx })).join('')}</div></section>`;
+  const step3 = r && st.series ? `<section class="glass">${heading('list', 'Escolha os Seus Ingredientes', 3)}${ingredients(r, st, ctx, today)}</section>` : '';
+  const multi = st.choices.outputMode === 'multiple';
+  const step4 = !st.series ? '' : !r ? `<section class="glass locked">${locked('Misture!', 4, 'Conclua os passos anteriores para liberar')}</section>`
+    : `<section class="glass go">${heading('sparkles', 'Misture!', 4)}<div class="gen-wrap"><button type="button" class="gen">${ic('sparkles')}${multi ? 'Misture as suas playlists de álbuns!' : 'Misture a sua playlist de álbuns!'}</button>
+      <p class="sum"${today ? '' : ' data-inv="BLEND-R08"'}>Usando <b>${P(r, 'pt', r.pt)}</b> em <b>${esc(SERIES[0].name)}</b> (${st.choices.duration} min${summaryTail(r, st, today)}, modo ${({ auto: 'automático', single: 'uma playlist', multiple: 'várias playlists' })[st.choices.outputMode]})</p></div></section>`;
+  return `<div class="site"><div class="s-nav"><span class="s-brand">The Album Blender</span><span class="s-menu"><span>Inicie</span><span>Álbuns</span><span class="cur">Blend</span><span>Playlists</span><span>Inventário</span></span><span class="s-av">M</span></div>
+    <div class="s-wrap"><div class="s-head"><div class="s-title"><span aria-hidden="true">🍹</span><h1>O Menu de Mistura</h1></div><p class="s-motto">"Sua Música, Sua Receita"</p>${stepper(st.series, r)}</div>
+    ${step1}${step2}${step3}${step4}</div></div>`;
+}
+function blendPhone(ctx) {
+  const today = ctx.startsWith('ref'); const cat = catalogFor(!today); const st = siteState(ctx);
+  const r = cat.find(x => x.id === st.recipe) || null;
+  const pick = `<section class="glass">${heading('disc', 'Escolha a Sua Mistura', 1)}<p class="pick-l">Série</p>
+    ${st.series ? `<button type="button" class="pick" data-act="series" data-ctx="${ctx}"><span class="casc" aria-hidden="true">${SERIES[0].c.map(c => `<i style="background:${c}"></i>`).join('')}</span><span class="t"><b>${esc(SERIES[0].name)}</b><small>${SERIES[0].n} álbuns</small></span><span class="a">Trocar</span></button>`
+      : `<button type="button" class="pick" style="border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.05)" data-act="series" data-ctx="${ctx}"><span class="t"><b>Escolha uma série</b><small>4 séries para escolher</small></span><span class="a">Escolher</span></button>`}</section>`;
+  const step2 = !st.series ? `<section class="glass locked">${locked('Escolha a Sua Receita', 2, 'Conclua o Passo 1 para liberar')}</section>`
+    : `<section class="glass">${heading('file-text', 'Escolha a Sua Receita', 2)}<div class="rcs"${today ? '' : ' data-inv="BLEND-R01"'}>${cat.map(x => card(x, { sel: r && x.id === r.id, today, ctx })).join('')}</div></section>`;
+  const step3 = r && st.series ? `<section class="glass">${heading('list', 'Escolha os Seus Ingredientes', 3)}${ingredients(r, st, ctx, today)}</section>` : '';
+  const note = !st.series ? 'Passo 1 de 4: escolha uma série' : !r ? 'Passo 2 de 4: escolha uma receita'
+    : `${P(r, 'pt', r.pt)} · ${!today && r.shown.skip ? `<span class="prop">pula ${st.choices.skip}</span> · ` : ''}${st.choices.duration} min`;
+  return `<div class="phone site"><div class="ph-top"><b>Blend</b><span class="s-av">M</span></div>
+    <div class="ph-scroll"><div class="s-head"><div class="s-title"><span aria-hidden="true">🍹</span><h1>O Menu de Mistura</h1></div><p class="s-motto">"Sua Música, Sua Receita"</p>${stepper(st.series, r)}</div>${pick}${step2}${step3}</div>
+    <div class="ph-bar"><span${today ? '' : ' data-inv="BLEND-R08"'}>${note}</span><button type="button" ${st.series && r ? '' : 'disabled'}>Misturar!</button></div>
+    <nav class="ph-tabs" aria-label="Menu"><span>${ic('home')}Inicie</span><span>${ic('disc')}Álbuns</span><span class="cur">${ic('sparkles')}Blend</span><span>${ic('list-music')}Playlists</span><span>${ic('box')}Inventário</span></nav></div>`;
+}
+
+/* ---------- the Panel ---------- */
+function rail(today) {
+  return `<nav class="cms-rail" aria-label="Seções do admin"><div class="cms-who"><span class="cms-avatar" aria-hidden="true">M</span><div><b>Você</b><small>superadministrador</small></div></div>
+    <button type="button" class="cms-navb" ${today ? 'aria-current="page"' : ''}>Textos</button><button type="button" class="cms-navb">Caixa</button><button type="button" class="cms-navb" disabled>Funções · depois</button>
+    ${today ? '<button type="button" class="cms-navb" disabled>Receitas da Mistura · depois</button>' : '<button type="button" class="cms-navb" aria-current="page">Receitas da Mistura</button>'}</nav>`;
+}
+function adminToday() {
+  const rows = [['blend.recipes.topNPopular.name', 'Top Tracks by Spotify Popularity', 'Top Faixas por Popularidade no Spotify'], ['blend.recipes.topNPopular.description', 'Pick your favorite tracks, based on Spotify popularity.', 'Escolha as suas faixas favoritas, com base na popularidade no Spotify.'], ['blend.step2.title', 'Choose Your Recipe', 'Escolha a Sua Receita']];
+  return `<div data-admin-skin class="cms">${rail(true)}<main class="cms-main">
+    <div class="cms-head"><h1>Textos</h1><p>Escolha a tela, veja o inglês e o português lado a lado e mude o que quiser. Salvar põe no ar na hora, depois de você confirmar o que vai.</p></div>
+    <div class="todaynote"><b>Hoje:</b> «Receitas da Mistura · depois» está apagado no menu. A ordem, a recomendada, a cor e os ingredientes de cada receita são código. Só o nome e a descrição mudam aqui, como textos.</div>
+    <p class="cms-site"><span class="cms-soft">O que o site mostra:</span> <b>publicado (vindo do banco)</b></p>
+    <div class="cms-bar"><div class="cms-bar-info"><b>Tudo salvo</b><span>O site está como você vê aqui. Salvar põe no ar na hora.</span></div><div class="cms-acts"><button class="ak-btn" disabled>Descartar</button><button class="ak-btn pri" disabled>Salvar</button></div></div>
+    <div class="cms-screens"><button class="cms-chip">Home</button><button class="cms-chip" aria-pressed="true">Blend</button><button class="cms-chip">Playlists</button><button class="cms-chip">Inventário</button></div>
+    <div class="cms-rows">${rows.map(x => `<div class="cms-row"><span class="cms-key">${x[0]}</span><div><span class="cms-lbl">English</span>${esc(x[1])}</div><div><span class="cms-lbl">Português</span>${esc(x[2])}</div></div>`).join('')}</div></main></div>`;
+}
+function changes() {
+  const pub = JSON.parse(S.pub); let n = 0;
+  if (pub.map(r => r.id).join() !== S.recipes.map(r => r.id).join()) n++;
+  S.recipes.forEach(r => { const p = pub.find(x => x.id === r.id); if (!p || JSON.stringify(p) !== JSON.stringify(r)) n++; });
+  return n;
+}
+function lookPicker(r, who) {
+  return `<div class="fld"><span class="ak-lb">Cor <span class="ak-badge prop">lista fechada</span></span><div class="sws" role="radiogroup" aria-label="Cor">${LOOKS.map(l => `<button type="button" class="sw-c" role="radio" aria-checked="${r.look === l.id}" aria-label="${l.name}${l.isNew ? ' (nova)' : ''}" title="${l.name}" style="background:linear-gradient(135deg,${l.c1},${l.c2})" data-act="look" data-who="${who}" data-v="${l.id}"></button>`).join('')}</div></div>
+    <div class="fld"><span class="ak-lb">Ícone <span class="ak-badge prop">lista fechada</span></span><div class="sws" role="radiogroup" aria-label="Ícone">${ICON_LIST.map(([id, nm]) => `<button type="button" class="sw-i" role="radio" aria-checked="${r.icon === id}" aria-label="${nm}" title="${nm}" data-act="icon" data-who="${who}" data-v="${id}">${ic(id)}</button>`).join('')}</div></div>`;
+}
+function namesFields(r, who, err) {
+  const f = (lab, k, ta) => `<div class="fld"><label class="ak-lb" for="${who}-${k}">${lab}${(r.prop && r.prop[k]) || r.isNew || who === 'b' ? ' <span class="ak-badge prop">texto proposto</span>' : ''}</label>${ta ? `<textarea class="ak-input" id="${who}-${k}" data-act="txt" data-who="${who}" data-k="${k}">${esc(r[k])}</textarea>` : `<input class="ak-input" id="${who}-${k}" data-act="txt" data-who="${who}" data-k="${k}" value="${esc(r[k])}" ${err && (k === 'pt' || k === 'en') ? 'aria-invalid="true"' : ''}>`}</div>`;
+  return `<div class="two"><div class="fset" style="margin:0">${f('Nome em português', 'pt')}${f('Descrição em português', 'dpt', 1)}${f('Selo em português', 'badge')}</div>
+    <div class="fset" style="margin:0">${f('Nome em inglês', 'en')}${f('Descrição em inglês', 'den', 1)}${f('Selo em inglês', 'badgeEn')}</div></div>`;
+}
+const SRC = { spotify: 'Popularidade no Spotify', bea: 'Escolha da crítica (BestEverAlbums)', combined: 'Combinada', user: 'Minha classificação' };
+const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+function blockSummary(b) {
+  const t = [SRC[b.source], b.from === 'top' ? 'do topo (as mais)' : 'do fim (as menos)', 'pula ' + b.skip, 'pega ' + b.take, b.short ? 'tira as com menos de ' + mmss(b.short) : 'sem exclusão por duração', ING.groupingStrategy.opts.find(o => o[0] === b.group)[1].toLowerCase()];
+  return t.map(x => `<span class="ak-badge">${esc(x)}</span>`).join('');
+}
+function configBody(r) {
+  const ing = Object.keys(ING).map(k => { const d = ING[k]; const w = why(r, k); const on = !!r.shown[k] && !w;
+    return `<div class="igr ${on ? '' : 'dim'}"><label class="ck"><input type="checkbox" data-act="shown" data-id="${r.id}" data-k="${k}" ${on ? 'checked' : ''} ${w ? 'disabled' : ''}><span>${d.name}${w ? `<small>${w}</small>` : ''}</span></label>
+      <label class="sr" for="def-${r.id}-${k}">Começa em: ${d.name}</label><select class="ak-input" id="def-${r.id}-${k}" data-act="def" data-id="${r.id}" data-k="${k}" ${on ? '' : 'disabled'}>${d.opts.map(([v, l]) => `<option value="${v}" ${String(r.def[k]) === String(v) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`; }).join('');
+  const b = r.blocks;
+  return `<div class="rrow-b"><div style="display:grid;gap:14px;min-width:0">
+      <fieldset class="fset" data-inv="RCP-06"><legend>Nome, descrição e selo</legend>${namesFields(r, r.id)}<p class="ak-hint">São textos do site: aparecem também na seção Textos, com as mesmas chaves.</p></fieldset>
+      <fieldset class="fset" data-inv="RCP-07"><legend>Aparência</legend>${lookPicker(r, r.id)}</fieldset>
+      <fieldset class="fset" data-inv="RCP-08"><legend>Ingredientes que a pessoa vê, e onde cada um começa</legend><div class="ig">${ing}</div></fieldset>
+      ${b ? `<fieldset class="fset"><legend>Os blocos</legend><div class="blocksum">${blockSummary(b)}</div><div><button type="button" class="ak-btn" data-act="edit-blocks" data-id="${r.id}">Mudar os blocos</button></div></fieldset>` : '<p class="ak-hint">Receita do código: o que ela escolhe não muda aqui, só como aparece.</p>'}
+      <div><button type="button" class="ak-btn" data-act="open" data-id="${r.id}">Fechar</button></div></div>
+    <div class="side"><div class="ak-where" data-inv="RCP-09"><b>Como fica na tela de Blend</b><div id="mini-${r.id}">${card(r, { sel: false, today: false, ctx: 'mini' })}</div></div>
+      <p class="ak-hint">${r.on ? 'Aparece na tela de Blend.' : 'Escondida: não aparece na tela de Blend.'}${r.rec ? ' É a recomendada.' : ''}</p></div></div>`;
+}
+const GUARD = 'A recomendada não pode sumir da tela de Blend. Recomende outra receita antes de esconder esta.';
+function adminRecipes() {
+  const n = changes(); const code = S.src === 'code'; const failed = S.src === 'failed';
+  const site = failed ? `<p class="cms-site" data-inv="RCP-01"><span class="cms-soft">O que a tela de Blend mostra:</span> <b>as receitas do código (a reserva)</b> <span class="ak-badge warn">não foi possível ler: o banco não respondeu</span></p><div class="ak-notice warn"><span class="prop">A lista abaixo é a do código, não a publicada. Salvar publica esta lista; se você não mexer, nada muda na tela de Blend.</span></div>`
+    : code ? `<p class="cms-site" data-inv="RCP-01"><span class="cms-soft">O que a tela de Blend mostra:</span> <b>as receitas do código</b> <span class="cms-soft">· <span class="prop">nada publicado ainda: a tela é igual à de hoje</span></span></p>`
+    : `<p class="cms-site" data-inv="RCP-01"><span class="cms-soft">O que a tela de Blend mostra:</span> <b><span class="prop">as receitas publicadas aqui</span></b></p>`;
+  let msg = '';
+  if (S.msg === 'confirm') {
+    const vis = S.recipes.filter(r => r.on), hid = S.recipes.filter(r => !r.on), rec = S.recipes.find(r => r.rec);
+    msg = `<div class="cms-msg conf" role="status" data-inv="RCP-12"><b class="prop">As receitas vão ao ar agora, na tela de Blend:</b><ul class="prop"><li>Aparecem ${vis.length}, nesta ordem: ${vis.map(r => esc(r.pt)).join(' · ')}.</li>${hid.length ? `<li>Escondidas: ${hid.map(r => esc(r.pt)).join(', ')}.</li>` : ''}<li>A recomendada: ${esc(rec ? rec.pt : '—')}.</li></ul>
+      <span class="cms-soft prop">Quem abrir a tela de Blend a partir de agora vê esta lista. Uma playlist guardada nunca muda de faixas. Para voltar atrás, você muda de novo e salva.</span>
+      <div class="cms-acts"><button class="ak-btn pri" data-act="publish">Pôr no ar</button><button class="ak-btn" data-act="msg-close">Voltar</button></div></div>`;
+  } else if (S.msg === 'saved') msg = '<div class="cms-msg ok" role="status"><span class="prop">Salvo e no ar: as receitas da tela de Blend.</span></div>';
+  const bar = `<div class="cms-bar ${n ? 'has' : ''}" data-inv="RCP-02"><div class="cms-bar-info">${n ? `<b>${n} ${n === 1 ? 'mudança não salva' : 'mudanças não salvas'}</b><span>salvar põe no ar</span>` : '<b>Tudo salvo</b><span>O site está como você vê aqui. Salvar põe no ar na hora.</span>'}</div>
+    <div class="cms-acts"><button class="ak-btn" data-act="discard" ${n ? '' : 'disabled'}>Descartar</button><button class="ak-btn pri" data-act="save" ${n || code || failed ? '' : 'disabled'}>Salvar</button></div>${msg}</div>`;
+  const rows = S.recipes.map((r, i) => { const l = LOOK(r.look); const last = i === S.recipes.length - 1;
+    return `<li class="rrow ${r.on ? '' : 'off'} ${S.open === r.id ? 'open' : ''} ${S.moved === r.id ? 'moved' : ''}" draggable="true" data-rid="${r.id}">
+      <div class="rrow-h"><span class="ctl"><span class="grip" title="Arraste para mudar a ordem" aria-hidden="true">${ic('grip')}</span><span class="ord"><button type="button" class="ak-icon" data-act="up" data-id="${r.id}" aria-label="Subir ${esc(r.pt)}" ${i ? '' : 'disabled'}>${ic('up')}</button><button type="button" class="ak-icon" data-act="down" data-id="${r.id}" aria-label="Descer ${esc(r.pt)}" ${last ? 'disabled' : ''}>${ic('down')}</button></span><span class="pos">${i + 1}</span></span>
+        <span class="rico" style="background:linear-gradient(135deg,${l.c1},${l.c2})">${ic(r.icon)}</span>
+        <div class="rrow-t"><b>${P(r, 'pt', r.pt || '(sem nome)')}</b><small>${esc(r.en)} · ${r.kind === 'blocks' ? 'de blocos' : 'do código'}</small>
+          <div class="tags">${r.rec ? '<span class="ak-badge accent">★ recomendada</span>' : ''}<span class="ak-badge">${esc(r.badge || 'ALGORITMO')}</span>${r.on ? '' : '<span class="ak-badge hid">escondida</span>'}${r.isNew ? '<span class="ak-badge new">nova · não salva</span>' : ''}</div></div>
+        <div class="rrow-acts"><button type="button" class="ak-switch" role="switch" aria-checked="${r.on}" aria-label="${esc(r.pt)} aparece na tela de Blend" data-act="on" data-id="${r.id}" data-inv="${i === 0 ? 'RCP-04' : ''}"><i></i><span>${r.on ? 'Aparece' : 'Escondida'}</span></button>
+          <button type="button" class="star" aria-pressed="${r.rec}" data-act="star" data-id="${r.id}" ${r.on ? '' : 'disabled title="Mostre a receita antes de recomendá-la"'} data-inv="${i === 0 ? 'RCP-05' : ''}">${ic('star')}${r.rec ? 'Recomendada' : 'Recomendar'}</button>
+          <button type="button" class="ak-btn" data-act="open" data-id="${r.id}" aria-expanded="${S.open === r.id}">${S.open === r.id ? 'Fechar' : 'Configurar'}</button></div></div>
+      ${S.open === r.id ? configBody(r) : ''}</li>`; }).join('');
+  return `<div data-admin-skin class="cms">${rail(false)}<main class="cms-main">
+    <div class="cms-head"><h1>Receitas da Mistura</h1><p class="prop">As receitas que a tela de Blend oferece: quais aparecem, em que ordem, qual é a recomendada, como cada uma se parece e com que ingredientes começa. Salvar põe no ar na hora, depois de você confirmar o que vai.</p></div>
+    ${site}${bar}
+    ${S.guard ? `<div class="ak-notice err" role="alert"><span class="prop">${S.guard}</span></div>` : ''}
+    <ol class="rlist" data-inv="RCP-03" aria-label="Receitas, na ordem da tela de Blend">${rows}</ol>
+    <p class="said" aria-live="polite">${S.said}</p>
+    <div class="addrow"><button type="button" class="ak-btn pri" data-act="new" data-inv="RCP-10">${ic('plus')}Nova receita, de blocos</button><span class="ak-hint prop">Uma receita nova nasce escondida. Receita não se apaga: só se esconde.</span></div>
+    <section class="later" data-inv="RCP-11" aria-label="Depois: criar com IA"><h3>${ic('wand')}Criar algoritmo próprio com IA <span class="ak-badge">depois: ainda não existe</span></h3>
+      <p class="prop" style="margin:0">Você cria, com ajuda de IA, a fonte do ranking de uma receita, como a sua equilibrada, sem depender do Spotify nem do BestEverAlbums. Ela passa por testes e pela prévia antes de você ligá-la.</p>
+      <div><button type="button" class="ak-btn" disabled>Criar uma fonte do ranking</button></div></section>
+  </main></div>`;
+}
+
+/* ---------- the builder ---------- */
+function newBuilder(preset, editing) {
+  return Object.assign({ preset, album: preset === 'least' ? 'vu' : 'okc', tried: false, editing: editing || null }, clone(PRESETS[preset]));
+}
+function fromRecipe(r, editing) {
+  const b = Object.assign(newBuilder('blank', editing ? r.id : null), { pt: r.pt, en: r.en, dpt: r.dpt, den: r.den, badge: r.badge, badgeEn: r.badgeEn, look: r.look, icon: r.icon, album: r.blocks.from === 'bottom' ? 'vu' : 'okc' }, clone(r.blocks));
+  if (!editing) Object.assign(b, { preset: 'copy-' + r.id, pt: r.pt + ' (cópia)', en: r.en + ' (copy)' });
+  return b;
+}
+function pick(b) {
+  const al = ALBUMS[b.album];
+  const rows = al.tracks.map(([n, d, p], i) => { const [m, s] = d.split(':').map(Number); return { n, d, p, sec: m * 60 + s, no: i + 1 }; });
+  const usable = rows.filter(r => r.p != null && !(b.short && r.sec < b.short));
+  const ranked = usable.slice().sort((a, c) => (b.from === 'top' ? c.p - a.p : a.p - c.p) || a.no - c.no);
+  ranked.forEach((r, i) => { r.rank = i + 1; r.res = i < b.skip ? 'skip' : i < b.skip + b.take ? 'in' : 'out'; });
+  rows.forEach(r => { if (r.p == null) r.res = 'nodata'; else if (b.short && r.sec < b.short) r.res = 'short'; });
+  return { order: ranked.concat(rows.filter(r => r.res === 'nodata' || r.res === 'short')), picked: ranked.filter(r => r.res === 'in'), rows };
+}
+function builder() {
+  const b = S.builder; const over = b.skip + b.take > 15; const noName = b.tried && !b.pt.trim() && !b.en.trim();
+  const { order, picked, rows } = pick(b);
+  const W = { in: 'entra', skip: 'pulada', out: 'fica de fora', nodata: 'sem dado', short: 'curta demais' };
+  const TAG = { in: 'accent', skip: '', out: '', nodata: 'warn', short: 'warn' };
+  const count = k => rows.filter(r => r.res === k).length;
+  const pv = over ? '<p class="ak-err-t prop">A prévia volta quando a receita estiver dentro dos limites.</p>'
+    : `<p class="pvsum"><b>${picked.length} ${picked.length === 1 ? 'faixa entra' : 'faixas entram'}</b> <span class="cms-soft">deste álbum:</span> ${picked.map(r => esc(r.n)).join(', ') || '<span class="prop">nenhuma. Pule menos ou pegue mais.</span>'}</p>
+      <div class="pvcount"><span class="ak-badge accent">${count('in')} entram</span><span class="ak-badge">${count('skip')} puladas</span><span class="ak-badge">${count('out')} de fora</span><span class="ak-badge warn">${count('nodata')} sem dado</span>${b.short ? `<span class="ak-badge warn">${count('short')} curtas demais</span>` : ''}</div>
+      <ol class="pvlist">${order.map(r => `<li class="pvr ${r.res}"><span class="n">${r.rank || '–'}</span><span class="t" title="${esc(r.n)}">${esc(r.n)}<small>${r.d}</small></span><span class="b" aria-hidden="true"><i style="width:${r.p || 0}%"></i></span><span class="v"><span class="ak-badge ${TAG[r.res]}">${W[r.res]}${r.p != null ? ' · ' + r.p : ''}</span></span></li>`).join('')}</ol>`;
+  const stp = (k, min, max, lab) => `<span class="stp"><button type="button" class="ak-icon" data-act="bstep" data-k="${k}" data-d="-1" aria-label="${lab} menos" ${b[k] > min ? '' : 'disabled'}>−</button><output aria-live="polite">${b[k]}</output><button type="button" class="ak-icon" data-act="bstep" data-k="${k}" data-d="1" aria-label="${lab} mais" ${b[k] < max ? '' : 'disabled'}>+</button></span>`;
+  const blk = (n, title, sub, body, inv, bad) => `<div class="blk ${bad ? 'bad' : ''}" data-inv="${inv}"><div class="blk-h"><span class="ak-num">${n}</span><div><b>${title}</b>${sub ? `<p>${sub}</p>` : ''}</div></div>${body}</div>`;
+  const groups = GROUP.filter(g => g[0] !== 'shuffle');
+  const editing = b.editing ? S.recipes.find(r => r.id === b.editing) : null;
+  return `<div data-admin-skin class="cms">${rail(false)}<main class="cms-main">
+    <p class="crumb"><button type="button" data-act="to-admin">Receitas da Mistura</button> › ${editing ? esc(editing.pt) + ' · os blocos' : 'Nova receita'}</p>
+    <div class="cms-head"><h1>${editing ? 'Os blocos de ' + esc(editing.pt) : 'Nova receita, de blocos'}</h1><p class="prop">Você escolhe os blocos; um motor só, fixo e testado, faz o resto. Nada de código. A prévia mostra, num álbum de exemplo, o que a receita faria.</p></div>
+    ${editing ? '' : `<div class="chips" role="group" aria-label="Começar de" data-inv="BLD-01"><span class="cms-soft" style="align-self:center">Começar de:</span><button type="button" class="chip" data-act="preset" data-v="blank" aria-pressed="${b.preset === 'blank'}">Em branco</button>${S.recipes.filter(r => r.blocks).map(r => `<button type="button" class="chip" data-act="copy" data-id="${r.id}" aria-pressed="${b.preset === 'copy-' + r.id}"><span class="prop">Uma cópia de ${esc(r.pt)}</span></button>`).join('')}</div>`}
+    <div class="bld"><div style="display:grid;gap:10px;min-width:0">
+      ${blk(1, 'Fonte do ranking', 'o que ordena as faixas de cada álbum', `<div class="chips">${Object.entries(SRC).map(([v, l]) => `<button type="button" class="chip" data-act="bset" data-k="source" data-v="${v}" aria-pressed="${b.source === v}">${l}</button>`).join('')}<button type="button" class="chip" disabled title="Depois: ainda não existe" data-inv="BLD-13">${ic('wand')}<span class="prop">Uma fonte própria, criada com IA · depois</span></button></div>`, 'BLD-02')}
+      ${blk(2, 'De onde começar', 'do topo da lista ou do fim', `<span class="akseg" role="group" aria-label="De onde começar"><button type="button" data-act="bset" data-k="from" data-v="top" aria-pressed="${b.from === 'top'}">Do topo (as mais)</button><button type="button" data-act="bset" data-k="from" data-v="bottom" aria-pressed="${b.from === 'bottom'}">Do fim (as menos)</button></span>`, 'BLD-03')}
+      ${blk(3, 'Pular, em cada álbum', 'quantas deixar passar antes de pegar (0 a 10)', stp('skip', 0, 10, 'Pular'), 'BLD-04', over)}
+      ${blk(4, 'Pegar, em cada álbum', 'quantas entram depois das puladas (1 a 10)', `${stp('take', 1, 10, 'Pegar')}<p class="meter ${over ? 'bad' : ''}">pular + pegar: <b>${b.skip + b.take}</b> de no máximo 15</p>${over ? `<p class="ak-err-t prop" role="alert">Pular ${b.skip} e pegar ${b.take} passa do limite: pular mais pegar vai até 15. Pegue até ${15 - b.skip}, ou pule menos.</p>` : ''}`, 'BLD-05', over)}
+      ${blk(5, 'Tirar as faixas curtas', 'faixas mais curtas que isto não entram (0 a 5 minutos)', `<div class="rng"><label class="sr" for="b-short">Duração mínima</label><input type="range" id="b-short" min="0" max="300" step="15" value="${b.short}" data-act="bshort"><output id="b-shorto">${b.short ? 'menos de ' + mmss(b.short) : 'nenhuma'}</output></div>`, 'BLD-06')}
+      ${blk(6, 'Agrupamento', 'como as faixas escolhidas se juntam na playlist', `<div class="chips">${groups.map(g => `<button type="button" class="chip" data-act="bset" data-k="group" data-v="${g[0]}" aria-pressed="${b.group === g[0]}">${g[2]}</button>`).join('')}</div><p class="ak-hint prop">Sem «Aleatório»: a mesma receita e os mesmos álbuns dão sempre as mesmas faixas.</p>`, 'BLD-07')}
+      <div class="fixed" data-inv="BLD-08"><b>Sempre, em toda receita de blocos:</b> <span class="prop">uma faixa sem dado fica fora (nunca conta, nem como a menos ouvida); no empate, vale a ordem da faixa no álbum.</span></div>
+      ${blk(7, 'Nome, descrição, selo e aparência', 'como a pessoa vê a receita, nos dois idiomas', `${namesFields(b, 'b', noName)}${noName ? '<p class="ak-err-t prop" role="alert">Dê um nome à receita, em pelo menos um idioma. Sem nome, ela não entra na lista.</p>' : ''}${lookPicker(b, 'b')}`, 'BLD-09', noName)}
+    </div>
+    <aside class="pv" aria-label="Prévia num álbum de exemplo" data-inv="BLD-10"><h3>O que este álbum daria</h3>
+      <p class="pvguide"><b>Como ler:</b> <span class="prop">as faixas na ordem em que a receita as lê, com a popularidade de 0 a 100. As faixas são reais; a popularidade é um número de exemplo, inventado.${b.source !== 'spotify' ? ' O exemplo só tem a popularidade no Spotify: com outra fonte, a ordem real muda.' : ''}</span></p>
+      <label class="sr" for="b-album">Álbum de exemplo</label><select class="ak-input" id="b-album" data-act="balbum">${Object.entries(ALBUMS).map(([k, a]) => `<option value="${k}" ${b.album === k ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select>
+      ${pv}
+      <div class="ak-where" style="margin-top:6px"><b>Como fica na tela de Blend</b><div id="mini-b">${card(Object.assign({ isNew: 1, rec: false }, b, { pt: b.pt || '(sem nome)' }), { sel: false, today: false, ctx: 'mini' })}</div></div>
+    </aside></div>
+    <div class="bact" data-inv="BLD-11"><button type="button" class="ak-btn pri" data-act="bsave" ${over ? 'disabled' : ''}>${editing ? 'Guardar os blocos' : 'Pôr na lista, escondida'}</button><button type="button" class="ak-btn" data-act="to-admin">Cancelar</button>
+      <p class="prop">${editing ? 'A mudança vai ao ar quando você salvar a lista. Uma playlist guardada nunca muda de faixas.' : 'Ela nasce escondida: aparece na tela de Blend só quando você a liga e salva a lista.'}</p></div>
+  </main></div>`;
+}
+
+/* ---------- the comparator ---------- */
+const BLEND_STATES = [['deep', 'Deep cuts escolhida, com o deslizador'], ['least', 'As menos ouvidas escolhida'], ['none', 'Série escolhida, nenhuma receita ainda'], ['locked', 'Sem série: passo 2 trancado'], ['rec', 'Deep cuts como a recomendada (selo único)'], ['hidden', 'As menos ouvidas escondida no Painel'], ['code', 'Nada publicado ou banco fora: o código']];
+const TABS = {
+  'blend-pc': { states: BLEND_STATES, key: 'blend' },
+  'blend-ph': { states: BLEND_STATES, key: 'blend' },
+  admin: { states: [['list', 'Publicado: a lista'], ['config', 'Configurando Deep cuts'], ['hidden', 'Uma receita escondida'], ['guard', 'Tentando esconder a recomendada'], ['confirm', 'Salvar: o que vai ao ar'], ['saved', 'Salvo e no ar'], ['code', 'Nada publicado ainda: o código'], ['failed', 'A leitura falhou']], key: 'admin' },
+  builder: { states: [['deep', 'Os blocos de Deep cuts, prévia em OK Computer'], ['least', 'Os blocos de As menos ouvidas, prévia com faixa sem dado'], ['copy', 'Nova, uma cópia de Deep cuts, tirando as faixas curtas'], ['noname', 'Nova, em branco, sem nome: recusada'], ['bounds', 'Nova, fora dos limites: pular 10 e pegar 6']], key: 'builder' }
+};
+const SAY = {
+  'blend-pc': 'A tela de Blend lê a lista do Painel: <b>Deep cuts</b> e <b>As menos ouvidas</b> entram como cartões, e <b>Deep cuts</b> traz o deslizador do pulo (de 3 a 10). O selo «★ RECOMENDADA» é um só, da tela.',
+  'blend-ph': 'No celular, a mesma lista em uma coluna. O deslizador fica no passo 3, e a barra de baixo diz a receita e o pulo antes de «Misturar!».',
+  admin: 'A seção nova do Painel: mostrar e esconder, a ordem (arraste ou use as setas), uma só recomendada, e «Configurar» para cor, ícone, textos e ingredientes. «Criar com IA» fica marcado como depois.',
+  builder: 'Os blocos de uma receita (aqui, os de <b>Deep cuts</b>) e uma receita nova, em branco ou copiada de outra da lista. A prévia mostra, num álbum de exemplo, o que entra, o que é pulado e o que fica sem dado. A fonte própria com IA fica marcada como depois.'
+};
+function applyState() {
+  const t = TABS[S.tab].key, st = S.state[t];
+  if (t === 'blend') S.site = {};
+  if (t === 'admin') {
+    S.recipes = clone(PROPOSAL0); S.pub = JSON.stringify(S.recipes); S.open = null; S.msg = null; S.src = 'published'; S.said = ''; S.guard = ''; S.moved = null;
+    if (st === 'config') S.open = 'deep-cuts';
+    if (st === 'hidden') { S.recipes.find(r => r.id === 'least-played').on = false; S.said = '<b>As menos ouvidas</b> está escondida: não aparece na tela de Blend.'; }
+    if (st === 'guard') S.guard = GUARD;
+    if (st === 'confirm') { const r = S.recipes.splice(4, 1)[0]; S.recipes.splice(1, 0, r); S.moved = 'deep-cuts'; S.msg = 'confirm'; }
+    if (st === 'saved') S.msg = 'saved';
+    if (st === 'code' || st === 'failed') { S.src = st; S.recipes.forEach(r => { if (r.kind === 'blocks') r.on = false; }); S.pub = JSON.stringify(S.recipes); }
+    S.site = {};
+  }
+  if (t === 'builder') {
+    const base = PROPOSAL0.find(r => r.id === (st === 'least' ? 'least-played' : 'deep-cuts'));
+    S.builder = st === 'deep' || st === 'least' ? fromRecipe(base, true) : st === 'noname' ? newBuilder('blank') : fromRecipe(base, false);
+    if (st === 'copy') S.builder.short = 270;
+    if (st === 'noname') S.builder.tried = true;
+    if (st === 'bounds') { S.builder.skip = 10; S.builder.take = 6; }
+  }
+}
+function tools() {
+  const t = TABS[S.tab]; const st = S.state[t.key];
+  return `${S.tab === 'builder' ? '' : `<span class="seg" role="group" aria-label="O que mostrar">${[['both', 'Lado a lado'], ['prop', 'Só a proposta'], ['ref', 'Só hoje']].map(([v, l]) => `<button type="button" data-act="view" data-v="${v}" aria-pressed="${S.view === v}">${l}</button>`).join('')}</span>`}
+    ${S.tab === 'admin' || S.tab === 'builder' ? `<span class="seg" role="group" aria-label="Largura">${[['pc', 'Computador'], ['ph', 'Celular']].map(([v, l]) => `<button type="button" data-act="width" data-v="${v}" aria-pressed="${S.width === v}">${l}</button>`).join('')}</span>` : ''}
+    <label>Estado <select id="state">${t.states.map(([v, l]) => `<option value="${v}" ${st === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+    <label><input type="checkbox" id="marks" ${document.body.classList.contains('prop-on') ? 'checked' : ''}> Sublinhar os textos propostos</label>
+    <label><input type="checkbox" id="ids" ${S.ids ? 'checked' : ''}> Mostrar os itens do inventário</label>`;
+}
+function col(label, small, inner, w, isNew) {
+  return `<section class="col ${isNew ? 'is-new' : ''}"><h2>${label}${isNew ? ' <span class="pill new">Nova</span>' : ''} <small>${small}</small></h2><div class="fit" data-w="${w}" style="max-width:${w + 2}px"><div class="fit-in" style="width:${w}px">${inner}</div></div></section>`;
+}
+function render() {
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === S.tab)));
+  $('#tools').innerHTML = tools(); $('#say').innerHTML = SAY[S.tab];
+  const v = S.tab === 'builder' ? 'prop' : S.view; const cols = [];
+  const W = S.width === 'ph' ? 390 : 1280;
+  if (S.tab === 'blend-pc') { if (v !== 'prop') cols.push(col('Referência (hoje)', '/blend no computador · 1280 px', blendPC('refpc'), 1280)); if (v !== 'ref') cols.push(col('Proposta · v1', '/blend no computador · 1280 px', blendPC('pc'), 1280, 1)); }
+  if (S.tab === 'blend-ph') { if (v !== 'prop') cols.push(col('Referência (hoje)', 'celular · 390 px', blendPhone('refph'), 390)); if (v !== 'ref') cols.push(col('Proposta · v1', 'celular · 390 px', blendPhone('ph'), 390, 1)); }
+  if (S.tab === 'admin') { if (v !== 'prop') cols.push(col('Referência (hoje)', '/admin · ' + W + ' px', adminToday(), W)); if (v !== 'ref') cols.push(col('Proposta · v1', '/admin · Receitas da Mistura · ' + W + ' px', adminRecipes(), W, 1)); }
+  if (S.tab === 'builder') cols.push(col('Proposta · v1', 'hoje não existe: uma receita nova é código · ' + W + ' px', builder(), W, 1));
+  const ph = S.tab === 'blend-ph' || ((S.tab === 'admin' || S.tab === 'builder') && S.width === 'ph');
+  $('#stage').innerHTML = `<div class="cols ${ph ? 'ph' : ''} ${cols.length === 1 ? 'one' : ''}">${cols.join('')}</div>`;
+  document.body.classList.toggle('ids-on', S.ids);
+  fitAll();
+  // a phone opens on its chosen recipe, so the slider of «Deep cuts» is in view without scrolling inside the frame
+  document.querySelectorAll('.ph-scroll').forEach(sc => { const g = sc.querySelector('.ingr'); const c = sc.querySelector('.rc.sel'); if (g) sc.scrollTop = g.closest('section').offsetTop - 150; else if (c) sc.scrollTop = c.offsetTop - 16; });
+}
+function fitAll() {
+  document.querySelectorAll('.fit').forEach(f => {
+    const inn = f.firstElementChild; const w = +f.dataset.w; const s = Math.min(1, f.clientWidth / w);
+    inn.style.transform = s < 1 ? `scale(${s})` : ''; f.style.height = Math.ceil(inn.offsetHeight * s) + 'px';
+  });
+}
+window.addEventListener('resize', fitAll);
+if (document.fonts) document.fonts.ready.then(fitAll);
+
+/* ---------- interactions ---------- */
+const recipe = id => S.recipes.find(r => r.id === id);
+function move(id, d) {
+  const i = S.recipes.findIndex(r => r.id === id); const j = i + d; if (j < 0 || j >= S.recipes.length) return;
+  const [r] = S.recipes.splice(i, 1); S.recipes.splice(j, 0, r); S.moved = id; S.said = `<b>${esc(r.pt)}</b> foi para o ${ordm(j + 1)} lugar.`; S.msg = null;
+}
+document.addEventListener('click', e => {
+  const tab = e.target.closest('.tab'); if (tab) { S.tab = tab.dataset.tab; render(); return; }
+  if (e.target.id === 'theme') { S.theme = S.theme === 'auto' ? 'light' : S.theme === 'light' ? 'dark' : 'auto'; if (S.theme === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.dataset.theme = S.theme; e.target.textContent = 'Tema da moldura: ' + ({ auto: 'automático', light: 'claro', dark: 'escuro' })[S.theme]; return; }
+  const a = e.target.closest('[data-act]'); if (!a || a.tagName === 'INPUT' || a.tagName === 'SELECT' || a.tagName === 'TEXTAREA') return;
+  const act = a.dataset.act, id = a.dataset.id, ctx = a.dataset.ctx;
+  if (act === 'view') S.view = a.dataset.v;
+  else if (act === 'width') S.width = a.dataset.v;
+  else if (act === 'pick') { if (ctx === 'mini') return; const st = S.site[ctx]; st.recipe = id; if (!ctx.startsWith('ref')) st.choices = choicesFor(catalogFor(true).find(x => x.id === id)); }
+  else if (act === 'series') S.site[ctx].series = true;
+  else if (act === 'ch') { const v = a.dataset.v; S.site[ctx].choices[a.dataset.k] = isNaN(+v) ? v : +v; }
+  else if (act === 'on') { const r = recipe(id); if (r.rec && r.on) S.guard = GUARD; else { r.on = !r.on; S.guard = ''; S.said = `<b>${esc(r.pt)}</b> ${r.on ? 'aparece' : 'está escondida'} na tela de Blend.`; S.msg = null; } S.site = {}; }
+  else if (act === 'star') { S.recipes.forEach(r => { r.rec = r.id === id; }); S.guard = ''; S.said = `<b>${esc(recipe(id).pt)}</b> é a recomendada: só ela traz o selo na tela de Blend.`; S.msg = null; }
+  else if (act === 'up' || act === 'down') move(id, act === 'up' ? -1 : 1);
+  else if (act === 'open') S.open = S.open === id ? null : id;
+  else if (act === 'look' || act === 'icon') { const t = a.dataset.who === 'b' ? S.builder : recipe(a.dataset.who); t[act] = a.dataset.v; }
+  else if (act === 'save') S.msg = 'confirm';
+  else if (act === 'publish') { S.recipes.forEach(r => { delete r.isNew; }); S.pub = JSON.stringify(S.recipes); S.msg = 'saved'; S.moved = null; S.src = 'published'; }
+  else if (act === 'msg-close') S.msg = null;
+  else if (act === 'discard') { S.recipes = JSON.parse(S.pub); S.msg = null; S.said = 'As mudanças foram descartadas.'; S.moved = null; }
+  else if (act === 'new') { S.builder = newBuilder('blank'); S.tab = 'builder'; }
+  else if (act === 'edit-blocks') { S.builder = fromRecipe(recipe(id), true); S.tab = 'builder'; }
+  else if (act === 'copy') S.builder = fromRecipe(recipe(id), false);
+  else if (act === 'to-admin') S.tab = 'admin';
+  else if (act === 'preset') S.builder = newBuilder(a.dataset.v);
+  else if (act === 'bset') S.builder[a.dataset.k] = a.dataset.v;
+  else if (act === 'bstep') { const b = S.builder; b[a.dataset.k] = Math.max(a.dataset.k === 'take' ? 1 : 0, Math.min(10, b[a.dataset.k] + +a.dataset.d)); }
+  else if (act === 'bsave') {
+    const b = S.builder; b.tried = true;
+    if (!b.pt.trim() && !b.en.trim()) { render(); return; }
+    const blocks = { source: b.source, from: b.from, skip: b.skip, take: b.take, short: b.short, group: b.group };
+    if (b.editing) { Object.assign(recipe(b.editing), { blocks, pt: b.pt, en: b.en, dpt: b.dpt, den: b.den, badge: b.badge, badgeEn: b.badgeEn, look: b.look, icon: b.icon }); S.said = `Os blocos de <b>${esc(b.pt || b.en)}</b> mudaram. Salve a lista para pôr no ar.`; }
+    else { const nid = 'nova-' + (S.recipes.length + 1); S.recipes.push(R({ id: nid, kind: 'blocks', isNew: 1, on: false, look: b.look, icon: b.icon, badge: b.badge || 'ALGORITMO', badgeEn: b.badgeEn || b.badge || 'ALGORITHM', pt: b.pt || b.en, en: b.en || b.pt, dpt: b.dpt, den: b.den, shown: { groupingStrategy: 1, outputMode: 1, skip: b.from === 'top' && b.skip > 0 ? 1 : 0 }, blocks, def: Object.assign(clone(DEF), { skip: b.skip }) }));
+      S.said = `<b>${esc(b.pt || b.en)}</b> entrou no fim da lista, escondida. Ligue-a e salve para aparecer na tela de Blend.`; S.open = null; }
+    S.site = {}; S.tab = 'admin';
+  } else return;
+  render();
+});
+document.addEventListener('input', e => {
+  const a = e.target; const act = a.dataset && a.dataset.act; if (!act) return;
+  if (act === 'skip') { const ctx = a.dataset.ctx, take = +a.dataset.take, base = +a.min, k = +a.value, x = k - base; S.site[ctx].choices.skip = k;
+    $('#skipo-' + ctx).textContent = k; $('#skipx-' + ctx).textContent = x ? `as ${base} + ${x}` : `as ${base} da receita`; $('#skipt-' + ctx).textContent = skipText(k, take);
+    $('#strip-' + ctx).querySelectorAll('.cell').forEach((c, i) => { const p = i + 1; c.className = 'cell ' + (p <= k ? 'sk' : p <= k + take ? 'in' : 'rest'); }); }
+  if (act === 'dur') { const ctx = a.dataset.ctx; S.site[ctx].choices.duration = +a.value; $('#duro-' + ctx).textContent = a.value + 'm'; }
+  if (act === 'txt') { const isB = a.dataset.who === 'b'; const t = isB ? S.builder : recipe(a.dataset.who); t[a.dataset.k] = a.value; const m = $('#mini-' + a.dataset.who); if (m) m.innerHTML = card(Object.assign({}, t, isB ? { isNew: 1, rec: false, pt: t.pt || '(sem nome)' } : {}), { sel: false, today: false, ctx: 'mini' }); }
+  if (act === 'bshort') { S.builder.short = +a.value; $('#b-shorto').textContent = S.builder.short ? 'menos de ' + mmss(S.builder.short) : 'nenhuma'; }
+});
+document.addEventListener('change', e => {
+  const a = e.target;
+  if (a.id === 'state') { S.state[TABS[S.tab].key] = a.value; applyState(); render(); return; }
+  if (a.id === 'marks') { document.body.classList.toggle('prop-on', a.checked); return; }
+  if (a.id === 'ids') { S.ids = a.checked; render(); return; }
+  const act = a.dataset && a.dataset.act; if (!act) return;
+  if (act === 'skip' || act === 'dur' || act === 'bshort') { render(); return; }
+  if (act === 'shown') { recipe(a.dataset.id).shown[a.dataset.k] = a.checked ? 1 : 0; S.msg = null; S.site = {}; render(); }
+  if (act === 'def') { const v = a.value; recipe(a.dataset.id).def[a.dataset.k] = isNaN(+v) ? v : +v; S.msg = null; S.site = {}; render(); }
+  if (act === 'balbum') { S.builder.album = a.value; render(); }
+});
+/* drag to reorder (the arrows do the same without dragging; Esc gives up a drag) */
+document.addEventListener('dragstart', e => { const li = e.target.closest && e.target.closest('.rrow'); if (!li) return; S.drag = li.dataset.rid; li.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', S.drag); } catch (_) {} });
+document.addEventListener('dragover', e => { const li = e.target.closest && e.target.closest('.rrow'); if (!li || !S.drag) return; e.preventDefault(); document.querySelectorAll('.rrow.over').forEach(x => x.classList.remove('over')); if (li.dataset.rid !== S.drag) li.classList.add('over'); });
+document.addEventListener('drop', e => { const li = e.target.closest && e.target.closest('.rrow'); if (!li || !S.drag) return; e.preventDefault(); const from = S.recipes.findIndex(r => r.id === S.drag), to = S.recipes.findIndex(r => r.id === li.dataset.rid); if (from > -1 && to > -1 && from !== to) move(S.drag, to - from); S.drag = null; S.site = {}; render(); });
+document.addEventListener('dragend', () => { S.drag = null; document.querySelectorAll('.rrow.dragging,.rrow.over').forEach(x => x.classList.remove('dragging', 'over')); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.drag) { S.drag = null; render(); } });
+
+applyState(); S.builder = fromRecipe(PROPOSAL0.find(r => r.id === 'deep-cuts'), true);
+render();
+</script>
+</body>
+</html>

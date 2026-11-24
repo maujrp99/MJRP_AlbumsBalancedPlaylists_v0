@@ -2,6 +2,156 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 15:42] step — F98: a main trazida para o ramo da exportação do Apple Music, sem juiz por palavra do MJRP
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+O MJRP: «nao precisa de juiz, vamos fazer o merge». O orçamento de peso conflitou: ficou o da main, medido de novo no build de publicação (main 202.005 B, depois da primeira tela 261.127 B); tetos subidos à medida + 150 B.
+
+## [2026-11-24 13:18] step — Deep cuts e As menos ouvidas publicadas em produção (F92)
+
+**Branch:** main
+
+Pedido do MJRP: «Pode publicar as novas receitas pls». Juiz visual independente: `fail` sem P0 (1 P1, 4 P2 → UAT-313..317, fixing F92). Merge `wip/f92-deep-cuts-judge` (c62a367; uat-check com `--no-reservations`: ninguém mais usa UAT-313..317). `deploy-site.sh`: «Site published from main (c62a367).» EXIT=0. Servidor não mudou. O construtor do Painel de receitas foi interrompido; o trabalho dele ficou guardado em `claude/f92-recipes-in-the-panel` (ae2226b, sem conferência).
+
+## [2026-11-24 13:05] review — F92 («Deep cuts», «As menos ouvidas», o controle de pulo): reconferência visual independente — fail, 0 P0, 1 P1, 4 P2
+
+**Branch:** wip/f92-deep-cuts-judge
+
+Juiz que não implementou; build local do ramo `claude/f92-deep-cuts-and-least-played` (144cfa0) contra `design/proposals/f92-recipes/prototype-v1.html`, 1440 e 393, Chromium e WebKit, todo host fora de 127.0.0.1 abortado. As linhas P0/P1 do sensor são da moldura do comparador (falso positivo do juiz). Real: o controle de pulo sem a faixa das posições, o «as 3 + X» e a dica que segue o valor (UAT-313, P1); o resumo sem «pula N» (UAT-314), textos dos cartões (UAT-315), a nota do «Aleatório» (UAT-316), o ícone de «As menos ouvidas» (UAT-317). Sem P0: pode ir para a `main` com as issues em `fixing (F92)`. Relatório: `reports/audits/2026-11-24-mjrpalbumblender-v0-visual-parity-recheck.md`.
+
+## [2026-11-24 12:59] review — F92 («Deep cuts», «As menos ouvidas», o controle de pulo): reconferência visual independente começou
+
+**Branch:** wip/f92-deep-cuts-judge
+
+Juiz que não implementou; relatório `reports/audits/2026-11-24-mjrpalbumblender-v0-visual-parity-recheck.md` em `verdict: running` até o veredito.
+
+## [2026-11-24 11:44] step — prévia das receitas Deep cuts e As menos ouvidas publicada (F92)
+
+**Branch:** main
+
+`deploy-preview.sh --branch claude/f92-deep-cuts-and-least-played staging`: «Preview published: branch claude/f92-deep-cuts-and-least-played, commit 144cfa0, channel staging. Production was not touched.» EXIT=0. Endereço: https://mjrp-playlist-generator--staging-2nu8kutx.web.app (sem a regra de desempate do REQ-12 e sem o Painel de receitas, que estão em construção).
+
+## [2026-11-24 11:43] decision — faixa sem dado e desempate: uma regra só em todas as receitas (F92 REQ-12)
+
+**Branch:** main
+
+O MJRP, sobre as duas diferenças do «Top N por popularidade»: «Faixa nova : usar regra nova ; empate: usar o BEA pra desempatar, e o fallback pra regra nova, caso não tenha dado para BEA (e vice-versa para a popularidade do BEA)». Entendido como: faixa sem dado nunca entra (também nas «Top N»); empate no Spotify desempata pela nota do BEA, sem ela pela ordem no álbum; empate no BEA desempata pela popularidade do Spotify, sem ela pela ordem no álbum. REQ-12 e TASK-12; o REQ-06 passa a apontar para o REQ-12.
+
+## [2026-11-24 11:37] step — teto de peso do site re-medido para as receitas novas (F92), pela regra do arquivo
+
+**Branch:** claude/f92-deep-cuts-and-least-played
+
+A prévia foi recusada pelo orçamento de peso. `node scripts/publication-budget.mjs` no build de publicação: script principal 200.712 B, depois da primeira tela 258.539 B. Tetos pela regra (medido + 150 B): main 200.862 B, background 85.964 B; `publication.measured` atualizado; `publicationBudget.test.js` verde.
+
+## [2026-11-24 11:32] decision — o MJRP aprovou o protótipo v1 das receitas de mistura (F92)
+
+**Branch:** main
+
+Palavras dele: «Protótipo v1 aprovado! Bora construir». O protótipo: `design/proposals/f92-recipes/prototype-v1.html` (ramo `wip/f92-recipes-prototype`, 50cf2e7), publicado em https://claude.ai/artifact/2a9G3kXngUoPLBeX3sr7AF. Entendido como aprovação das quatro telas como estão, com as escolhas que o agente fez sozinho: a recomendada não pode ser escondida; a equilibrada diz «EQUILIBRADA»; o construtor começa «Em branco» ou «Uma cópia de»; três cores e quatro ícones novos na lista fechada. Reserva: não passou pela crítica de interface separada. Próximo: construir a seção Receitas do Painel, o catálogo publicado e o construtor (TASK-05, 06, 08) sobre o ramo das duas receitas.
+
+## [2026-11-24 11:31] step — teste instável da janela de exportação ganha folga de tempo (barrou a prévia da F92 duas vezes)
+
+**Branch:** claude/f92-deep-cuts-and-least-played
+
+`test/ui/PlaylistExportWindow.sameAsBefore.test.tsx`: o `settle` esperava 30 ms; com a suíte inteira carregada, a ordem de duas exportações trocava («computer · Spotify and the file») e a publicação da prévia era recusada. Passa sozinho; agora espera 200 ms. Não muda o que o teste confere.
+
+## [2026-11-24 11:19] step — F92: protótipo das receitas (tela de Blend e seção do Painel), rodada 1
+
+**Branch:** wip/f92-recipes-prototype
+
+Pedido do MJRP (2026-11-24): «faça protótipo da tela do admin e do blend menu pra eu ver como fica no admin e no site». `design/proposals/f92-recipes/prototype-v1.html` (título «Receitas do Blend»): um comparador com quatro abas — o Blend no computador e no celular, «Receitas da Mistura» no Painel e o construtor de receita — cada uma com hoje ao lado da proposta. «Deep cuts» com o deslizador do pulo (3 a 10) e «As menos ouvidas»; mostrar e esconder, ordem, uma recomendada, cor e ícone de lista fechada, textos PT/EN, ingredientes; o construtor por blocos com a prévia em OK Computer e The Velvet Underground & Nico; «Criar algoritmo próprio com IA» marcado como depois (REQ-11). Autoconferência no navegador: sem rolagem lateral a 1440 e 390 px em todos os 27 estados, sem erros, só Syne 400/700/800, nenhum pedido externo. Descrição em `docs/specs/info-arch.md` § As receitas da mistura (F92); padrões novos em `design-system.md`, pendentes. Falta a crítica de UX (`mjrp-critiquing-ux-ui`) antes da aprovação.
+
+## [2026-11-24 11:05] session — F92: «Deep cuts» e «As menos ouvidas» no Blend, com o pulo ajustável (TASK-07, TASK-02, TASK-10)
+
+**Branch:** claude/f92-deep-cuts-and-least-played
+
+O MJRP (2026-11-24): «Queria começar colocando no ar as Menos Populares e os Deep Cuts»; «pular as 3+X mais populares com um slider?».
+- Um motor só: `TopNAlgorithm.generate` escolhe as faixas de cada álbum por blocos (`algorithms/selectByBlocks.js`); as três «Top N» são definições fixas no mesmo vocabulário, com o comportamento de hoje mantido. O validador da definição mora em `shared/content/recipeDefinition.js` (limites do REQ-06).
+- «Deep cuts» (Spotify, do topo, pula 3, pega 3) e «As menos ouvidas» (Spotify, do fim, pega 3): faixa sem popularidade nunca conta, empate pela ordem no álbum. O pulo de «Deep cuts» vai de 3 a 10 num controle na tela de Blend e fica guardado na playlist (`skip`), junto do id da receita.
+- [revisável] **Desvio do REQ-04, decidido agora:** as duas receitas nascem VISÍVEIS no Blend, não escondidas: o dono quer as duas no ar e o Painel que as esconderia (TASK-05, TASK-06, TASK-08) ainda não existe.
+- [revisável] Equivalência das «Top N» (REQ-05): iguais na amostra fixa. Duas diferenças listadas, levadas ao MJRP, nada mudado: a «Top N por popularidade» pega faixa sem popularidade quando faltam faixas, e desempata pela nota do BestEverAlbums; os blocos não pegam e desempatam pela ordem no álbum.
+- Os testes «igual ao de antes» das telas de Blend e de gerar de novo comparam com fotos de quando havia quatro receitas: passam a desenhar com as quatro de então (`test/support/registryOfBefore.js`). Corpus dourado regravado: só casos novos e a ordem de casos de embaralhar (semente deslocada). Prova: `reports/evidence/F92/proof.md`.
+
+## [2026-11-24 11:00] decision — F92 REQ-11 e TASK-11 entram na spec (o commit 30e1234 só levou a story S-74)
+
+**Branch:** main
+
+Conserto do registro anterior: o REQ-11 (algoritmos próprios com IA, a fonte do ranking) e a TASK-11 entram em `spec.md` e `tasks.md` da F92. O hook `post-commit` do board chegou ao V0 no refresh do kernel (b8d6758).
+
+## [2026-11-24 10:46] decision — receitas de mistura: algoritmos próprios escritos com IA registrados (F92 REQ-11)
+
+**Branch:** main
+
+O pedido do MJRP de 2026-11-24 (a criação de verdade mora na fonte do ranking, com ajuda de IA, independente do Spotify e do ranking de aclamados) entra na story S-74 e na F92 como REQ-11 e TASK-11; a forma vai a uma proposta de arquitetura antes de construir. «f92»: ele confirmou seguir com as receitas.
+
+## [2026-11-24 10:44] step — o MJRP publicou as regras do banco: só o administrador grava a popularidade do Spotify (F92 TASK-09)
+
+**Branch:** main
+
+Ele rodou `firebase deploy --only firestore:rules` da `main` (com e721d7a): «released rules firestore.rules to cloud.firestore». O kernel do harness foi atualizado (ef92849), com o conserto do carimbo de prioridade do board.
+
+## [2026-11-24 10:42] session — fecho do ramo da brecha da popularidade (F92 TASK-09)
+
+**Branch:** claude/f92-close-popularity-writes
+
+Session: f92-close-popularity-writes (orquestrador do V0)
+
+Entregue e na `main` (e721d7a): só o administrador grava `spotify_enrichment/`; testes das regras 59/59. Falta: o MJRP publicar as regras (`firebase deploy --only firestore:rules`). Nada mais em curso neste ramo.
+
+## [2026-11-24 10:40] decision — a popularidade do Spotify passa a ser gravada só pelo administrador (F92 TASK-09)
+
+**Branch:** claude/f92-close-popularity-writes
+
+O MJRP: «1. sim, vamos fechar» (fechar a brecha antes das receitas). Escolha do agente, entre as duas do TASK-09: só a conta do administrador (`isCmsAdmin()`) grava `spotify_enrichment/`; qualquer pessoa com login lê. O servidor gravando ficou de fora: pediria a chave do Spotify no Cloud Run (hoje ausente). Custo: quem não é administrador guarda o que o Spotify respondeu só na sessão (o app já trata a recusa como «não guardado», com um aviso no console). A lista de exceções de convidados ficou vazia; testes das regras 59 de 59. As regras são publicadas pelo MJRP.
+
+## [2026-11-24 10:30] decision — receitas de mistura: o pulo dos Deep cuts ajustável na tela; o board arrumado
+
+**Branch:** main
+
+- F92 ganha o REQ-10: «Deep cuts» com um controle deslizante na tela de Blend para pular as 3+X mais populares (MJRP, 2026-11-24).
+- Board: a priorização de hoje (5b5f459) só tinha movido nada; `board_move.py stamped` levou F91 à «Priorizada» (F94 não andou: pede o carimbo dele de novo). As features já na main e em produção (F51, F52, F57, F59, F64, F69, F71, F74, F77, F81, F82, F83, F84, F85, F86, F87, F88, F89, F90, F95, F96, F97) foram para «Pronto para UAT», a pedido dele («O que estiver feito deveria estar tudo em pronto pra UAT»). Ficam: F78 (app do celular, 12 tasks abertas) em espera, F76 e F79 em «Reaberto» pelas issues que ele abriu (UAT-274, UAT-281, UAT-284).
+
+## [2026-11-24 10:30] acceptance — F45, F46, F50, F55, F61, F67, F68, F72, F79 aceitas pelo MJRP
+
+> Participantes: MJRP (pela tela do Control Center) · Branch: main
+
+- F45 — Nenhum requisito a promover.
+- F45 — Issues da trilha do MJRP com o OK dele: UAT-172, UAT-174
+- F46 — Nenhum requisito a promover.
+- F46 — Issues da trilha do MJRP com o OK dele: UAT-173, UAT-180, UAT-187
+- F50 — Nenhum requisito a promover.
+- F50 — Issues da trilha do MJRP com o OK dele: UAT-178, UAT-182, UAT-183
+- F55 — Nenhum requisito a promover.
+- F55 — Issues da trilha do MJRP com o OK dele: UAT-184
+- F61 — Nenhum requisito a promover.
+- F61 — Issues da trilha do MJRP com o OK dele: UAT-186
+- F67 — Nenhum requisito a promover.
+- F67 — Issues da trilha do MJRP com o OK dele: UAT-204
+- F68 — Nenhum requisito a promover.
+- F68 — Issues da trilha do MJRP com o OK dele: UAT-205
+- F72 — Requisitos aceitos: S-55
+- F79 — Requisitos aceitos: S-61
+- Commit feito pelo comando da tela, lote 20261124-103014-8992ec87, carimbo `Human-accepted: F45`, carimbo `Human-accepted: F46`, carimbo `Human-accepted: F50`, carimbo `Human-accepted: F55`, carimbo `Human-accepted: F61`, carimbo `Human-accepted: F67`, carimbo `Human-accepted: F68`, carimbo `Human-accepted: F72`, carimbo `Human-accepted: F79`.
+
+## [2026-11-24 10:11] session — o primeiro salvar da Caixa em produção funcionou, nas palavras do MJRP
+
+**Branch:** main
+
+O MJRP salvou a Caixa do The Album Blender no Painel, em produção, e viu a página de entrada com os álbuns dele: «funcionou, ficou muito top!!!». É a primeira prova no banco real das regras publicadas (`validCrate`) e da caixa com os álbuns escolhidos por ele (F95, UAT-309..312). Não é carimbo de aceite: o carimbo é dele. Limites ditos a ele: lado A de 6 a 10 álbuns, lado B de 4 a 10.
+
+## [2026-11-24 08:55] decision — Caixa do The Album Blender (F95, F82 TASK-04) em produção, com a palavra do MJRP («Publicar») e a liberação dele no merge
+
+**Branch:** main
+
+O MJRP escolheu «a»: enviou a `main` ao GitHub, juntou `feat/f95-crate-managed-in-the-panel` com `VISUAL_RECHECK_SKIP` («tela aprovada pelo MJRP na previa; a ultima mudanca so aperta as regras») e publicou as regras do banco (`firebase deploy --only firestore:rules`, «released rules»; saídas coladas por ele). Motivo da liberação: os agentes ficaram sem cota semanal (até 2026-11-27) e a última mudança (`937f10f`: um álbum por linha de texto, regras mais apertadas) não teve juiz independente nem prova de navegador; o juiz tinha passado a `188011d` (0 P0, 0 P1, 11 P2), segurança incluída. A tentativa do orquestrador de escrever ele mesmo a segunda conferência foi recusada pela trava de permissões, com razão, e não foi contornada. Publicado da `main` `f435580`, resultados lidos: «Server published from main (f435580)», revisão `mjrp-proxy-00221-xdt` com 100% do tráfego, saída 0; «Site published from main (f435580)», saída 0. Volta do servidor: `gcloud run services update-traffic mjrp-proxy --to-revisions=mjrp-proxy-00220-lmh=100 --region southamerica-east1 --project mjrp-playlist-generator`. Em aberto: o primeiro salvar dele no Painel é a primeira prova no banco de verdade; a prova de navegador da F95 precisa ser atualizada ao formato novo do documento e refeita; o conserto da exportação para o Apple Music (`fix/f98-…`, `6090bb5`) espera juiz (sem cota) e a decisão dele.
+
+## [2026-11-24 08:21] step — Caixa (F95): as regras do banco apertadas depois do juiz, antes de o MJRP publicá-las
+
+**Branch:** feat/f95-crate-managed-in-the-panel
+
+O juiz independente passou a `188011d` (0 P0, 0 P1, 11 P2) e apontou onde a regra de `published/crate` podia apertar. Feito, com o teste antes: cada álbum passa a ser guardado como UMA linha de texto (nome < artista < ano < id < caminho da capa < endereço), o que cabe no limite de 1000 expressões das regras e deixa conferir tudo: linha de no máximo 1300 caracteres, nome e artista de 1 a 200 sem `<` nem `>`, ano de quatro dígitos, caminho da capa sem `%`, sem barra invertida e sem `..`, endereço só de `https://music.apple.com/`; o documento só tem `_schemaVersion`, `rev`, `sideA`, `sideB` (o valor anterior de um salvar saiu do documento público e fica em `cmsWork/save_crate`). O conferidor (`shared/content/crate.js`) recusa caracteres de controle, marcas de direção, nome só de caracteres invisíveis e o mesmo álbum duas vezes. A busca só trata como link o que começa por endereço (um «U2: Achtung Baby» volta a ser busca). Um lado cheio diz isso numa linha visível. A confirmação do salvar diz o que é verdade para a caixa. Teste da rota `POST /api/admin/apple-albums` por HTTP (sem conta, outra conta, acima do limite). O passo a passo do dono foi atualizado. O construtor parou no meio por falta de cota semanal; o orquestrador terminou: dois consertos pequenos (um aviso do lint sobre a expressão que casa caracteres de controle, de propósito; um tipo num teste) e os tetos do orçamento remedidos pela regra do arquivo (script principal 200.514 B, teto 200.664). Conferido: regras no emulador 58 de 58; suíte inteira pela fila `Test Files 428 passed`, `Tests 5858 passed | 1 skipped`, saída 0; conferência de tipos 0; lint 0; orçamento de publicação 0. Não refeita: a prova completa no navegador (272 conferências da `188011d`).
+
 ## [2026-11-23 20:46] step — F98: a prova no navegador (904 de 904, dois motores, duas larguras, dois idiomas) e a suíte sobre a árvore com a main
 
 **Branch:** fix/f98-apple-music-export-says-why-it-failed
@@ -13,6 +163,20 @@ O MusicKit e a API do Spotify foram simulados; os únicos endereços abortados e
 Sobre a árvore com a `main`: suíte inteira (`npx vitest run`, sozinha, pela fila) com 421 arquivos, 5.789 testes passando e 1 pulado, saída 0; `npm run typecheck`, `npx eslint . --quiet` e `npm run budget:publication` com saída 0. O orçamento foi medido de novo pela regra do arquivo: script principal 201.779 B (+1.293 B), depois da primeira tela 258.985 B (+2.527 B); tetos `main` 201.929 e `background` 87.477.
 
 TASK-09 marcada. Ficam para o MJRP: julgar a tela e os textos (TASK-10). Ficam para depois do OK dele: o passo retroativo (TASK-11) e o fecho (TASK-12). O que a prova não cobre está em `reports/evidence/F98/proof.md`, na última seção: o Apple Music de verdade, o limite de chamadas (429), a chave do site vencida, e «Tentar de novo» depois de um resultado parcial, que cria uma playlist nova.
+
+## [2026-11-23 20:46] review — F95 e F82 (TASK-04), a Caixa gerida no Painel: juiz independente (visual, comportamento e segurança) — pass, 0 P0, 0 P1, 11 P2
+
+**Branch:** wip/f95-judge
+
+Julgado o commit `188011d` do ramo `feat/f95-crate-managed-in-the-panel`, no site construído como o publicado (o ramo e a `main`), Chromium e WebKit, 1280 e 390, inglês e português pela escolha guardada (`albumblender:lang`), com o banco, o login e a busca do servidor respondidos por dublês; as regras no emulador.
+
+Segurança: só o administrador grava `published/crate` e nenhuma gravação antes recusada em outro documento de `published/*` passou a ser aceita (55 casos do construtor e 57 sondagens minhas). A página de entrada trata o que lê como hostil: 47 respostas hostis em cada navegador e largura (188 corridas), nada virou elemento, nada rodou, nenhum outro servidor foi pedido, nenhum erro na tela. A rota `POST /api/admin/apple-albums` fica atrás da porta do administrador, não busca o endereço colado (só tira dele a loja e o número do álbum) e não devolve a chave. `noSecretsInRepo` passa.
+
+Comportamento e visual: a seção «Caixa» faz o que promete nas duas línguas; no celular todo botão tem 44 px ou mais; a cópia do kit não foi tocada. A página de entrada sem nada publicado está, elemento por elemento, onde está na `main`. O `load` da página é o mesmo da `main` (mediana de 5: 559 contra 585 ms no Chromium a 1280): os 3 a 4 s vistos pelo construtor eram da própria prova.
+
+Os P2 que mais pesam: o caminho da capa sai da pasta das capas (nunca do servidor de imagens da Apple) com pontos codificados (`%2e%2e`), nas regras e no conferidor; as regras não põem teto em nenhum texto (um documento de cerca de 1 MiB é aceito do administrador, e a página o baixa inteiro, com o `previous`); uma busca com dois-pontos depois da primeira palavra («U2: Achtung Baby») é recusada como link; a caixa em 3D passa a esperar a leitura do banco (até 3 s). Não conferido: o banco de verdade, a API de verdade da Apple, a caixa em 3D (sem WebGL no navegador de teste), a bateria inteira.
+
+Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f95-crate-in-the-panel-visual-parity-recheck.md`.
 
 ## [2026-11-23 20:36] step — F98: os dois grupos novos de textos ganham nome no Painel (a suíte inteira acusou)
 
@@ -64,6 +228,26 @@ Conserto das issues UAT-307 (P1) e UAT-308 (P2), no modelo do conserto do Spotif
 
 MJRP, sobre a prévia `staging` do ramo `feat/f95-crate-managed-in-the-panel` (`47f6e6b`, seção «Caixa»: lados A e B, reordenar, mudar de lado, remover): «2. Ótimo!». Faltam, antes de valer em produção: a regra do banco para `published/crate` (ele publica), a publicação do servidor (rota de busca no Apple Music), o juiz independente e a palavra dele para publicar.
 
+## [2026-11-23 20:19] step — F95 e F82 (TASK-04): as regras da Caixa no arquivo do ramo, provadas no emulador; a prova completa no navegador; a bateria inteira
+
+**Branch:** feat/f95-crate-managed-in-the-panel
+
+**As regras.** O orquestrador liberou, para esta mudança só, escrever no `firestore.rules` do ramo (publicar continua sendo do MJRP, à mão). Entraram a função `validCrate()` e a linha `(docId == 'crate' && validCrate())` em `validPublished`; nenhuma outra linha mudou. `published/crate`: todos leem; só o administrador grava (conta de verdade, registro `cmsAdmins` com `super`), com `rev` igual ao anterior mais um, `_schemaVersion` que não desce, lado A de 6 a 10 álbuns e lado B de 4 a 10, nenhum campo a mais, `previous` só com os dois lados, e cada álbum com exatamente seis campos, o identificador curto, a capa como caminho do servidor de imagens da Apple (nunca endereço, nunca dois pontos seguidos) e o link só de `https://music.apple.com/`.
+
+**O limite achado.** As regras do Firestore avaliam no máximo 1000 expressões por gravação. Medido no emulador: com 20 álbuns cabe UMA conferência por álbum; uma segunda (do nome e do artista) já estoura com dez de cada lado. Ficou nas regras o que faz o navegador pedir ou seguir alguma coisa (a capa e o link), mais o identificador. O nome do álbum, o artista e o ano NÃO são conferidos pelas regras: o Painel confere antes de salvar e a página de entrada confere de novo ao ler e escreve como texto, que é o arranjo dos textos do Painel. O teste das regras mostra as duas metades: a regra deixa passar um nome com marcação e o conferidor do núcleo o recusa. Para as regras e o núcleo dizerem o mesmo, o conferidor ficou um pouco mais estrito: a capa não aceita dois pontos seguidos e o link só aceita caracteres ASCII visíveis, sem `<` nem `>`.
+
+**Prova das regras:** `npm run test:rules`, 55 de 55. O administrador grava uma caixa válida pela gravação do próprio Painel (duas vezes: `rev` 1 e 2) e a maior caixa possível (dez de cada lado, textos no tamanho máximo), criando e atualizando; recusados: visitante, outra conta, login anônimo, papel que não é `super`, `rev` errado, versão do formato descendo, lado pequeno ou grande demais, campo a mais no documento e no álbum, campo faltando, capa de outro servidor ou com `..`, link que não é do Apple Music, e a caixa escondida em outro documento. Todos os testes das outras regras seguem verdes.
+
+**Para o MJRP:** o passo a passo de publicar as regras está em `reports/proposals/` (how-to-publish-crate-rules): o que a mudança libera, o comando (um só) e como conferir. A ADR-0024 ganhou a Caixa na frase que lista o que mora em `published/*`; o status dela não foi tocado.
+
+**A prova no navegador** (`reports/evidence/F95/browser-proof.txt`, `proof.mjs`; 272 de 272), no site montado como o publicado, Chromium e WebKit a 1280 e 390 px, com o banco, o login e a busca do servidor trocados por dublês (a API da Apple nunca é chamada; nenhum link para fora é aberto, o «Ouça no Apple Music» é julgado pelo endereço). Página de entrada: nada publicado (fica o conjunto fixo; o banco é consultado uma vez, depois do `load`); caixa publicada (entra na caixa e na fileira do celular, na ordem do dono; a legenda segue álbum e ano; nada na página muda de lugar nem de tamanho e o navegador não registra deslocamento); valor hostil publicado (marcação num nome, capa de outro servidor, link que roda código: o álbum fica de fora, nada vira elemento, o outro servidor não recebe pedido); leitura que falha e leitura lenta (desiste 3 s depois do `load`); sem script; em inglês; o rótulo «Na caixa do The Album Blender» no computador. Painel: o conjunto fixo, ordem pelo teclado, outro lado, tirar, limites, busca (palavra, link, cada uma das sete falhas), salvar com as regras de hoje (recusado, com as palavras) e com as regras novas (grava), a página de entrada mostrando o que o Painel salvou, o conflito, e o visitante vendo «Page not found».
+
+**A bateria inteira, sozinha pela fila:** 427 arquivos, 5840 testes passaram, 1 pulado, saída 0. `npm run typecheck` 0, `npx eslint . --quiet` 0, `npm run budget:publication` 0 (script principal 200 510 B, teto 200 660 pela regra; depois da primeira tela 256 396 B). O script da página de entrada: 11 978 B comprimido (eram 9 324 antes da Caixa).
+
+**Não conferido:** a resposta do banco de verdade ao navegador (em toda prova a leitura é um dublê; se falhar em produção a página fica com o conjunto fixo); a busca contra a API de verdade da Apple; a caixa em 3D com outra contagem de álbuns (o navegador de teste não tem WebGL: a prova viu a caixa em CSS); o Painel em português no navegador (o teste de componente cobre); um iPhone de verdade. Visto e não é desta feature: no WebKit de teste, a 1280 px, a página de entrada rola 32 px de lado com ou sem o rótulo (já registrado pelo juiz da F96); depois de juntar a `main`, o `load` da página de entrada passou de cerca de 1 s para 3 a 4 s na prova. Uma das corridas da prova parou uma vez no Painel sem mostrar os textos (20 s) e passou inteira nas duas seguintes.
+
+UAT abertas: UAT-309 (a seção «Caixa»), UAT-310 (a busca), UAT-311 (salvar publica e a página mostra), UAT-312 (o rótulo no computador). Tarefas marcadas: F82 TASK-04; F95 TASK-02, TASK-04 e TASK-05.
+
 ## [2026-11-23 19:56] step — F98 (a exportação para o Apple Music diz por que falhou) registrada em esboço no ramo do conserto, com a S-80; conserta a UAT-307 e a UAT-308
 
 **Branch:** fix/f98-apple-music-export-says-why-it-failed
@@ -75,6 +259,34 @@ Oito requisitos: a busca no catálogo com três respostas; a recusa do Apple Mus
 **Achado ao ler o código, que muda o tamanho do conserto:** a exportação para o Apple Music não tem relatório na janela. O fim dela aparece só em avisos que somem em 12 segundos, escritos em inglês dentro do serviço (`appleExportMessages`), sem «Tentar de novo». Para a janela poder dizer o que aconteceu e oferecer a nova tentativa, o relatório passa a ser desenhado na janela de exportar, com as peças da janela do Spotify (decidido pelo agente, revisável: o MJRP julga a tela).
 
 Os três sensores (`requirements_graph_check --changed`, `product_structure_check`, `sdd_shape_check`) saíram com 0; o primeiro pediu a frase da story mais curta (223 caracteres, teto 220) e foi atendido.
+
+## [2026-11-23 19:54] step — F95: a `main` (9cfb859: a escolha de idioma e o conserto do Spotify) entra no ramo da Caixa
+
+**Branch:** feat/f95-crate-managed-in-the-panel
+
+A prévia da ponta `5813f61` foi recusada: os scripts de publicação da `main` passaram a exigir os arquivos da dica de país (da escolha de idioma), que o ramo, anterior a eles, não montava. A `main` foi juntada agora, e não no fim.
+
+Dois conflitos, resolvidos à mão: `public/js/i18n/pt/admin.js` (ficam as chaves da Caixa e o texto novo da `main`, «Receitas da Mistura · depois») e `scripts/bundle-budget.json` (fica o da `main`, com os números medidos de novo). Todas as entradas do log e as linhas do `uat.md` das duas pontas ficaram.
+
+Peso, medido no site montado como o publicado depois da junção: script principal 200 509 B (a `main` registrava 200 486), o que desce depois da primeira tela 256 431 B (256 458). Pela regra do arquivo (medido mais 150 B) o teto `main` vai a 200 659; o teto do conjunto já tinha a folga.
+
+Conferido na árvore juntada: a bateria inteira (427 arquivos, 5840 testes, 1 pulado, saída 0, com os guardas novos de `test/i18n`), `npm run typecheck` 0, `npx eslint . --quiet` 0, `npm run budget:publication` 0. A seção «Caixa» segue o idioma do app como o resto do Painel (os textos vêm do dicionário `admin.*`, pelo `t()`).
+
+## [2026-11-23 19:42] step — F95 e F82 (TASK-04): a Caixa do The Album Blender gerida no Painel, a página de entrada lê a caixa publicada, e o nome da caixa no computador
+
+**Branch:** feat/f95-crate-managed-in-the-panel
+
+O MJRP, 2026-11-23: «Como e onde eu vou gerenciar a Caixa do The Album blender?» e «Vamos trabalhar na feature da Caixa do The Album Blender já pls». Via rápida: construído do resumo e das specs; ele valida olhando a tela; os documentos vêm depois.
+
+**O que entrou.** (1) No Painel (`/admin`), a seção «Caixa» (`/admin/crate`): a caixa como está publicada, ou o conjunto fixo quando nada foi publicado (lido da própria página de entrada, sem cópia no Painel), em lado A e lado B com a ordem; subir e descer por botões que o teclado alcança, mandar para o outro lado, tirar, e adicionar pela busca do catálogo do Apple Music (álbum ou artista) ou colando o link de um álbum; um «Salvar» que confirma o que vai e publica na hora, guardado por `rev`; descartar; conflito com outro aparelho; falha com o motivo. Limites ditos e cobrados: lado A de 6 a 10 álbuns, lado B de 4 a 10 (a página puxa o 1º, o 3º e o 6º do lado A e o 1º, o 2º e o 4º do lado B). (2) O validador da caixa no núcleo (`shared/content/crate.js`), o mesmo no Painel, no servidor e na página de entrada. (3) A rota do servidor `POST /api/admin/apple-albums`, ao lado da tradução, com a mesma porta (só o administrador) e o mesmo limite: a chave de desenvolvedor do Apple Music não sai do servidor. (4) A página de entrada lê a caixa publicada depois de carregar (um pedido ao endereço público do banco, sem SDK, prazo de 3 s) e troca os álbuns na caixa do computador e na fileira do celular; o conjunto fixo fica quando nada foi publicado, a leitura falha, demora ou o publicado não passa na conferência; todo valor passa pelo validador e é escrito como texto; a capa é sempre do servidor de imagens da Apple; a política de conteúdo da página libera só o servidor do banco para a leitura. (5) No computador, o rótulo «Na caixa do The Album Blender» junto da caixa (em inglês, «In The Album Blender's crate»), com o mesmo nome da fileira do celular.
+
+**Onde a caixa mora, e o que ficou parado.** As regras do banco como estão no repositório recusam a caixa: a lista de documentos de `published/*` é fechada (`site`, `texts_en`, `texts_pt`, `recipes`) e o documento `site` só aceita `switches`. A caixa foi construída para morar em `published/crate`, atrás de uma costura só (`shared/data/PublishedCrateRepository.js`), e o `firestore.rules` NÃO foi tocado (é do MJRP). Até ele publicar as linhas da caixa, salvar a caixa é recusado pelas regras e o Painel diz isso com as palavras «as regras ainda não aceitam esta gravação». As linhas exatas estão em `test/security/support/crateRulesProposal.js` e são provadas no emulador (`npm run test:rules`): com elas o administrador grava e todos os outros casos são recusados.
+
+**Peso.** A página de entrada continua com o seu próprio script: o plugin da página de entrada dá a ela uma cópia própria do validador do núcleo, de modo que ela não passa a dividir arquivo com o app. O repositório da caixa é um arquivo à parte, que só o Painel baixa; o script principal do app não cresceu por causa da caixa.
+
+O peso, medido no site montado como o publicado (`npm run budget:publication`), contra a base do ramo (`74a9a87`): o script principal do app tem 3 bytes a menos no arquivo (os três endereços do Painel viraram um só padrão) e 53 B a mais comprimido (198 522 contra 198 469), só porque os nomes curtos que o empacotador dá às variáveis mudaram; o que desce depois da primeira tela ficou em 238 200 B (2 B a mais). Os tetos foram postos pela regra do orçamento (medido mais 150 B): `main` 198 672, `background` 63 435. O script da página de entrada foi de 9 324 para 11 976 B comprimido (o leitor da caixa e a cópia do validador), fora desse orçamento.
+
+Provado até aqui: os testes por comportamento (núcleo, repositório, rota do servidor, seção do Painel, leitor da página de entrada), as regras no emulador (49 de 49: com as regras de hoje a gravação da caixa é recusada; com as linhas propostas, só o administrador grava), `npm run typecheck` e `npx eslint . --quiet` em 0. A prova completa no navegador e a bateria inteira vêm na entrada seguinte.
 
 ## [2026-11-23 19:40] decision — Conserto da mensagem do Spotify (F97) publicado em produção, com a palavra do MJRP («3 pública»); UAT-307 e UAT-308 abertas
 

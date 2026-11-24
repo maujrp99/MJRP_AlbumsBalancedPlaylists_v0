@@ -118,6 +118,8 @@ describe('what the page receives', () => {
 
     it('the stage says "Fictional albums · original art" only over invented covers', () => {
         expect(stageTagHtml('fictional')).toContain('data-i18n="tag.fict"')
-        expect(stageTagHtml('real')).toBe('')
+        // over the real covers the same place carries the crate's name (F95; test/splash/publishedCrate.test.js), never «fictional»
+        expect(stageTagHtml('real')).not.toContain('tag.fict')
+        expect(stageTagHtml('real')).toContain('data-i18n="shelf.title"')
     })
 })

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 catalog_marks_guard.py - the PreToolUse hook that refuses an AGENT's command that would produce the human's valve on
 the canonical catalog (CC-ADR-0014 section 10, accepted by the MJRP on 2026-10-14 15:09; CC-ADR-0016 section 1) and on the acceptance of a
@@ -349,7 +349,7 @@ def commit_carries_stamp(rest, cwd, heredocs, other_words, whole=""):
     return any(has_stamp(x) for x in texts)
 
 
-GATE_RECORD = "push-gate-passed.json"
+GATE_RECORDS = ("push-gate-passed.json", "push-gate-full.json")  # F339 (CC-ADR-0066 § 5): the newest full run, too
 GATE_READERS = {"cat", "head", "tail", "less", "more", "grep", "egrep", "ls", "stat", "wc", "file", "jq", "test", "[", "diff", "cmp"}
 
 
@@ -357,7 +357,7 @@ def writes_gate_record(argv):
     """True when a simple command may WRITE the file where a project's gate records the SHA it approved (F244, CC-ADR-0045 § 8):
     anything that names it but a plain reader, and a reader whose output is redirected into it. Reading it stays free: the agent
     needs it to know why a card is stuck."""
-    hits = [i for i, w in enumerate(argv) if GATE_RECORD in w]
+    hits = [i for i, w in enumerate(argv) if any(r in w for r in GATE_RECORDS)]
     if not hits:
         return False
     if os.path.basename(argv[0]) not in GATE_READERS:

@@ -2,7 +2,8 @@
  * The Painel (/admin), first iteration: the Texts section (F82, REQ-01, REQ-09; the «Painel» level of the approved
  * prototype, design/proposals/f82-cms/). The texts of the site by screen, English and Portuguese side by side; the search by
  * word; the Portuguese texts that wait for the owner, approved one by one, the selected ones or all of a screen; the save
- * bar. Switches and recipes come later: their entries are in the menu, turned off.
+ * bar. The second section is «Caixa», the crate of albums of the entry page (CratePanel.tsx; REQ-03). Switches and recipes
+ * come later: their entries are in the menu, turned off.
  *
  * It is drawn with the admin kit's fields and skin (ui/admin-kit, a stamped copy never edited here) and given everything it
  * uses (`PanelProps`), so a test hands it a storage of its own.
@@ -11,9 +12,11 @@ import { useEffect, useMemo, useState } from 'react'
 import type { KitPorts } from '../../ui/admin-kit/index'
 import { t, tPlural } from '../../i18n/t.js'
 import { useLocale } from '../../react-bridge/useLocale'
+import { CrateSection, CrateSource } from './CratePanel'
 import { SaveBar } from './SaveBar'
 import { TextRow, type RowDeps } from './TextRow'
 import { pendingOf, screensOf, visibleKeys, type Locale } from './model'
+import { useCrate, type Crate, type CrateDeps } from './useCrate'
 import { usePanel, type Panel, type PanelDeps } from './usePanel'
 
 /** What the site shows of a language now, as its reader says (services/content). */
@@ -24,8 +27,22 @@ export interface SiteState {
     rejected: Array<{ key: string; reason: string }>
 }
 
+/** A section of the Painel that is built. */
+export type Section = 'texts' | 'crate'
+export const SECTIONS: readonly Section[] = ['texts', 'crate']
+
+/** Which section the address names, and the way to another (the app's router behind it; without it the Painel keeps it itself). */
+export interface SectionPort {
+    where: () => Section
+    go: (section: Section) => void
+    listen: (changed: () => void) => () => void
+}
+
 export interface PanelProps extends PanelDeps, RowDeps {
     ports: KitPorts
+    /** The crate of the entry page: its storage and the search of Apple Music's catalogue. */
+    crate: CrateDeps
+    section?: SectionPort
     siteState: (locale: Locale) => SiteState
     /** Be told when the site's reader changes state (the read ended, a text was refused); returns the way to stop. */
     onSiteState?: (listener: () => void) => () => void
@@ -35,11 +52,13 @@ export interface PanelProps extends PanelDeps, RowDeps {
 
 const LATER = ['switches', 'recipes'] as const
 
-function Rail() {
+function Rail({ section, onGo }: { section: Section; onGo: (section: Section) => void }) {
     return (
         <nav className="cms-rail" aria-label={t('admin.nav.label')}>
             <div className="cms-who"><span className="cms-avatar" aria-hidden="true">M</span><div><b>{t('admin.who.you')}</b><small>{t('admin.who.role')}</small></div></div>
-            <button type="button" className="cms-navb" aria-current="page">{t('admin.nav.texts')}</button>
+            {SECTIONS.map((id) => (
+                <button key={id} type="button" className="cms-navb" data-section={id} aria-current={id === section ? 'page' : undefined} onClick={() => onGo(id)}>{t(`admin.nav.${id}`)}</button>
+            ))}
             {LATER.map((id) => <button key={id} type="button" className="cms-navb" disabled data-later={id}>{t(`admin.nav.${id}`)}</button>)}
         </nav>
     )
@@ -96,7 +115,7 @@ function Bulk({ panel, waiting, selected }: { panel: Panel; waiting: string[]; s
 }
 
 /** What the read is doing, when there is nothing to edit yet: reading, could not read, or no permission. */
-function Gate({ panel }: { panel: Panel }) {
+function Gate({ panel }: { panel: Pick<Panel, 'phase' | 'read'> }) {
     if (panel.phase === 'reading') return <div className="ak-notice" role="status" data-read="reading">{t('admin.read.reading')}</div>
     if (panel.phase === 'failed') {
         return <div className="ak-notice err" role="alert" data-read="failed">{t('admin.read.failed')}<button type="button" className="ak-btn" onClick={panel.read}>{t('admin.read.retry')}</button></div>
@@ -147,12 +166,47 @@ function Texts({ props, panel }: { props: PanelProps; panel: Panel }) {
     )
 }
 
+/** The section the Painel is on: the address's when the router is given, its own otherwise. */
+function useSection(port: SectionPort | undefined): [Section, (section: Section) => void] {
+    const [section, setSection] = useState<Section>(() => port?.where() ?? 'texts')
+    useEffect(() => port?.listen(() => setSection(port.where())), [port])
+    return [section, (next) => { setSection(next); port?.go(next) }]
+}
+
+function Head({ section, locale, props, panel, crate }: { section: Section; locale: string; props: PanelProps; panel: Panel; crate: Crate }) {
+    if (section === 'crate') {
+        return (
+            <header className="cms-head">
+                <h1>{t('admin.crate.title')}</h1>
+                <p>{t('admin.crate.lead')}</p>
+                {crate.phase === 'ready' && <CrateSource crate={crate} />}
+            </header>
+        )
+    }
+    return (
+        <header className="cms-head">
+            <h1>{t('admin.texts.title')}</h1>
+            <p>{t('admin.texts.lead')}</p>
+            {panel.phase === 'ready' && <SiteLine state={props.siteState(locale === 'pt' ? 'pt' : 'en')} />}
+        </header>
+    )
+}
+
+function Body({ section, props, panel, crate }: { section: Section; props: PanelProps; panel: Panel; crate: Crate }) {
+    if (section === 'crate') return crate.phase === 'ready' ? <CrateSection crate={crate} /> : <Gate panel={{ phase: crate.phase, read: crate.reread }} />
+    return panel.phase === 'ready' ? <Texts props={props} panel={panel} /> : <Gate panel={panel} />
+}
+
 export function TextsPanel(props: PanelProps) {
     const locale = useLocale() // draws again when the language or the published texts change
     const panel = usePanel(props)
-    // What is not saved now, for the question at the moment of leaving.
+    // The crate is read with the Painel and kept while the owner moves between the sections: a change not saved is not lost.
+    const crate = useCrate(props.crate)
+    const [section, go] = useSection(props.section)
+    // What is not saved now, in either section, for the question at the moment of leaving.
     const [draft] = useState(() => ({ unsaved: 0 }))
-    useEffect(() => { draft.unsaved = panel.unsaved.length }, [draft, panel.unsaved.length])
+    const unsaved = panel.unsaved.length + (crate.unsaved ? 1 : 0)
+    useEffect(() => { draft.unsaved = unsaved }, [draft, unsaved])
     // The site's reader ends its read, or refuses a text, while the Painel is open: the line about the site follows it.
     const [, setSiteTurn] = useState(0)
     const onSiteState = props.onSiteState
@@ -160,15 +214,11 @@ export function TextsPanel(props: PanelProps) {
     const guardLeave = props.guardLeave
     useEffect(() => guardLeave?.(() => draft.unsaved > 0), [guardLeave, draft])
     return (
-        <div className="cms" data-admin-skin="albumblender" data-phase={panel.phase}>
-            <Rail />
+        <div className="cms" data-admin-skin="albumblender" data-phase={section === 'crate' ? crate.phase : panel.phase} data-section={section}>
+            <Rail section={section} onGo={go} />
             <section className="cms-main">
-                <header className="cms-head">
-                    <h1>{t('admin.texts.title')}</h1>
-                    <p>{t('admin.texts.lead')}</p>
-                    {panel.phase === 'ready' && <SiteLine state={props.siteState(locale === 'pt' ? 'pt' : 'en')} />}
-                </header>
-                {panel.phase === 'ready' ? <Texts props={props} panel={panel} /> : <Gate panel={panel} />}
+                <Head section={section} locale={locale} props={props} panel={panel} crate={crate} />
+                <Body section={section} props={props} panel={panel} crate={crate} />
             </section>
         </div>
     )

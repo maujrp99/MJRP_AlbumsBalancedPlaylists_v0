@@ -13,7 +13,10 @@ const LOOKS = Object.freeze({
     // Top N (curated selection)
     'top-n-popular': { icon: 'TrendingUp', from: 'from-green-500', to: 'to-emerald-600', fromTint: 'from-green-500/10', toTint: 'to-emerald-600/10' }, // Spotify green
     'top-n-acclaimed': { icon: 'Award', from: 'from-rose-500', to: 'to-orange-500', fromTint: 'from-rose-500/10', toTint: 'to-orange-500/10' }, // BestEverAlbums red and orange
-    'top-n-user': { icon: 'User', from: 'from-sky-500', to: 'to-blue-600', fromTint: 'from-sky-500/10', toTint: 'to-blue-600/10' } // the person's blue
+    'top-n-user': { icon: 'User', from: 'from-sky-500', to: 'to-blue-600', fromTint: 'from-sky-500/10', toTint: 'to-blue-600/10' }, // the person's blue
+    // F92: the recipes made of blocks
+    'deep-cuts': { icon: 'Compass', from: 'from-violet-500', to: 'to-purple-600', fromTint: 'from-violet-500/10', toTint: 'to-purple-600/10' }, // digging past the hits
+    'least-played': { icon: 'Search', from: 'from-teal-500', to: 'to-cyan-600', fromTint: 'from-teal-500/10', toTint: 'to-cyan-600/10' } // the opposite of the top
 })
 
 const UNKNOWN = Object.freeze({ icon: 'Music', from: 'from-gray-500', to: 'to-gray-600', fromTint: 'from-gray-500/10', toTint: 'to-gray-600/10' })

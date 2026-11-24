@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """pdlc_vocabulary_check.py - the skills and the kernel speak the PDLC of today (v12), and a fast-lane feature closes with its record.
 
 Two checks in one sensor, both about the same failure: the process changed and the text that teaches it did not.

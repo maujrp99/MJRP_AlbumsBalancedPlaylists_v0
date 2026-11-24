@@ -485,6 +485,16 @@ Nenhuma peça é redesenhada: o mesmo HTML, as mesmas classes e as mesmas folhas
 | `shell/PhoneShell.tsx`, `PhoneMenu.js`, `phoneTabs.js` | `shell/PhoneShell.tsx`, `PhoneMenu.tsx`, `phoneTabs.ts` | 3 | a moldura do celular escreve no `body` por um portal; o menu e a pergunta de limpar o cache são `ui/SheetWindow` (que ganhou `id` e rodapé) |
 | `components/LoginModal.js` | `shell/LoginWindow.tsx` | 3 | a janela de entrar, aberta por `stores/loginWindow.js` (qualquer tela chama `openLoginWindow()`) |
 
+## Receitas da mistura (F92) · padrões propostos, pendentes de aprovação do MJRP
+
+Do protótipo `design/proposals/f92-recipes/prototype-v1.html` (2026-11-24). *(proposto pelo agente — pendente de aprovação do MJRP)*
+
+- **A aparência de uma receita é de uma lista fechada.** Cor: o degradê do ícone, de 8 — Âmbar `#fbbf24 → #f97316`, Verde `#22c55e → #059669`, Rosa `#f43f5e → #f97316`, Azul `#0ea5e9 → #2563eb` (as de hoje, `models/recipeLooks.js`), **Violeta** `#8b5cf6 → #c026d3`, **Água** `#0d9488 → #0e7490`, **Fogo** `#f97316 → #dc2626` (novas) e Cinza `#6b7280 → #4b5563` (a de quem não tem). Ícone, de 10: brilho, sobe, prêmio, pessoa (os de hoje), **bússola, desce, fones, chama** (novos), álbum e nota. O ícone é branco sobre o degradê (Água foi escurecida para o branco passar 3:1).
+- **O selo de uma receita** tem a cor da fonte (SPOTIFY verde, BEA rosa) e, nas outras, a cor clara da receita a 20 %. **O selo «★ RECOMENDADA» é um só, da tela,** no cartão que o dono marca; o selo próprio de uma receita nunca diz «recomendada».
+- **O deslizador do pulo (Deep cuts):** o deslizador de duração de hoje (laranja), com o número grande à direita e, embaixo dele, «as 3 + X»; a frase do que entra; e a **faixa das posições** 1 a 13 — pulada (cinza, riscada), entra (laranja, texto escuro), fica de fora (tracejada) — com a legenda.
+- **A linha de uma receita no Painel:** a linha ordenada do kit (puxador, ↑ ↓ de 44 px, a posição) com o ícone na cor da receita, o nome em Syne, o nome em inglês e a origem («do código», «de blocos»), os selos, a chave «Aparece», a estrela «Recomendar» (âmbar quando marcada) e «Configurar». Escondida: borda tracejada e selo «escondida». A linha aberta mostra, ao lado, o cartão real sobre o preto.
+- **O construtor:** blocos numerados (o número do kit, `.ak-num`) à esquerda; a prévia presa à direita (embaixo, no celular), com a guia de leitura acima da lista, a lista na ordem da receita, uma barra de popularidade e um selo por faixa (entra em laranja suave; sem dado e curta demais em rosa).
+
 ## Arquivo
 
 Texto substituído na F86 (2026-11-21), guardado palavra por palavra para as referências antigas (UAT, log). O que vale está nas seções acima.

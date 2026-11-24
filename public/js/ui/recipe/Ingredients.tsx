@@ -16,12 +16,15 @@
  *     the duration does not (it keeps the focus and its place) and only the number beside it changes;
  *   - the slider is heard by the event `input` on the element itself, because the `onChange` of React does not hear a value written by a script;
  *   - what is chosen for a recipe is not wiped when the recipe changes: the owner keeps the choices, and a section hidden by the new recipe still holds its value.
+ *
+ * F92 (REQ-10): «Deep cuts» shows a slider of how many of the most popular tracks of each album to skip (3 + X, inside the limits), heard as the
+ * duration slider is (the event `input` on the element; it keeps the focus). A recipe made of blocks is not offered the shuffle.
  */
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Icon } from '../Icon'
 import { t } from '../../i18n/t.js'
 import { broken } from './broken'
-import { GROUPING_STRATEGIES, OUTPUT_MODES, RANKING_TYPES, TRACK_COUNTS, ingredientsOf, showsDuration } from '../../models/recipeIngredients.js'
+import { OUTPUT_MODES, RANKING_TYPES, SKIP_RANGE, TRACK_COUNTS, groupingsOf, ingredientsOf, showsDuration } from '../../models/recipeIngredients.js'
 import type { Choices } from '../../models/recipeIngredients.js'
 
 export type { Choices }
@@ -50,7 +53,8 @@ export function Ingredients({ recipeId, choices, onChange, recipeChosen = 0 }: I
     return (
         <div key={`${recipeChosen}.${pressed}`} className="space-y-6">
             {shown.trackCount ? <TopNumber chosen={choices.trackCount} onChoose={(trackCount) => choose({ trackCount })} /> : null}
-            {shown.groupingStrategy ? <Grouping chosen={choices.groupingStrategy} onChoose={(groupingStrategy) => choose({ groupingStrategy })} /> : null}
+            {shown.skip ? <Skip choices={choices} onChange={onChange} /> : null}
+            {shown.groupingStrategy ? <Grouping options={groupingsOf(recipeId)} chosen={choices.groupingStrategy} onChoose={(groupingStrategy) => choose({ groupingStrategy })} /> : null}
             {shown.outputMode ? <Structure chosen={choices.outputMode} onChoose={(outputMode) => choose({ outputMode })} /> : null}
             {showsDuration(shown, choices.outputMode) ? <Duration choices={choices} onChange={onChange} /> : null}
             {shown.rankingType ? <Source chosen={choices.rankingType} onChoose={(rankingType) => choose({ rankingType })} /> : null}
@@ -130,6 +134,53 @@ function Duration({ choices, onChange }: { choices: Choices; onChange: (next: Ch
     )
 }
 
+/** The skip of «Deep cuts» (F92, REQ-10): a slider from 3 to the limit; the number beside it is the skip chosen. It keeps the focus while it moves. */
+function Skip({ choices, onChange }: { choices: Choices; onChange: (next: Choices) => void }) {
+    const slider = useRef<HTMLInputElement>(null)
+    const skip = Math.min(Math.max(choices.skip ?? SKIP_RANGE.min, SKIP_RANGE.min), SKIP_RANGE.max)
+    const [drawnWith] = useState(skip)
+    // the number beside the slider follows the slider itself (the owner may draw again later)
+    const [value, setValue] = useState(skip)
+    const latest = useRef({ choices, onChange })
+    latest.current = { choices, onChange }
+    useLayoutEffect(() => {
+        const input = slider.current
+        if (!input) return undefined
+        input.value = String(drawnWith)
+        const heard = () => {
+            const next = { ...latest.current.choices, skip: parseInt(input.value) }
+            latest.current = { ...latest.current, choices: next }
+            setValue(next.skip)
+            latest.current.onChange(next)
+        }
+        input.addEventListener('input', heard)
+        return () => input.removeEventListener('input', heard)
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- the slider is made once for each draw of the section; what it reads is in `latest`
+    }, [])
+    return (
+        <div>
+            <label className={LABEL} htmlFor="blend-skip-slider">
+                <Icon name="Compass" className="w-4 h-4 inline mr-2" />{t('ui.recipe.skip.label')}
+            </label>
+            <div className="flex items-center gap-4">
+                <input
+                    ref={slider}
+                    type="range"
+                    min={SKIP_RANGE.min}
+                    max={SKIP_RANGE.max}
+                    step="1"
+                    id="blend-skip-slider"
+                    defaultValue={drawnWith}
+                    aria-valuetext={t('ui.recipe.skip.valueText', { n: value })}
+                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-orange-400"
+                />
+                <span id="blend-skip-display" className="text-2xl font-bold text-orange-400 w-12 text-center">{value}</span>
+            </div>
+            <p className="text-xs text-muted mt-2">{t('ui.recipe.skip.hint', { min: SKIP_RANGE.min, max: SKIP_RANGE.max })}</p>
+        </div>
+    )
+}
+
 function Structure({ chosen, onChoose }: { chosen: string; onChoose: (value: string) => void }) {
     return (
         <div>
@@ -187,14 +238,14 @@ function WideOption({ cls, attribute, icon, isChosen, label, description, onPres
     )
 }
 
-function Grouping({ chosen, onChoose }: { chosen: string; onChoose: (value: string) => void }) {
+function Grouping({ options, chosen, onChoose }: { options: ReadonlyArray<{ value: string; icon: string }>; chosen: string; onChoose: (value: string) => void }) {
     return (
         <div>
             <label className={LABEL}>
                 <Icon name="Layers" className="w-4 h-4 inline mr-2" />{broken(t('ui.recipe.grouping.label'), 0, 16)}
             </label>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                {GROUPING_STRATEGIES.map(({ value, icon }) => (
+                {options.map(({ value, icon }) => (
                     <button
                         key={value}
                         type="button"

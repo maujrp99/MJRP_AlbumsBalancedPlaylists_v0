@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -97,6 +97,13 @@ HERE = Path(__file__).parent
 ACCEPTANCE_CUT_SHA = "2fc3592d0f1ad713b7a417844be5f9bf217b7a2e"
 ACCEPTANCE_STAMPED_SINCE = "2026-10-19 23:36"
 STAMP_ACCEPTED = re.compile(r"^Human-accepted:[ \t]*(\S+)[ \t]*$", re.I | re.M)
+FEATURE_STAMP = re.compile(r"F\d{2,}")
+
+
+def feature_batch(stamps):
+    """CC-ADR-0067 (F340): several `Human-accepted:` lines in one commit are the batch of features the MJRP signed once,
+    one line per feature, never twice, and every line a feature: an `adr:`, `issue:` or `requirements` stamp goes alone."""
+    return len(set(stamps)) == len(stamps) and all(FEATURE_STAMP.fullmatch(s) for s in stamps)
 # CC-ADR-0028 (F56): an ADR born on the MJRP's route (`**Acceptance**: MJRP`, decision@3; or born with no route line and dated from
 # adr_header_check.SHORT_SINCE on) becomes Accepted only in the commit of his acceptance, stamped `Human-accepted: adr:<ID>`. The
 # route counts AS BORN (the version of the commit that added the file): moving it to `tech lead` afterwards is the valve bypassed.
@@ -1585,9 +1592,10 @@ class Graph:
             sha, when, message = found
             stamps = STAMP_ACCEPTED.findall(message)
             want = " | ".join(sorted(names))
-            if len(stamps) > 1:
-                self.find("acceptance_stamped", f"{ident}: Accepted em {sha[:7]} ({when}) num commit com {len(stamps)} carimbos `Human-accepted:` — um aceite, um carimbo")
-            elif not stamps or stamps[0] not in names:
+            if len(stamps) > 1 and not feature_batch(stamps):
+                self.find("acceptance_stamped", f"{ident}: Accepted em {sha[:7]} ({when}) num commit com {len(stamps)} carimbos `Human-accepted:` — "
+                          "mais de um carimbo só vale quando todos são de feature, um por feature do lote (CC-ADR-0067)")
+            elif not set(stamps) & set(names):
                 self.find("acceptance_stamped", f"{ident}: Accepted em {sha[:7]} ({when}) sem o carimbo `Human-accepted: {want}` — o aceite é do humano e vem "
                           "do commit que o comando da tela dele faz (CC-ADR-0024); um `status: Accepted` escrito à mão não vale")
             elif self.agent_signature().search(message):

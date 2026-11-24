@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 acceptance_issue_ok.py - the effect `acceptance_stamped` gained with CC-ADR-0029 (step 2 of ADR-0019 section 2 for the
 issue): a cell `OK do humano` of `docs/specs/uat.md` that BECAME the MJRP's OK (the form `uat_tracks_check._HUMAN_OK`) came
@@ -97,10 +97,12 @@ def judge(git, brasilia, stamp, agent_signature):
             message = git("show", "-s", "--format=%B", sha)[1]
             stamps = stamp.findall(message)
             who = f"{ident}: o `OK do humano` passou a `{ok}` em {sha[:7]} ({brasilia(ts)})"
-            if len(stamps) > 1:
-                found.append(("acceptance_stamped", f"{who} num commit com {len(stamps)} carimbos `Human-accepted:` — um aceite, um carimbo"))
+            batch = len(stamps) > 1 and len(set(stamps)) == len(stamps) and all(re.fullmatch(r"F\d{2,}", s) for s in stamps)
+            if len(stamps) > 1 and not batch:
+                found.append(("acceptance_stamped", f"{who} num commit com {len(stamps)} carimbos `Human-accepted:` — mais de um carimbo só "
+                              "vale quando todos são de feature, um por feature do lote (CC-ADR-0067)"))
             elif not stamps or not (stamps[0] in (f"issue:{ident}", "requirements")
-                                    or (re.fullmatch(r"F\d{2,}", stamps[0]) and _linked(git, sha, stamps[0], ident, status))):
+                                    or any(re.fullmatch(r"F\d{2,}", s) and _linked(git, sha, s, ident, status) for s in stamps)):
                 found.append(("acceptance_stamped", f"{who} sem o carimbo `Human-accepted: issue:{ident}` (nem o da feature que a liga) — o OK é do "
                               "humano e vem do commit que o comando da tela dele faz (CC-ADR-0029); escrito à mão não vale"))
             elif agent_signature.search(message):

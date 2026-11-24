@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-11-21 · fonte d990067a9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai:

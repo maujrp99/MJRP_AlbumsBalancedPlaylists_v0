@@ -1,0 +1,21 @@
+#!/bin/sh
+# cópia carimbada do MJRP Harness · versão 2026-11-24 · fonte ea9bb8495 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# post-commit - F67 (S-168): the pre-commit writes the derived statuses into the commit. After a `git commit -- <paths>` git
+# commits a temporary index, and the real one keeps the old blobs of the files it wrote: `git status` would show the derived
+# status as a change to undo. status_sync.py --post-commit aligns those entries with HEAD - only where the real index held
+# nothing else for that file (a change the person prepared is never replaced). It never fails: the commit is already made.
+#
+# Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+SYNC="$ROOT/mjrp-scripts/status_sync.py"
+if [ -f "$SYNC" ] && command -v python3 >/dev/null 2>&1; then
+  python3 "$SYNC" "$ROOT" --post-commit
+fi
+# F275 (UAT-592): the MJRP's stamped commit (his order, his acceptance, his reopening) moves on the board what it decided, signed by the
+# commit; and the commit that writes a feature's plan, its tasks or its first closed task moves its stage (lote 1b). A commit with neither
+# moves nothing; the hook never fails.
+MOVE="$ROOT/mjrp-scripts/board_move.py"
+if [ -f "$MOVE" ] && command -v python3 >/dev/null 2>&1; then
+  python3 "$MOVE" committed HEAD --root "$ROOT" || true
+fi
+exit 0

@@ -24,6 +24,9 @@ export class TopNUserAlgorithm extends TopNAlgorithm {
         isRecommended: false
     }
 
+    /** Its fixed definition in the blocks of F92 (REQ-05): user, from the top, skip 0, take N (3 to start). */
+    static definition = Object.freeze({ source: 'user', direction: 'top', skip: 0, take: 3, minSeconds: 0, grouping: 'by_album' })
+
     constructor(opts = {}) {
         super({
             ...opts,
