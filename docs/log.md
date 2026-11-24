@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 10:46] decision — receitas de mistura: algoritmos próprios escritos com IA registrados (F92 REQ-11)
+
+**Branch:** main
+
+O pedido do MJRP de 2026-11-24 (a criação de verdade mora na fonte do ranking, com ajuda de IA, independente do Spotify e do ranking de aclamados) entra na story S-74 e na F92 como REQ-11 e TASK-11; a forma vai a uma proposta de arquitetura antes de construir. «f92»: ele confirmou seguir com as receitas.
+
 ## [2026-11-24 10:44] step — o MJRP publicou as regras do banco: só o administrador grava a popularidade do Spotify (F92 TASK-09)
 
 **Branch:** main
