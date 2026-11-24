@@ -1,0 +1,28 @@
+{
+ "scenario": "6-empty",
+ "musicKit": [
+  "fetch",
+  "MusicKit.configure",
+  "MusicKit.getInstance",
+  "authorize",
+  "GET /v1/me/library/playlist-folders",
+  "GET /v1/me/library/playlist-folders",
+  "POST /v1/me/library/playlist-folders",
+  "GET /catalog/search",
+  "GET /catalog/search",
+  "GET /catalog/search",
+  "GET /catalog/search",
+  "GET /catalog/search",
+  "GET /catalog/search",
+  "GET /catalog/search",
+  "GET /catalog/search",
+  "GET /catalog/search",
+  "GET /catalog/search"
+ ],
+ "aborted": [
+  "https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap",
+  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?VE",
+  "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA8x-II628CK3",
+  "https://www.google.com/images/cleardot.gif?zx=4dririmugx39"
+ ]
+}

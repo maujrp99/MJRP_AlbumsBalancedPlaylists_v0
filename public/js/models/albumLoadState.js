@@ -43,24 +43,20 @@ export const EnrichmentStatus = Object.freeze({
  */
 export const HoldReason = Object.freeze({ UNAUTHORIZED: 'unauthorized', RATE_LIMITED: 'rate_limited', SOURCE_BUSY: 'source_busy', SPOTIFY_BUSY: 'spotify_busy' })
 
+/** How long the notice of a hold stays on screen. */
+const HOLD_NOTICE_MS = 10000
+
 /**
- * What to tell the person when the load goes on hold.
+ * What to tell the person when the load goes on hold, as DATA: the reason, the hour the load resumes at, and the kind of notice. The
+ * model writes no sentence (F98, UAT-308; models/ does not import i18n/): i18n/holdTexts.js says it in the language of the app.
  * @param {{ reason: string, until: number|null }} hold - `until` is a time in ms, or null
- * @param {Function} [formatTime] - (ms) => text
- * @returns {{ message: string, type: string, durationMs: number }}
+ * @returns {{ reason: string, until: number|null, type: 'warning'|'info', durationMs: number }} `reason` is one of HoldReason:
+ *          a reason this does not know is told as the server asking to wait
  */
-export function holdNotice(hold, formatTime = (ms) => new Date(ms).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })) {
-    if (hold.reason === HoldReason.UNAUTHORIZED) {
-        return { message: 'Your sign-in could not be confirmed. Sign in again to keep loading ratings.', type: 'warning', durationMs: 10000 }
-    }
-    const when = hold.until ? ` It resumes by itself at ${formatTime(hold.until)}.` : ''
-    if (hold.reason === HoldReason.SOURCE_BUSY) {
-        return { message: `The ratings source asked to slow down. Loading ratings is paused.${when}`, type: 'info', durationMs: 10000 }
-    }
-    if (hold.reason === HoldReason.SPOTIFY_BUSY) {
-        return { message: `Spotify asked to slow down. Loading popularity is paused.${when}`, type: 'info', durationMs: 10000 }
-    }
-    return { message: `The server asked to slow down. Loading is paused.${when}`, type: 'info', durationMs: 10000 }
+export function holdNotice(hold) {
+    if (hold.reason === HoldReason.UNAUTHORIZED) return { reason: hold.reason, until: null, type: 'warning', durationMs: HOLD_NOTICE_MS }
+    const known = hold.reason === HoldReason.SOURCE_BUSY || hold.reason === HoldReason.SPOTIFY_BUSY
+    return { reason: known ? hold.reason : HoldReason.RATE_LIMITED, until: hold.until ?? null, type: 'info', durationMs: HOLD_NOTICE_MS }
 }
 
 /** The enrichment sources of an album. */

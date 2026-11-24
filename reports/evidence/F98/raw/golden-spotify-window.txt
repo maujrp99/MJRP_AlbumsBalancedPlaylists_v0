@@ -1,0 +1,101 @@
+=== done, everything created, with the links · done
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+=== done, everything created, with the links · focus
+  - "body"
+  + "h3 text-xl font-bold text-white mb-2 focus:outline-none"
+=== done, one playlist already there and an address that is no link · done
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+=== partial: tracks not found, created without all their tracks, none found, not created · partial
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+  - Server error
+  + The export stopped: Server error
+  - ["Export to Spotify","Export stopped part of the way","Server error","Created (1)","Road trip - Greatest Hits"," ","· 2 tracks"," "," Open in Spotify","Created without all their tracks (1)","• Road trip - Deep Cuts (100 of 150 tracks)","Not created (1)","• Road trip - B-Sides","No track found (1)","• Road trip - Ghosts","Tracks matched","2 / 14","\n                            12 tracks not found\n                        ","• Artist 1 - Song 1","• Artist 2 - Song 2","• Artist 3 - Song 3","• Artist 4 - Song 4","• Artist 5 - Song 5","• Artist 6 - Song 6","• Artist 7 - Song 7","• Artist 8 - Song 8","• Artist 9 - Song 9","• Artist 10 - Song 10","...and 2 more"," Try again","What was already creat
+  + ["Export to Spotify","Export stopped part of the way","The export stopped: Server error","Created (1)","Road trip - Greatest Hits"," ","· 2 tracks"," "," Open in Spotify","Created without all their tracks (1)","• Road trip - Deep Cuts (100 of 150 tracks)","Not created (1)","• Road trip - B-Sides","No track found (1)","• Road trip - Ghosts","Tracks matched","2 / 14","\n                            12 tracks not found\n                        ","• Artist 1 - Song 1","• Artist 2 - Song 2","• Artist 3 - Song 3","• Artist 4 - Song 4","• Artist 5 - Song 5","• Artist 6 - Song 6","• Artist 7 - Song 7","• Artist 8 - Song 8","• Artist 9 - Song 9","• Artist 10 - Song 10","...and 2 more"," Try again","Wh
+=== partial: one track not found (the summary), nothing matched · one not found
+  - <div class="text-center"> <div class="bg-[#1DB954] flex h-16 items-center justify-center mb-4 mx-auto rounded-full w-16"> <svg class="w-8 h-8 text-white" shape="1gz6c3j"/>
+  + <div aria-live="polite" class="text-center" role="status"> <div class="bg-yellow-500/20 flex h-16 items-center justify-center mb-4 mx-auto rounded-full w-16"> <svg class="w-8 h-8 text-yellow-400" shape="ucx6bi"/>
+  - <h3 class="font-bold mb-2 text-white text-xl"> Export Complete! 🎉
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1"> Exported, with something left out
+  - 
+  + <p class="text-white/80"> See below what was left out. </p>
+  - ["Export to Spotify","Export Complete! 🎉","No track found (1)","• Road trip","Tracks matched","0 / 1","\n                            1 track not found\n                        ","• Only - One","\n                Close\n            "]
+  + ["Export to Spotify","Exported, with something left out","See below what was left out.","No track found (1)","• Road trip","Tracks matched","0 / 1","\n                            1 track not found\n                        ","• Only - One","\n                Close\n            "]
+=== done, the report has no tracks at all · done, no summary
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+=== not connected: connect again, and leaving to sign in · reconnect
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+=== failure: try again, and it works the second time · failed
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+  - Spotify asked to wait 600 seconds before the next request (Rate Limited).
+  + Spotify asked to wait 600 seconds before the next request.
+  - ["Export to Spotify","Export Failed","Spotify asked to wait 600 seconds before the next request (Rate Limited).","Not created (1)","• Road trip","Tracks matched","4 / 4"," Try again","What was already created is not created again.","\n                Close\n            "]
+  + ["Export to Spotify","Export Failed","Spotify asked to wait 600 seconds before the next request.","Not created (1)","• Road trip","Tracks matched","4 / 4"," Try again","What was already created is not created again.","\n                Close\n            "]
+=== failure: try again, and it works the second time · focus
+  - "body"
+  + "h3 text-xl font-bold text-white mb-2 focus:outline-none"
+=== failure: try again, and it works the second time · trying again
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+  - Spotify asked to wait 600 seconds before the next request (Rate Limited).
+  + Spotify asked to wait 600 seconds before the next request.
+  - ["Export to Spotify","Export Failed","Spotify asked to wait 600 seconds before the next request (Rate Limited).","Not created (1)","• Road trip","Tracks matched","4 / 4"," Try again","What was already created is not created again.","\n                Close\n            "]
+  + ["Export to Spotify","Export Failed","Spotify asked to wait 600 seconds before the next request.","Not created (1)","• Road trip","Tracks matched","4 / 4"," Try again","What was already created is not created again.","\n                Close\n            "]
+=== failure: try again, and it works the second time · done the second time
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+=== failure the service did not foresee: with a message and without · boom
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+  - boom
+  + The export stopped: boom
+  - ["Export to Spotify","Export Failed","boom"," Try again","What was already created is not created again.","\n                Close\n            "]
+  + ["Export to Spotify","Export Failed","The export stopped: boom"," Try again","What was already created is not created again.","\n                Close\n            "]
+=== failure the service did not foresee: with a message and without · no message
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+=== the button pressed twice starts one export · done
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+=== what a person typed or the export said is text, never markup · searching
+  - 
+  + Searching:
+  - ["Export to Spotify","Searching tracks...","
+  + ["Export to Spotify","Searching tracks...","Searching:
+=== what a person typed or the export said is text, never markup · done
+  - <div class="text-center">
+  + <div aria-live="polite" class="text-center" role="status">
+  - <h3 class="font-bold mb-2 text-white text-xl">
+  + <h3 class="focus:outline-none font-bold mb-2 text-white text-xl" data-export-heading="true" tabindex="-1">
+  - 
+  + The export stopped:
+  - ["Export to Spotify","Export stopped part of the way","
+  + ["Export to Spotify","Export stopped part of the way","The export stopped:
+labels changed: 16 of 52

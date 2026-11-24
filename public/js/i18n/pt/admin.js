@@ -172,6 +172,8 @@ export const admin = {
     'admin.screens.shell': "Menu e moldura",
     'admin.screens.start': "Criar",
     'admin.screens.spotifyWindow': "Janela de exportar para o Spotify",
+    'admin.screens.appleReport': "Relatório da exportação para o Apple Music",
+    'admin.screens.exportReport': "Relatórios de exportação (os dois serviços)",
     'admin.screens.ask': "Perguntas e confirmações",
     'admin.screens.ui': "Peças comuns",
     'admin.kit.saved': "Tudo salvo",

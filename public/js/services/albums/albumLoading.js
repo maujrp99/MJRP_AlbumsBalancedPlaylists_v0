@@ -12,7 +12,7 @@
  * No screen or controller loops over album queries or calls the API client for an album.
  */
 
-import { clockText } from '../../i18n/dates.js'
+import { holdNoticeText } from '../../i18n/holdTexts.js'
 import { albumLoadStore } from '../../stores/albumLoad.js'
 import { albumsStore } from '../../stores/albums.js'
 import { albumSeriesStore } from '../../stores/albumSeries.js'
@@ -91,10 +91,11 @@ export const albumCachePort = new AlbumCacheAdapter({
  * is asked for only then, so the load does not bring the screen's code with it.
  */
 const showHoldNotice = (hold) => {
-    const notice = holdNotice(hold, clockText) // the hour in the language of the app (F81)
+    const notice = holdNotice(hold)
+    const message = holdNoticeText(notice) // the words and the hour in the language of the app (F81, F98)
     import('../../stores/toasts.js')
-        .then(({ showToast }) => showToast(notice.message, notice.type, notice.durationMs))
-        .catch(error => console.warn(`[albumLoading] ${notice.message}`, error?.message || error))
+        .then(({ showToast }) => showToast(message, notice.type, notice.durationMs))
+        .catch(error => console.warn(`[albumLoading] ${message}`, error?.message || error))
 }
 
 export const albumLoadService = new AlbumLoadService({

@@ -1,0 +1,79 @@
+SAID · one playlist, into the folder of the series (not in the library yet: created)
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"Road trip\".", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · one playlist, into the folder of the series (already in the library: found by name, any case)
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"Road trip\".", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · a batch of three into a folder chosen from the library (by id: no lookup)
+   - ["toast", "success", "3 playlists exported to Apple Music, in the folder \"Picked\".", 12000]
+   + ["toast", "success", "3 playlists exported to Apple Music.", 12000]
+SAID · a batch into a NEW folder the person named (looked up by name, missing, created)
+   - ["toast", "success", "3 playlists exported to Apple Music, in the folder \"Fresh folder\".", 12000]
+   + ["toast", "success", "3 playlists exported to Apple Music.", 12000]
+SAID · a remembered folder (the choice the step remembers reaches the export as the folder name; it exists in the library)
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"Remembered\".", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · one playlist of a batch: it keeps the position it has in the batch
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"Road trip\".", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · no folder: the top of the library
+   - ["toast", "success", "3 playlists exported to Apple Music, outside any folder.", 12000]
+   + ["toast", "success", "3 playlists exported to Apple Music.", 12000]
+SAID · tracks not found in the catalog, and a playlist with none found
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"S\".", 12000]
+   - ["toast", "warning", "No track was found in Apple Music for \"2. Mix - Ghosts\": not created.", 12000]
+   - ["toast", "warning", "4 tracks were not found in Apple Music and were left out: Artist - Nowhere 0-0, Artist - Nowhere 0-1, Artist - Nowhere 1-0, Artist - Nowhere 1-1.", 12000]
+   + ["toast", "warning", "The export to Apple Music ended with something left out: 1 of 2 playlists created.", 12000]
+SAID · a playlist with 300 tracks that carry their Apple Music id (one request holds them all: no chunking)
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"S\".", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · a playlist with 120 tracks the catalog is asked about one by one
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"S\".", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · a library with 250 folders (three pages): the folder of the series is on the last page
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"Road trip\".", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · the rate limit (429) answers the second creation: the others are still tried
+   - ["toast", "error", "Apple Music did not create 1 of 3 playlists: \"2. Mix - Deep Cuts\" (Too Many Requests). Export again to create what is missing: what was created is not created twice.", 12000]
+   - ["toast", "success", "2 playlists exported to Apple Music, in the folder \"Road trip\": \"1. Mix - Greatest Hits\", \"3. Mix - B-Sides\".", 12000]
+   + ["toast", "warning", "The export to Apple Music ended with something left out: 2 of 3 playlists created.", 12000]
+CALLS CHANGED · every creation fails (401, the token expired in the middle)
+   before: 19 events; 3 playlist POSTs
+   after:  10 events; 1 playlist POSTs
+SAID · every creation fails (401, the token expired in the middle)
+   - ["progress", "Exporting 2. Mix - Deep Cuts..."]
+   - ["progress", "Exporting 3. Mix - B-Sides..."]
+   - ["toast", "error", "Apple Music did not create 3 of 3 playlists: \"1. Mix - Greatest Hits\" (Unauthorized), \"2. Mix - Deep Cuts\" (Unauthorized), \"3. Mix - B-Sides\" (Unauthorized). Export again to create what is missing: what was created is not created twice.", 12000]
+   + ["toast", "error", "Apple Music did not allow this for your account. This is not about your tracks. Check that your Apple Music subscription is active. Then open the menu, disconnect Apple Music under Connections, connect again and export again.", 12000]
+SAID · the creation fails, then the same press is repeated: only what was missing is created
+   - ["toast", "error", "Apple Music did not create 1 of 2 playlists: \"1. Mix - Greatest Hits\" (Server error). Export again to create what is missing: what was created is not created twice.", 12000]
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"Road trip\": \"2. Mix - Deep Cuts\".", 12000]
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"Road trip\".", 12000]
+   - ["toast", "info", "1 playlist was already exported in this session and was not created again.", 12000]
+   + ["toast", "warning", "The export to Apple Music ended with something left out: 1 of 2 playlists created.", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · the authorization expired: the person says no
+   - ["toast", "warning", "Apple Music was not authorized: nothing was exported.", 12000]
+   + ["toast", "warning", "Apple Music was not authorized, so nothing was exported. Try again and allow the access in the Apple Music window.", 12000]
+SAID · the person denies the authorization
+   - ["toast", "warning", "Apple Music was not authorized: nothing was exported.", 12000]
+   + ["toast", "warning", "Apple Music was not authorized, so nothing was exported. Try again and allow the access in the Apple Music window.", 12000]
+SAID · the developer token cannot be had (the site is not set up for Apple Music)
+   - ["toast", "error", "Apple Music is not set up for this site: nothing was exported.", 12000]
+   + ["toast", "error", "Apple Music is not set up for this site. Nothing was exported.", 12000]
+SAID · the folder cannot be created: the playlists go to the top of the library
+   - ["toast", "warning", "The folder \"Road trip\" could not be created in Apple Music: the playlists are at the top of your library.", 12000]
+SAID · the same export pressed again after it ended: nothing is created twice
+   - ["toast", "success", "2 playlists exported to Apple Music, in the folder \"Road trip\".", 12000]
+   + ["toast", "success", "2 playlists exported to Apple Music.", 12000]
+SAID · pressed twice at once: the second is told one is running
+   - ["toast", "success", "1 playlist exported to Apple Music, in the folder \"Road trip\".", 12000]
+   + ["toast", "success", "1 playlist exported to Apple Music.", 12000]
+SAID · the edit screen: the playlists, the batch and the series are the screen's own
+   - ["toast", "success", "2 playlists exported to Apple Music, in the folder \"Road trip\".", 12000]
+   + ["toast", "success", "2 playlists exported to Apple Music.", 12000]
+CALLS CHANGED · the step reads the folders, the person has not authorized
+   before: 6 events; 0 playlist POSTs
+   after:  6 events; 0 playlist POSTs
+
+scenarios: 28 · calls to MusicKit changed in: 2 · what is said changed in: 21 · untouched but for the report line: 6

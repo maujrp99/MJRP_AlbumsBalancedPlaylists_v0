@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 15:42] step — F98: a main trazida para o ramo da exportação do Apple Music, sem juiz por palavra do MJRP
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+O MJRP: «nao precisa de juiz, vamos fazer o merge». O orçamento de peso conflitou: ficou o da main, medido de novo no build de publicação (main 202.005 B, depois da primeira tela 261.127 B); tetos subidos à medida + 150 B.
+
 ## [2026-11-24 13:18] step — Deep cuts e As menos ouvidas publicadas em produção (F92)
 
 **Branch:** main
@@ -146,6 +152,18 @@ O MJRP escolheu «a»: enviou a `main` ao GitHub, juntou `feat/f95-crate-managed
 
 O juiz independente passou a `188011d` (0 P0, 0 P1, 11 P2) e apontou onde a regra de `published/crate` podia apertar. Feito, com o teste antes: cada álbum passa a ser guardado como UMA linha de texto (nome < artista < ano < id < caminho da capa < endereço), o que cabe no limite de 1000 expressões das regras e deixa conferir tudo: linha de no máximo 1300 caracteres, nome e artista de 1 a 200 sem `<` nem `>`, ano de quatro dígitos, caminho da capa sem `%`, sem barra invertida e sem `..`, endereço só de `https://music.apple.com/`; o documento só tem `_schemaVersion`, `rev`, `sideA`, `sideB` (o valor anterior de um salvar saiu do documento público e fica em `cmsWork/save_crate`). O conferidor (`shared/content/crate.js`) recusa caracteres de controle, marcas de direção, nome só de caracteres invisíveis e o mesmo álbum duas vezes. A busca só trata como link o que começa por endereço (um «U2: Achtung Baby» volta a ser busca). Um lado cheio diz isso numa linha visível. A confirmação do salvar diz o que é verdade para a caixa. Teste da rota `POST /api/admin/apple-albums` por HTTP (sem conta, outra conta, acima do limite). O passo a passo do dono foi atualizado. O construtor parou no meio por falta de cota semanal; o orquestrador terminou: dois consertos pequenos (um aviso do lint sobre a expressão que casa caracteres de controle, de propósito; um tipo num teste) e os tetos do orçamento remedidos pela regra do arquivo (script principal 200.514 B, teto 200.664). Conferido: regras no emulador 58 de 58; suíte inteira pela fila `Test Files 428 passed`, `Tests 5858 passed | 1 skipped`, saída 0; conferência de tipos 0; lint 0; orçamento de publicação 0. Não refeita: a prova completa no navegador (272 conferências da `188011d`).
 
+## [2026-11-23 20:46] step — F98: a prova no navegador (904 de 904, dois motores, duas larguras, dois idiomas) e a suíte sobre a árvore com a main
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+A prova no navegador, no site construído da ponta do ramo (com a `main` `b76dfeb` juntada), nos dois motores, nas duas larguras e nos dois idiomas: **904 de 904** verificações (Chromium e WebKit, 1280 e 390, inglês e português; 108 por rodada em inglês, 118 em português, que confere também que nenhuma frase em inglês dos relatórios está na tela). Onze cenários por rodada: no Apple Music, sucesso, todas as buscas falhando e depois «Tentar de novo» com o Apple Music de volta, um misto, a autorização não dada, a conta recusada (403) e nada no catálogo; no Spotify, o misto (que deixou de ter título de sucesso), o 403 com o texto suavizado, o 500, as listas vazias e o sucesso. Evidência em `reports/evidence/F98/` (`proof.md`, `browser-proof.mjs`, `run-all.sh`, `raw/`, 104 capturas em `figures/`).
+
+O MusicKit e a API do Spotify foram simulados; os únicos endereços abortados em toda a prova foram os do Google e do Firebase, e nenhum endereço da Apple nem das páginas do Spotify chegou a ser pedido. Nenhum link que sai do site foi pressionado; nenhum app da máquina foi aberto. O substituto do MusicKit dos testes (`test/support/musicKitRecorder.js`) ganhou duas falhas novas (a busca de um título só; o status da busca que falha).
+
+Sobre a árvore com a `main`: suíte inteira (`npx vitest run`, sozinha, pela fila) com 421 arquivos, 5.789 testes passando e 1 pulado, saída 0; `npm run typecheck`, `npx eslint . --quiet` e `npm run budget:publication` com saída 0. O orçamento foi medido de novo pela regra do arquivo: script principal 201.779 B (+1.293 B), depois da primeira tela 258.985 B (+2.527 B); tetos `main` 201.929 e `background` 87.477.
+
+TASK-09 marcada. Ficam para o MJRP: julgar a tela e os textos (TASK-10). Ficam para depois do OK dele: o passo retroativo (TASK-11) e o fecho (TASK-12). O que a prova não cobre está em `reports/evidence/F98/proof.md`, na última seção: o Apple Music de verdade, o limite de chamadas (429), a chave do site vencida, e «Tentar de novo» depois de um resultado parcial, que cria uma playlist nova.
+
 ## [2026-11-23 20:46] review — F95 e F82 (TASK-04), a Caixa gerida no Painel: juiz independente (visual, comportamento e segurança) — pass, 0 P0, 0 P1, 11 P2
 
 **Branch:** wip/f95-judge
@@ -159,6 +177,56 @@ Comportamento e visual: a seção «Caixa» faz o que promete nas duas línguas;
 Os P2 que mais pesam: o caminho da capa sai da pasta das capas (nunca do servidor de imagens da Apple) com pontos codificados (`%2e%2e`), nas regras e no conferidor; as regras não põem teto em nenhum texto (um documento de cerca de 1 MiB é aceito do administrador, e a página o baixa inteiro, com o `previous`); uma busca com dois-pontos depois da primeira palavra («U2: Achtung Baby») é recusada como link; a caixa em 3D passa a esperar a leitura do banco (até 3 s). Não conferido: o banco de verdade, a API de verdade da Apple, a caixa em 3D (sem WebGL no navegador de teste), a bateria inteira.
 
 Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f95-crate-in-the-panel-visual-parity-recheck.md`.
+
+## [2026-11-23 20:36] step — F98: os dois grupos novos de textos ganham nome no Painel (a suíte inteira acusou)
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+A suíte inteira, rodada sobre a árvore já com a `main`, acusou um teste: `test/screens/admin/adapter.test.ts` («every screen the Painel can show has a name»). O Painel de textos agrupa as chaves pelo primeiro nome, e os dois grupos novos da F98 (`appleReport`, o relatório da exportação para o Apple Music; `exportReport`, as frases que as duas janelas dividem) não tinham nome na lista do Painel. Ganharam, nos dois idiomas (`public/js/i18n/en/admin.js`, `public/js/i18n/pt/admin.js`): «Apple Music export report» / «Relatório da exportação para o Apple Music» e «Export reports (both services)» / «Relatórios de exportação (os dois serviços)». Assim os textos novos aparecem no Painel para o MJRP aprovar ou reescrever, como os outros.
+
+Depois do acerto: suíte inteira (`npx vitest run`, sozinha, pela fila) com 421 arquivos, 5.789 testes passando e 1 pulado, saída 0.
+
+## [2026-11-23 20:32] step — F98: a main (b76dfeb) juntada ao ramo do conserto, sem conflito
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+A `main` (`b76dfeb`: a aprovação da prévia da seção «Caixa» do Painel, só documentos) juntada ao ramo do conserto, sem conflito: todas as entradas do log dos dois lados ficaram, as linhas do `uat.md` também, e nenhum arquivo de código veio da `main`. Nenhuma marca de conflito nos arquivos (`docs/log.md`, `docs/specs/uat.md`, `scripts/bundle-budget.json`). A suíte inteira, os tipos, o lint, o orçamento de publicação e a prova no navegador são rodados sobre esta árvore, no commit seguinte.
+
+## [2026-11-23 20:31] step — F98: a exportação para o Apple Music diz por que falhou (UAT-307), e toda frase da exportação e do aviso de pausa vem dos dicionários (UAT-308)
+
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
+
+Conserto das issues UAT-307 (P1) e UAT-308 (P2), no modelo do conserto do Spotify (F97). Teste antes: os dez arquivos de teste novos e alterados rodaram antes da implementação, com 71 testes falhando e quatro arquivos sem carregar (`reports/evidence/F98/red-before.txt`); depois, verdes.
+
+**O que mudou para quem exporta para o Apple Music**
+- **A busca tem três respostas.** `MusicKitCatalog.findTrackFromAlbum` e `findTrack` não engolem mais a falha: devolvem a faixa, ou «nada» só quando o Apple Music respondeu e não tinha, ou lançam o erro. `AppleMusicExportService` conta à parte as faixas que não puderam ser conferidas (`unchecked`, `uncheckedTracks`); uma playlist sem nenhuma faixa conferida vai para «não criadas», nunca para «nenhuma faixa encontrada».
+- **A recusa tem nome.** `AppleMusicRefusedError` (401, 403, os códigos de recusa do MusicKit) e `AppleMusicAuthorizationError` (a pessoa não autorizou), em `public/js/services/musickit/musicKitErrors.js`. Recusada, a exportação para na hora e diz «o Apple Music não permitiu isto para a sua conta», com o próximo passo (conferir a assinatura; desconectar e conectar de novo no menu).
+- **O fim da exportação aparece na janela.** Até aqui o fim era uma fila de avisos que sumiam em 12 segundos, escritos em inglês dentro do serviço, sem «Tentar de novo». Agora a janela de exportar fica no relatório (`public/js/ui/AppleExportReport.tsx`): o que foi criado e em que pasta, o que não foi, as faixas não encontradas separadas das não conferidas, e «Tentar de novo» quando outra tentativa pode trazer algo. Decidido pelo agente, revisável: o MJRP julga a tela. Se a pessoa fecha a janela durante a exportação, um aviso só diz como terminou.
+- **Resultado parcial não é sucesso**, nas duas janelas: com faixas sem conferir (ou playlist que ficou de fora) o título é «Exported, with something left out», com sinal âmbar, e «Tentar de novo» diz o que faz (a playlist que ganhar faixas é criada como nova; a desta tentativa continua lá).
+- **Acessibilidade**, nas duas janelas: o topo do relatório é uma região `role="status"` e o título recebe o foco quando o relatório aparece. As peças do relatório passaram a ser compartilhadas (`public/js/ui/ExportReportParts.tsx`).
+- **Evento de uso**: `playlists_exported` leva `reason` (`refused`, `unchecked`) também para o Apple Music; faixas sem conferir fazem o desfecho `partial`.
+
+**Toda frase vem do dicionário (UAT-308).** `SpotifyExportService`, `AppleMusicExportService` e `holdNotice` devolvem código e dados (o tipo da falha, a etapa do progresso e os nomes, o motivo da pausa e a hora); as palavras são ditas por `public/js/i18n/exportTexts.js`, `public/js/i18n/holdTexts.js` e pelas duas janelas, o mesmo padrão de `askTexts.js` e `inventoryTexts.js`. 61 chaves novas em cada idioma. O teste de guarda `test/architecture/exportsDoNotSpeak.test.js` lê os três arquivos e falha em qualquer frase pronta (duas palavras ou mais, ou uma palavra escrita como começo de frase); passam o console, o erro lançado e duas descrições que a exportação grava DENTRO do Spotify (listadas com o motivo).
+
+**Os dois textos do juiz da F97.** «the list has few places» virou «the list has only a few places». Sobre o 403: o corpo da resposta do Spotify não separa com segurança a recusa do modo de desenvolvimento dos outros 403 (o texto muda entre versões e pode vir sem JSON), então o texto foi suavizado em vez de ramificado: «Spotify did not allow this for your account», com a lista de testes como «o motivo mais provável» e o passo «peça para incluir o seu e-mail» mantido.
+
+**As falhas do MusicKit que a exportação faz, uma a uma**
+- Cobertas: o site sem a chave do Apple Music («não está configurado»); o MusicKit que não carrega ou passa do prazo («não foi possível falar»); a autorização não dada; a recusa (401, 403, sem assinatura, autorização revogada) ao ler ou criar a pasta, na busca e ao criar a playlist; a busca que falha por rede, 5xx ou qualquer outro erro («não conferida»); a busca respondida sem nada («não encontrada»); a criação recusada por outro motivo (a playlist aparece em «o Apple Music não criou», com o que ele disse, e as outras ainda são tentadas); a pasta que não pôde ser criada (as playlists vão para a raiz da biblioteca, e o relatório diz).
+- Não cobertas: o limite de chamadas (429) não tem espera nem texto próprio (na busca conta como «não conferida», na criação entra em «não criou»); uma chave do site vencida (401 no catálogo) aparece como recusa da conta, com o mesmo próximo passo; o que o MusicKit de verdade lança numa conta recusada não pôde ser lido (a leitura usa o código do erro, o status e as palavras, com folga); faixas que o Apple Music aceite e não inclua na playlist. Não há chamada separada de «incluir faixas»: elas vão no mesmo pedido que cria a playlist.
+
+**As três gravações de referência mudaram de propósito**, regravadas e comparadas linha a linha (`reports/evidence/F98/raw/golden-*.txt`): 16 de 52 páginas da janela do Spotify (a região de status, o foco, as frases da janela, o título do resultado parcial), 4 de 44 da janela de exportar (o relatório no lugar do passo da pasta), e a gravação das chamadas ao MusicKit, em que as chamadas são as mesmas em 26 de 28 cenários (num, o 401 agora para a exportação na primeira criação: 1 pedido em vez de 3).
+
+**Orçamento de peso**, medido de novo pela regra do arquivo (medido + 150 B): script principal 201.784 B (+1.298 B: os textos em inglês e `holdTexts.js`), depois da primeira tela 258.998 B (+2.540 B); tetos `main` 201.934 e `background` 87.495.
+
+**Conferido:** o grupo de testes da exportação, dos dicionários, da arquitetura, dos modelos e dos serviços (202 arquivos, 2.394 testes) verde; `npm run typecheck` e `npx eslint . --quiet` com saída 0. A suíte inteira e a prova no navegador vêm no commit seguinte.
+
+**O que não foi conferido:** a resposta de verdade do Apple Music e do MusicKit (tudo é simulado; nenhuma conta real foi usada); a redação em português, que é dele aprovar. O `doctor.py` sai vermelho nesta árvore por dois erros do `MEMORY.md` (o bloco «Where the Work Stopped» acima do tamanho, e o `## Now` mais antigo que o log), que já estavam na `main`; este ramo não toca o `MEMORY.md`.
+
+## [2026-11-23 20:19] decision — Caixa do The Album Blender no Painel: o MJRP aprovou a prévia da seção
+
+**Branch:** main
+
+MJRP, sobre a prévia `staging` do ramo `feat/f95-crate-managed-in-the-panel` (`47f6e6b`, seção «Caixa»: lados A e B, reordenar, mudar de lado, remover): «2. Ótimo!». Faltam, antes de valer em produção: a regra do banco para `published/crate` (ele publica), a publicação do servidor (rota de busca no Apple Music), o juiz independente e a palavra dele para publicar.
 
 ## [2026-11-23 20:19] step — F95 e F82 (TASK-04): as regras da Caixa no arquivo do ramo, provadas no emulador; a prova completa no navegador; a bateria inteira
 
@@ -180,11 +248,17 @@ Relatório: `reports/audits/2026-11-23-mjrpalbumblender-v0-f95-crate-in-the-pane
 
 UAT abertas: UAT-309 (a seção «Caixa»), UAT-310 (a busca), UAT-311 (salvar publica e a página mostra), UAT-312 (o rótulo no computador). Tarefas marcadas: F82 TASK-04; F95 TASK-02, TASK-04 e TASK-05.
 
-## [2026-11-23 20:19] decision — Caixa do The Album Blender no Painel: o MJRP aprovou a prévia da seção
+## [2026-11-23 19:56] step — F98 (a exportação para o Apple Music diz por que falhou) registrada em esboço no ramo do conserto, com a S-80; conserta a UAT-307 e a UAT-308
 
-**Branch:** main
+**Branch:** fix/f98-apple-music-export-says-why-it-failed
 
-MJRP, sobre a prévia `staging` do ramo `feat/f95-crate-managed-in-the-panel` (`47f6e6b`, seção «Caixa»: lados A e B, reordenar, mudar de lado, remover): «2. Ótimo!». Faltam, antes de valer em produção: a regra do banco para `published/crate` (ele publica), a publicação do servidor (rota de busca no Apple Music), o juiz independente e a palavra dele para publicar.
+O MJRP, sobre consertar a exportação para o Apple Music (UAT-307): «2.sim». Registrados no próprio ramo do conserto, antes de qualquer código (a sessão que orquestra pediu que o registro viaje com o conserto): a story S-80 (`docs/specs/requirements/ep-04-export-playlists/`), embutida no `prd.md` no épico EP-04, e a feature F98 (`docs/specs/features/F98-apple-music-export-says-why-it-failed/`: spec, plan e tasks em esboço; `lane: fast`, `solution_type: fix`, `fixes: ["UAT-307", "UAT-308"]`, importa a S-80). Os ids foram reservados com `merge_train.py next-item-id --reserve`; a sessão reservou a F98 no board (`session_lease.py claim`).
+
+Oito requisitos: a busca no catálogo com três respostas; a recusa do Apple Music para a exportação e aparece com o próximo passo; «Tentar de novo» quando nada pôde ser conferido; o fim da exportação para o Apple Music na janela de exportar, e o resultado parcial sem título de sucesso nas duas janelas; o evento `playlists_exported` com `reason` para o Apple Music; toda frase da exportação e do aviso de pausa vinda dos dicionários, com teste de guarda (UAT-308); os dois acertos do texto da recusa do Spotify; `role="status"` e o foco no título do resultado.
+
+**Achado ao ler o código, que muda o tamanho do conserto:** a exportação para o Apple Music não tem relatório na janela. O fim dela aparece só em avisos que somem em 12 segundos, escritos em inglês dentro do serviço (`appleExportMessages`), sem «Tentar de novo». Para a janela poder dizer o que aconteceu e oferecer a nova tentativa, o relatório passa a ser desenhado na janela de exportar, com as peças da janela do Spotify (decidido pelo agente, revisável: o MJRP julga a tela).
+
+Os três sensores (`requirements_graph_check --changed`, `product_structure_check`, `sdd_shape_check`) saíram com 0; o primeiro pediu a frase da story mais curta (223 caracteres, teto 220) e foi atendido.
 
 ## [2026-11-23 19:54] step — F95: a `main` (9cfb859: a escolha de idioma e o conserto do Spotify) entra no ramo da Caixa
 

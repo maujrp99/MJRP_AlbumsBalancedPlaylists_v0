@@ -1,0 +1,18 @@
+{
+ "mode": "down",
+ "spotify": [
+  "GET /me -> 200",
+  "GET /search -> 500",
+  "GET /search -> 500",
+  "GET /search -> 500",
+  "GET /search -> 500",
+  "GET /search -> 500"
+ ],
+ "aborted": [
+  "https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap",
+  "https://apis.google.com/js/api.js?onload=__iframefcb329846",
+  "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA8x-II628CK3",
+  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?VE",
+  "https://www.google.com/images/cleardot.gif?zx=cndf2xk9k7xe"
+ ]
+}

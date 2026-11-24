@@ -1,0 +1,110 @@
+PASS  chromium-390-en · apple success · the result is a status region and its heading has the focus
+PASS  chromium-390-en · apple success · the heading is «complete»  Export complete
+PASS  chromium-390-en · apple success · both playlists are listed as created, with their tracks, in the folder  Export completeCreated (2)1. Unsaved Batch - Greatest Hits · 3 tracks 2. Unsaved Batch - Deep Cuts · 2 tracks In the folder "MJRP Playlists"Close
+PASS  chromium-390-en · apple success · nothing is said to be missing: no list of tracks, no «not created»  Export completeCreated (2)1. Unsaved Batch - Greatest Hits · 3 tracks 2. Unsaved Batch - Deep Cuts · 2 tracks In the folder "MJRP Playlists"Close
+PASS  chromium-390-en · apple success · no «Try again»: nothing another try could bring
+PASS  chromium-390-en · apple success · two playlists were created in the library of the stand-in  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/sear
+PASS  chromium-390-en · apple success · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · apple success · the page speaks en  en
+PASS  chromium-390-en · apple success · no page error
+PASS  chromium-390-en · apple success · the page never left the site
+PASS  chromium-390-en · apple success · the real MusicKit and Apple were never reached
+PASS  chromium-390-en · apple 500 · the result is a status region and its heading has the focus
+PASS  chromium-390-en · apple 500 · the heading is «failed»  Export failed
+PASS  chromium-390-en · apple 500 · says the tracks could not be checked  Export failedApple Music could not be reached, so your tracks could not be checked. Nothing was created.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks could not be checked • Artist - One• Artist - T
+PASS  chromium-390-en · apple 500 · counts them: 5 tracks could not be checked  Export failedApple Music could not be reached, so your tracks could not be checked. Nothing was created.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks could not be checked • Artist - One• Artist - T
+PASS  chromium-390-en · apple 500 · never says «not found»  Export failedApple Music could not be reached, so your tracks could not be checked. Nothing was created.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks could not be checked • Artist - One• Artist - T
+PASS  chromium-390-en · apple 500 · both playlists are «not created»  Export failedApple Music could not be reached, so your tracks could not be checked. Nothing was created.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks could not be checked • Artist - One• Artist - T
+PASS  chromium-390-en · apple 500 · offers «Try again»
+PASS  chromium-390-en · apple 500 · every track was asked for (5 searches) and nothing was created  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/sear
+PASS  chromium-390-en · apple 500 · «Try again», with Apple Music back, completes the export: two playlists created  Export completeCreated (2)1. Unsaved Batch - Greatest Hits · 3 tracks 2. Unsaved Batch - Deep Cuts · 1 track In the folder "MJRP Playlists" 1 track not found • Artist - Nowhere ManClose
+PASS  chromium-390-en · apple 500 · after the second report the heading has the focus again
+PASS  chromium-390-en · apple 500 · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · apple 500 · the page speaks en  en
+PASS  chromium-390-en · apple 500 · no page error
+PASS  chromium-390-en · apple 500 · the page never left the site
+PASS  chromium-390-en · apple 500 · the real MusicKit and Apple were never reached
+PASS  chromium-390-en · apple mixed · the result is a status region and its heading has the focus
+PASS  chromium-390-en · apple mixed · NOT headed as a clean success: «Exported, with something left out»  Exported, with something left out
+PASS  chromium-390-en · apple mixed · both playlists created with what was found  Exported, with something left outSee below what was left out.Created (2)1. Unsaved Batch - Greatest Hits · 2 tracks 2. Unsaved Batch - Deep Cuts · 1 track In the folder "MJRP Playlists" 1 track not found • Artist - Nowhere Man 1 track could
+PASS  chromium-390-en · apple mixed · one not found and one not checked, counted apart  Exported, with something left outSee below what was left out.Created (2)1. Unsaved Batch - Greatest Hits · 2 tracks 2. Unsaved Batch - Deep Cuts · 1 track In the folder "MJRP Playlists" 1 track not found • Artist - Nowhere Man 1 track could
+PASS  chromium-390-en · apple mixed · the track whose search failed is in the «could not be checked» list only   1 track not found • Artist - Nowhere Man ||  1 track could not be checked • Artist - Two
+PASS  chromium-390-en · apple mixed · offers «Try again» for what was left out, and says what trying again does  d Batch - Deep Cuts · 1 track In the folder "MJRP Playlists" 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try againTry again exports again. A playlist that gets more tracks this time is created as a n
+PASS  chromium-390-en · apple mixed · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · apple mixed · the page speaks en  en
+PASS  chromium-390-en · apple mixed · no page error
+PASS  chromium-390-en · apple mixed · the page never left the site
+PASS  chromium-390-en · apple mixed · the real MusicKit and Apple were never reached
+PASS  chromium-390-en · apple not authorized · the result is a status region and its heading has the focus
+PASS  chromium-390-en · apple not authorized · the heading is «failed»  Export failed
+PASS  chromium-390-en · apple not authorized · says so plainly, with the next step  Export failedApple Music was not authorized, so nothing was exported.Try again and allow the access in the Apple Music window.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Try againWhat was already created 
+PASS  chromium-390-en · apple not authorized · never says «not found» nor «could not be checked»  Export failedApple Music was not authorized, so nothing was exported.Try again and allow the access in the Apple Music window.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Try againWhat was already created 
+PASS  chromium-390-en · apple not authorized · nothing was searched or created  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; authorize
+PASS  chromium-390-en · apple not authorized · offers «Try again»
+PASS  chromium-390-en · apple not authorized · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · apple not authorized · the page speaks en  en
+PASS  chromium-390-en · apple not authorized · no page error
+PASS  chromium-390-en · apple not authorized · the page never left the site
+PASS  chromium-390-en · apple not authorized · the real MusicKit and Apple were never reached
+PASS  chromium-390-en · apple 403 · the result is a status region and its heading has the focus
+PASS  chromium-390-en · apple 403 · the heading is «failed»  Export failed
+PASS  chromium-390-en · apple 403 · says «Apple Music did not allow this for your account», with the next step  Export failedApple Music did not allow this for your accountThis is not about your tracks. Check that your Apple Music subscription is active. Then open the menu, disconnect Apple Music under Connections, connect again and export again.Not 
+PASS  chromium-390-en · apple 403 · never says «not found» nor «could not be checked»  Export failedApple Music did not allow this for your accountThis is not about your tracks. Check that your Apple Music subscription is active. Then open the menu, disconnect Apple Music under Connections, connect again and export again.Not 
+PASS  chromium-390-en · apple 403 · the export stopped at the first refused search (1 of 5), nothing created  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search
+PASS  chromium-390-en · apple 403 · both playlists are «not created»  Export failedApple Music did not allow this for your accountThis is not about your tracks. Check that your Apple Music subscription is active. Then open the menu, disconnect Apple Music under Connections, connect again and export again.Not 
+PASS  chromium-390-en · apple 403 · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · apple 403 · the page speaks en  en
+PASS  chromium-390-en · apple 403 · no page error
+PASS  chromium-390-en · apple 403 · the page never left the site
+PASS  chromium-390-en · apple 403 · the real MusicKit and Apple were never reached
+PASS  chromium-390-en · apple nothing in the catalogue · the result is a status region and its heading has the focus
+PASS  chromium-390-en · apple empty · the heading is «failed»  Export failed
+PASS  chromium-390-en · apple empty · says none of the tracks was found  Export failedNone of the tracks was found in Apple Music. Nothing was created.No track found (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four•
+PASS  chromium-390-en · apple empty · counts them as not found: 5  Export failedNone of the tracks was found in Apple Music. Nothing was created.No track found (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four•
+PASS  chromium-390-en · apple empty · does not say «could not be checked» nor «did not allow»
+PASS  chromium-390-en · apple empty · no «Try again»: Apple Music answered, and would answer the same
+PASS  chromium-390-en · apple empty · every search was answered (two per track: with the album, then without)  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/sear
+PASS  chromium-390-en · apple nothing in the catalogue · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · apple nothing in the catalogue · the page speaks en  en
+PASS  chromium-390-en · apple nothing in the catalogue · no page error
+PASS  chromium-390-en · apple nothing in the catalogue · the page never left the site
+PASS  chromium-390-en · apple nothing in the catalogue · the real MusicKit and Apple were never reached
+PASS  chromium-390-en · spotify mixed · the result is a status region and its heading has the focus
+PASS  chromium-390-en · spotify mixed · NOT headed as a clean success: «Exported, with something left out»  Exported, with something left out
+PASS  chromium-390-en · spotify mixed · the playlist was created with what was found (3 / 5)  Export to SpotifyExported, with something left outSee below what was left out.Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try ag
+PASS  chromium-390-en · spotify mixed · one not found and one not checked, counted apart  Export to SpotifyExported, with something left outSee below what was left out.Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try ag
+PASS  chromium-390-en · spotify mixed · offers «Try again» for what was left out, and says what trying again does  (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try againTry again exports again. A playlist that gets more tracks this time is created as a
+PASS  chromium-390-en · spotify mixed · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · spotify mixed · no page error
+PASS  chromium-390-en · spotify mixed · the page never left the site
+PASS  chromium-390-en · spotify 403 · the result is a status region and its heading has the focus
+PASS  chromium-390-en · spotify 403 · says «Spotify did not allow this for your account»  Export to SpotifyExport FailedSpotify did not allow this for your accountNot created (1)• MJRP PlaylistThis is not about your tracks. The most likely reason: The Album Blender is in a limited test pha
+PASS  chromium-390-en · spotify 403 · names the test list as the most likely reason, and keeps the next step  Export to SpotifyExport FailedSpotify did not allow this for your accountNot created (1)• MJRP PlaylistThis is not about your tracks. The most likely reason: The Album Blender is in a limited test phase on Spotify, and Spotify only serves t
+PASS  chromium-390-en · spotify 403 · «the list has only a few places»
+PASS  chromium-390-en · spotify 403 · never says tracks not found, no «Try again»
+PASS  chromium-390-en · spotify 403 · the export stopped at the first refused search  GET /me -> 403 ; GET /search -> 403
+PASS  chromium-390-en · spotify 403 · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · spotify 403 · no page error
+PASS  chromium-390-en · spotify 403 · the page never left the site
+PASS  chromium-390-en · spotify 500 · the result is a status region and its heading has the focus
+PASS  chromium-390-en · spotify 500 · the heading is «failed»  Export Failed
+PASS  chromium-390-en · spotify 500 · says the tracks could not be checked, and counts them  Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Thre
+PASS  chromium-390-en · spotify 500 · offers «Try again»
+PASS  chromium-390-en · spotify 500 · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · spotify 500 · no page error
+PASS  chromium-390-en · spotify 500 · the page never left the site
+PASS  chromium-390-en · spotify empty · the result is a status region and its heading has the focus
+PASS  chromium-390-en · spotify empty · says no tracks were found, in the language of the app  Export to SpotifyExport FailedNo tracks found on SpotifyNo track found (1)• MJRP PlaylistTracks matched0 / 5 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Close 
+PASS  chromium-390-en · spotify empty · counts them as not found: 5  Export to SpotifyExport FailedNo tracks found on SpotifyNo track found (1)• MJRP PlaylistTracks matched0 / 5 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Close 
+PASS  chromium-390-en · spotify empty · no «Try again»: Spotify answered, and would answer the same
+PASS  chromium-390-en · spotify empty · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · spotify empty · no page error
+PASS  chromium-390-en · spotify empty · the page never left the site
+PASS  chromium-390-en · spotify success · the result is a status region and its heading has the focus
+PASS  chromium-390-en · spotify success · the heading is «complete»: a track not found is not a failure  Export Complete! 🎉
+PASS  chromium-390-en · spotify success · the playlist was created (4 / 5), no «Try again»  Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 4 tracks Open in SpotifyTracks matched4 / 5 1 track not found • Artist - Nowhere Man Close 
+PASS  chromium-390-en · spotify success · the window fits the screen, no sideways scroll
+PASS  chromium-390-en · spotify success · no page error
+PASS  chromium-390-en · spotify success · the page never left the site
+
+chromium-390-en: 108 passed, 0 failed

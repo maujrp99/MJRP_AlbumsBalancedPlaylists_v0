@@ -173,6 +173,8 @@ export const admin = {
     'admin.screens.shell': "Menu and frame",
     'admin.screens.start': "Create",
     'admin.screens.spotifyWindow': "Spotify export window",
+    'admin.screens.appleReport': "Apple Music export report",
+    'admin.screens.exportReport': "Export reports (both services)",
     'admin.screens.ask': "Questions and confirmations",
     'admin.screens.ui': "Shared pieces",
     'admin.kit.saved': "All saved",

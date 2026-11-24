@@ -175,6 +175,7 @@ serves:: [[ROADMAP#^OUT-01]] ^EP-04
 
 ![[S-72-export-a-playlist-from-the-saved-playlists-screen]]
 ![[S-79-know-why-the-spotify-export-failed]]
+![[S-80-know-why-the-apple-music-export-failed]]
 
 
 

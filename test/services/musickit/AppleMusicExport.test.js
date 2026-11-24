@@ -15,7 +15,9 @@ vi.mock('../../../public/js/stores/toasts.js', () => {
     return { default: toast, toast }
 })
 
-import { AppleMusicExportService, appleExportMessages } from '../../../public/js/services/AppleMusicExportService.js'
+import { AppleMusicExportService } from '../../../public/js/services/AppleMusicExportService.js'
+import { AppleMusicRefusedError, AppleMusicAuthorizationError } from '../../../public/js/services/musickit/musicKitErrors.js'
+import { appleSummaryNotice } from '../../../public/js/i18n/exportTexts.js'
 import { exportLedger } from '../../../public/js/services/export/exportLedger.js'
 import { handleExportToAppleMusic } from '../../../public/js/controllers/playlistExports.js'
 import { playlistsStore } from '../../../public/js/stores/playlists.js'
@@ -30,10 +32,15 @@ function fakeMusicKit() {
         failCreate: [],         // names whose creation fails (taken once each)
         folderId: 'folder-1',
         authorizeError: null,
+        searchFails: {},        // title -> the error its search throws (F98)
+        folderError: null,
         init: vi.fn(async () => { }),
         authorize: vi.fn(async () => { if (fake.authorizeError) throw fake.authorizeError }),
-        createOrGetFolder: vi.fn(async () => fake.folderId),
-        findTrackFromAlbum: vi.fn(async (title) => (fake.catalog[title] ? { id: fake.catalog[title] } : null)),
+        createOrGetFolder: vi.fn(async () => { if (fake.folderError) throw fake.folderError; return fake.folderId }),
+        findTrackFromAlbum: vi.fn(async (title) => {
+            if (fake.searchFails[title]) throw fake.searchFails[title]
+            return fake.catalog[title] ? { id: fake.catalog[title] } : null
+        }),
         createPlaylistInFolder: vi.fn(async (name, trackIds, folderId) => {
             const at = fake.failCreate.indexOf(name)
             if (at !== -1) {
@@ -90,7 +97,7 @@ describe('exporting to Apple Music (F62)', () => {
 
             const report = await run()
 
-            expect(report.failed).toEqual([{ name: NAMES[0], message: 'Apple Music said no' }])
+            expect(report.failed).toEqual([{ name: NAMES[0], detail: 'Apple Music said no' }])
             expect(report.created.map(p => p.name)).toEqual([NAMES[1]])
         })
 
@@ -132,7 +139,7 @@ describe('exporting to Apple Music (F62)', () => {
 
             const report = await run()
 
-            expect(report.failure).toEqual({ kind: 'authorization', message: 'Authorization was cancelled' })
+            expect(report.failure).toEqual({ kind: 'authorization' })
             expect(report.notCreated).toEqual(NAMES)
             expect(musicKit.library).toEqual([])
         })
@@ -172,49 +179,177 @@ describe('exporting to Apple Music (F62)', () => {
         })
     })
 
-    describe('what the person is told', () => {
-        const told = (report) => appleExportMessages(report).map(m => `${m.type}: ${m.text}`)
+    describe('a search that failed is not a track that was not found (F98, UAT-307, REQ-01)', () => {
+        const down = () => Object.assign(new Error('Search unavailable'), { status: 500 })
 
-        it('a clean export', async () => {
-            expect(told(await run())).toEqual(['success: 2 playlists exported to Apple Music, in the folder "Road trip".'])
+        it('a 500 of the search: the track is counted as not checked, apart, and the rest is exported', async () => {
+            musicKit.searchFails.Two = down()
+
+            const report = await run()
+
+            expect(report.unchecked).toBe(1)
+            expect(report.uncheckedTracks).toEqual(['Artist - Two'])
+            expect(report.notFound).toEqual([])
+            expect(report.created.map(p => [p.name, p.tracks, p.total])).toEqual([[NAMES[0], 1, 2], [NAMES[1], 2, 2]])
+            expect(report.failure).toBeNull()
         })
 
-        it('a failure in the middle: what was not created and why, and what was', async () => {
-            musicKit.failCreate.push(NAMES[1])
+        it('the network down on one search: not checked, never not found', async () => {
+            musicKit.searchFails.Three = new TypeError('Failed to fetch')
 
-            expect(told(await run())).toEqual([
-                'error: Apple Music did not create 1 of 2 playlists: "2. Mix - Deep Cuts" (Apple Music said no). Export again to create what is missing: what was created is not created twice.',
-                'success: 1 playlist exported to Apple Music, in the folder "Road trip": "1. Mix - Greatest Hits".'
-            ])
+            const report = await run()
+
+            expect(report.uncheckedTracks).toEqual(['Artist - Three'])
+            expect(report.notFound).toEqual([])
         })
 
-        it('a second export of the same playlists', async () => {
-            await run()
+        it('a track is «not found» only when Apple Music answered and had none', async () => {
+            const report = await run([{ name: 'Half', tracks: [track('One'), track('Nowhere')] }])
 
-            expect(told(await run())).toEqual(['info: 2 playlists were already exported in this session and were not created again.'])
+            expect(report.notFound).toEqual(['Artist - Nowhere'])
+            expect(report.unchecked).toBe(0)
+            expect(report.uncheckedTracks).toEqual([])
         })
 
-        it('tracks not found, a playlist with none and a folder that could not be made', async () => {
-            musicKit.folderId = null
-            const report = await run([{ name: 'Half', tracks: [track('One'), track('Nowhere')] }, { name: 'Ghosts', tracks: [track('Nowhere')] }])
+        it('a playlist none of whose tracks could be checked is «not created», never «no track found»', async () => {
+            musicKit.searchFails.Three = down()
+            musicKit.searchFails.Four = down()
 
-            expect(told(report)).toEqual([
-                'success: 1 playlist exported to Apple Music.',
-                'warning: The folder "Road trip" could not be created in Apple Music: the playlists are at the top of your library.',
-                'warning: No track was found in Apple Music for "2. Mix - Ghosts": not created.',
-                'warning: 2 tracks were not found in Apple Music and were left out: Artist - Nowhere, Artist - Nowhere.'
-            ])
+            const report = await run()
+
+            expect(report.empty).toEqual([])
+            expect(report.notCreated).toEqual([NAMES[1]])
+            expect(report.created.map(p => p.name)).toEqual([NAMES[0]])
+            expect(report.failure).toBeNull()
         })
 
-        it('nothing created at all', async () => {
-            musicKit.authorizeError = new Error('Authorization was cancelled')
-            expect(told(await run())).toEqual(['warning: Apple Music was not authorized: nothing was exported.'])
+        it('when nothing could be checked the export says that, not that nothing was found (REQ-03)', async () => {
+            for (const title of ['One', 'Two', 'Three', 'Four']) musicKit.searchFails[title] = down()
 
+            const report = await run()
+
+            expect(report.failure).toEqual({ kind: 'unchecked' })
+            expect(report.unchecked).toBe(4)
+            expect(report.notFound).toEqual([])
+            expect(report.empty).toEqual([])
+            expect(report.notCreated).toEqual(NAMES)
+            expect(musicKit.library).toEqual([])
+        })
+
+        it('when Apple Music answered every search and had none, that is «not found», with its own kind', async () => {
+            const report = await run([{ name: 'Ghosts', tracks: [track('Nowhere'), track('Nobody')] }])
+
+            expect(report.failure).toEqual({ kind: 'not-found' })
+            expect(report.notFound).toEqual(['Artist - Nowhere', 'Artist - Nobody'])
+            expect(report.empty).toEqual(['1. Mix - Ghosts'])
+            expect(report.unchecked).toBe(0)
+        })
+    })
+
+    describe('when Apple Music refuses the person (F98, REQ-02)', () => {
+        const refusal = () => Object.assign(new Error('Forbidden'), { status: 403 })
+
+        it('a 403 on a search stops the export and is a refusal: never «not found»', async () => {
+            musicKit.searchFails.One = refusal()
+
+            const report = await run()
+
+            expect(report.failure).toEqual({ kind: 'refused' })
+            expect(report.notFound).toEqual([])
+            expect(report.empty).toEqual([])
+            expect(report.notCreated).toEqual(NAMES)
+            expect(musicKit.findTrackFromAlbum).toHaveBeenCalledTimes(1)
+            expect(musicKit.library).toEqual([])
+        })
+
+        it('the refusal with its name, thrown by the catalogue, is the same refusal', async () => {
+            musicKit.searchFails.Three = new AppleMusicRefusedError('Forbidden')
+
+            const report = await run()
+
+            expect(report.failure).toEqual({ kind: 'refused' })
+            expect(report.created.map(p => p.name)).toEqual([NAMES[0]])
+            expect(report.notCreated).toEqual([NAMES[1]])
+        })
+
+        it('a 403 when the playlist is created (no subscription) stops the export: the others are not tried', async () => {
+            musicKit.createPlaylistInFolder.mockRejectedValue(refusal())
+
+            const report = await run()
+
+            expect(report.failure).toEqual({ kind: 'refused' })
+            expect(report.failed).toEqual([])
+            expect(report.notCreated).toEqual(NAMES)
+            expect(musicKit.createPlaylistInFolder).toHaveBeenCalledTimes(1)
+        })
+
+        it('a refusal while the folder is read stops it before any search', async () => {
+            musicKit.folderError = new AppleMusicRefusedError('Forbidden')
+
+            const report = await run()
+
+            expect(report.failure).toEqual({ kind: 'refused' })
+            expect(report.notCreated).toEqual(NAMES)
+            expect(musicKit.findTrackFromAlbum).not.toHaveBeenCalled()
+        })
+
+        it('the authorization not given has its own kind, whatever words the error has', async () => {
+            musicKit.authorizeError = new AppleMusicAuthorizationError('anything')
+
+            expect((await run()).failure).toEqual({ kind: 'authorization' })
+        })
+
+        it('the other ways of not starting: not set up, not reached, and what Apple Music said', async () => {
             musicKit.authorizeError = new Error('MusicKit not configured')
-            expect(told(await run())).toEqual(['error: Apple Music is not set up for this site: nothing was exported.'])
+            expect((await run()).failure).toEqual({ kind: 'not-configured' })
+
+            musicKit.authorizeError = Object.assign(new Error('MusicKit took too long'), { name: 'DeadlineError' })
+            expect((await run()).failure).toEqual({ kind: 'unreachable' })
 
             musicKit.authorizeError = new Error('network down')
-            expect(told(await run())).toEqual(['error: The export to Apple Music failed before anything was created: network down.'])
+            expect((await run()).failure).toEqual({ kind: 'error', detail: 'network down' })
+        })
+    })
+
+    describe('the export writes no sentence of its own (F98, UAT-308, REQ-06)', () => {
+        it('the progress is told in steps and names, for the screen to say in its language', async () => {
+            const steps = []
+            await AppleMusicExportService.exportPlaylists(PLAYLISTS, { seriesName: 'Road trip', batchName: 'Mix' }, { musicKit, onProgress: (step) => steps.push(step) })
+
+            expect(steps).toEqual([
+                { step: 'connecting' }, { step: 'authorizing' }, { step: 'folder' },
+                { step: 'exporting', name: NAMES[0] }, { step: 'exporting', name: NAMES[1] }
+            ])
+        })
+
+        it('a playlist Apple Music did not create keeps what Apple Music said, or nothing: never words of the app', async () => {
+            musicKit.createPlaylistInFolder.mockRejectedValueOnce({})
+
+            const report = await run()
+
+            expect(report.failed).toEqual([{ name: NAMES[0], detail: null }])
+        })
+    })
+
+    describe('what the person is told when no window is there to show the report', () => {
+        const told = async (report) => { const notice = appleSummaryNotice(await report); return `${notice.type}: ${notice.text}` }
+
+        it('a clean export', async () => {
+            expect(await told(run())).toBe('success: 2 playlists exported to Apple Music.')
+        })
+
+        it('something left out: how many were created, as a warning', async () => {
+            musicKit.failCreate.push(NAMES[1])
+            expect(await told(run())).toBe('warning: The export to Apple Music ended with something left out: 1 of 2 playlists created.')
+        })
+
+        it('nothing created: why', async () => {
+            musicKit.authorizeError = new Error('Authorization was cancelled')
+            expect(await told(run())).toBe('warning: Apple Music was not authorized, so nothing was exported. Try again and allow the access in the Apple Music window.')
+
+            musicKit.authorizeError = null
+            musicKit.searchFails.One = Object.assign(new Error('Forbidden'), { status: 403 })
+            expect(await told(run())).toMatch(/^error: Apple Music did not allow this for your account\. This is not about your tracks\. Check that your Apple Music subscription is active\./)
         })
     })
 
@@ -249,7 +384,7 @@ describe('exporting to Apple Music (F62)', () => {
 
             await handleExportToAppleMusic()
 
-            expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Apple Music did not create 2 of 2 playlists'), expect.any(Number))
+            expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Apple Music did not create the playlists'), expect.any(Number))
             expect(toast.success).not.toHaveBeenCalled()
         })
     })

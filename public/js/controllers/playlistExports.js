@@ -10,7 +10,8 @@ import { t } from '../i18n/t.js'
 import { DEFAULT_BATCH_NAME, DEFAULT_SERIES_NAME } from '../models/defaultNames.js'
 import { albumSeriesStore } from '../stores/albumSeries.js'
 import { playlistsStore } from '../stores/playlists.js'
-import { AppleMusicExportService, appleExportMessages } from '../services/AppleMusicExportService.js'
+import { AppleMusicExportService } from '../services/AppleMusicExportService.js'
+import { appleProgressText, appleSummaryNotice } from '../i18n/exportTexts.js'
 import { track } from '../services/usage/track.js'
 
 /**
@@ -67,7 +68,7 @@ export function handleExportJson(playlists, { batchName: givenBatchName } = {}) 
 /** Where the progress of the Apple export is written: the screen is told (a text while it runs, null when it is over); none given: nowhere. */
 const progressWriter = ({ onStatus }) => onStatus || (() => {})
 
-/** How long the report of an export stays: it names playlists, it is not read at a glance. */
+/** How long the notice of an export stays: it is not read at a glance. */
 const REPORT_MS = 12000
 
 /** One export to Apple Music at a time: a second press while one runs creates nothing. */
@@ -79,6 +80,9 @@ let appleExportRunning = false
  * created in this session) is AppleMusicExportService's. The edit screen gives no playlists and
  * exports the ones it holds; the saved playlists screen gives one playlist or the whole batch (F90).
  *
+ * The report is handed to whoever draws it (`onReport`: the export window, ui/AppleExportReport.tsx, F98). When nobody is there to
+ * draw it (the window was closed while the export ran), one notice says how it ended: the export never ends in silence.
+ *
  * @param {Object} options - Options
  * @param {(text: string|null) => void} [options.onStatus] - the screen that draws the button is told the progress
  *   (a text while it runs, null when it is over). The branch that wrote on a button of its own (`btn`) is gone: no caller used it since F90.
@@ -89,18 +93,20 @@ let appleExportRunning = false
  * @param {string} [options.folderName] - the Apple Music folder; none given: the series name (F90)
  * @param {string} [options.folderId] - the id of that folder, when it was picked from the library's list (F90)
  * @param {boolean} [options.noFolder] - no folder: the top of the library (F90)
+ * @param {(report: any) => boolean} [options.onReport] - draws the report; answers true when it did (F98)
+ * @returns {Promise<Object|null>} the report (AppleExportReport); null when no export ran
  */
 export async function handleExportToAppleMusic(options = {}) {
     const { onStatus } = options
 
     if (appleExportRunning) {
         toast.info(t('notices.export.running'))
-        return
+        return null
     }
     const playlists = options.playlists || playlistsStore.getPlaylists()
     if (playlists.length === 0) {
         toast.warning(t('notices.export.nothing'))
-        return
+        return null
     }
 
     appleExportRunning = true
@@ -112,12 +118,17 @@ export async function handleExportToAppleMusic(options = {}) {
         const report = await AppleMusicExportService.exportPlaylists(
             playlists,
             { seriesName: seriesNameOf(options.seriesName), batchName: options.batchName || getEffectiveBatchName(), positions: options.positions, folderName: options.folderName, folderId: options.folderId, noFolder: options.noFolder },
-            { musicKit: musicKitService, onProgress: say }
+            { musicKit: musicKitService, onProgress: (progress) => say(appleProgressText(progress)) }
         )
-        appleExportMessages(report).forEach(message => toast[message.type](message.text, REPORT_MS))
+        if (options.onReport?.(report) !== true) {
+            const notice = appleSummaryNotice(report)
+            toast[notice.type](notice.text, REPORT_MS)
+        }
+        return report
     } catch (error) {
         console.error('[AppleMusic] Export failed:', error)
         toast.error(t('notices.export.failed', { message: error.message }), REPORT_MS)
+        return null
     } finally {
         appleExportRunning = false
         if (onStatus) onStatus(null)

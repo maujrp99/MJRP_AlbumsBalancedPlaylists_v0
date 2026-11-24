@@ -113,31 +113,31 @@ describe('FailureReason', () => {
     })
 })
 
-describe('holdNotice (F52): what the person reads when the server said "sign in" or "wait"', () => {
-    it('"sign in" asks to sign in again, as a warning', () => {
-        const notice = holdNotice({ reason: HoldReason.UNAUTHORIZED, until: null })
-        expect(notice.type).toBe('warning')
-        expect(notice.message).toMatch(/sign in again/i)
+describe('holdNotice (F52): what the person is told when the server said "sign in" or "wait"', () => {
+    // F98 (UAT-308): the model gives the reason, the hour and the kind of notice; the words are said in the language of the app
+    // by i18n/holdTexts.js (test/i18n/exportTexts.test.js holds the sentences, the English word for word as the model wrote it).
+    it('"sign in" is a warning, with no hour to resume at', () => {
+        expect(holdNotice({ reason: HoldReason.UNAUTHORIZED, until: null })).toEqual({ reason: 'unauthorized', until: null, type: 'warning', durationMs: 10000 })
     })
 
-    it('"wait" says the load is paused and when it resumes', () => {
-        const notice = holdNotice({ reason: HoldReason.RATE_LIMITED, until: 1000 }, (ms) => 'T' + ms)
-        expect(notice.type).toBe('info')
-        expect(notice.message).toContain('paused')
-        expect(notice.message).toContain('T1000')
+    it('"wait" is information, with the hour it resumes at', () => {
+        expect(holdNotice({ reason: HoldReason.RATE_LIMITED, until: 1000 })).toEqual({ reason: 'rate_limited', until: 1000, type: 'info', durationMs: 10000 })
     })
 
-    it('"the ratings source asked to wait" names the source, not the server, and says when it resumes', () => {
-        const notice = holdNotice({ reason: HoldReason.SOURCE_BUSY, until: 1000 }, (ms) => 'T' + ms)
-        expect(notice.type).toBe('info')
-        expect(notice.message).toMatch(/ratings source/i)
-        expect(notice.message).toContain('paused')
-        expect(notice.message).toContain('T1000')
+    it('"the ratings source asked to wait" and "Spotify asked to wait" keep their own reason', () => {
+        expect(holdNotice({ reason: HoldReason.SOURCE_BUSY, until: 1000 }).reason).toBe('source_busy')
+        expect(holdNotice({ reason: HoldReason.SPOTIFY_BUSY, until: 1000 }).reason).toBe('spotify_busy')
     })
 
-    it('never says an album failed: a hold is not a failure', () => {
+    it('a reason it does not know is told as the server asking to wait', () => {
+        expect(holdNotice({ reason: 'something-new', until: null }).reason).toBe('rate_limited')
+    })
+
+    it('writes no sentence: the model does not speak (F98, REQ-06)', () => {
         for (const reason of Object.values(HoldReason)) {
-            expect(holdNotice({ reason, until: null }).message).not.toMatch(/fail/i)
+            const notice = holdNotice({ reason, until: 1000 })
+            expect(notice.message).toBeUndefined()
+            expect(Object.values(notice).filter(value => typeof value === 'string' && /\s/.test(value))).toEqual([])
         }
     })
 })

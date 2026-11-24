@@ -13,6 +13,7 @@ import { AlbumLoadService } from '../../../public/js/services/albums/AlbumLoadSe
 import { askPopularityOnConnect } from '../../../public/js/services/albums/popularityOnConnect.js'
 import { AlbumLoadStore } from '../../../public/js/stores/albumLoad.js'
 import { EnrichmentStatus, HoldReason, holdNotice, queryKey } from '../../../public/js/models/albumLoadState.js'
+import { holdNoticeText } from '../../../public/js/i18n/holdTexts.js'
 import { SpotifyRateLimitError, SpotifyReconnectError } from '../../../public/js/services/spotify/spotifyErrors.js'
 import { applySpotifyData } from '../../../public/js/helpers/SpotifyEnrichmentHelper.js'
 import { IDENTITY_RULE_VERSION } from '../../../shared/albumIdentity.js'
@@ -261,8 +262,8 @@ describe('the load with the three outcomes', () => {
     })
 
     it('the notice of that hold names Spotify and the popularity', () => {
-        const notice = holdNotice({ reason: HoldReason.SPOTIFY_BUSY, until: 1000 }, () => '10:30')
-        expect(notice.message).toBe('Spotify asked to slow down. Loading popularity is paused. It resumes by itself at 10:30.')
+        const notice = holdNotice({ reason: HoldReason.SPOTIFY_BUSY, until: 1000 })
+        expect(holdNoticeText(notice, () => '10:30')).toBe('Spotify asked to slow down. Loading popularity is paused. It resumes by itself at 10:30.')
     })
 
     it('the person connects: the sources that were "not connected" are asked, through the service, and no album is loaded again', async () => {

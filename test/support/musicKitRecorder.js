@@ -12,7 +12,9 @@
  *   folders         [{ id, name }] the library's folders; paged `pageSize` at a time (default 100) with a `next` link
  *   folderListFails true: reading the folders rejects (500)
  *   catalog         { '<title>': '<id>' }: what the search finds; a title not in it finds nothing; a search for '*' term fails when `searchFails`
- *   searchFails     true: every catalog search rejects (500)
+ *   searchFails     true: every catalog search rejects (500, or `searchStatus`)
+ *   searchStatus    the status a failing search rejects with (F98: 403 is Apple Music refusing the person)
+ *   searchFailsFor  { '<title>': <status> }: the search of that title rejects with that status, the others are answered (F98)
  *   postFails       { '<nth playlist POST, 1-based>': { status, message } }: that creation rejects
  *   postAlwaysFails { status, message }: every playlist creation rejects
  *   folderPostFails true: creating a folder rejects
@@ -66,8 +68,10 @@ export function installMusicKitRecorder(win, calls, behavior = {}) {
                     return { data: { data: [{ id: `p.${playlistPosts}` }] } }
                 }
                 if (/\/search$/.test(path)) {
-                    if (b.searchFails) throw rejection(500, 'Search unavailable')
+                    if (b.searchFails) throw rejection(b.searchStatus || 500, b.searchStatus === 403 ? 'Forbidden' : 'Search unavailable')
                     const term = String((params && params.term) || '')
+                    const failing = Object.keys(b.searchFailsFor || {}).find(title => term.startsWith(`${title} `))
+                    if (failing) throw rejection(b.searchFailsFor[failing], 'Search unavailable')
                     const found = Object.keys(b.catalog || {}).find(title => term.startsWith(`${title} `))
                     const songs = found ? [{ id: b.catalog[found], attributes: { name: found } }] : []
                     return { data: { results: songs.length ? { songs: { data: songs } } : {} } }

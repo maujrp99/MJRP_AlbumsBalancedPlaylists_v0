@@ -120,7 +120,7 @@ describe('SpotifyExportWindow (F62)', () => {
                 mode: 'separate',
                 created: [made('Road trip - Greatest Hits', 'pl-1')],
                 notCreated: ['Road trip - Deep Cuts'],
-                failure: { kind: 'reconnect', message: 'Spotify needs you to connect again.' }
+                failure: { kind: 'reconnect' }
             }))
 
             await startExport()
@@ -139,7 +139,7 @@ describe('SpotifyExportWindow (F62)', () => {
             SpotifyExportService.exportPlaylists
                 .mockResolvedValueOnce(report({
                     notCreated: ['Road trip'],
-                    failure: { kind: 'rate-limit', retryAfterSeconds: 600, message: 'Spotify asked to wait 600 seconds before the next request (Rate Limited).' }
+                    failure: { kind: 'rate-limit', retryAfterSeconds: 600 }
                 }))
                 .mockResolvedValueOnce(report({ created: [made('Road trip', 'pl-1')] }))
 
@@ -160,7 +160,7 @@ describe('SpotifyExportWindow (F62)', () => {
                 mode: 'separate',
                 incomplete: [{ name: 'Road trip - Greatest Hits', url: 'https://open.spotify.com/playlist/pl-1', tracks: 100, total: 150 }],
                 empty: ['Road trip - Ghosts'],
-                failure: { kind: 'error', message: 'Server error' }
+                failure: { kind: 'error', detail: 'Server error' }
             }))
 
             await startExport()
@@ -184,8 +184,8 @@ describe('SpotifyExportWindow (F62)', () => {
     })
 
     describe('when the export could not check the tracks (F97, UAT-302)', () => {
-        const refused = () => report({ matchCount: 0, notCreated: ['Road trip'], failure: { kind: 'refused', message: 'Spotify did not allow this account.' } })
-        const unchecked = () => report({ matchCount: 0, unchecked: 4, notCreated: ['Road trip'], failure: { kind: 'unchecked', message: 'Spotify could not be reached: no track could be checked.' } })
+        const refused = () => report({ matchCount: 0, notCreated: ['Road trip'], failure: { kind: 'refused' } })
+        const unchecked = () => report({ matchCount: 0, unchecked: 4, notCreated: ['Road trip'], failure: { kind: 'unchecked' } })
 
         afterEach(async () => { await setLocale('en'); localStorage.removeItem(PREVIEW_KEY) })
 
@@ -194,7 +194,7 @@ describe('SpotifyExportWindow (F62)', () => {
 
             await startExport()
 
-            expect(text()).toContain('Spotify did not allow this account')
+            expect(text()).toContain('Spotify did not allow this for your account')
             expect(text()).toContain('limited test phase')
             expect(text()).toContain('Ask the owner')
             expect(text()).toContain('Export to Apple Music is available')
@@ -211,7 +211,7 @@ describe('SpotifyExportWindow (F62)', () => {
 
             await startExport()
 
-            expect(text()).toContain('O Spotify não permitiu esta conta')
+            expect(text()).toContain('O Spotify não permitiu isto para a sua conta')
             expect(text()).toContain('Peça a quem cuida de The Album Blender')
             expect(text()).not.toMatch(/\b(o|do|no|ao|pelo) The Album Blender/i)
             expect(text()).toContain('A exportação para o Apple Music está disponível')
@@ -230,6 +230,7 @@ describe('SpotifyExportWindow (F62)', () => {
 
             expect(text()).toContain('1 track not found')
             expect(text()).toContain('2 tracks could not be checked')
+            expect(text()).not.toContain('Export Complete')
             const lists = [...windowBox().querySelectorAll('details')].map(box => box.textContent.replace(/\s+/g, ' '))
             expect(lists.find(list => list.includes('could not be checked'))).toContain('Artist - Two')
             expect(lists.find(list => list.includes('not found'))).not.toContain('Artist - Two')
@@ -259,6 +260,175 @@ describe('SpotifyExportWindow (F62)', () => {
 
             expect(text()).toContain('as suas faixas não puderam ser conferidas')
             expect(text()).toContain('Tentar de novo')
+        })
+    })
+
+    describe('a result with something left out is not a clean success (F98, REQ-04)', () => {
+        const mixed = () => SpotifyExportService.exportPlaylists.mockImplementation(async (playlists, options, handlers) => {
+            handlers.onUnchecked({ artist: 'Artist', title: 'Two' })
+            return report({ matchCount: 3, unchecked: 1, created: [made('Road trip', 'pl-1', { tracks: 3, total: 3 })] })
+        })
+
+        afterEach(async () => { await setLocale('en'); localStorage.removeItem(PREVIEW_KEY) })
+
+        it('tracks that could not be checked: the heading says something was left out, never «Export Complete»', async () => {
+            mixed()
+
+            await startExport()
+
+            expect(windowBox().querySelector('[data-export-heading]').textContent).toBe('Exported, with something left out')
+            expect(text()).not.toContain('Export Complete')
+            expect(text()).toContain('1 track could not be checked')
+            expect(text()).toContain('Created (1)')
+        })
+
+        it('offers to try again for what was left out, and says what trying again does', async () => {
+            mixed()
+
+            await startExport()
+
+            expect(windowBox().querySelector('#retryExportBtn')).not.toBeNull()
+            expect(text()).toContain('A playlist that gets more tracks this time is created as a new one')
+        })
+
+        it('tracks not found alone are still a complete export: Spotify answered', async () => {
+            SpotifyExportService.exportPlaylists.mockImplementation(async (playlists, options, handlers) => {
+                handlers.onNotFound({ artist: 'Artist', title: 'Nowhere' })
+                return report({ matchCount: 3, unchecked: 0, created: [made('Road trip', 'pl-1', { tracks: 3, total: 3 })] })
+            })
+
+            await startExport()
+
+            expect(text()).toContain('Export Complete')
+            expect(windowBox().querySelector('#retryExportBtn')).toBeNull()
+        })
+
+        it('a playlist with no track found, beside one created: something was left out, and there is nothing to try again', async () => {
+            SpotifyExportService.exportPlaylists.mockResolvedValue(report({ mode: 'separate', created: [made('Road trip - A', 'pl-1')], empty: ['Road trip - Ghosts'] }))
+
+            await startExport()
+
+            expect(windowBox().querySelector('[data-export-heading]').textContent).toBe('Exported, with something left out')
+            expect(windowBox().querySelector('#retryExportBtn')).toBeNull()
+        })
+
+        it('in Portuguese', async () => {
+            localStorage.setItem(PREVIEW_KEY, 'pt')
+            expect(await setLocale('pt')).toBe(true)
+            mixed()
+
+            await startExport()
+
+            expect(windowBox().querySelector('[data-export-heading]').textContent).toBe('Exportado, mas algo ficou de fora')
+            expect(text()).toContain('1 faixa não pôde ser conferida')
+        })
+    })
+
+    describe('every sentence comes from the dictionary of the language (F98, UAT-308, REQ-06)', () => {
+        const inPortuguese = async () => { localStorage.setItem(PREVIEW_KEY, 'pt'); expect(await setLocale('pt')).toBe(true) }
+        afterEach(async () => { await setLocale('en'); localStorage.removeItem(PREVIEW_KEY) })
+
+        it('the window says each failure by its kind: the words are not the service\'s', async () => {
+            SpotifyExportService.exportPlaylists.mockResolvedValue(report({ notCreated: ['Road trip'], failure: { kind: 'reconnect', message: 'IGNORED WORDS' } }))
+
+            await startExport()
+
+            expect(text()).toContain('Spotify needs you to connect again.')
+            expect(text()).not.toContain('IGNORED WORDS')
+        })
+
+        it('connect again, in Portuguese', async () => {
+            await inPortuguese()
+            SpotifyExportService.exportPlaylists.mockResolvedValue(report({ notCreated: ['Road trip'], failure: { kind: 'reconnect' } }))
+
+            await startExport()
+
+            expect(text()).toContain('O Spotify precisa que você conecte de novo.')
+            expect(text()).not.toContain('Spotify needs you')
+        })
+
+        it('the rate limit, in Portuguese, with the time Spotify asked for, and without it', async () => {
+            await inPortuguese()
+            SpotifyExportService.exportPlaylists
+                .mockResolvedValueOnce(report({ notCreated: ['Road trip'], failure: { kind: 'rate-limit', retryAfterSeconds: 600 } }))
+                .mockResolvedValueOnce(report({ notCreated: ['Road trip'], failure: { kind: 'rate-limit', retryAfterSeconds: null } }))
+
+            await startExport()
+            expect(text()).toContain('O Spotify pediu para esperar 600 segundos antes do próximo pedido.')
+
+            press(windowBox().querySelector('#retryExportBtn'))
+            await vi.waitFor(() => expect(text()).toContain('O Spotify pediu para esperar antes do próximo pedido.'))
+        })
+
+        it('no track found, in Portuguese', async () => {
+            await inPortuguese()
+            SpotifyExportService.exportPlaylists.mockResolvedValue(report({ matchCount: 0, empty: ['Road trip'], failure: { kind: 'not-found' } }))
+
+            await startExport()
+
+            expect(text()).toContain('Nenhuma faixa encontrada no Spotify')
+            expect(text()).not.toContain('No tracks found')
+        })
+
+        it('what Spotify itself said is shown inside a sentence of the app; with nothing said, the app says so', async () => {
+            await inPortuguese()
+            SpotifyExportService.exportPlaylists
+                .mockResolvedValueOnce(report({ notCreated: ['Road trip'], failure: { kind: 'error', detail: 'Server error' } }))
+                .mockResolvedValueOnce(report({ notCreated: ['Road trip'], failure: { kind: 'error', detail: null } }))
+
+            await startExport()
+            expect(text()).toContain('A exportação parou: Server error')
+
+            press(windowBox().querySelector('#retryExportBtn'))
+            await vi.waitFor(() => expect(text()).toContain('O Spotify não respondeu.'))
+        })
+
+        it('the progress is said by the window, from the stage and the names the service gives', async () => {
+            await inPortuguese()
+            let finish
+            SpotifyExportService.exportPlaylists.mockImplementation(async (playlists, options, handlers) => {
+                handlers.onProgress('MATCHING', 1, 4, { title: 'One' })
+                await new Promise(resolve => { finish = resolve })
+                handlers.onProgress('CREATING', 1, 1, { name: 'Road trip' })
+                await new Promise(resolve => { finish = resolve })
+                handlers.onProgress('ADDING', 0, 4, { name: 'Road trip', count: 4 })
+                await new Promise(resolve => { finish = resolve })
+                return report({ created: [made('Road trip', 'pl-1')] })
+            })
+
+            press(windowBox().querySelector('#startExportBtn'))
+            await vi.waitFor(() => expect(text()).toContain('Buscando: One'))
+            finish()
+            await vi.waitFor(() => expect(text()).toContain('Criando "Road trip"...'))
+            finish()
+            await vi.waitFor(() => expect(text()).toContain('Adicionando 4 faixas a "Road trip"...'))
+            finish()
+            await vi.waitFor(() => expect(text()).toContain('Exportação concluída'))
+        })
+    })
+
+    describe('the result is announced and takes the focus (F98, REQ-08)', () => {
+        it('the result is a status region, and its heading has the focus when the report appears', async () => {
+            SpotifyExportService.exportPlaylists.mockResolvedValue(report({ created: [made('Road trip', 'pl-1')] }))
+
+            await startExport()
+
+            const heading = windowBox().querySelector('[data-export-heading]')
+            expect(heading.closest('[role="status"]')).not.toBeNull()
+            expect(heading.closest('[role="status"]').getAttribute('aria-live')).toBe('polite')
+            expect(heading.textContent).toContain('Export Complete')
+            expect(document.activeElement).toBe(heading)
+        })
+
+        it('a failure too: the heading of the failure has the focus', async () => {
+            SpotifyExportService.exportPlaylists.mockResolvedValue(report({ notCreated: ['Road trip'], failure: { kind: 'unchecked' } }))
+
+            await startExport()
+
+            const heading = windowBox().querySelector('[data-export-heading]')
+            expect(heading.textContent).toBe('Export Failed')
+            expect(document.activeElement).toBe(heading)
+            expect(heading.closest('[role="status"]').textContent).toContain('your tracks could not be checked')
         })
     })
 })

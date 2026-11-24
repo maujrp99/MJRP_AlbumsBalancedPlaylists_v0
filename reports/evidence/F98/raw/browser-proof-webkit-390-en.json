@@ -1,0 +1,547 @@
+{
+ "tag": "webkit-390-en",
+ "passed": 108,
+ "failed": 0,
+ "results": [
+  {
+   "what": "apple success · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple success · the heading is «complete»",
+   "ok": true,
+   "detail": "Export complete"
+  },
+  {
+   "what": "apple success · both playlists are listed as created, with their tracks, in the folder",
+   "ok": true,
+   "detail": "Export completeCreated (2)1. Unsaved Batch - Greatest Hits · 3 tracks 2. Unsaved Batch - Deep Cuts · 2 tracks In the folder \"MJRP Playlists\"Close"
+  },
+  {
+   "what": "apple success · nothing is said to be missing: no list of tracks, no «not created»",
+   "ok": true,
+   "detail": "Export completeCreated (2)1. Unsaved Batch - Greatest Hits · 3 tracks 2. Unsaved Batch - Deep Cuts · 2 tracks In the folder \"MJRP Playlists\"Close"
+  },
+  {
+   "what": "apple success · no «Try again»: nothing another try could bring",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple success · two playlists were created in the library of the stand-in",
+   "ok": true,
+   "detail": "fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/search ; POST /v1/me/library/playlists ; GET /catalog/search ; G"
+  },
+  {
+   "what": "apple success · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple success · the page speaks en",
+   "ok": true,
+   "detail": "en"
+  },
+  {
+   "what": "apple success · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple success · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple success · the real MusicKit and Apple were never reached",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 500 · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 500 · the heading is «failed»",
+   "ok": true,
+   "detail": "Export failed"
+  },
+  {
+   "what": "apple 500 · says the tracks could not be checked",
+   "ok": true,
+   "detail": "Export failedApple Music could not be reached, so your tracks could not be checked. Nothing was created.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks could not be checked • Artist - One• Artist - T"
+  },
+  {
+   "what": "apple 500 · counts them: 5 tracks could not be checked",
+   "ok": true,
+   "detail": "Export failedApple Music could not be reached, so your tracks could not be checked. Nothing was created.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Try againWhat was already created is not created again.Close"
+  },
+  {
+   "what": "apple 500 · never says «not found»",
+   "ok": true,
+   "detail": "Export failedApple Music could not be reached, so your tracks could not be checked. Nothing was created.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Try againWhat was already created is not created again.Close"
+  },
+  {
+   "what": "apple 500 · both playlists are «not created»",
+   "ok": true,
+   "detail": "Export failedApple Music could not be reached, so your tracks could not be checked. Nothing was created.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Try againWhat was already created is not created again.Close"
+  },
+  {
+   "what": "apple 500 · offers «Try again»",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 500 · every track was asked for (5 searches) and nothing was created",
+   "ok": true,
+   "detail": "fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/search ; GET /catalog/search ; GET /catalog/search"
+  },
+  {
+   "what": "apple 500 · «Try again», with Apple Music back, completes the export: two playlists created",
+   "ok": true,
+   "detail": "Export completeCreated (2)1. Unsaved Batch - Greatest Hits · 3 tracks 2. Unsaved Batch - Deep Cuts · 1 track In the folder \"MJRP Playlists\" 1 track not found • Artist - Nowhere ManClose"
+  },
+  {
+   "what": "apple 500 · after the second report the heading has the focus again",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 500 · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 500 · the page speaks en",
+   "ok": true,
+   "detail": "en"
+  },
+  {
+   "what": "apple 500 · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 500 · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 500 · the real MusicKit and Apple were never reached",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple mixed · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple mixed · NOT headed as a clean success: «Exported, with something left out»",
+   "ok": true,
+   "detail": "Exported, with something left out"
+  },
+  {
+   "what": "apple mixed · both playlists created with what was found",
+   "ok": true,
+   "detail": "Exported, with something left outSee below what was left out.Created (2)1. Unsaved Batch - Greatest Hits · 2 tracks 2. Unsaved Batch - Deep Cuts · 1 track In the folder \"MJRP Playlists\" 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try againTry again exports ag"
+  },
+  {
+   "what": "apple mixed · one not found and one not checked, counted apart",
+   "ok": true,
+   "detail": "Exported, with something left outSee below what was left out.Created (2)1. Unsaved Batch - Greatest Hits · 2 tracks 2. Unsaved Batch - Deep Cuts · 1 track In the folder \"MJRP Playlists\" 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try againTry again exports again. A playlist that gets more tracks this time is created as a new one; the one from this attempt stays in Apple Music.Close"
+  },
+  {
+   "what": "apple mixed · the track whose search failed is in the «could not be checked» list only",
+   "ok": true,
+   "detail": " 1 track not found • Artist - Nowhere Man ||  1 track could not be checked • Artist - Two"
+  },
+  {
+   "what": "apple mixed · offers «Try again» for what was left out, and says what trying again does",
+   "ok": true,
+   "detail": "d Batch - Deep Cuts · 1 track In the folder \"MJRP Playlists\" 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try againTry again exports again. A playlist that gets more tracks this time is created as a new one; the one from this attempt stays in Apple Music.Close"
+  },
+  {
+   "what": "apple mixed · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple mixed · the page speaks en",
+   "ok": true,
+   "detail": "en"
+  },
+  {
+   "what": "apple mixed · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple mixed · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple mixed · the real MusicKit and Apple were never reached",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple not authorized · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple not authorized · the heading is «failed»",
+   "ok": true,
+   "detail": "Export failed"
+  },
+  {
+   "what": "apple not authorized · says so plainly, with the next step",
+   "ok": true,
+   "detail": "Export failedApple Music was not authorized, so nothing was exported.Try again and allow the access in the Apple Music window.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Try againWhat was already created is not created again.Close"
+  },
+  {
+   "what": "apple not authorized · never says «not found» nor «could not be checked»",
+   "ok": true,
+   "detail": "Export failedApple Music was not authorized, so nothing was exported.Try again and allow the access in the Apple Music window.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Try againWhat was already created is not created again.Close"
+  },
+  {
+   "what": "apple not authorized · nothing was searched or created",
+   "ok": true,
+   "detail": "fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; authorize"
+  },
+  {
+   "what": "apple not authorized · offers «Try again»",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple not authorized · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple not authorized · the page speaks en",
+   "ok": true,
+   "detail": "en"
+  },
+  {
+   "what": "apple not authorized · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple not authorized · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple not authorized · the real MusicKit and Apple were never reached",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 403 · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 403 · the heading is «failed»",
+   "ok": true,
+   "detail": "Export failed"
+  },
+  {
+   "what": "apple 403 · says «Apple Music did not allow this for your account», with the next step",
+   "ok": true,
+   "detail": "Export failedApple Music did not allow this for your accountThis is not about your tracks. Check that your Apple Music subscription is active. Then open the menu, disconnect Apple Music under Connections, connect again and export again.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Try againWhat was already created is not created again.Close"
+  },
+  {
+   "what": "apple 403 · never says «not found» nor «could not be checked»",
+   "ok": true,
+   "detail": "Export failedApple Music did not allow this for your accountThis is not about your tracks. Check that your Apple Music subscription is active. Then open the menu, disconnect Apple Music under Connections, connect again and export again.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Try againWhat was already created is not created again.Close"
+  },
+  {
+   "what": "apple 403 · the export stopped at the first refused search (1 of 5), nothing created",
+   "ok": true,
+   "detail": "fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search"
+  },
+  {
+   "what": "apple 403 · both playlists are «not created»",
+   "ok": true,
+   "detail": "Export failedApple Music did not allow this for your accountThis is not about your tracks. Check that your Apple Music subscription is active. Then open the menu, disconnect Apple Music under Connections, connect again and export again.Not created (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Try againWhat was already created is not created again.Close"
+  },
+  {
+   "what": "apple 403 · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 403 · the page speaks en",
+   "ok": true,
+   "detail": "en"
+  },
+  {
+   "what": "apple 403 · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 403 · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple 403 · the real MusicKit and Apple were never reached",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple nothing in the catalogue · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple empty · the heading is «failed»",
+   "ok": true,
+   "detail": "Export failed"
+  },
+  {
+   "what": "apple empty · says none of the tracks was found",
+   "ok": true,
+   "detail": "Export failedNone of the tracks was found in Apple Music. Nothing was created.No track found (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere ManClose"
+  },
+  {
+   "what": "apple empty · counts them as not found: 5",
+   "ok": true,
+   "detail": "Export failedNone of the tracks was found in Apple Music. Nothing was created.No track found (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere ManClose"
+  },
+  {
+   "what": "apple empty · does not say «could not be checked» nor «did not allow»",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple empty · no «Try again»: Apple Music answered, and would answer the same",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple empty · every search was answered (two per track: with the album, then without)",
+   "ok": true,
+   "detail": "fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/search ; GET /catalog/search ; GET /catalog/search ; GET /catalo"
+  },
+  {
+   "what": "apple nothing in the catalogue · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple nothing in the catalogue · the page speaks en",
+   "ok": true,
+   "detail": "en"
+  },
+  {
+   "what": "apple nothing in the catalogue · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple nothing in the catalogue · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "apple nothing in the catalogue · the real MusicKit and Apple were never reached",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify mixed · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify mixed · NOT headed as a clean success: «Exported, with something left out»",
+   "ok": true,
+   "detail": "Exported, with something left out"
+  },
+  {
+   "what": "spotify mixed · the playlist was created with what was found (3 / 5)",
+   "ok": true,
+   "detail": "Export to SpotifyExported, with something left outSee below what was left out.Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try againTry again exports again. A playlist that gets more tracks"
+  },
+  {
+   "what": "spotify mixed · one not found and one not checked, counted apart",
+   "ok": true,
+   "detail": "Export to SpotifyExported, with something left outSee below what was left out.Created (1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try againTry again exports again. A playlist that gets more tracks this time is created as a new one; the one from this attempt stays in Spotify. Close "
+  },
+  {
+   "what": "spotify mixed · offers «Try again» for what was left out, and says what trying again does",
+   "ok": true,
+   "detail": "(1)MJRP Playlist · 3 tracks Open in SpotifyTracks matched3 / 5 1 track not found • Artist - Nowhere Man 1 track could not be checked • Artist - Two Try againTry again exports again. A playlist that gets more tracks this time is created as a new one; the one from this attempt stays in Spotify. Close "
+  },
+  {
+   "what": "spotify mixed · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify mixed · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify mixed · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 403 · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 403 · says «Spotify did not allow this for your account»",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedSpotify did not allow this for your accountNot created (1)• MJRP PlaylistThis is not about your tracks. The most likely reason: The Album Blender is in a limited test pha"
+  },
+  {
+   "what": "spotify 403 · names the test list as the most likely reason, and keeps the next step",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedSpotify did not allow this for your accountNot created (1)• MJRP PlaylistThis is not about your tracks. The most likely reason: The Album Blender is in a limited test phase on Spotify, and Spotify only serves the accounts on its test list. Ask the owner of The Album Blender to add the e-mail of your Spotify account; the list has only a few places. Export to Apple Music is available. Close "
+  },
+  {
+   "what": "spotify 403 · «the list has only a few places»",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 403 · never says tracks not found, no «Try again»",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 403 · the export stopped at the first refused search",
+   "ok": true,
+   "detail": "GET /me -> 403 ; GET /search -> 403"
+  },
+  {
+   "what": "spotify 403 · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 403 · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 403 · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 500 · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 500 · the heading is «failed»",
+   "ok": true,
+   "detail": "Export Failed"
+  },
+  {
+   "what": "spotify 500 · says the tracks could not be checked, and counts them",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedSpotify could not be reached, so your tracks could not be checked. Nothing was created.Not created (1)• MJRP PlaylistTracks matched0 / 5 5 tracks could not be checked • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Try againWhat was already created is not created again. Close "
+  },
+  {
+   "what": "spotify 500 · offers «Try again»",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 500 · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 500 · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify 500 · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify empty · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify empty · says no tracks were found, in the language of the app",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedNo tracks found on SpotifyNo track found (1)• MJRP PlaylistTracks matched0 / 5 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Close "
+  },
+  {
+   "what": "spotify empty · counts them as not found: 5",
+   "ok": true,
+   "detail": "Export to SpotifyExport FailedNo tracks found on SpotifyNo track found (1)• MJRP PlaylistTracks matched0 / 5 5 tracks not found • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - Nowhere Man Close "
+  },
+  {
+   "what": "spotify empty · no «Try again»: Spotify answered, and would answer the same",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify empty · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify empty · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify empty · the page never left the site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify success · the result is a status region and its heading has the focus",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify success · the heading is «complete»: a track not found is not a failure",
+   "ok": true,
+   "detail": "Export Complete! 🎉"
+  },
+  {
+   "what": "spotify success · the playlist was created (4 / 5), no «Try again»",
+   "ok": true,
+   "detail": "Export to SpotifyExport Complete! 🎉Created (1)MJRP Playlist · 4 tracks Open in SpotifyTracks matched4 / 5 1 track not found • Artist - Nowhere Man Close "
+  },
+  {
+   "what": "spotify success · the window fits the screen, no sideways scroll",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify success · no page error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "what": "spotify success · the page never left the site",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

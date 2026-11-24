@@ -1,0 +1,120 @@
+PASS  chromium-390-pt · apple success · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · apple success · the heading is «complete»  Exportação concluída
+PASS  chromium-390-pt · apple success · both playlists are listed as created, with their tracks, in the folder  Exportação concluídaCriadas (2)1. Unsaved Batch - Greatest Hits · 3 faixas 2. Unsaved Batch - Deep Cuts · 2 faixas Na pasta "MJRP Playlists"Fechar
+PASS  chromium-390-pt · apple success · nothing is said to be missing: no list of tracks, no «not created»  Exportação concluídaCriadas (2)1. Unsaved Batch - Greatest Hits · 3 faixas 2. Unsaved Batch - Deep Cuts · 2 faixas Na pasta "MJRP Playlists"Fechar
+PASS  chromium-390-pt · apple success · no «Try again»: nothing another try could bring
+PASS  chromium-390-pt · apple success · two playlists were created in the library of the stand-in  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/sear
+PASS  chromium-390-pt · apple success · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · apple success · the page speaks pt  pt-BR
+PASS  chromium-390-pt · apple success · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · apple success · no page error
+PASS  chromium-390-pt · apple success · the page never left the site
+PASS  chromium-390-pt · apple success · the real MusicKit and Apple were never reached
+PASS  chromium-390-pt · apple 500 · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · apple 500 · the heading is «failed»  A exportação falhou
+PASS  chromium-390-pt · apple 500 · says the tracks could not be checked  A exportação falhouNão foi possível falar com o Apple Music, então as suas faixas não puderam ser conferidas. Nada foi criado.Não criadas (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 faixas não puderam ser conferida
+PASS  chromium-390-pt · apple 500 · counts them: 5 tracks could not be checked  A exportação falhouNão foi possível falar com o Apple Music, então as suas faixas não puderam ser conferidas. Nada foi criado.Não criadas (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 faixas não puderam ser conferida
+PASS  chromium-390-pt · apple 500 · never says «not found»  A exportação falhouNão foi possível falar com o Apple Music, então as suas faixas não puderam ser conferidas. Nada foi criado.Não criadas (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 faixas não puderam ser conferida
+PASS  chromium-390-pt · apple 500 · both playlists are «not created»  A exportação falhouNão foi possível falar com o Apple Music, então as suas faixas não puderam ser conferidas. Nada foi criado.Não criadas (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 faixas não puderam ser conferida
+PASS  chromium-390-pt · apple 500 · offers «Try again»
+PASS  chromium-390-pt · apple 500 · every track was asked for (5 searches) and nothing was created  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/sear
+PASS  chromium-390-pt · apple 500 · «Try again», with Apple Music back, completes the export: two playlists created  Exportação concluídaCriadas (2)1. Unsaved Batch - Greatest Hits · 3 faixas 2. Unsaved Batch - Deep Cuts · 1 faixa Na pasta "MJRP Playlists" 1 faixa não encontrada • Artist - Nowhere ManFechar
+PASS  chromium-390-pt · apple 500 · after the second report the heading has the focus again
+PASS  chromium-390-pt · apple 500 · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · apple 500 · the page speaks pt  pt-BR
+PASS  chromium-390-pt · apple 500 · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · apple 500 · no page error
+PASS  chromium-390-pt · apple 500 · the page never left the site
+PASS  chromium-390-pt · apple 500 · the real MusicKit and Apple were never reached
+PASS  chromium-390-pt · apple mixed · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · apple mixed · NOT headed as a clean success: «Exported, with something left out»  Exportado, mas algo ficou de fora
+PASS  chromium-390-pt · apple mixed · both playlists created with what was found  Exportado, mas algo ficou de foraVeja abaixo o que ficou de fora.Criadas (2)1. Unsaved Batch - Greatest Hits · 2 faixas 2. Unsaved Batch - Deep Cuts · 1 faixa Na pasta "MJRP Playlists" 1 faixa não encontrada • Artist - Nowhere Man 1 faixa n
+PASS  chromium-390-pt · apple mixed · one not found and one not checked, counted apart  Exportado, mas algo ficou de foraVeja abaixo o que ficou de fora.Criadas (2)1. Unsaved Batch - Greatest Hits · 2 faixas 2. Unsaved Batch - Deep Cuts · 1 faixa Na pasta "MJRP Playlists" 1 faixa não encontrada • Artist - Nowhere Man 1 faixa n
+PASS  chromium-390-pt · apple mixed · the track whose search failed is in the «could not be checked» list only   1 faixa não encontrada • Artist - Nowhere Man ||  1 faixa não pôde ser conferida • Artist - Two
+PASS  chromium-390-pt · apple mixed · offers «Try again» for what was left out, and says what trying again does  ep Cuts · 1 faixa Na pasta "MJRP Playlists" 1 faixa não encontrada • Artist - Nowhere Man 1 faixa não pôde ser conferida • Artist - Two Tentar de novoTentar de novo exporta outra vez. A playlist que ganhar mais faixas desta vez é criada com
+PASS  chromium-390-pt · apple mixed · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · apple mixed · the page speaks pt  pt-BR
+PASS  chromium-390-pt · apple mixed · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · apple mixed · no page error
+PASS  chromium-390-pt · apple mixed · the page never left the site
+PASS  chromium-390-pt · apple mixed · the real MusicKit and Apple were never reached
+PASS  chromium-390-pt · apple not authorized · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · apple not authorized · the heading is «failed»  A exportação falhou
+PASS  chromium-390-pt · apple not authorized · says so plainly, with the next step  A exportação falhouO Apple Music não foi autorizado, então nada foi exportado.Tente de novo e permita o acesso na janela do Apple Music.Não criadas (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Tentar de novoO que já f
+PASS  chromium-390-pt · apple not authorized · never says «not found» nor «could not be checked»  A exportação falhouO Apple Music não foi autorizado, então nada foi exportado.Tente de novo e permita o acesso na janela do Apple Music.Não criadas (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts Tentar de novoO que já f
+PASS  chromium-390-pt · apple not authorized · nothing was searched or created  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; authorize
+PASS  chromium-390-pt · apple not authorized · offers «Try again»
+PASS  chromium-390-pt · apple not authorized · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · apple not authorized · the page speaks pt  pt-BR
+PASS  chromium-390-pt · apple not authorized · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · apple not authorized · no page error
+PASS  chromium-390-pt · apple not authorized · the page never left the site
+PASS  chromium-390-pt · apple not authorized · the real MusicKit and Apple were never reached
+PASS  chromium-390-pt · apple 403 · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · apple 403 · the heading is «failed»  A exportação falhou
+PASS  chromium-390-pt · apple 403 · says «Apple Music did not allow this for your account», with the next step  A exportação falhouO Apple Music não permitiu isto para a sua contaNão é um problema com as suas faixas. Confira se a sua assinatura do Apple Music está ativa. Depois abra o menu, desconecte o Apple Music em Conexões, conecte de novo e expo
+PASS  chromium-390-pt · apple 403 · never says «not found» nor «could not be checked»  A exportação falhouO Apple Music não permitiu isto para a sua contaNão é um problema com as suas faixas. Confira se a sua assinatura do Apple Music está ativa. Depois abra o menu, desconecte o Apple Music em Conexões, conecte de novo e expo
+PASS  chromium-390-pt · apple 403 · the export stopped at the first refused search (1 of 5), nothing created  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search
+PASS  chromium-390-pt · apple 403 · both playlists are «not created»  A exportação falhouO Apple Music não permitiu isto para a sua contaNão é um problema com as suas faixas. Confira se a sua assinatura do Apple Music está ativa. Depois abra o menu, desconecte o Apple Music em Conexões, conecte de novo e expo
+PASS  chromium-390-pt · apple 403 · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · apple 403 · the page speaks pt  pt-BR
+PASS  chromium-390-pt · apple 403 · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · apple 403 · no page error
+PASS  chromium-390-pt · apple 403 · the page never left the site
+PASS  chromium-390-pt · apple 403 · the real MusicKit and Apple were never reached
+PASS  chromium-390-pt · apple nothing in the catalogue · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · apple empty · the heading is «failed»  A exportação falhou
+PASS  chromium-390-pt · apple empty · says none of the tracks was found  A exportação falhouNenhuma das faixas foi encontrada no Apple Music. Nada foi criado.Nenhuma faixa encontrada (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 faixas não encontradas • Artist - One• Artist - Two• Artist 
+PASS  chromium-390-pt · apple empty · counts them as not found: 5  A exportação falhouNenhuma das faixas foi encontrada no Apple Music. Nada foi criado.Nenhuma faixa encontrada (2)• 1. Unsaved Batch - Greatest Hits• 2. Unsaved Batch - Deep Cuts 5 faixas não encontradas • Artist - One• Artist - Two• Artist 
+PASS  chromium-390-pt · apple empty · does not say «could not be checked» nor «did not allow»
+PASS  chromium-390-pt · apple empty · no «Try again»: Apple Music answered, and would answer the same
+PASS  chromium-390-pt · apple empty · every search was answered (two per track: with the album, then without)  fetch ; MusicKit.configure ; MusicKit.getInstance ; authorize ; GET /v1/me/library/playlist-folders ; GET /v1/me/library/playlist-folders ; POST /v1/me/library/playlist-folders ; GET /catalog/search ; GET /catalog/search ; GET /catalog/sear
+PASS  chromium-390-pt · apple nothing in the catalogue · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · apple nothing in the catalogue · the page speaks pt  pt-BR
+PASS  chromium-390-pt · apple nothing in the catalogue · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · apple nothing in the catalogue · no page error
+PASS  chromium-390-pt · apple nothing in the catalogue · the page never left the site
+PASS  chromium-390-pt · apple nothing in the catalogue · the real MusicKit and Apple were never reached
+PASS  chromium-390-pt · spotify mixed · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · spotify mixed · NOT headed as a clean success: «Exported, with something left out»  Exportado, mas algo ficou de fora
+PASS  chromium-390-pt · spotify mixed · the playlist was created with what was found (3 / 5)  Exportar para o SpotifyExportado, mas algo ficou de foraVeja abaixo o que ficou de fora.Criadas (1)Playlist MJRP · 3 faixas Abrir no SpotifyFaixas encontradas3 / 5 1 faixa não encontrada • Artist - Nowhere Man 1 faixa não pôde ser conferida
+PASS  chromium-390-pt · spotify mixed · one not found and one not checked, counted apart  Exportar para o SpotifyExportado, mas algo ficou de foraVeja abaixo o que ficou de fora.Criadas (1)Playlist MJRP · 3 faixas Abrir no SpotifyFaixas encontradas3 / 5 1 faixa não encontrada • Artist - Nowhere Man 1 faixa não pôde ser conferida
+PASS  chromium-390-pt · spotify mixed · offers «Try again» for what was left out, and says what trying again does  aixas Abrir no SpotifyFaixas encontradas3 / 5 1 faixa não encontrada • Artist - Nowhere Man 1 faixa não pôde ser conferida • Artist - Two Tentar de novoTentar de novo exporta outra vez. A playlist que ganhar mais faixas desta vez é criada c
+PASS  chromium-390-pt · spotify mixed · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · spotify mixed · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · spotify mixed · no page error
+PASS  chromium-390-pt · spotify mixed · the page never left the site
+PASS  chromium-390-pt · spotify 403 · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · spotify 403 · says «Spotify did not allow this for your account»  Exportar para o SpotifyA exportação falhouO Spotify não permitiu isto para a sua contaNão criadas (1)• Playlist MJRPNão é um problema com as suas faixas. O motivo mais provável: no Spotify, The Album 
+PASS  chromium-390-pt · spotify 403 · names the test list as the most likely reason, and keeps the next step  Exportar para o SpotifyA exportação falhouO Spotify não permitiu isto para a sua contaNão criadas (1)• Playlist MJRPNão é um problema com as suas faixas. O motivo mais provável: no Spotify, The Album Blender está numa fase de testes limitad
+PASS  chromium-390-pt · spotify 403 · never says tracks not found, no «Try again»
+PASS  chromium-390-pt · spotify 403 · the export stopped at the first refused search  GET /me -> 403 ; GET /search -> 403
+PASS  chromium-390-pt · spotify 403 · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · spotify 403 · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · spotify 403 · no page error
+PASS  chromium-390-pt · spotify 403 · the page never left the site
+PASS  chromium-390-pt · spotify 500 · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · spotify 500 · the heading is «failed»  A exportação falhou
+PASS  chromium-390-pt · spotify 500 · says the tracks could not be checked, and counts them  Exportar para o SpotifyA exportação falhouNão foi possível falar com o Spotify, então as suas faixas não puderam ser conferidas. Nada foi criado.Não criadas (1)• Playlist MJRPFaixas encontradas0 / 5 5 faixas não puderam ser conferidas • Art
+PASS  chromium-390-pt · spotify 500 · offers «Try again»
+PASS  chromium-390-pt · spotify 500 · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · spotify 500 · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · spotify 500 · no page error
+PASS  chromium-390-pt · spotify 500 · the page never left the site
+PASS  chromium-390-pt · spotify empty · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · spotify empty · says no tracks were found, in the language of the app  Exportar para o SpotifyA exportação falhouNenhuma faixa encontrada no SpotifyNenhuma faixa encontrada (1)• Playlist MJRPFaixas encontradas0 / 5 5 faixas não encontradas • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - N
+PASS  chromium-390-pt · spotify empty · counts them as not found: 5  Exportar para o SpotifyA exportação falhouNenhuma faixa encontrada no SpotifyNenhuma faixa encontrada (1)• Playlist MJRPFaixas encontradas0 / 5 5 faixas não encontradas • Artist - One• Artist - Two• Artist - Three• Artist - Four• Artist - N
+PASS  chromium-390-pt · spotify empty · no «Try again»: Spotify answered, and would answer the same
+PASS  chromium-390-pt · spotify empty · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · spotify empty · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · spotify empty · no page error
+PASS  chromium-390-pt · spotify empty · the page never left the site
+PASS  chromium-390-pt · spotify success · the result is a status region and its heading has the focus
+PASS  chromium-390-pt · spotify success · the heading is «complete»: a track not found is not a failure  Exportação concluída! 🎉
+PASS  chromium-390-pt · spotify success · the playlist was created (4 / 5), no «Try again»  Exportar para o SpotifyExportação concluída! 🎉Criadas (1)Playlist MJRP · 4 faixas Abrir no SpotifyFaixas encontradas4 / 5 1 faixa não encontrada • Artist - Nowhere Man Fechar 
+PASS  chromium-390-pt · spotify success · the window fits the screen, no sideways scroll
+PASS  chromium-390-pt · spotify success · no English sentence of the report on a Portuguese screen
+PASS  chromium-390-pt · spotify success · no page error
+PASS  chromium-390-pt · spotify success · the page never left the site
+
+chromium-390-pt: 118 passed, 0 failed
