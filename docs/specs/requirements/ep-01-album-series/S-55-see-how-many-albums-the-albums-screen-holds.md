@@ -3,11 +3,12 @@ id: S-55
 aliases: [S-55]
 type: requirement
 format: story
-status: Done
+status: Accepted
 epic: "[[prd#^EP-01]]"
 planned_for: "[[ROADMAP#^REL-40]]"
 points_to: ["[[behavior#^library-counts]]"]
 delivered_by: ["49c786e", "274dfe4"]
+accepted_in: "log 2026-11-24 10:30"
 ---
 # S-55 · Como quem cura séries de álbuns, quero ver na tela de séries quantos álbuns ela reúne, para que eu saiba o tamanho da minha coleção sem contar.
 

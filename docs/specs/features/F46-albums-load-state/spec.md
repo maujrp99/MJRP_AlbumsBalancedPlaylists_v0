@@ -1,9 +1,10 @@
 ---
-status: Done
+status: Accepted
 lane: fast
 solution_type: fix
 imports: []
 fixes: ["UAT-173"]
+accepted_in: "log 2026-11-24 10:30"
 ---
 # Feature F46: Cada série termina carregada, vazia ou com aviso de falha, e nada some durante a carga
 **Approved**: not a gate (via rápida; o MJRP julga)

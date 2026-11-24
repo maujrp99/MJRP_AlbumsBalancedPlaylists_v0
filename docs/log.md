@@ -2,6 +2,28 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 10:30] acceptance — F45, F46, F50, F55, F61, F67, F68, F72, F79 aceitas pelo MJRP
+
+> Participantes: MJRP (pela tela do Control Center) · Branch: main
+
+- F45 — Nenhum requisito a promover.
+- F45 — Issues da trilha do MJRP com o OK dele: UAT-172, UAT-174
+- F46 — Nenhum requisito a promover.
+- F46 — Issues da trilha do MJRP com o OK dele: UAT-173, UAT-180, UAT-187
+- F50 — Nenhum requisito a promover.
+- F50 — Issues da trilha do MJRP com o OK dele: UAT-178, UAT-182, UAT-183
+- F55 — Nenhum requisito a promover.
+- F55 — Issues da trilha do MJRP com o OK dele: UAT-184
+- F61 — Nenhum requisito a promover.
+- F61 — Issues da trilha do MJRP com o OK dele: UAT-186
+- F67 — Nenhum requisito a promover.
+- F67 — Issues da trilha do MJRP com o OK dele: UAT-204
+- F68 — Nenhum requisito a promover.
+- F68 — Issues da trilha do MJRP com o OK dele: UAT-205
+- F72 — Requisitos aceitos: S-55
+- F79 — Requisitos aceitos: S-61
+- Commit feito pelo comando da tela, lote 20261124-103014-8992ec87, carimbo `Human-accepted: F45`, carimbo `Human-accepted: F46`, carimbo `Human-accepted: F50`, carimbo `Human-accepted: F55`, carimbo `Human-accepted: F61`, carimbo `Human-accepted: F67`, carimbo `Human-accepted: F68`, carimbo `Human-accepted: F72`, carimbo `Human-accepted: F79`.
+
 ## [2026-11-24 10:11] session — o primeiro salvar da Caixa em produção funcionou, nas palavras do MJRP
 
 **Branch:** main
