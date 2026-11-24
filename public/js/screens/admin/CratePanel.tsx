@@ -88,6 +88,7 @@ function SideList({ crate, side }: { crate: Crate; side: Side }) {
             </header>
             <p className="cms-soft">{t(`admin.crate.side.hint.${side}`)}</p>
             {state !== 'ok' && <p className="ak-err-t" role="alert" data-count-problem={state}>{t(`admin.crate.${state}`, { side: sideName(side), min, max })}</p>}
+            {!canTake(crate.sides, side) && state === 'ok' && <p className="cms-full" role="status" data-side-full>{t('admin.crate.full', { side: sideName(side), max })}</p>}
             <ol className="cms-albums">
                 {list.map((album, index) => <Row key={album.id} crate={crate} side={side} index={index} album={album} onAct={onAct} />)}
             </ol>
@@ -151,7 +152,7 @@ function Confirm({ crate }: { crate: Crate }) {
             {changes.removed.length > 0 && <span data-change="removed">{named('admin.crate.confirm.removed', changes.removed)}</span>}
             {changes.moved && <span data-change="moved">{t('admin.crate.confirm.moved')}</span>}
             {same && <span data-change="same">{t('admin.crate.confirm.same')}</span>}
-            <span className="cms-soft">{t('admin.confirm.note')}</span>
+            <span className="cms-soft">{t('admin.crate.confirm.note')}</span>
             <div className="cms-acts">
                 <button type="button" className="ak-btn pri" data-act="save-confirm" onClick={crate.confirm}>{t('admin.confirm.go')}</button>
                 <button type="button" className="ak-btn" data-act="save-back" onClick={crate.back}>{t('admin.confirm.back')}</button>

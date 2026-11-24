@@ -110,6 +110,15 @@ describe('an Apple Music album link', () => {
         ]) expect(albumLinkOf(link), link).toBeNull()
         expect(albumLinkOf('harvest neil young')).toBeUndefined()
     })
+
+    it('a search with a colon in it is words, not an address (the judge of 2026-11-23): «U2: Achtung Baby», «AC:DC»', () => {
+        for (const words of ['U2: Achtung Baby', 'AC:DC', 'Mezzanine:remastered', 'a:b', 'mailto:x@example.invalid', 'javascript:alert(1)', 'music: the album']) expect(albumLinkOf(words), words).toBeUndefined()
+    })
+
+    it('a link pasted without «https://» is still that album', () => {
+        expect(albumLinkOf('music.apple.com/us/album/harvest/1015739190')).toEqual({ storefront: 'us', id: '1015739190' })
+        expect(albumLinkOf('music.apple.com/us/artist/neil-young/549086')).toBeNull()
+    })
 })
 
 describe('the search of the Painel', () => {
@@ -155,6 +164,12 @@ describe('the search of the Painel', () => {
             expect(await serviceWith(catalog).search(body), JSON.stringify(body)).toMatchObject({ ok: false, status: 400, code: 'invalid_request', reason: 'invalid-request' })
         }
         expect(catalog.searchAlbums).not.toHaveBeenCalled()
+    })
+
+    it('a search with a colon goes to the catalogue as words', async () => {
+        const catalog = catalogThat([raw(1)])
+        expect((await serviceWith(catalog).search({ query: 'U2: Achtung Baby' })).ok).toBe(true)
+        expect(catalog.searchAlbums).toHaveBeenCalledWith('U2: Achtung Baby', { storefront: 'us', limit: MAX_RESULTS })
     })
 
     it('an address that is not an Apple Music album link: 400 «not-an-album-link», and Apple is not asked', async () => {

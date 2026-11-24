@@ -6,7 +6,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import {
-    CRATE_LIMITS, CRATE_SCHEMA_VERSION, artPathOf, buildCrateSave, coverUrl, flatCrate, readCrateDocument, sameCrate, sidesOfFlat,
+    CRATE_LIMITS, CRATE_SCHEMA_VERSION, artPathOf, buildCrateSave, coverUrl, decodeAlbum, encodeAlbum, flatCrate, readCrateDocument, sameCrate, sidesOfFlat,
     validateAlbum, validateCrate
 } from '../../../shared/content/crate.js'
 
@@ -30,6 +30,16 @@ describe('one album of the crate', () => {
         expect(validateAlbum(album(1, { artist: 'x'.repeat(201) }))).toEqual({ ok: false, reason: 'too_long' })
     })
 
+    it('a name with a control character or a mark that changes the direction of the text is refused; one made only of invisible characters is empty', () => {
+        for (const title of ['line\nbreak', 'tab\there', 'bell\u0007', 'nul\u0000', 'evil\u202Egnp.exe', 'a\u2066b', 'mark\u200F']) {
+            expect(validateAlbum(album(1, { title })), JSON.stringify(title)).toEqual({ ok: false, reason: 'characters' })
+        }
+        expect(validateAlbum(album(1, { artist: 'x\u202Ey' }))).toEqual({ ok: false, reason: 'characters' })
+        for (const title of ['\u200B', '\u200B \u200D\uFEFF', '\u00AD\u2060']) expect(validateAlbum(album(1, { title })), JSON.stringify(title)).toEqual({ ok: false, reason: 'empty' })
+        // letters of any language, accents and a zero-width joiner inside a name are a name
+        for (const title of ['Admirável Chip Novo', 'ジャズ', 'Ænima', 'Sigur Rós ( )', 'a\u200Db']) expect(validateAlbum(album(1, { title })).ok, title).toBe(true)
+    })
+
     it('the year is a whole number of four digits', () => {
         for (const year of ['1994', 1994.5, 94, 30000, null]) expect(validateAlbum(album(1, { year })), String(year)).toEqual({ ok: false, reason: 'year' })
         expect(validateAlbum(album(1, { year: 1967 })).ok).toBe(true)
@@ -38,7 +48,9 @@ describe('one album of the crate', () => {
     it('the cover is a PATH on Apple\'s image server: an address, another server, a way out of the folder or odd characters are refused', () => {
         for (const art of [
             'https://evil.example/x.jpg', '//evil.example/x.jpg', '/Music/x.jpg', 'Music/../../x.jpg', 'Music/x y.jpg', 'Music/x.jpg?u=1',
-            'Music/x.jpg#f', 'Music\\x.jpg', 'Music/a@b/x.jpg', 'javascript:alert(1)', '', 5, `Music/${'a'.repeat(400)}.jpg`, 'Music/a..b.jpg', 'x.jpg'
+            'Music/x.jpg#f', 'Music\\x.jpg', 'Music/a@b/x.jpg', 'javascript:alert(1)', '', 5, `Music/${'a'.repeat(400)}.jpg`, 'Music/a..b.jpg', 'x.jpg',
+            // a dot written as %2e is a dot for the image server: nothing encoded may leave the folder either (the judge of 2026-11-23)
+            'a/%2e%2e/%2e%2e/x', 'Music/%2E%2E/x.jpg', 'Music/a%2fb/x.jpg', 'Music/.hidden/x.jpg', 'Music/x.jpg.', 'Music//x.jpg', 'Music/x.jpg/'
         ]) expect(validateAlbum(album(1, { art })), String(art)).toEqual({ ok: false, reason: 'cover' })
     })
 
@@ -131,27 +143,57 @@ describe('the crate as the entry page stands it', () => {
 })
 
 describe('the published document', () => {
-    it('is read by its two lists and its sequence of saves', () => {
-        expect(readCrateDocument({ _schemaVersion: 1, rev: 4, sideA: [1], sideB: [2], previous: {} })).toEqual({ ok: true, rev: 4, sideA: [1], sideB: [2] })
-        expect(readCrateDocument({ sideA: [], sideB: [] })).toEqual({ ok: true, rev: 0, sideA: [], sideB: [] })
-        for (const data of [null, 'x', { rev: 1 }, { sideA: [], sideB: {} }]) expect(readCrateDocument(data).ok).toBe(false)
+    it('an album is stored as one line of text, its six values joined by «<», which none of them can hold; the line reads back as the album', () => {
+        const line = encodeAlbum(album(7, { title: 'A "quoted" & odd title', year: 1972 }))
+        expect(line).toBe('A "quoted" & odd title<Artist 7<1972<7<Music115/v4/aa/bb/cc/7/cover.jpg<https://music.apple.com/us/album/album-7/7')
+        expect(decodeAlbum(line)).toEqual(album(7, { title: 'A "quoted" & odd title', year: 1972 }))
+        expect(validateAlbum(decodeAlbum(line)).ok).toBe(true)
     })
 
-    it('a save writes the two sides, rev plus one, and the earlier value only of the side that changed', () => {
-        const live = { _schemaVersion: 1, rev: 4, sideA: side(1, 6), sideB: side(20, 4) }
+    it('what is not a line of six values comes back as it is, and the check refuses it', () => {
+        for (const line of ['only<five<1990<id<art', 'a<b<c<d<e<f<g', '', 7, null, { id: '1' }]) {
+            expect(decodeAlbum(line)).toBe(line)
+            expect(validateAlbum(decodeAlbum(line)).ok).toBe(false)
+        }
+        // a year that is not four digits stays text, and the check refuses it
+        expect(validateAlbum(decodeAlbum('T<A<19x0<1<Music/x.jpg<https://music.apple.com/us/album/a/1'))).toEqual({ ok: false, reason: 'year' })
+    })
+
+    it('is read by its two lists of lines and its sequence of saves', () => {
+        const lines = (list) => list.map(encodeAlbum)
+        expect(readCrateDocument({ _schemaVersion: 1, rev: 4, sideA: lines(side(1, 2)), sideB: lines(side(20, 1)) })).toEqual({ ok: true, rev: 4, sideA: side(1, 2), sideB: side(20, 1) })
+        expect(readCrateDocument({ sideA: [], sideB: [] })).toEqual({ ok: true, rev: 0, sideA: [], sideB: [] })
+        for (const data of [null, 'x', { rev: 1 }, { sideA: [], sideB: {} }]) expect(readCrateDocument(data).ok).toBe(false)
+        // a crate read and checked: the albums of the lines
+        const read = readCrateDocument({ rev: 1, sideA: lines(side(1, 6)), sideB: lines(side(20, 4)) })
+        expect(validateCrate({ sideA: read.sideA, sideB: read.sideB })).toEqual({ ok: true, sides: { a: side(1, 6), b: side(20, 4) }, rejected: [] })
+    })
+
+    it('a save writes the two sides as lines and rev plus one, and NOTHING else; the earlier value of the side that changed comes apart, for the work area', () => {
+        const lines = (list) => list.map(encodeAlbum)
+        const live = { _schemaVersion: 1, rev: 4, sideA: lines(side(1, 6)), sideB: lines(side(20, 4)) }
         const next = { a: side(1, 6), b: [...side(20, 4)].reverse() }
-        const { data, changed } = buildCrateSave(live, next)
+        const { data, previous, changed } = buildCrateSave(live, next)
         expect(changed).toEqual(['sideB'])
-        expect(data).toEqual({ _schemaVersion: CRATE_SCHEMA_VERSION, rev: 5, sideA: next.a, sideB: next.b, previous: { sideB: live.sideB } })
+        expect(data).toEqual({ _schemaVersion: CRATE_SCHEMA_VERSION, rev: 5, sideA: lines(next.a), sideB: lines(next.b) })
+        expect(previous).toEqual({ sideB: live.sideB })
     })
 
     it('the first save is rev 1 and keeps «nothing» as the earlier value; an equal crate changes nothing', () => {
         const sides = { a: side(1, 6), b: side(20, 4) }
         const first = buildCrateSave(null, sides)
         expect(first.data.rev).toBe(1)
-        expect(first.data.previous).toEqual({ sideA: null, sideB: null })
+        expect(Object.keys(first.data).sort()).toEqual(['_schemaVersion', 'rev', 'sideA', 'sideB'])
+        expect(first.previous).toEqual({ sideA: null, sideB: null })
         expect(first.changed).toEqual(['sideA', 'sideB'])
         expect(buildCrateSave(first.data, sides).changed).toEqual([])
+    })
+
+    it('the longest album the check accepts is a line the database\'s rules accept: at most 1300 characters', () => {
+        const longest = album(1, { id: 'i'.repeat(64), title: 'T'.repeat(200), artist: 'A'.repeat(200), art: `Music1/${'a'.repeat(288)}.jpg`, href: `https://music.apple.com/${'x'.repeat(470)}` })
+        expect(validateAlbum(longest).ok).toBe(true)
+        expect(encodeAlbum(longest).length).toBeLessThanOrEqual(1300)
+        expect(validateAlbum({ ...longest, href: `${longest.href}x` })).toEqual({ ok: false, reason: 'link' })
     })
 
     it('two crates are the same when every album of every side is the same, in the same order', () => {

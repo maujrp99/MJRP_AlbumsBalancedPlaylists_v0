@@ -6,16 +6,25 @@
  * in the two places. Pure: no Firebase, no `fetch`, no global (test/architecture/coreStaysPortable.test.js).
  *
  * The published document (`published/crate`):
- *   { _schemaVersion, rev, sideA: [album], sideB: [album], previous?: { sideA?, sideB? } }
- * Each side is in the order the owner sees it, THE FRONT RECORD FIRST. An album is exactly what the entry page needs:
- *   id      a short name (Apple's catalogue id, or the key of the fixed set)
- *   title   the album's name, as text: not empty, no < nor >, up to 200 characters
+ *   { _schemaVersion, rev, sideA: [line], sideB: [line] }
+ * Each side is in the order the owner sees it, THE FRONT RECORD FIRST. An album is stored as ONE LINE OF TEXT, its six
+ * values joined by «<» (encodeAlbum, decodeAlbum): `title<artist<year<id<artwork path<Apple Music address`. Why a line and
+ * not a map: the database's rules cannot loop and evaluate at most 1000 expressions a save, and a line is checked whole with
+ * one match, which leaves room to check every value of twenty albums (firestore.rules, validCrateRecord). Everywhere else
+ * an album is a plain record of exactly what the entry page needs:
+ *   id      a short name (Apple's catalogue id, or the key of the fixed set): 1 to 64 of A-Z a-z 0-9 _ -
+ *   title   the album's name, as text: not empty, no < nor >, no control nor direction-changing character, not made of
+ *           invisible characters only, up to 200 characters
  *   artist  the same rule
  *   year    a whole number of four digits
- *   art     the PATH of the artwork on Apple's image server (never an address: the page writes the server itself)
- *   href    the album's page on Apple Music (https://music.apple.com/…)
+ *   art     the PATH of the artwork on Apple's image server (never an address: the page writes the server itself):
+ *           segments of A-Z a-z 0-9 _ - with single dots inside, between single slashes; no «..», no % and no backslash,
+ *           so nothing in it, encoded or not, can leave the artwork folder
+ *   href    the album's page on Apple Music (https://music.apple.com/… in printable ASCII, no < nor >)
  * A bad album is refused ALONE and the others go on; the same album twice stays once. Then each side must hold what the
  * crate can draw (CRATE_LIMITS), or the whole crate is refused and the entry page keeps its fixed set.
+ * The earlier value of a save (F82, REQ-08) is NOT in the public document: the repository keeps it in the Painel's work
+ * area, which only the administrator reads, so no visitor downloads it.
  */
 import { isAllowedLink } from './texts.js'
 
@@ -35,13 +44,15 @@ export const LISTEN_SERVER = 'https://music.apple.com/'
 
 export const MAX_NAME_CHARS = 200
 const MAX_ART_CHARS = 300
-const MAX_LINK_CHARS = 500
+/** The address after the server's: what the database's rules allow (firestore.rules). */
+const MAX_LINK_CHARS = LISTEN_SERVER.length + 470
 
 export const REASON_NOT_AN_ALBUM = 'not_an_album'
 export const REASON_ID = 'id'
 export const REASON_NOT_TEXT = 'not_text'
 export const REASON_EMPTY = 'empty'
 export const REASON_MARKUP = 'markup'
+export const REASON_CHARACTERS = 'characters'
 export const REASON_TOO_LONG = 'too_long'
 export const REASON_YEAR = 'year'
 export const REASON_COVER = 'cover'
@@ -57,17 +68,29 @@ const isPlainMap = (value) => {
     return prototype === Object.prototype || prototype === null
 }
 
-/** The rule of a name (title, artist) that is broken, or null: the plain text rule of the site's texts. */
+/** Characters a name never needs and that can deceive: control characters, and the marks that change the direction of the text. */
+// eslint-disable-next-line no-control-regex -- matching control characters is the point of this rule
+const DECEIVING = /[\u0000-\u001F\u007F-\u009F\u200E\u200F\u202A-\u202E\u2066-\u2069]/
+/** Characters that draw nothing: a name made only of them (and spaces) is an empty name. */
+const INVISIBLE = /[\u00AD\u200B-\u200D\u2060\uFEFF]/g
+
+/** The rule of a name (title, artist) that is broken, or null: the plain text rule of the site's texts, and no deceiving character. */
 function brokenName(text) {
     if (typeof text !== 'string') return REASON_NOT_TEXT
-    if (text.trim() === '') return REASON_EMPTY
+    if (DECEIVING.test(text)) return REASON_CHARACTERS
+    if (text.replace(INVISIBLE, '').trim() === '') return REASON_EMPTY
     if (/[<>]/.test(text)) return REASON_MARKUP
     return text.length > MAX_NAME_CHARS ? REASON_TOO_LONG : null
 }
 
-/** A path inside the artwork folder: letters, digits and . _ - % between single slashes, never two dots in a row, never an address (the same rule as the database's: firestore.rules). */
-const isArtPath = (art) => typeof art === 'string' && art.length <= MAX_ART_CHARS
-    && /^[A-Za-z0-9._%-]+(\/[A-Za-z0-9._%-]+)+$/.test(art) && !art.includes('..')
+/**
+ * A path inside the artwork folder, never an address (the same rule as the database's: firestore.rules): two or more
+ * segments of letters, digits, _ and -, with single dots inside, between single slashes. No % and no backslash: a dot
+ * written as %2e would be read as a dot by the image server, and «..» would leave the folder.
+ */
+const ART_SEGMENT = '[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*'
+const ART_PATH = new RegExp(`^${ART_SEGMENT}(?:/${ART_SEGMENT})+$`)
+const isArtPath = (art) => typeof art === 'string' && art.length <= MAX_ART_CHARS && ART_PATH.test(art)
 
 /**
  * The address of a cover, always on the one image server: the page asks for a square of `size` pixels.
@@ -91,7 +114,7 @@ export function artPathOf(url) {
 const isYear = (year) => Number.isInteger(year) && year >= 1000 && year <= 9999
 // printable ASCII with no < nor >, as the database's rules check it (an address of Apple Music comes percent-encoded)
 const isListenLink = (href) => typeof href === 'string' && href.length <= MAX_LINK_CHARS && href.startsWith(LISTEN_SERVER) && /^[!-;=?-~]+$/.test(href) && isAllowedLink(href)
-const isId = (id) => typeof id === 'string' && /^[\w-]{1,64}$/.test(id)
+const isId = (id) => typeof id === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(id)
 
 const refused = (reason) => ({ ok: false, reason })
 
@@ -169,34 +192,61 @@ const sameSide = (one, other) => Array.isArray(one) && Array.isArray(other) && o
 /** Two crates with the same albums on the same sides in the same order. */
 export const sameCrate = (one, other) => sameSide(one?.a, other?.a) && sameSide(one?.b, other?.b)
 
+/** The mark between the six values of an album's line: none of the values can hold it. */
+const MARK = '<'
+
 /**
- * The shape of the `published/crate` document. A newer version of the shape is read in the fields known here. The albums
- * are NOT checked here (validateCrate does it).
+ * An album as its line of the published document: `title<artist<year<id<artwork path<Apple Music address`.
+ * @param {{ id: string, title: string, artist: string, year: number, art: string, href: string }} album - already checked
+ * @returns {string}
+ */
+export const encodeAlbum = (album) => [album.title, album.artist, album.year, album.id, album.art, album.href].join(MARK)
+
+/**
+ * The album of a line of the published document, NOT yet checked (validateAlbum does it). What is not a line of six values
+ * comes back as it is, and the check refuses it as «not an album».
+ * @param {*} line
+ * @returns {Object|*}
+ */
+export function decodeAlbum(line) {
+    const parts = typeof line === 'string' ? line.split(MARK) : []
+    if (parts.length !== 6) return line
+    const [title, artist, year, id, art, href] = parts
+    return { id, title, artist, year: /^[1-9][0-9]{3}$/.test(year) ? Number(year) : year, art, href }
+}
+
+/**
+ * The shape of the `published/crate` document, with each line read as an album. A newer version of the shape is read in the
+ * fields known here. The albums are NOT checked here (validateCrate does it).
  * @param {*} data
  * @returns {{ ok: true, rev: number, sideA: Array, sideB: Array } | { ok: false, reason: string }}
  */
 export function readCrateDocument(data) {
     if (!isPlainMap(data) || !Array.isArray(data.sideA) || !Array.isArray(data.sideB)) return refused(REASON_NOT_A_CRATE)
-    return { ok: true, rev: Number.isInteger(data.rev) ? data.rev : 0, sideA: [...data.sideA], sideB: [...data.sideB] }
+    // only a line is an album of the document: anything else stored in a place (a map, a number) is no album at all
+    const albumsOf = (lines) => lines.map(line => (typeof line === 'string' ? decodeAlbum(line) : null))
+    return { ok: true, rev: Number.isInteger(data.rev) ? data.rev : 0, sideA: albumsOf(data.sideA), sideB: albumsOf(data.sideB) }
 }
 
+const sameLines = (one, other) => one.length === other.length && one.every((line, i) => line === other[i])
+
 /**
- * What a save of the crate writes: the whole document, `rev` the stored one plus one (the rules refuse anything else) and
- * `previous` with the earlier value ONLY of the side this save changed (null when there was none), so it covers the last
- * save alone (F82, REQ-08).
+ * What a save of the crate writes: the whole document - the two sides as lines, `rev` the stored one plus one (the rules
+ * refuse anything else) - and, apart, the earlier value ONLY of the side this save changed (null when there was none), which
+ * covers the last save alone (F82, REQ-08) and goes to the Painel's work area, never to the public document.
  * @param {Object|null} live - the stored document, or null when there is none
  * @param {{ a: Object[], b: Object[] }} sides - already checked (validateCrate)
- * @returns {{ data: { _schemaVersion: number, rev: number, sideA: Object[], sideB: Object[], previous: Object }, changed: string[] }}
+ * @returns {{ data: { _schemaVersion: number, rev: number, sideA: string[], sideB: string[] }, previous: Object, changed: string[] }}
  *   `changed` empty: there is nothing to save
  */
 export function buildCrateSave(live, sides) {
     const stored = isPlainMap(live) ? live : {}
-    const next = { sideA: sides.a, sideB: sides.b }
+    const next = { sideA: sides.a.map(encodeAlbum), sideB: sides.b.map(encodeAlbum) }
     const previous = {}
     const changed = []
     for (const field of ['sideA', 'sideB']) {
         const before = Array.isArray(stored[field]) ? stored[field] : null
-        if (before && sameSide(before, next[field])) continue
+        if (before && sameLines(before, next[field])) continue
         previous[field] = before
         changed.push(field)
     }
@@ -205,9 +255,9 @@ export function buildCrateSave(live, sides) {
             _schemaVersion: Math.max(CRATE_SCHEMA_VERSION, Number.isInteger(stored._schemaVersion) ? stored._schemaVersion : 0),
             rev: (Number.isInteger(stored.rev) ? stored.rev : 0) + 1,
             sideA: next.sideA,
-            sideB: next.sideB,
-            previous
+            sideB: next.sideB
         },
+        previous,
         changed
     }
 }

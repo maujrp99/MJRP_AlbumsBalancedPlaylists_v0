@@ -34,16 +34,21 @@ const REASONS = Object.freeze({
 const INVALID = () => failure('invalid_request', { reason: REASONS.INVALID_REQUEST })
 const NOT_A_LINK = () => failure('invalid_request', { reason: REASONS.NOT_AN_ALBUM_LINK })
 
+/** What makes a query an address: it starts as a web address does, or with Apple Music's own name (a link pasted without «https://»). */
+const LOOKS_LIKE_A_LINK = /^(https?:\/\/|music\.apple\.com\/)/i
+
 /**
- * What a query is: `undefined` when it is not an address at all (a search by words), `null` when it is an address but not
- * an album of Apple Music, or the album's storefront and id.
+ * What a query is: `undefined` when it is not an address at all (a search by words: «U2: Achtung Baby» and «AC:DC» are
+ * words, whatever their colon), `null` when it is an address but not an album of Apple Music, or the album's storefront
+ * and id.
  * @param {string} query
  * @returns {{ storefront: string, id: string } | null | undefined}
  */
 function albumLinkOf (query) {
   const text = String(query).trim()
-  if (!/^[a-z][a-z0-9+.-]*:/i.test(text)) return undefined
-  const match = /^https:\/\/music\.apple\.com\/([a-z]{2})\/album\/(?:[^/?#]+\/)?(\d+)(?:[?#].*)?$/i.exec(text)
+  if (!LOOKS_LIKE_A_LINK.test(text)) return undefined
+  const address = /^music\./i.test(text) ? `https://${text}` : text
+  const match = /^https:\/\/music\.apple\.com\/([a-z]{2})\/album\/(?:[^/?#]+\/)?(\d+)(?:[?#].*)?$/i.exec(address)
   return match ? { storefront: match[1].toLowerCase(), id: match[2] } : null
 }
 
@@ -92,4 +97,4 @@ function createAppleAlbumService ({ catalog }) {
   return { search }
 }
 
-module.exports = { createAppleAlbumService, albumLinkOf, MAX_QUERY_CHARS, MAX_RESULTS, SEARCH_STOREFRONT, REASONS }
+module.exports = { createAppleAlbumService, albumLinkOf, LOOKS_LIKE_A_LINK, MAX_QUERY_CHARS, MAX_RESULTS, SEARCH_STOREFRONT, REASONS }

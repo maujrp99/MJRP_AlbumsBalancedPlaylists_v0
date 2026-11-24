@@ -155,13 +155,19 @@ describe('the limits of a side, said and enforced', () => {
         expect((app.querySelector('[data-act="discard"]') as HTMLButtonElement).disabled).toBe(false)
     })
 
+    it('a full side says so in a line anybody reads (not only in the hint of a button that is off), and the other side does not', async () => {
+        const { text, app } = await show({ crate: { start: crateRead({ sides: { a: side(1, 10), b: side(20, 4) } }) } })
+        expect(text('[data-side="a"] [data-side-full]')).toBe('Side A is full (10 albums): it takes no more until one leaves.')
+        expect(app.querySelector('[data-side="b"] [data-side-full]')).toBeNull()
+    })
+
     it('a full side takes no more: «to that side» and «add to that side» are off', async () => {
         const { app, row, search } = await show({ crate: { start: crateRead({ sides: { a: side(1, 10), b: side(20, 4) } }) } })
         expect((app.querySelector(`${row(20)} [data-act="across"]`) as HTMLButtonElement).disabled).toBe(true)
         await search('anything')
         const add = app.querySelector('[data-result="900"] [data-act="add-a"]') as HTMLButtonElement
         expect(add.disabled).toBe(true)
-        expect(add.title).toBe('Side A is full (10 albums).')
+        expect(add.title).toBe('Side A is full (10 albums): it takes no more until one leaves.')
         expect((app.querySelector('[data-result="900"] [data-act="add-b"]') as HTMLButtonElement).disabled).toBe(false)
     })
 })
@@ -234,6 +240,9 @@ describe('saving the crate', () => {
         expect(text('[data-change="added"]')).toBe('1 album comes in: Album 900')
         expect(text('[data-change="removed"]')).toBe('1 album goes out: Album 7')
         expect(text('[data-change="moved"]')).toBe('The order or the side of the albums that stay changes.')
+        // what is true of the crate: the entry page reads it at each opening (it is not the texts' «within a minute»)
+        expect(text('[data-state="confirm"]')).toContain('Whoever opens the entry page from now on sees this crate')
+        expect(text('[data-state="confirm"]')).not.toContain('within a minute')
         expect(crate.saves).toEqual([])
         await click('[data-act="save-back"]')
         expect(crate.saves).toEqual([])

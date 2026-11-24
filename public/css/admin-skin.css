@@ -121,6 +121,7 @@
 .cms-side-h { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
 .cms-side-h h2 { font: 700 20px/1.2 var(--ak-display); }
 .cms-side > p { font-size: 13px; }
+.cms-full { padding: 6px 10px; border-radius: var(--ak-radius); background: var(--ak-new-soft); color: var(--ak-new); font-size: 13px; }
 .cms-albums { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
 /* An album: its place, its cover and its names on one line; its buttons under the names, so a long name keeps the whole width. */
 .cms-album { display: grid; grid-template-columns: 20px 56px minmax(0, 1fr); gap: 6px 10px; align-items: center; padding: 8px; border: 1px solid var(--ak-line); border-radius: var(--ak-radius); background: var(--ak-bg); }

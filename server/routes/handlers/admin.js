@@ -4,6 +4,7 @@
  * to `respond` (lib/outcome.js): the handlers build no answer of their own.
  */
 const { respond } = require('../../lib/outcome')
+const { LOOKS_LIKE_A_LINK } = require('../../lib/services/appleAlbumService')
 
 /**
  * @param {Object} deps
@@ -46,7 +47,7 @@ function createAdminHandlers ({ translateService, appleAlbumService, logger = co
       event: 'cms_apple_albums',
       answer: result.ok ? result.outcome : (result.reason || result.code),
       ms: now() - startedAt,
-      kind: query === null ? null : (/^\s*https?:/i.test(query) ? 'link' : 'term'),
+      kind: query === null ? null : (LOOKS_LIKE_A_LINK.test(query.trim()) ? 'link' : 'term'),
       chars: query === null ? null : query.length,
       count: result.ok ? result.data.albums.length : null
     })

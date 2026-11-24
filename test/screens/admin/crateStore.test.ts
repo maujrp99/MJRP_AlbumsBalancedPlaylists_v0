@@ -5,13 +5,15 @@
  */
 import { describe, it, expect, vi } from 'vitest'
 import { searchAlbums, searchReasonOf } from '../../../public/js/screens/admin/appleAlbums'
-import { validateCrate } from '../../../shared/content/crate.js'
+import { encodeAlbum, validateCrate } from '../../../shared/content/crate.js'
 import { COVER_SETS } from '../../../public/splash/covers.js'
 import { crateOf, crateStore, type CrateRepository } from '../../../public/js/screens/admin/crateStore'
 import { fixedCrateOf } from '../../../public/js/screens/admin/fixedCrate'
 import { album, entryPage, fixedCrate, side } from './support'
 
 const fixed = async () => fixedCrate()
+/** A side as the document stores it: one line of text an album. */
+const lines = (list: Parameters<typeof encodeAlbum>[0][]): string[] => list.map((entry) => encodeAlbum(entry))
 
 describe('the fixed set, read from the entry page itself', () => {
     it('is the real set the page shows: side A from the front, side B from ITS front (the last sleeve of the page)', () => {
@@ -54,16 +56,16 @@ describe('the crate that was read', () => {
     })
 
     it('a published crate that passes the check: its two sides and its revision, and the entry page is not even asked', async () => {
-        const data = { _schemaVersion: 1, rev: 4, sideA: side(1, 6), sideB: side(20, 4) }
+        const data = { _schemaVersion: 1, rev: 4, sideA: lines(side(1, 6)), sideB: lines(side(20, 4)) }
         const never = vi.fn(fixed)
         expect(await crateOf({ exists: true, data }, never)).toEqual({ sides: { a: side(1, 6), b: side(20, 4) }, rev: 4, source: 'published', rejected: 0 })
         expect(never).not.toHaveBeenCalled()
     })
 
     it('a published crate with a bad album, or with a side outside the limits: its good albums, to mend, on its revision', async () => {
-        const bad = { rev: 4, sideA: [album(1, { art: 'https://evil.example/x.jpg' }), ...side(2, 6)], sideB: side(20, 4) }
+        const bad = { rev: 4, sideA: lines([album(1, { art: 'https://evil.example/x.jpg' }), ...side(2, 6)]), sideB: lines(side(20, 4)) }
         expect(await crateOf({ exists: true, data: bad }, fixed)).toEqual({ sides: { a: side(2, 6), b: side(20, 4) }, rev: 4, source: 'mend', rejected: 1 })
-        const short = { rev: 9, sideA: side(1, 2), sideB: side(20, 4) }
+        const short = { rev: 9, sideA: lines(side(1, 2)), sideB: lines(side(20, 4)) }
         expect(await crateOf({ exists: true, data: short }, fixed)).toEqual({ sides: { a: side(1, 2), b: side(20, 4) }, rev: 9, source: 'mend', rejected: 0 })
     })
 

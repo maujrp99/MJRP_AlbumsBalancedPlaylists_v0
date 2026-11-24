@@ -7,9 +7,12 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { PublishedCrateRepository, CRATE_ID } from '../../../shared/data/PublishedCrateRepository.js'
+import { encodeAlbum } from '../../../shared/content/crate.js'
 
 const album = (id) => ({ id: String(id), title: `Album ${id}`, artist: `Artist ${id}`, year: 1990, art: `Music1/v4/${id}/c.jpg`, href: `https://music.apple.com/us/album/a/${id}` })
 const side = (from, count) => Array.from({ length: count }, (_, i) => album(from + i))
+/** A side as the document stores it: one line of text an album. */
+const lines = (list) => list.map(encodeAlbum)
 
 function fakeStore(initial = {}) {
     const docs = new Map(Object.entries(initial))
@@ -43,34 +46,36 @@ describe('the crate in the published content', () => {
         const sides = { a: side(1, 6), b: side(20, 4) }
         const answer = await new PublishedCrateRepository(store).saveCrate({ loadedRev: 0, sides, updatedBy: 'owner' })
         expect(answer).toEqual({ status: 'saved', rev: 1, sides })
-        expect(store.docs.get('published/crate')).toEqual({ _schemaVersion: 1, rev: 1, sideA: sides.a, sideB: sides.b, previous: { sideA: null, sideB: null } })
+        // the public document is the crate and nothing else: no earlier value, nobody's name
+        expect(store.docs.get('published/crate')).toEqual({ _schemaVersion: 1, rev: 1, sideA: lines(sides.a), sideB: lines(sides.b) })
         expect(JSON.stringify(store.docs.get('published/crate'))).not.toContain('owner')
-        expect(store.docs.get('cmsWork/save_crate')).toEqual({ _schemaVersion: 1, doc: 'crate', rev: 1, keys: ['sideA', 'sideB'], updatedBy: 'owner', updatedAt: '<server time>' })
+        expect(store.docs.get('cmsWork/save_crate')).toEqual({ _schemaVersion: 1, doc: 'crate', rev: 1, keys: ['sideA', 'sideB'], previous: { sideA: null, sideB: null }, updatedBy: 'owner', updatedAt: '<server time>' })
     })
 
     it('a later save follows the rev read and keeps the earlier value of the side that changed', async () => {
-        const live = { _schemaVersion: 1, rev: 3, sideA: side(1, 6), sideB: side(20, 4) }
+        const live = { _schemaVersion: 1, rev: 3, sideA: lines(side(1, 6)), sideB: lines(side(20, 4)) }
         const store = fakeStore({ 'published/crate': live })
         const sides = { a: side(1, 6).reverse(), b: side(20, 4) }
         const answer = await new PublishedCrateRepository(store).saveCrate({ loadedRev: 3, sides, updatedBy: 'owner' })
         expect(answer.status).toBe('saved')
         expect(answer.rev).toBe(4)
-        expect(store.docs.get('published/crate').previous).toEqual({ sideA: live.sideA })
+        expect(store.docs.get('published/crate').previous).toBeUndefined()
+        expect(store.docs.get('cmsWork/save_crate').previous).toEqual({ sideA: live.sideA })
     })
 
     it('another device saved in between: a conflict, with what is live, and nothing written', async () => {
-        const live = { _schemaVersion: 1, rev: 5, sideA: side(1, 6), sideB: side(20, 4) }
+        const live = { _schemaVersion: 1, rev: 5, sideA: lines(side(1, 6)), sideB: lines(side(20, 4)) }
         const store = fakeStore({ 'published/crate': live })
         const answer = await new PublishedCrateRepository(store).saveCrate({ loadedRev: 4, sides: { a: side(30, 6), b: side(20, 4) }, updatedBy: 'owner' })
-        expect(answer).toEqual({ status: 'conflict', rev: 5, sides: { a: live.sideA, b: live.sideB } })
+        expect(answer).toEqual({ status: 'conflict', rev: 5, sides: { a: side(1, 6), b: side(20, 4) } })
         expect(store.log.filter(([what]) => what === 'tx.set')).toEqual([])
     })
 
     it('the other device saved the very same crate: no conflict, nothing to write', async () => {
-        const live = { _schemaVersion: 1, rev: 5, sideA: side(1, 6), sideB: side(20, 4) }
+        const live = { _schemaVersion: 1, rev: 5, sideA: lines(side(1, 6)), sideB: lines(side(20, 4)) }
         const store = fakeStore({ 'published/crate': live })
         const answer = await new PublishedCrateRepository(store).saveCrate({ loadedRev: 4, sides: { a: side(1, 6), b: side(20, 4) }, updatedBy: 'owner' })
-        expect(answer).toEqual({ status: 'unchanged', rev: 5, sides: { a: live.sideA, b: live.sideB } })
+        expect(answer).toEqual({ status: 'unchanged', rev: 5, sides: { a: side(1, 6), b: side(20, 4) } })
     })
 
     it('the repositories every visitor or every save of the texts downloads know nothing of the crate', () => {

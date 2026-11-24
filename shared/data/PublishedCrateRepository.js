@@ -2,9 +2,11 @@
  * PublishedCrateRepository - the crate of albums of the entry page in the published content (F82, REQ-03, REQ-08, REQ-09;
  * F95; ADR-0024): where it lives and how the Painel saves it. THE ONE PLACE that knows its path and its shape:
  *
- *   published/crate      { _schemaVersion, rev, sideA: [album], sideB: [album], previous?: { sideA?, sideB? } }
- *                        (the albums and the limits of a side: shared/content/crate.js)
- *   cmsWork/save_crate   { _schemaVersion, doc, rev, keys, updatedBy, updatedAt } - who saved, and when
+ *   published/crate      { _schemaVersion, rev, sideA: [line], sideB: [line] } - an album is one line of text
+ *                        (the line, the albums and the limits of a side: shared/content/crate.js)
+ *   cmsWork/save_crate   { _schemaVersion, doc, rev, keys, previous, updatedBy, updatedAt } - who saved, when, and the
+ *                        earlier value of the side the save changed (the last save only: F82 REQ-08). Only the
+ *                        administrator reads it: the public document carries nothing but the crate
  *
  * A file of its own, beside the repository of the texts, because only the Painel uses it: the site of every visitor
  * downloads neither. The entry page does not use it either: it reads the same document by the database's public address,
@@ -30,8 +32,8 @@ export class PublishedCrateRepository extends PublishedContentRepository {
     }
 
     /**
-     * The Painel's save of the crate, in one transaction, as the texts': the document with `rev` = the one read + 1 and the
-     * `previous` of the side that changed, and who saved and when in cmsWork (never in the public document). The crate is
+     * The Painel's save of the crate, in one transaction, as the texts': the document with `rev` = the one read + 1, and in
+     * cmsWork (never in the public document) who saved, when, and the earlier value of the side that changed. The crate is
      * one thing: when another device saved a different crate in between, nothing is written and what is live comes back.
      * @param {{ loadedRev: number, sides: { a: Object[], b: Object[] }, updatedBy: string }} save
      * @returns {Promise<{ status: 'saved'|'unchanged'|'conflict', rev: number, sides: { a: Object[], b: Object[] } }>}
@@ -52,10 +54,10 @@ export class PublishedCrateRepository extends PublishedContentRepository {
             const liveRev = Number.isInteger(live?.rev) ? live.rev : 0
             if (liveSides && sameCrate(liveSides, checked.sides)) return { status: 'unchanged', rev: liveRev, sides: liveSides }
             if (liveRev !== loadedRev) return { status: 'conflict', rev: liveRev, sides: liveSides ?? { a: [], b: [] } }
-            const { data, changed } = buildCrateSave(live, checked.sides)
+            const { data, previous, changed } = buildCrateSave(live, checked.sides)
             transaction.set(ref, data)
             transaction.set(workRef, {
-                _schemaVersion: CRATE_SCHEMA_VERSION, doc: CRATE_ID, rev: data.rev, keys: changed, updatedBy, updatedAt: store.serverTimestamp()
+                _schemaVersion: CRATE_SCHEMA_VERSION, doc: CRATE_ID, rev: data.rev, keys: changed, previous, updatedBy, updatedAt: store.serverTimestamp()
             })
             return { status: 'saved', rev: data.rev, sides: checked.sides }
         })

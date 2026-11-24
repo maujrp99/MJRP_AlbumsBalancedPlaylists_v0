@@ -9,8 +9,8 @@
 - **Um documento novo no banco, `published/crate`:** a Caixa do The Album Blender (os álbuns da página de entrada, em lado A e lado B, na ordem).
 - **Quem grava:** só você, com a sua conta de verdade e o registro de administrador (`cmsAdmins`), como nos textos do Painel. Visitante, outra conta e login anônimo são recusados.
 - **Quem lê:** todo mundo, sem login. A página de entrada lê a caixa para cada visitante. O documento só guarda o que a página mostra: nome do álbum, artista, ano, capa e link do Apple Music.
-- **O que as regras conferem a cada gravação:** lado A de 6 a 10 álbuns e lado B de 4 a 10; cada álbum com exatamente seis campos; a capa como um caminho do servidor de imagens da Apple (nunca um endereço de outro servidor, nunca `..`); o link só de `https://music.apple.com/`; o identificador curto; nenhum campo a mais no documento; a versão (`rev`) igual à anterior mais um; a versão do formato nunca desce; ninguém apaga pelo app.
-- **O que as regras NÃO conferem, e quem confere:** o nome do álbum, o artista e o ano. As regras do Firestore avaliam no máximo 1000 expressões por gravação, e com 20 álbuns sobra espaço para uma conferência só por álbum (medido no emulador). Ficou nas regras o que faz o navegador pedir ou seguir alguma coisa (a capa e o link). O nome, o artista e o ano são conferidos pelo Painel antes de salvar e de novo pela página de entrada ao ler, que os escreve como texto, nunca como marcação: é o mesmo arranjo dos textos do Painel.
+- **O que as regras conferem a cada gravação:** lado A de 6 a 10 álbuns e lado B de 4 a 10; cada álbum guardado como uma linha de texto só (nome, artista, ano, identificador, capa e link), de no máximo 1300 caracteres; nome e artista de 1 a 200 caracteres, sem `<` nem `>`; o ano com quatro dígitos; a capa como um caminho do servidor de imagens da Apple (nunca um endereço de outro servidor, nunca `..`, nunca `%` nem barra invertida); o link só de `https://music.apple.com/`; nenhum campo a mais no documento; a versão (`rev`) igual à anterior mais um; a versão do formato nunca desce; ninguém apaga pelo app.
+- **O que as regras não conseguem dizer, e quem confere:** caracteres de controle ou invisíveis num nome e o mesmo álbum duas vezes. Isso o Painel confere antes de salvar e a página de entrada confere de novo ao ler, e escreve tudo como texto, nunca como marcação.
 - **Nada mais muda:** as outras regras do arquivo ficam iguais, linha por linha.
 
 ## O que você ganha e o que paga
@@ -44,12 +44,12 @@ Leva alguns segundos e vale na hora. Não publica o site nem o servidor.
 ## Voltar atrás
 
 - **Voltar a caixa ao conjunto fixo:** apague o documento `published/crate` no console do Firebase. A página de entrada volta aos 15 álbuns do código na visita seguinte.
-- **Voltar um salvar:** o documento guarda, em `previous`, o lado como estava antes do último salvar; copie-o de volta no console.
+- **Voltar um salvar:** o estado anterior ao último salvar fica guardado na área de trabalho do Painel (`cmsWork`, que só você lê), não no documento público; refaça a ordem no Painel e salve de novo.
 - **Tirar a regra:** publique de novo o `firestore.rules` de antes (o comando é o mesmo). O documento já gravado continua lá e continua lido; só deixa de aceitar gravação.
 
 ## A prova
 
-`npm run test:rules` roda as regras do arquivo num emulador: o administrador grava uma caixa válida (pela gravação do próprio Painel), e são recusados o visitante, a outra conta, o login anônimo, a versão errada, a caixa grande ou pequena demais, o campo a mais, a capa de outro servidor e o link que não é do Apple Music; e mostra que a marcação num nome, que as regras deixam passar, é recusada pelo conferidor do Painel e da página de entrada. Os testes das outras regras seguem verdes.
+`npm run test:rules` roda as regras do arquivo num emulador (58 casos): o administrador grava uma caixa válida (pela gravação do próprio Painel), e são recusados o visitante, a outra conta, o login anônimo, a versão errada, a caixa grande ou pequena demais, o campo a mais, a linha longa demais, a marcação num nome, a capa de outro servidor ou com `%`, e o link que não é do Apple Music. Os testes das outras regras seguem verdes.
 
 ## O que mais falta para a Caixa funcionar inteira
 

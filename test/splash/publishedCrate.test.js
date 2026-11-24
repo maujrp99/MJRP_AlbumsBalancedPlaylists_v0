@@ -14,7 +14,7 @@ import {
 import { cssCrateLayout, captionIndex, startSplash } from '../../public/splash/splash.js'
 import { COVER_SETS, coverImagesHtml, captionHtml, shelfHtml, stageTagHtml } from '../../public/splash/covers.js'
 import { COPY } from '../../public/splash/copy.js'
-import { CRATE_LIMITS } from '../../shared/content/crate.js'
+import { CRATE_LIMITS, encodeAlbum } from '../../shared/content/crate.js'
 import { fillCopy, fillEntryPage } from '../../scripts/entryPage.mjs'
 
 const PAGE = readFileSync(resolve(process.cwd(), 'public/splash.html'), 'utf8')
@@ -35,7 +35,8 @@ const wire = (value) => {
 }
 const found = (data) => [{ found: { name: CRATE_DOCUMENT, fields: wire(data).mapValue.fields, createTime: 'x', updateTime: 'x' }, readTime: 'x' }]
 const missing = () => [{ missing: CRATE_DOCUMENT, readTime: 'x' }]
-const published = (sideA = side(1, 6), sideB = side(20, 4)) => ({ _schemaVersion: 1, rev: 3, sideA, sideB, previous: { sideA: null } })
+/** The document as the Painel saves it: one line of text an album (shared/content/crate.js). */
+const published = (sideA = side(1, 6), sideB = side(20, 4)) => ({ _schemaVersion: 1, rev: 3, sideA: sideA.map(encodeAlbum), sideB: sideB.map(encodeAlbum) })
 
 describe('where the crate is read from', () => {
     it('the site\'s own Firebase project, by the database\'s public address: one document', () => {
@@ -88,6 +89,8 @@ describe('what the database answered', () => {
     it('a crate that falls outside the limits, or that is not a crate, is refused whole: the fixed set stays', () => {
         expect(crateOfAnswer(found(published(side(1, CRATE_LIMITS.a.min - 1))))).toEqual({ state: 'refused', reason: 'side_a_count' })
         expect(crateOfAnswer(found({ rev: 1, sideA: 'x', sideB: [] }))).toEqual({ state: 'refused', reason: 'not_a_crate' })
+        // albums stored as anything but lines (a map, a number) are not albums: none is left, so the crate is refused
+        expect(crateOfAnswer(found({ rev: 1, sideA: side(1, 6), sideB: [1, 2, 3, 4] }))).toEqual({ state: 'refused', reason: 'side_a_count' })
         expect(crateOfAnswer({ error: { code: 403 } })).toEqual({ state: 'refused', reason: 'bad_answer' })
         expect(crateOfAnswer(null)).toEqual({ state: 'refused', reason: 'bad_answer' })
     })
