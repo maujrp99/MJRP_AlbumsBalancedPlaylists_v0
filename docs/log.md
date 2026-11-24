@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 12:59] review — F92 («Deep cuts», «As menos ouvidas», o controle de pulo): reconferência visual independente começou
+
+**Branch:** wip/f92-deep-cuts-judge
+
+Juiz que não implementou; relatório `reports/audits/2026-11-24-mjrpalbumblender-v0-visual-parity-recheck.md` em `verdict: running` até o veredito.
+
 ## [2026-11-24 11:37] step — teto de peso do site re-medido para as receitas novas (F92), pela regra do arquivo
 
 **Branch:** claude/f92-deep-cuts-and-least-played
