@@ -152,6 +152,7 @@ folder:: ep-02-blend-recipes
 serves:: [[ROADMAP#^OUT-02]] ^EP-02
 
 ![[S-74-grow-and-manage-the-blend-algorithms-from-the-cms]]
+![[S-81-create-a-ranking-source-by-chatting-with-ai]]
 
 
 

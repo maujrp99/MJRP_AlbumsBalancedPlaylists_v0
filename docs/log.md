@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 17:07] decision — F99 criada: a fonte de ranking própria, criada conversando com a IA, numa tela própria (S-81)
+
+**Branch:** main
+
+O MJRP, olhando o construtor de receitas: «acho que a tela tá muito cheia pra  ter a parte de ía ali, deveríamos ter uma tela nova e limpa só cum campo de chat pra gerar a receita com IA, por exempo, todo o lado esq do print, vira um chat e todo o lado direito o preview»; e «pode prototipar isso tb pls?». Criadas a S-81 (no PRD, EP-02) e a F99 em esboço (via padrão, feature); o REQ-11 da F92 passa a ser construído pela F99. Próximo: o protótipo num comparador.
+
 ## [2026-11-24 17:01] decision — F92: tirar também as faixas mais longas (REQ-13) e a prévia numa série, não num álbum (REQ-14)
 
 **Branch:** main
