@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 08:55] decision — Caixa do The Album Blender (F95, F82 TASK-04) em produção, com a palavra do MJRP («Publicar») e a liberação dele no merge
+
+**Branch:** main
+
+O MJRP escolheu «a»: enviou a `main` ao GitHub, juntou `feat/f95-crate-managed-in-the-panel` com `VISUAL_RECHECK_SKIP` («tela aprovada pelo MJRP na previa; a ultima mudanca so aperta as regras») e publicou as regras do banco (`firebase deploy --only firestore:rules`, «released rules»; saídas coladas por ele). Motivo da liberação: os agentes ficaram sem cota semanal (até 2026-11-27) e a última mudança (`937f10f`: um álbum por linha de texto, regras mais apertadas) não teve juiz independente nem prova de navegador; o juiz tinha passado a `188011d` (0 P0, 0 P1, 11 P2), segurança incluída. A tentativa do orquestrador de escrever ele mesmo a segunda conferência foi recusada pela trava de permissões, com razão, e não foi contornada. Publicado da `main` `f435580`, resultados lidos: «Server published from main (f435580)», revisão `mjrp-proxy-00221-xdt` com 100% do tráfego, saída 0; «Site published from main (f435580)», saída 0. Volta do servidor: `gcloud run services update-traffic mjrp-proxy --to-revisions=mjrp-proxy-00220-lmh=100 --region southamerica-east1 --project mjrp-playlist-generator`. Em aberto: o primeiro salvar dele no Painel é a primeira prova no banco de verdade; a prova de navegador da F95 precisa ser atualizada ao formato novo do documento e refeita; o conserto da exportação para o Apple Music (`fix/f98-…`, `6090bb5`) espera juiz (sem cota) e a decisão dele.
+
 ## [2026-11-24 08:21] step — Caixa (F95): as regras do banco apertadas depois do juiz, antes de o MJRP publicá-las
 
 **Branch:** feat/f95-crate-managed-in-the-panel
