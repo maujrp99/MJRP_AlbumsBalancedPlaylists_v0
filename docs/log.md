@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`, `harness-feedback`, `review` (uma passada de crítica, com o caminho do relatório). Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-11-24 11:32] decision — o MJRP aprovou o protótipo v1 das receitas de mistura (F92)
+
+**Branch:** main
+
+Palavras dele: «Protótipo v1 aprovado! Bora construir». O protótipo: `design/proposals/f92-recipes/prototype-v1.html` (ramo `wip/f92-recipes-prototype`, 50cf2e7), publicado em https://claude.ai/artifact/2a9G3kXngUoPLBeX3sr7AF. Entendido como aprovação das quatro telas como estão, com as escolhas que o agente fez sozinho: a recomendada não pode ser escondida; a equilibrada diz «EQUILIBRADA»; o construtor começa «Em branco» ou «Uma cópia de»; três cores e quatro ícones novos na lista fechada. Reserva: não passou pela crítica de interface separada. Próximo: construir a seção Receitas do Painel, o catálogo publicado e o construtor (TASK-05, 06, 08) sobre o ramo das duas receitas.
+
 ## [2026-11-24 11:00] decision — F92 REQ-11 e TASK-11 entram na spec (o commit 30e1234 só levou a story S-74)
 
 **Branch:** main
